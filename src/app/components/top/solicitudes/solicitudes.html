@@ -108,7 +108,7 @@
                                                         <span class="badge badge-success">Turno dado</span>
                                                     </td>
                                                     <td class="text-center">
-                                                        <span *ngIf="darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno">
+                                                        <span *ngIf="darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno && !prestacion.solicitud.turno && prestacion.estados[prestacion.estados.length-1].tipo !== 'anulada'">
                                                             <plex-button icon="calendar-plus" type="success" (click)="darTurno(prestacion)"
                                                                 title="Dar Turno">
                                                             </plex-button>
@@ -119,6 +119,11 @@
                                                             </plex-button>
                                                         </span>
                                                         <span *ngIf="visualizarEntrada[i]">
+                                                        </span>
+                                                        <span *ngIf="permisoDesactivar && darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno && prestacion.estados[prestacion.estados.length-1].tipo !== 'anulada'">
+                                                            <plex-button type="danger" icon="delete" (click)="desactivar(prestacionesEntrada,i)"
+                                                                title="Desactivar">
+                                                            </plex-button>
                                                         </span>
                                                     </td>
                                                 </tr>
@@ -161,7 +166,6 @@
                                                     <td>{{prestacion.solicitud.fecha | fecha}}</td>
                                                     <td>{{prestacion.paciente | paciente}}<br>DNI
                                                         {{prestacion.paciente.documento}}</td>
-                                                    <!-- <td>{{prestacion.paciente | paciente}}</td> -->
                                                     <td *ngIf="prestacion.solicitud.organizacionOrigen">{{prestacion.solicitud.organizacionOrigen.nombre}}</td>
                                                     <td *ngIf="!prestacion.solicitud.organizacionOrigen"></td>
                                                     <td *ngIf="prestacion.solicitud.profesionalOrigen">{{prestacion.solicitud.profesionalOrigen
@@ -200,16 +204,20 @@
                 <detalle-solicitud [tipoSolicitud]="tipoSolicitud" [prestacionSeleccionada]="prestacionSeleccionada"
                     [turnoSeleccionado]="turnoSeleccionado"></detalle-solicitud>
             </div>
-            <div *ngIf="showAuditar && !showDidebar" class="col-3">
+            <div *ngIf="showAuditar && !showSidebar" class="col-3">
                 <auditar-solicitud [tipoSolicitud]="tipoSolicitud" [prestacionSeleccionada]="prestacionSeleccionada"
                     (returnAuditoria)="returnAuditoria($event)"></auditar-solicitud>
+            </div>
+            <div *ngIf="showDesactivar && !showSidebar" class="col-3">
+                <desactivar-solicitud [tipoSolicitud]="tipoSolicitud" [prestacionSeleccionada]="prestacionSeleccionada"
+                    (returnDesactivar)="returnDesactivar($event)"></desactivar-solicitud>
             </div>
         </div>
         <!-- Configuración de Reglas -->
     </section>
     <footer *ngIf="!showEditarReglas">
 
-        <plex-button *ngIf="permisosReglas" type="primary" label="Reglas" (click)="editarReglas()"></plex-button>
+        <plex-button class="mr-2" *ngIf="permisosReglas" type="primary" label="Reglas" (click)="editarReglas()"></plex-button>
 
         <plex-button type="primary" label="Reglas Global" routerLink="/top/reglasVisualizacion"></plex-button>
 

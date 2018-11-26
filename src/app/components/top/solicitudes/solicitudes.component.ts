@@ -49,13 +49,16 @@ export class SolicitudesComponent implements OnInit {
     public organizacion;
     public prestacionesPermisos = [];
     public permisosReglas;
+    public permisoDesactivar = false;
+    public showDesactivar = false;
     public prestacionDestino;
     public estado;
     public estados = [
         { id: 'auditoria', nombre: 'auditoria' },
         { id: 'pendiente', nombre: 'pendiente' },
         { id: 'rechazada', nombre: 'rechazada' },
-        { id: 'turnoDado', nombre: 'turno dado' }
+        { id: 'turnoDado', nombre: 'turno dado' },
+        { id: 'anulada', nombre: 'anulada' }
     ];
     prestacionSeleccionada: any;
 
@@ -72,6 +75,7 @@ export class SolicitudesComponent implements OnInit {
     ngOnInit() {
         this.permisosReglas = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:reglas:?')[0] === '*' : false;
         this.prestacionesPermisos = this.auth.getPermissions('solicitudes:tipoPrestacion:?');
+        this.permisoDesactivar = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:desactivar:?')[0] === '*' : false;
         this.showCargarSolicitud = false;
         this.cargarSolicitudes();
     }
@@ -180,6 +184,7 @@ export class SolicitudesComponent implements OnInit {
         this.pacienteSeleccionado = prestacionSolicitud.paciente;
         this.showDarTurnos = true;
     }
+
     cancelar(prestacionSolicitud) {
         this.plex.confirm('¿Realmente quiere cancelar la solicitud?', 'Atención').then((confirmar) => {
             if (confirmar) {
@@ -196,7 +201,15 @@ export class SolicitudesComponent implements OnInit {
                 });
             }
         });
+    }
 
+    desactivar(arrayPrestaciones, indice) {
+        let indicePrestacion = this.prestaciones.findIndex((prest: any) => { return prest.id === arrayPrestaciones[indice].id; });
+        this.solicitudSeleccionada = this.prestaciones[indicePrestacion].solicitud;
+        this.prestacionSeleccionada = this.prestaciones[indicePrestacion];
+        this.pacienteSolicitud = this.prestaciones[indicePrestacion].paciente;
+        this.showDesactivar = true;
+        this.showSidebar = false;
     }
 
     volverDarTurno() {
@@ -446,6 +459,24 @@ export class SolicitudesComponent implements OnInit {
                     respuesta => {
                         this.cargarSolicitudes();
                         this.plex.toast('danger', '', 'Solicitud Rechazada');
+                    }
+                );
+            }
+        }
+    }
+
+    returnDesactivar(event) {
+        this.showDesactivar = false;
+        if (event.status === false) {
+            if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
+                let patch = {
+                    op: 'estadoPush',
+                    estado: { tipo: 'anulada', motivoRechazo: event.motivo }
+                };
+                this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
+                    respuesta => {
+                        this.cargarSolicitudes();
+                        this.plex.toast('danger', '', 'Solicitud Desactivada');
                     }
                 );
             }
