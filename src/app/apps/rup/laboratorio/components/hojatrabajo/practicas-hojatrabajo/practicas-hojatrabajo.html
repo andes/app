@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-3">
-        <plex-text [(ngModel)]="codigo" label="Cod. de Practica" name="codigoPractica" (keydown.enter)="getPracticaPorCodigo()"
+        <plex-text [(ngModel)]="codigo" label="Codigo de Practica" name="codigoPractica" (keydown.enter)="getPracticaPorCodigo()"
             (blur)="getPracticaPorCodigo()" placeholder="Escriba el código"></plex-text>
     </div>
     <div class="col">
@@ -20,22 +20,29 @@
 </div>
 <br>
 <div class="row">
-    <div class="col">
+    <div class="col" cdkDropList (cdkDropListDropped)="drop($event)">
         <table class="table table-striped table-sm">
             <thead>
-                <th>codigo</th>
-                <th>analisis</th>
-                <th>texto a imprimir</th>
-                <th>borrar</th>
+                <th>&nbsp;</th>
+                <th>Código</th>
+                <th>Práctica</th>
+                <th>Texto a imprimir</th>
+                <th>Borrar</th>
             </thead>
             <tbody>
-                <tr class="hover" *ngFor="let practicaHT of hojaTrabajo.practicas">
+                <tr class="hover" *ngFor="let practicaHT of hojaTrabajo.practicas; index as ix; first as isFirst; last as isLast" cdkDrag cdkDragLockAxis="y" >
+                    <td cdkDragHandle class="n-resize" >
+                        <plex-icon name="arrow-up-thick" (click)="clickUp(ix)" *ngIf="!isFirst"></plex-icon>
+                        <plex-icon name="arrow-down-thick" (click)="clickDown(ix)" *ngIf="!isLast"></plex-icon>
+                    </td>
                     <td>{{practicaHT.practica.codigo}}</td>
                     <td>{{practicaHT.practica.nombre}}</td>
                     <td>{{practicaHT.nombre}}</td>
                     <td>
                         <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practicaHT.practica)"></plex-button>
                     </td>
+                    <span *cdkDragPreview>
+                    </span>
                 </tr>
             </tbody>
         </table>

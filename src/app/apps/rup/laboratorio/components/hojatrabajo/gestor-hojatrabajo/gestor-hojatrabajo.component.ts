@@ -78,7 +78,7 @@ export class GestorHojatrabajoComponent implements OnInit {
     }
 
     volverLista() {
-        console.log('guardar hoja', new Date);
+        console.log('volverLista', new Date);
     }
 
     cargarHoja() {
