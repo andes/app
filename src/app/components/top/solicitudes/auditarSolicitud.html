@@ -8,7 +8,8 @@
         <div class="col-12 text-left">
             <b>Paciente</b>
             <h5>
-                <span class="blue"> {{prestacionSeleccionada?.paciente?.nombre}} {{prestacionSeleccionada?.paciente?.apellido}}
+                <span class="blue"> {{prestacionSeleccionada?.paciente?.nombre}}
+                    {{prestacionSeleccionada?.paciente?.apellido}}
                 </span>
             </h5>
         </div>
@@ -19,37 +20,6 @@
             <br> {{ prestacionSeleccionada?.solicitud.horaInicio | fecha }}
         </div>
     </div>
-    <!-- <div class="row">
-        <div class="col-12 text-left">
-            <b>Profesional Origen</b>
-            <br> {{ prestacionSeleccionada?.solicitud.profesionalOrigen?.nombre }} {{ prestacionSeleccionada?.solicitud.profesionalOrigen?.apellido
-            }}
-            <br>
-            <b>Tipo de Prestación Origen</b>
-            <br> {{ prestacionSeleccionada?.solicitud.tipoPrestacionOrigen?.term }}
-            <br>
-            <b>Organización Origen</b>
-            <br> {{ prestacionSeleccionada?.solicitud.organizacionOrigen?.nombre }}
-            <hr>
-
-            <b>Profesional Destino</b>
-            <span *ngIf="prestacionSeleccionada?.solicitud.profesional">
-                <br> {{ prestacionSeleccionada?.solicitud.profesional?.nombre }} {{ prestacionSeleccionada?.solicitud.profesional?.apellido}}
-            </span>
-            <span *ngIf="!prestacionSeleccionada?.solicitud.profesional"> - </span>
-            <br>
-            <b>Tipo de Prestación Destino</b>
-            <br> {{ prestacionSeleccionada?.solicitud.tipoPrestacion?.term }}
-            <br>
-            <b>Organización Destino</b>
-            <br>
-            <span *ngIf="prestacionSeleccionada?.solicitud.organizacion">{{ prestacionSeleccionada?.solicitud.organizacion?.nombre
-                }}
-            </span>
-            <span *ngIf="!prestacionSeleccionada?.solicitud.organizacion"> - </span>
-            <br>
-        </div>
-    </div> -->
     <div class="row" *ngIf="prestacionSeleccionada?.solicitud.registros.length>0 && prestacionSeleccionada?.solicitud.registros[0].valor">
         <div class="col-12">
             <hr>
@@ -72,13 +42,11 @@
                                     <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto">
                                         {{ doc.ext }}
                                     </a>
-                                    <!-- <div *ngIf="!soloValores" class="x-mark" (click)="imageRemoved(doc)">
-                                        <span class="close"></span>
-                                    </div> -->
                                 </div>
                             </a>
 
-                            <div (click)="lightbox = false" *ngIf="i === indice && lightbox" [ngClass]="{'lightbox': i === indice && lightbox }" class="hover">
+                            <div (click)="lightbox = false" *ngIf="i === indice && lightbox" [ngClass]="{'lightbox': i === indice && lightbox }"
+                                class="hover">
                                 <i (click)=imagenPrevia(i) class="mdi mdi-chevron-double-left previous parpadeo"></i>
                                 <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
                                 <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto m-1 p-2">
