@@ -19,9 +19,6 @@ import {
     IFinanciador
 } from './../../interfaces/IFinanciador';
 import {
-    Observable, Observer, Subscriber
-} from 'rxjs/Rx';
-import {
     LogService
 } from './../../services/log.service';
 import {
@@ -54,14 +51,10 @@ import {
 } from '@andes/plex';
 import * as moment from 'moment';
 import {
-    FormBuilder,
-    FormGroup,
-    FormArray,
-    Validators
+    FormBuilder
 } from '@angular/forms';
 import {
-    DomSanitizer,
-    SafeHtml
+    DomSanitizer
 } from '@angular/platform-browser';
 import {
     Component,
