@@ -184,11 +184,7 @@ const appRoutes: Routes = [
 
   { path: 'estadisticas', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingGuard] },
   // Campañas Salud
-  // { path: 'campanias', component: CampaniaListadoComponent, canActivate: [RoutingGuard]},
-
-  // { path: 'campaniasPublicacion', component: CampaniaPublicacionComponent, canActivate: [RoutingGuard]},
   { path: 'campaniasSalud', component: CampaniaSaludComponent, canActivate: [RoutingGuard] },
-  // { path: 'campaniasFormulario', component: CampaniaFormComponent, canActivate: [RoutingGuard]},
 
   // dejar siempre al último porque no encuentra las url después de esta
   { path: '**', redirectTo: 'inicio' }

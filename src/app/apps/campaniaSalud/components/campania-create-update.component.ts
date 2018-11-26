@@ -2,7 +2,7 @@ import { AdjuntosService } from './../../../modules/rup/services/adjuntos.servic
 import { CampaniaSaludService } from './../services/campaniaSalud.service';
 import { ICampaniaSalud } from './../interfaces/ICampaniaSalud';
 import { Plex } from '@andes/plex';
-import { Component, OnInit, Input, EventEmitter, Output, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
 import * as enumerados from '../../../utils/enumerados';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -53,7 +53,7 @@ export class CampaniaFormComponent implements OnInit {
     sexos: any[];
 
     /*CARGA DE IMAGENES*/
-    @ViewChildren('upload') childsComponents: QueryList<any>;
+    @ViewChild('upload') uploadComponent: ElementRef;
 
     /**
      * Bandera que indica si hay un problema con el formato de la imagen ingresada (que sea SVG y que no sea tamaño 35px*35px)
@@ -140,7 +140,7 @@ export class CampaniaFormComponent implements OnInit {
         this.errorFormato = false;
 
         if (!this.formatosValidos.find((item) => item === ext.toLowerCase())) { // se fija si la extensión del archivo está dentro de las opciones permitidas
-            (this.childsComponents.first as any).nativeElement.value = '';
+            this.uploadComponent.nativeElement.value = '';
             this.errorFormato = true;
             this.imagenSegura = null;
             return;
@@ -149,7 +149,7 @@ export class CampaniaFormComponent implements OnInit {
         let myReader: FileReader = new FileReader();
 
         myReader.onloadend = (e) => {
-            (this.childsComponents.first as any).nativeElement.value = '';
+            this.uploadComponent.nativeElement.value = '';
 
             this.imagenSvg = myReader.result as string;
             if (this.confirmarSvg(this.imagenSvg)) {

@@ -12,7 +12,7 @@ export class CampaniaSaludService {
     constructor(private server: Server) {
     }
 
-    getCampanias(params?): Observable<ICampaniaSalud[]> {
+    get(params?): Observable<ICampaniaSalud[]> {
         return this.server.get(this.campaniaUrl, { params: params });
     }
     putCampanias(campania: ICampaniaSalud) {

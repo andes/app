@@ -68,7 +68,7 @@ export class CampaniaSaludComponent implements OnInit {
      * @memberof CampaniaSaludComponent
      */
     recuperarCampanias() {
-        this.campaniaSaludService.getCampanias({
+        this.campaniaSaludService.get({
             fechaDesde: this.fechaDesde,
             fechaHasta: this.fechaHasta
         }).subscribe(res => {
