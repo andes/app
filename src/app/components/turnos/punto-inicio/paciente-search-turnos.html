@@ -25,10 +25,10 @@
                                 <b>Documento: </b>
                                 <span *ngIf="paciente.documento !== ''">{{ paciente.documento | number}}</span>
                                 <span *ngIf="paciente.documento === ''" class="text-danger">Sin documento</span> |
-                                <b>Fecha de Nacimiento</b>
+                                <b>Fecha de Nacimiento </b>
                                 <span *ngIf="paciente.fechaNacimiento !== null">{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</span>
                                 <span *ngIf="paciente.fechaNacimiento === null" class="text-danger">Sin fecha de nacimiento</span> |
-                                <b>Sexo</b>
+                                <b>Sexo </b>
                                 <span>{{paciente.sexo}}</span>
                             </td>
                             <td>

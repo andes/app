@@ -1,14 +1,13 @@
 import { element } from 'protractor';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject ,  Subject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Server } from '@andes/shared';
 import { SemanticTag } from '../interfaces/semantic-tag.type';
 import { IElementoRUP } from './../interfaces/elementoRUP.interface';
 import { IElementosRUPCache } from './../interfaces/elementosRUPCache.interface';
 import { ISnomedConcept } from './../interfaces/snomed-concept.interface';
-import { Subject } from 'rxjs/Subject';
 
 const url = '/modules/rup/elementosRUP';
 
@@ -130,8 +129,14 @@ export class ElementosRUPService {
      * @memberof ElementosRUPService
      */
     buscarElemento(concepto: ISnomedConcept, esSolicitud: boolean): IElementoRUP {
-        // Busca el elemento RUP que implemente el concepto
 
+        // Busca el elemento RUP que implemente el concepto
+        if (typeof concepto.conceptId === 'undefined') {
+            concepto = concepto[1];
+        }
+
+        // TODO: ver cómo resolver esto mejor...
+        concepto.semanticTag = concepto.semanticTag === 'plan' ? 'procedimiento' : concepto.semanticTag;
         if (esSolicitud) {
             let elemento = this.cacheParaSolicitud[concepto.conceptId];
             if (elemento) {
@@ -171,4 +176,16 @@ export class ElementosRUPService {
         }
         return null;
     }
+
+
+    getConceptosInternacion() {
+        let conceptosInternacion = {
+            epicrisis: this.cache['2341000013106'] ? this.cache['2341000013106'].conceptos[0] : null,
+            ingreso: this.cache['721915006'] ? this.cache['721915006'].conceptos[0] : null,
+            egreso: this.cache['58000006'] ? this.cache['58000006'].conceptos[0] : null
+        };
+        return conceptosInternacion;
+    }
+
+
 }

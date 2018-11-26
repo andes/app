@@ -1,7 +1,7 @@
 <form class="plex-layout ng-untouched ng-pristine ng-valid" novalidate="">
     <section>
         <div class="row">
-            <div class="col">
+            <div [ngClass]="cssLayout">
                 <plex-box>
                     <header>
                         <div class="clearfix">
@@ -9,42 +9,47 @@
                         </div>
                         <!-- Filtros -->
                         <div class="row">
-                            <div class="{{verDevolver ? 'col-6' : 'col-3'}}">
-                                <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')" name="fechaDesde" label="Desde"
-                                    class="fechas">
+                            <div class="col-3">
+                                <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')"
+                                    name="fechaDesde" label="Desde" class="fechas">
                                 </plex-datetime>
                             </div>
-                            <div class="{{  verDevolver ? 'col-6' : 'col-3'}}">
-                                <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="getCarpetas($event, 'fechaHasta')" name="fechaHasta" label="Hasta"
-                                    class="fechas">
+                            <div class="col-3">
+                                <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="getCarpetas($event, 'fechaHasta')"
+                                    name="fechaHasta" label="Hasta" class="fechas">
                                 </plex-datetime>
                             </div>
-                            <div class="{{  verDevolver ? 'col-6' : 'col-4'}}" (click)="toogleSort()" style="margin-top: 45px;">
-                                <i *ngIf="sortDescending" class="mdi mdi-checkbox-marked">Order Nro. Carpeta Descendente</i>
-                                <i *ngIf="!sortDescending" class="mdi mdi-checkbox-blank-outline">Order Nro. Carpeta Descendente</i>
+                            <div class="col-5" (click)="toogleSort()" style="margin-top: 45px;">
+                                <i *ngIf="sortDescending" class="mdi mdi-checkbox-marked">Order Nro. Carpeta
+                                    Descendente</i>
+                                <i *ngIf="!sortDescending" class="mdi mdi-checkbox-blank-outline">Order Nro. Carpeta
+                                    Descendente</i>
                             </div>
-                            <div class="{{  verDevolver ? 'col-4' : 'col-2'}} text-right">
+                            <div class="col-1 text-right">
                                 <label>
                                     &nbsp;</label>
-                                <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
+                                <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
+                                    (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
                             </div>
                         </div>
                         <div class="row" *ngIf="mostrarMasOpciones">
                             <div class="col-4">
-                                <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event, 'prestaciones')" (getData)="loadPrestaciones($event)"
-                                    name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
+                                <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event, 'prestaciones')"
+                                    (getData)="loadPrestaciones($event)" name="prestaciones" label="Prestación"
+                                    placeholder="Buscar una prestación" ngModelOptions="{standalone: true}">
                                 </plex-select>
                             </div>
                             <div class="col-4">
-                                <plex-select [(ngModel)]="espacioFisico" (change)="getCarpetas($event,'espacioFisico')" name="espacioFisico" (getData)="loadEspacios($event)"
-                                    label="Espacio Físico" placeholder="Buscar un espacio físico" labelField="nombre + '(' + servicio.nombre + ')'"
+                                <plex-select [(ngModel)]="espacioFisico" (change)="getCarpetas($event,'espacioFisico')"
+                                    name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico"
+                                    placeholder="Buscar un espacio físico" labelField="nombre + '(' + servicio.nombre + ')'"
                                     ngModelOptions="{standalone: true}">
                                 </plex-select>
                             </div>
                             <div class="col-4">
-                                <plex-select [(ngModel)]="profesional" name="profesional" (change)="getCarpetas($event, 'profesionales')" (getData)="loadProfesionales($event)"
-                                    label="Profesional" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre"
-                                    [required]="true">
+                                <plex-select [(ngModel)]="profesional" name="profesional" (change)="getCarpetas($event, 'profesionales')"
+                                    (getData)="loadProfesionales($event)" label="Profesional" placeholder="Escriba el apellido del Profesional"
+                                    labelField="apellido + ' ' + nombre">
                                 </plex-select>
                             </div>
                         </div>
@@ -80,14 +85,18 @@
                                     <b>
                                         {{carpeta.paciente.apellido}}, {{carpeta.paciente.nombre}}
                                     </b>
-                                    <br/> Documento:
+                                    <br> Documento:
                                     <b>{{carpeta.paciente.documento}}</b>
                                 </td>
                                 <td *ngIf='!carpeta.datosSolicitudManual'>
-                                    {{carpeta.datosPrestamo.turno.espacioFisico?.nombre}} {{carpeta.datosPrestamo.turno.espacioFisico ? ' - ' : ''}} {{carpeta.datosPrestamo.turno.espacioFisico?.servicio?.nombre}}
+                                    {{carpeta.datosPrestamo.turno.espacioFisico?.nombre}}
+                                    {{carpeta.datosPrestamo.turno.espacioFisico ? ' - ' : ''}}
+                                    {{carpeta.datosPrestamo.turno.espacioFisico?.servicio?.nombre}}
                                 </td>
                                 <td *ngIf='carpeta.datosSolicitudManual'>
-                                    {{carpeta.datosSolicitudManual.espacioFisico?.nombre}} {{carpeta.datosSolicitudManual.espacioFisico ? ' - ' : ''}} {{carpeta.datosSolicitudManual.espacioFisico?.servicio?.nombre}}
+                                    {{carpeta.datosSolicitudManual.espacioFisico?.nombre}}
+                                    {{carpeta.datosSolicitudManual.espacioFisico ? ' - ' : ''}}
+                                    {{carpeta.datosSolicitudManual.espacioFisico?.servicio?.nombre}}
                                 </td>
                                 <td *ngIf='!carpeta.datosSolicitudManual'>
                                     {{carpeta.datosPrestamo.turno.tipoPrestacion?.term}}
@@ -99,7 +108,9 @@
                                     {{carpeta.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}
                                 </td>
                                 <td *ngIf='carpeta.datosSolicitudManual'>
-                                    {{carpeta.datosSolicitudManual.profesional ? carpeta.datosSolicitudManual.profesional.nombre + ', ' + carpeta.datosSolicitudManual.profesional.apellido
+                                    {{carpeta.datosSolicitudManual.profesional ?
+                                    carpeta.datosSolicitudManual.profesional.nombre + ', ' +
+                                    carpeta.datosSolicitudManual.profesional.apellido
                                     : ''}}
                                 </td>
                                 <td *ngIf='!carpeta.datosSolicitudManual'>
@@ -109,7 +120,8 @@
                                     {{carpeta.datosSolicitudManual.observaciones}}
                                 </td>
                                 <td *ngIf="carpeta.estado == 'Prestada'">
-                                    <button class="btn btn-primary" label="Devolver" (click)="devolver(carpeta)" [disabled]="carpetasSeleccionadas.length > 0">Devolver
+                                    <button class="btn btn-primary" label="Devolver" (click)="devolver(carpeta)"
+                                        [disabled]="carpetasSeleccionadas.length > 0">Devolver
                                     </button>
                                 </td>
                             </tr>
@@ -119,11 +131,13 @@
             </div>
             <div class="col-4" *ngIf="verDevolver">
                 <div class="clear"></div>
-                <app-devolver-hc [devolver]="carpetaSeleccionada" (cancelDevolverEmit)="onCancelDevolver($event)" (carpetaDevueltaEmit)="onCarpeta($event)"></app-devolver-hc>
+                <app-devolver-hc [devolver]="carpetaSeleccionada" (cancelDevolverEmit)="onCancelDevolver($event)"
+                    (carpetaDevueltaEmit)="onCarpeta($event)"></app-devolver-hc>
             </div>
         </div>
     </section>
     <footer *ngIf="carpetasSeleccionadas.length > 0">
-        <button type="primary" class="btn btn-primary" label="Devolver Carpetas" (click)="devolverCarpetas()">Devolver Carpetas</button>
+        <button type="primary" class="btn btn-primary" label="Devolver Carpetas" (click)="devolverCarpetas()">Devolver
+            Carpetas</button>
     </footer>
 </form>

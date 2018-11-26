@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output, Input, OnInit, OnChanges } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 
@@ -114,7 +114,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
                     items: []
                 });
             });
-        };
+        }
 
         this.agendasTable.forEach(agenda => {
             let start_time = moment(agenda.horaInicio);
@@ -155,7 +155,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
 
         });
         this.matrix = matrix;
-    };
+    }
 
     iterarLibres(start, end) {
         let items = [];

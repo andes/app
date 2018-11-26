@@ -1,10 +1,13 @@
-@import 'node_modules/@andes/plex/src/lib/css/variables';
+$adi-font-path: '~@andes/icons/fonts/';
+@import '~@andes/icons/scss/andes-icons';
+@import '~@andes/plex/src/lib/css/variables';
+
 // Variables
 $problema: #f1930d; // deprecated
 $trastorno: #ff4a1a;
 $hallazgo: #f4a03b;
 $procedimiento: #92278e;
-$plan: #0070cc;
+$solicitud: #0070cc;
 // $productos: #ef0993;
 $producto: #00bcb4;
 $adjunto: #b9c512;
@@ -13,9 +16,11 @@ $otro: #b9c512;
 $invert: #002738;
 $calificador: #660520;
 $laboratorio: #a0a0a0;
+$registro: #8bc43f; // elemento de registro
 // definimos esta lista para poder acceder mediante la funcion map-get() ya que en sass no se puede hacer 
 // la interpolacion del string a una variable directamente
-$rup_colors: ( problema: $problema, calificador: $calificador, laboratorio: $laboratorio, trastorno: $trastorno, situación: $problema, hallazgo: $hallazgo, procedimiento: $procedimiento, regimen: $procedimiento, entidad: $procedimiento, plan: $plan, producto: $producto, adjunto: $adjunto, elementoderegistro: $adjunto, invert: $invert, todos: $todos, otro: $otro);
+$rup_colors: (problema: $problema, calificador: $calificador, laboratorio: $laboratorio, trastorno: $trastorno, situación: $problema, hallazgo: $hallazgo, procedimiento: $procedimiento, regimen: $procedimiento, entidad: $procedimiento, solicitud: $solicitud, producto: $producto, adjunto: $adjunto, elementoderegistro: $registro, invert: $invert, todos: $todos, otro: $otro);
+
 //TODO: hay que unificar los badges de distintas pantallas: tamaño, colores, bordes, espacios...    
 .badge-validada,
 .badge-success,

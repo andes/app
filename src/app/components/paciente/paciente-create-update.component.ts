@@ -72,9 +72,9 @@ import {
 })
 export class PacienteCreateUpdateComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
-    @Input('seleccion') seleccion: IPaciente;
-    @Input('isScan') isScan: IPaciente;
-    @Input('escaneado') escaneado: Boolean;
+    @Input() seleccion: IPaciente;
+    @Input() isScan: IPaciente;
+    @Input() escaneado: Boolean;
     @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
     foto = '';
@@ -89,7 +89,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     posiblesRelaciones: any[] = [];
 
     provincias: IProvincia[] = [];
-    obrasSociales: IFinanciador[] = [];
+    // obrasSociales: IFinanciador[] = [];
     pacientesSimilares = [];
     barriosNeuquen: any[];
     localidadesNeuquen: any[] = [];
@@ -177,6 +177,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
         notaError: ''
     };
 
+    public nombrePattern: string;
+
     // PARA LA APP MOBILE
     public showMobile = false;
     public checkPass = false;
@@ -195,13 +197,15 @@ export class PacienteCreateUpdateComponent implements OnInit {
         private parentescoService: ParentescoService,
         private ansesService: AnsesService,
         public appMobile: AppMobileService,
-        private financiadorService: FinanciadorService, public plex: Plex) { }
+        private financiadorService: FinanciadorService, public plex: Plex) {
+        this.nombrePattern = pacienteService.nombreRegEx.source;
+    }
 
     ngOnInit() {
         // Se cargan los combos
-        this.financiadorService.get().subscribe(resultado => {
-            this.obrasSociales = resultado;
-        });
+        // this.financiadorService.get().subscribe(resultado => {
+        //     this.obrasSociales = resultado;
+        // });
 
         this.relacionesBorradas = [];
 
@@ -471,7 +475,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
     verificarContactosRepetidos() {
         let valores = [];
-        // console.log(this.pacienteModel.contacto);
         for (let elem of this.pacienteModel.contacto) {
             const item = valores.find(s => s === elem.valor);
             if (item) {
@@ -497,13 +500,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
                 return elem;
             });
-
-            if (pacienteGuardar.financiador) {
-                pacienteGuardar.financiador.map((elem: any) => {
-                    delete elem.entidad.$order;
-                    return elem;
-                });
-            }
 
             // Luego aquí habría que validar pacientes de otras prov. y paises (Por ahora solo NQN)
             pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
@@ -731,7 +727,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     if (!resultado) {
                         this.save(valid);
                         this.disableGuardar = true;
-                    };
+                    }
                 });
             } else {
                 this.save(valid);
@@ -756,28 +752,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
     removeContacto(i) {
         if (i >= 0) {
             this.pacienteModel.contacto.splice(i, 1);
-        }
-    }
-
-    addFinanciador() {
-        let nuevoFinanciador = {
-            entidad: null,
-            codigo: '',
-            activo: true,
-            fechaAlta: null,
-            fechaBaja: null,
-            ranking: this.pacienteModel.financiador ? this.pacienteModel.financiador.length : 0
-        };
-        if (this.pacienteModel.financiador) {
-            this.pacienteModel.financiador.push(nuevoFinanciador);
-        } else {
-            this.pacienteModel.financiador = [nuevoFinanciador];
-        }
-    }
-
-    removeFinanciador(i) {
-        if (i >= 0) {
-            this.pacienteModel.financiador.splice(i, 1);
         }
     }
 

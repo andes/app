@@ -61,7 +61,6 @@ export class PanelEspacioComponent implements OnInit {
             },
             err => {
                 if (err) {
-                    console.log(err);
                 }
             });
     }
@@ -92,7 +91,7 @@ export class PanelEspacioComponent implements OnInit {
                         bandera = true;
                         break;
                     }
-                };
+                }
                 if (bandera) {
                     let elto = {
                         agenda: this.agenda,
@@ -245,12 +244,11 @@ export class PanelEspacioComponent implements OnInit {
                 band = true;
             }, err => {
                 if (err) {
-                    console.log(err);
                 }
             });
         }
         if (band) {
-            this.plex.alert('Los cambios se guardaron correctamente');
+            this.plex.info('success', 'Los cambios se guardaron correctamente');
         }
     }
 }

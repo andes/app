@@ -5,7 +5,7 @@
                 <header>
                     <div class="row">
                         <div class="col-6">LISTADO DE SOLICITUDES DE CARPETAS DE PACIENTES</div>
-                        <div class="col-6 text-right">{{solicitudes[0].fecha | date: 'dd/MM/yyyy'}}</div>
+                        <div class="col-6 text-right">{{solicitudes[0].fecha | fecha}}</div>
                     </div>
                 </header>
                 <table *ngFor="let solicitud of solicitudes">

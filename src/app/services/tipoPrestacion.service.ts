@@ -1,8 +1,8 @@
-import { ITipoPrestacion } from './../interfaces/ITipoPrestacion';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import { environment } from '../../environments/environment';
 import { Server } from '@andes/shared';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { environment } from '../../environments/environment';
+import { ITipoPrestacion } from './../interfaces/ITipoPrestacion';
 
 @Injectable()
 export class TipoPrestacionService {

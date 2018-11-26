@@ -1,5 +1,5 @@
 import { PacienteService } from './../../../../services/paciente.service';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
 import { Component, Input, EventEmitter, Output, OnInit, HostBinding, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
@@ -237,7 +237,7 @@ export class AgregarSobreturnoComponent implements OnInit {
                 mpi.subscribe(resultado => {
 
                     if (resultado) {
-                        this.plex.alert('Se actualizó el numero de telefono');
+                        this.plex.info('success', 'Se actualizó el numero de telefono');
                     }
                 });
             }
@@ -262,7 +262,7 @@ export class AgregarSobreturnoComponent implements OnInit {
                 this.volverRevision.emit(true);
             });
         } else {
-            this.plex.alert('Debe completar los datos requeridos');
+            this.plex.info('warning', 'Debe completar los datos requeridos');
         }
     }
 
