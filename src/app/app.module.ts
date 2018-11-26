@@ -481,6 +481,7 @@ import { FormTerapeuticoDetallePageComponent } from './components/formularioTera
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
 import { UploadFileComponent } from './shared/components/upload-file.component';
 import { BebeCruComponent } from './core/mpi/components/bebe-cru.component';
+import { NotaComponent } from './core/mpi/components/notas-paciente.component';
 
 
 registerLocaleData(localeEs, 'es');
@@ -598,6 +599,7 @@ registerLocaleData(localeEs, 'es');
         PacientePanelComponent,
         PacientePanelComponent,
         BebeCruComponent,
+        NotaComponent,
 
         // form Terapeutico
         FormTerapeuticoComponent,
