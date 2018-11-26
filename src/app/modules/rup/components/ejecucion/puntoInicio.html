@@ -16,7 +16,7 @@
 
                     <!-- Filtros -->
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-3">
                             <plex-datetime type="date" [(ngModel)]="fecha" (change)="actualizar()" name="horaInicio"
                                 label="Fecha" [required]="true" skipBy="day">
                             </plex-datetime>
@@ -24,7 +24,7 @@
                         <div class="col-3">
                             <plex-text [(ngModel)]="paciente" (change)="filtrar()" [required]="true" label="Buscar paciente"></plex-text>
                         </div>
-                        <div class="col">
+                        <div class="col-6">
                             <plex-select [(ngModel)]="prestacionSeleccion" [required]="true" name="nombrePrestacion"
                                 label="Filtrar por prestación" [data]="tiposPrestacion" labelField="term" (change)="filtrar()">
                             </plex-select>
@@ -129,9 +129,10 @@
                     <div class=" row ">
                         <div class="col-12 ">
                             <ng-container>
-                                {{ agendaSeleccionada.horaInicio | date: 'EEE' }} {{ agendaSeleccionada.horaInicio |
-                                date: 'dd/MM/yyyy'}}, {{ agendaSeleccionada.horaInicio
-                                | date: 'HH:mm'}} a {{ agendaSeleccionada.horaFin | date: 'HH:mm'}} hs
+                                {{ agendaSeleccionada.horaInicio | date: 'EEE' }} 
+                                {{ agendaSeleccionada.horaInicio | fecha}}, 
+                                {{ agendaSeleccionada.horaInicio | date: 'HH:mm'}} a 
+                                {{ agendaSeleccionada.horaFin | date: 'HH:mm'}} hs
                                 <span class="badge-info " *ngIf="agendaSeleccionada.dinamica ">Dinámica</span>
                                 <div *ngFor="let tipoPrestacion of agendaSeleccionada.tipoPrestaciones ">{{tipoPrestacion.nombre}}</div>
 
@@ -466,6 +467,8 @@
     </div>
 </footer>
 <!-- Búsqueda de pacientes -->
+
 <!-- <pacientesSearch *ngIf="buscandoPaciente" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()"
     [mostrarCancelar]="true" [modoCompleto]="true" [bloquearCreate]="true"></pacientesSearch> -->
 <!-- <dinamica *ngIf="buscandoPaciente" [prestaciones]="agendaSeleccionada.bloques[0].tipoPrestaciones"></dinamica> -->
+

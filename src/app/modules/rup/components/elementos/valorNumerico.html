@@ -1,0 +1,19 @@
+<form #form="ngForm">
+    <div class="row flex-column">
+        <div class="col-12">
+            <div *ngIf="params?.title; else showTerm">
+                <label class="text-capitalize">{{ params.title }}</label>
+            </div>
+            <ng-template #showTerm>
+                <label class="text-capitalize">{{ registro.concepto.term }}</label>
+            </ng-template>
+            <ng-container *ngIf="!soloValores; else showSoloValores">
+                <plex-int name="intValue" *ngIf="params.numericType === 'integer'" [(ngModel)]="registro.valor" suffix="{{ params.unit ? params.unit : '' }}"></plex-int>
+                <plex-float name="floatValue" *ngIf="params.numericType === 'float'" [(ngModel)]="registro.valor" suffix="{{ params.unit ? params.unit : '' }}"></plex-float>
+            </ng-container>
+            <ng-template #showSoloValores>
+                {{registro.valor}} {{params.unit}}
+            </ng-template>
+        </div>
+    </div>
+</form>
