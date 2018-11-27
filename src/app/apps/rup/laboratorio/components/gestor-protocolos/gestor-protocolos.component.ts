@@ -1,3 +1,4 @@
+// import { AgendaCacheService } from './../../../../../services/turnos/agendaCache.service';
 import { Constantes } from './../../controllers/constants';
 import { Component, OnInit, Input, ViewChild, EventEmitter, Output } from '@angular/core';
 import { ProtocoloDetalleComponent } from '../protocolos/protocolo-detalle.component';
@@ -69,12 +70,15 @@ export class GestorProtocolosComponent
         public plex: Plex,
         public servicioPrestaciones: PrestacionesService,
         public auth: Auth,
+        // public as: AgendaCacheService
     ) { }
 
     ngOnInit() {
         if (!this.protocolo) {
             this.resetearProtocolo({});
         }
+
+        // this.as.getAgenda();
 
         // this.refreshSelection();
     }

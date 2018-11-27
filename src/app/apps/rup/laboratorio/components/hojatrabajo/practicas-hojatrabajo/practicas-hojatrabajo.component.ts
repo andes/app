@@ -12,13 +12,14 @@ export class PracticasHojatrabajoComponent implements OnInit {
     codigo;
     nombrePractica;
     nombreImpresion: String;
-    practica: IPractica;
+    practica: IPractica = {} as IPractica;
     @Input() hojaTrabajo: any;
 
 
     constructor(public plex: Plex, private servicioPractica: PracticaService) { }
 
     ngOnInit() {
+        this.seleccionarPractica({} as IPractica);
     }
 
     /**

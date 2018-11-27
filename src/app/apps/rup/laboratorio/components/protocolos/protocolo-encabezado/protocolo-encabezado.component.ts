@@ -25,11 +25,16 @@ export class ProtocoloEncabezadoComponent implements OnInit {
     @Output() siguienteEmit = new EventEmitter<any>();
     @Output() anteriorEmit = new EventEmitter<any>();
     @Output() edicionDatosCabeceraEmitter = new EventEmitter<any>();
+    @Output() cambiarPacienteEmitter = new EventEmitter<any>();
 
     constructor(
     ) { }
 
     ngOnInit() {
+    }
+
+    cambiarPaciente() {
+        this.cambiarPacienteEmitter.emit();
     }
 
     editarDatosCabecera() {

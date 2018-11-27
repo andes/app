@@ -1,3 +1,3 @@
-<protocolo-encabezado-edicion *ngIf="edicionDatosCabecera" [modo]="modo" [protocolo]="modelo" [seleccionPaciente]="seleccionPaciente"></protocolo-encabezado-edicion>
+<protocolo-encabezado-edicion *ngIf="edicionDatosCabecera" [modo]="modo" [protocolo]="modelo" (cambiarPacienteEmitter)="cambiarPaciente()" [seleccionPaciente]="seleccionPaciente"></protocolo-encabezado-edicion>
 <protocolo-encabezado-vista *ngIf="!edicionDatosCabecera" [modo]="modo" [protocolo]="modelo" [edicionDatosCabecera]="edicionDatosCabecera"
     (siguienteEmit)='siguiente()' (anteriorEmit)='anterior()' (edicionDatosCabeceraEmitter)="editarDatosCabecera()"></protocolo-encabezado-vista>

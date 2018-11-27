@@ -1,4 +1,25 @@
 <section class="labs-listado-item" style="width: 100% !important">
+    <div class="row d-inline">
+        <div class="col-12">
+            <span *ngIf='solicitudProtocolo.solicitudPrestacion.numeroProtocolo' class="badge badge-success" style='float: left; margin-right: 20px; margin-top: 10px;'>
+                <h2>{{solicitudProtocolo.solicitudPrestacion.numeroProtocolo?.numeroCompleto}}</h2>
+            </span>
+            <ng-container>
+                <div class="row">
+
+                    <div class="col">
+                        <h2>{{modelo.paciente.documento}} - {{modelo.paciente.apellido}},
+                            {{modelo.paciente.nombre}}</h2>
+                        F. Nac.: {{modelo.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}, Sexo:
+                        {{modelo.paciente.sexo}}
+                    </div>
+                    <div class="col-2">
+                        <plex-button position="left" type="warning" (click)="cambiarPaciente()">Cambiar Paciente</plex-button>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
     <div class="row">
         <div class="col">
             <div class="listado-contenedor-secundario">

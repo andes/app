@@ -6,42 +6,13 @@
     </div>
 </div>
 
-<ng-container *ngIf="edicionDatosCabecera && !seleccionPaciente">
-    <div class="row d-inline">
-        <div class="col-12">
-            <span *ngIf='solicitudProtocolo.solicitudPrestacion.numeroProtocolo' class="badge badge-success" style='float: left; margin-right: 20px; margin-top: 10px;'>
-                <h2>{{solicitudProtocolo.solicitudPrestacion.numeroProtocolo?.numeroCompleto}}</h2>
-            </span>
-            <ng-container>
-                <div class="row">
+<protocolo-encabezado  *ngIf="!seleccionPaciente && showProtocoloDetalle" [modo]="modo" [protocolo]="modelo" [edicionDatosCabecera]="edicionDatosCabecera" (cambiarPacienteEmitter)="cambiarPaciente()"
+    (edicionDatosCabeceraEmitter)="editarDatosCabecera()" (siguienteEmit)='siguiente()' (anteriorEmit)='anterior()'></protocolo-encabezado>
 
-                    <div class="col">
-                        <h2>{{modelo.paciente.documento}} - {{modelo.paciente.apellido}}, {{modelo.paciente.nombre}}</h2>
-                        F. Nac.: {{modelo.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}, Sexo:
-                        {{modelo.paciente.sexo}}
-                    </div>
-                    <div class="col-2">
-                        <plex-button position="left" type="warning" (click)="cambiarPaciente()">Cambiar Paciente</plex-button>
-                    </div>
-                </div>
-            </ng-container>
-        </div>
-    </div>
-</ng-container>
-
-<!--FIN SECCION PACIENTE-->
-
-<!-- SECCION PROTOCOLO -->
-<ng-container *ngIf="showProtocoloDetalle && !seleccionPaciente">
-    <!-- ENCABEZADO DE PROTOCOLO -->
-    <protocolo-encabezado [modo]="modo" [protocolo]="modelo" [edicionDatosCabecera]="edicionDatosCabecera" (edicionDatosCabeceraEmitter)="editarDatosCabecera()"
-        (siguienteEmit)='siguiente()' (anteriorEmit)='anterior()' ></protocolo-encabezado>
-    <!-- FIN ENCABEZADO DE PROTOCOLO -->
-</ng-container>
 <ng-container *ngIf='mostrarCuerpoProtocolo'>
     <plex-tabs>
         <plex-tab label="Análisis">
-
+            
             <div class="row">
                 <div class="col">
                     <tabla-datalle-protocolo [modo]="modo" [modelo]="modelo" [solicitudProtocolo]="solicitudProtocolo"

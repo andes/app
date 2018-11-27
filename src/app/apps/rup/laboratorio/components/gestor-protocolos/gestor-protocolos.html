@@ -1,36 +1,38 @@
 <plex-layout main="{{showProtocoloDetalle ? ( ocultarPanelLateral ? 0 : 2)  : 12}}">
     <plex-layout-main *ngIf='!ocultarPanelLateral && modo !== "puntoInicio" '>
-    <!-- <plex-layout-main> -->
+        <!-- <plex-layout-main> -->
         <!-- ENCABEZADO -->
         <header>
-            <div class="clearfix">
+            <div class="clearfix" *ngIf="!showProtocoloDetalle">
                 <div class="page-title float-left">
-                    <ng-container *ngIf="!showProtocoloDetalle">
+                    <ng-container>
                         Laboratorio |
                         <ng-container *ngIf="modo === 'puntoInicio' || modo === 'recepcion'">Recepcionar Paciente</ng-container>
                         <ng-container *ngIf="modo === 'control'">Auditoría de Protocolos</ng-container>
                         <ng-container *ngIf="modo === 'carga'">Carga de Resultados</ng-container>
                         <ng-container *ngIf="modo === 'validacion'">Validación de Resultados</ng-container>
                     </ng-container>
-                    <ng-container *ngIf="showProtocoloDetalle">
+                    <!-- <ng-container *ngIf="showProtocoloDetalle">
                         Listado
-                    </ng-container>
+                    </ng-container> -->
                 </div>
-                <plex-tabs [activeIndex]="accionIndex" class='float-right' (change)="cambio($event)" *ngIf="!showProtocoloDetalle">
+                <plex-tabs [activeIndex]="accionIndex" class='float-right' (change)="cambio($event)">
                     <plex-tab label="Recepción"></plex-tab>
                     <plex-tab label="Auditoria"></plex-tab>
                     <plex-tab label="Carga"></plex-tab>
                     <plex-tab label="Validación"></plex-tab>
                 </plex-tabs>
             </div>
+            <div class="clearfix" *ngIf="showProtocoloDetalle">
+                <div class="page-title float-left">
+                    Listado
+                </div>
+            </div>
 
         </header>
         <!-- FIN ENCABEZADO -->
 
         <filtros-busqueda-protocolo *ngIf="!showProtocoloDetalle" [modo]="modo" (buscarProtocolosEmmiter)="refreshSelection($event)"></filtros-busqueda-protocolo>
-
-        <br *ngIf="!showProtocoloDetalle">
-        <hr *ngIf="!showProtocoloDetalle">
 
         <!--VISUALIZACIÓN DE PROTOCOLOS CONTROL -->
         <div *ngIf="!protocolos?.length" class="alert alert-default">

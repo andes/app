@@ -22,7 +22,52 @@ export class GrillaHojatrabajoComponent implements OnInit {
     }
     grilla = [];
     protocolos: any[];
-    practicasHT: IPracticasHojaTrabajo[] = []
+    practicasHT: IPracticasHojaTrabajo[] = [{
+        practica: {
+            id: null,
+            nombre: "Cortisol Libre, Urinaria (CLU)",
+            codigo: "1212",
+            concepto: {
+                id: null,
+                fsn: "leucocitos en orina (hallazgo)", term: "leucocitos en orina", conceptId: "14089001", semanticTag: "hallazgo"
+            }
+        },
+        // {
+        //     concepto: { fsn: "leucocitos en orina (hallazgo)", term: "leucocitos en orina", conceptId: "275741008", semanticTag: "hallazgo" },
+        //     nombre: "Cortisol Libre, Urinaria (CLU)",
+        // },
+        nombre: "cortisol"
+    }, {
+        practica: {
+            id: null,
+            nombre: "Cortisol Libre, Urinaria (CLU)",
+            codigo: "1212",
+            concepto: {
+                id: null,
+                fsn: "leucocitos en orina (hallazgo)", term: "leucocitos en orina", conceptId: "104107006XXX    ", semanticTag: "hallazgo"
+            }
+        },
+        // {
+        //     concepto: { fsn: "leucocitos en orina (hallazgo)", term: "leucocitos en orina", conceptId: "275741008", semanticTag: "hallazgo" },
+        //     nombre: "Cortisol Libre, Urinaria (CLU)",
+        // },
+        nombre: "cortisol"
+    }, {
+        practica: {
+            id: null,
+            nombre: "Cortisol Libre, Urinaria (CLU)",
+            codigo: "1212",
+            concepto: {
+                id: null,
+                fsn: "leucocitos en orina (hallazgo)", term: "leucocitos en orina", conceptId: "54706004", semanticTag: "hallazgo"
+            }
+        },
+        // {
+        //     concepto: { fsn: "leucocitos en orina (hallazgo)", term: "leucocitos en orina", conceptId: "275741008", semanticTag: "hallazgo" },
+        //     nombre: "Cortisol Libre, Urinaria (CLU)",
+        // },
+        nombre: "cortisol"
+    }]
 
     buscarProtocolos() {
         let params = {
