@@ -7,9 +7,9 @@ import { IPracticasHojaTrabajo } from '../../../interfaces/practica/hojaTrabajo/
 
 @Component({
     selector: 'grilla-hojatrabajo',
-    templateUrl: './grilla-hojatrabajo.html',   
+    templateUrl: './grilla-hojatrabajo.html',
     styleUrls: ['../../../assets/grilla-hojatrabajo.css'],
-}) 
+})
 export class GrillaHojatrabajoComponent implements OnInit {
     @Input() hojaTrabajo: IHojaTrabajo;
     constructor(
@@ -22,6 +22,7 @@ export class GrillaHojatrabajoComponent implements OnInit {
     }
     grilla = [];
     protocolos: any[];
+<<<<<<< HEAD
     practicasHT: IPracticasHojaTrabajo[] = [{
         practica: {
             id: null,
@@ -68,12 +69,15 @@ export class GrillaHojatrabajoComponent implements OnInit {
         // },
         nombre: "cortisol"
     }]
+=======
+    practicasHT: IPracticasHojaTrabajo[] = [];
+>>>>>>> 3ab49491977829e9df440fcb9061631fe3afeca3
 
     buscarProtocolos() {
         let params = {
             tipoPrestacionSolicititud: '15220000',
             estado: []
-        }
+        };
 
         this.servicioPrestaciones.get(params).subscribe(protocolos => {
             console.log(protocolos);
@@ -99,18 +103,18 @@ export class GrillaHojatrabajoComponent implements OnInit {
                     }
                 }
             }
-        }
+        };
 
         this.protocolos.forEach((protocolo) => {
             let entrada = {
                 numeroProtocolo: protocolo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo ? protocolo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo.numeroCompleto : 'XXXX',
                 resultados: []
-            }
+            };
 
             this.practicasHT.forEach((practicaHT: any) => {
                 entrada.resultados.push(cargarPracticas(protocolo.ejecucion.registros, practicaHT.practica.concepto.conceptId));
             });
-            this.grilla.push(entrada)
+            this.grilla.push(entrada);
         });
     }
 }

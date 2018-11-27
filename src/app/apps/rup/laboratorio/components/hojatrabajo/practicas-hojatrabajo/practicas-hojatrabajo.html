@@ -1,41 +1,58 @@
-<div class="row">
-    <div class="col-3">
-        <plex-text [(ngModel)]="codigo" label="Cod. de Practica" name="codigoPractica" (keydown.enter)="getPracticaPorCodigo()"
-            (blur)="getPracticaPorCodigo()" placeholder="Escriba el código"></plex-text>
-    </div>
-    <div class="col">
-        <plex-select [(ngModel)]="practica" label="Nombre de Practica" name="nombrePractica" (getData)="getPracticasPorNombre($event);"
-            (change)="seleccionarPractica($event.value)" placeholder="Ingrese el nombre de la práctica" labelField="codigo + ' - ' + nombre" >
-        </plex-select>
-    </div>
-</div>
-<div class="row">
-    <div class="col-5">
-        <plex-text [(ngModel)]='nombreImpresion' label="Nombre a Imprimir" name="nombreImprimir"  placeholder='Escriba el texto a imprimir'></plex-text>
-    </div>
-    <div class="col">
-        <br><br>
-        <plex-button label="Agregar a lista" type="info btn-sm" (click)="agregarPractica()"></plex-button>
-    </div>
-</div>
+<form #cargaPracticasHT="ngForm">
+    <fieldset>
+        <div class="row">
+            <div class="col-3">
+                <!-- La primera vez que se introduce un codigo no funciona,
+                    pero luego funciona si primemo buscamos en el select y las veces sucesivas usando el codigo-->
+                <plex-text [(ngModel)]="codigo" label="Codigo de Practica" name="codigoPractica" (keydown.enter)="getPracticaPorCodigo()"
+                (focusout)="getPracticaPorCodigo()" placeholder="Escriba el código" [required]="!(codigo || practica)"></plex-text>
+            </div>
+            <div class="col">
+                <plex-select [(ngModel)]="practica" label="Nombre de Practica" name="nombrePractica" (getData)="getPracticasPorNombre($event);"
+                    (change)="seleccionarPractica($event.value)" placeholder="Ingrese el nombre de la práctica"
+                    labelField="codigo + ' - ' + nombre" [required]="!(codigo || practica)">
+                </plex-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                <plex-text [(ngModel)]='nombreImpresion' label="Nombre a Imprimir" name="nombreImprimir" placeholder='Escriba el texto a imprimir'
+                    [required]="!nombreImpresion"></plex-text>
+            </div>
+            <div class="col">
+                <br><br>
+                <plex-button label="Agregar a lista" type="info btn-sm" (click)="agregarPractica($event)" [validateForm]="cargaPracticasHT"></plex-button>
+            </div>
+        </div>
+    </fieldset>
+</form>
+
 <br>
 <div class="row">
-    <div class="col">
+    <div class="col" cdkDropList (cdkDropListDropped)="drop($event)">
         <table class="table table-striped table-sm">
             <thead>
-                <th>codigo</th>
-                <th>analisis</th>
-                <th>texto a imprimir</th>
-                <th>borrar</th>
+                <th>&nbsp;</th>
+                <th>Código</th>
+                <th>Práctica</th>
+                <th>Texto a imprimir</th>
+                <th>Borrar</th>
             </thead>
             <tbody>
-                <tr class="hover" *ngFor="let practicaHT of hojaTrabajo.practicas">
+                <tr class="hover" *ngFor="let practicaHT of hojaTrabajo.practicas; index as ix; first as isFirst; last as isLast"
+                    cdkDrag cdkDragLockAxis="y">
+                    <td cdkDragHandle class="n-resize">
+                        <plex-icon name="arrow-up-thick" (click)="clickUp(ix)" *ngIf="!isFirst"></plex-icon>
+                        <plex-icon name="arrow-down-thick" (click)="clickDown(ix)" *ngIf="!isLast"></plex-icon>
+                    </td>
                     <td>{{practicaHT.practica.codigo}}</td>
                     <td>{{practicaHT.practica.nombre}}</td>
                     <td>{{practicaHT.nombre}}</td>
                     <td>
                         <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practicaHT.practica)"></plex-button>
                     </td>
+                    <span *cdkDragPreview>
+                    </span>
                 </tr>
             </tbody>
         </table>

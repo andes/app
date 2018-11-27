@@ -5,6 +5,7 @@
         <div *ngIf="!hojasTrabajo?.length && !loader" class="alert alert-default">
             <i class="mdi mdi-emoticon-sad"></i> No hay resultados que coincidan con los filtros de búsqueda
         </div>
+        <plex-button position="right" *ngIf="!loader" [size]="sm" class="float-right mr-1" type="success" label="+" (click)="agregarHoja()"></plex-button>
         <table *ngIf="hojasTrabajo?.length" class="table table-striped table-hover">
             <thead>
                 <tr>

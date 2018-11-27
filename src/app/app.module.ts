@@ -20,6 +20,7 @@ import { LOCALE_ID } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 // Global
 import { PlexModule } from '@andes/plex';
@@ -524,7 +525,8 @@ registerLocaleData(localeEs, 'es');
         routing,
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
-        })
+        }),
+        DragDropModule
     ],
     declarations: [
         AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,

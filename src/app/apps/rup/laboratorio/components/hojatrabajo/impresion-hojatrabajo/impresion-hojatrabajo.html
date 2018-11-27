@@ -1,54 +1,57 @@
-<div class="row">
-    <div class="col-3">
-        <plex-text [(ngModel)]="hojaTrabajo.nombre" label="Nombre de Hoja de Trabajo" name="nombre" placeholder="Escriba un nombre para la hoja de trabajo"
-            [required]="true"></plex-text>
-    </div>
-    <div class="col"></div>
-
-</div>
-<div class="row">
-    <div class="col">
-        <label> Protocolo</label>
-        <plex-bool [(ngModel)]="hojaTrabajo.protocolo.imprimirPrioridad" type="slide" label="Imprimir Prioridad" name="imprimirPrioridad"></plex-bool>
-        <plex-bool [(ngModel)]="hojaTrabajo.protocolo.imprimirOrigen" type="slide" label="Imprimir Origen" name="imprimirOrigen"></plex-bool>
-        <plex-bool [(ngModel)]="hojaTrabajo.protocolo.imprimirDiagnostico" type="slide" label="Imprimir Diagnostico"
-            name="imprimirDiagnostico"></plex-bool>
-    </div>
-    <div class="col">
-        <label>Paciente</label>
-        <plex-bool [(ngModel)]="hojaTrabajo.paciente.imprimirApellidoNombre" type="slide" label="Imprimir Apellido y Nombre"
-            name="imprimirApellidoNombre"></plex-bool>
-        <plex-bool [(ngModel)]="hojaTrabajo.paciente.imprimirEdad" type="slide" label="Imprimir Edad" name="imprimirEdad"></plex-bool><br>
-        <plex-bool [(ngModel)]="hojaTrabajo.paciente.imprimirSexo" type="slide" label="Imprimir Sexo" name="imprimirSexo"></plex-bool>
-    </div>
-    <div class="col">
-        <label>Papel</label>
-        <plex-radio [(ngModel)]="hojaTrabajo.papel.formato" [data]="opcionesFormato" name="formato" type="horizontal"
-            [required]="true">
-        </plex-radio>
-        <plex-radio [(ngModel)]="hojaTrabajo.papel.orientacion" [data]="opcionesOrientacion" name="orientacion" type="horizontal"
-            [required]="true">
-        </plex-radio>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col">
-        <plex-text [(ngModel)]="hojaTrabajo.papel.anchoColumnasMilimetros" label="Ancho de Columnas en mm" name="anchoColumnasMilimetros"
-            placeholder="Escriba el ancho de las columnas en mm"></plex-text>
-    </div>
-    <div class="col">
-        <plex-text [(ngModel)]="hojaTrabajo.papel.textoInferiorDerecha" label="Texto Inferior Derecha" name="textoInferiorDerecha"
-            placeholder="Escriba el texto que saldra el la parte inferior derecha de la hoja"></plex-text>
-    </div>
-    <div class="col">
-        <plex-text [(ngModel)]="hojaTrabajo.papel.textoInferiorIzquierda" label="Texto Inferior Izquierda" name="textoInferiorIzquierda"
-            placeholder="Escriba el texto que saldra el la parte inferior izquierda de la hoja"></plex-text>
-    </div>
-</div>
-<div class="row">
-    <div class="col-4">
-        <plex-text [(ngModel)]="hojaTrabajo.paciente.cantidadLineaAdicional" label="Cantidad de Lineas Adicionales"
-            name="cantidadLineaAdicional" placeholder="Escriba la cantidad de lineas adicionales"></plex-text>
-    </div>
-</div>
+<form #impresionHT="ngForm">
+    <fieldset>
+        <div class="row">
+            <div class="col-3">
+                <plex-text [(ngModel)]="hojaTrabajo.nombre" label="Nombre de Hoja de Trabajo" name="nombre" placeholder="Escriba un nombre para la hoja de trabajo"
+                    [required]="true"></plex-text>
+            </div>
+            <div class="col"></div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <label> Protocolo</label>
+                <plex-bool [(ngModel)]="hojaTrabajo.protocolo.imprimirPrioridad" type="slide" label="Imprimir Prioridad"
+                    name="imprimirPrioridad"></plex-bool>
+                <plex-bool [(ngModel)]="hojaTrabajo.protocolo.imprimirOrigen" type="slide" label="Imprimir Origen" name="imprimirOrigen"></plex-bool>
+                <plex-bool [(ngModel)]="hojaTrabajo.protocolo.imprimirDiagnostico" type="slide" label="Imprimir Diagnostico"
+                    name="imprimirDiagnostico"></plex-bool>
+            </div>
+            <div class="col">
+                <label>Paciente</label>
+                <plex-bool [(ngModel)]="hojaTrabajo.paciente.imprimirApellidoNombre" type="slide" label="Imprimir Apellido y Nombre"
+                    name="imprimirApellidoNombre"></plex-bool>
+                <plex-bool [(ngModel)]="hojaTrabajo.paciente.imprimirEdad" type="slide" label="Imprimir Edad" name="imprimirEdad"></plex-bool><br>
+                <plex-bool [(ngModel)]="hojaTrabajo.paciente.imprimirSexo" type="slide" label="Imprimir Sexo" name="imprimirSexo"></plex-bool>
+            </div>
+            <div class="col">
+                <label>Papel</label>
+                <plex-radio [(ngModel)]="hojaTrabajo.papel.formato" [data]="opcionesFormato" name="formato" type="horizontal"
+                    [required]="true">
+                </plex-radio>
+                <plex-radio [(ngModel)]="hojaTrabajo.papel.orientacion" [data]="opcionesOrientacion" name="orientacion"
+                    type="horizontal" [required]="true">
+                </plex-radio>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <plex-text [(ngModel)]="hojaTrabajo.papel.anchoColumnasMilimetros" label="Ancho de Columnas en mm" name="anchoColumnasMilimetros"
+                    placeholder="Escriba el ancho de las columnas en mm"></plex-text>
+            </div>
+            <div class="col">
+                <plex-text [(ngModel)]="hojaTrabajo.papel.textoInferiorDerecha" label="Texto Inferior Derecha" name="textoInferiorDerecha"
+                    placeholder="Escriba el texto que saldra el la parte inferior derecha de la hoja"></plex-text>
+            </div>
+            <div class="col">
+                <plex-text [(ngModel)]="hojaTrabajo.papel.textoInferiorIzquierda" label="Texto Inferior Izquierda" name="textoInferiorIzquierda"
+                    placeholder="Escriba el texto que saldra el la parte inferior izquierda de la hoja"></plex-text>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <plex-text [(ngModel)]="hojaTrabajo.paciente.cantidadLineaAdicional" label="Cantidad de Lineas Adicionales"
+                    name="cantidadLineaAdicional" placeholder="Escriba la cantidad de lineas adicionales"></plex-text>
+            </div>
+        </div>
+    </fieldset>
+</form>

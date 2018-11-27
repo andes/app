@@ -44,6 +44,9 @@ export class GestorHojatrabajoComponent implements OnInit {
         this.hojaTrabajo = $event;
     }
 
+    agregarHojaTrabajo() {
+        this.agregarHoja();
+    }
 
     guardarHoja() {
         if (!this.hojaTrabajo.id) {
@@ -66,8 +69,16 @@ export class GestorHojatrabajoComponent implements OnInit {
         this.hojaTrabajo = new IHojaTrabajo();
     }
 
+    vistaPreliminar() {
+        console.log('vista preliminar hoja', new Date);
+    }
+
+    eliminarHoja() {
+        console.log('eliminar hoja', new Date);
+    }
+
     volverLista() {
-        console.log('guardar hoja', new Date);
+        console.log('volverLista', new Date);
     }
 
     cargarHoja() {

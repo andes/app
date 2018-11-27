@@ -3,7 +3,7 @@
         <header>
             Hojas de Trabajo
         </header>
-        <lista-hojatrabajo (hojaTrabajoSelectedEmmiter)="seleccionarHojaTrabajo($event)"></lista-hojatrabajo>
+        <lista-hojatrabajo (hojaTrabajoSelectedEmmiter)="seleccionarHojaTrabajo($event)" (hojaTrabajoAgregarEmmiter)="agregarHojaTrabajo()"></lista-hojatrabajo>
     </plex-layout-main>
 
     <plex-layout-sidebar>
@@ -40,7 +40,8 @@
 
     <plex-layout-footer *ngIf="true">
         <plex-button position="left" type="warning" (click)="volverLista()">Volver</plex-button>
-        <plex-button position="right" class="float-right mr-1" type="success" label="Agregar Hoja" (click)="agregarHoja()"></plex-button>
+        <plex-button position="right" class="float-right mr-1" type="primary" label="Vista Preliminar" (click)="vistaPreliminar()" [disabled]="!hojaTrabajo._id"></plex-button>
+        <plex-button position="right" class="float-right mr-1" type="danger" label="Eliminar Hoja" (click)="eliminarHoja()" [disabled]="!hojaTrabajo._id"></plex-button>
         <plex-button position="right" class="float-right mr-1" type="success" label="Guardar Hoja" (click)="guardarHoja()"></plex-button>
         <plex-button position="right" class="float-right mr-1" type="info" label="Cargar" (click)="cargarHoja()"></plex-button>
     </plex-layout-footer>
