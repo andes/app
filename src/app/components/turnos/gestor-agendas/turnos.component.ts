@@ -185,6 +185,20 @@ export class TurnosComponent implements OnInit {
         return this.turnosSeleccionados.length > 0;
     }
 
+    /**
+     * Devuelve si uno de los turnos seleccionados tiene diagnóstico cargado
+     *
+     * @returns {Boolean}
+     * @memberof TurnosComponent
+     */
+    tienenDiagnostico(): Boolean {
+        for (let x = 0; x < this.turnosSeleccionados.length; x++) {
+            if (this.turnosSeleccionados[x].diagnostico.codificaciones.length > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
     ningunoConEstado(estado) {
         for (let x = 0; x < this.turnosSeleccionados.length; x++) {
             if (this.turnosSeleccionados[x].estado === estado) {
@@ -250,7 +264,7 @@ export class TurnosComponent implements OnInit {
             // Dar asistencia: el turno está con paciente asignado, sin asistencia ==> pasa a estar con paciente asignado, con asistencia
             darAsistencia: puedeRegistrarAsistencia && this.agendaNoCerrada() && this.tienenPacientes() && this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.ningunoConEstado('suspendido')) && this.agendaHoy(),
             // Sacar asistencia: el turno está con paciente asignado, con asistencia ==> pasa a estar "sin asistencia" (mantiene el paciente)
-            sacarAsistencia: puedeRegistrarAsistencia && this.agendaNoCerrada() && this.tienenAsistencia() && this.tienenPacientes(),
+            sacarAsistencia: puedeRegistrarAsistencia && this.agendaNoCerrada() && this.tienenAsistencia() && this.tienenPacientes() && !this.tienenDiagnostico(),
             // Suspender turno: El turno no tiene asistencia ==> el estado pasa a "suspendido"
             suspenderTurno: puedeSuspenderTurno && this.agendaNoCerrada() && this.agendaNoSuspendida() && this.noTienenAsistencia() && this.ningunoConEstado('suspendido') && this.ningunoConEstado('turnoDoble'),
             // Liberar turno: está "asignado" ==> el estado pasa a "disponible" y se elimina el paciente
