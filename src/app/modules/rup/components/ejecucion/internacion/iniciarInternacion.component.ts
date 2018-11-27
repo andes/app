@@ -16,7 +16,7 @@ import { OrganizacionService } from '../../../../../services/organizacion.servic
 import { CamasService } from '../../../services/camas.service';
 import { ProfesionalService } from '../../../../../services/profesional.service';
 import { ObraSocialService } from '../../../../../services/obraSocial.service';
-import { PacienteService } from '../../../../../services/paciente.service';
+import { PacienteService } from '../../../../../core/mpi/services/paciente.service';
 import { IObraSocial } from '../../../../../interfaces/IObraSocial';
 import { InternacionService } from '../../../services/internacion.service';
 

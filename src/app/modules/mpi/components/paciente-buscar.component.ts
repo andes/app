@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
-import { PacienteService } from './../../../services/paciente.service';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import * as moment from 'moment';
 import { DocumentoEscaneado, DocumentoEscaneados } from './../../../components/paciente/documento-escaneado.const';
 import { LogService } from './../../../services/log.service';

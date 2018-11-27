@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
-import { PacienteService } from './../../services/paciente.service';
+import { PacienteService } from '../../core/mpi/services/paciente.service';
 import { RenaperService } from './../../services/fuentesAutenticas/servicioRenaper.service';
 import { SisaService } from './../../services/fuentesAutenticas/servicioSisa.service';
 import { Plex } from '@andes/plex';

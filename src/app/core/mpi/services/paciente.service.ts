@@ -1,11 +1,11 @@
 import { Observable } from 'rxjs/Observable';
-import { PacienteSearch } from './pacienteSearch.interface';
-import { IPaciente } from '../core/mpi/interfaces/IPaciente';
+import { PacienteSearch } from '../../../services/pacienteSearch.interface';
+import { IPaciente } from '../interfaces/IPaciente';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { environment } from '../../environments/environment';
-import { ICarpetaPaciente } from './../interfaces/ICarpetaPaciente';
-import { IPacienteMatch } from '../modules/mpi/interfaces/IPacienteMatch.inteface';
+import { environment } from '../../../../environments/environment';
+import { ICarpetaPaciente } from '../../../interfaces/ICarpetaPaciente';
+import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 
 @Injectable()
 export class PacienteService {

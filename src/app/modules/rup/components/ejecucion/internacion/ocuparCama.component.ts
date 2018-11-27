@@ -14,7 +14,7 @@ import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.int
 import { SnomedService } from '../../../../../services/term/snomed.service';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import { ElementosRUPService } from '../../../services/elementosRUP.service';
-import { PacienteService } from '../../../../../services/paciente.service';
+import { PacienteService } from '../../../../../core/mpi/services/paciente.service';
 import { CamasService } from '../../../services/camas.service';
 
 @Component({

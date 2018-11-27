@@ -1,5 +1,5 @@
 
-import {forkJoin as observableForkJoin } from 'rxjs';
+import { forkJoin as observableForkJoin } from 'rxjs';
 import { estados } from './../../../../utils/enumerados';
 
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
@@ -11,7 +11,7 @@ import { EstadosAgenda } from './../../../../components/turnos/enums';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { PacienteService } from './../../../../services/paciente.service';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { TurnoService } from '../../../../services/turnos/turno.service';

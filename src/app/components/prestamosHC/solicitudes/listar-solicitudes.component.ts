@@ -10,7 +10,7 @@ import * as moment from 'moment';
 
 // Servicios
 import { PrestamosService } from './../../../services/prestamosHC/prestamos-hc.service';
-import { PacienteService } from '../../../services/paciente.service';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { EspacioFisicoService } from '../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from '../../../services/profesional.service';

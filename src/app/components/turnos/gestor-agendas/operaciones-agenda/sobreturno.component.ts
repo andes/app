@@ -1,4 +1,4 @@
-import { PacienteService } from './../../../../services/paciente.service';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { Observable } from 'rxjs/Observable';
 import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
 import { Component, Input, EventEmitter, Output, OnInit, HostBinding, PipeTransform } from '@angular/core';

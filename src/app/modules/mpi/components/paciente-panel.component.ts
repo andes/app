@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { ObraSocialService } from '../../../services/obraSocial.service';
 import { ProfeService } from '../../../services/profe.service';
 import { Subscription } from 'rxjs/Subscription';
-import { PacienteService } from '../../../services/paciente.service';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 
 @Component({
     selector: 'paciente-panel',

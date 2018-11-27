@@ -1,5 +1,5 @@
 import { LogService } from './../../services/log.service';
-import { PacienteService } from './../../services/paciente.service';
+import { PacienteService } from '../../core/mpi/services/paciente.service';
 import { Component, Output, EventEmitter, OnInit, Input } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';

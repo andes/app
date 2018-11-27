@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter, OnInit, HostBinding, Input, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { PacienteService } from './../../services/paciente.service';
+import { PacienteService } from '../../core/mpi/services/paciente.service';
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
 import { IPaciente } from '../../core/mpi/interfaces/IPaciente';

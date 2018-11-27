@@ -59,7 +59,7 @@ import {
 } from './../../services/fuentesAutenticas/servicioAnses.service';
 import {
     PacienteService
-} from './../../services/paciente.service';
+} from '../../core/mpi/services/paciente.service';
 import * as enumerados from './../../utils/enumerados';
 import {
     IPaciente

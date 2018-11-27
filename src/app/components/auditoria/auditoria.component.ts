@@ -11,10 +11,10 @@ import {
   IAudit
 } from '../../interfaces/auditoria/IAudit';
 import {
-} from './../../services/paciente.service';
+} from '../../core/mpi/services/paciente.service';
 import * as moment from 'moment';
 // Services
-import { PacienteService } from './../../services/paciente.service';
+import { PacienteService } from '../../core/mpi/services/paciente.service';
 import { AgendaService } from './../../services/turnos/agenda.service';
 import { AuditoriaService } from '../../services/auditoria/auditoria.service';
 import { SisaService } from '../../services/fuentesAutenticas/servicioSisa.service';
