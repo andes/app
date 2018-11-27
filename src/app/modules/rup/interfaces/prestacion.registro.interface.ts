@@ -22,6 +22,8 @@ export class IPrestacionRegistro {
     esDiagnosticoPrincipal: Boolean;
     // Indica si este registro es valido (no vacio)
     valido: Boolean;
+    // Indica si este registro es obervable
+    observe: Boolean;
 
     solicitud: any;
 
