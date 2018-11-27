@@ -45,8 +45,10 @@
                 <i class="mdi mdi-emoticon-sad"></i> No hay protocolos que coincidan con los filtros de búsqueda
             </div>
 
+            <!-- LISTA DE PROTOCOLOS -->
             <lista-protocolos [protocolos]='protocolos' [modo]='modo' (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)'
                 [showProtocoloDetalle]='showProtocoloDetalle'></lista-protocolos>
+
             <plex-layout-sidebar *ngIf="!showListarProtocolos">
                 <header>
                     <div class="clearfix row">
@@ -64,12 +66,14 @@
                         </div>
                     </div>
                 </header>
+
+                <!-- DETALLE DE PROTOCOLO -->
                 <protocolo-detalle [protocolo]="protocolo" [showProtocoloDetalle]="showProtocoloDetalle"
                     [indexProtocolo]='indexProtocolo' [protocolos]="protocolos" [edicionDatosCabecera]='edicionDatosCabecera'
                     [modo]='modo' [seleccionPaciente]='seleccionPaciente' (volverAListaControEmit)='volverLista()'
                     (mostrarCuerpoProtocoloEmit)='mostrarBotonesGuardarProtocoloFooter($event)'
-                    (mostrarCuerpoProtocolo)='mostrarCuerpoProtocolo' [editarListaPracticas]='editarListaPracticas'
-                    (areas)='areas'></protocolo-detalle>
+                    (mostrarCuerpoProtocolo)='mostrarCuerpoProtocolo' [editarListaPracticas]='editarListaPracticas'></protocolo-detalle>
+
             </plex-layout-sidebar>
 
             <plex-layout-footer *ngIf="!showProtocoloDetalle && modo === 'recepcion'">

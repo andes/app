@@ -1,67 +1,65 @@
 <ng-container *ngIf="protocolos && protocolos.length > 0">
-    <table class="table table-striped table-sm">
-        <thead>
-            <th *ngIf='modo !== "puntoInicio" && modo !== "recepcion"'>Nro.</th>
-            <th>Fecha</th>
-            <ng-container *ngIf="!showProtocoloDetalle">
-                <th>Entrega</th>
-                <th *ngIf='modo !== "puntoInicio"'>DNI</th>
-                <th *ngIf='modo !== "puntoInicio"'>Apellidos y Nombres</th>
-                <th *ngIf='modo !== "puntoInicio"'>F. Nacimiento</th>
-                <th *ngIf='modo !== "puntoInicio"'>Sexo</th>
-                <th>Origen</th>
-                <th>Prioridad</th>
-                <th *ngIf='modo !== "puntoInicio"'>Estado</th>
-                <th></th>
-                <th></th>
-            </ng-container>
-        </thead>
-        <tbody>
-            <tr *ngFor="let protocolo of protocolos; let i=index">
-                <td *ngIf='modo !== "puntoInicio" && modo !== "recepcion"'>{{protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto}}</td>
-                <td>{{protocolo.solicitud.fecha | fecha}}</td>
-                <!-- <plex-button *ngIf='showProtocoloDetalle' icon="arrow-right-drop-circle-outline" class="float-right mr-2" (click)="editarDatosCabecera()"
+    <div class="table-grid table-grid-head {{ modo }}">
+        <span *ngIf='modo !== "puntoInicio" && modo !== "recepcion"'>Nro.</span>
+        <span>Fecha</span>
+        <ng-container *ngIf="!showProtocoloDetalle">
+            <span>Entrega</span>
+            <span *ngIf='modo !== "puntoInicio"'>DNI</span>
+            <span *ngIf='modo !== "puntoInicio"'>Apellidos y Nombres</span>
+            <span *ngIf='modo !== "puntoInicio"'>F. Nacimiento</span>
+            <span *ngIf='modo !== "puntoInicio"'>Sexo</span>
+            <span>Origen</span>
+            <span>Prioridad</span>
+            <span *ngIf='modo !== "puntoInicio"'>Estado</span>
+            <span>Acciones</span>
+        </ng-container>
+    </div>
+
+    <div class="table-grid {{ modo }}" *ngFor="let protocolo of protocolos; let i=index">
+        <span *ngIf='modo !== "puntoInicio" && modo !== "recepcion"'>
+            {{ protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto }}</span>
+        <span>{{ protocolo.solicitud.fecha | fecha }}</span>
+        <!-- <plex-button *ngIf='showProtocoloDetalle' icon="arrow-right-drop-circle-outline" class="float-right mr-2" (click)="editarDatosCabecera()"
                  > -->
-                <!-- </plex-button> -->
-                <ng-container *ngIf="!showProtocoloDetalle">
-                    <td>{{protocolo.ejecucion.fecha | fecha}}</td>
-                    <td *ngIf='modo !== "puntoInicio"'>{{protocolo.paciente.documento}}</td>
-                    <td *ngIf='modo !== "puntoInicio"'>{{protocolo.paciente.apellido}} {{protocolo.paciente.nombre}}</td>
-                    <td *ngIf='modo !== "puntoInicio"'>{{protocolo.paciente.fechaNacimiento | fecha}}</td>
-                    <td *ngIf='modo !== "puntoInicio" && protocolo?.paciente?.sexo ==="femenino"'>F</td>
-                    <td *ngIf='modo !== "puntoInicio" && protocolo?.paciente?.sexo ==="masculino"'>M</td>
-                    <td>{{protocolo.solicitud.ambitoOrigen}}</td>
-                    <td>
-                        <plex-badge *ngIf="protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.prioridad?.nombre === 'Urgencia'"
-                            type="danger" class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
-                        <plex-badge *ngIf="protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.prioridad?.nombre === 'Normal'"
-                            type="success" class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
-                    </td>
-                    <td>
-                        <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'ejecucion'" type="warning"
-                            class="ml-2">{{protocolo.estados[protocolo.estados.length -1].tipo}}</plex-badge>
-                        <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'validada'" type="success"
-                            class="ml-2">{{protocolo.estados[protocolo.estados.length -1].tipo}}</plex-badge>
-                    </td>
-                    <td>
-                        <plex-button type="success" size="sm" (click)="seleccionarProtocolo(protocolo, i)" class="ml-2">
-                            <ng-container *ngIf='modo === "recepcion" || modo === "puntoInicio"'>Recepcionar
-                            </ng-container>
-                            <ng-container *ngIf='modo === "control"'>Auditar
-                            </ng-container>
-                            <ng-container *ngIf='modo === "carga"'>Cargar
-                            </ng-container>
-                            <ng-container *ngIf='modo ==="validacion"'>Validar
-                            </ng-container>
-                            <ng-container *ngIf='modo === "listado"'>Ver Protocolo
-                            </ng-container>
-                        </plex-button>
-                        <plex-button type="success" size="sm" (click)="seleccionarProtocolo(protocolo, i)" class="ml-2">
-                            <i class="mdi mdi-file-document"></i>
-                        </plex-button>
-                    </td>
-                </ng-container>
-            </tr>
-        </tbody>
-    </table>
+        <!-- </plex-button> -->
+        <ng-container *ngIf="!showProtocoloDetalle">
+            <span>{{protocolo.ejecucion.fecha | fecha}}</span>
+            <span *ngIf='modo !== "puntoInicio"'>{{protocolo.paciente.documento}}</span>
+            <span *ngIf='modo !== "puntoInicio"'>{{protocolo.paciente.apellido}} {{protocolo.paciente.nombre}}</span>
+            <span *ngIf='modo !== "puntoInicio"'>{{protocolo.paciente.fechaNacimiento | fecha}}</span>
+            <span *ngIf='modo !== "puntoInicio" && protocolo?.paciente?.sexo ==="femenino"'>F</span>
+            <span *ngIf='modo !== "puntoInicio" && protocolo?.paciente?.sexo ==="masculino"'>M</span>
+            <span>{{protocolo.solicitud.ambitoOrigen}}</span>
+            <span>
+                <plex-badge *ngIf="protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.prioridad?.nombre === 'Urgencia'"
+                    type="danger">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
+                <plex-badge *ngIf="protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.prioridad?.nombre === 'Normal'"
+                    type="success">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
+            </span>
+            <span>
+                <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'ejecucion'" type="warning">{{protocolo.estados[protocolo.estados.length
+                    -1].tipo}}</plex-badge>
+                <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'validada'" type="success">{{protocolo.estados[protocolo.estados.length
+                    -1].tipo}}</plex-badge>
+            </span>
+            <span>
+                <plex-button type="success" size="sm" (click)="seleccionarProtocolo(protocolo, i)">
+                    <ng-container *ngIf='modo === "recepcion" || modo === "puntoInicio"'>Recepcionar
+                    </ng-container>
+                    <ng-container *ngIf='modo === "control"'>Auditar
+                    </ng-container>
+                    <ng-container *ngIf='modo === "carga"'>Cargar
+                    </ng-container>
+                    <ng-container *ngIf='modo ==="validacion"'>Validar
+                    </ng-container>
+                    <ng-container *ngIf='modo === "listado"'>Ver Protocolo
+                    </ng-container>
+                </plex-button>
+                <!-- <plex-button class="ml-1" type="success" size="sm" (click)="seleccionarProtocolo(protocolo, i)">
+                    <i class="mdi mdi-file-document"></i>
+                </plex-button> -->
+            </span>
+        </ng-container>
+    </div>
+
 </ng-container>
