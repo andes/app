@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Observable } from 'rxjs/Observable';
 import { ICama } from '../interfaces/ICama';
-import { IPaciente } from '../../../interfaces/IPaciente';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 
 @Injectable()

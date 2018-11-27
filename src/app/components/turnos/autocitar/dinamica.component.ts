@@ -3,7 +3,7 @@ import { IPrestacion } from './../../../modules/rup/interfaces/prestacion.interf
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
-import { IPaciente } from '../../../interfaces/IPaciente';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { PacienteBuscarResultado } from '../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 import { TurnoService } from '../../../services/turnos/turno.service';

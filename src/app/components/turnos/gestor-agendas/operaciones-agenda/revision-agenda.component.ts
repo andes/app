@@ -9,7 +9,7 @@ import { EstadosAsistencia } from './../../enums';
 import { EstadosAgenda } from './../../enums';
 
 // Interfaces
-import { IPaciente } from './../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 
 // Servicios
 import { PacienteService } from './../../../../services/paciente.service';

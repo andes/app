@@ -2,7 +2,7 @@ import { Router } from '@angular/router';
 import { Component, OnInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { IPaciente } from './../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 
 @Component({
     selector: 'rup-hudsBusquedaPaciente',

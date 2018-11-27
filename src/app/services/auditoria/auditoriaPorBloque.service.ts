@@ -1,8 +1,8 @@
 
-import {throwError as observableThrowError} from 'rxjs';
+import { throwError as observableThrowError } from 'rxjs';
 import { Params } from '@angular/router';
 import { IListaMatcheo } from './../../interfaces/auditoria/IListaMatcheo';
-import { IPaciente } from '../../interfaces/IPaciente';
+import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Headers, Http, RequestOptions, RequestMethod, Response } from '@angular/http';

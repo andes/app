@@ -16,7 +16,7 @@ import * as moment from 'moment';
 import * as calculos from './../../../utils/calculosDashboard';
 import {
     IPaciente
-} from './../../../interfaces/IPaciente';
+} from '../../../core/mpi/interfaces/IPaciente';
 
 // Servicios
 import {

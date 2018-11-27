@@ -1,4 +1,4 @@
-import { IUbicacion } from './IUbicacion';
+import { IUbicacion } from '../../../interfaces/IUbicacion';
 
 export interface IDireccion {
     valor: String;

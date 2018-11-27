@@ -23,7 +23,7 @@ import {
 } from './../../services/financiador.service';
 import {
     IDireccion
-} from './../../interfaces/IDireccion';
+} from '../../core/mpi/interfaces/IDireccion';
 import {
     IBarrio
 } from './../../interfaces/IBarrio';
@@ -63,7 +63,7 @@ import {
 import * as enumerados from './../../utils/enumerados';
 import {
     IPaciente
-} from './../../interfaces/IPaciente';
+} from '../../core/mpi/interfaces/IPaciente';
 import {
     IProvincia
 } from './../../interfaces/IProvincia';

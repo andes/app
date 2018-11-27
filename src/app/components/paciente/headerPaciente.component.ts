@@ -1,6 +1,6 @@
 import { Plex } from '@andes/plex';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
-import { IPaciente } from '../../interfaces/IPaciente';
+import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 import { Auth } from '@andes/auth';
 
 @Component({

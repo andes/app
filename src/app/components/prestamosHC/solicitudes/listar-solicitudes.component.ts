@@ -20,7 +20,7 @@ import { CDAService } from './../../../modules/rup/services/CDA.service';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
 
 // Interfaces
-import { IPaciente } from './../../../interfaces/IPaciente';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { debug } from 'util';
 import { environment } from '../../../../environments/environment';
 

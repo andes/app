@@ -8,7 +8,7 @@ import * as moment from 'moment';
 
 // Interfaces
 import { IProfesional } from './../../../interfaces/IProfesional';
-import { IPaciente } from './../../../interfaces/IPaciente';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 // Services
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';

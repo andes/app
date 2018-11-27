@@ -3,7 +3,7 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { ITurno } from './../../interfaces/turnos/ITurno';
 import { PacienteService } from './../../services/paciente.service';
-import { IPaciente } from '../../interfaces/IPaciente';
+import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 
 @Component({
     selector: 'carpeta-paciente',

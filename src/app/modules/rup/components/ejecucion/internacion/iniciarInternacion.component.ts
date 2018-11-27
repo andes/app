@@ -1,5 +1,5 @@
 import { PrestacionesService } from './../../../services/prestaciones.service';
-import { IPaciente } from './../../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { Observable } from 'rxjs';
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';

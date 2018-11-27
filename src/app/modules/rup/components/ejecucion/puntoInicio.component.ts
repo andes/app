@@ -13,7 +13,7 @@ import { TipoPrestacionService } from './../../../../services/tipoPrestacion.ser
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { PacienteService } from './../../../../services/paciente.service';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
-import { IPaciente } from '../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 
 @Component({

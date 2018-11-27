@@ -4,7 +4,7 @@ import { Auth } from '@andes/auth';
 import * as moment from 'moment';
 
 // Interfaces
-import { IPaciente } from './../../../interfaces/IPaciente';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 // Servicios
 import { TurnoService } from '../../../services/turnos/turno.service';

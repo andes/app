@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IPaciente } from '../../../interfaces/IPaciente';
+import { IPaciente } from '../interfaces/IPaciente';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 import { PacienteBuscarResultado } from '../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 import { Plex } from '@andes/plex';
@@ -9,8 +9,9 @@ import { PaisService } from '../../../services/pais.service';
 import { LocalidadService } from '../../../services/localidad.service';
 import { ProvinciaService } from '../../../services/provincia.service';
 import { IProvincia } from '../../../interfaces/IProvincia';
-import { IDireccion } from '../../../interfaces/IDireccion';
+import { IDireccion } from '../interfaces/IDireccion';
 import { ParentescoService } from '../../../services/parentesco.service';
+import { PacienteSaveService } from '../services/paciente-save.service';
 
 @Component({
     selector: 'apps/mpi/bebe',
@@ -98,8 +99,16 @@ export class BebeCruComponent implements OnInit {
         private paisService: PaisService,
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
-        private parentescoService: ParentescoService
-    ) { }
+        private parentescoService: ParentescoService,
+        private pacienteSave: PacienteSaveService
+    ) {
+        this.plex.updateTitle([{
+            route: '/apps/mpi',
+            name: 'MPI'
+        }, {
+            name: 'REGISTRO DE BEBÉ'
+        }]);
+    }
 
 
     ngOnInit() {
@@ -128,6 +137,7 @@ export class BebeCruComponent implements OnInit {
     onPacienteSelected(paciente: IPaciente) {
         this.relacion.apellido = paciente.apellido;
         this.relacion.nombre = paciente.nombre;
+        this.relacion.documento = paciente.documento;
         this.relacion.fechaNacimiento = paciente.fechaNacimiento;
         this.relacion.fechaNacimiento = paciente.fechaNacimiento;
         this.relacion.sexo = paciente.sexo;
@@ -198,7 +208,16 @@ export class BebeCruComponent implements OnInit {
     }
 
     save(event) {
-        console.log(this.bebeModel);
+        if (this.showBuscador && event.formValid) {
+            this.plex.info('warning', 'Agregue la relación de madre o padre', 'Información Faltante');
+        } else {
+            console.log(this.bebeModel);
+            this.pacienteSave.preSave(this.bebeModel);
+        }
+    }
+
+    cambiarRelacion() {
+        this.showBuscador = true;
     }
 
 

@@ -18,7 +18,7 @@ import {
 import * as moment from 'moment';
 import {
     IPaciente
-} from '../../interfaces/IPaciente';
+} from '../../core/mpi/interfaces/IPaciente';
 import {
     Matching
 } from '@andes/match';

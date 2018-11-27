@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 import { PacienteSearch } from './pacienteSearch.interface';
-import { IPaciente } from './../interfaces/IPaciente';
+import { IPaciente } from '../core/mpi/interfaces/IPaciente';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { environment } from '../../environments/environment';

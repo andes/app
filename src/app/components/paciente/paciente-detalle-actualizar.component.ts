@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IPaciente } from './../../interfaces/IPaciente';
+import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 import { IProvincia } from '../../interfaces/IProvincia';
 import { IFinanciador } from '../../interfaces/IFinanciador';
 import { LocalidadService } from '../../services/localidad.service';
