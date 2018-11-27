@@ -693,7 +693,8 @@ registerLocaleData(localeEs, 'es');
         SugerenciasService,
         ConfiguracionPrestacionService,
         PrestacionLegacyService,
-        SeleccionBinariaComponent
+        SeleccionBinariaComponent,
+        PacienteCreateUpdateComponent
     ]
 })
 
