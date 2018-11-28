@@ -1,7 +1,8 @@
+import { ProtocoloService } from './../../../services/protocolo.service';
 import { IPractica } from '../../../interfaces/practica/IPractica';
 import { IPracticaBuscarResultado } from '../../../interfaces/practica/IPracticaBuscarResultado.inteface';
 import { PracticaService } from '../../../services/practica.service';
-import { Input, Component, OnInit} from '@angular/core';
+import { Input, Component, OnInit } from '@angular/core';
 
 import { Plex } from '@andes/plex';
 import { Constantes } from '../../../controllers/constants';
@@ -20,28 +21,143 @@ export class TablaDatalleProtocolo implements OnInit {
     @Input() modo: any;
     @Input() modelo: any;
     @Input() solicitudProtocolo: any;
-    @Input() practicasCarga: any;
-    @Input() practicasEjecucion: any;
+    
+    practicasCarga = [];
+    practicasVista = [];
+    
+    practicasEjecucion = [];    
+    @Input('practicasEjecucion')
+    set pjs(practicasEjecucion) {
+        this.practicasEjecucion = practicasEjecucion;
+        // if (this.modo === 'validacion' || this.modo === 'carga') {
+            this.cargarListaPracticaCarga();
+            if (this.modo === 'validacion') {
+                this.cargarResultadosAnteriores();
+            }
+        // }
+    }
+
+
+
     @Input() areas: any;
     @Input() editarListaPracticas;
     practicas;
     practicaSeleccionada = null;
 
-    // @Input('practicasCarga')
-    // set setPracticasEjecucion(value: any) {
-
-    //     this.practicasEjecucion = value;
-    //     // if (this.modo.id === 'validacion' || this.modo.id === 'carga') {
-    //     //     this.cargarListaPracticaCarga();
-    //     //     if (this.modo.id === 'validacion') {
-    //     //         this.cargarResultadosAnteriores();
-    //     //     }
-    //     // }
-    // }
     constructor(
         private servicioPractica: PracticaService,
+        private servicioProtocolo: ProtocoloService,
         public plex: Plex
     ) { }
+
+    /**
+     *
+     *
+     * @memberof ProtocoloDetalleComponent
+     */
+    async cargarListaPracticaCarga() {
+        this.practicasCarga = [];
+        let cargarPracticas = (registos, nivelTab) => {
+            return new Promise((resolve) => {
+                if (registos.length > 0) {
+                    let ids = [];
+                    registos.forEach((reg1) => { ids.push(reg1._id); });
+                    this.servicioPractica.findByIds(ids).subscribe(async (practicas) => {
+                        for (const reg2 of registos) {
+                            let match: any = practicas.filter((practica: any) => {
+                                return practica._id === reg2._id;
+                            })[0];
+
+                            let margen = [];
+                            for (let i = 0; i < nivelTab; i++) {
+                                margen.push({});
+                            }
+console.log(this.areas)
+                            if ((this.areas.length === 0) || this.areas.some(id => id === match.area.id)) {
+                                this.practicasCarga.push({
+                                    registro: reg2,
+                                    practica: match,
+                                    margen: margen
+                                });
+                            }
+                            await cargarPracticas(reg2.registros, nivelTab + 1);
+                        }
+                        resolve();
+                    });
+                } else {
+                    resolve();
+                }
+            });
+        };
+        await cargarPracticas(this.practicasEjecucion, 0);
+    }
+
+
+    /**
+     * Setea al resultado de cada práctica un array con la lista de resultados anteriores registrados para el paciente de la práctica
+     *
+     * @memberof ProtocoloDetalleComponent
+     */
+    cargarResultadosAnteriores() {
+        this.practicasEjecucion.forEach((practica) => {
+            this.servicioProtocolo.getResultadosAnteriores(this.modelo.paciente.id, practica.concepto.conceptId).subscribe(resultadosAnteriores => {
+                practica.resultado.resultadosAnteriores = resultadosAnteriores;
+            });
+        });
+    }
+
+    /**
+     *
+     *
+     * @memberof ProtocoloDetalleComponent
+     */
+    async cargarConfiguracionesResultado() {
+        let ids = [];
+        this.practicasCarga.map((reg) => { ids.push(reg.practica.id); });
+        await this.servicioPractica.findByIds(ids).subscribe(
+            (resultados) => {
+                this.practicasCarga.map((reg) => {
+                    for (let resultado of resultados) {
+                        let practica: any = resultado;
+
+                        if (resultado.id === reg.practica._id) {
+                            reg.formatoResultado = practica.resultado.formato;
+                            reg.formatoResultado.unidadMedida = practica.unidadMedida;
+                            reg.formatoResultado.valoresReferencia = practica.presentaciones[0].valoresReferencia[0];
+                            reg.valoresCriticos = practica.valoresCriticos;
+                            break;
+                        }
+                    }
+                });
+            });
+    }
+
+    /**
+ *
+ *
+ * @memberof ProtocoloDetalleComponent
+ */
+    validarResultados() {
+        this.practicasCarga.forEach((objetoPractica) => {
+            let resultado = objetoPractica.practica.valor.resultado;
+            let alertasValReferencia = [];
+            let alertasValCriticos = [];
+            if (resultado && !objetoPractica.esCompuesta) {
+                let valoresReferencia = objetoPractica.formatoResultado.valoresReferencia;
+                if (objetoPractica.valoresCriticos.minimo > resultado.valor || objetoPractica.valoresCriticos < resultado.valor) {
+                    alertasValCriticos.push({
+                        nombre: objetoPractica.practica.nombre,
+                        resultado: resultado
+                    });
+                } else if (valoresReferencia.valorMinimo > resultado.valor || valoresReferencia.valorMaximo < resultado.valor) {
+                    alertasValCriticos.push({
+                        nombre: objetoPractica.practica.nombre,
+                        resultado: resultado
+                    });
+                }
+            }
+        });
+    }
 
     /**
      * Retorna true si el último estado registrado es de validada, false si no.
@@ -165,7 +281,7 @@ export class TablaDatalleProtocolo implements OnInit {
      * @param {any} objetoPractica
      * @returns
      * @memberof TablaDatalleProtocolo
-     */ 
+     */
     esValorCritico(objetoPractica) {
         // let resultado = objetoPractica.practica.valor.resultado;
         // if (resultado && !objetoPractica.esCompuesta) {

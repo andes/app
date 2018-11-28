@@ -5,7 +5,7 @@
     </div>
     <div class="col-2" *ngIf='modo !== "recepcion"'>
         <plex-select [(ngModel)]="this.busqueda.area " (change)="buscarProtocolos($event,'area')" name="area" label="Area"
-            [data]='laboratorioInternoEnum'></plex-select>
+            [data]='areas'></plex-select>
     </div>
     <div class="col-2">
         <plex-select [(ngModel)]="prioridad" (change)="buscarProtocolos($event,'prioridad')" name="prioridad" label="Prioridad"

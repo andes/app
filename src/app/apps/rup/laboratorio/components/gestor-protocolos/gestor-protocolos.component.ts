@@ -3,6 +3,7 @@ import { Constantes } from './../../controllers/constants';
 import { Component, OnInit, Input, ViewChild, EventEmitter, Output } from '@angular/core';
 import { ProtocoloDetalleComponent } from '../protocolos/protocolo-detalle.component';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
+
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 
@@ -26,9 +27,8 @@ export class GestorProtocolosComponent
     public mostrarCuerpoProtocolo: Boolean = true;
     public ocultarPanelLateral: Boolean = false;
     public editarListaPracticas: Boolean = false;
+    public areas = [];
 
-    // public protocolos: IPrestacion[];
-    // public protocolo: IPrestacion;
     public protocolos: any[];
     public protocolo: any;
 
@@ -143,6 +143,7 @@ export class GestorProtocolosComponent
     refreshSelection($event?) {
         if ($event) {
             this.busqueda = $event;
+            this.areas = $event.area ? [$event.area] : [];
         }
 
         this.getProtocolos(this.busqueda);
@@ -277,7 +278,7 @@ export class GestorProtocolosComponent
     //     if (ls.profesional === this.auth.profesional._id) {
     //         this.busqueda = ls.busqueda;
     //         // this.origen.id = ls.busqueda.origen;
-    //         // this.area.id = ls.busqueda.area;
+    //         // this.area.id = ls.busqueda.;
     //         // this.prioridad.id = ls.busqueda.prioridad;
     //         console.log('local storage', this.busqueda);
     //         // this.busqueda.solicitudDesde = new Date(ls.busqueda.solicitudDesde);
