@@ -314,13 +314,13 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     compararBloques(fecha1, fecha2): number {
-        let indiceAux: Number;
+        // let indiceAux: Number;
         if (fecha1.horaInicio && fecha2.horaInicio) {
-            if (fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime() > 0) {
-                indiceAux = fecha1.indice;
-                fecha1.indice = fecha2.indice;
-                fecha2.indice = indiceAux;
-            }
+            // /* if (fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime() > 0) {
+            //     indiceAux = fecha1.indice;
+            //     fecha1.indice = fecha2.indice;
+            //     fecha2.indice = indiceAux;
+            // } */
             return fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime();
         } else {
             return 0;
@@ -387,31 +387,38 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     cambioHoraBloques(texto: String) {
-        this.fecha = new Date(this.modelo.fecha);
-        if (this.elementoActivo.horaInicio) {
-            this.aproximar(this.elementoActivo.horaInicio);
-        }
-        if (this.elementoActivo.horaFin) {
-            this.aproximar(this.elementoActivo.horaFin);
-        }
-        let inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
-        let fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
-
-        if (inicio && fin) {
-            let duracion = this.calcularDuracion(inicio, fin, this.elementoActivo.cantidadTurnos);
-            if (duracion) {
-                this.elementoActivo.duracionTurno = Math.floor(duracion);
-                let cantidad = this.calcularCantidad(inicio, fin, duracion);
-                this.elementoActivo.cantidadTurnos = Math.floor(cantidad);
+        if (this.elementoActivo.horaInicio && this.elementoActivo.horaFin) {
+            this.fecha = new Date(this.modelo.fecha);
+            if (this.elementoActivo.horaInicio) {
+                this.aproximar(this.elementoActivo.horaInicio);
             }
-            this.validarTodo();
-        }
-        if (texto === 'inicio' && !this.modelo.intercalar) {
-            this.modelo.bloques.sort(this.compararBloques);
+            if (this.elementoActivo.horaFin) {
+                this.aproximar(this.elementoActivo.horaFin);
+            }
+            let inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
+            let fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
+
+            if (inicio && fin) {
+                let duracion = this.calcularDuracion(inicio, fin, this.elementoActivo.cantidadTurnos);
+                if (duracion) {
+                    this.elementoActivo.duracionTurno = Math.floor(duracion);
+                    let cantidad = this.calcularCantidad(inicio, fin, duracion);
+                    this.elementoActivo.cantidadTurnos = Math.floor(cantidad);
+                }
+                this.validarTodo();
+            }
+            // console.log('elementoActivo ', this.elementoActivo);
+            if (texto === 'fin' && !this.modelo.intercalar) {
+                this.modelo.bloques.sort(this.compararBloques);
+            }
+            this.modelo.bloques.forEach((bloque, index) => {
+                bloque.indice = index;
+            });
+            // console.log('elementoActivo ', this.elementoActivo);
+            // this.bloqueActivo = this.elementoActivo.indice;
+            // this.activarBloque(this.elementoActivo.indice);
         }
 
-        this.bloqueActivo = this.elementoActivo.indice;
-        this.activarBloque(this.elementoActivo.indice);
     }
 
     cambiaTurnos(cual: String) {
