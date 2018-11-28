@@ -1,13 +1,13 @@
 <ng-container *ngIf="protocolos && protocolos.length > 0">
     <div class="table-grid table-grid-head {{ modo }}">
+        <span *ngIf='modo !== "puntoInicio"'>Sexo</span>
         <span *ngIf='modo !== "puntoInicio" && modo !== "recepcion"'>Nro.</span>
         <span>Fecha</span>
         <ng-container *ngIf="!showProtocoloDetalle">
             <span>Entrega</span>
-            <span *ngIf='modo !== "puntoInicio"'>DNI</span>
+            <span *ngIf='modo !== "puntoInicio"'>Documento</span>
             <span *ngIf='modo !== "puntoInicio"'>Apellidos y Nombres</span>
             <span *ngIf='modo !== "puntoInicio"'>F. Nacimiento</span>
-            <span *ngIf='modo !== "puntoInicio"'>Sexo</span>
             <span>Origen</span>
             <span>Prioridad</span>
             <span *ngIf='modo !== "puntoInicio"'>Estado</span>
@@ -16,8 +16,11 @@
     </div>
 
     <div class="table-grid {{ modo }}" *ngFor="let protocolo of protocolos; let i=index">
+        <span *ngIf='modo !== "puntoInicio" && protocolo?.paciente?.sexo ==="femenino"'><i class="mdi mdi-gender-female"></i></span>
+        <span *ngIf='modo !== "puntoInicio" && protocolo?.paciente?.sexo ==="masculino"'><i class="mdi mdi-gender-male"></i></span>
         <span *ngIf='modo !== "puntoInicio" && modo !== "recepcion"'>
-            {{ protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto }}</span>
+            {{ protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto }}
+        </span>
         <span>{{ protocolo.solicitud.fecha | fecha }}</span>
         <!-- <plex-button *ngIf='showProtocoloDetalle' icon="arrow-right-drop-circle-outline" class="float-right mr-2" (click)="editarDatosCabecera()"
                  > -->
@@ -27,8 +30,6 @@
             <span *ngIf='modo !== "puntoInicio"'>{{protocolo.paciente.documento}}</span>
             <span *ngIf='modo !== "puntoInicio"'>{{protocolo.paciente.apellido}} {{protocolo.paciente.nombre}}</span>
             <span *ngIf='modo !== "puntoInicio"'>{{protocolo.paciente.fechaNacimiento | fecha}}</span>
-            <span *ngIf='modo !== "puntoInicio" && protocolo?.paciente?.sexo ==="femenino"'>F</span>
-            <span *ngIf='modo !== "puntoInicio" && protocolo?.paciente?.sexo ==="masculino"'>M</span>
             <span>{{protocolo.solicitud.ambitoOrigen}}</span>
             <span>
                 <plex-badge *ngIf="protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.prioridad?.nombre === 'Urgencia'"
@@ -39,7 +40,7 @@
             <span>
                 <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'ejecucion'" type="warning">{{protocolo.estados[protocolo.estados.length
                     -1].tipo}}</plex-badge>
-                <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'validada'" type="success">{{protocolo.estados[protocolo.estados.length
+                <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'validada'" type="info">{{protocolo.estados[protocolo.estados.length
                     -1].tipo}}</plex-badge>
             </span>
             <span>
