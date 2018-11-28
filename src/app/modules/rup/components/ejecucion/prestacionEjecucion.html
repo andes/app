@@ -78,7 +78,7 @@
                                 <ng-container *ngFor="let registro of prestacion.ejecucion.registros; let i = index">
                                     <!-- Drop area -->
                                     <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(i, $event)" [dragOverClass]="'drop-posicion-hover'"
-                                        [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="posicionOnDrag !== i && registroOnDrag !== registro?.concepto.conceptId">
+                                        [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="posicionOnDrag !== i">
                                         Mover a esta posición
                                     </div>
 
@@ -103,7 +103,8 @@
                                                     <ng-container *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length > 0">
 
                                                         <div class="float-left" *ngIf="registro?.relacionadoCon">
-                                                            <b class="clearfix" *ngIf="registro?.relacionadoCon">Relacionado con: </b>
+                                                            <b class="clearfix" *ngIf="registro?.relacionadoCon">Relacionado
+                                                                con: </b>
                                                             <!-- <ng-container *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length > 0 && (!elementoRUP?.reglas?.requeridos?.relacionesMultiples)">
                                                                     <small class="badge badge-info text-uppercase">
                                                                         {{ registro.relacionadoCon[0].concepto.term }}
@@ -118,8 +119,9 @@
                                                             <ng-container>
                                                                 <ng-container *ngFor="let relacion of registro.relacionadoCon; let r=index">
                                                                     <small class="badge badge-info">
-                                                                        {{ relacion?.cara ? 'diente ' + relacion?.concepto?.term + ' (cara
-                                                                        ' + relacion.cara + ')' : relacion.concepto.term }}
+                                                                        {{ relacion?.cara ? 'diente ' +
+                                                                        relacion?.concepto?.term + ' (cara ' +
+                                                                        relacion.cara + ')' : relacion.concepto.term }}
                                                                     </small>
                                                                     <a href="javascript:void(0);" (click)="desvincular(registro, registro.relacionadoCon[r])"
                                                                         class="desvincular" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
@@ -171,7 +173,8 @@
                                                 [dragClass]="'drag-target-border'" [dragData]="registro" (onDragStart)="draggingRegistro(i ,registro, true)"
                                                 (onDragEnd)="draggingRegistro(i, registro, false)">
                                                 <span>
-                                                    {{ (registro.esSolicitud) ? 'solicitud' : registro.concepto.semanticTag}}
+                                                    {{ (registro.esSolicitud) ? 'solicitud' :
+                                                    registro.concepto.semanticTag}}
                                                 </span>
                                             </div>
 
@@ -193,7 +196,8 @@
                                                         Debe completar los datos
                                                     </span>
                                                 </div>
-
+                                                <!-- {{ elementosRUPService.buscarElemento(registro.concepto,
+                                                registro.esSolicitud) | json }} -->
                                                 <!-- RUP Loader -->
                                                 <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)"
                                                     [prestacion]="prestacion" [paciente]="paciente" [registro]="registro" [soloValores]="false"
@@ -209,7 +213,8 @@
                                             <div class="text-center col" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && confirmarDesvincular[registro.id]">
 
                                                 <div class="confirmarDesvincular"> ¿Confirmar desvinculación con
-                                                    <b class="text-capitalize">{{ mostrarVinculacion(registro)?.concepto.term }}
+                                                    <b class="text-capitalize">{{
+                                                        mostrarVinculacion(registro)?.concepto.term }}
                                                         <span *ngIf="mostrarVinculacion(registro)?.cara">/ {{
                                                             mostrarVinculacion(registro)?.cara }}</span>
                                                     </b>?

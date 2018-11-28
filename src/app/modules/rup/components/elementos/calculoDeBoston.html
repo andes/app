@@ -1,0 +1,53 @@
+<form #form="ngForm">
+    <ng-container *ngIf="!soloValores; else showSoloValores">
+        <div class="row">
+            <div class="col-5">
+                <ng-container *ngIf="params?.title; else showTerm">
+                    <label class="text-capitalize">{{ params.title }}</label>
+                </ng-container>
+                <ng-template #showTerm>
+                    <label class="text-capitalize">{{ registro.concepto.term }}</label>
+                </ng-template>
+                <plex-radio label="CI" [(ngModel)]="registro?.valor.ci" [data]="opciones" name="CI" type="horizontal" (change)="changeNumber()"
+                    required="true">
+                </plex-radio> <br>
+                <plex-radio label="CT" [(ngModel)]="registro?.valor.ct" [data]="opciones" name="CT" type="horizontal" (change)="changeNumber()"
+                    required="true">
+                </plex-radio><br>
+                <plex-radio label="CD" [(ngModel)]="registro?.valor.cd" [data]="opciones" name="CD" type="horizontal" (change)="changeNumber()"
+                    required="true">
+                </plex-radio>
+            </div>
+            <div class="col-3">
+                <plex-text label="Resultado test de Boston" [(ngModel)]="valorBoston" name="boston" [readonly]="true">
+                </plex-text>
+            </div>
+        </div>
+    </ng-container>
+</form>
+
+<ng-template #showSoloValores>
+    <div class="row">
+        <div class="col">
+            <label>Calculo de Boston</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <label>CI</label>
+            {{registro.valor.ci}}
+        </div>
+        <div class="col-3">
+            <label>CT</label>
+            {{registro.valor.ct}}
+        </div>
+        <div class="col-3">
+            <label>CD</label>
+            {{registro.valor.cd}}
+        </div>
+        <div class="col-3">
+            <label>Total</label>
+            {{registro.valor.total}}
+        </div>
+    </div>
+</ng-template>

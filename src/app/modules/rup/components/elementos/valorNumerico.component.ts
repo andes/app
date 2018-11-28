@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
-import { dateValidator } from '@andes/plex/src/lib/core/validator.functions';
 
 @Component({
     selector: 'rup-valor-numerico',
