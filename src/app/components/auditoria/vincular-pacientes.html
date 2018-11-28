@@ -45,9 +45,9 @@
                                                     (click)="desvincular(item.paciente,i)"></plex-button>
                                             </td>
                                             <td>
-                                                <plex-button *ngIf="item.vinculado && item.activo" (click)="desactivar(item.paciente,i)"
+                                                <plex-button *ngIf="item.vinculado && item.paciente.activo" (click)="desactivar(item.paciente,i)"
                                                     type='warning' label="Desactivar"></plex-button>
-                                                <plex-button *ngIf="item.vinculado && !item.activo" (click)="activar(item.paciente,i)"
+                                                <plex-button *ngIf="item.vinculado && !item.paciente.activo" (click)="activar(item.paciente,i)"
                                                     type='info' label="Activar"></plex-button>
                                             </td>
 
