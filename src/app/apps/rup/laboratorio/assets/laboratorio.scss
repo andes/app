@@ -52,6 +52,17 @@
 
 }
 
+
+header {
+    nav {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        plex-button {
+            justify-self: flex-end;
+        }
+    }       
+}
+
 .filtros-container {
     display: grid;
     grid-template-columns: repeat(6, minmax(100px, 1fr));
@@ -66,7 +77,9 @@
     }
     &> div {
         width: auto;
+        display: flex;
         align-self: flex-end;
+        justify-content: space-evenly;
         padding: .15rem .25rem;
     }
     &.carga,

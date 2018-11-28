@@ -31,8 +31,10 @@
             <small class="text-primary"></small>
     </span> -->
     <div>
-        <plex-button label="" type="info" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
-            (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
+        <label for="">Filtros avanzados</label>
+        <plex-button type="info" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
+            (click)="mostrarMasOpciones = !mostrarMasOpciones">
+        </plex-button>
     </div>
 </div>
 <!-- FIN FILTROS BASICOS  -->
