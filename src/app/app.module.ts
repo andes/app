@@ -366,6 +366,11 @@ import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
 import { ConfiguracionPrestacionCrearComponent } from './components/configuracionPrestacion/configuracion-prestacion-crear.component';
 
+// Campañas Salud
+import { CampaniaSaludService } from './apps/campaniaSalud/services/campaniaSalud.service';
+import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campaniaSalud.component';
+import { CampaniaVisualizacionComponent } from './apps/campaniaSalud/components/campaniaVisualizacion.component';
+import { CampaniaFormComponent } from './apps/campaniaSalud/components/campania-create-update.component';
 
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
@@ -515,7 +520,7 @@ registerLocaleData(localeEs, 'es');
         routing,
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
-        })
+        }),
     ],
     declarations: [
         AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,
@@ -622,7 +627,12 @@ registerLocaleData(localeEs, 'es');
         // Configuracion prestacion
         ConfiguracionPrestacionVisualizarComponent,
         ConfiguracionPrestacionCrearComponent,
-        PucoComponent
+        PucoComponent,
+
+        // Campañas Salud
+        CampaniaSaludComponent,
+        CampaniaVisualizacionComponent,
+        CampaniaFormComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
@@ -693,6 +703,7 @@ registerLocaleData(localeEs, 'es');
         SugerenciasService,
         ConfiguracionPrestacionService,
         PrestacionLegacyService,
+        CampaniaSaludService,
         SeleccionBinariaComponent,
         PacienteCreateUpdateComponent
     ]

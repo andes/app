@@ -1,0 +1,95 @@
+<form #campaniaForm="ngForm">
+    <fieldset>
+        <legend>Datos principales</legend>
+        <div class="row">
+            <div class="col-md">
+                <plex-text label="Asunto" [(ngModel)]="campaniaEdit.asunto" name="asunto" [required]="true"></plex-text>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md">
+                <plex-text label="Cuerpo" [(ngModel)]="campaniaEdit.cuerpo" name="cuerpo" [required]="true" [html]="true"></plex-text>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <plex-datetime type="date" [(ngModel)]="campaniaEdit.fechaPublicacion" name="fechaPublicacion" label="Fecha de Publicación"
+                    [required]="true" [max]="campaniaEdit.vigencia.hasta" [min]="campaniaEdit.vigencia.desde">
+                </plex-datetime>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Carga de Imagen</legend>
+        <div class="row">
+            <div class="col-4 mt-3">
+                <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
+                <plex-button type="primary" class="btn-sm" label="Cargar imagen" (click)="upload.click()"></plex-button>
+                <plex-text style="display:none;" [(ngModel)]="imagenSegura" [required]="true" name="imagenSegura"></plex-text>
+            </div>
+            <div class="col-8 mt-3">
+                <span *ngIf="errorFormato">
+                    <span class="badge-danger"> Archivo inválido </span>
+                </span>
+                <div *ngIf="!errorFormato" [innerHtml]="imagenSegura"></div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Perfil Demográfico Destino</legend>
+        <div class="row">
+            <div class="col-md-4">
+                <plex-select label="Sexo" [(ngModel)]="campaniaEdit.target.sexo" name="sexo" [data]="sexos"></plex-select>
+            </div>
+            <div class="col-md-4">
+                <plex-int label="Edad desde" [(ngModel)]="campaniaEdit.target.grupoEtario.desde" name="desde"></plex-int>
+            </div>
+            <div class="col-md-4">
+                <plex-int label="Edad hasta" [(ngModel)]="campaniaEdit.target.grupoEtario.hasta" name="hasta"></plex-int>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Vigencia</legend>
+        <div class="row">
+            <div class="col-md">
+                <plex-datetime type="date" [(ngModel)]="campaniaEdit.vigencia.desde" name="fechaDesde" label="Desde"
+                    [required]="true" [max]="campaniaEdit.fechaPublicacion">
+                </plex-datetime>
+            </div>
+            <div class="col-md">
+                <plex-datetime type="date" [(ngModel)]="campaniaEdit.vigencia.hasta" name="fechaHasta" label="Hasta"
+                    [required]="true" [min]="campaniaEdit.fechaPublicacion">
+                </plex-datetime>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Datos del Acceso</legend>
+        <div class="row">
+            <div class="col-md-6">
+                <plex-text label="Texto Acción" [(ngModel)]="campaniaEdit.textoAccion" name="textoAccion"></plex-text>
+            </div>
+            <div class="col-md-6">
+                <plex-text label="Link" [(ngModel)]="campaniaEdit.link" name="link" [required]="true"></plex-text>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="row">
+            <div class="col-md text-right">
+                <plex-bool label="¿Está activo?" [(ngModel)]="campaniaEdit.activo" name="activo" type="slide"></plex-bool>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="row">
+            <div class="col text-left">
+                <plex-button label="Cancelar" type="danger" (click)="onCancel()"></plex-button>
+            </div>
+            <div class="col text-right">
+                <plex-button label="Guardar" type="success" [validateForm]="campaniaForm" (click)="save($event)"></plex-button>
+            </div>
+        </div>
+    </fieldset>
+</form>
