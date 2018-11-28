@@ -1,5 +1,5 @@
 import { Constantes } from './../../controllers/constants';
-import { Component, OnInit, Input, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, EventEmitter, Output, ViewEncapsulation, HostBinding } from '@angular/core';
 import { ProtocoloDetalleComponent } from '../protocolos/protocolo-detalle.component';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { Auth } from '@andes/auth';
@@ -8,12 +8,12 @@ import { Plex } from '@andes/plex';
 @Component({
     selector: 'gestor-protocolos',
     templateUrl: 'gestor-protocolos.html',
-    styleUrls: ['../../assets/laboratorio.scss']
+    styleUrls: ['../../assets/laboratorio.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 
-export class GestorProtocolosComponent
-
-    implements OnInit {
+export class GestorProtocolosComponent implements OnInit {
+    @HostBinding('class.plex-layout') layout = true;
 
     @Output() volverAPuntoInicioEmmiter: EventEmitter<any> = new EventEmitter<any>();
     public seleccionPaciente: Boolean = false;
@@ -62,7 +62,7 @@ export class GestorProtocolosComponent
     public modoAVolver = '';
 
     @ViewChild(ProtocoloDetalleComponent)
-    private protocoloDetalleComponent: ProtocoloDetalleComponent;
+    public protocoloDetalleComponent: ProtocoloDetalleComponent;
 
     constructor(
         public plex: Plex,
@@ -166,9 +166,9 @@ export class GestorProtocolosComponent
         if (value.protocolo) {
             this.mostrarCuerpoProtocolo = (this.modo === 'control') || (this.modo === 'carga') || (this.modo === 'validacion') || (this.modo === 'puntoInicio');
             this.protocolo = value.protocolo;
+            this.indexProtocolo = value.index;
             this.showListarProtocolos = false;
             this.showProtocoloDetalle = true;
-            this.indexProtocolo = value.index;
             this.seleccionPaciente = false;
             this.showCargarSolicitud = true;
             this.ocultarPanelLateral = (this.modo === 'recepcion') || (this.modo === 'puntoInicio');
