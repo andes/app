@@ -22,6 +22,64 @@
     margin-right: auto;
 }
 
-.table.table-striped.table-sm p {
-    margin-bottom: 0rem;
+// .table.table-striped.table-sm p {
+//     margin-bottom: 0rem;
+// }
+
+.table-grid {
+    display: grid;
+    grid-template-columns: repeat(11, 1fr);
+    &.table-grid-head {
+        font-weight: 800;
+
+    }
+    &.recepcion {
+        grid-template-columns: repeat(10, 1fr);
+    }
+    
+    &> span {
+        min-height: 55px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        text-align: center;
+        padding: .15rem .25rem;
+    }
+
+    &:nth-child(even) {
+        background: #ddd;
+    }
+
+}
+
+.filtros-container {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(100px, 1fr));
+    &> span {
+        >:first-child {
+            width: 100%;
+        }
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-end;
+        padding: .15rem .25rem;
+    }
+    &> div {
+        width: auto;
+        align-self: flex-end;
+        padding: .15rem .25rem;
+    }
+    &.carga,
+    &.validacion {
+        grid-template-columns: repeat(7, minmax(100px, 1fr));
+        &> div {
+            width: auto;
+            align-self: flex-end;
+            padding: .15rem .25rem;
+        }
+    }
+}
+
+.tabs {
+    height: 70px !important;
 }
