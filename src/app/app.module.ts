@@ -703,7 +703,7 @@ registerLocaleData(localeEs, 'es');
         SugerenciasService,
         ConfiguracionPrestacionService,
         PrestacionLegacyService,
-        CampaniaSaludService
+        CampaniaSaludService,
         SeleccionBinariaComponent,
         PacienteCreateUpdateComponent
     ]
