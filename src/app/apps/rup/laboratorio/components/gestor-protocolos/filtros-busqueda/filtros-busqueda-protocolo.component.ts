@@ -27,6 +27,7 @@ export class FiltrosBusquedaProtocoloComponent
     public pacientes;
     public pacienteActivo;
     public cargaLaboratorioEnum;
+    public modoCargaLaboratorio;
     public modoCargaLaboratorioEnum;
     public indexProtocolo;
     public turnosRecepcion;
@@ -56,6 +57,10 @@ export class FiltrosBusquedaProtocoloComponent
         organizacion: null,
         estado: []
     };
+
+    mostrarMasOpciones = false;
+
+    paciente: any;
 
     constructor(public plex: Plex, private formBuilder: FormBuilder,
         public auth: Auth,
@@ -149,6 +154,10 @@ export class FiltrosBusquedaProtocoloComponent
 
         localStorage.setItem('filtros', JSON.stringify(filtrosPorDefecto));
         this.plex.toast('success', 'Se recordará su selección de filtro en sus próximas sesiones.', 'Información', 3000);
+    }
+
+    filtrarPaciente() {
+        this.buscarProtocolosEmmiter.emit(this.busqueda);
     }
 }
 
