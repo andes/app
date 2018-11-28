@@ -21,6 +21,24 @@
                                     <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)" [params]="elementosRUPService.selectPorRefsetId(registro.data.concepto)"
                                         [prestacion]="prestacion" [paciente]="paciente" [registro]="registro.data" [soloValores]="true">
                                     </rup>
+                                    <ng-container *ngIf="registro.data.concepto.semanticTag !== 'trastorno' && registro.data.concepto.semanticTag !== 'hallazgo'">
+                                        <div class="row">
+                                            <div class="col">
+                                                <span [innerHTML]="servicioPrestacion.mostrarInformeRelacionado(paciente,registro.data, registro.data.concepto)"></span>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col">
+                                                <ng-container *ngFor="let relacion of registro.data.relacionadoCon; let r=index">
+                                                    Relacionado con:
+                                                    <small class="badge badge-info">
+                                                        {{ relacion?.cara ? 'diente ' + relacion?.concepto?.term + ' (cara ' + relacion?.cara + ')' : relacion.concepto?.term }}
+                                                    </small>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                    </ng-container>
                                 </tab>
 
                                 <tab [tabTitle]="registro.data.solicitud.tipoPrestacion.term" [class]="registro.data.class" *ngIf="registro.tipo === 'prestacion'">
