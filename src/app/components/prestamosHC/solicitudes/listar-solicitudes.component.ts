@@ -59,6 +59,7 @@ export class ListarSolicitudesComponent implements OnInit {
     public verImprimirSolicitudes: Boolean = false;
     public mostrarMasOpciones = false;
     public sortDescending = false;
+    public mostrarPrestadas = true;
     public _listarCarpetas;
 
     get cssLayout() {
@@ -154,7 +155,7 @@ export class ListarSolicitudesComponent implements OnInit {
             this.filters['estado'] = value.nombre;
         }
 
-        this.filters['mostrarPrestamos'] = true;
+        this.filters['mostrarPrestamos'] = this.mostrarPrestadas;
 
         this.prestamosService.getCarpetasSolicitud(this.filters).subscribe(carpetas => {
             this.carpetas = carpetas;
@@ -333,11 +334,6 @@ export class ListarSolicitudesComponent implements OnInit {
         let carpetas_sort = carpetas_numeros.concat(carpetas_letras);
         this.carpetas = [];
         this.carpetas = carpetas_sort;
-    }
-
-    toogleSort() {
-        this.sortDescending = !this.sortDescending;
-        this.sortCarpetas();
     }
 
     onCancelSolicitar(event) {

@@ -31,11 +31,13 @@
                                         name="fechaHasta" label="Hasta" class="fechas">
                                     </plex-datetime>
                                 </div>
-                                <div class="col-6" (click)="toogleSort()" style="margin-top: 45px;">
-                                    <i *ngIf="sortDescending" class="mdi mdi-checkbox-marked">
-                                        Order Nro. Carpeta Descendente</i>
-                                    <i *ngIf="!sortDescending" class="mdi mdi-checkbox-blank-outline">
-                                        Order Nro. Carpeta Descendente</i>
+                                <div class="col-6">
+                                    <plex-bool [(ngModel)]="sortDescending" type="checkbox" label="Order Nro. Carpeta Descendente"
+                                        class="vertical-center" (change)="sortCarpetas()" name="checkboxSort"></plex-bool>
+                                    <br>
+                                    <plex-bool [(ngModel)]="mostrarPrestadas" type="checkbox" label="Mostrar carpetas prestadas"
+                                        class="vertical-center" (change)="getCarpetas('','')" name="checkboxPrestamos"></plex-bool>
+
                                 </div>
                             </div>
 
@@ -138,7 +140,7 @@
                                         </td>
                                         <!-- Boton para subir HUDS digitalizada -->
                                         <td>
-                                            <upload-file label="Adjuntar HUDS" [extensiones]="['pdf']"  (onUpload)="onUpload($event, carpeta)" ></upload-file>
+                                            <upload-file label="Adjuntar HUDS" [extensiones]="['pdf']" (onUpload)="onUpload($event, carpeta)"></upload-file>
                                             <br><br>
                                             <span *ngIf="errorExt===i">
                                                 <span class="badge-danger">Archivo inválido. Solo se admite PDF</span>

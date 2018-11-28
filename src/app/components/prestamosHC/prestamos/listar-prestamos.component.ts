@@ -40,7 +40,7 @@ export class ListarPrestamosComponent implements OnInit {
     public sortDescending = false;
     public _listarCarpetas;
 
-    get cssLayout () {
+    get cssLayout() {
         return { 'col-8': this.verDevolver, 'col': !this.verDevolver };
     }
 
@@ -231,11 +231,6 @@ export class ListarPrestamosComponent implements OnInit {
         let carpetas_sort = carpetas_numeros.concat(carpetas_letras);
         this.carpetas = [];
         this.carpetas = carpetas_sort;
-    }
-
-    toogleSort() {
-        this.sortDescending = !this.sortDescending;
-        this.sortCarpetas();
     }
 
     onShowDevolver(event) {

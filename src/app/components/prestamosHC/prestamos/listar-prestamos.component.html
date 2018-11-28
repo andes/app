@@ -19,11 +19,9 @@
                                     name="fechaHasta" label="Hasta" class="fechas">
                                 </plex-datetime>
                             </div>
-                            <div class="col-5" (click)="toogleSort()" style="margin-top: 45px;">
-                                <i *ngIf="sortDescending" class="mdi mdi-checkbox-marked">Order Nro. Carpeta
-                                    Descendente</i>
-                                <i *ngIf="!sortDescending" class="mdi mdi-checkbox-blank-outline">Order Nro. Carpeta
-                                    Descendente</i>
+                            <div class="col-5" (click)="toogleSort()" style="margin-top: 22px;">
+                                <plex-bool [(ngModel)]="sortDescending" type="checkbox" label="Order Nro. Carpeta Descendente"
+                                    class="vertical-center" (change)="sortCarpetas()" name="checkboxSort"></plex-bool>
                             </div>
                             <div class="col-1 text-right">
                                 <label>
