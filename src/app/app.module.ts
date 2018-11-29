@@ -376,6 +376,8 @@ import { ImpresionHojatrabajoComponent } from './apps/rup/laboratorio/components
 import { EncabezadoHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/encabezado-hojatrabajo/encabezado-hojatrabajo.component';
 import { CargaHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/carga-hojatrabajo/carga-hojatrabajo.component';
 import { GrillaHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/grilla-hojatrabajo/grilla-hojatrabajo.component';
+import { AreaLaboratorioService } from './apps/rup/laboratorio/services/arealaboratorio.service';
+
 
 
 import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
@@ -730,7 +732,8 @@ registerLocaleData(localeEs, 'es');
         FacturacionAutomaticaService,
         SugerenciasService,
         ConfiguracionPrestacionService,
-        PrestacionLegacyService
+        PrestacionLegacyService,
+        AreaLaboratorioService
     ]
 })
 
