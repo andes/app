@@ -105,7 +105,7 @@ const appRoutes: Routes = [
   { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
   { path: 'mpi/auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
   { path: 'mpi/auditoria2', component: Auditoria2Component, canActivate: [RoutingGuard] },
-  { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
+  { path: 'apps/mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
   { path: 'apps/mpi/bebe', component: BebeCruComponent, canActivate: [RoutingGuard] },
   { path: 'apps/mpi/sinDni', component: ExtrangeroNNCruComponent, canActivate: [RoutingGuard] },
 
