@@ -68,9 +68,6 @@ import {
     IProvincia
 } from './../../interfaces/IProvincia';
 import {
-    FechaPipe
-} from './../../pipes/fecha.pipe';
-import {
     Plex
 } from '@andes/plex';
 import {
@@ -125,7 +122,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     relacionesBorradas: any[];
 
     provincias: IProvincia[] = [];
-    obrasSociales: IFinanciador[] = [];
+    // obrasSociales: IFinanciador[] = [];
     pacientesSimilares = [];
     barriosNeuquen: any[];
     localidadesNeuquen: any[] = [];
@@ -239,9 +236,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
     ngOnInit() {
         // Se cargan los combos
-        this.financiadorService.get().subscribe(resultado => {
-            this.obrasSociales = resultado;
-        });
+        // this.financiadorService.get().subscribe(resultado => {
+        //     this.obrasSociales = resultado;
+        // });
 
         this.relacionesBorradas = [];
 
@@ -532,12 +529,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
                 return elem;
             });
-            if (pacienteGuardar.financiador) {
-                pacienteGuardar.financiador.map((elem: any) => {
-                    delete elem.entidad.$order;
-                    return elem;
-                });
-            }
 
             // Luego aquí habría que validar pacientes de otras prov. y paises (Por ahora solo NQN)
             pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
@@ -845,27 +836,27 @@ export class PacienteCreateUpdateComponent implements OnInit {
         }
     }
 
-    addFinanciador() {
-        let nuevoFinanciador = {
-            entidad: null,
-            codigo: '',
-            activo: true,
-            fechaAlta: null,
-            fechaBaja: null,
-            ranking: this.pacienteModel.financiador ? this.pacienteModel.financiador.length : 0
-        };
-        if (this.pacienteModel.financiador) {
-            this.pacienteModel.financiador.push(nuevoFinanciador);
-        } else {
-            this.pacienteModel.financiador = [nuevoFinanciador];
-        }
-    }
+    // addFinanciador() {
+    //     let nuevoFinanciador = {
+    //         entidad: null,
+    //         codigo: '',
+    //         activo: true,
+    //         fechaAlta: null,
+    //         fechaBaja: null,
+    //         ranking: this.pacienteModel.financiador ? this.pacienteModel.financiador.length : 0
+    //     };
+    //     if (this.pacienteModel.financiador) {
+    //         this.pacienteModel.financiador.push(nuevoFinanciador);
+    //     } else {
+    //         this.pacienteModel.financiador = [nuevoFinanciador];
+    //     }
+    // }
 
-    removeFinanciador(i) {
-        if (i >= 0) {
-            this.pacienteModel.financiador.splice(i, 1);
-        }
-    }
+    // removeFinanciador(i) {
+    //     if (i >= 0) {
+    //         this.pacienteModel.financiador.splice(i, 1);
+    //     }
+    // }
     private comprobarDocumentoEscaneado(): DocumentoEscaneado {
         for (let key in DocumentoEscaneados) {
             if (DocumentoEscaneados[key].regEx.test(this.buscarPacRel)) {

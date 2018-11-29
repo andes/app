@@ -6,6 +6,18 @@ $color-rosa: #002B3A;
 $color-amarillo: #666600;
 $color-salmon: #E2917F;
 $color-coral: #ce803e;
+
+$andes-azul-oscuro: #002838;
+$andes-azul: #0070cc;
+$andes-azul-claro: #00A8E0;
+$andes-celeste: #84cef0;
+$andes-violeta: #982f98;
+$andes-magenta: #e3007e;
+$andes-verde: #00b9b1;
+$andes-verde-claro: #63c7b7;
+$andes-naranja: #ff4a1a;
+$andes-naranja-claro: #f4a03b;
+
 //
 // Clases
 .logo {
@@ -21,10 +33,12 @@ $color-coral: #ce803e;
 }
 
 .boton {
+    min-height: 266px;
     padding: .5em;
     color: white;
     cursor: pointer;
     transition: all .5s;
+    margin-top: 15px;
     // Contenido
     .icono {
         font-size: 3em;
@@ -32,7 +46,7 @@ $color-coral: #ce803e;
     .titulo {
         text-transform: uppercase;
         font-size: 2em;
-        font-weight: 100;
+        font-weight: 400;
         line-height: .8em;
         padding-bottom: 1em;
     }
@@ -77,10 +91,20 @@ $color-coral: #ce803e;
     &.color-salmon:hover {
         background: darken($color-salmon, 10%);
     }
-    &.color-coral {
-        background: $color-coral;
+    &.color-verde-claro {
+        background: $andes-verde-claro;
     }
-    &.color-coral:hover {
-        background: darken($color-coral, 10%);
+    &.color-verde-claro:hover {
+        background: darken($andes-verde-claro, 10%);
     }
+    &.color-verde {
+        background: $andes-verde;
+    }
+    &.color-verde:hover {
+        background: darken($andes-verde, 10%);
+    }
+}
+
+.andes-inicio > div {
+    
 }

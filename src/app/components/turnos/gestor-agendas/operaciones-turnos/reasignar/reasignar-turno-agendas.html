@@ -42,13 +42,13 @@
                         <!-- AGENDA ORIGEN -->
                         <div class="col-6 text-warning" *ngIf="agendaAReasignar?.horaInicio">
                             <b>{{agendaAReasignar?.horaInicio | date: 'EEEE' | uppercase }} {{agendaAReasignar?.horaInicio |
-                                date: 'dd/MM/yyyy'}} de {{agendaAReasignar?.horaInicio | date: 'HH:mm'}} a {{agendaAReasignar?.horaFin
+                                fecha}} de {{agendaAReasignar?.horaInicio | date: 'HH:mm'}} a {{agendaAReasignar?.horaFin
                                 | date: 'HH:mm'}} hs</b>
                         </div>
                         <!-- AGENDA DESTINO -->
                         <div class="col-6 text-info" *ngIf="agendaDestino?.agenda">
                             <b>{{agendaDestino?.agenda?.horaInicio | date: 'EEEE' | uppercase }} {{ agendaDestino?.agenda?.horaInicio
-                                | date: 'dd/MM/yyyy'}} de {{ agendaDestino?.agenda.horaInicio | date: 'HH:mm' }} a {{ agendaDestino?.agenda?.horaFin
+                                | fecha}} de {{ agendaDestino?.agenda.horaInicio | date: 'HH:mm' }} a {{ agendaDestino?.agenda?.horaFin
                                 | date:'HH:mm' }} hs
                             </b>
                         </div>
