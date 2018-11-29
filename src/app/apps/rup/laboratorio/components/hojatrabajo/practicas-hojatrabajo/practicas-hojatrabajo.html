@@ -42,8 +42,8 @@
                 <tr class="hover" *ngFor="let practicaHT of hojaTrabajo.practicas; index as ix; first as isFirst; last as isLast"
                     cdkDrag cdkDragLockAxis="y">
                     <td cdkDragHandle class="n-resize">
-                        <plex-icon name="arrow-up-thick" (click)="clickUp(ix)" *ngIf="!isFirst"></plex-icon>
-                        <plex-icon name="arrow-down-thick" (click)="clickDown(ix)" *ngIf="!isLast"></plex-icon>
+                        <plex-icon name="arrow-up-thick" (click)="clickUp(ix)" *ngIf="!isFirst" class="float-left"></plex-icon>
+                        <plex-icon name="arrow-down-thick" (click)="clickDown(ix)" *ngIf="!isLast" class="float-right"></plex-icon>
                     </td>
                     <td>{{practicaHT.practica.codigo}}</td>
                     <td>{{practicaHT.practica.nombre}}</td>

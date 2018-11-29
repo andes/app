@@ -1,11 +1,15 @@
 <form #impresionHT="ngForm">
     <fieldset>
         <div class="row">
-            <div class="col-3">
+            <div class="col-6">
                 <plex-text [(ngModel)]="hojaTrabajo.nombre" label="Nombre de Hoja de Trabajo" name="nombre" placeholder="Escriba un nombre para la hoja de trabajo"
                     [required]="true"></plex-text>
             </div>
-            <div class="col"></div>
+            <div class="col-6">
+                <plex-select [(ngModel)]="hojaTrabajo.area" label="Area" name="area" [data]="areas" placeholder="Seleccione..."
+                    [required]="true">
+                </plex-select>
+            </div>
         </div>
         <div class="row">
             <div class="col">

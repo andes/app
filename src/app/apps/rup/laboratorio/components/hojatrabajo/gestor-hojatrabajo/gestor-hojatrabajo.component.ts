@@ -1,3 +1,4 @@
+import { AreaLaboratorioService } from '../../../services/areaLaboratorio.service';
 import { ListaHojatrabajoComponent } from './../lista-hojatrabajo/lista-hojatrabajo.component';
 import { IHojaTrabajo } from '../../../interfaces/practica/hojaTrabajo/IHojaTrabajo';
 import { HojaTrabajoService } from '../../../services/hojatrabajo.service';
@@ -14,6 +15,7 @@ export class GestorHojatrabajoComponent implements OnInit {
     public accionIndex = 0;
     public modo = '';
     public hojaTrabajo: IHojaTrabajo;
+    public areas: any[];
 
     @ViewChild(ListaHojatrabajoComponent)
     private listaHojatrabajoComponent: ListaHojatrabajoComponent;
@@ -21,10 +23,12 @@ export class GestorHojatrabajoComponent implements OnInit {
     // Constructor
     constructor(
         private plex: Plex,
-        private servicioHojaTrabajo: HojaTrabajoService
+        private servicioHojaTrabajo: HojaTrabajoService,
+        private areaLaboratorioService: AreaLaboratorioService
     ) { }
 
     ngOnInit() {
+        this.loadAreas();
         this.agregarHoja();
     }
 
@@ -85,5 +89,17 @@ export class GestorHojatrabajoComponent implements OnInit {
         if (this.hojaTrabajo._id) {
 
         }
+    }
+
+    loadAreas() {
+        this.areaLaboratorioService.get().subscribe((areas: any) => {
+            this.areas = areas.map((area) => {
+               return {
+                    id: area._id,
+                    nombre: area.nombre
+                };
+            });
+            // event.callback(this.areas);
+        });
     }
 }

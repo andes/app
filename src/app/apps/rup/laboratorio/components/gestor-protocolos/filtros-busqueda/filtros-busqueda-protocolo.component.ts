@@ -1,5 +1,5 @@
 import { Auth } from '@andes/auth';
-import { AreaLaboratorioService } from './../../../services/areaLaboratorio.service';
+import { AreaLaboratorioService } from '../../../services/areaLaboratorio.service';
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Plex } from '@andes/plex';
