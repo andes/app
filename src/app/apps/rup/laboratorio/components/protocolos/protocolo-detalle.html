@@ -6,18 +6,18 @@
     </div>
 </div>
 
-<protocolo-encabezado  *ngIf="!seleccionPaciente && showProtocoloDetalle" [modo]="modo" [protocolo]="modelo" [edicionDatosCabecera]="edicionDatosCabecera" (cambiarPacienteEmitter)="cambiarPaciente()"
+<protocolo-encabezado *ngIf="!seleccionPaciente && showProtocoloDetalle" [modo]="modo" [protocolo]="modelo"
+    [edicionDatosCabecera]="edicionDatosCabecera" (cambiarPacienteEmitter)="cambiarPaciente()"
     (edicionDatosCabeceraEmitter)="editarDatosCabecera()" (siguienteEmit)='siguiente()' (anteriorEmit)='anterior()'></protocolo-encabezado>
 
 <ng-container *ngIf='mostrarCuerpoProtocolo'>
     <plex-tabs>
         <plex-tab label="Análisis">
-            
+
             <div class="row">
                 <div class="col">
                     <tabla-datalle-protocolo [modo]="modo" [modelo]="modelo" [solicitudProtocolo]="solicitudProtocolo"
-                        [practicasEjecucion]="practicasEjecucion" [practicasCarga]="practicasCarga" [areas]="areas"
-                        [editarListaPracticas]="editarListaPracticas">
+                        [practicasEjecucion]="practicasEjecucion" [areas]="areas" [editarListaPracticas]="editarListaPracticas">
                     </tabla-datalle-protocolo>
                 </div>
             </div>

@@ -2,7 +2,6 @@ import { Server } from '@andes/shared';
 import { IOrganizacion } from './../interfaces/IOrganizacion';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { environment } from '../../environments/environment';
 
 @Injectable()
 export class OrganizacionService {

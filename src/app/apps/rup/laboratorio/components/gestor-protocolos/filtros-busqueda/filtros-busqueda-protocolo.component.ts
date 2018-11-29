@@ -1,4 +1,5 @@
 import { Auth } from '@andes/auth';
+import { AreaLaboratorioService } from './../../../services/areaLaboratorio.service';
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Plex } from '@andes/plex';
@@ -23,7 +24,6 @@ export class FiltrosBusquedaProtocoloComponent
     public estadosFiltroEnum;
     public estadosValFiltroEnum;
 
-    public laboratorioInternoEnum: any;
     public pacientes;
     public pacienteActivo;
     public cargaLaboratorioEnum;
@@ -60,6 +60,7 @@ export class FiltrosBusquedaProtocoloComponent
     constructor(public plex: Plex, private formBuilder: FormBuilder,
         public auth: Auth,
         private servicioOrganizacion: OrganizacionService,
+        private servicioAreaLaboratorio: AreaLaboratorioService
     ) { }
 
     ngOnInit() {
@@ -67,11 +68,21 @@ export class FiltrosBusquedaProtocoloComponent
         this.estadosFiltroEnum = enumerados.getEstadosFiltroLab();
         this.estadosValFiltroEnum = enumerados.getEstadosFiltroLab().slice(1, 4);
         this.origenEnum = enumerados.getOrigenLab();
-        this.laboratorioInternoEnum = enumerados.getLaboratorioInterno();
         this.cargaLaboratorioEnum = enumerados.getCargaLaboratorio();
         this.modoCargaLaboratorioEnum = enumerados.getModoCargaLaboratorio();
-        // this.resetearProtocolo();
+        this.cargarAreasLaboratorio();
         this.buscarProtocolos();
+    }
+
+    cargarAreasLaboratorio() {
+        this.servicioAreaLaboratorio.get().subscribe((areas: any) => {
+            this.areas = areas.map((area) => {
+               return {
+                    id: area._id,
+                    nombre: area.nombre
+                }
+            });
+        });
     }
 
     /**
@@ -82,6 +93,9 @@ export class FiltrosBusquedaProtocoloComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     buscarProtocolos(value?, tipo?) {
+        if(tipo && tipo == 'area') {
+            this.busqueda.area = this.busqueda.area.id;
+        }
         this.buscarProtocolosEmmiter.emit(this.busqueda);
     }
 
