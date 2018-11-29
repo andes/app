@@ -1,3 +1,4 @@
+import { ITipoPrestacion } from "./../../../../interfaces/ITipoPrestacion";
 import { OrganizacionService } from './../../../../services/organizacion.service';
 import { Component, EventEmitter, Output, OnInit, Input, HostBinding, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
@@ -11,6 +12,7 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { ISubscription } from 'rxjs/Subscription';
+import { TipoPrestacionComponent } from '../../../tipoPrestacion/tipoPrestacion.component';
 
 @Component({
     selector: 'planificar-agenda',
@@ -752,25 +754,34 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         this.showBloque = true;
     }
 
-    onSave($event, clonar) {
+    onSave($event, clonar: Boolean) {
         this.hideGuardar = true;
         if (this.dinamica) {
             this.modelo.dinamica = true;
             this.modelo.cupo = (this.setCupo) ? this.cupoMaximo : -1;
         }
 
-        for (let i = 0; i < this.modelo.bloques.length; i++) {
-            let bloque = this.modelo.bloques[i];
-            // Verifico que cada bloque tenga al menos una prestacion activa
-            let prestacionActiva = false;
+        let arrayPrestaciones = new Array<ITipoPrestacion>();
+        let bloqueConPrestActiva = false;
+        let indice = 0;
+        do {
+            bloqueConPrestActiva = false;
+            let bloque = this.modelo.bloques[indice];
             for (let j = 0; j < bloque.tipoPrestaciones.length; j++) {
                 if (bloque.tipoPrestaciones[j].activo) {
-                    prestacionActiva = true;
-                    break;
+                    bloqueConPrestActiva = true;
+
+                    if (!arrayPrestaciones.find((p) => p.conceptId === bloque.tipoPrestaciones[j].conceptId)) {
+                        arrayPrestaciones.push(bloque.tipoPrestaciones[j]);
+                    }
                 }
             }
-        }
-        if ($event.formValid && this.verificarNoNominalizada()) {
+            indice++;
+        } while (bloqueConPrestActiva && indice < this.modelo.bloques.length);
+
+        if ($event.formValid && this.verificarNoNominalizada() &&
+            bloqueConPrestActiva &&
+            arrayPrestaciones.length === this.modelo.tipoPrestaciones.length) {
             let espOperation: Observable<IAgenda>;
             this.fecha = new Date(this.modelo.fecha);
             this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
@@ -865,9 +876,14 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         } else {
             if (!this.verificarNoNominalizada()) {
                 this.plex.info('warning', 'Solo puede haber una prestación en las agendas no nominalizadas');
+            } else if (!bloqueConPrestActiva) {
+                this.plex.info('warning', 'Existe un bloque con todas sus prestaciones inactivas.');
+            } else if (arrayPrestaciones.length !== this.modelo.tipoPrestaciones.length) {
+                this.plex.info('warning', 'Por lo menos una de las prestaciones de la agenda está sin activar.');
             } else {
                 this.plex.info('warning', 'Debe completar los datos requeridos');
             }
+            this.hideGuardar = false;
         }
     }
 
