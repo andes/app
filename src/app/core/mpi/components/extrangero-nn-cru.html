@@ -1,0 +1,126 @@
+<plex-layout main="9">
+    <plex-layout-main>
+        <form #formulario="ngForm">
+            <fieldset>
+                <legend>Registro SIN DNI</legend>
+                <!-- DATOS BASICOS -->
+                <div class="row">
+                    <div class="col-4">
+                        <plex-text label="Apellido" [(ngModel)]="pacienteModel.apellido" name="apellido" required="true" [readonly]="validado">
+                        </plex-text>
+                    </div>
+                    <div class="col-4">
+                        <plex-text label="Nombre" [(ngModel)]="pacienteModel.nombre" name="nombre" required="true" [readonly]="validado">
+                        </plex-text>
+                    </div>
+                    <div class="col-4">
+                        <plex-select [(ngModel)]="pacienteModel.sexo" label="Sexo" [data]="sexos" name="sexo" required="true" placeholder="Seleccione.."
+                            [readonly]="validado" (change)="completarGenero();disableGuardar = false; enableIgnorarGuardar = false;">
+                        </plex-select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="validado" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
+                            [(ngModel)]="pacienteModel.fechaNacimiento" name="fechaNacimiento" [required]="!noPoseeDNI">
+                        </plex-datetime>
+                    </div>
+                    <div class="col-4">
+                        <plex-select label="Tipo de identificación" [(ngModel)]="pacienteModel.tipoIdentificacion" [data]="tipoIdentificacion" [readonly]="validado"
+                            required="true" name="tipoIdentificacion" placeholder="Seleccione..">
+                        </plex-select>
+                    </div>
+                    <div class="col-4">
+                        <plex-int label="Número de identificación" [max]="99999999" [readonly]="validado" [(ngModel)]="pacienteModel.numeroIdentificacion"
+                            name="numeroIdentificacion" required="true">
+                        </plex-int>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Datos del domicilio</legend>
+
+                <div class="row">
+                    <div class="col-4">
+                        <plex-text label="Domicilio" [(ngModel)]="pacienteModel.domicilio" name="domicilio"></plex-text>
+                    </div>
+                    <div class="col-4">
+                        <plex-select label="Provincia" [(ngModel)]="pacienteModel.direccion[0].ubicacion.provincia" [data]="provincias" name="provincia"
+                            placeholder="Seleccione.." (change)="loadLocalidades(pacienteModel.direccion[0].ubicacion.provincia)"></plex-select>
+                    </div>
+                    <div class="col-4">
+                        <plex-select label="Localidad" [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad" [data]="localidadesNeuquen" name="localidad"
+                            placeholder="Seleccione.."></plex-select>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Identidad autopercibida</legend>
+
+                <div class="row">
+                    <div class="col-4">
+                        <plex-text label="Nombre" [(ngModel)]="pacienteModel.alias" name="nombreAutopercibido"></plex-text>
+                    </div>
+                    <div class="col-4">
+                        <plex-select label="Género" [(ngModel)]="pacienteModel.genero" [data]="generos" name="genero"></plex-select>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- DATOS DE CONTACTO -->
+            <fieldset>
+                <legend>Datos de contacto</legend>
+
+                <div *ngIf="pacienteModel.contacto">
+                    <div class="row">
+                        <div class="col-10 text-right">
+                            <plex-bool [(ngModel)]="noPoseeContacto" label="No posee ningún tipo de contacto" name="noPoseeContacto" (change)="limpiarContacto()"></plex-bool>
+                        </div>
+                        <div class="col-2 text-right">
+                            <plex-button title="Agregar contacto" titlePosition="left" type="primary btn-sm" icon="phone-plus" (click)="addContacto('celular', '')"></plex-button>
+                        </div>
+                    </div>
+                    <div class="row" *ngFor="let _unContacto of pacienteModel.contacto; let i = index">
+                        <div class="col-4">
+                            <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}" [required]="i <= 0" label="Tipo:">
+                            </plex-select>
+                        </div>
+                        <div class="col-4">
+                            <span *ngIf="_unContacto.tipo && _unContacto.tipo.id">
+                                <plex-text *ngIf="_unContacto.tipo.id !== 'celular'" label="Dato:" [(ngModel)]="_unContacto.valor" name="valor-{{i}}" [required]="!noPoseeContacto && (i <= 0)">
+                                </plex-text>
+                                <plex-phone label="Numero:" *ngIf="_unContacto.tipo.id === 'celular'" [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000"
+                                    [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}">
+                                </plex-phone>
+                            </span>
+                            <span *ngIf="_unContacto.tipo && !_unContacto.tipo.id">
+                                <plex-text *ngIf="_unContacto.tipo !== 'celular'" label="Dato:" [(ngModel)]="_unContacto.valor" name="valor-{{i}}" [required]="!noPoseeContacto && (i <= 0)">
+                                </plex-text>
+                                <plex-phone label="Numero:" *ngIf="_unContacto.tipo === 'celular'" [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000"
+                                    [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}">
+                                </plex-phone>
+                            </span>
+                        </div>
+                        <div class="col-2" *ngIf="i > 0">
+                            <br>
+                            <br>
+                            <plex-button label="" type="danger btn-sm" icon="close" (click)="removeContacto(i)"></plex-button>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </plex-layout-main>
+
+    <plex-layout-sidebar>
+        <paciente-panel [paciente]="pacienteModel"></paciente-panel>
+    </plex-layout-sidebar>
+
+    <plex-layout-footer>
+        <plex-button label="Cancelar" type="danger" position="left" (click)="cancel()"></plex-button>
+        <plex-button label="Guardar" type="success" position="right" [validateForm]="formulario" (click)="save($event)"></plex-button>
+    </plex-layout-footer>
+
+</plex-layout>
