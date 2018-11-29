@@ -1,0 +1,56 @@
+<div *ngIf="(ultimaConsulta?.updatedAt || ultimaConsulta?.createdAt) && validacion === false" class="row bg-faded" class="d-flex justify-content-start">
+    <div class="col m-0 p-0 bg-registro-anterior">
+        <span>Registros tomados el {{ (ultimaConsulta.updatedAt || ultimaConsulta.createdAt) | fecha }}, por {{ ultimaConsulta.createdBy
+            | profesional }})</span>
+    </div>
+</div>
+<hr>
+
+<!-- Se muestran campos de la consulta ACTUAL en pantalla EJECUCION (cuando no se encuentran registros anteriores) -->
+<ng-container *ngIf="!registrosVacios && ultimaConsulta?.registros?.length && soloValores === false && validacion === false">
+    <ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
+        <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
+            <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
+                <div *ngIf="item.elementoRUP && ultimaConsulta?.registros[i]" class="col-{{ item.style.columns }}">
+                    <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]"
+                        [soloValores]="false" (change)="emitChange()">
+                    </rup>
+                </div>
+            </ng-container>
+        </div>
+    </ng-container>
+</ng-container>
+
+<!-- Se muestran campos de la consulta ACTUAL en pantalla EJECUCION (cuando se encuentran registros anteriores, se auto rellena) -->
+<ng-container *ngIf="registrosVacios && soloValores === false && validacion === false">
+    <ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
+        <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
+            <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
+                <div *ngIf="item.elementoRUP && ultimaConsulta?.registros[i]" class="col-{{ item.style.columns }}">
+                    <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]"
+                        [soloValores]="false" (change)="emitChange()">
+                    </rup>
+                </div>
+            </ng-container>
+        </div>
+    </ng-container>
+</ng-container>
+
+<!-- Se muestran valores de la consulta ACTUAL en pantalla RESUMEN -->
+<ng-container *ngIf="registro?.registros?.length && soloValores === true">
+    <ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
+        <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
+            <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
+                <div *ngIf="item.elementoRUP" class="col-{{ item.style.columns }}">
+                    <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion" [registro]="ultimaConsulta.registros[i]"
+                        [soloValores]="true" (change)="emitChange()">
+                    </rup>
+                </div>
+            </ng-container>
+        </div>
+    </ng-container>
+</ng-container>
+<!-- Se muestran valores de las consultas -->
+<ng-container *ngIf="registro.valor && soloValores === true">
+    <span [innerHTML]="registro.valor"></span>
+</ng-container>
