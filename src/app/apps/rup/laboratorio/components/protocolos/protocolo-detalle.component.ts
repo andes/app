@@ -85,7 +85,7 @@ export class ProtocoloDetalleComponent
         this.modelo = value;
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
         this.practicasEjecucion = this.modelo.ejecucion.registros;
-
+        console.log('this.practicasEjecucion', this.practicasEjecucion)
         if (this.practicasEjecucion.length > 0 && (this.modo === 'puntoInicio' || this.modo === 'recepcion' || this.modo === 'control')) {
             this.cargarCodigosPracticas();
         }
