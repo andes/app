@@ -242,7 +242,7 @@ import { FrecuenciaRespiratoriaComponent } from './modules/rup/components/elemen
 import { ObservacionesComponent } from './modules/rup/components/elementos/observaciones.component';
 import { NuevaEvolucionProblemaComponent } from './modules/rup/components/elementos/nuevaEvolucionProblema.component';
 import { EvolucionProblemaDefaultComponent } from './modules/rup/components/elementos/evolucionProblemaDefault.component';
-import { AutocitadoComponent } from './modules/rup/components/elementos/autocitado.component';
+import { AutocitadoComponent } from './modules/rup/components/elementos/autocitado/autocitado.component';
 import { ObesidadComponent } from './modules/rup/components/elementos/obesidad.component';
 import { HipertensionArterialComponent } from './modules/rup/components/elementos/hipertensionArterial.component';
 import { FiltradoGlomerularComponent } from './modules/rup/components/elementos/filtradoGlomerular.component';

@@ -1,5 +1,5 @@
-import { RUPComponent } from './../core/rup.component';
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { RUPComponent } from '../../core/rup.component';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 @Component({
     selector: 'rup-autocitado',
     templateUrl: 'autocitado.html'
