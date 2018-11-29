@@ -11,6 +11,7 @@ export class ParentescoService {
     constructor(private server: Server) { }
 
     get(): Observable<any[]> {
+        // TODO -> Cachear este response https://codeburst.io/angular-best-practices-4bed7ae1d0b7
         return this.server.get(this.parentescoUrl);
     }
 }

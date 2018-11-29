@@ -1,4 +1,4 @@
-import { PacienteService } from '../paciente.service';
+import { PacienteService } from '../../core/mpi/services/paciente.service';
 import * as https from 'https';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';

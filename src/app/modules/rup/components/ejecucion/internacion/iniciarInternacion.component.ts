@@ -1,5 +1,5 @@
 import { PrestacionesService } from './../../../services/prestaciones.service';
-import { IPaciente } from './../../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { Observable } from 'rxjs';
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -16,7 +16,7 @@ import { OrganizacionService } from '../../../../../services/organizacion.servic
 import { CamasService } from '../../../services/camas.service';
 import { ProfesionalService } from '../../../../../services/profesional.service';
 import { ObraSocialService } from '../../../../../services/obraSocial.service';
-import { PacienteService } from '../../../../../services/paciente.service';
+import { PacienteService } from '../../../../../core/mpi/services/paciente.service';
 import { IObraSocial } from '../../../../../interfaces/IObraSocial';
 import { InternacionService } from '../../../services/internacion.service';
 

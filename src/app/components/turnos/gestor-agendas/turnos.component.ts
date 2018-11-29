@@ -3,7 +3,7 @@ import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { PacienteService } from './../../../services/paciente.service';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { SmsService } from './../../../services/turnos/sms.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';

@@ -10,7 +10,7 @@ import * as moment from 'moment';
 
 // Servicios
 import { PrestamosService } from './../../../services/prestamosHC/prestamos-hc.service';
-import { PacienteService } from '../../../services/paciente.service';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { EspacioFisicoService } from '../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from '../../../services/profesional.service';
@@ -20,7 +20,7 @@ import { CDAService } from './../../../modules/rup/services/CDA.service';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
 
 // Interfaces
-import { IPaciente } from './../../../interfaces/IPaciente';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { debug } from 'util';
 import { environment } from '../../../../environments/environment';
 

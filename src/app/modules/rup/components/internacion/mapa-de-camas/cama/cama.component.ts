@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter } fro
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
-import { PacienteService } from '../../../../../../services/paciente.service';
+import { PacienteService } from '../../../../../../core/mpi/services/paciente.service';
 import { CamasService } from '../../../../services/camas.service';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
 import { PrestacionesService } from '../../../../services/prestaciones.service';

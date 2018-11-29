@@ -8,7 +8,7 @@ import { CamasService } from '../../../../services/camas.service';
 import { PrestacionesService } from '../../../../services/prestaciones.service';
 import { IPacienteMatch } from '../../../../../mpi/interfaces/IPacienteMatch.inteface';
 import { PacienteBuscarResultado } from '../../../../../mpi/interfaces/PacienteBuscarResultado.inteface';
-import { IPaciente } from '../../../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../../../core/mpi/interfaces/IPaciente';
 import { ElementosRUPService } from '../../../../services/elementosRUP.service';
 import { InternacionService } from '../../../../services/internacion.service';
 @Component({

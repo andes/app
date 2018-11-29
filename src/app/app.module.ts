@@ -60,7 +60,7 @@ import { EspecialidadService } from './services/especialidad.service';
 import { BarrioService } from './services/barrio.service';
 import { LocalidadService } from './services/localidad.service';
 import { PaisService } from './services/pais.service';
-import { PacienteService } from './services/paciente.service';
+import { PacienteService } from './core/mpi/services/paciente.service';
 import { TipoEstablecimientoService } from './services/tipoEstablecimiento.service';
 import { ProvinciaService } from './services/provincia.service';
 import { FinanciadorService } from './services/financiador.service';
@@ -482,6 +482,7 @@ import { FormTerapeuticoDetallePageComponent } from './components/formularioTera
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
 import { UploadFileComponent } from './shared/components/upload-file.component';
 import { BebeCruComponent } from './core/mpi/components/bebe-cru.component';
+import { NotaComponent } from './core/mpi/components/notas-paciente.component';
 
 
 registerLocaleData(localeEs, 'es');
@@ -600,6 +601,7 @@ registerLocaleData(localeEs, 'es');
         PacientePanelComponent,
         BebeCruComponent,
         ExtrangeroNNCruComponent,
+        NotaComponent,
 
         // form Terapeutico
         FormTerapeuticoComponent,

@@ -5,8 +5,8 @@ import { EspacioFisicoService } from '../../../services/turnos/espacio-fisico.se
 import { ProfesionalService } from '../../../services/profesional.service';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { IPaciente } from './../../../interfaces/IPaciente';
-import { PacienteService } from '../../../services/paciente.service';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 
 
 

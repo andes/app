@@ -1,10 +1,10 @@
-import { PacienteService } from './../../../services/paciente.service';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import * as moment from 'moment';
 import * as calculos from './../../../utils/calculosDashboard';
-import { IPaciente } from './../../../interfaces/IPaciente';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 // Servicios
 import { TurnoService } from '../../../services/turnos/turno.service';

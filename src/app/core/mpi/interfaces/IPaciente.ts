@@ -1,7 +1,7 @@
-import { IPacienteRelacion } from './../modules/mpi/interfaces/IPacienteRelacion.inteface';
-import { IContacto } from './IContacto';
+import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
+import { IContacto } from '../../../interfaces/IContacto';
 import { IDireccion } from './IDireccion';
-import { EstadoCivil } from './../utils/enumerados';
+import { EstadoCivil } from '../../../utils/enumerados';
 
 export interface IPaciente {
     id: string;

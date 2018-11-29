@@ -1,12 +1,12 @@
 import { Plex } from '@andes/plex';
 import { IPacienteRelacion } from './../interfaces/IPacienteRelacion.inteface';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { IPaciente } from '../../../interfaces/IPaciente';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { Observable } from 'rxjs/Observable';
 import { ObraSocialService } from '../../../services/obraSocial.service';
 import { ProfeService } from '../../../services/profe.service';
 import { Subscription } from 'rxjs/Subscription';
-import { PacienteService } from '../../../services/paciente.service';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 
 @Component({
     selector: 'paciente-panel',

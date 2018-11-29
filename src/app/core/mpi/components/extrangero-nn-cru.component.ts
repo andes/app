@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IPaciente } from '../../../interfaces/IPaciente';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 import { Plex } from '@andes/plex';
 import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
@@ -8,7 +8,7 @@ import { PaisService } from '../../../services/pais.service';
 import { LocalidadService } from '../../../services/localidad.service';
 import { ProvinciaService } from '../../../services/provincia.service';
 import { IProvincia } from '../../../interfaces/IProvincia';
-import { IDireccion } from '../../../interfaces/IDireccion';
+import { IDireccion } from '../../../core/mpi/interfaces/IDireccion';
 import { ParentescoService } from '../../../services/parentesco.service';
 import { IContacto } from '../../../interfaces/IContacto';
 import * as enumerados from '../../../utils/enumerados';

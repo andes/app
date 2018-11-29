@@ -7,10 +7,10 @@ import * as moment from 'moment';
 
 // Interfaces
 import { IAgenda } from '../../../interfaces/turnos/IAgenda';
-import { IPaciente } from './../../../interfaces/IPaciente';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 // Servicios
-import { PacienteService } from '../../../services/paciente.service';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 // import { AgendaService } from '../../../services/turnos/agenda.service';
 import { AppMobileService } from '../../../services/appMobile.service';
 

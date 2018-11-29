@@ -9,10 +9,10 @@ import { EstadosAsistencia } from './../../enums';
 import { EstadosAgenda } from './../../enums';
 
 // Interfaces
-import { IPaciente } from './../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 
 // Servicios
-import { PacienteService } from './../../../../services/paciente.service';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { TurnoService } from './../../../../services/turnos/turno.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { Cie10Service } from '../../../../services/term/cie10.service';

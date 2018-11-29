@@ -14,12 +14,12 @@ import { ObraSocialService } from './../../../services/obraSocial.service';
 import { IBloque } from './../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
-import { IPaciente } from './../../../interfaces/IPaciente';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
 import { CalendarioDia } from './calendario-dia.class';
 
 // Servicios
-import { PacienteService } from '../../../services/paciente.service';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
