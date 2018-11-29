@@ -8,14 +8,8 @@ export class IHojaTrabajo {
     nombre: String;
     responsable: String;
     area: {
-        id: string,
-        nombre: String,
-        concepto: {
-            term: string,
-            fsn: string,
-            conceptId: string,
-            semanticTag: string
-        }
+        id: String,
+        nombre: String
     };
     protocolo: {
         imprimirPrioridad: Boolean,
@@ -42,13 +36,7 @@ export class IHojaTrabajo {
     constructor() {
         this.area = {
             id: '',
-            nombre: '',
-            concepto: {
-                term: '',
-                fsn: '',
-                conceptId: '',
-                semanticTag: ''
-            }
+            nombre: ''
         };
         this.protocolo = {
             imprimirPrioridad: false,
