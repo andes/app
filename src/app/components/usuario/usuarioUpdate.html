@@ -17,12 +17,17 @@
                         </div>
                     </div>
                     <div class="row">&nbsp;</div>
-                    <div *ngFor="let permiso of permisos$ | async ">
-                        <arbolPermisos [item]="permiso" [userPermissions]="permisos"></arbolPermisos>
+                    <div *ngIf="organizacionesUsuario.length > 0">
+                        <div *ngFor="let permiso of permisos$ | async ">
+                            <arbolPermisos [item]="permiso" [userPermissions]="permisos"></arbolPermisos>
+                        </div>
+                        <div>
+                            <div class="row">&nbsp;</div>
+                            <plex-button type="danger" icon="delete" label="Quitar Efector" (click)="deleteEfector()"></plex-button>
+                        </div>
                     </div>
-                    <div *ngIf="btnEliminar">
-                        <div class="row">&nbsp;</div>
-                        <plex-button type="danger" icon="delete" label="Quitar Efector" (click)="deleteEfector()"></plex-button>
+                    <div *ngIf="organizacionesUsuario.length <= 0" class="alert alert-default">
+                        <i class="mdi mdi-emoticon-sad"></i> Agregue un efector para modificar sus permisos
                     </div>
                 </span>
                 <div *ngIf="hidePermisos">
@@ -62,10 +67,19 @@
 <footer>
     <div class="row">
         <div class="col text-left">
+<<<<<<< HEAD
             <plex-button icon="close-circle-outline" label="Cancelar" type="danger" (click)="onCancel()"></plex-button>
         </div>
         <div class="col text-right">
             <plex-button icon="content-save" label="Guardar" type="success" (click)="onSave()"></plex-button>
+=======
+            <plex-button icon="close-circle-outline " label="Cancelar " type="danger " (click)="onCancel() ">
+            </plex-button>
+        </div>
+        <div class="col text-right">
+            <plex-button icon="content-save " label="Guardar " type="success " (click)="onSave() ">
+            </plex-button>
+>>>>>>> c21ff4911b4fefbc75a477c3421e0e4ba084e86b
         </div>
     </div>
 </footer>

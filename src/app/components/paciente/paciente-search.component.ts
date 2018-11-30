@@ -32,6 +32,8 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
     public showCreateUpdate = false;
     public mostrarNuevo = false;
     public autoFocus = 0;
+
+
     /**
      * Indica si muestra el botón Cancelar/Volver en el footer
      */

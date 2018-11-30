@@ -15,10 +15,10 @@ export interface IElementoRUP {
     esSolicitud: Boolean;
 
     // Indica si no muestra el motivo de consulta al validar
-    motivoConsoltaOpcional: Boolean;
+    motivoConsultaOpcional: Boolean;
 
     // Indica los parámetros para instanciar el componente
-    params: { [key: string]: any };
+    params: any;
     reglas: { [key: string]: any };
     // Indica el estilo para aplicar al componente
     style: {

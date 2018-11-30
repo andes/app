@@ -39,7 +39,8 @@ import { DocumentosService } from './services/documentos.service';
 import { EdadPipe } from './pipes/edad.pipe';
 import { ProfesionalPipe } from './pipes/profesional.pipe';
 import { FromNowPipe } from './pipes/fromNow.pipe';
-import { FechaPipe } from './pipes/fecha.pipe';
+import { FechaPipe } from './shared/pipes/fecha.pipe';
+import { HoraPipe } from './shared/pipes/hora.pipe';
 import { PacientePipe } from './pipes/paciente.pipe';
 import { SexoPipe } from './pipes/sexo.pipe';
 import { OrganizacionPipe } from './pipes/organizacion.pipe';
@@ -85,6 +86,7 @@ import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
 import { ProfeService } from './services/profe.service';
 import { ReglasComponent } from './components/top/reglas/reglas.component';
+import { VisualizacionReglasComponent } from './components/top/reglas/visualizacionReglas.component';
 import { ReglaService } from './services/top/reglas.service';
 import { FacturacionAutomaticaService } from './services/facturacionAutomatica.service';
 import { PeriodoPadronesPucoService } from './services/periodoPadronesPuco.service';
@@ -267,7 +269,7 @@ import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/
 import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
 import { InformeActividadNoNominalizadaComponent } from './modules/rup/components/elementos/informeActividadNoNominalizada.component';
 
-import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
+import { GraficoLinealComponent } from './modules/rup/components/elementos/graficoLineal.component';
 import { PesoComponent } from './modules/rup/components/elementos/peso.component';
 import { PercentiloPesoComponent } from './modules/rup/components/elementos/percentiloPeso.component';
 import { TallaComponent } from './modules/rup/components/elementos/talla.component';
@@ -285,6 +287,11 @@ import { DesarrolloPsicomotorComponent } from './modules/rup/components/elemento
 import { RegistrarMedidasAntropometricasNinoE3Y6AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE3Y6A.component';
 import { RegistrarMedidasAntropometricasNinoM2AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoM2A.component';
 import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE2Y3A.component';
+import { CalculoDeBostonComponent } from './modules/rup/components/elementos/calculoDeBoston.component';
+import { SeleccionBinariaComponent } from './modules/rup/components/elementos/seleccionBinaria.component';
+import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico.component';
+import { MoleculaBaseComponent } from './modules/rup/components/elementos/moleculaBase.component';
+
 import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria.component';
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -359,6 +366,11 @@ import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
 import { ConfiguracionPrestacionCrearComponent } from './components/configuracionPrestacion/configuracion-prestacion-crear.component';
 
+// Campañas Salud
+import { CampaniaSaludService } from './apps/campaniaSalud/services/campaniaSalud.service';
+import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campaniaSalud.component';
+import { CampaniaVisualizacionComponent } from './apps/campaniaSalud/components/campaniaVisualizacion.component';
+import { CampaniaFormComponent } from './apps/campaniaSalud/components/campania-create-update.component';
 
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
@@ -382,7 +394,6 @@ export let RUPRegistry = {
     'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent,
     'AdjuntarDocumentoComponent': AdjuntarDocumentoComponent,
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
-    'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent,
     'IngresoInternacionComponent': IngresoInternacionComponent,
     'PasesCamaComponent': PasesCamaComponent,
     'InformeEpicrisisComponent': InformeEpicrisisComponent,
@@ -411,7 +422,12 @@ export let RUPRegistry = {
     'RegistrarMedidasAntropometricasNinoE3Y6AComponent': RegistrarMedidasAntropometricasNinoE3Y6AComponent,
     'RegistrarMedidasAntropometricasNinoM2AComponent': RegistrarMedidasAntropometricasNinoM2AComponent,
     'RegistrarMedidasAntropometricasNinoE2Y3AComponent': RegistrarMedidasAntropometricasNinoE2Y3AComponent,
+    'CalculoDeBostonComponent': CalculoDeBostonComponent,
+    'SeleccionBinariaComponent': SeleccionBinariaComponent,
+    'ValorNumericoComponent': ValorNumericoComponent,
     'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
+    'GraficoLinealComponent': GraficoLinealComponent,
+    'MoleculaBaseComponent': MoleculaBaseComponent
 };
 
 let RUPComponentsArray = [
@@ -433,7 +449,7 @@ let RUPComponentsArray = [
     RegistrarMedicamentoDefaultComponent,
     RiesgoCardiovascularComponent,
     SaturacionOxigenoComponent,
-    SeguimientoDelPesoComponent,
+    GraficoLinealComponent,
     SignosVitalesComponent,
     SolicitudPrestacionDefaultComponent,
     TallaComponent,
@@ -468,7 +484,11 @@ let RUPComponentsArray = [
     RegistrarMedidasAntropometricasNinoM2AComponent,
     RegistrarMedidasAntropometricasNinoE2Y3AComponent,
     RegistrarMedidasAntropometricasNinoE3Y6AComponent,
-    ProcedimientoDeEnfermeriaComponent
+    CalculoDeBostonComponent,
+    SeleccionBinariaComponent,
+    ValorNumericoComponent,
+    ProcedimientoDeEnfermeriaComponent,
+    MoleculaBaseComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -480,6 +500,7 @@ import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem
 import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
 import { UploadFileComponent } from './shared/components/upload-file.component';
+
 
 
 registerLocaleData(localeEs, 'es');
@@ -499,7 +520,7 @@ registerLocaleData(localeEs, 'es');
         routing,
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
-        })
+        }),
     ],
     declarations: [
         AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,
@@ -510,7 +531,7 @@ registerLocaleData(localeEs, 'es');
         UploadFileComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         PacienteCreateUpdateComponent, PacienteDetalleComponent, PacienteSearchComponent, DashboardComponent,
-        MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
+        MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, HoraPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
         FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, DinamicaFormComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         Html2TextPipe,
@@ -591,6 +612,7 @@ registerLocaleData(localeEs, 'es');
         SectoresItemComponent,
         PucoComponent,
         ReglasComponent,
+        VisualizacionReglasComponent,
         // MPI
         PacienteBuscarComponent,
         PacienteListadoComponent,
@@ -605,7 +627,12 @@ registerLocaleData(localeEs, 'es');
         // Configuracion prestacion
         ConfiguracionPrestacionVisualizarComponent,
         ConfiguracionPrestacionCrearComponent,
-        PucoComponent
+        PucoComponent,
+
+        // Campañas Salud
+        CampaniaSaludComponent,
+        CampaniaVisualizacionComponent,
+        CampaniaFormComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
@@ -675,7 +702,10 @@ registerLocaleData(localeEs, 'es');
         FacturacionAutomaticaService,
         SugerenciasService,
         ConfiguracionPrestacionService,
-        PrestacionLegacyService
+        PrestacionLegacyService,
+        CampaniaSaludService,
+        SeleccionBinariaComponent,
+        PacienteCreateUpdateComponent
     ]
 })
 
