@@ -1,23 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { IPaciente } from '../interfaces/IPaciente';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 import { Plex } from '@andes/plex';
 import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
-import { BarrioService } from '../../../services/barrio.service';
 import { PaisService } from '../../../services/pais.service';
 import { LocalidadService } from '../../../services/localidad.service';
 import { ProvinciaService } from '../../../services/provincia.service';
 import { IProvincia } from '../../../interfaces/IProvincia';
-import { IDireccion } from '../../../core/mpi/interfaces/IDireccion';
+import { IDireccion } from '../interfaces/IDireccion';
 import { ParentescoService } from '../../../services/parentesco.service';
 import { IContacto } from '../../../interfaces/IContacto';
 import * as enumerados from '../../../utils/enumerados';
+import { PacienteService } from '../services/paciente.service';
 
 @Component({
-    selector: 'extrangero-nn-cru',
-    templateUrl: 'extrangero-nn-cru.html'
+    selector: 'extranjero-nn-cru',
+    templateUrl: 'extranjero-nn-cru.html'
 })
-export class ExtrangeroNNCruComponent implements OnInit {
+export class ExtranjeroNNCruComponent implements OnInit {
+    @Input() paciente: IPaciente;
+    @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
     direccion: IDireccion = {
         valor: '',
@@ -109,11 +111,11 @@ export class ExtrangeroNNCruComponent implements OnInit {
 
     constructor(
         private plex: Plex,
-        private barrioService: BarrioService,
         private paisService: PaisService,
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
-        private parentescoService: ParentescoService
+        private parentescoService: ParentescoService,
+        private pacienteService: PacienteService
     ) { }
 
 
@@ -154,7 +156,64 @@ export class ExtrangeroNNCruComponent implements OnInit {
             this.localidadNeuquen = Loc[0];
         });
 
+        if (this.paciente && !this.isEmptyObject(this.paciente)) {
+            this.actualizarDatosPaciente();
+            if (this.paciente.id) {
+                // Busco el paciente en mongodb (caso que no este en mongo y si en elastic server)
+                this.pacienteService.getById(this.paciente.id)
+                    .subscribe(resultado => {
+                        if (resultado) {
+                            this.paciente = Object.assign({}, resultado);
+                            this.actualizarDatosPaciente();
+                        }
+                    });
+            }
+        }
     }
+
+    actualizarDatosPaciente() {
+        if (this.paciente.contacto) {
+            if (this.paciente.contacto.length <= 0) {
+                this.paciente.contacto[0] = this.contacto;
+            }
+        } else {
+            this.paciente.contacto = [this.contacto];
+        }
+
+        if (this.paciente.direccion) {
+            if (this.paciente.direccion.length <= 0) {
+                // Si la dirección existe pero esta vacía, completamos la 1er posición del arreglo con el schema default de dirección
+                this.paciente.direccion[0] = this.direccion;
+            } else {
+                if (this.paciente.direccion[0].ubicacion) {
+                    if (this.paciente.direccion[0].ubicacion.provincia !== null) {
+                        (this.paciente.direccion[0].ubicacion.provincia.nombre === 'Neuquén') ? this.viveProvNeuquen = true : this.viveProvNeuquen = false;
+                        this.loadLocalidades(this.paciente.direccion[0].ubicacion.provincia);
+                    }
+                }
+                if (!this.paciente.reportarError) {
+                    this.paciente.reportarError = false;
+                }
+            }
+        } else {
+            // Si no tenia dirección se le asigna el arreglo con el schema default
+            this.paciente.direccion = [this.direccion];
+        }
+        this.pacienteModel = Object.assign({}, this.paciente);
+        this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
+    }
+
+
+    isEmptyObject(obj) {
+        for (let prop in obj) {
+            if (obj.hasOwnProperty(prop)) {
+                return false;
+            }
+        }
+        return JSON.stringify(obj) === JSON.stringify({});
+    }
+
+    // --------------- LOCALIDAD / PROVINCIA -----------------------
 
     /**
     * Change del plex-bool viveProvNeuquen
@@ -275,7 +334,7 @@ export class ExtrangeroNNCruComponent implements OnInit {
     // -------------- FOOTER ------------------------------
 
     cancel() {
-        // TODO navegar atrás
+        this.data.emit(null);
     }
 
     save(event) {

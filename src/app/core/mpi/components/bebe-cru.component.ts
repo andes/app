@@ -11,7 +11,7 @@ import { ProvinciaService } from '../../../services/provincia.service';
 import { IProvincia } from '../../../interfaces/IProvincia';
 import { IDireccion } from '../interfaces/IDireccion';
 import { ParentescoService } from '../../../services/parentesco.service';
-import { PacienteSaveService } from '../services/paciente-save.service';
+import { PacienteService } from '../services/paciente.service';
 
 @Component({
     selector: 'apps/mpi/bebe',
@@ -62,6 +62,8 @@ export class BebeCruComponent implements OnInit {
         sexo: undefined,
         genero: undefined,
         fechaNacimiento: null, // Fecha Nacimiento
+        tipoIdentificacion: '',
+        numeroIdentificacion: '',
         edad: null,
         edadReal: null,
         fechaFallecimiento: null,
@@ -100,7 +102,7 @@ export class BebeCruComponent implements OnInit {
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
         private parentescoService: ParentescoService,
-        private pacienteSave: PacienteSaveService
+        private pacienteService: PacienteService
     ) {
         this.plex.updateTitle([{
             route: '/apps/mpi',
@@ -208,12 +210,12 @@ export class BebeCruComponent implements OnInit {
     }
 
     save(event) {
-        if (this.showBuscador && event.formValid) {
-            this.plex.info('warning', 'Agregue la relación de madre o padre', 'Información Faltante');
-        } else {
-            console.log(this.bebeModel);
-            this.pacienteSave.preSave(this.bebeModel);
-        }
+        // if (this.showBuscador && event.formValid) {
+        //     this.plex.info('warning', 'Agregue la relación de madre o padre', 'Información Faltante');
+        // } else {
+        //     console.log(this.bebeModel);
+        //     this.pacienteSave.preSave(this.bebeModel);
+        // }
     }
 
     cambiarRelacion() {

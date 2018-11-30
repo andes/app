@@ -72,7 +72,7 @@ export enum EstadosEspacios {
 
 export enum TipoIdentificacion {
     'pasaporte',
-    'dni extrangero'
+    'dni extranjero'
 }
 
 export function titleCase(str) {
