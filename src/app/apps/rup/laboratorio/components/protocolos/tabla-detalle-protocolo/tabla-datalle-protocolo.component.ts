@@ -1,3 +1,4 @@
+import { Auth } from '@andes/auth';
 import { ProtocoloService } from './../../../services/protocolo.service';
 import { IPractica } from '../../../interfaces/practica/IPractica';
 import { IPracticaBuscarResultado } from '../../../interfaces/practica/IPracticaBuscarResultado.inteface';
@@ -47,7 +48,8 @@ export class TablaDatalleProtocolo implements OnInit {
     constructor(
         private servicioPractica: PracticaService,
         private servicioProtocolo: ProtocoloService,
-        public plex: Plex
+        public plex: Plex,
+        public auth: Auth
     ) { }
 
     /**
@@ -72,7 +74,6 @@ export class TablaDatalleProtocolo implements OnInit {
                             for (let i = 0; i < nivelTab; i++) {
                                 margen.push({});
                             }
-console.log(this.areas)
                             if ((this.areas.length === 0) || this.areas.some(id => id === match.area.id)) {
                                 this.practicasCarga.push({
                                     registro: reg2,
@@ -191,6 +192,9 @@ console.log(this.areas)
         practicas.forEach(practica => {
             if (practica.valor) {
                 practica.valor.resultado.validado = $event.value;
+                if ($event) {
+                    this.actualizarEstadoPractica(practica.valor,'validar')
+                }
             }
             // } else {
             this.validarTodas($event, practica.registros);
@@ -321,7 +325,12 @@ console.log(this.areas)
                         valor: null,
                         sinMuestra: false,
                         validado: false
-                    }
+                    },
+                    estados: [{
+                        tipo: 'pendiente',
+                        usuario: this.auth.usuario,
+                        fecha: new Date()
+                    }]
                 };
                 // }
                 practicaEjecucion.registros = await this.getPracticasRequeridas(practica);
@@ -331,6 +340,25 @@ console.log(this.areas)
             }
         }
         this.practicaSeleccionada = null;
+    }
+
+    actualizarEstadoPractica(valor, tipo) {
+        let estado = {
+            tipo: tipo,
+            usuario: this.auth.usuario,
+            fecha: new Date(),
+            pendienteGuardar: true
+        }
+
+        if (!valor.estados) {
+            valor.estados = [];
+        }
+        
+        if (valor.estados.length === 0 || !valor.estados[valor.estados.length - 1].pendienteGuardar) {
+            valor.estados.push(estado);
+        } else {
+            valor.estados[valor.estados.length - 1] = estado;
+        }
     }
 
     /**

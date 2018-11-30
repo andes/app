@@ -71,7 +71,7 @@
                         <p>
                             <!-- {{practicaCarga.formatoResultado | json}} -->
                             <ng-container *ngIf='practicaCarga.registro.valor && !practicaCarga.registro.valor.resultado.sinMuestra'>
-                                <plex-float *ngIf="practicaCarga.practica.resultado.formato && practicaCarga.practica.resultado.formato.tipo === 'Numérico'"
+                                <plex-float *ngIf="practicaCarga.practica.resultado.formato && practicaCarga.practica.resultado.formato.tipo === 'Numérico'" (change)="actualizarEstadoPractica(practicaCarga.registro.valor,'cargar')"  
                                     [ngClass]="{'text-danger' : esValorCritico(practicaCarga.practica)}" [(ngModel)]="practicaCarga.registro.valor.resultado.valor"></plex-float>
                                 <b *ngIf="practicaCarga.registro.valor.resultado.sinMuestra">Sin muestra</b>
                             </ng-container>
@@ -107,12 +107,11 @@
                     </ng-container>
                     <ng-container *ngIf='(modo ==="carga" || modo ==="validacion") && !showObservaciones'>
                         <td class="small text-success">
-                            <ng-container *ngIf="practicaCarga.registro.valor.resultado.valor !== null && practicaCarga.registro.valor.resultado.valor !== '' && !practicaCarga.registro.valor.resultado.validado">Carga:
-                                Bioq. Lateulade Marcelo.
-                                <br />MP 679 05/11/2018 09:38</ng-container>
-                            <ng-container *ngIf="practicaCarga.registro.valor.resultado.validado">Val.: Bioq. Lateulade
-                                Marcelo.
-                                <br />MP 679 05/11/2018 09:38</ng-container>
+                            <ng-container *ngIf="practicaCarga.registro.valor.estados.length > 0">
+                                {{practicaCarga.registro.valor.estados[practicaCarga.registro.valor.estados.length-1]?.tipo}}: 
+                                {{practicaCarga.registro.valor.estados[practicaCarga.registro.valor.estados.length-1]?.usuario.nombre}} 
+                                {{practicaCarga.registro.valor.estados[practicaCarga.registro.valor.estados.length-1]?.usuario.apellido}}
+                                <br/>{{practicaCarga.registro.valor.estados[practicaCarga.registro.valor.estados.length-1]?.fecha | date: 'dd/MM/yyyy' }}</ng-container>
                         </td>
                         <td>
                             <plex-button type="info" title="Observaciones" icon="mdi mdi-file-document" (click)="verObservaciones()">
