@@ -3,7 +3,7 @@
         <header>
             Hojas de Trabajo
         </header>
-        <lista-hojatrabajo (hojaTrabajoSelectedEmmiter)="seleccionarHojaTrabajo($event)" (hojaTrabajoAgregarEmmiter)="agregarHojaTrabajo()"></lista-hojatrabajo>
+        <lista-hojatrabajo (hojaTrabajoSelectedEmmiter)="seleccionarHojaTrabajo($event)" (hojaTrabajoAgregarEmmiter)="agregarHojaTrabajo()" [areas]="areas"></lista-hojatrabajo>
     </plex-layout-main>
 
     <plex-layout-sidebar>
@@ -19,7 +19,7 @@
                             </div>
                         </div>
                     </header>
-                    <impresion-hojatrabajo *ngIf="hojaTrabajo" [hojaTrabajo]='hojaTrabajo'></impresion-hojatrabajo>
+                    <impresion-hojatrabajo *ngIf="hojaTrabajo" [hojaTrabajo]='hojaTrabajo' [areas]="areas"></impresion-hojatrabajo>
                 </plex-tab>
                 <plex-tab label="Prácticas de la Hoja">
                     <header>

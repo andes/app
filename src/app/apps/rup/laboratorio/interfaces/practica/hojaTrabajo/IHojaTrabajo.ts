@@ -8,13 +8,8 @@ export class IHojaTrabajo {
     nombre: String;
     responsable: String;
     area: {
-        nombre: String,
-        conceptoSnomed: {
-            term: string,
-            fsn: string,
-            conceptId: string,
-            semanticTag: string
-        }
+        id: String,
+        nombre: String
     };
     protocolo: {
         imprimirPrioridad: Boolean,
@@ -40,13 +35,8 @@ export class IHojaTrabajo {
 
     constructor() {
         this.area = {
-            nombre: '',
-            conceptoSnomed: {
-                term: '',
-                fsn: '',
-                conceptId: '',
-                semanticTag: ''
-            }
+            id: '',
+            nombre: ''
         };
         this.protocolo = {
             imprimirPrioridad: false,
@@ -70,16 +60,16 @@ export class IHojaTrabajo {
 
 
         // HARDCODEEEE.,...............
-        this.area = {
-            nombre: 'QUIMICA CLINICA',
-            conceptoSnomed: {
-                'fsn': 'servicio de bioquímica clínica (calificador)',
-                'term': 'servicio de bioquímica clínica',
-                'conceptId': '310076001',
-                'semanticTag': 'calificador'
-            }
-        };
-        
+        // this.area = {
+        //     nombre: 'QUIMICA CLINICA',
+        //     conceptoSnomed: {
+        //         'fsn': 'servicio de bioquímica clínica (calificador)',
+        //         'term': 'servicio de bioquímica clínica',
+        //         'conceptId': '310076001',
+        //         'semanticTag': 'calificador'
+        //     }
+        // };
+
         this.laboratorio = new ObjectID();
         this.responsable = new ObjectID();
         this.practicas = [];
