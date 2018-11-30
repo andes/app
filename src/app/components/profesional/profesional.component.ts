@@ -8,16 +8,16 @@ import { Component, OnInit, Output, Input, EventEmitter, ViewChild } from '@angu
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Plex } from '@andes/plex';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ScrollingModule, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 
 @Component({
     selector: 'profesionales',
     templateUrl: 'profesional.html',
-    styles: ['img {max-height: 200px;}']
+    styleUrls: [
+        'profesional.scss'
+    ]
 })
 export class ProfesionalComponent implements OnInit {
-    @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
 
     showcreate = false;
     showupdate = false;

@@ -25,7 +25,9 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'profesional-create-update',
     templateUrl: 'profesional-create-update.html',
-    styles: ['img {max-height: 200px;}']
+    styleUrls: [
+        'profesional.scss'
+    ]
 })
 export class ProfesionalCreateUpdateComponent implements OnInit {
     @Input() seleccion: IProfesional;
@@ -73,11 +75,11 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
     };
     match = new Matching();
     weights = {
-        identity: 0.3,
-        name: 0.3,
-        gender: 0.1,
-        birthDate: 0.3
-    };
+        identity: 0.55,
+        name: 0.10,
+        gender: 0.3,
+        birthDate: 0.05
+      };
     validado = false;
     noPoseeContacto = false;
     constructor(private formBuilder: FormBuilder,
@@ -134,7 +136,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
 
     removeContacto(i) {
         if (i >= 0) {
-            this.profesional.contacto.splice(i, 1);
+            this.profesional.contactos.splice(i, 1);
         }
     }
 
@@ -174,6 +176,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                     datos => {
                         if (datos.length > 0) {
                             datos.forEach(profCandidato => {
+                        this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
 
                                 let porcentajeMatching = this.match.matchPersonas(this.profesional, profCandidato, this.weights, 'Levenshtein');
                                 let profesionalMatch = {
@@ -185,7 +188,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                                     profesionalMatch.matching = porcentajeMatching * 100;
                                     profesionalMatch.paciente = profCandidato;
                                 }
-                                if (profesionalMatch.matching === 100) {
+                                if (profesionalMatch.matching >= 94) {
                                     match100 = true;
                                 }
 
@@ -193,7 +196,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
 
                             if (match100) {
                                 this.plex.info('warning', '', 'El profesional que está intentando guardar ya se encuentra cargado');
-                                this.mostrarBtnGuardar = false;
+                                // this.mostrarBtnGuardar = false;
                             } else {
                                 this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
 
