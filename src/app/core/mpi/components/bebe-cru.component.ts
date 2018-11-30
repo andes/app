@@ -159,27 +159,28 @@ export class BebeCruComponent implements OnInit {
     }
 
     onPacienteSelected(paciente: IPaciente) {
-        this.relacion.apellido = paciente.apellido;
-        this.relacion.nombre = paciente.nombre;
-        this.relacion.documento = paciente.documento;
-        this.relacion.fechaNacimiento = paciente.fechaNacimiento;
-        this.relacion.fechaNacimiento = paciente.fechaNacimiento;
-        this.relacion.sexo = paciente.sexo;
-        this.relacion.referencia = paciente.id;
-        let rel = this.parentescoModel.find((elem) => {
-            if (elem.nombre === 'progenitor/a') {
-                return elem;
-            }
-        });
-        this.relacion.relacion = rel;
-        this.bebeModel.relaciones = [this.relacion];
-        /* Si no se cargó ninguna dirección, tomamos el dato de la madre */
-        if (!this.bebeModel.direccion[0].valor) {
-            this.bebeModel.direccion[0].valor = paciente.direccion[0].valor;
-        }
-        if (!this.bebeModel.direccion[0].ubicacion.provincia) {
-            this.bebeModel.direccion[0].ubicacion.provincia = paciente.direccion[0].ubicacion.provincia;
-            if (paciente.direccion && paciente.direccion[0].ubicacion && paciente.direccion[0].ubicacion.provincia && paciente.direccion[0].ubicacion.provincia.nombre === 'Neuquén') {
+        if (paciente) {
+            this.relacion.apellido = paciente.apellido;
+            this.relacion.nombre = paciente.nombre;
+            this.relacion.documento = paciente.documento;
+            this.relacion.fechaNacimiento = paciente.fechaNacimiento;
+            this.relacion.fechaNacimiento = paciente.fechaNacimiento;
+            this.relacion.sexo = paciente.sexo;
+            this.relacion.referencia = paciente.id;
+            let rel = this.parentescoModel.find((elem) => {
+                if (elem.nombre === 'progenitor/a') {
+                    return elem;
+                }
+            });
+            this.relacion.relacion = rel;
+            this.bebeModel.relaciones = [this.relacion];
+            /* Si no se cargó ninguna dirección, tomamos el dato de la madre */
+            if (!this.bebeModel.direccion[0].valor && !this.bebeModel.direccion[0].ubicacion.provincia &&
+                paciente.direccion && paciente.direccion[0].ubicacion && paciente.direccion[0].ubicacion.provincia
+                && paciente.direccion[0].ubicacion.provincia.id && paciente.direccion[0].ubicacion.provincia.nombre === 'Neuquén') {
+
+                this.bebeModel.direccion[0].valor = paciente.direccion[0].valor;
+                this.bebeModel.direccion[0].ubicacion.provincia = paciente.direccion[0].ubicacion.provincia;
                 this.localidadService.getXProvincia(paciente.direccion[0].ubicacion.provincia.id).subscribe(result => {
                     this.localidadesNeuquen = result;
                     this.bebeModel.direccion[0].ubicacion.localidad = paciente.direccion[0].ubicacion.localidad;
@@ -187,14 +188,14 @@ export class BebeCruComponent implements OnInit {
                     this.showBuscador = false;
                     console.log(paciente.direccion[0].ubicacion);
                 });
+            } else {
+                this.pacientes = null;
+                this.showBuscador = false;
             }
         } else {
-            this.pacientes = null;
-            this.showBuscador = false;
-            console.log(paciente.direccion[0].ubicacion);
+            this.plex.alert('Error', 'Imposible obtener el paciente seleccionado');
         }
     }
-
     /**
     * Change del plex-bool viveProvNeuquen
     * carga las localidades correspondientes a Neuquén
