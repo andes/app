@@ -1,9 +1,8 @@
 import { Observable } from 'rxjs/Observable';
-import { PacienteSearch } from '../../../services/pacienteSearch.interface';
+import { PacienteSearch } from '../../../interfaces/pacienteSearch.interface';
 import { IPaciente } from '../interfaces/IPaciente';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { environment } from '../../../../environments/environment';
 import { ICarpetaPaciente } from '../../../interfaces/ICarpetaPaciente';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 

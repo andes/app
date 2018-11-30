@@ -70,6 +70,11 @@ export enum EstadosEspacios {
     'baja permanente'
 }
 
+export enum TipoIdentificacion {
+    'pasaporte',
+    'dni extranjero'
+}
+
 export function titleCase(str) {
     return str.toLowerCase().split(' ').map(function (word) {
         return (word.charAt(0).toUpperCase() + word.slice(1));
@@ -93,6 +98,24 @@ export function getObjSexos() {
     let arrSexo = Object.keys(Sexo);
     arrSexo = arrSexo.slice(arrSexo.length / 2);
     let salida = arrSexo.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
+
+export function getTipoIdentificacion() {
+    let arrTipoId = Object.keys(TipoIdentificacion);
+    arrTipoId = arrTipoId.slice(arrTipoId.length / 2);
+    return arrTipoId;
+}
+
+export function getObjTipoIdentificacion() {
+    let arrTipoId = Object.keys(TipoIdentificacion);
+    arrTipoId = arrTipoId.slice(arrTipoId.length / 2);
+    let salida = arrTipoId.map(elem => {
         return {
             'id': elem,
             'nombre': titleCase(elem)

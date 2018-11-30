@@ -62,6 +62,8 @@ export class BebeCruComponent implements OnInit {
         sexo: undefined,
         genero: undefined,
         fechaNacimiento: null, // Fecha Nacimiento
+        tipoIdentificacion: '',
+        numeroIdentificacion: '',
         edad: null,
         edadReal: null,
         fechaFallecimiento: null,

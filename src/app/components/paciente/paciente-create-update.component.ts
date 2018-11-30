@@ -14,7 +14,7 @@ import {
 } from './../../interfaces/IUbicacion';
 import {
     PacienteSearch
-} from './../../services/pacienteSearch.interface';
+} from './../../interfaces/pacienteSearch.interface';
 import {
     IContacto
 } from './../../interfaces/IContacto';
@@ -197,6 +197,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
         sexo: undefined,
         genero: undefined,
         fechaNacimiento: null, // Fecha Nacimiento
+        tipoIdentificacion: '',
+        numeroIdentificacion: '',
         edad: null,
         edadReal: null,
         fechaFallecimiento: null,

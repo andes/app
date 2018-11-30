@@ -16,6 +16,8 @@ export interface IPaciente {
     contacto: IContacto[];
     sexo: string;
     genero: string;
+    tipoIdentificacion: String;
+    numeroIdentificacion: String;
     fechaNacimiento: Date; // Fecha Nacimiento
     edad: Number;
     edadReal: { valor: Number, unidad: string };
