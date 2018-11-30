@@ -11,10 +11,11 @@ export class ListaHojatrabajoComponent implements OnInit {
 
     // Propiedades
     hojasTrabajo = [];
-    hojasTrabajoSelect = [];
+    hojasTrabajoFiltered = [];
     loader = true;
     seleccion: any = [];
     selectedArea: any;
+    hojaTrabajoSelected: IHojaTrabajo | null;
 
     @Input() areas: any[];
     // Eventos
@@ -35,13 +36,15 @@ export class ListaHojatrabajoComponent implements OnInit {
     cargarListado() {
         this.servicioHojaTrabajo.get().subscribe(hojasTrabajo => {
             this.hojasTrabajo = hojasTrabajo;
-            this.hojasTrabajoSelect = hojasTrabajo;
+            this.hojasTrabajoFiltered = hojasTrabajo;
+            this.hojaTrabajoSelected = null;
             this.loader = false;
-        return;
+            return;
         });
     }
 
     seleccionar(hojaTrabajo: any) {
+        this.hojaTrabajoSelected = hojaTrabajo;
         this.hojaTrabajoSelectedEmmiter.emit(hojaTrabajo);
     }
 
@@ -51,9 +54,9 @@ export class ListaHojatrabajoComponent implements OnInit {
 
     filtrarHT($event) {
         if ($event.value) {
-            this.hojasTrabajoSelect = this.hojasTrabajo.filter(ht => ht.area.nombre === $event.value.nombre);
+            this.hojasTrabajoFiltered = this.hojasTrabajo.filter(ht => ht.area.nombre === $event.value.nombre);
         } else {
-            this.hojasTrabajoSelect = this.hojasTrabajo;
+            this.hojasTrabajoFiltered = this.hojasTrabajo;
         }
     }
 }
