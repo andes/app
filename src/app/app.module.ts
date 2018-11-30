@@ -262,7 +262,7 @@ import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internac
 import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
 import { CensoDiarioComponent } from './modules/rup/components/internacion/censo/censoDiario.component';
 import { CensoMensualComponent } from './modules/rup/components/internacion/censo/censoMensual.component';
-import { ElementoDeRegistroComponent } from './modules/rup/components/elementos/elementoDeRegistro.component';
+import { ElementoDeRegistroComponent } from './modules/rup/components/elementos/elementoDeRegistro/elementoDeRegistro.component';
 import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeEpicrisis.component';
 import { ListaEsperaInternacionComponent } from './modules/rup/components/ejecucion/internacion/ListaEsperaInternacion.component';
 import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/odontologiaDefault.component';
@@ -283,7 +283,7 @@ import { PercentiloDeTensionArterialComponent } from './modules/rup/components/e
 import { ConsultaDeNinoSanoM2AComponent } from './modules/rup/components/elementos/consultaDeNinoSano/consultaDeNinoSanoM2A.component';
 import { ConsultaDeNinoSanoE2Y3AComponent } from './modules/rup/components/elementos/consultaDeNinoSano/consultaDeNinoSanoE2Y3A.component';
 import { ConsultaDeNinoSanoE3Y6AComponent } from './modules/rup/components/elementos/consultaDeNinoSano/consultaDeNinoSanoE3Y6A.component';
-import { DesarrolloPsicomotorComponent } from './modules/rup/components/elementos/desarrolloPsicomotor.component';
+import { DesarrolloPsicomotorComponent } from './modules/rup/components/elementos/desarrolloPsicomotor/desarrolloPsicomotor.component';
 import { RegistrarMedidasAntropometricasNinoE3Y6AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE3Y6A.component';
 import { RegistrarMedidasAntropometricasNinoM2AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoM2A.component';
 import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE2Y3A.component';
