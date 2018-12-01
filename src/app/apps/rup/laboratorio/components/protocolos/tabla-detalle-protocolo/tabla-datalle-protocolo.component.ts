@@ -22,23 +22,30 @@ export class TablaDatalleProtocolo implements OnInit {
     @Input() modo: any;
     @Input() modelo: any;
     @Input() solicitudProtocolo: any;
-    
+
     practicasCarga = [];
     practicasVista = [];
-    
-    practicasEjecucion = [];    
+
+    practicasEjecucion = [];
     @Input('practicasEjecucion')
     set pjs(practicasEjecucion) {
         this.practicasEjecucion = practicasEjecucion;
+        console.log('this.practicasEjecucion', this.practicasEjecucion)
         // if (this.modo === 'validacion' || this.modo === 'carga') {
-            this.cargarListaPracticaCarga();
-            if (this.modo === 'validacion') {
-                this.cargarResultadosAnteriores();
-            }
+        this.cargarListaPracticaCarga();
+        if (this.modo === 'validacion') {
+            this.cargarResultadosAnteriores();
+        
+        }
+        console.log('xxxx  this.practicasCarga', this.practicasCarga)
+        console.log('xxxx  this.practicasCarga', this.practicasCarga.length)
+        this.practicasCarga.forEach((practica) => { console.log('margen', practica.margen.length) } );
+        this.practicasVista = this.practicasCarga.filter(practica => { return practica.margen.length === 0 });
+        console.log('this.practicasVista', this.practicasVista)
+        console.log('this.practicasCarga', this.practicasCarga)
+
         // }
     }
-
-
 
     @Input() areas: any;
     @Input() editarListaPracticas;
@@ -63,7 +70,9 @@ export class TablaDatalleProtocolo implements OnInit {
             return new Promise((resolve) => {
                 if (registos.length > 0) {
                     let ids = [];
+                    
                     registos.forEach((reg1) => { ids.push(reg1._id); });
+                    
                     this.servicioPractica.findByIds(ids).subscribe(async (practicas) => {
                         for (const reg2 of registos) {
                             let match: any = practicas.filter((practica: any) => {
@@ -74,6 +83,7 @@ export class TablaDatalleProtocolo implements OnInit {
                             for (let i = 0; i < nivelTab; i++) {
                                 margen.push({});
                             }
+
                             if ((this.areas.length === 0) || this.areas.some(id => id === match.area.id)) {
                                 this.practicasCarga.push({
                                     registro: reg2,
@@ -91,6 +101,7 @@ export class TablaDatalleProtocolo implements OnInit {
             });
         };
         await cargarPracticas(this.practicasEjecucion, 0);
+        console.log('cargarListaPracticaCarga');
     }
 
 
@@ -193,7 +204,7 @@ export class TablaDatalleProtocolo implements OnInit {
             if (practica.valor) {
                 practica.valor.resultado.validado = $event.value;
                 if ($event) {
-                    this.actualizarEstadoPractica(practica.valor,'validar')
+                    this.actualizarEstadoPractica(practica.valor, 'validar')
                 }
             }
             // } else {
@@ -353,7 +364,7 @@ export class TablaDatalleProtocolo implements OnInit {
         if (!valor.estados) {
             valor.estados = [];
         }
-        
+
         if (valor.estados.length === 0 || !valor.estados[valor.estados.length - 1].pendienteGuardar) {
             valor.estados.push(estado);
         } else {
