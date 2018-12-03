@@ -31,12 +31,36 @@
     grid-template-columns: repeat(11, 1fr);
     &.table-grid-head {
         font-weight: 800;
-
     }
     &.recepcion {
         grid-template-columns: repeat(10, 1fr);
     }
-    
+    &.puntoInicio {
+        grid-template-columns: repeat(5, 1fr);
+    }
+    &.paciente {
+        grid-template-columns: 120px repeat(4, 1fr);
+        &>span {
+            justify-items: left;
+        }
+        
+        &.seleccionado {
+            grid-template-columns: 200px 1fr;
+            // grid-template-rows: 200px repeat(2, 1fr);
+            img {
+                grid-column: 1/2;
+                height: 200px;
+                width: 200px;
+            }
+            span {
+                grid-column: 2/3;
+                display: flex;
+                justify-content: left;
+                padding: .15rem .25rem;
+            }
+        }
+    }
+
     &> span {
         min-height: 55px;
         display: flex;
