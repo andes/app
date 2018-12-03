@@ -5,10 +5,12 @@ import { Component, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, Pipe
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { PacienteBuscarResultado } from '../../../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 
 @Component({
     selector: 'punto-inicio-laboratorio',
-    templateUrl: 'punto-inicio.html'
+    templateUrl: 'punto-inicio.html',
+    styleUrls: ['../../assets/laboratorio.scss']
 })
 
 export class PuntoInicioLaboratorioComponent implements OnInit {
@@ -45,7 +47,7 @@ export class PuntoInicioLaboratorioComponent implements OnInit {
     turnoArancelamiento: any;
     showArancelamiento = false;
     private esOperacion = false;
-
+    listado: any;
 
     constructor(
         public servicePaciente: PacienteService,
@@ -56,8 +58,28 @@ export class PuntoInicioLaboratorioComponent implements OnInit {
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:puntoInicio:?').length > 0;
-        this.puedeDarTurno = this.auth.getPermissions('turnos:puntoInicio:darTurnos:?').length > 0;
-        this.puedeCrearSolicitud = this.auth.getPermissions('turnos:puntoInicio:solicitud:?').length > 0;
+        this.puedeDarTurno = this.puedeDarTurno && this.auth.getPermissions('turnos:puntoInicio:darTurnos:?').length > 0;
+        this.puedeCrearSolicitud = this.puedeCrearSolicitud && this.auth.getPermissions('turnos:puntoInicio:solicitud:?').length > 0;
+    }
+
+    /**
+     * Funcionalidades del buscador de MPI
+     */
+    searchStart() {
+        this.listado = null;
+    }
+
+    searchEnd(resultado: PacienteBuscarResultado) {
+        if (resultado.err) {
+            this.plex.info('danger', resultado.err);
+        } else {
+            this.listado = resultado.pacientes;
+        }
+    }
+
+
+    recepcionSinTurno() {
+        this.pacienteSinTurnoEmitter.emit(this.paciente);
     }
 
     showArancelamientoForm(turno) {
@@ -73,6 +95,7 @@ export class PuntoInicioLaboratorioComponent implements OnInit {
     }
     onPacienteSelected(paciente: IPaciente): void {
         this.paciente = paciente;
+        this.seleccion = paciente;
 
         if (paciente.id) {
             if (paciente.estado === 'temporal' && paciente.scan) {
@@ -111,7 +134,6 @@ export class PuntoInicioLaboratorioComponent implements OnInit {
             this.showMostrarEstadisticasAgendas = false;
             this.showMostrarEstadisticasPacientes = false;
             this.showIngresarSolicitud = false;
-            this.seleccion = paciente;
             if (paciente.scan) {
                 this.esEscaneado = true;
             }
@@ -154,6 +176,7 @@ export class PuntoInicioLaboratorioComponent implements OnInit {
         this.showMostrarEstadisticasPacientes = false;
         this.showMostrarTurnosPaciente = false;
         this.showIngresarSolicitud = false;
+        this.showListaSolicitudes = false;
     }
 
     verificarOperacion({ operacion, paciente }) {
