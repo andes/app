@@ -6,7 +6,7 @@
                     [required]="true"></plex-text>
             </div>
             <div class="col-6">
-                <plex-select [(ngModel)]="hojaTrabajo.area" label="Area" name="area" (getData)="getAreas()" placeholder="Seleccione..."
+                <plex-select [(ngModel)]="hojaTrabajo.area" label="Area" name="area" [data]="areas" placeholder="Seleccione..."
                     [required]="true">
                 </plex-select>
             </div>

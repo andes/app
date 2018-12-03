@@ -23,8 +23,4 @@ export class ImpresionHojatrabajoComponent implements OnInit {
 
     ngOnInit() {
     }
-
-    getAreas() {
-        return this.areas;
-    }
 }
