@@ -4,7 +4,7 @@ import { IPaciente } from '../../../../../../interfaces/IPaciente';
 
 @Component({
   selector: 'punto-inicio-listado-solicitudes',
-  templateUrl: './listado-solicitudes.html'
+  templateUrl: './listado-solicitudes.html',
 })
 export class ListadoSolicitudesComponent implements OnInit {
   @Output() seleccionarProtocoloEmitter: EventEmitter<any> = new EventEmitter<any>();
@@ -53,10 +53,6 @@ export class ListadoSolicitudesComponent implements OnInit {
    */
   seleccionarProtocolo($event) {
     this.seleccionarProtocoloEmitter.emit($event);
-  }
-
-  recepcionSinTurno() {
-    this.pacienteSinTurnoEmitter.emit(this.paciente);
   }
 
 }
