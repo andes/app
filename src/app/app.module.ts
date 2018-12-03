@@ -371,7 +371,7 @@ import { GestorProtocolosComponent } from './apps/rup/laboratorio/components/ges
 import { PuntoInicioLaboratorioComponent } from './apps/rup/laboratorio/components/punto-inicio/punto-inicio.component';
 import { ListadoSolicitudesComponent } from './apps/rup/laboratorio/components/punto-inicio/listado-solicitudes/listado-solicitudes.component';
 import { HojaTrabajoService } from './apps/rup/laboratorio/services/hojatrabajo.service';
-import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/protocolos/tabla-detalle-protocolo/tabla-datalle-protocolo.component';
+import { TablaDatalleProtocoloComponent } from './apps/rup/laboratorio/components/protocolos/tabla-detalle-protocolo/tabla-datalle-protocolo.component';
 import { ProtocoloDetalleComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-detalle.component';
 import { ListaProtocolosComponent } from './apps/rup/laboratorio/components/lista-protocolos/lista-protocolos.component';
 import { ProtocoloEncabezadoComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-encabezado/protocolo-encabezado.component';
@@ -634,7 +634,7 @@ registerLocaleData(localeEs, 'es');
 
         // SIL
         LaboratorioComponent,
-        TablaDatalleProtocolo,
+        TablaDatalleProtocoloComponent,
         ListaProtocolosComponent,
         GestorProtocolosComponent,
         ProtocoloDetalleComponent,
