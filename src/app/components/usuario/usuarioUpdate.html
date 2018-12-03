@@ -8,7 +8,8 @@
                 <span *ngIf="!hidePermisos">
                     <div class="row">
                         <div class="col-9">
-                            <plex-select [(ngModel)]="organizacionSelect" name="organizacion" [data]="organizacionesUsuario" [required]="true" (change)="onOrgChange()">
+                            <plex-select [(ngModel)]="organizacionSelect" name="organizacion" [data]="organizacionesUsuario"
+                                [required]="true" (change)="onOrgChange()" labelField="nombre + ', ' + direccion.ubicacion.localidad.nombre">
                             </plex-select>
                         </div>
                         <div class="col" *ngIf="showAgregarEfector">
@@ -16,16 +17,22 @@
                         </div>
                     </div>
                     <div class="row">&nbsp;</div>
-                    <div *ngFor="let permiso of permisos$ | async ">
-                        <arbolPermisos [item]="permiso" [userPermissions]="permisos"></arbolPermisos>
+                    <div *ngIf="organizacionesUsuario.length > 0">
+                        <div *ngFor="let permiso of permisos$ | async ">
+                            <arbolPermisos [item]="permiso" [userPermissions]="permisos"></arbolPermisos>
+                        </div>
+                        <div>
+                            <div class="row">&nbsp;</div>
+                            <plex-button type="danger" icon="delete" label="Quitar Efector" (click)="deleteEfector()"></plex-button>
+                        </div>
                     </div>
-                    <div *ngIf="btnEliminar">
-                        <div class="row">&nbsp;</div>
-                        <plex-button type="danger" icon="delete" label="Quitar Efector" (click)="deleteEfector()"></plex-button>
+                    <div *ngIf="organizacionesUsuario.length <= 0" class="alert alert-default">
+                        <i class="mdi mdi-emoticon-sad"></i> Agregue un efector para modificar sus permisos
                     </div>
                 </span>
                 <div *ngIf="hidePermisos">
-                    <plex-select label="Nuevo Efector" [(ngModel)]="newOrg" name="nuevaOrganizacion" [data]="newOrganizaciones" [required]="true">
+                    <plex-select label="Nuevo Efector" [(ngModel)]="newOrg" name="nuevaOrganizacion" [data]="newOrganizaciones"
+                        [required]="true" labelField="nombre + ', ' + direccion.ubicacion.localidad.nombre">
                     </plex-select>
                     <plex-button type="primary" icon="save" label="Agregar" (click)="agregarOrg()"></plex-button>
                 </div>
@@ -58,11 +65,14 @@
     </div>
 </section>
 <footer>
-    <div class="text-right ">
-        <plex-button icon="close-circle-outline " label="Cancelar " type="danger " (click)="onCancel() ">
-        </plex-button>
-        <plex-button icon="content-save " label="Guardar " type="success " (click)="onSave() ">
-        </plex-button>
-
+    <div class="row">
+        <div class="col text-left">
+            <plex-button icon="close-circle-outline " label="Cancelar " type="danger " (click)="onCancel() ">
+            </plex-button>
+        </div>
+        <div class="col text-right">
+            <plex-button icon="content-save " label="Guardar " type="success " (click)="onSave() ">
+            </plex-button>
+        </div>
     </div>
 </footer>

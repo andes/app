@@ -106,6 +106,9 @@ import { FormTerapeuticoComponent } from './components/formularioTerapeutico/for
 
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
 
+// Campañas salud
+import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campaniaSalud.component';
+
 const appRoutes: Routes = [
   // Tablas maestras
   { path: 'tm/organizacion', component: OrganizacionComponent, canActivate: [RoutingGuard] },
@@ -213,7 +216,10 @@ const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
 
   { path: 'estadisticas', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingGuard] },
+  // Campañas Salud
+  { path: 'campaniasSalud', component: CampaniaSaludComponent, canActivate: [RoutingGuard] },
 
+  // dejar siempre al último porque no encuentra las url después de esta
   { path: '**', redirectTo: 'inicio' }
 ];
 

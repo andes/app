@@ -22,11 +22,10 @@
                             <th>Usuario</th>
                             <th>Apellido</th>
                             <th>Nombre</th>
-                            <th>Seleccionar</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="hover" *ngFor="let user of users  | textFilter:textoLibre ; let i=index">
+                        <tr class="hover" *ngFor="let user of users  | textFilter:textoLibre ; let i=index" (click)="seleccionarUsuario(user)">
                             <td>{{user.usuario}}</td>
                             <td *ngIf="user.apellido; else sinDatos">
                                 {{user.apellido}}
@@ -37,10 +36,6 @@
                             <ng-template #sinDatos>
                                 <td> SIN DATOS</td>
                             </ng-template>
-
-                            <td>
-                                <plex-button title="Seleccionar Usuario" icon="check-circle-outline" type="link" (click)="seleccionarUsuario(user)"></plex-button>
-                            </td>
                         </tr>
                     </tbody>
                 </table>
