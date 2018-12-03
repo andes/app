@@ -1,34 +1,29 @@
-<div class="row" *ngIf="edicionDatosCabecera && seleccionPaciente" style="display: block">
-    <div class="col-12">
-        <label>Paciente</label>
-        <pacientesSearch [bloquearCreate]="true" [modoCompleto]="false" [hideFooter]="true" (selected)="seleccionarPaciente($event)">
+<div *ngIf="edicionDatosCabecera && seleccionPaciente">
+        <!-- <label>Paciente</label> -->
+        <pacientesSearch [label]="'Buscar un paciente'" [bloquearCreate]="true" [modoCompleto]="false" [hideFooter]="true" (selected)="seleccionarPaciente($event)">
         </pacientesSearch>
-    </div>
 </div>
 
 <ng-container *ngIf="edicionDatosCabecera && !seleccionPaciente">
     <div class="row d-inline">
         <div class="col-12">
-            <span *ngIf='solicitudProtocolo.solicitudPrestacion.numeroProtocolo' class="badge badge-success" style='float: left; margin-right: 20px; margin-top: 10px;'>
-                <h2>{{solicitudProtocolo.solicitudPrestacion.numeroProtocolo?.numeroCompleto}}</h2>
+            <span *ngIf='solicitudProtocolo.solicitudPrestacion.numeroProtocolo' class="badge badge-success">
+                <h2>{{ solicitudProtocolo.solicitudPrestacion.numeroProtocolo?.numeroCompleto }}</h2>
             </span>
             <ng-container>
                 <div class="row">
-
                     <div class="col">
-                        <h2>{{modelo.paciente.documento}} - {{modelo.paciente.apellido}}, {{modelo.paciente.nombre}}</h2>
-                        F. Nac.: {{modelo.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}, Sexo:
-                        {{modelo.paciente.sexo}}
+                        <h2>{{ modelo.paciente.apellido }}, {{ modelo.paciente.nombre }} - {{ modelo.paciente.documento }}</h2>
+                        Fecha de Nacimiento: {{modelo.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }} - Sexo: {{ modelo.paciente.sexo }}
                     </div>
                     <div class="col-2">
-                        <plex-button position="left" type="warning" (click)="cambiarPaciente()">Cambiar Paciente</plex-button>
+                        <plex-button class="d-flex flex-row-reverse" position="left" type="warning" (click)="cambiarPaciente()">Cambiar Paciente</plex-button>
                     </div>
                 </div>
             </ng-container>
         </div>
     </div>
 </ng-container>
-
 <!--FIN SECCION PACIENTE-->
 
 <!-- SECCION PROTOCOLO -->
@@ -52,7 +47,7 @@
             </div>
 
         </plex-tab>
-        <plex-tab *ngIf='modo ==="recepcion" || modo ==="control"' label="Diagnostico">
+        <plex-tab *ngIf='modo === "recepcion" || modo === "control"' label="Diagnóstico">
             <div class="row">
                 <div class="col-12">
                     <plex-text [(ngModel)]="solicitudProtocolo.solicitudPrestacion.diagnostico" label="Diagnostico"
@@ -64,7 +59,7 @@
     </plex-tabs>
     <!--OBSERVACIONES - RECEPCION-->
     <div class="row">
-        <div *ngIf="modo === 'puntoInicio' || modo === 'recepcion' || modo==='control' || modo==='carga'" class="col-12">
+        <div *ngIf="modo === 'puntoInicio' || modo === 'recepcion' || modo === 'control' || modo === 'carga'" class="col-12">
             <plex-text [(ngModel)]="solicitudProtocolo.solicitudPrestacion.observaciones" label="Observaciones internas"
                 name="observaciones" multiline="true">
             </plex-text>
