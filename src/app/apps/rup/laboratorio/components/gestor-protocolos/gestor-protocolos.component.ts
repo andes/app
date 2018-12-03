@@ -203,14 +203,27 @@ export class GestorProtocolosComponent implements OnInit {
      * @memberof PuntoInicioLaboratorioComponent
      */
     mostrarFomularioPacienteSinTurno() {
-        this.resetearProtocolo({});
+        this.resetearProtocolo(this.paciente);
+        this.seleccionarProtocolo({});
         this.edicionDatosCabecera = true;
-        this.ocultarPanelLateral = true;
+        // this.ocultarPanelLateral = true;
         this.showListarProtocolos = false;
         this.showProtocoloDetalle = true;
         this.indexProtocolo = 0;
         this.seleccionPaciente = true;
         this.mostrarCuerpoProtocolo = false;
+
+
+
+
+
+        // this.mostrarCuerpoProtocolo = (this.modo === 'control') || (this.modo === 'carga') || (this.modo === 'validacion') || (this.modo === 'puntoInicio');
+        //     this.showListarProtocolos = false;
+        //     this.showProtocoloDetalle = true;
+        //     this.seleccionPaciente = false;
+        //     this.showCargarSolicitud = true;
+        //     this.ocultarPanelLateral = (this.modo === 'recepcion') || (this.modo === 'puntoInicio');
+        //     this.showBotonesGuardar = (this.modo !== 'recepcion');
     }
 
     mostrarBotonesGuardarProtocoloFooter($event) {

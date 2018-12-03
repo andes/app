@@ -3,6 +3,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'lista-protocolos',
   templateUrl: './lista-protocolos.html',
+  styleUrls: ['../../assets/laboratorio.scss']
 })
 export class ListaProtocolosComponent implements OnInit {
 

@@ -22,8 +22,7 @@
             {{ protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto }}
         </span>
         <span>{{ protocolo.solicitud.fecha | fecha }}</span>
-        <!-- <plex-button *ngIf='showProtocoloDetalle' icon="arrow-right-drop-circle-outline" class="float-right mr-2" (click)="editarDatosCabecera()"
-                 > -->
+        <!-- <plex-button *ngIf='showProtocoloDetalle' icon="arrow-right-drop-circle-outline" class="float-right mr-2" (click)="editarDatosCabecera()"> -->
         <!-- </plex-button> -->
         <ng-container *ngIf="!showProtocoloDetalle">
             <span>{{protocolo.ejecucion.fecha | fecha}}</span>
@@ -37,7 +36,7 @@
                 <plex-badge *ngIf="protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.prioridad?.nombre === 'Normal'"
                     type="success">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
             </span>
-            <span>
+            <span *ngIf='modo !== "puntoInicio"'>
                 <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'ejecucion'" type="warning">{{protocolo.estados[protocolo.estados.length
                     -1].tipo}}</plex-badge>
                 <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'validada'" type="info">{{protocolo.estados[protocolo.estados.length
@@ -64,3 +63,9 @@
     </div>
 
 </ng-container>
+<!--VISUALIZACIÓN DE PROTOCOLOS CONTROL -->
+<div class="row" *ngIf="!protocolos?.length">
+    <div class="col">
+        <i class="mdi mdi-emoticon-sad"></i> No hay protocolos que coincidan con los filtros de búsqueda
+    </div>
+</div>
