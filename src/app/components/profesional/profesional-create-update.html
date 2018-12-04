@@ -31,7 +31,7 @@
                     </div>
                     <div class="col-md-3">
                         <plex-datetime type="date" label="Fecha de nacimiento" [(ngModel)]="profesional.fechaNacimiento"
-                            name='fechaNacimiento' [required]="true">
+                            name='fechaNacimiento' [required]="true" [readonly]="validado">
                         </plex-datetime>
                     </div>
 
@@ -56,7 +56,7 @@
                                 <div class="row" *ngFor="let _unContacto of profesional.contactos; let i = index">
                                     <div class="col-4">
                                         <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}"
-                                            [required]="i <= 0" label="Tipo:">
+                                            [required]="i <= 0" label="Tipo">
                                         </plex-select>
                                     </div>
                                     <div class="col-4">
