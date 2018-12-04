@@ -152,12 +152,10 @@
                                                         Debe completar los datos
                                                     </span>
                                                 </div>
-                                                <!-- {{ elementosRUPService.buscarElemento(registro.concepto,
-                                                registro.esSolicitud) | json }} -->
-                                                <!-- RUP Loader -->
-                                                <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion"
-                                                    [paciente]="paciente" [registro]="registro" [soloValores]="false" (change)="elementosRUPService.selectPorRefsetId(registro.concepto)"
-                                                    (ejecutarConcepto)="ejecutarConcepto($event, registro)" [params]="elementosRUPService.selectPorRefsetId(registro.concepto, registro.esSolicitud)"></rup>
+                                                <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)"
+                                                    [prestacion]="prestacion" [paciente]="paciente" [registro]="registro"
+                                                    [soloValores]="false" (change)="elementosRUPService.selectPorRefsetId(registro.concepto)"
+                                                    (ejecutarConcepto)="ejecutarConcepto($event, registro)" [params]="elementosRUPService.coleccionRetsetId[registro.concepto.conceptId]"></rup>
                                             </div>
                                         </div>
 

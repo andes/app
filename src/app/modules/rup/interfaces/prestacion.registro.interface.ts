@@ -2,6 +2,10 @@ import { IElementoRUP } from './elementoRUP.interface';
 import { ISnomedConcept } from './snomed-concept.interface';
 import { ObjectID } from 'bson';
 
+export class IRegistroPrivacy {
+    scope: String;
+}
+
 export class IPrestacionRegistro {
     id: string;
     // Indica el nombre del registro, calculado por el elementoRUP.
@@ -22,6 +26,8 @@ export class IPrestacionRegistro {
     esDiagnosticoPrincipal: Boolean;
     // Indica si este registro es valido (no vacio)
     valido: Boolean;
+
+    privacy: IRegistroPrivacy;
 
     solicitud: any;
 
