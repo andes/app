@@ -287,7 +287,7 @@ import { RegistrarMedidasAntropometricasNinoM2AComponent } from './modules/rup/c
 import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE2Y3A.component';
 import { SeleccionBinariaComponent } from './modules/rup/components/elementos/seleccionBinaria.component';
 import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico.component';
-import { MoleculaBaseComponent } from './modules/rup/components/elementos/moleculaBase.component';
+import { MoleculaBaseComponent } from './modules/rup/components/elementos/moleculaBase/moleculaBase.component';
 
 import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria.component';
 // TODO: Eliminar todo esto de las llaves: deprecated

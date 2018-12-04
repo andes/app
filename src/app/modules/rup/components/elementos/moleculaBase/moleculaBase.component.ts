@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RUPComponent } from '../core/rup.component';
+import { RUPComponent } from '../../core/rup.component';
 
 @Component({
     selector: 'rup-molecula-base',
