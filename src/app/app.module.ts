@@ -262,7 +262,7 @@ import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama
 import { CensoDiarioComponent } from './modules/rup/components/internacion/censo/censoDiario.component';
 import { CensoMensualComponent } from './modules/rup/components/internacion/censo/censoMensual.component';
 import { ElementoDeRegistroComponent } from './modules/rup/components/elementos/elementoDeRegistro/elementoDeRegistro.component';
-import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeEpicrisis.component';
+import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeDeEpicrisis/informeEpicrisis.component';
 import { ListaEsperaInternacionComponent } from './modules/rup/components/ejecucion/internacion/ListaEsperaInternacion.component';
 import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/odontologiaDefault.component';
 import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';

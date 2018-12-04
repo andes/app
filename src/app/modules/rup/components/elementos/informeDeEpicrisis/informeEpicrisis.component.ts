@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { RUPComponent } from './../core/rup.component';
+import { RUPComponent } from '../../core/rup.component';
 
 @Component({
     selector: 'rup-InformeEpicrisisComponent',
