@@ -1,5 +1,4 @@
-import { IPrestacion } from './../../interfaces/prestacion.interface';
-import { Component, OnInit, ViewEncapsulation, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 
 @Component({
