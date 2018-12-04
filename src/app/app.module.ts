@@ -245,7 +245,6 @@ import { EvolucionProblemaDefaultComponent } from './modules/rup/components/elem
 import { AutocitadoComponent } from './modules/rup/components/elementos/autocitado/autocitado.component';
 import { ObesidadComponent } from './modules/rup/components/elementos/obesidad.component';
 import { HipertensionArterialComponent } from './modules/rup/components/elementos/hipertensionArterial.component';
-import { FiltradoGlomerularComponent } from './modules/rup/components/elementos/filtradoGlomerular.component';
 import { RiesgoCardiovascularComponent } from './modules/rup/components/elementos/riesgoCardiovascular.component';
 import { AdjuntarDocumentoComponent } from './modules/rup/components/elementos/adjuntarDocumento/adjuntarDocumento.component';
 import { RegistrarMedicamentoDefaultComponent } from './modules/rup/components/elementos/registrarMedicamentoDefault.component';
@@ -384,7 +383,6 @@ export let RUPRegistry = {
     'AutocitadoComponent': AutocitadoComponent,
     'ObesidadComponent': ObesidadComponent,
     'HipertensionArterialComponent': HipertensionArterialComponent,
-    'FiltradoGlomerularComponent': FiltradoGlomerularComponent,
     'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent,
     'AdjuntarDocumentoComponent': AdjuntarDocumentoComponent,
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
@@ -427,7 +425,6 @@ let RUPComponentsArray = [
     SelectPorRefsetComponent,
     AutocitadoComponent,
     EvolucionProblemaDefaultComponent,
-    FiltradoGlomerularComponent,
     FrecuenciaCardiacaComponent,
     FrecuenciaRespiratoriaComponent,
     HipertensionArterialComponent,
