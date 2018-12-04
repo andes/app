@@ -248,7 +248,7 @@ import { HipertensionArterialComponent } from './modules/rup/components/elemento
 import { RiesgoCardiovascularComponent } from './modules/rup/components/elementos/riesgoCardiovascular.component';
 import { AdjuntarDocumentoComponent } from './modules/rup/components/elementos/adjuntarDocumento/adjuntarDocumento.component';
 import { RegistrarMedicamentoDefaultComponent } from './modules/rup/components/elementos/registrarMedicamentoDefault.component';
-import { InformesComponent } from './modules/rup/components/elementos/informe.component';
+import { InformesComponent } from './modules/rup/components/elementos/informe/informe.component';
 import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
 import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
 import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
@@ -266,7 +266,7 @@ import { InformeEpicrisisComponent } from './modules/rup/components/elementos/in
 import { ListaEsperaInternacionComponent } from './modules/rup/components/ejecucion/internacion/ListaEsperaInternacion.component';
 import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/odontologiaDefault.component';
 import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
-import { InformeActividadNoNominalizadaComponent } from './modules/rup/components/elementos/informeActividadNoNominalizada.component';
+import { InformeActividadNoNominalizadaComponent } from './modules/rup/components/elementos/informeActividadNoNominalizada/informeActividadNoNominalizada.component';
 
 import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
 import { PesoComponent } from './modules/rup/components/elementos/peso.component';

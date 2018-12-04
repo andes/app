@@ -1,10 +1,8 @@
-import { SnomedService } from '../../../../services/term/snomed.service';
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
-import { RUPComponent } from './../core/rup.component';
-import { IPacienteMatch } from '../../../mpi/interfaces/IPacienteMatch.inteface';
-import { IPaciente } from '../../../../interfaces/IPaciente';
-import { Plex } from '@andes/plex';
-import { PacienteBuscarResultado } from '../../../mpi/interfaces/PacienteBuscarResultado.inteface';
+import { Component, OnInit } from '@angular/core';
+import { RUPComponent } from '../../core/rup.component';
+import { IPacienteMatch } from '../../../../mpi/interfaces/IPacienteMatch.inteface';
+import { IPaciente } from '../../../../../interfaces/IPaciente';
+import { PacienteBuscarResultado } from '../../../../mpi/interfaces/PacienteBuscarResultado.inteface';
 
 @Component({
     selector: 'rup-ActividadNoNominalizada',
