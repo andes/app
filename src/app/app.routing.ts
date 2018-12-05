@@ -181,9 +181,12 @@ const appRoutes: Routes = [
   // Solicitudes
   { path: 'solicitudes', component: SolicitudesComponent, canActivate: [RoutingGuard] },
   // Laboratorio
-  { path: 'laboratorio', redirectTo: 'laboratorio/inicio' },
-  { path: 'laboratorio/inicio', component: PuntoInicioLaboratorioComponent, canActivate: [RoutingGuard] },
+  // { path: 'laboratorio', redirectTo: 'laboratorio/recepcion' },
+  { path: 'laboratorio/recepcion', component: PuntoInicioLaboratorioComponent, canActivate: [RoutingGuard] },
+  { path: 'laboratorio/recepcion/:id', component: PuntoInicioLaboratorioComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/protocolos', component: LaboratorioComponent, canActivate: [RoutingGuard] },
+  { path: 'laboratorio/protocolos/sinTurno', component: LaboratorioComponent, canActivate: [RoutingGuard] },
+  { path: 'laboratorio/protocolos/sinTurno/:id', component: LaboratorioComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/hojatrabajo', component: GestorHojatrabajoComponent, canActivate: [RoutingGuard] },
   // { path: 'laboratorio', component: GestorProtocolosComponent, canActivate: [RoutingGuard] },
   // { path: 'laboratorio', component: ProtocoloDetalleComponent, canActivate: [RoutingGuard] },
