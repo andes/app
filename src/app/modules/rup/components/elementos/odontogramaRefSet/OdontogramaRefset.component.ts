@@ -1,10 +1,8 @@
-import { setTimeout } from 'timers';
-import { IPrestacion } from './../../interfaces/prestacion.interface';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
-import { RUPComponent } from './../core/rup.component';
-import { IPrestacionGetParams } from '../../interfaces/prestacionGetParams.interface';
-// import { Plex } from '@andes/plex';
-import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
+import { IPrestacion } from '../../../interfaces/prestacion.interface';
+import { Component, OnInit } from '@angular/core';
+import { RUPComponent } from '../../core/rup.component';
+import { IPrestacionGetParams } from '../../../interfaces/prestacionGetParams.interface';
+import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.interface';
 
 @Component({
     selector: 'rup-OdontogramaRefset',

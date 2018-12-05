@@ -254,7 +254,7 @@ import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/
 import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
 import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoDerecho.component';
 import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
-import { OdontogramaRefsetComponent } from './modules/rup/components/elementos/OdontogramaRefset.component';
+import { OdontogramaRefsetComponent } from './modules/rup/components/elementos/odontogramaRefSet/OdontogramaRefset.component';
 import { LactanciaComponent } from './modules/rup/components/elementos/lactancia/lactancia.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
