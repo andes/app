@@ -199,6 +199,10 @@ export class UsuarioUpdateComponent implements OnInit {
     }
 
     onCancel() {
-        this.data.emit(null);
+        if (this.hidePermisos) {
+            this.hidePermisos = false;
+        } else {
+            this.data.emit(null);
+        }
     }
 }
