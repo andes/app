@@ -1,7 +1,6 @@
-import { SnomedService } from '../../../../services/term/snomed.service';
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
-import { RUPComponent } from './../core/rup.component';
-import { Plex } from '@andes/plex';
+import { Component, OnInit } from '@angular/core';
+import { RUPComponent } from '../../core/rup.component';
+
 
 @Component({
     selector: 'rup-procedimientoDeEnfermeria',
