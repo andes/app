@@ -11,6 +11,7 @@ import { PrestacionesService } from '../../../../../modules/rup/services/prestac
 import * as enumerados from './../../../../../utils/enumerados';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Constantes } from '../../controllers/constants';
+import { PacienteBuscarResultado } from '../../../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 
 @Component({
     selector: 'protocolo-detalle',
@@ -65,6 +66,8 @@ export class ProtocoloDetalleComponent
     @Input() indexProtocolo: any;
     @Input() areas: any;
     @Input() editarListaPracticas;
+    listado: any;
+    seleccion: any;
     @Input('protocolo')
     set protocolo(value: any) {
         if (value) {
@@ -85,7 +88,7 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     cargarProtocolo(value: any) {
-        console.log('cargarProtocolo', value)
+        console.log('cargarProtocolo', value);
         this.modelo = value;
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
         this.practicasEjecucion = this.modelo.ejecucion.registros;
@@ -96,7 +99,7 @@ export class ProtocoloDetalleComponent
 
         if ((this.modo === 'puntoInicio' || this.modo === 'recepcion') && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
             this.editarDatosCabecera();
-            this.seleccionPaciente = this.modo === 'recepcion';
+            // this.seleccionPaciente = this.modo === 'recepcion';
         } else {
             this.aceptarEdicionCabecera();
             if (this.modo === 'validacion' || this.modo === 'carga') {
@@ -221,7 +224,7 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     editarDatosCabecera() {
-        // this.edicionDatosCabecera = (this.modo !== 'puntoInicio'); 
+        // this.edicionDatosCabecera = (this.modo !== 'puntoInicio');
         // this.mostrarCuerpoProtocolo = (this.modo === 'puntoInicio');
         this.edicionDatosCabecera = true;
         this.mostrarCuerpoProtocolo = false;
@@ -269,31 +272,20 @@ export class ProtocoloDetalleComponent
         return false;
     }
     /**
-     *
-     *
-     * @memberof ProtocoloDetalleComponent
+     * Funcionalidades del buscador de MPI
      */
     searchStart() {
-        this.pacientes = null;
+        this.listado = null;
+        this.seleccion = null;
+        // this.router.navigate(['/laboratorio/recepcion/']);
+
     }
 
-    /**
-     *
-     *
-     * @param {*} resultado
-     * @memberof ProtocoloDetalleComponent
-     */
-    searchEnd(resultado: any) {
+    searchEnd(resultado: PacienteBuscarResultado) {
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
         } else {
-            this.pacientes = resultado.pacientes;
-            if (this.pacientes) {
-                this.mostrarListaMpi = true;
-            } else {
-                this.mostrarListaMpi = false;
-            }
-
+            this.listado = resultado.pacientes;
         }
     }
     /**
@@ -302,8 +294,10 @@ export class ProtocoloDetalleComponent
      * @param {*} paciente
      * @memberof ProtocoloDetalleComponent
      */
-    hoverPaciente(paciente: any) {
-        this.pacienteActivo = paciente;
+    onPacienteSelected(paciente: PacienteBuscarResultado) {
+        this.modelo.paciente = paciente;
+        this.listado = null;
+        this.seleccionPaciente = false;
     }
 
     /**
@@ -344,6 +338,7 @@ export class ProtocoloDetalleComponent
     cambiarPaciente() {
         this.seleccionPaciente = true;
     }
+
 
     /**
      * Retorna true si el último estado registrado es de validada, false si no.
