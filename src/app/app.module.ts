@@ -239,7 +239,7 @@ import { SignosVitalesComponent } from './modules/rup/components/elementos/signo
 import { SaturacionOxigenoComponent } from './modules/rup/components/elementos/saturacionOxigeno.component';
 import { FrecuenciaCardiacaComponent } from './modules/rup/components/elementos/frecuenciaCardiaca.component';
 import { FrecuenciaRespiratoriaComponent } from './modules/rup/components/elementos/frecuenciaRespiratoria.component';
-import { ObservacionesComponent } from './modules/rup/components/elementos/observaciones.component';
+import { ObservacionesComponent } from './modules/rup/components/elementos/observaciones/observaciones.component';
 import { NuevaEvolucionProblemaComponent } from './modules/rup/components/elementos/nuevaEvolucionProblema.component';
 import { EvolucionProblemaDefaultComponent } from './modules/rup/components/elementos/evolucionProblemaDefault/evolucionProblemaDefault.component';
 import { AutocitadoComponent } from './modules/rup/components/elementos/autocitado/autocitado.component';
