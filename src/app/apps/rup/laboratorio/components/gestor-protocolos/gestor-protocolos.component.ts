@@ -1,9 +1,11 @@
 import { Constantes } from './../../controllers/constants';
-import { Component, OnInit, Input, ViewChild, EventEmitter, Output, ViewEncapsulation, HostBinding } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, EventEmitter, Output, ViewEncapsulation, HostBinding, OnDestroy } from '@angular/core';
 import { ProtocoloDetalleComponent } from '../protocolos/protocolo-detalle.component';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { PacienteService } from '../../../../../services/paciente.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'gestor-protocolos',
@@ -30,6 +32,7 @@ export class GestorProtocolosComponent implements OnInit {
     // public protocolo: IPrestacion;
     public protocolos: any[];
     public protocolo: any;
+    routeParams: any;
 
     @Input('protocolo')
     set setProtocolo(value: any) {
@@ -65,6 +68,8 @@ export class GestorProtocolosComponent implements OnInit {
     public protocoloDetalleComponent: ProtocoloDetalleComponent;
 
     constructor(
+        public servicePaciente: PacienteService,
+        private route: ActivatedRoute,
         public plex: Plex,
         public servicioPrestaciones: PrestacionesService,
         public auth: Auth,
@@ -74,9 +79,34 @@ export class GestorProtocolosComponent implements OnInit {
         if (!this.protocolo) {
             this.resetearProtocolo({});
         }
+        this.routeParams = this.route.params.subscribe(params => {
+            console.log(params);
+            if (params['id']) {
+                let id = params['id'];
+                this.servicePaciente.getById(id).subscribe(pacienteMPI => {
+                    this.modo = 'recepcion';
+                    this.paciente = pacienteMPI;
+                    this.ocultarPanelLateral = false;
+                    this.mostrarFomularioPacienteSinTurno();
+                    this.seleccionPaciente = false;
+                    this.seleccionarProtocolo(this.protocolo);
+                    // this.resetearProtocolo(this.paciente);
+                    // this.editarListaPracticas = true;
+                    // this.edicionDatosCabecera = true;
+                    // this.ocultarPanelLateral = true;
+                    // this.showProtocoloDetalle = true;
+                    // this.indexProtocolo = 0;
+                    // this.seleccionPaciente = false;
+                    // this.mostrarCuerpoProtocolo = true;
+                });
+            }
 
-        // this.refreshSelection();
+        });
     }
+
+    // ngOnDestroy() {
+    //     this.routeParams.unsubscribe();
+    // }
 
     cambio($event) {
         this.accionIndex = $event;
@@ -145,7 +175,7 @@ export class GestorProtocolosComponent implements OnInit {
 
     getProtocolos(params: any) {
         this.servicioPrestaciones.get(params).subscribe(protocolos => {
-            console.log({protocolos});
+            console.log({ protocolos });
             this.protocolos = protocolos;
         }, err => {
             if (err) {
@@ -203,19 +233,18 @@ export class GestorProtocolosComponent implements OnInit {
      * @memberof PuntoInicioLaboratorioComponent
      */
     mostrarFomularioPacienteSinTurno() {
-        this.resetearProtocolo(this.paciente);
-        this.seleccionarProtocolo({});
-        this.edicionDatosCabecera = true;
-        // this.ocultarPanelLateral = true;
-        this.showListarProtocolos = false;
-        this.showProtocoloDetalle = true;
-        this.indexProtocolo = 0;
-        this.seleccionPaciente = true;
-        this.mostrarCuerpoProtocolo = false;
-
-
-
-
+        console.log(this.paciente);
+        if (this.paciente) {
+            this.resetearProtocolo(this.paciente);
+            this.seleccionarProtocolo({});
+            this.edicionDatosCabecera = true;
+            // this.ocultarPanelLateral = true;
+            this.showListarProtocolos = false;
+            this.showProtocoloDetalle = true;
+            this.indexProtocolo = 0;
+            this.seleccionPaciente = true;
+            this.mostrarCuerpoProtocolo = true;
+        }
 
         // this.mostrarCuerpoProtocolo = (this.modo === 'control') || (this.modo === 'carga') || (this.modo === 'validacion') || (this.modo === 'puntoInicio');
         //     this.showListarProtocolos = false;
