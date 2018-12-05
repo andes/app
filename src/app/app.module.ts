@@ -256,7 +256,6 @@ import { OdontogramaRefsetComponent } from './modules/rup/components/elementos/o
 import { LactanciaComponent } from './modules/rup/components/elementos/lactancia/lactancia.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
-import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
 import { CensoDiarioComponent } from './modules/rup/components/internacion/censo/censoDiario.component';
 import { CensoMensualComponent } from './modules/rup/components/internacion/censo/censoMensual.component';
 import { ElementoDeRegistroComponent } from './modules/rup/components/elementos/elementoDeRegistro/elementoDeRegistro.component';
@@ -385,7 +384,6 @@ export let RUPRegistry = {
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
     'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent,
     'IngresoInternacionComponent': IngresoInternacionComponent,
-    'PasesCamaComponent': PasesCamaComponent,
     'InformeEpicrisisComponent': InformeEpicrisisComponent,
     'ElementoDeRegistroComponent': ElementoDeRegistroComponent,
     'OdontogramaRefsetComponent': OdontogramaRefsetComponent,
@@ -447,7 +445,6 @@ let RUPComponentsArray = [
     OdontogramaRefsetComponent,
     LactanciaComponent,
     IniciarInternacionComponent,
-    PasesCamaComponent,
     CensoDiarioComponent,
     CensoMensualComponent,
     InformeEpicrisisComponent,
