@@ -283,7 +283,7 @@ import { RegistrarMedidasAntropometricasNinoE3Y6AComponent } from './modules/rup
 import { RegistrarMedidasAntropometricasNinoM2AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoM2A.component';
 import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE2Y3A.component';
 import { SeleccionBinariaComponent } from './modules/rup/components/elementos/seleccionBinaria/seleccionBinaria.component';
-import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico.component';
+import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico/valorNumerico.component';
 import { MoleculaBaseComponent } from './modules/rup/components/elementos/moleculaBase/moleculaBase.component';
 
 import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria/procedimientoDeEnfermeria.component';
