@@ -4,14 +4,14 @@ import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.i
 import { PacienteBuscarResultado } from '../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 import { Plex } from '@andes/plex';
 import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
-import { BarrioService } from '../../../services/barrio.service';
-import { PaisService } from '../../../services/pais.service';
 import { LocalidadService } from '../../../services/localidad.service';
 import { ProvinciaService } from '../../../services/provincia.service';
 import { IProvincia } from '../../../interfaces/IProvincia';
 import { IDireccion } from '../interfaces/IDireccion';
 import { ParentescoService } from '../../../services/parentesco.service';
 import { PacienteService } from '../services/paciente.service';
+import { Router } from '@angular/router';
+import { PaisService } from '../../../services/pais.service';
 
 @Component({
     selector: 'apps/mpi/bebe',
@@ -88,7 +88,6 @@ export class BebeCruComponent implements OnInit {
     paisArgentina = null;
     provinciaNeuquen = null;
     localidadNeuquen = null;
-    viveEnNeuquen = false;
     viveProvNeuquen = false;
     barriosNeuquen: any[];
     localidadesNeuquen: any[] = [];
@@ -97,12 +96,12 @@ export class BebeCruComponent implements OnInit {
 
     constructor(
         private plex: Plex,
-        private barrioService: BarrioService,
-        private paisService: PaisService,
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
         private parentescoService: ParentescoService,
-        private pacienteService: PacienteService
+        private pacienteService: PacienteService,
+        private paisService: PaisService,
+        private router: Router
     ) {
         this.plex.updateTitle([{
             route: '/apps/mpi',
@@ -117,6 +116,29 @@ export class BebeCruComponent implements OnInit {
         // Se cargan los parentescos para las relaciones
         this.parentescoService.get().subscribe(resultado => {
             this.parentescoModel = resultado;
+        });
+        // Set País Argentina
+        this.paisService.get({
+            nombre: 'Argentina'
+        }).subscribe(arg => {
+            this.paisArgentina = arg[0];
+        });
+
+        // Cargamos todas las provincias
+        this.provinciaService.get({}).subscribe(rta => {
+            this.provincias = rta;
+        });
+
+        this.provinciaService.get({
+            nombre: 'Neuquén'
+        }).subscribe(Prov => {
+            this.provinciaNeuquen = Prov[0];
+        });
+
+        this.localidadService.get({
+            nombre: 'Neuquén'
+        }).subscribe(Loc => {
+            this.localidadNeuquen = Loc[0];
         });
     }
 
@@ -137,28 +159,43 @@ export class BebeCruComponent implements OnInit {
     }
 
     onPacienteSelected(paciente: IPaciente) {
-        this.relacion.apellido = paciente.apellido;
-        this.relacion.nombre = paciente.nombre;
-        this.relacion.documento = paciente.documento;
-        this.relacion.fechaNacimiento = paciente.fechaNacimiento;
-        this.relacion.fechaNacimiento = paciente.fechaNacimiento;
-        this.relacion.sexo = paciente.sexo;
-        this.relacion.referencia = paciente.id;
-        let rel = this.parentescoModel.find((elem) => {
-            if (elem.nombre === 'progenitor/a') {
-                return elem;
-            }
-        });
-        this.relacion.relacion = rel;
-        this.bebeModel.relaciones = [this.relacion];
-        /* Si no se cargó ninguna dirección, tomamos el dato de la madre */
-        if (!this.bebeModel.direccion[0].valor) {
-            this.bebeModel.direccion = paciente.direccion;
-        }
-        this.pacientes = null;
-        this.showBuscador = false;
-    }
+        if (paciente) {
+            this.relacion.apellido = paciente.apellido;
+            this.relacion.nombre = paciente.nombre;
+            this.relacion.documento = paciente.documento;
+            this.relacion.fechaNacimiento = paciente.fechaNacimiento;
+            this.relacion.fechaNacimiento = paciente.fechaNacimiento;
+            this.relacion.sexo = paciente.sexo;
+            this.relacion.referencia = paciente.id;
+            let rel = this.parentescoModel.find((elem) => {
+                if (elem.nombre === 'progenitor/a') {
+                    return elem;
+                }
+            });
+            this.relacion.relacion = rel;
+            this.bebeModel.relaciones = [this.relacion];
+            /* Si no se cargó ninguna dirección, tomamos el dato de la madre */
+            if (!this.bebeModel.direccion[0].valor && !this.bebeModel.direccion[0].ubicacion.provincia &&
+                paciente.direccion && paciente.direccion[0].ubicacion && paciente.direccion[0].ubicacion.provincia
+                && paciente.direccion[0].ubicacion.provincia.id && paciente.direccion[0].ubicacion.provincia.nombre === 'Neuquén') {
 
+                this.bebeModel.direccion[0].valor = paciente.direccion[0].valor;
+                this.bebeModel.direccion[0].ubicacion.provincia = paciente.direccion[0].ubicacion.provincia;
+                this.localidadService.getXProvincia(paciente.direccion[0].ubicacion.provincia.id).subscribe(result => {
+                    this.localidadesNeuquen = result;
+                    this.bebeModel.direccion[0].ubicacion.localidad = paciente.direccion[0].ubicacion.localidad;
+                    this.pacientes = null;
+                    this.showBuscador = false;
+                    console.log(paciente.direccion[0].ubicacion);
+                });
+            } else {
+                this.pacientes = null;
+                this.showBuscador = false;
+            }
+        } else {
+            this.plex.alert('Error', 'Imposible obtener el paciente seleccionado');
+        }
+    }
     /**
     * Change del plex-bool viveProvNeuquen
     * carga las localidades correspondientes a Neuquén
@@ -169,11 +206,19 @@ export class BebeCruComponent implements OnInit {
     changeProvNeuquen(event) {
         if (event.value) {
             this.loadLocalidades(this.provinciaNeuquen);
+            this.bebeModel.direccion[0].ubicacion.provincia = this.provinciaNeuquen;
         } else {
-            this.viveEnNeuquen = false;
+            this.bebeModel.direccion[0].ubicacion.provincia = null;
             this.localidadesNeuquen = [];
         }
 
+    }
+    loadProvincias(event, pais) {
+        if (pais && pais.id) {
+            this.provinciaService.get({
+                pais: pais.id
+            }).subscribe(event.callback);
+        }
     }
     /**
      * Change del plex-bool viveNQN
@@ -183,17 +228,10 @@ export class BebeCruComponent implements OnInit {
      * @memberOf PacienteCreateUpdateComponent
      */
     changeLocalidadNeuquen(event) {
-        // if (event.value) {
-        //     this.loadBarrios(this.localidadNeuquen);
-        // } else {
-        //     this.barriosNeuquen = [];
-        // }
-    }
-    loadProvincias(event, pais) {
-        if (pais && pais.id) {
-            this.provinciaService.get({
-                pais: pais.id
-            }).subscribe(event.callback);
+        if (event.value) {
+            this.bebeModel.direccion[0].ubicacion.localidad = this.localidadNeuquen;
+        } else {
+            this.bebeModel.direccion[0].ubicacion.localidad = null;
         }
     }
 
@@ -206,21 +244,31 @@ export class BebeCruComponent implements OnInit {
     }
 
     cancel() {
-        // TODO navegar atrás
+        this.router.navigate(['./apps/mpi']);
     }
 
     save(event) {
-        // if (this.showBuscador && event.formValid) {
-        //     this.plex.info('warning', 'Agregue la relación de madre o padre', 'Información Faltante');
-        // } else {
-        //     console.log(this.bebeModel);
-        //     this.pacienteSave.preSave(this.bebeModel);
-        // }
+        // Si aún no elegió una relación (showBuscardor=true) no debe dejar guardar
+        if (this.showBuscador && event.formValid) {
+            this.plex.info('warning', 'Agregue la relación de madre o padre', 'Información Faltante');
+        } else {
+            this.bebeModel.genero = this.bebeModel.sexo;
+            this.pacienteService.save(this.bebeModel).subscribe(
+                () => {
+                    this.plex.info('success', 'Los datos se actualizaron correctamente');
+                    this.router.navigate(['./apps/mpi']);
+                },
+                () => {
+                    this.plex.info('warning', 'Paciente no guardado', 'Error de conexión');
+                });
+        }
     }
 
     cambiarRelacion() {
         this.showBuscador = true;
+        this.bebeModel.direccion[0].valor = null;
+        this.bebeModel.direccion[0].ubicacion.localidad = null;
+        this.bebeModel.direccion[0].ubicacion.provincia = null;
     }
-
 
 }
