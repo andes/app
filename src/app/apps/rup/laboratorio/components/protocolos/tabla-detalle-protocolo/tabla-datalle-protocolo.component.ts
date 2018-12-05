@@ -14,7 +14,7 @@ import { Constantes } from '../../../controllers/constants';
     templateUrl: 'tabla-datalle-protocolo.html'
 })
 
-export class TablaDatalleProtocolo implements OnInit {
+export class TablaDatalleProtocoloComponent implements OnInit {
     ngOnInit() {
 
     }
@@ -219,7 +219,7 @@ export class TablaDatalleProtocolo implements OnInit {
     /**
      *
      *
-     * @memberof TablaDatalleProtocolo
+     * @memberof TablaDatalleProtocoloComponent
      */
     busquedaInicial() {
         this.practicas = null;
@@ -227,7 +227,7 @@ export class TablaDatalleProtocolo implements OnInit {
     /**
      *
      *
-     * @memberof TablaDatalleProtocolo
+     * @memberof TablaDatalleProtocoloComponent
      */
     searchClear() {
         this.practicas = null;
@@ -236,7 +236,7 @@ export class TablaDatalleProtocolo implements OnInit {
      *
      *
      * @param {PracticaBuscarResultado} resultado
-     * @memberof TablaDatalleProtocolo
+     * @memberof TablaDatalleProtocoloComponent
      */
     busquedaFinal(resultado: IPracticaBuscarResultado) {
         if (resultado.err) {
@@ -249,7 +249,7 @@ export class TablaDatalleProtocolo implements OnInit {
      *
      *
      * @param {any} $event
-     * @memberof TablaDatalleProtocolo
+     * @memberof TablaDatalleProtocoloComponent
      */
     loadPracticasPorNombre($event) {
         if ($event.query) {
@@ -267,7 +267,7 @@ export class TablaDatalleProtocolo implements OnInit {
      *
      *
      * @param {any} value
-     * @memberof TablaDatalleProtocolo
+     * @memberof TablaDatalleProtocoloComponent
      */
     getPracticaPorCodigo(value) {
         if (this.practicaSeleccionada !== '') {
@@ -284,7 +284,7 @@ export class TablaDatalleProtocolo implements OnInit {
      *
      * @param {any} objetoPractica
      * @returns
-     * @memberof TablaDatalleProtocolo
+     * @memberof TablaDatalleProtocoloComponent
      */
     esValorCritico(objetoPractica) {
         // let resultado = objetoPractica.practica.valor.resultado;

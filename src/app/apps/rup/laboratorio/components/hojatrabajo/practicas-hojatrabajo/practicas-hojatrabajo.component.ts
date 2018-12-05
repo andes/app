@@ -46,7 +46,7 @@ export class PracticasHojatrabajoComponent implements OnInit {
      *
      *
      * @param {any} $event
-     * @memberof TablaDatalleProtocolo
+     * @memberof PracticasHojatrabajoComponent
      */
     getPracticasPorNombre($event) {
         if ($event.query) {
