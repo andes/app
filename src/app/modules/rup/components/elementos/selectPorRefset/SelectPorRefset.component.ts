@@ -1,6 +1,6 @@
-import { IPrestacionGetParams } from './../../services/prestacionGetParams.interface';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
-import { RUPComponent } from './../core/rup.component';
+import { IPrestacionGetParams } from '../../../services/prestacionGetParams.interface';
+import { Component, OnInit } from '@angular/core';
+import { RUPComponent } from '../../core/rup.component';
 
 @Component({
     selector: 'rup-SelectPorRefset',

@@ -229,7 +229,7 @@ import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucio
 import { LaboratoriosComponent } from './modules/rup/components/laboratorios/laboratorios.component';
 // import { RUPRegistry } from './modules/rup/components/core/rup-.registry';
 // TODO: ver con JGabriel!!!
-import { SelectPorRefsetComponent } from './modules/rup/components/elementos/SelectPorRefset.component';
+import { SelectPorRefsetComponent } from './modules/rup/components/elementos/selectPorRefset/SelectPorRefset.component';
 import { TensionSistolicaComponent } from './modules/rup/components/elementos/tensionSistolica.component';
 import { TensionDiastolicaComponent } from './modules/rup/components/elementos/tensionDiastolica.component';
 import { TensionArterialComponent } from './modules/rup/components/elementos/tensionArterial.component';
