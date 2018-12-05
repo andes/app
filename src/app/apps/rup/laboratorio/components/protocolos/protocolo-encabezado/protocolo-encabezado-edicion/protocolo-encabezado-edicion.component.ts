@@ -7,7 +7,7 @@ import { Auth } from '@andes/auth';
 @Component({
     selector: 'protocolo-encabezado-edicion',
     templateUrl: './protocolo-encabezado-edicion.html',
-    // styleUrls: ['../../../assets/laboratorio.scss']
+    styleUrls: ['../../../../assets/laboratorio.scss']
 })
 
 export class ProtocoloEncabezadoEdicionComponent implements OnInit {

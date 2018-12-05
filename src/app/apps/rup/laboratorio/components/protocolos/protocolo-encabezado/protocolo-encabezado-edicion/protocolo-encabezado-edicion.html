@@ -1,59 +1,26 @@
-<section class="labs-listado-item" style="width: 100% !important">
-    <div class="row">
-        <div class="col">
-            <div class="listado-contenedor-secundario">
-
-                <!-- Modo edicion de datos -->
-                <article *ngIf='!seleccionPaciente' class="labs-item-numero">
-                    <div class="row ml-1" style="width: 100% !important;">
-                        <div class="col-2">
-                            <plex-datetime type="date" [(ngModel)]="modelo.ejecucion.fecha" name="fecha" label="Fecha"
-                                [required]="true"></plex-datetime>
-                        </div>
-                        <div class="col-2">
-                            <plex-datetime type="date" [(ngModel)]="solicitudProtocolo.solicitudPrestacion.fechaTomaMuestra"
-                                name="fechaTomaMuestra" label="F. Muestra" [required]="true"></plex-datetime>
-                        </div>
-                        <div class="col-2">
-                            <plex-datetime type="date" [(ngModel)]="modelo.solicitud.fech" name="fecha" label="F. solicitud"
-                                [required]="true"></plex-datetime>
-                        </div>
-                    </div>
-                    <div class="row ml-1">
-                        <div class="col-5">
-                            <!-- TODO: Una vez implementado TOP cambiar modelo.solicitud.organizacion x modelo.solicitud.organizacionOrigen -->
-                            <plex-select [(ngModel)]="modelo.solicitud.organizacion" (getData)="loadOrganizaciones($event)"
-                                labelField="nombre" placeholder="Seleccione..." label="Efector Solicitante" [required]="true">
-                            </plex-select>
-                        </div>
-                        <div class="col-6">
-                            <!-- TODO: Una vez implementado TOP cambiar modelo.solicitud.profesional x modelo.solicitud.profesionalOrigen -->
-                            <plex-select [(ngModel)]="modelo.solicitud.profesional" name="profesional" label="Profesional solicitante"
-                                (getData)="loadProfesionales($event)" placeholder="Escriba el apellido del Profesional"
-                                labelField="apellido + ' ' + nombre" [required]="true">
-                            </plex-select>
-                        </div>
-                    </div>
-                    <div class="row ml-1">
-                        <div class="col-3">
-                            <plex-select [(ngModel)]="modelo.solicitud.ambitoOrigen" name="ambitoOrigen" (getData)="loadOrigen($event)"
-                                label="Origen" placeholder="Seleccione el origen" [required]="true">
-                            </plex-select>
-                        </div>
-                        <div class="col-4">
-                            <plex-select [(ngModel)]="solicitudProtocolo.solicitudPrestacion.servicio" label="Servicio"
-                                placeholder="Seleccione el servicio" (getData)="loadServicios($event)" labelField='term'>
-                            </plex-select>
-                        </div>
-                        <div class="col-2">
-                            <plex-select [(ngModel)]="solicitudProtocolo.solicitudPrestacion.prioridad" name="prioridad"
-                                (getData)="loadPrioridad($event)" label="Prioridad" placeholder="Seleccione la prioridad"
-                                labelField="nombre" [required]="true">
-                            </plex-select>
-                        </div>
-                    </div>
-                </article>
-            </div>
-        </div>
+<section>
+    <div class="form-grid" *ngIf="!seleccionPaciente">
+        <plex-datetime type="date" [(ngModel)]="modelo.ejecucion.fecha" name="fecha" label="Fecha" [required]="true"></plex-datetime>
+        <plex-datetime type="date" [(ngModel)]="solicitudProtocolo.solicitudPrestacion.fechaTomaMuestra" name="fechaTomaMuestra"
+            label="Fecha de la Muestra" [required]="true"></plex-datetime>
+        <plex-datetime type="date" [(ngModel)]="modelo.solicitud.fech" name="fecha" label="Fecha de Solicitud"
+            [required]="true"></plex-datetime>
+        <plex-select [(ngModel)]="modelo.solicitud.organizacion" (getData)="loadOrganizaciones($event)" labelField="nombre"
+            placeholder="Seleccione..." label="Efector Solicitante" [required]="true">
+        </plex-select>
+        <plex-select [(ngModel)]="modelo.solicitud.profesional" name="profesional" label="Profesional Solicitante"
+            (getData)="loadProfesionales($event)" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre"
+            [required]="true">
+        </plex-select>
+        <plex-select [(ngModel)]="modelo.solicitud.ambitoOrigen" name="ambitoOrigen" (getData)="loadOrigen($event)"
+            label="Origen" placeholder="Seleccione el origen" [required]="true">
+        </plex-select>
+        <plex-select [(ngModel)]="solicitudProtocolo.solicitudPrestacion.servicio" label="Servicio" placeholder="Seleccione el servicio"
+            (getData)="loadServicios($event)" labelField='term'>
+        </plex-select>
+        <plex-select [(ngModel)]="solicitudProtocolo.solicitudPrestacion.prioridad" name="prioridad" (getData)="loadPrioridad($event)"
+            label="Prioridad" placeholder="Seleccione la prioridad" labelField="nombre" [required]="true">
+        </plex-select>
     </div>
+
 </section>
