@@ -4,9 +4,15 @@
             <plex-tabs>
                 <plex-tab label="Paciente" icon="account">
                     <fieldset>
-                        <legend>Registro SIN DNI</legend>
+                        <legend>Datos básicos</legend>
+
                         <!-- DATOS BASICOS -->
                         <div class="row">
+                            <div class="col-4">
+                                <plex-int label="Número de Documento" [(ngModel)]="pacienteModel.documento" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
+                                    [readonly]=" validado || noPoseeDNI " [max]="9999999999" name="documento" [required]="!noPoseeDNI">
+                                </plex-int>
+                            </div>
                             <div class="col-4">
                                 <plex-text label="Apellido" [(ngModel)]="pacienteModel.apellido" name="apellido" required="true" [readonly]="validado">
                                 </plex-text>
@@ -14,11 +20,6 @@
                             <div class="col-4">
                                 <plex-text label="Nombre" [(ngModel)]="pacienteModel.nombre" name="nombre" required="true" [readonly]="validado">
                                 </plex-text>
-                            </div>
-                            <div class="col-4">
-                                <plex-select [(ngModel)]="pacienteModel.sexo" label="Sexo" [data]="sexos" name="sexo" required="true" placeholder="Seleccione.."
-                                    [readonly]="validado" (change)="completarGenero();disableGuardar = false; enableIgnorarGuardar = false;">
-                                </plex-select>
                             </div>
                         </div>
                         <div class="row">
@@ -28,14 +29,44 @@
                                 </plex-datetime>
                             </div>
                             <div class="col-4">
-                                <plex-select label="Tipo de identificación" [(ngModel)]="pacienteModel.tipoIdentificacion" [data]="tipoIdentificacion" [readonly]="validado"
-                                    required="true" name="tipoIdentificacion" placeholder="Seleccione..">
+                                <plex-select [(ngModel)]="pacienteModel.sexo" label="Sexo" [data]="sexos" name="sexo" required="true" placeholder="Seleccione.."
+                                    [readonly]="validado" (change)="completarGenero();disableGuardar = false; enableIgnorarGuardar = false;">
                                 </plex-select>
                             </div>
                             <div class="col-4">
-                                <plex-int label="Número de identificación" [max]="99999999" [readonly]="validado" [(ngModel)]="pacienteModel.numeroIdentificacion"
-                                    name="numeroIdentificacion" required="true">
-                                </plex-int>
+                                <plex-select [(ngModel)]="pacienteModel.estadoCivil" name="estadoCivil" [data]="estadosCiviles" label="Estado Civil">
+                                </plex-select>
+                            </div>
+                        </div>
+
+                        <!-- Reporte de error en datos -->
+                        <div class="row" *ngIf="validado">
+                            <div class="col-12">
+                                <plex-bool [(ngModel)]="pacienteModel.reportarError" name="reportarError" label="Considero que los datos son incorrectos y quiero reportar el error"></plex-bool>
+                            </div>
+                            <div class="col-12" *ngIf="pacienteModel.reportarError">
+                                <plex-text placeholder="Ingrese una descripción del error" [(ngModel)]="pacienteModel.notaError" name="notaError"> </plex-text>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- DATOS PARA APP MOBILE DE ANDES -->
+                    <fieldset *ngIf="validado && activarApp">
+                        <legend>Datos para App Mobile de ANDES</legend>
+                        <div class="row">
+                            <div class="col-4">
+                                <plex-text label="Usuario Andes (E-Mail)" [(ngModel)]="emailAndes" [readonly]="!checkPass" name="usuarioAndes" placeholder="e-mail"
+                                    (focusout)="onFocusout('email', emailAndes)"></plex-text>
+                            </div>
+                            <div class="col-4">
+                                <plex-phone label="Celular para app de Andes" [(ngModel)]="celularAndes" placeholder="Ej: 2990000000" name="celularAndes"
+                                    (focusout)="onFocusout('celular', celularAndes)"></plex-phone>
+                            </div>
+                            <div class="col-4">
+                                <span style="color: red" *ngIf="emailAndes && messageApp.length > 0">
+                                    <i class="mdi mdi-alert-circle-outline"></i>
+                                    {{messageApp}}
+                                </span>
                             </div>
                         </div>
                     </fieldset>

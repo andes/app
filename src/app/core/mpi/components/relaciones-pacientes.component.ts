@@ -28,6 +28,7 @@ export class RelacionesPacientesComponent implements OnInit {
     buscarPacRel = '';
     PacientesRel = null;
     loading = false;
+    searchClear = true;    // True si el campo de búsqueda se encuentra vacío
 
     public nombrePattern: string;
 
@@ -48,6 +49,26 @@ export class RelacionesPacientesComponent implements OnInit {
         }
     }
 
+    // -------------- SOBRE BUSCADOR ----------------
+
+    onSearchStart() {
+        this.loading = true;
+    }
+
+    onSearchEnd(pacientes: IPaciente[]) {
+        if (pacientes) {
+            this.searchClear = false;
+            this.loading = false;
+            this.actualizarPosiblesRelaciones(pacientes);
+        }
+    }
+
+    onSearchClear() {
+        this.searchClear = true;
+        this.posiblesRelaciones = [];
+    }
+
+    // ------------- SOBRE RELACIONES ---------------
 
     // Resultado de la búsqueda de pacientes para relacionar (Tab 'relaciones')
     actualizarPosiblesRelaciones(listaPacientes: any[]) {
@@ -61,62 +82,6 @@ export class RelacionesPacientesComponent implements OnInit {
             }
         }
         this.posiblesRelaciones = listaPacientes;
-    }
-
-    // Borra/agrega relaciones al paciente segun corresponda.
-    actualizarRelaciones(unPaciente) {
-        this.pacienteService.save(unPaciente).subscribe(unPacienteSave => {
-            if (unPacienteSave) {
-                // Borramos relaciones
-                if (this.relacionesBorradas.length > 0) {
-                    this.relacionesBorradas.forEach(rel => {
-                        let relacionOpuesta = this.parentescoModel.find((elem) => {
-                            if (elem.nombre === rel.relacion.opuesto) {
-                                return elem;
-                            }
-                        });
-                        let dto = {
-                            relacion: relacionOpuesta,
-                            referencia: unPacienteSave.id,
-                        };
-                        if (rel.referencia) {
-                            this.pacienteService.patch(rel.referencia, {
-                                'op': 'deleteRelacion',
-                                'dto': dto
-                            }).subscribe();
-                        }
-                    });
-                }
-                // agregamos las relaciones opuestas
-                if (unPacienteSave.relaciones && unPacienteSave.relaciones.length > 0) {
-                    unPacienteSave.relaciones.forEach(rel => {
-                        let relacionOpuesta = this.parentescoModel.find((elem) => {
-                            if (elem.nombre === rel.relacion.opuesto) {
-                                return elem;
-                            }
-                        });
-                        let dto = {
-                            relacion: relacionOpuesta,
-                            referencia: unPacienteSave.id,
-                            nombre: unPacienteSave.nombre,
-                            apellido: unPacienteSave.apellido,
-                            documento: unPacienteSave.documento ? unPacienteSave.documento : '',
-                            foto: unPacienteSave.foto ? unPacienteSave.foto : null
-                        };
-                        if (rel.referencia) {
-                            this.pacienteService.patch(rel.referencia, {
-                                'op': 'updateRelacion',
-                                'dto': dto
-                            }).subscribe();
-                        }
-                    });
-                }
-                // this.data.emit(unPacienteSave);
-                this.plex.info('success', 'Los datos se actualizaron correctamente');
-            } else {
-                this.plex.info('warning', 'ERROR: Ocurrió un problema al actualizar los datos');
-            }
-        });
     }
 
     seleccionarPacienteRelacionado(pacienteEncontrado) {

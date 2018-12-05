@@ -44,6 +44,8 @@ import { DashboardComponent } from './components/paciente/dashboard.component';
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { Auditoria2Component } from './components/auditoria/auditoria2.component';
 import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cru.component';
+import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
+import { PacienteCruComponent } from './core/mpi/components/paciente-cru.component';
 
 // ... Obras sociales
 import { PucoComponent } from './components/puco/puco.component';
@@ -108,6 +110,8 @@ const appRoutes: Routes = [
   { path: 'apps/mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
   { path: 'apps/mpi/bebe', component: BebeCruComponent, canActivate: [RoutingGuard] },
   { path: 'apps/mpi/sinDni', component: ExtranjeroNNCruComponent, canActivate: [RoutingGuard] },
+  { path: 'apps/mpi/busqueda', component: BusquedaMpiComponent, canActivate: [RoutingGuard] },
+  { path: 'apps/mpi/paciente', component: PacienteCruComponent, canActivate: [RoutingGuard] },
 
   // Obras sociales
   { path: 'puco', component: PucoComponent },

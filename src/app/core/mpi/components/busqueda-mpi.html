@@ -1,0 +1,34 @@
+<plex-layout main="12">
+    <plex-layout-main>
+        <fieldset>
+            <legend>Buscar un paciente</legend>
+
+            <div class="row">
+                <div class="col-md">
+                    <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event.pacientes)" (searchClear)="onSearchClear()"></paciente-buscar>
+                </div>
+            </div>
+            <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+
+            <div class="row">
+                <div class="col">
+                    <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda" [autoselect]="false"
+                        (selected)="onPacienteSelected($event)"></paciente-listado>
+                    <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length && !searchClear" class="alert alert-danger">
+                        <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row" *ngIf="resultadoBusqueda && !resultadoBusqueda.length && !searchClear">
+                <div class="col-3 contenedorTipo">CARGAR BEBÉ</div>
+                <div class="col-3 contenedorTipo">CARGAR NN</div>
+                <div class="col-3 contenedorTipo">CARGAR EXTRANJERO</div>
+                <div class="col-3 contenedorTipo">IDENTIFICADO</div>
+            </div>
+        </fieldset>
+    </plex-layout-main>
+
+</plex-layout>
+
+<!--paciente-cru  [seleccion]="pacienteSeleccionado" [escaneado]="pacienteSeleccionado.escaneado" (data)='afterPacienteCru($event)'></paciente-cru-->

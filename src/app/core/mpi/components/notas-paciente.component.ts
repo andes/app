@@ -1,4 +1,4 @@
-import { OnInit, Component, Input } from '@angular/core';
+import { OnInit, Component, Input, EventEmitter, Output } from '@angular/core';
 import { Plex } from '@andes/plex';
 
 @Component({
@@ -9,6 +9,7 @@ import { Plex } from '@andes/plex';
 export class NotaComponent implements OnInit {
 
     @Input() notas = [];
+    @Output() notasNew: EventEmitter<any[]> = new EventEmitter<any[]>();
 
     nuevaNota = '';
     notaError: '';
@@ -59,6 +60,7 @@ export class NotaComponent implements OnInit {
                 });
             }
         }
+        this.notasNew.emit(this.notas);
         this.nuevaNota = '';
     }
 
@@ -72,6 +74,7 @@ export class NotaComponent implements OnInit {
                 let resultado = (a.destacada && !b.destacada ? -1 : (b.destacada && !a.destacada ? 1 : 0));
                 return resultado;
             });
+            this.notasNew.emit(this.notas);
         }
     }
 

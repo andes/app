@@ -154,6 +154,8 @@ import { PacienteListadoComponent } from './modules/mpi/components/paciente-list
 import { PacientePanelComponent } from './modules/mpi/components/paciente-panel.component';
 import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cru.component';
 import { RelacionesPacientesComponent } from './core/mpi/components/relaciones-pacientes.component';
+import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
+import { PacienteCruComponent } from './core/mpi/components/paciente-cru.component';
 
 // PUCO/ObraSocial
 import { PucoComponent } from './components/puco/puco.component';
@@ -604,6 +606,8 @@ registerLocaleData(localeEs, 'es');
         ExtranjeroNNCruComponent,
         NotaComponent,
         RelacionesPacientesComponent,
+        BusquedaMpiComponent,
+        PacienteCruComponent,
 
         // form Terapeutico
         FormTerapeuticoComponent,
