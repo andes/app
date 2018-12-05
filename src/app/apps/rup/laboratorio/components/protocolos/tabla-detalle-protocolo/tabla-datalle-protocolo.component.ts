@@ -22,19 +22,19 @@ export class TablaDatalleProtocolo implements OnInit {
     @Input() modo: any;
     @Input() modelo: any;
     @Input() solicitudProtocolo: any;
-    
+
     practicasCarga = [];
     practicasVista = [];
-    
-    practicasEjecucion = [];    
+
+    practicasEjecucion = [];
     @Input('practicasEjecucion')
     set pjs(practicasEjecucion) {
         this.practicasEjecucion = practicasEjecucion;
         // if (this.modo === 'validacion' || this.modo === 'carga') {
-            this.cargarListaPracticaCarga();
-            if (this.modo === 'validacion') {
-                this.cargarResultadosAnteriores();
-            }
+        this.cargarListaPracticaCarga();
+        if (this.modo === 'validacion') {
+            this.cargarResultadosAnteriores();
+        }
         // }
     }
 
@@ -193,7 +193,7 @@ export class TablaDatalleProtocolo implements OnInit {
             if (practica.valor) {
                 practica.valor.resultado.validado = $event.value;
                 if ($event) {
-                    this.actualizarEstadoPractica(practica.valor,'validar')
+                    this.actualizarEstadoPractica(practica.valor, 'validar');
                 }
             }
             // } else {
@@ -348,12 +348,12 @@ export class TablaDatalleProtocolo implements OnInit {
             usuario: this.auth.usuario,
             fecha: new Date(),
             pendienteGuardar: true
-        }
+        };
 
         if (!valor.estados) {
             valor.estados = [];
         }
-        
+
         if (valor.estados.length === 0 || !valor.estados[valor.estados.length - 1].pendienteGuardar) {
             valor.estados.push(estado);
         } else {
