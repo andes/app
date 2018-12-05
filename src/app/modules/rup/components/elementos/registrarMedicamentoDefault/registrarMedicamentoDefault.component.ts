@@ -1,6 +1,6 @@
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
-import { RUPComponent } from './../core/rup.component';
-import * as moment from 'moment';
+import { Component, OnInit } from '@angular/core';
+import { RUPComponent } from '../../core/rup.component';
+
 @Component({
     selector: 'rup-registrarMedicamentoDefault',
     templateUrl: 'registrarMedicamentoDefault.html'
