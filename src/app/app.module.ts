@@ -252,8 +252,6 @@ import { InformesComponent } from './modules/rup/components/elementos/informe/in
 import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
 import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
 import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
-import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoDerecho.component';
-import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
 import { OdontogramaRefsetComponent } from './modules/rup/components/elementos/odontogramaRefSet/OdontogramaRefset.component';
 import { LactanciaComponent } from './modules/rup/components/elementos/lactancia/lactancia.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
@@ -264,7 +262,7 @@ import { CensoMensualComponent } from './modules/rup/components/internacion/cens
 import { ElementoDeRegistroComponent } from './modules/rup/components/elementos/elementoDeRegistro/elementoDeRegistro.component';
 import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeDeEpicrisis/informeEpicrisis.component';
 import { ListaEsperaInternacionComponent } from './modules/rup/components/ejecucion/internacion/ListaEsperaInternacion.component';
-import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/odontologiaDefault.component';
+import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/odontologiaDefault/odontologiaDefault.component';
 import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
 import { InformeActividadNoNominalizadaComponent } from './modules/rup/components/elementos/informeActividadNoNominalizada/informeActividadNoNominalizada.component';
 import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
@@ -390,8 +388,6 @@ export let RUPRegistry = {
     'PasesCamaComponent': PasesCamaComponent,
     'InformeEpicrisisComponent': InformeEpicrisisComponent,
     'ElementoDeRegistroComponent': ElementoDeRegistroComponent,
-    'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
-    'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
     'OdontogramaRefsetComponent': OdontogramaRefsetComponent,
     'LactanciaComponent': LactanciaComponent,
     'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
@@ -448,8 +444,6 @@ let RUPComponentsArray = [
     TensionSistolicaComponent,
     AdjuntarDocumentoComponent,
     IngresoInternacionComponent,
-    OtoemisionAcusticaDeOidoDerechoComponent,
-    OtoemisionAcusticaDeOidoIzquierdoComponent,
     OdontogramaRefsetComponent,
     LactanciaComponent,
     IniciarInternacionComponent,
