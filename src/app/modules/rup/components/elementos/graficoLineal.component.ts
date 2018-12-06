@@ -1,4 +1,4 @@
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
 
 import * as moment from 'moment';
@@ -25,11 +25,9 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
         moment.locale('es');
 
 
-        this.elementoRUP.params.map((param, index) => {
+        this.elementoRUP.params.map((param) => {
 
             this.prestacionesService.getRegistrosHuds(this.paciente.id, `${param.query}`).subscribe(prestaciones => {
-
-                let pr = JSON.parse(JSON.stringify(prestaciones));
 
                 if (prestaciones.length) {
 
