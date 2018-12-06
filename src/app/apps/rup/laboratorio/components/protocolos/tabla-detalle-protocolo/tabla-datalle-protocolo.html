@@ -22,13 +22,13 @@
     <tbody>
         <ng-container *ngIf='modo ==="puntoInicio" || modo ==="recepcion" || modo ==="control"'>
             <tr class="hover" *ngFor="let practicaVista of let practicaVista of practicasVista">
-                <td>{{practicaVista.practica.codigo}}</td>
-                <td>{{practicaVista.practica.nombre}}</td>
+                <td>{{practicaVista.codigo}}</td>
+                <td>{{practicaVista.nombre}}</td>
                 <td>
-                    <plex-bool type="checkbox" [(ngModel)]="practicaVista.practica.valor.resultado.sinMuestra" name="sinMuestra"></plex-bool>
+                    <plex-bool type="checkbox" [(ngModel)]="practicaVista.valor.resultado.sinMuestra" name="sinMuestra"></plex-bool>
                 </td>
                 <td>
-                    <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practicaVista.practica)"></plex-button>
+                    <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practicaVista)"></plex-button>
                 </td>
             </tr>
             <tr class="hover" *ngIf="editarListaPracticas">

@@ -5,11 +5,11 @@ import { Component } from '@angular/core';
     templateUrl: 'laboratorio.html'
 })
 export class LaboratorioComponent {
-    
+
     // valor se debe asignar segun permuiso de usuario
     public modo = 'carga';
     // public modo = "puntoInicio";
-    public mostrarPuntoInicio = (this.modo === "puntoInicio");
+    public mostrarPuntoInicio = (this.modo === 'puntoInicio');
 
     public protocolo;
     public paciente;

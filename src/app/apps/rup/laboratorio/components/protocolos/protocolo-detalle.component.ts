@@ -85,7 +85,7 @@ export class ProtocoloDetalleComponent
         this.modelo = value;
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
         this.practicasEjecucion = this.modelo.ejecucion.registros;
-        console.log('this.practicasEjecucion', this.practicasEjecucion)
+
         if (this.practicasEjecucion.length > 0 && (this.modo === 'puntoInicio' || this.modo === 'recepcion' || this.modo === 'control')) {
             this.cargarCodigosPracticas();
         }
@@ -108,9 +108,12 @@ export class ProtocoloDetalleComponent
         this.practicasEjecucion.forEach(practica => ids.push(practica._id));
         this.servicioPractica.getCodigosPracticas(ids).subscribe(idsCodigos => {
             this.practicasEjecucion.forEach(practica => {
-                practica.codigo = idsCodigos.filter((idCodigo) => {
+                let p = idsCodigos.filter((idCodigo) => {
                     return idCodigo._id === practica._id;
-                })[0].codigo;
+                })[0];
+
+                practica.codigo = p.codigo;
+                practica.area = p.area;
             });
         });
     }
@@ -198,7 +201,7 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     editarDatosCabecera() {
-        // this.edicionDatosCabecera = (this.modo !== 'puntoInicio'); 
+        // this.edicionDatosCabecera = (this.modo !== 'puntoInicio');
         // this.mostrarCuerpoProtocolo = (this.modo === 'puntoInicio');
         this.edicionDatosCabecera = true;
         this.mostrarCuerpoProtocolo = false;

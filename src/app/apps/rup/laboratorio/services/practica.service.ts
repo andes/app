@@ -23,22 +23,25 @@ export class PracticaService {
     }
 
     getCodigosPracticas(ids) {
-        return this.server.get(this.practicaUrl + '?ids=' + ids + '&fields=codigo', null).map((value) => {
+        return this.server.get(this.practicaUrl + '?ids=' + ids + '&fields=codigo,area', null).map((value) => {
             return value;
         });
     }
 
     getMatchCodigo(codigo: IPracticaSearch, buscarSImples?): Observable<IPracticaMatch[]> {
-        return this.server.get(this.practicaCodigoUrl + codigo + (buscarSImples ? '&buscarSimples=true' : ""), null).map((value) => {
+        return this.server.get(this.practicaCodigoUrl + codigo + (buscarSImples ? '&buscarSimples=true' : ''), null).map((value) => {
             return value;
         });
     }
 
-    findByIds(ids): Observable<IPracticaMatch[]> {
-        // return this.server.get(this.practicaUrl, { params: params, showError: true }).map((value) => {
-        //     return value;
-        // });
-        return this.server.get(this.practicaUrl + '?ids=' + ids, null).map((value) => {
+    findByIds(params): Observable<IPracticaMatch[]> {
+        return this.server.get(this.practicaUrl, { params: params, showError: true }).map((value) => {
+            return value;
+        });
+    }
+
+    findByIdsCompletas(ids): Observable<IPracticaMatch[]> {
+        return this.server.get(this.practicaUrl, { params: {ids: ids, cargarSubpracticas: true}, showError: true }).map((value) => {
             return value;
         });
     }

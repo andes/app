@@ -80,7 +80,7 @@ export class FiltrosBusquedaProtocoloComponent
                return {
                     id: area._id,
                     nombre: area.nombre
-                }
+                };
             });
         });
     }
@@ -88,12 +88,11 @@ export class FiltrosBusquedaProtocoloComponent
     /**
      * Realiza la búsqueda de prestaciones según selección de filtros
      *
-     * @param {any} [value]
      * @param {any} [tipo]
      * @memberof PuntoInicioLaboratorioComponent
      */
-    buscarProtocolos(value?, tipo?) {
-        if(tipo && tipo == 'area') {
+    buscarProtocolos(tipo?) {
+        if (tipo && tipo === 'area') {
             this.busqueda.area = this.busqueda.area.id;
         }
         this.buscarProtocolosEmmiter.emit(this.busqueda);

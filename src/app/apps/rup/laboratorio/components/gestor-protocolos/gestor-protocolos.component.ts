@@ -1,4 +1,3 @@
-// import { AgendaCacheService } from './../../../../../services/turnos/agendaCache.service';
 import { Constantes } from './../../controllers/constants';
 import { Component, OnInit, Input, ViewChild, EventEmitter, Output } from '@angular/core';
 import { ProtocoloDetalleComponent } from '../protocolos/protocolo-detalle.component';
@@ -17,7 +16,7 @@ export class GestorProtocolosComponent
 
     implements OnInit {
 
-    @Output()  volverAPuntoInicioEmmiter: EventEmitter<any> = new EventEmitter<any>(); 
+    @Output()  volverAPuntoInicioEmmiter: EventEmitter<any> = new EventEmitter<any>();
     public seleccionPaciente: Boolean = false;
     public showListarProtocolos: Boolean = true;
     public showProtocoloDetalle: Boolean = false;
@@ -43,7 +42,6 @@ export class GestorProtocolosComponent
 
     @Input('paciente')
     set paciente(value) {
-        console.log('setPaciente', value)
         if (value) {
             this.resetearProtocolo(value);
             this.seleccionarProtocolo({ protocolo: this.protocolo, index: 0 });
@@ -189,7 +187,6 @@ export class GestorProtocolosComponent
      */
     volverLista() {
         if (this.modo === 'puntoInicio') {
-            console.log('volverLista', this.modo)
             // location.reload();
             this.volverAPuntoInicioEmmiter.emit(true);
         } else {
@@ -199,8 +196,8 @@ export class GestorProtocolosComponent
             this.showCargarSolicitud = false;
             this.ocultarPanelLateral = false;
             this.seleccionPaciente = false;
-            this.showBotonesGuardar = false;    
-        }  
+            this.showBotonesGuardar = false;
+        }
     }
 
     /**
@@ -265,9 +262,9 @@ export class GestorProtocolosComponent
     }
 
     guardarSolicitud() {
-        this.protocoloDetalleComponent.guardarSolicitud()
+        this.protocoloDetalleComponent.guardarSolicitud();
     }
-    
+
 
     // getlocalStorage() {
     //     let ls = JSON.parse(localStorage.getItem('filtros'));
