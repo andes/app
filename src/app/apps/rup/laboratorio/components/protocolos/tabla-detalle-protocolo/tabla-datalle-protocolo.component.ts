@@ -40,7 +40,13 @@ export class TablaDatalleProtocoloComponent implements OnInit {
                 }
             });
         } else {
-            this.cargarPracticasVista();
+            this.cargarPracticasVista().then(() => {
+                console.log('cargarPracticasVista cargarResultadosAnterioresPV');
+
+                if (this.modo === 'control') {
+                    this.cargarResultadosAnterioresPV();
+                }
+            });
         }
     }
 
@@ -62,9 +68,12 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      * @memberof TablaDatalleProtocolo
      */
     cargarPracticasVista() {
-        this.practicasVista = this.practicasEjecucion.filter(p =>
-            ( (this.areas.length === 0) || this.areas.some(id => id === p.area._id) )
-        );
+        return new Promise((resolve) => {
+            this.practicasVista = this.practicasEjecucion.filter(p =>
+                ((this.areas.length === 0) || this.areas.some(id => id === p.area._id))
+            );
+            resolve();
+        });
     }
 
     /**
@@ -123,6 +132,14 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         });
     }
 
+    cargarResultadosAnterioresPV() {
+        console.log('cargarResultadosAnterioresPV');
+        this.practicasVista.forEach((practicaVista) => {
+            this.servicioProtocolo.getResultadosAnteriores(this.modelo.paciente.id, practicaVista.concepto.conceptId).subscribe(resultadosAnteriores => {
+                practicaVista.resultadosAnteriores = resultadosAnteriores;
+            });
+        });
+    }
 
     /**
      *
@@ -133,7 +150,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
 
         let ids = this.practicasCarga.map((reg) => { return reg.practica.id._id; });
         console.log('cargarConfiguracionesResultado', ids);
-        await this.servicioPractica.findByIds({ids: ids}).subscribe(
+        await this.servicioPractica.findByIds({ ids: ids }).subscribe(
             (resultados) => {
                 this.practicasCarga.map((reg) => {
                     for (let resultado of resultados) {
@@ -151,11 +168,11 @@ export class TablaDatalleProtocoloComponent implements OnInit {
             });
     }
 
-/**
- *
- *
- * @memberof TablaDatalleProtocolo
- */
+    /**
+     *
+     *
+     * @memberof TablaDatalleProtocolo
+     */
     validarResultados() {
         this.practicasCarga.forEach((objetoPractica) => {
             let resultado = objetoPractica.practica.valor.resultado;
