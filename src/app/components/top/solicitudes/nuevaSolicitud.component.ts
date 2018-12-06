@@ -162,10 +162,12 @@ export class NuevaSolicitudComponent implements OnInit {
     }
 
     onSelectOrganizacionOrigen() {
-        let regla: any = this.arrayOrganizacionesOrigen.find((org: any) => org.origen.organizacion.id === this.modelo.solicitud.organizacionOrigen.id);
-        if (regla && regla.origen) {
-            this.arrayReglasOrigen = regla.origen.prestaciones;
-            this.dataTipoPrestacionesOrigen = regla.origen.prestaciones.map(elem => { return { id: elem.prestacion.conceptId, nombre: elem.prestacion.term }; });
+        if (this.modelo.solicitud.organizacionOrigen) {
+            let regla: any = this.arrayOrganizacionesOrigen.find((org: any) => org.origen.organizacion.id === this.modelo.solicitud.organizacionOrigen.id);
+            if (regla && regla.origen) {
+                this.arrayReglasOrigen = regla.origen.prestaciones;
+                this.dataTipoPrestacionesOrigen = regla.origen.prestaciones.map(elem => { return { id: elem.prestacion.conceptId, nombre: elem.prestacion.term }; });
+            }
         }
     }
 
