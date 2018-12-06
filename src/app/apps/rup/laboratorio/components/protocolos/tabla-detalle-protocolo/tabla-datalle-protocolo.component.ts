@@ -78,7 +78,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
             this.practicasCarga = [];
 
             let ids = this.practicasEjecucion.map((reg) => { return reg._id; });
-            console.log('cargarListaPracticaCarga', ids)
+            console.log('cargarListaPracticaCarga', ids);
             this.servicioPractica.findByIdsCompletas(ids).subscribe((res) => {
                 let cargarPracticas = (registos, practicas, nivelTab) => {
                     if (registos.length > 0) {
@@ -116,9 +116,9 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      * @memberof TablaDatalleProtocolo
      */
     cargarResultadosAnteriores() {
-        this.practicasEjecucion.forEach((practica) => {
-            this.servicioProtocolo.getResultadosAnteriores(this.modelo.paciente.id, practica.concepto.conceptId).subscribe(resultadosAnteriores => {
-                practica.resultado.resultadosAnteriores = resultadosAnteriores;
+        this.practicasCarga.forEach((practicaCarga) => {
+            this.servicioProtocolo.getResultadosAnteriores(this.modelo.paciente.id, practicaCarga.registro.concepto.conceptId).subscribe(resultadosAnteriores => {
+                practicaCarga.practica.resultado.resultadosAnteriores = resultadosAnteriores;
             });
         });
     }
@@ -132,7 +132,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     async cargarConfiguracionesResultado() {
 
         let ids = this.practicasCarga.map((reg) => { return reg.practica.id._id; });
-        console.log('cargarConfiguracionesResultado', ids)
+        console.log('cargarConfiguracionesResultado', ids);
         await this.servicioPractica.findByIds({ids: ids}).subscribe(
             (resultados) => {
                 this.practicasCarga.map((reg) => {
