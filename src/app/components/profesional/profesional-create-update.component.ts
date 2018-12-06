@@ -156,8 +156,8 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                 resultado => {
                     if (resultado.datos.nroError === 0) {
                         this.validado = true;
-                        this.profesional.nombre = resultado.datos.nombres;
-                        this.profesional.apellido = resultado.datos.apellido;
+                        this.profesional.nombre = resultado.datos.nombres.toUpperCase();
+                        this.profesional.apellido = resultado.datos.apellido.toUpperCase();
                         this.profesional.fechaNacimiento = moment(resultado.datos.fechaNacimiento, 'YYYY-MM-DD');
                     } else {
                         this.plex.info('warning', '', 'El profesional no se encontró en RENAPER');
@@ -171,14 +171,21 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         if ($event.formValid) {
             let match100 = false;
             this.profesional['profesionalMatriculado'] = false;
+            this.profesional.sexo = this.profesional.sexo.toLowerCase();
             this.profesionalService.get({ documento: this.profesional.documento })
                 .subscribe(
                     datos => {
                         if (datos.length > 0) {
                             datos.forEach(profCandidato => {
-                        this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
-
-                                let porcentajeMatching = this.match.matchPersonas(this.profesional, profCandidato, this.weights, 'Levenshtein');
+                                this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
+                                const prof = {
+                                    sexo: profCandidato.sexo.toString().toLowerCase(),
+                                    nombre: profCandidato.nombre,
+                                    apellido: profCandidato.apellido,
+                                    fechaNacimiento: profCandidato.fechaNacimiento,
+                                    documento: profCandidato.documento
+                                };
+                                let porcentajeMatching = this.match.matchPersonas(this.profesional, prof, this.weights, 'Levenshtein');
                                 let profesionalMatch = {
                                     matching: 0,
                                     paciente: null
