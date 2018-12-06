@@ -250,7 +250,6 @@ import { RegistrarMedicamentoDefaultComponent } from './modules/rup/components/e
 import { InformesComponent } from './modules/rup/components/elementos/informe/informe.component';
 import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
 import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
-import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
 import { OdontogramaRefsetComponent } from './modules/rup/components/elementos/odontogramaRefSet/OdontogramaRefset.component';
 import { LactanciaComponent } from './modules/rup/components/elementos/lactancia/lactancia.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
@@ -268,7 +267,6 @@ import { PercentiloPesoComponent } from './modules/rup/components/elementos/perc
 import { TallaComponent } from './modules/rup/components/elementos/talla.component';
 import { PercentiloTallaComponent } from './modules/rup/components/elementos/percentiloTalla.component';
 import { PerimetroCefalicoComponent } from './modules/rup/components/elementos/perimetroCefalico.component';
-import { IndiceDeMasaCorporalComponent } from './modules/rup/components/elementos/indiceDeMasaCorporal.component';
 import { PercentiloDeMasaCorporalComponent } from './modules/rup/components/elementos/percentiloDeMasaCorporal.component';
 import { PercentiloPerimetroCefalicoComponent } from './modules/rup/components/elementos/percentiloPerimetroCefalico.component';
 import { TensionArterialPediatricaComponent } from './modules/rup/components/elementos/tensionArterialPediatrica.component';
@@ -380,7 +378,6 @@ export let RUPRegistry = {
     'AdjuntarDocumentoComponent': AdjuntarDocumentoComponent,
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
     'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent,
-    'IngresoInternacionComponent': IngresoInternacionComponent,
     'InformeEpicrisisComponent': InformeEpicrisisComponent,
     'ElementoDeRegistroComponent': ElementoDeRegistroComponent,
     'OdontogramaRefsetComponent': OdontogramaRefsetComponent,
@@ -393,7 +390,6 @@ export let RUPRegistry = {
     'PercentiloPerimetroCefalicoComponent': PercentiloPerimetroCefalicoComponent,
     'TallaComponent': TallaComponent,
     'PercentiloTallaComponent': PercentiloTallaComponent,
-    'IndiceDeMasaCorporalComponent': IndiceDeMasaCorporalComponent,
     'PercentiloDeMasaCorporalComponent': PercentiloDeMasaCorporalComponent,
     'TensionArterialPediatricaComponent': TensionArterialPediatricaComponent,
     'PercentiloDeTensionArterialComponent': PercentiloDeTensionArterialComponent,
@@ -416,7 +412,6 @@ let RUPComponentsArray = [
     EvolucionProblemaDefaultComponent,
     FrecuenciaCardiacaComponent,
     FrecuenciaRespiratoriaComponent,
-    IndiceDeMasaCorporalComponent,
     InformesComponent,
     NuevaEvolucionProblemaComponent,
     ObesidadComponent,
@@ -436,7 +431,6 @@ let RUPComponentsArray = [
     TensionDiastolicaComponent,
     TensionSistolicaComponent,
     AdjuntarDocumentoComponent,
-    IngresoInternacionComponent,
     OdontogramaRefsetComponent,
     LactanciaComponent,
     IniciarInternacionComponent,
@@ -540,7 +534,6 @@ registerLocaleData(localeEs, 'es');
         PrestacionEjecucionComponent,
         PrestacionValidacionComponent,
         SnomedBuscarComponent,
-
         HeaderPacienteComponent,
         PacienteDetalleActualizarComponent,
         HudsBusquedaComponent,
@@ -560,7 +553,6 @@ registerLocaleData(localeEs, 'es');
         CamaComponent,
         PuntoInicioInternacionComponent,
         LaboratoriosComponent,
-
         OrganizacionSectoresComponent,
         EgresoInternacionComponent,
         ResumenInternacionComponent,
