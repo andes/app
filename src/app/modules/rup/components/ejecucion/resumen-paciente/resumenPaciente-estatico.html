@@ -45,34 +45,23 @@
             </div>
         </div>
 
+
+    </div>
+    <div class="row">
+        <div class="col">
+            <div>                
+                <p>
+                    <b>Solicitada por el profesional:</b> {{prestacion.solicitud.profesional | profesional }}
+                    <br>
+                    <b>Desde la Organización:</b> {{prestacion.solicitud.organizacion.nombre}}
+                    <br>
+                    <b>Fecha:</b> {{prestacion.solicitud.fecha | fecha}}
+                </p>
+                <p *ngIf="prestacion.solicitud.prestacionOrigen">
+                    Prestación de origen: {{ prestacion.solicitud.prestacionOrigen }}
+                </p>
+            </div>
+        </div>
     </div>
     <hr>
-    <ng-container *ngIf="graficos.length">
-        <div class="row" *ngFor="let grafico of graficos">
-            <div class="col-12">
-                <h4 class="text-capitalize">
-                    {{ grafico.conceptos | enumerar:['term'] }}
-                </h4>
-                <rup [elementoRUP]="grafico" [prestacion]="prestacion" [paciente]="paciente" [soloValores]="false"></rup>
-            </div>
-        </div>
-    </ng-container>
-    <!-- <div class="prestacionActual">
-        <div class="row" *ngIf="prestacionSolicitud">
-            <div class="col-6">
-                <label>{{prestacionSolicitud.tipoPrestacion.term}}</label>
-            </div>
-            <div class="col-6 text-right">
-                <label>{{prestacionSolicitud.fecha | fecha }}</label>
-            </div>
-        </div>
-        <div class="row" *ngIf="prestacionSolicitud">
-            <div class="col-6">
-                {{prestacionSolicitud.profesional.apellido}}, {{prestacionSolicitud.profesional.nombre}}
-            </div>
-            <div class="col-6  text-right">
-                <label>{{prestacionSolicitud.fecha | fecha}}</label>
-            </div>
-        </div>
-    </div> -->
 </ng-container>

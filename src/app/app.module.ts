@@ -227,11 +227,9 @@ import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoIn
 import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
 import { VistaCDAComponent } from './modules/rup/components/ejecucion/vistaCDA.component';
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
-import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumenPaciente-estatico.component';
-import { ResumenPacienteDinamicoComponent } from './modules/rup/components/ejecucion/resumenPaciente-dinamico.component';
-import { ResumenPacienteDinamicoMujerComponent } from './modules/rup/components/ejecucion/resumenPaciente-dinamico-mujer.component';
-import { ResumenPacienteDinamicoHombreComponent } from './modules/rup/components/ejecucion/resumenPaciente-dinamico-hombre.component';
-import { ResumenPacienteDinamicoNinoComponent } from './modules/rup/components/ejecucion/resumenPaciente-dinamico-nino.component';
+import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
+import { ResumenPacienteDinamicoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
+import { ResumenPacienteDinamicoNinoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico-nino.component';
 
 
 // Legacy para RUP
@@ -480,8 +478,6 @@ let RUPComponentsArray = [
     ResumenPacienteEstaticoComponent,
     ResumenPacienteDinamicoComponent,
     ResumenPacienteDinamicoNinoComponent,
-    ResumenPacienteDinamicoMujerComponent,
-    ResumenPacienteDinamicoHombreComponent,
     InformeActividadNoNominalizadaComponent,
     PercentiloPesoComponent,
     PercentiloTallaComponent,

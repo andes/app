@@ -2,45 +2,18 @@
     <!-- Sección principal -->
     <section class="plex-layout prestacionEjecucion" *ngIf="!showCambioPaciente && prestacion && showPrestacion">
         <div class="row">
-
             <!-- Panel Principal -->
             <div class="col-8">
                 <plex-box>
-                    <!-- <header>
-                        <div class="row">
-                            <div class="col-9 page-title titulo-consulta">
-                                <span class="consulta">CONSULTA | </span> {{prestacion.solicitud.tipoPrestacion.term}}
-                                -
-                                <span class="fecha">{{prestacion.solicitud.fecha | date: 'EEE dd/M/yyyy'}}</span>
-                            </div>
-                            <div class="col-3 float-right text-right">
-                                <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud"
-                                    *ngIf="!showDatosSolicitud" (click)="mostrarDatosSolicitud(true)"></plex-button>
-                                <plex-button icon="information" type="info" class="" title="Ver Registros de la Solicitud"
-                                    *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
-                            </div>
-                        </div>
-                    </header> -->
-
-                    <!-- div de la info de la solicitud -->
-                    <div [hidden]="!showDatosSolicitud">
-                        <!-- <h3> {{prestacion.solicitud.tipoPrestacion.term}} </h3> -->
-                        <p>
-                            <b>Solicitada por el profesional:</b> {{prestacion.solicitud.profesional | profesional }}
-                            <br>
-                            <b>Desde la Organización:</b> {{prestacion.solicitud.organizacion.nombre}}
-                            <br>
-                            <b>Fecha:</b> {{prestacion.solicitud.fecha | date}}
-                        </p>
-                        <p *ngIf="prestacion.solicitud.prestacionOrigen">
-                            Prestación de origen: {{ prestacion.solicitud.prestacionOrigen }}
-                        </p>
-                    </div>
-
-
                     <tabs [options]="{dragScroll: false, trim: 30, fixFirstOnScroll: true , canClose: true , tabFixed: true}"
                         [hidden]="showDatosSolicitud" (_tab)="cerrartab($event)">
 
+                        <tab [tabTitle]="ResumendePaciente" *ngIf="paciente">
+                            <rup-resumenPaciente-estatico [prestacion]="prestacion" [paciente]="paciente"></rup-resumenPaciente-estatico>
+                            <rup-resumenPaciente-dinamico-nino *ngIf="paciente.edad <= 6" [paciente]="paciente"></rup-resumenPaciente-dinamico-nino>
+                            <rup-resumenPaciente-dinamico *ngIf="paciente.edad > 6" [prestacion]="prestacion" [paciente]="paciente"></rup-resumenPaciente-dinamico>
+                        </tab>
+                        
                         <tab [tabTitle]="(prestacion.ejecucion.registros && prestacion.ejecucion.registros.length) ? 'Registros de esta consulta (' + prestacion.ejecucion.registros.length + ')' : 'Registros de esta consulta '">
 
                             <div class="row" *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length">
@@ -281,10 +254,7 @@
                                 </div>
                             </div>
                         </tab>
-                        <tab [tabTitle]="ResumendePaciente" *ngIf="paciente">
-                            <rup-resumenPaciente-estatico [prestacion]="prestacion" [paciente]="paciente"></rup-resumenPaciente-estatico>
-                            <rup-resumenPaciente-dinamico-nino *ngIf="paciente.edad <= 6" [paciente]="paciente"></rup-resumenPaciente-dinamico-nino>
-                        </tab>
+                        
 
                         <ng-container *ngIf="registrosHuds">
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">

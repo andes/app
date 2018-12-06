@@ -1,10 +1,10 @@
-import { Component, Output, Input, EventEmitter, OnInit, HostBinding } from '@angular/core';
+import { Component, Input, OnInit, HostBinding } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { IPaciente } from '../../../../interfaces/IPaciente';
-import { ResumenPacienteDinamicoService } from '../../services/resumenPaciente-dinamico.service';
-import { VacunasService } from '../../../../services/vacunas.service';
-import { PrestacionesService } from '../../services/prestaciones.service';
-import { ElementosRUPService } from './../../services/elementosRUP.service';
+import { IPaciente } from '../../../../../interfaces/IPaciente';
+import { ResumenPacienteDinamicoService } from '../../../services/resumenPaciente-dinamico.service';
+import { VacunasService } from '../../../../../services/vacunas.service';
+import { PrestacionesService } from '../../../services/prestaciones.service';
+import { ElementosRUPService } from '../../../services/elementosRUP.service';
 
 @Component({
     selector: 'rup-resumenPaciente-dinamico-nino',
