@@ -5,7 +5,6 @@
                 <legend>Datos basicos</legend>
             </fieldset>
             <form #formulario="ngForm">
-
                 <div class="row">
                     <div class="col-md-4">
                         <plex-text label="Nombre" [(ngModel)]="profesional.nombre" name="profesional.nombre" [readonly]="validado"
@@ -102,29 +101,36 @@
         <div class="row mb-1">
             <div class="col">
                 <label>Nombre y apellido</label>
-                <strong *ngIf="profesional.apellido">{{profesional.apellido | uppercase}}, {{profesional.nombre |
-                    uppercase}}</strong>
+                <strong *ngIf="profesional.apellido">
+                    {{profesional.apellido | uppercase}}, {{profesional.nombre | uppercase}}
+                </strong>
             </div>
         </div>
         <div class="row mb-1">
             <div class="col">
                 <label>Documento</label>
-                <span *ngIf="profesional.documento" class="mr-1">{{ profesional.documento | number }}</span>
-
+                <span *ngIf="profesional.documento" class="mr-1">
+                    {{ profesional.documento | number }}
+                </span>
             </div>
         </div>
         <div class="row mb-1">
             <div class="col">
                 <label>Fecha de nacimiento</label>
-                <span *ngIf="profesional.fechaNacimiento">{{ profesional.fechaNacimiento | fecha }}</span> | <span
-                    *ngIf="profesional.fechaNacimiento">{{
-                    profesional | edad }}</span>
+                <span *ngIf="profesional.fechaNacimiento">
+                    {{ profesional.fechaNacimiento | fecha }}
+                </span> | 
+                <span *ngIf="profesional.fechaNacimiento">
+                    {{ profesional | edad }}
+                </span>
             </div>
         </div>
         <div class="row mb-1">
             <div class="col">
                 <label>Sexo / Género</label>
-                <span *ngIf="profesional.sexo">{{ profesional | sexo }}</span>
+                <span *ngIf="profesional.sexo">
+                    {{ profesional | sexo }}
+                </span>
             </div>
         </div>
         <div class="row mb-1" *ngIf="profesional.sexo && profesional.documento">
