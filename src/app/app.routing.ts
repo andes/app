@@ -89,7 +89,7 @@ import { ReglasComponent } from './components/top/reglas/reglas.component';
 import { LaboratorioComponent } from './apps/rup/laboratorio/components/laboratorio.component';
 import { ProtocoloDetalleComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-detalle.component';
 // import { PracticaDemoComponent } from './apps/rup/laboratorio/components/demoPractica.component';
-import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/protocolos/tabla-detalle-protocolo/tabla-datalle-protocolo.component';
+import { TablaDatalleProtocoloComponent } from './apps/rup/laboratorio/components/protocolos/tabla-detalle-protocolo/tabla-datalle-protocolo.component';
 import { GestorProtocolosComponent } from './apps/rup/laboratorio/components/gestor-protocolos/gestor-protocolos.component';
 import { ListaProtocolosComponent } from './apps/rup/laboratorio/components/lista-protocolos/lista-protocolos.component';
 import { PuntoInicioLaboratorioComponent } from './apps/rup/laboratorio/components/punto-inicio/punto-inicio.component';
@@ -179,7 +179,7 @@ const appRoutes: Routes = [
   { path: 'laboratorio', component: LaboratorioComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio', component: GestorProtocolosComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio', component: ProtocoloDetalleComponent, canActivate: [RoutingGuard] },
-  { path: 'laboratorio', component: TablaDatalleProtocolo, canActivate: [RoutingGuard] },
+  { path: 'laboratorio', component: TablaDatalleProtocoloComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio', component: ListaProtocolosComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/', component: PuntoInicioLaboratorioComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/', component: ListadoSolicitudesComponent, canActivate: [RoutingGuard] },

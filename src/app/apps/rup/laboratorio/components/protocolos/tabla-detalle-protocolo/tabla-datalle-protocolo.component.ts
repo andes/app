@@ -14,7 +14,7 @@ import { Constantes } from '../../../controllers/constants';
     templateUrl: 'tabla-datalle-protocolo.html'
 })
 
-export class TablaDatalleProtocolo implements OnInit {
+export class TablaDatalleProtocoloComponent implements OnInit {
     ngOnInit() {
 
     }
@@ -28,10 +28,24 @@ export class TablaDatalleProtocolo implements OnInit {
     practicasVista = [];
 
     practicasEjecucion = [];
+<<<<<<< HEAD
 
     @Input('practicasEjecucion')
     set pjs(practicasEjecucion) {
         this.practicasEjecucion = practicasEjecucion;
+=======
+    @Input('practicasEjecucion')
+    set pjs(practicasEjecucion) {
+        this.practicasEjecucion = practicasEjecucion;
+        // if (this.modo === 'validacion' || this.modo === 'carga') {
+        this.cargarListaPracticaCarga();
+        if (this.modo === 'validacion') {
+            this.cargarResultadosAnteriores();
+        }
+        // }
+    }
+
+>>>>>>> c36ae71f44cf82a618278054e2bcd78ed862eb9b
 
         if (this.modo === 'carga' || this.modo === 'validacion') {
             this.cargarListaPracticaCarga().then(() => {
@@ -238,7 +252,7 @@ export class TablaDatalleProtocolo implements OnInit {
     /**
      *
      *
-     * @memberof TablaDatalleProtocolo
+     * @memberof TablaDatalleProtocoloComponent
      */
     busquedaInicial() {
         this.practicas = null;
@@ -246,7 +260,7 @@ export class TablaDatalleProtocolo implements OnInit {
     /**
      *
      *
-     * @memberof TablaDatalleProtocolo
+     * @memberof TablaDatalleProtocoloComponent
      */
     searchClear() {
         this.practicas = null;
@@ -255,7 +269,7 @@ export class TablaDatalleProtocolo implements OnInit {
      *
      *
      * @param {PracticaBuscarResultado} resultado
-     * @memberof TablaDatalleProtocolo
+     * @memberof TablaDatalleProtocoloComponent
      */
     busquedaFinal(resultado: IPracticaBuscarResultado) {
         if (resultado.err) {
@@ -268,7 +282,7 @@ export class TablaDatalleProtocolo implements OnInit {
      *
      *
      * @param {any} $event
-     * @memberof TablaDatalleProtocolo
+     * @memberof TablaDatalleProtocoloComponent
      */
     loadPracticasPorNombre($event) {
         if ($event.query) {
@@ -286,7 +300,7 @@ export class TablaDatalleProtocolo implements OnInit {
      *
      *
      * @param {any} value
-     * @memberof TablaDatalleProtocolo
+     * @memberof TablaDatalleProtocoloComponent
      */
     getPracticaPorCodigo(value) {
         if (this.practicaSeleccionada !== '') {
@@ -303,7 +317,7 @@ export class TablaDatalleProtocolo implements OnInit {
      *
      * @param {any} objetoPractica
      * @returns
-     * @memberof TablaDatalleProtocolo
+     * @memberof TablaDatalleProtocoloComponent
      */
     esValorCritico(objetoPractica) {
         // let resultado = objetoPractica.practica.valor.resultado;

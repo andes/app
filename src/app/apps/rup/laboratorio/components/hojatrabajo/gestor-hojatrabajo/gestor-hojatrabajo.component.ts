@@ -93,13 +93,12 @@ export class GestorHojatrabajoComponent implements OnInit {
 
     loadAreas() {
         this.areaLaboratorioService.get().subscribe((areas: any) => {
-            this.areas = areas.map((area) => {
+            return this.areas = areas.map((area) => {
                return {
                     id: area._id,
                     nombre: area.nombre
                 };
             });
-            // event.callback(this.areas);
         });
     }
 }

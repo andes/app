@@ -23,4 +23,5 @@ export class HojaTrabajoService {
     patch(hojaTrabajo: IHojaTrabajo): Observable<IHojaTrabajo> {
         return this.server.patch(this.laboratorioUrl + 'hojatrabajo/' + hojaTrabajo._id, hojaTrabajo);
     }
+
 }

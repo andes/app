@@ -34,6 +34,7 @@ export class IHojaTrabajo {
     practicas: IPracticasHojaTrabajo[];
 
     constructor() {
+        this.id = '';
         this.area = {
             id: '',
             nombre: ''
@@ -57,21 +58,9 @@ export class IHojaTrabajo {
             textoInferiorIzquierda: '',
         };
         this.baja = false;
-
-
-        // HARDCODEEEE.,...............
-        // this.area = {
-        //     nombre: 'QUIMICA CLINICA',
-        //     conceptoSnomed: {
-        //         'fsn': 'servicio de bioquímica clínica (calificador)',
-        //         'term': 'servicio de bioquímica clínica',
-        //         'conceptId': '310076001',
-        //         'semanticTag': 'calificador'
-        //     }
-        // };
-
         this.laboratorio = new ObjectID();
         this.responsable = new ObjectID();
         this.practicas = [];
     }
+
 }

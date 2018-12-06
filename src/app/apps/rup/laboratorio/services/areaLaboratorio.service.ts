@@ -12,7 +12,6 @@ export class AreaLaboratorioService {
      * Metodo get. Trae el objeto organizacion.
      * @param {any} params Opciones de busqueda
      */
-
     get(): Observable<[]> {
         return this.server.get(this.practicaUrl, null).map((value) => {
             return value;
