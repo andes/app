@@ -28,24 +28,10 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     practicasVista = [];
 
     practicasEjecucion = [];
-<<<<<<< HEAD
 
     @Input('practicasEjecucion')
     set pjs(practicasEjecucion) {
         this.practicasEjecucion = practicasEjecucion;
-=======
-    @Input('practicasEjecucion')
-    set pjs(practicasEjecucion) {
-        this.practicasEjecucion = practicasEjecucion;
-        // if (this.modo === 'validacion' || this.modo === 'carga') {
-        this.cargarListaPracticaCarga();
-        if (this.modo === 'validacion') {
-            this.cargarResultadosAnteriores();
-        }
-        // }
-    }
-
->>>>>>> c36ae71f44cf82a618278054e2bcd78ed862eb9b
 
         if (this.modo === 'carga' || this.modo === 'validacion') {
             this.cargarListaPracticaCarga().then(() => {

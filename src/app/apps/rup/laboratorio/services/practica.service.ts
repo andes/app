@@ -23,7 +23,7 @@ export class PracticaService {
     }
 
     getCodigosPracticas(ids) {
-        return this.server.get(this.practicaUrl + '?ids=' + ids + '&fields=codigo,area', null).map((value) => {
+        return this.server.get(this.practicaUrl, {params: { ids: ids, fields: 'codigo,area'}, showError: true}).map((value) => {
             return value;
         });
     }

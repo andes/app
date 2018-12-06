@@ -104,8 +104,7 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     cargarCodigosPracticas() {
-        let ids = [];
-        this.practicasEjecucion.forEach(practica => ids.push(practica._id));
+        let ids = this.practicasEjecucion.map((reg) => { return reg._id; });
         this.servicioPractica.getCodigosPracticas(ids).subscribe(idsCodigos => {
             this.practicasEjecucion.forEach(practica => {
                 let p = idsCodigos.filter((idCodigo) => {
