@@ -205,6 +205,18 @@ export class NuevaSolicitudComponent implements OnInit {
         }
     }
 
+    checkProfesional() {
+        // Si profesional origen y destino coinciden ..
+        if (!this.autocitado && this.modelo.solicitud.profesionalOrigen && this.modelo.solicitud.profesional
+            && this.modelo.solicitud.profesionalOrigen.id === this.modelo.solicitud.profesional.id) {
+            // Si organización origen y destino son distintas ..
+            if (this.modelo.solicitud.organizacionOrigen && this.modelo.solicitud.organizacionOrigen.id !== this.modelo.solicitud.organizacion.id) {
+                this.plex.info('info', 'Para realizar una autocitación, la organización origen y destino debe ser la misma.');
+                this.modelo.solicitud.profesional = [];
+            }
+        }
+    }
+
     guardarSolicitud($event) {
 
         if ($event.formValid) {
