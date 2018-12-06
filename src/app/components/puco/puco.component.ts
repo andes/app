@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -8,7 +7,7 @@ import { ProfeService } from './../../services/profe.service';
 import { SugerenciasService } from '../../services/sendmailsugerencias.service';
 import { IProfe } from '../../interfaces/IProfe';
 
-import {forkJoin as observableForkJoin } from 'rxjs';
+import { forkJoin as observableForkJoin } from 'rxjs';
 
 @Component({
     selector: 'puco',
@@ -44,6 +43,7 @@ export class PucoComponent implements OnInit, OnDestroy {
         private obraSocialService: ObraSocialService,
         private profeService: ProfeService,
         private sugerenciasService: SugerenciasService,
+        private auth: Auth,
         private plex: Plex) { }
 
     /* limpiamos la request que se haya ejecutado */
@@ -59,46 +59,46 @@ export class PucoComponent implements OnInit, OnDestroy {
             this.profeService.getPadrones({})]
         ).subscribe(padrones => {
 
-                let periodoMasActual = new Date();  // fecha actual para configurar el select a continuacion ..
+            let periodoMasActual = new Date();  // fecha actual para configurar el select a continuacion ..
 
-                // se construye el contenido del select segun la cantidad de meses hacia atras que se pudiera consultar
-                for (let i = 0; i < this.cantidadPeriodos; i++) {
-                    let periodoAux = moment(periodoMasActual).subtract(i, 'month');
-                    this.periodos[i] = { id: i, nombre: moment(periodoAux).format('MMMM [de] YYYY'), version: periodoAux };    // Ej: {1, "mayo 2018", "2018/05/05"}
+            // se construye el contenido del select segun la cantidad de meses hacia atras que se pudiera consultar
+            for (let i = 0; i < this.cantidadPeriodos; i++) {
+                let periodoAux = moment(periodoMasActual).subtract(i, 'month');
+                this.periodos[i] = { id: i, nombre: moment(periodoAux).format('MMMM [de] YYYY'), version: periodoAux };    // Ej: {1, "mayo 2018", "2018/05/05"}
 
-                }
-                this.setPeriodo(this.periodos[0]);  // por defecto se setea el periodo en el corriente mes
-                this.periodoMasAntiguo = this.periodos[this.cantidadPeriodos - 1];  // ultimo mes hacia atras que mostrará el select
+            }
+            this.setPeriodo(this.periodos[0]);  // por defecto se setea el periodo en el corriente mes
+            this.periodoMasAntiguo = this.periodos[this.cantidadPeriodos - 1];  // ultimo mes hacia atras que mostrará el select
 
 
-                // (Para el sidebar) Se setean las variables para mostrar los padrones de PUCO que se encuentran disponibles.
-                if (padrones[0].length) {
-                    for (let i = 0; i < padrones[0].length; i++) {
+            // (Para el sidebar) Se setean las variables para mostrar los padrones de PUCO que se encuentran disponibles.
+            if (padrones[0].length) {
+                for (let i = 0; i < padrones[0].length; i++) {
 
-                        if (i === padrones[0].length - 1) {
-                            this.listaPeriodosPuco += moment(padrones[0][i].version).utc().format('MMMM [de] YYYY');
-                        } else {
-                            this.listaPeriodosPuco += moment(padrones[0][i].version).utc().format('MMMM [de] YYYY') + ', ';
-                        }
+                    if (i === padrones[0].length - 1) {
+                        this.listaPeriodosPuco += moment(padrones[0][i].version).utc().format('MMMM [de] YYYY');
+                    } else {
+                        this.listaPeriodosPuco += moment(padrones[0][i].version).utc().format('MMMM [de] YYYY') + ', ';
                     }
-                    this.ultimaActualizacionPuco = moment(padrones[0][0].version).utc();
                 }
+                this.ultimaActualizacionPuco = moment(padrones[0][0].version).utc();
+            }
 
 
-                // (Para el sidebar) Se setean las variables para mostrar los padrones de INCLUIR SALUD que se encuentran disponibles.
-                if (padrones[1].length) {
-                    for (let i = 0; i < padrones[1].length; i++) {
+            // (Para el sidebar) Se setean las variables para mostrar los padrones de INCLUIR SALUD que se encuentran disponibles.
+            if (padrones[1].length) {
+                for (let i = 0; i < padrones[1].length; i++) {
 
-                        if (i === padrones[1].length - 1) {
-                            this.listaPeriodosProfe += moment(padrones[1][i].version).format('MMMM [de] YYYY');
-                        } else {
-                            this.listaPeriodosProfe += moment(padrones[1][i].version).format('MMMM [de] YYYY') + ', ';
-                        }
+                    if (i === padrones[1].length - 1) {
+                        this.listaPeriodosProfe += moment(padrones[1][i].version).format('MMMM [de] YYYY');
+                    } else {
+                        this.listaPeriodosProfe += moment(padrones[1][i].version).format('MMMM [de] YYYY') + ', ';
                     }
-                    this.ultimaActualizacionProfe = padrones[1][0].version;
                 }
+                this.ultimaActualizacionProfe = padrones[1][0].version;
+            }
 
-            });
+        });
     }
 
     // Realiza controles simples cuando se modifica el valor del select
@@ -162,13 +162,13 @@ export class PucoComponent implements OnInit, OnDestroy {
                             this.resProfe = (t[1] as any);
 
                             if (this.resPuco) {
-                                this.usuarios = <any> this.resPuco;
+                                this.usuarios = <any>this.resPuco;
                             }
                             if (this.resProfe) {
                                 if (this.resPuco) {
                                     this.usuarios = this.resPuco.concat(this.resProfe);
                                 } else {
-                                    this.usuarios = <any> this.resProfe;
+                                    this.usuarios = <any>this.resProfe;
                                 }
                             }
                         });
@@ -187,5 +187,9 @@ export class PucoComponent implements OnInit, OnDestroy {
     // Boton reporte de errores/sugerencias
     sugerencias() {
         this.sugerenciasService.post();
+    }
+
+    checkLog() {
+        return this.auth.loggedIn();
     }
 }
