@@ -18,8 +18,6 @@
                 </form>
                 <br>
             </header>
-
-            <!-- <cdk-virtual-scroll-viewport itemSize="5" style="height: 100%;display: flex;"> -->
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
@@ -31,25 +29,25 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let profesional of datos" (click)='seleccionarProfesional(profesional)'>
+                        <tr *ngFor="let profesional of datos" (click)="seleccionarProfesional(profesional)">
                             <td>{{profesional.documento}}</td>
                             <td>{{profesional.apellido}}</td>
                             <td>{{profesional.nombre}}</td>
                             <td>
-                                <span *ngIf='profesional.profesionalMatriculado' class="badge badge-info">Matriculado</span>
-                                <span *ngIf='!profesional.profesionalMatriculado' class="badge badge-warning"> No
-                                    Matriculado</span>
-
+                                <span *ngIf="profesional.profesionalMatriculado" class="badge badge-info">
+                                    Matriculado
+                                </span>
+                                <span *ngIf="!profesional.profesionalMatriculado" class="badge badge-warning">
+                                    No Matriculado
+                                </span>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <!-- </cdk-virtual-scroll-viewport> -->
         </ng-container>
         <ng-container *ngIf='nuevoProfesional'>
             <profesional-create-update [seleccion]="seleccion" (data)='onReturn($event)'></profesional-create-update>
-
         </ng-container>
     </plex-layout-main>
 
@@ -61,39 +59,54 @@
             <div class="row mb-1">
                 <div class="col text-center">
                     <img [src]="fotoProfesional" class="img-thumbnail" />
-              </div>
+                </div>
             </div>
             <div class="row mb-1" *ngIf="profesionalSelected.apellido">
                 <div class="col">
-                    <strong>{{profesionalSelected.apellido | uppercase}}, {{profesionalSelected.nombre | uppercase}}</strong>
+                    <strong>
+                        {{profesionalSelected.apellido | uppercase}},
+                        {{profesionalSelected.nombre | uppercase}}
+                    </strong>
                 </div>
             </div>
             <div class="row mb-1">
                 <div class="col">
-                    <span *ngIf="profesionalSelected.documento" class="mr-1">{{ profesionalSelected.documento | number
-                        }}</span>
-                    <span *ngIf='profesionalSelected.profesionalMatriculado' class="badge badge-info">Matriculado</span>
-                    <span *ngIf='!profesionalSelected.profesionalMatriculado' class="badge badge-warning"> No
-                        Matriculado</span>
+                    <span *ngIf="profesionalSelected.documento" class="mr-1">
+                        {{ profesionalSelected.documento | number }}
+                    </span>
+                    <span *ngIf='profesionalSelected.profesionalMatriculado' class="badge badge-info">
+                        Matriculado
+                    </span>
+                    <span *ngIf='!profesionalSelected.profesionalMatriculado' class="badge badge-warning">
+                        No Matriculado
+                    </span>
                 </div>
             </div>
             <div class="row mb-1" *ngIf="profesionalSelected.fechaNacimiento">
                 <div class="col">
                     <label>Fecha de nacimiento</label>
-                    <span>{{ profesionalSelected.fechaNacimiento | fecha }}</span> | <span>{{ profesionalSelected |
-                        edad }}</span>
+                    <span>
+                        {{ profesionalSelected.fechaNacimiento | fecha }}
+                    </span> |
+                    <span>
+                        {{ profesionalSelected | edad }}
+                    </span>
                 </div>
             </div>
             <div class="row mb-1" *ngIf="profesionalSelected.sexo">
                 <div class="col">
                     <label>Sexo / Género</label>
-                    <span>{{ profesionalSelected | sexo }}</span>
+                    <span>
+                        {{ profesionalSelected | sexo }}
+                    </span>
                 </div>
             </div>
             <div class="row mb-1" *ngIf="profesionalSelected.cuit">
                 <div class="col">
                     <label>CUIL</label>
-                    <span>{{ profesionalSelected.cuit }}</span>
+                    <span>
+                        {{ profesionalSelected.cuit }}
+                    </span>
                 </div>
             </div>
             <div class="row mb-1" *ngIf="profesionalSelected.formacionGrado && profesionalSelected.formacionGrado.length > 0">
@@ -112,9 +125,9 @@
                     <label>Especialidades</label>
                     <div *ngFor='let formacionPosgrado of profesionalSelected.formacionPosgrado'>
                         <div *ngIf='formacionPosgrado && formacionPosgrado.matriculacion && formacionPosgrado.matriculacion[formacionPosgrado.matriculacion.length - 1].matriculaNumero'>
-                            {{formacionPosgrado.especialidad.nombre}} - Matricula:
-                            {{formacionPosgrado.matriculacion[formacionPosgrado.matriculacion.length -
-                            1].matriculaNumero}}
+                            {{formacionPosgrado.especialidad.nombre}} - 
+                            Matricula:
+                            {{ formacionPosgrado.matriculacion[formacionPosgrado.matriculacion.length -1].matriculaNumero }}
                         </div>
                     </div>
                 </div>
