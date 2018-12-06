@@ -25,7 +25,8 @@
                 <td>{{practica.codigo}}</td>
                 <td>{{practica.nombre}}</td>
                 <td>
-                    <plex-bool type="checkbox" [(ngModel)]="practica.valor.resultado.sinMuestra" name="sinMuestra"></plex-bool>
+                    <plex-bool *ngIf="practica?.valor?.resultado" type="checkbox" [(ngModel)]="practica.valor.resultado.sinMuestra"
+                        name="sinMuestra"></plex-bool>
                 </td>
                 <td>
                     <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practica)"></plex-button>

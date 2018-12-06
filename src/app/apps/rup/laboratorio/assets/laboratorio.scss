@@ -167,3 +167,9 @@ header {
         display: flex;
     }
 }
+
+
+.protocolo-auditoria {
+    display: grid;
+    grid-template-columns: 15px 1fr 15px;
+}
