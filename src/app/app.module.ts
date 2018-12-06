@@ -262,7 +262,6 @@ import { ElementoDeRegistroComponent } from './modules/rup/components/elementos/
 import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeDeEpicrisis/informeEpicrisis.component';
 import { ListaEsperaInternacionComponent } from './modules/rup/components/ejecucion/internacion/ListaEsperaInternacion.component';
 import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/odontologiaDefault/odontologiaDefault.component';
-import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
 import { InformeActividadNoNominalizadaComponent } from './modules/rup/components/elementos/informeActividadNoNominalizada/informeActividadNoNominalizada.component';
 import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
 import { PesoComponent } from './modules/rup/components/elementos/peso.component';
@@ -389,7 +388,6 @@ export let RUPRegistry = {
     'OdontogramaRefsetComponent': OdontogramaRefsetComponent,
     'LactanciaComponent': LactanciaComponent,
     'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
-    'CircunferenciaCinturaComponent': CircunferenciaCinturaComponent,
     'InformeActividadNoNominalizadaComponent': InformeActividadNoNominalizadaComponent,
     'PesoComponent': PesoComponent,
     'PercentiloPesoComponent': PercentiloPesoComponent,
@@ -450,7 +448,6 @@ let RUPComponentsArray = [
     InformeEpicrisisComponent,
     ElementoDeRegistroComponent,
     OdontologiaDefaultComponent,
-    CircunferenciaCinturaComponent,
     InformeActividadNoNominalizadaComponent,
     PercentiloPesoComponent,
     PercentiloTallaComponent,
