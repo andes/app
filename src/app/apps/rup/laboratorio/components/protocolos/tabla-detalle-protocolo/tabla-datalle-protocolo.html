@@ -98,7 +98,7 @@
                             <!-- <p> {{ practicaCarga.practica.resultado?.resultadosAnteriores | json }}</p> -->
                             <ng-container *ngIf="practicaCarga.practica.resultado?.resultadosAnteriores.length > 0">
                                 {{ practicaCarga.practica.resultado.resultadosAnteriores[(practicaCarga.practica.resultado.resultadosAnteriores.length) - 1]?.valor }}
-                                <br>
+                                &nbsp;
                                 {{ practicaCarga.practica.resultado.resultadosAnteriores[(practicaCarga.practica.resultado.resultadosAnteriores.length) - 1]?.unidadMedida}}
                                 <br>
                                 {{ practicaCarga.practica.resultado.resultadosAnteriores[(practicaCarga.practica.resultado.resultadosAnteriores.length) - 1]?.fecha | date: 'dd/MM/yyyy' }}
