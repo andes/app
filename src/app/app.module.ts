@@ -240,10 +240,8 @@ import { SaturacionOxigenoComponent } from './modules/rup/components/elementos/s
 import { FrecuenciaCardiacaComponent } from './modules/rup/components/elementos/frecuenciaCardiaca.component';
 import { FrecuenciaRespiratoriaComponent } from './modules/rup/components/elementos/frecuenciaRespiratoria.component';
 import { ObservacionesComponent } from './modules/rup/components/elementos/observaciones/observaciones.component';
-import { NuevaEvolucionProblemaComponent } from './modules/rup/components/elementos/nuevaEvolucionProblema.component';
 import { EvolucionProblemaDefaultComponent } from './modules/rup/components/elementos/evolucionProblemaDefault/evolucionProblemaDefault.component';
 import { AutocitadoComponent } from './modules/rup/components/elementos/autocitado/autocitado.component';
-import { ObesidadComponent } from './modules/rup/components/elementos/obesidad.component';
 import { RiesgoCardiovascularComponent } from './modules/rup/components/elementos/riesgoCardiovascular.component';
 import { AdjuntarDocumentoComponent } from './modules/rup/components/elementos/adjuntarDocumento/adjuntarDocumento.component';
 import { RegistrarMedicamentoDefaultComponent } from './modules/rup/components/elementos/registrarMedicamentoDefault/registrarMedicamentoDefault.component';
@@ -361,7 +359,6 @@ export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
     'EvolucionProblemaDefaultComponent': EvolucionProblemaDefaultComponent,
     'InformesComponent': InformesComponent,
-    'NuevaEvolucionProblemaComponent': NuevaEvolucionProblemaComponent,
     'ObservacionesComponent': ObservacionesComponent,
     'SaturacionOxigenoComponent': SaturacionOxigenoComponent,
     'SignosVitalesComponent': SignosVitalesComponent,
@@ -373,7 +370,6 @@ export let RUPRegistry = {
     'FrecuenciaCardiacaComponent': FrecuenciaCardiacaComponent,
     'FrecuenciaRespiratoriaComponent': FrecuenciaRespiratoriaComponent,
     'AutocitadoComponent': AutocitadoComponent,
-    'ObesidadComponent': ObesidadComponent,
     'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent,
     'AdjuntarDocumentoComponent': AdjuntarDocumentoComponent,
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
@@ -413,8 +409,6 @@ let RUPComponentsArray = [
     FrecuenciaCardiacaComponent,
     FrecuenciaRespiratoriaComponent,
     InformesComponent,
-    NuevaEvolucionProblemaComponent,
-    ObesidadComponent,
     ObservacionesComponent,
     PesoComponent,
     PercentiloPerimetroCefalicoComponent,
