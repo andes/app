@@ -17,8 +17,10 @@
                 <small *ngIf="espacio.sector">{{espacio._value.sector.nombre}}</small>
                 <span *ngFor="let eq of espacio._value.equipamiento" class="badge badge-info">{{eq.term}}</span>
             </td>
-            <td *ngFor="let agenda of espacio._items" (mouseenter)="showInfo(agenda?.id)" (mouseleave)="showInfo(false)" [colSpan]="agenda?.colspan"
-                class="text-white" [ngClass]="{'ocupado': agenda.id}" (click)="seleccionarEspacio(espacio, agenda.disponible)">
+
+            <td *ngFor="let agenda of espacio._items" (mouseenter)="showInfo(agenda?.id)" (mouseleave)="showInfo(false)"
+                [colSpan]="agenda?.colspan" class="text-white" [ngClass]="{'ocupado-planificacion': agenda.id && agenda._value && agenda._value.estado ==='planificacion', 'ocupado': agenda.id && agenda._value && agenda._value.estado !=='planificacion'}"
+                (click)="seleccionarEspacio(espacio, agenda.disponible)">
                 <ng-container *ngIf="agenda && idInfoAgenda === agenda.id">
                     <div class="info-agenda">
                         <div class="texto-agenda">
