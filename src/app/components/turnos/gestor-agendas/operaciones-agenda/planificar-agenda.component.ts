@@ -336,6 +336,11 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     cambioPrestaciones() {
+        // Valores por defecto
+        this.noNominalizada = false;
+        this.dinamica = false;
+        this.modelo.nominalizada = true;
+
         if (this.modelo.tipoPrestaciones && this.modelo.tipoPrestaciones.length === 1) {
             if (this.modelo.tipoPrestaciones[0].noNominalizada) {
                 this.noNominalizada = true;
