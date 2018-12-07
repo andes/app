@@ -31,7 +31,8 @@ export class MapaEspacioFisicoVistaComponent implements OnInit {
     public matrix = [];
     public seleccionada;
     public agendaSeleccionada: IAgenda;
-    public editar: Boolean = false;
+    private permisoEdicion = false;
+    // public editar: Boolean = false;
 
     public filtros: any = {
         fecha: new Date(),
@@ -48,9 +49,11 @@ export class MapaEspacioFisicoVistaComponent implements OnInit {
         private router: Router) { }
 
     ngOnInit() {
-        if (this.auth.check('turnos:editarEspacio') || this.auth.check('turnos:*')) {
-            this.editar = true;
-        }
+        this.permisoEdicion = this.auth.getPermissions('espaciosFisicos:?').length > 0 ? this.auth.getPermissions('espaciosFisicos:?')[0] === '*' : false;
+
+        // if (this.auth.check('turnos:editarEspacio') || this.auth.check('turnos:*')) {
+        //     this.editar = true;
+        // }
         // buscamos la organizacion para obtener el listado de edificios
         this.organizacionService.getById(this.auth.organizacion._id).subscribe(organizacion => {
             this.organizacion = organizacion;
@@ -108,9 +111,7 @@ export class MapaEspacioFisicoVistaComponent implements OnInit {
     }
 
     routeEspaciosFisicos() {
-        if (this.auth.check('turnos:editarEspacio') || this.auth.check('turnos:*')) {
-            this.router.navigate(['./tm/espacio_fisico']);
-        }
+        this.router.navigate(['./tm/espacio_fisico']);
     }
 }
 

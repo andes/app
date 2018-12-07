@@ -90,4 +90,8 @@ export class EspacioFisicoComponent implements OnInit {
         });
     }
 
+    routeMapa() {
+        this.router.navigate(['./tm/mapa_espacio_fisico']);
+    }
+
 }

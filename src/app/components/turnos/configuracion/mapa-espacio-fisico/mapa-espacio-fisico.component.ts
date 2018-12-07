@@ -40,7 +40,6 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
     public headers = [];
     public matrix: any;
     private agendaCache: IAgenda = null;
-
     idInfoAgenda = '';
 
     constructor(
@@ -50,6 +49,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
 
 
     ngOnInit() {
+        console.log(this.auth.getPermissions('espaciosFisicos:?'));
         if (this.agendaSeleccionada) {
             this.refreshScreen();
         } else {

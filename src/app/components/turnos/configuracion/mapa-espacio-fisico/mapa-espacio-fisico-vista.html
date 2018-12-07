@@ -4,12 +4,13 @@
             <form #formulario="ngForm">
                 <div class="row">
                     <div class="col-md-3">
-                        <plex-datetime type="date" [(ngModel)]="filtros.fecha" [required]="true" name="fechaFiltro" label="Fecha">
+                        <plex-datetime type="date" [(ngModel)]="filtros.fecha" [required]="true" name="fechaFiltro"
+                            label="Fecha">
                         </plex-datetime>
                     </div>
                     <div class="col-md-3">
-                        <plex-select [(ngModel)]="filtros.edificio" [required]="true" name="edificio" [data]="listadoEdificios" label="Edificio"
-                            labelField="descripcion">
+                        <plex-select [(ngModel)]="filtros.edificio" [required]="true" name="edificio" [data]="listadoEdificios"
+                            label="Edificio" labelField="descripcion">
                         </plex-select>
                     </div>
                     <div class="col-md-3">
@@ -18,8 +19,10 @@
                     </div>
                     <div class="col-md-3">
                         <br>
-                        <plex-button type="primary" position="right" label="Buscar" [validateForm]="formulario" (click)="matrizEspaciosFisicos($event.formValid)">
+                        <plex-button class="mr-1" type="primary" label="Buscar" [validateForm]="formulario" (click)="matrizEspaciosFisicos($event.formValid)">
                         </plex-button>
+                        <plex-button *ngIf="permisoEdicion" type="primary" label="Configurar Espacios" (click)="routeEspaciosFisicos()"></plex-button>
+
                     </div>
                 </div>
             </form>
@@ -29,15 +32,13 @@
         </div>
         <div class="row">
             <div class="col">
-                <mapa-espacio-fisico *ngIf="listadoEspaciosFisicos && listadoAgendas" [agendaSeleccionada]="null" [agendasTable]="listadoAgendas"
-                    [espacioTable]="listadoEspaciosFisicos" (agendaVista)="visualizarDetalleAgenda($event)" [fecha]="filtros.fecha"></mapa-espacio-fisico>
+                <mapa-espacio-fisico *ngIf="listadoEspaciosFisicos && listadoAgendas" [agendaSeleccionada]="null"
+                    [agendasTable]="listadoAgendas" [espacioTable]="listadoEspaciosFisicos" (agendaVista)="visualizarDetalleAgenda($event)"
+                    [fecha]="filtros.fecha"></mapa-espacio-fisico>
             </div>
         </div>
     </plex-layout-main>
     <plex-layout-sidebar>
         <detalle-agenda *ngIf="agendaSeleccionada" [agenda]="agendaSeleccionada"></detalle-agenda>
     </plex-layout-sidebar>
-    <plex-layout-footer>
-        <plex-button type="info" *ngIf="editar" label="Listar espacios físicos" position="right" (click)="routeEspaciosFisicos()"></plex-button>
-    </plex-layout-footer>
 </plex-layout>
