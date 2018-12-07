@@ -78,11 +78,11 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
     public conceptosTurneables: any[];
 
     public conceptos = {
-        hallazgos: ['hallazgo', 'situación'],
+        hallazgos: ['hallazgo', 'situación', 'evento'],
         trastornos: ['trastorno'],
         procedimientos: ['procedimiento', 'entidad observable', 'régimen/tratamiento'],
         planes: ['procedimiento', 'régimen/tratamiento'],
-        productos: ['producto'],
+        productos: ['producto', 'objeto físico', 'medicamento clínico'],
         otros: ['elemento de registro']
     };
 
