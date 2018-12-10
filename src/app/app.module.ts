@@ -248,7 +248,6 @@ import { AutocitadoComponent } from './modules/rup/components/elementos/autocita
 import { ObesidadComponent } from './modules/rup/components/elementos/obesidad.component';
 import { HipertensionArterialComponent } from './modules/rup/components/elementos/hipertensionArterial.component';
 import { FiltradoGlomerularComponent } from './modules/rup/components/elementos/filtradoGlomerular.component';
-import { RiesgoCardiovascularComponent } from './modules/rup/components/elementos/riesgoCardiovascular.component';
 import { AdjuntarDocumentoComponent } from './modules/rup/components/elementos/adjuntarDocumento.component';
 import { RegistrarMedicamentoDefaultComponent } from './modules/rup/components/elementos/registrarMedicamentoDefault.component';
 import { InformesComponent } from './modules/rup/components/elementos/informe.component';
@@ -293,8 +292,8 @@ import { CalculoDeBostonComponent } from './modules/rup/components/elementos/cal
 import { SeleccionBinariaComponent } from './modules/rup/components/elementos/seleccionBinaria.component';
 import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico.component';
 import { MoleculaBaseComponent } from './modules/rup/components/elementos/moleculaBase.component';
-
 import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria.component';
+
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
@@ -368,6 +367,9 @@ import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
 import { ConfiguracionPrestacionCrearComponent } from './components/configuracionPrestacion/configuracion-prestacion-crear.component';
 
+import { RiesgoCardiovascularService } from './modules/rup/components/formulas/riesgoCardiovascular.service';
+import { FormulaBaseService } from './modules/rup/components/formulas';
+import { FormulaBaseComponent } from './modules/rup/components/elementos/FormulaBase.component';
 // Campañas Salud
 import { CampaniaSaludService } from './apps/campaniaSalud/services/campaniaSalud.service';
 import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campaniaSalud.component';
@@ -393,7 +395,6 @@ export let RUPRegistry = {
     'ObesidadComponent': ObesidadComponent,
     'HipertensionArterialComponent': HipertensionArterialComponent,
     'FiltradoGlomerularComponent': FiltradoGlomerularComponent,
-    'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent,
     'AdjuntarDocumentoComponent': AdjuntarDocumentoComponent,
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
     'IngresoInternacionComponent': IngresoInternacionComponent,
@@ -428,6 +429,7 @@ export let RUPRegistry = {
     'SeleccionBinariaComponent': SeleccionBinariaComponent,
     'ValorNumericoComponent': ValorNumericoComponent,
     'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
+    'FormulaBaseComponent': FormulaBaseComponent,
     'GraficoLinealComponent': GraficoLinealComponent,
     'MoleculaBaseComponent': MoleculaBaseComponent
 };
@@ -449,7 +451,6 @@ let RUPComponentsArray = [
     PercentiloPerimetroCefalicoComponent,
     PerimetroCefalicoComponent,
     RegistrarMedicamentoDefaultComponent,
-    RiesgoCardiovascularComponent,
     SaturacionOxigenoComponent,
     GraficoLinealComponent,
     SignosVitalesComponent,
@@ -486,6 +487,10 @@ let RUPComponentsArray = [
     RegistrarMedidasAntropometricasNinoM2AComponent,
     RegistrarMedidasAntropometricasNinoE2Y3AComponent,
     RegistrarMedidasAntropometricasNinoE3Y6AComponent,
+    ProcedimientoDeEnfermeriaComponent,
+    ValorNumericoComponent,
+    SeleccionBinariaComponent,
+    FormulaBaseComponent,
     CalculoDeBostonComponent,
     SeleccionBinariaComponent,
     ValorNumericoComponent,
@@ -706,6 +711,9 @@ registerLocaleData(localeEs, 'es');
         SugerenciasService,
         ConfiguracionPrestacionService,
         PrestacionLegacyService,
+        RiesgoCardiovascularService,
+        FormulaBaseService,
+        SeleccionBinariaComponent,
         CampaniaSaludService,
         SeleccionBinariaComponent,
         PacienteCreateUpdateComponent
