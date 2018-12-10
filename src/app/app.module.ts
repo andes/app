@@ -269,7 +269,7 @@ import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/
 import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
 import { InformeActividadNoNominalizadaComponent } from './modules/rup/components/elementos/informeActividadNoNominalizada.component';
 
-import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
+import { GraficoLinealComponent } from './modules/rup/components/elementos/graficoLineal.component';
 import { PesoComponent } from './modules/rup/components/elementos/peso.component';
 import { PercentiloPesoComponent } from './modules/rup/components/elementos/percentiloPeso.component';
 import { TallaComponent } from './modules/rup/components/elementos/talla.component';
@@ -367,6 +367,11 @@ import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
 import { ConfiguracionPrestacionCrearComponent } from './components/configuracionPrestacion/configuracion-prestacion-crear.component';
 
+// Campañas Salud
+import { CampaniaSaludService } from './apps/campaniaSalud/services/campaniaSalud.service';
+import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campaniaSalud.component';
+import { CampaniaVisualizacionComponent } from './apps/campaniaSalud/components/campaniaVisualizacion.component';
+import { CampaniaFormComponent } from './apps/campaniaSalud/components/campania-create-update.component';
 
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
@@ -390,7 +395,6 @@ export let RUPRegistry = {
     'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent,
     'AdjuntarDocumentoComponent': AdjuntarDocumentoComponent,
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
-    'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent,
     'IngresoInternacionComponent': IngresoInternacionComponent,
     'PasesCamaComponent': PasesCamaComponent,
     'InformeEpicrisisComponent': InformeEpicrisisComponent,
@@ -423,6 +427,7 @@ export let RUPRegistry = {
     'SeleccionBinariaComponent': SeleccionBinariaComponent,
     'ValorNumericoComponent': ValorNumericoComponent,
     'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
+    'GraficoLinealComponent': GraficoLinealComponent,
     'MoleculaBaseComponent': MoleculaBaseComponent
 };
 
@@ -445,7 +450,7 @@ let RUPComponentsArray = [
     RegistrarMedicamentoDefaultComponent,
     RiesgoCardiovascularComponent,
     SaturacionOxigenoComponent,
-    SeguimientoDelPesoComponent,
+    GraficoLinealComponent,
     SignosVitalesComponent,
     SolicitudPrestacionDefaultComponent,
     TallaComponent,
@@ -516,7 +521,7 @@ registerLocaleData(localeEs, 'es');
         routing,
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
-        })
+        }),
     ],
     declarations: [
         AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,
@@ -624,7 +629,12 @@ registerLocaleData(localeEs, 'es');
         // Configuracion prestacion
         ConfiguracionPrestacionVisualizarComponent,
         ConfiguracionPrestacionCrearComponent,
-        PucoComponent
+        PucoComponent,
+
+        // Campañas Salud
+        CampaniaSaludComponent,
+        CampaniaVisualizacionComponent,
+        CampaniaFormComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
@@ -695,7 +705,9 @@ registerLocaleData(localeEs, 'es');
         SugerenciasService,
         ConfiguracionPrestacionService,
         PrestacionLegacyService,
-        SeleccionBinariaComponent
+        CampaniaSaludService,
+        SeleccionBinariaComponent,
+        PacienteCreateUpdateComponent
     ]
 })
 
