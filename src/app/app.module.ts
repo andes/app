@@ -27,7 +27,7 @@ import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
 import { AuthModule } from '@andes/auth';
 import { Auth } from '@andes/auth';
-import { RoutingGuard } from './app.routings-guard.class';
+import { RoutingGuard, RoutingNavBar } from './app.routings-guard.class';
 import { AgmCoreModule } from '@agm/core';
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
@@ -656,6 +656,7 @@ registerLocaleData(localeEs, 'es');
         Server,
         Auth,
         RoutingGuard,
+        RoutingNavBar,
         OrganizacionService,
         OcupacionService,
         ProvinciaService,
