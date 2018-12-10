@@ -118,7 +118,10 @@ export class RUPComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.renderer.invokeElementMethod(this.elemento.nativeElement, 'scrollIntoView');
+        // Hack momentaneo
+        if (!this.soloValores) {
+            this.renderer.invokeElementMethod(this.elemento.nativeElement, 'scrollIntoView');
+        }
     }
 
     /**
