@@ -160,6 +160,17 @@ export class PrestacionEjecucionComponent implements OnInit {
                     this.showPrestacion = true;
                     this.servicioPrestacion.getById(id).subscribe(prestacion => {
                         this.prestacion = prestacion;
+
+                        this.plex.updateTitle([{
+                            route: '/',
+                            name: 'ANDES'
+                        }, {
+                            route: '/rup',
+                            name: 'RUP'
+                        }, {
+                            name: this.prestacion && this.prestacion.solicitud.tipoPrestacion.term ? this.prestacion.solicitud.tipoPrestacion.term : ''
+                        }]);
+
                         // this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
                         // Si la prestación está validada, navega a la página de validación
                         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {

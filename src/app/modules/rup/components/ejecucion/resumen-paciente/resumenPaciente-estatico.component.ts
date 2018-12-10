@@ -32,11 +32,5 @@ export class ResumenPacienteEstaticoComponent implements OnInit {
 
     async ngOnInit() {
         this.prestacionSolicitud = this.prestacion.solicitud;
-        this.plex.updateTitle([{
-            route: '/rup',
-            name: 'RUP'
-        }, {
-            name: this.prestacionSolicitud && this.prestacionSolicitud.tipoPrestacion.term ? this.prestacionSolicitud.tipoPrestacion.term : ''
-        }]);
     }
 }
