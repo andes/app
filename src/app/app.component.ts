@@ -1,5 +1,5 @@
 
-import {finalize} from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { environment } from './../environments/environment';
 import { Component } from '@angular/core';
 import { Plex } from '@andes/plex';
@@ -49,6 +49,9 @@ export class AppComponent {
         if (this.auth.getPermissions('turnos:puntoInicio:?').length > 0) {
             accessList.push({ label: 'CITAS: Punto de Inicio', icon: 'calendar', route: '/citas/puntoInicio' });
         }
+
+        accessList.push({ label: 'CITAS: Espacios Fisicos', icon: 'cogs', route: 'tm/mapa_espacio_fisico' });
+
         if (this.auth.getPermissions('mpi:?').length > 0) {
             accessList.push({ label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: '/mpi' });
         }
