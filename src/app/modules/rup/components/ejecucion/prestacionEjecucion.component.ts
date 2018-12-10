@@ -497,9 +497,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             let registroRequerido = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === '371531000');
             if (registroRequerido) {
                 nuevoRegistro.relacionadoCon.push(registroRequerido);
-                if (nuevoRegistro.id) {
-                    this.itemsRegistros[nuevoRegistro.id].collapse = true;
-                }
             }
         }
         //
