@@ -149,7 +149,6 @@ export class GestorProtocolosComponent
 
     getProtocolos(params: any) {
         this.servicioPrestaciones.get(params).subscribe(protocolos => {
-            console.log(protocolos);
             this.protocolos = protocolos;
         }, err => {
             if (err) {
