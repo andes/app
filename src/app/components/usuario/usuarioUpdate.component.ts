@@ -148,9 +148,8 @@ export class UsuarioUpdateComponent implements OnInit {
      */
     loadPermisos() {
         this.temp = this.userModel.organizaciones.find(item =>
-            String(item._id) === String(this.organizacionSelectPrev._id)
+            String(item._id) === (this.organizacionSelectPrev ? String(this.organizacionSelectPrev._id) : null)
         );
-
         if (this.temp) {
             this.permisos = this.temp.permisos;
         } else {
@@ -184,7 +183,7 @@ export class UsuarioUpdateComponent implements OnInit {
         this.childsComponents.forEach(child => {
             permisos = [...permisos, ...child.generateString()];
         });
-        this.temp = this.userModel.organizaciones.find(item => String(item._id) === String(this.organizacionSelectPrev._id));
+        this.temp = this.userModel.organizaciones.find(item => String(item._id) === (this.organizacionSelectPrev ? String(this.organizacionSelectPrev._id) : null));
         if (this.temp) {
             this.temp.permisos = permisos;
         }
@@ -200,6 +199,10 @@ export class UsuarioUpdateComponent implements OnInit {
     }
 
     onCancel() {
-        this.data.emit(null);
+        if (this.hidePermisos) {
+            this.hidePermisos = false;
+        } else {
+            this.data.emit(null);
+        }
     }
 }

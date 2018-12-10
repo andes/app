@@ -15,10 +15,19 @@ import { IProvincia } from './../../interfaces/IProvincia';
 import { ILocalidad } from './../../interfaces/ILocalidad';
 import { IEspecialidad } from './../../interfaces/IEspecialidad';
 import * as enumerados from './../../utils/enumerados';
-
+import {
+    IContacto
+} from './../../interfaces/IContacto';
+import { RenaperService } from '../../services/fuentesAutenticas/servicioRenaper.service';
+import { Plex } from '@andes/plex';
+import { Matching } from '@andes/match';
+import { Router } from '@angular/router';
 @Component({
     selector: 'profesional-create-update',
-    templateUrl: 'profesional-create-update.html'
+    templateUrl: 'profesional-create-update.html',
+    styleUrls: [
+        'profesional.scss'
+    ]
 })
 export class ProfesionalCreateUpdateComponent implements OnInit {
     @Input() seleccion: IProfesional;
@@ -37,20 +46,51 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
     generos: any[];
     tipoComunicacion: any[];
     estadosCiviles: any[];
-
+    sugeridos;
+    mostrarBtnGuardar = true;
+    match100 = false;
     paises: IPais[] = [];
     provincias: IProvincia[] = [];
     localidades: ILocalidad[] = [];
     todasProvincias: IProvincia[] = [];
     todasLocalidades: ILocalidad[] = [];
     todasEspecialidades: IEspecialidad[] = [];
+    contacto: IContacto = {
+        tipo: 'celular',
+        valor: '',
+        ranking: 0,
+        activo: true,
+        ultimaActualizacion: new Date()
+    };
+    profesional: any = {
+        nombre: '',
+        apellido: '',
+        documento: null,
+        contactos: [this.contacto],
+        fechaNacimiento: '',
+        sexo: '',
+        generoAutopercibido: '',
+        nombreAutopercibido: ''
 
+    };
+    match = new Matching();
+    weights = {
+        identity: 0.55,
+        name: 0.10,
+        gender: 0.3,
+        birthDate: 0.05
+      };
+    validado = false;
+    noPoseeContacto = false;
     constructor(private formBuilder: FormBuilder,
         private profesionalService: ProfesionalService,
         private paisService: PaisService,
+        private plex: Plex,
+        private router: Router,
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
-        private especialidadService: EspecialidadService) { }
+        private especialidadService: EspecialidadService,
+        private renaperService: RenaperService) { }
 
     ngOnInit() {
         this.sexos = enumerados.getObjSexos();
@@ -58,165 +98,8 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.estadosCiviles = enumerados.getObjEstadoCivil();
 
-
-        // consultamos si es que hay datos cargados en seleccion ... entonces hacemos un update y no un insert
-        let nombre = this.seleccion ? this.seleccion.nombre : '';
-        let apellido = this.seleccion ? this.seleccion.apellido : '';
-        let documento = this.seleccion ? this.seleccion.documento : '';
-        let fechaNac = this.seleccion ? this.seleccion.fechaNacimiento : null;
-        let fechaFalle = this.seleccion ? this.seleccion.fechaFallecimiento : null;
-        let especialidades = this.seleccion ? this.seleccion.especialidad : null;
-        let rol = this.seleccion ? this.seleccion.rol : '';
-        let sexoSelected = this.seleccion ? enumerados.getObjeto(this.seleccion.sexo) : null;
-        let genero = this.seleccion ? enumerados.getObjeto(this.seleccion.genero) : null;
-        let estadoCivil = this.seleccion ? enumerados.getObjeto(this.seleccion.estadoCivil) : null;
-
-        this.createForm = this.formBuilder.group({
-            nombre: [nombre, Validators.required],
-            apellido: [apellido, Validators.required],
-            documento: [documento, Validators.required],
-            contacto: this.formBuilder.array([]),
-            fechaNacimiento: [fechaNac, Validators.required],
-            fechaFallecimiento: [fechaFalle],
-            sexo: [sexoSelected],
-            genero: [genero],
-            direccion: this.formBuilder.array([]),
-            estadoCivil: [estadoCivil],
-            foto: [''], // Queda pendiente para agregar un path o ver como se implementa
-            rol: [rol, Validators.required],
-            especialidad: [especialidades],
-            matriculas: this.formBuilder.array([])
-        });
-
-        if (this.seleccion) {
-            // Cargo arrays selecciondaos
-            this.loadMatriculas();
-            this.loadContactos();
-            this.loadDirecciones();
-        }
-
     }
 
-    loadEspecialidades(event) {
-        this.especialidadService.get({ nombre: event.query }).subscribe(event.callback);
-    }
-
-    /* Codigo Direccion */
-
-    iniDireccion(unaDireccion?: IDireccion) {
-        // Inicializa contacto
-        let myPais;
-        let myProvincia;
-        let myLocalidad;
-        if (unaDireccion) {
-            if (unaDireccion.ubicacion) {
-                if (unaDireccion.ubicacion.pais) {
-                    myPais = unaDireccion.ubicacion.pais;
-                    if (unaDireccion.ubicacion.provincia) {
-                        this.provincias = this.todasProvincias.filter((p) => p.pais.id === myPais.id);
-                        myProvincia = unaDireccion.ubicacion.provincia;
-                        if (unaDireccion.ubicacion.localidad) {
-                            this.localidades = this.todasLocalidades.filter((loc) => loc.provincia.id === myProvincia.id);
-                            myLocalidad = unaDireccion.ubicacion.localidad;
-                        }
-                    }
-                }
-            }
-
-            return this.formBuilder.group({
-                valor: [unaDireccion.valor],
-                ubicacion: this.formBuilder.group({
-                    pais: [myPais],
-                    provincia: [myProvincia],
-                    localidad: [myLocalidad]
-                }),
-                ranking: [unaDireccion.ranking],
-                codigoPostal: [unaDireccion.codigoPostal],
-                ultimaActualizacion: [unaDireccion.ultimaActualizacion],
-                activo: [unaDireccion.activo]
-            });
-        } else {
-            return this.formBuilder.group({
-                valor: [''],
-                ubicacion: this.formBuilder.group({
-                    pais: [''],
-                    provincia: [''],
-                    localidad: ['']
-                }),
-                ranking: [],
-                codigoPostal: [''],
-                ultimaActualizacion: [''],
-                activo: [true]
-            });
-        }
-    }
-
-    addDireccion(unaDireccion?) {
-        // agrega formMatricula
-        const control = <FormArray>this.createForm.controls['direccion'];
-        control.push(this.iniDireccion(unaDireccion));
-    }
-
-    loadDirecciones() {
-        this.seleccion.direccion.forEach(element => {
-            this.addDireccion(element);
-        });
-    }
-    removeDireccion(i: number) {
-        // elimina formMatricula
-        const control = <FormArray>this.createForm.controls['direccion'];
-        control.removeAt(i);
-    }
-    /*Código de matriculas*/
-
-    setMatricula(objMat: IMatricula) {
-        return this.formBuilder.group({
-            numero: [objMat.numero, Validators.required],
-            descripcion: [objMat.descripcion],
-            activo: [objMat.activo],
-            fechaInicio: [objMat.fechaInicio],
-            fechaVencimiento: [objMat.fechaVencimiento],
-
-        });
-    }
-
-    loadMatriculas() {
-        let cantidadMatriculasActuales = this.seleccion.matriculas.length;
-        const control = <FormArray>this.createForm.controls['matriculas'];
-        // Si tienen al menos una matrículas
-        if (cantidadMatriculasActuales > 0) {
-            for (let i = 0; i < cantidadMatriculasActuales; i++) {
-                let objMatricula: IMatricula;
-                objMatricula = this.seleccion.matriculas[i];
-                control.push(this.setMatricula(objMatricula));
-            }
-        } else {
-            control.push(this.iniMatricula());
-        }
-    }
-
-    iniMatricula() {
-        // Inicializa matrículas
-        return this.formBuilder.group({
-            numero: ['', Validators.required],
-            descripcion: [''],
-            fechaInicio: [null],
-            fechaVencimiento: [null],
-            activo: [true]
-        });
-    }
-
-    addMatricula() {
-        // agrega formMatricula
-        const control = <FormArray>this.createForm.controls['matriculas'];
-        control.push(this.iniMatricula());
-    }
-
-    removeMatricula(i: number) {
-        // elimina formMatricula
-        const control = <FormArray>this.createForm.controls['matriculas'];
-        control.removeAt(i);
-    }
 
     /*Código de filtrado de combos*/
     loadPaises(event) {
@@ -233,79 +116,117 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
 
     /*Código de contactos*/
 
-    initContacto(rank: Number) {
-        // Inicializa contacto
-        let fecha = new Date();
-        return this.formBuilder.group({
-            tipo: ['', Validators.required],
-            valor: ['', Validators.required],
-            ranking: [rank],
-            ultimaActualizacion: [fecha],
-            activo: [true]
+    addContacto(key, valor) {
+        let nuevoContacto = Object.assign({}, {
+            tipo: key,
+            valor: valor,
+            ranking: 0,
+            activo: true,
+            ultimaActualizacion: new Date()
         });
+        this.profesional.contactos.push(nuevoContacto);
     }
 
-    addContacto() {
-        const control = <FormArray>this.createForm.controls['contacto'];
-        control.push(this.initContacto(control.length + 1));
-    }
-
-    removeContacto(indice: number) {
-        const control = <FormArray>this.createForm.controls['contacto'];
-        control.removeAt(indice);
-    }
-
-    setContacto(cont: any) {
-        let tipo = cont ? enumerados.getObjeto(cont.tipo) : null;
-        return this.formBuilder.group({
-            tipo: [tipo, Validators.required],
-            valor: [cont.valor, Validators.required],
-            ranking: [cont.ranking],
-            ultimaActualizacion: [cont.ultimaActualizacion],
-            activo: [cont.activo]
-        });
-    }
-
-    loadContactos() {
-        let cantidadContactosActuales = this.seleccion.contacto.length;
-        const control = <FormArray>this.createForm.controls['contacto'];
-
-        if (cantidadContactosActuales > 0) {
-            for (let i = 0; i < cantidadContactosActuales; i++) {
-                let contacto: any = this.seleccion.contacto[i];
-                control.push(this.setContacto(contacto));
-            }
-        } else {
-            control.push(this.initContacto(1));
+    limpiarContacto() {
+        if (this.noPoseeContacto) {
+            this.profesional.contactos = [this.contacto];
+            this.profesional.contactos[0].valor = '';
         }
     }
 
-    /*Guardar los datos*/
-    onSave(model: any, isvalid: boolean) {
-        if (isvalid) {
-            model.activo = true;
-            model.genero = model.genero.id;
-            model.sexo = model.sexo.id;
-            model.estadoCivil = model.estadoCivil.id;
-            model.contacto = model.contacto.map(elem => { elem.tipo = elem.tipo.id; return elem; });
-            let profOperation: Observable<IProfesional>;
-
-            if (this.seleccion) {
-                model.id = this.seleccion.id;
-                profOperation = this.profesionalService.put(model);
-            } else {
-                profOperation = this.profesionalService.post(model);
-            }
-
-            profOperation.subscribe(resultado => this.data.emit(resultado));
-
-        } else {
-            alert('Complete datos obligatorios');
+    removeContacto(i) {
+        if (i >= 0) {
+            this.profesional.contactos.splice(i, 1);
         }
     }
 
-    onCancel() {
-        this.data.emit(null);
-        return false;
+    renaperVerification(profesional) {
+        if (!profesional.documento || (profesional.sexo.id === 'otro')) {
+            this.plex.info('warning', 'La validación por RENAPER requiere sexo MASCULINO o FEMENINO.', 'Atención');
+        } else {
+            // this.loading = true;
+            let sexoRena = null;
+            let documentoRena = null;
+
+            profesional.sexo = ((typeof profesional.sexo === 'string')) ? profesional.sexo : (Object(profesional.sexo).id);
+            sexoRena = profesional.sexo === 'masculino' ? 'M' : 'F';
+            documentoRena = profesional.documento;
+
+            this.renaperService.get({ documento: documentoRena, sexo: sexoRena }).subscribe(
+                resultado => {
+                    if (resultado.datos.nroError === 0) {
+                        this.validado = true;
+                        this.profesional.nombre = resultado.datos.nombres.toUpperCase();
+                        this.profesional.apellido = resultado.datos.apellido.toUpperCase();
+                        this.profesional.fechaNacimiento = moment(resultado.datos.fechaNacimiento, 'YYYY-MM-DD');
+                    } else {
+                        this.plex.info('warning', '', 'El profesional no se encontró en RENAPER');
+                    }
+                });
+        }
     }
+
+
+    save($event) {
+        if ($event.formValid) {
+            let match100 = false;
+            this.profesional['profesionalMatriculado'] = false;
+            this.profesional.sexo = this.profesional.sexo.toLowerCase();
+            this.profesionalService.get({ documento: this.profesional.documento })
+                .subscribe(
+                    datos => {
+                        if (datos.length > 0) {
+                            datos.forEach(profCandidato => {
+                                this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
+                                const prof = {
+                                    sexo: profCandidato.sexo.toString().toLowerCase(),
+                                    nombre: profCandidato.nombre,
+                                    apellido: profCandidato.apellido,
+                                    fechaNacimiento: profCandidato.fechaNacimiento,
+                                    documento: profCandidato.documento
+                                };
+                                let porcentajeMatching = this.match.matchPersonas(this.profesional, prof, this.weights, 'Levenshtein');
+                                let profesionalMatch = {
+                                    matching: 0,
+                                    paciente: null
+                                };
+                                if (porcentajeMatching) {
+
+                                    profesionalMatch.matching = porcentajeMatching * 100;
+                                    profesionalMatch.paciente = profCandidato;
+                                }
+                                if (profesionalMatch.matching >= 94) {
+                                    match100 = true;
+                                }
+
+                            });
+
+                            if (match100) {
+                                this.plex.info('warning', '', 'El profesional que está intentando guardar ya se encuentra cargado');
+                                // this.mostrarBtnGuardar = false;
+                            } else {
+                                this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
+
+                                this.profesionalService.saveProfesional({ profesional: this.profesional })
+                                    .subscribe(nuevoProfesional => {
+                                        this.plex.info('success', '', '¡El profesional se creó con éxito!');
+                                        this.router.navigate(['/tm/profesional']);
+                                    });
+                            }
+                            // this.sugeridosEncontrados = true;
+                            // this.sugeridos = datos;
+                        } else {
+                            this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
+                            this.profesionalService.saveProfesional({ profesional: this.profesional })
+                                .subscribe(nuevoProfesional => {
+                                    this.plex.info('success', '', '¡El profesional se creó con éxito!');
+                                    this.router.navigate(['/tm/profesional']);
+
+                                });
+                        }
+
+                    });
+        }
+    }
+
 }
