@@ -290,7 +290,6 @@ import { CalculoDeBostonComponent } from './modules/rup/components/elementos/cal
 import { SeleccionBinariaComponent } from './modules/rup/components/elementos/seleccionBinaria.component';
 import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico.component';
 import { MoleculaBaseComponent } from './modules/rup/components/elementos/moleculaBase.component';
-
 import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
