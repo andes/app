@@ -11,15 +11,16 @@
                         <div class="row">
                             <div class="col-3">
                                 <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="cargarSolicitudes()" name="fechaDesde"
-                                    label="Desde" class="fechas">
+                                    label="Desde" class="fechas" [max]="fechaHasta">
                                 </plex-datetime>
                             </div>
                             <div class="col-3">
                                 <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="cargarSolicitudes()" name="fechaHasta"
-                                    label="Hasta" class="fechas">
+                                    label="Hasta" class="fechas" [min]="fechaDesde">
                                 </plex-datetime>
                             </div>
-                            <div class="col-3">
+                            <div class="
+                                    col-3">
                                 <plex-text [(ngModel)]="paciente" name="paciente" (change)="filtrarPaciente()" label="Buscar paciente"></plex-text>
                             </div>
                             <div class="{{showEditarAgendaPanel && agendasSeleccionadas?.length === 1 ? 'col-4' : 'col-2'}} text-right">
@@ -120,9 +121,9 @@
                                                         </span>
                                                         <span *ngIf="visualizarEntrada[i]">
                                                         </span>
-                                                        <span *ngIf="permisoDesactivar && darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno && prestacion.estados[prestacion.estados.length-1].tipo !== 'anulada'">
-                                                            <plex-button type="danger" icon="delete" (click)="desactivar(prestacionesEntrada,i)"
-                                                                title="Desactivar">
+                                                        <span *ngIf="permisoAnular && darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno && prestacion.estados[prestacion.estados.length-1].tipo !== 'anulada'">
+                                                            <plex-button type="danger" icon="delete" (click)="anular(prestacionesEntrada,i)"
+                                                                title="Anular">
                                                             </plex-button>
                                                         </span>
                                                     </td>
@@ -208,9 +209,9 @@
                 <auditar-solicitud [tipoSolicitud]="tipoSolicitud" [prestacionSeleccionada]="prestacionSeleccionada"
                     (returnAuditoria)="returnAuditoria($event)"></auditar-solicitud>
             </div>
-            <div *ngIf="showDesactivar && !showSidebar" class="col-3">
-                <desactivar-solicitud [tipoSolicitud]="tipoSolicitud" [prestacionSeleccionada]="prestacionSeleccionada"
-                    (returnDesactivar)="returnDesactivar($event)"></desactivar-solicitud>
+            <div *ngIf="showAnular && !showSidebar" class="col-3">
+                <anular-solicitud [tipoSolicitud]="tipoSolicitud" [prestacionSeleccionada]="prestacionSeleccionada"
+                    (returnAnular)="returnAnular($event)"></anular-solicitud>
             </div>
         </div>
         <!-- Configuración de Reglas -->

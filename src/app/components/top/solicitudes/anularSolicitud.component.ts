@@ -5,11 +5,11 @@ import { environment } from '../../../../environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
-    selector: 'desactivar-solicitud',
-    templateUrl: './desactivarSolicitud.html',
+    selector: 'anular-solicitud',
+    templateUrl: './anularSolicitud.html',
     styleUrls: ['adjuntarDocumento.scss'],
 })
-export class DesactivarSolicitudComponent implements OnInit {
+export class AnularSolicitudComponent implements OnInit {
     imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
     extensions = [
         // Documentos
@@ -23,7 +23,7 @@ export class DesactivarSolicitudComponent implements OnInit {
 
     @Input() prestacionSeleccionada: any;
     @Input() tipoSolicitud: string;
-    @Output() returnDesactivar: EventEmitter<any> = new EventEmitter<any>();
+    @Output() returnAnular: EventEmitter<any> = new EventEmitter<any>();
     // Adjuntos
     fotos: any[] = [];
     fileToken: String = null;
@@ -46,22 +46,22 @@ export class DesactivarSolicitudComponent implements OnInit {
     }
 
     aceptar() {
-        this.returnDesactivar.emit({ status: true });
+        this.returnAnular.emit({ status: true });
     }
 
     rechazar() {
         this.showConfirmar = true;
     }
 
-    cancelarDesactivar() {
-        this.returnDesactivar.emit({ status: true });
+    cancelarAnular() {
+        this.returnAnular.emit({ status: true });
 
         // this.showConfirmar = false;
     }
 
-    confirmarDesactivar() {
+    confirmarAnular() {
         if (this.motivo) {
-            this.returnDesactivar.emit({ status: false, motivo: this.motivo });
+            this.returnAnular.emit({ status: false, motivo: this.motivo });
             this.showConfirmar = false;
         } else {
             this.plex.info('danger', 'Debe ingresar el motivo de anulación');

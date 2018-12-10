@@ -1,7 +1,7 @@
 <plex-box>
     <header>
         <div class="clearfix">
-            <div class="page-title float-left">DESACTIVAR SOLICITUD</div>
+            <div class="page-title float-left">ANULAR SOLICITUD</div>
         </div>
     </header>
     <div class="row">
@@ -65,17 +65,17 @@
     <span>
         <div class="row">
             <div class="col-12">
-                <plex-text label="Motivo de Anulación" multiline="true" name="motivo" [(ngModel)]="motivo">
+                <plex-text label="Motivo de Anulación" multiline="true" name="motivo" [(ngModel)]="motivo" [required]="true">
                 </plex-text>
             </div>
         </div>
         <br>
         <div class="row">
             <div class="col-6 text-left">
-                <plex-button type="danger" (click)="cancelarDesactivar()">Cancelar</plex-button>
+                <plex-button type="danger" (click)="cancelarAnular()">Cancelar</plex-button>
             </div>
             <div class="col-6 text-right">
-                <plex-button type="success" (click)="confirmarDesactivar()">Confirmar</plex-button>
+                <plex-button type="success" (click)="confirmarAnular()">Confirmar</plex-button>
             </div>
         </div>
     </span>
