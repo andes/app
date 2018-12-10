@@ -31,7 +31,7 @@ export class MapaEspacioFisicoVistaComponent implements OnInit {
     public matrix = [];
     public seleccionada;
     public agendaSeleccionada: IAgenda;
-    private permisoEdicion = false;
+    public permisoEdicion = false;
     // public editar: Boolean = false;
 
     public filtros: any = {
