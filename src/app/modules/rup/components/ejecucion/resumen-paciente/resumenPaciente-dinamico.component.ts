@@ -11,7 +11,6 @@ import { IPrestacion } from '../../../interfaces/prestacion.interface';
 })
 
 export class ResumenPacienteDinamicoComponent implements OnInit {
-    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
     @Input() paciente: IPaciente;
     @Input() prestacion: IPrestacion;
 

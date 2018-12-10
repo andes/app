@@ -31,7 +31,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @ViewChildren(RUPComponent) rupElements: QueryList<any>;
 
-    public ResumendePaciente = 'Resumen de Paciente';
+    public activeTab = 1;
     public obraSocialPaciente;
 
     // prestacion actual en ejecucion
@@ -223,6 +223,14 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.conceptosTurneables = conceptosTurneables;
             });
         });
+    }
+
+    /**
+     *
+     */
+
+    public onCloseTab($event) {
+        this.registrosHuds.splice($event - 2, 1);
     }
 
     /**
@@ -1207,10 +1215,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         } else {
             return false;
         }
-    }
-    // recibe el tab que se clikeo y lo saca del array..
-    cerrartab($event) {
-        this.registrosHuds.splice($event, 1);
     }
 
     recibeSitengoResultado($event) {

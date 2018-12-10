@@ -257,8 +257,6 @@ import { RiesgoCardiovascularComponent } from './modules/rup/components/elemento
 import { AdjuntarDocumentoComponent } from './modules/rup/components/elementos/adjuntarDocumento.component';
 import { RegistrarMedicamentoDefaultComponent } from './modules/rup/components/elementos/registrarMedicamentoDefault.component';
 import { InformesComponent } from './modules/rup/components/elementos/informe.component';
-import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
-import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
 import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
 import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoDerecho.component';
 import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
@@ -596,8 +594,6 @@ registerLocaleData(localeEs, 'es');
 
         // RUP
         ...RUPComponentsArray,
-        TabsComponent,
-        TabComponent,
         MapaDeCamasComponent,
         CamaComponent,
         PuntoInicioInternacionComponent,

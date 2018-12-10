@@ -13,7 +13,6 @@ import { ISnomedConcept } from '../../../interfaces/snomed-concept.interface';
 })
 
 export class ResumenPacienteEstaticoComponent implements OnInit {
-    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
     @Input() prestacion: IPrestacion;
     @Input() paciente: IPaciente;
 

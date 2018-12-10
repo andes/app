@@ -12,7 +12,6 @@ import { ElementosRUPService } from '../../../services/elementosRUP.service';
 })
 
 export class ResumenPacienteDinamicoNinoComponent implements OnInit {
-    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
     @Input() paciente: IPaciente;
     private tablaModelo = [];   // modelo de tabla a imprimir, con titulos e idConcepts ordenados como se deberia mostrar. No modificar.
     public tabla = [];  // tabla que finalmente va a mostrar la informacion. Se utiliza el formato de la tabla modelo para confeccionarla.
