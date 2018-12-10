@@ -26,6 +26,14 @@ export class ProfesionalService {
         return this.server.post(this.profesionalUrl, organizacion); // ...using post request
     }
 
+    getFoto(params: any): Observable<any> {
+        return this.server.get(this.profesionalUrl + '/foto/', { params: params });
+    }
+
+    saveProfesional(profesionalModel: any) {
+        return this.server.post(this.profesionalUrl, profesionalModel);
+    }
+
     disable(profesional: IProfesional): Observable<IProfesional> {
         alert('Reimplementar con Server');
         throw new Error('Reimplementar con Server');
