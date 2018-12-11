@@ -32,7 +32,13 @@ export class RevisionFueraAgendaComponent implements OnInit {
     constructor(private plex: Plex, private serviceCodificacion: CodificacionService) { }
 
     // Métodos
-    ngOnInit() { }
+    ngOnInit() {
+        this.fechaDesde = new Date();
+        this.fechaHasta = new Date();
+        this.fechaDesde = moment(this.fechaDesde).startOf('day');
+        this.fechaHasta = moment(this.fechaHasta).endOf('day');
+        this.cargarPrestaciones();
+    }
 
     cargarPrestaciones() {
         if (this.fechaDesde && this.fechaHasta) {
@@ -85,6 +91,12 @@ export class RevisionFueraAgendaComponent implements OnInit {
 
     aprobar(index) {
         this.diagnosticos[index].codificacionAuditoria = this.diagnosticos[index].codificacionProfesional.cie10;
+        // En el caso que aprueben el primer diagnóstico, se aprueba el resto
+        if (index === 0) {
+            for (let j = 1; j < this.diagnosticos.length; j++) {
+                this.diagnosticos[j].codificacionAuditoria = this.diagnosticos[j].codificacionProfesional.cie10;
+            }
+        }
         this.onSave();
     }
 

@@ -247,12 +247,12 @@
                     <div class="row">
                         <div class="col-6">
                             <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="cargarPrestaciones()" name="fechaDesde"
-                                label="Desde" class="fechas">
+                                label="Desde" class="fechas" [max]="fechaHasta">
                             </plex-datetime>
                         </div>
                         <div class="col-6">
                             <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="cargarPrestaciones()" name="fechaHasta"
-                                label="Hasta" class="fechas">
+                                label="Hasta" class="fechas" [min]="fechaDesde">
                             </plex-datetime>
                         </div>
                     </div>
