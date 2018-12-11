@@ -3,12 +3,10 @@
         <th *ngIf='modo ==="puntoInicio" || modo ==="recepcion" || modo ==="control"' style='width: 100px;'>Cod.</th>
         <th>Descripcion</th>
         <th *ngIf='modo ==="puntoInicio" || modo ==="recepcion" || modo ==="control"' class="float-center">S/Muestra</th>
-        <ng-container *ngIf='modo !=="puntoInicio" && modo !=="control" && modo !=="recepcion"'>
-            <th class="float-center">Valor</th>
-            <th *ngIf='modo ==="validacion"' class="float-center">R. Anterior</th> 
-            <th class="float-center">UM</th>
-            <th class="float-center">VR</th>
-        </ng-container>
+            <th *ngIf='modo !=="puntoInicio" && modo !=="control" && modo !=="recepcion"' class="float-center">Valor</th>
+            <th *ngIf='modo ==="validacion" || modo ==="control"' class="float-center">R. Anterior</th>
+            <th *ngIf='modo !=="puntoInicio" && modo !=="control" && modo !=="recepcion"' class="float-center">UM</th>
+            <th *ngIf='modo !=="puntoInicio" && modo !=="control" && modo !=="recepcion"' class="float-center">VR</th>
         <th class="float-center" *ngIf='modo === "validacion"'>
             <div>
                 <plex-bool type="checkbox" [(ngModel)]="flagMarcarTodas" (change)="validarTodas($event, practicasEjecucion)"
@@ -21,11 +19,26 @@
     </thead>
     <tbody>
         <ng-container *ngIf='modo ==="puntoInicio" || modo ==="recepcion" || modo ==="control"'>
-            <tr class="hover" *ngFor="let practicaVista of let practicaVista of practicasVista">
+            <tr class="hover" *ngFor="let practicaVista of practicasVista">
                 <td>{{practicaVista.codigo}}</td>
                 <td>{{practicaVista.nombre}}</td>
                 <td>
                     <plex-bool type="checkbox" [(ngModel)]="practicaVista.valor.resultado.sinMuestra" name="sinMuestra"></plex-bool>
+                </td>
+                <td *ngIf='modo ==="control"'>
+                    <span style='color:green'>
+                        <!-- <p> {{ practicaVista?.resultadosAnteriores | json }}</p> -->
+                        <ng-container *ngIf="practicaVista.resultadosAnteriores && practicaVista.resultadosAnteriores.length > 0">
+                            {{ practicaVista.resultadosAnteriores[(practicaVista.resultadosAnteriores.length) - 1]?.valor }}
+                            &nbsp;
+                            {{ practicaVista.resultadosAnteriores[(practicaVista.resultadosAnteriores.length) - 1]?.unidadMedida}}
+                            <br>
+                            {{ practicaVista.resultadosAnteriores[(practicaVista.resultadosAnteriores.length) - 1]?.fecha | date: 'dd/MM/yyyy' }}
+                        </ng-container>
+                        <ng-container *ngIf="!(practicaVista?.resultadosAnteriores.length > 0)">
+                            <p>sin datos</p>
+                        </ng-container>
+                    </span>
                 </td>
                 <td>
                     <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practicaVista)"></plex-button>
@@ -42,7 +55,8 @@
                         labelField="codigo + ' - ' + nombre">
                     </plex-select>
                 </td>
-                <!-- <plex-bool type="checkbox" [(ngModel)]="practica.resultado.sinMuestra" name="sinMuestra"></plex-bool> -->
+
+                <!-- <plex-bool type="checkbox" [(ngModel)]="practicaCarga.practica.resultado.sinMuestra" name="sinMuestra"></plex-bool> -->
                 <td></td>
                 <td></td>
                 <td></td>
@@ -71,7 +85,8 @@
                         <p>
                             <!-- {{practicaCarga.formatoResultado | json}} -->
                             <ng-container *ngIf='practicaCarga.registro.valor && !practicaCarga.registro.valor.resultado.sinMuestra'>
-                                <plex-float *ngIf="practicaCarga.practica.resultado.formato && practicaCarga.practica.resultado.formato.tipo === 'Numérico'" (change)="actualizarEstadoPractica(practicaCarga.registro.valor,'cargar')"  
+                                <plex-float *ngIf="practicaCarga.practica.resultado.formato && practicaCarga.practica.resultado.formato.tipo === 'Numérico'"
+                                    (change)="actualizarEstadoPractica(practicaCarga.registro.valor,'cargar')"
                                     [ngClass]="{'text-danger' : esValorCritico(practicaCarga.practica)}" [(ngModel)]="practicaCarga.registro.valor.resultado.valor"></plex-float>
                                 <b *ngIf="practicaCarga.registro.valor.resultado.sinMuestra">Sin muestra</b>
                             </ng-container>
@@ -80,11 +95,17 @@
                     </td>
                     <td *ngIf='modo ==="validacion"'>
                         <span style='color:green'>
-                            <!-- {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length) - 1]?.valor}}
-                                <br> {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length)
-                                - 1]?.unidadMedida}}
-                                <br> {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length)
-                                - 1]?.fecha | date: 'dd/MM/yyyy' }} -->
+                            <!-- <p> {{ practicaCarga.practica.resultado?.resultadosAnteriores | json }}</p> -->
+                            <ng-container *ngIf="practicaCarga.practica.resultado?.resultadosAnteriores.length > 0">
+                                {{ practicaCarga.practica.resultado.resultadosAnteriores[(practicaCarga.practica.resultado.resultadosAnteriores.length) - 1]?.valor }}
+                                &nbsp;
+                                {{ practicaCarga.practica.resultado.resultadosAnteriores[(practicaCarga.practica.resultado.resultadosAnteriores.length) - 1]?.unidadMedida}}
+                                <br>
+                                {{ practicaCarga.practica.resultado.resultadosAnteriores[(practicaCarga.practica.resultado.resultadosAnteriores.length) - 1]?.fecha | date: 'dd/MM/yyyy' }}
+                            </ng-container>
+                            <ng-container *ngIf="!(practicaCarga.practica.resultado?.resultadosAnteriores.length > 0)">
+                                <p>sin datos</p>
+                            </ng-container>
                         </span>
                     </td>
                     <td>
@@ -108,10 +129,11 @@
                     <ng-container *ngIf='(modo ==="carga" || modo ==="validacion") && !showObservaciones'>
                         <td class="small text-success">
                             <ng-container *ngIf="practicaCarga.registro.valor.estados.length > 0">
-                                {{practicaCarga.registro.valor.estados[practicaCarga.registro.valor.estados.length-1]?.tipo}}: 
-                                {{practicaCarga.registro.valor.estados[practicaCarga.registro.valor.estados.length-1]?.usuario.nombre}} 
+                                {{practicaCarga.registro.valor.estados[practicaCarga.registro.valor.estados.length-1]?.tipo}}:
+                                {{practicaCarga.registro.valor.estados[practicaCarga.registro.valor.estados.length-1]?.usuario.nombre}}
                                 {{practicaCarga.registro.valor.estados[practicaCarga.registro.valor.estados.length-1]?.usuario.apellido}}
-                                <br/>{{practicaCarga.registro.valor.estados[practicaCarga.registro.valor.estados.length-1]?.fecha | date: 'dd/MM/yyyy' }}</ng-container>
+                                <br />{{practicaCarga.registro.valor.estados[practicaCarga.registro.valor.estados.length-1]?.fecha
+                                | date: 'dd/MM/yyyy' }}</ng-container>
                         </td>
                         <td>
                             <plex-button type="info" title="Observaciones" icon="mdi mdi-file-document" (click)="verObservaciones()">

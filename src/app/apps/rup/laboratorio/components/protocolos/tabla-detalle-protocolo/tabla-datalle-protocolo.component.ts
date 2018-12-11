@@ -40,6 +40,9 @@ export class TablaDatalleProtocoloComponent implements OnInit {
             });
         } else {
             this.cargarPracticasVista();
+            if (this.modo === 'control') {
+                this.cargarResultadosAnterioresPV();
+            }
         }
     }
 
@@ -109,9 +112,18 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      * @memberof TablaDatalleProtocolo
      */
     cargarResultadosAnteriores() {
-        this.practicasEjecucion.forEach((practica) => {
-            this.servicioProtocolo.getResultadosAnteriores(this.modelo.paciente.id, practica.concepto.conceptId).subscribe(resultadosAnteriores => {
-                practica.resultado.resultadosAnteriores = resultadosAnteriores;
+        this.practicasCarga.forEach((practicaCarga) => {
+            this.servicioProtocolo.getResultadosAnteriores(this.modelo.paciente.id, practicaCarga.registro.concepto.conceptId).subscribe(resultadosAnteriores => {
+                practicaCarga.practica.resultado.resultadosAnteriores = resultadosAnteriores;
+            });
+        });
+    }
+
+    cargarResultadosAnterioresPV() {
+        console.log('cargarResultadosAnterioresPV');
+        this.practicasVista.forEach((practicaVista) => {
+            this.servicioProtocolo.getResultadosAnteriores(this.modelo.paciente.id, practicaVista.concepto.conceptId).subscribe(resultadosAnteriores => {
+                practicaVista.resultadosAnteriores = resultadosAnteriores;
             });
         });
     }
@@ -190,7 +202,6 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         let practicaIndex = practicasSolicitud.findIndex(x => x.id === practica.id);
 
         this.servicioPractica.findByIdsCompletas(practica._id).subscribe((practicasEliminiar) => {
-            debugger;
             this.modelo.ejecucion.registros = this.practicasEjecucion.filter( pe =>  
                 !( practicasEliminiar.some( (r : any) => r._id === pe._id ) )
             );
