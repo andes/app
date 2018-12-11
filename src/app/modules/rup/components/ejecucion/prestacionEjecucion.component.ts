@@ -177,12 +177,14 @@ export class PrestacionEjecucionComponent implements OnInit {
                             this.router.navigate(['/rup/validacion/', this.prestacion.id]);
                         } else {
                             // Carga la información completa del paciente
-                            this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
-                                this.paciente = paciente;
-                                this.obraSocialService.get({ dni: this.paciente.documento }).subscribe(os => {
-                                    this.obraSocialPaciente = os;
+                            if (!prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                                this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
+                                    this.paciente = paciente;
+                                    this.obraSocialService.get({ dni: this.paciente.documento }).subscribe(os => {
+                                        this.obraSocialPaciente = os;
+                                    });
                                 });
-                            });
+                            }
                             // cambio: this.prestacionSolicitud = prestacion.solicitud;
                             // Trae el elementoRUP que implementa esta Prestación
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
