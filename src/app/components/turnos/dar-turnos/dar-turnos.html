@@ -301,7 +301,7 @@
                                     <label>Obra Social </label>
                                     <div>{{obraSocialPaciente.financiador}}</div>
                                 </span>
-                                <plex-select *ngIf="desplegarOS" label="Obra Social" [(ngModel)]="obraSocialPaciente"
+                                <plex-select *ngIf="desplegarOS || !obraSocialPaciente" label="Obra Social" [(ngModel)]="obraSocialPaciente"
                                     name="obraSocialPaciente" (getData)="loadObrasSociales($event)" labelField="financiador"></plex-select>
                             </div>
                         </div>
