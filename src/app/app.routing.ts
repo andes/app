@@ -39,6 +39,7 @@ import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operac
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
 import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/puntoInicio-turnos.component';
+import { MapaEspacioFisicoVistaComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico-vista.component';
 
 // ... MPI
 import { DashboardComponent } from './components/paciente/dashboard.component';
@@ -97,14 +98,15 @@ import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campania
 
 const appRoutes: Routes = [
   // Tablas maestras
-  { path: 'tm/organizacion', component: OrganizacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'tm/organizacion/:id/sectores', component: OrganizacionSectoresComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'tm/organizacion/cama/:idCama', component: CamaCreateUpdateComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'tm/organizacion/cama', component: CamaCreateUpdateComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'tm/profesional', component: ProfesionalComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'tm/profesional/create', component: ProfesionalCreateUpdateComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'tm/especialidad', component: EspecialidadComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'tm/espacio_fisico', component: EspacioFisicoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'tm/organizacion', component: OrganizacionComponent, canActivate: [RoutingGuard] },
+  { path: 'tm/organizacion/:id/sectores', component: OrganizacionSectoresComponent, canActivate: [RoutingGuard] },
+  { path: 'tm/organizacion/cama/:idCama', component: CamaCreateUpdateComponent, canActivate: [RoutingGuard] },
+  { path: 'tm/organizacion/cama', component: CamaCreateUpdateComponent, canActivate: [RoutingGuard] },
+  { path: 'tm/profesional', component: ProfesionalComponent, canActivate: [RoutingGuard] },
+  { path: 'tm/profesional/create', component: ProfesionalCreateUpdateComponent, canActivate: [RoutingGuard] },
+  { path: 'tm/especialidad', component: EspecialidadComponent, canActivate: [RoutingGuard] },
+  { path: 'tm/espacio_fisico', component: EspacioFisicoComponent, canActivate: [RoutingGuard] },
+  { path: 'tm/mapa_espacio_fisico', component: MapaEspacioFisicoVistaComponent, canActivate: [RoutingGuard] },
 
   // MPI
   { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingNavBar, RoutingGuard] },
