@@ -7,12 +7,6 @@
                 <plex-box>
                     <plex-tabs [hidden]="showDatosSolicitud" [activeIndex]="activeTab" (close)="onCloseTab($event)">
 
-                        <plex-tab label="Resumen del Paciente" *ngIf="paciente">
-                            <rup-resumenPaciente-estatico [prestacion]="prestacion" [paciente]="paciente"></rup-resumenPaciente-estatico>
-                            <rup-resumenPaciente-dinamico-nino *ngIf="paciente.edad <= 6" [paciente]="paciente"></rup-resumenPaciente-dinamico-nino>
-                            <rup-resumenPaciente-dinamico *ngIf="paciente.edad > 6" [prestacion]="prestacion" [paciente]="paciente"></rup-resumenPaciente-dinamico>
-                        </plex-tab>
-                        
                         <plex-tab [label]="(prestacion.ejecucion.registros && prestacion.ejecucion.registros.length) ? 'Registros de esta consulta (' + prestacion.ejecucion.registros.length + ')' : 'Registros de esta consulta '">
 
                             <div class="row" *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length">
@@ -256,6 +250,11 @@
                             </div>
                         </plex-tab>
                         
+                        <plex-tab label="Resumen del Paciente" *ngIf="paciente">
+                            <rup-resumenPaciente-estatico [prestacion]="prestacion" [paciente]="paciente"></rup-resumenPaciente-estatico>
+                            <rup-resumenPaciente-dinamico-nino *ngIf="paciente.edad <= 6" [paciente]="paciente"></rup-resumenPaciente-dinamico-nino>
+                            <rup-resumenPaciente-dinamico *ngIf="paciente.edad > 6" [prestacion]="prestacion" [paciente]="paciente"></rup-resumenPaciente-dinamico>
+                        </plex-tab>
 
                         <ng-container *ngIf="registrosHuds">
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">
