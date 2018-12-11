@@ -274,7 +274,7 @@ export class PrestacionesService {
                 if (prestacion.ejecucion) {
                     let agregar = prestacion.ejecucion.registros
                         .filter(registro =>
-                            registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno')
+                            registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'evento')
                         .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
                     // COnceptId del informe requerido en en todas las prestaciones ambulatorias
                     if (agregar.length > 0) {
@@ -437,7 +437,9 @@ export class PrestacionesService {
                 if (prestacion.ejecucion) {
                     let agregar = prestacion.ejecucion.registros
                         .filter(registro =>
-                            registro.concepto.semanticTag === 'producto')
+                            registro.concepto.semanticTag === 'producto' ||
+                            registro.concepto.semanticTag === 'objeto físico' ||
+                            registro.concepto.semanticTag === 'medicamento clínico')
                         .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
                     registros = [...registros, ...agregar];
 
@@ -955,6 +957,10 @@ export class PrestacionesService {
             clase = 'regimen';
         } else if (conceptoSNOMED.semanticTag === 'elemento de registro') {
             clase = 'elementoderegistro';
+        } else if (conceptoSNOMED.semanticTag === 'evento') {
+            clase = 'hallazgo';
+        } else if (conceptoSNOMED.semanticTag === 'objeto físico' || conceptoSNOMED.semanticTag === 'medicamento clínico') {
+            clase = 'producto';
         }
 
         return clase;
@@ -976,6 +982,9 @@ export class PrestacionesService {
         } else {
             switch (conceptoSNOMED.semanticTag) {
                 case 'hallazgo':
+                case 'evento':
+                    icon = 'hallazgo';
+                    break;
                 case 'situación':
                     icon = 'hallazgo';
                     break;
@@ -993,6 +1002,12 @@ export class PrestacionesService {
                     icon = 'trastorno';
                     break;
                 case 'producto':
+                    icon = 'producto';
+                    break;
+                case 'objeto físico':
+                    icon = 'producto';
+                    break;
+                case 'medicamento clínico':
                     icon = 'producto';
                     break;
 
