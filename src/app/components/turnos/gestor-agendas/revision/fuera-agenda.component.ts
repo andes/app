@@ -94,10 +94,6 @@ export class RevisionFueraAgendaComponent implements OnInit {
         this.onSave();
     }
 
-    verAuditadas() {
-        this.cargarPrestaciones();
-    }
-
     onSave() {
         // Se guarda la prestación seleccionada
         if (this.diagnosticos) {
