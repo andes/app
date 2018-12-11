@@ -1,10 +1,12 @@
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-resumenHistoriaClinica',
     templateUrl: 'resumenHistoriaClinica.html'
 })
+@RupElement()
 export class ResumenHistoriaClinicaComponent extends RUPComponent implements OnInit {
     public referentSet = [];
     ngOnInit() {
