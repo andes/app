@@ -27,7 +27,7 @@ import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
 import { AuthModule } from '@andes/auth';
 import { Auth } from '@andes/auth';
-import { RoutingGuard } from './app.routings-guard.class';
+import { RoutingGuard, RoutingNavBar } from './app.routings-guard.class';
 import { AgmCoreModule } from '@agm/core';
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
@@ -120,6 +120,9 @@ import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service
 import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesProfesional.service';
 import { InternacionService } from './modules/rup/services/internacion.service';
 import { CDAService } from './modules/rup/services/CDA.service';
+import { ResumenPacienteDinamicoService } from './modules/rup/services/resumenPaciente-dinamico.service';
+import { VacunasService } from './services/vacunas.service';
+
 
 
 
@@ -226,6 +229,10 @@ import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoIn
 import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
 import { VistaCDAComponent } from './modules/rup/components/ejecucion/vistaCDA.component';
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
+import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
+import { ResumenPacienteDinamicoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
+import { ResumenPacienteDinamicoNinoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico-nino.component';
+
 
 // Legacy para RUP
 import { LaboratoriosComponent } from './modules/rup/components/laboratorios/laboratorios.component';
@@ -251,8 +258,6 @@ import { FiltradoGlomerularComponent } from './modules/rup/components/elementos/
 import { AdjuntarDocumentoComponent } from './modules/rup/components/elementos/adjuntarDocumento.component';
 import { RegistrarMedicamentoDefaultComponent } from './modules/rup/components/elementos/registrarMedicamentoDefault.component';
 import { InformesComponent } from './modules/rup/components/elementos/informe.component';
-import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
-import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
 import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
 import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoDerecho.component';
 import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
@@ -288,6 +293,7 @@ import { DesarrolloPsicomotorComponent } from './modules/rup/components/elemento
 import { RegistrarMedidasAntropometricasNinoE3Y6AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE3Y6A.component';
 import { RegistrarMedidasAntropometricasNinoM2AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoM2A.component';
 import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE2Y3A.component';
+import { ResumenHistoriaClinicaComponent } from './modules/rup/components/elementos/resumenHistoriaClinica.component';
 import { CalculoDeBostonComponent } from './modules/rup/components/elementos/calculoDeBoston.component';
 import { SeleccionBinariaComponent } from './modules/rup/components/elementos/seleccionBinaria.component';
 import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico.component';
@@ -425,12 +431,13 @@ export let RUPRegistry = {
     'RegistrarMedidasAntropometricasNinoE3Y6AComponent': RegistrarMedidasAntropometricasNinoE3Y6AComponent,
     'RegistrarMedidasAntropometricasNinoM2AComponent': RegistrarMedidasAntropometricasNinoM2AComponent,
     'RegistrarMedidasAntropometricasNinoE2Y3AComponent': RegistrarMedidasAntropometricasNinoE2Y3AComponent,
+    'ResumenHistoriaClinicaComponent': ResumenHistoriaClinicaComponent,
+    'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
+    'GraficoLinealComponent': GraficoLinealComponent,
     'CalculoDeBostonComponent': CalculoDeBostonComponent,
     'SeleccionBinariaComponent': SeleccionBinariaComponent,
     'ValorNumericoComponent': ValorNumericoComponent,
-    'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
     'FormulaBaseComponent': FormulaBaseComponent,
-    'GraficoLinealComponent': GraficoLinealComponent,
     'MoleculaBaseComponent': MoleculaBaseComponent
 };
 
@@ -474,6 +481,9 @@ let RUPComponentsArray = [
     ElementoDeRegistroComponent,
     OdontologiaDefaultComponent,
     CircunferenciaCinturaComponent,
+    ResumenPacienteEstaticoComponent,
+    ResumenPacienteDinamicoComponent,
+    ResumenPacienteDinamicoNinoComponent,
     InformeActividadNoNominalizadaComponent,
     PercentiloPesoComponent,
     PercentiloTallaComponent,
@@ -487,9 +497,7 @@ let RUPComponentsArray = [
     RegistrarMedidasAntropometricasNinoM2AComponent,
     RegistrarMedidasAntropometricasNinoE2Y3AComponent,
     RegistrarMedidasAntropometricasNinoE3Y6AComponent,
-    ProcedimientoDeEnfermeriaComponent,
-    ValorNumericoComponent,
-    SeleccionBinariaComponent,
+    ResumenHistoriaClinicaComponent,
     FormulaBaseComponent,
     CalculoDeBostonComponent,
     SeleccionBinariaComponent,
@@ -501,6 +509,7 @@ let RUPComponentsArray = [
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+import { ChartComponent } from './modules/rup/components/elementos/chart.component';
 import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
 import { FormTerapeuticoService } from './services/formTerapeutico/formTerapeutico.service';
 import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem.component';
@@ -589,13 +598,11 @@ registerLocaleData(localeEs, 'es');
 
         // RUP
         ...RUPComponentsArray,
-        TabsComponent,
-        TabComponent,
         MapaDeCamasComponent,
         CamaComponent,
         PuntoInicioInternacionComponent,
         LaboratoriosComponent,
-
+        ChartComponent,
         OrganizacionSectoresComponent,
         EgresoInternacionComponent,
         ResumenInternacionComponent,
@@ -653,6 +660,7 @@ registerLocaleData(localeEs, 'es');
         Server,
         Auth,
         RoutingGuard,
+        RoutingNavBar,
         OrganizacionService,
         OcupacionService,
         ProvinciaService,
@@ -711,6 +719,8 @@ registerLocaleData(localeEs, 'es');
         SugerenciasService,
         ConfiguracionPrestacionService,
         PrestacionLegacyService,
+        ResumenPacienteDinamicoService,
+        VacunasService,
         RiesgoCardiovascularService,
         FormulaBaseService,
         SeleccionBinariaComponent,
