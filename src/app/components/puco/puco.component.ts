@@ -7,6 +7,7 @@ import { SugerenciasService } from '../../services/sendmailsugerencias.service';
 import { IProfe } from '../../interfaces/IProfe';
 import { forkJoin as observableForkJoin } from 'rxjs';
 import { DocumentosService } from '../../services/documentos.service';
+import { Auth } from '@andes/auth';
 import { saveAs } from 'file-saver';
 import { Slug } from 'ng2-slugify';
 
@@ -49,7 +50,6 @@ export class PucoComponent implements OnInit, OnDestroy {
         private profeService: ProfeService,
         private sugerenciasService: SugerenciasService,
         private auth: Auth,
-        private plex: Plex) { }
         private documentosService: DocumentosService) { }
 
     /* limpiamos la request que se haya ejecutado */
