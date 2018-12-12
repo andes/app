@@ -597,8 +597,9 @@ export class PuntoInicioComponent implements OnInit {
     }
 
     /**
-     *
-     *
+     * Se puede registrar inasistencia de un turno cuando se cumplen todas las validaciones:
+     * la agenda: no es futura, no está auditada
+     * turno: no está suspendido, ya pasó la hora de inicio, profesional no cargó prestación todavía y tiene paciente asignado
      * @param {*} turno
      * @returns {Boolean} si debe mostrarse o no el botón para registrar inasistencia
      * @memberof PuntoInicioComponent
@@ -607,8 +608,8 @@ export class PuntoInicioComponent implements OnInit {
         let horaActual = moment(new Date()).format('LT');
         let horaTurno = moment(turno.horaInicio).format('LT');
         return !this.esFutura(this.agendaSeleccionada) && this.agendaSeleccionada.estado !== 'auditada' &&
-            turno.estado !== 'suspendido' && horaTurno >= horaActual &&
-            turno.paciente && turno.diagnostico.codificaciones.length === 0 && !turno.asistencia;
+            turno.estado !== 'suspendido' && horaTurno <= horaActual &&
+            turno.paciente && turno.diagnostico.codificaciones.length === 0;
     }
 
 }

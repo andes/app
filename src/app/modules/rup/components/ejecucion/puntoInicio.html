@@ -266,8 +266,6 @@
                                             <plex-button size="block" *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'validada' && tienePermisos(turno.tipoPrestacion, turno.prestacion)"
                                                 label="VER RESÚMEN" type="success btn-sm" (click)="routeTo('validacion', turno.prestacion.id)"></plex-button>
 
-                                            <!-- *ngIf="!turno.asistencia && !esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && turno.paciente && turno.diagnostico.codificaciones.length == 0 " -->
-                                            <!-- estaba en el ngIf dl Registrar inasistencia (!turno.prestacion || (turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente')) -->
                                             <plex-button size="block" *ngIf="esHabilitadoRegistrarInasistencia(turno)"
                                                 type="warning btn-sm" label="REGISTRAR INASISTENCIA" (click)="registrarInasistencia(turno.paciente,agendaSeleccionada, turno.id, 'noAsistio')"></plex-button>
 
