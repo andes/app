@@ -1,13 +1,14 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+
+import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { Auth } from '@andes/auth';
-import { Plex } from '@andes/plex';
 import { ObraSocialService } from './../../services/obraSocial.service';
 import { ProfeService } from './../../services/profe.service';
 import { SugerenciasService } from '../../services/sendmailsugerencias.service';
 import { IProfe } from '../../interfaces/IProfe';
-
 import { forkJoin as observableForkJoin } from 'rxjs';
+import { DocumentosService } from '../../services/documentos.service';
+import { saveAs } from 'file-saver';
+import { Slug } from 'ng2-slugify';
 
 @Component({
     selector: 'puco',
@@ -28,9 +29,13 @@ export class PucoComponent implements OnInit, OnDestroy {
     public cantidadPeriodos = 6;    // cantidad de versiones de padrones que se traen desde la DB
     public periodoMasAntiguo;    // la última version hacia atrás del padron a buscar
     public usuarios = [];
+    public showPrintForm = false;
+    public usuarioSelected = null;
     private resPuco = [];
     private resProfe: IProfe;
     private timeoutHandle: number;
+    private slug = new Slug('default'); // para documento pdf
+
     @Input() autofocus: Boolean = true;
 
     // termino a buscar ..
@@ -45,6 +50,7 @@ export class PucoComponent implements OnInit, OnDestroy {
         private sugerenciasService: SugerenciasService,
         private auth: Auth,
         private plex: Plex) { }
+        private documentosService: DocumentosService) { }
 
     /* limpiamos la request que se haya ejecutado */
     ngOnDestroy() {
@@ -189,7 +195,32 @@ export class PucoComponent implements OnInit, OnDestroy {
         this.sugerenciasService.post();
     }
 
+
     checkLog() {
         return this.auth.loggedIn();
+    }
+
+    imprimirConstatacion(usuario: any) {
+        let dto = {
+            dni: usuario.dni,
+            nombre: usuario.nombre,
+            codigoFinanciador: usuario.codigoFinanciador,
+            financiador: usuario.financiador
+        };
+        this.documentosService.descargarConstanciaPuco(dto).subscribe((data: any) => {
+            if (data) {
+                data.nombre = dto.nombre;
+                // Generar descarga como PDF
+                this.descargarConstancia(data, { type: 'application/pdf' });
+            } else {
+                // Fallback a impresión normal desde el navegador
+                window.print();
+            }
+        });
+    }
+
+    private descargarConstancia(data: any, headers: any): void {
+        let blob = new Blob([data], headers);
+        saveAs(blob, this.slug.slugify(data.nombre + ' ' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf');
     }
 }

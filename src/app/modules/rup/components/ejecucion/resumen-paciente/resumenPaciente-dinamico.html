@@ -1,0 +1,10 @@
+<ng-container *ngIf="graficos.length">
+    <div class="row" *ngFor="let grafico of graficos">
+        <div class="col-12">
+            <h4 class="text-capitalize">
+                {{ grafico.conceptos | enumerar:['term'] }}
+            </h4>
+            <rup [elementoRUP]="grafico" [prestacion]="prestacion" [paciente]="paciente" [soloValores]="false"></rup>
+        </div>
+    </div>
+</ng-container>

@@ -14,6 +14,7 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
+import { ObraSocialService } from './../../../../services/obraSocial.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
 import { Observable } from 'rxjs/Observable';
 import { RUPComponent } from '../core/rup.component';
@@ -30,10 +31,14 @@ export class PrestacionEjecucionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @ViewChildren(RUPComponent) rupElements: QueryList<any>;
 
+    public activeTab = 1;
+    public obraSocialPaciente;
+
     // prestacion actual en ejecucion
     public prestacion: IPrestacion;
     public paciente: IPaciente;
     public elementoRUP: IElementoRUP;
+    public prestacionSolicitud;
 
     public showPlanes = false;
     public relacion = null;
@@ -108,7 +113,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     public flagValid = true;
 
     constructor(
-        public servicioPrestacion: PrestacionesService,
+        private obraSocialService: ObraSocialService,
+        private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
         public plex: Plex, public auth: Auth,
         private router: Router, private route: ActivatedRoute,
@@ -154,19 +160,32 @@ export class PrestacionEjecucionComponent implements OnInit {
                     this.showPrestacion = true;
                     this.servicioPrestacion.getById(id).subscribe(prestacion => {
                         this.prestacion = prestacion;
+
+                        this.plex.updateTitle([{
+                            route: '/',
+                            name: 'ANDES'
+                        }, {
+                            route: '/rup',
+                            name: 'RUP'
+                        }, {
+                            name: this.prestacion && this.prestacion.solicitud.tipoPrestacion.term ? this.prestacion.solicitud.tipoPrestacion.term : ''
+                        }]);
+
                         // this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
                         // Si la prestación está validada, navega a la página de validación
                         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
                             this.router.navigate(['/rup/validacion/', this.prestacion.id]);
                         } else {
                             // Carga la información completa del paciente
-                            if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                            if (!prestacion.solicitud.tipoPrestacion.noNominalizada) {
                                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                                     this.paciente = paciente;
+                                    this.obraSocialService.get({ dni: this.paciente.documento }).subscribe(os => {
+                                        this.obraSocialPaciente = os;
+                                    });
                                 });
                             }
-                            // Trae el elementoRUP que implementa esta Prestación
-                            // this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
+                            // cambio: this.prestacionSolicitud = prestacion.solicitud;
                             // Trae el elementoRUP que implementa esta Prestación
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
                             if (this.elementoRUP.requeridos.length > 0) {
@@ -217,6 +236,14 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.conceptosTurneables = conceptosTurneables;
             });
         });
+    }
+
+    /**
+     *
+     */
+
+    public onCloseTab($event) {
+        this.registrosHuds.splice($event - 2, 1);
     }
 
     /**
@@ -497,9 +524,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             let registroRequerido = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === '371531000');
             if (registroRequerido) {
                 nuevoRegistro.relacionadoCon.push(registroRequerido);
-                if (nuevoRegistro.id) {
-                    this.itemsRegistros[nuevoRegistro.id].collapse = true;
-                }
             }
         }
         //
@@ -1201,10 +1225,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         } else {
             return false;
         }
-    }
-    // recibe el tab que se clikeo y lo saca del array..
-    cerrartab($event) {
-        this.registrosHuds.splice($event, 1);
     }
 
     recibeSitengoResultado($event) {
