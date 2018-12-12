@@ -596,5 +596,19 @@ export class PuntoInicioComponent implements OnInit {
             this.tienePermisos(turno.tipoPrestacion, turno.prestacion) && condAsistencia);
     }
 
+    /**
+     *
+     *
+     * @param {*} turno
+     * @returns {Boolean} si debe mostrarse o no el botón para registrar inasistencia
+     * @memberof PuntoInicioComponent
+     */
+    esHabilitadoRegistrarInasistencia(turno): Boolean {
+        let horaActual = moment(new Date()).format('LT');
+        let horaTurno = moment(turno.horaInicio).format('LT');
+        return !this.esFutura(this.agendaSeleccionada) && this.agendaSeleccionada.estado !== 'auditada' &&
+            turno.estado !== 'suspendido' && horaTurno >= horaActual &&
+            turno.paciente && turno.diagnostico.codificaciones.length === 0 && !turno.asistencia;
+    }
 
 }
