@@ -105,6 +105,7 @@ export class ReglasComponent {
 
   deleteOrganizacion(indice) {
     this.reglas.splice(indice, 1);
+    this.reglaActiva = -1;
   }
 
   addPrestacion() {
