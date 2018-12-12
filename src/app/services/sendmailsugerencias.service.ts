@@ -1,6 +1,4 @@
-import * as https from 'https';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { Server } from '@andes/shared';
 import swal from 'sweetalert2';
 
@@ -12,7 +10,6 @@ export class SugerenciasService {
     constructor(private server: Server) { }
 
     post(): void {
-
         swal({
             title: 'Escriba un comentario',
             input: 'textarea',
@@ -21,6 +18,7 @@ export class SugerenciasService {
             confirmButtonText: 'Enviar',
             showLoaderOnConfirm: true,
             preConfirm: (textarea) => {
+
                 return new Promise((resolve, reject) => {
                     this.server.post(this.sugerenciasUrl, { texto: textarea, subject: 'Reportes de Errores o Sugerencias' }).subscribe(
                         result => {

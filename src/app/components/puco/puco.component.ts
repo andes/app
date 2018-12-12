@@ -1,3 +1,4 @@
+
 import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { ObraSocialService } from './../../services/obraSocial.service';
@@ -6,6 +7,7 @@ import { SugerenciasService } from '../../services/sendmailsugerencias.service';
 import { IProfe } from '../../interfaces/IProfe';
 import { forkJoin as observableForkJoin } from 'rxjs';
 import { DocumentosService } from '../../services/documentos.service';
+import { Auth } from '@andes/auth';
 import { saveAs } from 'file-saver';
 import { Slug } from 'ng2-slugify';
 
@@ -47,6 +49,7 @@ export class PucoComponent implements OnInit, OnDestroy {
         private obraSocialService: ObraSocialService,
         private profeService: ProfeService,
         private sugerenciasService: SugerenciasService,
+        private auth: Auth,
         private documentosService: DocumentosService) { }
 
     /* limpiamos la request que se haya ejecutado */
@@ -190,6 +193,11 @@ export class PucoComponent implements OnInit, OnDestroy {
     // Boton reporte de errores/sugerencias
     sugerencias() {
         this.sugerenciasService.post();
+    }
+
+
+    checkLog() {
+        return this.auth.loggedIn();
     }
 
     imprimirConstatacion(usuario: any) {

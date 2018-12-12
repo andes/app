@@ -85,9 +85,9 @@
                 <p>Padrones disponibles: {{listaPeriodosProfe}}</p>
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="checkLog()">
             <div class="col">
-                <plex-button label='Reporte de Errores/Sugerencias' type='warning' title="Sugerencias" (click)="sugerencias()"></plex-button>
+                <plex-button label='Reporte de Errores/Sugerencias' type='warning' title="Sugerencias" (click)="sugerencias($event)"></plex-button>
             </div>
         </div>
     </plex-layout-sidebar>
