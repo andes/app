@@ -492,7 +492,6 @@ export class HudsBusquedaComponent implements OnInit {
 
 
     listarPrestaciones() {
-        console.log('hola');
         this.servicioPrestacion.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
             this.prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
             this.prestaciones = this.prestaciones.map(p => {
