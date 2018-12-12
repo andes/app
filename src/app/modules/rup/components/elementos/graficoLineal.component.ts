@@ -1,4 +1,4 @@
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
 
 import * as moment from 'moment';
@@ -43,7 +43,6 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
                         prestaciones.filter(y => y.registro.valor !== null && isNumber(y.registro.valor)).map(p => ({ fecha: p.fecha })),
                     );
 
-
                     // asignamos los datosLineales al data para el chart
                     this.barChartData.push(
                         { data: prestaciones.map(p => p.registro.valor).filter(y => y !== null && isNumber(y)), label: param.label, fill: false },
@@ -58,7 +57,6 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
                 }
             });
         });
-
 
     }
 
