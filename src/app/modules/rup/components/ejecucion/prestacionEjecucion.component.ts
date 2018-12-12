@@ -187,7 +187,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                             }
                             // cambio: this.prestacionSolicitud = prestacion.solicitud;
                             // Trae el elementoRUP que implementa esta Prestación
-                            debugger;
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
                             if (this.elementoRUP.requeridos.length > 0) {
                                 for (let elementoRequerido of this.elementoRUP.requeridos) {
