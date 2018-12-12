@@ -31,7 +31,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @ViewChildren(RUPComponent) rupElements: QueryList<any>;
 
-    public activeTab = 1;
+    public activeTab = 0;
     public obraSocialPaciente;
 
     // prestacion actual en ejecucion
@@ -187,6 +187,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                             }
                             // cambio: this.prestacionSolicitud = prestacion.solicitud;
                             // Trae el elementoRUP que implementa esta Prestación
+                            debugger;
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
                             if (this.elementoRUP.requeridos.length > 0) {
                                 for (let elementoRequerido of this.elementoRUP.requeridos) {
