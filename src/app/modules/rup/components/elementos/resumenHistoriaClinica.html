@@ -1,0 +1,18 @@
+<form #form="ngForm">
+    <ng-container *ngIf="!soloValores">
+        <plex-text label="Resumen" [(ngModel)]="registro.valor" id="resumen" name="resumen" [html]="true" [required]="true" [readonly]="false"
+            placeholder="Ingrese una evolución">
+        </plex-text>
+    </ng-container>
+
+    <p *ngIf="soloValores && !registro.valor" class="readonly">
+        <span>Resumen</span>
+        sin valor
+    </p>
+    <p *ngIf="soloValores && registro.valor" class="readonly">
+        <span>Resumen</span>
+        <ng-container>
+            <span [innerHTML]="registro.valor"></span>
+        </ng-container>
+    </p>
+</form>
