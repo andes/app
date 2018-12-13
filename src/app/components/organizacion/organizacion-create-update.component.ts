@@ -181,10 +181,10 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         let operacion = this.organizacionService.save(organizacionGuardar);
         operacion.subscribe(result => {
             if (result) {
-                this.plex.alert('Los datos se actualizaron correctamente');
+                this.plex.info('success', 'Los datos se actualizaron correctamente');
                 this.data.emit(result);
             } else {
-                this.plex.alert('ERROR: Ocurrio un problema al actualizar los datos');
+                this.plex.info('warning', 'ERROR: Ocurrio un problema al actualizar los datos');
             }
         });
     }

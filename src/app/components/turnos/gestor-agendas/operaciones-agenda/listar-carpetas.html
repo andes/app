@@ -8,7 +8,7 @@
                             <plex-text name="titulo" [(ngModel)]="titulo" placeholder="Título">
                             </plex-text>
                         </div>
-                        <div class="col-4">{{agendasSeleccionadas[0].horaInicio | date: 'dd/MM/yyyy'}}</div>
+                        <div class="col-4">{{agendasSeleccionadas[0].horaInicio | fecha}}</div>
                     </div>
                 </header>
                 <table *ngFor="let agenda of agendasSeleccionadas">

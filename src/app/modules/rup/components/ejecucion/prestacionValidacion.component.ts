@@ -13,6 +13,7 @@ import { Slug } from 'ng2-slugify';
 import { saveAs } from 'file-saver';
 import * as moment from 'moment';
 import 'rxjs/Rx';
+import { CodificacionService } from '../../services/codificacion.service';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -104,14 +105,16 @@ export class PrestacionValidacionComponent implements OnInit {
     public nombreArchivo: any;
     public btnVolver;
     public rutaVolver;
+    descargando = false;
 
-    constructor(private servicioPrestacion: PrestacionesService,
+    constructor(public servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
         private servicioPaciente: PacienteService, private SNOMED: SnomedService,
         public plex: Plex, public auth: Auth, private router: Router,
         public servicioAgenda: AgendaService,
         private route: ActivatedRoute,
-        private servicioDocumentos: DocumentosService
+        private servicioDocumentos: DocumentosService,
+        private codificacionService: CodificacionService
     ) {
     }
 
@@ -156,6 +159,15 @@ export class PrestacionValidacionComponent implements OnInit {
         this.servicioPrestacion.getById(id).subscribe(prestacion => {
             this.prestacion = prestacion;
             this.registrosOriginales = prestacion.ejecucion.registros;
+            this.plex.updateTitle([{
+                route: '/',
+                name: 'ANDES'
+            }, {
+                route: '/rup',
+                name: 'RUP'
+            }, {
+                name: this.prestacion && this.prestacion.solicitud.tipoPrestacion.term ? this.prestacion.solicitud.tipoPrestacion.term : ''
+            }]);
 
             this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
 
@@ -300,6 +312,10 @@ export class PrestacionValidacionComponent implements OnInit {
                                 let filtroRegistros = this.prestacion.ejecucion.registros.filter(x => result.find(y => y.conceptId === x.concepto.conceptId));
                                 if (this.prestacion.solicitud.turno && !(filtroRegistros && filtroRegistros.length > 0)) {
                                     this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
+                                } else {
+                                    if (!this.prestacion.solicitud.turno) {
+                                        this.codificacionService.addCodificacion(prestacion.id).subscribe();
+                                    }
                                 }
                             });
                     }
@@ -473,7 +489,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
         let traverse = (_registros, registro, deep) => {
             let orden = [];
-            let hijos = _registros.filter(item => item.relacionadoCon[0] === registro.id || item.relacionadoCon[0] === registro.concepto.conceptId);
+            let hijos = _registros.filter(item => item.relacionadoCon[0] && (item.relacionadoCon[0].id === registro.id || item.relacionadoCon[0].conceptId === registro.concepto.conceptId));
             this.registrosDeep[registro.id] = deep;
             hijos.forEach((hijo) => {
                 orden = [...orden, hijo, ...traverse(_registros, hijo, deep + 1)];
@@ -602,6 +618,9 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     descargarResumen() {
+
+        this.descargando = true;
+
         this.prestacion.ejecucion.registros.forEach(x => {
             x.icon = 'down';
         });
@@ -656,6 +675,7 @@ export class PrestacionValidacionComponent implements OnInit {
                 if (data) {
                     // Generar descarga como PDF
                     this.descargarArchivo(data, { type: 'application/pdf' });
+                    this.descargando = false;
                 } else {
                     // Fallback a impresión normal desde el navegador
                     window.print();
@@ -688,11 +708,11 @@ export class PrestacionValidacionComponent implements OnInit {
      */
 
     showMotivo(elemento) {
-        if (this.elementoRUPprestacion.motivoConsoltaOpcional) {
+        if (this.elementoRUPprestacion.motivoConsultaOpcional) {
             return false;
         }
         let last = this.prestacion.estados.length - 1;
-        return this.prestacion.estados[last].tipo !== 'validada' && elemento.valor.estado !== 'transformado';
+        return this.prestacion.estados[last].tipo !== 'validada' && elemento.valor && elemento.valor.estado !== 'transformado' && this.prestacion.solicitud.ambitoOrigen !== 'internacion';
 
     }
 

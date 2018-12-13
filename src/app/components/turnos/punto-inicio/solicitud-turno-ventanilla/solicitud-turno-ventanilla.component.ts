@@ -196,7 +196,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
             );
 
         } else {
-            this.plex.alert('Debe completar los datos requeridos');
+            this.plex.info('warning', 'Debe completar los datos requeridos');
         }
     }
 

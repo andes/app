@@ -70,7 +70,7 @@ export class PrestacionCrearComponent implements OnInit {
             this.paciente = paciente;
             this.buscandoPaciente = false;
         } else {
-            this.plex.alert('El paciente debe ser registrado en MPI');
+            this.plex.info('warning', 'El paciente debe ser registrado en MPI');
         }
     }
 
