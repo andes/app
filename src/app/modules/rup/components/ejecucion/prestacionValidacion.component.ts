@@ -159,6 +159,15 @@ export class PrestacionValidacionComponent implements OnInit {
         this.servicioPrestacion.getById(id).subscribe(prestacion => {
             this.prestacion = prestacion;
             this.registrosOriginales = prestacion.ejecucion.registros;
+            this.plex.updateTitle([{
+                route: '/',
+                name: 'ANDES'
+            }, {
+                route: '/rup',
+                name: 'RUP'
+            }, {
+                name: this.prestacion && this.prestacion.solicitud.tipoPrestacion.term ? this.prestacion.solicitud.tipoPrestacion.term : ''
+            }]);
 
             this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
 
