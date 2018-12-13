@@ -1,41 +1,13 @@
-import {
-    Component,
-    OnInit, OnDestroy,
-    HostBinding,
-    NgModule,
-    ViewContainerRef,
-    ViewChild
-} from '@angular/core';
-import {
-    FormBuilder,
-    FormGroup,
-    FormsModule
-} from '@angular/forms';
-import {
-    Router
-} from '@angular/router';
-import {
-    Auth
-} from '@andes/auth';
-import {
-    Plex
-} from '@andes/plex';
-import {
-    TipoPrestacionService
-} from './../../../services/tipoPrestacion.service';
-import {
-    ProfesionalService
-} from './../../../services/profesional.service';
-import {
-    EspacioFisicoService
-} from './../../../services/turnos/espacio-fisico.service';
-import {
-    AgendaService
-} from './../../../services/turnos/agenda.service';
-import {
-    IAgenda
-} from './../../../interfaces/turnos/IAgenda';
-
+import { Component, OnInit, OnDestroy, HostBinding, ViewContainerRef, ViewChild } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
+import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
+import { ProfesionalService } from './../../../services/profesional.service';
+import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.service';
+import { AgendaService } from './../../../services/turnos/agenda.service';
+import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import * as enumerado from './../enums';
 import * as moment from 'moment';
 import { enumToArray } from '../../../utils/enums';
@@ -74,6 +46,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public showAgregarNotaAgenda = false;
     public showAgregarSobreturno = false;
     public showRevisionAgenda = false;
+    public showRevisionFueraAgenda = false;
     public showListadoTurnos = false;
     public showCarpetas = false;
     public showSuspenderAgenda = false;
@@ -284,6 +257,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showEditarAgendaPanel = false;
         this.showTurnos = false;
         this.showRevisionAgenda = false;
+        this.showRevisionFueraAgenda = false;
         this.showReasignarTurno = false;
         this.showReasignarTurnoAutomatico = false;
         this.showListadoTurnos = false;
@@ -328,6 +302,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showAgregarSobreturno = false;
         this.showClonar = false;
         this.showRevisionAgenda = false;
+        this.showRevisionFueraAgenda = false;
         this.showReasignarTurno = false;
         this.showReasignarTurnoAutomatico = false;
         this.showListadoTurnos = false;
@@ -370,6 +345,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         }
         this.showAgregarNotaAgenda = false;
         this.showRevisionAgenda = false;
+        this.showRevisionFueraAgenda = false;
         this.showReasignarTurno = false;
         this.showListadoTurnos = false;
         this.showReasignarTurnoAutomatico = false;
@@ -498,14 +474,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                         if (!this.hayAgendasSuspendidas() && !this.showSuspenderAgenda) {
                             this.showTurnos = true;
                         }
-                        // if (this.hayAgendasSuspendidas() && this.showSuspenderAgenda) {
-                        // this.showGestorAgendas = false;
-                        // this.showReasignarTurnoAutomatico = true; -->funcion comentada queda fuera del release
-                        //   this.showSuspenderTurnos = true;
-                        // this.agendasSeleccionadas[0] = ag;
-                        // } else {
-                        //     this.showTurnos = true;
-                        // }
                     }
                 });
             }
@@ -632,6 +600,11 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         if (agenda) {
             this.getAgendas(this.parametros);
         }
+    }
+
+    auditarFueraAgenda() {
+        this.showGestorAgendas = false;
+        this.showRevisionFueraAgenda = true;
     }
 
 }
