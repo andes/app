@@ -85,7 +85,9 @@ import {
     FormBuilder,
     FormGroup,
     FormArray,
-    Validators
+    Validators,
+    Form,
+    NgForm
 } from '@angular/forms';
 import {
     DomSanitizer,
@@ -518,6 +520,16 @@ export class PacienteCreateUpdateComponent implements OnInit {
             }
         }
         return true;
+    }
+
+    verificarCorreoValido(mail, indice, form) {
+        let formato = new RegExp(/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/);
+        debugger;
+        if (formato.test(mail)) {
+            form.controls.markAsDirty(true);
+        } else {
+            form.controls['valor-' + indice].$markAsDirty();
+        }
     }
 
     async save(valid) {
