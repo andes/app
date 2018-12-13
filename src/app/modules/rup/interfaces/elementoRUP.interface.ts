@@ -11,6 +11,7 @@ export interface IElementoRUP {
     defaultFor: SemanticTag[];
     // Tipo de elemento
     tipo: string;
+    formulaImplementation?: string;
     // Indica si este elementoRUP aplica a una solicitud
     esSolicitud: Boolean;
 
