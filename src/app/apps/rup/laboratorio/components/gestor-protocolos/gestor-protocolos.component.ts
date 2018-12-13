@@ -2,6 +2,7 @@ import { Constantes } from './../../controllers/constants';
 import { Component, OnInit, Input, ViewChild, EventEmitter, Output, ViewEncapsulation, HostBinding, OnDestroy } from '@angular/core';
 import { ProtocoloDetalleComponent } from '../protocolos/protocolo-detalle.component';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
+
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { PacienteService } from '../../../../../services/paciente.service';
@@ -27,9 +28,8 @@ export class GestorProtocolosComponent implements OnInit {
     public mostrarCuerpoProtocolo: Boolean = true;
     public ocultarPanelLateral: Boolean = false;
     public editarListaPracticas: Boolean = false;
+    public areas = [];
 
-    // public protocolos: IPrestacion[];
-    // public protocolo: IPrestacion;
     public protocolos: any[];
     public protocolo: any;
     routeParams: any;
@@ -73,6 +73,7 @@ export class GestorProtocolosComponent implements OnInit {
         public plex: Plex,
         public servicioPrestaciones: PrestacionesService,
         public auth: Auth,
+        // public as: AgendaCacheService
     ) { }
 
     ngOnInit() {
@@ -168,6 +169,7 @@ export class GestorProtocolosComponent implements OnInit {
     refreshSelection($event?) {
         if ($event) {
             this.busqueda = $event;
+            this.areas = $event.areas ? $event.areas : [];
         }
 
         this.getProtocolos(this.busqueda);
@@ -175,7 +177,6 @@ export class GestorProtocolosComponent implements OnInit {
 
     getProtocolos(params: any) {
         this.servicioPrestaciones.get(params).subscribe(protocolos => {
-            console.log({ protocolos });
             this.protocolos = protocolos;
         }, err => {
             if (err) {
@@ -213,7 +214,6 @@ export class GestorProtocolosComponent implements OnInit {
      */
     volverLista() {
         if (this.modo === 'puntoInicio') {
-            console.log('volverLista', this.modo);
             // location.reload();
             this.volverAPuntoInicioEmmiter.emit(true);
         } else {
@@ -314,7 +314,7 @@ export class GestorProtocolosComponent implements OnInit {
     //     if (ls.profesional === this.auth.profesional._id) {
     //         this.busqueda = ls.busqueda;
     //         // this.origen.id = ls.busqueda.origen;
-    //         // this.area.id = ls.busqueda.area;
+    //         // this.area.id = ls.busqueda.;
     //         // this.prioridad.id = ls.busqueda.prioridad;
     //         console.log('local storage', this.busqueda);
     //         // this.busqueda.solicitudDesde = new Date(ls.busqueda.solicitudDesde);

@@ -1,3 +1,5 @@
+import { Auth } from '@andes/auth';
+import { AreaLaboratorioService } from '../../../services/areaLaboratorio.service';
 import { ListaHojatrabajoComponent } from './../lista-hojatrabajo/lista-hojatrabajo.component';
 import { IHojaTrabajo } from '../../../interfaces/practica/hojaTrabajo/IHojaTrabajo';
 import { HojaTrabajoService } from '../../../services/hojatrabajo.service';
@@ -14,6 +16,7 @@ export class GestorHojatrabajoComponent implements OnInit {
     public accionIndex = 0;
     public modo = '';
     public hojaTrabajo: IHojaTrabajo;
+    public areas: any[];
 
     @ViewChild(ListaHojatrabajoComponent)
     private listaHojatrabajoComponent: ListaHojatrabajoComponent;
@@ -21,11 +24,14 @@ export class GestorHojatrabajoComponent implements OnInit {
     // Constructor
     constructor(
         private plex: Plex,
-        private servicioHojaTrabajo: HojaTrabajoService
+        private servicioHojaTrabajo: HojaTrabajoService,
+        private areaLaboratorioService: AreaLaboratorioService,
+        private auth: Auth
     ) { }
 
     ngOnInit() {
-        this.agregarHoja();
+        this.loadAreas();
+        this.agregarHojaTrabajo();
     }
 
     cambio($event) {
@@ -42,10 +48,6 @@ export class GestorHojatrabajoComponent implements OnInit {
 
     seleccionarHojaTrabajo($event) {
         this.hojaTrabajo = $event;
-    }
-
-    agregarHojaTrabajo() {
-        this.agregarHoja();
     }
 
     guardarHoja() {
@@ -65,8 +67,9 @@ export class GestorHojatrabajoComponent implements OnInit {
         this.listaHojatrabajoComponent.cargarListado();
     }
 
-    agregarHoja() {
+    agregarHojaTrabajo() {
         this.hojaTrabajo = new IHojaTrabajo();
+        this.hojaTrabajo.laboratorio = this.auth.organizacion.id;
     }
 
     vistaPreliminar() {
@@ -78,12 +81,23 @@ export class GestorHojatrabajoComponent implements OnInit {
     }
 
     volverLista() {
-        console.log('guardar hoja', new Date);
+        console.log('volverLista', new Date);
     }
 
     cargarHoja() {
         if (this.hojaTrabajo._id) {
 
         }
+    }
+
+    loadAreas() {
+        this.areaLaboratorioService.get().subscribe((areas: any) => {
+            return this.areas = areas.map((area) => {
+               return {
+                    id: area._id,
+                    nombre: area.nombre
+                };
+            });
+        });
     }
 }

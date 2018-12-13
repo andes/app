@@ -100,19 +100,6 @@ export enum OrigenLaboratorioFiltro {
     'guardia',
 }
 
-export enum laboratorioInterno {
-    'PROTEINAS E INMUNOLOGIA',
-    'HEMOSTASIA',
-    'FERTILIDAD',
-    'BIOLOGIA MOLECULAR',
-    'TOXICOLOGIA',
-    'QUIMICA CLINICA',
-    'ENDOCRINOLOGIA',
-    'SEROLOGIA',
-    'ORINA & LIQUIDOS CORPORALES',
-    'HEMATOLOGIA'
-}
-
 export enum EstadosEspacios {
     'disponible',
     'mantenimiento',
@@ -316,18 +303,6 @@ export function getOrigenLab() {
 
 export function getOrigenFiltroLab() {
     let arrLab = Object.keys(OrigenLaboratorioFiltro);
-    arrLab = arrLab.slice(arrLab.length / 2);
-    let salida = arrLab.map(elem => {
-        return {
-            'id': elem,
-            'nombre': titleCase(elem)
-        };
-    });
-    return salida;
-}
-
-export function getLaboratorioInterno() {
-    let arrLab = Object.keys(laboratorioInterno);
     arrLab = arrLab.slice(arrLab.length / 2);
     let salida = arrLab.map(elem => {
         return {

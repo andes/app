@@ -11,7 +11,6 @@ import { Auth } from '@andes/auth';
 })
 
 export class ProtocoloEncabezadoEdicionComponent implements OnInit {
-
     modelo: any;
     solicitudProtocolo: any;
     mostrarMasOpciones: Boolean;
@@ -31,6 +30,7 @@ export class ProtocoloEncabezadoEdicionComponent implements OnInit {
     }
     @Output() siguienteEmit = new EventEmitter<any>();
     @Output() anteriorEmit = new EventEmitter<any>();
+    @Output() cambiarPacienteEmitter = new EventEmitter<any>();
 
     constructor(
         public auth: Auth,
@@ -44,6 +44,10 @@ export class ProtocoloEncabezadoEdicionComponent implements OnInit {
     cargarProtocolo(value: any) {
         this.modelo = value;
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
+    }
+
+    cambiarPaciente() {
+        this.cambiarPacienteEmitter.emit();
     }
 
     /**

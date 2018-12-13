@@ -2,6 +2,14 @@
     <span *ngIf='modo === "carga" || modo === "validacion"'>
         <plex-radio [data]="modoCargaLaboratorioEnum" label="Modo de carga" [(ngModel)]="modoCargaLaboratorio" type="horizontal"></plex-radio>
     </span>
+    <span *ngIf='showSelectPracticas'>
+        <plex-select [(ngModel)]="busqueda.area " (change)="buscarProtocolos($event,'area')" name="area" label="Area"
+            [data]='areas'></plex-select>
+    </span>
+    <span *ngIf='showSelectHojaTrabajo'>
+        <plex-select [(ngModel)]="hojaTrabajo" (change)="buscarProtocolos($event,'hojaTrabajo')" name="hojadetrabajo"
+            label="Hoja de Trabajo" (getData)='getHojasTrabajo($event)' labelField="nombre"></plex-select>
+    </span>
     <span>
         <plex-datetime type="date" [(ngModel)]="busqueda.solicitudDesde" (change)="buscarProtocolos($event,'fechaDesde')"
             name="solicitudDesde" label="Fecha desde" [required]="true" skipBy="day">
@@ -13,7 +21,7 @@
         </plex-datetime>
     </span>
     <span *ngIf='modo !== "recepcion"'>
-        <plex-select [(ngModel)]="this.busqueda.area" (change)="buscarProtocolos($event,'area')" name="area" label="Area"
+        <plex-select [(ngModel)]="busqueda.area" (change)="buscarProtocolos($event,'area')" name="area" label="Area"
             [data]='laboratorioInternoEnum'></plex-select>
     </span>
     <span>
@@ -24,16 +32,9 @@
         <plex-select [(ngModel)]="origen" (change)="buscarProtocolos($event,'origen')" name="origen" label="Origen"
             [data]="origenEnum"></plex-select>
     </span>
-    <!-- <spanlabs-contenedor-secundario" *ngIf='modo ==="recepcion"'>
-            <plex-button title="Iniciar Protocolo" icon="plus" class="align-self-end" type="success" (click)="mostrarFomularioPacienteSinTurno()"></plex-button>
-        </span> -->
-    <!-- <span *ngIf='modo !== "recepcion"' class="contenedor-bloque-texto line-height mr-2">
-            <small class="text-primary"></small>
-    </span> -->
     <div>
         <label for="">Filtros avanzados</label>
-        <plex-button type="info" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
-            (click)="mostrarMasOpciones = !mostrarMasOpciones">
+        <plex-button type="info" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones">
         </plex-button>
     </div>
 </div>
@@ -43,7 +44,7 @@
 <ng-container *ngIf="mostrarMasOpciones">
     <div class="filtros-container">
         <div>
-                <plex-text [(ngModel)]="paciente" name="paciente" (change)="filtrarPaciente()" label="Paciente"></plex-text>
+            <plex-text [(ngModel)]="paciente" name="paciente" (change)="filtrarPaciente()" label="Paciente"></plex-text>
         </div>
         <span *ngIf='modo ==="carga"'>
             <plex-select [(ngModel)]="servicio" name="servicio" (getData)="loadServicios($event)" (change)="buscarProtocolos($event,'servicio')"
@@ -76,4 +77,7 @@
         </ng-container>
     </div>
 </ng-container>
+<br>
+<hr>
+
 <!-- FIN FILTROS AVANZADOS-->

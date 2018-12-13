@@ -86,6 +86,7 @@ export interface IPractica {
         minimo: Number,
         maximo: Number
     };
+    requeridos: [];
     activo: Boolean;
 
 }

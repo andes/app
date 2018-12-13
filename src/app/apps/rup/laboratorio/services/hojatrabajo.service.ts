@@ -8,8 +8,8 @@ export class HojaTrabajoService {
     private laboratorioUrl = '/modules/rup/laboratorio/'; // URL API
     constructor(private server: Server) { }
 
-    get() {
-        return this.server.get(this.laboratorioUrl + 'hojatrabajo');
+    get(organizacion) {
+        return this.server.get(this.laboratorioUrl + 'hojatrabajo', { params: {organizacion: organizacion}, showError: true });
     }
 
     post(hojaTrabajo: IHojaTrabajo): Observable<IHojaTrabajo> {
@@ -23,4 +23,5 @@ export class HojaTrabajoService {
     patch(hojaTrabajo: IHojaTrabajo): Observable<IHojaTrabajo> {
         return this.server.patch(this.laboratorioUrl + 'hojatrabajo/' + hojaTrabajo._id, hojaTrabajo);
     }
+
 }

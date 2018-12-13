@@ -1,4 +1,6 @@
+import { HojaTrabajoService } from './../../../services/hojatrabajo.service';
 import { Auth } from '@andes/auth';
+import { AreaLaboratorioService } from '../../../services/areaLaboratorio.service';
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Plex } from '@andes/plex';
@@ -18,17 +20,20 @@ export class FiltrosBusquedaProtocoloComponent
     @Input() modo;
     @Input() editarListaPracticas;
 
+    public showSelectPracticas: Boolean = false;
+    public showSelectHojaTrabajo: Boolean = false;
     public origenEnum: any;
     public prioridadesFiltroEnum;
     public estadosFiltroEnum;
     public estadosValFiltroEnum;
+    public hojaTrabajo;
 
-    public laboratorioInternoEnum: any;
     public pacientes;
     public pacienteActivo;
     public cargaLaboratorioEnum;
     public modoCargaLaboratorio;
     public modoCargaLaboratorioEnum;
+    public laboratorioInternoEnum;
     public indexProtocolo;
     public turnosRecepcion;
     public origen = null;
@@ -51,11 +56,13 @@ export class FiltrosBusquedaProtocoloComponent
         numProtocoloHasta: null,
         servicio: null,
         prioridad: null,
-        area: null,
+        areas: null,
         laboratorioInterno: null,
         tipoPrestacionSolicititud: '15220000',
         organizacion: null,
-        estado: []
+        estado: [],
+        practicas: null,
+        area: null
     };
 
     mostrarMasOpciones = false;
@@ -65,6 +72,8 @@ export class FiltrosBusquedaProtocoloComponent
     constructor(public plex: Plex, private formBuilder: FormBuilder,
         public auth: Auth,
         private servicioOrganizacion: OrganizacionService,
+        private servicioAreaLaboratorio: AreaLaboratorioService,
+        private servicioHojaTrabajo: HojaTrabajoService,
     ) { }
 
     ngOnInit() {
@@ -72,21 +81,39 @@ export class FiltrosBusquedaProtocoloComponent
         this.estadosFiltroEnum = enumerados.getEstadosFiltroLab();
         this.estadosValFiltroEnum = enumerados.getEstadosFiltroLab().slice(1, 4);
         this.origenEnum = enumerados.getOrigenLab();
-        this.laboratorioInternoEnum = enumerados.getLaboratorioInterno();
         this.cargaLaboratorioEnum = enumerados.getCargaLaboratorio();
         this.modoCargaLaboratorioEnum = enumerados.getModoCargaLaboratorio();
-        // this.resetearProtocolo();
+        this.cargarAreasLaboratorio();
         this.buscarProtocolos();
+    }
+
+    cargarAreasLaboratorio() {
+        this.servicioAreaLaboratorio.get().subscribe((areas: any) => {
+            this.areas = areas.map((area) => {
+                return {
+                    id: area._id,
+                    nombre: area.nombre
+                };
+            });
+        });
     }
 
     /**
      * Realiza la búsqueda de prestaciones según selección de filtros
      *
-     * @param {any} [value]
      * @param {any} [tipo]
      * @memberof PuntoInicioLaboratorioComponent
      */
-    buscarProtocolos(value?, tipo?) {
+    buscarProtocolos($event?, tipo?) {
+        if (tipo) {
+            if (tipo === 'area') {
+                this.busqueda.areas = [this.busqueda.areas.id];
+            } else if (tipo === 'hojaTrabajo') {
+                // this.busqueda.areas = this.hojaTrabajo ? [this.hojaTrabajo.area.id] : [];
+                this.busqueda.practicas = this.hojaTrabajo ? this.hojaTrabajo.practicas.map(p => { return p.id; }) : [];
+            }
+        }
+        console.log('adds', tipo, this.busqueda.practicas);
         this.buscarProtocolosEmmiter.emit(this.busqueda);
     }
 
@@ -129,6 +156,32 @@ export class FiltrosBusquedaProtocoloComponent
     loadPrioridad(event) {
         event.callback(enumerados.getPrioridadesLab());
         return enumerados.getPrioridadesLab();
+    }
+
+    /**
+     *
+     *
+     * @param {*} $event
+     * @memberof FiltrosBusquedaProtocoloComponent
+     */
+    cambiarModoCarga($event) {
+        if ($event.value === 'Lista de protocolos') {
+            this.showSelectPracticas = true;
+        } else if ($event.value === 'Hoja de trabajo') {
+            this.showSelectHojaTrabajo = true;
+        }
+    }
+
+    /**
+     *
+     *
+     * @param {*} $event
+     * @memberof FiltrosBusquedaProtocoloComponent
+     */
+    getHojasTrabajo($event) {
+        this.servicioHojaTrabajo.get(this.auth.organizacion.id).subscribe((hojas: any) => {
+            $event.callback(hojas);
+        });
     }
 
     /**

@@ -1,5 +1,7 @@
 import { IHojaTrabajo } from '../../../interfaces/practica/hojaTrabajo/IHojaTrabajo';
 import { Component, OnInit, Input } from '@angular/core';
+import { Plex } from '@andes/plex';
+
 
 @Component({
     selector: 'impresion-hojatrabajo',
@@ -13,9 +15,12 @@ export class ImpresionHojatrabajoComponent implements OnInit {
     orientacion = 'Horizontal';
 
     @Input() hojaTrabajo: IHojaTrabajo;
-    constructor() { }
+    @Input() areas: any[];
+
+    constructor(
+        public plex: Plex
+    ) { }
 
     ngOnInit() {
     }
-
 }

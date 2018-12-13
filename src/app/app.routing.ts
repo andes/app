@@ -191,15 +191,6 @@ const appRoutes: Routes = [
   { path: 'laboratorio/protocolos/sinTurno', component: LaboratorioComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/protocolos/sinTurno/:id', component: LaboratorioComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/hojatrabajo', component: GestorHojatrabajoComponent, canActivate: [RoutingGuard] },
-  // { path: 'laboratorio', component: GestorProtocolosComponent, canActivate: [RoutingGuard] },
-  // { path: 'laboratorio', component: ProtocoloDetalleComponent, canActivate: [RoutingGuard] },
-  // { path: 'laboratorio', component: TablaDatalleProtocolo, canActivate: [RoutingGuard] },
-  // { path: 'laboratorio', component: ListaProtocolosComponent, canActivate: [RoutingGuard] },
-  // { path: 'laboratorio/', component: ListadoSolicitudesComponent, canActivate: [RoutingGuard] },
-  // { path: 'laboratorio/', component: FiltrosBusquedaProtocoloComponent, canActivate: [RoutingGuard] },
-  // { path: 'laboratorio/', component: ProtocoloEncabezadoComponent, canActivate: [RoutingGuard] },
-  // { path: 'laboratorio/', component: ProtocoloEncabezadoEdicionComponent, canActivate: [RoutingGuard] },
-  // { path: 'laboratorio/', component: ProtocoloEncabezadoVistaComponent, canActivate: [RoutingGuard] },
 
   // Solicitudes
   { path: 'solicitudes', component: SolicitudesComponent, canActivate: [RoutingNavBar, RoutingGuard] },

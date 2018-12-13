@@ -1,27 +1,3 @@
-<!-- <ng-container *ngIf="edicionDatosCabecera && !seleccionPaciente">
-    <div class="row d-inline">
-        <div class="col-12">
-            <span *ngIf='solicitudProtocolo.solicitudPrestacion.numeroProtocolo' class="badge badge-success">
-                <h2>{{ solicitudProtocolo.solicitudPrestacion.numeroProtocolo?.numeroCompleto }}</h2>
-            </span>
-            <ng-container>
-                <div class="row">
-                    <div class="col">
-                        <h2>{{ modelo.paciente.apellido }}, {{ modelo.paciente.nombre }} - {{ modelo.paciente.documento
-                            }}</h2>
-                        Fecha de Nacimiento: {{modelo.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }} - Sexo: {{
-                        modelo.paciente.sexo }}
-                    </div>
-                    <div class="col-2">
-                        <plex-button class="d-flex flex-row-reverse" position="left" type="warning" (click)="cambiarPaciente()">Cambiar
-                            Paciente</plex-button>
-                    </div>
-                </div>
-            </ng-container>
-        </div>
-    </div>
-</ng-container> -->
-
 <div class="paciente-seleccionado edicion" *ngIf="edicionDatosCabecera">
     <span *ngIf="solicitudProtocolo.solicitudPrestacion.numeroProtocolo" class="badge badge-success">
         <h2>{{ solicitudProtocolo.solicitudPrestacion.numeroProtocolo?.numeroCompleto }}</h2>
@@ -90,7 +66,7 @@
 <!--FIN SECCION PACIENTE-->
 
 <!-- SECCION PROTOCOLO -->
-<ng-container *ngIf="showProtocoloDetalle">
+<ng-container *ngIf="!seleccionPaciente && showProtocoloDetalle">
     <!-- ENCABEZADO DE PROTOCOLO -->
     <protocolo-encabezado [modo]="modo" [protocolo]="modelo" [edicionDatosCabecera]="edicionDatosCabecera"
         (edicionDatosCabeceraEmitter)="editarDatosCabecera()" (siguienteEmit)='siguiente()' (anteriorEmit)='anterior()'></protocolo-encabezado>
@@ -103,8 +79,7 @@
             <div class="row">
                 <div class="col">
                     <tabla-datalle-protocolo [modo]="modo" [modelo]="modelo" [solicitudProtocolo]="solicitudProtocolo"
-                        [practicasEjecucion]="practicasEjecucion" [practicasCarga]="practicasCarga" [areas]="areas"
-                        [editarListaPracticas]="editarListaPracticas">
+                        [practicasEjecucion]="practicasEjecucion" [busqueda]="busqueda" [editarListaPracticas]="editarListaPracticas">
                     </tabla-datalle-protocolo>
                 </div>
             </div>

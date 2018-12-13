@@ -1,105 +1,109 @@
 <section *ngIf="!ocultarPanelLateral && modo !== 'puntoInicio'">
+    <plex-layout main="{{showProtocoloDetalle ? ( ocultarPanelLateral ? 0 : 2)  : 12}}">
+        <plex-layout-main *ngIf='!ocultarPanelLateral && modo !== "puntoInicio" '>
 
-    <div class="row">
-        <div class="col">
-            <plex-box>
+            <filtros-busqueda-protocolo *ngIf="!showProtocoloDetalle" [modo]="modo" (buscarProtocolosEmmiter)="refreshSelection($event)"></filtros-busqueda-protocolo>
 
-                <!-- ENCABEZADO -->
-                <header *ngIf="!showProtocoloDetalle">
-                    <div class="clearfix">
-                        <div class="page-title">
-                            <ng-container *ngIf="!showProtocoloDetalle">
+            <br *ngIf="!showProtocoloDetalle">
+            <hr *ngIf="!showProtocoloDetalle">
+
+            <!-- LISTA DE PROTOCOLOS -->
+            <lista-protocolos *ngIf="!showProtocoloDetalle" [protocolos]='protocolos' [modo]='modo'
+                (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)' [showProtocoloDetalle]='showProtocoloDetalle'></lista-protocolos>
+            <!--VISUALIZACIÓN DE PROTOCOLOS CONTROL -->
+            <div *ngIf="!protocolos?.length" class="alert alert-default">
+                <i class="mdi mdi-emoticon-sad"></i> No hay protocolos que coincidan con los filtros de búsqueda
+            </div>
+        </plex-layout-main>
+    </plex-layout>
+    <plex-layout>
+        <plex-layout-sidebar>
+            <!-- ENCABEZADO -->
+            <header *ngIf="!showProtocoloDetalle">
+                <div class="clearfix">
+                    <div class="page-title">
+                        <ng-container *ngIf="!showProtocoloDetalle">
+                            Laboratorio |
+                            <ng-container *ngIf="modo === 'puntoInicio' || modo === 'recepcion'">
+                                Recepcionar
+                                Paciente
+                            </ng-container>
+                            <ng-container *ngIf="modo === 'control'">Auditoría de Protocolos</ng-container>
+                            <ng-container *ngIf="modo === 'carga'">Carga de Resultados</ng-container>
+                            <ng-container *ngIf="modo === 'validacion'">Validación de Resultados</ng-container>
+                        </ng-container>
+                        <ng-container>
+                            Protocolos
+                        </ng-container>
+                    </div>
+                    <nav>
+                        <plex-tabs [activeIndex]="accionIndex" (change)="cambio($event)" *ngIf="!showProtocoloDetalle">
+                            <plex-tab label="Recepción"></plex-tab>
+                            <plex-tab label="Auditoria"></plex-tab>
+                            <plex-tab label="Carga"></plex-tab>
+                            <plex-tab label="Validación"></plex-tab>
+                        </plex-tabs>
+                        <ng-container *ngIf="!showProtocoloDetalle && modo === 'recepcion'">
+                            <plex-button label="accion clave" type="warning" label="Paciente sin Turno" (click)="mostrarFomularioPacienteSinTurno()"></plex-button>
+                        </ng-container>
+                    </nav>
+                </div>
+            </header>
+
+
+
+            <plex-layout-sidebar *ngIf="!showListarProtocolos">
+                <header>
+                    <div class="clearfix row">
+                        <div class="page-title float-left col">
+                            <ng-container *ngIf="showProtocoloDetalle">
                                 Laboratorio |
-                                <ng-container *ngIf="modo === 'puntoInicio' || modo === 'recepcion'">
-                                    Recepcionar
-                                    Paciente
-                                </ng-container>
+                                <ng-container *ngIf="modo === 'recepcion'">Recepcionar Paciente</ng-container>
                                 <ng-container *ngIf="modo === 'control'">Auditoría de Protocolos</ng-container>
                                 <ng-container *ngIf="modo === 'carga'">Carga de Resultados</ng-container>
                                 <ng-container *ngIf="modo === 'validacion'">Validación de Resultados</ng-container>
                             </ng-container>
-                            <ng-container>
-                                Protocolos
-                            </ng-container>
                         </div>
-                        <nav>
-                            <plex-tabs [activeIndex]="accionIndex" (change)="cambio($event)" *ngIf="!showProtocoloDetalle">
-                                <plex-tab label="Recepción"></plex-tab>
-                                <plex-tab label="Auditoria"></plex-tab>
-                                <plex-tab label="Carga"></plex-tab>
-                                <plex-tab label="Validación"></plex-tab>
-                            </plex-tabs>
-                            <ng-container *ngIf="!showProtocoloDetalle && modo === 'recepcion'">
-                                <plex-button label="accion clave" type="warning" label="Paciente sin Turno" (click)="mostrarFomularioPacienteSinTurno()"></plex-button>
-                                <!-- <plex-button label="accion clave" type="warning" label="Paciente sin Turno" (click)="seleccionarProtocolo(protocolo, 0)"></plex-button> -->
-                            </ng-container>
-                        </nav>
+                        <ng-container *ngIf='modo === "carga" || modo === "validacion"' class="col-2">
+                            <plex-button position="right" type="warning" label="Auditar" class="mr-3" (click)="volverAControl()"></plex-button>
+                        </ng-container>
+                        <div class="col d-flex flex-row-reverse" *ngIf="showProtocoloDetalle && modoAVolver === '' ">
+                            <plex-button *ngIf="!showBotonesGuardar && showProtocoloDetalle" position="right" type="success"
+                                label="Aceptar" (click)="protocoloDetalleComponent.aceptarEdicionCabecera()"></plex-button>
+                            <plex-button position="left" type="warning" (click)="volverLista()" label="Volver"></plex-button>
+                        </div>
                     </div>
                 </header>
 
-                <filtros-busqueda-protocolo *ngIf="!showProtocoloDetalle" [modo]="modo" (buscarProtocolosEmmiter)="refreshSelection($event)"></filtros-busqueda-protocolo>
+                <!-- DETALLE DE PROTOCOLO -->
+                <protocolo-detalle *ngIf="showProtocoloDetalle" [protocolo]="protocolo" [showProtocoloDetalle]="showProtocoloDetalle"
+                    [indexProtocolo]="indexProtocolo" [protocolos]="protocolos" [edicionDatosCabecera]="edicionDatosCabecera"
+                    [modo]="modo" [seleccionPaciente]="seleccionPaciente" (volverAListaControEmit)="volverLista()"
+                    (mostrarCuerpoProtocoloEmit)="mostrarBotonesGuardarProtocoloFooter($event)"
+                    (mostrarCuerpoProtocolo)="mostrarCuerpoProtocolo" [editarListaPracticas]="editarListaPracticas"></protocolo-detalle>
 
-                <br *ngIf="!showProtocoloDetalle">
-                <hr *ngIf="!showProtocoloDetalle">
+            </plex-layout-sidebar>
 
-                <!-- LISTA DE PROTOCOLOS -->
-                <lista-protocolos *ngIf="!showProtocoloDetalle" [protocolos]='protocolos' [modo]='modo'
-                    (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)' [showProtocoloDetalle]='showProtocoloDetalle'></lista-protocolos>
+            <ng-container *ngIf="showProtocoloDetalle && modoAVolver === '' ">
 
-                <plex-layout-sidebar *ngIf="!showListarProtocolos">
-                    <header>
-                        <div class="clearfix row">
-                            <div class="page-title float-left col">
-                                <ng-container *ngIf="showProtocoloDetalle">
-                                    Laboratorio |
-                                    <ng-container *ngIf="modo === 'recepcion'">Recepcionar Paciente</ng-container>
-                                    <ng-container *ngIf="modo === 'control'">Auditoría de Protocolos</ng-container>
-                                    <ng-container *ngIf="modo === 'carga'">Carga de Resultados</ng-container>
-                                    <ng-container *ngIf="modo === 'validacion'">Validación de Resultados</ng-container>
-                                </ng-container>
-                            </div>
-                            <ng-container *ngIf='modo === "carga" || modo === "validacion"' class="col-2">
-                                <plex-button position="right" type="warning" label="Auditar" class="mr-3" (click)="volverAControl()"></plex-button>
-                            </ng-container>
-                            <div class="col d-flex flex-row-reverse" *ngIf="showProtocoloDetalle && modoAVolver === '' ">
-                                <plex-button *ngIf="!showBotonesGuardar && showProtocoloDetalle" position="right" type="success"
-                                    label="Aceptar" (click)="protocoloDetalleComponent.aceptarEdicionCabecera()"></plex-button>
-                                <plex-button position="left" type="warning" (click)="volverLista()" label="Volver"></plex-button>
-                            </div>
-                        </div>
-                    </header>
+                <plex-button *ngIf='modo !== "validacion" && showBotonesGuardar' position="right" class="float-right mr-1"
+                    type="success" label="Guardar" (click)="guardarSolicitud()"></plex-button>
+                <plex-button *ngIf='modo !=="validacion" && showBotonesGuardar' position="right" class="float-right mr-1"
+                    type="success" label="Guardar + CB" (click)="guardarSolicitud()"></plex-button>
+                ​
+                <plex-button *ngIf='modo === "validacion" && showBotonesGuardar && !ocultarPanelLateral' position="right"
+                    class="float-right mr-1" type="success" label="Validar todos" (click)="guardarSolicitud()"></plex-button>
+                <plex-button *ngIf='modo === "validacion" && showBotonesGuardar && !ocultarPanelLateral' position="right"
+                    class="float-right mr-1" type="success" label="Validar pendientes" (click)="guardarSolicitud()"></plex-button>
+                ​
+                <!-- <plex-button *ngIf='!showBotonesGuardar && protocoloDetalleComponent && protocoloDetalleComponent?.edicionDatosCabecera' -->
 
-                    <!-- DETALLE DE PROTOCOLO -->
-                    <protocolo-detalle *ngIf="showProtocoloDetalle" [protocolo]="protocolo" [showProtocoloDetalle]="showProtocoloDetalle"
-                        [indexProtocolo]="indexProtocolo" [protocolos]="protocolos" [edicionDatosCabecera]="edicionDatosCabecera"
-                        [modo]="modo" [seleccionPaciente]="seleccionPaciente" (volverAListaControEmit)="volverLista()"
-                        (mostrarCuerpoProtocoloEmit)="mostrarBotonesGuardarProtocoloFooter($event)"
-                        (mostrarCuerpoProtocolo)="mostrarCuerpoProtocolo" [editarListaPracticas]="editarListaPracticas"></protocolo-detalle>
+            </ng-container>
 
-                </plex-layout-sidebar>
-
-                <ng-container *ngIf="showProtocoloDetalle && modoAVolver === '' ">
-
-                    <plex-button *ngIf='modo !== "validacion" && showBotonesGuardar' position="right" class="float-right mr-1"
-                        type="success" label="Guardar" (click)="guardarSolicitud()"></plex-button>
-                    <plex-button *ngIf='modo !=="validacion" && showBotonesGuardar' position="right" class="float-right mr-1"
-                        type="success" label="Guardar + CB" (click)="guardarSolicitud()"></plex-button>
-                    ​
-                    <plex-button *ngIf='modo === "validacion" && showBotonesGuardar && !ocultarPanelLateral' position="right"
-                        class="float-right mr-1" type="success" label="Validar todos" (click)="guardarSolicitud()"></plex-button>
-                    <plex-button *ngIf='modo === "validacion" && showBotonesGuardar && !ocultarPanelLateral' position="right"
-                        class="float-right mr-1" type="success" label="Validar pendientes" (click)="guardarSolicitud()"></plex-button>
-                    ​
-                    <!-- <plex-button *ngIf='!showBotonesGuardar && protocoloDetalleComponent && protocoloDetalleComponent?.edicionDatosCabecera' -->
-
-                </ng-container>
-
-                <plex-layout-footer *ngIf="showProtocoloDetalle && modoAVolver !== '' ">
-                    <plex-button position="left" type="warning" (click)="volverLista()">Volver</plex-button>
-                    <plex-button position="right" class="float-right mr-1" type="success" label="Guardar Auditoria"
-                        (click)="guardarSolicitudYVolver()"></plex-button>
-                </plex-layout-footer>
-            </plex-box>
-        </div>
-    </div>
+            <plex-layout-footer *ngIf="showProtocoloDetalle && modoAVolver !== '' ">
+                <plex-button position="left" type="warning" (click)="volverLista()">Volver</plex-button>
+                <plex-button position="right" class="float-right mr-1" type="success" label="Guardar Auditoria" (click)="guardarSolicitudYVolver()"></plex-button>
+            </plex-layout-footer>
+        </plex-layout-sidebar>
+    </plex-layout>
 </section>

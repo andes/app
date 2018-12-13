@@ -2,33 +2,37 @@ import { IPractica } from '../../../../../../interfaces/laboratorio/IPractica';
 import { PracticaService } from '../../../services/practica.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { Plex } from '@andes/plex';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+
 
 @Component({
     selector: 'practicas-hojatrabajo',
-    templateUrl: './practicas-hojatrabajo.html'
+    templateUrl: './practicas-hojatrabajo.html',
+    styleUrls: ['./practicas-hojatrabajo.css']
 })
 export class PracticasHojatrabajoComponent implements OnInit {
 
     codigo;
     nombrePractica;
     nombreImpresion: String;
-    practica: IPractica;
+    practica: IPractica = {} as IPractica;
     @Input() hojaTrabajo: any;
 
 
     constructor(public plex: Plex, private servicioPractica: PracticaService) { }
 
     ngOnInit() {
+        this.seleccionarPractica({} as IPractica);
     }
 
     /**
      *
      *
      * @param {*} value
-     * @memberof PracticasHojatrabajoComponent 
+     * @memberof PracticasHojatrabajoComponent
      */
     getPracticaPorCodigo() {
-        console.log()
+        console.log();
         if (this.codigo) {
             this.servicioPractica.getMatchCodigo(this.codigo).subscribe((resultado: any) => {
                 if (resultado) {
@@ -42,7 +46,7 @@ export class PracticasHojatrabajoComponent implements OnInit {
      *
      *
      * @param {any} $event
-     * @memberof TablaDatalleProtocolo
+     * @memberof PracticasHojatrabajoComponent
      */
     getPracticasPorNombre($event) {
         if ($event.query) {
@@ -73,25 +77,29 @@ export class PracticasHojatrabajoComponent implements OnInit {
     * @param {IPractica} practica
     * @memberof ProtocoloDetalleComponent
     */
-    async agregarPractica() {
-        if (this.practica) {
-            if (this.findPracticaIndex(this.practica) < 0) {
-                this.hojaTrabajo.practicas.push({
-                    nombre: this.nombreImpresion,
-                    practica: {
-                        id: this.practica._id,
-                        nombre: this.practica.nombre,
-                        codigo: this.practica.codigo,
-                        concepto: this.practica.concepto
-                    }
-                });
-            } else {
-                this.plex.alert('', 'Práctica ya ingresada');
+    async agregarPractica($event) {
+        if ($event.formValid) {
+            if (this.practica) {
+                if (this.findPracticaIndex(this.practica) < 0) {
+                    this.hojaTrabajo.practicas.push({
+                        nombre: this.nombreImpresion,
+                        practica: {
+                            id: this.practica._id,
+                            nombre: this.practica.nombre,
+                            codigo: this.practica.codigo,
+                            concepto: this.practica.concepto
+                        }
+                    });
+                } else {
+                    this.plex.alert('', 'Práctica ya ingresada');
+                }
             }
+            this.nombreImpresion = '';
+            this.codigo = '';
+            this.practica = null;
+        } else {
+            this.plex.info('warning', 'Debe completar los datos requeridos');
         }
-        this.nombreImpresion = '';
-        this.codigo = '';
-        this.practica = null;
     }
 
     /**
@@ -114,5 +122,25 @@ export class PracticasHojatrabajoComponent implements OnInit {
      */
     eliminarPractica(practica: IPractica) {
         this.hojaTrabajo.practicas.splice(this.findPracticaIndex(practica), 1);
+    }
+
+    /**
+     * Drag and Drop ng7
+     */
+    drop(event: CdkDragDrop<string[]>) {
+        console.log('movido', event.previousIndex, event.currentIndex, event.item);
+        moveItemInArray(this.hojaTrabajo.practicas, event.previousIndex, event.currentIndex);
+    }
+
+    clickUp(index: number) {
+        if (index !== 0) {
+            moveItemInArray(this.hojaTrabajo.practicas, index, index - 1);
+        }
+    }
+
+    clickDown(index: number) {
+        if (index < this.hojaTrabajo.practicas.length) {
+            console.log(moveItemInArray(this.hojaTrabajo.practicas, index, index + 1));
+        }
     }
 }

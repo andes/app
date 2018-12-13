@@ -170,8 +170,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
     }
 
-
-
     refreshSelection(value, tipo) {
         if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*' && this.prestaciones.length === 0) {
             this.parametros['tipoPrestaciones'] = this.prestacionesPermisos;
