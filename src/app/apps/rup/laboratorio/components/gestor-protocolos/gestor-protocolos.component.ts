@@ -141,7 +141,7 @@ export class GestorProtocolosComponent
     refreshSelection($event?) {
         if ($event) {
             this.busqueda = $event;
-            this.areas = $event.area ? [$event.area] : [];
+            this.areas = $event.areas ? $event.areas : [];
         }
 
         this.getProtocolos(this.busqueda);

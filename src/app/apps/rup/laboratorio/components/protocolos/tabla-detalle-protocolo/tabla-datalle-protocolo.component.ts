@@ -19,11 +19,10 @@ export class TablaDatalleProtocoloComponent implements OnInit {
 
     }
 
-    @Input() areas: any;
     @Input() modo: any;
     @Input() modelo: any;
     @Input() solicitudProtocolo: any;
-
+    @Input() busqueda: any;
     practicasCarga = [];
     practicasVista = [];
 
@@ -67,7 +66,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         let practicasSolicitud = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas;
         this.practicasVista = this.practicasEjecucion
             .filter(pe => practicasSolicitud.some(ps => ps._id === pe._id))
-            .filter(p => ((this.areas.length === 0) || this.areas.some(id => id === p.area._id))
+            .filter(p => ((this.busqueda.areas.length === 0) || this.busqueda.areas.some(id => id === p.area._id))
         );
     }
 
@@ -80,22 +79,28 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     cargarListaPracticaCarga() {
         return new Promise((resolve) => {
             this.practicasCarga = [];
-
+            let idsFiltrados = this.busqueda.practicas ? this.getIdsFiltrados( this.busqueda.practicas ) : null;
             let ids = this.practicasEjecucion.map((reg) => { return reg._id; });
+
             this.servicioPractica.findByIdsCompletas(ids).subscribe((res) => {
                 let cargarPracticas = (registos, practicas, nivelTab) => {
                     if (registos.length > 0) {
                         for (const reg of registos) {
-                            let match: any = practicas.filter((practica: any) => {
-                                return practica._id === reg._id;
-                            })[0];
 
-                            if ( (this.areas.length === 0) || this.areas.some(id => id === match.area.id) ) {
-                                this.practicasCarga.push({
-                                    registro: reg,
-                                    practica: match,
-                                    margen: []
-                                });
+                            if (!idsFiltrados || this.busqueda.practicas === 0 || idsFiltrados.some(e => e._id === reg._id)) {
+                                let match: any = practicas.filter((practica: any) => {
+                                    return practica._id === reg._id;
+                                })[0];
+    
+                                let matchArea = !this.busqueda.areas || (this.busqueda.areas.length === 0) || this.busqueda.areas.some(id => id === match.area.id);
+                                
+                                if (matchArea) {
+                                    this.practicasCarga.push({
+                                        registro: reg,
+                                        practica: match,
+                                        margen: []
+                                    });
+                                }
                             }
                         }
                     };
@@ -105,6 +110,30 @@ export class TablaDatalleProtocoloComponent implements OnInit {
             });
         });
     }
+
+    /**
+     *
+     *
+     * @param {*} ids
+     * @returns
+     * @memberof TablaDatalleProtocoloComponent
+     */
+    getIdsFiltrados(ids) {
+        let practicasFiltradas = [];
+        const foo = (idsFiltro) => {
+            this.practicasEjecucion.forEach( (p) => {
+                 idsFiltro.forEach( (id) => { idsFiltro })
+            })
+            let filtradas = this.practicasEjecucion.filter( (p) => { 
+                return idsFiltro.some( id => id === p._id ) 
+            });
+            filtradas.forEach( pf => foo(pf.relacionadoCon) );
+            practicasFiltradas = practicasFiltradas.concat(filtradas);
+        }
+        foo(ids);
+        return practicasFiltradas;        
+    }
+
 
     /**
      * Setea al resultado de cada práctica un array con la lista de resultados anteriores registrados para el paciente de la práctica
@@ -330,7 +359,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
             destacado: false,
             esSolicitud: false,
             esDiagnosticoPrincipal: false,
-            relacionadoCon: [],
+            relacionadoCon: practica.requeridos.map( (req) => {return req._id} ),
             nombre: practica.nombre,
             concepto: practica.concepto,
             valor: {

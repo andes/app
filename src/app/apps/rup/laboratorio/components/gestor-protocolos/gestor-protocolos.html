@@ -64,7 +64,7 @@
         <protocolo-detalle [protocolo]="protocolo" [showProtocoloDetalle]="showProtocoloDetalle" [indexProtocolo]='indexProtocolo'
             [protocolos]="protocolos" [edicionDatosCabecera]='edicionDatosCabecera' [modo]='modo' [seleccionPaciente]='seleccionPaciente'
             (volverAListaControEmit)='volverLista()' (mostrarCuerpoProtocoloEmit)='mostrarBotonesGuardarProtocoloFooter($event)'
-            (mostrarCuerpoProtocolo)='mostrarCuerpoProtocolo' [editarListaPracticas]='editarListaPracticas' [areas]='areas'></protocolo-detalle>
+            (mostrarCuerpoProtocolo)='mostrarCuerpoProtocolo' [editarListaPracticas]='editarListaPracticas' [busqueda]='busqueda'></protocolo-detalle>
     </plex-layout-sidebar>
 
     <plex-layout-footer *ngIf="!showProtocoloDetalle && modo === 'recepcion'">

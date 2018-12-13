@@ -1,3 +1,4 @@
+import { Auth } from '@andes/auth';
 import { AreaLaboratorioService } from '../../../services/areaLaboratorio.service';
 import { ListaHojatrabajoComponent } from './../lista-hojatrabajo/lista-hojatrabajo.component';
 import { IHojaTrabajo } from '../../../interfaces/practica/hojaTrabajo/IHojaTrabajo';
@@ -24,12 +25,13 @@ export class GestorHojatrabajoComponent implements OnInit {
     constructor(
         private plex: Plex,
         private servicioHojaTrabajo: HojaTrabajoService,
-        private areaLaboratorioService: AreaLaboratorioService
+        private areaLaboratorioService: AreaLaboratorioService,
+        private auth: Auth
     ) { }
 
     ngOnInit() {
         this.loadAreas();
-        this.agregarHoja();
+        this.agregarHojaTrabajo();
     }
 
     cambio($event) {
@@ -46,10 +48,6 @@ export class GestorHojatrabajoComponent implements OnInit {
 
     seleccionarHojaTrabajo($event) {
         this.hojaTrabajo = $event;
-    }
-
-    agregarHojaTrabajo() {
-        this.agregarHoja();
     }
 
     guardarHoja() {
@@ -69,8 +67,9 @@ export class GestorHojatrabajoComponent implements OnInit {
         this.listaHojatrabajoComponent.cargarListado();
     }
 
-    agregarHoja() {
+    agregarHojaTrabajo() {
         this.hojaTrabajo = new IHojaTrabajo();
+        this.hojaTrabajo.laboratorio = this.auth.organizacion.id;
     }
 
     vistaPreliminar() {

@@ -38,11 +38,6 @@ export class ProtocoloDetalleComponent
     public pacientes;
     public pacienteActivo;
     public mostrarListaMpi: Boolean = false;
-    public busqueda = {
-        dniPaciente: null,
-        nombrePaciente: null,
-        apellidoPaciente: null,
-    };
     practicasEjecucion;
     showObservaciones: Boolean = false;
     solicitudProtocolo: any;
@@ -59,7 +54,7 @@ export class ProtocoloDetalleComponent
     @Input() protocolos: any;
     @Input() modo: String;
     @Input() indexProtocolo: any;
-    @Input() areas: any;
+    @Input() busqueda: any;
     @Input() editarListaPracticas;
 
     @Input('protocolo')

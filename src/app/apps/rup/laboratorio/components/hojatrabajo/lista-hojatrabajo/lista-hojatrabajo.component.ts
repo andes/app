@@ -1,6 +1,6 @@
+import { Auth } from '@andes/auth';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { HojaTrabajoService } from '../../../services/hojatrabajo.service';
-import { Plex } from '@andes/plex';
 import { IHojaTrabajo } from '../../../interfaces/practica/hojaTrabajo/IHojaTrabajo';
 
 @Component({
@@ -24,8 +24,8 @@ export class ListaHojatrabajoComponent implements OnInit {
 
     // Constructor
     constructor(
-        private plex: Plex,
-        private servicioHojaTrabajo: HojaTrabajoService
+        private servicioHojaTrabajo: HojaTrabajoService,
+        private auth: Auth
     ) { }
 
     ngOnInit() {
@@ -33,8 +33,13 @@ export class ListaHojatrabajoComponent implements OnInit {
         this.cargarListado();
     }
 
+    /**
+     *
+     *
+     * @memberof ListaHojatrabajoComponent
+     */
     cargarListado() {
-        this.servicioHojaTrabajo.get().subscribe(hojasTrabajo => {
+        this.servicioHojaTrabajo.get(this.auth.organizacion.id).subscribe(hojasTrabajo => {
             this.hojasTrabajo = hojasTrabajo;
             this.hojasTrabajoFiltered = hojasTrabajo;
             this.hojaTrabajoSelected = null;
@@ -43,15 +48,32 @@ export class ListaHojatrabajoComponent implements OnInit {
         });
     }
 
+    /**
+     *
+     *
+     * @param {*} hojaTrabajo
+     * @memberof ListaHojatrabajoComponent
+     */
     seleccionar(hojaTrabajo: any) {
         this.hojaTrabajoSelected = hojaTrabajo;
         this.hojaTrabajoSelectedEmmiter.emit(hojaTrabajo);
     }
 
+    /**
+     *
+     *
+     * @memberof ListaHojatrabajoComponent
+     */
     agregarHoja() {
         this.hojaTrabajoAgregarEmmiter.emit();
     }
 
+    /**
+     *
+     *
+     * @param {*} $event
+     * @memberof ListaHojatrabajoComponent
+     */
     filtrarHT($event) {
         if ($event.value) {
             this.hojasTrabajoFiltered = this.hojasTrabajo.filter(ht => ht.area.nombre === $event.value.nombre);

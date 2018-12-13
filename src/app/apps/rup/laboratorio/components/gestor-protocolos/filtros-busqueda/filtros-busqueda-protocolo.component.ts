@@ -1,3 +1,4 @@
+import { HojaTrabajoService } from './../../../services/hojatrabajo.service';
 import { Auth } from '@andes/auth';
 import { AreaLaboratorioService } from '../../../services/areaLaboratorio.service';
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
@@ -19,10 +20,13 @@ export class FiltrosBusquedaProtocoloComponent
     @Input() modo;
     @Input() editarListaPracticas;
 
+    public showSelectPracticas : Boolean = false;
+    public showSelectHojaTrabajo : Boolean = false;
     public origenEnum: any;
     public prioridadesFiltroEnum;
     public estadosFiltroEnum;
     public estadosValFiltroEnum;
+    public hojaTrabajo;
 
     public pacientes;
     public pacienteActivo;
@@ -50,17 +54,19 @@ export class FiltrosBusquedaProtocoloComponent
         numProtocoloHasta: null,
         servicio: null,
         prioridad: null,
-        area: null,
+        areas: null,
         laboratorioInterno: null,
         tipoPrestacionSolicititud: '15220000',
         organizacion: null,
-        estado: []
+        estado: [],
+        practicas: null
     };
 
     constructor(public plex: Plex, private formBuilder: FormBuilder,
         public auth: Auth,
         private servicioOrganizacion: OrganizacionService,
-        private servicioAreaLaboratorio: AreaLaboratorioService
+        private servicioAreaLaboratorio: AreaLaboratorioService,
+        private servicioHojaTrabajo: HojaTrabajoService,
     ) { }
 
     ngOnInit() {
@@ -91,10 +97,16 @@ export class FiltrosBusquedaProtocoloComponent
      * @param {any} [tipo]
      * @memberof PuntoInicioLaboratorioComponent
      */
-    buscarProtocolos(tipo?) {
-        if (tipo && tipo === 'area') {
-            this.busqueda.area = this.busqueda.area.id;
+    buscarProtocolos($event?, tipo?) {
+        if (tipo) {
+            if (tipo === 'area') {
+                this.busqueda.areas = [this.busqueda.areas.id];
+            } else if (tipo === 'hojaTrabajo') {
+                // this.busqueda.areas = this.hojaTrabajo ? [this.hojaTrabajo.area.id] : [];
+                this.busqueda.practicas = this.hojaTrabajo ? this.hojaTrabajo.practicas.map( p => {return p.id} ) : []
+            }
         }
+        console.log('adds',tipo, this.busqueda.practicas)
         this.buscarProtocolosEmmiter.emit(this.busqueda);
     }
 
@@ -137,6 +149,32 @@ export class FiltrosBusquedaProtocoloComponent
     loadPrioridad(event) {
         event.callback(enumerados.getPrioridadesLab());
         return enumerados.getPrioridadesLab();
+    }
+
+    /**
+     *
+     *
+     * @param {*} $event
+     * @memberof FiltrosBusquedaProtocoloComponent
+     */
+    cambiarModoCarga($event){
+        if ($event.value === 'Lista de protocolos') {
+            this.showSelectPracticas = true;
+        } else if ($event.value === 'Hoja de trabajo') {
+            this.showSelectHojaTrabajo = true;
+        } 
+    }
+    
+    /**
+     *
+     *
+     * @param {*} $event
+     * @memberof FiltrosBusquedaProtocoloComponent
+     */
+    getHojasTrabajo($event) {
+        this.servicioHojaTrabajo.get(this.auth.organizacion.id).subscribe((hojas: any) => {
+            $event.callback(hojas);
+        });
     }
 
     /**
