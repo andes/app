@@ -127,12 +127,12 @@
                             <div class="row" *ngIf="!modelo.intercalar">
                                 <div class="col-6">
                                     <plex-datetime type="time" [(ngModel)]="elementoActivo.horaInicio" [name]="'horaInicio' + bloqueActivo"
-                                        [required]="true" (change)="cambioHoraBloques( 'inicio' )" label="Hora Inicio">
+                                        [required]="true" (blur)="cambioHoraBloques( 'inicio' )" label="Hora Inicio">
                                     </plex-datetime>
                                 </div>
                                 <div class="col-6">
                                     <plex-datetime type="time" [(ngModel)]="elementoActivo.horaFin" name="horaFin"
-                                        [required]="true" (change)="cambioHoraBloques( 'fin' )" label="Hora Fin">
+                                        [required]="true" (blur)="cambioHoraBloques( 'fin' )" label="Hora Fin">
                                     </plex-datetime>
                                 </div>
                             </div>

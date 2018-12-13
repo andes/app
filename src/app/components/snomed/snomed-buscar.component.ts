@@ -172,7 +172,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges, OnDestroy {
                     case 'problemas':
                         apiMethod = this.SNOMED.get({
                             search: search,
-                            semanticTag: ['hallazgo', 'trastorno', 'situación']
+                            semanticTag: ['hallazgo', 'trastorno', 'situación', 'evento']
                         });
                         break;
                     case 'procedimientos':
@@ -190,7 +190,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges, OnDestroy {
                     case 'productos':
                         apiMethod = this.SNOMED.get({
                             search: search,
-                            semanticTag: ['producto']
+                            semanticTag: ['producto', 'objeto físico', 'medicamento clínico']
                         });
                         break;
                     case 'equipamientos':
@@ -202,7 +202,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges, OnDestroy {
                     default:
                         apiMethod = this.SNOMED.get({
                             search: search,
-                            semanticTag: ['hallazgo', 'trastorno', 'procedimiento', 'entidad observable', 'producto', 'situación', 'régimen/tratamiento', 'elemento de registro']
+                            semanticTag: ['hallazgo', 'trastorno', 'procedimiento', 'entidad observable', 'producto', 'situación', 'régimen/tratamiento', 'elemento de registro', 'objeto físico', 'medicamento clínico', 'evento']
                         });
                         break;
                 }
