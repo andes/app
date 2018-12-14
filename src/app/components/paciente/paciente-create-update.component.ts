@@ -522,14 +522,21 @@ export class PacienteCreateUpdateComponent implements OnInit {
         return true;
     }
 
-    verificarCorreoValido(mail, indice, form) {
+    verificarCorreoValido(indice, form) {
         let formato = new RegExp(/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/);
-        debugger;
-        if (formato.test(mail)) {
-            form.controls.markAsDirty(true);
-        } else {
-            form.controls['valor-' + indice].$markAsDirty();
-        }
+        let mail = String(this.pacienteModel.contacto[indice].valor);
+        form.form.controls['valor-' + indice].setErrors(null);  // con cada caracter nuevo 'limpia' el error y reevalúa
+
+        window.setTimeout(() => {
+            if (mail) {
+                if (formato.test(mail)) {
+                    form.form.controls['valor-' + indice].setErrors(null);
+                } else {
+                    form.form.controls['valor-' + indice].setErrors({ 'invalid': true });
+                    console.log(form.form.controls['valor-' + indice]);
+                }
+            }
+        }, 500);
     }
 
     async save(valid) {
