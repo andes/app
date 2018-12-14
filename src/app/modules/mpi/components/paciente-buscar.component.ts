@@ -207,7 +207,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                         cadenaInput: textoLibre
                     }).subscribe(
                         resultado => {
-                            if (this.filtrarInactivos) { resultado = resultado.filter((elem: any) => (elem.activo)); }
+                            if (this.filtrarInactivos) { resultado = resultado.filter(elem => (!elem.paciente.hasOwnProperty('activo') || elem.paciente.activo)); }
                             this.searchEnd.emit({ pacientes: resultado, err: null });
                         },
                         (err) => this.searchEnd.emit({ pacientes: [], err: err })
