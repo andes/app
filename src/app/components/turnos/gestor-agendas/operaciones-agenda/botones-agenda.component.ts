@@ -276,11 +276,12 @@ export class BotonesAgendaComponent implements OnInit {
 
     tienePrestacionIniciada(agenda: IAgenda) {
         let flag = false;
-        agenda.bloques.forEach(bloque => {
-            if (!flag) {
-                flag = (bloque.turnos.find(unTurno => unTurno.asistencia === 'asistio') !== undefined);
+        for (let bloque of agenda.bloques) {
+            flag = (bloque.turnos.find(unTurno => unTurno.asistencia === 'asistio') !== undefined);
+            if (flag) {
+                break;
             }
-        });
+        }
         return flag;
     }
 
