@@ -56,7 +56,7 @@ export class FiltrosBusquedaProtocoloComponent
         numProtocoloHasta: null,
         servicio: null,
         prioridad: null,
-        areas: null,
+        areas: [],
         laboratorioInterno: null,
         tipoPrestacionSolicititud: '15220000',
         organizacion: null,
@@ -107,7 +107,7 @@ export class FiltrosBusquedaProtocoloComponent
     buscarProtocolos($event?, tipo?) {
         if (tipo) {
             if (tipo === 'area') {
-                this.busqueda.areas = [this.busqueda.areas.id];
+                this.busqueda.areas = [this.busqueda.area.id];
             } else if (tipo === 'hojaTrabajo') {
                 // this.busqueda.areas = this.hojaTrabajo ? [this.hojaTrabajo.area.id] : [];
                 this.busqueda.practicas = this.hojaTrabajo ? this.hojaTrabajo.practicas.map(p => { return p.id; }) : [];

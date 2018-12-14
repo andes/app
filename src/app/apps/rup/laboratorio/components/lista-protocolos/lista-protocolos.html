@@ -1,5 +1,8 @@
 <ng-container *ngIf="protocolos && protocolos.length > 0">
     <div class="table-grid table-grid-head {{ modo }}">
+
+        <div class="page-title float-left col" *ngIf="showProtocoloDetalle">Listado</div>
+
         <span *ngIf='modo !== "puntoInicio"'>Sexo</span>
         <span *ngIf='modo !== "puntoInicio" && modo !== "recepcion"'>Nro.</span>
         <span>Fecha</span>

@@ -1,6 +1,6 @@
 <div class="filtros-container {{ modo }}">
     <span *ngIf='modo === "carga" || modo === "validacion"'>
-        <plex-radio [data]="modoCargaLaboratorioEnum" label="Modo de carga" [(ngModel)]="modoCargaLaboratorio" type="horizontal"></plex-radio>
+        <plex-radio [data]="modoCargaLaboratorioEnum" label="Modo de carga" [(ngModel)]="modoCargaLaboratorio"  ></plex-radio>
     </span>
     <span *ngIf='showSelectPracticas'>
         <plex-select [(ngModel)]="busqueda.area " (change)="buscarProtocolos($event,'area')" name="area" label="Area"
@@ -22,7 +22,7 @@
     </span>
     <span *ngIf='modo !== "recepcion"'>
         <plex-select [(ngModel)]="busqueda.area" (change)="buscarProtocolos($event,'area')" name="area" label="Area"
-            [data]='laboratorioInternoEnum'></plex-select>
+            [data]='areas'></plex-select>
     </span>
     <span>
         <plex-select [(ngModel)]="prioridad" (change)="buscarProtocolos($event,'prioridad')" name="prioridad" label="Prioridad"

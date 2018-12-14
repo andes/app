@@ -8,7 +8,7 @@
             <hr *ngIf="!showProtocoloDetalle">
 
             <!-- LISTA DE PROTOCOLOS -->
-            <lista-protocolos *ngIf="!showProtocoloDetalle" [protocolos]='protocolos' [modo]='modo'
+            <lista-protocolos [protocolos]='protocolos' [modo]='modo'
                 (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)' [showProtocoloDetalle]='showProtocoloDetalle'></lista-protocolos>
             <!--VISUALIZACIÓN DE PROTOCOLOS CONTROL -->
             <div *ngIf="!protocolos?.length" class="alert alert-default">
@@ -73,7 +73,7 @@
                 [indexProtocolo]="indexProtocolo" [protocolos]="protocolos" [edicionDatosCabecera]="edicionDatosCabecera"
                 [modo]="modo" [seleccionPaciente]="seleccionPaciente" (volverAListaControEmit)="volverLista()"
                 (mostrarCuerpoProtocoloEmit)="mostrarBotonesGuardarProtocoloFooter($event)" (mostrarCuerpoProtocolo)="mostrarCuerpoProtocolo"
-                [editarListaPracticas]="editarListaPracticas"></protocolo-detalle>
+                [editarListaPracticas]="editarListaPracticas" [busqueda]='busqueda' ></protocolo-detalle>
 
         </plex-layout-sidebar>
 
