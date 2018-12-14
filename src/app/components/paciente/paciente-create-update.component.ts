@@ -451,6 +451,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         } else {
             this.viveEnNeuquen = false;
             this.pacienteModel.direccion[0].ubicacion.provincia = null;
+            this.pacienteModel.direccion[0].ubicacion.localidad = null;
             this.localidadesNeuquen = [];
             this.barriosNeuquen = [];
         }
