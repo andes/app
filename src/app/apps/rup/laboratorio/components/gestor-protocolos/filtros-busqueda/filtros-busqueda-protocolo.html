@@ -1,6 +1,7 @@
-<div class="filtros-container {{ modo }}">
-    <span *ngIf='modo === "carga" || modo === "validacion"'>
-        <plex-radio [data]="modoCargaLaboratorioEnum" label="Modo de carga" [(ngModel)]="modoCargaLaboratorio"  ></plex-radio>
+<div class="row ml-1" *ngIf='modo === "carga" || modo === "validacion"'>
+    <span>
+        <plex-radio [data]="modoCargaLaboratorioEnum" label="Modo de carga" (change)="cambiarModoCarga($event)"
+            [(ngModel)]="modoCargaLaboratorio" type="horizontal"></plex-radio>
     </span>
     <span *ngIf='showSelectPracticas'>
         <plex-select [(ngModel)]="busqueda.area " (change)="buscarProtocolos($event,'area')" name="area" label="Area"
@@ -10,6 +11,8 @@
         <plex-select [(ngModel)]="hojaTrabajo" (change)="buscarProtocolos($event,'hojaTrabajo')" name="hojadetrabajo"
             label="Hoja de Trabajo" (getData)='getHojasTrabajo($event)' labelField="nombre"></plex-select>
     </span>
+</div>
+<div class="filtros-container {{ modo }}">
     <span>
         <plex-datetime type="date" [(ngModel)]="busqueda.solicitudDesde" (change)="buscarProtocolos($event,'fechaDesde')"
             name="solicitudDesde" label="Fecha desde" [required]="true" skipBy="day">

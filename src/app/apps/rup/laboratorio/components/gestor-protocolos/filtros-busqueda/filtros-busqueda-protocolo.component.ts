@@ -162,13 +162,20 @@ export class FiltrosBusquedaProtocoloComponent
      *
      *
      * @param {*} $event
-     * @memberof FiltrosBusquedaProtocoloComponent
+     * @membero f FiltrosBusquedaProtocoloComponent
      */
     cambiarModoCarga($event) {
-        if ($event.value === 'Lista de protocolos') {
-            this.showSelectPracticas = true;
-        } else if ($event.value === 'Hoja de trabajo') {
+        // if ($event.value === 'Lista de protocolos') {
+        //     this.showSelectPracticas = true;
+        //     this.showSelectHojaTrabajo = false;
+        // } else
+         if ($event.value === 'Hoja de trabajo') {
             this.showSelectHojaTrabajo = true;
+            this.showSelectPracticas = false;
+        }
+
+        else {
+            this.showSelectHojaTrabajo = false;
         }
     }
 
