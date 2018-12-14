@@ -182,7 +182,7 @@
                                             </plex-select>
                                         </div>
                                     </div>
-                                    <div class="row" *ngIf="!viveEnNeuquen && pacienteModel.direccion[0].ubicacion.localidad && pacienteModel.direccion[0].ubicacion.localidad._id === localidadNeuquen._id">
+                                    <div class="row" *ngIf="!viveEnNeuquen && pacienteModel.direccion[0].ubicacion.localidad && pacienteModel.direccion[0].ubicacion.localidad.id === localidadNeuquen.id">
                                         <div class="col-md-6">
                                             <plex-select label="Barrio" placeholder="Seleccione.." [(ngModel)]="pacienteModel.direccion[0].ubicacion.barrio"
                                                 name="barrio" [data]="barriosNeuquen" labelField="nombre">
@@ -207,7 +207,7 @@
                                         </plex-select>
                                     </div>
                                 </div>
-                                <div class="row" *ngIf="!viveProvNeuquen && !viveEnNeuquen && pacienteModel.direccion[0].ubicacion.localidad && pacienteModel.direccion[0].ubicacion.localidad._id === localidadNeuquen._id">
+                                <div class="row" *ngIf="!viveProvNeuquen && !viveEnNeuquen && pacienteModel.direccion[0].ubicacion.localidad && pacienteModel.direccion[0].ubicacion.localidad.id === localidadNeuquen.id">
                                     <div class="col-md-4">
                                         <plex-select label="Barrio" placeholder="Seleccione.." [(ngModel)]="pacienteModel.direccion[0].ubicacion.barrio"
                                             name="barrio" [data]="barriosNeuquen" labelField="nombre">
