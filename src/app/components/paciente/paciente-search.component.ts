@@ -252,7 +252,6 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                     }).subscribe(resultado => {
                         this.loading = false;
                         this.resultado = resultado;
-                        this.resultado = resultado.filter(elem => (elem.activo));
                         this.esEscaneado = true;
                         // Encontramos un matcheo al 100%
                         if (resultado.length) {
@@ -271,7 +270,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                                 fechaNacimiento: pacienteEscaneado.fechaNacimiento,
                                 escaneado: true
                             }).subscribe(resultSuggest => {
-                                this.pacientesSimilares = resultSuggest.filter(elem => (elem.activo));
+                                this.pacientesSimilares = resultSuggest;
                                 if (this.pacientesSimilares.length > 0) {
                                     let pacienteEncontrado = this.pacientesSimilares.find(valuePac => {
                                         if (valuePac.paciente.scan && valuePac.paciente.scan === this.textoLibre) {
@@ -332,8 +331,8 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                         type: 'multimatch',
                         cadenaInput: this.textoLibre
                     }).subscribe(resultado => {
+                        this.resultado = resultado;
                         this.loading = false;
-                        this.resultado = resultado.filter(elem => (elem.activo));
                         this.esEscaneado = false;
                         this.mostrarNuevo = this.auth.check('mpi:nuevoPaciente');
                     }, (err) => {
