@@ -31,18 +31,18 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     @Input('practicasEjecucion')
     set pjs(practicasEjecucion) {
         this.practicasEjecucion = practicasEjecucion;
-        if (this.modo === 'carga' || this.modo === 'validacion') {
+        // if (this.modo === 'carga' || this.modo === 'validacion') {
             this.cargarListaPracticaCarga().then(() => {
-                if (this.modo === 'validacion') {
+                // if (this.modo === 'validacion') {
                     this.cargarResultadosAnteriores();
-                }
+                // }
             });
-        } else {
+        // } else {
             this.cargarPracticasVista();
-            if (this.modo === 'control') {
-                this.cargarResultadosAnterioresPV();
-            }
-        }
+            // if (this.modo === 'control') {
+                // this.cargarResultadosAnterioresPV();
+            // }
+        // }
     }
 
     @Input() editarListaPracticas;
@@ -83,7 +83,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
             let ids = this.practicasEjecucion.map((reg) => { return reg._id; });
 
             this.servicioPractica.findByIdsCompletas(ids).subscribe((res) => {
-                let cargarPracticas = (registos, practicas, nivelTab) => {
+                let cargarPracticas = (registos, practicas) => {
                     if (registos.length > 0) {
                         for (const reg of registos) {
 
@@ -95,17 +95,21 @@ export class TablaDatalleProtocoloComponent implements OnInit {
                                 let matchArea = !this.busqueda.areas || (this.busqueda.areas.length === 0) || this.busqueda.areas.some(id => id === match.area.id);
 
                                 if (matchArea) {
+                                    let margen = [];
+                                    for (let i = 0; i < reg.valor.nivel; i++) {
+                                        margen.push({});
+                                    }
                                     this.practicasCarga.push({
                                         registro: reg,
                                         practica: match,
-                                        margen: []
+                                        margen: margen
                                     });
                                 }
                             }
                         }
                     }
                 };
-                cargarPracticas(this.practicasEjecucion, res, 0);
+                cargarPracticas(this.practicasEjecucion, res);
                 resolve();
             });
         });
@@ -363,6 +367,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
             nombre: practica.nombre,
             concepto: practica.concepto,
             valor: {
+                nivel: practica.nivel,
                 resultado: {
                     valor: null,
                     sinMuestra: false,

@@ -3,7 +3,7 @@
         <plex-datetime type="date" [(ngModel)]="modelo.ejecucion.fecha" name="fecha" label="Fecha" [required]="true"></plex-datetime>
         <plex-datetime type="date" [(ngModel)]="solicitudProtocolo.solicitudPrestacion.fechaTomaMuestra" name="fechaTomaMuestra"
             label="Fecha de la Muestra" [required]="true"></plex-datetime>
-        <plex-datetime type="date" [(ngModel)]="modelo.solicitud.fech" name="fecha" label="Fecha de Solicitud"
+        <plex-datetime type="date" [(ngModel)]="modelo.solicitud.fecha" name="fecha" label="Fecha de Solicitud"
             [required]="true"></plex-datetime>
         <plex-select [(ngModel)]="modelo.solicitud.organizacion" (getData)="loadOrganizaciones($event)" labelField="nombre"
             placeholder="Seleccione..." label="Efector Solicitante" [required]="true">

@@ -60,21 +60,23 @@
                         </ng-container>
                     </plex-button>
                     <!-- <plex-button class="ml-1" type="success" size="sm" (click)="seleccionarProtocolo(protocolo, i)">
-                    <i class="mdi mdi-file-document"></i>
-                </plex-button> -->
+                        <i class="mdi mdi-file-document"></i>
+                    </plex-button> -->
                 </span>
             </ng-container>
         </ng-container>
+
+        <ng-container *ngIf="showProtocoloDetalle">
+            <span *ngIf='modo !== "puntoInicio" && protocolo?.paciente?.sexo ==="femenino"'><i class="mdi mdi-gender-female"></i></span>
+            <span *ngIf='modo !== "puntoInicio" && protocolo?.paciente?.sexo ==="masculino"'><i class="mdi mdi-gender-male"></i></span>
+            <span *ngIf='modo !== "puntoInicio" && modo !== "recepcion"'>
+                {{ protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto }}
+            </span>
+            <span>{{ protocolo.solicitud.fecha | fecha }}</span>
+        </ng-container>
     </div>
 
-    <ng-container *ngIf="showProtocoloDetalle">
-        <span *ngIf='modo !== "puntoInicio" && protocolo?.paciente?.sexo ==="femenino"'><i class="mdi mdi-gender-female"></i></span>
-        <span *ngIf='modo !== "puntoInicio" && protocolo?.paciente?.sexo ==="masculino"'><i class="mdi mdi-gender-male"></i></span>
-        <span *ngIf='modo !== "puntoInicio" && modo !== "recepcion"'>
-            {{ protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto }}
-        </span>
-        <span>{{ protocolo.solicitud.fecha | fecha }}</span>
-    </ng-container>
+
 
 </ng-container>
 <!--VISUALIZACIÓN DE PROTOCOLOS CONTROL -->

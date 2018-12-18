@@ -24,10 +24,12 @@ export class GestorProtocolosComponent implements OnInit {
     public showProtocoloDetalle: Boolean = false;
     public showCargarSolicitud: Boolean = false;
     public edicionDatosCabecera: Boolean;
-    public showBotonesGuardar: Boolean = false;
+    public showBotonGuardar: Boolean = false;
     public mostrarCuerpoProtocolo: Boolean = true;
     public ocultarPanelLateral: Boolean = false;
     public editarListaPracticas: Boolean = false;
+    public showBotonAceptar: Boolean = false;
+
     public areas = [];
 
     public protocolos: any[];
@@ -80,6 +82,7 @@ export class GestorProtocolosComponent implements OnInit {
         if (!this.protocolo) {
             this.resetearProtocolo({});
         }
+        this.showBotonAceptar = true;
         this.routeParams = this.route.params.subscribe(params => {
             console.log(params);
             if (params['id']) {
@@ -136,7 +139,7 @@ export class GestorProtocolosComponent implements OnInit {
             solicitud: {
                 esSolicitud: true,
                 tipoPrestacion: null,
-                organizacion: {},
+                organizacion: this.auth.organizacion,
                 profesional: {},
                 ambitoOrigen: null,
                 fecha: new Date(),
@@ -203,7 +206,6 @@ export class GestorProtocolosComponent implements OnInit {
             this.seleccionPaciente = false;
             this.showCargarSolicitud = true;
             this.ocultarPanelLateral = (this.modo === 'recepcion') || (this.modo === 'puntoInicio');
-            this.showBotonesGuardar = (this.modo !== 'recepcion');
         }
     }
 
@@ -223,7 +225,6 @@ export class GestorProtocolosComponent implements OnInit {
             this.showCargarSolicitud = false;
             this.ocultarPanelLateral = false;
             this.seleccionPaciente = false;
-            this.showBotonesGuardar = false;
         }
     }
 
@@ -244,6 +245,7 @@ export class GestorProtocolosComponent implements OnInit {
             this.indexProtocolo = 0;
             this.seleccionPaciente = true;
             this.mostrarCuerpoProtocolo = true;
+            this.showBotonAceptar = true;
         }
 
         // this.mostrarCuerpoProtocolo = (this.modo === 'control') || (this.modo === 'carga') || (this.modo === 'validacion') || (this.modo === 'puntoInicio');
@@ -255,9 +257,36 @@ export class GestorProtocolosComponent implements OnInit {
         //     this.showBotonesGuardar = (this.modo !== 'recepcion');
     }
 
-    mostrarBotonesGuardarProtocoloFooter($event) {
-        this.showBotonesGuardar = $event;
+    // mostrarBotonesGuardarProtocoloFooter($event) {
+    //     this.showBotonesGuardar = $event;
+    // }
+
+    /**
+     *
+     *
+     * @memberof GestorProtocolosComponent
+     */
+    aceptarCambios() {
+        if (this.modoAVolver !== '') {
+            // this.showProtocoloDetalle = true;
+            // this.modo = this.modoAVolver;
+            // this.modoAVolver = '';
+            // this.ocultarPanelLateral = false;
+            // this.showBotonAceptar = true;
+            // this.showListarProtocolos = false;
+            // guardarSolicitudYVolver() {
+        this.ocultarPanelLateral = false;
+        this.modo = this.modoAVolver;
+        this.protocoloDetalleComponent.guardarSolicitudYVolver(this.modoAVolver);
+        this.modoAVolver = '';
+    // }
+        } else {
+            this.showBotonAceptar = false;
+            this.showBotonGuardar = true;
+            this.protocoloDetalleComponent.aceptarEdicionCabecera();
+        }
     }
+
 
     /**
      * Guarda en el local storage del browser la selección de filtros de búsqueda para futuras búsquedas
@@ -291,13 +320,8 @@ export class GestorProtocolosComponent implements OnInit {
         this.ocultarPanelLateral = true;
         this.modoAVolver = this.modo;
         this.modo = 'control';
-    }
-
-    guardarSolicitudYVolver() {
-        this.ocultarPanelLateral = false;
-        this.modo = this.modoAVolver;
-        this.protocoloDetalleComponent.guardarSolicitudYVolver(this.modoAVolver);
-        this.modoAVolver = '';
+        this.showBotonAceptar = true;
+        console.log('showListarProtocolos', this.showListarProtocolos, 'showProtocoloDetalle', this.showProtocoloDetalle);
     }
 
     guardarSolicitud() {

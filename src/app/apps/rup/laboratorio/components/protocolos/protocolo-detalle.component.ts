@@ -35,6 +35,7 @@ export class ProtocoloDetalleComponent
     flagMarcarTodas: Boolean = false;
     nombrePractica;
     codigoPractica;
+    public showBotonesGuardar: Boolean = false;
     public mostrarMasOpciones: Boolean = false;
     public pacientes;
     public pacienteActivo;
@@ -82,6 +83,7 @@ export class ProtocoloDetalleComponent
         this.modelo = value;
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
         this.practicasEjecucion = this.modelo.ejecucion.registros;
+        this.showBotonesGuardar = (this.modo !== 'recepcion');
 
         if (this.practicasEjecucion.length > 0 && (this.modo === 'puntoInicio' || this.modo === 'recepcion' || this.modo === 'control')) {
             this.cargarCodigosPracticas();
@@ -216,6 +218,7 @@ export class ProtocoloDetalleComponent
         this.seleccionPaciente = false;
         this.mostrarCuerpoProtocolo = true;
         this.mostrarCuerpoProtocoloEmit.emit(this.mostrarCuerpoProtocolo);
+        this.showBotonesGuardar = true;
     }
 
     estaSeleccionado(protocolo) {
