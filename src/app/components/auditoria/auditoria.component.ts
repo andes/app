@@ -301,9 +301,7 @@ export class AuditoriaComponent implements OnInit {
     desactivar(pac: IPaciente, index: number) {
         // si el paciente tiene otros pacientes en su array de identificadores, no lo podemos desactivar
         if (pac.identificadores && pac.identificadores.filter(identificador => identificador.entidad === 'ANDES').length > 0) {
-            this.plex.info('warning', 'Existen otros pacientes vinculados a este paciente', 'No Permitido').subscribe(
-                () => { return null; }
-            );
+            this.plex.info('warning', 'Existen otros pacientes vinculados a este paciente', 'No Permitido');
         } else {
             this.pacienteService.disable(pac).subscribe(res => {
                 this.pacientes.splice(index, 1);
