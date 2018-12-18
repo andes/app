@@ -63,7 +63,7 @@ export class ListarSolicitudesComponent implements OnInit {
     public _listarCarpetas;
 
     get cssLayout() {
-        return { 'col-9': this.verPrestar || this.verSolicitudManual, 'col': !this.verSolicitudManual && !this.verPrestar };
+        return { 'col-9': this.verPrestar || this.verSolicitudManual || this.verNuevaCarpeta, 'col': !this.verSolicitudManual && !this.verPrestar };
     }
 
     get listaCarpetasInput(): any {
