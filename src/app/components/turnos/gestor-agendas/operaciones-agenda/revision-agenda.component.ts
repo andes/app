@@ -373,7 +373,7 @@ export class RevisionAgendaComponent implements OnInit {
      * @param {any} reparo
      * @memberof RevisionAgendaComponent
      */
-    repararDiagnostico(reparo) {
+    repararDiagnostico(reparo: any) {
         if (reparo) {
             this.diagnosticos[this.indiceReparo].codificacionAuditoria = reparo;
             this.showReparo = false;
