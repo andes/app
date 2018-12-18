@@ -102,6 +102,10 @@ export class VistaHudsComponent implements OnInit {
         return false;
     }
 
+    public onCloseTab($event) {
+        this.registrosHuds.splice($event, 1);
+    }
+
 
     agregarListadoHuds(elemento) {
         if (elemento.tipo === 'prestacion') {
@@ -131,11 +135,6 @@ export class VistaHudsComponent implements OnInit {
     volver(ruta = null) {
         ruta = ruta ? ruta : 'rup';
         this.router.navigate([ruta]);
-    }
-
-    // recibe el tab que se clikeo y lo saca del array..
-    cerrartab($event) {
-        this.registrosHuds.splice($event, 1);
     }
 
     evtCambiaPaciente() {

@@ -13,7 +13,7 @@ export class SeleccionBinariaComponent extends RUPComponent implements OnInit {
     public label;
 
     ngOnInit() {
-        this.label = this.params.title ? this.params.title : this.registro.concepto.term;
+        this.label = this.params && this.params.title ? this.params.title : this.registro.concepto.term;
         this.options = this.params.defaultOptions;
         if (!this.registro.valor) {
             this.registro.valor = null;
@@ -24,6 +24,7 @@ export class SeleccionBinariaComponent extends RUPComponent implements OnInit {
 
     onChange() {
         this.registro.valor = this.options.find(i => i.id === this.valor);
+        this.emitChange();
     }
 
 }
