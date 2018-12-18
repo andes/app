@@ -170,7 +170,7 @@ export class ClonarAgendaComponent implements OnInit {
                 if (filtro.length === 0) {
                     this.seleccionados.push(dia.fecha.getTime());
                 } else {
-                    // contatenamos en agendasFiltradas las agendas del nuevo día seleccionado y luego verificamos conflictos
+                    // concatenamos en agendasFiltradas las agendas del nuevo día seleccionado y luego verificamos conflictos
                     filtro.forEach((fil) => {
                         let aux = this.agendasFiltradas.map(elem => { return elem.id; });
                         if (aux.indexOf(fil.id) < 0) {
@@ -238,22 +238,6 @@ export class ClonarAgendaComponent implements OnInit {
         return false;
     }
 
-    // combinarFechas(fecha1, fecha2) {
-    //     if (fecha1 && fecha2) {
-    //         let horas: number;
-    //         let minutes: number;
-    //         let auxiliar: Date;
-
-    //         auxiliar = new Date(fecha1);
-    //         horas = fecha2.getHours();
-    //         minutes = fecha2.getMinutes();
-    //         auxiliar.setHours(horas, minutes, 0, 0);
-    //         return auxiliar;
-    //     } else {
-    //         return null;
-    //     }
-    // }
-
     public clonar() {
         if (this.seleccionados.length > 1) { // >1 porque el primer elemento es la agenda original
             this.plex.confirm('¿Está seguro que desea realizar la clonación?').then(conf => {
@@ -265,7 +249,7 @@ export class ClonarAgendaComponent implements OnInit {
                         clones: this.seleccionados
                     };
                     this.serviceAgenda.clonar(data).subscribe(resultado => {
-                        this.plex.info('success', 'La Agenda se clonó correctamente').then(ok => {
+                        this.plex.info('success', 'La Agenda se clonó correctamente').then(() => {
                             this.volverAlGestor.emit(true);
                         });
                     },
