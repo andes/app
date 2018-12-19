@@ -1,4 +1,4 @@
-import { ITipoPrestacion } from "./../../../../interfaces/ITipoPrestacion";
+import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
 import { OrganizacionService } from './../../../../services/organizacion.service';
 import { Component, EventEmitter, Output, OnInit, Input, HostBinding, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
