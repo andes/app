@@ -5,12 +5,11 @@
             label="Fecha de la Muestra" [required]="true"></plex-datetime>
         <plex-datetime type="date" [(ngModel)]="modelo.solicitud.fecha" name="fecha" label="Fecha de Solicitud"
             [required]="true"></plex-datetime>
-        <plex-select [(ngModel)]="modelo.solicitud.organizacion" (getData)="loadOrganizaciones($event)" labelField="nombre"
-            placeholder="Seleccione..." label="Efector Solicitante" [required]="true">
+        <plex-select [(ngModel)]="modelo.solicitud.organizacion" label="Organizacion" placeholder="Seleccione organizacion"
+            (getData)="loadOrganizaciones($event)" labelField='nombre'>
         </plex-select>
-        <plex-select [(ngModel)]="modelo.solicitud.profesional" name="profesional" label="Profesional Solicitante"
-            (getData)="loadProfesionales($event)" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre"
-            [required]="true">
+        <plex-select [(ngModel)]="modelo.solicitud.profesional" (getData)="loadProfesionales($event)"
+            name="profesional" label="Profesional" placeholder="Buscar un profesional" labelField="apellido + ' ' + nombre" >
         </plex-select>
         <plex-select [(ngModel)]="modelo.solicitud.ambitoOrigen" name="ambitoOrigen" (getData)="loadOrigen($event)"
             label="Origen" placeholder="Seleccione el origen" [required]="true">

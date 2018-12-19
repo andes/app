@@ -153,7 +153,6 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     }
 
     cargarResultadosAnterioresPV() {
-        console.log('cargarResultadosAnterioresPV');
         this.practicasVista.forEach((practicaVista) => {
             this.servicioProtocolo.getResultadosAnteriores(this.modelo.paciente.id, practicaVista.concepto.conceptId).subscribe(resultadosAnteriores => {
                 practicaVista.resultadosAnteriores = resultadosAnteriores;

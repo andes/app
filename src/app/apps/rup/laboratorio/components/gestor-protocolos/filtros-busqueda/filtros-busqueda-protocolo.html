@@ -28,11 +28,11 @@
             [data]='areas'></plex-select>
     </span>
     <span>
-        <plex-select [(ngModel)]="prioridad" (change)="buscarProtocolos($event,'prioridad')" name="prioridad" label="Prioridad"
+        <plex-select [(ngModel)]="busqueda.prioridad" (change)="buscarProtocolos($event,'prioridad')" name="prioridad" label="Prioridad"
             [data]="prioridadesFiltroEnum"></plex-select>
     </span>
     <span>
-        <plex-select [(ngModel)]="origen" (change)="buscarProtocolos($event,'origen')" name="origen" label="Origen"
+        <plex-select [(ngModel)]="busqueda.origen" (change)="buscarProtocolos($event,'origen')" name="origen" label="Origen"
             [data]="origenEnum"></plex-select>
     </span>
     <div>
@@ -56,8 +56,8 @@
             </plex-select>
         </span>
         <span *ngIf='modo !== "carga" && modo !== "recepcion"'>
-            <plex-select [(ngModel)]="servicio" name="servicio" (getData)="loadServicios($event)" (change)="buscarProtocolos($event,'servicio')"
-                label="Servicio" placeholder="Seleccione el servicio" labelField="term" [required]="false" idField="term">
+            <plex-select [(ngModel)]="servicios" name="servicio" (getData)="loadServicios($event)" (change)="buscarProtocolos($event,'servicio')"
+                label="Servicio" placeholder="Seleccione el servicio" labelField="term" [required]="false" idField="term" [multiple]=true>
             </plex-select>
         </span>
         <ng-container *ngIf='modo !== "recepcion"'>

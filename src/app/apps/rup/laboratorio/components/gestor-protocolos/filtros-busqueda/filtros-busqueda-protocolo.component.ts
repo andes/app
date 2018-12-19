@@ -27,7 +27,6 @@ export class FiltrosBusquedaProtocoloComponent
     public estadosFiltroEnum;
     public estadosValFiltroEnum;
     public hojaTrabajo;
-
     public pacientes;
     public pacienteActivo;
     public cargaLaboratorioEnum;
@@ -36,15 +35,8 @@ export class FiltrosBusquedaProtocoloComponent
     public laboratorioInternoEnum;
     public indexProtocolo;
     public turnosRecepcion;
-    public origen = null;
-    public area = null;
     public areas = [];
-    public prioridad = null;
-    public servicio = null;
-    public estado;
-    public organizacion;
-    public numProtocoloDesde;
-    public numProtocoloHasta;
+    public servicios = [];
     public busqueda = {
         solicitudDesde: new Date(),
         solicitudHasta: new Date(),
@@ -107,13 +99,17 @@ export class FiltrosBusquedaProtocoloComponent
     buscarProtocolos($event?, tipo?) {
         if (tipo) {
             if (tipo === 'area') {
-                this.busqueda.areas = [this.busqueda.area.id];
+                this.busqueda.areas = this.busqueda.area ? [this.busqueda.area.id] : null;
             } else if (tipo === 'hojaTrabajo') {
-                // this.busqueda.areas = this.hojaTrabajo ? [this.hojaTrabajo.area.id] : [];
                 this.busqueda.practicas = this.hojaTrabajo ? this.hojaTrabajo.practicas.map(p => { return p.id; }) : [];
+            } else if (tipo === 'origen') {
+                this.busqueda.origen = this.busqueda.origen ? this.busqueda.origen.id : null;
+            } else if (tipo === 'prioridad') {
+                this.busqueda.prioridad = this.busqueda.prioridad ? this.busqueda.prioridad.id : null;
+            } else if (tipo === 'servicio') {
+                this.busqueda.servicio = this.servicios.map( (e: any) => { return e.id; } );
             }
         }
-        console.log('adds', tipo, this.busqueda.practicas);
         this.buscarProtocolosEmmiter.emit(this.busqueda);
     }
 
@@ -162,7 +158,7 @@ export class FiltrosBusquedaProtocoloComponent
      *
      *
      * @param {*} $event
-     * @membero f FiltrosBusquedaProtocoloComponent
+     * @memberof FiltrosBusquedaProtocoloComponent
      */
     cambiarModoCarga($event) {
         // if ($event.value === 'Lista de protocolos') {
@@ -172,9 +168,7 @@ export class FiltrosBusquedaProtocoloComponent
          if ($event.value === 'Hoja de trabajo') {
             this.showSelectHojaTrabajo = true;
             this.showSelectPracticas = false;
-        }
-
-        else {
+        } else {
             this.showSelectHojaTrabajo = false;
         }
     }

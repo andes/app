@@ -10,6 +10,7 @@
             <!-- LISTA DE PROTOCOLOS -->
             <lista-protocolos [protocolos]='protocolos' [modo]='modo' (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)'
                 [showProtocoloDetalle]='showProtocoloDetalle'></lista-protocolos>
+
             <!--VISUALIZACIÓN DE PROTOCOLOS CONTROL -->
             <div *ngIf="!protocolos?.length" class="alert alert-default">
                 <i class="mdi mdi-emoticon-sad"></i> No hay protocolos que coincidan con los filtros de búsqueda
@@ -46,7 +47,6 @@
             </header>
         </plex-layout-main>
         <plex-layout-sidebar *ngIf="!showListarProtocolos">
-           XXX 
             <header>
                 <div class="clearfix row">
                     <div class="page-title float-left col">
@@ -58,26 +58,30 @@
                             <ng-container *ngIf="modo === 'validacion'">Validación de Resultados</ng-container>
                         </ng-container>
                     </div>
-                    
+
                     <ng-container *ngIf='modo === "carga" || modo === "validacion"' class="col-2">
                         <plex-button position="right" type="warning" label="Auditar" class="mr-3" (click)="volverAControl()"></plex-button>
                     </ng-container>
 
                     <div class="col d-flex flex-row-reverse" *ngIf="showProtocoloDetalle">
-                        <plex-button *ngIf="showBotonAceptar" position="right" type="success"
-                            label="Aceptar" (click)="aceptarCambios()"></plex-button>
+                        <plex-button *ngIf="showBotonAceptar" position="right" type="success" label="Aceptar" (click)="aceptarCambios()"></plex-button>
                         <plex-button position="left" type="warning" (click)="volverLista()" label="Volver"></plex-button>
                     </div>
 
-                    <ng-container *ngIf='modo !== "validacion" && showBotonGuardar'>
-                        <plex-button position="right" class="float-right mr-1" type="success" label="Guardar" (click)="guardarSolicitud()"></plex-button>
-                        <plex-button position="right" class="float-right mr-1" type="success" label="Guardar + CB" (click)="guardarSolicitud()"></plex-button>
-                    </ng-container>
-                    ​
-                    <ng-container *ngIf='modo === "validacion" && showBotonesGuardar && !ocultarPanelLateral'>
-                        <plex-button position="right" class="float-right mr-1" type="success" label="Validar todos" (click)="guardarSolicitud()"></plex-button>
-                        <plex-button position="right" class="float-right mr-1" type="success" label="Validar pendientes"
-                            (click)="guardarSolicitud()"></plex-button> ​
+                    <ng-container *ngIf='showBotonGuardar'>
+                        <ng-container *ngIf='modo !== "validacion" '>
+                            <plex-button position="right" class="float-right mr-1" type="success" label="Guardar"
+                                (click)="guardarSolicitud()"></plex-button>
+                            <plex-button position="right" class="float-right mr-1" type="success" label="Guardar + CB"
+                                (click)="guardarSolicitud()"></plex-button>
+                        </ng-container>
+                        ​
+                        <ng-container *ngIf='modo === "validacion" '>
+                            <plex-button position="right" class="float-right mr-1" type="success" label="Validar todos"
+                                (click)="guardarSolicitud()"></plex-button>
+                            <plex-button position="right" class="float-right mr-1" type="success" label="Validar pendientes"
+                                (click)="guardarSolicitud()"></plex-button> ​
+                        </ng-container>
                     </ng-container>
 
                 </div>
