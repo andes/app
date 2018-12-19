@@ -44,7 +44,6 @@ import { MapaEspacioFisicoVistaComponent } from './components/turnos/configuraci
 // ... MPI
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
-import { Auditoria2Component } from './components/auditoria/auditoria2.component';
 
 // ... Obras sociales
 import { PucoComponent } from './components/puco/puco.component';
@@ -89,6 +88,7 @@ import { VisualizacionReglasComponent } from './components/top/reglas/visualizac
 // Home de Estadisticas
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
 import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
+import { VincularPacientesComponent } from './components/auditoria/vincular-pacientes.component';
 
 
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
@@ -109,10 +109,9 @@ const appRoutes: Routes = [
   { path: 'tm/mapa_espacio_fisico', component: MapaEspacioFisicoVistaComponent, canActivate: [RoutingGuard] },
 
   // MPI
-  { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'mpi/auditoria', component: AuditoriaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'mpi/auditoria2', component: Auditoria2Component, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'apps/mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
+  { path: 'apps/mpi/auditoria/vincular-pacientes', component: VincularPacientesComponent, canActivate: [RoutingGuard] },
+  { path: 'apps/mpi/auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
 
   // Obras sociales
   { path: 'puco', component: PucoComponent },
@@ -173,11 +172,7 @@ const appRoutes: Routes = [
   { path: 'top/reglas', component: ReglasComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'top/reglasVisualizacion', component: VisualizacionReglasComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
-  // RUTAS LEGACY --- Deshabilitar una vez migradas al nuevo esquema rup/xxx , citas/xxx
-  /* ELIMINAR ==> */ { path: 'pacientes', component: PacienteSearchComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  /* ELIMINAR ==> */ { path: 'auditoria', component: AuditoriaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  /* ELIMINAR ==> */ { path: 'auditoria2', component: Auditoria2Component, canActivate: [RoutingNavBar, RoutingGuard] },
-  /* ELIMINAR ==> */ { path: 'dashboard', component: DashboardComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  /* ELIMINAR ==> */ { path: 'dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },
 
   // TODO: Verificar si estas rutas todavía son válidas, y ubicarlas en los módulos correspondientes
   /* VERIFICAR ==> */ { path: 'tipoprestaciones', component: TipoPrestacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
