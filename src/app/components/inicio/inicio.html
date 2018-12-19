@@ -1,10 +1,10 @@
 <section>
     <plex-box>
         <div class="text-center">
-            <div class="logo"></div>            
+            <div class="logo"></div>
             <div *ngIf="!denied" class="andes-inicio row">
                 <div *ngIf="mpi" class="col-xs-12 col-sm-6 col-md-4">
-                    <div class="boton color-celeste" routerLink="/mpi">
+                    <div class="boton color-celeste" routerLink="/apps/mpi">
                         <i class="icono mdi mdi-account-multiple-outline"></i>
                         <div class="titulo">MPI</div>
                         <div class="subtitulo">Indice Maestro
@@ -43,7 +43,7 @@
                             <br>de prestaciones de pacientes</div>
                     </div>
                 </div>
-                
+
                 <div *ngIf="prestamosHC" class="col-xs-12 col-sm-6 col-md-4">
                     <div class="boton color-amarillo" routerLink="/prestamosHC">
                         <i class="icono mdi mdi-folder"></i>
@@ -54,7 +54,7 @@
                             <br>de las carpetas de Historias Clínicas de los pacientes</div>
                     </div>
                 </div>
-                    
+
                 <!-- <div *ngIf="internacion" class="col-xs-12 col-sm-6 col-md-4">
                     <div class="boton color-verde" routerLink="/internacion/camas">
                         <i class="icono mdi mdi-hotel"></i>
@@ -64,7 +64,7 @@
                             <br />de los distintos servicios de la organización</div>
                     </div>
                 </div> -->
-    
+
                 <div *ngIf="internacionEpicrisis" class="col-xs-12 col-sm-6 col-md-4">
                     <div class="boton color-verde" routerLink="/internacion/inicio">
                         <i class="icono mdi mdi-hotel"></i>
@@ -74,7 +74,7 @@
                     </div>
                 </div>
             </div>
- 
+
 
             <div *ngIf="denied" class="row">
                 <div class="col">

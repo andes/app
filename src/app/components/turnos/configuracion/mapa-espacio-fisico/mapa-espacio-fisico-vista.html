@@ -1,0 +1,44 @@
+<plex-layout [main]="seleccionada ? 8 : 12">
+    <plex-layout-main>
+        <header>
+            <form #formulario="ngForm">
+                <div class="row">
+                    <div class="col-md-3">
+                        <plex-datetime type="date" [(ngModel)]="filtros.fecha" [required]="true" name="fechaFiltro"
+                            label="Fecha">
+                        </plex-datetime>
+                    </div>
+                    <div class="col-md-3">
+                        <plex-select [(ngModel)]="filtros.edificio" [required]="true" name="edificio" [data]="listadoEdificios"
+                            label="Edificio" labelField="descripcion">
+                        </plex-select>
+                    </div>
+                    <div class="col-md-3">
+                        <plex-text [(ngModel)]="filtros.nombre" label="Espacio físico" name="nombre" placeholder="Filtrar por nombre">
+                        </plex-text>
+                    </div>
+                    <div class="col-md-3">
+                        <br>
+                        <plex-button class="mr-1" type="primary" label="Buscar" [validateForm]="formulario" (click)="matrizEspaciosFisicos($event.formValid)">
+                        </plex-button>
+                        <plex-button *ngIf="permisoEdicion" type="primary" label="Configurar Espacios" (click)="routeEspaciosFisicos()"></plex-button>
+
+                    </div>
+                </div>
+            </form>
+        </header>
+        <div class="row">
+            <div class="col">&nbsp;</div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <mapa-espacio-fisico *ngIf="listadoEspaciosFisicos && listadoAgendas" [agendaSeleccionada]="null"
+                    [agendasTable]="listadoAgendas" [espacioTable]="listadoEspaciosFisicos" (agendaVista)="visualizarDetalleAgenda($event)"
+                    [fecha]="filtros.fecha"></mapa-espacio-fisico>
+            </div>
+        </div>
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <detalle-agenda *ngIf="agendaSeleccionada" [agenda]="agendaSeleccionada"></detalle-agenda>
+    </plex-layout-sidebar>
+</plex-layout>
