@@ -13,6 +13,7 @@ import { Slug } from 'ng2-slugify';
 import { saveAs } from 'file-saver';
 import * as moment from 'moment';
 import 'rxjs/Rx';
+import { CodificacionService } from '../../services/codificacion.service';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -112,7 +113,8 @@ export class PrestacionValidacionComponent implements OnInit {
         public plex: Plex, public auth: Auth, private router: Router,
         public servicioAgenda: AgendaService,
         private route: ActivatedRoute,
-        private servicioDocumentos: DocumentosService
+        private servicioDocumentos: DocumentosService,
+        private codificacionService: CodificacionService
     ) {
     }
 
@@ -310,6 +312,10 @@ export class PrestacionValidacionComponent implements OnInit {
                                 let filtroRegistros = this.prestacion.ejecucion.registros.filter(x => result.find(y => y.conceptId === x.concepto.conceptId));
                                 if (this.prestacion.solicitud.turno && !(filtroRegistros && filtroRegistros.length > 0)) {
                                     this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
+                                } else {
+                                    if (!this.prestacion.solicitud.turno) {
+                                        this.codificacionService.addCodificacion(prestacion.id).subscribe();
+                                    }
                                 }
                             });
                     }
