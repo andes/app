@@ -481,7 +481,7 @@ export class ListarSolicitudesComponent implements OnInit {
         if (carpetas) {
             let carpetaNueva = carpetas.find(x => x.organizacion._id === this.auth.organizacion.id);
             let msj = `Nro de Carpeta ${carpetaNueva.nroCarpeta} asignada a ${this.paciente.apellido}, ${this.paciente.nombre}`;
-            this.plex.alert(msj);
+            this.plex.info('warning', msj);
         } else {
             this.verNuevaCarpeta = false;
         }
