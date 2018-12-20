@@ -106,8 +106,8 @@ export class ProtocoloEncabezadoEdicionComponent implements OnInit {
     loadProfesionales($event) {
         if ($event.query) {
             this.servicioProfesional.get({ nombreCompleto: $event.query }).subscribe($event.callback);
-        } else {
-            $event.callback(this.modelo.solicitud.profesional ? this.modelo.solicitud.profesional : []);
+        } else if (this.modelo.solicitud.profesional && this.modelo.solicitud.profesional.id) {
+            $event.callback(this.modelo.solicitud.profesional);
         }
     }
 

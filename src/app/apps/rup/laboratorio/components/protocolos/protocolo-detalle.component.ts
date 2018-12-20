@@ -48,6 +48,7 @@ export class ProtocoloDetalleComponent
     @Output() newSolicitudEmitter: EventEmitter<any> = new EventEmitter<any>();
     @Output() volverAListaControEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
     @Output() mostrarCuerpoProtocoloEmit = new EventEmitter<any>();
+    @Output() edicionDatosCabeceraEmitter = new EventEmitter<any>();
 
     @Input() edicionDatosCabecera: Boolean;
     @Input() seleccionPaciente: Boolean;
@@ -204,7 +205,10 @@ export class ProtocoloDetalleComponent
         this.edicionDatosCabecera = true;
         this.mostrarCuerpoProtocolo = false;
         this.seleccionPaciente = false;
+        this.showBotonesGuardar = false;
         this.mostrarCuerpoProtocoloEmit.emit(this.mostrarCuerpoProtocolo);
+
+        this.edicionDatosCabeceraEmitter.emit();
     }
 
     /**
@@ -419,8 +423,7 @@ export class ProtocoloDetalleComponent
         }
     }
 
-    async guardarSolicitud() {
-        this.modelo.solicitud.ambitoOrigen = this.modelo.solicitud.ambitoOrigen.id;
+    guardarSolicitud() {
         this.modelo.solicitud.tipoPrestacion = Constantes.conceptoPruebaLaboratorio;
 
         if (this.modo === 'control' || this.modo === 'recepcion') {

@@ -231,6 +231,16 @@ export class GestorProtocolosComponent implements OnInit {
     }
 
     /**
+     *
+     *
+     * @memberof GestorProtocolosComponent
+     */
+    editarDatosCabecera() {
+        this.showBotonAceptar = true;
+        this.showBotonGuardar = false;
+    }
+
+    /**
      * Cambia configuración de paneles para modo recepción paciente sin turno
      *
      * @memberof PuntoInicioLaboratorioComponent

@@ -28,8 +28,8 @@
             [data]='areas'></plex-select>
     </span>
     <span>
-        <plex-select [(ngModel)]="busqueda.prioridad" (change)="buscarProtocolos($event,'prioridad')" name="prioridad" label="Prioridad"
-            [data]="prioridadesFiltroEnum"></plex-select>
+        <plex-select [(ngModel)]="busqueda.prioridad" (change)="buscarProtocolos($event,'prioridad')" name="prioridad"
+            label="Prioridad" [data]="prioridadesFiltroEnum"></plex-select>
     </span>
     <span>
         <plex-select [(ngModel)]="busqueda.origen" (change)="buscarProtocolos($event,'origen')" name="origen" label="Origen"
@@ -46,9 +46,11 @@
 <!-- FILTROS AVANZADOS-->
 <ng-container *ngIf="mostrarMasOpciones">
     <div class="filtros-container">
-        <div>
-            <plex-text [(ngModel)]="paciente" name="paciente" (change)="filtrarPaciente()" label="Paciente"></plex-text>
-        </div>
+        <span>
+            <plex-select [(ngModel)]="paciente" name="paciente" (getData)="loadPacientes($event)" (change)="buscarProtocolos($event,'paciente')"
+                label="Paciente" placeholder="Ingrese paciente" labelField="nombre + ' ' + apellido" [required]="false"></plex-select>
+        </span>
+
         <span *ngIf='modo ==="carga"'>
             <plex-select [(ngModel)]="servicio" name="servicio" (getData)="loadServicios($event)" (change)="buscarProtocolos($event,'servicio')"
                 label="Servicio" placeholder="Seleccione el servicio" labelField="term" [multiple]="true" [required]="false"
@@ -57,7 +59,8 @@
         </span>
         <span *ngIf='modo !== "carga" && modo !== "recepcion"'>
             <plex-select [(ngModel)]="servicios" name="servicio" (getData)="loadServicios($event)" (change)="buscarProtocolos($event,'servicio')"
-                label="Servicio" placeholder="Seleccione el servicio" labelField="term" [required]="false" idField="term" [multiple]=true>
+                label="Servicio" placeholder="Seleccione el servicio" labelField="term" [required]="false" idField="term"
+                [multiple]=true>
             </plex-select>
         </span>
         <ng-container *ngIf='modo !== "recepcion"'>

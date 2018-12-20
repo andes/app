@@ -26,8 +26,7 @@
                 {{ protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto }}
             </span>
             <span>{{ protocolo.solicitud.fecha | fecha }}</span>
-            <!-- <plex-button *ngIf='showProtocoloDetalle' icon="arrow-right-drop-circle-outline" class="float-right mr-2" (click)="editarDatosCabecera()"> -->
-            <!-- </plex-button> -->
+    
             <ng-container>
                 <span>{{protocolo.ejecucion.fecha | fecha}}</span>
                 <span *ngIf='modo !== "puntoInicio"'>{{protocolo.paciente.documento}}</span>

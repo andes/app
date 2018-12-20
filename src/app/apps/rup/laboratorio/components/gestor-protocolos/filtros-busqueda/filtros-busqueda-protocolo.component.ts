@@ -1,3 +1,4 @@
+import { PacienteService } from './../../../../../../services/paciente.service';
 import { HojaTrabajoService } from './../../../services/hojatrabajo.service';
 import { Auth } from '@andes/auth';
 import { AreaLaboratorioService } from '../../../services/areaLaboratorio.service';
@@ -40,9 +41,7 @@ export class FiltrosBusquedaProtocoloComponent
     public busqueda = {
         solicitudDesde: new Date(),
         solicitudHasta: new Date(),
-        pacienteDocumento: null,
-        nombrePaciente: null,
-        apellidoPaciente: null,
+        idPaciente: null,
         origen: null,
         numProtocoloDesde: null,
         numProtocoloHasta: null,
@@ -66,6 +65,7 @@ export class FiltrosBusquedaProtocoloComponent
         private servicioOrganizacion: OrganizacionService,
         private servicioAreaLaboratorio: AreaLaboratorioService,
         private servicioHojaTrabajo: HojaTrabajoService,
+        private servicioPaciente: PacienteService
     ) { }
 
     ngOnInit() {
@@ -107,7 +107,10 @@ export class FiltrosBusquedaProtocoloComponent
             } else if (tipo === 'prioridad') {
                 this.busqueda.prioridad = this.busqueda.prioridad ? this.busqueda.prioridad.id : null;
             } else if (tipo === 'servicio') {
-                this.busqueda.servicio = this.servicios.map( (e: any) => { return e.id; } );
+                this.busqueda.servicio = this.servicios.map((e: any) => { return e.id; });
+            } else if (tipo === 'paciente') {
+                console.log('fafafa', this.paciente);
+                this.busqueda.idPaciente = this.paciente ? this.paciente.id : null;
             }
         }
         this.buscarProtocolosEmmiter.emit(this.busqueda);
@@ -157,6 +160,20 @@ export class FiltrosBusquedaProtocoloComponent
     /**
      *
      *
+     * @param {*} event
+     * @memberof FiltrosBusquedaProtocoloComponent
+     */
+    loadPacientes(event) {
+        if (event.query) {
+            this.servicioPaciente.get({ type: 'multimatch', cadenaInput: event.query }).subscribe(event.callback);
+        } else {
+            event.callback([]);
+        }
+    }
+
+    /**
+     *
+     *
      * @param {*} $event
      * @memberof FiltrosBusquedaProtocoloComponent
      */
@@ -165,7 +182,7 @@ export class FiltrosBusquedaProtocoloComponent
         //     this.showSelectPracticas = true;
         //     this.showSelectHojaTrabajo = false;
         // } else
-         if ($event.value === 'Hoja de trabajo') {
+        if ($event.value === 'Hoja de trabajo') {
             this.showSelectHojaTrabajo = true;
             this.showSelectPracticas = false;
         } else {

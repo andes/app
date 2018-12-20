@@ -401,6 +401,11 @@ export class TablaDatalleProtocoloComponent implements OnInit {
                     resultados.forEach(res => {
                         this.practicasEjecucion.push(this.generateRegistroEjecucion(res));
                     });
+                    this.cargarListaPracticaCarga().then(() => {
+                        // if (this.modo === 'validacion') {
+                            this.cargarResultadosAnteriores();
+                        // }
+                    });
                 });
             } else {
                 this.plex.alert('', 'Práctica ya ingresada');
