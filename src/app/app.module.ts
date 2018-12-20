@@ -506,7 +506,8 @@ let RUPComponentsArray = [
     SeleccionBinariaComponent,
     ValorNumericoComponent,
     ProcedimientoDeEnfermeriaComponent,
-    MoleculaBaseComponent
+    MoleculaBaseComponent,
+    HeaderPacienteComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
