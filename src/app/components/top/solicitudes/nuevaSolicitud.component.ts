@@ -162,10 +162,12 @@ export class NuevaSolicitudComponent implements OnInit {
     }
 
     onSelectOrganizacionOrigen() {
-        let regla: any = this.arrayOrganizacionesOrigen.find((org: any) => org.origen.organizacion.id === this.modelo.solicitud.organizacionOrigen.id);
-        if (regla && regla.origen) {
-            this.arrayReglasOrigen = regla.origen.prestaciones;
-            this.dataTipoPrestacionesOrigen = regla.origen.prestaciones.map(elem => { return { id: elem.prestacion.conceptId, nombre: elem.prestacion.term }; });
+        if (this.modelo.solicitud.organizacionOrigen) {
+            let regla: any = this.arrayOrganizacionesOrigen.find((org: any) => org.origen.organizacion.id === this.modelo.solicitud.organizacionOrigen.id);
+            if (regla && regla.origen) {
+                this.arrayReglasOrigen = regla.origen.prestaciones;
+                this.dataTipoPrestacionesOrigen = regla.origen.prestaciones.map(elem => { return { id: elem.prestacion.conceptId, nombre: elem.prestacion.term }; });
+            }
         }
     }
 
@@ -201,6 +203,18 @@ export class NuevaSolicitudComponent implements OnInit {
                 this.modelo.estados.push({ tipo: 'auditoria' });
             } else {
                 this.modelo.estados.push({ tipo: 'pendiente' });
+            }
+        }
+    }
+
+    checkProfesional() {
+        // Si profesional origen y destino coinciden ..
+        if (!this.autocitado && this.modelo.solicitud.profesionalOrigen && this.modelo.solicitud.profesional
+            && this.modelo.solicitud.profesionalOrigen.id === this.modelo.solicitud.profesional.id) {
+            // Si organización origen y destino son distintas ..
+            if (this.modelo.solicitud.organizacionOrigen && this.modelo.solicitud.organizacionOrigen.id !== this.modelo.solicitud.organizacion.id) {
+                this.plex.info('info', 'Para realizar una autocitación, la organización origen y destino debe ser la misma.');
+                this.modelo.solicitud.profesional = [];
             }
         }
     }
