@@ -15,11 +15,12 @@ export class ProtocoloEncabezadoEdicionComponent implements OnInit {
     solicitudProtocolo: any;
     mostrarMasOpciones: Boolean;
     organizacion: any;
+    origen: any;
     edicionDatosCabecera: Boolean;
     @Input() seleccionPaciente: Boolean;
     @Input() modo: String;
     @Input('edicionDatosCabecera')
-    set asd(value) {
+    set eDC(value) {
         this.edicionDatosCabecera = value;
     }
     @Input('protocolo')
@@ -119,5 +120,14 @@ export class ProtocoloEncabezadoEdicionComponent implements OnInit {
      */
     loadOrigen($event) {
         $event.callback(getOrigenFiltroLab());
+    }
+
+    /**
+     *
+     *
+     * @memberof ProtocoloEncabezadoEdicionComponent
+     */
+    setAmbitoOrigen(event) {
+        this.modelo.solicitud.ambitoOrigen = this.origen ? this.origen.id : null;
     }
 }
