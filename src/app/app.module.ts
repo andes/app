@@ -355,6 +355,7 @@ import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.c
 import { DetalleSolicitudComponent } from './components/top/solicitudes/detalleSolicitud.component';
 import { AuditarSolicitudComponent } from './components/top/solicitudes/auditarSolicitud.component';
 import { NuevaSolicitudComponent } from './components/top/solicitudes/nuevaSolicitud.component';
+import { AnularSolicitudComponent } from './components/top/solicitudes/anularSolicitud.component';
 
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
@@ -615,6 +616,7 @@ registerLocaleData(localeEs, 'es');
         SolicitudesComponent,
         DetalleSolicitudComponent,
         AuditarSolicitudComponent,
+        AnularSolicitudComponent,
         NuevaSolicitudComponent,
         PrestamosHcComponent,
         ListarSolicitudesComponent,
