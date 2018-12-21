@@ -70,9 +70,12 @@
             <tr class="hover" *ngFor="let practicaCarga of practicasCarga">
                 <td>
                     <ng-container *ngFor="let m of practicaCarga.margen">&nbsp;&nbsp;&nbsp;</ng-container>
-                    {{practicaCarga.practica.nombre}}
+                    <!-- MERS CODE: estilos inline provisorios, pediente decisión de UI/UX -->
+                    <span *ngIf="!(practicaCarga.practica.categoria === 'simple')" style='color: #5BC0F4; font-weight: bold; font-size: 18px;'>{{practicaCarga.practica.nombre}}</span>
+                    <ng-container *ngIf="practicaCarga.practica.categoria === 'simple'">{{practicaCarga.practica.nombre}}</ng-container>
                 </td>
-                <ng-container *ngIf="practicaCarga.esCompuesta">
+                <ng-container *ngIf="!(practicaCarga.practica.categoria === 'simple') ">
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -80,10 +83,9 @@
                     <ng-container *ngIf="modo ==='validacion'">
                         <td></td>
                         <td></td>
-                        <td></td>
                     </ng-container>
                 </ng-container>
-                <ng-container *ngIf="!practicaCarga.esCompuesta">
+                <ng-container *ngIf="practicaCarga.practica.categoria === 'simple'">
                     <td class="text-left align-middle estado">
                         <p>
                             <!-- {{practicaCarga.formatoResultado | json}} -->
@@ -135,7 +137,7 @@
                             <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practica)"></plex-button>
                         </td>
                     </ng-container>
-                    <ng-container *ngIf='(modo ==="carga" || modo ==="validacion") && !showObservaciones'>
+                    <ng-container *ngIf='(modo ==="carga" || modo ==="validacion")'>
                         <td class="small text-success">
                             <ng-container *ngIf="practicaCarga.registro.valor.estados.length > 0">
                                 {{practicaCarga.registro.valor.estados[practicaCarga.registro.valor.estados.length-1]?.tipo}}:
@@ -145,21 +147,16 @@
                                 | date: 'dd/MM/yyyy' }}</ng-container>
                         </td>
                         <td>
-                            <plex-button type="info" title="Observaciones" icon="mdi mdi-file-document" (click)="verObservaciones()">
+                            <plex-button  type="info" title="Observaciones" icon="mdi mdi-file-document" (click)="verObservaciones()">
                             </plex-button>
                         </td>
                     </ng-container>
                 </ng-container>
-                <div class="row">
-                    <div class="col-12">
-                        <plex-text *ngIf="showObservaciones" name="observaciones" [(ngModel)]="practica.observaciones">
-                        </plex-text>
-                    </div>
-                    <div *ngIf="showObservaciones" class="col-1 btnEdit">
-                        <plex-button type="danger" icon="close-circle-outline" title="Guardar" (click)="cerrarObservacion()">
-                        </plex-button>
-                    </div>
-                </div>
+                <!-- <td>
+                    <plex-button type="danger" icon="close-circle-outline" title="Guardar" (click)="cerrarObservacion()">
+                    </plex-button>
+                </td> -->
+
             </tr>
         </ng-container>
     </tbody>

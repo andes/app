@@ -1,7 +1,7 @@
 import { ProfesionalService } from '../../../../../../../services/profesional.service';
 import { OrganizacionService } from '../../../../../../../services/organizacion.service';
 import { Input, Output, Component, OnInit, EventEmitter } from '@angular/core';
-import { getPrioridadesLab, getOrigenFiltroLab } from '../../../../../../../utils/enumerados';
+import { getPrioridadesLab, getOrigenLab } from '../../../../../../../utils/enumerados';
 import { Auth } from '@andes/auth';
 
 @Component({
@@ -50,18 +50,13 @@ export class ProtocoloEncabezadoEdicionComponent implements OnInit {
      */
     cargarProtocolo(value: any) {
         this.modelo = value;
+        this.origen = {
+            id: this.modelo.solicitud.ambitoOrigen,
+            nombre: this.modelo.solicitud.ambitoOrigen
+        };
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
     }
 
-    cambiarPaciente() {
-        this.cambiarPacienteEmitter.emit();
-    }
-
-    /**
-     *
-     *
-     * @memberof ProtocoloEncabezadoEdicionComponent
-     */
     cambiarPaciente() {
         this.cambiarPacienteEmitter.emit();
     }
@@ -123,7 +118,7 @@ export class ProtocoloEncabezadoEdicionComponent implements OnInit {
      * @memberof ProtocoloDetalleComponent
      */
     loadOrigen($event) {
-        $event.callback(getOrigenFiltroLab());
+        $event.callback(getOrigenLab());
     }
 
     /**

@@ -97,7 +97,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
                                 if (matchArea) {
                                     let margen = [];
                                     for (let i = 0; i < reg.valor.nivel; i++) {
-                                        margen.push({});
+                                        margen = margen.concat([{}, {}, {}]);
                                     }
                                     this.practicasCarga.push({
                                         registro: reg,
