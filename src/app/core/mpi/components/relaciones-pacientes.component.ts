@@ -2,7 +2,9 @@ import {
     Component,
     OnInit,
     Input,
-    HostBinding
+    HostBinding,
+    ViewChild,
+    ElementRef
 } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ParentescoService } from '../../../services/parentesco.service';
@@ -18,6 +20,7 @@ export class RelacionesPacientesComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
     @Input() paciente: IPaciente;
     @Input() seleccion: IPaciente;
+    @ViewChild('listadoRel') listado: ElementRef;
 
     parentescoModel: any[] = [];
     relacionesBorradas: any[] = [];
@@ -60,6 +63,12 @@ export class RelacionesPacientesComponent implements OnInit {
             this.searchClear = false;
             this.loading = false;
             this.actualizarPosiblesRelaciones(pacientes);
+            if (this.paciente.relaciones.length > 2) {
+                // scroll hacia resultado de búsqueda
+                window.setTimeout(() => {
+                    this.listado.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 200);
+            }
         }
     }
 

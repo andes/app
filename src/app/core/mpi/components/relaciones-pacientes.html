@@ -21,7 +21,8 @@
                 </td>
                 <td>{{_unaRel.apellido}} {{_unaRel.nombre}}</td>
                 <td>
-                    <plex-select [(ngModel)]="_unaRel.relacion" name="relacion-{{k}}" [data]="parentescoModel" [required]="true" placeholder="Seleccione...">
+                    <plex-select [(ngModel)]="_unaRel.relacion" name="relacion-{{k}}" [data]="parentescoModel"
+                        [required]="true" placeholder="Seleccione...">
                     </plex-select>
                 </td>
                 <td class="text-center">
@@ -37,7 +38,7 @@
         </div>
     </div>
     <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
-    <div class="row">
+    <div class="row" #listadoRel>
         <div class="col">
             <paciente-listado [pacientes]="posiblesRelaciones" (selected)="seleccionarPacienteRelacionado($event)"></paciente-listado>
             <div *ngIf="posiblesRelaciones && !posiblesRelaciones.length && !searchClear" class="alert alert-danger">
