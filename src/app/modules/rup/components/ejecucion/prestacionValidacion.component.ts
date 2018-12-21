@@ -14,6 +14,7 @@ import { saveAs } from 'file-saver';
 import * as moment from 'moment';
 import 'rxjs/Rx';
 import { CodificacionService } from '../../services/codificacion.service';
+import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -158,6 +159,7 @@ export class PrestacionValidacionComponent implements OnInit {
         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
         this.servicioPrestacion.getById(id).subscribe(prestacion => {
             this.prestacion = prestacion;
+            this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.prestacion.paciente });
             this.registrosOriginales = prestacion.ejecucion.registros;
             this.plex.updateTitle([{
                 route: '/',

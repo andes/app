@@ -180,7 +180,7 @@ const appRoutes: Routes = [
   // Principal
   { path: 'inicio', component: InicioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'selectOrganizacion', component: SelectOrganizacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'login', component: LoginComponent },
+  { path: 'login', component: LoginComponent, canActivate: [RoutingNavBar] },
 
   { path: 'estadisticas', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingNavBar, RoutingGuard] },
   // Campañas Salud
