@@ -16,6 +16,7 @@
                                 <plex-tab [allowClose]="true"
                                           [label]="registro.data.concepto.term" 
                                           [class]="registro.data.class" 
+                                          [color]="registro.data.class"
                                           *ngIf="registro.tipo === 'hallazgo' || registro.tipo === 'medicamento'">
                                     <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)" [params]="elementosRUPService.selectPorRefsetId(registro.data.concepto)"
                                         [prestacion]="prestacion" [paciente]="paciente" [registro]="registro.data" [soloValores]="true">
@@ -25,6 +26,7 @@
                                 <plex-tab [allowClose]="true" 
                                           [label]="registro.data.solicitud.tipoPrestacion.term" 
                                           [class]="registro.data.class" 
+                                          color="solicitud"
                                           *ngIf="registro.tipo === 'prestacion'">
                                     <h4 class="text-capitalize">{{ registro.data.solicitud.tipoPrestacion.term }}</h4>
                                     <div class="row">
