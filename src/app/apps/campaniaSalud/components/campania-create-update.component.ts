@@ -192,7 +192,7 @@ export class CampaniaFormComponent implements OnInit {
 
         let cumpleTamanio: boolean = regExTamanio.test(archivo);
         if (!cumpleTamanio) {
-            this.plex.alert('El tamaño de la imagen debe ser 35px x 35px.');
+            this.plex.info('danger', 'El tamaño de la imagen debe ser 35px x 35px.');
         }
 
         return regExXml.test(archivo) && regExSvg.test(archivo) && cumpleTamanio;
