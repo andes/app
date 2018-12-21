@@ -120,15 +120,10 @@ export class PrestacionesService {
      *
      * @memberof PrestacionesService
      */
-    getSolicitudes(params: any, options: any = {}): Observable<IPrestacion[]> {
-        if (typeof options.showError === 'undefined') {
-            options.showError = true;
-        }
-
-        let opt = { params: params, options };
-
-        return this.server.get(this.prestacionesUrl + '/solicitudes', opt);
+    getSolicitudes(params: any): Observable<IPrestacion[]> {
+        return this.server.get(this.prestacionesUrl + '/solicitudes', { params: params, showError: true });
     }
+
     /**
      * Método get. Trae lista de objetos prestacion.
      *
@@ -292,7 +287,7 @@ export class PrestacionesService {
                 if (prestacion.ejecucion) {
                     let agregar = prestacion.ejecucion.registros
                         .filter(registro =>
-                            registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno')
+                            registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'evento')
                         .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
                     // COnceptId del informe requerido en en todas las prestaciones ambulatorias
                     if (agregar.length > 0) {
@@ -455,7 +450,9 @@ export class PrestacionesService {
                 if (prestacion.ejecucion) {
                     let agregar = prestacion.ejecucion.registros
                         .filter(registro =>
-                            registro.concepto.semanticTag === 'producto')
+                            registro.concepto.semanticTag === 'producto' ||
+                            registro.concepto.semanticTag === 'objeto físico' ||
+                            registro.concepto.semanticTag === 'medicamento clínico')
                         .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
                     registros = [...registros, ...agregar];
 
@@ -626,14 +623,15 @@ export class PrestacionesService {
      * Buscar en la HUDS de un paciente los registros que coincidan con los conceptIds
      *
      * @param {string} idPaciente Paciente a buscar
-     * @param {any[]} conceptIds Array de conceptId de SNOMED que deseo buscar
+     * @param {any[]} expresion expresion SNOMED que obtiene los conceptos que deseo buscar
      * @returns {any[]} Prestaciones del paciente que coincidan con los conceptIds
      * @memberof PrestacionesService
      */
-    getRegistrosHuds(idPaciente: string, expresion) {
+    getRegistrosHuds(idPaciente: string, expresion, deadLine = null) {
         let opt = {
             params: {
-                'expresion': expresion
+                'expresion': expresion,
+                'deadLine': deadLine
             },
             options: {
                 showError: true
@@ -720,10 +718,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                {
-                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                },
+                    {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -756,10 +754,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                {
-                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                },
+                    {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -783,10 +781,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                {
-                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                },
+                    {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -834,7 +832,7 @@ export class PrestacionesService {
                         // Controlemos que se trata de una prestación turneable.
                         // Solo creamos prestaciones pendiente para conceptos turneables
 
-                        let existeConcepto = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId);
+                        let existeConcepto = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId && c.term === conceptoSolicitud.term);
                         if (existeConcepto) {
                             // creamos objeto de prestacion
                             let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, existeConcepto, 'validacion', 'ambulatorio');
@@ -972,6 +970,10 @@ export class PrestacionesService {
             clase = 'regimen';
         } else if (conceptoSNOMED.semanticTag === 'elemento de registro') {
             clase = 'elementoderegistro';
+        } else if (conceptoSNOMED.semanticTag === 'evento') {
+            clase = 'hallazgo';
+        } else if (conceptoSNOMED.semanticTag === 'objeto físico' || conceptoSNOMED.semanticTag === 'medicamento clínico') {
+            clase = 'producto';
         }
 
         return clase;
@@ -993,6 +995,9 @@ export class PrestacionesService {
         } else {
             switch (conceptoSNOMED.semanticTag) {
                 case 'hallazgo':
+                case 'evento':
+                    icon = 'hallazgo';
+                    break;
                 case 'situación':
                     icon = 'hallazgo';
                     break;
@@ -1010,6 +1015,12 @@ export class PrestacionesService {
                     icon = 'trastorno';
                     break;
                 case 'producto':
+                    icon = 'producto';
+                    break;
+                case 'objeto físico':
+                    icon = 'producto';
+                    break;
+                case 'medicamento clínico':
                     icon = 'producto';
                     break;
 

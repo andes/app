@@ -20,7 +20,8 @@ export class NuevaSolicitudComponent implements OnInit {
     @ViewChildren('upload') childsComponents: QueryList<any>;
 
     showSeleccionarPaciente = true;
-    permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
+    permisos = this.auth.getPermissions('solicitudes:tipoPrestacion:?');
+
     paciente: any;
     motivo: '';
     fecha: any;
@@ -148,7 +149,6 @@ export class NuevaSolicitudComponent implements OnInit {
         }
         if (this.tipoSolicitud === 'entrada' && this.auth.organizacion.id && this.modelo.solicitud.tipoPrestacion && this.modelo.solicitud.tipoPrestacion.conceptId) {
             if (this.prestacionOrigen) {
-                // let regla: any = this.arrayReglasOrigen.find((rule: any) => { return rule.conceptId === this.prestacionOrigen.id; });
                 let regla: any = this.arrayReglasOrigen.find((rule: any) => { return rule.prestacion.conceptId === this.prestacionOrigen.id; });
 
                 if (regla.auditable) {
@@ -248,7 +248,7 @@ export class NuevaSolicitudComponent implements OnInit {
             });
 
         } else {
-            this.plex.alert('Debe completar los datos requeridos');
+            this.plex.info('warning', 'Debe completar los datos requeridos');
         }
     }
 
@@ -268,13 +268,14 @@ export class NuevaSolicitudComponent implements OnInit {
 
     loadTipoPrestaciones(event) {
         this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data: any) => {
-            let dataF;
-            if (this.permisos[0] === '*') {
-                dataF = data;
-            } else {
-                dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
-            }
-            event.callback(dataF);
+            // let dataF;
+            // if (this.permisos[0] === '*') {
+            //     dataF = data;
+            // } else {
+            //     dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
+            // }
+            // event.callback(dataF);
+            event.callback(data);
         });
     }
 
@@ -337,7 +338,6 @@ export class NuevaSolicitudComponent implements OnInit {
     imageRemoved($event) {
         let index = this.fotos.indexOf($event);
         this.fotos.splice(index, 1);
-        // this.registro.valor.documentos.splice(index, 1);
     }
 
     activaLightbox(index) {
@@ -363,7 +363,6 @@ export class NuevaSolicitudComponent implements OnInit {
 
     createUrl(doc) {
         /** Hack momentaneo */
-        // let jwt = window.sessionStorage.getItem('jwt');
         if (doc.id) {
             let apiUri = environment.API;
             return apiUri + '/modules/rup/store/' + doc.id + '?token=' + this.fileToken;

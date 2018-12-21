@@ -24,7 +24,7 @@ export class LaboratorioComponent {
         this.paciente = $event;
     }
 
-     volverAPuntoInicio($event) {
+    volverAPuntoInicio($event) {
         this.mostrarPuntoInicio = true;
     }
 }

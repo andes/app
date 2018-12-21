@@ -72,7 +72,7 @@ export class PanelAgendaComponent implements OnInit {
             // Quitar cuando esté solucionado inconveniente de plex-select
             let profesional = [];
             if (this.agenda.profesionales && this.agenda.profesionales.length > 10) {
-                this.plex.alert('Seleccione un profesional de la lista');
+                this.plex.info('warning', 'Seleccione un profesional de la lista');
             } else {
                 if (this.agenda.profesionales) {
                     profesional = this.agenda.profesionales;
@@ -221,7 +221,16 @@ export class PanelAgendaComponent implements OnInit {
             // Loop profesionales
             if (this.agenda.profesionales) {
                 this.agenda.profesionales.forEach((profesional, index) => {
-                    this.serviceAgenda.get({ 'organizacion': this.auth.organizacion.id, 'idProfesional': profesional.id, 'rango': true, 'desde': this.agenda.horaInicio, 'hasta': this.agenda.horaFin }).subscribe(agendas => {
+                    let params = {
+                        organizacion: this.auth.organizacion.id,
+                        idProfesional: profesional.id,
+                        rango: true,
+                        desde: this.agenda.horaInicio,
+                        hasta: this.agenda.horaFin,
+                        estados: ['planificacion', 'disponible', 'publicada', 'pausada']
+                    };
+                    // this.serviceAgenda.get({ 'organizacion': this.auth.organizacion.id, 'idProfesional': profesional.id, 'rango': true, 'desde': this.agenda.horaInicio, 'hasta': this.agenda.horaFin }).subscribe(agendas => {
+                    this.serviceAgenda.get(params).subscribe(agendas => {
                         // Hay problemas de solapamiento?
                         let agendasConSolapamiento = agendas.filter(agenda => {
                             return agenda.id !== this.agenda.id || !this.agenda.id; // Ignorar agenda actual

@@ -1,5 +1,5 @@
 
-import {finalize} from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { environment } from './../environments/environment';
 import { Component } from '@angular/core';
 import { Plex } from '@andes/plex';
@@ -49,6 +49,9 @@ export class AppComponent {
         if (this.auth.getPermissions('turnos:puntoInicio:?').length > 0) {
             accessList.push({ label: 'CITAS: Punto de Inicio', icon: 'calendar', route: '/citas/puntoInicio' });
         }
+
+        accessList.push({ label: 'CITAS: Espacios Fisicos', icon: 'cogs', route: 'tm/mapa_espacio_fisico' });
+
         if (this.auth.getPermissions('mpi:?').length > 0) {
             accessList.push({ label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: '/mpi' });
         }
@@ -72,8 +75,9 @@ export class AppComponent {
 
         // if (this.auth.getPermissions('rup:?').length > 0) {
         if (true) {
-            accessList.push({ label: 'SIL: Sistema de Laboratorio', icon: 'contacts', route: '/laboratorio' });
-            accessList.push({ label: 'SIL: Hoja de trabajo', icon: 'contacts', route: '/laboratorio/hojatrabajo' });
+            accessList.push({ label: 'SIL: Recepción de Laboratorios', icon: 'contacts', route: '/laboratorio/recepcion' });
+            accessList.push({ label: 'SIL: Gestor de Protocolos', icon: 'contacts', route: '/laboratorio/protocolos' });
+            accessList.push({ label: 'SIL: Hojas de trabajo', icon: 'contacts', route: '/laboratorio/hojatrabajo' });
         }
 
         // faltan permisos
@@ -81,6 +85,7 @@ export class AppComponent {
             accessList.push({ label: 'Formulario Terapeutico', icon: 'mdi mdi-needle', route: '/formularioTerapeutico' });
         }
         this.menuList.push({ label: 'Página principal', icon: 'home', route: '/inicio' });
+        this.menuList.push({ label: 'Padrones', icon: 'magnify', route: '/puco' });
 
         accessList.forEach((permiso) => {
             this.menuList.push(permiso);

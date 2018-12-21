@@ -1,6 +1,6 @@
 <!-- Loader -->
 <plex-loader *ngIf="loading" class="loading" type="ball-pulse"></plex-loader>
-<div id="detalleContenedor">
+<div id="detalleContenedor" [ngClass]="{'loadMode': loading}">
     <div class="row mb-1">
         <div class="col text-center">
             <img *ngIf="_paciente.foto" class="img-thumbnail" src="{{ _paciente.foto }}">
@@ -35,7 +35,7 @@
     <div class="row mb-1" *ngIf="_paciente.fechaNacimiento !== null">
         <div class="col-6">
             <label>Fecha de Nacimiento</label>
-            <span>{{ _paciente.fechaNacimiento | fecha }}</span>
+            <span>{{ _paciente.fechaNacimiento | fecha:'utc' }}</span>
         </div>
         <div class="col">
             <label>Edad</label>
@@ -58,6 +58,13 @@
         <div class="col">
             <label>Cuil</label>
             <span>{{ _paciente.cuil }}</span>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col">
+            <label>Obra Social</label>
+            <span *ngIf="obraSocial">{{ obraSocial.financiador }}</span>
+            <span *ngIf="!obraSocial">Sin obra social</span>
         </div>
     </div>
     <div class="row mb-1" *ngIf="_paciente.documento && _paciente.sexo && mostrarRenaper">

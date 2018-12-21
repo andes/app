@@ -1,3 +1,4 @@
+import { PacienteService } from './../../../../../../services/paciente.service';
 import { HojaTrabajoService } from './../../../services/hojatrabajo.service';
 import { Auth } from '@andes/auth';
 import { AreaLaboratorioService } from '../../../services/areaLaboratorio.service';
@@ -20,53 +21,51 @@ export class FiltrosBusquedaProtocoloComponent
     @Input() modo;
     @Input() editarListaPracticas;
 
-    public showSelectPracticas : Boolean = false;
-    public showSelectHojaTrabajo : Boolean = false;
+    public showSelectPracticas: Boolean = false;
+    public showSelectHojaTrabajo: Boolean = false;
     public origenEnum: any;
     public prioridadesFiltroEnum;
     public estadosFiltroEnum;
     public estadosValFiltroEnum;
     public hojaTrabajo;
-
     public pacientes;
     public pacienteActivo;
     public cargaLaboratorioEnum;
+    public modoCargaLaboratorio;
     public modoCargaLaboratorioEnum;
+    public laboratorioInternoEnum;
     public indexProtocolo;
     public turnosRecepcion;
-    public origen = null;
-    public area = null;
     public areas = [];
-    public prioridad = null;
-    public servicio = null;
-    public estado;
-    public organizacion;
-    public numProtocoloDesde;
-    public numProtocoloHasta;
+    public servicios = [];
     public busqueda = {
         solicitudDesde: new Date(),
         solicitudHasta: new Date(),
-        pacienteDocumento: null,
-        nombrePaciente: null,
-        apellidoPaciente: null,
+        idPaciente: null,
         origen: null,
         numProtocoloDesde: null,
         numProtocoloHasta: null,
         servicio: null,
         prioridad: null,
-        areas: null,
+        areas: [],
         laboratorioInterno: null,
         tipoPrestacionSolicititud: '15220000',
         organizacion: null,
         estado: [],
-        practicas: null
+        practicas: null,
+        area: null
     };
+
+    mostrarMasOpciones = false;
+
+    paciente: any;
 
     constructor(public plex: Plex, private formBuilder: FormBuilder,
         public auth: Auth,
         private servicioOrganizacion: OrganizacionService,
         private servicioAreaLaboratorio: AreaLaboratorioService,
         private servicioHojaTrabajo: HojaTrabajoService,
+        private servicioPaciente: PacienteService
     ) { }
 
     ngOnInit() {
@@ -83,7 +82,7 @@ export class FiltrosBusquedaProtocoloComponent
     cargarAreasLaboratorio() {
         this.servicioAreaLaboratorio.get().subscribe((areas: any) => {
             this.areas = areas.map((area) => {
-               return {
+                return {
                     id: area._id,
                     nombre: area.nombre
                 };
@@ -100,13 +99,20 @@ export class FiltrosBusquedaProtocoloComponent
     buscarProtocolos($event?, tipo?) {
         if (tipo) {
             if (tipo === 'area') {
-                this.busqueda.areas = [this.busqueda.areas.id];
+                this.busqueda.areas = this.busqueda.area ? [this.busqueda.area.id] : null;
             } else if (tipo === 'hojaTrabajo') {
-                // this.busqueda.areas = this.hojaTrabajo ? [this.hojaTrabajo.area.id] : [];
-                this.busqueda.practicas = this.hojaTrabajo ? this.hojaTrabajo.practicas.map( p => {return p.id} ) : []
+                this.busqueda.practicas = this.hojaTrabajo ? this.hojaTrabajo.practicas.map(p => { return p.id; }) : [];
+            } else if (tipo === 'origen') {
+                this.busqueda.origen = this.busqueda.origen ? this.busqueda.origen.id : null;
+            } else if (tipo === 'prioridad') {
+                this.busqueda.prioridad = this.busqueda.prioridad ? this.busqueda.prioridad.id : null;
+            } else if (tipo === 'servicio') {
+                this.busqueda.servicio = this.servicios.map((e: any) => { return e.id; });
+            } else if (tipo === 'paciente') {
+                console.log('fafafa', this.paciente);
+                this.busqueda.idPaciente = this.paciente ? this.paciente.id : null;
             }
         }
-        console.log('adds',tipo, this.busqueda.practicas)
         this.buscarProtocolosEmmiter.emit(this.busqueda);
     }
 
@@ -154,17 +160,36 @@ export class FiltrosBusquedaProtocoloComponent
     /**
      *
      *
+     * @param {*} event
+     * @memberof FiltrosBusquedaProtocoloComponent
+     */
+    loadPacientes(event) {
+        if (event.query) {
+            this.servicioPaciente.get({ type: 'multimatch', cadenaInput: event.query }).subscribe(event.callback);
+        } else {
+            event.callback([]);
+        }
+    }
+
+    /**
+     *
+     *
      * @param {*} $event
      * @memberof FiltrosBusquedaProtocoloComponent
      */
-    cambiarModoCarga($event){
-        if ($event.value === 'Lista de protocolos') {
-            this.showSelectPracticas = true;
-        } else if ($event.value === 'Hoja de trabajo') {
+    cambiarModoCarga($event) {
+        // if ($event.value === 'Lista de protocolos') {
+        //     this.showSelectPracticas = true;
+        //     this.showSelectHojaTrabajo = false;
+        // } else
+        if ($event.value === 'Hoja de trabajo') {
             this.showSelectHojaTrabajo = true;
-        } 
+            this.showSelectPracticas = false;
+        } else {
+            this.showSelectHojaTrabajo = false;
+        }
     }
-    
+
     /**
      *
      *
@@ -200,6 +225,10 @@ export class FiltrosBusquedaProtocoloComponent
 
         localStorage.setItem('filtros', JSON.stringify(filtrosPorDefecto));
         this.plex.toast('success', 'Se recordará su selección de filtro en sus próximas sesiones.', 'Información', 3000);
+    }
+
+    filtrarPaciente() {
+        this.buscarProtocolosEmmiter.emit(this.busqueda);
     }
 }
 

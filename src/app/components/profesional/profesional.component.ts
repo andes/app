@@ -1,20 +1,24 @@
 
-import {debounceTime} from 'rxjs/operators';
+import { debounceTime } from 'rxjs/operators';
 import { ProfesionalCreateUpdateComponent } from './profesional-create-update.component';
 import { IProfesional } from './../../interfaces/IProfesional';
 import { ProfesionalService } from './../../services/profesional.service';
 import { Observable } from 'rxjs/Observable';
-import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Plex } from '@andes/plex';
+import { DomSanitizer } from '@angular/platform-browser';
 
-const limit = 50;
 
 @Component({
     selector: 'profesionales',
-    templateUrl: 'profesional.html'
+    templateUrl: 'profesional.html',
+    styleUrls: [
+        'profesional.scss'
+    ]
 })
 export class ProfesionalComponent implements OnInit {
+
     showcreate = false;
     showupdate = false;
     datos: IProfesional[];
@@ -25,10 +29,14 @@ export class ProfesionalComponent implements OnInit {
     finScroll = false;
     tengoDatos = true;
     value: any;
+    limit: any = 200;
+    profesionalSelected: any = false;
+    fotoProfesional: any;
+    nuevoProfesional = false;
     // cantidad: IProfesional[];
 
 
-    constructor(private formBuilder: FormBuilder, private profesionalService: ProfesionalService) { }
+    constructor(private formBuilder: FormBuilder, private profesionalService: ProfesionalService, public sanitizer: DomSanitizer) { }
 
     ngOnInit() {
         this.searchForm = this.formBuilder.group({
@@ -37,7 +45,7 @@ export class ProfesionalComponent implements OnInit {
             documento: ['']
         });
 
-        this.searchForm.valueChanges.pipe(debounceTime(200)).subscribe((value) => {
+        this.searchForm.valueChanges.pipe(debounceTime(1000)).subscribe((value) => {
             this.value = value;
             this.skip = 0;
             this.loadDatos(false);
@@ -52,56 +60,22 @@ export class ProfesionalComponent implements OnInit {
             'nombre': this.value && this.value.nombre,
             'documento': this.value && this.value.documento,
             'skip': this.skip,
-            'limit': limit
+            'limit': this.limit
         };
-        this.profesionalService.get(parametros)
-            .subscribe(
-            datos => {
-                if (concatenar) {
-                    if (datos.length > 0) {
-                        this.datos = this.datos.concat(datos);
-                    } else {
-                        this.finScroll = true;
-                        this.tengoDatos = false;
-                    }
-                } else {
-                    this.datos = datos;
-                    this.finScroll = false;
-                }
-                this.loader = false;
-            });
+        this.profesionalService.get(parametros).subscribe(datos => {
+            this.datos = datos;
+        });
     }
 
-    onReturn(objProfesional: IProfesional): void {
-        this.showcreate = false;
-        this.showupdate = false;
-        if (objProfesional) {
-            this.loadDatos();
-        }
+
+    seleccionarProfesional(profesional) {
+        this.profesionalSelected = profesional;
+        this.profesionalService.getFoto({ id: this.profesionalSelected.id }).subscribe(resp => {
+            this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp);
+        });
     }
 
-    Activo(objProfesional: IProfesional) {
-        if (objProfesional.activo) {
-            this.profesionalService.disable(objProfesional)
-                .subscribe(dato => this.loadDatos()); // Bind to view
-        } else {
-            this.profesionalService.enable(objProfesional)
-                .subscribe(dato => this.loadDatos()); // Bind to view
-        }
-    }
 
-    onEdit(objProfesional: IProfesional) {
-        this.showcreate = false;
-        this.showupdate = true;
-        this.seleccion = objProfesional;
-    }
 
-    nextPage() {
-        if (this.tengoDatos) {
-            this.skip += limit;
-            this.loadDatos(true);
-            this.loader = true;
-        }
-    }
 
 }

@@ -84,15 +84,13 @@ export enum PrioridadesLaboratorio {
 
 export enum PrioridadesLaboratorioFiltro {
     'normal',
-    'urgencia',
-    'todos'
+    'urgencia'
 }
 
 export enum OrigenLaboratorio {
     'ambulatorio',
     'internación',
-    'guardia',
-    'todos'
+    'guardia'
 }
 export enum OrigenLaboratorioFiltro {
     'ambulatorio',

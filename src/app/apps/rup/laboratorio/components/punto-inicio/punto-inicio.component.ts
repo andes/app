@@ -1,23 +1,27 @@
 import { IPaciente } from './../../../../../interfaces/IPaciente';
 import { AppMobileService } from './../../../../../services/appMobile.service';
 import { PacienteService } from './../../../../../services/paciente.service';
-import { Component, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { PacienteBuscarResultado } from '../../../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 
 @Component({
     selector: 'punto-inicio-laboratorio',
-    templateUrl: 'punto-inicio.html'
+    templateUrl: 'punto-inicio.html',
+    styleUrls: ['../../assets/laboratorio.scss']
 })
 
-export class PuntoInicioLaboratorioComponent implements OnInit {
+export class PuntoInicioLaboratorioComponent implements OnInit, OnDestroy {
 
     @HostBinding('class.plex-layout') layout = true;
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
     @Output() seleccionarProtocoloEmitter: EventEmitter<any> = new EventEmitter<any>();
     @Output() pacienteSinTurnoEmitter: EventEmitter<any> = new EventEmitter<any>();
+
 
     public puedeCrearSolicitud = false;
     public puedeAutocitar = false;
@@ -38,43 +42,88 @@ export class PuntoInicioLaboratorioComponent implements OnInit {
     showDashboard = true;
     showMostrarTurnosPaciente = false;
     showCreateUpdate = false;
-    seleccion = null;
+    seleccion: IPaciente = null;
     esEscaneado = false;
     textoPacienteSearch = '';
     resultadoCreate;
     turnoArancelamiento: any;
     showArancelamiento = false;
     private esOperacion = false;
-
+    listado: any;
+    pacienteId: any;
+    routeParams: any;
 
     constructor(
         public servicePaciente: PacienteService,
         public auth: Auth,
         public appMobile: AppMobileService,
         private router: Router,
+        private route: ActivatedRoute,
+        private location: Location,
         private plex: Plex) { }
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:puntoInicio:?').length > 0;
-        this.puedeDarTurno = this.auth.getPermissions('turnos:puntoInicio:darTurnos:?').length > 0;
-        this.puedeCrearSolicitud = this.auth.getPermissions('turnos:puntoInicio:solicitud:?').length > 0;
+        this.puedeDarTurno = this.puedeDarTurno && this.auth.getPermissions('turnos:puntoInicio:darTurnos:?').length > 0;
+        this.puedeCrearSolicitud = this.puedeCrearSolicitud && this.auth.getPermissions('turnos:puntoInicio:solicitud:?').length > 0;
+
+        this.routeParams = this.route.params.subscribe(params => {
+            if (params['id'] && !this.seleccion) {
+                this.pacienteId = params['id'];
+
+                this.servicePaciente.getById(this.pacienteId).subscribe(pacienteMPI => {
+                    this.onPacienteSelected(pacienteMPI);
+                });
+            }
+
+        });
+    }
+
+    ngOnDestroy() {
+        this.routeParams.unsubscribe(); // <-------
+    }
+
+    /**
+     * Funcionalidades del buscador de MPI
+     */
+    searchStart() {
+        this.listado = null;
+        this.seleccion = null;
+        this.router.navigate(['/laboratorio/recepcion/']);
+
+    }
+
+    searchEnd(resultado: PacienteBuscarResultado) {
+        if (resultado.err) {
+            this.plex.info('danger', resultado.err);
+        } else {
+            this.listado = resultado.pacientes;
+        }
+    }
+
+    recepcionSinTurno() {
+        this.pacienteSinTurnoEmitter.emit(this.paciente);
+        this.router.navigate(['/laboratorio/protocolos/sinTurno/' + this.seleccion.id]);
     }
 
     showArancelamientoForm(turno) {
         this.turnoArancelamiento = turno;
         this.showDashboard = false;
         this.showArancelamiento = true;
-
     }
 
     volverAPuntoInicio() {
         this.showArancelamiento = false;
         this.showDashboard = true;
     }
+
     onPacienteSelected(paciente: IPaciente): void {
         this.paciente = paciente;
+        this.seleccion = paciente;
 
         if (paciente.id) {
+
+
             if (paciente.estado === 'temporal' && paciente.scan) {
                 this.seleccion = paciente;
                 if (paciente.scan) {
@@ -107,11 +156,16 @@ export class PuntoInicioLaboratorioComponent implements OnInit {
                         }
                     });
             }
+
+            // this.router.navigate(['/laboratorio/recepcion/' + paciente.id]);
+            let url = this.router.createUrlTree(['/laboratorio/recepcion/' + paciente.id]).toString();
+            // Change the URL without navigate:
+            this.location.go(url);
+
         } else {
             this.showMostrarEstadisticasAgendas = false;
             this.showMostrarEstadisticasPacientes = false;
             this.showIngresarSolicitud = false;
-            this.seleccion = paciente;
             if (paciente.scan) {
                 this.esEscaneado = true;
             }
@@ -154,6 +208,7 @@ export class PuntoInicioLaboratorioComponent implements OnInit {
         this.showMostrarEstadisticasPacientes = false;
         this.showMostrarTurnosPaciente = false;
         this.showIngresarSolicitud = false;
+        this.showListaSolicitudes = false;
     }
 
     verificarOperacion({ operacion, paciente }) {
@@ -226,7 +281,7 @@ export class PuntoInicioLaboratorioComponent implements OnInit {
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
         // No está autorizado para ver esta pantalla
         if (!this.autorizado) {
-            this.redirect('inicio');
+            this.redirect('/laboratorio/recepcion');
         } else {
             this.redirect('dashboard_codificacion');
         }

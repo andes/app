@@ -10,6 +10,7 @@ import { ProfesionalService } from '../../../../../services/profesional.service'
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Constantes } from '../../controllers/constants';
+import { PacienteBuscarResultado } from '../../../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 
 @Component({
     selector: 'protocolo-detalle',
@@ -34,6 +35,7 @@ export class ProtocoloDetalleComponent
     flagMarcarTodas: Boolean = false;
     nombrePractica;
     codigoPractica;
+    public showBotonesGuardar: Boolean = false;
     public mostrarMasOpciones: Boolean = false;
     public pacientes;
     public pacienteActivo;
@@ -46,17 +48,19 @@ export class ProtocoloDetalleComponent
     @Output() newSolicitudEmitter: EventEmitter<any> = new EventEmitter<any>();
     @Output() volverAListaControEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
     @Output() mostrarCuerpoProtocoloEmit = new EventEmitter<any>();
+    @Output() edicionDatosCabeceraEmitter = new EventEmitter<any>();
 
     @Input() edicionDatosCabecera: Boolean;
     @Input() seleccionPaciente: Boolean;
     @Input() showProtocoloDetalle: Boolean;
     @Input() mostrarCuerpoProtocolo: Boolean;
     @Input() protocolos: any;
-    @Input() modo: String;
+    @Input() modo: string;
     @Input() indexProtocolo: any;
     @Input() busqueda: any;
     @Input() editarListaPracticas;
-
+    listado: any;
+    seleccion: any;
     @Input('protocolo')
     set protocolo(value: any) {
         if (value) {
@@ -80,6 +84,7 @@ export class ProtocoloDetalleComponent
         this.modelo = value;
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
         this.practicasEjecucion = this.modelo.ejecucion.registros;
+        this.showBotonesGuardar = (this.modo !== 'recepcion');
 
         if (this.practicasEjecucion.length > 0 && (this.modo === 'puntoInicio' || this.modo === 'recepcion' || this.modo === 'control')) {
             this.cargarCodigosPracticas();
@@ -87,7 +92,7 @@ export class ProtocoloDetalleComponent
 
         if ((this.modo === 'puntoInicio' || this.modo === 'recepcion') && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
             this.editarDatosCabecera();
-            this.seleccionPaciente = this.modo === 'recepcion';
+            // this.seleccionPaciente = this.modo === 'recepcion';
         } else {
             this.aceptarEdicionCabecera();
         }
@@ -200,7 +205,10 @@ export class ProtocoloDetalleComponent
         this.edicionDatosCabecera = true;
         this.mostrarCuerpoProtocolo = false;
         this.seleccionPaciente = false;
+        this.showBotonesGuardar = false;
         this.mostrarCuerpoProtocoloEmit.emit(this.mostrarCuerpoProtocolo);
+
+        this.edicionDatosCabeceraEmitter.emit();
     }
 
     /**
@@ -214,6 +222,7 @@ export class ProtocoloDetalleComponent
         this.seleccionPaciente = false;
         this.mostrarCuerpoProtocolo = true;
         this.mostrarCuerpoProtocoloEmit.emit(this.mostrarCuerpoProtocolo);
+        this.showBotonesGuardar = true;
     }
 
     estaSeleccionado(protocolo) {
@@ -231,31 +240,20 @@ export class ProtocoloDetalleComponent
         return false;
     }
     /**
-     *
-     *
-     * @memberof ProtocoloDetalleComponent
+     * Funcionalidades del buscador de MPI
      */
     searchStart() {
-        this.pacientes = null;
+        this.listado = null;
+        this.seleccion = null;
+        // this.router.navigate(['/laboratorio/recepcion/']);
+
     }
 
-    /**
-     *
-     *
-     * @param {*} resultado
-     * @memberof ProtocoloDetalleComponent
-     */
-    searchEnd(resultado: any) {
+    searchEnd(resultado: PacienteBuscarResultado) {
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
         } else {
-            this.pacientes = resultado.pacientes;
-            if (this.pacientes) {
-                this.mostrarListaMpi = true;
-            } else {
-                this.mostrarListaMpi = false;
-            }
-
+            this.listado = resultado.pacientes;
         }
     }
     /**
@@ -264,8 +262,10 @@ export class ProtocoloDetalleComponent
      * @param {*} paciente
      * @memberof ProtocoloDetalleComponent
      */
-    hoverPaciente(paciente: any) {
-        this.pacienteActivo = paciente;
+    onPacienteSelected(paciente: PacienteBuscarResultado) {
+        this.modelo.paciente = paciente;
+        this.listado = null;
+        this.seleccionPaciente = false;
     }
 
     /**
@@ -306,6 +306,7 @@ export class ProtocoloDetalleComponent
     cambiarPaciente() {
         this.seleccionPaciente = true;
     }
+
 
     /**
      * Retorna true si el último estado registrado es de validada, false si no.
@@ -422,8 +423,7 @@ export class ProtocoloDetalleComponent
         }
     }
 
-    async guardarSolicitud() {
-        this.modelo.solicitud.ambitoOrigen = this.modelo.solicitud.ambitoOrigen.id;
+    guardarSolicitud() {
         this.modelo.solicitud.tipoPrestacion = Constantes.conceptoPruebaLaboratorio;
 
         if (this.modo === 'control' || this.modo === 'recepcion') {

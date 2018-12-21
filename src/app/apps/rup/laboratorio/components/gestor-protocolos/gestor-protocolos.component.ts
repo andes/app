@@ -1,35 +1,40 @@
 import { Constantes } from './../../controllers/constants';
-import { Component, OnInit, Input, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, EventEmitter, Output, ViewEncapsulation, HostBinding, OnDestroy } from '@angular/core';
 import { ProtocoloDetalleComponent } from '../protocolos/protocolo-detalle.component';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { PacienteService } from '../../../../../services/paciente.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'gestor-protocolos',
     templateUrl: 'gestor-protocolos.html',
-    styleUrls: ['../../assets/laboratorio.scss']
+    styleUrls: ['../../assets/laboratorio.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 
-export class GestorProtocolosComponent
+export class GestorProtocolosComponent implements OnInit {
+    @HostBinding('class.plex-layout') layout = true;
 
-    implements OnInit {
-
-    @Output()  volverAPuntoInicioEmmiter: EventEmitter<any> = new EventEmitter<any>();
+    @Output() volverAPuntoInicioEmmiter: EventEmitter<any> = new EventEmitter<any>();
     public seleccionPaciente: Boolean = false;
     public showListarProtocolos: Boolean = true;
     public showProtocoloDetalle: Boolean = false;
     public showCargarSolicitud: Boolean = false;
     public edicionDatosCabecera: Boolean;
-    public showBotonesGuardar: Boolean = false;
+    public showBotonGuardar: Boolean = false;
     public mostrarCuerpoProtocolo: Boolean = true;
     public ocultarPanelLateral: Boolean = false;
     public editarListaPracticas: Boolean = false;
+    public showBotonAceptar: Boolean = false;
+
     public areas = [];
 
     public protocolos: any[];
     public protocolo: any;
+    routeParams: any;
 
     @Input('protocolo')
     set setProtocolo(value: any) {
@@ -62,9 +67,11 @@ export class GestorProtocolosComponent
     public modoAVolver = '';
 
     @ViewChild(ProtocoloDetalleComponent)
-    private protocoloDetalleComponent: ProtocoloDetalleComponent;
+    public protocoloDetalleComponent: ProtocoloDetalleComponent;
 
     constructor(
+        public servicePaciente: PacienteService,
+        private route: ActivatedRoute,
         public plex: Plex,
         public servicioPrestaciones: PrestacionesService,
         public auth: Auth,
@@ -75,11 +82,35 @@ export class GestorProtocolosComponent
         if (!this.protocolo) {
             this.resetearProtocolo({});
         }
+        this.showBotonAceptar = true;
+        this.routeParams = this.route.params.subscribe(params => {
+            console.log(params);
+            if (params['id']) {
+                let id = params['id'];
+                this.servicePaciente.getById(id).subscribe(pacienteMPI => {
+                    this.modo = 'recepcion';
+                    this.paciente = pacienteMPI;
+                    this.ocultarPanelLateral = false;
+                    this.mostrarFomularioPacienteSinTurno();
+                    this.seleccionPaciente = false;
+                    this.seleccionarProtocolo(this.protocolo);
+                    // this.resetearProtocolo(this.paciente);
+                    // this.editarListaPracticas = true;
+                    // this.edicionDatosCabecera = true;
+                    // this.ocultarPanelLateral = true;
+                    // this.showProtocoloDetalle = true;
+                    // this.indexProtocolo = 0;
+                    // this.seleccionPaciente = false;
+                    // this.mostrarCuerpoProtocolo = true;
+                });
+            }
 
-        // this.as.getAgenda();
-
-        // this.refreshSelection();
+        });
     }
+
+    // ngOnDestroy() {
+    //     this.routeParams.unsubscribe();
+    // }
 
     cambio($event) {
         this.accionIndex = $event;
@@ -108,7 +139,7 @@ export class GestorProtocolosComponent
             solicitud: {
                 esSolicitud: true,
                 tipoPrestacion: null,
-                organizacion: {},
+                organizacion: this.auth.organizacion,
                 profesional: {},
                 ambitoOrigen: null,
                 fecha: new Date(),
@@ -169,13 +200,14 @@ export class GestorProtocolosComponent
         if (value.protocolo) {
             this.mostrarCuerpoProtocolo = (this.modo === 'control') || (this.modo === 'carga') || (this.modo === 'validacion') || (this.modo === 'puntoInicio');
             this.protocolo = value.protocolo;
+            this.indexProtocolo = value.index;
             this.showListarProtocolos = false;
             this.showProtocoloDetalle = true;
-            this.indexProtocolo = value.index;
             this.seleccionPaciente = false;
             this.showCargarSolicitud = true;
+            this.showBotonAceptar = false;
+            this.showBotonGuardar = true;
             this.ocultarPanelLateral = (this.modo === 'recepcion') || (this.modo === 'puntoInicio');
-            this.showBotonesGuardar = (this.modo !== 'recepcion');
         }
     }
 
@@ -195,8 +227,17 @@ export class GestorProtocolosComponent
             this.showCargarSolicitud = false;
             this.ocultarPanelLateral = false;
             this.seleccionPaciente = false;
-            this.showBotonesGuardar = false;
         }
+    }
+
+    /**
+     *
+     *
+     * @memberof GestorProtocolosComponent
+     */
+    editarDatosCabecera() {
+        this.showBotonAceptar = true;
+        this.showBotonGuardar = false;
     }
 
     /**
@@ -205,19 +246,58 @@ export class GestorProtocolosComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     mostrarFomularioPacienteSinTurno() {
-        this.resetearProtocolo({});
-        this.edicionDatosCabecera = true;
-        this.ocultarPanelLateral = true;
-        this.showListarProtocolos = false;
-        this.showProtocoloDetalle = true;
-        this.indexProtocolo = 0;
-        this.seleccionPaciente = true;
-        this.mostrarCuerpoProtocolo = false;
+        if (this.paciente) {
+            this.resetearProtocolo(this.paciente);
+            this.seleccionarProtocolo({});
+            this.edicionDatosCabecera = true;
+            // this.ocultarPanelLateral = true;
+            this.showListarProtocolos = false;
+            this.showProtocoloDetalle = true;
+            this.indexProtocolo = 0;
+            this.seleccionPaciente = true;
+            this.mostrarCuerpoProtocolo = true;
+            this.showBotonAceptar = true;
+        }
+
+        // this.mostrarCuerpoProtocolo = (this.modo === 'control') || (this.modo === 'carga') || (this.modo === 'validacion') || (this.modo === 'puntoInicio');
+        //     this.showListarProtocolos = false;
+        //     this.showProtocoloDetalle = true;
+        //     this.seleccionPaciente = false;
+        //     this.showCargarSolicitud = true;
+        //     this.ocultarPanelLateral = (this.modo === 'recepcion') || (this.modo === 'puntoInicio');
+        //     this.showBotonesGuardar = (this.modo !== 'recepcion');
     }
 
-    mostrarBotonesGuardarProtocoloFooter($event) {
-        this.showBotonesGuardar = $event;
+    // mostrarBotonesGuardarProtocoloFooter($event) {
+    //     this.showBotonesGuardar = $event;
+    // }
+
+    /**
+     *
+     *
+     * @memberof GestorProtocolosComponent
+     */
+    aceptarCambios() {
+        if (this.modoAVolver !== '') {
+            // this.showProtocoloDetalle = true;
+            // this.modo = this.modoAVolver;
+            // this.modoAVolver = '';
+            // this.ocultarPanelLateral = false;
+            // this.showBotonAceptar = true;
+            // this.showListarProtocolos = false;
+            // guardarSolicitudYVolver() {
+        this.ocultarPanelLateral = false;
+        this.modo = this.modoAVolver;
+        this.protocoloDetalleComponent.guardarSolicitudYVolver(this.modoAVolver);
+        this.modoAVolver = '';
+    // }
+        } else {
+            this.showBotonAceptar = false;
+            this.showBotonGuardar = true;
+            this.protocoloDetalleComponent.aceptarEdicionCabecera();
+        }
     }
+
 
     /**
      * Guarda en el local storage del browser la selección de filtros de búsqueda para futuras búsquedas
@@ -251,13 +331,8 @@ export class GestorProtocolosComponent
         this.ocultarPanelLateral = true;
         this.modoAVolver = this.modo;
         this.modo = 'control';
-    }
-
-    guardarSolicitudYVolver() {
-        this.ocultarPanelLateral = false;
-        this.modo = this.modoAVolver;
-        this.protocoloDetalleComponent.guardarSolicitudYVolver(this.modoAVolver);
-        this.modoAVolver = '';
+        this.showBotonAceptar = true;
+        this.showBotonGuardar = false;
     }
 
     guardarSolicitud() {

@@ -1,6 +1,4 @@
 import { Input, Output, Component, OnInit, EventEmitter } from '@angular/core';
-import { IPrestacion } from '../../../../../../modules/rup/interfaces/prestacion.interface';
-import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'protocolo-encabezado',
@@ -12,16 +10,17 @@ export class ProtocoloEncabezadoComponent implements OnInit {
 
     modelo: any;
     solicitudProtocolo: any;
+
     @Input() modo: String;
     @Input() edicionDatosCabecera: Boolean;
     @Input() seleccionPaciente: Boolean;
-    // seleccionPaciente: Boolean;
     @Input('protocolo')
     set protocolo(value: any) {
         if (value) {
             this.cargarProtocolo(value);
         }
     }
+
     @Output() siguienteEmit = new EventEmitter<any>();
     @Output() anteriorEmit = new EventEmitter<any>();
     @Output() edicionDatosCabeceraEmitter = new EventEmitter<any>();

@@ -81,7 +81,7 @@
                                     <i *ngIf="!(estaSeleccionada(agenda) >= 0)" class="mdi mdi-checkbox-blank-outline"></i>
                                 </td>
                                 <td (click)="verAgenda(agenda, false, $event)">
-                                    <div class="datos-agenda">{{agenda.horaInicio | date: 'EEE' | uppercase }} {{agenda.horaInicio | date: 'dd/MM/yyyy'}}
+                                    <div class="datos-agenda">{{agenda.horaInicio | date: 'EEE' | uppercase }} {{agenda.horaInicio | fecha}}
                                         <i class="mdi mdi-clock" title="Horario inicio/fin"></i> {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs
                                         -
                                         <i class="mdi mdi-timelapse" title="Duración"></i> {{ duracionAgenda(agenda.horaInicio, agenda.horaFin) }}

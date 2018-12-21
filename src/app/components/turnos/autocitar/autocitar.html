@@ -41,7 +41,7 @@
                                     <div *ngIf="agendasAutocitar && agendasAutocitar.length > 0" class="col-3">
                                         <div class="card">
                                             <div class="card-block">
-                                                <b class="card-title">Agenda: {{ agenda.horaInicio | date: 'dd/MM/yyyy' }}
+                                                <b class="card-title">Agenda: {{ agenda.horaInicio | fecha }}
                                                     <br>{{ agenda.horaInicio | date: 'HH:mm' }} a {{ agenda.horaFin | date: 'HH:mm'
                                                     }} hs</b>
                                                 <p class="card-text" *ngIf="agenda.profesionales?.length > 0">Profesionales: {{ agenda.profesionales | enumerar:['apellido', 'nombre']

@@ -7,7 +7,7 @@ import { Auth } from '@andes/auth';
 @Component({
     selector: 'protocolo-encabezado-edicion',
     templateUrl: './protocolo-encabezado-edicion.html',
-    // styleUrls: ['../../../assets/laboratorio.scss']
+    styleUrls: ['../../../../assets/laboratorio.scss']
 })
 
 export class ProtocoloEncabezadoEdicionComponent implements OnInit {
@@ -15,11 +15,12 @@ export class ProtocoloEncabezadoEdicionComponent implements OnInit {
     solicitudProtocolo: any;
     mostrarMasOpciones: Boolean;
     organizacion: any;
+    origen: any;
     edicionDatosCabecera: Boolean;
     @Input() seleccionPaciente: Boolean;
     @Input() modo: String;
     @Input('edicionDatosCabecera')
-    set asd(value) {
+    set eDC(value) {
         this.edicionDatosCabecera = value;
     }
     @Input('protocolo')
@@ -41,11 +42,26 @@ export class ProtocoloEncabezadoEdicionComponent implements OnInit {
     ngOnInit() {
     }
 
+    /**
+     *
+     *
+     * @param {*} value
+     * @memberof ProtocoloEncabezadoEdicionComponent
+     */
     cargarProtocolo(value: any) {
         this.modelo = value;
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
     }
 
+    cambiarPaciente() {
+        this.cambiarPacienteEmitter.emit();
+    }
+
+    /**
+     *
+     *
+     * @memberof ProtocoloEncabezadoEdicionComponent
+     */
     cambiarPaciente() {
         this.cambiarPacienteEmitter.emit();
     }
@@ -58,8 +74,7 @@ export class ProtocoloEncabezadoEdicionComponent implements OnInit {
     */
     loadServicios($event) {
         this.servicioOrganizacion.getById(this.auth.organizacion.id).subscribe((organizacion: any) => {
-            let servicioEnum = organizacion.unidadesOrganizativas;
-            $event.callback(servicioEnum);
+            $event.callback(organizacion.unidadesOrganizativas);
         });
     }
 
@@ -71,12 +86,9 @@ export class ProtocoloEncabezadoEdicionComponent implements OnInit {
      */
     loadOrganizaciones(event) {
         if (event.query) {
-            let query = {
-                nombre: event.query
-            };
-            this.servicioOrganizacion.get(query).subscribe(event.callback);
+            this.servicioOrganizacion.get({ nombre: event.query } ).subscribe(event.callback);
         } else {
-            event.callback([]);
+            event.callback( this.modelo.solicitud.organizacion ? this.modelo.solicitud.organizacion : [] );
         }
     }
 
@@ -88,7 +100,6 @@ export class ProtocoloEncabezadoEdicionComponent implements OnInit {
      */
     loadPrioridad(event) {
         event.callback(getPrioridadesLab());
-        return getPrioridadesLab();
     }
 
     /**
@@ -98,21 +109,29 @@ export class ProtocoloEncabezadoEdicionComponent implements OnInit {
      * @memberof ProtocoloDetalleComponent
      */
     loadProfesionales($event) {
-        let query = {
-            nombreCompleto: $event.query
-        };
-        this.servicioProfesional.get(query).subscribe((resultado: any) => {
-            $event.callback(resultado);
-        });
+        if ($event.query) {
+            this.servicioProfesional.get({ nombreCompleto: $event.query }).subscribe($event.callback);
+        } else if (this.modelo.solicitud.profesional && this.modelo.solicitud.profesional.id) {
+            $event.callback(this.modelo.solicitud.profesional);
+        }
     }
 
     /**
- * Busca ambito de origen
- *
- * @param {any} $event
- * @memberof ProtocoloDetalleComponent
- */
+     * Busca ambito de origen
+     *
+     * @param {any} $event
+     * @memberof ProtocoloDetalleComponent
+     */
     loadOrigen($event) {
         $event.callback(getOrigenFiltroLab());
+    }
+
+    /**
+     *
+     *
+     * @memberof ProtocoloEncabezadoEdicionComponent
+     */
+    setAmbitoOrigen(event) {
+        this.modelo.solicitud.ambitoOrigen = this.origen ? this.origen.id : null;
     }
 }

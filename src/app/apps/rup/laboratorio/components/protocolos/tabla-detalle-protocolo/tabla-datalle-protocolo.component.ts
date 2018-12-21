@@ -31,18 +31,18 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     @Input('practicasEjecucion')
     set pjs(practicasEjecucion) {
         this.practicasEjecucion = practicasEjecucion;
-        if (this.modo === 'carga' || this.modo === 'validacion') {
+        // if (this.modo === 'carga' || this.modo === 'validacion') {
             this.cargarListaPracticaCarga().then(() => {
-                if (this.modo === 'validacion') {
+                // if (this.modo === 'validacion') {
                     this.cargarResultadosAnteriores();
-                }
+                // }
             });
-        } else {
+        // } else {
             this.cargarPracticasVista();
-            if (this.modo === 'control') {
-                this.cargarResultadosAnterioresPV();
-            }
-        }
+            // if (this.modo === 'control') {
+                // this.cargarResultadosAnterioresPV();
+            // }
+        // }
     }
 
     @Input() editarListaPracticas;
@@ -67,7 +67,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         this.practicasVista = this.practicasEjecucion
             .filter(pe => practicasSolicitud.some(ps => ps._id === pe._id))
             .filter(p => ((this.busqueda.areas.length === 0) || this.busqueda.areas.some(id => id === p.area._id))
-        );
+            );
     }
 
     /**
@@ -79,11 +79,11 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     cargarListaPracticaCarga() {
         return new Promise((resolve) => {
             this.practicasCarga = [];
-            let idsFiltrados = this.busqueda.practicas ? this.getIdsFiltrados( this.busqueda.practicas ) : null;
+            let idsFiltrados = this.busqueda.practicas ? this.getIdsFiltrados(this.busqueda.practicas) : null;
             let ids = this.practicasEjecucion.map((reg) => { return reg._id; });
 
             this.servicioPractica.findByIdsCompletas(ids).subscribe((res) => {
-                let cargarPracticas = (registos, practicas, nivelTab) => {
+                let cargarPracticas = (registos, practicas) => {
                     if (registos.length > 0) {
                         for (const reg of registos) {
 
@@ -91,21 +91,25 @@ export class TablaDatalleProtocoloComponent implements OnInit {
                                 let match: any = practicas.filter((practica: any) => {
                                     return practica._id === reg._id;
                                 })[0];
-    
+
                                 let matchArea = !this.busqueda.areas || (this.busqueda.areas.length === 0) || this.busqueda.areas.some(id => id === match.area.id);
-                                
+
                                 if (matchArea) {
+                                    let margen = [];
+                                    for (let i = 0; i < reg.valor.nivel; i++) {
+                                        margen.push({});
+                                    }
                                     this.practicasCarga.push({
                                         registro: reg,
                                         practica: match,
-                                        margen: []
+                                        margen: margen
                                     });
                                 }
                             }
                         }
-                    };
-                }
-                cargarPracticas(this.practicasEjecucion, res, 0);
+                    }
+                };
+                cargarPracticas(this.practicasEjecucion, res);
                 resolve();
             });
         });
@@ -121,17 +125,17 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     getIdsFiltrados(ids) {
         let practicasFiltradas = [];
         const foo = (idsFiltro) => {
-            this.practicasEjecucion.forEach( (p) => {
-                 idsFiltro.forEach( (id) => { idsFiltro })
-            })
-            let filtradas = this.practicasEjecucion.filter( (p) => { 
-                return idsFiltro.some( id => id === p._id ) 
+            this.practicasEjecucion.forEach((p) => {
+                idsFiltro.forEach((id) => idsFiltro);
             });
-            filtradas.forEach( pf => foo(pf.relacionadoCon) );
+            let filtradas = this.practicasEjecucion.filter((p) => {
+                return idsFiltro.some(id => id === p._id);
+            });
+            filtradas.forEach(pf => foo(pf.relacionadoCon));
             practicasFiltradas = practicasFiltradas.concat(filtradas);
-        }
+        };
         foo(ids);
-        return practicasFiltradas;        
+        return practicasFiltradas;
     }
 
 
@@ -149,7 +153,6 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     }
 
     cargarResultadosAnterioresPV() {
-        console.log('cargarResultadosAnterioresPV');
         this.practicasVista.forEach((practicaVista) => {
             this.servicioProtocolo.getResultadosAnteriores(this.modelo.paciente.id, practicaVista.concepto.conceptId).subscribe(resultadosAnteriores => {
                 practicaVista.resultadosAnteriores = resultadosAnteriores;
@@ -231,8 +234,8 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         let practicaIndex = practicasSolicitud.findIndex(x => x.id === practica.id);
 
         this.servicioPractica.findByIdsCompletas(practica._id).subscribe((practicasEliminiar) => {
-            this.modelo.ejecucion.registros = this.practicasEjecucion.filter( pe =>  
-                !( practicasEliminiar.some( (r : any) => r._id === pe._id ) )
+            this.modelo.ejecucion.registros = this.practicasEjecucion.filter(pe =>
+                !(practicasEliminiar.some((r: any) => r._id === pe._id))
             );
         });
 
@@ -359,10 +362,11 @@ export class TablaDatalleProtocoloComponent implements OnInit {
             destacado: false,
             esSolicitud: false,
             esDiagnosticoPrincipal: false,
-            relacionadoCon: practica.requeridos.map( (req) => {return req._id} ),
+            relacionadoCon: practica.requeridos.map((req) => { return req._id; }),
             nombre: practica.nombre,
             concepto: practica.concepto,
             valor: {
+                nivel: practica.nivel,
                 resultado: {
                     valor: null,
                     sinMuestra: false,
@@ -374,7 +378,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
                     fecha: new Date()
                 }]
             }
-        }
+        };
         return practicaEjecucion;
     }
 
@@ -394,8 +398,13 @@ export class TablaDatalleProtocoloComponent implements OnInit {
                 this.practicasVista.push(practicaEjecucion);
 
                 this.servicioPractica.findByIdsCompletas(practica._id).subscribe((resultados) => {
-                    resultados.forEach( res => {
-                        this.practicasEjecucion.push(this.generateRegistroEjecucion(res));  
+                    resultados.forEach(res => {
+                        this.practicasEjecucion.push(this.generateRegistroEjecucion(res));
+                    });
+                    this.cargarListaPracticaCarga().then(() => {
+                        // if (this.modo === 'validacion') {
+                            this.cargarResultadosAnteriores();
+                        // }
                     });
                 });
             } else {

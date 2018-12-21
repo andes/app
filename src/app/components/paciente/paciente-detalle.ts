@@ -1,12 +1,13 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { IPaciente } from './../../interfaces/IPaciente';
-import {
-    PacienteService
-} from './../../services/paciente.service';
-import {
-    RenaperService
-} from './../../services/fuentesAutenticas/servicioRenaper.service';
+import { PacienteService } from './../../services/paciente.service';
+import { RenaperService } from './../../services/fuentesAutenticas/servicioRenaper.service';
+import { SisaService } from './../../services/fuentesAutenticas/servicioSisa.service';
 import { Plex } from '@andes/plex';
+import { PacienteCreateUpdateComponent } from './paciente-create-update.component';
+import { ObraSocialService } from '../../services/obraSocial.service';
+import { IObraSocial } from '../../interfaces/IObraSocial';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'paciente-detalle',
@@ -36,10 +37,25 @@ export class PacienteDetalleComponent implements OnInit {
     deshabilitarValidar = false;
     inconsistenciaDatos = false;
     backUpDatos = [];
+    obraSocial: IObraSocial;    // Si existen mas de dos se muestra solo la de la primera posicion del array
+    nombrePattern;
+    permisosRenaper = 'fa:get:renaper';
+    autorizadoRenaper = false;  // check si posee permisos
 
-    constructor(private renaperService: RenaperService, private plex: Plex) { }
+    constructor(private renaperService: RenaperService,
+        private parent: PacienteCreateUpdateComponent,
+        private plex: Plex,
+        public auth: Auth,
+        private sisaService: SisaService,
+        private pacienteService: PacienteService,
+        private obraSocialService: ObraSocialService) {
+        this.nombrePattern = pacienteService.nombreRegEx;
+    }
 
     ngOnInit() {
+        // Se chequea si el usuario posee permisos para validación por renaper
+        this.autorizadoRenaper = this.auth.check(this.permisosRenaper);
+
         this.backUpDatos['nombre'] = this.paciente.nombre;
         this.backUpDatos['apellido'] = this.paciente.apellido;
         this.backUpDatos['estado'] = this.paciente.estado;
@@ -51,54 +67,113 @@ export class PacienteDetalleComponent implements OnInit {
             this.backUpDatos['direccion'] = this.paciente.direccion[0].valor;
             this.backUpDatos['codigoPostal'] = this.paciente.direccion[0].codigoPostal;
         }
+
+        this.loadObraSocial();
+    }
+
+    loadObraSocial() {
+        this.obraSocialService.get({ dni: this._paciente.documento }).subscribe(resultado => {
+            if (resultado.length) {
+                this.obraSocial = resultado[0];
+            }
+        });
     }
 
     renaperVerification(patient) {
+        if (!patient.documento || (patient.sexo.id === 'otro')) {
+            this.plex.info('warning', 'La validación por renaper requiere sexo MASCULINO o FEMENINO.', 'Atención');
+        } else {
+            this.loading = true;
+            let sexoRena = null;
+            let documentoRena = null;
 
-        // TODO llamar al servicio de renaper y actualizar: Datos básicos y Foto
-        // En caso que el paciente ya esté validado sólo traer la foto!
-        // Cancela la búsqueda anterior
+            patient.sexo = ((typeof patient.sexo === 'string')) ? patient.sexo : (Object(patient.sexo).id);
+            sexoRena = patient.sexo === 'masculino' ? 'M' : 'F';
+            documentoRena = patient.documento;
 
-        window.document.getElementById('detalleContenedor').classList.add('loadMode');
-        this.loading = true;
-        let sexoRena = null;
-        let documentoRena = null;
+            this.renaperService.get({ documento: documentoRena, sexo: sexoRena }).subscribe(
+                resultado => {
+                    this.deshabilitarValidar = true;
+                    let datos = resultado.datos;
+                    if (resultado.datos.nroError === 0) {
+                        if (patient.estado === 'temporal') {
+                            // Se cargan los datos mínimos para poder consultar matcheo
+                            patient.nombre = datos.nombres;
+                            patient.apellido = datos.apellido;
+                            patient.fechaNacimiento = moment(datos.fechaNacimiento, 'YYYY-MM-DD');
+                            // Se chequea si el paciente actual ya existe como validado.
+                            this.parent.verificaPacienteRepetido().then(validadoExistente => {
+                                if (validadoExistente) {
+                                    patient = this.parent.pacienteModel;
+                                    this.plex.info('info', 'El paciente que está intentando cargar ya se encuentra validado por otra fuente auténtica.');
+                                    this.loading = false;
+                                } else {
+                                    // si nombre y apellido contienen solo caracteres válidos ..
+                                    if (this.nombrePattern.test(datos.nombres) && this.nombrePattern.test(datos.apellido)) {
+                                        patient.nombre = datos.nombres;
+                                        patient.apellido = datos.apellido;
+                                        patient.estado = 'validado';
+                                        this.renaperNotification.emit(true);
+                                        this.loading = false;
+                                    } else {
+                                        this.plex.toast('info', 'Reintentando validación', 'INFORMACION:', 3500);
+                                        this.getSisa(patient, sexoRena);
+                                    }
+                                    this.paciente.direccion[0].valor = datos.calle + ' ' + datos.numero;
+                                    this.paciente.direccion[0].codigoPostal = datos.cpostal;
+                                    this.paciente.cuil = datos.cuil;
+                                    patient.foto = resultado.datos.foto;
+                                }
+                            });
+                        } else {
+                            //  Se completan datos FALTANTES
+                            if (!this.paciente.direccion[0].valor) {
+                                this.paciente.direccion[0].valor = datos.calle + ' ' + datos.numero;
+                            }
+                            if (!this.paciente.direccion[0].codigoPostal) {
+                                this.paciente.direccion[0].codigoPostal = datos.cpostal;
+                            }
+                            if (!this.paciente.cuil) {
+                                this.paciente.cuil = datos.cuil;
+                            }
+                            patient.foto = resultado.datos.foto;
+                            this.loading = false;
+                        }
+                    } else {
+                        this.deshabilitarValidar = false;
+                        this.plex.info('info', 'Por favor, revisar los datos ingresados.', 'No se encontró información');
+                        this.loading = false;
+                    }
+                });
+        }
+    }
 
-        patient.sexo = ((typeof patient.sexo === 'string')) ? patient.sexo : (Object(patient.sexo).id);
-        sexoRena = patient.sexo === 'masculino' ? 'M' : 'F';
-        documentoRena = patient.documento;
-
-        this.renaperService.get({ documento: documentoRena, sexo: sexoRena }).subscribe(resultado => {
-            // Queda pendiente actualizar la localidad y provincia de renaper en caso que no la carguen
-            this.deshabilitarValidar = true;
-            this.loading = false;
-            let datos = resultado.datos;
-            if (resultado.datos.nroError === 0) {
-                if (patient.estado === 'temporal') {
-                    patient.nombre = datos.nombres;
-                    patient.apellido = datos.apellido;
-                    patient.fechaNacimiento = moment(datos.fechaNacimiento, 'YYYY-MM-DD');
-                    patient.estado = 'validado';
-                    this.paciente.direccion[0].valor = datos.calle + ' ' + datos.numero;
-                    this.paciente.direccion[0].codigoPostal = datos.cpostal;
-                    patient.cuil = datos.cuil;
+    private getSisa(paciente: any, sexoRena) {
+        let dto = {
+            documento: paciente.documento,
+            sexo: sexoRena,
+        };
+        this.sisaService.getPaciente(dto).subscribe(sisaPaciente => {
+            if (sisaPaciente) {
+                if (this.nombrePattern.test(sisaPaciente.nombre) && this.nombrePattern.test(sisaPaciente.apellido)) {
+                    paciente.nombre = sisaPaciente.nombre;
+                    paciente.apellido = sisaPaciente.apellido;
+                    paciente.estado = 'validado';
+                    this.renaperNotification.emit(true);
+                    this.deshabilitarValidar = true;
+                    this.loading = false;
                 } else {
-                    if (!this.paciente.direccion[0].valor) {
-                        this.paciente.direccion[0].valor = datos.calle + ' ' + datos.numero;
-                    }
-                    if (!this.paciente.cuil) {
-                        this.paciente.cuil = datos.cuil;
-                    }
+                    this.renaperNotification.emit(false);
+                    this.loading = false;
+                    this.plex.info('info', 'Nombre y/o apellido contienen caracteres ilegibles. El paciente se registrará como temporal.', 'Información', 5000);
                 }
-                patient.foto = resultado.datos.foto;
-                this.renaperNotification.emit(true);
             } else {
-                // TODO ver el tema de mostrar algún error si no trae nada
-                this.plex.toast('danger', resultado.datos.descripcionError + ', REVISAR LOS DATOS INGRESADOS');
-                this.deshabilitarValidar = false;
+                this.plex.info('info', 'Por favor, revisar los datos ingresados.', 'No se encontró información');
+                this.loading = false;
             }
-
-            window.document.getElementById('detalleContenedor').classList.remove('loadMode');
+        }, err => {
+            this.plex.info('warning', 'Por favor, revisar los datos ingresados.', 'No se encontró información');
+            this.loading = false;
         });
     }
 

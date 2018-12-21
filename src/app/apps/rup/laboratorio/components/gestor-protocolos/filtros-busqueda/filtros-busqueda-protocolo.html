@@ -1,96 +1,86 @@
-<div class="row contenedor-filtros" *ngIf='modo === "carga" || modo === "validacion"'>
-    <div class="col">
-        <plex-radio [data]="modoCargaLaboratorioEnum" label="nombre" (change)="cambiarModoCarga($event)"
+<div class="row ml-1" *ngIf='modo === "carga" || modo === "validacion"'>
+    <span>
+        <plex-radio [data]="modoCargaLaboratorioEnum" label="Modo de carga" (change)="cambiarModoCarga($event)"
             [(ngModel)]="modoCargaLaboratorio" type="horizontal"></plex-radio>
-    </div>
-    <div class="col" *ngIf='showSelectPracticas'>
+    </span>
+    <span *ngIf='showSelectPracticas'>
         <plex-select [(ngModel)]="busqueda.area " (change)="buscarProtocolos($event,'area')" name="area" label="Area"
             [data]='areas'></plex-select>
-    </div>
-    <div class="col" *ngIf='showSelectHojaTrabajo'>
-        <plex-select [(ngModel)]="hojaTrabajo" (change)="buscarProtocolos($event,'hojaTrabajo')" name="area" label="Area"
-            (getData)='getHojasTrabajo($event)' labelField="nombre"></plex-select>
-    </div>
+    </span>
+    <span *ngIf='showSelectHojaTrabajo'>
+        <plex-select [(ngModel)]="hojaTrabajo" (change)="buscarProtocolos($event,'hojaTrabajo')" name="hojadetrabajo"
+            label="Hoja de Trabajo" (getData)='getHojasTrabajo($event)' labelField="nombre"></plex-select>
+    </span>
 </div>
-<div class="row contenedor-filtros">
-    <div class="col-2" *ngIf='modo !== "recepcion"'>
+<div class="filtros-container {{ modo }}">
+    <span>
+        <plex-datetime type="date" [(ngModel)]="busqueda.solicitudDesde" (change)="buscarProtocolos($event,'fechaDesde')"
+            name="solicitudDesde" label="Fecha desde" [required]="true" skipBy="day">
+        </plex-datetime>
+    </span>
+    <span>
+        <plex-datetime type="date" [(ngModel)]="busqueda.solicitudHasta" (change)="buscarProtocolos($event,'fechaHasta')"
+            name="solicitudHasta" label="Fecha hasta" [required]="true" skipBy="day">
+        </plex-datetime>
+    </span>
+    <span *ngIf='modo !== "recepcion"'>
         <plex-select [(ngModel)]="busqueda.area" (change)="buscarProtocolos($event,'area')" name="area" label="Area"
             [data]='areas'></plex-select>
-    </div>
-    <div class="col-2">
-        <plex-select [(ngModel)]="prioridad" (change)="buscarProtocolos($event,'prioridad')" name="prioridad" label="Prioridad"
-            [data]="prioridadesFiltroEnum"></plex-select>
-    </div>
-    <div class="col-2">
-        <plex-select [(ngModel)]="origen" (change)="buscarProtocolos($event,'origen')" name="origen" label="Origen"
+    </span>
+    <span>
+        <plex-select [(ngModel)]="busqueda.prioridad" (change)="buscarProtocolos($event,'prioridad')" name="prioridad"
+            label="Prioridad" [data]="prioridadesFiltroEnum"></plex-select>
+    </span>
+    <span>
+        <plex-select [(ngModel)]="busqueda.origen" (change)="buscarProtocolos($event,'origen')" name="origen" label="Origen"
             [data]="origenEnum"></plex-select>
-    </div>
-    <div class="col-2">
-        <plex-datetime type="date" [(ngModel)]="busqueda.solicitudDesde" (change)="buscarProtocolos($event,'fechaDesde')"
-            name="solicitudDesde" label="Fecha desde" class="fechas" [required]="true">
-        </plex-datetime>
-    </div>
-    <div class="col-2">
-        <plex-datetime type="date" [(ngModel)]="busqueda.solicitudHasta" (change)="buscarProtocolos($event,'fechaHasta')"
-            name="solicitudHasta" label="Fecha hasta" class="fechas" [required]="true">
-        </plex-datetime>
-    </div>
-    <!-- <div class="col-2 labs-contenedor-secundario" *ngIf='modo ==="recepcion"'>
-            <plex-button title="Iniciar Protocolo" icon="plus" class="align-self-end" type="success" (click)="mostrarFomularioPacienteSinTurno()"></plex-button>
-        </div> -->
-    <div class="col-2 labs-contenedor-secundario" *ngIf='modo !== "recepcion"'>
-        <div class="contenedor-bloque-texto line-height mr-2">
-            <small class="text-primary"></small>
-        </div>
-        <plex-button label="" type="info" style='margin-top: 22px;top: 39px;position: relative;' [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
-            (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
+    </span>
+    <div>
+        <label for="">Filtros avanzados</label>
+        <plex-button type="info" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones">
+        </plex-button>
     </div>
 </div>
 <!-- FIN FILTROS BASICOS  -->
 
 <!-- FILTROS AVANZADOS-->
 <ng-container *ngIf="mostrarMasOpciones">
-    <div class="row">
-        <div *ngIf='modo ==="carga"' class="col">
+    <div class="filtros-container">
+        <span>
+            <plex-select [(ngModel)]="paciente" name="paciente" (getData)="loadPacientes($event)" (change)="buscarProtocolos($event,'paciente')"
+                label="Paciente" placeholder="Ingrese paciente" labelField="nombre + ' ' + apellido" [required]="false"></plex-select>
+        </span>
+
+        <span *ngIf='modo ==="carga"'>
             <plex-select [(ngModel)]="servicio" name="servicio" (getData)="loadServicios($event)" (change)="buscarProtocolos($event,'servicio')"
                 label="Servicio" placeholder="Seleccione el servicio" labelField="term" [multiple]="true" [required]="false"
                 idField="term">
             </plex-select>
-        </div>
-        <div *ngIf='modo !== "carga" && modo !== "recepcion"' class="col-3">
-            <plex-select [(ngModel)]="servicio" name="servicio" (getData)="loadServicios($event)" (change)="buscarProtocolos($event,'servicio')"
-                label="Servicio" placeholder="Seleccione el servicio" labelField="term" [required]="false" idField="term">
+        </span>
+        <span *ngIf='modo !== "carga" && modo !== "recepcion"'>
+            <plex-select [(ngModel)]="servicios" name="servicio" (getData)="loadServicios($event)" (change)="buscarProtocolos($event,'servicio')"
+                label="Servicio" placeholder="Seleccione el servicio" labelField="term" [required]="false" idField="term"
+                [multiple]=true>
             </plex-select>
-        </div>
+        </span>
         <ng-container *ngIf='modo !== "recepcion"'>
-            <div class="col-3">
+            <span>
                 <plex-float [(ngModel)]="busqueda.numProtocoloDesde" (change)="buscarProtocolos($event,'numProtocoloDesde')"
                     name="numProtocoloDesde" label="N° protocolo desde"></plex-float>
-            </div>
-            <div class="col-3">
+            </span>
+            <span>
                 <plex-float [(ngModel)]="busqueda.numProtocoloHasta" (change)="buscarProtocolos($event,'numProtocoloHasta')"
                     name="numProtocoloHasta" label="N° protocolo hasta"></plex-float>
-            </div>
-            <div class="col-3">
+            </span>
+            <span>
                 <plex-select [(ngModel)]="organizacion" (change)="buscarProtocolos($event,'organizacion')" name="organizacion"
                     label="Efector Solicitante" (getData)="loadOrganizaciones($event)"></plex-select>
-            </div>
+            </span>
+            <span *ngIf='modo ==="listado"'>
+                <plex-select [(ngModel)]="estado" (change)="buscarProtocolos($event,'estado')" name="estado" label="Estado"
+                    [data]="estadosFiltroEnum"></plex-select>
+            </span>
         </ng-container>
-    </div>
-    <div *ngIf='modo ==="listado"' class="col-3">
-        <plex-select [(ngModel)]="estado" (change)="buscarProtocolos($event,'estado')" name="estado" label="Estado"
-            [data]="estadosFiltroEnum"></plex-select>
-    </div>
-    <div class="row">
-        <div class="col">
-            <label>Paciente</label>
-            <paciente-buscar (searchStart)="searchStartPaciente()" (searchEnd)="searchEndPaciente($event)"
-                (searchClear)="searchClearPaciente($event)"></paciente-buscar>
-            <div class="scrollPacientes" *ngIf='mostrarListaMpi'>
-                <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [autoselect]="false"
-                    (selected)="seleccionarPaciente($event)" (hover)="hoverPaciente($event)"></paciente-listado>
-            </div>
-        </div>
     </div>
 </ng-container>
 <br>

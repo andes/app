@@ -1,5 +1,5 @@
 
-import {forkJoin as observableForkJoin } from 'rxjs';
+import { forkJoin as observableForkJoin } from 'rxjs';
 import { estados } from './../../../../utils/enumerados';
 
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
@@ -15,6 +15,8 @@ import { PacienteService } from './../../../../services/paciente.service';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { IPaciente } from '../../../../interfaces/IPaciente';
 import { TurnoService } from '../../../../services/turnos/turno.service';
+import { SnomedService } from '../../../../services/term/snomed.service';
+
 
 @Component({
     selector: 'rup-puntoInicio',
@@ -48,12 +50,14 @@ export class PuntoInicioComponent implements OnInit {
     public prestacionSeleccion: any;
     public paciente: any;
 
+
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
         public servicioAgenda: AgendaService,
         public servicioPrestacion: PrestacionesService,
         public servicePaciente: PacienteService,
         public serviceTurno: TurnoService,
+        public snomed: SnomedService,
         public servicioTipoPrestacion: TipoPrestacionService) { }
 
     ngOnInit() {
@@ -67,6 +71,13 @@ export class PuntoInicioComponent implements OnInit {
             if (!this.auth.profesional.id) {
                 this.redirect('inicio');
             } else {
+                this.plex.updateTitle([{
+                    route: '/',
+                    name: 'ANDES'
+                }, {
+                    name: 'RUP'
+                }]);
+
                 this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
                     if (data && data.length <= 0) {
                         this.redirect('inicio');
@@ -77,6 +88,7 @@ export class PuntoInicioComponent implements OnInit {
                 });
             }
         }
+
     }
 
     redirect(pagina: string) {
@@ -106,10 +118,22 @@ export class PuntoInicioComponent implements OnInit {
                 organizacion: this.auth.organizacion.id,
                 sinEstado: 'modificada',
                 ambitoOrigen: 'ambulatorio'
+            }),
+            // buscamos las prestaciones pendientes que este asociadas a un turno para ejecutarlas
+            this.servicioPrestacion.get({
+                organizacion: this.auth.organizacion.id,
+                estado: 'pendiente',
+                tieneTurno: 'si',
+                // TODO: filtrar por las prestaciones permitidas
+                // tipoPrestaciones: this.tiposPrestacion.map(tp => { return tp.conceptId; })
             })
         ).subscribe(data => {
             this.agendas = data[0];
             this.prestaciones = data[1];
+            // Sumamos las prestaciones pendientes si hubiera
+            if (data[2]) {
+                this.prestaciones = [...this.prestaciones, ...data[2]];
+            }
             if (this.agendas.length) {
                 // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
                 this.agendas.forEach(agenda => {
@@ -296,10 +320,9 @@ export class PuntoInicioComponent implements OnInit {
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
                 this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
-
                     this.routeTo('ejecucion', prestacion.id);
                 }, (err) => {
-                    this.plex.alert('No fue posible crear la prestación', 'ERROR');
+                    this.plex.info('warning', 'No fue posible crear la prestación', 'ERROR');
                 });
             } else {
                 return false;
@@ -307,13 +330,79 @@ export class PuntoInicioComponent implements OnInit {
         });
     }
 
+
+    registrarInasistencia(paciente, agenda: IAgenda = null, turno, operacion) {
+        let cambios;
+        cambios = {
+            op: operacion,
+            turnos: [turno]
+        };
+        if (operacion === 'noAsistio') {
+            this.plex.confirm(`¿Está seguro que desea registrar la inasistencia del paciente: <b> ${paciente.apellido} ${paciente.nombre} </b> ?`).then(confirmacion => {
+                if (confirmacion) {
+                    this.servicioAgenda.patch(agenda.id, cambios).subscribe(() => {
+                        this.actualizar();
+                    });
+                } else {
+                    return false;
+                }
+            });
+        } else {
+            this.plex.confirm(`¿Está seguro que desea revertir los cambios?`).then(confirmacion => {
+                if (confirmacion) {
+                    this.servicioAgenda.patch(agenda.id, cambios).subscribe(() => {
+                        this.actualizar();
+                    });
+                } else {
+                    return false;
+                }
+            });
+        }
+
+        // En caso de crear una prestación
+        //     let planes = [];
+        //     this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
+        //         if (prestacion) {
+        //             console.log('prestacion', prestacion);
+        //             prestacion.ejecucion.registros.push({
+        //                 esDiagnosticoPrincipal: true,
+        //                 nombre: 'no asistió',
+        //                 concepto: {
+        //                     refsetIds: [
+        //                         '900000000000497000'
+        //                     ],
+        //                     fsn: 'no asistió (hallazgo)',
+        //                     semanticTag: 'hallazgo',
+        //                     conceptId: '281399006',
+        //                     term: 'no asistió',
+        //                 },
+        //                 valor: {
+        //                     estado: 'activo',
+        //                     fechaInicio: new Date(),
+        //                 }
+        //             });
+        //             this.servicioPrestacion.validarPrestacion(prestacion, planes).subscribe(() => {
+        //                 this.plex.toast('success', 'Se registro la inasistencia del paciente', 'Información', 300);
+        //                 this.actualizar();
+
+        //             }, (err) => {
+        //                 this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
+        //             });
+        //         }
+        //     }, (err) => {
+        //         this.plex.alert('No fue posible crear la prestación', 'ERROR');
+        //     });
+
+    }
+
+
     iniciarPrestacionNoNominalizada(snomedConcept, turno) {
         this.plex.confirm('</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
                 this.servicioPrestacion.crearPrestacion(null, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
                     this.routeTo('ejecucion', prestacion.id);
                 }, (err) => {
-                    this.plex.alert('No fue posible crear la prestación', 'ERROR');
+                    this.plex.info('warning', 'No fue posible crear la prestación', 'ERROR');
                 });
             } else {
                 return false;
@@ -424,56 +513,19 @@ export class PuntoInicioComponent implements OnInit {
         return moment(agenda.horaInicio).fromNow();
     }
 
+
     // buscar paciente para asigar en las agendas dinamicas
     buscarPaciente() {
         this.buscandoPaciente = true;
     }
 
-    // Paciente seleccionado para la carga en agendas dinamicas
-    onPacienteSelected(paciente: IPaciente) {
-        if (paciente.id) {
-
-            let pacienteSave = {
-                id: paciente.id,
-                documento: paciente.documento,
-                apellido: paciente.apellido,
-                nombre: paciente.nombre,
-                alias: paciente.alias,
-                fechaNacimiento: paciente.fechaNacimiento,
-                sexo: paciente.sexo
-            };
-            this.darTurno(pacienteSave);
-        } else {
-            this.plex.alert('El paciente debe ser registrado en MPI');
-        }
-    }
-
-    darTurno(paciente) {
-        let idAgendaSeleccionada = this.agendaSeleccionada.id;
-        if (this.agendaSeleccionada.dinamica) {
-            this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + this.agendaSeleccionada.tipoPrestaciones[0].term + '</b>', '¿Está seguro de que desea agregar el paciente a la agenda?').then(confirmacion => {
-                let datosTurno = {
-                    nota: '',
-                    motivoConsulta: '',
-                    tipoPrestacion: this.agendaSeleccionada.tipoPrestaciones[0],
-                    paciente: paciente,
-                    idAgenda: this.agendaSeleccionada.id
-                };
-                this.serviceTurno.saveDinamica(datosTurno).subscribe(
-                    resultado => {
-                        this.buscandoPaciente = false;
-                        this.actualizar();
-                    },
-                    error => {
-
-                    });
-            });
-        }
+    cancelarDinamica() {
+        this.buscandoPaciente = false;
     }
 
     /**
        * Ejecutar una prestacion que esta en estado pendiente
-       */
+    */
     ejecutarPrestacionPendiente(idPrestacion, paciente, snomedConcept) {
         let params: any = {
             op: 'estadoPush',
@@ -491,11 +543,66 @@ export class PuntoInicioComponent implements OnInit {
                 this.servicioPrestacion.patch(idPrestacion, params).subscribe(prestacion => {
                     this.router.navigate(['/rup/ejecucion', idPrestacion]);
                 }, (err) => {
-                    this.plex.alert('No fue posible iniciar la prestación: ' + err, 'ERROR');
+                    this.plex.info('warning', 'No fue posible iniciar la prestación: ' + err, 'ERROR');
                 });
             } else {
                 return false;
             }
         });
     }
+
+    verificarAsistencia(turno) {
+        if (!turno.asistencia) {
+            return true;
+        } else {
+            if (turno.asistencia === 'asistio') {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    verIniciarPrestacionPendiente(turno, agenda) {
+        let condAsistencia = false;
+        if (turno.asistencia && turno.asistencia === 'asistio') {
+            if (turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente') {
+                condAsistencia = true;
+            }
+        } else {
+            if (turno.asistencia && turno.asistencia !== 'asistio') {
+                condAsistencia = true;
+            } else {
+                if (!turno.asistencia) {
+                    condAsistencia = true;
+                }
+            }
+        }
+
+        return (this.esFutura(agenda) && turno.paciente && turno.estado !== 'suspendido' && turno.prestacion &&
+            turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente' &&
+            this.tienePermisos(turno.tipoPrestacion, turno.prestacion) && condAsistencia);
+    }
+
+
+    verIniciarPrestacion(turno, agenda) {
+        let condAsistencia = false;
+        if (turno.asistencia && turno.asistencia === 'asistio') {
+            if (!turno.prestacion) {
+                condAsistencia = true;
+            }
+        } else {
+            if (turno.asistencia && turno.asistencia !== 'asistio') {
+                condAsistencia = true;
+            } else {
+                if (!turno.asistencia) {
+                    condAsistencia = true;
+                }
+            }
+        }
+
+        return (!this.esFutura(agenda) && turno.paciente && turno.estado !== 'suspendido' &&
+            this.tienePermisos(turno.tipoPrestacion, turno.prestacion) && condAsistencia);
+    }
+
+
 }
