@@ -157,6 +157,7 @@ import { RelacionesPacientesComponent } from './core/mpi/components/relaciones-p
 import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
 import { PacienteCruComponent } from './core/mpi/components/paciente-cru.component';
 
+
 // PUCO/ObraSocial
 import { PucoComponent } from './components/puco/puco.component';
 
@@ -486,6 +487,7 @@ import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/
 import { UploadFileComponent } from './shared/components/upload-file.component';
 import { BebeCruComponent } from './core/mpi/components/bebe-cru.component';
 import { NotaComponent } from './core/mpi/components/notas-paciente.component';
+import { PacienteCacheService } from './core/mpi/services/pacienteCache.service';
 
 
 registerLocaleData(localeEs, 'es');
@@ -687,7 +689,8 @@ registerLocaleData(localeEs, 'es');
         FacturacionAutomaticaService,
         SugerenciasService,
         ConfiguracionPrestacionService,
-        PrestacionLegacyService
+        PrestacionLegacyService,
+        PacienteCacheService
     ]
 })
 
