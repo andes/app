@@ -331,8 +331,8 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                         type: 'multimatch',
                         cadenaInput: this.textoLibre
                     }).subscribe(resultado => {
-                        this.loading = false;
                         this.resultado = resultado;
+                        this.loading = false;
                         this.esEscaneado = false;
                         this.mostrarNuevo = this.auth.check('mpi:nuevoPaciente');
                     }, (err) => {

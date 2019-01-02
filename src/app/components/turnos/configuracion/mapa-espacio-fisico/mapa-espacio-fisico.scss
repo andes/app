@@ -10,7 +10,10 @@
         position: relative;
     }
     .ocupado {
-        background-color: #5cb85c;
+        background-color: #f0ad4e;
+    }
+    .ocupado-planificacion {
+        background-color: #c0bbb6;
     }
     .libre {
         background-color: white;
@@ -23,13 +26,6 @@
     }
     tr:hover {
         cursor: pointer; // background-color: #C7BEBE;
-        td {
-            // border: transparent;
-            // background-color: #C7BEBE;
-            // &.ocupado {
-            //     background-color: rgb(141, 192, 31);
-            // }
-        }
     }
     .info-agenda {
         min-height: 50px;

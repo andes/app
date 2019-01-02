@@ -1,14 +1,15 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+
+import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { Auth } from '@andes/auth';
-import { Plex } from '@andes/plex';
 import { ObraSocialService } from './../../services/obraSocial.service';
 import { ProfeService } from './../../services/profe.service';
 import { SugerenciasService } from '../../services/sendmailsugerencias.service';
 import { IProfe } from '../../interfaces/IProfe';
-
-import {forkJoin as observableForkJoin } from 'rxjs';
+import { forkJoin as observableForkJoin } from 'rxjs';
+import { DocumentosService } from '../../services/documentos.service';
+import { Auth } from '@andes/auth';
+import { saveAs } from 'file-saver';
+import { Slug } from 'ng2-slugify';
 
 @Component({
     selector: 'puco',
@@ -29,9 +30,13 @@ export class PucoComponent implements OnInit, OnDestroy {
     public cantidadPeriodos = 6;    // cantidad de versiones de padrones que se traen desde la DB
     public periodoMasAntiguo;    // la última version hacia atrás del padron a buscar
     public usuarios = [];
+    public showPrintForm = false;
+    public usuarioSelected = null;
     private resPuco = [];
     private resProfe: IProfe;
     private timeoutHandle: number;
+    private slug = new Slug('default'); // para documento pdf
+
     @Input() autofocus: Boolean = true;
 
     // termino a buscar ..
@@ -44,7 +49,8 @@ export class PucoComponent implements OnInit, OnDestroy {
         private obraSocialService: ObraSocialService,
         private profeService: ProfeService,
         private sugerenciasService: SugerenciasService,
-        private plex: Plex) { }
+        private auth: Auth,
+        private documentosService: DocumentosService) { }
 
     /* limpiamos la request que se haya ejecutado */
     ngOnDestroy() {
@@ -59,46 +65,46 @@ export class PucoComponent implements OnInit, OnDestroy {
             this.profeService.getPadrones({})]
         ).subscribe(padrones => {
 
-                let periodoMasActual = new Date();  // fecha actual para configurar el select a continuacion ..
+            let periodoMasActual = new Date();  // fecha actual para configurar el select a continuacion ..
 
-                // se construye el contenido del select segun la cantidad de meses hacia atras que se pudiera consultar
-                for (let i = 0; i < this.cantidadPeriodos; i++) {
-                    let periodoAux = moment(periodoMasActual).subtract(i, 'month');
-                    this.periodos[i] = { id: i, nombre: moment(periodoAux).format('MMMM [de] YYYY'), version: periodoAux };    // Ej: {1, "mayo 2018", "2018/05/05"}
+            // se construye el contenido del select segun la cantidad de meses hacia atras que se pudiera consultar
+            for (let i = 0; i < this.cantidadPeriodos; i++) {
+                let periodoAux = moment(periodoMasActual).subtract(i, 'month');
+                this.periodos[i] = { id: i, nombre: moment(periodoAux).format('MMMM [de] YYYY'), version: periodoAux };    // Ej: {1, "mayo 2018", "2018/05/05"}
 
-                }
-                this.setPeriodo(this.periodos[0]);  // por defecto se setea el periodo en el corriente mes
-                this.periodoMasAntiguo = this.periodos[this.cantidadPeriodos - 1];  // ultimo mes hacia atras que mostrará el select
+            }
+            this.setPeriodo(this.periodos[0]);  // por defecto se setea el periodo en el corriente mes
+            this.periodoMasAntiguo = this.periodos[this.cantidadPeriodos - 1];  // ultimo mes hacia atras que mostrará el select
 
 
-                // (Para el sidebar) Se setean las variables para mostrar los padrones de PUCO que se encuentran disponibles.
-                if (padrones[0].length) {
-                    for (let i = 0; i < padrones[0].length; i++) {
+            // (Para el sidebar) Se setean las variables para mostrar los padrones de PUCO que se encuentran disponibles.
+            if (padrones[0].length) {
+                for (let i = 0; i < padrones[0].length; i++) {
 
-                        if (i === padrones[0].length - 1) {
-                            this.listaPeriodosPuco += moment(padrones[0][i].version).utc().format('MMMM [de] YYYY');
-                        } else {
-                            this.listaPeriodosPuco += moment(padrones[0][i].version).utc().format('MMMM [de] YYYY') + ', ';
-                        }
+                    if (i === padrones[0].length - 1) {
+                        this.listaPeriodosPuco += moment(padrones[0][i].version).utc().format('MMMM [de] YYYY');
+                    } else {
+                        this.listaPeriodosPuco += moment(padrones[0][i].version).utc().format('MMMM [de] YYYY') + ', ';
                     }
-                    this.ultimaActualizacionPuco = moment(padrones[0][0].version).utc();
                 }
+                this.ultimaActualizacionPuco = moment(padrones[0][0].version).utc();
+            }
 
 
-                // (Para el sidebar) Se setean las variables para mostrar los padrones de INCLUIR SALUD que se encuentran disponibles.
-                if (padrones[1].length) {
-                    for (let i = 0; i < padrones[1].length; i++) {
+            // (Para el sidebar) Se setean las variables para mostrar los padrones de INCLUIR SALUD que se encuentran disponibles.
+            if (padrones[1].length) {
+                for (let i = 0; i < padrones[1].length; i++) {
 
-                        if (i === padrones[1].length - 1) {
-                            this.listaPeriodosProfe += moment(padrones[1][i].version).format('MMMM [de] YYYY');
-                        } else {
-                            this.listaPeriodosProfe += moment(padrones[1][i].version).format('MMMM [de] YYYY') + ', ';
-                        }
+                    if (i === padrones[1].length - 1) {
+                        this.listaPeriodosProfe += moment(padrones[1][i].version).format('MMMM [de] YYYY');
+                    } else {
+                        this.listaPeriodosProfe += moment(padrones[1][i].version).format('MMMM [de] YYYY') + ', ';
                     }
-                    this.ultimaActualizacionProfe = padrones[1][0].version;
                 }
+                this.ultimaActualizacionProfe = padrones[1][0].version;
+            }
 
-            });
+        });
     }
 
     // Realiza controles simples cuando se modifica el valor del select
@@ -162,13 +168,13 @@ export class PucoComponent implements OnInit, OnDestroy {
                             this.resProfe = (t[1] as any);
 
                             if (this.resPuco) {
-                                this.usuarios = <any> this.resPuco;
+                                this.usuarios = <any>this.resPuco;
                             }
                             if (this.resProfe) {
                                 if (this.resPuco) {
                                     this.usuarios = this.resPuco.concat(this.resProfe);
                                 } else {
-                                    this.usuarios = <any> this.resProfe;
+                                    this.usuarios = <any>this.resProfe;
                                 }
                             }
                         });
@@ -187,5 +193,34 @@ export class PucoComponent implements OnInit, OnDestroy {
     // Boton reporte de errores/sugerencias
     sugerencias() {
         this.sugerenciasService.post();
+    }
+
+
+    checkLog() {
+        return this.auth.loggedIn();
+    }
+
+    imprimirConstatacion(usuario: any) {
+        let dto = {
+            dni: usuario.dni,
+            nombre: usuario.nombre,
+            codigoFinanciador: usuario.codigoFinanciador,
+            financiador: usuario.financiador
+        };
+        this.documentosService.descargarConstanciaPuco(dto).subscribe((data: any) => {
+            if (data) {
+                data.nombre = dto.nombre;
+                // Generar descarga como PDF
+                this.descargarConstancia(data, { type: 'application/pdf' });
+            } else {
+                // Fallback a impresión normal desde el navegador
+                window.print();
+            }
+        });
+    }
+
+    private descargarConstancia(data: any, headers: any): void {
+        let blob = new Blob([data], headers);
+        saveAs(blob, this.slug.slugify(data.nombre + ' ' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf');
     }
 }

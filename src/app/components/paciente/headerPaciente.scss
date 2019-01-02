@@ -1,10 +1,10 @@
 :host {
-    position: fixed;
-    left: 100px;
-    top: 0px;
+    // position: fixed;
+    // left: 100px;
+    // top: 0px;    
     z-index: 3000;
     background: #0070BA;
-    padding-right: 5px;
+    // padding-right: 5px;
     cursor: help; // Texto
     .texto {
         color: white;
@@ -16,12 +16,18 @@
     } // Popover con detalles de paciente
     .popover {
         display: none;
-        margin-top: 18%;
+        margin-top: 50px;
         cursor: default;
         font-size: 1em;
         min-width: 275px;
+        left: 100px;
     }
     &:hover .popover {
         display: block;
     }
+}
+
+div.clearfix {
+    background: #0070BA;
+    height: 50px;
 }

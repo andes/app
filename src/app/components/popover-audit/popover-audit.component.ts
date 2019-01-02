@@ -12,6 +12,8 @@ export class PopoverAuditComponent implements OnInit {
 
   @Input()
   placement: string;
+  @Input()
+  showUpdate: boolean;
   private _datos: any;
   @Input('data')
   set data(value: any) {
@@ -27,6 +29,7 @@ export class PopoverAuditComponent implements OnInit {
   }
 
   ngOnInit() {
+
     let texto = '';
     if (this._datos) {
       if (this._datos.createdBy || this._datos.createdAt) {
@@ -34,7 +37,7 @@ export class PopoverAuditComponent implements OnInit {
         texto += texto + this._datos.createdBy ? 'por ' + this._datos.createdBy.nombreCompleto + ' ' : '';
         texto += texto + this._datos.createdAt ? 'el día ' + moment(this._datos.createdAt, 'dd/MM/yyyy HH:mm').format('DD/MM/YYYY HH:mm') : '';
       }
-      if (this._datos.updatedBy || this._datos.updatedAt) {
+      if (this.showUpdate && (this._datos.updatedBy || this._datos.updatedAt)) {
         texto += 'Actualizado ';
         if (this._datos.emitidoPor === 'appMobile') {
           texto += this._datos.updatedBy ? 'por ' + this._datos.updatedBy.nombre + ' ' : '';
