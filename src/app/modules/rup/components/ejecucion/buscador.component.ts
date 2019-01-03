@@ -135,23 +135,19 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
 
 
     async ngOnInit() {
-        this.servicioPrestacion.getRefSetData().subscribe(async refset => {
-            this.busquedaRefSet = refset;
-            // inicializamos variable resultsAux con la misma estructura que results
-            this.resultsAux = Object.assign({}, this.results);
-            // inicializamos el filtro actual para los hallazgos
-            this.filtroActual = 'todos';
-            this.ultimoTipoBusqueda = this.busquedaActual;
-            // Se inicializa el buscador básico, principal
-            await this.inicializarBuscadorBasico();
+        this.busquedaRefSet = this.servicioPrestacion.getRefSetData();
+        // inicializamos variable resultsAux con la misma estructura que results
+        this.resultsAux = Object.assign({}, this.results);
+        // inicializamos el filtro actual para los hallazgos
+        this.filtroActual = 'todos';
+        this.ultimoTipoBusqueda = this.busquedaActual;
+        // Se inicializa el buscador básico, principal
+        await this.inicializarBuscadorBasico();
 
-            // Se inicializa el buscador guiado, secundario
-            this.gruposGuiada = await this.inicializarBusquedaGuiada();
+        // Se inicializa el buscador guiado, secundario
+        this.gruposGuiada = await this.inicializarBusquedaGuiada();
 
-            this.filtrarResultadosBusquedaGuiada();
-
-        });
-
+        this.filtrarResultadosBusquedaGuiada();
     }
 
     inicializarBusquedaGuiada() {
@@ -185,8 +181,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
                 const frecuentesProfesional = fp.map((res: any) => {
                     let concepto = res.concepto;
                     (concepto as any).frecuencia = res.frecuencia;
-                    (concepto as any).esSolicitud = res.concepto.esSolicitud;
-
+                    (concepto as any).esSolicitud = res.esSolicitud;
                     return concepto;
                 });
 
@@ -200,7 +195,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             this.results['frecuentesTP']['todos'] = frecuentesTP.map(res => {
                 let concepto = res.concepto;
                 concepto.frecuencia = res.frecuencia;
-                concepto.esSolicitud = res.concepto.esSolicitud;
+                concepto.esSolicitud = res.esSolicitud;
                 return concepto;
             });
             this.filtrarResultados('frecuentesTP');
@@ -498,6 +493,9 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             if (busquedaActual === 'misFrecuentes' || busquedaActual === 'frecuentesTP') {
                 // quitamos aquellos que son no son elementos de registros, no es correcto que aparezcan
                 this.results[busquedaActual]['todos'] = this.results[busquedaActual]['todos'] ? this.results[busquedaActual]['todos'].filter(x => !this.esElementoRegistro(x)) : [];
+                this.results[busquedaActual]['procedimientos'] = this.results[busquedaActual]['procedimientos'] ? this.results[busquedaActual]['procedimientos'].filter(x => !this.esSolicitud(x)) : [];
+                this.results[busquedaActual]['todos'] = this.results[busquedaActual]['todos'] ? this.results[busquedaActual]['todos'].filter(x => !this.esSolicitud(x)) : [];
+
             }
             if (this.results[busquedaActual]['planes']) {
                 let planesCopia = JSON.parse(JSON.stringify(this.results[busquedaActual]['planes']));
