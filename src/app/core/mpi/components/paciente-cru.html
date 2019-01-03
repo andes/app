@@ -10,31 +10,36 @@
                         <div class="row">
                             <div class="col-4">
                                 <plex-int label="Número de Documento" [(ngModel)]="pacienteModel.documento" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
-                                    [readonly]=" validado || noPoseeDNI " [max]="9999999999" name="documento" [required]="!noPoseeDNI">
+                                    [readonly]=" validado || noPoseeDNI " [max]="9999999999" name="documento"
+                                    [required]="!noPoseeDNI">
                                 </plex-int>
                             </div>
                             <div class="col-4">
-                                <plex-text label="Apellido" [(ngModel)]="pacienteModel.apellido" name="apellido" required="true" [readonly]="validado">
+                                <plex-text label="Apellido" [(ngModel)]="pacienteModel.apellido" name="apellido"
+                                    required="true" [readonly]="validado">
                                 </plex-text>
                             </div>
                             <div class="col-4">
-                                <plex-text label="Nombre" [(ngModel)]="pacienteModel.nombre" name="nombre" required="true" [readonly]="validado">
+                                <plex-text label="Nombre" [(ngModel)]="pacienteModel.nombre" name="nombre" required="true"
+                                    [readonly]="validado">
                                 </plex-text>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-4">
-                                <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="validado" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
-                                    [(ngModel)]="pacienteModel.fechaNacimiento" name="fechaNacimiento" [required]="!noPoseeDNI">
+                                <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="validado"
+                                    (change)="disableGuardar = false; enableIgnorarGuardar = false;" [(ngModel)]="pacienteModel.fechaNacimiento"
+                                    name="fechaNacimiento" [required]="!noPoseeDNI">
                                 </plex-datetime>
                             </div>
                             <div class="col-4">
-                                <plex-select [(ngModel)]="pacienteModel.sexo" label="Sexo" [data]="sexos" name="sexo" required="true" placeholder="Seleccione.."
-                                    [readonly]="validado" (change)="completarGenero();disableGuardar = false; enableIgnorarGuardar = false;">
+                                <plex-select [(ngModel)]="pacienteModel.sexo" label="Sexo" [data]="sexos" name="sexo"
+                                    required="true" placeholder="Seleccione.." [readonly]="validado" (change)="completarGenero();disableGuardar = false; enableIgnorarGuardar = false;">
                                 </plex-select>
                             </div>
                             <div class="col-4">
-                                <plex-select [(ngModel)]="pacienteModel.estadoCivil" name="estadoCivil" [data]="estadosCiviles" label="Estado Civil">
+                                <plex-select [(ngModel)]="pacienteModel.estadoCivil" name="estadoCivil" [data]="estadosCiviles"
+                                    label="Estado Civil">
                                 </plex-select>
                             </div>
                         </div>
@@ -45,7 +50,8 @@
                                 <plex-bool [(ngModel)]="pacienteModel.reportarError" name="reportarError" label="Considero que los datos son incorrectos y quiero reportar el error"></plex-bool>
                             </div>
                             <div class="col-12" *ngIf="pacienteModel.reportarError">
-                                <plex-text placeholder="Ingrese una descripción del error" [(ngModel)]="pacienteModel.notaError" name="notaError"> </plex-text>
+                                <plex-text placeholder="Ingrese una descripción del error" [(ngModel)]="pacienteModel.notaError"
+                                    name="notaError"> </plex-text>
                             </div>
                         </div>
                     </fieldset>
@@ -55,12 +61,12 @@
                         <legend>Datos para App Mobile de ANDES</legend>
                         <div class="row">
                             <div class="col-4">
-                                <plex-text label="Usuario Andes (E-Mail)" [(ngModel)]="emailAndes" [readonly]="!checkPass" name="usuarioAndes" placeholder="e-mail"
-                                    (focusout)="onFocusout('email', emailAndes)"></plex-text>
+                                <plex-text label="Usuario Andes (E-Mail)" [(ngModel)]="emailAndes" [readonly]="!checkPass"
+                                    name="usuarioAndes" placeholder="e-mail" (focusout)="onFocusout('email', emailAndes)"></plex-text>
                             </div>
                             <div class="col-4">
-                                <plex-phone label="Celular para app de Andes" [(ngModel)]="celularAndes" placeholder="Ej: 2990000000" name="celularAndes"
-                                    (focusout)="onFocusout('celular', celularAndes)"></plex-phone>
+                                <plex-phone label="Celular para app de Andes" [(ngModel)]="celularAndes" placeholder="Ej: 2990000000"
+                                    name="celularAndes" (focusout)="onFocusout('celular', celularAndes)"></plex-phone>
                             </div>
                             <div class="col-4">
                                 <span style="color: red" *ngIf="emailAndes && messageApp.length > 0">
@@ -91,46 +97,58 @@
 
                         <div class="row">
                             <div class="col-12">
-                                <plex-bool [(ngModel)]="viveProvNeuquen" label="¿Vive en la Provincia de Neuquén?" name="viveProvNeuquen" (change)="changeProvNeuquen($event)"></plex-bool>
+                                <plex-bool [(ngModel)]="viveProvNeuquen" label="¿Vive en la Provincia de Neuquén?" name="viveProvNeuquen"
+                                    (change)="changeProvNeuquen($event)"></plex-bool>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12" *ngIf="viveProvNeuquen">
-                                <plex-bool [(ngModel)]="viveEnNeuquen" label="¿Vive en Neuquén Capital?" name="viveNQN" (change)="changeLocalidadNeuquen($event)"></plex-bool>
+                                <plex-bool [(ngModel)]="viveEnNeuquen" label="¿Vive en Neuquén Capital?" name="viveNQN"
+                                    (change)="changeLocalidadNeuquen($event)"></plex-bool>
                             </div>
                         </div>
                         <div *ngIf="viveProvNeuquen">
                             <div class="row" *ngIf="viveEnNeuquen">
                                 <div class="col-6">
-                                    <plex-text label="Dirección" [(ngModel)]="pacienteModel.direccion[0].valor" name="divValor" placeholder="Ej: Avenida las Flores 1200">
+                                    <plex-text label="Dirección" [(ngModel)]="pacienteModel.direccion[0].valor" name="divValor"
+                                        placeholder="Ej: Avenida las Flores 1200">
                                     </plex-text>
                                 </div>
                             </div>
                             <div class="row" *ngIf="!viveEnNeuquen">
                                 <div class="col">
-                                    <plex-text label="Dirección" [(ngModel)]="pacienteModel.direccion[0].valor" name="divValor" placeholder="Ej: Avenida las Flores 1200">
+                                    <plex-text label="Dirección" [(ngModel)]="pacienteModel.direccion[0].valor" name="divValor"
+                                        placeholder="Ej: Avenida las Flores 1200">
                                     </plex-text>
                                 </div>
-                                <div class="col">
-                                    <plex-select label="Localidad" [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad" name="localidad" [data]="localidadesNeuquen"
-                                        labelField="nombre" (change)="loadBarrios(pacienteModel.direccion[0].ubicacion.localidad)">
+                                <div class="col" *ngIf="localidades && localidades.length > 0">
+                                    <plex-select label="Localidad" [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad"
+                                        name="localidad" [data]="localidades" labelField="nombre" (change)="loadBarrios(pacienteModel.direccion[0].ubicacion.localidad)">
                                     </plex-select>
                                 </div>
                             </div>
                         </div>
                         <div class="row" *ngIf="!viveProvNeuquen">
                             <div class="col">
-                                <plex-text label="Dirección" [(ngModel)]="pacienteModel.direccion[0].valor" name="divValor" placeholder="Ej: Avenida las Flores 1200">
+                                <plex-text label="Dirección" [(ngModel)]="pacienteModel.direccion[0].valor" name="divValor"
+                                    placeholder="Ej: Avenida las Flores 1200">
                                 </plex-text>
                             </div>
                             <div class="col">
-                                <plex-select label="Provincia" [(ngModel)]="pacienteModel.direccion[0].ubicacion.provincia" name="provincia" [data]="provincias"
-                                    labelField="nombre" (change)="loadLocalidades(pacienteModel.direccion[0].ubicacion.provincia)">
+                                <plex-select label="Provincia" [(ngModel)]="pacienteModel.direccion[0].ubicacion.provincia"
+                                    name="provincia" [data]="provincias" labelField="nombre" (change)="loadLocalidades(pacienteModel.direccion[0].ubicacion.provincia)">
                                 </plex-select>
                             </div>
-                            <div class="col">
-                                <plex-select label="Localidad" [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad" name="localidad" [data]="localidadesNeuquen"
-                                    labelField="nombre">
+                            <div class="col" *ngIf="localidades && localidades.length > 0">
+                                <plex-select label="Localidad" [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad"
+                                    name="localidad" [data]="localidades" labelField="nombre" (change)="loadBarrios(pacienteModel.direccion[0].ubicacion.localidad)">
+                                </plex-select>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="barrios && barrios.length > 0">
+                            <div class="col-4">
+                                <plex-select label="Barrio" [(ngModel)]="pacienteModel.direccion[0].ubicacion.barrio"
+                                    name="barrio" [data]="barrios" labelField="nombre">
                                 </plex-select>
                             </div>
                         </div>
@@ -143,31 +161,38 @@
                         <div *ngIf="pacienteModel.contacto">
                             <div class="row">
                                 <div class="col-8">
-                                    <plex-bool [(ngModel)]="noPoseeContacto" label="No posee ningún tipo de contacto" name="noPoseeContacto" (change)="limpiarContacto()"></plex-bool>
+                                    <plex-bool [(ngModel)]="noPoseeContacto" label="No posee ningún tipo de contacto"
+                                        name="noPoseeContacto" (change)="limpiarContacto()"></plex-bool>
                                 </div>
                                 <div class="col-4" *ngIf="!noPoseeContacto">
-                                    <plex-button title="Agregar contacto" titlePosition="left" type="primary btn-sm" icon="phone-plus" (click)="addContacto('celular', '')"></plex-button>
+                                    <plex-button title="Agregar contacto" titlePosition="left" type="primary btn-sm"
+                                        icon="phone-plus" (click)="addContacto('celular', '')"></plex-button>
                                 </div>
                             </div>
                             <div class="row" *ngFor="let _unContacto of pacienteModel.contacto; let i = index">
                                 <ng-container *ngIf="!noPoseeContacto">
                                     <div class="col-4">
-                                        <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}" [required]="i <= 0" label="Tipo:">
+                                        <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}"
+                                            [required]="i <= 0" label="Tipo:">
                                         </plex-select>
                                     </div>
                                     <div class="col-4">
                                         <span *ngIf="_unContacto.tipo && _unContacto.tipo.id">
-                                            <plex-text *ngIf="_unContacto.tipo.id !== 'celular'" label="Dato:" [(ngModel)]="_unContacto.valor" name="valor-{{i}}" [required]="!noPoseeContacto && (i <= 0)">
+                                            <plex-text *ngIf="_unContacto.tipo.id !== 'celular'" label="Dato:"
+                                                [(ngModel)]="_unContacto.valor" name="valor-{{i}}" [required]="!noPoseeContacto && (i <= 0)">
                                             </plex-text>
-                                            <plex-phone label="Numero:" *ngIf="_unContacto.tipo.id === 'celular'" [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000"
-                                                [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}">
+                                            <plex-phone label="Numero:" *ngIf="_unContacto.tipo.id === 'celular'"
+                                                [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000" [required]="!noPoseeContacto && (i <= 0)"
+                                                name="valor-{{i}}">
                                             </plex-phone>
                                         </span>
                                         <span *ngIf="_unContacto.tipo && !_unContacto.tipo.id">
-                                            <plex-text *ngIf="_unContacto.tipo !== 'celular'" label="Dato:" [(ngModel)]="_unContacto.valor" name="valor-{{i}}" [required]="!noPoseeContacto && (i <= 0)">
+                                            <plex-text *ngIf="_unContacto.tipo !== 'celular'" label="Dato:" [(ngModel)]="_unContacto.valor"
+                                                name="valor-{{i}}" [required]="!noPoseeContacto && (i <= 0)">
                                             </plex-text>
-                                            <plex-phone label="Numero:" *ngIf="_unContacto.tipo === 'celular'" [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000"
-                                                [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}">
+                                            <plex-phone label="Numero:" *ngIf="_unContacto.tipo === 'celular'"
+                                                [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000" [required]="!noPoseeContacto && (i <= 0)"
+                                                name="valor-{{i}}">
                                             </plex-phone>
                                         </span>
                                     </div>
@@ -201,7 +226,11 @@
 
     <plex-layout-footer>
         <plex-button label="Cancelar" type="danger" position="left" (click)="cancel()"></plex-button>
-        <plex-button label="Guardar" type="success" position="right" [validateForm]="formulario" (click)="save($event)"></plex-button>
+        <plex-button *ngIf="!disableGuardar" label="Guardar" type="success" position="right" [validateForm]="formulario"
+            (click)="save($event,false)"></plex-button>
+        <plex-button *ngIf="enableIgnorarGuardar" label="Ignorar y Guardar" type="warning" position="right"
+            [validateForm]="formulario" (click)="save($event,true)"></plex-button>
+
     </plex-layout-footer>
 
 </plex-layout>

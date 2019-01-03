@@ -108,11 +108,11 @@ export class PacienteService {
         return this.put(paciente);
     }
 
-    save(paciente: IPaciente): Observable<IPaciente> {
-        if (paciente.id) {
-            return this.server.put(this.pacienteUrl + '/' + paciente.id, paciente);
+    save(dto: any): Observable<any> {
+        if (dto.id) {
+            return this.server.put(this.pacienteUrl + '/' + dto.id, dto);
         } else {
-            return this.server.post(this.pacienteUrl, paciente);
+            return this.server.post(this.pacienteUrl, dto);
 
         }
     }

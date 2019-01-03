@@ -1,116 +1,27 @@
-import {
-    AppMobileService
-} from './../../../services/appMobile.service';
-import {
-    ParentescoService
-} from './../../../services/parentesco.service';
-
-import {
-    IUbicacion
-} from './../../../interfaces/IUbicacion';
-import {
-    PacienteSearch
-} from './../../../interfaces/pacienteSearch.interface';
-import {
-    IContacto
-} from './../../../interfaces/IContacto';
-import {
-    FinanciadorService
-} from './../../../services/financiador.service';
-import {
-    IDireccion
-} from '../../../core/mpi/interfaces/IDireccion';
-import {
-    IBarrio
-} from './../../../interfaces/IBarrio';
-import {
-    ILocalidad
-} from './../../../interfaces/ILocalidad';
-import {
-    IPais
-} from './../../../interfaces/IPais';
-import {
-    IFinanciador
-} from './../../../interfaces/IFinanciador';
-import {
-    Observable
-} from 'rxjs/Rx';
-import {
-    LogService
-} from './../../../services/log.service';
-import {
-    BarrioService
-} from './../../../services/barrio.service';
-import {
-    LocalidadService
-} from './../../../services/localidad.service';
-import {
-    ProvinciaService
-} from './../../../services/provincia.service';
-import {
-    PaisService
-} from './../../../services/pais.service';
-import {
-    AnsesService,
-} from './../../../services/fuentesAutenticas/servicioAnses.service';
-import {
-    PacienteService
-} from '../../../core/mpi/services/paciente.service';
+import { AppMobileService } from './../../../services/appMobile.service';
+import { ParentescoService } from './../../../services/parentesco.service';
+import { IContacto } from './../../../interfaces/IContacto';
+import { IDireccion } from '../../../core/mpi/interfaces/IDireccion';
+import { LogService } from './../../../services/log.service';
+import { LocalidadService } from './../../../services/localidad.service';
+import { ProvinciaService } from './../../../services/provincia.service';
+import { PaisService } from './../../../services/pais.service';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import * as enumerados from './../../../utils/enumerados';
-import {
-    IPaciente
-} from '../../../core/mpi/interfaces/IPaciente';
-import {
-    IProvincia
-} from './../../../interfaces/IProvincia';
-import {
-    FechaPipe
-} from './../../../pipes/fecha.pipe';
-import {
-    Plex
-} from '@andes/plex';
-import {
-    MapsComponent
-} from './../../../utils/mapsComponent';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
+import { IProvincia } from './../../../interfaces/IProvincia';
+import { Plex } from '@andes/plex';
 import * as moment from 'moment';
-import {
-    PacientePipe
-} from './../../../pipes/paciente.pipe';
-import {
-    EdadPipe
-} from './../../../pipes/edad.pipe';
-
-import {
-    FormBuilder,
-    FormGroup,
-    FormArray,
-    Validators
-} from '@angular/forms';
-import {
-    DomSanitizer,
-    SafeHtml,
-} from '@angular/platform-browser';
-import {
-    Component,
-    OnInit,
-    Output,
-    Input,
-    EventEmitter,
-    HostBinding
-} from '@angular/core';
-import { Params, ActivatedRoute } from '@angular/router';
-
+import { Component, OnInit, } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PacienteCacheService } from '../services/pacienteCache.service';
+import { BarrioService } from '../../../services/barrio.service';
 
 @Component({
     selector: 'paciente-cru',
     templateUrl: 'paciente-cru.html'
 })
 export class PacienteCruComponent implements OnInit {
-    @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
-    // @Input() paciente: IPaciente;
-    // @Input() isScan: IPaciente;
-    // @Input() escaneado: Boolean;
-    @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
     foto = '';
     estados = [];
@@ -123,8 +34,8 @@ export class PacienteCruComponent implements OnInit {
 
     provincias: IProvincia[] = [];
     pacientesSimilares = [];
-    barriosNeuquen: any[];
-    localidadesNeuquen: any[] = [];
+    barrios: any[];
+    localidades: any[] = [];
 
     paisArgentina = null;
     provinciaNeuquen = null;
@@ -132,7 +43,7 @@ export class PacienteCruComponent implements OnInit {
     validado = false;
     noPoseeDNI = false;
     noPoseeContacto = false;
-    contactosBackUp = [];
+    contactosCache = [];
     disableGuardar = false;
     enableIgnorarGuardar = false;
     sugerenciaAceptada = false;
@@ -140,13 +51,11 @@ export class PacienteCruComponent implements OnInit {
     viveEnNeuquen = false;
     viveProvNeuquen = false;
     posibleDuplicado = false;
-    altoMacheo = false;
     loading = false;
     esEscaneado = false;
     autoFocus = 0;
     hoy = moment().endOf('day').toDate();
     showCargar: boolean;
-
     contacto: IContacto = {
         tipo: 'celular',
         valor: '',
@@ -202,9 +111,9 @@ export class PacienteCruComponent implements OnInit {
         notaError: ''
     };
 
+    public escaneado = false;
     public paciente: IPaciente;
     public nombrePattern: string;
-
     // PARA LA APP MOBILE
     public showMobile = false;
     public checkPass = false;
@@ -213,28 +122,50 @@ export class PacienteCruComponent implements OnInit {
     public celularAndes: String = '';
     public activarApp = false;
 
-    public escaneado = false;
-
-    constructor(private formBuilder: FormBuilder, private _sanitizer: DomSanitizer,
+    constructor(
+        public router: Router,
         private paisService: PaisService,
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
+        private barriosService: BarrioService,
         private logService: LogService,
-        private barrioService: BarrioService,
         private pacienteService: PacienteService,
         private parentescoService: ParentescoService,
-        private ansesService: AnsesService,
         public appMobile: AppMobileService,
         public route: ActivatedRoute,
-        private financiadorService: FinanciadorService, public plex: Plex) {
+        private pacienteCache: PacienteCacheService,
+        public plex: Plex) {
         this.nombrePattern = pacienteService.nombreRegEx.source;
     }
 
     ngOnInit() {
         this.updateTitle('Registrar un paciente');
-        this.route.queryParams.subscribe((params: any) => {
-            this.paciente = JSON.parse(params[0]);
+        this.pacienteCache.getPaciente().subscribe(res => {
+            if (res && !this.isEmptyObject(res)) {
+                this.paciente = JSON.parse(JSON.stringify(res));
+                this.actualizarDatosPaciente();
+                if (this.paciente.id) {
+                    // Busco el paciente en mongodb
+                    this.pacienteService.getById(this.paciente.id).subscribe(resultado => {
+                        if (resultado) {
+                            if (!resultado.scan) {
+                                resultado.scan = this.paciente.scan;
+                            }
+                            if (this.escaneado && resultado.estado !== 'validado') {
+                                resultado.nombre = this.paciente.nombre.toUpperCase();
+                                resultado.apellido = this.paciente.apellido.toUpperCase();
+                                resultado.fechaNacimiento = this.paciente.fechaNacimiento;
+                                resultado.sexo = this.paciente.sexo;
+                                resultado.documento = this.paciente.documento;
+                            }
+                            this.paciente = Object.assign({}, resultado);
+                        }
+                        this.actualizarDatosPaciente();
+                    });
+                }
+            }
         });
+        this.pacienteCache.getScanState().subscribe(result => { this.escaneado = result; });
 
         this.relacionesBorradas = [];
 
@@ -274,31 +205,7 @@ export class PacienteCruComponent implements OnInit {
         this.estadosCiviles = enumerados.getObjEstadoCivil();
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.estados = enumerados.getEstados();
-        /*this.relacionTutores = enumerados.getObjRelacionTutor();*/
-        if (this.paciente && !this.isEmptyObject(this.paciente)) {
-            this.actualizarDatosPaciente();
-            if (this.paciente.id) {
-                // Busco el paciente en mongodb (caso que no este en mongo y si en elastic server)
-                this.pacienteService.getById(this.paciente.id)
-                    .subscribe(resultado => {
-                        if (resultado) {
-                            if (!resultado.scan) {
-                                resultado.scan = this.paciente.scan;
-                            }
 
-                            if (this.escaneado && resultado.estado !== 'validado') {
-                                resultado.nombre = this.paciente.nombre.toUpperCase();
-                                resultado.apellido = this.paciente.apellido.toUpperCase();
-                                resultado.fechaNacimiento = this.paciente.fechaNacimiento;
-                                resultado.sexo = this.paciente.sexo;
-                                resultado.documento = this.paciente.documento;
-                            }
-                            this.paciente = Object.assign({}, resultado);
-                        }
-                        this.actualizarDatosPaciente();
-                    });
-            }
-        }
     }
 
     private updateTitle(nombre: string) {
@@ -376,6 +283,10 @@ export class PacienteCruComponent implements OnInit {
                         (this.paciente.direccion[0].ubicacion.provincia.nombre === 'Neuquén') ? this.viveProvNeuquen = true : this.viveProvNeuquen = false;
                         this.loadLocalidades(this.paciente.direccion[0].ubicacion.provincia);
                     }
+                    if (this.paciente.direccion[0].ubicacion.localidad !== null) {
+                        (this.paciente.direccion[0].ubicacion.localidad.nombre === 'Neuquén') ? this.viveEnNeuquen = true : this.viveEnNeuquen = false;
+                        this.loadBarrios(this.paciente.direccion[0].ubicacion.localidad);
+                    }
                 }
                 if (!this.paciente.reportarError) {
                     this.paciente.reportarError = false;
@@ -390,7 +301,7 @@ export class PacienteCruComponent implements OnInit {
         this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
 
         // Se verifican los datos de la app mobile
-        if (this.paciente.id) {
+        if (!this.paciente.id) {
             // this.appMobile.check(this.paciente.id).subscribe(data => {
             //     if (!data.account) {
             //         // No posee cuenta
@@ -448,7 +359,15 @@ export class PacienteCruComponent implements OnInit {
     loadLocalidades(provincia) {
         if (provincia && provincia.id) {
             this.localidadService.getXProvincia(provincia.id).subscribe(result => {
-                this.localidadesNeuquen = result;
+                this.localidades = result;
+            });
+        }
+    }
+
+    loadBarrios(localidad) {
+        if (localidad && localidad.id) {
+            this.barriosService.getXLocalidad(localidad.id).subscribe(result => {
+                this.barrios = result;
             });
         }
     }
@@ -463,7 +382,23 @@ export class PacienteCruComponent implements OnInit {
             this.loadLocalidades(this.provinciaNeuquen);
         } else {
             this.viveEnNeuquen = false;
-            this.localidadesNeuquen = [];
+            this.localidades = [];
+        }
+    }
+
+    /**
+     * Change del plex-bool viveNQN
+     * carga los barrios de Neuquén
+     * @param {any} event
+     *
+     * @memberOf PacienteCreateUpdateComponent
+     */
+    changeLocalidadNeuquen(event) {
+        if (event.value) {
+            this.loadBarrios(this.localidadNeuquen);
+        } else {
+            this.pacienteModel.direccion[0].ubicacion.localidad = null;
+            this.barrios = [];
         }
     }
 
@@ -493,34 +428,13 @@ export class PacienteCruComponent implements OnInit {
         }
     }
 
-    chequearContacto(key) {
-        let index = this.pacienteModel.contacto.findIndex(item => item.tipo === key);
-        if (index >= 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    verificarContactosRepetidos() {
-        let valores = [];
-        for (let elem of this.pacienteModel.contacto) {
-            const item = valores.find(s => s === elem.valor);
-            if (item) {
-                return false;
-            } else {
-                valores.push(elem.valor);
-            }
-        }
-        return true;
-    }
-
+    // Guarda los contactos cuando se tilda "no posee contactos", para recuperarlos en caso de destildar el box.
     limpiarContacto() {
-        if (this.noPoseeContacto) { // checkbox en true
-            this.contactosBackUp = this.pacienteModel.contacto;
+        if (this.noPoseeContacto) {
+            this.contactosCache = this.pacienteModel.contacto;
             this.pacienteModel.contacto = [this.contacto];
         } else {
-            this.pacienteModel.contacto = this.contactosBackUp;
+            this.pacienteModel.contacto = this.contactosCache;
         }
     }
 
@@ -543,206 +457,118 @@ export class PacienteCruComponent implements OnInit {
         }
     }
 
-
-
-    // ------------------ SAVE -----------------------------
-
-    preSave(valid) {
-        if (valid.formValid) {
-            if (this.pacienteModel.documento) {
-                this.verificaPacienteRepetido().then((resultado) => {
-                    if (!resultado) {
-                        this.save(valid);
-                        this.disableGuardar = true;
-                    }
-                });
-            } else {
-                this.save(valid);
-                this.disableGuardar = true;
-            }
-        } else {
+    save(event, ignoreCheck = false) {
+        if (!event.formValid) {
             this.plex.info('warning', 'Debe completar los datos obligatorios');
+            return;
         }
-    }
-
-    save(valid) {
-        const repetidos = this.verificarContactosRepetidos();
-        if (valid.formValid && repetidos) {
-
-            let pacienteGuardar = Object.assign({}, this.pacienteModel);
-
-            pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-            pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : null;
-            pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : undefined;
-
-            pacienteGuardar.contacto.map(elem => {
-                elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
-                return elem;
-            });
-
-            // Luego aquí habría que validar pacientes de otras prov. y paises (Por ahora solo NQN)
-            pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
-
-            if (this.viveProvNeuquen) {
-                pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaNeuquen;
-            }
-            if (this.viveEnNeuquen) {
-                pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadNeuquen;
-            }
-            if (this.altoMacheo) {
-                this.logService.post('mpi', 'macheoAlto', {
-                    paciente: this.pacienteModel
-                }).subscribe(() => { });
-            }
-            if (this.posibleDuplicado) {
-                this.logService.post('mpi', 'posibleDuplicado', {
-                    paciente: this.pacienteModel
-                }).subscribe(() => { });
-            }
-            // Chequeamos cambios en relaciones del paciente
-            if (pacienteGuardar.documento) {
-                this.actualizarRelaciones(pacienteGuardar);
-            }
-
-            // NAVEGAR HACIA ATRAS LUEGO DE GUARDAR
-
-        } else {
-            this.plex.info('Debe completar los datos obligatorios. Verificar los contactos', 'Información');
+        this.pacienteCache.setScanState(false);
+        this.disableGuardar = true;
+        let pacienteGuardar: any = Object.assign({}, this.pacienteModel);
+        pacienteGuardar.ignoreCheck = ignoreCheck;
+        pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
+        pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : null;
+        pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : undefined;
+        pacienteGuardar.contacto.map(elem => {
+            elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
+            return elem;
+        });
+        pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
+        if (this.viveProvNeuquen) {
+            pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaNeuquen;
         }
+        if (this.viveEnNeuquen) {
+            pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadNeuquen;
+        }
+        // Chequeamos cambios en relaciones del paciente
+        if (pacienteGuardar.documento) {
+            this.actualizarRelaciones(pacienteGuardar);
+        }
+        this.pacienteService.save(pacienteGuardar).subscribe(
+            resultadoSave => {
+                // Existen sugerencias de pacientes similares?
+                if (resultadoSave.resultadoMatching && resultadoSave.resultadoMatching.length > 0 && !this.sugerenciaAceptada) {
+                    if (this.escaneado) {
+                        this.pacientesSimilares = resultadoSave.resultadoMatching.filter(elem => elem.paciente.estado === 'validado');
+                    }
+                    // Si el matcheo es alto o el dni-sexo está repetido no podemos ignorar las sugerencias
+                    this.enableIgnorarGuardar = !resultadoSave.macheoAlto && !resultadoSave.dniRepetido;
+                    if (this.pacientesSimilares && this.pacientesSimilares.length > 0 && this.pacientesSimilares[0].match >= 1.0) {  // Hay un matcheo del 100%?
+                        this.plex.info('danger', 'El paciente ya existe, verifique los datos', 'Atención');
+                        this.onSelect(this.pacientesSimilares[0].paciente);
+                        this.pacientesSimilares = null;
+                    } else {
+                        if (!this.enableIgnorarGuardar) {
+                            this.plex.info('danger', 'El paciente que ya existe, verifique las sugerencias');
+                        } else {
+                            this.plex.info('warning', 'Existen pacientes similares, verifique las sugerencias');
+                        }
+                    }
+                } else {
+                    this.actualizarRelaciones(resultadoSave);
+                    this.plex.info('success', 'Los datos se actualizaron correctamente');
+                    this.router.navigate(['apps/mpi/busqueda']);
+                }
+            },
+            error => {
+                this.plex.info('warning', 'Error guardando el paciente');
+            }
+        );
     }
 
     // Borra/agrega relaciones al paciente segun corresponda.
-    actualizarRelaciones(unPaciente) {
-        this.pacienteService.save(unPaciente).subscribe(unPacienteSave => {
-            if (unPacienteSave) {
-                // Borramos relaciones
-                if (this.relacionesBorradas.length > 0) {
-                    this.relacionesBorradas.forEach(rel => {
-                        let relacionOpuesta = this.parentescoModel.find((elem) => {
-                            if (elem.nombre === rel.relacion.opuesto) {
-                                return elem;
-                            }
-                        });
-                        let dto = {
-                            relacion: relacionOpuesta,
-                            referencia: unPacienteSave.id,
-                        };
-                        if (rel.referencia) {
-                            this.pacienteService.patch(rel.referencia, {
-                                'op': 'deleteRelacion',
-                                'dto': dto
-                            }).subscribe();
+    actualizarRelaciones(unPacienteSave) {
+        if (unPacienteSave) {
+            // Borramos relaciones
+            if (this.relacionesBorradas.length > 0) {
+                this.relacionesBorradas.forEach(rel => {
+                    let relacionOpuesta = this.parentescoModel.find((elem) => {
+                        if (elem.nombre === rel.relacion.opuesto) {
+                            return elem;
                         }
                     });
-                }
-                // agregamos las relaciones opuestas
-                if (unPacienteSave.relaciones && unPacienteSave.relaciones.length > 0) {
-                    unPacienteSave.relaciones.forEach(rel => {
-                        let relacionOpuesta = this.parentescoModel.find((elem) => {
-                            if (elem.nombre === rel.relacion.opuesto) {
-                                return elem;
-                            }
-                        });
-                        let dto = {
-                            relacion: relacionOpuesta,
-                            referencia: unPacienteSave.id,
-                            nombre: unPacienteSave.nombre,
-                            apellido: unPacienteSave.apellido,
-                            documento: unPacienteSave.documento ? unPacienteSave.documento : '',
-                            foto: unPacienteSave.foto ? unPacienteSave.foto : null
-                        };
-                        if (rel.referencia) {
-                            this.pacienteService.patch(rel.referencia, {
-                                'op': 'updateRelacion',
-                                'dto': dto
-                            }).subscribe();
-                        }
-                    });
-                }
-                this.data.emit(unPacienteSave);
-                this.plex.info('success', 'Los datos se actualizaron correctamente');
-            } else {
-                this.plex.info('warning', 'ERROR: Ocurrió un problema al actualizar los datos');
+                    let dto = {
+                        relacion: relacionOpuesta,
+                        referencia: unPacienteSave.id,
+                    };
+                    if (rel.referencia) {
+                        this.pacienteService.patch(rel.referencia, {
+                            'op': 'deleteRelacion',
+                            'dto': dto
+                        }).subscribe();
+                    }
+                });
             }
-        });
+            // agregamos las relaciones opuestas
+            if (unPacienteSave.relaciones && unPacienteSave.relaciones.length > 0) {
+                unPacienteSave.relaciones.forEach(rel => {
+                    let relacionOpuesta = this.parentescoModel.find((elem) => {
+                        if (elem.nombre === rel.relacion.opuesto) {
+                            return elem;
+                        }
+                    });
+                    let dto = {
+                        relacion: relacionOpuesta,
+                        referencia: unPacienteSave.id,
+                        nombre: unPacienteSave.nombre,
+                        apellido: unPacienteSave.apellido,
+                        documento: unPacienteSave.documento ? unPacienteSave.documento : '',
+                        foto: unPacienteSave.foto ? unPacienteSave.foto : null
+                    };
+                    if (rel.referencia) {
+                        this.pacienteService.patch(rel.referencia, {
+                            'op': 'updateRelacion',
+                            'dto': dto
+                        }).subscribe();
+                    }
+                });
+            }
+
+        }
     }
 
     // Verifica paciente repetido y genera lista de candidatos
-    verificaPacienteRepetido() {
-        this.posibleDuplicado = false;
-        this.altoMacheo = false;
 
-        return new Promise((resolve, reject) => {
-            if (this.pacienteModel.nombre && this.pacienteModel.apellido && this.pacienteModel.documento &&
-                this.pacienteModel.fechaNacimiento && this.pacienteModel.sexo) {
-                let dto: any = {
-                    type: 'suggest',
-                    claveBlocking: 'documento',
-                    percentage: true,
-                    apellido: this.pacienteModel.apellido.toString(),
-                    nombre: this.pacienteModel.nombre.toString(),
-                    documento: this.pacienteModel.documento.toString(),
-                    sexo: ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id),
-                    fechaNacimiento: this.pacienteModel.fechaNacimiento
-                };
-                this.pacienteService.get(dto).subscribe(resultado => {
-                    this.pacientesSimilares = resultado;
-
-                    // agregamos la condición de abajo para filtrar las sugerencias
-                    // cuando el paciente fue escaneado o ya estaba validado.
-                    if (this.escaneado || this.pacienteModel.estado === 'validado') {
-
-                        this.pacientesSimilares = this.pacientesSimilares.filter(item => item.paciente.estado === 'validado');
-                    }
-                    this.pacientesSimilares = this.pacientesSimilares.filter(item => item.match >= 0.88);
-                    if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
-                        // Nos quedamos todos los pacientes menos el mismo.
-
-                        this.pacientesSimilares = this.pacientesSimilares.filter(paciente => paciente.paciente.id !== this.pacienteModel.id);
-                        if (this.pacientesSimilares.length <= 0) {
-                            resolve(false);
-                        } else {
-                            if (this.pacientesSimilares[0].match >= 0.94) {
-                                if (this.pacientesSimilares[0].match >= 1.0) {
-                                    this.onSelect(this.pacientesSimilares[0].paciente);
-                                    this.pacientesSimilares = null;
-                                    this.enableIgnorarGuardar = false;
-                                } else {
-                                    this.logService.post('mpi', 'macheoAlto', {
-                                        pacienteDB: this.pacientesSimilares[0],
-                                        pacienteScan: this.pacienteModel
-                                    }).subscribe(() => { });
-                                    this.plex.info('warning', 'El paciente que está cargando ya existe, debe buscarlo y seleccionarlo');
-                                    this.enableIgnorarGuardar = false;
-                                    this.disableGuardar = true;
-                                }
-                            } else {
-                                if (!this.verificarDNISexo(this.pacientesSimilares)) {
-                                    this.logService.post('mpi', 'posibleDuplicado', {
-                                        pacienteDB: this.pacientesSimilares[0],
-                                        pacienteScan: this.pacienteModel
-                                    }).subscribe(() => { });
-                                    this.posibleDuplicado = true;
-                                    this.plex.info('warning', 'Existen pacientes con un alto porcentaje de coincidencia, verifique la lista');
-                                    this.enableIgnorarGuardar = true;
-                                    this.disableGuardar = true;
-                                } else {
-                                    resolve(true);
-                                }
-                            }
-                            resolve(true);
-                        }
-                    } else {
-                        this.disableGuardar = false;
-                        this.enableIgnorarGuardar = false;
-                        resolve(false);
-                    }
-                });
-            } else {
-                resolve(false);
-            }
-        });
-    }
 
     activarAppMobile(unPaciente) {
         // Activa la app mobile
@@ -770,9 +596,9 @@ export class PacienteCruComponent implements OnInit {
     }
 
     cancel() {
-        // VER NAVEGAR HACIA ATRAS
         this.showMobile = false;
-        this.data.emit(null);
+        this.router.navigate(['apps/mpi/busqueda']);
+
     }
 
     // ---------------- NOTIFICACIONES --------------------
@@ -785,26 +611,4 @@ export class PacienteCruComponent implements OnInit {
         this.pacienteModel.notas = notasNew;
     }
 
-
-    // addFinanciador() {
-    //     let nuevoFinanciador = {
-    //         entidad: null,
-    //         codigo: '',
-    //         activo: true,
-    //         fechaAlta: null,
-    //         fechaBaja: null,
-    //         ranking: this.pacienteModel.financiador ? this.pacienteModel.financiador.length : 0
-    //     };
-    //     if (this.pacienteModel.financiador) {
-    //         this.pacienteModel.financiador.push(nuevoFinanciador);
-    //     } else {
-    //         this.pacienteModel.financiador = [nuevoFinanciador];
-    //     }
-    // }
-
-    // removeFinanciador(i) {
-    //     if (i >= 0) {
-    //         this.pacienteModel.financiador.splice(i, 1);
-    //     }
-    // }
 }
