@@ -21,11 +21,11 @@ export class PacienteCacheService {
         this.pacienteCache.next(null);
     }
 
-    setScanState(scanState) {
+    setScanState(scanState: boolean) {
         this.isScannedCache.next(scanState);
     }
 
-    getScanState(): Observable<any> {
+    getScanState(): Observable<boolean> {
         return this.isScannedCache.asObservable();
     }
 
