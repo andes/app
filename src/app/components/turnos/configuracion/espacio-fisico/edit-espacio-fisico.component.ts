@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 
@@ -7,6 +7,7 @@ import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import { OrganizacionService } from './../../../../services/organizacion.service';
 import * as enumerados from './../../../../utils/enumerados';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'edit-espacio-fisico',
@@ -33,12 +34,14 @@ export class EditEspacioFisicoComponent implements OnInit {
     public modelo: any = {};
     public edif: any = {};
     public autorizado: boolean;
-    constructor(public plex: Plex, public EspacioFisicoService: EspacioFisicoService, public OrganizacionService: OrganizacionService,
+    constructor(public plex: Plex, private router: Router, public espacioFisicoService: EspacioFisicoService, public organizacionService: OrganizacionService,
         public auth: Auth) { }
 
     ngOnInit() {
-        this.autorizado = this.auth.check('turnos:editarEspacio');
-        console.log('this.espacioFisicoHijo ', this.espacioFisicoHijo);
+        this.autorizado = this.auth.check('turnos:*') || this.auth.check('turnos:editarEspacio');
+        if (!this.autorizado) {
+            this.router.navigate(['./inicio']);
+        }
 
         let nombre = this.espacioFisicoHijo ? this.espacioFisicoHijo.nombre : '';
         let descripcion = this.espacioFisicoHijo ? this.espacioFisicoHijo.descripcion : '';
@@ -59,14 +62,14 @@ export class EditEspacioFisicoComponent implements OnInit {
     }
 
     loadEdificios(event) {
-        this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
+        this.organizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
             event.callback(respuesta.edificio);
         });
     }
 
     loadSectores(event) {
         // let sectores = [];
-        this.EspacioFisicoService.get({ organizacion: this.auth.organizacion._id }).subscribe(respuesta => {
+        this.espacioFisicoService.get({ organizacion: this.auth.organizacion._id }).subscribe(respuesta => {
             let sectores = respuesta.map((ef) => {
                 return (typeof ef.sector !== 'undefined' && ef.sector.nombre !== '-' ? ef.sector : []);
             }).filter((elem, index, self) => {
@@ -79,7 +82,7 @@ export class EditEspacioFisicoComponent implements OnInit {
 
     loadServicios(event) {
         let servicios = [];
-        this.EspacioFisicoService.get({ organizacion: this.auth.organizacion._id }).subscribe(respuesta => {
+        this.espacioFisicoService.get({ organizacion: this.auth.organizacion._id }).subscribe(respuesta => {
             servicios = respuesta.map((ef) => {
                 return (typeof ef.servicio !== 'undefined' ? ef.servicio : []);
             });
@@ -91,20 +94,20 @@ export class EditEspacioFisicoComponent implements OnInit {
         event.callback(enumerados.getEstadosEspacios());
     }
 
-    onClick(modelo: IEspacioFisico) {
+    guardar(form) {
+        if (form.formValid) {
+            let estOperation: Observable<IEspacioFisico>;
+            this.modelo.organizacion = this.auth.organizacion;
+            this.modelo.estado = this.modelo.estado ? this.modelo.estado.id : 'disponible';
 
-        console.log('modelo ', modelo);
-        let estOperation: Observable<IEspacioFisico>;
-        modelo.organizacion = this.auth.organizacion;
-        modelo.estado = this.modelo.estado ? this.modelo.estado.id : 'disponible';
-
-        if (this.espacioFisicoHijo) {
-            modelo.id = this.espacioFisicoHijo.id;
-            estOperation = this.EspacioFisicoService.put(modelo);
-        } else {
-            estOperation = this.EspacioFisicoService.post(modelo);
+            if (this.espacioFisicoHijo) {
+                this.modelo.id = this.espacioFisicoHijo.id;
+                estOperation = this.espacioFisicoService.put(this.modelo);
+            } else {
+                estOperation = this.espacioFisicoService.post(this.modelo);
+            }
+            estOperation.subscribe(resultado => this.data.emit(resultado));
         }
-        estOperation.subscribe(resultado => this.data.emit(resultado));
     }
 
     onCancel() {

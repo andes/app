@@ -1,8 +1,0 @@
-<ng-container *ngIf="pesos.length">
-    <canvas class="w-100" baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
-        [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
-</ng-container>
-
-<p *ngIf="!pesos.length">
-    No se han registrado pesos para el paciente. No se puede armar la curva de peso.
-</p>

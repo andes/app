@@ -1,6 +1,6 @@
 import { OrganizacionService } from './../../../../services/organizacion.service';
 import { Component, EventEmitter, Output, OnInit, Input, HostBinding, AfterViewInit } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import * as moment from 'moment';
@@ -56,7 +56,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     // ultima request de profesionales que se almacena con el subscribe
     private lastRequest: ISubscription;
 
-    constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
+    constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public organizacionService: OrganizacionService,
         public serviceAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
 
     ngOnInit() {
@@ -139,7 +139,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     loadEdificios(event) {
-        this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
+        this.organizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
             event.callback(respuesta.edificio);
         });
     }
@@ -221,17 +221,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         }
     }
 
-    // cambiarNominalizada(cambio) {
-    //     this.modelo.nominalizada = !this.noNominalizada;
-    //     if (this.noNominalizada) {
-    //         this.dinamica = false;
-    //     }
-    // }
-
     seleccionarDinamica() {
         if (this.dinamica) {
             if (this.noNominalizada) {
-                this.plex.alert('No se puede configurar como dinámica ya que la prestación seleccionada es no nominalizada').then(() => {
+                this.plex.info('warning', 'No se puede configurar como dinámica ya que la prestación seleccionada es no nominalizada').then(() => {
                     this.dinamica = false;
                 });
             } else {
@@ -321,13 +314,13 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     compararBloques(fecha1, fecha2): number {
-        let indiceAux: Number;
+        // let indiceAux: Number;
         if (fecha1.horaInicio && fecha2.horaInicio) {
-            if (fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime() > 0) {
-                indiceAux = fecha1.indice;
-                fecha1.indice = fecha2.indice;
-                fecha2.indice = indiceAux;
-            }
+            // /* if (fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime() > 0) {
+            //     indiceAux = fecha1.indice;
+            //     fecha1.indice = fecha2.indice;
+            //     fecha2.indice = indiceAux;
+            // } */
             return fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime();
         } else {
             return 0;
@@ -343,6 +336,11 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     cambioPrestaciones() {
+        // Valores por defecto
+        this.noNominalizada = false;
+        this.dinamica = false;
+        this.modelo.nominalizada = true;
+
         if (this.modelo.tipoPrestaciones && this.modelo.tipoPrestaciones.length === 1) {
             if (this.modelo.tipoPrestaciones[0].noNominalizada) {
                 this.noNominalizada = true;
@@ -394,31 +392,38 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     cambioHoraBloques(texto: String) {
-        this.fecha = new Date(this.modelo.fecha);
-        if (this.elementoActivo.horaInicio) {
-            this.aproximar(this.elementoActivo.horaInicio);
-        }
-        if (this.elementoActivo.horaFin) {
-            this.aproximar(this.elementoActivo.horaFin);
-        }
-        let inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
-        let fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
-
-        if (inicio && fin) {
-            let duracion = this.calcularDuracion(inicio, fin, this.elementoActivo.cantidadTurnos);
-            if (duracion) {
-                this.elementoActivo.duracionTurno = Math.floor(duracion);
-                let cantidad = this.calcularCantidad(inicio, fin, duracion);
-                this.elementoActivo.cantidadTurnos = Math.floor(cantidad);
+        if (this.elementoActivo.horaInicio && this.elementoActivo.horaFin) {
+            this.fecha = new Date(this.modelo.fecha);
+            if (this.elementoActivo.horaInicio) {
+                this.aproximar(this.elementoActivo.horaInicio);
             }
-            this.validarTodo();
-        }
-        if (texto === 'inicio' && !this.modelo.intercalar) {
-            this.modelo.bloques.sort(this.compararBloques);
+            if (this.elementoActivo.horaFin) {
+                this.aproximar(this.elementoActivo.horaFin);
+            }
+            let inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
+            let fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
+
+            if (inicio && fin) {
+                let duracion = this.calcularDuracion(inicio, fin, this.elementoActivo.cantidadTurnos);
+                if (duracion) {
+                    this.elementoActivo.duracionTurno = Math.floor(duracion);
+                    let cantidad = this.calcularCantidad(inicio, fin, duracion);
+                    this.elementoActivo.cantidadTurnos = Math.floor(cantidad);
+                }
+                this.validarTodo();
+            }
+            // console.log('elementoActivo ', this.elementoActivo);
+            if (texto === 'fin' && !this.modelo.intercalar) {
+                this.modelo.bloques.sort(this.compararBloques);
+            }
+            this.modelo.bloques.forEach((bloque, index) => {
+                bloque.indice = index;
+            });
+            // console.log('elementoActivo ', this.elementoActivo);
+            // this.bloqueActivo = this.elementoActivo.indice;
+            // this.activarBloque(this.elementoActivo.indice);
         }
 
-        this.bloqueActivo = this.elementoActivo.indice;
-        this.activarBloque(this.elementoActivo.indice);
     }
 
     cambiaTurnos(cual: String) {
@@ -729,12 +734,12 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             let efector = this.auth.organizacion; // Para que realice el filtro por organización donde estoy logueado
             query.nombre = nombre;
             query.organizacion = efector.id;
-        };
+        }
 
         if (agenda.equipamiento && agenda.equipamiento.length > 0) {
             let equipamiento = agenda.equipamiento.map((item) => item.term);
             query.equipamiento = equipamiento;
-        };
+        }
 
         if (!agenda.espacioFisico && !agenda.equipamiento) {
             this.espaciosList = [];
@@ -754,7 +759,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         this.validarTodo();
         if (this.modelo.id === '0') {
             delete this.modelo.id;
-        };
+        }
         this.showMapaEspacioFisico = false;
         this.showBloque = true;
     }
@@ -848,9 +853,11 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                         }
                     }
                 }
-                bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
-                    return el.activo === true && delete el.$order;
-                });
+                if (!this.dinamica) {
+                    bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
+                        return el.activo === true;
+                    });
+                }
             });
             espOperation = this.serviceAgenda.save(this.modelo);
             espOperation.subscribe(resultado => {
@@ -869,9 +876,9 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 (err) => { this.hideGuardar = false; });
         } else {
             if (!this.verificarNoNominalizada()) {
-                this.plex.alert('Solo puede haber una prestación en las agendas no nominalizadas');
+                this.plex.info('warning', 'Solo puede haber una prestación en las agendas no nominalizadas');
             } else {
-                this.plex.alert('Debe completar los datos requeridos');
+                this.plex.info('warning', 'Debe completar los datos requeridos');
             }
         }
     }

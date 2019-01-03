@@ -1,4 +1,5 @@
 export interface IObraSocial {
+  id: string;
   tipoDocumento: String;
   dni: Number;
   transmite: String;
@@ -6,4 +7,5 @@ export interface IObraSocial {
   codigoFinanciador: Number;
   financiador: String;
   version: Date;
+  numeroAfiliado: String;
 }

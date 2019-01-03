@@ -1,4 +1,3 @@
-import { FechaPipe } from './app/pipes/fecha.pipe';
 import './polyfills.ts';
 
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';

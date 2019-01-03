@@ -1,4 +1,4 @@
-<plex-layout main="9">
+<plex-layout main="9" *ngIf="!showPrintForm">
     <plex-layout-main>
         <header>
             <h3>Padrón de cobertura social</h3>
@@ -34,6 +34,7 @@
                     <th>Apellido y nombre</th>
                     <th>Padrón</th>
                     <th>Otra información</th>
+                    <th>Constatación</th>
                 </tr>
             </thead>
             <tbody>
@@ -46,7 +47,10 @@
                         {{usuario.financiador}}
                     </td>
                     <td *ngIf="usuario.fechaAlta; else sinDatos">
-                        Fecha de alta: {{usuario.fechaAlta | date: 'dd/MM/yyyy'}}
+                        Fecha de alta: {{usuario.fechaAlta | fecha}}
+                    </td>
+                    <td>
+                        <plex-button label="Imprimir" type="success" (click)="imprimirConstatacion(usuario)"></plex-button>
                     </td>
                     <ng-template #sinDatos>
                         <td>SIN DATOS</td>
@@ -81,12 +85,10 @@
                 <p>Padrones disponibles: {{listaPeriodosProfe}}</p>
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="checkLog()">
             <div class="col">
-                <plex-button label='Reporte de Errores/Sugerencias' type='warning' title="Sugerencias" (click)="sugerencias()"></plex-button>
+                <plex-button label='Reporte de Errores/Sugerencias' type='warning' title="Sugerencias" (click)="sugerencias($event)"></plex-button>
             </div>
         </div>
-
     </plex-layout-sidebar>
-
 </plex-layout>

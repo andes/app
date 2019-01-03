@@ -13,6 +13,8 @@ import { Slug } from 'ng2-slugify';
 import { saveAs } from 'file-saver';
 import * as moment from 'moment';
 import 'rxjs/Rx';
+import { CodificacionService } from '../../services/codificacion.service';
+import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -32,8 +34,6 @@ export class PrestacionValidacionComponent implements OnInit {
 
     // Tiene permisos para descargar?
     public puedeDescargarPDF = false;
-
-    public nombreArchivo = '';
 
     // Usa el keymap 'default'
     private slug = new Slug('default');
@@ -103,18 +103,32 @@ export class PrestacionValidacionComponent implements OnInit {
         { id: true, label: 'Si' },
         { id: false, label: 'No' }
     ];
+    public nombreArchivo: any;
+    public btnVolver;
+    public rutaVolver;
+    descargando = false;
 
-    constructor(private servicioPrestacion: PrestacionesService,
+    constructor(public servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
         private servicioPaciente: PacienteService, private SNOMED: SnomedService,
         public plex: Plex, public auth: Auth, private router: Router,
         public servicioAgenda: AgendaService,
         private route: ActivatedRoute,
-        private servicioDocumentos: DocumentosService
+        private servicioDocumentos: DocumentosService,
+        private codificacionService: CodificacionService
     ) {
     }
 
     ngOnInit() {
+        // consultamos desde que pagina se ingreso para poder volver a la misma
+        this.btnVolver = 'Volver';
+        this.rutaVolver =
+            this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
+                if (resp) {
+                    this.btnVolver = resp.nombre;
+                    this.rutaVolver = resp.ruta;
+                }
+            });
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
         if (this.auth.getPermissions('rup:?').length <= 0) {
             this.redirect('inicio');
@@ -145,7 +159,17 @@ export class PrestacionValidacionComponent implements OnInit {
         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
         this.servicioPrestacion.getById(id).subscribe(prestacion => {
             this.prestacion = prestacion;
+            this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.prestacion.paciente });
             this.registrosOriginales = prestacion.ejecucion.registros;
+            this.plex.updateTitle([{
+                route: '/',
+                name: 'ANDES'
+            }, {
+                route: '/rup',
+                name: 'RUP'
+            }, {
+                name: this.prestacion && this.prestacion.solicitud.tipoPrestacion.term ? this.prestacion.solicitud.tipoPrestacion.term : ''
+            }]);
 
             this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
 
@@ -245,12 +269,12 @@ export class PrestacionValidacionComponent implements OnInit {
             this.plex.toast('info', existeC2.concepto.term.toUpperCase() + '. Debe indicar si es primera vez.');
             return false;
         }
-        if (!existeDiagnostico && !this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+        if (!existeDiagnostico && this.prestacion.solicitud.ambitoOrigen !== 'internacion' && !this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
             this.plex.toast('info', 'Debe seleccionar un procedimiento / diagnostico principal', 'procedimiento / diagnostico principal', 1000);
             return false;
         }
         if (diagnosticoRepetido) {
-            this.plex.toast('info', 'No puede seleccionar más de un procedimiento / diagnostico principal');
+            this.plex.toast('info', 'No puede seleccionar más de un procedimiento / diagnóstico principal');
             return false;
         }
         this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
@@ -264,9 +288,18 @@ export class PrestacionValidacionComponent implements OnInit {
 
                 // filtramos los planes que deben generar prestaciones pendientes (Planes con conceptos turneales)
                 let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
-
                 this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                     this.prestacion = prestacion;
+                    this.prestacion.ejecucion.registros.forEach(registro => {
+                        if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                            if (registro.relacionadoCon[0] && (typeof registro.relacionadoCon[0] === 'string')) {
+                                registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
+                                    return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
+                                });
+                            }
+                        }
+                    });
+
                     this.motivoReadOnly = true;
                     if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
                         // actualizamos las prestaciones de la HUDS
@@ -281,6 +314,10 @@ export class PrestacionValidacionComponent implements OnInit {
                                 let filtroRegistros = this.prestacion.ejecucion.registros.filter(x => result.find(y => y.conceptId === x.concepto.conceptId));
                                 if (this.prestacion.solicitud.turno && !(filtroRegistros && filtroRegistros.length > 0)) {
                                     this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
+                                } else {
+                                    if (!this.prestacion.solicitud.turno) {
+                                        this.codificacionService.addCodificacion(prestacion.id).subscribe();
+                                    }
                                 }
                             });
                     }
@@ -320,10 +357,14 @@ export class PrestacionValidacionComponent implements OnInit {
                         // Vamos a cambiar el estado de la prestación a ejecucion
                         this.servicioPrestacion.patch(this.prestacion._id || params['id'], cambioEstado).subscribe(prestacion => {
                             this.prestacion = prestacion;
-
-                            // actualizamos las prestaciones de la HUDS
-                            this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
-                            });
+                            // chequeamos si es no nominalizada si
+                            if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                                // actualizamos las prestaciones de la HUDS
+                                this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                                });
+                            } else {
+                                this.router.navigate(['rup/ejecucion', this.prestacion.id]);
+                            }
 
                             this.router.navigate(['rup/ejecucion', this.prestacion.id]);
                         }, (err) => {
@@ -357,8 +398,27 @@ export class PrestacionValidacionComponent implements OnInit {
         this.router.navigate(['rup/ejecucion/', this.prestacion.id]);
     }
 
-    volverInicio() {
-        this.router.navigate(['rup']);
+    volverInicio(ambito = 'ambulatorio', ruta = null) {
+        let mensaje = ambito === 'ambulatorio' ? 'Punto de Inicio' : 'Mapa de Camas';
+        let ruteo;
+        if (ambito === 'ambulatorio') {
+            ruteo = 'rup';
+            this.btnVolver = mensaje;
+        } else {
+            if (ruta) {
+                ruteo = ruta;
+            } else {
+                ruteo = '/internacion/camas';
+            }
+        }
+        this.router.navigate([ruteo]);
+        // this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Volver al ' + mensaje + '?').then(confirmado => {
+        //     if (confirmado) {
+        //         this.router.navigate([ruteo]);
+        //     } else {
+        //         return;
+        //     }
+        // });
     }
 
     darTurno(prestacionSolicitud) {
@@ -431,7 +491,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
         let traverse = (_registros, registro, deep) => {
             let orden = [];
-            let hijos = _registros.filter(item => item.relacionadoCon[0] === registro.id || item.relacionadoCon[0] === registro.concepto.conceptId);
+            let hijos = _registros.filter(item => item.relacionadoCon[0] && (item.relacionadoCon[0].id === registro.id || item.relacionadoCon[0].conceptId === registro.concepto.conceptId));
             this.registrosDeep[registro.id] = deep;
             hijos.forEach((hijo) => {
                 orden = [...orden, hijo, ...traverse(_registros, hijo, deep + 1)];
@@ -560,6 +620,9 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     descargarResumen() {
+
+        this.descargando = true;
+
         this.prestacion.ejecucion.registros.forEach(x => {
             x.icon = 'down';
         });
@@ -580,7 +643,7 @@ export class PrestacionValidacionComponent implements OnInit {
             content += header;
             content += `
                 <div class="paciente">
-                    <b>Paciente:</b> ${this.paciente.apellido}, ${this.paciente.nombre} - 
+                    <b>Paciente:</b> ${this.paciente.apellido}, ${this.paciente.nombre} -
                     ${this.paciente.documento} - ${moment(this.paciente.fechaNacimiento).fromNow(true)}
                 </div>
                 `;
@@ -614,6 +677,7 @@ export class PrestacionValidacionComponent implements OnInit {
                 if (data) {
                     // Generar descarga como PDF
                     this.descargarArchivo(data, { type: 'application/pdf' });
+                    this.descargando = false;
                 } else {
                     // Fallback a impresión normal desde el navegador
                     window.print();
@@ -626,7 +690,6 @@ export class PrestacionValidacionComponent implements OnInit {
         let blob = new Blob([data], headers);
         saveAs(blob, this.nombreArchivo + this.slug.slugify('-' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf');
     }
-
     /**
      * Busca los grupos de la búsqueda guiada a los que pertenece un concepto
      * @param {IConcept} concept
@@ -639,6 +702,20 @@ export class PrestacionValidacionComponent implements OnInit {
             }
         });
         return results;
+    }
+
+
+    /**
+     * Determina si muestra el label motivo de consulta.
+     */
+
+    showMotivo(elemento) {
+        if (this.elementoRUPprestacion.motivoConsultaOpcional) {
+            return false;
+        }
+        let last = this.prestacion.estados.length - 1;
+        return this.prestacion.estados[last].tipo !== 'validada' && elemento.valor && elemento.valor.estado !== 'transformado' && this.prestacion.solicitud.ambitoOrigen !== 'internacion';
+
     }
 
 }

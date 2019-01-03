@@ -4,7 +4,7 @@ import {
     ViewEncapsulation, ContentChildren, OnDestroy
 } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { ISubscription } from 'rxjs/Subscription';
+import { SubscriptionLike as ISubscription } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Cie10Service } from '../../../../services/term/cie10.service';
@@ -75,7 +75,7 @@ export class BuscadorCie10Component implements OnInit, OnDestroy {
             if (this.searchTerm.match(/^\s{1,}/)) {
                 this.searchTerm = '';
                 return;
-            };
+            }
 
             // levantamos el valor que escribimos en el input
             // let search = this.searchTerm.trim();

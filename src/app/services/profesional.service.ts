@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { IProfesional } from './../interfaces/IProfesional';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
@@ -24,6 +24,14 @@ export class ProfesionalService {
      */
     post(organizacion: IProfesional): Observable<IProfesional> {
         return this.server.post(this.profesionalUrl, organizacion); // ...using post request
+    }
+
+    getFoto(params: any): Observable<any> {
+        return this.server.get(this.profesionalUrl + '/foto/', { params: params });
+    }
+
+    saveProfesional(profesionalModel: any) {
+        return this.server.post(this.profesionalUrl, profesionalModel);
     }
 
     disable(profesional: IProfesional): Observable<IProfesional> {

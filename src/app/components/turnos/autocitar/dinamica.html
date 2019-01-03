@@ -1,0 +1,51 @@
+<plex-layout>
+    <plex-layout-main>
+        <form #formulario="ngForm">
+            <fieldset>
+                <legend>Datos del turno</legend>
+                <!-- Row sólo puede tener hijos de tipo col-*/col-*-* -->
+                <!-- Todos los col deben sumar 12 o usar 'col' para un ancho automático -->
+                <div class="row">
+                    <div class="col-md">
+                        <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="searchClear()"></paciente-buscar>
+                        <paciente-listado *ngIf="pacientes && pacientes.length" [type]="'sm'" [pacientes]="pacientes" [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
+                        <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
+                            ¡No se encontró ningún paciente!
+                        </div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="pacienteActivo">
+                    <div class="col-md">
+                        <label>Paciente </label>
+                        <span>{{pacienteActivo | paciente}}</span>
+                    </div>
+                </div>
+                <div class="row" *ngIf="pacienteActivo">
+                    <div class="col-md-6">
+                        <label>Documento: </label>
+                        <span>{{pacienteActivo.documento}}</span>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Sexo: </label>
+                        <span>{{pacienteActivo.genero}}</span>
+                    </div>
+                </div>
+                <div class="row" *ngIf="prestaciones.length > 1">
+                    <div class="col-md">
+                        <plex-select label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion" [data]="prestaciones" name="turnoTipoPrestacion"
+                            [required]="true"></plex-select>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="row">
+                <!-- Botonera-->
+                <div class="col-md text-left">
+                    <plex-button label="Cancelar" type="danger" (click)="cancelar($event)"></plex-button>
+                </div>
+                <div class="col-md text-right">
+                    <plex-button label="Guardar" type="success" [validateForm]="formulario" (click)="guardar($event)"></plex-button>
+                </div>
+            </div>
+        </form>
+    </plex-layout-main>
+</plex-layout>

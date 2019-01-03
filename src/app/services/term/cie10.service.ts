@@ -1,5 +1,5 @@
 import { Server } from '@andes/shared';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 
 @Injectable()
@@ -8,7 +8,7 @@ export class Cie10Service {
     constructor(private server: Server) { }
 
     get(params: any): Observable<any[]> {
-        return this.server.get(this.cie10URL, {params: params, showError: true});
+        return this.server.get(this.cie10URL, { params: params, showError: true });
     }
     /**
      * Metodo getById. Trae el objeto de Cie10 por su Id.

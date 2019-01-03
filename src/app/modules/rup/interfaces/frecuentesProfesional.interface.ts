@@ -14,4 +14,4 @@ export interface IFrecuentesProfesional {
 
         frecuencia: Number
     }];
-};
+}
