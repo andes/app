@@ -1,19 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { IPaciente } from '../interfaces/IPaciente';
-import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 import { Plex } from '@andes/plex';
-import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
-import { PaisService } from '../../../services/pais.service';
-import { LocalidadService } from '../../../services/localidad.service';
-import { ProvinciaService } from '../../../services/provincia.service';
-import { IProvincia } from '../../../interfaces/IProvincia';
-import { IDireccion } from '../interfaces/IDireccion';
-import { ParentescoService } from '../../../services/parentesco.service';
-import { IContacto } from '../../../interfaces/IContacto';
-import * as enumerados from '../../../utils/enumerados';
-import { PacienteService } from '../services/paciente.service';
-import { PacienteCruComponent } from './paciente-cru.component';
 import { Router } from '@angular/router';
+import { PacienteCacheService } from '../services/pacienteCache.service';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'busqueda-mpi',
@@ -21,7 +11,6 @@ import { Router } from '@angular/router';
     styleUrls: ['busqueda-mpi.scss']
 })
 export class BusquedaMpiComponent implements OnInit {
-    @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
     loading = false;
     resultadoBusqueda: IPaciente[] = [];
@@ -30,12 +19,18 @@ export class BusquedaMpiComponent implements OnInit {
     pacienteSeleccionado = null;
 
     constructor(
+        private pacienteCache: PacienteCacheService,
         private plex: Plex,
-        private pacienteService: PacienteService,
-        public router: Router) { }
+        private router: Router,
+        private auth: Auth
+    ) { }
 
     ngOnInit() {
-        this.updateTitle('Buscar un paciente');
+        this.updateTitle('Buscar pacientes');
+        if (!(this.auth.getPermissions('mpi:?').length > 0)) {
+            // Si no está autorizado redirect al home
+            this.router.navigate(['./inicio']);
+        }
     }
 
     private updateTitle(nombre: string) {
@@ -54,9 +49,10 @@ export class BusquedaMpiComponent implements OnInit {
         this.loading = true;
     }
 
-    searchEnd(pacientes: IPaciente[]) {
+    searchEnd(pacientes: IPaciente[], escaneado: boolean) {
         this.searchClear = false;
         this.loading = false;
+        this.pacienteCache.setScanState(escaneado);
         this.resultadoBusqueda = pacientes;
     }
 
@@ -69,9 +65,8 @@ export class BusquedaMpiComponent implements OnInit {
 
     onPacienteSelected(paciente: IPaciente) {
         if (paciente) {
-            // Pasaje de datos solo de prueba hasta resolver navegabilidad
-            let params = [JSON.stringify(paciente)];
-            this.router.navigate(['apps/mpi/paciente'], { queryParams: params });  // abre paciente-cru
+            this.pacienteCache.setPaciente(paciente);
+            this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru
         }
     }
 
