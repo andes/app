@@ -8,8 +8,13 @@ export class HojaTrabajoService {
     private laboratorioUrl = '/modules/rup/laboratorio/'; // URL API
     constructor(private server: Server) { }
 
-    get(organizacion) {
-        return this.server.get(this.laboratorioUrl + 'hojatrabajo', { params: {organizacion: organizacion}, showError: true });
+    get(organizacion, area?) {
+        let params: any = {organizacion: organizacion};
+        if (area) {
+            params.area = area;
+        }
+
+        return this.server.get(this.laboratorioUrl + 'hojatrabajo', { params: params, showError: true });
     }
 
     post(hojaTrabajo: IHojaTrabajo): Observable<IHojaTrabajo> {

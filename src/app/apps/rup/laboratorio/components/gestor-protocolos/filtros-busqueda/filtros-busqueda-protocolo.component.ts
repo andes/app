@@ -36,6 +36,7 @@ export class FiltrosBusquedaProtocoloComponent
     public laboratorioInternoEnum;
     public indexProtocolo;
     public turnosRecepcion;
+    public hojasTrabajo = [];
     public areas = [];
     public servicios = [];
     public busqueda = {
@@ -191,21 +192,29 @@ export class FiltrosBusquedaProtocoloComponent
     }
 
     /**
-     *
+     * Buscar hojas de trabajo según área seleccionada. En cualquier caso (área seleccionada o no) limpia los atributos hojaTrabajo (dependiente de hojasTrabajo)
+     *  y this.busqueda.practicas (dependientes en este caso de la hojaTrabajo seleccionada)
      *
      * @param {*} $event
      * @memberof FiltrosBusquedaProtocoloComponent
      */
-    getHojasTrabajo($event) {
-        this.servicioHojaTrabajo.get(this.auth.organizacion.id).subscribe((hojas: any) => {
-            $event.callback(hojas);
-        });
+    buscarHojasTrabajo($event) {
+        if ($event.value) {
+            this.servicioHojaTrabajo.get(this.auth.organizacion.id, $event.value.id).subscribe((hojas: any) => {
+                this.hojasTrabajo = hojas;
+            });
+        } else {
+            this.hojasTrabajo = [];
+        }
+        this.hojaTrabajo = null;
+        this.busqueda.practicas = null;
+        this.buscarProtocolos();
     }
 
     /**
      * Guarda en el local storage del browser la selección de filtros de búsqueda para futuras búsquedas
      *
-     * @memberof PuntoInicioLaboratorioComponent
+     * @memberof FiltrosBusquedaProtocoloComponent
      */
     recordarFiltros() {
         let filtrosPorDefecto = {
@@ -227,6 +236,11 @@ export class FiltrosBusquedaProtocoloComponent
         this.plex.toast('success', 'Se recordará su selección de filtro en sus próximas sesiones.', 'Información', 3000);
     }
 
+    /**
+     *
+     *
+     * @memberof FiltrosBusquedaProtocoloComponent
+     */
     filtrarPaciente() {
         this.buscarProtocolosEmmiter.emit(this.busqueda);
     }
