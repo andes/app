@@ -147,7 +147,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                     }).subscribe(resultado => {
                         if (resultado.length) {
                             // 1.2. Si encuentra el paciente (un matcheo al 100%) finaliza la búsqueda
-                            return this.searchEnd.emit({ pacientes: resultado, err: null });
+                            return this.searchEnd.emit({ escaneado: true, pacientes: resultado, err: null });
                         } else {
                             // 1.3. Si no encontró el paciente escaneado, busca uno similar
                             this.pacienteService.getMatch({
@@ -169,7 +169,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                                 let match = resultadoSuggest.find(i => i.paciente.scan && i.paciente.scan === textoLibre);
                                 if (match) {
                                     // TODO: this.logService.post('mpi', 'validadoScan', { pacienteDB: datoDB, pacienteScan: pacienteEscaneado }).subscribe(() => { });
-                                    return this.searchEnd.emit({ pacientes: [match], err: null });
+                                    return this.searchEnd.emit({ escaneado: true, pacientes: [match], err: null });
                                 } else {
                                     // 1.3.3. Busca uno con un porcentaje alto de matcheo
                                     if (resultadoSuggest[0].match >= 0.94) {
