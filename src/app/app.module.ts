@@ -188,6 +188,8 @@ import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/o
 import { PanelAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/panel-agenda.component';
 import { BotonesAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/botones-agenda.component';
 import { RevisionAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/revision-agenda.component';
+import { RevisionFueraAgendaComponent } from './components/turnos/gestor-agendas/revision/fuera-agenda.component';
+
 import { PopoverAuditComponent } from './components/popover-audit/popover-audit.component';
 import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/puntoInicio-turnos.component';
 import { EstadisticasAgendasComponent } from './components/turnos/dashboard/estadisticas-agendas.component';
@@ -311,7 +313,7 @@ import { EditarAuditoriaPrestacionPacienteComponent } from './components/auditor
 
 // AUDITORIA
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
-import { Auditoria2Component } from './components/auditoria/auditoria2.component';
+import { VincularPacientesComponent } from './components/auditoria/vincular-pacientes.component';
 // import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
 
 // USUARIO
@@ -353,6 +355,7 @@ import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.c
 import { DetalleSolicitudComponent } from './components/top/solicitudes/detalleSolicitud.component';
 import { AuditarSolicitudComponent } from './components/top/solicitudes/auditarSolicitud.component';
 import { NuevaSolicitudComponent } from './components/top/solicitudes/nuevaSolicitud.component';
+import { AnularSolicitudComponent } from './components/top/solicitudes/anularSolicitud.component';
 
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
@@ -444,7 +447,8 @@ let RUPComponentsArray = [
     SeleccionBinariaComponent,
     ValorNumericoComponent,
     ProcedimientoDeEnfermeriaComponent,
-    MoleculaBaseComponent
+    MoleculaBaseComponent,
+    HeaderPacienteComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -457,6 +461,7 @@ import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem
 import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
 import { UploadFileComponent } from './shared/components/upload-file.component';
+import { CodificacionService } from './modules/rup/services/codificacion.service';
 
 
 
@@ -496,7 +501,7 @@ registerLocaleData(localeEs, 'es');
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
         TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
-        ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, PopoverAuditComponent,
+        ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, RevisionFueraAgendaComponent, PopoverAuditComponent,
         RUPComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
         CarpetaPacienteComponent,
@@ -506,7 +511,7 @@ registerLocaleData(localeEs, 'es');
         PermisosComponent, ArbolPermisosComponent,
         // AuditoriaPorBloqueComponent,
         PuntoInicioComponent,
-        Auditoria2Component,
+        VincularPacientesComponent,
         LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
         AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
         HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
@@ -553,6 +558,7 @@ registerLocaleData(localeEs, 'es');
         SolicitudesComponent,
         DetalleSolicitudComponent,
         AuditarSolicitudComponent,
+        AnularSolicitudComponent,
         NuevaSolicitudComponent,
         PrestamosHcComponent,
         ListarSolicitudesComponent,
@@ -660,6 +666,7 @@ registerLocaleData(localeEs, 'es');
         SugerenciasService,
         ConfiguracionPrestacionService,
         PrestacionLegacyService,
+        CodificacionService,
         ResumenPacienteDinamicoService,
         VacunasService,
         RiesgoCardiovascularService,

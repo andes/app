@@ -18,6 +18,7 @@ import { ObraSocialService } from './../../../../services/obraSocial.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
 import { Observable } from 'rxjs/Observable';
 import { RUPComponent } from '../core/rup.component';
+import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -176,6 +177,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
                             this.router.navigate(['/rup/validacion/', this.prestacion.id]);
                         } else {
+                            this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.prestacion.paciente });
                             // Carga la información completa del paciente
                             if (!prestacion.solicitud.tipoPrestacion.noNominalizada) {
                                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {

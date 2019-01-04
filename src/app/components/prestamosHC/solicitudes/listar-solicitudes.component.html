@@ -138,7 +138,7 @@
                                         </td>
                                         <!-- Boton para subir HUDS digitalizada -->
                                         <td>
-                                            <upload-file label="Adjuntar HUDS" [extensiones]="['pdf']"  (onUpload)="onUpload($event, carpeta)" ></upload-file>
+                                            <upload-file label="Adjuntar HUDS" [extensiones]="['pdf']" (onUpload)="onUpload($event, carpeta)"></upload-file>
                                             <br><br>
                                             <span *ngIf="errorExt===i">
                                                 <span class="badge-danger">Archivo inválido. Solo se admite PDF</span>
@@ -170,6 +170,30 @@
                 <div type="info">
                     <solicitud-manual-hc [pacienteSeleccionado]="paciente" (cancelSolicitudManualEmit)="onCancelSolicitar($event)"
                         (nuevaCarpetaManualEmit)="onCarpeta($event)"></solicitud-manual-hc>
+                </div>
+            </div>
+            <div class="col-3" *ngIf="verNuevaCarpeta">
+                <div type="info">
+                    <section>
+                        <plex-box>
+                            <legend>
+                                <div class="clearfix">
+                                    <span class="float-left">Paciente {{paciente.apellido}},
+                                        {{paciente.nombre}}</span>
+                                </div>
+                                <hr>
+                            </legend>
+                            <carpeta-paciente [turnoSeleccionado]="null" [pacienteSeleccionado]="paciente"
+                                (guardarCarpetaEmit)="afterComponenteCarpeta($event)" (cancelarCarpetaEmit)="afterComponenteCarpeta($event) "></carpeta-paciente>
+                            <br>
+                            <footer>
+                                <div class="text-right">
+                                    <plex-button label="Cerrar" type="danger" (click)="afterComponenteCarpeta(false)">
+                                    </plex-button>
+                                </div>
+                            </footer>
+                        </plex-box>
+                    </section>
                 </div>
             </div>
         </div>
