@@ -261,12 +261,12 @@ import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/
 import { InformeActividadNoNominalizadaComponent } from './modules/rup/components/elementos/informeActividadNoNominalizada/informeActividadNoNominalizada.component';
 import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
 import { PesoComponent } from './modules/rup/components/elementos/peso.component';
-import { PercentiloPesoComponent } from './modules/rup/components/elementos/percentiloPeso.component';
+// import { PercentiloPesoComponent } from './modules/rup/components/elementos/percentiloPeso.component';
 import { TallaComponent } from './modules/rup/components/elementos/talla.component';
 import { PercentiloTallaComponent } from './modules/rup/components/elementos/percentiloTalla.component';
 import { PerimetroCefalicoComponent } from './modules/rup/components/elementos/perimetroCefalico.component';
-import { PercentiloDeMasaCorporalComponent } from './modules/rup/components/elementos/percentiloDeMasaCorporal.component';
-import { PercentiloPerimetroCefalicoComponent } from './modules/rup/components/elementos/percentiloPerimetroCefalico.component';
+// import { PercentiloDeMasaCorporalComponent } from './modules/rup/components/elementos/percentiloDeMasaCorporal.component';
+// import { PercentiloPerimetroCefalicoComponent } from './modules/rup/components/elementos/percentiloPerimetroCefalico.component';
 import { TensionArterialPediatricaComponent } from './modules/rup/components/elementos/tensionArterialPediatrica.component';
 import { PercentiloDeTensionArterialComponent } from './modules/rup/components/elementos/percentiloDeTensionArterial.component';
 import { ConsultaDeNinoSanoM2AComponent } from './modules/rup/components/elementos/consultaDeNinoSano/consultaDeNinoSanoM2A.component';
@@ -381,12 +381,12 @@ export let RUPRegistry = {
     'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
     'InformeActividadNoNominalizadaComponent': InformeActividadNoNominalizadaComponent,
     'PesoComponent': PesoComponent,
-    'PercentiloPesoComponent': PercentiloPesoComponent,
+    // 'PercentiloPesoComponent': PercentiloPesoComponent,
     'PerimetroCefalicoComponent': PerimetroCefalicoComponent,
-    'PercentiloPerimetroCefalicoComponent': PercentiloPerimetroCefalicoComponent,
+    // 'PercentiloPerimetroCefalicoComponent': PercentiloPerimetroCefalicoComponent,
     'TallaComponent': TallaComponent,
     'PercentiloTallaComponent': PercentiloTallaComponent,
-    'PercentiloDeMasaCorporalComponent': PercentiloDeMasaCorporalComponent,
+    // 'PercentiloDeMasaCorporalComponent': PercentiloDeMasaCorporalComponent,
     'TensionArterialPediatricaComponent': TensionArterialPediatricaComponent,
     'PercentiloDeTensionArterialComponent': PercentiloDeTensionArterialComponent,
     'ConsultaDeNinoSanoM2AComponent': ConsultaDeNinoSanoM2AComponent,
@@ -411,7 +411,7 @@ let RUPComponentsArray = [
     InformesComponent,
     ObservacionesComponent,
     PesoComponent,
-    PercentiloPerimetroCefalicoComponent,
+    // PercentiloPerimetroCefalicoComponent,
     PerimetroCefalicoComponent,
     RegistrarMedicamentoDefaultComponent,
     RiesgoCardiovascularComponent,
@@ -434,9 +434,9 @@ let RUPComponentsArray = [
     ElementoDeRegistroComponent,
     OdontologiaDefaultComponent,
     InformeActividadNoNominalizadaComponent,
-    PercentiloPesoComponent,
+    // PercentiloPesoComponent,
     PercentiloTallaComponent,
-    PercentiloDeMasaCorporalComponent,
+    // PercentiloDeMasaCorporalComponent,
     TensionArterialPediatricaComponent,
     PercentiloDeTensionArterialComponent,
     ConsultaDeNinoSanoM2AComponent,
