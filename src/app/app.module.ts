@@ -262,8 +262,6 @@ import { InformeActividadNoNominalizadaComponent } from './modules/rup/component
 import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
 import { PesoComponent } from './modules/rup/components/elementos/peso.component';
 import { TallaComponent } from './modules/rup/components/elementos/talla.component';
-// import { PercentiloTallaComponent } from './modules/rup/components/elementos/percentiloTalla.component';
-import { PerimetroCefalicoComponent } from './modules/rup/components/elementos/perimetroCefalico.component';
 import { TensionArterialPediatricaComponent } from './modules/rup/components/elementos/tensionArterialPediatrica.component';
 import { ConsultaDeNinoSanoM2AComponent } from './modules/rup/components/elementos/consultaDeNinoSano/consultaDeNinoSanoM2A.component';
 import { ConsultaDeNinoSanoE2Y3AComponent } from './modules/rup/components/elementos/consultaDeNinoSano/consultaDeNinoSanoE2Y3A.component';
@@ -377,9 +375,7 @@ export let RUPRegistry = {
     'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
     'InformeActividadNoNominalizadaComponent': InformeActividadNoNominalizadaComponent,
     'PesoComponent': PesoComponent,
-    'PerimetroCefalicoComponent': PerimetroCefalicoComponent,
     'TallaComponent': TallaComponent,
-    // 'PercentiloTallaComponent': PercentiloTallaComponent,
     'TensionArterialPediatricaComponent': TensionArterialPediatricaComponent,
     'ConsultaDeNinoSanoM2AComponent': ConsultaDeNinoSanoM2AComponent,
     'ConsultaDeNinoSanoE2Y3AComponent': ConsultaDeNinoSanoE2Y3AComponent,
@@ -403,7 +399,6 @@ let RUPComponentsArray = [
     InformesComponent,
     ObservacionesComponent,
     PesoComponent,
-    PerimetroCefalicoComponent,
     RegistrarMedicamentoDefaultComponent,
     RiesgoCardiovascularComponent,
     SaturacionOxigenoComponent,
@@ -425,7 +420,6 @@ let RUPComponentsArray = [
     ElementoDeRegistroComponent,
     OdontologiaDefaultComponent,
     InformeActividadNoNominalizadaComponent,
-    // PercentiloTallaComponent,
     TensionArterialPediatricaComponent,
     ConsultaDeNinoSanoM2AComponent,
     ConsultaDeNinoSanoE2Y3AComponent,
