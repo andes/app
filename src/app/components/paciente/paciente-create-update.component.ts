@@ -525,7 +525,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 this.actualizarRelaciones(pacienteGuardar);
             }
         } else {
-            this.plex.info('Debe completar los datos obligatorios. Verificar los contactos', 'Información');
+            this.plex.info('info', 'Debe completar los datos obligatorios. Verificar los contactos', 'Aviso');
         }
     }
 
@@ -734,7 +734,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 this.disableGuardar = true;
             }
         } else {
-            this.plex.info('Debe completar los datos obligatorios', 'Atención');
+            this.plex.info('info', 'Debe completar los datos obligatorios', 'Aviso');
         }
     }
 
@@ -801,7 +801,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 // Se borran los resultados de la búsqueda.
                 this.posiblesRelaciones = null;
             } else {
-                this.plex.toast('info', 'Antes de agregar una nueva relación debe completar las existentes.', 'Informacion');
+                this.plex.toast('info', 'Antes de agregar una nueva relación debe completar las existentes.', 'Aviso');
             }
         }
     }
