@@ -520,13 +520,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     paciente: this.pacienteModel
                 }).subscribe(() => { });
             }
-            // Chequeamos cambios en relaciones del paciente
-            if (pacienteGuardar.documento) {
-                this.actualizarRelaciones(pacienteGuardar);
-            } else {
-                this.data.emit(pacienteGuardar);
-                this.plex.info('success', 'Los datos se actualizaron correctamente');
-            }
+            this.actualizarRelaciones(pacienteGuardar);
         } else {
             this.plex.info('info', 'Debe completar los datos obligatorios. Verificar los contactos', 'Aviso');
         }
@@ -583,7 +577,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                             referencia: unPacienteSave.id,
                             nombre: unPacienteSave.nombre,
                             apellido: unPacienteSave.apellido,
-                            documento: unPacienteSave.documento ? unPacienteSave.documento : '',
+                            documento: unPacienteSave.documento,
                             foto: unPacienteSave.foto ? unPacienteSave.foto : null
                         };
                         if (rel.referencia) {
@@ -739,7 +733,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
         } else {
             this.plex.info('info', 'Debe completar los datos obligatorios', 'Aviso');
         }
-        console.log('dni: ', this.pacienteModel.documento, 'guardar: ', this.disableGuardar);
     }
 
     addContacto(key, valor) {
@@ -766,7 +759,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
             // Control: Si los datos de las relaciones agregadas anteriormente no estan completas, no se permitira agregar nuevas.
             if (this.pacienteModel.relaciones && this.pacienteModel.relaciones.length) {
                 ultimaRelacion = this.pacienteModel.relaciones[this.pacienteModel.relaciones.length - 1];
-                permitirNuevaRelacion = Boolean(ultimaRelacion.documento && ultimaRelacion.apellido && ultimaRelacion.nombre && ultimaRelacion.relacion);
+                permitirNuevaRelacion = ultimaRelacion.relacion;
             }
 
             if (permitirNuevaRelacion) {
