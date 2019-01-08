@@ -5,7 +5,6 @@
                 <plex-tab label="Paciente" icon="account">
                     <fieldset>
                         <legend>Datos básicos</legend>
-
                         <!-- DATOS BASICOS -->
                         <div class="row">
                             <div class="col-4">
@@ -91,6 +90,58 @@
                         </div>
                     </fieldset>
 
+                    <!-- DATOS DE CONTACTO -->
+                    <fieldset>
+                        <legend>Datos de contacto</legend>
+
+                        <div *ngIf="pacienteModel.contacto">
+                            <div class="row">
+                                <div class="col-8">
+                                    <plex-bool [(ngModel)]="noPoseeContacto" label="No posee ningún tipo de contacto"
+                                        name="noPoseeContacto" (change)="limpiarContacto()"></plex-bool>
+                                </div>
+                                <div class="col-4" *ngIf="!noPoseeContacto">
+                                    <plex-button title="Agregar contacto" titlePosition="left" type="primary btn-sm"
+                                        icon="phone-plus" (click)="addContacto('celular', '')"></plex-button>
+                                </div>
+                            </div>
+                            <div class="row" *ngFor="let _unContacto of pacienteModel.contacto; let i = index">
+                                <ng-container *ngIf="!noPoseeContacto">
+                                    <div class="col-4">
+                                        <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}"
+                                            [required]="i <= 0" label="Tipo:">
+                                        </plex-select>
+                                    </div>
+                                    <div class="col-4">
+                                        <span *ngIf="_unContacto.tipo && _unContacto.tipo.id">
+                                            <plex-text *ngIf="_unContacto.tipo.id !== 'celular'" label="Dato:"
+                                                [(ngModel)]="_unContacto.valor" name="valor-{{i}}" [required]="!noPoseeContacto && (i <= 0)">
+                                            </plex-text>
+                                            <plex-phone label="Numero:" *ngIf="_unContacto.tipo.id === 'celular'"
+                                                [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000" [required]="!noPoseeContacto && (i <= 0)"
+                                                name="valor-{{i}}">
+                                            </plex-phone>
+                                        </span>
+                                        <span *ngIf="_unContacto.tipo && !_unContacto.tipo.id">
+                                            <plex-text *ngIf="_unContacto.tipo !== 'celular'" label="Dato:" [(ngModel)]="_unContacto.valor"
+                                                name="valor-{{i}}" [required]="!noPoseeContacto && (i <= 0)">
+                                            </plex-text>
+                                            <plex-phone label="Numero:" *ngIf="_unContacto.tipo === 'celular'"
+                                                [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000" [required]="!noPoseeContacto && (i <= 0)"
+                                                name="valor-{{i}}">
+                                            </plex-phone>
+                                        </span>
+                                    </div>
+                                    <div class="col-2" *ngIf="i > 0">
+                                        <br>
+                                        <br>
+                                        <plex-button label="" type="danger btn-sm" icon="close" (click)="removeContacto(i)"></plex-button>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </fieldset>
+
                     <!-- DATOS DE DOMICILIO -->
                     <fieldset>
                         <legend>Datos del domicilio</legend>
@@ -154,57 +205,7 @@
                         </div>
                     </fieldset>
 
-                    <!-- DATOS DE CONTACTO -->
-                    <fieldset>
-                        <legend>Datos de contacto</legend>
 
-                        <div *ngIf="pacienteModel.contacto">
-                            <div class="row">
-                                <div class="col-8">
-                                    <plex-bool [(ngModel)]="noPoseeContacto" label="No posee ningún tipo de contacto"
-                                        name="noPoseeContacto" (change)="limpiarContacto()"></plex-bool>
-                                </div>
-                                <div class="col-4" *ngIf="!noPoseeContacto">
-                                    <plex-button title="Agregar contacto" titlePosition="left" type="primary btn-sm"
-                                        icon="phone-plus" (click)="addContacto('celular', '')"></plex-button>
-                                </div>
-                            </div>
-                            <div class="row" *ngFor="let _unContacto of pacienteModel.contacto; let i = index">
-                                <ng-container *ngIf="!noPoseeContacto">
-                                    <div class="col-4">
-                                        <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}"
-                                            [required]="i <= 0" label="Tipo:">
-                                        </plex-select>
-                                    </div>
-                                    <div class="col-4">
-                                        <span *ngIf="_unContacto.tipo && _unContacto.tipo.id">
-                                            <plex-text *ngIf="_unContacto.tipo.id !== 'celular'" label="Dato:"
-                                                [(ngModel)]="_unContacto.valor" name="valor-{{i}}" [required]="!noPoseeContacto && (i <= 0)">
-                                            </plex-text>
-                                            <plex-phone label="Numero:" *ngIf="_unContacto.tipo.id === 'celular'"
-                                                [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000" [required]="!noPoseeContacto && (i <= 0)"
-                                                name="valor-{{i}}">
-                                            </plex-phone>
-                                        </span>
-                                        <span *ngIf="_unContacto.tipo && !_unContacto.tipo.id">
-                                            <plex-text *ngIf="_unContacto.tipo !== 'celular'" label="Dato:" [(ngModel)]="_unContacto.valor"
-                                                name="valor-{{i}}" [required]="!noPoseeContacto && (i <= 0)">
-                                            </plex-text>
-                                            <plex-phone label="Numero:" *ngIf="_unContacto.tipo === 'celular'"
-                                                [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000" [required]="!noPoseeContacto && (i <= 0)"
-                                                name="valor-{{i}}">
-                                            </plex-phone>
-                                        </span>
-                                    </div>
-                                    <div class="col-2" *ngIf="i > 0">
-                                        <br>
-                                        <br>
-                                        <plex-button label="" type="danger btn-sm" icon="close" (click)="removeContacto(i)"></plex-button>
-                                    </div>
-                                </ng-container>
-                            </div>
-                        </div>
-                    </fieldset>
                 </plex-tab>
 
                 <!-- NOTAS -->
@@ -221,10 +222,49 @@
     </plex-layout-main>
 
     <plex-layout-sidebar>
-        <paciente-panel [paciente]="pacienteModel"></paciente-panel>
+        <span *ngIf='!showMobile'>
+            <!-- Pacientes candidatos -->
+            <div *ngIf='(pacientesSimilares && pacientesSimilares.length > 0); else showPanel' type="inverted" title="Pacientes Candidatos">
+                <header>
+                    <h4>Pacientes Candidatos</h4>
+                </header>
+                <div class="row">
+                    <div class="col-md-12 hover">
+                        <ul class="list-group">
+                            <li class="list-group-item justify-content-between" *ngFor="let elem of pacientesSimilares">
+                                <h4 class="box-title-elemento">{{elem.paciente.apellido| uppercase}}
+                                    {{elem.paciente.nombre| uppercase}}
+                                    <br>
+                                    <small>Documento: {{elem.paciente.documento}}
+                                        <br> fecha de Nacimiento: {{elem.paciente.fechaNacimiento | fecha }}
+                                        <br> Sexo: {{elem.paciente.sexo}}
+                                    </small>
+
+                                </h4>
+                                <h4>Similitud: {{elem.match * 100}} %
+                                    <span>
+                                        <plex-button type="primary btn-sm" icon="account" label="Seleccionar" (click)="onSelect(elem.paciente)"></plex-button>
+                                    </span>
+                                </h4>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <ng-template #showPanel>
+                <paciente-panel [paciente]="pacienteModel"></paciente-panel>
+            </ng-template>
+        </span>
+        <activar-app *ngIf='showMobile' [paciente]="pacienteModel"></activar-app>
     </plex-layout-sidebar>
 
     <plex-layout-footer>
+        <plex-button *ngIf="pacienteModel.id && pacienteModel.estado === 'validado' && !showMobile" label="Gestión de App Mobile"
+            type="info" position="right" (click)="gestionMobile(true)" class="pr-1">
+        </plex-button>
+        <plex-button *ngIf="showMobile" label="Volver a detalles paciente" class="pr-1" type="info" position="right"
+            (click)="gestionMobile(false)">
+        </plex-button>
         <plex-button label="Cancelar" type="danger" position="left" (click)="cancel()"></plex-button>
         <plex-button *ngIf="!disableGuardar" label="Guardar" type="success" position="right" [validateForm]="formulario"
             (click)="save($event,false)"></plex-button>

@@ -300,16 +300,8 @@ export class PacienteCruComponent implements OnInit {
         this.pacienteModel = Object.assign({}, this.paciente);
         this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
 
-        // Se verifican los datos de la app mobile
+        // Se piden los datos para app mobile en la 1er carga del paciente
         if (!this.paciente.id) {
-            // this.appMobile.check(this.paciente.id).subscribe(data => {
-            //     if (!data.account) {
-            //         // No posee cuenta
-            //         this.checkPass = true;
-            //         this.activarApp = true;
-            //     }
-            // });
-        } else {
             this.checkPass = true;
             this.activarApp = true;
         }
@@ -487,22 +479,14 @@ export class PacienteCruComponent implements OnInit {
         this.pacienteService.save(pacienteGuardar).subscribe(
             resultadoSave => {
                 // Existen sugerencias de pacientes similares?
-                if (resultadoSave.resultadoMatching && resultadoSave.resultadoMatching.length > 0 && !this.sugerenciaAceptada) {
-                    if (this.escaneado) {
-                        this.pacientesSimilares = resultadoSave.resultadoMatching.filter(elem => elem.paciente.estado === 'validado');
-                    }
+                if (resultadoSave.resultadoMatching && resultadoSave.resultadoMatching.length > 0) {
+                    this.pacientesSimilares = this.escaneado ? resultadoSave.resultadoMatching.filter(elem => elem.paciente.estado === 'validado') : resultadoSave.resultadoMatching;
                     // Si el matcheo es alto o el dni-sexo está repetido no podemos ignorar las sugerencias
                     this.enableIgnorarGuardar = !resultadoSave.macheoAlto && !resultadoSave.dniRepetido;
-                    if (this.pacientesSimilares && this.pacientesSimilares.length > 0 && this.pacientesSimilares[0].match >= 1.0) {  // Hay un matcheo del 100%?
-                        this.plex.info('danger', 'El paciente ya existe, verifique los datos', 'Atención');
-                        this.onSelect(this.pacientesSimilares[0].paciente);
-                        this.pacientesSimilares = null;
+                    if (!this.enableIgnorarGuardar) {
+                        this.plex.info('danger', 'El paciente ya existe, verifique las sugerencias');
                     } else {
-                        if (!this.enableIgnorarGuardar) {
-                            this.plex.info('danger', 'El paciente que ya existe, verifique las sugerencias');
-                        } else {
-                            this.plex.info('warning', 'Existen pacientes similares, verifique las sugerencias');
-                        }
+                        this.plex.info('warning', 'Existen pacientes similares, verifique las sugerencias');
                     }
                 } else {
                     this.actualizarRelaciones(resultadoSave);
