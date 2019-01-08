@@ -445,7 +445,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     limpiarDocumento() {
         if (this.noPoseeDNI) {
             this.pacienteModel.documento = '';
-            this.plex.info('Recuerde que al guardar un paciente sin el número de documento será imposible realizar validaciones contra fuentes auténticas.', 'Información');
+            this.plex.info('info', 'Recuerde que al guardar un paciente sin el número de documento será imposible realizar validaciones contra fuentes auténticas.', 'Aviso');
         }
     }
     limpiarContacto() {
@@ -523,6 +523,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
             // Chequeamos cambios en relaciones del paciente
             if (pacienteGuardar.documento) {
                 this.actualizarRelaciones(pacienteGuardar);
+            } else {
+                this.data.emit(pacienteGuardar);
+                this.plex.info('success', 'Los datos se actualizaron correctamente');
             }
         } else {
             this.plex.info('info', 'Debe completar los datos obligatorios. Verificar los contactos', 'Aviso');
@@ -608,10 +611,10 @@ export class PacienteCreateUpdateComponent implements OnInit {
             }).subscribe((datos) => {
                 if (datos.error) {
                     if (datos.error === 'email_not_found') {
-                        this.plex.info('El paciente no tiene asignado un email.', 'Atención');
+                        this.plex.info('info', 'El paciente no tiene asignado un email.', 'Atención');
                     }
                     if (datos.error === 'email_exists') {
-                        this.plex.info('El mail ingresado ya existe, ingrese otro email', 'Atención');
+                        this.plex.info('info', 'El mail ingresado ya existe, ingrese otro email', 'Atención');
                     }
                 } else {
                     this.plex.info('success', 'Se ha enviado el código de activación al paciente');
@@ -676,7 +679,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                         pacienteDB: this.pacientesSimilares[0],
                                         pacienteScan: this.pacienteModel
                                     }).subscribe(() => { });
-                                    this.plex.info('El paciente que está cargando ya existe en el sistema, favor seleccionar', 'Atención');
+                                    this.plex.info('info', 'El paciente que está cargando ya existe en el sistema, favor seleccionar', 'Atención');
                                     this.enableIgnorarGuardar = false;
                                     this.disableGuardar = true;
                                 }
@@ -687,7 +690,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                         pacienteScan: this.pacienteModel
                                     }).subscribe(() => { });
                                     this.posibleDuplicado = true;
-                                    this.plex.info('Existen pacientes con un alto procentaje de matcheo, verifique la lista', 'Atención');
+                                    this.plex.info('info', 'Existen pacientes con un alto procentaje de matcheo, verifique la lista', 'Atención');
                                     this.enableIgnorarGuardar = true;
                                     this.disableGuardar = true;
                                 } else {
@@ -736,6 +739,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         } else {
             this.plex.info('info', 'Debe completar los datos obligatorios', 'Aviso');
         }
+        console.log('dni: ', this.pacienteModel.documento, 'guardar: ', this.disableGuardar);
     }
 
     addContacto(key, valor) {
