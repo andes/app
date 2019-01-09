@@ -25,23 +25,25 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     @Input() busqueda: any;
     practicasCarga = [];
     practicasVista = [];
-
     practicasEjecucion = [];
+    alertasValReferencia = [];
+    alertasValCriticos = [];
 
     @Input('practicasEjecucion')
     set pjs(practicasEjecucion) {
         this.practicasEjecucion = practicasEjecucion;
         // if (this.modo === 'carga' || this.modo === 'validacion') {
-            this.cargarListaPracticaCarga().then(() => {
-                // if (this.modo === 'validacion') {
-                    this.cargarResultadosAnteriores();
-                // }
-            });
+        this.cargarListaPracticaCarga().then(() => {
+            this.cargarResultadosAnteriores();
+            if (this.modo === 'validacion') {
+                this.generarAlertasResultados();
+            }
+        });
         // } else {
-            this.cargarPracticasVista();
-            // if (this.modo === 'control') {
-                // this.cargarResultadosAnterioresPV();
-            // }
+        this.cargarPracticasVista();
+        // if (this.modo === 'control') {
+        // this.cargarResultadosAnterioresPV();
+        // }
         // }
     }
 
@@ -66,8 +68,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         let practicasSolicitud = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas;
         this.practicasVista = this.practicasEjecucion
             .filter(pe => practicasSolicitud.some(ps => ps._id === pe._id))
-            .filter(p => ((this.busqueda.areas.length === 0) || this.busqueda.areas.some(id => id === p.area._id))
-            );
+            .filter(p => ((this.busqueda.areas.length === 0) || this.busqueda.areas.some(id => id === p.area._id)));
     }
 
     /**
@@ -118,6 +119,15 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     /**
      *
      *
+     * @memberof TablaDatalleProtocoloComponent
+     */
+    generarAlertasResultados() {
+        this.practicasCarga.forEach( e => this.validarValorResultado(e) );
+    }
+
+    /**
+     *
+     *
      * @param {*} ids
      * @returns
      * @memberof TablaDatalleProtocoloComponent
@@ -152,6 +162,11 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         });
     }
 
+    /**
+     *
+     *
+     * @memberof TablaDatalleProtocoloComponent
+     */
     cargarResultadosAnterioresPV() {
         this.practicasVista.forEach((practicaVista) => {
             this.servicioProtocolo.getResultadosAnteriores(this.modelo.paciente.id, practicaVista.concepto.conceptId).subscribe(resultadosAnteriores => {
@@ -190,30 +205,37 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      *
      * @memberof TablaDatalleProtocolo
      */
-    validarResultados() {
-        this.practicasCarga.forEach((objetoPractica) => {
-            let resultado = objetoPractica.practica.valor.resultado;
-            let alertasValReferencia = [];
-            let alertasValCriticos = [];
-            if (resultado && !objetoPractica.esCompuesta) {
-                let valoresReferencia = objetoPractica.formatoResultado.valoresReferencia;
-                if (objetoPractica.valoresCriticos.minimo > resultado.valor || objetoPractica.valoresCriticos < resultado.valor) {
-                    alertasValCriticos.push({
-                        nombre: objetoPractica.practica.nombre,
-                        resultado: resultado
-                    });
-                } else if (valoresReferencia.valorMinimo > resultado.valor || valoresReferencia.valorMaximo < resultado.valor) {
-                    alertasValCriticos.push({
-                        nombre: objetoPractica.practica.nombre,
-                        resultado: resultado
-                    });
-                }
-            }
-        });
+    async validarResultados() {
+        if (this.alertasValCriticos.length > 0) {
+            let msg = 'Se encontraron resultados críticos para los siguientes análisis: ';
+            this.alertasValCriticos.forEach(e => msg += e.nombre + ', ');
+
+            return await this.plex.confirm(msg.substring(0, msg.length - 2) + '. ¿Desea confirmar estos valores?');
+        } else {
+            return true;
+        }
     }
 
     /**
-     * Retorna true si el último estado registrado es de validada, false si no.
+     *
+     *
+     * @memberof TablaDatalleProtocoloComponent
+     */
+    esValorCritico(id) {
+        return this.alertasValCriticos.some(a => a.id === id);
+    }
+
+    /**
+     *
+     *
+     * @memberof TablaDatalleProtocoloComponent
+     */
+    esValorReferencia(id) {
+        return this.alertasValReferencia.some(a => a.id === id);
+    }
+
+    /**
+     * Retorna true si el último estado registrado es de valireturndada, false si no.
      *
      * @returns
      * @memberof TablaDatalleProtocolo
@@ -339,22 +361,6 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         }
     }
 
-    /**
-     *
-     *
-     * @param {any} objetoPractica
-     * @returns
-     * @memberof TablaDatalleProtocoloComponent
-     */
-    esValorCritico(objetoPractica) {
-        // let resultado = objetoPractica.practica.valor.resultado;
-        // if (resultado && !objetoPractica.esCompuesta) {
-        //     let valoresReferencia = objetoPractica.formatoResultado.valoresReferencia;
-        //     return (valoresReferencia.valorMinimo > resultado.valor || valoresReferencia.valorMaximo < resultado.valor);
-        // }
-        return false;
-    }
-
     generateRegistroEjecucion(practica) {
         let practicaEjecucion: any = {
             _id: practica.id,
@@ -403,7 +409,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
                     });
                     this.cargarListaPracticaCarga().then(() => {
                         // if (this.modo === 'validacion') {
-                            this.cargarResultadosAnteriores();
+                        this.cargarResultadosAnteriores();
                         // }
                     });
                 });
@@ -421,13 +427,15 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      * @param {*} tipo
      * @memberof TablaDatalleProtocolo
      */
-    actualizarEstadoPractica(valor, tipo) {
+    actualizarEstadoPractica(objetoPractica, tipo) {
         let estado = {
             tipo: tipo,
             usuario: this.auth.usuario,
             fecha: new Date(),
             pendienteGuardar: true
         };
+
+        let valor = objetoPractica.registro.valor;
 
         if (!valor.estados) {
             valor.estados = [];
@@ -437,6 +445,38 @@ export class TablaDatalleProtocoloComponent implements OnInit {
             valor.estados.push(estado);
         } else {
             valor.estados[valor.estados.length - 1] = estado;
+        }
+
+        this.validarValorResultado(objetoPractica);
+    }
+
+    /**
+     * Genera alertas de practicas cuyos valores sobreparas valores de refencia o valores críticos
+     *
+     * @memberof TablaDatalleProtocoloComponent
+     */
+    validarValorResultado(objetoPractica) {
+        const resultado = objetoPractica.registro.valor.resultado;
+        if (resultado && resultado.valor && objetoPractica.practica.categoria !== 'compuesta') {
+            let alerta = {
+                id: objetoPractica.registro._id,
+                nombre: objetoPractica.practica.nombre,
+                resultado: resultado
+            };
+
+            // TODO: Debe tomar valores de referencia según presentación actica y edad y sexo de paciente, NO el primero de todos por edefecto, como está actulamente-
+            let valoresReferencia = objetoPractica.practica.presentaciones[0].valoresReferencia[0];
+
+            this.alertasValReferencia = this.alertasValReferencia.filter(e => e.id !== objetoPractica.registro._id);
+            this.alertasValCriticos = this.alertasValCriticos.filter(e => e.id !== objetoPractica.registro._id);
+
+            if (objetoPractica.practica.valoresCriticos && objetoPractica.practica.valoresCriticos.minimo > resultado.valor || objetoPractica.practica.valoresCriticos.maximo < resultado.valor) {
+                this.alertasValCriticos.push(alerta);
+            } else {
+                if (valoresReferencia.valorMinimo > resultado.valor || valoresReferencia.valorMaximo < resultado.valor) {
+                    this.alertasValReferencia.push(alerta);
+                }
+            }
         }
     }
 

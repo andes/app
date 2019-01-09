@@ -1,6 +1,7 @@
+import { TablaDatalleProtocoloComponent } from './tabla-detalle-protocolo/tabla-datalle-protocolo.component';
 import { PracticaService } from './../../services/practica.service';
 import { ProtocoloService } from './../../services/protocolo.service';
-import { Input, Output, Component, OnInit, HostBinding, EventEmitter } from '@angular/core';
+import { Input, Output, Component, OnInit, HostBinding, EventEmitter, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
@@ -44,6 +45,9 @@ export class ProtocoloDetalleComponent
     showObservaciones: Boolean = false;
     solicitudProtocolo: any;
     mostrarMasHeader: Boolean = false;
+
+    @ViewChild(TablaDatalleProtocoloComponent)
+    public tablaDetalleProtocoloComponent: TablaDatalleProtocoloComponent;
 
     @Output() newSolicitudEmitter: EventEmitter<any> = new EventEmitter<any>();
     @Output() volverAListaControEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
@@ -366,11 +370,10 @@ export class ProtocoloDetalleComponent
      *
      * @memberof ProtocoloDetalleComponent
      */
-    guardarProtocolo(next) {
+    async guardarProtocolo(next) {
         if (this.modelo.id) {
-
-            if (this.modo === 'carga' || this.modo === 'validacion') {
-                // this.validarResultados();
+            if ( (this.modo === 'carga' || this.modo === 'validacion') && !(await this.tablaDetalleProtocoloComponent.validarResultados()) )  {
+                return ;
             }
 
             let registros = this.modelo.ejecucion.registros;
@@ -455,9 +458,6 @@ export class ProtocoloDetalleComponent
         this.guardarProtocolo(false);
     }
 
-    // validarResultados() {
-    //     // this.practicasEjecucion
-    // }
 
     // getConfiguracionResultado(idPractica) {
     //     return new Promise( async (resolve) => {

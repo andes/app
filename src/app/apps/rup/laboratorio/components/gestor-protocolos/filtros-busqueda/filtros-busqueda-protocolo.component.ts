@@ -31,7 +31,7 @@ export class FiltrosBusquedaProtocoloComponent
     public pacientes;
     public pacienteActivo;
     public cargaLaboratorioEnum;
-    public modoCargaLaboratorio;
+    public modoCargaLaboratorio = 'Lista de protocolos';
     public modoCargaLaboratorioEnum;
     public laboratorioInternoEnum;
     public indexProtocolo;
