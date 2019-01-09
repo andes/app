@@ -5,7 +5,7 @@
             <filtros-busqueda-protocolo *ngIf="!showProtocoloDetalle" [modo]="modo" (buscarProtocolosEmmiter)="refreshSelection($event)"></filtros-busqueda-protocolo>
 
             <br *ngIf="!showProtocoloDetalle">
-            <hr *ngIf="!showProtocoloDetalle"> 
+            <hr *ngIf="!showProtocoloDetalle">
 
             <!-- LISTA DE PROTOCOLOS -->
             <lista-protocolos [protocolos]='protocolos' [modo]='modo' (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)'
@@ -35,7 +35,7 @@
                     <nav>
                         <plex-tabs [activeIndex]="accionIndex" (change)="cambio($event)" *ngIf="!showProtocoloDetalle">
                             <plex-tab label="Recepción"></plex-tab>
-                            <plex-tab label="Auditoria"></plex-tab>
+                            <plex-tab label="Auditoría"></plex-tab>
                             <plex-tab label="Carga"></plex-tab>
                             <plex-tab label="Validación"></plex-tab>
                         </plex-tabs>
@@ -91,7 +91,7 @@
                 [indexProtocolo]="indexProtocolo" [protocolos]="protocolos" [edicionDatosCabecera]="edicionDatosCabecera"
                 [modo]="modo" [seleccionPaciente]="seleccionPaciente" (volverAListaControEmit)="volverLista()"
                 (mostrarCuerpoProtocolo)="mostrarCuerpoProtocolo" [editarListaPracticas]="editarListaPracticas"
-                [busqueda]='busqueda' (edicionDatosCabeceraEmitter)="editarDatosCabecera()" ></protocolo-detalle>
+                [busqueda]='busqueda' (edicionDatosCabeceraEmitter)="editarDatosCabecera()"></protocolo-detalle>
 
         </plex-layout-sidebar>
 
