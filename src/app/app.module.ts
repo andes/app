@@ -27,7 +27,7 @@ import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
 import { AuthModule } from '@andes/auth';
 import { Auth } from '@andes/auth';
-import { RoutingGuard } from './app.routings-guard.class';
+import { RoutingGuard, RoutingNavBar } from './app.routings-guard.class';
 import { AgmCoreModule } from '@agm/core';
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
@@ -120,6 +120,9 @@ import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service
 import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesProfesional.service';
 import { InternacionService } from './modules/rup/services/internacion.service';
 import { CDAService } from './modules/rup/services/CDA.service';
+import { ResumenPacienteDinamicoService } from './modules/rup/services/resumenPaciente-dinamico.service';
+import { VacunasService } from './services/vacunas.service';
+
 
 
 
@@ -177,6 +180,7 @@ import { EspacioFisicoComponent } from './components/turnos/configuracion/espaci
 import { EditEspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/edit-espacio-fisico.component';
 import { FiltrosMapaEspacioFisicoComponent } from './components/turnos/configuracion/mapa-espacio-fisico/filtros-mapa-espacio-fisico.component';
 import { AgregarNotaTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/agregar-nota-turno.component';
+import { DetalleAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/detalle-agenda.component';
 import { CarpetaPacienteComponent } from './components/carpeta-paciente/carpeta-paciente.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
 import { AgregarNotaAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/nota-agenda.component';
@@ -184,6 +188,8 @@ import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/o
 import { PanelAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/panel-agenda.component';
 import { BotonesAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/botones-agenda.component';
 import { RevisionAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/revision-agenda.component';
+import { RevisionFueraAgendaComponent } from './components/turnos/gestor-agendas/revision/fuera-agenda.component';
+
 import { PopoverAuditComponent } from './components/popover-audit/popover-audit.component';
 import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/puntoInicio-turnos.component';
 import { EstadisticasAgendasComponent } from './components/turnos/dashboard/estadisticas-agendas.component';
@@ -201,6 +207,7 @@ import { SuspenderAgendaComponent } from './components/turnos/gestor-agendas/ope
 import { ArancelamientoFormComponent } from './components/turnos/punto-inicio/arancelamiento/arancelamiento-form.component';
 import { AutocitarTurnoAgendasComponent } from './components/turnos/autocitar/autocitar.component';
 import { DinamicaFormComponent } from './components/turnos/autocitar/dinamica.component';
+import { MapaEspacioFisicoVistaComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico-vista.component';
 
 import { BuscadorCie10Component } from './components/turnos/gestor-agendas/operaciones-agenda/buscador-cie10.component';
 
@@ -224,6 +231,10 @@ import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoIn
 import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
 import { VistaCDAComponent } from './modules/rup/components/ejecucion/vistaCDA.component';
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
+import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
+import { ResumenPacienteDinamicoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
+import { ResumenPacienteDinamicoNinoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico-nino.component';
+
 
 // Legacy para RUP
 import { LaboratoriosComponent } from './modules/rup/components/laboratorios/laboratorios.component';
@@ -246,12 +257,9 @@ import { AutocitadoComponent } from './modules/rup/components/elementos/autocita
 import { ObesidadComponent } from './modules/rup/components/elementos/obesidad.component';
 import { HipertensionArterialComponent } from './modules/rup/components/elementos/hipertensionArterial.component';
 import { FiltradoGlomerularComponent } from './modules/rup/components/elementos/filtradoGlomerular.component';
-import { RiesgoCardiovascularComponent } from './modules/rup/components/elementos/riesgoCardiovascular.component';
 import { AdjuntarDocumentoComponent } from './modules/rup/components/elementos/adjuntarDocumento.component';
 import { RegistrarMedicamentoDefaultComponent } from './modules/rup/components/elementos/registrarMedicamentoDefault.component';
 import { InformesComponent } from './modules/rup/components/elementos/informe.component';
-import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
-import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
 import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
 import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoDerecho.component';
 import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
@@ -287,12 +295,13 @@ import { DesarrolloPsicomotorComponent } from './modules/rup/components/elemento
 import { RegistrarMedidasAntropometricasNinoE3Y6AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE3Y6A.component';
 import { RegistrarMedidasAntropometricasNinoM2AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoM2A.component';
 import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE2Y3A.component';
+import { ResumenHistoriaClinicaComponent } from './modules/rup/components/elementos/resumenHistoriaClinica.component';
 import { CalculoDeBostonComponent } from './modules/rup/components/elementos/calculoDeBoston.component';
 import { SeleccionBinariaComponent } from './modules/rup/components/elementos/seleccionBinaria.component';
 import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico.component';
 import { MoleculaBaseComponent } from './modules/rup/components/elementos/moleculaBase.component';
-
 import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria.component';
+
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
@@ -304,7 +313,7 @@ import { EditarAuditoriaPrestacionPacienteComponent } from './components/auditor
 
 // AUDITORIA
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
-import { Auditoria2Component } from './components/auditoria/auditoria2.component';
+import { VincularPacientesComponent } from './components/auditoria/vincular-pacientes.component';
 // import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
 
 // USUARIO
@@ -346,6 +355,7 @@ import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.c
 import { DetalleSolicitudComponent } from './components/top/solicitudes/detalleSolicitud.component';
 import { AuditarSolicitudComponent } from './components/top/solicitudes/auditarSolicitud.component';
 import { NuevaSolicitudComponent } from './components/top/solicitudes/nuevaSolicitud.component';
+import { AnularSolicitudComponent } from './components/top/solicitudes/anularSolicitud.component';
 
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
@@ -366,6 +376,9 @@ import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
 import { ConfiguracionPrestacionCrearComponent } from './components/configuracionPrestacion/configuracion-prestacion-crear.component';
 
+import { RiesgoCardiovascularService } from './modules/rup/components/formulas/riesgoCardiovascular.service';
+import { FormulaBaseService } from './modules/rup/components/formulas';
+import { FormulaBaseComponent } from './modules/rup/components/elementos/FormulaBase.component';
 // Campañas Salud
 import { CampaniaSaludService } from './apps/campaniaSalud/services/campaniaSalud.service';
 import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campaniaSalud.component';
@@ -391,7 +404,6 @@ export let RUPRegistry = {
     'ObesidadComponent': ObesidadComponent,
     'HipertensionArterialComponent': HipertensionArterialComponent,
     'FiltradoGlomerularComponent': FiltradoGlomerularComponent,
-    'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent,
     'AdjuntarDocumentoComponent': AdjuntarDocumentoComponent,
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
     'IngresoInternacionComponent': IngresoInternacionComponent,
@@ -422,11 +434,13 @@ export let RUPRegistry = {
     'RegistrarMedidasAntropometricasNinoE3Y6AComponent': RegistrarMedidasAntropometricasNinoE3Y6AComponent,
     'RegistrarMedidasAntropometricasNinoM2AComponent': RegistrarMedidasAntropometricasNinoM2AComponent,
     'RegistrarMedidasAntropometricasNinoE2Y3AComponent': RegistrarMedidasAntropometricasNinoE2Y3AComponent,
+    'ResumenHistoriaClinicaComponent': ResumenHistoriaClinicaComponent,
+    'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
+    'GraficoLinealComponent': GraficoLinealComponent,
     'CalculoDeBostonComponent': CalculoDeBostonComponent,
     'SeleccionBinariaComponent': SeleccionBinariaComponent,
     'ValorNumericoComponent': ValorNumericoComponent,
-    'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
-    'GraficoLinealComponent': GraficoLinealComponent,
+    'FormulaBaseComponent': FormulaBaseComponent,
     'MoleculaBaseComponent': MoleculaBaseComponent
 };
 
@@ -447,7 +461,6 @@ let RUPComponentsArray = [
     PercentiloPerimetroCefalicoComponent,
     PerimetroCefalicoComponent,
     RegistrarMedicamentoDefaultComponent,
-    RiesgoCardiovascularComponent,
     SaturacionOxigenoComponent,
     GraficoLinealComponent,
     SignosVitalesComponent,
@@ -471,6 +484,9 @@ let RUPComponentsArray = [
     ElementoDeRegistroComponent,
     OdontologiaDefaultComponent,
     CircunferenciaCinturaComponent,
+    ResumenPacienteEstaticoComponent,
+    ResumenPacienteDinamicoComponent,
+    ResumenPacienteDinamicoNinoComponent,
     InformeActividadNoNominalizadaComponent,
     PercentiloPesoComponent,
     PercentiloTallaComponent,
@@ -484,22 +500,27 @@ let RUPComponentsArray = [
     RegistrarMedidasAntropometricasNinoM2AComponent,
     RegistrarMedidasAntropometricasNinoE2Y3AComponent,
     RegistrarMedidasAntropometricasNinoE3Y6AComponent,
+    ResumenHistoriaClinicaComponent,
+    FormulaBaseComponent,
     CalculoDeBostonComponent,
     SeleccionBinariaComponent,
     ValorNumericoComponent,
     ProcedimientoDeEnfermeriaComponent,
-    MoleculaBaseComponent
+    MoleculaBaseComponent,
+    HeaderPacienteComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+import { ChartComponent } from './modules/rup/components/elementos/chart.component';
 import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
 import { FormTerapeuticoService } from './services/formTerapeutico/formTerapeutico.service';
 import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem.component';
 import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
 import { UploadFileComponent } from './shared/components/upload-file.component';
+import { CodificacionService } from './modules/rup/services/codificacion.service';
 
 
 
@@ -539,7 +560,7 @@ registerLocaleData(localeEs, 'es');
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
         TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
-        ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, PopoverAuditComponent,
+        ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, RevisionFueraAgendaComponent, PopoverAuditComponent,
         RUPComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
         CarpetaPacienteComponent,
@@ -549,7 +570,7 @@ registerLocaleData(localeEs, 'es');
         PermisosComponent, ArbolPermisosComponent,
         // AuditoriaPorBloqueComponent,
         PuntoInicioComponent,
-        Auditoria2Component,
+        VincularPacientesComponent,
         LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
         AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
         HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
@@ -562,12 +583,13 @@ registerLocaleData(localeEs, 'es');
         EncabezadoReportesComponent,
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent, SuspenderAgendaComponent,
+        MapaEspacioFisicoVistaComponent,
         ResumenComponent,
         PrestacionCrearComponent,
         PrestacionEjecucionComponent,
         PrestacionValidacionComponent,
         SnomedBuscarComponent,
-
+        DetalleAgendaComponent,
         HeaderPacienteComponent,
         PacienteDetalleActualizarComponent,
         HudsBusquedaComponent,
@@ -581,13 +603,11 @@ registerLocaleData(localeEs, 'es');
 
         // RUP
         ...RUPComponentsArray,
-        TabsComponent,
-        TabComponent,
         MapaDeCamasComponent,
         CamaComponent,
         PuntoInicioInternacionComponent,
         LaboratoriosComponent,
-
+        ChartComponent,
         OrganizacionSectoresComponent,
         EgresoInternacionComponent,
         ResumenInternacionComponent,
@@ -597,6 +617,7 @@ registerLocaleData(localeEs, 'es');
         SolicitudesComponent,
         DetalleSolicitudComponent,
         AuditarSolicitudComponent,
+        AnularSolicitudComponent,
         NuevaSolicitudComponent,
         PrestamosHcComponent,
         ListarSolicitudesComponent,
@@ -645,6 +666,7 @@ registerLocaleData(localeEs, 'es');
         Server,
         Auth,
         RoutingGuard,
+        RoutingNavBar,
         OrganizacionService,
         OcupacionService,
         ProvinciaService,
@@ -703,6 +725,12 @@ registerLocaleData(localeEs, 'es');
         SugerenciasService,
         ConfiguracionPrestacionService,
         PrestacionLegacyService,
+        CodificacionService,
+        ResumenPacienteDinamicoService,
+        VacunasService,
+        RiesgoCardiovascularService,
+        FormulaBaseService,
+        SeleccionBinariaComponent,
         CampaniaSaludService,
         SeleccionBinariaComponent,
         PacienteCreateUpdateComponent

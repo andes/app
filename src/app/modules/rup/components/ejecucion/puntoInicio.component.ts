@@ -71,6 +71,13 @@ export class PuntoInicioComponent implements OnInit {
             if (!this.auth.profesional.id) {
                 this.redirect('inicio');
             } else {
+                this.plex.updateTitle([{
+                    route: '/',
+                    name: 'ANDES'
+                }, {
+                    name: 'RUP'
+                }]);
+
                 this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
                     if (data && data.length <= 0) {
                         this.redirect('inicio');
@@ -81,6 +88,7 @@ export class PuntoInicioComponent implements OnInit {
                 });
             }
         }
+
     }
 
     redirect(pagina: string) {

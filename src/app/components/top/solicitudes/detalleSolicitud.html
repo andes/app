@@ -4,8 +4,8 @@
             <div class="page-title float-left">SOLICITUD DE {{ tipoSolicitud.toUpperCase() }}</div>
         </div>
     </header>
-    <div class="row">
-        <div class="col" *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
+    <div class="row" *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
+        <div class="col">
             <!-- Cuando la solicitud fue rechazada muestra los datos del rechazo -->
             <b>Motivo de Rechazo</b>
             <br>
@@ -17,6 +17,26 @@
             <span class="text-left" *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
                 {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdBy | profesional}}</span>
             <br>
+        </div>
+    </div>
+    <div class="row" *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'anulada'">
+        <div class="col">
+            <!-- Cuando la solicitud fue rechazada muestra los datos del rechazo -->
+            <b>Motivo de Anulación</b>
+            <br>
+            <span class="text-left">
+                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo}}</span>
+            <br>
+            <b>Usuario que anula</b>
+            <br>
+            <span class="text-left">
+                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdBy | profesional}}</span>
+            <br>
+            <b>Fecha de Anulación</b>
+            <br>
+            <span class="text-left">
+                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdAt | date:
+                'dd/MM/yyyy'}}</span>
         </div>
     </div>
     <div class="row">
@@ -83,10 +103,11 @@
             </span>
         </div>
     </div>
-    <div class="row" *ngIf="prestacionSeleccionada.solicitud.registros.length>0 && prestacionSeleccionada.solicitud.registros[0].valor">
+    <div class="row" *ngIf="prestacionSeleccionada.solicitud.registros.length>0 && prestacionSeleccionada.solicitud.registros[0]?.valor">
         <div class="col">
             <hr>
-            <b *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.solicitudPrestacion.motivo">Motivo</b>
+            <b *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.solicitudPrestacion.motivo">Motivo de
+                Solicitud</b>
             <br>
             <span *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.solicitudPrestacion">
                 {{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.motivo}}
