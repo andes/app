@@ -1,33 +1,33 @@
-import { Component, OnInit } from '@angular/core';
-import { RUPComponent } from './../core/rup.component';
-@Component({
-    selector: 'rup-peso',
-    templateUrl: 'peso.html'
-})
-export class PesoComponent extends RUPComponent implements OnInit {
-    public esRequerido: boolean;
+// import { Component, OnInit } from '@angular/core';
+// import { RUPComponent } from './../core/rup.component';
+// @Component({
+//     selector: 'rup-peso',
+//     templateUrl: 'peso.html'
+// })
+// export class PesoComponent extends RUPComponent implements OnInit {
+//     public esRequerido: boolean;
 
-    ngOnInit() {
-        if (!this.soloValores) {
-            // Observa cuando cambia la propiedad 'peso' en otro elemento RUP
-            this.conceptObserverService.observe(this.registro).subscribe((data) => {
+//     ngOnInit() {
+//         if (!this.soloValores) {
+//             // Observa cuando cambia la propiedad 'peso' en otro elemento RUP
+//             this.conceptObserverService.observe(this.registro).subscribe((data) => {
 
-                if (this.registro.valor !== data.valor) {
-                    this.registro.valor = data.valor;
-                    this.emitChange(false);
-                }
-            });
-        }
-        if (this.registro.valor) {
-            this.mensaje = this.getMensajes();
-        }
+//                 if (this.registro.valor !== data.valor) {
+//                     this.registro.valor = data.valor;
+//                     this.emitChange(false);
+//                 }
+//             });
+//         }
+//         if (this.registro.valor) {
+//             this.mensaje = this.getMensajes();
+//         }
 
-        if (this.params) {
-            this.esRequerido = this.params.required;
-        } else {
-            this.esRequerido = false;
-        }
-    }
+//         if (this.params) {
+//             this.esRequerido = this.params.required;
+//         } else {
+//             this.esRequerido = false;
+//         }
+//     }
 
     // getMensajes() {
     //     let peso = this.registro.valor;
@@ -341,4 +341,4 @@ export class PesoComponent extends RUPComponent implements OnInit {
     //     }
     //     return mensaje;
     // }
-}
+// }

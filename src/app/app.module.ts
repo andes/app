@@ -242,7 +242,7 @@ import { FrecuenciaRespiratoriaComponent } from './modules/rup/components/elemen
 import { ObservacionesComponent } from './modules/rup/components/elementos/observaciones/observaciones.component';
 import { EvolucionProblemaDefaultComponent } from './modules/rup/components/elementos/evolucionProblemaDefault/evolucionProblemaDefault.component';
 import { AutocitadoComponent } from './modules/rup/components/elementos/autocitado/autocitado.component';
-import { RiesgoCardiovascularComponent } from './modules/rup/components/elementos/riesgoCardiovascular.component';
+// import { RiesgoCardiovascularComponent } from './modules/rup/components/elementos/riesgoCardiovascular.component';
 import { AdjuntarDocumentoComponent } from './modules/rup/components/elementos/adjuntarDocumento/adjuntarDocumento.component';
 import { RegistrarMedicamentoDefaultComponent } from './modules/rup/components/elementos/registrarMedicamentoDefault/registrarMedicamentoDefault.component';
 import { InformesComponent } from './modules/rup/components/elementos/informe/informe.component';
@@ -260,7 +260,7 @@ import { ListaEsperaInternacionComponent } from './modules/rup/components/ejecuc
 import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/odontologiaDefault/odontologiaDefault.component';
 import { InformeActividadNoNominalizadaComponent } from './modules/rup/components/elementos/informeActividadNoNominalizada/informeActividadNoNominalizada.component';
 import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
-import { PesoComponent } from './modules/rup/components/elementos/peso.component';
+// import { PesoComponent } from './modules/rup/components/elementos/peso.component';
 import { TallaComponent } from './modules/rup/components/elementos/talla.component';
 import { TensionArterialPediatricaComponent } from './modules/rup/components/elementos/tensionArterialPediatrica.component';
 import { ConsultaDeNinoSanoM2AComponent } from './modules/rup/components/elementos/consultaDeNinoSano/consultaDeNinoSanoM2A.component';
@@ -364,7 +364,7 @@ export let RUPRegistry = {
     'FrecuenciaCardiacaComponent': FrecuenciaCardiacaComponent,
     'FrecuenciaRespiratoriaComponent': FrecuenciaRespiratoriaComponent,
     'AutocitadoComponent': AutocitadoComponent,
-    'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent,
+    // 'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent,
     'AdjuntarDocumentoComponent': AdjuntarDocumentoComponent,
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
     'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent,
@@ -374,7 +374,7 @@ export let RUPRegistry = {
     'LactanciaComponent': LactanciaComponent,
     'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
     'InformeActividadNoNominalizadaComponent': InformeActividadNoNominalizadaComponent,
-    'PesoComponent': PesoComponent,
+    // 'PesoComponent': PesoComponent,
     'TallaComponent': TallaComponent,
     'TensionArterialPediatricaComponent': TensionArterialPediatricaComponent,
     'ConsultaDeNinoSanoM2AComponent': ConsultaDeNinoSanoM2AComponent,
@@ -398,9 +398,9 @@ let RUPComponentsArray = [
     FrecuenciaRespiratoriaComponent,
     InformesComponent,
     ObservacionesComponent,
-    PesoComponent,
+    // PesoComponent,
     RegistrarMedicamentoDefaultComponent,
-    RiesgoCardiovascularComponent,
+    // RiesgoCardiovascularComponent,
     SaturacionOxigenoComponent,
     SeguimientoDelPesoComponent,
     SignosVitalesComponent,
