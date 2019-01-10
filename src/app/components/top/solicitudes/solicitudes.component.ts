@@ -243,7 +243,7 @@ export class SolicitudesComponent implements OnInit {
                 solicitudHasta: this.fechaHasta
             };
             if (this.estado) {
-                if (this.estado.id !== 'turno dado') {
+                if (this.estado.id !== 'turnoDado') {
                     params['estados'] = [this.estado.id];
                     if (this.estado.id === 'pendiente') {
                         params['tieneTurno'] = false;
