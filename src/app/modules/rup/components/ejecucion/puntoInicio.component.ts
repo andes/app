@@ -220,7 +220,7 @@ export class PuntoInicioComponent implements OnInit {
         // filtramos por agendas propias o todas menos las propias
         if (this.soloMisAgendas) {
             this.agendas = this.agendas.filter(agenda => {
-                return (agenda.profesionales.find(profesional => {
+                return (agenda.profesionales && agenda.profesionales.find(profesional => {
                     return (profesional.id === this.auth.profesional.id);
                 }));
             });
