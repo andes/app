@@ -46,6 +46,8 @@ export class ProtocoloDetalleComponent
     solicitudProtocolo: any;
     mostrarMasHeader: Boolean = false;
 
+    alarmasValoresCriticos: any;
+
     @ViewChild(TablaDatalleProtocoloComponent)
     public tablaDetalleProtocoloComponent: TablaDatalleProtocoloComponent;
 
@@ -63,6 +65,7 @@ export class ProtocoloDetalleComponent
     @Input() indexProtocolo: any;
     @Input() busqueda: any;
     @Input() editarListaPracticas;
+
     listado: any;
     seleccion: any;
     @Input('protocolo')
@@ -372,8 +375,9 @@ export class ProtocoloDetalleComponent
      */
     async guardarProtocolo(next) {
         if (this.modelo.id) {
-            if ( (this.modo === 'carga' || this.modo === 'validacion') && !(await this.tablaDetalleProtocoloComponent.validarResultados()) )  {
-                return ;
+            if (this.modo === 'carga' || this.modo === 'validacion') {
+                this.alarmasValoresCriticos = await this.tablaDetalleProtocoloComponent.validarResultados();
+                return;
             }
 
             let registros = this.modelo.ejecucion.registros;
@@ -444,6 +448,16 @@ export class ProtocoloDetalleComponent
             this.guardarProtocolo(true);
             // this.cargarResultadosAnteriores();
         }
+    }
+
+    /**
+     *
+     *
+     * @returns
+     * @memberof ProtocoloDetalleComponent
+     */
+    showGestorAlarmas() {
+        return this.alarmasValoresCriticos && this.alarmasValoresCriticos.length > 0;
     }
 
     /**

@@ -1,7 +1,7 @@
 import { IPaciente } from './../../../../../interfaces/IPaciente';
 import { AppMobileService } from './../../../../../services/appMobile.service';
 import { PacienteService } from './../../../../../services/paciente.service';
-import { Component, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform, OnDestroy } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, HostBinding, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Auth } from '@andes/auth';

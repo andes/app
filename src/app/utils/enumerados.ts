@@ -112,6 +112,14 @@ export enum EstadoHojaTrabajo {
     'analisis'
 }
 
+enum RespuestasGestionValoresCriticos {
+    'Se avisó al médico',
+    'No se pudo contactar al médico',
+    'Justificado por el diagnóstico',
+    'Máxima emergencia',
+    'Corrección de resultado'
+}
+
 export function titleCase(str) {
     return str.toLowerCase().split(' ').map(function (word) {
         return (word.charAt(0).toUpperCase() + word.slice(1));
@@ -325,6 +333,18 @@ export function getRelacionTutor() {
 
 export function getObjRelacionTutor() {
     let arrRT = Object.keys(relacionTutor);
+    arrRT = arrRT.slice(arrRT.length / 2);
+    let salida = arrRT.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
+
+export function getRespuestasGestionValoresCriticos() {
+    let arrRT = Object.keys(RespuestasGestionValoresCriticos);
     arrRT = arrRT.slice(arrRT.length / 2);
     let salida = arrRT.map(elem => {
         return {

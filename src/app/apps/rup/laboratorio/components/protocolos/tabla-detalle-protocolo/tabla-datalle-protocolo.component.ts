@@ -1,9 +1,11 @@
+import { ProfesionalService } from './../../../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import { ProtocoloService } from './../../../services/protocolo.service';
 import { IPractica } from '../../../interfaces/practica/IPractica';
 import { IPracticaBuscarResultado } from '../../../interfaces/practica/IPracticaBuscarResultado.inteface';
 import { PracticaService } from '../../../services/practica.service';
 import { Input, Component, OnInit } from '@angular/core';
+import { getRespuestasGestionValoresCriticos } from '../../../../../../utils/enumerados';
 
 import { Plex } from '@andes/plex';
 import { Constantes } from '../../../controllers/constants';
@@ -28,6 +30,9 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     practicasEjecucion = [];
     alertasValReferencia = [];
     alertasValCriticos = [];
+    showGestionAlarmas: Boolean;
+    showSelectProfesional: Boolean;
+    avisoValoresCriticos: any;
 
     @Input('practicasEjecucion')
     set pjs(practicasEjecucion) {
@@ -54,6 +59,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     constructor(
         private servicioPractica: PracticaService,
         private servicioProtocolo: ProtocoloService,
+        private servicioProfesional: ProfesionalService,
         public plex: Plex,
         public auth: Auth
     ) { }
@@ -210,9 +216,15 @@ export class TablaDatalleProtocoloComponent implements OnInit {
             let msg = 'Se encontraron resultados críticos para los siguientes análisis: ';
             this.alertasValCriticos.forEach(e => msg += e.nombre + ', ');
 
-            return await this.plex.confirm(msg.substring(0, msg.length - 2) + '. ¿Desea confirmar estos valores?');
+            let respuesta = await this.plex.confirm(msg.substring(0, msg.length - 2) + '. ¿Desea confirmar estos valores?');
+            if (respuesta) {
+                this.showGestionAlarmas = true;
+                this.modelo.solicitud.registros[0].valor.solicitudPrestacion.avisoValoresCriticos = {};
+                this.avisoValoresCriticos = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.avisoValoresCriticos;
+            }
+
         } else {
-            return true;
+            return this.alertasValCriticos;
         }
     }
 
@@ -222,7 +234,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      * @memberof TablaDatalleProtocoloComponent
      */
     esValorCritico(id) {
-        return this.alertasValCriticos.some(a => a.id === id);
+        return this.alertasValCriticos.some(a => a.registro.id === id);
     }
 
     /**
@@ -231,7 +243,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      * @memberof TablaDatalleProtocoloComponent
      */
     esValorReferencia(id) {
-        return this.alertasValReferencia.some(a => a.id === id);
+        return this.alertasValReferencia.some(a => a.registro.id === id);
     }
 
     /**
@@ -459,8 +471,8 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         const resultado = objetoPractica.registro.valor.resultado;
         if (resultado && resultado.valor && objetoPractica.practica.categoria !== 'compuesta') {
             let alerta = {
-                id: objetoPractica.registro._id,
-                nombre: objetoPractica.practica.nombre,
+                registro: objetoPractica.registro,
+                practica: objetoPractica.practica,
                 resultado: resultado
             };
 
@@ -477,6 +489,51 @@ export class TablaDatalleProtocoloComponent implements OnInit {
                     this.alertasValReferencia.push(alerta);
                 }
             }
+        }
+    }
+
+    /**
+     * Busca y carga lista de profesionales
+     *
+     * @param {any} $event
+     * @memberof ProtocoloDetalleComponent
+     */
+    loadProfesionales($event) {
+        let query = {
+            nombreCompleto: $event.query
+        };
+        this.servicioProfesional.get(query).subscribe((resultado: any) => {
+            $event.callback(resultado);
+        });
+    }
+
+    /**
+     * Busca y carga lista de profesionales
+     *
+     * @param {any} $event
+     * @memberof ProtocoloDetalleComponent
+     */
+    getOpcionesRespuesta($event) {
+        $event.callback(getRespuestasGestionValoresCriticos());
+    }
+
+        /**
+     * Busca y carga lista de profesionales
+     *
+     * @param {any} $event
+     * @memberof ProtocoloDetalleComponent
+     */
+    changeRespuestaGestionValoresCriticos($event) {
+        const rtas = getRespuestasGestionValoresCriticos();
+        if ($event.value) {
+            this.showSelectProfesional = $event.value.id === rtas[0].id || $event.value.id === rtas[1].id || $event.value   .id === rtas[2].id;
+            if (!this.showSelectProfesional) {
+                this.avisoValoresCriticos.profesionalReportado = null;
+            }
+        } else {
+            this.showSelectProfesional = false;
+            this.avisoValoresCriticos.profesionalReportado = null;
+            this.avisoValoresCriticos.respuesta = null;
         }
     }
 

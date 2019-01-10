@@ -147,6 +147,34 @@ header {
     }
 }
 
+.gestion-alarmas-container {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(100px, 1fr));
+    &> span {
+        >:first-child {
+            width: 100%;
+        }
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-end;
+        padding: .15rem .25rem;
+    }
+    &> div {
+        width: auto;
+        display: flex;
+        align-self: flex-end;
+        justify-content: space-evenly;
+        padding: .15rem .25rem;
+    }
+        grid-template-columns: repeat(2, minmax(100px, 1fr));
+        &> div {
+            width: auto;
+            align-self: flex-end;
+            padding: .15rem .25rem;
+        }
+    
+}
+
 .tabs {
     height: 70px !important;
 }
