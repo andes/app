@@ -1,4 +1,4 @@
-import { IPrestacionGetParams } from './../../services/prestacionGetParams.interface';
+import { IPrestacionGetParams } from './../../interfaces/prestacionGetParams.interface';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 
