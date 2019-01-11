@@ -1,3 +1,4 @@
+import { SemanticTag } from './../../interfaces/semantic-tag.type';
 import { Component, OnInit, HostBinding, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Plex } from '@andes/plex';
@@ -142,5 +143,6 @@ export class VistaHudsComponent implements OnInit {
     evtCambiaPaciente() {
         this.cambiarPaciente.emit(true);
     }
+
 
 }

@@ -87,6 +87,9 @@ export class PrestacionesService {
     public elementosRegistros = {
         odontograma: '3561000013109'
     };
+    public conceptosSnomed = {
+        InformeEncuentro: '371531000'
+    };
 
     // Ids de conceptos que refieren que un paciente no concurrió a la consulta
     // Se usan para hacer un PATCH en el turno, quedando turno.asistencia = 'noAsistio'
@@ -301,6 +304,7 @@ export class PrestacionesService {
                 });
                 if (!registroEncontrado && registro.valor) {
                     let dato = {
+                        idPrestacion: registro.idPrestacion,
                         concepto: registro.concepto,
                         prestaciones: [registro.idPrestacion],
                         evoluciones: [{
@@ -314,13 +318,15 @@ export class PrestacionesService {
                             idRegistroTransformado: registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : null,
                             origen: registro.valor.origen ? registro.valor.origen : null,
                             idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : null,
-                            informeRequerido: registro.informeRequerido ? registro.informeRequerido : null
+                            informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
+                            relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : []
                         }]
                     };
                     registroSalida.push(dato);
                 } else {
                     let ultimaEvolucion = registroEncontrado.evoluciones[registroEncontrado.evoluciones.length - 1];
                     let nuevaEvolucion = {
+                        idPrestacion: registro.idPrestacion,
                         fechaCarga: registro.createdAt,
                         idRegistro: registro.id,
                         profesional: registro.createdBy.nombreCompleto,
@@ -331,7 +337,8 @@ export class PrestacionesService {
                         idRegistroTransformado: registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : ultimaEvolucion.idRegistroTransformado,
                         origen: registro.valor.origen ? registro.valor.origen : ultimaEvolucion.origen,
                         idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : ultimaEvolucion.idRegistroGenerado,
-                        informeRequerido: registro.informeRequerido ? registro.informeRequerido : null
+                        informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
+                        relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : []
                     };
                     registroEncontrado.prestaciones.push(registro.idPrestacion);
                     registroEncontrado.evoluciones.push(nuevaEvolucion);
@@ -1019,6 +1026,33 @@ export class PrestacionesService {
 
         return icon;
     }
+
+
+    /**
+        * Devuelve el texto del informe del encuentro asociado al registro
+        *
+        * @param {any} paciente un paciente
+        * @param {any} registro un registro de una prestación
+        * @returns  {string} Informe del encuentro relacionado al registro de entrada
+        * @memberof PrestacionesService
+        */
+    mostrarInformeRelacionado(paciente, registro, concepto) {
+        let salida = '';
+        if (registro.idPrestacion && concepto.conceptId !== this.conceptosSnomed.InformeEncuentro) {
+            if (this.cache[paciente.id]) {
+                let unaPrestacion = this.cache[paciente.id].find(p => p.id === registro.idPrestacion);
+                if (unaPrestacion) {
+                    // vamos a buscar si en la prestación esta registrado un informe del encuentro
+                    let registroEncontrado = unaPrestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.conceptosSnomed.InformeEncuentro);
+                    if (registroEncontrado) {
+                        salida = registroEncontrado.valor ? '<label>Informe del encuentro</label>' + registroEncontrado.valor : null;
+                    }
+                }
+            }
+        }
+        return salida;
+    }
+
 
     /*******
      * INTERNACION
