@@ -227,22 +227,18 @@ import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucio
 
 // Legacy para RUP
 import { LaboratoriosComponent } from './modules/rup/components/laboratorios/laboratorios.component';
-// import { RUPRegistry } from './modules/rup/components/core/rup-.registry';
-// TODO: ver con JGabriel!!!
+// Componentes de RUP
 import { SelectPorRefsetComponent } from './modules/rup/components/elementos/selectPorRefset/SelectPorRefset.component';
 import { TensionSistolicaComponent } from './modules/rup/components/elementos/tensionSistolica.component';
 import { TensionDiastolicaComponent } from './modules/rup/components/elementos/tensionDiastolica.component';
 import { TensionArterialComponent } from './modules/rup/components/elementos/tensionArterial.component';
-import { TemperaturaComponent } from './modules/rup/components/elementos/temperatura.component';
 import { SolicitudPrestacionDefaultComponent } from './modules/rup/components/elementos/solicitudPrestacionDefault/solicitudPrestacionDefault.component';
-// import { SignosVitalesComponent } from './modules/rup/components/elementos/signosVitales.component';
 import { SaturacionOxigenoComponent } from './modules/rup/components/elementos/saturacionOxigeno.component';
 import { FrecuenciaCardiacaComponent } from './modules/rup/components/elementos/frecuenciaCardiaca.component';
 import { FrecuenciaRespiratoriaComponent } from './modules/rup/components/elementos/frecuenciaRespiratoria.component';
 import { ObservacionesComponent } from './modules/rup/components/elementos/observaciones/observaciones.component';
 import { EvolucionProblemaDefaultComponent } from './modules/rup/components/elementos/evolucionProblemaDefault/evolucionProblemaDefault.component';
 import { AutocitadoComponent } from './modules/rup/components/elementos/autocitado/autocitado.component';
-// import { RiesgoCardiovascularComponent } from './modules/rup/components/elementos/riesgoCardiovascular.component';
 import { AdjuntarDocumentoComponent } from './modules/rup/components/elementos/adjuntarDocumento/adjuntarDocumento.component';
 import { RegistrarMedicamentoDefaultComponent } from './modules/rup/components/elementos/registrarMedicamentoDefault/registrarMedicamentoDefault.component';
 import { InformesComponent } from './modules/rup/components/elementos/informe/informe.component';
@@ -260,8 +256,6 @@ import { ListaEsperaInternacionComponent } from './modules/rup/components/ejecuc
 import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/odontologiaDefault/odontologiaDefault.component';
 import { InformeActividadNoNominalizadaComponent } from './modules/rup/components/elementos/informeActividadNoNominalizada/informeActividadNoNominalizada.component';
 import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
-// import { PesoComponent } from './modules/rup/components/elementos/peso.component';
-// import { TallaComponent } from './modules/rup/components/elementos/talla.component';
 import { TensionArterialPediatricaComponent } from './modules/rup/components/elementos/tensionArterialPediatrica.component';
 import { ConsultaDeNinoSanoM2AComponent } from './modules/rup/components/elementos/consultaDeNinoSano/consultaDeNinoSanoM2A.component';
 import { ConsultaDeNinoSanoE2Y3AComponent } from './modules/rup/components/elementos/consultaDeNinoSano/consultaDeNinoSanoE2Y3A.component';
@@ -355,16 +349,13 @@ export let RUPRegistry = {
     'InformesComponent': InformesComponent,
     'ObservacionesComponent': ObservacionesComponent,
     'SaturacionOxigenoComponent': SaturacionOxigenoComponent,
-    // 'SignosVitalesComponent': SignosVitalesComponent,
     'SolicitudPrestacionDefaultComponent': SolicitudPrestacionDefaultComponent,
-    'TemperaturaComponent': TemperaturaComponent,
     'TensionArterialComponent': TensionArterialComponent,
     'TensionDiastolicaComponent': TensionDiastolicaComponent,
     'TensionSistolicaComponent': TensionSistolicaComponent,
     'FrecuenciaCardiacaComponent': FrecuenciaCardiacaComponent,
     'FrecuenciaRespiratoriaComponent': FrecuenciaRespiratoriaComponent,
     'AutocitadoComponent': AutocitadoComponent,
-    // 'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent,
     'AdjuntarDocumentoComponent': AdjuntarDocumentoComponent,
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
     'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent,
@@ -374,8 +365,6 @@ export let RUPRegistry = {
     'LactanciaComponent': LactanciaComponent,
     'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
     'InformeActividadNoNominalizadaComponent': InformeActividadNoNominalizadaComponent,
-    // 'PesoComponent': PesoComponent,
-    // 'TallaComponent': TallaComponent,
     'TensionArterialPediatricaComponent': TensionArterialPediatricaComponent,
     'ConsultaDeNinoSanoM2AComponent': ConsultaDeNinoSanoM2AComponent,
     'ConsultaDeNinoSanoE2Y3AComponent': ConsultaDeNinoSanoE2Y3AComponent,
@@ -398,15 +387,10 @@ let RUPComponentsArray = [
     FrecuenciaRespiratoriaComponent,
     InformesComponent,
     ObservacionesComponent,
-    // PesoComponent,
     RegistrarMedicamentoDefaultComponent,
-    // RiesgoCardiovascularComponent,
     SaturacionOxigenoComponent,
     SeguimientoDelPesoComponent,
-    // SignosVitalesComponent,
     SolicitudPrestacionDefaultComponent,
-    // TallaComponent,
-    TemperaturaComponent,
     TensionArterialComponent,
     TensionDiastolicaComponent,
     TensionSistolicaComponent,
