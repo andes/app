@@ -266,6 +266,10 @@
             (click)="gestionMobile(false)">
         </plex-button>
         <plex-button label="Cancelar" type="danger" position="left" (click)="cancel()"></plex-button>
+        <plex-button *ngIf="!validado && !foto" class="pr-1" label="Validar Paciente" type="info" position="right"
+            [validateForm]="formulario" [disabled]="disableValidar" (click)="validarPaciente($event)"></plex-button>
+        <plex-button *ngIf="showDeshacer" class="pr-1" label="Deshacer Validación" type="warning" position="right"
+            (click)="deshacerValidacion()"></plex-button>
         <plex-button *ngIf="!disableGuardar" label="Guardar" type="success" position="right" [validateForm]="formulario"
             (click)="save($event,false)"></plex-button>
         <plex-button *ngIf="enableIgnorarGuardar" label="Ignorar y Guardar" type="warning" position="right"

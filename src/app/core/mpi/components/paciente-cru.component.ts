@@ -2,7 +2,6 @@ import { AppMobileService } from './../../../services/appMobile.service';
 import { ParentescoService } from './../../../services/parentesco.service';
 import { IContacto } from './../../../interfaces/IContacto';
 import { IDireccion } from '../../../core/mpi/interfaces/IDireccion';
-import { LogService } from './../../../services/log.service';
 import { LocalidadService } from './../../../services/localidad.service';
 import { ProvinciaService } from './../../../services/provincia.service';
 import { PaisService } from './../../../services/pais.service';
@@ -31,6 +30,7 @@ export class PacienteCruComponent implements OnInit {
     tipoComunicacion: any[];
     parentescoModel: any[];
     relacionesBorradas: any[];
+    backUpDatos = [];
 
     provincias: IProvincia[] = [];
     pacientesSimilares = [];
@@ -110,10 +110,11 @@ export class PacienteCruComponent implements OnInit {
         reportarError: false,
         notaError: ''
     };
-
+    public disableValidar = false;
     public escaneado = false;
     public paciente: IPaciente;
     public nombrePattern: string;
+    public showDeshacer = false;
     // PARA LA APP MOBILE
     public showMobile = false;
     public checkPass = false;
@@ -128,7 +129,6 @@ export class PacienteCruComponent implements OnInit {
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
         private barriosService: BarrioService,
-        private logService: LogService,
         private pacienteService: PacienteService,
         private parentescoService: ParentescoService,
         public appMobile: AppMobileService,
@@ -140,32 +140,37 @@ export class PacienteCruComponent implements OnInit {
 
     ngOnInit() {
         this.updateTitle('Registrar un paciente');
+        // obtiene el paciente cacheado
         this.pacienteCache.getPaciente().subscribe(res => {
-            if (res && !this.isEmptyObject(res)) {
-                this.paciente = JSON.parse(JSON.stringify(res));
-                this.actualizarDatosPaciente();
-                if (this.paciente.id) {
-                    // Busco el paciente en mongodb
-                    this.pacienteService.getById(this.paciente.id).subscribe(resultado => {
-                        if (resultado) {
-                            if (!resultado.scan) {
-                                resultado.scan = this.paciente.scan;
+            this.pacienteCache.getScanState().subscribe(result => {
+                this.escaneado = result;
+                if (res) {
+                    this.paciente = JSON.parse(JSON.stringify(res));
+                    if (this.paciente.id) {
+                        // Busco el paciente en mongodb
+                        this.pacienteService.getById(this.paciente.id).subscribe(resultado => {
+                            if (resultado) {
+                                if (!resultado.scan) {
+                                    resultado.scan = this.paciente.scan;
+                                }
+                                if (this.escaneado && resultado.estado !== 'validado') {
+                                    resultado.nombre = this.paciente.nombre.toUpperCase();
+                                    resultado.apellido = this.paciente.apellido.toUpperCase();
+                                    resultado.fechaNacimiento = this.paciente.fechaNacimiento;
+                                    resultado.sexo = this.paciente.sexo;
+                                    resultado.documento = this.paciente.documento;
+                                }
+                                this.paciente = Object.assign({}, resultado);
                             }
-                            if (this.escaneado && resultado.estado !== 'validado') {
-                                resultado.nombre = this.paciente.nombre.toUpperCase();
-                                resultado.apellido = this.paciente.apellido.toUpperCase();
-                                resultado.fechaNacimiento = this.paciente.fechaNacimiento;
-                                resultado.sexo = this.paciente.sexo;
-                                resultado.documento = this.paciente.documento;
-                            }
-                            this.paciente = Object.assign({}, resultado);
-                        }
-                        this.actualizarDatosPaciente();
-                    });
+                            this.actualizarDatosPaciente();
+                        });
+                    } else {
+                        this.plex.info('warning', 'Paciente inexistente', 'Error');
+                    }
                 }
-            }
+            });
         });
-        this.pacienteCache.getScanState().subscribe(result => { this.escaneado = result; });
+        // consulta a la cache si el paciente fue escaneado o no
 
         this.relacionesBorradas = [];
 
@@ -198,7 +203,6 @@ export class PacienteCruComponent implements OnInit {
             this.localidadNeuquen = Loc[0];
         });
 
-        // Se cargan los enumerados
         this.showCargar = false;
         this.sexos = enumerados.getObjSexos();
         this.generos = enumerados.getObjGeneros();
@@ -218,16 +222,6 @@ export class PacienteCruComponent implements OnInit {
         }]);
     }
 
-    isEmptyObject(obj) {
-        for (let prop in obj) {
-            if (obj.hasOwnProperty(prop)) {
-                return false;
-            }
-        }
-        return JSON.stringify(obj) === JSON.stringify({});
-    }
-
-
     // ---------------- PACIENTE -----------------------
 
     onSelect(paciente: IPaciente) {
@@ -236,6 +230,7 @@ export class PacienteCruComponent implements OnInit {
         this.disableGuardar = false;
         this.enableIgnorarGuardar = false;
         this.sugerenciaAceptada = true;
+        this.pacientesSimilares = [];
     }
 
     actualizarDatosPaciente() {
@@ -551,9 +546,6 @@ export class PacienteCruComponent implements OnInit {
         }
     }
 
-    // Verifica paciente repetido y genera lista de candidatos
-
-
     activarAppMobile(unPaciente) {
         // Activa la app mobile
         if (this.activarApp && this.emailAndes && this.celularAndes) {
@@ -593,6 +585,67 @@ export class PacienteCruComponent implements OnInit {
 
     notasNotification(notasNew) {
         this.pacienteModel.notas = notasNew;
+    }
+
+    validarPaciente(event) {
+        if (!event.formValid) {
+            this.plex.info('warning', 'Debe completar los datos obligatorios');
+            return;
+        }
+        if (this.pacienteModel.sexo === 'otro') {
+            this.plex.info('warning', 'La validación por requiere sexo MASCULINO o FEMENINO.', 'Atención');
+            return;
+        }
+        this.disableValidar = true;
+        this.pacienteService.validar(this.pacienteModel).subscribe(resultado => {
+            if (resultado.validado) {
+                this.setBackup();
+                this.validado = true;
+                this.showDeshacer = true;
+                this.pacienteModel.nombre = resultado.paciente.nombre;
+                this.pacienteModel.apellido = resultado.paciente.apellido;
+                this.pacienteModel.estado = resultado.paciente.estado;
+                this.pacienteModel.fechaNacimiento = resultado.paciente.fechaNacimiento;
+                this.pacienteModel.foto = resultado.paciente.foto;
+                this.plex.info('success', '¡Paciente Validado!');
+            } else {
+                this.plex.toast('danger', 'Validación Fallida');
+                this.disableValidar = false;
+            }
+        }
+        );
+    }
+
+    private setBackup() {
+        this.backUpDatos['nombre'] = this.pacienteModel.nombre;
+        this.backUpDatos['apellido'] = this.pacienteModel.apellido;
+        this.backUpDatos['estado'] = this.pacienteModel.estado;
+        this.backUpDatos['genero'] = this.pacienteModel.genero;
+        this.backUpDatos['fechaNacimiento'] = this.pacienteModel.fechaNacimiento;
+        this.backUpDatos['foto'] = this.pacienteModel.foto;
+        this.backUpDatos['cuil'] = this.pacienteModel.cuil;
+        if (this.pacienteModel.direccion) {
+            this.backUpDatos['direccion'] = this.pacienteModel.direccion[0].valor;
+            this.backUpDatos['codigoPostal'] = this.pacienteModel.direccion[0].codigoPostal;
+        }
+    }
+
+    deshacerValidacion() {
+        this.showDeshacer = false;
+        this.pacienteModel.foto = this.backUpDatos['foto'];
+        this.pacienteModel.direccion[0].valor = this.backUpDatos['direccion'];
+        this.pacienteModel.direccion[0].codigoPostal = this.backUpDatos['codigoPostal'];
+
+        if (this.backUpDatos['estado'] === 'temporal') {
+            this.pacienteModel.nombre = this.backUpDatos['nombre'];
+            this.pacienteModel.apellido = this.backUpDatos['apellido'];
+            this.pacienteModel.fechaNacimiento = this.backUpDatos['fechaNacimiento'];
+            this.pacienteModel.cuil = this.backUpDatos['cuil'];
+            this.pacienteModel.estado = this.backUpDatos['estado'];
+            this.pacienteModel.genero = this.backUpDatos['genero'];
+            this.validado = false;
+        }
+        this.disableValidar = false;
     }
 
 }
