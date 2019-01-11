@@ -46,6 +46,8 @@ export class PacienteService {
         });
     }
 
+
+
     get(params: PacienteSearch): Observable<IPaciente[]> {
         return this.server.get(this.pacienteUrl, { params: params, showError: true });
     }
@@ -73,7 +75,16 @@ export class PacienteService {
     post(paciente: IPaciente): Observable<IPaciente> {
         return this.server.post(this.pacienteUrl, paciente);
     }
-
+    /**
+     * Consulta fuentes auténticas para obtener datos del paciente validados.
+     *
+     * @param {*} paciente
+     * @returns {Observable<any>}
+     * @memberof PacienteService
+     */
+    validar(paciente: any): Observable<any> {
+        return this.server.post(this.pacienteUrl + '/validar', paciente);
+    }
     /**
      * Metodo put. Actualiza un objeto paciente.
      * @param {IPaciente} paciente Recibe IPaciente
@@ -122,4 +133,5 @@ export class PacienteService {
     incrementarNroCarpeta(): Observable<any> {
         return this.server.post(this.carpetaUrl + '/incrementarCuenta', {});
     }
+
 }
