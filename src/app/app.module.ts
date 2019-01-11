@@ -261,7 +261,7 @@ import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/
 import { InformeActividadNoNominalizadaComponent } from './modules/rup/components/elementos/informeActividadNoNominalizada/informeActividadNoNominalizada.component';
 import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
 // import { PesoComponent } from './modules/rup/components/elementos/peso.component';
-import { TallaComponent } from './modules/rup/components/elementos/talla.component';
+// import { TallaComponent } from './modules/rup/components/elementos/talla.component';
 import { TensionArterialPediatricaComponent } from './modules/rup/components/elementos/tensionArterialPediatrica.component';
 import { ConsultaDeNinoSanoM2AComponent } from './modules/rup/components/elementos/consultaDeNinoSano/consultaDeNinoSanoM2A.component';
 import { ConsultaDeNinoSanoE2Y3AComponent } from './modules/rup/components/elementos/consultaDeNinoSano/consultaDeNinoSanoE2Y3A.component';
@@ -375,7 +375,7 @@ export let RUPRegistry = {
     'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
     'InformeActividadNoNominalizadaComponent': InformeActividadNoNominalizadaComponent,
     // 'PesoComponent': PesoComponent,
-    'TallaComponent': TallaComponent,
+    // 'TallaComponent': TallaComponent,
     'TensionArterialPediatricaComponent': TensionArterialPediatricaComponent,
     'ConsultaDeNinoSanoM2AComponent': ConsultaDeNinoSanoM2AComponent,
     'ConsultaDeNinoSanoE2Y3AComponent': ConsultaDeNinoSanoE2Y3AComponent,
@@ -405,7 +405,7 @@ let RUPComponentsArray = [
     SeguimientoDelPesoComponent,
     // SignosVitalesComponent,
     SolicitudPrestacionDefaultComponent,
-    TallaComponent,
+    // TallaComponent,
     TemperaturaComponent,
     TensionArterialComponent,
     TensionDiastolicaComponent,
