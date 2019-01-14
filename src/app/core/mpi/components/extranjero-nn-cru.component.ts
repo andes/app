@@ -360,6 +360,22 @@ export class ExtranjeroNNCruComponent implements OnInit {
         return true;
     }
 
+    verificarCorreoValido(indice, form) {
+        let formato = new RegExp(/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/);
+        let mail = String(this.pacienteModel.contacto[indice].valor);
+        form.form.controls['valor-' + indice].setErrors(null);  // con cada caracter nuevo 'limpia' el error y reevalúa
+        window.setTimeout(() => {
+            if (mail) {
+                if (formato.test(mail)) {
+                    form.form.controls['valor-' + indice].setErrors(null);
+                } else {
+                    form.form.controls['valor-' + indice].setErrors({ 'invalid': true });
+                    console.log(form.form.controls['valor-' + indice]);
+                }
+            }
+        }, 500);
+    }
+
     chequearContacto(key) {
         let index = this.pacienteModel.contacto.findIndex(item => item.tipo === key);
         if (index >= 0) {
