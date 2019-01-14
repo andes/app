@@ -49,13 +49,16 @@ export class SolicitudesComponent implements OnInit {
     public organizacion;
     public prestacionesPermisos = [];
     public permisosReglas;
+    public permisoAnular = false;
+    public showAnular = false;
     public prestacionDestino;
     public estado;
     public estados = [
-        { id: 'auditoria', nombre: 'auditoria' },
-        { id: 'pendiente', nombre: 'pendiente' },
-        { id: 'rechazada', nombre: 'rechazada' },
-        { id: 'turnoDado', nombre: 'turno dado' }
+        { id: 'auditoria', nombre: 'AUDITORIA' },
+        { id: 'pendiente', nombre: 'PENDIENTE' },
+        { id: 'rechazada', nombre: 'RECHAZADA' },
+        { id: 'turnoDado', nombre: 'TURNO DADO' },
+        { id: 'anulada', nombre: 'ANULADA' }
     ];
     prestacionSeleccionada: any;
 
@@ -72,6 +75,7 @@ export class SolicitudesComponent implements OnInit {
     ngOnInit() {
         this.permisosReglas = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:reglas:?')[0] === '*' : false;
         this.prestacionesPermisos = this.auth.getPermissions('solicitudes:tipoPrestacion:?');
+        this.permisoAnular = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:anular:?')[0] === '*' : false;
         this.showCargarSolicitud = false;
         this.cargarSolicitudes();
     }
@@ -180,6 +184,7 @@ export class SolicitudesComponent implements OnInit {
         this.pacienteSeleccionado = prestacionSolicitud.paciente;
         this.showDarTurnos = true;
     }
+
     cancelar(prestacionSolicitud) {
         this.plex.confirm('¿Realmente quiere cancelar la solicitud?', 'Atención').then((confirmar) => {
             if (confirmar) {
@@ -196,7 +201,15 @@ export class SolicitudesComponent implements OnInit {
                 });
             }
         });
+    }
 
+    anular(arrayPrestaciones, indice) {
+        let indicePrestacion = this.prestaciones.findIndex((prest: any) => { return prest.id === arrayPrestaciones[indice].id; });
+        this.solicitudSeleccionada = this.prestaciones[indicePrestacion].solicitud;
+        this.prestacionSeleccionada = this.prestaciones[indicePrestacion];
+        this.pacienteSolicitud = this.prestaciones[indicePrestacion].paciente;
+        this.showAnular = true;
+        this.showSidebar = false;
     }
 
     volverDarTurno() {
@@ -230,9 +243,9 @@ export class SolicitudesComponent implements OnInit {
                 solicitudHasta: this.fechaHasta
             };
             if (this.estado) {
-                if (this.estado.nombre !== 'turno dado') {
-                    params['estados'] = [this.estado.nombre];
-                    if (this.estado.nombre === 'pendiente') {
+                if (this.estado.id !== 'turnoDado') {
+                    params['estados'] = [this.estado.id];
+                    if (this.estado.id === 'pendiente') {
                         params['tieneTurno'] = false;
                     }
                 } else {
@@ -446,6 +459,24 @@ export class SolicitudesComponent implements OnInit {
                     respuesta => {
                         this.cargarSolicitudes();
                         this.plex.toast('danger', '', 'Solicitud Rechazada');
+                    }
+                );
+            }
+        }
+    }
+
+    returnAnular(event) {
+        this.showAnular = false;
+        if (event.status === false) {
+            if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
+                let patch = {
+                    op: 'estadoPush',
+                    estado: { tipo: 'anulada', motivoRechazo: event.motivo }
+                };
+                this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
+                    respuesta => {
+                        this.cargarSolicitudes();
+                        this.plex.toast('danger', '', 'Solicitud Anulada');
                     }
                 );
             }

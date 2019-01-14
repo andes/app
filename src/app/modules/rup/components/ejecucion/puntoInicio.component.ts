@@ -102,6 +102,7 @@ export class PuntoInicioComponent implements OnInit {
 
     // tieneTurnosAsignados: true,
     actualizar() {
+        const idsPrestacionesPermitidas = this.tiposPrestacion.map(t => t.conceptId);
         observableForkJoin(
             // Agendas
             this.servicioAgenda.get({
@@ -117,24 +118,27 @@ export class PuntoInicioComponent implements OnInit {
                 fechaHasta: new Date(),
                 organizacion: this.auth.organizacion.id,
                 sinEstado: 'modificada',
-                ambitoOrigen: 'ambulatorio'
+                ambitoOrigen: 'ambulatorio',
+                tipoPrestaciones: idsPrestacionesPermitidas
             }),
             // buscamos las prestaciones pendientes que este asociadas a un turno para ejecutarlas
             this.servicioPrestacion.get({
+                solicitudHasta: moment(this.fecha).isValid() ? moment(this.fecha).endOf('day').toDate() : new Date(),
                 organizacion: this.auth.organizacion.id,
                 estado: 'pendiente',
-                tieneTurno: 'si',
-                // TODO: filtrar por las prestaciones permitidas
-                // tipoPrestaciones: this.tiposPrestacion.map(tp => { return tp.conceptId; })
+                tieneTurno: true,
+                ambitoOrigen: 'ambulatorio',
+                tipoPrestaciones: idsPrestacionesPermitidas
             })
         ).subscribe(data => {
             this.agendas = data[0];
             this.prestaciones = data[1];
-            // Sumamos las prestaciones pendientes si hubiera
             if (data[2]) {
                 this.prestaciones = [...this.prestaciones, ...data[2]];
             }
+
             if (this.agendas.length) {
+
                 // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
                 this.agendas.forEach(agenda => {
                     agenda['cantidadTurnos'] = 0;
@@ -155,7 +159,7 @@ export class PuntoInicioComponent implements OnInit {
                         });
                     });
 
-                    // busquemos si hy sobreturnos para vincularlos con la prestacion correspondiente
+                    // busquemos si hay sobreturnos para vincularlos con la prestacion correspondiente
                     if (agenda.sobreturnos) {
                         agenda.sobreturnos.forEach(sobreturno => {
                             let indexPrestacion = this.prestaciones.findIndex(prestacion => {
@@ -169,7 +173,6 @@ export class PuntoInicioComponent implements OnInit {
                         });
                     }
                 });
-
             }
 
             this.agendasOriginales = JSON.parse(JSON.stringify(this.agendas));
