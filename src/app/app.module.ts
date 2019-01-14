@@ -229,7 +229,6 @@ import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucio
 import { LaboratoriosComponent } from './modules/rup/components/laboratorios/laboratorios.component';
 // Componentes de RUP
 import { SelectPorRefsetComponent } from './modules/rup/components/elementos/selectPorRefset/SelectPorRefset.component';
-import { TensionSistolicaComponent } from './modules/rup/components/elementos/tensionSistolica.component';
 import { TensionDiastolicaComponent } from './modules/rup/components/elementos/tensionDiastolica.component';
 import { TensionArterialComponent } from './modules/rup/components/elementos/tensionArterial.component';
 import { SolicitudPrestacionDefaultComponent } from './modules/rup/components/elementos/solicitudPrestacionDefault/solicitudPrestacionDefault.component';
@@ -352,7 +351,6 @@ export let RUPRegistry = {
     'SolicitudPrestacionDefaultComponent': SolicitudPrestacionDefaultComponent,
     'TensionArterialComponent': TensionArterialComponent,
     'TensionDiastolicaComponent': TensionDiastolicaComponent,
-    'TensionSistolicaComponent': TensionSistolicaComponent,
     'FrecuenciaCardiacaComponent': FrecuenciaCardiacaComponent,
     'FrecuenciaRespiratoriaComponent': FrecuenciaRespiratoriaComponent,
     'AutocitadoComponent': AutocitadoComponent,
@@ -393,7 +391,6 @@ let RUPComponentsArray = [
     SolicitudPrestacionDefaultComponent,
     TensionArterialComponent,
     TensionDiastolicaComponent,
-    TensionSistolicaComponent,
     AdjuntarDocumentoComponent,
     OdontogramaRefsetComponent,
     LactanciaComponent,
