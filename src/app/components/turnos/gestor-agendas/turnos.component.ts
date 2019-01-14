@@ -192,16 +192,7 @@ export class TurnosComponent implements OnInit {
      * @memberof TurnosComponent
      */
     tienenDiagnostico(): Boolean {
-        let tieneDiagnostico = false;
-        let x = 0;
-        while (x < this.turnosSeleccionados.length) {
-            if (this.turnosSeleccionados[x].diagnostico.codificaciones.length > 0) {
-                tieneDiagnostico = true;
-                break;
-            }
-            x++;
-        }
-        return tieneDiagnostico;
+        return this.turnosSeleccionados.some(x => { return x.diagnostico.codificaciones.length > 0; });
     }
 
     ningunoConEstado(estado) {
