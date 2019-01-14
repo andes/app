@@ -1,4 +1,4 @@
-<ng-container *ngIf='!showGestionAlarmas'>
+<ng-container *ngIf='!showGestorAlarmas'>
     <table class="table table-striped table-sm">
         <thead>
             <th *ngIf='modo ==="puntoInicio" || modo ==="recepcion" || modo ==="control"' style='width: 100px;'>Cod.</th>
@@ -68,7 +68,7 @@
             </ng-container>
 
             <ng-container *ngIf="modo === 'carga' || modo === 'validacion'">
-                <tr class="hover" *ngFor="let practicaCarga of practicasCarga">
+                <tr class="hover" *ngFor="let practicaCarga of practicasCarga; let i = index">
                     <td>
                         <ng-container *ngFor="let m of practicaCarga.margen">&nbsp;&nbsp;&nbsp;</ng-container>
                         <!-- MERS CODE: estilos inline provisorios, pendiente decisión de UI/UX -->
@@ -92,19 +92,18 @@
                                 <!-- {{practicaCarga.formatoResultado | json}} -->
                                 <ng-container *ngIf='practicaCarga.registro.valor && !practicaCarga.registro.valor.resultado.sinMuestra'>
                                     <plex-float *ngIf="practicaCarga.practica.resultado.formato && practicaCarga.practica.resultado.formato.tipo === 'Numérico'"
-                                        (change)="actualizarEstadoPractica(practicaCarga, 'cargar')" [ngClass]="{'text-danger' : esValorCritico(practicaCarga.practica)}"
+                                        (change)="actualizarEstadoPractica($event, practicaCarga, 'cargar')"
                                         [(ngModel)]="practicaCarga.registro.valor.resultado.valor"></plex-float>
                                     <b *ngIf="practicaCarga.registro.valor.resultado.sinMuestra">Sin muestra</b>
                                 </ng-container>
 
-                                <plex-button *ngIf='esValorCritico(practicaCarga.registro.id)' type="danger" title="Aceptar Valores Críticos"
+                                <plex-button *ngIf='verificarValorCritico(practicaCarga)' type="danger" title="Aceptar Valores Críticos"
                                     icon="mdi mdi-alert" (click)="verObservaciones()">
                                 </plex-button>
 
-                                <plex-button *ngIf='esValorReferencia(practicaCarga.registro.id)' type="warning" title="Aceptar Valores Críticos"
-                                    icon="mdi mdi-alert" (click)="verObservaciones()">
+                                <plex-button *ngIf='!verificarValorCritico(practicaCarga) && verificarValorReferencia(practicaCarga)'
+                                    type="warning" title="Aceptar Valores Críticos" icon="mdi mdi-alert" (click)="verObservaciones()">
                                 </plex-button>
-
 
                             </p>
                         </td>
@@ -137,8 +136,8 @@
                         </td>
                         <ng-container *ngIf='modo ==="validacion"'>
                             <td>
-                                <plex-bool type="checkbox" [(ngModel)]="practicaCarga.registro.valor.resultado.validado"
-                                    name="validado" (change)="clickValidar($event)" name="clickValidar"></plex-bool>
+                                <plex-bool type="checkbox" [(ngModel)]="validaciones[i].validado" name="validado"
+                                    (change)="clickValidar($event)" name="clickValidar"></plex-bool>
                             </td>
                         </ng-container>
                         <!-- <td></td> -->
@@ -173,17 +172,19 @@
     </table>
 </ng-container>
 
-<ng-container *ngIf='showGestionAlarmas'>
+<ng-container *ngIf='showGestorAlarmas'>
     <div class='gestion-alarmas-container'>
-        <span><plex-select [(ngModel)]="avisoValoresCriticos.respuesta"
-            (getData)="getOpcionesRespuesta($event)" (change)='changeRespuestaGestionValoresCriticos($event)' name="respuesta" label="Respuesta" placeholder="Seleccione una respuesta"
-            labelField="nombre"></plex-select></span>
-    
-        <span><plex-select *ngIf='showSelectProfesional' [(ngModel)]="avisoValoresCriticos.profesionalReportado"
-            (getData)="loadProfesionales($event)" name="profesional" label="Profesional" placeholder="Buscar un profesional"
-            labelField="nombre"></plex-select></span>
-            </div>
-    
+        <span>
+            <plex-select [(ngModel)]="avisoValoresCriticos.respuesta" (getData)="getOpcionesRespuesta($event)" (change)='changeRespuestaGestionValoresCriticos($event)'
+                name="respuesta" label="Respuesta" placeholder="Seleccione una respuesta" labelField="nombre"></plex-select>
+        </span>
+
+        <span>
+            <plex-select *ngIf='showSelectProfesional' [(ngModel)]="avisoValoresCriticos.profesionalReportado"
+                (getData)="loadProfesionales($event)" name="profesional" label="Profesional" placeholder="Buscar un profesional"
+                labelField="nombre"></plex-select>
+        </span>
+    </div>
 
     <table class="table table-striped table-sm">
         <thead>
@@ -192,15 +193,15 @@
             <th>UM</th>
         </thead>
         <tbody>
-            <tr class="hover" *ngFor="let alarma of alertasValCriticos">
+            <tr class="hover" *ngFor="let alarma of validaciones">
                 <td>
-                    {{alarma.practica.nombre}}
+                    {{alarma.registroPractica.practica.nombre}}
                 </td>
                 <td>
-                    {{ alarma.registro.valor.resultado.valor }}
+                    {{ alarma.registroPractica.registro.valor.resultado.valor }}
                 </td>
                 <td>
-                    {{ alarma.practica.unidadMedida.nombre }}
+                    {{ alarma.registroPractica.practica.unidadMedida.nombre }}
                 </td>
             </tr>
         </tbody>

@@ -21,19 +21,14 @@
                     <div class="page-title">
                         <ng-container *ngIf="!showProtocoloDetalle">
                             Laboratorio |
-                            <ng-container *ngIf="modo === 'puntoInicio' || modo === 'recepcion'">
-                                Recepcionar Paciente
-                            </ng-container>
-                            <ng-container *ngIf="modo === 'control'">Auditoría de Protocolos</ng-container>
-                            <ng-container *ngIf="modo === 'carga'">Carga de Resultados</ng-container>
-                            <ng-container *ngIf="modo === 'validacion'">Validación de Resultados</ng-container>
+                            <ng-container>{{titulo}}</ng-container>
                         </ng-container>
                         <ng-container>
                             Protocolos
                         </ng-container>
                     </div>
                     <nav>
-                        <plex-tabs [activeIndex]="accionIndex" (change)="cambio($event)" *ngIf="!showProtocoloDetalle">
+                        <plex-tabs [activeIndex]="accionIndex" (change)="onTabChange($event)" *ngIf="!showProtocoloDetalle">
                             <plex-tab label="Recepción"></plex-tab>
                             <plex-tab label="Auditoria"></plex-tab>
                             <plex-tab label="Carga"></plex-tab>
@@ -88,7 +83,7 @@
 
             <!-- DETALLE DE PROTOCOLO -->
             <protocolo-detalle *ngIf="showProtocoloDetalle" [protocolo]="protocolo" [showProtocoloDetalle]="showProtocoloDetalle"
-                [indexProtocolo]="indexProtocolo" [protocolos]="protocolos" [edicionDatosCabecera]="edicionDatosCabecera"
+                [indexProtocolo]="indexProtocolo" [protocolos]="protocolos" [edicionDatosCabecera]="edicionDatosCabecera" [titulo]="titulo"
                 [modo]="modo" [seleccionPaciente]="seleccionPaciente" (volverAListaControEmit)="volverLista()"
                 (mostrarCuerpoProtocolo)="mostrarCuerpoProtocolo" [editarListaPracticas]="editarListaPracticas"
                 [busqueda]='busqueda' (edicionDatosCabeceraEmitter)="editarDatosCabecera()" ></protocolo-detalle>

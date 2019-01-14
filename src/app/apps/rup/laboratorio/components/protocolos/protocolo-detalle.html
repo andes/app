@@ -1,4 +1,4 @@
-        <div class="paciente-seleccionado edicion" *ngIf="edicionDatosCabecera">
+<div class="paciente-seleccionado edicion" *ngIf="edicionDatosCabecera">
     <span *ngIf="solicitudProtocolo.solicitudPrestacion.numeroProtocolo" class="badge badge-success">
         <h2>{{ solicitudProtocolo.solicitudPrestacion.numeroProtocolo?.numeroCompleto }}</h2>
     </span>
@@ -9,7 +9,6 @@
             {{ modelo.paciente | paciente }}
             <plex-button class="d-flex flex-row-reverse" position="right" type="warning" (click)="cambiarPaciente()"
                 label="Cambiar Paciente"></plex-button>
-
         </span>
         <span>{{ modelo.paciente?.documento ? 'Documento: ' + modelo.paciente.documento : 'Sin documento'
             }}</span>
@@ -79,7 +78,8 @@
             <div class="row">
                 <div class="col">
                     <tabla-datalle-protocolo [modo]="modo" [modelo]="modelo" [solicitudProtocolo]="solicitudProtocolo"
-                        [practicasEjecucion]="practicasEjecucion" [busqueda]="busqueda" [editarListaPracticas]="editarListaPracticas">
+                        [practicasEjecucion]="practicasEjecucion" [busqueda]="busqueda" [editarListaPracticas]="editarListaPracticas"
+                        [validaciones]="validaciones" [showGestorAlarmas]='showGestorAlarmas' >
                     </tabla-datalle-protocolo>
                 </div>
             </div>

@@ -29,6 +29,7 @@ export class GestorProtocolosComponent implements OnInit {
     public ocultarPanelLateral: Boolean = false;
     public editarListaPracticas: Boolean = false;
     public showBotonAceptar: Boolean = false;
+    public titulo;
 
     public areas = [];
 
@@ -43,7 +44,8 @@ export class GestorProtocolosComponent implements OnInit {
             this.ocultarPanelLateral = true;
         }
     }
-    @Input() modo;
+    @Input() modo: 'puntoInicio' | 'listado' | 'recepcion' | 'control' | 'carga' | 'validacion';
+    modoAVolver: 'puntoInicio' | 'listado' | 'recepcion' | 'control' | 'carga' | 'validacion';
 
     @Input('paciente')
     set paciente(value) {
@@ -64,7 +66,6 @@ export class GestorProtocolosComponent implements OnInit {
     public busqueda;
 
     public accionIndex = 1;
-    public modoAVolver = '';
 
     @ViewChild(ProtocoloDetalleComponent)
     public protocoloDetalleComponent: ProtocoloDetalleComponent;
@@ -104,28 +105,39 @@ export class GestorProtocolosComponent implements OnInit {
                     // this.mostrarCuerpoProtocolo = true;
                 });
             }
-
         });
     }
 
+    setModo() {
+
+    }
     // ngOnDestroy() {
     //     this.routeParams.unsubscribe();
     // }
 
-    cambio($event) {
-        this.accionIndex = $event;
-        if ($event === 0) {
+    onTabChange($event) {
+        this.cambiarModo($event);
+        this.refreshSelection();
+    }
+
+    cambiarModo(modoId) {
+        this.accionIndex = modoId;
+        if (modoId === 0) {
             this.modo = 'recepcion';
-        } else if ($event === 1) {
+            this.titulo = 'Recepcionar Paciente';
+        } else if (modoId === 1) {
+            this.titulo = 'Auditoría de Protocolos';
             this.modo = 'control';
-        } else if ($event === 2) {
+        } else if (modoId === 2) {
+            this.titulo = 'Carga de Resultados';
             this.modo = 'carga';
-        } else if ($event === 3) {
+        } else if (modoId === 3) {
+            this.titulo = 'Validación de Resultados';
             this.modo = 'validacion';
-        } else if ($event === 4) {
+        } else if (modoId === 4) {
+            this.titulo = 'Listado';
             this.modo = 'listado';
         }
-        this.refreshSelection();
     }
 
     /**
@@ -278,7 +290,7 @@ export class GestorProtocolosComponent implements OnInit {
      * @memberof GestorProtocolosComponent
      */
     aceptarCambios() {
-        if (this.modoAVolver !== '') {
+        if (this.modoAVolver) {
             // this.showProtocoloDetalle = true;
             // this.modo = this.modoAVolver;
             // this.modoAVolver = '';
@@ -289,7 +301,7 @@ export class GestorProtocolosComponent implements OnInit {
         this.ocultarPanelLateral = false;
         this.modo = this.modoAVolver;
         this.protocoloDetalleComponent.guardarSolicitudYVolver(this.modoAVolver);
-        this.modoAVolver = '';
+        this.modoAVolver = null;
     // }
         } else {
             this.showBotonAceptar = false;
@@ -330,7 +342,8 @@ export class GestorProtocolosComponent implements OnInit {
         this.protocoloDetalleComponent.cargarCodigosPracticas();
         this.ocultarPanelLateral = true;
         this.modoAVolver = this.modo;
-        this.modo = 'control';
+        // this.modo = 'control';
+        this.cambiarModo(1);
         this.showBotonAceptar = true;
         this.showBotonGuardar = false;
     }

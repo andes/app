@@ -1,3 +1,4 @@
+import { forEach } from '@angular/router/src/utils/collection';
 import { TablaDatalleProtocoloComponent } from './tabla-detalle-protocolo/tabla-datalle-protocolo.component';
 import { PracticaService } from './../../services/practica.service';
 import { ProtocoloService } from './../../services/protocolo.service';
@@ -33,7 +34,6 @@ export class ProtocoloDetalleComponent
     profesionalOrigen: null;
     organizacion: any;
     modelo: any;
-    flagMarcarTodas: Boolean = false;
     nombrePractica;
     codigoPractica;
     public showBotonesGuardar: Boolean = false;
@@ -41,12 +41,14 @@ export class ProtocoloDetalleComponent
     public pacientes;
     public pacienteActivo;
     public mostrarListaMpi: Boolean = false;
+
     practicasEjecucion;
     showObservaciones: Boolean = false;
     solicitudProtocolo: any;
     mostrarMasHeader: Boolean = false;
+    showGestorAlarmas: Boolean = false;
 
-    alarmasValoresCriticos: any;
+    validaciones = [];
 
     @ViewChild(TablaDatalleProtocoloComponent)
     public tablaDetalleProtocoloComponent: TablaDatalleProtocoloComponent;
@@ -65,6 +67,7 @@ export class ProtocoloDetalleComponent
     @Input() indexProtocolo: any;
     @Input() busqueda: any;
     @Input() editarListaPracticas;
+    @Input() titulo;
 
     listado: any;
     seleccion: any;
@@ -91,6 +94,7 @@ export class ProtocoloDetalleComponent
         this.modelo = value;
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
         this.practicasEjecucion = this.modelo.ejecucion.registros;
+        // this.tablaDetalleProtocoloComponent.practicasEjecucion = this.practicasEjecucion;
         this.showBotonesGuardar = (this.modo !== 'recepcion');
 
         if (this.practicasEjecucion.length > 0 && (this.modo === 'puntoInicio' || this.modo === 'recepcion' || this.modo === 'control')) {
@@ -232,9 +236,17 @@ export class ProtocoloDetalleComponent
         this.showBotonesGuardar = true;
     }
 
+    /**
+     *
+     *
+     * @param {*} protocolo
+     * @returns
+     * @memberof ProtocoloDetalleComponent
+     */
     estaSeleccionado(protocolo) {
         return false;
     }
+
     /**
      * Redirecciona a la pagina provista por parametro
      *
@@ -256,6 +268,12 @@ export class ProtocoloDetalleComponent
 
     }
 
+    /**
+     *
+     *
+     * @param {PacienteBuscarResultado} resultado
+     * @memberof ProtocoloDetalleComponent
+     */
     searchEnd(resultado: PacienteBuscarResultado) {
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
@@ -326,18 +344,6 @@ export class ProtocoloDetalleComponent
     }
 
     /**
-     * Destilda de checkbox 'marcar todas', cuando alguna práctica es desmarcada de la lista
-     *
-     * @param {any} event
-     * @memberof ProtocoloDetalleComponent
-     */
-    clickValidar(event) {
-        if (!event.value) {
-            this.flagMarcarTodas = false;
-        }
-    }
-
-    /**
      * Muestra panel de observación
      *
      * @memberof ProtocoloDetalleComponent
@@ -375,61 +381,115 @@ export class ProtocoloDetalleComponent
      */
     async guardarProtocolo(next) {
         if (this.modelo.id) {
-            if (this.modo === 'carga' || this.modo === 'validacion') {
-                this.alarmasValoresCriticos = await this.tablaDetalleProtocoloComponent.validarResultados();
-                return;
+            if (this.modo === 'validacion') {
+                this.actualizarProtocolo(next);
             }
-
-            let registros = this.modelo.ejecucion.registros;
-            let solicitud = JSON.parse(JSON.stringify(this.modelo.solicitud));
-
-            let params: any = {
-                registros: registros
-            };
-
-            if (this.modelo.estados[this.modelo.estados.length - 1].tipo === 'pendiente') {
-                params.op = 'nuevoProtocoloLaboratorio';
-                params.estado = { tipo: 'ejecucion' };
-                params.solicitud = solicitud;
-            } else if (this.modo === 'validacion' && this.isProtocoloValidado()) {
-                params.op = 'estadoPush';
-                params.estado = Constantes.estadoValidada;
-            } else {
-                params.op = 'registros';
-                params.solicitud = solicitud;
-            }
-
-            this.servicioPrestacion.patch(this.modelo.id, params).subscribe(prestacionEjecutada => {
-                // if (next && this.modo !== 'puntoInicio') {
-                if (next) {
-
-                    this.protocolos.splice(this.indexProtocolo, 1);
-                    if (this.modo === 'recepcion' || this.protocolos.length === 0) {
-                        this.mostrarCuerpoProtocolo = true;
-                        this.volverAListaControEmit.emit();
-                    } else {
-                        if (!this.protocolos[this.indexProtocolo]) {
-                            this.indexProtocolo = this.protocolos.length - 1;
-                        }
-                        this.cargarProtocolo(this.protocolos[this.indexProtocolo]);
-                    }
-                    this.plex.toast('success', this.modelo.ejecucion.registros[0].nombre, 'Solicitud guardada', 4000);
-                }
-                // } else {
-                //     this.mostrarCuerpoProtocolo = true;
-                //     this.volverAListaControEmit.emit()
-                // }
-            });
         } else {
-            this.modelo.estados = [{ tipo: 'ejecucion' }];
-            this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
-                this.mostrarCuerpoProtocolo = true;
-                this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
-                this.volverAListaControEmit.emit();
-            });
+            this.guardarNuevoProtocolo();
         }
     }
 
+    /**
+     *
+     *
+     * @private
+     * @returns
+     * @memberof ProtocoloDetalleComponent
+     */
+    private getParams() {
+        let solicitud = JSON.parse(JSON.stringify(this.modelo.solicitud));
+
+        let params: any = {
+            registros: this.modelo.ejecucion.registros
+        };
+
+        if (this.modelo.estados[this.modelo.estados.length - 1].tipo === 'pendiente') {
+            params.op = 'nuevoProtocoloLaboratorio';
+            params.estado = { tipo: 'ejecucion' };
+            params.solicitud = solicitud;
+        } else if (this.modo === 'validacion' && this.isProtocoloValidado()) {
+            params.op = 'estadoPush';
+            params.estado = Constantes.estadoValidada;
+        } else {
+            params.op = 'registros';
+            params.solicitud = solicitud;
+        }
+        return params;
+    }
+
+    /**
+     *
+     *
+     * @private
+     * @memberof ProtocoloDetalleComponent
+     */
+    private guardarNuevoProtocolo() {
+        this.modelo.estados = [{ tipo: 'ejecucion' }];
+        this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
+            this.mostrarCuerpoProtocolo = true;
+            this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
+            this.volverAListaControEmit.emit();
+        });
+    }
+
+    /**
+     *
+     *
+     * @private
+     * @param {*} next
+     * @returns
+     * @memberof ProtocoloDetalleComponent
+     */
+    private async actualizarProtocolo(next) {
+        this.setearEstadosValidacion();
+        this.servicioPrestacion.patch(this.modelo.id, this.getParams()).subscribe(async () => {
+            // if (next && this.modo !== 'puntoInicio') {
+
+            let alertasValidadas = this.validaciones.filter(e => e.validado && e.esValorCritico);
+            if (alertasValidadas.length > 0 && await this.confirmarValoresCriticos(alertasValidadas)) {
+                this.validaciones = this.validaciones.filter(e => e.validado && e.esValorCritico);
+                this.validaciones.forEach( e => e.esValorCritico = false);
+                this.showGestorAlarmas = true;
+                this.titulo = 'Gestor de alarmas';
+
+            } else if (next) {
+                this.showGestorAlarmas = false;
+                this.protocolos.splice(this.indexProtocolo, 1);
+                if (this.modo === 'recepcion' || this.protocolos.length === 0) {
+                    this.mostrarCuerpoProtocolo = true;
+                    this.volverAListaControEmit.emit();
+                } else {
+                    if (!this.protocolos[this.indexProtocolo]) {
+                        this.indexProtocolo = this.protocolos.length - 1;
+                    }
+                    this.cargarProtocolo(this.protocolos[this.indexProtocolo]);
+                }
+                this.plex.toast('success', this.modelo.ejecucion.registros[0].nombre, 'Solicitud guardada', 4000);
+            }
+            // } else {
+            //     this.mostrarCuerpoProtocolo = true;
+            //     this.volverAListaControEmit.emit()
+            // }
+        });
+    }
+
+    private setearEstadosValidacion() {
+        let estado = {
+            tipo: 'validada',
+            usuario: this.auth.usuario,
+            fecha: new Date(),
+            pendienteGuardar: true
+        };
+
+        let practicasValidar = this.validaciones.filter(e => e.validado && !e.esValorCritico);
+        practicasValidar.forEach(e => e.registroPractica.registro.valor.estados.push(estado));
+    }
+
+    /**
+     *
+     *
+     * @memberof ProtocoloDetalleComponent
+     */
     guardarSolicitud() {
         this.modelo.solicitud.tipoPrestacion = Constantes.conceptoPruebaLaboratorio;
 
@@ -450,15 +510,6 @@ export class ProtocoloDetalleComponent
         }
     }
 
-    /**
-     *
-     *
-     * @returns
-     * @memberof ProtocoloDetalleComponent
-     */
-    showGestorAlarmas() {
-        return this.alarmasValoresCriticos && this.alarmasValoresCriticos.length > 0;
-    }
 
     /**
      *
@@ -472,6 +523,21 @@ export class ProtocoloDetalleComponent
         this.guardarProtocolo(false);
     }
 
+    /**
+     * Pide confirmación al usuario para validar resultados con valores críticos (VC)
+     * @memberof TablaDatalleProtocolo
+     */
+    async confirmarValoresCriticos(alertasValidadas) {
+        let msg = 'Se encontraron resultados críticos para los siguientes análisis: ';
+        alertasValidadas.forEach(e => {
+            msg += e.registroPractica.practica.nombre + ', ';
+        });
+
+        return await this.plex.confirm(msg.substring(0, msg.length - 2) + '. ¿Desea confirmar estos valores?');
+    }
+
+    actualizarEstadosValidacion() {
+    }
 
     // getConfiguracionResultado(idPractica) {
     //     return new Promise( async (resolve) => {
