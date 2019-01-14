@@ -1,30 +1,30 @@
 <ng-container *ngIf='!showGestorAlarmas'>
-    <table class="table table-striped table-sm">
-        <thead>
-            <th *ngIf='modo ==="puntoInicio" || modo ==="recepcion" || modo ==="control"' style='width: 100px;'>Cod.</th>
-            <th>Descripcion</th>
-            <th *ngIf='modo ==="puntoInicio" || modo ==="recepcion" || modo ==="control"' class="float-center">S/Muestra</th>
-            <th *ngIf='modo !=="puntoInicio" && modo !=="control" && modo !=="recepcion"' class="float-center">Valor</th>
-            <th *ngIf='modo ==="validacion" || modo ==="control"' class="float-center">R. Anterior</th>
-            <th *ngIf='modo !=="puntoInicio" && modo !=="control" && modo !=="recepcion"' class="float-center">UM</th>
-            <th *ngIf='modo !=="puntoInicio" && modo !=="control" && modo !=="recepcion"' class="float-center">VR</th>
-            <th class="float-center" *ngIf='modo === "validacion"'>
-                <div>
-                    <plex-bool type="checkbox" [(ngModel)]="flagMarcarTodas" (change)="validarTodas($event, practicasEjecucion)"
-                        name="validarTodos"></plex-bool>
-                </div>Validar
-            </th>
-            <th class="float-center" *ngIf='modo !=="control" && modo !=="recepcion"'>Estado</th>
-            <th *ngIf='modo === "recepcion" || modo === "control"'>Acciones</th>
-            <th *ngIf='modo === "carga" || modo === "validacion"'>Observs.</th>
-        </thead>
-        <tbody>
-            <ng-container *ngIf='modo ==="puntoInicio" || modo ==="recepcion" || modo ==="control"'>
-                <tr class="hover" *ngFor="let practicaVista of practicasVista">
-                    <td>{{practicaVista.codigo}}</td>
-                    <td>{{practicaVista.nombre}}</td>
-                    <td>
-                        <plex-bool type="checkbox" [(ngModel)]="practicaVista.valor.resultado.sinMuestra" name="sinMuestra"></plex-bool>
+        <table class="table table-striped table-sm">
+                <thead>
+                    <th *ngIf='modo ==="puntoInicio" || modo ==="recepcion" || modo ==="control"' style='width: 100px;'>Cód.</th>
+                    <th>Descripción</th>
+                    <th *ngIf='modo ==="puntoInicio" || modo ==="recepcion" || modo ==="control"' class="float-center">S/Muestra</th>
+                    <th *ngIf='modo !=="puntoInicio" && modo !=="control" && modo !=="recepcion"' class="float-center">Valor</th>
+                    <th *ngIf='modo ==="validacion" || modo ==="control"' class="float-center">R. Anterior</th>
+                    <th *ngIf='modo !=="puntoInicio" && modo !=="control" && modo !=="recepcion"' class="float-center">UM</th>
+                    <th *ngIf='modo !=="puntoInicio" && modo !=="control" && modo !=="recepcion"' class="float-center">VR</th>
+                    <th class="float-center" *ngIf='modo === "validacion"'>
+                        <div>
+                            <plex-bool type="checkbox" [(ngModel)]="flagMarcarTodas" (change)="validarTodas($event, practicasEjecucion)"
+                                name="validarTodos"></plex-bool>
+                        </div>Validar
+                    </th>
+                    <th class="float-center" *ngIf='modo !=="control" && modo !=="recepcion"'>Estado</th>
+                    <th *ngIf='modo === "recepcion" || modo === "control"'>Acciones</th>
+                    <th *ngIf='modo === "carga" || modo === "validacion"'>Observs.</th>
+                </thead>
+                <tbody>
+                    <ng-container *ngIf='modo ==="puntoInicio" || modo ==="recepcion" || modo ==="control"'>
+                        <tr class="hover" *ngFor="let practicaVista of practicasVista">
+                            <td>{{practicaVista.codigo}}</td>
+                            <td>{{practicaVista.nombre}}</td>
+                            <td>
+                                <plex-bool type="checkbox" [(ngModel)]="practicaVista.valor.resultado.sinMuestra" name="sinMuestra"></plex-bool>
                     </td>
                     <td *ngIf='modo ==="control"'>
                         <span style='color:green'>

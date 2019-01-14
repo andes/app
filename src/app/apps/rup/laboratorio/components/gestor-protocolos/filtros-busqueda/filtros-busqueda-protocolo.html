@@ -4,8 +4,7 @@
             [(ngModel)]="modoCargaLaboratorio" type="horizontal"></plex-radio>
     </span>
     <span *ngIf='showSelectHojaTrabajo'>
-        <plex-select [(ngModel)]="busqueda.area " (change)="buscarHojasTrabajo($event)" name="area" label="Area"
-            [data]='areas'></plex-select>
+        <plex-select [(ngModel)]="busqueda.area " (change)="buscarHojasTrabajo($event)" name="area" label="Área" [data]='areas'></plex-select>
     </span>
     <span *ngIf='showSelectHojaTrabajo'>
         <plex-select [(ngModel)]="hojaTrabajo" (change)="buscarProtocolos($event,'hojaTrabajo')" name="hojadetrabajo"
@@ -24,7 +23,7 @@
         </plex-datetime>
     </span>
     <span *ngIf='modo !== "recepcion" && !showSelectHojaTrabajo'>
-        <plex-select [(ngModel)]="busqueda.area" (change)="buscarProtocolos($event,'area')" name="area" label="Area"
+        <plex-select [(ngModel)]="busqueda.area" (change)="buscarProtocolos($event,'area')" name="area" label="Área"
             [data]='areas'></plex-select>
     </span>
     <span>
