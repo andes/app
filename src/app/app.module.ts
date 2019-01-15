@@ -251,7 +251,6 @@ import { ListaEsperaInternacionComponent } from './modules/rup/components/ejecuc
 import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/odontologiaDefault/odontologiaDefault.component';
 import { InformeActividadNoNominalizadaComponent } from './modules/rup/components/elementos/informeActividadNoNominalizada/informeActividadNoNominalizada.component';
 import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
-import { TensionArterialPediatricaComponent } from './modules/rup/components/elementos/tensionArterialPediatrica.component';
 import { ConsultaDeNinoSanoM2AComponent } from './modules/rup/components/elementos/consultaDeNinoSano/consultaDeNinoSanoM2A.component';
 import { ConsultaDeNinoSanoE2Y3AComponent } from './modules/rup/components/elementos/consultaDeNinoSano/consultaDeNinoSanoE2Y3A.component';
 import { ConsultaDeNinoSanoE3Y6AComponent } from './modules/rup/components/elementos/consultaDeNinoSano/consultaDeNinoSanoE3Y6A.component';
@@ -355,7 +354,6 @@ export let RUPRegistry = {
     'LactanciaComponent': LactanciaComponent,
     'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
     'InformeActividadNoNominalizadaComponent': InformeActividadNoNominalizadaComponent,
-    'TensionArterialPediatricaComponent': TensionArterialPediatricaComponent,
     'ConsultaDeNinoSanoM2AComponent': ConsultaDeNinoSanoM2AComponent,
     'ConsultaDeNinoSanoE2Y3AComponent': ConsultaDeNinoSanoE2Y3AComponent,
     'ConsultaDeNinoSanoE3Y6AComponent': ConsultaDeNinoSanoE3Y6AComponent,
@@ -389,7 +387,6 @@ let RUPComponentsArray = [
     ElementoDeRegistroComponent,
     OdontologiaDefaultComponent,
     InformeActividadNoNominalizadaComponent,
-    TensionArterialPediatricaComponent,
     ConsultaDeNinoSanoM2AComponent,
     ConsultaDeNinoSanoE2Y3AComponent,
     ConsultaDeNinoSanoE3Y6AComponent,
