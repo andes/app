@@ -15,6 +15,7 @@ import { Auth } from '@andes/auth';
 export class HudsBusquedaComponent implements OnInit {
     laboratoriosFS: any;
     laboratorios: any;
+    vacunas: any = [];
     colapsadoOtros = true;
     colapsadoActivos = true;
     colapsadoCronicos = true;
@@ -589,7 +590,9 @@ export class HudsBusquedaComponent implements OnInit {
         this.servicioPrestacion.getCDAByPaciente(this.paciente.id).subscribe(registros => {
             this.cdas = registros;
             this.listarLaboratorios();
+            // filtramos los laboratorios que se listan por separado
             let otrasPrestaciones = [... this.cdas.filter(cda => cda.prestacion.snomed.conceptId !== '4241000179101')];
+
             let filtro = otrasPrestaciones.map(op => {
                 op.id = op.cda_id;
                 return {
@@ -601,7 +604,9 @@ export class HudsBusquedaComponent implements OnInit {
                     estado: 'validada'
                 };
             });
-
+            // filtramos las vacunas que se listan por separado
+            this.vacunas = [...filtro.filter(cda => cda.prestacion.conceptId === '33879002')];
+            filtro = [...filtro.filter(cda => cda.prestacion.conceptId !== '33879002')];
             this.prestaciones = [...this.prestaciones, ...filtro];
 
             // vamos a ordenar la prestaciones por fecha
@@ -618,6 +623,11 @@ export class HudsBusquedaComponent implements OnInit {
     listarLaboratorios() {
         this.laboratorios = [... this.cdas.filter(cda => cda.prestacion.snomed.conceptId === '4241000179101')];
 
+    }
+
+    // Trae los medicamentos registrados para el paciente
+    listarVacunas() {
+        this.vacunas = [... this.cdas.filter(cda => cda.prestacion.snomed.conceptId === '33879002')];
     }
 
     buscarTranformacion(transformado) {
