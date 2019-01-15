@@ -210,6 +210,7 @@ import { DinamicaFormComponent } from './components/turnos/autocitar/dinamica.co
 import { MapaEspacioFisicoVistaComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico-vista.component';
 
 import { BuscadorCie10Component } from './components/turnos/gestor-agendas/operaciones-agenda/buscador-cie10.component';
+import { UpdateContactoDireccionComponent } from './components/turnos/dashboard/update-contacto-direccion.component';
 
 
 // ... RUP
@@ -639,6 +640,7 @@ registerLocaleData(localeEs, 'es');
         PacienteListadoComponent,
         PacientePanelComponent,
         PacientePanelComponent,
+        UpdateContactoDireccionComponent,
 
         // form Terapeutico
         FormTerapeuticoComponent,

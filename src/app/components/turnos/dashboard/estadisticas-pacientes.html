@@ -69,63 +69,7 @@
                 </div>
             </div>
             <br>
-            <div class="row">
-                <div class="col">
-                    <h5>Paciente |
-                        <span class="text-primary">Estadísticas</span>
-                    </h5>
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div class="col">
-                    <span>Filtrar por Fechas</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <plex-datetime type="date" [(ngModel)]="fechaDesde" [required]="true" name="fechaDesde" label="Desde">
-                    </plex-datetime>
-                </div>
-                <div class="col-6">
-                    <plex-datetime type="date" [(ngModel)]="fechaHasta" [required]="true" name="fechaHasta" label="Hasta">
-                    </plex-datetime>
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-2 vertical-center text-center">
-                    <i class="mdi mdi-account-check mdi-36px"></i>
-                </div>
-                <div class="col-7 vertical-center">
-                    <h5>Cantidad de turnos</h5>
-                </div>
-                <div class="col-2 badge badge-success">
-                    <span class="h3">{{turnosOtorgados}}</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-2 vertical-center text-center">
-                    <i class="mdi mdi-account-minus mdi-36px"></i>
-                </div>
-                <div class="col-7 vertical-center">
-                    <h5>Inasistencias</h5>
-                </div>
-                <div class="col-2 badge badge-danger">
-                    <span class="h3">{{inasistencias}}</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-2 vertical-center text-center">
-                    <i class="mdi mdi-calendar-remove mdi-36px"></i>
-                </div>
-                <div class="col-7 vertical-center">
-                    <h5>Anulaciones</h5>
-                </div>
-                <div class="col-2 badge badge-warning">
-                    <span class="h3">{{anulaciones}}</span>
-                </div>
-            </div>
+            <update-contacto-direccion [paciente]="_paciente"></update-contacto-direccion>
         </fieldset>
 
     </plex-tab>
@@ -147,7 +91,8 @@
                             | {{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}}
                         </div>
 
-                        <div *ngIf="turno.estado === 'liberado'">Por {{turno.updatedBy.nombreCompleto}} el {{turno.updatedAt
+                        <div *ngIf="turno.estado === 'liberado'">Por {{turno.updatedBy.nombreCompleto}} el
+                            {{turno.updatedAt
                             | fecha}} a las {{turno.updatedAt | date: 'HH:mm'}}</div>
 
                         <div *ngIf="turno.tipoPrestacion?.term">{{turno.tipoPrestacion.term}}</div>
