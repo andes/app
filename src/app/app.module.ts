@@ -231,7 +231,6 @@ import { LaboratoriosComponent } from './modules/rup/components/laboratorios/lab
 import { SelectPorRefsetComponent } from './modules/rup/components/elementos/selectPorRefset/SelectPorRefset.component';
 import { SolicitudPrestacionDefaultComponent } from './modules/rup/components/elementos/solicitudPrestacionDefault/solicitudPrestacionDefault.component';
 import { SaturacionOxigenoComponent } from './modules/rup/components/elementos/saturacionOxigeno.component';
-import { FrecuenciaCardiacaComponent } from './modules/rup/components/elementos/frecuenciaCardiaca.component';
 import { FrecuenciaRespiratoriaComponent } from './modules/rup/components/elementos/frecuenciaRespiratoria.component';
 import { ObservacionesComponent } from './modules/rup/components/elementos/observaciones/observaciones.component';
 import { EvolucionProblemaDefaultComponent } from './modules/rup/components/elementos/evolucionProblemaDefault/evolucionProblemaDefault.component';
@@ -347,7 +346,6 @@ export let RUPRegistry = {
     'ObservacionesComponent': ObservacionesComponent,
     'SaturacionOxigenoComponent': SaturacionOxigenoComponent,
     'SolicitudPrestacionDefaultComponent': SolicitudPrestacionDefaultComponent,
-    'FrecuenciaCardiacaComponent': FrecuenciaCardiacaComponent,
     'FrecuenciaRespiratoriaComponent': FrecuenciaRespiratoriaComponent,
     'AutocitadoComponent': AutocitadoComponent,
     'AdjuntarDocumentoComponent': AdjuntarDocumentoComponent,
@@ -377,7 +375,6 @@ let RUPComponentsArray = [
     SelectPorRefsetComponent,
     AutocitadoComponent,
     EvolucionProblemaDefaultComponent,
-    FrecuenciaCardiacaComponent,
     FrecuenciaRespiratoriaComponent,
     InformesComponent,
     ObservacionesComponent,
