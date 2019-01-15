@@ -13,10 +13,10 @@
                 <div class="col-5">
                     <span *ngIf="_unContacto.tipo">
                         <plex-phone *ngIf="_unContacto.tipo === 'fijo' || _unContacto.tipo.id === 'fijo'" label="Número:"
-                            [(ngModel)]="_unContacto.valor" name="valor-{{i}}" (change)="disableGuardar = false">
+                            [(ngModel)]="_unContacto.valor" name="valor-{{i}}" (keyup)="disableGuardar = false">
                         </plex-phone>
                         <plex-phone label="Número:" *ngIf="_unContacto.tipo === 'celular' || _unContacto.tipo.id === 'celular'"
-                            [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000" name="valor-{{i}}" (change)="disableGuardar = false">
+                            [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000" name="valor-{{i}}" (keyup)="disableGuardar = false">
                         </plex-phone>
                     </span>
                 </div>
@@ -37,7 +37,7 @@
         <div class="row">
             <div class="col-12">
                 <plex-text label="Dirección" [(ngModel)]="direccion.valor" name="divValor" placeholder="Ej: Avenida las Flores 1200"
-                    (change)="disableGuardar = false">
+                    (keyup)="disableGuardar = false">
                 </plex-text>
             </div>
         </div>

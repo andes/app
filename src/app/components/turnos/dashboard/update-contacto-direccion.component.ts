@@ -118,7 +118,7 @@ export class UpdateContactoDireccionComponent implements OnInit {
     }
 
     changeTipoContacto(indice, keyTipo) {
-        this.arrayContactos[indice].valor = '';
+        // this.arrayContactos[indice].valor = '';
         this.arrayContactos[indice].tipo = keyTipo.id;
         this.disableGuardar = false;
     }
@@ -129,7 +129,7 @@ export class UpdateContactoDireccionComponent implements OnInit {
         }
     }
 
-    // Chequea si existen contactos vacíos despues de la primera posicion y los elimina.
+    // Chequea si existen contactos vacíos y los elimina.
     eliminarContactosVacios() {
         let indice = 0;
 
@@ -170,28 +170,21 @@ export class UpdateContactoDireccionComponent implements OnInit {
 
     save(valid) {
         if (valid.formValid) {
-            debugger;
             this.eliminarContactosVacios();
+            this.paciente.contacto = this.arrayContactos;
+            this.paciente.direccion = [this.direccion];
 
-            // if (!this.arrayContactos[0].valor) {
-            //     this.arrayContactos = [this.contacto];
-            // }
+            this.pacienteService.save(this.paciente).subscribe();
 
-            this.pacienteService.patch(this.paciente.id, {
-                'op': 'updateContactos',
-                'contacto': this.arrayContactos
-            }).subscribe();
-
-            // if (!this.paciente.direccion[0].valor) {
-            //     this.paciente.direccion[0] = this.direccion;
-            // }
-            // this.pacienteService.patch(this.paciente.id, {
-            //     'op': 'updateDireccion',
-            //     'direccion': this.paciente.direccion
-            // }).subscribe();
             this.disableGuardar = true;
+            this.plex.toast('success', 'Los cambios han sido guardados.', 'Información');
+
+            if (!this.paciente.contacto.length) {
+                this.arrayContactos = [this.contacto];
+            }
+        } else {
+            this.plex.toast('warning', 'Verifique los datos ingresados por favor.', 'Aviso');
         }
-        this.plex.toast('success', 'Los cambios han sido guardados.', 'Información');
     }
 }
 
