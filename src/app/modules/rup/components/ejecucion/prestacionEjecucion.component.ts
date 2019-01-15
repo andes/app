@@ -113,6 +113,8 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     public flagValid = true;
 
+    public scopePrivacy = [];
+
     constructor(
         private obraSocialService: ObraSocialService,
         private servicioPrestacion: PrestacionesService,
@@ -1288,6 +1290,20 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
         });
         return results;
+    }
+
+    onChangePrivacy(registro) {
+        this.scopePrivacy = [];
+        this.scopePrivacy = [{label: registro.privacy.scope === 'public' ? 'Activar privacidad' : 'Desactivar privacidad',
+        handler: () => {
+            this.activarPrivacidad(registro);
+        }
+        }];
+    }
+
+    activarPrivacidad(registro) {
+        let scopeCruzado = {'public': 'private', 'private': 'public'};
+        registro.privacy.scope = scopeCruzado[registro.privacy.scope];
     }
 
 }

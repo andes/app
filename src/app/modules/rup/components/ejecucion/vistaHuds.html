@@ -77,10 +77,11 @@
                                                             </ng-container>
                                                         </div>
                                                         <div class="actions">
-                                                            <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0"
-                                                                class="badge badge-info">
-                                                                <b>Relacionado con:</b> {{
-                                                                elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
+                                                            <small class="badge-danger float-left" *ngIf="elemento?.privacy?.scope === 'private'">
+                                                                Registro Privado
+                                                            </small>
+                                                            <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
+                                                                <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
                                                                 + elemento.relacionadoCon[0].concepto.term.slice(1)}}
                                                             </small>
                                                             <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">

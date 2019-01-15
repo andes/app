@@ -94,9 +94,16 @@
                                                     </ng-container>
                                                 </div>
                                             </div>
-
                                             <div class="actions" *ngIf="!confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i) )">
-
+                                                
+                                                <ng-container *ngIf="registro?.privacy?.scope">
+                                                    <span class="badge-info float-left" *ngIf="registro?.privacy?.scope === 'private'">
+                                                        Registro Privado
+                                                    </span>
+                                                    <plex-dropdown type="primary" class="dropdown-inline" [right]="true"
+                                                        icon="file-lock" (onOpen)="onChangePrivacy(registro)" [items]="scopePrivacy"
+                                                        title="Privado"></plex-dropdown>
+                                                </ng-container>
                                                 <!--span class="badge badge-{{ (registro.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(registro.concepto) }}">
                                                         {{registro.concepto.semanticTag}}
                                                     </span-->
