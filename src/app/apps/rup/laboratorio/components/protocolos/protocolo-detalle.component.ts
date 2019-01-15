@@ -258,6 +258,7 @@ export class ProtocoloDetalleComponent
         this.router.navigate(['./"${pagina}"']);
         return false;
     }
+
     /**
      * Funcionalidades del buscador de MPI
      */
@@ -381,9 +382,7 @@ export class ProtocoloDetalleComponent
      */
     async guardarProtocolo(next) {
         if (this.modelo.id) {
-            if (this.modo === 'validacion') {
-                this.actualizarProtocolo(next);
-            }
+            this.actualizarProtocolo(next);
         } else {
             this.guardarNuevoProtocolo();
         }
@@ -441,11 +440,17 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     private async actualizarProtocolo(next) {
-        this.setearEstadosValidacion();
-        this.servicioPrestacion.patch(this.modelo.id, this.getParams()).subscribe(async () => {
-            // if (next && this.modo !== 'puntoInicio') {
+        if (this.modo === 'validacion') {
+            this.setearEstadosValidacion();
+        }
 
-            let alertasValidadas = this.validaciones.filter(e => e.validado && e.esValorCritico);
+        this.servicioPrestacion.patch(this.modelo.id, this.getParams()).subscribe(async () => {
+
+            let alertasValidadas = [];
+            if (this.modo === 'validacion') {
+                alertasValidadas = this.validaciones.filter(e => e.validado && e.esValorCritico);
+            }
+
             if (alertasValidadas.length > 0 && await this.confirmarValoresCriticos(alertasValidadas)) {
                 this.validaciones = this.validaciones.filter(e => e.validado && e.esValorCritico);
                 this.validaciones.forEach( e => e.esValorCritico = false);
@@ -465,24 +470,28 @@ export class ProtocoloDetalleComponent
                     this.cargarProtocolo(this.protocolos[this.indexProtocolo]);
                 }
                 this.plex.toast('success', this.modelo.ejecucion.registros[0].nombre, 'Solicitud guardada', 4000);
+            } else {
+                this.mostrarCuerpoProtocolo = true;
+                this.volverAListaControEmit.emit();
             }
-            // } else {
-            //     this.mostrarCuerpoProtocolo = true;
-            //     this.volverAListaControEmit.emit()
-            // }
         });
     }
 
+    /**
+     *
+     *
+     * @private
+     * @memberof ProtocoloDetalleComponent
+     */
     private setearEstadosValidacion() {
-        let estado = {
-            tipo: 'validada',
-            usuario: this.auth.usuario,
-            fecha: new Date(),
-            pendienteGuardar: true
-        };
-
         let practicasValidar = this.validaciones.filter(e => e.validado && !e.esValorCritico);
-        practicasValidar.forEach(e => e.registroPractica.registro.valor.estados.push(estado));
+        practicasValidar.forEach(e => e.registroPractica.registro.valor.estados.push( {
+                tipo: 'validada',
+                usuario: this.auth.usuario,
+                fecha: new Date(),
+                pendienteGuardar: true
+            })
+        );
     }
 
     /**
@@ -506,7 +515,6 @@ export class ProtocoloDetalleComponent
             this.iniciarProtocolo();
         } else {
             this.guardarProtocolo(true);
-            // this.cargarResultadosAnteriores();
         }
     }
 
