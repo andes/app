@@ -1,3 +1,4 @@
+import { SemanticTag } from './../../interfaces/semantic-tag.type';
 import { Component, OnInit, HostBinding, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Plex } from '@andes/plex';
@@ -8,6 +9,7 @@ import { IPaciente } from './../../../../interfaces/IPaciente';
 import { LogService } from '../../../../services/log.service';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
+import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 
 @Component({
     selector: 'rup-vistaHuds',
@@ -77,13 +79,14 @@ export class VistaHudsComponent implements OnInit {
             this.route.params.subscribe(params => {
                 let id = params['id'];
                 // Carga la información completa del paciente
-                this.servicioPaciente.getById(
-                    id).subscribe(paciente => {
-                        this.paciente = paciente;
-                    });
+                this.servicioPaciente.getById(id).subscribe(paciente => {
+                    this.paciente = paciente;
+                    this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
+                });
             });
         } else {
             // Loggeo de lo que ve el profesional
+            this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente  });
             this.logService.post('rup', 'hudsPantalla', {
                 paciente: {
                     id: this.paciente.id,
@@ -100,6 +103,10 @@ export class VistaHudsComponent implements OnInit {
     redirect(pagina: string) {
         this.router.navigate(['./' + pagina]);
         return false;
+    }
+
+    public onCloseTab($event) {
+        this.registrosHuds.splice($event, 1);
     }
 
 
@@ -133,13 +140,9 @@ export class VistaHudsComponent implements OnInit {
         this.router.navigate([ruta]);
     }
 
-    // recibe el tab que se clikeo y lo saca del array..
-    cerrartab($event) {
-        this.registrosHuds.splice($event, 1);
-    }
-
     evtCambiaPaciente() {
         this.cambiarPaciente.emit(true);
     }
+
 
 }

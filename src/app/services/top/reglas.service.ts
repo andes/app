@@ -22,4 +22,8 @@ export class ReglaService {
         return this.server.post(this.reglaUrl, reglas);
     }
 
+    delete(params: any): Observable<any[]> {
+        return this.server.delete(this.reglaUrl, { params: params, showError: true });
+    }
+
 }

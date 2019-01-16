@@ -12,11 +12,12 @@ export class IPrestacionGetParams {
     conceptsIdEjecucion?: any[];
     solicitudDesde?: Date;
     solicitudHasta?: Date;
-    tienePrestacionOrigen?: 'si' | 'no';
-    tieneTurno?: 'si' | 'no';
+    tienePrestacionOrigen?: Boolean;
+    tieneTurno?: Boolean;
     organizacion?: string;
     ordenFecha?: boolean;
     ordenFechaEjecucion?: boolean;
     limit?: number;
     ambitoOrigen?: string;
+    tipoPrestaciones?: any[];
 }

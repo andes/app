@@ -14,9 +14,11 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
+import { ObraSocialService } from './../../../../services/obraSocial.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
 import { Observable } from 'rxjs/Observable';
 import { RUPComponent } from '../core/rup.component';
+import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -30,10 +32,14 @@ export class PrestacionEjecucionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @ViewChildren(RUPComponent) rupElements: QueryList<any>;
 
+    public activeTab = 0;
+    public obraSocialPaciente;
+
     // prestacion actual en ejecucion
     public prestacion: IPrestacion;
     public paciente: IPaciente;
     public elementoRUP: IElementoRUP;
+    public prestacionSolicitud;
 
     public showPlanes = false;
     public relacion = null;
@@ -57,7 +63,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     public confirmarEliminar: Boolean = false;
     public indexEliminar: any;
-    public scopeEliminar: String;
+    public scopeEliminar: any;
 
     // Mustro mpi para cambiar de paciente.
     public showCambioPaciente = false;
@@ -108,6 +114,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     public flagValid = true;
 
     constructor(
+        private obraSocialService: ObraSocialService,
         private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
         public plex: Plex, public auth: Auth,
@@ -154,19 +161,33 @@ export class PrestacionEjecucionComponent implements OnInit {
                     this.showPrestacion = true;
                     this.servicioPrestacion.getById(id).subscribe(prestacion => {
                         this.prestacion = prestacion;
+
+                        this.plex.updateTitle([{
+                            route: '/',
+                            name: 'ANDES'
+                        }, {
+                            route: '/rup',
+                            name: 'RUP'
+                        }, {
+                            name: this.prestacion && this.prestacion.solicitud.tipoPrestacion.term ? this.prestacion.solicitud.tipoPrestacion.term : ''
+                        }]);
+
                         // this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
                         // Si la prestación está validada, navega a la página de validación
                         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
                             this.router.navigate(['/rup/validacion/', this.prestacion.id]);
                         } else {
+                            this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.prestacion.paciente });
                             // Carga la información completa del paciente
-                            if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                            if (!prestacion.solicitud.tipoPrestacion.noNominalizada) {
                                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                                     this.paciente = paciente;
+                                    this.obraSocialService.get({ dni: this.paciente.documento }).subscribe(os => {
+                                        this.obraSocialPaciente = os;
+                                    });
                                 });
                             }
-                            // Trae el elementoRUP que implementa esta Prestación
-                            // this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
+                            // cambio: this.prestacionSolicitud = prestacion.solicitud;
                             // Trae el elementoRUP que implementa esta Prestación
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
                             if (this.elementoRUP.requeridos.length > 0) {
@@ -217,6 +238,14 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.conceptosTurneables = conceptosTurneables;
             });
         });
+    }
+
+    /**
+     *
+     */
+
+    public onCloseTab($event) {
+        this.registrosHuds.splice($event - 2, 1);
     }
 
     /**
@@ -497,9 +526,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             let registroRequerido = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === '371531000');
             if (registroRequerido) {
                 nuevoRegistro.relacionadoCon.push(registroRequerido);
-                if (nuevoRegistro.id) {
-                    this.itemsRegistros[nuevoRegistro.id].collapse = true;
-                }
             }
         }
         //
@@ -526,6 +552,10 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (snomedConcept[0] && snomedConcept[0][0] === 'planes') {
             snomedConcept = JSON.parse(JSON.stringify(snomedConcept[1]));
             snomedConcept.semanticTag = 'plan';
+        } else {
+            if (snomedConcept[1]) {
+                snomedConcept = JSON.parse(JSON.stringify(snomedConcept[1]));
+            }
         }
 
         this.refSet = this.servicioPrestacion.getRefSetData();
@@ -588,8 +618,8 @@ export class PrestacionEjecucionComponent implements OnInit {
                 return false;
             }
 
-            // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
-            if ((snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación')) {
+            // Buscar si es hallazgo o trastorno buscar primero si ya existe en Huds
+            if ((snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación') && (!this.elementoRUP.reglas || !this.elementoRUP.reglas.requeridos || !this.elementoRUP.reglas.requeridos.relacionesMultiples)) {
                 this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
                     .subscribe(dato => {
                         if (dato) {
@@ -606,7 +636,9 @@ export class PrestacionEjecucionComponent implements OnInit {
                                         registroDestino.relacionadoCon = [...registroDestino.relacionadoCon, resultado];
                                     }
                                 } else {
-                                    registroDestino.relacionadoCon = [resultado];
+                                    if (registroDestino) {
+                                        registroDestino.relacionadoCon = [resultado];
+                                    }
                                 }
                             } else {
 
@@ -626,7 +658,9 @@ export class PrestacionEjecucionComponent implements OnInit {
                                                 resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
                                                 // }
                                             } else {
-                                                registroDestino.relacionadoCon = [resultado];
+                                                if (registroDestino) {
+                                                    registroDestino.relacionadoCon = [resultado];
+                                                }
                                             }
 
                                         } else {
@@ -638,7 +672,9 @@ export class PrestacionEjecucionComponent implements OnInit {
                                                 resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
                                                 // }
                                             } else {
-                                                registroDestino.relacionadoCon = [resultado];
+                                                if (registroDestino) {
+                                                    registroDestino.relacionadoCon = [resultado];
+                                                }
                                             }
                                         }
                                     });
@@ -649,10 +685,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                         } else {
                             resultado = this.cargarNuevoRegistro(snomedConcept);
                             if (resultado && this.tipoBusqueda) {
-
-                                // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).conceptId)) === -1) {
-                                // resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? (this.tipoBusqueda && this.tipoBusqueda[1] && this.tipoBusqueda[1].conceptos) : this.tipoBusqueda.conceptos;
-                                // }
                                 resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
                             } else {
                                 if (registroDestino) {
@@ -679,7 +711,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                         resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : (this.tipoBusqueda && this.tipoBusqueda.conceptos ? this.tipoBusqueda.conceptos : []);
 
                     }
-                    // this.tipoBusqueda = null;
                 }
 
             }
@@ -1196,10 +1227,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         } else {
             return false;
         }
-    }
-    // recibe el tab que se clikeo y lo saca del array..
-    cerrartab($event) {
-        this.registrosHuds.splice($event, 1);
     }
 
     recibeSitengoResultado($event) {

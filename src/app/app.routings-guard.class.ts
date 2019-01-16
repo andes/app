@@ -18,3 +18,14 @@ export class RoutingGuard implements CanActivate {
         }
     }
 }
+
+@Injectable()
+export class RoutingNavBar implements CanActivate {
+    constructor(private plex: Plex) { }
+
+    canActivate() {
+        this.plex.clearNavbar();
+        this.plex.updateTitle('ANDES | Apps Neuquinas de Salud');
+        return true;
+    }
+}

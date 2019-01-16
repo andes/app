@@ -18,7 +18,7 @@
                     <b class="text-danger">Sin documento (temporal)</b>
                 </div>
                 <div>
-                    <strong>Fecha Nacimiento: </strong>{{ auditoriaPP.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</div>
+                    <strong>Fecha Nacimiento: </strong>{{ auditoriaPP.paciente.fechaNacimiento | fecha }}</div>
                 <div *ngIf="auditoriaPP.paciente.fechaNacimiento !== ''">
                     <strong>Fecha Nacimiento: </strong>{{ auditoriaPP.paciente.fechaNacimiento | fecha }}</div>
                 <div *ngIf="auditoriaPP.paciente.fechaNacimiento === ''">
