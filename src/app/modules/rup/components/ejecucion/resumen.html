@@ -17,7 +17,7 @@
                         <span class="badge badge-info  mdi mdi-link pull-right"></span>
                     </div>
                     <small> Solicitado el
-                        <strong>{{ prestacion.solicitud.fecha | fecha }}</strong>
+                        <strong>{{ prestacion.solicitud.fecha | fecha: 'utc' }}</strong>
                         <span> por {{ prestacion.solicitud.profesional | profesional }}</span>
                         <!--<span *ngIf="!prestacion.ejecucion?.profesionales[0]?.nombreCompleto">(sin profesionales asignados)</span>-->
                     </small>
@@ -60,7 +60,8 @@
                         <strong>{{problema.tipoProblema.term}} </strong> |
                         <small>Iniciado
                             <strong>{{problema.fechaInicio | fromNow}}</strong> por el profesional
-                            <strong>{{problema.evoluciones[problema.evoluciones.length - 1].profesional.nombreCompleto}}</strong>
+                            <strong>{{problema.evoluciones[problema.evoluciones.length -
+                                1].profesional.nombreCompleto}}</strong>
                         </small>
                     </span>
 
@@ -130,14 +131,14 @@
             <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver('/rup')" type="danger"></plex-button>
         </div>
         <div class="col text-right">
-            <plex-button *ngIf="prestacion.estados[prestacion.estados.length-1].tipo == 'pendiente'" title="Iniciar prestación" label="Iniciar"
-                type="success" (click)="iniciarPrestacion(prestacion.id)">
+            <plex-button *ngIf="prestacion.estados[prestacion.estados.length-1].tipo == 'pendiente'" title="Iniciar prestación"
+                label="Iniciar" type="success" (click)="iniciarPrestacion(prestacion.id)">
             </plex-button>
-            <plex-button *ngIf="prestacion.estados[prestacion.estados.length-1].tipo == 'validada'" title="Ver resumen" label="Ver resumen"
-                type="success" (click)="verResumen(prestacion.id)">
+            <plex-button *ngIf="prestacion.estados[prestacion.estados.length-1].tipo == 'validada'" title="Ver resumen"
+                label="Ver resumen" type="success" (click)="verResumen(prestacion.id)">
             </plex-button>
-            <plex-button *ngIf="prestacion.estados[prestacion.estados.length-1].tipo == 'ejecucion'" title="Ver prestación" label="Ir a registros"
-                type="success" (click)="verPrestacion(prestacion.id)">
+            <plex-button *ngIf="prestacion.estados[prestacion.estados.length-1].tipo == 'ejecucion'" title="Ver prestación"
+                label="Ir a registros" type="success" (click)="verPrestacion(prestacion.id)">
             </plex-button>
         </div>
     </div>
