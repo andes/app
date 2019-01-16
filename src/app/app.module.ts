@@ -261,6 +261,8 @@ import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './modules/rup
 import { SeleccionBinariaComponent } from './modules/rup/components/elementos/seleccionBinaria/seleccionBinaria.component';
 import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico/valorNumerico.component';
 import { MoleculaBaseComponent } from './modules/rup/components/elementos/moleculaBase/moleculaBase.component';
+import { IndiceDeMasaCorporalComponent } from './modules/rup/components/elementos/indiceDeMasaCorporal.component';
+
 
 import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria/procedimientoDeEnfermeria.component';
 // TODO: Eliminar todo esto de las llaves: deprecated
@@ -364,7 +366,8 @@ export let RUPRegistry = {
     'SeleccionBinariaComponent': SeleccionBinariaComponent,
     'ValorNumericoComponent': ValorNumericoComponent,
     'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
-    'MoleculaBaseComponent': MoleculaBaseComponent
+    'MoleculaBaseComponent': MoleculaBaseComponent,
+    'IndiceDeMasaCorporalComponent': IndiceDeMasaCorporalComponent
 };
 
 let RUPComponentsArray = [
@@ -397,7 +400,8 @@ let RUPComponentsArray = [
     SeleccionBinariaComponent,
     ValorNumericoComponent,
     ProcedimientoDeEnfermeriaComponent,
-    MoleculaBaseComponent
+    MoleculaBaseComponent,
+    IndiceDeMasaCorporalComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -409,7 +413,6 @@ import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem
 import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
 import { UploadFileComponent } from './shared/components/upload-file.component';
-
 
 
 registerLocaleData(localeEs, 'es');
