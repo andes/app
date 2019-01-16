@@ -7,6 +7,7 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { PacienteService } from '../../../../../services/paciente.service';
 import { ActivatedRoute } from '@angular/router';
+import { ProtocoloCacheService } from '../../services/protocoloCache.service';
 
 @Component({
     selector: 'gestor-protocolos',
@@ -30,6 +31,7 @@ export class GestorProtocolosComponent implements OnInit {
     public editarListaPracticas: Boolean = false;
     public showBotonAceptar: Boolean = false;
     public titulo;
+    public contextoCache;
 
     public areas = [];
 
@@ -44,7 +46,7 @@ export class GestorProtocolosComponent implements OnInit {
             this.ocultarPanelLateral = true;
         }
     }
-    @Input() modo: 'puntoInicio' | 'listado' | 'recepcion' | 'control' | 'carga' | 'validacion';
+    // @Input() modo: 'puntoInicio' | 'listado' | 'recepcion' | 'control' | 'carga' | 'validacion';
     modoAVolver: 'puntoInicio' | 'listado' | 'recepcion' | 'control' | 'carga' | 'validacion';
 
     @Input('paciente')
@@ -76,12 +78,14 @@ export class GestorProtocolosComponent implements OnInit {
         public plex: Plex,
         public servicioPrestaciones: PrestacionesService,
         public auth: Auth,
+        public protocoloCacheService: ProtocoloCacheService,
         // public as: AgendaCacheService
     ) { }
 
     ngOnInit() {
         if (!this.protocolo) {
             this.resetearProtocolo({});
+            this.contextoCache = this.protocoloCacheService.getContextoCache();
         }
         this.showBotonAceptar = true;
         this.routeParams = this.route.params.subscribe(params => {
@@ -89,7 +93,6 @@ export class GestorProtocolosComponent implements OnInit {
             if (params['id']) {
                 let id = params['id'];
                 this.servicePaciente.getById(id).subscribe(pacienteMPI => {
-                    this.modo = 'recepcion';
                     this.paciente = pacienteMPI;
                     this.ocultarPanelLateral = false;
                     this.mostrarFomularioPacienteSinTurno();
@@ -123,20 +126,20 @@ export class GestorProtocolosComponent implements OnInit {
     cambiarModo(modoId) {
         this.accionIndex = modoId;
         if (modoId === 0) {
-            this.modo = 'recepcion';
-            this.titulo = 'Recepcionar Paciente';
+            this.contextoCache.modo = 'recepcion';
+            this.contextoCache.titulo = 'Recepcionar Paciente';
         } else if (modoId === 1) {
-            this.titulo = 'Auditoría de Protocolos';
-            this.modo = 'control';
+            this.contextoCache.titulo = 'Auditoría de Protocolos';
+            this.contextoCache.modo = 'control';
         } else if (modoId === 2) {
-            this.titulo = 'Carga de Resultados';
-            this.modo = 'carga';
+            this.contextoCache.titulo = 'Carga de Resultados';
+            this.contextoCache.modo = 'carga';
         } else if (modoId === 3) {
-            this.titulo = 'Validación de Resultados';
-            this.modo = 'validacion';
+            this.contextoCache.titulo = 'Validación de Resultados';
+            this.contextoCache.modo = 'validacion';
         } else if (modoId === 4) {
-            this.titulo = 'Listado';
-            this.modo = 'listado';
+            this.contextoCache.titulo = 'Listado';
+            this.contextoCache.modo = 'listado';
         }
     }
 
@@ -210,7 +213,7 @@ export class GestorProtocolosComponent implements OnInit {
     seleccionarProtocolo(value) {
         // Si se presionó el boton suspender, no se muestran otros protocolos hasta que se confirme o cancele la acción.
         if (value.protocolo) {
-            this.mostrarCuerpoProtocolo = (this.modo === 'control') || (this.modo === 'carga') || (this.modo === 'validacion') || (this.modo === 'puntoInicio');
+            this.mostrarCuerpoProtocolo = (this.contextoCache.modo === 'control') || (this.contextoCache.modo === 'carga') || (this.contextoCache.modo === 'validacion') || (this.contextoCache.modo === 'puntoInicio');
             this.protocolo = value.protocolo;
             this.indexProtocolo = value.index;
             this.showListarProtocolos = false;
@@ -219,7 +222,7 @@ export class GestorProtocolosComponent implements OnInit {
             this.showCargarSolicitud = true;
             this.showBotonAceptar = false;
             this.showBotonGuardar = true;
-            this.ocultarPanelLateral = (this.modo === 'recepcion') || (this.modo === 'puntoInicio');
+            this.ocultarPanelLateral = (this.contextoCache.modo === 'recepcion') || (this.contextoCache.modo === 'puntoInicio');
         }
     }
 
@@ -229,7 +232,7 @@ export class GestorProtocolosComponent implements OnInit {
      * @memberof PuntoInicioLaboratorioComponent
      */
     volverLista() {
-        if (this.modo === 'puntoInicio') {
+        if (this.contextoCache.modo === 'puntoInicio') {
             // location.reload();
             this.volverAPuntoInicioEmmiter.emit(true);
         } else {
@@ -271,13 +274,13 @@ export class GestorProtocolosComponent implements OnInit {
             this.showBotonAceptar = true;
         }
 
-        // this.mostrarCuerpoProtocolo = (this.modo === 'control') || (this.modo === 'carga') || (this.modo === 'validacion') || (this.modo === 'puntoInicio');
+        // this.mostrarCuerpoProtocolo = (this.contextoCache.modo === 'control') || (this.contextoCache.modo === 'carga') || (this.contextoCache.modo === 'validacion') || (this.contextoCache.modo === 'puntoInicio');
         //     this.showListarProtocolos = false;
         //     this.showProtocoloDetalle = true;
         //     this.seleccionPaciente = false;
         //     this.showCargarSolicitud = true;
-        //     this.ocultarPanelLateral = (this.modo === 'recepcion') || (this.modo === 'puntoInicio');
-        //     this.showBotonesGuardar = (this.modo !== 'recepcion');
+        //     this.ocultarPanelLateral = (this.contextoCache.modo === 'recepcion') || (this.contextoCache.modo === 'puntoInicio');
+        //     this.showBotonesGuardar = (this.contextoCache.modo !== 'recepcion');
     }
 
     // mostrarBotonesGuardarProtocoloFooter($event) {
@@ -290,18 +293,18 @@ export class GestorProtocolosComponent implements OnInit {
      * @memberof GestorProtocolosComponent
      */
     aceptarCambios() {
-        if (this.modoAVolver) {
+        if (this.contextoCache.modoAVolver) {
             // this.showProtocoloDetalle = true;
-            // this.modo = this.modoAVolver;
-            // this.modoAVolver = '';
+            // this.contextoCache.modo = this.contextoCache.modoAVolver;
+            // this.contextoCache.modoAVolver = '';
             // this.ocultarPanelLateral = false;
             // this.showBotonAceptar = true;
             // this.showListarProtocolos = false;
             // guardarSolicitudYVolver() {
         this.ocultarPanelLateral = false;
-        this.modo = this.modoAVolver;
-        this.protocoloDetalleComponent.guardarSolicitudYVolver(this.modoAVolver);
-        this.modoAVolver = null;
+        this.contextoCache.modo = this.contextoCache.modoAVolver;
+        this.protocoloDetalleComponent.guardarSolicitudYVolver(this.contextoCache.modoAVolver);
+        this.contextoCache.modoAVolver = null;
     // }
         } else {
             this.showBotonAceptar = false;
@@ -341,8 +344,8 @@ export class GestorProtocolosComponent implements OnInit {
     volverAControl() {
         this.protocoloDetalleComponent.cargarCodigosPracticas();
         this.ocultarPanelLateral = true;
-        this.modoAVolver = this.modo;
-        // this.modo = 'control';
+        this.contextoCache.modoAVolver = this.contextoCache.modo;
+        // this.contextoCache.modo = 'control';
         this.cambiarModo(1);
         this.showBotonAceptar = true;
         this.showBotonGuardar = false;
@@ -368,7 +371,7 @@ export class GestorProtocolosComponent implements OnInit {
     //         // this.busqueda.solicitudDesde = new Date(ls.busqueda.solicitudDesde);
     //     }
 
-    //     if (this.modo === 'Recepcion') {
+    //     if (this.contextoCache.modo === 'Recepcion') {
     //         this.turnosLaboratorio();
     //     }
     // }

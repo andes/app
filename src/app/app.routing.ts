@@ -87,19 +87,8 @@ import { CamaCreateUpdateComponent } from './modules/rup/components/internacion/
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 import { ReglasComponent } from './components/top/reglas/reglas.component';
 // SIL
-// import { PracticaListadoComponent } from './apps/rup/laboratorio/components/protocolos/buscador-practicas/practica-listado.component';
 import { LaboratorioComponent } from './apps/rup/laboratorio/components/laboratorio.component';
-import { ProtocoloDetalleComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-detalle.component';
-// import { PracticaDemoComponent } from './apps/rup/laboratorio/components/demoPractica.component';
-import { TablaDatalleProtocoloComponent } from './apps/rup/laboratorio/components/protocolos/tabla-detalle-protocolo/tabla-datalle-protocolo.component';
-import { GestorProtocolosComponent } from './apps/rup/laboratorio/components/gestor-protocolos/gestor-protocolos.component';
-import { ListaProtocolosComponent } from './apps/rup/laboratorio/components/lista-protocolos/lista-protocolos.component';
 import { PuntoInicioLaboratorioComponent } from './apps/rup/laboratorio/components/punto-inicio/punto-inicio.component';
-import { ListadoSolicitudesComponent } from './apps/rup/laboratorio/components/punto-inicio/listado-solicitudes/listado-solicitudes.component';
-import { FiltrosBusquedaProtocoloComponent } from './apps/rup/laboratorio/components/gestor-protocolos/filtros-busqueda/filtros-busqueda-protocolo.component';
-import { ProtocoloEncabezadoComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-encabezado/protocolo-encabezado.component';
-import { ProtocoloEncabezadoVistaComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-encabezado/protocolo-encabezado-vista/protocolo-encabezado-vista.component';
-import { ProtocoloEncabezadoEdicionComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-encabezado/protocolo-encabezado-edicion/protocolo-encabezado-edicion.component';
 import { VisualizacionReglasComponent } from './components/top/reglas/visualizacionReglas.component';
 
 // Home de Estadisticas

@@ -64,7 +64,7 @@
 
 <!--FIN SECCION PACIENTE-->
 
-<!-- SECCION PROTOCOLO -->
+<!-- SECCION PROTOCOLO -->      
 <ng-container *ngIf="!seleccionPaciente && showProtocoloDetalle">
     <!-- ENCABEZADO DE PROTOCOLO -->
     <protocolo-encabezado [modo]="modo" [protocolo]="modelo" [edicionDatosCabecera]="edicionDatosCabecera"
@@ -77,9 +77,9 @@
 
             <div class="row">
                 <div class="col">
-                    <tabla-datalle-protocolo [modo]="modo" [modelo]="modelo" [solicitudProtocolo]="solicitudProtocolo"
+                    <tabla-datalle-protocolo [modo]="this.contextoCache.modo" [modelo]="modelo" [solicitudProtocolo]="solicitudProtocolo" 
                         [practicasEjecucion]="practicasEjecucion" [busqueda]="busqueda" [editarListaPracticas]="editarListaPracticas"
-                        [validaciones]="validaciones" [showGestorAlarmas]='showGestorAlarmas' >
+                        [validaciones]="validaciones" [showGestorAlarmas]='showGestorAlarmas' (verHistorialResultadosEmitter)='showHistorialResultados($event)'>
                     </tabla-datalle-protocolo>
                 </div>
             </div>
@@ -107,4 +107,6 @@
         </div>
     </div>
 </ng-container>
+
+<chart-resultados-anteriores *ngIf='verHistorialResultados'  [practica]='historialResultados'></chart-resultados-anteriores>
 <!--FIN SECCION PRTOCOLO -->

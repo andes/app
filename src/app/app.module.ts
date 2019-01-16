@@ -371,6 +371,7 @@ import { SolicitudManualComponent } from './components/prestamosHC/solicitudes/s
 
 
 // SIL
+import { ProtocoloCacheService } from './apps/rup/laboratorio/services/protocoloCache.service';
 import { ProtocoloService } from './apps/rup/laboratorio/services/protocolo.service';
 import { PracticaService } from './apps/rup/laboratorio/services/practica.service';
 import { HojaTrabajoService } from './apps/rup/laboratorio/services/hojatrabajo.service';
@@ -393,6 +394,7 @@ import { ImpresionHojatrabajoComponent } from './apps/rup/laboratorio/components
 import { EncabezadoHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/encabezado-hojatrabajo/encabezado-hojatrabajo.component';
 import { CargaHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/carga-hojatrabajo/carga-hojatrabajo.component';
 import { GrillaHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/grilla-hojatrabajo/grilla-hojatrabajo.component';
+import { CharHistorialResultadoComponent } from './apps/rup/laboratorio/components/protocolos/chart-resultados-anteriores/chart-resultados-anteriores.component';
 
 
 import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
@@ -673,6 +675,7 @@ registerLocaleData(localeEs, 'es');
         EncabezadoHojatrabajoComponent,
         CargaHojatrabajoComponent,
         GrillaHojatrabajoComponent,
+        CharHistorialResultadoComponent,
 
         // MPI
         PacienteBuscarComponent,
@@ -731,6 +734,7 @@ registerLocaleData(localeEs, 'es');
         PracticaService,
         HojaTrabajoService,
         ProtocoloService,
+        ProtocoloCacheService,
         AreaLaboratorioService,
         FinanciadorService,
         ParentescoService,

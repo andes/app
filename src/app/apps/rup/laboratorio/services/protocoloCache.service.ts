@@ -1,4 +1,3 @@
-import { IPrestacion } from './../../../../interfaces/turnos/IPrestacion';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
@@ -6,18 +5,14 @@ import { Observable } from 'rxjs';
 Injectable();
 export class ProtocoloCacheService {
 
-    private protocoloCache = new BehaviorSubject<any>(null);
+    private contextoCache = new BehaviorSubject<any>({titulo: 'carga', modo: 'carga'});
 
-    setPrestacion(prestacion: IPrestacion) {
-        this.protocoloCache.next(prestacion);
+    setContextoCache(prestacion: any) {
+        this.contextoCache.next(prestacion);
     }
 
-    getPrestacion(): Observable<any> {
-        return this.protocoloCache.asObservable();
-    }
-
-    clearAgenda() {
-        this.protocoloCache.next(null);
+    getContextoCache(): Observable<any> {
+        return (this.contextoCache.asObservable().source as any)._value;
     }
 }
 

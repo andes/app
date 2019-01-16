@@ -1,4 +1,3 @@
-import { forEach } from '@angular/router/src/utils/collection';
 import { TablaDatalleProtocoloComponent } from './tabla-detalle-protocolo/tabla-datalle-protocolo.component';
 import { PracticaService } from './../../services/practica.service';
 import { ProtocoloService } from './../../services/protocolo.service';
@@ -13,6 +12,7 @@ import { PrestacionesService } from '../../../../../modules/rup/services/prestac
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Constantes } from '../../controllers/constants';
 import { PacienteBuscarResultado } from '../../../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
+import { ProtocoloCacheService } from '../../services/protocoloCache.service';
 
 @Component({
     selector: 'protocolo-detalle',
@@ -41,13 +41,15 @@ export class ProtocoloDetalleComponent
     public pacientes;
     public pacienteActivo;
     public mostrarListaMpi: Boolean = false;
+    public contextoCache;
 
     practicasEjecucion;
     showObservaciones: Boolean = false;
     solicitudProtocolo: any;
     mostrarMasHeader: Boolean = false;
     showGestorAlarmas: Boolean = false;
-
+    verHistorialResultados: Boolean = false;
+    historialResultados;
     validaciones = [];
 
     @ViewChild(TablaDatalleProtocoloComponent)
@@ -63,11 +65,9 @@ export class ProtocoloDetalleComponent
     @Input() showProtocoloDetalle: Boolean;
     @Input() mostrarCuerpoProtocolo: Boolean;
     @Input() protocolos: any;
-    @Input() modo: string;
     @Input() indexProtocolo: any;
     @Input() busqueda: any;
     @Input() editarListaPracticas;
-    @Input() titulo;
 
     listado: any;
     seleccion: any;
@@ -94,16 +94,16 @@ export class ProtocoloDetalleComponent
         this.modelo = value;
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
         this.practicasEjecucion = this.modelo.ejecucion.registros;
-        // this.tablaDetalleProtocoloComponent.practicasEjecucion = this.practicasEjecucion;
-        this.showBotonesGuardar = (this.modo !== 'recepcion');
+        this.contextoCache = this.protocoloCacheService.getContextoCache();
 
-        if (this.practicasEjecucion.length > 0 && (this.modo === 'puntoInicio' || this.modo === 'recepcion' || this.modo === 'control')) {
+        this.showBotonesGuardar = (this.contextoCache.modo !== 'recepcion');
+
+        if (this.practicasEjecucion.length > 0 && (this.contextoCache.modo === 'puntoInicio' || this.contextoCache.modo === 'recepcion' || this.contextoCache.modo === 'control')) {
             this.cargarCodigosPracticas();
         }
 
-        if ((this.modo === 'puntoInicio' || this.modo === 'recepcion') && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
+        if ((this.contextoCache.modo === 'puntoInicio' || this.contextoCache.modo === 'recepcion') && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
             this.editarDatosCabecera();
-            // this.seleccionPaciente = this.modo === 'recepcion';
         } else {
             this.aceptarEdicionCabecera();
         }
@@ -151,7 +151,8 @@ export class ProtocoloDetalleComponent
         private servicioPrestacion: PrestacionesService,
         private servicioProtocolo: ProtocoloService,
         private servicioProfesional: ProfesionalService,
-        private servicioPractica: PracticaService
+        private servicioPractica: PracticaService,
+        private protocoloCacheService: ProtocoloCacheService
     ) { }
 
     ngOnInit() {
@@ -211,8 +212,6 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     editarDatosCabecera() {
-        // this.edicionDatosCabecera = (this.modo !== 'puntoInicio');
-        // this.mostrarCuerpoProtocolo = (this.modo === 'puntoInicio');
         this.edicionDatosCabecera = true;
         this.mostrarCuerpoProtocolo = false;
         this.seleccionPaciente = false;
@@ -406,7 +405,7 @@ export class ProtocoloDetalleComponent
             params.op = 'nuevoProtocoloLaboratorio';
             params.estado = { tipo: 'ejecucion' };
             params.solicitud = solicitud;
-        } else if (this.modo === 'validacion' && this.isProtocoloValidado()) {
+        } else if (this.contextoCache.modo === 'validacion' && this.isProtocoloValidado()) {
             params.op = 'estadoPush';
             params.estado = Constantes.estadoValidada;
         } else {
@@ -440,14 +439,14 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     private async actualizarProtocolo(next) {
-        if (this.modo === 'validacion') {
+        if (this.contextoCache.modo === 'validacion') {
             this.setearEstadosValidacion();
         }
 
         this.servicioPrestacion.patch(this.modelo.id, this.getParams()).subscribe(async () => {
 
             let alertasValidadas = [];
-            if (this.modo === 'validacion') {
+            if (this.contextoCache.modo === 'validacion') {
                 alertasValidadas = this.validaciones.filter(e => e.validado && e.esValorCritico);
             }
 
@@ -455,12 +454,12 @@ export class ProtocoloDetalleComponent
                 this.validaciones = this.validaciones.filter(e => e.validado && e.esValorCritico);
                 this.validaciones.forEach( e => e.esValorCritico = false);
                 this.showGestorAlarmas = true;
-                this.titulo = 'Gestor de alarmas';
+                this.contextoCache.titulo = 'Gestor de alarmas';
 
             } else if (next) {
                 this.showGestorAlarmas = false;
                 this.protocolos.splice(this.indexProtocolo, 1);
-                if (this.modo === 'recepcion' || this.protocolos.length === 0) {
+                if (this.contextoCache.modo === 'recepcion' || this.protocolos.length === 0) {
                     this.mostrarCuerpoProtocolo = true;
                     this.volverAListaControEmit.emit();
                 } else {
@@ -502,16 +501,16 @@ export class ProtocoloDetalleComponent
     guardarSolicitud() {
         this.modelo.solicitud.tipoPrestacion = Constantes.conceptoPruebaLaboratorio;
 
-        if (this.modo === 'control' || this.modo === 'recepcion') {
+        if (this.contextoCache.modo === 'control' || this.contextoCache.modo === 'recepcion') {
             this.solicitudProtocolo.solicitudPrestacion.organizacionDestino = this.auth.organizacion;
             this.solicitudProtocolo.solicitudPrestacion.fechaTomaMuestra = this.fechaTomaMuestra;
 
             // await this.cargarPracticasAEjecucion();
-        } else if (this.modo === 'validacion' && !this.isProtocoloValidado()) {
+        } else if (this.contextoCache.modo === 'validacion' && !this.isProtocoloValidado()) {
             // this.actualizarEstadoValidacion();
         }
 
-        if (this.modo === 'recepcion') {
+        if (this.contextoCache.modo === 'recepcion') {
             this.iniciarProtocolo();
         } else {
             this.guardarProtocolo(true);
@@ -526,7 +525,7 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     guardarSolicitudYVolver(modoAVolver) {
-        this.modo = modoAVolver;
+        this.contextoCache.modo = modoAVolver;
         this.cargarProtocolo(this.modelo);
         this.guardarProtocolo(false);
     }
@@ -542,6 +541,12 @@ export class ProtocoloDetalleComponent
         });
 
         return await this.plex.confirm(msg.substring(0, msg.length - 2) + '. ¿Desea confirmar estos valores?');
+    }
+
+    showHistorialResultados(event) {
+        this.mostrarCuerpoProtocolo = false;
+        this.verHistorialResultados = true;
+        this.historialResultados = event;
     }
 
     actualizarEstadosValidacion() {

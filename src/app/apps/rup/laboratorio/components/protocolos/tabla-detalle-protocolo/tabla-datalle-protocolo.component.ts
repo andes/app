@@ -3,7 +3,7 @@ import { Auth } from '@andes/auth';
 import { ProtocoloService } from './../../../services/protocolo.service';
 import { IPractica } from '../../../interfaces/practica/IPractica';
 import { PracticaService } from '../../../services/practica.service';
-import { Input, Component, OnInit } from '@angular/core';
+import { Input, Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { getRespuestasGestionValoresCriticos } from '../../../../../../utils/enumerados';
 
 import { Plex } from '@andes/plex';
@@ -19,7 +19,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     ngOnInit() {
 
     }
-
+    @Output() verHistorialResultadosEmitter: EventEmitter<any> = new EventEmitter<any>();
     @Input() modo: any;
     @Input() modelo: any;
     @Input() solicitudProtocolo: any;
@@ -66,7 +66,6 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         public plex: Plex,
         public auth: Auth
     ) { }
-
 
     /**
      *
@@ -203,11 +202,11 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      * @memberof TablaDatalleProtocoloComponent
      */
     cargarResultadosAnterioresPV() {
-        this.practicasVista.forEach((practicaVista) => {
-            this.servicioProtocolo.getResultadosAnteriores(this.modelo.paciente.id, practicaVista.concepto.conceptId).subscribe(resultadosAnteriores => {
-                practicaVista.resultadosAnteriores = resultadosAnteriores;
-            });
-        });
+        // this.practicasVista.forEach((practicaVista) => {
+        //     this.servicioProtocolo.getResultadosAnteriores(this.modelo.paciente.id, practicaVista.concepto.conceptId).subscribe(resultadosAnteriores => {
+        //         practicaVista.resultadosAnteriores = resultadosAnteriores;
+        //     });
+        // });d
     }
 
     /**
@@ -559,6 +558,10 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         if (!event.value) {
             this.flagMarcarTodas = false;
         }
+    }
+
+    verHistorialResultados(element) {
+        this.verHistorialResultadosEmitter.emit(element.practica);
     }
 
 

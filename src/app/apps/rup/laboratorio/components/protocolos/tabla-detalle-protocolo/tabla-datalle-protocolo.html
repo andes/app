@@ -29,7 +29,7 @@
                     <td *ngIf='modo ==="control"'>
                         <span style='color:green'>
                             <!-- <p> {{ practicaVista?.resultadosAnteriores | json }}</p> -->
-                            <ng-container *ngIf="practicaVista.resultadosAnteriores && practicaVista.resultadosAnteriores.length > 0">
+                            <!-- <ng-container *ngIf="practicaVista.resultadosAnteriores && practicaVista.resultadosAnteriores.length > 0">
                                 {{ practicaVista.resultadosAnteriores[(practicaVista.resultadosAnteriores.length) -
                                 1]?.valor }}
                                 &nbsp;
@@ -38,7 +38,7 @@
                                 <br>
                                 {{ practicaVista.resultadosAnteriores[(practicaVista.resultadosAnteriores.length) -
                                 1]?.fecha | date: 'dd/MM/yyyy' }}
-                            </ng-container>
+                            </ng-container> -->
                             <!-- <ng-container *ngIf="!(practicaVistA.resultadosAnteriores.length > 0)">
                             <p>sin datos</p>
                         </ng-container> -->
@@ -109,15 +109,17 @@
                         <td *ngIf='modo ==="validacion"'>
                             <span style='color:green'>
                                 <!-- <p> {{ practicaCarga.practica.resultado?.resultadosAnteriores | json }}</p> -->
-                                <ng-container *ngIf="practicaCarga.practica.resultadosAnteriores.resultados.length > 0">
-                                    {{ practicaCarga.practica.resultadosAnteriores.resultados[0].valor }}
-                                    &nbsp;
-                                    <br>
-                                    {{ practicaCarga.practica.unidadMedida.nombre }}
-                                    <br>
-                                    {{ practicaCarga.practica.resultadosAnteriores.resultados[0].fecha | date: 'dd/MM/yyyy' }}
+                                <ng-container *ngIf="practicaCarga.practica.resultadosAnteriores && practicaCarga.practica.resultadosAnteriores.resultados.length > 0">
+                                    <span (click)="verHistorialResultados(practicaCarga)" >
+                                        {{ practicaCarga.practica.resultadosAnteriores.resultados[0].valor }}
+                                        &nbsp;
+                                        <br>
+                                        {{ practicaCarga.practica.unidadMedida.nombre }}
+                                        <br>
+                                        {{ practicaCarga.practica.resultadosAnteriores.resultados[0].fecha | date: 'dd/MM/yyyy' }}
+                                    </span>
                                 </ng-container>
-                                <ng-container *ngIf="!(practicaCarga.practica.resultadosAnteriores.resultados.length > 0)">
+                                <ng-container *ngIf="practicaCarga.practica.resultadosAnteriores &&  !(practicaCarga.practica.resultadosAnteriores.resultados.length > 0)">
                                     <p>sin datos</p>
                                 </ng-container>
                             </span>
