@@ -15,6 +15,7 @@ import { Component, OnInit, } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PacienteCacheService } from '../services/pacienteCache.service';
 import { BarrioService } from '../../../services/barrio.service';
+import { RelacionesPacientesComponent } from './relaciones-pacientes.component';
 
 @Component({
     selector: 'paciente-cru',
@@ -468,9 +469,10 @@ export class PacienteCruComponent implements OnInit {
             pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadNeuquen;
         }
         // Chequeamos cambios en relaciones del paciente
-        if (pacienteGuardar.documento) {
-            this.actualizarRelaciones(pacienteGuardar);
-        }
+        //    if (pacienteGuardar.documento) {
+
+        this.actualizarRelaciones(pacienteGuardar);
+        //   }
         this.pacienteService.save(pacienteGuardar).subscribe(
             resultadoSave => {
                 // Existen sugerencias de pacientes similares?
@@ -531,7 +533,7 @@ export class PacienteCruComponent implements OnInit {
                         referencia: unPacienteSave.id,
                         nombre: unPacienteSave.nombre,
                         apellido: unPacienteSave.apellido,
-                        documento: unPacienteSave.documento ? unPacienteSave.documento : '',
+                        documento: unPacienteSave.documento,
                         foto: unPacienteSave.foto ? unPacienteSave.foto : null
                     };
                     if (rel.referencia) {
@@ -542,7 +544,6 @@ export class PacienteCruComponent implements OnInit {
                     }
                 });
             }
-
         }
     }
 
@@ -586,6 +587,14 @@ export class PacienteCruComponent implements OnInit {
     notasNotification(notasNew) {
         this.pacienteModel.notas = notasNew;
     }
+
+
+    actualizarRelacionesBorradas(arrayBorradas: any[]) {
+        this.relacionesBorradas = arrayBorradas;
+    }
+
+
+    // ------------------- PARA VALIDACION ---------------------
 
     validarPaciente(event) {
         if (!event.formValid) {

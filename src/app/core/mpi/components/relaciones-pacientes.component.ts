@@ -4,7 +4,9 @@ import {
     Input,
     HostBinding,
     ViewChild,
-    ElementRef
+    ElementRef,
+    Output,
+    EventEmitter
 } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ParentescoService } from '../../../services/parentesco.service';
@@ -18,10 +20,20 @@ import { IPaciente } from '../interfaces/IPaciente';
 })
 export class RelacionesPacientesComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
-    @Input() paciente: IPaciente;
-    @Input() seleccion: IPaciente;
+    @Input()
+    set paciente(valor: IPaciente) {
+        this._paciente = valor;
+        if (valor.relaciones) {
+            this.relacionesIniciales = valor.relaciones;
+        }
+    }
+    get paciente(): IPaciente {
+        return this._paciente;
+    }
+    @Output() arrayBorradas: EventEmitter<any[]> = new EventEmitter<any[]>();
     @ViewChild('listadoRel') listado: ElementRef;
 
+    _paciente: IPaciente;
     parentescoModel: any[] = [];
     relacionesBorradas: any[] = [];
     relacionesIniciales: any[] = [];
@@ -48,7 +60,7 @@ export class RelacionesPacientesComponent implements OnInit {
 
         // Se guarda estado de las relaciones al comenzar la edición
         if (this.paciente.relaciones && this.paciente.relaciones.length) {
-            this.relacionesIniciales = this.paciente.relaciones.slice(0, this.paciente.relaciones.length);
+            this.relacionesIniciales = this.paciente.relaciones.slice(0, this.paciente.relaciones.length - 1);
         }
     }
 
@@ -100,7 +112,7 @@ export class RelacionesPacientesComponent implements OnInit {
             // Control: Si los datos de las relaciones agregadas anteriormente no estan completas, no se permitira agregar nuevas.
             if (this.paciente.relaciones && this.paciente.relaciones.length) {
                 ultimaRelacion = this.paciente.relaciones[this.paciente.relaciones.length - 1];
-                permitirNuevaRelacion = Boolean(ultimaRelacion.documento && ultimaRelacion.apellido && ultimaRelacion.nombre && ultimaRelacion.relacion);
+                permitirNuevaRelacion = ultimaRelacion.relacion; // Boolean(ultimaRelacion.documento && ultimaRelacion.apellido && ultimaRelacion.nombre && ultimaRelacion.relacion);
             }
 
             if (permitirNuevaRelacion) {
@@ -152,6 +164,7 @@ export class RelacionesPacientesComponent implements OnInit {
                 this.relacionesBorradas.push(this.paciente.relaciones[i]);
             }
             this.paciente.relaciones.splice(i, 1);
+            this.arrayBorradas.emit(this.relacionesBorradas);
         }
     }
 }

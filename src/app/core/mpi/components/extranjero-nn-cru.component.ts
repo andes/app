@@ -489,4 +489,9 @@ export class ExtranjeroNNCruComponent implements OnInit {
     notasNotification(notasNew) {
         this.pacienteModel.notas = notasNew;
     }
+
+    actualizarRelacionesBorradas(arrayBorradas: any[]) {
+        this.relacionesBorradas = arrayBorradas;
+    }
+
 }
