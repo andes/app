@@ -28,7 +28,6 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     practicasVista = [];
     practicasEjecucion = [];
     alertasValReferencia = [];
-    // alertasValCriticos = [];
     @Input() alertasValidadas = [];
     @Input() showGestorAlarmas: Boolean;
     showSelectProfesional: Boolean;
@@ -92,9 +91,9 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      * @memberof TablaDatalleProtocolo
      */
     cargarPracticasVista() {
-        let practicasSolicitud = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas;
+        const practicasSolicitud = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas;
         this.practicasVista = this.practicasEjecucion
-            .filter(pe => practicasSolicitud.some(ps => ps._id === pe._id))
+            .filter(pe => practicasSolicitud.some(ps => ps._id === pe.valor.idPractica))
             .filter(p => ((this.busqueda.areas.length === 0) || this.busqueda.areas.some(id => id === p.area._id)));
     }
 
@@ -386,7 +385,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
                         this.practicasEjecucion.push(this.generateRegistroEjecucion(res));
                     });
                     this.cargarListaPracticaCarga().then(() => {
-                        if (this.modo === 'validacion') {
+                        if (this.modo === Constantes.modoIds.validacion) {
                             this.cargarResultadosAnteriores();
                         }
                     });
@@ -447,7 +446,6 @@ export class TablaDatalleProtocoloComponent implements OnInit {
             // TODO: Debe tomar valores de referencia según presentación actica y edad y sexo de paciente, NO el primero de todos por edefecto, como está actulamente-
 
             this.alertasValReferencia = this.alertasValReferencia.filter(e => e.id !== objetoPractica.registro._id);
-            // this.alertasValCriticos = this.alertasValCriticos.filter(e => e.id !== objetoPractica.registro._id);
 
             if (this.verificarValorCritico(objetoPractica)) {
                 // this.alertasValCriticos.push(alerta);
@@ -560,6 +558,12 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         }
     }
 
+    /**
+     *
+     *
+     * @param {*} element
+     * @memberof TablaDatalleProtocoloComponent
+     */
     verHistorialResultados(element) {
         this.verHistorialResultadosEmitter.emit(element.practica);
     }

@@ -91,19 +91,12 @@ export class GestorProtocolosComponent implements OnInit {
                 let id = params['id'];
                 this.servicePaciente.getById(id).subscribe(pacienteMPI => {
                     this.paciente = pacienteMPI;
-                    this.ocultarPanelLateral = false;
+                    this.ocultarPanelLateral = true;
                     this.mostrarFomularioPacienteSinTurno();
                     this.seleccionPaciente = false;
                     this.seleccionarProtocolo(this.protocolo);
+                    this.protocoloCacheService.cambiarModo(Constantes.modoIds.recepcionSinTurno);
                     this.contextoCache.mostrarCuerpoProtocolo = false;
-                    // this.resetearProtocolo(this.paciente);
-                    // this.editarListaPracticas = true;
-                    // this.edicionDatosCabecera = true;
-                    // this.ocultarPanelLateral = true;
-                    // this.showProtocoloDetalle = true;
-                    // this.indexProtocolo = 0;
-                    // this.seleccionPaciente = false;
-                    // this.contextoCache.mostrarCuerpoProtocolo = true;
                 });
             }
         });
@@ -112,9 +105,6 @@ export class GestorProtocolosComponent implements OnInit {
     setModo() {
 
     }
-    // ngOnDestroy() {
-    //     this.routeParams.unsubscribe();
-    // }
 
     onTabChange($event) {
         this.protocoloCacheService.cambiarModo($event);
@@ -191,7 +181,8 @@ export class GestorProtocolosComponent implements OnInit {
     seleccionarProtocolo(value) {
         // Si se presionó el boton suspender, no se muestran otros protocolos hasta que se confirme o cancele la acción.
         if (value.protocolo) {
-            this.contextoCache.mostrarCuerpoProtocolo = (this.contextoCache.modo === 'control') || (this.contextoCache.modo === 'carga') || (this.contextoCache.modo === 'validacion') || (this.contextoCache.modo === Constantes.modoIds.recepcionSinTurno);
+            this.contextoCache.edicionDatosCabecera = false;
+            this.contextoCache.mostrarCuerpoProtocolo = (this.contextoCache.modo !== 'recepcion');
             this.protocolo = value.protocolo;
             this.indexProtocolo = value.index;
             this.showListarProtocolos = false;
@@ -200,6 +191,7 @@ export class GestorProtocolosComponent implements OnInit {
             this.showCargarSolicitud = true;
             this.showBotonAceptar = false;
             this.showBotonGuardar = true;
+            this.editarListaPracticas = (this.contextoCache.modo !== 'recepcion');
             this.ocultarPanelLateral = (this.contextoCache.modo === 'recepcion') || (this.contextoCache.modo === Constantes.modoIds.recepcionSinTurno);
         }
     }
@@ -251,19 +243,7 @@ export class GestorProtocolosComponent implements OnInit {
             this.contextoCache.mostrarCuerpoProtocolo = true;
             this.showBotonAceptar = true;
         }
-
-        // this.contextoCache.mostrarCuerpoProtocolo = (this.contextoCache.modo === 'control') || (this.contextoCache.modo === 'carga') || (this.contextoCache.modo === 'validacion') || (this.contextoCache.modo === 'puntoInicio');
-        //     this.showListarProtocolos = false;
-        //     this.showProtocoloDetalle = true;
-        //     this.seleccionPaciente = false;
-        //     this.showCargarSolicitud = true;
-        //     this.ocultarPanelLateral = (this.contextoCache.modo === 'recepcion') || (this.contextoCache.modo === 'puntoInicio');
-        //     this.showBotonesGuardar = (this.contextoCache.modo !== 'recepcion');
     }
-
-    // mostrarBotonesGuardarProtocoloFooter($event) {
-    //     this.showBotonesGuardar = $event;
-    // }
 
     /**
      *
@@ -276,7 +256,6 @@ export class GestorProtocolosComponent implements OnInit {
             this.contextoCache.modo = this.contextoCache.modoAVolver;
             this.protocoloDetalleComponent.guardarSolicitudYVolver();
             this.contextoCache.modoAVolver = null;
-            // }
         } else {
             this.showBotonAceptar = false;
             this.showBotonGuardar = true;
@@ -284,6 +263,42 @@ export class GestorProtocolosComponent implements OnInit {
         }
     }
 
+
+    /**
+     *
+     *
+     * @memberof GestorProtocolosComponent
+     */
+    volverAControl() {
+        this.protocoloDetalleComponent.cargarCodigosPracticas();
+        this.ocultarPanelLateral = true;
+        this.contextoCache.modoAVolver = this.contextoCache.modo;
+        this.contextoCache.modo = 'control';
+        this.protocoloCacheService.cambiarModo(Constantes.modoIds.control);
+        this.showBotonAceptar = true;
+        this.showBotonGuardar = false;
+    }
+
+    /**
+     *
+     *
+     * @memberof GestorProtocolosComponent
+     */
+    guardarSolicitud() {
+        this.protocoloDetalleComponent.guardarSolicitud();
+    }
+
+    /**
+     *
+     *
+     * @memberof GestorProtocolosComponent
+     */
+    salirDeHistoricoResultadoa() {
+        this.contextoCache.titulo = Constantes.titulos.validacion;
+        this.contextoCache.botonesAccion = 'validacion';
+        this.contextoCache.mostrarCuerpoProtocolo = true;
+        this.contextoCache.verHistorialResultados = false;
+    }
 
     /**
      * Guarda en el local storage del browser la selección de filtros de búsqueda para futuras búsquedas
@@ -310,27 +325,6 @@ export class GestorProtocolosComponent implements OnInit {
 
         localStorage.setItem('filtros', JSON.stringify(filtrosPorDefecto));
         this.plex.toast('success', 'Se recordará su selección de filtro en sus próximas sesiones.', 'Información', 3000);
-    }
-
-    volverAControl() {
-        this.protocoloDetalleComponent.cargarCodigosPracticas();
-        this.ocultarPanelLateral = true;
-        this.contextoCache.modoAVolver = this.contextoCache.modo;
-        this.contextoCache.modo = 'control';
-        this.protocoloCacheService.cambiarModo(Constantes.modoIds.control);
-        this.showBotonAceptar = true;
-        this.showBotonGuardar = false;
-    }
-
-    guardarSolicitud() {
-        this.protocoloDetalleComponent.guardarSolicitud();
-    }
-
-    salirDeHistoricoResultadoa() {
-        this.contextoCache.titulo = Constantes.titulos.validacion;
-        this.contextoCache.botonesAccion = 'validacion';
-        this.contextoCache.mostrarCuerpoProtocolo = true;
-        this.contextoCache.verHistorialResultados = false;
     }
 
     // getlocalStorage() {

@@ -109,16 +109,16 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     cargarCodigosPracticas() {
-        let ids = this.practicasEjecucion.map((reg) => { return reg._id; });
+        let ids = this.practicasEjecucion.map((reg) => { return reg.valor.idPractica; });
         this.servicioPractica.getCodigosPracticas(ids).subscribe(idsCodigos => {
-            this.practicasEjecucion.forEach(practica => {
+            this.practicasEjecucion.forEach(reg => {
                 let p = idsCodigos.filter((idCodigo) => {
-                    return idCodigo._id === practica._id;
+                    return idCodigo._id === reg.valor.idPractica;
                 })[0];
 
                 if (p) {
-                    practica.codigo = p.codigo;
-                    practica.area = p.area;
+                    reg.codigo = p.codigo;
+                    reg.area = p.area;
                 }
             });
         });
@@ -534,19 +534,16 @@ export class ProtocoloDetalleComponent
         return await this.plex.confirm(msg.substring(0, msg.length - 2) + '. ¿Desea confirmar estos valores?');
     }
 
+    /**
+     *
+     *
+     * @param {*} event
+     * @memberof ProtocoloDetalleComponent
+     */
     showHistorialResultados(event) {
         this.contextoCache.mostrarCuerpoProtocolo = false;
         this.contextoCache.verHistorialResultados = true;
         this.historialResultados = event;
     }
 
-    actualizarEstadosValidacion() {
     }
-
-    // getConfiguracionResultado(idPractica) {
-    //     return new Promise( async (resolve) => {
-    //         await this.servicioPractica.findByIds( {id: idPractica} ).subscribe(
-    //             (practicas : any) => { resolve(practicas[0] ? practicas[0].resultado : null); });
-    //     });
-    // }
-}
