@@ -1,3 +1,4 @@
+import { ProtocoloCacheService } from './../../../services/protocoloCache.service';
 import { Input, Output, Component, OnInit, EventEmitter } from '@angular/core';
 
 @Component({
@@ -10,9 +11,8 @@ export class ProtocoloEncabezadoComponent implements OnInit {
 
     modelo: any;
     solicitudProtocolo: any;
+    contextoCache;
 
-    @Input() modo: String;
-    @Input() edicionDatosCabecera: Boolean;
     @Input() seleccionPaciente: Boolean;
     @Input('protocolo')
     set protocolo(value: any) {
@@ -26,10 +26,10 @@ export class ProtocoloEncabezadoComponent implements OnInit {
     @Output() edicionDatosCabeceraEmitter = new EventEmitter<any>();
     @Output() cambiarPacienteEmitter = new EventEmitter<any>();
 
-    constructor(
-    ) { }
+    constructor( public protocoloCacheService: ProtocoloCacheService ) { }
 
     ngOnInit() {
+        this.contextoCache = this.protocoloCacheService.getContextoCache();
     }
 
     cambiarPaciente() {
@@ -37,7 +37,7 @@ export class ProtocoloEncabezadoComponent implements OnInit {
     }
 
     editarDatosCabecera() {
-        this.edicionDatosCabecera = true;
+        this.contextoCache.edicionDatosCabecera = true;
         this.edicionDatosCabeceraEmitter.emit(true);
     }
 

@@ -16,13 +16,9 @@ export class ProtocoloEncabezadoEdicionComponent implements OnInit {
     mostrarMasOpciones: Boolean;
     organizacion: any;
     origen: any;
-    edicionDatosCabecera: Boolean;
     @Input() seleccionPaciente: Boolean;
     @Input() modo: String;
-    @Input('edicionDatosCabecera')
-    set eDC(value) {
-        this.edicionDatosCabecera = value;
-    }
+
     @Input('protocolo')
     set protocolo(value: any) {
         if (value) {

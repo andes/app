@@ -23,7 +23,6 @@
                     <div class="col">
 
                         <div class="form-group">
-                            <!-- <plex-button label="Recepción sin turno" type="warning" (click)="recepcionSinTurno()" class="d-flex flex-row-reverse"></plex-button> -->
                             <label for="paciente-buscar" class="form-control-label">Buscar paciente</label>
                             <paciente-buscar *ngIf="!showCreateUpdate" (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
                                 (searchClear)="searchStart()"></paciente-buscar>
@@ -76,8 +75,6 @@
                             </ng-container>
                         </ng-container>
                     </div>
-
-
                 </div>
             </plex-box>
         </div>

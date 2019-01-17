@@ -16,15 +16,19 @@ export class CharHistorialResultadoComponent implements OnInit {
     public barChartType = 'line';
     public barChartLegend = false;
     public barChartData: any[] = [];
+    public contextoCache;
 
     @Input() practica;
 
     constructor(
-        public protocoloCache: ProtocoloCacheService,
+        public protocoloCache: ProtocoloCacheService
     ) { }
 
 
     ngOnInit() {
+        this.contextoCache = this.protocoloCache.getContextoCache();
+        this.contextoCache.titulo = 'Histórico de resultados: ' +  this.practica.nombre;
+        this.contextoCache.botonesAccion = 'historicoResultados';
         this.generarEtiquetasCurva();
     }
 
@@ -96,7 +100,5 @@ export class CharHistorialResultadoComponent implements OnInit {
             //     }
             // }
         };
-        console.log('min',     this.practica.resultadosAnteriores.resultados[this.practica.resultadosAnteriores.resultados.length - 1].fecha);
-            console.log('max', this.practica.resultadosAnteriores.resultados[0].fecha);
     }
 }

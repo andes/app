@@ -48,7 +48,6 @@ export class ProtocoloDetalleComponent
     solicitudProtocolo: any;
     mostrarMasHeader: Boolean = false;
     showGestorAlarmas: Boolean = false;
-    verHistorialResultados: Boolean = false;
     historialResultados;
     validaciones = [];
 
@@ -57,13 +56,9 @@ export class ProtocoloDetalleComponent
 
     @Output() newSolicitudEmitter: EventEmitter<any> = new EventEmitter<any>();
     @Output() volverAListaControEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
-    @Output() mostrarCuerpoProtocoloEmit = new EventEmitter<any>();
     @Output() edicionDatosCabeceraEmitter = new EventEmitter<any>();
 
-    @Input() edicionDatosCabecera: Boolean;
     @Input() seleccionPaciente: Boolean;
-    @Input() showProtocoloDetalle: Boolean;
-    @Input() mostrarCuerpoProtocolo: Boolean;
     @Input() protocolos: any;
     @Input() indexProtocolo: any;
     @Input() busqueda: any;
@@ -95,17 +90,16 @@ export class ProtocoloDetalleComponent
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
         this.practicasEjecucion = this.modelo.ejecucion.registros;
         this.contextoCache = this.protocoloCacheService.getContextoCache();
-
         this.showBotonesGuardar = (this.contextoCache.modo !== 'recepcion');
 
-        if (this.practicasEjecucion.length > 0 && (this.contextoCache.modo === 'puntoInicio' || this.contextoCache.modo === 'recepcion' || this.contextoCache.modo === 'control')) {
+        if (this.practicasEjecucion.length > 0 && (this.contextoCache.modo === Constantes.modoIds.recepcionSinTurno || this.contextoCache.modo === 'recepcion' || this.contextoCache.modo === 'control')) {
             this.cargarCodigosPracticas();
         }
 
-        if ((this.contextoCache.modo === 'puntoInicio' || this.contextoCache.modo === 'recepcion') && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
+        if ((this.contextoCache.modo === Constantes.modoIds.recepcionSinTurno || this.contextoCache.modo === 'recepcion') && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
             this.editarDatosCabecera();
         } else {
-            this.aceptarEdicionCabecera();
+            // this.aceptarEdicionCabecera();
         }
     }
 
@@ -122,8 +116,10 @@ export class ProtocoloDetalleComponent
                     return idCodigo._id === practica._id;
                 })[0];
 
-                practica.codigo = p.codigo;
-                practica.area = p.area;
+                if (p) {
+                    practica.codigo = p.codigo;
+                    practica.area = p.area;
+                }
             });
         });
     }
@@ -170,7 +166,6 @@ export class ProtocoloDetalleComponent
     seleccionarPaciente(paciente: any): void {
         this.modelo.paciente = paciente;
         this.seleccionPaciente = false;
-        this.showProtocoloDetalle = true;
     }
 
     /**
@@ -212,12 +207,10 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     editarDatosCabecera() {
-        this.edicionDatosCabecera = true;
-        this.mostrarCuerpoProtocolo = false;
+        this.contextoCache.edicionDatosCabecera = true;
+        this.contextoCache.mostrarCuerpoProtocolo = false;
         this.seleccionPaciente = false;
         this.showBotonesGuardar = false;
-        this.mostrarCuerpoProtocoloEmit.emit(this.mostrarCuerpoProtocolo);
-
         this.edicionDatosCabeceraEmitter.emit();
     }
 
@@ -228,11 +221,10 @@ export class ProtocoloDetalleComponent
      */
     aceptarEdicionCabecera() {
         this.editarListaPracticas = true;
-        this.edicionDatosCabecera = false;
-        this.seleccionPaciente = false;
-        this.mostrarCuerpoProtocolo = true;
-        this.mostrarCuerpoProtocoloEmit.emit(this.mostrarCuerpoProtocolo);
         this.showBotonesGuardar = true;
+        this.seleccionPaciente = false;
+        this.contextoCache.edicionDatosCabecera = false;
+        this.contextoCache.mostrarCuerpoProtocolo = true;
     }
 
     /**
@@ -424,7 +416,7 @@ export class ProtocoloDetalleComponent
     private guardarNuevoProtocolo() {
         this.modelo.estados = [{ tipo: 'ejecucion' }];
         this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
-            this.mostrarCuerpoProtocolo = true;
+            this.contextoCache.mostrarCuerpoProtocolo = true;
             this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
             this.volverAListaControEmit.emit();
         });
@@ -460,7 +452,7 @@ export class ProtocoloDetalleComponent
                 this.showGestorAlarmas = false;
                 this.protocolos.splice(this.indexProtocolo, 1);
                 if (this.contextoCache.modo === 'recepcion' || this.protocolos.length === 0) {
-                    this.mostrarCuerpoProtocolo = true;
+                    this.contextoCache.mostrarCuerpoProtocolo = true;
                     this.volverAListaControEmit.emit();
                 } else {
                     if (!this.protocolos[this.indexProtocolo]) {
@@ -470,7 +462,7 @@ export class ProtocoloDetalleComponent
                 }
                 this.plex.toast('success', this.modelo.ejecucion.registros[0].nombre, 'Solicitud guardada', 4000);
             } else {
-                this.mostrarCuerpoProtocolo = true;
+                this.contextoCache.mostrarCuerpoProtocolo = true;
                 this.volverAListaControEmit.emit();
             }
         });
@@ -524,8 +516,7 @@ export class ProtocoloDetalleComponent
      * @param {any} modoAVolver
      * @memberof ProtocoloDetalleComponent
      */
-    guardarSolicitudYVolver(modoAVolver) {
-        this.contextoCache.modo = modoAVolver;
+    guardarSolicitudYVolver() {
         this.cargarProtocolo(this.modelo);
         this.guardarProtocolo(false);
     }
@@ -544,8 +535,8 @@ export class ProtocoloDetalleComponent
     }
 
     showHistorialResultados(event) {
-        this.mostrarCuerpoProtocolo = false;
-        this.verHistorialResultados = true;
+        this.contextoCache.mostrarCuerpoProtocolo = false;
+        this.contextoCache.verHistorialResultados = true;
         this.historialResultados = event;
     }
 

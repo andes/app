@@ -1,4 +1,4 @@
-<div class="paciente-seleccionado edicion" *ngIf="edicionDatosCabecera">
+<div class="paciente-seleccionado edicion" *ngIf="contextoCache.edicionDatosCabecera">
     <span *ngIf="solicitudProtocolo.solicitudPrestacion.numeroProtocolo" class="badge badge-success">
         <h2>{{ solicitudProtocolo.solicitudPrestacion.numeroProtocolo?.numeroCompleto }}</h2>
     </span>
@@ -24,8 +24,7 @@
     </div>
 </div>
 <div>
-    <span *ngIf="edicionDatosCabecera && seleccionPaciente">
-        <!-- <plex-button label="Recepción sin turno" type="warning" (click)="recepcionSinTurno()" class="d-flex flex-row-reverse"></plex-button> -->
+    <span *ngIf="contextoCache.edicionDatosCabecera && seleccionPaciente">
         <label for="paciente-buscar" class="form-control-label">Cambiar paciente</label>
         <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="searchStart()"></paciente-buscar>
         <!-- Tabla / listado de pacientes -->
@@ -64,22 +63,23 @@
 
 <!--FIN SECCION PACIENTE-->
 
-<!-- SECCION PROTOCOLO -->      
-<ng-container *ngIf="!seleccionPaciente && showProtocoloDetalle">
+<!-- SECCION PROTOCOLO -->
+<ng-container *ngIf="!seleccionPaciente">
     <!-- ENCABEZADO DE PROTOCOLO -->
-    <protocolo-encabezado [modo]="modo" [protocolo]="modelo" [edicionDatosCabecera]="edicionDatosCabecera"
-        (edicionDatosCabeceraEmitter)="editarDatosCabecera()" (siguienteEmit)='siguiente()' (anteriorEmit)='anterior()'></protocolo-encabezado>
+    <protocolo-encabezado [protocolo]="modelo" (edicionDatosCabeceraEmitter)="editarDatosCabecera()"
+        (siguienteEmit)='siguiente()' (anteriorEmit)='anterior()'></protocolo-encabezado>
     <!-- FIN ENCABEZADO DE PROTOCOLO -->
 </ng-container>
-<ng-container *ngIf='mostrarCuerpoProtocolo'>
+<ng-container *ngIf='contextoCache.mostrarCuerpoProtocolo'>
     <plex-tabs>
         <plex-tab label="Análisis">
 
             <div class="row">
                 <div class="col">
-                    <tabla-datalle-protocolo [modo]="this.contextoCache.modo" [modelo]="modelo" [solicitudProtocolo]="solicitudProtocolo" 
+                    <tabla-datalle-protocolo [modo]="this.contextoCache.modo" [modelo]="modelo" [solicitudProtocolo]="solicitudProtocolo"
                         [practicasEjecucion]="practicasEjecucion" [busqueda]="busqueda" [editarListaPracticas]="editarListaPracticas"
-                        [validaciones]="validaciones" [showGestorAlarmas]='showGestorAlarmas' (verHistorialResultadosEmitter)='showHistorialResultados($event)'>
+                        [validaciones]="validaciones" [showGestorAlarmas]='showGestorAlarmas'
+                        (verHistorialResultadosEmitter)='showHistorialResultados($event)'>
                     </tabla-datalle-protocolo>
                 </div>
             </div>
@@ -97,7 +97,7 @@
     </plex-tabs>
     <!--OBSERVACIONES - RECEPCION-->
     <div class="row">
-        <div *ngIf="modo === 'puntoInicio' || modo === 'recepcion' || modo === 'control' || modo === 'carga'" class="col-12">
+        <div *ngIf="modo === 'recepcionSinTurno' || modo === 'recepcion' || modo === 'control' || modo === 'carga'" class="col-12">
             <plex-text [(ngModel)]="solicitudProtocolo.solicitudPrestacion.observaciones" label="Observaciones internas"
                 name="observaciones" multiline="true">
             </plex-text>
@@ -108,5 +108,5 @@
     </div>
 </ng-container>
 
-<chart-resultados-anteriores *ngIf='verHistorialResultados'  [practica]='historialResultados'></chart-resultados-anteriores>
+<chart-resultados-anteriores *ngIf='contextoCache.verHistorialResultados' [practica]='historialResultados'></chart-resultados-anteriores>
 <!--FIN SECCION PRTOCOLO -->

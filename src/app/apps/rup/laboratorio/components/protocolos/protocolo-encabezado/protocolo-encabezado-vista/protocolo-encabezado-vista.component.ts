@@ -10,7 +10,6 @@ export class ProtocoloEncabezadoVistaComponent implements OnInit {
     modelo: any;
     solicitudProtocolo: any;
     mostrarMasOpciones: boolean;
-    @Input() edicionDatosCabecera: boolean;
     @Input() modo: string;
     @Input('protocolo')
     set protocolo(value: any) {
@@ -19,8 +18,8 @@ export class ProtocoloEncabezadoVistaComponent implements OnInit {
         }
     }
 
-    @Output() siguienteEmit = new EventEmitter<any>();
-    @Output() anteriorEmit = new EventEmitter<any>();
+    @Output() siguienteEmitter = new EventEmitter<any>();
+    @Output() anteriorEmitter = new EventEmitter<any>();
     @Output() edicionDatosCabeceraEmitter = new EventEmitter<any>();
 
     constructor() { }
@@ -34,11 +33,11 @@ export class ProtocoloEncabezadoVistaComponent implements OnInit {
     }
 
     siguiente() {
-        this.siguienteEmit.emit();
+        this.siguienteEmitter.emit();
     }
 
     anterior() {
-        this.anteriorEmit.emit();
+        this.anteriorEmitter.emit();
     }
 
     editarDatosCabecera() {

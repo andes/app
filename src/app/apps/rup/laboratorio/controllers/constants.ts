@@ -16,6 +16,22 @@ export const Constantes = {
         conceptId: '122869004',
         semanticTag: 'procedimiento'
     },
-    estadoValidada: { tipo: 'validada' }
+    estadoValidada: { tipo: 'validada' },
+    titulos : {
+        validacion: 'Validación de Resultados',
+        recepcion: 'Recepcionar Paciente',
+        recepcionSinTurno: 'Recepcionar Paciente Sin Turno',
+        control: 'Auditoría de Protocolos',
+        carga: 'Carga de Resultados',
+        listado: 'Listado'
+    },
+    modoIds: {
+        recepcion: 0,
+        control: 1,
+        carga: 2,
+        validacion: 3,
+        listado: 4,
+        recepcionSinTurno: 5,
+    }
 };
 

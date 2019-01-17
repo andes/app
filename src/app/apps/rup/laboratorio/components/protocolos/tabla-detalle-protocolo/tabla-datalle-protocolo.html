@@ -1,30 +1,29 @@
 <ng-container *ngIf='!showGestorAlarmas'>
-        <table class="table table-striped table-sm">
-                <thead>
-                    <th *ngIf='modo ==="puntoInicio" || modo ==="recepcion" || modo ==="control"' style='width: 100px;'>Cód.</th>
-                    <th>Descripción</th>
-                    <th *ngIf='modo ==="puntoInicio" || modo ==="recepcion" || modo ==="control"' class="float-center">S/Muestra</th>
-                    <th *ngIf='modo !=="puntoInicio" && modo !=="control" && modo !=="recepcion"' class="float-center">Valor</th>
-                    <th *ngIf='modo ==="validacion" || modo ==="control"' class="float-center">R. Anterior</th>
-                    <th *ngIf='modo !=="puntoInicio" && modo !=="control" && modo !=="recepcion"' class="float-center">UM</th>
-                    <th *ngIf='modo !=="puntoInicio" && modo !=="control" && modo !=="recepcion"' class="float-center">VR</th>
-                    <th class="float-center" *ngIf='modo === "validacion"'>
-                        <div>
-                            <plex-bool type="checkbox" [(ngModel)]="flagMarcarTodas" (change)="validarTodas($event)"
-                                name="validarTodos"></plex-bool>
-                        </div>Validar
-                    </th>
-                    <th class="float-center" *ngIf='modo !=="control" && modo !=="recepcion"'>Estado</th>
-                    <th *ngIf='modo === "recepcion" || modo === "control"'>Acciones</th>
-                    <th *ngIf='modo === "carga" || modo === "validacion"'>Observs.</th>
-                </thead>
-                <tbody>
-                    <ng-container *ngIf='modo ==="puntoInicio" || modo ==="recepcion" || modo ==="control"'>
-                        <tr class="hover" *ngFor="let practicaVista of practicasVista">
-                            <td>{{practicaVista.codigo}}</td>
-                            <td>{{practicaVista.nombre}}</td>
-                            <td>
-                                <plex-bool type="checkbox" [(ngModel)]="practicaVista.valor.resultado.sinMuestra" name="sinMuestra"></plex-bool>
+    <table class="table table-striped table-sm">
+        <thead>
+            <th *ngIf='modo ==="recepcionSinTurno" || modo ==="recepcion" || modo ==="control"' style='width: 100px;'>Cód.</th>
+            <th>Descripción</th>
+            <th *ngIf='modo ==="recepcionSinTurno" || modo ==="recepcion" || modo ==="control"' class="float-center">S/Muestra</th>
+            <th *ngIf='modo !=="recepcionSinTurno" && modo !=="control" && modo !=="recepcion"' class="float-center">Valor</th>
+            <th *ngIf='modo ==="validacion" || modo ==="control"' class="float-center">R. Anterior</th>
+            <th *ngIf='modo !=="recepcionSinTurno" && modo !=="control" && modo !=="recepcion"' class="float-center">UM</th>
+            <th *ngIf='modo !=="recepcionSinTurno" && modo !=="control" && modo !=="recepcion"' class="float-center">VR</th>
+            <th class="float-center" *ngIf='modo === "validacion"'>
+                <div>
+                    <plex-bool type="checkbox" [(ngModel)]="flagMarcarTodas" (change)="validarTodas($event)" name="validarTodos"></plex-bool>
+                </div>Validar
+            </th>
+            <th class="float-center" *ngIf='modo !=="control" && modo !=="recepcion"'>Estado</th>
+            <th *ngIf='modo === "recepcion" || modo === "control"'>Acciones</th>
+            <th *ngIf='modo === "carga" || modo === "validacion"'>Observs.</th>
+        </thead>
+        <tbody>
+            <ng-container *ngIf='modo ==="recepcionSinTurno" || modo ==="recepcion" || modo === "control"'>
+                <tr class="hover" *ngFor="let practicaVista of practicasVista">
+                    <td>{{practicaVista.codigo}}</td>
+                    <td>{{practicaVista.nombre}}</td>
+                    <td>
+                        <plex-bool type="checkbox" [(ngModel)]="practicaVista.valor.resultado.sinMuestra" name="sinMuestra"></plex-bool>
                     </td>
                     <td *ngIf='modo ==="control"'>
                         <span style='color:green'>
@@ -110,13 +109,14 @@
                             <span style='color:green'>
                                 <!-- <p> {{ practicaCarga.practica.resultado?.resultadosAnteriores | json }}</p> -->
                                 <ng-container *ngIf="practicaCarga.practica.resultadosAnteriores && practicaCarga.practica.resultadosAnteriores.resultados.length > 0">
-                                    <span (click)="verHistorialResultados(practicaCarga)" >
+                                    <span (click)="verHistorialResultados(practicaCarga)">
                                         {{ practicaCarga.practica.resultadosAnteriores.resultados[0].valor }}
                                         &nbsp;
                                         <br>
                                         {{ practicaCarga.practica.unidadMedida.nombre }}
                                         <br>
-                                        {{ practicaCarga.practica.resultadosAnteriores.resultados[0].fecha | date: 'dd/MM/yyyy' }}
+                                        {{ practicaCarga.practica.resultadosAnteriores.resultados[0].fecha | date:
+                                        'dd/MM/yyyy' }}
                                     </span>
                                 </ng-container>
                                 <ng-container *ngIf="practicaCarga.practica.resultadosAnteriores &&  !(practicaCarga.practica.resultadosAnteriores.resultados.length > 0)">
@@ -174,7 +174,6 @@
             <plex-select [(ngModel)]="avisoValoresCriticos.respuesta" (getData)="getOpcionesRespuesta($event)" (change)='changeRespuestaGestionValoresCriticos($event)'
                 name="respuesta" label="Respuesta" placeholder="Seleccione una respuesta" labelField="nombre"></plex-select>
         </span>
-
         <span>
             <plex-select *ngIf='showSelectProfesional' [(ngModel)]="avisoValoresCriticos.profesionalReportado"
                 (getData)="loadProfesionales($event)" name="profesional" label="Profesional" placeholder="Buscar un profesional"

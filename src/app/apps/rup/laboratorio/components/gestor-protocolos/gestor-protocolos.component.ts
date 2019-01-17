@@ -2,12 +2,12 @@ import { Constantes } from './../../controllers/constants';
 import { Component, OnInit, Input, ViewChild, EventEmitter, Output, ViewEncapsulation, HostBinding, OnDestroy } from '@angular/core';
 import { ProtocoloDetalleComponent } from '../protocolos/protocolo-detalle.component';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
-
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { PacienteService } from '../../../../../services/paciente.service';
 import { ActivatedRoute } from '@angular/router';
 import { ProtocoloCacheService } from '../../services/protocoloCache.service';
+
 
 @Component({
     selector: 'gestor-protocolos',
@@ -24,9 +24,7 @@ export class GestorProtocolosComponent implements OnInit {
     public showListarProtocolos: Boolean = true;
     public showProtocoloDetalle: Boolean = false;
     public showCargarSolicitud: Boolean = false;
-    public edicionDatosCabecera: Boolean;
     public showBotonGuardar: Boolean = false;
-    public mostrarCuerpoProtocolo: Boolean = true;
     public ocultarPanelLateral: Boolean = false;
     public editarListaPracticas: Boolean = false;
     public showBotonAceptar: Boolean = false;
@@ -55,12 +53,12 @@ export class GestorProtocolosComponent implements OnInit {
             this.resetearProtocolo(value);
             this.seleccionarProtocolo({ protocolo: this.protocolo, index: 0 });
             this.editarListaPracticas = true;
-            this.edicionDatosCabecera = true;
+            this.contextoCache.edicionDatosCabecera = true;
             this.ocultarPanelLateral = true;
             this.showProtocoloDetalle = true;
             this.indexProtocolo = 0;
             this.seleccionPaciente = false;
-            this.mostrarCuerpoProtocolo = true;
+            this.contextoCache.mostrarCuerpoProtocolo = true;
         }
     }
 
@@ -79,7 +77,6 @@ export class GestorProtocolosComponent implements OnInit {
         public servicioPrestaciones: PrestacionesService,
         public auth: Auth,
         public protocoloCacheService: ProtocoloCacheService,
-        // public as: AgendaCacheService
     ) { }
 
     ngOnInit() {
@@ -98,6 +95,7 @@ export class GestorProtocolosComponent implements OnInit {
                     this.mostrarFomularioPacienteSinTurno();
                     this.seleccionPaciente = false;
                     this.seleccionarProtocolo(this.protocolo);
+                    this.contextoCache.mostrarCuerpoProtocolo = false;
                     // this.resetearProtocolo(this.paciente);
                     // this.editarListaPracticas = true;
                     // this.edicionDatosCabecera = true;
@@ -105,7 +103,7 @@ export class GestorProtocolosComponent implements OnInit {
                     // this.showProtocoloDetalle = true;
                     // this.indexProtocolo = 0;
                     // this.seleccionPaciente = false;
-                    // this.mostrarCuerpoProtocolo = true;
+                    // this.contextoCache.mostrarCuerpoProtocolo = true;
                 });
             }
         });
@@ -119,28 +117,8 @@ export class GestorProtocolosComponent implements OnInit {
     // }
 
     onTabChange($event) {
-        this.cambiarModo($event);
+        this.protocoloCacheService.cambiarModo($event);
         this.refreshSelection();
-    }
-
-    cambiarModo(modoId) {
-        this.accionIndex = modoId;
-        if (modoId === 0) {
-            this.contextoCache.modo = 'recepcion';
-            this.contextoCache.titulo = 'Recepcionar Paciente';
-        } else if (modoId === 1) {
-            this.contextoCache.titulo = 'Auditoría de Protocolos';
-            this.contextoCache.modo = 'control';
-        } else if (modoId === 2) {
-            this.contextoCache.titulo = 'Carga de Resultados';
-            this.contextoCache.modo = 'carga';
-        } else if (modoId === 3) {
-            this.contextoCache.titulo = 'Validación de Resultados';
-            this.contextoCache.modo = 'validacion';
-        } else if (modoId === 4) {
-            this.contextoCache.titulo = 'Listado';
-            this.contextoCache.modo = 'listado';
-        }
     }
 
     /**
@@ -213,7 +191,7 @@ export class GestorProtocolosComponent implements OnInit {
     seleccionarProtocolo(value) {
         // Si se presionó el boton suspender, no se muestran otros protocolos hasta que se confirme o cancele la acción.
         if (value.protocolo) {
-            this.mostrarCuerpoProtocolo = (this.contextoCache.modo === 'control') || (this.contextoCache.modo === 'carga') || (this.contextoCache.modo === 'validacion') || (this.contextoCache.modo === 'puntoInicio');
+            this.contextoCache.mostrarCuerpoProtocolo = (this.contextoCache.modo === 'control') || (this.contextoCache.modo === 'carga') || (this.contextoCache.modo === 'validacion') || (this.contextoCache.modo === Constantes.modoIds.recepcionSinTurno);
             this.protocolo = value.protocolo;
             this.indexProtocolo = value.index;
             this.showListarProtocolos = false;
@@ -222,7 +200,7 @@ export class GestorProtocolosComponent implements OnInit {
             this.showCargarSolicitud = true;
             this.showBotonAceptar = false;
             this.showBotonGuardar = true;
-            this.ocultarPanelLateral = (this.contextoCache.modo === 'recepcion') || (this.contextoCache.modo === 'puntoInicio');
+            this.ocultarPanelLateral = (this.contextoCache.modo === 'recepcion') || (this.contextoCache.modo === Constantes.modoIds.recepcionSinTurno);
         }
     }
 
@@ -232,7 +210,7 @@ export class GestorProtocolosComponent implements OnInit {
      * @memberof PuntoInicioLaboratorioComponent
      */
     volverLista() {
-        if (this.contextoCache.modo === 'puntoInicio') {
+        if (this.contextoCache.modo === Constantes.modoIds.recepcionSinTurno) {
             // location.reload();
             this.volverAPuntoInicioEmmiter.emit(true);
         } else {
@@ -264,17 +242,17 @@ export class GestorProtocolosComponent implements OnInit {
         if (this.paciente) {
             this.resetearProtocolo(this.paciente);
             this.seleccionarProtocolo({});
-            this.edicionDatosCabecera = true;
+            this.contextoCache.edicionDatosCabecera = true;
             // this.ocultarPanelLateral = true;
             this.showListarProtocolos = false;
             this.showProtocoloDetalle = true;
             this.indexProtocolo = 0;
             this.seleccionPaciente = true;
-            this.mostrarCuerpoProtocolo = true;
+            this.contextoCache.mostrarCuerpoProtocolo = true;
             this.showBotonAceptar = true;
         }
 
-        // this.mostrarCuerpoProtocolo = (this.contextoCache.modo === 'control') || (this.contextoCache.modo === 'carga') || (this.contextoCache.modo === 'validacion') || (this.contextoCache.modo === 'puntoInicio');
+        // this.contextoCache.mostrarCuerpoProtocolo = (this.contextoCache.modo === 'control') || (this.contextoCache.modo === 'carga') || (this.contextoCache.modo === 'validacion') || (this.contextoCache.modo === 'puntoInicio');
         //     this.showListarProtocolos = false;
         //     this.showProtocoloDetalle = true;
         //     this.seleccionPaciente = false;
@@ -294,18 +272,11 @@ export class GestorProtocolosComponent implements OnInit {
      */
     aceptarCambios() {
         if (this.contextoCache.modoAVolver) {
-            // this.showProtocoloDetalle = true;
-            // this.contextoCache.modo = this.contextoCache.modoAVolver;
-            // this.contextoCache.modoAVolver = '';
-            // this.ocultarPanelLateral = false;
-            // this.showBotonAceptar = true;
-            // this.showListarProtocolos = false;
-            // guardarSolicitudYVolver() {
-        this.ocultarPanelLateral = false;
-        this.contextoCache.modo = this.contextoCache.modoAVolver;
-        this.protocoloDetalleComponent.guardarSolicitudYVolver(this.contextoCache.modoAVolver);
-        this.contextoCache.modoAVolver = null;
-    // }
+            this.ocultarPanelLateral = false;
+            this.contextoCache.modo = this.contextoCache.modoAVolver;
+            this.protocoloDetalleComponent.guardarSolicitudYVolver();
+            this.contextoCache.modoAVolver = null;
+            // }
         } else {
             this.showBotonAceptar = false;
             this.showBotonGuardar = true;
@@ -345,8 +316,8 @@ export class GestorProtocolosComponent implements OnInit {
         this.protocoloDetalleComponent.cargarCodigosPracticas();
         this.ocultarPanelLateral = true;
         this.contextoCache.modoAVolver = this.contextoCache.modo;
-        // this.contextoCache.modo = 'control';
-        this.cambiarModo(1);
+        this.contextoCache.modo = 'control';
+        this.protocoloCacheService.cambiarModo(Constantes.modoIds.control);
         this.showBotonAceptar = true;
         this.showBotonGuardar = false;
     }
@@ -355,6 +326,12 @@ export class GestorProtocolosComponent implements OnInit {
         this.protocoloDetalleComponent.guardarSolicitud();
     }
 
+    salirDeHistoricoResultadoa() {
+        this.contextoCache.titulo = Constantes.titulos.validacion;
+        this.contextoCache.botonesAccion = 'validacion';
+        this.contextoCache.mostrarCuerpoProtocolo = true;
+        this.contextoCache.verHistorialResultados = false;
+    }
 
     // getlocalStorage() {
     //     let ls = JSON.parse(localStorage.getItem('filtros'));
