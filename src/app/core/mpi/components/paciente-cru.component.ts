@@ -281,7 +281,7 @@ export class PacienteCruComponent implements OnInit {
                         this.loadLocalidades(this.paciente.direccion[0].ubicacion.provincia);
                     }
                     if (this.paciente.direccion[0].ubicacion.localidad !== null) {
-                        (this.paciente.direccion[0].ubicacion.localidad.nombre === 'Neuquén') ? this.viveEnNeuquen = true : this.viveEnNeuquen = false;
+                        (this.paciente.direccion[0].ubicacion.localidad.nombre === 'Neuquén') ? this.viveEnNeuquen = true : (this.viveEnNeuquen = false, this.barrios = null);
                         this.loadBarrios(this.paciente.direccion[0].ubicacion.localidad);
                     }
                 }
@@ -469,11 +469,7 @@ export class PacienteCruComponent implements OnInit {
         if (this.viveEnNeuquen) {
             pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadNeuquen;
         }
-        // Chequeamos cambios en relaciones del paciente
-        //    if (pacienteGuardar.documento) {
 
-        this.actualizarRelaciones(pacienteGuardar);
-        //   }
         this.pacienteService.save(pacienteGuardar).subscribe(
             resultadoSave => {
                 // Existen sugerencias de pacientes similares?
@@ -576,7 +572,6 @@ export class PacienteCruComponent implements OnInit {
     cancel() {
         this.showMobile = false;
         this.router.navigate(['apps/mpi/busqueda']);
-
     }
 
     // ---------------- NOTIFICACIONES --------------------

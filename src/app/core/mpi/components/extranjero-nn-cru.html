@@ -4,7 +4,8 @@
             <plex-tabs>
                 <plex-tab label="Paciente" icon="account">
                     <fieldset>
-                        <legend>Registro SIN DNI</legend>
+                        <legend>Datos básicos</legend>
+
                         <!-- DATOS BASICOS -->
                         <div class="row">
                             <div class="col-4">
@@ -27,7 +28,7 @@
                             <div class="col-4">
                                 <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="validado"
                                     (change)="disableGuardar = false; enableIgnorarGuardar = false;" [(ngModel)]="pacienteModel.fechaNacimiento"
-                                    name="fechaNacimiento" [required]="!noPoseeDNI">
+                                    name="fechaNacimiento" required="true">
                                 </plex-datetime>
                             </div>
                             <div class="col-4">
@@ -55,62 +56,6 @@
                             </div>
                             <div class="col-4">
                                 <plex-select label="Género" [(ngModel)]="pacienteModel.genero" [data]="generos" name="genero"></plex-select>
-                            </div>
-                        </div>
-                    </fieldset>
-
-                    <!-- DATOS DE DOMICILIO -->
-                    <fieldset>
-                        <legend>Datos del domicilio</legend>
-
-                        <div class="row">
-                            <div class="col-12">
-                                <plex-bool [(ngModel)]="viveProvNeuquen" label="¿Vive en la Provincia de Neuquén?" name="viveProvNeuquen"
-                                    (change)="changeProvNeuquen($event)"></plex-bool>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12" *ngIf="viveProvNeuquen">
-                                <plex-bool [(ngModel)]="viveEnNeuquen" label="¿Vive en Neuquén Capital?" name="viveNQN"
-                                    (change)="changeLocalidadNeuquen($event)"></plex-bool>
-                            </div>
-                        </div>
-                        <div *ngIf="viveProvNeuquen">
-                            <div class="row" *ngIf="viveEnNeuquen">
-                                <div class="col-6">
-                                    <plex-text label="Dirección" [(ngModel)]="pacienteModel.direccion[0].valor" name="divValor"
-                                        placeholder="Ej: Avenida las Flores 1200">
-                                    </plex-text>
-                                </div>
-                            </div>
-                            <div class="row" *ngIf="!viveEnNeuquen">
-                                <div class="col">
-                                    <plex-text label="Dirección" [(ngModel)]="pacienteModel.direccion[0].valor" name="divValor"
-                                        placeholder="Ej: Avenida las Flores 1200">
-                                    </plex-text>
-                                </div>
-                                <div class="col">
-                                    <plex-select label="Localidad" [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad"
-                                        name="localidad" [data]="localidadesNeuquen" labelField="nombre" (change)="loadBarrios(pacienteModel.direccion[0].ubicacion.localidad)">
-                                    </plex-select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row" *ngIf="!viveProvNeuquen">
-                            <div class="col">
-                                <plex-text label="Dirección" [(ngModel)]="pacienteModel.direccion[0].valor" name="divValor"
-                                    placeholder="Ej: Avenida las Flores 1200">
-                                </plex-text>
-                            </div>
-                            <div class="col">
-                                <plex-select label="Provincia" [(ngModel)]="pacienteModel.direccion[0].ubicacion.provincia"
-                                    name="provincia" [data]="provincias" labelField="nombre" (change)="loadLocalidades(pacienteModel.direccion[0].ubicacion.provincia)">
-                                </plex-select>
-                            </div>
-                            <div class="col">
-                                <plex-select label="Localidad" [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad"
-                                    name="localidad" [data]="localidadesNeuquen" labelField="nombre">
-                                </plex-select>
                             </div>
                         </div>
                     </fieldset>
@@ -159,6 +104,74 @@
                                         <plex-button label="" type="danger btn-sm" icon="close" (click)="removeContacto(i)"></plex-button>
                                     </div>
                                 </ng-container>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- DATOS DE DOMICILIO -->
+                    <fieldset>
+                        <legend>Datos del domicilio</legend>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <plex-bool [(ngModel)]="viveProvNeuquen" label="¿Vive en la Provincia de Neuquén?" name="viveProvNeuquen"
+                                    (change)="changeProvNeuquen($event)"></plex-bool>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12" *ngIf="viveProvNeuquen">
+                                <plex-bool [(ngModel)]="viveEnNeuquen" label="¿Vive en Neuquén Capital?" name="viveNQN"
+                                    (change)="changeLocalidadNeuquen($event)"></plex-bool>
+                            </div>
+                        </div>
+                        <div *ngIf="viveProvNeuquen">
+                            <div class="row" *ngIf="viveEnNeuquen">
+                                <div class="col-6">
+                                    <plex-text label="Dirección" [(ngModel)]="pacienteModel.direccion[0].valor" name="divValor"
+                                        placeholder="Ej: Avenida las Flores 1200">
+                                    </plex-text>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="!viveEnNeuquen">
+                                <div class="col">
+                                    <plex-text label="Dirección" [(ngModel)]="pacienteModel.direccion[0].valor" name="divValor"
+                                        placeholder="Ej: Avenida las Flores 1200">
+                                    </plex-text>
+                                </div>
+                                <div class="col" *ngIf="localidades && localidades.length > 0">
+                                    <plex-select label="Localidad" [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad"
+                                        name="localidad" [data]="localidades" labelField="nombre" (change)="loadBarrios(pacienteModel.direccion[0].ubicacion.localidad)">
+                                    </plex-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="!viveProvNeuquen">
+                            <div class="col">
+                                <plex-text label="Dirección" [(ngModel)]="pacienteModel.direccion[0].valor" name="divValor"
+                                    placeholder="Ej: Avenida las Flores 1200">
+                                </plex-text>
+                            </div>
+                            <div class="col">
+                                <plex-select label="Provincia" [(ngModel)]="pacienteModel.direccion[0].ubicacion.provincia"
+                                    name="provincia" [data]="provincias" labelField="nombre" (change)="loadLocalidades(pacienteModel.direccion[0].ubicacion.provincia)">
+                                </plex-select>
+                            </div>
+                            <div class="col" *ngIf="localidades && localidades.length > 0">
+                                <plex-select label="Localidad" [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad"
+                                    name="localidad" [data]="localidades" labelField="nombre" (change)="loadBarrios(pacienteModel.direccion[0].ubicacion.localidad)">
+                                </plex-select>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="barrios && barrios.length > 0">
+                            <div class="col-6" *ngIf="viveProvNeuquen">
+                                <plex-select label="Barrio" [(ngModel)]="pacienteModel.direccion[0].ubicacion.barrio"
+                                    name="barrio" [data]="barrios" labelField="nombre">
+                                </plex-select>
+                            </div>
+                            <div class="col-4" *ngIf="!viveProvNeuquen">
+                                <plex-select label="Barrio" [(ngModel)]="pacienteModel.direccion[0].ubicacion.barrio"
+                                    name="barrio" [data]="barrios" labelField="nombre">
+                                </plex-select>
                             </div>
                         </div>
                     </fieldset>

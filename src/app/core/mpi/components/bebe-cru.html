@@ -27,7 +27,7 @@
                             <div class="col-4">
                                 <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="validado"
                                     (change)="disableGuardar = false; enableIgnorarGuardar = false;" [(ngModel)]="bebeModel.fechaNacimiento"
-                                    name="fechaNacimiento" [required]="!noPoseeDNI">
+                                    name="fechaNacimiento" [required]="true">
                                 </plex-datetime>
                             </div>
                         </div>
@@ -78,7 +78,7 @@
                                 <div class="col-4">
                                     <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="true"
                                         (change)="disableGuardar = false; enableIgnorarGuardar = false;" [(ngModel)]="relacion.fechaNacimiento"
-                                        name="fechaNacimientoRelacion" [required]="!noPoseeDNI">
+                                        name="fechaNacimientoRelacion">
                                     </plex-datetime>
                                 </div>
                             </div>
@@ -120,7 +120,7 @@
                                 </div>
                                 <div class="col">
                                     <plex-select label="Localidad" [(ngModel)]="bebeModel.direccion[0].ubicacion.localidad"
-                                        name="localidad" [data]="localidadesNeuquen" labelField="nombre" (change)="loadBarrios(bebeModel.direccion[0].ubicacion.localidad)">
+                                        name="localidad" [data]="localidadesNeuquen" labelField="nombre">
                                     </plex-select>
                                 </div>
 

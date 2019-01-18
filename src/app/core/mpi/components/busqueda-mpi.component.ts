@@ -70,10 +70,22 @@ export class BusquedaMpiComponent implements OnInit {
         }
     }
 
+    registroBebe() {
+        this.router.navigate(['apps/mpi/bebe']);
+    }
+
+    registroSinDni() {
+        this.router.navigate(['apps/mpi/sinDni']);
+    }
+
+    registroConDni() {
+        this.router.navigate(['apps/mpi/paciente']);
+    }
+
     // --------------------------------------------------
 
     afterPacienteCru(paciente: IPaciente) {
         this.showPacienteCru = false;
-        this.updateTitle('Buscar un paciente');
+        this.updateTitle('Buscar pacientes');
     }
 }

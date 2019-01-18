@@ -198,7 +198,12 @@
                             </div>
                         </div>
                         <div class="row" *ngIf="barrios && barrios.length > 0">
-                            <div class="col-4">
+                            <div class="col-6" *ngIf="viveProvNeuquen">
+                                <plex-select label="Barrio" [(ngModel)]="pacienteModel.direccion[0].ubicacion.barrio"
+                                    name="barrio" [data]="barrios" labelField="nombre">
+                                </plex-select>
+                            </div>
+                            <div class="col-4" *ngIf="!viveProvNeuquen">
                                 <plex-select label="Barrio" [(ngModel)]="pacienteModel.direccion[0].ubicacion.barrio"
                                     name="barrio" [data]="barrios" labelField="nombre">
                                 </plex-select>

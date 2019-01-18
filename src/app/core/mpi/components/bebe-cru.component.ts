@@ -89,6 +89,7 @@ export class BebeCruComponent implements OnInit {
     provinciaNeuquen = null;
     localidadNeuquen = null;
     viveProvNeuquen = false;
+    viveEnNeuquen = false;
     barriosNeuquen: any[];
     localidadesNeuquen: any[] = [];
     provincias: IProvincia[] = [];
@@ -164,7 +165,6 @@ export class BebeCruComponent implements OnInit {
             this.relacion.nombre = paciente.nombre;
             this.relacion.documento = paciente.documento;
             this.relacion.fechaNacimiento = paciente.fechaNacimiento;
-            this.relacion.fechaNacimiento = paciente.fechaNacimiento;
             this.relacion.sexo = paciente.sexo;
             this.relacion.referencia = paciente.id;
             let rel = this.parentescoModel.find((elem) => {
@@ -177,17 +177,23 @@ export class BebeCruComponent implements OnInit {
             /* Si no se cargó ninguna dirección, tomamos el dato de la madre */
             if (!this.bebeModel.direccion[0].valor && !this.bebeModel.direccion[0].ubicacion.provincia &&
                 paciente.direccion && paciente.direccion[0].ubicacion && paciente.direccion[0].ubicacion.provincia
-                && paciente.direccion[0].ubicacion.provincia.id && paciente.direccion[0].ubicacion.provincia.nombre === 'Neuquén') {
+                && paciente.direccion[0].ubicacion.provincia.nombre === 'Neuquén') {
 
+                this.viveProvNeuquen = true;
                 this.bebeModel.direccion[0].valor = paciente.direccion[0].valor;
                 this.bebeModel.direccion[0].ubicacion.provincia = paciente.direccion[0].ubicacion.provincia;
-                this.localidadService.getXProvincia(paciente.direccion[0].ubicacion.provincia.id).subscribe(result => {
-                    this.localidadesNeuquen = result;
+
+                if (paciente.direccion[0].ubicacion.localidad && paciente.direccion[0].ubicacion.localidad.nombre === 'Neuquén') {
+                    this.viveEnNeuquen = true;
                     this.bebeModel.direccion[0].ubicacion.localidad = paciente.direccion[0].ubicacion.localidad;
-                    this.pacientes = null;
-                    this.showBuscador = false;
-                    console.log(paciente.direccion[0].ubicacion);
-                });
+                } else {
+                    this.localidadService.getXProvincia(paciente.direccion[0].ubicacion.provincia.id).subscribe(result => {
+                        this.localidadesNeuquen = result;
+                        this.bebeModel.direccion[0].ubicacion.localidad = paciente.direccion[0].ubicacion.localidad;
+                    });
+                }
+                this.pacientes = null;
+                this.showBuscador = false;
             } else {
                 this.pacientes = null;
                 this.showBuscador = false;
@@ -248,6 +254,10 @@ export class BebeCruComponent implements OnInit {
     }
 
     save(event) {
+        if (!event.formValid) {
+            this.plex.info('warning', 'Debe completar los datos obligatorios');
+            return;
+        }
         // Si aún no elegió una relación (showBuscardor=true) no debe dejar guardar
         if (this.showBuscador && event.formValid) {
             this.plex.info('warning', 'Agregue la relación de madre o padre', 'Información Faltante');
