@@ -19,7 +19,8 @@ import { RelacionesPacientesComponent } from './relaciones-pacientes.component';
 
 @Component({
     selector: 'paciente-cru',
-    templateUrl: 'paciente-cru.html'
+    templateUrl: 'paciente-cru.html',
+    styleUrls: ['paciente-cru.scss']
 })
 export class PacienteCruComponent implements OnInit {
 
@@ -597,15 +598,18 @@ export class PacienteCruComponent implements OnInit {
     // ------------------- PARA VALIDACION ---------------------
 
     validarPaciente(event) {
-        if (!event.formValid) {
-            this.plex.info('warning', 'Debe completar los datos obligatorios');
+        if (!this.pacienteModel.documento && this.pacienteModel.sexo) {
+            this.plex.info('warning', 'La validación requiere ingresar documento y sexo..');
             return;
         }
-        if (this.pacienteModel.sexo === 'otro') {
-            this.plex.info('warning', 'La validación por requiere sexo MASCULINO o FEMENINO.', 'Atención');
+
+        let sexoPaciente = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
+        if (sexoPaciente === 'otro') {
+            this.plex.info('warning', 'La validación requiere sexo MASCULINO o FEMENINO.', 'Atención');
             return;
         }
         this.disableValidar = true;
+        this.loading = true;
         this.pacienteService.validar(this.pacienteModel).subscribe(resultado => {
             if (resultado.validado) {
                 this.setBackup();
@@ -616,13 +620,34 @@ export class PacienteCruComponent implements OnInit {
                 this.pacienteModel.estado = resultado.paciente.estado;
                 this.pacienteModel.fechaNacimiento = resultado.paciente.fechaNacimiento;
                 this.pacienteModel.foto = resultado.paciente.foto;
+                //  Se completan datos FALTANTES
+                if (!this.pacienteModel.direccion[0].valor && resultado.paciente.direccion) {
+                    this.pacienteModel.direccion[0].valor = resultado.paciente.direccion;
+                }
+                if (!this.pacienteModel.direccion[0].codigoPostal && resultado.paciente.cpostal) {
+                    this.pacienteModel.direccion[0].codigoPostal = resultado.paciente.cpostal;
+                }
+                if (!this.pacienteModel.cuil && resultado.paciente.cuil) {
+                    this.pacienteModel.cuil = resultado.paciente.cuil;
+                }
                 this.plex.info('success', '¡Paciente Validado!');
             } else {
-                this.plex.toast('danger', 'Validación Fallida');
-                this.disableValidar = false;
+                // ya existia paciente validado anteriormente
+                if (resultado.paciente.id) {
+                    this.pacienteModel = resultado.paciente;
+                    if (!this.pacienteModel.contacto) {
+                        this.pacienteModel.contacto = [this.contacto];
+                    }
+                    this.validado = true;
+                    this.showDeshacer = true;
+                    this.plex.info('info', 'El paciente que está intentando cargar ya se encontraba validado por otra fuente auténtica', 'Aviso');
+                } else {
+                    this.plex.toast('danger', 'Validación Fallida');
+                    this.disableValidar = false;
+                }
             }
-        }
-        );
+            this.loading = false;
+        });
     }
 
     private setBackup() {

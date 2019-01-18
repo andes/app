@@ -1,6 +1,7 @@
 <plex-layout main="9">
     <plex-layout-main>
-        <form #formulario="ngForm">
+        <plex-loader *ngIf="loading" class="loading" type="ball-pulse"></plex-loader>
+        <form #formulario="ngForm" [ngClass]="{'loadMode': loading}">
             <plex-tabs>
                 <plex-tab label="Paciente" icon="account">
                     <fieldset>
@@ -68,7 +69,7 @@
                                     name="celularAndes" (focusout)="onFocusout('celular', celularAndes)"></plex-phone>
                             </div>
                             <div class="col-4">
-                                <span style="color: red" *ngIf="emailAndes && messageApp.length > 0">
+                                <span class="text-danger" *ngIf="emailAndes && messageApp.length > 0">
                                     <i class="mdi mdi-alert-circle-outline"></i>
                                     {{messageApp}}
                                 </span>
@@ -222,39 +223,43 @@
     </plex-layout-main>
 
     <plex-layout-sidebar>
-        <span *ngIf='!showMobile'>
-            <!-- Pacientes candidatos -->
-            <div *ngIf='(pacientesSimilares && pacientesSimilares.length > 0); else showPanel' type="inverted" title="Pacientes Candidatos">
-                <header>
-                    <h4>Pacientes Candidatos</h4>
-                </header>
-                <div class="row">
-                    <div class="col-md-12 hover">
-                        <ul class="list-group">
-                            <li class="list-group-item justify-content-between" *ngFor="let elem of pacientesSimilares">
-                                <h4 class="box-title-elemento">{{elem.paciente.apellido| uppercase}}
-                                    {{elem.paciente.nombre| uppercase}}
-                                    <br>
-                                    <small>Documento: {{elem.paciente.documento}}
-                                        <br> fecha de Nacimiento: {{elem.paciente.fechaNacimiento | fecha }}
-                                        <br> Sexo: {{elem.paciente.sexo}}
-                                    </small>
+        <div [ngClass]="{'loadMode': loading}">
+            <span *ngIf='!showMobile'>
+                <!-- Pacientes candidatos -->
+                <div *ngIf='(pacientesSimilares && pacientesSimilares.length > 0); else showPanel' type="inverted"
+                    title="Pacientes Candidatos">
+                    <header>
+                        <h4>Pacientes Candidatos</h4>
+                    </header>
+                    <div class="row">
+                        <div class="col-md-12 hover">
+                            <ul class="list-group">
+                                <li class="list-group-item justify-content-between" *ngFor="let elem of pacientesSimilares">
+                                    <h4 class="box-title-elemento">{{elem.paciente.apellido| uppercase}}
+                                        {{elem.paciente.nombre| uppercase}}
+                                        <br>
+                                        <small>Documento: {{elem.paciente.documento}}
+                                            <br> fecha de Nacimiento: {{elem.paciente.fechaNacimiento | fecha }}
+                                            <br> Sexo: {{elem.paciente.sexo}}
+                                        </small>
 
-                                </h4>
-                                <h4>Similitud: {{elem.match * 100}} %
-                                    <span>
-                                        <plex-button type="primary btn-sm" icon="account" label="Seleccionar" (click)="onSelect(elem.paciente)"></plex-button>
-                                    </span>
-                                </h4>
-                            </li>
-                        </ul>
+                                    </h4>
+                                    <h4>Similitud: {{elem.match * 100}} %
+                                        <span>
+                                            <plex-button type="primary btn-sm" icon="account" label="Seleccionar"
+                                                (click)="onSelect(elem.paciente)"></plex-button>
+                                        </span>
+                                    </h4>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <ng-template #showPanel>
-                <paciente-panel [paciente]="pacienteModel"></paciente-panel>
-            </ng-template>
-        </span>
+                <ng-template #showPanel>
+                    <paciente-panel [paciente]="pacienteModel"></paciente-panel>
+                </ng-template>
+            </span>
+        </div>
         <activar-app *ngIf='showMobile' [paciente]="pacienteModel"></activar-app>
     </plex-layout-sidebar>
 
