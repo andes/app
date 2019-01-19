@@ -67,7 +67,7 @@
 <ng-container *ngIf="!seleccionPaciente">
     <!-- ENCABEZADO DE PROTOCOLO -->
     <protocolo-encabezado [protocolo]="modelo" (edicionDatosCabeceraEmitter)="editarDatosCabecera()"
-        (siguienteEmit)='siguiente()' (anteriorEmit)='anterior()'></protocolo-encabezado>
+        (siguienteEmit)='siguiente()' (anteriorEmit)='anterior()' ></protocolo-encabezado>
     <!-- FIN ENCABEZADO DE PROTOCOLO -->
 </ng-container>
 <ng-container *ngIf='contextoCache.mostrarCuerpoProtocolo'>
@@ -76,7 +76,7 @@
 
             <div class="row">
                 <div class="col">
-                    <tabla-datalle-protocolo [modo]="this.contextoCache.modo" [modelo]="modelo" [solicitudProtocolo]="solicitudProtocolo"
+                    <tabla-datalle-protocolo [modo]="contextoCache.modo" [modelo]="modelo" [solicitudProtocolo]="solicitudProtocolo"
                         [practicasEjecucion]="practicasEjecucion" [busqueda]="busqueda" [editarListaPracticas]="editarListaPracticas"
                         [validaciones]="validaciones" [showGestorAlarmas]='showGestorAlarmas'
                         (verHistorialResultadosEmitter)='showHistorialResultados($event)'>

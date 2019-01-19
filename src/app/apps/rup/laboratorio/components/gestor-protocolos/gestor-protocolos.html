@@ -1,7 +1,7 @@
 <plex-layout main="{{showProtocoloDetalle ? ( ocultarPanelLateral ? 0 : 3) : 12}}">
     <plex-layout-main *ngIf='!ocultarPanelLateral && contextoCache.modo !== "recepcionSinTurno" '>
 
-        <filtros-busqueda-protocolo *ngIf="!showProtocoloDetalle" (buscarProtocolosEmmiter)="refreshSelection($event)"></filtros-busqueda-protocolo>
+        <filtros-busqueda-protocolo *ngIf="!showProtocoloDetalle" [modo]='contextoCache.modo' (buscarProtocolosEmmiter)="refreshSelection($event)"></filtros-busqueda-protocolo>
 
         <br *ngIf="!showProtocoloDetalle">
         <hr *ngIf="!showProtocoloDetalle">

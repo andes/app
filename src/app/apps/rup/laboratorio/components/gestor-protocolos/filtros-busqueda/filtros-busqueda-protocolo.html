@@ -3,12 +3,16 @@
         <plex-radio [data]="modoCargaLaboratorioEnum" label="Modo de carga" (change)="cambiarModoCarga($event)"
             [(ngModel)]="modoCargaLaboratorio" type="horizontal"></plex-radio>
     </span>
-    <span *ngIf='showSelectHojaTrabajo'>
-        <plex-select [(ngModel)]="busqueda.area " (change)="buscarHojasTrabajo($event)" name="area" label="Área" [data]='areas'></plex-select>
+    <span *ngIf='showSelectArea'>
+        <plex-select [(ngModel)]="busqueda.area " (change)="onChangeSelectArea($event)" name="area" label="Área" [data]='areas'></plex-select>
     </span>
     <span *ngIf='showSelectHojaTrabajo'>
         <plex-select [(ngModel)]="hojaTrabajo" (change)="buscarProtocolos($event,'hojaTrabajo')" name="hojadetrabajo"
             label="Hoja de Trabajo" [data]='hojasTrabajo' labelField="nombre"></plex-select>
+    </span>
+    <span *ngIf='showSelectPracticas'>
+        <plex-select [(ngModel)]="busqueda.practicas" (change)="buscarProtocolos($event,'practicas')" name="practicas"
+            label="Prácticas" [data]='practicasFiltro' labelField="nombre" multiple="true" ></plex-select>
     </span>
 </div>
 <div class="filtros-container {{ modo }}">
@@ -22,7 +26,7 @@
             name="solicitudHasta" label="Fecha hasta" [required]="true" skipBy="day">
         </plex-datetime>
     </span>
-    <span *ngIf='modo !== "recepcion" && !showSelectHojaTrabajo'>
+    <span *ngIf='modo !== "recepcion" && !showSelectArea'>
         <plex-select [(ngModel)]="busqueda.area" (change)="buscarProtocolos($event,'area')" name="area" label="Área"
             [data]='areas'></plex-select>
     </span>

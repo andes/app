@@ -8,8 +8,20 @@ import { Server } from '@andes/shared';
 @Injectable()
 export class PracticaService {
     private practicaUrl = '/modules/rup/laboratorio/practicas'; // URL API
-    private practicaCodigoUrl = '/modules/rup/laboratorio/practicas/codigo/';
+    private practicaCodigoUrl = this.practicaUrl + '/codigo/';
+    private practicaByArea = this.practicaUrl + '/area/';
     constructor(private server: Server) { }
+
+    /**
+     * @param {PracticaSearch} params
+     * @returns {Observable<IPracticaMatch[]>}
+     * @memberof PracticaService
+     */
+    getByArea(idArea: IPracticaSearch): Observable<IPracticaMatch[]> {
+        return this.server.get(this.practicaByArea + idArea, { params: {}, showError: true }).map((value) => {
+            return value;
+        });
+    }
 
     /**
      * @param {PracticaSearch} params
