@@ -34,7 +34,7 @@ export class CharHistorialResultadoComponent implements OnInit {
 
     generarDatosCurva() {
         this.barChartData = [
-            { data: this.practica.resultadosAnteriores.resultados.map( (e: any)  => { return e.valor; } ), label: 'Valor ()', fill: false }
+            { data: this.practica.resultadosAnteriores.resultados.map( (e: any)  => { return e.valor; } ).reverse(), label: 'Valor ()', fill: false }
         ];
 
         this.barChartLabels = this.practica.resultadosAnteriores.resultados.map( (e: any)  => { return moment(e.fecha).format('DD-MM-YYYY'); } );

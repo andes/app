@@ -165,7 +165,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
                 idsFiltro.forEach((id) => idsFiltro);
             });
             let filtradas = this.practicasEjecucion.filter((p) => {
-                return idsFiltro.some(id => id === p._id);
+                return idsFiltro.some(id => id === p.valor.idPractica);
             });
             filtradas.forEach(pf => foo(pf.relacionadoCon));
             practicasFiltradas = practicasFiltradas.concat(filtradas);
