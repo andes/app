@@ -158,11 +158,9 @@ export class GestorProtocolosComponent implements OnInit {
             this.areas = $event.areas ? $event.areas : [];
         }
 
-        this.getProtocolos(this.busqueda);
-    }
+        this.busqueda.estado = this.contextoCache.modo === 'validacion' ? ['pendiente', 'ejecucion'] :  [];
 
-    getProtocolos(params: any) {
-        this.servicioPrestaciones.get(params).subscribe(protocolos => {
+        this.servicioPrestaciones.get(this.busqueda).subscribe(protocolos => {
             this.protocolos = protocolos;
         }, err => {
             if (err) {

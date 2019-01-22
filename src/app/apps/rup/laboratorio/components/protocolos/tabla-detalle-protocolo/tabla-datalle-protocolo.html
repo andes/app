@@ -172,7 +172,7 @@
     <div class='gestion-alarmas-container'>
         <span>
             <plex-select [(ngModel)]="avisoValoresCriticos.respuesta" (getData)="getOpcionesRespuesta($event)" (change)='changeRespuestaGestionValoresCriticos($event)'
-                name="respuesta" label="Respuesta" placeholder="Seleccione una respuesta" labelField="nombre"></plex-select>
+                name="respuesta" label="Respuesta" requi placeholder="Seleccione una respuesta" labelField="nombre"></plex-select>
         </span>
         <span>
             <plex-select *ngIf='showSelectProfesional' [(ngModel)]="avisoValoresCriticos.profesionalReportado"
