@@ -179,7 +179,7 @@
                                         </div>
                                         <div *ngIf="turno && turno.paciente && turno.asistencia && turno.estado !== 'suspendido'">
 
-                                            <span class="badge" [ngClass]="{ 'badge-warning': turno.asistencia === 'asistio', 'badge-danger': turno.asistencia === 'noAsistio'}">
+                                            <span class="badge " [ngClass]="{ 'badge-success': turno.asistencia === 'asistio', 'badge-danger': turno.asistencia === 'noAsistio'} ">
                                                 {{turno.asistencia}}
                                             </span>
                                             <br />
