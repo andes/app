@@ -14,8 +14,8 @@ import { SnomedService } from '../../../../services/term/snomed.service';
     styleUrls: ['cama-create-update.scss']
 })
 export class CamaCreateUpdateComponent implements OnInit {
-    @Input('idOrganizacion') idOrganizacion;
-    @Input('camaSeleccion') camaSeleccion;
+    @Input() idOrganizacion;
+    @Input() camaSeleccion;
     @Output() showCama: EventEmitter<any> = new EventEmitter<any>();
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
@@ -110,7 +110,7 @@ export class CamaCreateUpdateComponent implements OnInit {
                     }
 
                 } else {
-                    this.plex.alert('ERROR: Ocurrio un problema al crear la cama');
+                    this.plex.info('warning', 'ERROR: Ocurrio un problema al crear la cama');
                 }
             });
         }

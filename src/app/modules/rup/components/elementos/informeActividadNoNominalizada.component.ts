@@ -52,45 +52,9 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
             });
         }
 
-        this.listaActividades = [
-            {
-                '_id': '57f505d669fe79a598ee542b',
-                'fsn': 'cribado para papilomavirus humano (procedimiento)',
-                'semanticTag': 'procedimiento',
-                'conceptId': '700152009',
-                'term': 'cribado para papilomavirus humano'
-            },
-            {
-                '_id': '57f505d669fe79a598ee5428',
-                'fsn': 'cribado para papilomavirus humano (procedimiento)',
-                'semanticTag': 'procedimiento',
-                'conceptId': '700152009',
-                'term': 'cribado para papilomavirus humano (procedimiento)'
-            },
-            {
-                '_id': '57f505d669fe79a598ee542c',
-                'fsn': 'cribado para papilomavirus humano (procedimiento)',
-                'semanticTag': 'procedimiento',
-                'conceptId': '700152009',
-                'term': 'tamizado para papilomavirus humano'
-            },
-            {
-                '_id': '57f505d669fe79a598ee542a',
-                'fsn': 'cribado para papilomavirus humano (procedimiento)',
-                'semanticTag': 'procedimiento',
-                'conceptId': '700152009',
-                'term': 'detección selectiva para papilomavirus humano'
-            },
-            {
-                '_id': '57f505dc69fe79a598eee464',
-                'fsn': 'educación en el cuidado de la diabetes (procedimiento)',
-                'semanticTag': 'procedimiento',
-                'conceptId': '385805005',
-                'term': 'educación en el cuidado de la diabetes (procedimiento)'
-            }];
-        // this.snomedService.getQuery({ expression: '^1661000013109' }).subscribe(result => {
-        //     this.listaActividades = [...result];
-        // });
+        this.snomedService.getQuery({ expression: '^2691000013105' }).subscribe(result => {
+            this.listaActividades = [...result];
+        });
 
     }
 

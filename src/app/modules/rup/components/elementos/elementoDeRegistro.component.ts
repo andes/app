@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
+import { Subscription } from 'rxjs/Subscription';
 @Component({
     selector: 'rup-ElementoDeRegistroComponent',
     templateUrl: 'elementoDeRegistro.html',
@@ -30,21 +31,50 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
     // boleean para verificar si estan todos los conceptos colapsados
     public collapse = true;
 
+    public conceptosTurneables: any[];
+    suscriptionBuscador: any;
+    seleccionado: any;
+    conceptoSeleccionado: any;
+
     ngOnInit() {
+        if (this.registro && this.registro.registros) {
+            this.registro.registros.forEach((registro: any) => {
+                this.itemsRegistros[registro.id] = { collapse: true, items: null };
+            });
+        }
+        this.params.required = this.params.required ? this.params.required : false;
+        // buscamos si existe por parametro alguna restriccion en los conceptos.
         if (this.params.refsetId) {
             this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
                 this.conceptosPermitidos = resultado;
             });
         }
-        if (!this.registro.valor) {
-            this.registro.valor = {
-                descripcion: null
-            };
-        }
+        this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
+            this.conceptosTurneables = conceptosTurneables;
+        });
+
+
+        this.suscriptionBuscador = this.prestacionesService.notifySelection.subscribe(() => {
+            this.seleccionado = this.prestacionesService.getRefSetData();
+            // Estamos en la sección que tiene el foco actual?
+            if (this.seleccionado && this.registro.concepto.conceptId === this.seleccionado.conceptos.conceptId) {
+                let data: any = this.prestacionesService.getData();
+                if (data && data.concepto) {
+                    if (this.conceptoSeleccionado !== data.concepto) {
+                        this.conceptoSeleccionado = data.concepto;
+                        this.ejecutarConceptoInside(data.concepto);
+                    }
+                }
+            }
+        });
     }
 
+
+
     onConceptoDrop(e: any) {
+
         if (!this.validaConcepto(e.dragData)) {
+            return;
         } else {
             if (e.dragData.tipo) {
                 switch (e.dragData.tipo) {
@@ -66,14 +96,11 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
                     this.ejecutarConceptoInside(e.dragData);
                 });
             }
-
-
         }
     }
 
 
     ejecutarConceptoInside(snomedConcept, registroDestino = null) {
-        let valor;
         this.isDraggingConcepto = false;
         let registros = this.prestacion.ejecucion.registros;
 
@@ -82,12 +109,13 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         // si estamos cargando un concepto para una transformación de hall
         if (registoExiste) {
             // this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
-            // return false;
+            return false;
         }
         this.cargarNuevoRegistro(snomedConcept);
     }
 
     cargarNuevoRegistro(snomedConcept, valor = null) {
+
         // Si proviene del drag and drop
         if (snomedConcept.dragData) {
             snomedConcept = snomedConcept.dragData;
@@ -96,9 +124,15 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         let esSolicitud = false;
 
         // Si es un plan seteamos el true para que nos traiga el elemento rup por default
-        // if (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') {
-        //     esSolicitud = true;
-        // }
+
+        this.prestacionesService.getEsSolicitud().subscribe(resp => {
+            if (this.esTurneable(snomedConcept) || resp) {
+                esSolicitud = true;
+            }
+        });
+
+
+        // esSolicitud = this.esTurneable(snomedConcept);
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
         // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
@@ -109,8 +143,12 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
             nuevoRegistro.esSolicitud = true;
         }
         nuevoRegistro.valor = valor;
+        let existeRegistro = this.registroRepetido(nuevoRegistro);
 
-        this.registro.registros.push(nuevoRegistro);
+        if (existeRegistro) {
+            this.registro.registros.push(nuevoRegistro);
+        }
+        this.prestacionesService.clearData();
     }
 
 
@@ -268,14 +306,12 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
 
     validaConcepto(concepto) {
         if (this.conceptosPermitidos.length) {
-
             let control = this.conceptosPermitidos.find(c => c.conceptId === concepto.conceptId);
-
             if (control) {
                 return true;
             } else {
                 // TODO: Ver el mensaje a mostrar..
-                this.plex.alert('No se puede agregar ese concepto');
+                // this.plex.toast('No se puede agregar ese concepto');
                 return false;
             }
         } else {
@@ -298,5 +334,24 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
                 this.collapse = !this.collapse;
             }
         });
+    }
+
+    public esTurneable(concepto: any) {
+        if (!this.conceptosTurneables) {
+            return false;
+        }
+        return this.conceptosTurneables.find(x => {
+            return x.conceptId === concepto.conceptId;
+        });
+    }
+
+    registroRepetido(nuevoRegistro) {
+        let existeRegistro = [];
+        existeRegistro = this.registro.registros.filter(r => (r.concepto.conceptId === nuevoRegistro.concepto.conceptId) && (r.esSolicitud === nuevoRegistro.esSolicitud));
+        if (existeRegistro.length > 0) {
+            this.plex.toast('warning', 'El elemento seleccionados ya se encuentra agregado.');
+            return false;
+        }
+        return true;
     }
 }

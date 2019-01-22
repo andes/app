@@ -11,6 +11,8 @@ import { PrestacionesService } from '../../../../modules/rup/services/prestacion
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { CamasService } from '../services/camas.service';
 import { PacienteBuscarResultado } from '../../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
+import { ElementosRUPService } from '../../../../modules/rup/services/elementosRUP.service';
+
 // ../../../../services/internacion.service
 @Component({
     selector: 'app-mapa-de-camas',
@@ -19,14 +21,6 @@ import { PacienteBuscarResultado } from '../../../../modules/mpi/interfaces/Paci
     encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 export class MapaDeCamasComponent implements OnInit {
-
-
-    public epicrisis = {
-        'conceptId': '721919000',
-        'term': 'epicrisis de enfermería',
-        'fsn': 'epicrisis de enfermería (elemento de registro)',
-        'semanticTag': 'elemento de registro'
-    };
 
     // listado de camas de la organizacion
     public camas: any[] = [];
@@ -69,6 +63,7 @@ export class MapaDeCamasComponent implements OnInit {
     public loadCountFiltros = false;
     public editarIngreso;
     public accion;
+    public conceptosInternacion;
 
     public showEstados = true;
 
@@ -104,20 +99,22 @@ export class MapaDeCamasComponent implements OnInit {
         private router: Router,
         public organizacionService: OrganizacionService,
         private internacionService: InternacionService,
-        public camasService: CamasService) {
-        // this.plex.updateTitle([{
-        //     route: '/',
-        //     name: 'MAPA DE CAMAS'
-        // }
-        // ]);
+        public camasService: CamasService,
+        private elementoRupService: ElementosRUPService) {
     }
 
     ngOnInit() {
         this.refresh();
+        this.elementoRupService.ready.subscribe(() => {
+            this.conceptosInternacion = this.elementoRupService.getConceptosInternacion();
+        });
     }
 
 
     refresh(event = null) {
+        // Se setea ruta actual
+        this.servicioPrestacion.notificaRuta({ nombre: 'Mapa de Camas', ruta: 'internacion/camas' });
+
         // verificar permisos
         // buscar camas para la organización
         this.limpiarFiltros();
@@ -605,19 +602,17 @@ export class MapaDeCamasComponent implements OnInit {
        * Nos rutea a la ejecucion de RUP.
        */
     generaEpicrisis() {
-        let epicrisisEjecucion;
         this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacionPorInternacion.id }).subscribe(prestacionExiste => {
-            epicrisisEjecucion = prestacionExiste;
+            if (prestacionExiste.length === 0) {
+                let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.prestacionPorInternacion.paciente, this.conceptosInternacion.epicrisis, 'ejecucion', 'internacion');
+                nuevaPrestacion.solicitud.prestacionOrigen = this.prestacionPorInternacion.id;
+                this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+                    this.router.navigate(['rup/ejecucion', prestacion.id]);
+                });
+            } else {
+                this.router.navigate(['rup/ejecucion', prestacionExiste[0].id]);
+            }
         });
-        if (!epicrisisEjecucion) {
-            let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.prestacionPorInternacion.paciente, this.epicrisis, 'ejecucion', 'internacion');
-            nuevaPrestacion.solicitud.prestacionOrigen = this.prestacionPorInternacion.id;
-            this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
-                this.router.navigate(['rup/ejecucion', prestacion.id]);
-            });
-        } else {
-            this.router.navigate(['rup/ejecucion', epicrisisEjecucion[0].id]);
-        }
     }
 
 

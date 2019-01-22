@@ -99,11 +99,11 @@ export class HudsBusquedaComponent implements OnInit {
     public hallazgosNoActivos: any = [];
 
     public conceptos = {
-        hallazgo: ['hallazgo', 'situación'],
+        hallazgo: ['hallazgo', 'situación', 'evento'],
         trastorno: ['trastorno'],
         procedimiento: ['procedimiento', 'entidad observable', 'régimen/tratamiento'],
         plan: ['procedimiento', 'régimen/tratamiento'],
-        producto: ['producto'],
+        producto: ['producto', 'objeto físico', 'medicamento clínico'],
         elementoderegistro: ['elemento de registro'],
         laboratorios: ['laboratorios'],
     };
@@ -576,8 +576,11 @@ export class HudsBusquedaComponent implements OnInit {
 
     // Trae los medicamentos registrados para el paciente
     listarElementosDeRegistro() {
+        // filtramos los odontogramas
+
         this.servicioPrestacion.getByPacienteElementosRegistro(this.paciente.id, true).subscribe(elementosRegistro => {
-            this.elementosRegistro = elementosRegistro;
+
+            this.elementosRegistro = elementosRegistro.filter(e => e.concepto.conceptId !== this.servicioPrestacion.elementosRegistros.odontograma);
         });
     }
 
@@ -639,15 +642,15 @@ export class HudsBusquedaComponent implements OnInit {
         this.problemasActivos = this.problemasActivosAux;
         this.hallazgosNoActivos = this.hallazgosNoActivosAux;
         this.hallazgosCronicos = this.hallazgosCronicosAux;
-        if (this.filtroActual === 'hallazgo' || this.filtroActual === 'situación' || this.filtroActual === 'trastorno') {
+        if (this.filtroActual === 'hallazgo' || this.filtroActual === 'trastorno') {
             this.problemasActivos = this.problemasActivos.filter(h => {
-                return h.concepto.semanticTag === this.filtroActual;
+                return this.conceptos[this.filtroActual].includes(h.concepto.semanticTag);
             });
             this.hallazgosNoActivos = this.hallazgosNoActivos.filter(h => {
-                return h.concepto.semanticTag === this.filtroActual;
+                return this.conceptos[this.filtroActual].includes(h.concepto.semanticTag);
             });
             this.hallazgosCronicos = this.hallazgosCronicos.filter(h => {
-                return h.concepto.semanticTag === this.filtroActual;
+                return this.conceptos[this.filtroActual].includes(h.concepto.semanticTag);
             });
         } else {
             if (this.filtroActual === 'laboratorios') {

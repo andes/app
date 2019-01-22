@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges, ViewEncapsulation, ContentChildren, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { ISubscription } from 'rxjs/Subscription';
+import { SubscriptionLike as ISubscription } from 'rxjs';
 
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -146,7 +146,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges, OnDestroy {
             if (this.searchTerm.match(/^\s{1,}/)) {
                 this.searchTerm = '';
                 return;
-            };
+            }
 
             if (this.tipoBusqueda !== 'equipamientos') {
                 this._tengoResultado.emit(true);
@@ -172,7 +172,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges, OnDestroy {
                     case 'problemas':
                         apiMethod = this.SNOMED.get({
                             search: search,
-                            semanticTag: ['hallazgo', 'trastorno', 'situación']
+                            semanticTag: ['hallazgo', 'trastorno', 'situación', 'evento']
                         });
                         break;
                     case 'procedimientos':
@@ -190,7 +190,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges, OnDestroy {
                     case 'productos':
                         apiMethod = this.SNOMED.get({
                             search: search,
-                            semanticTag: ['producto']
+                            semanticTag: ['producto', 'objeto físico', 'medicamento clínico']
                         });
                         break;
                     case 'equipamientos':
@@ -202,7 +202,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges, OnDestroy {
                     default:
                         apiMethod = this.SNOMED.get({
                             search: search,
-                            semanticTag: ['hallazgo', 'trastorno', 'procedimiento', 'entidad observable', 'producto', 'situación', 'régimen/tratamiento', 'elemento de registro']
+                            semanticTag: ['hallazgo', 'trastorno', 'procedimiento', 'entidad observable', 'producto', 'situación', 'régimen/tratamiento', 'elemento de registro', 'objeto físico', 'medicamento clínico', 'evento']
                         });
                         break;
                 }

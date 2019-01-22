@@ -131,7 +131,7 @@ export class OrganizacionSectoresComponent implements OnInit {
                         }
                     });
                 } else {
-                    this.plex.alert('El sector contiene camas', 'No se puede borrar');
+                    this.plex.info('warning', 'El sector contiene camas', 'No se puede borrar');
                 }
             });
         } else {

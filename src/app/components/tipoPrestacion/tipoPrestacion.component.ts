@@ -1,7 +1,7 @@
 import { TipoPrestacionCreateUpdateComponent } from './tipoPrestacion-create-update.component';
 import { ITipoPrestacion } from './../../interfaces/ITipoPrestacion';
 import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 

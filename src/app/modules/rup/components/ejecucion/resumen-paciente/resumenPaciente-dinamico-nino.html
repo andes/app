@@ -1,0 +1,93 @@
+<ng-container>
+    <div class="row">
+        <div class="col-6" *ngIf="registro">
+            <h5>Resumen de HUDS</h5>
+            <rup-resumenHistoriaClinica *ngIf="registro" [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)"
+                [prestacion]="" [paciente]="paciente" [registro]="registro" [soloValores]="true"></rup-resumenHistoriaClinica>
+        </div>
+        <div class="col-6">
+            <h5>Vacunas aplicadas</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Vacuna</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="vacunas.length; else sinDatos">
+                        <tr *ngFor="let vacuna of vacunas">
+                            <td>{{vacuna.fechaAplicacion | date: 'dd/M/yyyy'}}</td>
+                            <td>{{vacuna.vacuna}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <ng-template #sinDatos>
+                    <tbody>
+                        <td colspan="2">No registra datos</td>
+                    </tbody>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <radio-chart [paciente]="paciente"></radio-chart>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h5>
+                Registro de visitas
+            </h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="table-responsive">
+                <table *ngIf="tabla.length" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>{{tabla[0][0].titulo}}</th>
+                            <th>{{tabla[0][1].titulo}}</th>
+                            <th>{{tabla[0][2].titulo}}</th>
+                            <th>{{tabla[0][3].titulo}}</th>
+                            <th>{{tabla[0][4].titulo}}</th>
+                            <th>{{tabla[0][5].titulo}}</th>
+                            <th>{{tabla[0][6].titulo}}</th>
+                            <th>{{tabla[0][7].titulo}}</th>
+                            <th>{{tabla[0][8].titulo}}</th>
+                            <th>{{tabla[0][9].titulo}}</th>
+                            <th>{{tabla[0][10].titulo}}</th>
+                            <th>{{tabla[0][11].titulo}}</th>
+                            <th>{{tabla[0][12].titulo}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let prestacion of tabla">
+                            <td>{{prestacion[0].valor}}</td>
+                            <td>{{prestacion[1].valor}}</td>
+                            <td>{{prestacion[2].valor}}</td>
+                            <td>{{prestacion[3].valor}}</td>
+                            <td>{{prestacion[4].valor}}</td>
+                            <td>{{prestacion[5].valor}}</td>
+                            <td>{{prestacion[6].valor}}</td>
+                            <td>{{prestacion[7].valor}}</td>
+                            <td>{{prestacion[8].valor}}</td>
+                            <td>{{prestacion[9].valor}}</td>
+                            <td>{{prestacion[10].valor}}</td>
+                            <td>{{prestacion[11].valor}}</td>
+                            <td>{{prestacion[12].valor}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</ng-container>

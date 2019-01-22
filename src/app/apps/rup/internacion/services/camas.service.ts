@@ -1,8 +1,9 @@
 import { Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+// import { Observable } from 'rxjs/Observable';
 import { ICama } from '../interfaces/ICama';
 import { IPaciente } from '../../../../interfaces/IPaciente';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class CamasService {
@@ -10,7 +11,7 @@ export class CamasService {
     private camasUrl = '/core/tm/camas';  // URL to web api
     constructor(private server: Server) { }
 
-    getCama(id: String): Observable<ICama[]> {
+    getCama(id: String): Observable<any> {
         return this.server.get(this.camasUrl + '/' + id, null);
     }
 

@@ -40,15 +40,8 @@ export class ListarPrestamosComponent implements OnInit {
     public sortDescending = false;
     public _listarCarpetas;
 
-    @Input('recargar')
-    set recargar(value: any) {
-        if (value) {
-            this.getCarpetas({}, null);
-        }
-    }
-
-    get recargar(): any {
-        return;
+    get cssLayout () {
+        return { 'col-8': this.verDevolver, 'col': !this.verDevolver };
     }
 
     @Output() carpetaDevueltaEmit: EventEmitter<any> = new EventEmitter<any>();
@@ -74,12 +67,20 @@ export class ListarPrestamosComponent implements OnInit {
     getCarpetas(value, filter) {
         if (filter === 'fechaDesde') {
             let fechaDesde = moment(this.fechaDesde).startOf('day');
+            let _fechaHasta = moment(this.fechaHasta).endOf('day');
+            if (fechaDesde > _fechaHasta) {
+                this.filters['fechaHasta'] = this.fechaHasta = moment(this.fechaDesde).endOf('day');
+            }
             if (fechaDesde.isValid()) {
                 this.filters['fechaDesde'] = fechaDesde;
             }
         }
         if (filter === 'fechaHasta') {
             let fechaHasta = moment(this.fechaHasta).endOf('day');
+            let _fechaDesde = moment(this.fechaDesde).startOf('day');
+            if (fechaHasta < _fechaDesde) {
+                this.filters['fechaDesde'] = this.fechaDesde = moment(this.fechaHasta).startOf('day');
+            }
             if (fechaHasta.isValid()) {
                 this.filters['fechaHasta'] = fechaHasta;
             }

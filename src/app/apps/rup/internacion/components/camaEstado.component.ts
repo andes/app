@@ -1,4 +1,4 @@
-import { HostBinding, EventEmitter, Component, OnInit, Input, Output } from '@angular/core';
+import { HostBinding, Component, OnInit, Input } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CamasService } from '../services/camas.service';

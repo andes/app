@@ -1,3 +1,5 @@
+
+import { finalize } from 'rxjs/operators';
 import { environment } from './../environments/environment';
 import { Component } from '@angular/core';
 import { Plex } from '@andes/plex';
@@ -15,8 +17,8 @@ export class AppComponent {
     private initStatusCheck() {
         if (environment.APIStatusCheck) {
             setTimeout(() => {
-                this.server.get('/core/status', { params: null, showError: false, showLoader: false })
-                    .finally(() => this.initStatusCheck())
+                this.server.get('/core/status', { params: null, showError: false, showLoader: false }).pipe(
+                    finalize(() => this.initStatusCheck()))
                     .subscribe(
                         (data) => this.plex.updateAppStatus(data),
                         (err) => this.plex.updateAppStatus({ API: 'Error' })
@@ -47,12 +49,23 @@ export class AppComponent {
         if (this.auth.getPermissions('turnos:puntoInicio:?').length > 0) {
             accessList.push({ label: 'CITAS: Punto de Inicio', icon: 'calendar', route: '/citas/puntoInicio' });
         }
+
+        accessList.push({ label: 'CITAS: Espacios Fisicos', icon: 'cogs', route: 'tm/mapa_espacio_fisico' });
+
         if (this.auth.getPermissions('mpi:?').length > 0) {
-            accessList.push({ label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: '/mpi' });
+            accessList.push({ label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: 'apps/mpi' });
+        }
+        if (this.auth.getPermissions('auditoriaPacientes:?').length > 0) {
+            accessList.push({ label: 'Auditoría MPI', icon: 'account-search', route: 'apps/mpi/auditoria' });
         }
 
         if (this.auth.getPermissions('rup:?').length > 0) {
             accessList.push({ label: 'RUP: Registro Universal de Prestaciones', icon: 'contacts', route: '/rup' });
+        }
+
+        let dato = this.auth.getPermissions('huds:?').length;
+        if (this.auth.getPermissions('huds:?').length > 0) {
+            accessList.push({ label: 'HUDS: Visualizar por paciente', icon: 'file-tree', route: '/rup/buscaHuds' });
         }
 
         if (this.auth.getPermissions('reportes:?').length > 0) {
@@ -65,9 +78,10 @@ export class AppComponent {
 
         // faltan permisos
         if (this.auth.getPermissions('formularioTerapeutico:?').length > 0) {
-        accessList.push({ label: 'Formulario Terapeutico', icon: 'mdi mdi-needle', route: '/formularioTerapeutico' });
+            accessList.push({ label: 'Formulario Terapeutico', icon: 'mdi mdi-needle', route: '/formularioTerapeutico' });
         }
         this.menuList.push({ label: 'Página principal', icon: 'home', route: '/inicio' });
+        this.menuList.push({ label: 'Padrones', icon: 'magnify', route: '/puco' });
 
         accessList.forEach((permiso) => {
             this.menuList.push(permiso);

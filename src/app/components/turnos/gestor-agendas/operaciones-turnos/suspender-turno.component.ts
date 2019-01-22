@@ -139,7 +139,7 @@ export class SuspenderTurnoComponent implements OnInit {
                         let horario = moment(this.seleccionadosSMS[x].horaInicio).format('HH:mm');
                         let mensaje = 'Le informamos que su turno del dia ' + dia + ' a las ' + horario + ' horas fue SUSPENDIDO.   ' + this.auth.organizacion.nombre;
                         this.enviarSMS(this.seleccionadosSMS[x].paciente, mensaje);
-                    };
+                    }
                 } else {
                     this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
                 }
@@ -170,7 +170,7 @@ export class SuspenderTurnoComponent implements OnInit {
 
                     this.saveSuspenderTurno.emit(resulAgenda);
 
-                    this.plex.alert('Los pacientes seleccionados pasaron a Lista de Espera');
+                    this.plex.info('warning', 'Los pacientes seleccionados pasaron a Lista de Espera');
 
                     // this.enviarSMS(this.turnos[x], 'Su turno fue cancelado, queda en lista de espera');
 

@@ -1,8 +1,8 @@
-<ng-container *ngIf="referentSet.length > 0">
+<ng-container *ngIf="referenceSet.length > 0">
     <div class="row">
         <div class="col-12">
-            <span *ngFor="let rf of referentSet" class="badge badge-danger">
-                {{rf}}
+            <span *ngFor="let rf of referenceSet" class="badge badge-danger">
+                {{ rf }}
             </span>
         </div>
     </div>
@@ -13,7 +13,7 @@
     </plex-text>
 </ng-container>
 
-<p *ngIf="soloValores" class="readonly">
+<p *ngIf="soloValores">
     <span>Informes</span>
     <ng-container>
         <span [innerHTML]="registro.valor"></span>

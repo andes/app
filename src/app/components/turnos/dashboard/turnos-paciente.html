@@ -17,7 +17,8 @@
                             <div *ngIf="turno" class="p-2" [ngClass]="{'bg-null': indiceTurno % 2 === 0}">
                                 <!-- Panel -->
                                 <div *ngIf="turno.asistencia == 'asistio' && turno.estado !== 'suspendido'" class="float-right badge-dashboard badge badge-success">{{turno.asistencia}}</div>
-                                <div *ngIf="turno.asistencia == 'noAsistio' && turno.estado !== 'suspendido'" class="float-right badge-dashboard badge badge-danger">{{ turno.asistencia }}</div>
+                                <div *ngIf="turno.asistencia == 'noAsistio' && turno.estado !== 'suspendido'" class="float-right badge-dashboard badge badge-danger">{{
+                                    turno.asistencia }}</div>
                                 <div *ngIf="turno.estado == 'suspendido'" class="float-right badge-dashboard badge badge-danger">Suspendido</div>
                                 <h5>{{ turno.tipoPrestacion.term }}</h5>
                                 <div class="row" *ngIf="turno.organizacion">
@@ -27,7 +28,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col" *ngIf="turno && turno.horaInicio">
-                                        <span>{{ turno.horaInicio | date:"EEEE" | uppercase }} {{ turno.horaInicio | date: 'dd/MM/yyyy'
+                                        <span>{{ turno.horaInicio | date:"EEEE" | uppercase }} {{ turno.horaInicio | fecha
                                             }}
                                         </span>
                                         <span *ngIf="turno.horaInicio">
@@ -37,7 +38,8 @@
 
                                 <div class="row" *ngIf="turno && turno.profesionales">
                                     <div class="col">
-                                        <strong>Profesionales:</strong> {{ turno.profesionales | enumerar:['apellido', 'nombre']
+                                        <strong>Profesionales:</strong> {{ turno.profesionales | enumerar:['apellido',
+                                        'nombre']
                                         }}
                                     </div>
                                 </div>
@@ -95,7 +97,8 @@
                     {{turnoArancelamiento | json}}
                     <div>{{turnoArancelamiento.paciente.obraSocial.financiador}}</div>
                 </span>
-                <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" multiline="true" (change)="cambiarMotivo()" [(ngModel)]="turnoArancelamiento.motivoConsulta"></plex-text>
+                <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" multiline="true" (change)="cambiarMotivo()"
+                    [(ngModel)]="turnoArancelamiento.motivoConsulta"></plex-text>
             </div>
         </div>
         <br>

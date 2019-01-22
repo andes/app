@@ -1,5 +1,7 @@
-import { Component, OnInit, Output, Input, EventEmitter, HostBinding, DebugElement } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { IPaciente } from '../../../../interfaces/IPaciente';
+import { Observable } from 'rxjs/Observable';
+import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -13,6 +15,8 @@ import { ProfesionalService } from '../../../../services/profesional.service';
 import { InternacionService } from '../services/internacion.service';
 import { PacienteService } from '../../../../services/paciente.service';
 import { IPrestacionRegistro } from '../../../../modules/rup/interfaces/prestacion.registro.interface';
+import { IObraSocial } from '../../../../interfaces/IObraSocial';
+
 
 @Component({
     selector: 'rup-iniciarInternacion',
@@ -33,7 +37,7 @@ export class IniciarInternacionComponent implements OnInit {
     btnIniciarGuardar;
     showEditarCarpetaPaciente = false;
     public ocupaciones = [];
-    public obraSocial = { nombre: '', codigoPuco: '' };
+    public obraSocial: any[];
     public origenHospitalizacion = [
         { id: 'consultorio externo', nombre: 'Consultorio externo' },
         { id: 'emergencia', nombre: 'Emergencia' },
@@ -143,14 +147,14 @@ export class IniciarInternacionComponent implements OnInit {
                 // Si el paciente ya tiene una internacion en ejecucion
                 if (resultado) {
                     if (resultado.cama) {
-                        this.plex.alert('El paciente registra una internación en ejecución y está ocupando una cama');
+                        this.plex.info('warning', 'El paciente registra una internación en ejecución y está ocupando una cama');
                         // Salimos del iniciar internacion
                         this.data.emit(false);
                         this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
                         this.router.navigate(['/internacion/camas']);
                     } else {
                         // y no esta ocupando cama lo pasamos directamente a ocupar una cama
-                        this.plex.alert('El paciente tiene una internación en ejecución');
+                        this.plex.info('warning', 'El paciente tiene una internación en ejecución');
                         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
                         this.servicioPrestacion.getById(resultado.ultimaInternacion.id).subscribe(prestacion => {
                             this.prestacion = prestacion;
@@ -175,7 +179,7 @@ export class IniciarInternacionComponent implements OnInit {
                     // Se busca la obra social del paciente y se le asigna
                     this.obraSocialService.get({ dni: this.paciente.documento }).subscribe((os: any) => {
                         if (os && os.length > 0) {
-                            this.obraSocial = { nombre: os[0].financiador, codigoPuco: os[0].codigoFinanciador };
+                            this.obraSocial = [{ nombre: os[0].financiador, codigoFinanciador: os[0].codigoFinanciador }];
                             this.informeIngreso.obraSocial = { nombre: os[0].financiador, codigoPuco: os[0].codigoFinanciador };
                         }
                     });
@@ -190,7 +194,7 @@ export class IniciarInternacionComponent implements OnInit {
 
             });
         } else {
-            this.plex.alert('El paciente debe ser registrado en MPI');
+            this.plex.info('warning', 'El paciente debe ser registrado en MPI');
         }
         if (this.camaSelected) {
             let camaId = this.camaSelected.id;
@@ -347,9 +351,10 @@ export class IniciarInternacionComponent implements OnInit {
                 let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, this.tipoPrestacionSeleccionada, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso, null, this.informeIngreso.profesional);
                 nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
+
                 if (this.obraSocial) {
-                    nuevaPrestacion.solicitud.obraSocial = { codigoPuco: this.obraSocial.codigoPuco, nombre: this.obraSocial.nombre };
-                    this.informeIngreso.obraSocial = this.obraSocial;
+                    // TODO: Sub-zero wins
+                    nuevaPrestacion.solicitud.obraSocial = { codigoPuco: this.obraSocial[0].codigoFinanciador, nombre: this.obraSocial[0].nombre };
                 }
 
                 this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {

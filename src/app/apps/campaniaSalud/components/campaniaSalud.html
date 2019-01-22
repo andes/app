@@ -1,0 +1,61 @@
+<plex-layout [main]="seleccionada ? 6 : 12">
+    <plex-layout-main>
+        <header>
+            <div class="row">
+                <div class="col-md-6">
+                    <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="aplicarFiltrosBusqueda()" name="fechaDesde"
+                        label="Vigencia desde" [required]="true" [max]="fechaHasta">
+                    </plex-datetime>
+                </div>
+                <div class="col-md-6">
+                    <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="aplicarFiltrosBusqueda()" name="fechaHasta"
+                        label="Vigencia hasta" [required]="true" [min]="fechaDesde">
+                    </plex-datetime>
+                </div>
+            </div>
+        </header>
+        <div class="row">
+            <div *ngIf="!campanias?.length" class="alert alert-default">
+                <i class="mdi mdi-emoticon-sad"></i> No hay resultados que coincidan con los filtros de búsqueda
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <table *ngIf="campanias?.length" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="w-50">Asunto</th>
+                            <th>Desde</th>
+                            <th>Hasta</th>
+                            <th *ngIf="!seleccionada">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover" *ngFor="let campania of campanias" (click)="seleccionCampania(campania)">
+                            <td>{{campania.asunto}}</td>
+                            <td>{{campania.vigencia.desde | fecha}}</td>
+                            <td>{{campania.vigencia.hasta | fecha}}</td>
+                            <td *ngIf="!seleccionada">
+                                <plex-badge *ngIf="campania.activo" type="success">
+                                    {{campaniaSaludService.getEstado(campania)}} </plex-badge>
+                                <plex-badge *ngIf="!campania.activo" type="danger">
+                                    {{campaniaSaludService.getEstado(campania)}} </plex-badge>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="text-right">
+            <plex-button label="Crear" type="success" position="right" (click)="crearCampania()"></plex-button>
+        </div>
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <ng-container *ngIf="seleccionada && mostrarVisualizacionCampania">
+            <campaniaSaludVisualizacion [campania]="seleccionada" (modificarOutput)='editarCampania()'></campaniaSaludVisualizacion>
+        </ng-container>
+        <ng-container *ngIf="seleccionada &&  !mostrarVisualizacionCampania">
+            <campaniaForm [campania]="seleccionada" (guardar)='guardarCampania($event)' (cancelar)='cancelarEdicionCampania()'></campaniaForm>
+        </ng-container>
+    </plex-layout-sidebar>
+</plex-layout>

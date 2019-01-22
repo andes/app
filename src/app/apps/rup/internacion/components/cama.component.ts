@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { setTimeout } from 'timers';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { InternacionService } from '../services/internacion.service';

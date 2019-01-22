@@ -12,4 +12,4 @@ export interface ICamaEstado {
     esCensable: Boolean;
     genero: ISnomedConcept;
     esMovimiento: Boolean;
-};
+}

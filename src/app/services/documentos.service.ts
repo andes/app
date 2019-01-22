@@ -1,8 +1,6 @@
+
 import { Observable } from 'rxjs/Rx';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
 import { Injectable } from '@angular/core';
-import { Server } from '@andes/shared';
 import { environment } from '../../environments/environment';
 import { Http, Response, ResponseContentType, RequestMethod } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';
@@ -56,4 +54,14 @@ export class DocumentosService {
         return res.blob();
     }
 
+    descargarConstanciaPuco(params): Observable<any> {
+        let headers = new Headers({
+            'Content-Type': 'application/json',
+        });
+        let options = new RequestOptions({ headers: headers, responseType: ResponseContentType.Blob, method: RequestMethod.Post });
+
+        return this.http.post(this.pdfURL + '/constanciaPuco/pdf', params, options)
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
 }

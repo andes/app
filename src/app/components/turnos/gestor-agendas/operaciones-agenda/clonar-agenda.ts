@@ -2,7 +2,7 @@ import { Router } from '@angular/router';
 import { Component, OnInit, Input, Output, EventEmitter, HostBinding } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import * as moment from 'moment';
@@ -266,7 +266,7 @@ export class ClonarAgendaComponent implements OnInit {
                         clones: this.seleccionados
                     };
                     this.serviceAgenda.clonar(data).subscribe(resultado => {
-                        this.plex.alert('La Agenda se clonó correctamente').then(ok => {
+                        this.plex.info('success', 'La Agenda se clonó correctamente').then(ok => {
                             this.volverAlGestor.emit(true);
                         });
                     },
@@ -279,7 +279,7 @@ export class ClonarAgendaComponent implements OnInit {
             }).catch(() => {
             });
         } else {
-            this.plex.alert('', 'Seleccione al menos un día válido del calendario');
+            this.plex.info('warning', '', 'Seleccione al menos un día válido del calendario');
         }
     }
 

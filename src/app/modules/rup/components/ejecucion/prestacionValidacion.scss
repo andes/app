@@ -1,7 +1,9 @@
 @import '../variables';
+
 // TODO: Crear paquete NPM con las fonts
 @media print {
     @import '../../assets/font.css';
+
     * {
         -webkit-print-color-adjust: exact !important;
         /* Chrome, Safari */
@@ -11,7 +13,7 @@
 }
 
 .type.prestacion {
-    background-color: $plan;
+    background-color: $solicitud;
 }
 
 .type.hallazgo,
@@ -29,8 +31,8 @@
     background-color: $procedimiento;
 }
 
-.type.plan {
-    background-color: $plan;
+.type.solicitud {
+    background-color: $solicitud;
 }
 
 .type.producto {
@@ -48,6 +50,7 @@
 .btn-orden {
     height: 28px;
     width: 28px;
+
     i {
         position: relative;
         left: -3px;
@@ -73,7 +76,7 @@
     display: none;
 }
 
-.titulo-planes~.titulo-planes {
+.titulo-solicitudes~.titulo-solicitudes {
     display: none;
 }
 
@@ -92,6 +95,7 @@
 .titulo-consulta {
     font-weight: 400;
     color: black;
+
     .consulta {
         color: $blue;
     }
@@ -102,6 +106,7 @@
     line-height: 36px;
     vertical-align: middle;
     display: inline-flex;
+
     span {
         margin-left: 10px;
     }
