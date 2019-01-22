@@ -4,6 +4,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
+import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 
 @Component({
     selector: 'rup-resumen',
@@ -31,6 +32,7 @@ export class ResumenComponent implements OnInit {
             let id = params['id'];
             this.servicioPrestacionPaciente.getById(id, { showError: false }).subscribe(prestacion => {
                 this.prestacion = prestacion;
+                this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.prestacion.paciente });
                 // this.loadProblemas();
                 this.buscarPrestacionesPendientes();
                 // this.cargarIndicadores();
