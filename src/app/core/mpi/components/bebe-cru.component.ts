@@ -12,6 +12,7 @@ import { ParentescoService } from '../../../services/parentesco.service';
 import { PacienteService } from '../services/paciente.service';
 import { Router } from '@angular/router';
 import { PaisService } from '../../../services/pais.service';
+import { PacienteCacheService } from '../services/pacienteCache.service';
 
 @Component({
     selector: 'apps/mpi/bebe',
@@ -100,6 +101,7 @@ export class BebeCruComponent implements OnInit {
         private localidadService: LocalidadService,
         private parentescoService: ParentescoService,
         private pacienteService: PacienteService,
+        private pacienteCache: PacienteCacheService,
         private paisService: PaisService,
         private router: Router
     ) {
@@ -193,7 +195,7 @@ export class BebeCruComponent implements OnInit {
                 this.showBuscador = false;
             }
         } else {
-            this.plex.alert('Error', 'Imposible obtener el paciente seleccionado');
+            this.plex.info('warning', 'Imposible obtener el paciente seleccionado', 'Error');
         }
     }
     /**
