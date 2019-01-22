@@ -18,6 +18,7 @@ export class SelectOrganizacionComponent implements OnInit {
     ngOnInit() {
         this.auth.organizaciones().subscribe(data => {
             if (data) {
+                console.log(data);
                 this.organizaciones = data;
                 if (this.organizaciones.length === 1) {
                     this.seleccionar(this.organizaciones[0]);

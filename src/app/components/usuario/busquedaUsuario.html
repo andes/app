@@ -6,10 +6,24 @@
                 <header>
                     <h3>Administración de Permisos</h3>
                 </header>
+                <div class='row'>
+                    <div class='col-11'>
+                        <plex-text [(ngModel)]="textoLibre" [autoFocus]="autoFocus" (change)="loadUsuarios()" prefix="<i class='mdi mdi-account-search'></i>"
+                            placeholder="Buscar por DNI, nombre o apellido">
+                        </plex-text>
+                    </div>
+                    <div class='col-1'>
+                        <plex-button *ngIf='!mostrarFiltro' icon="mdi mdi-menu-down" type="primary" (click)='mostrarFiltro = true'></plex-button>
+                        <plex-button *ngIf='mostrarFiltro' icon="mdi mdi-menu-up" type="primary" (click)='mostrarFiltro = false'></plex-button>
 
-                <plex-text [(ngModel)]="textoLibre" [autoFocus]="autoFocus" (change)="loadUsuarios()" prefix="<i class='mdi mdi-account-search'></i>"
-                    placeholder="Buscar por DNI, nombre o apellido">
-                </plex-text>
+                    </div>
+                </div>
+                <ng-container *ngIf='mostrarFiltro'>
+                    <plex-select [(ngModel)]="organizacionBusqueda" name="organizacionDestino" (change)="loadUsuarios()"
+                        label="Organización" placeholder="Seleccione la organización" labelField="nombre" (getData)="loadOrganizacion($event)">
+                    </plex-select>
+                </ng-container>
+
                 <!--Loader-->
                 <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
                 <div *ngIf="users && !users.length" class="alert alert-danger">
@@ -25,7 +39,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="hover" *ngFor="let user of users  | textFilter:textoLibre ; let i=index" (click)="seleccionarUsuario(user)">
+                        <tr class="hover" *ngFor="let user of users  | textFilter:textoLibre || idOrganizacionBusqueda ; let i=index"
+                            (click)="seleccionarUsuario(user)">
                             <td>{{user.usuario}}</td>
                             <td *ngIf="user.apellido; else sinDatos">
                                 {{user.apellido}}

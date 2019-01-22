@@ -88,4 +88,6 @@ export class UsuarioCreateComponent {
     afterCreateUpdate(user) {
         this.data.emit(user);
     }
+
+
 }

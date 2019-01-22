@@ -36,6 +36,8 @@ export class UsuarioUpdateComponent implements OnInit {
     public organizacionesUsuario: IOrganizacion[] = [];
     public permisos$: any;
     public showCreate = false;
+    public sideBarPermisos = false;
+    public organizacionesNuevas;
     public showUpdate = false;
     public permisos: any[] = [];
     public userModel: any = {
@@ -46,6 +48,7 @@ export class UsuarioUpdateComponent implements OnInit {
         password: '',
         organizaciones: []
     };
+    public organizacionActualAuthUs;
 
     constructor(private plex: Plex, private server: Server, private usuarioService: UsuarioService, private router: Router,
         private auth: Auth, private provinciaService: ProvinciaService, private organizacionService: OrganizacionService, private permisosService: PermisosService) { }
@@ -63,6 +66,7 @@ export class UsuarioUpdateComponent implements OnInit {
                         this.organizacionService.get({ ids: idOrganizaciones }).subscribe(dataUss => {
                             this.organizacionesUsuario = dataUss;
                             this.loadUser();
+                            this.getOrgActualAuthUs();
                         });
                     } else {
                         this.loadUser();
@@ -86,8 +90,10 @@ export class UsuarioUpdateComponent implements OnInit {
 
         // Si el usuario puede agregar efectores, se listan todos los disponibles (que no tenga todavía)
         if (this.auth.check('usuarios:agregarEfector')) {
+            console.log('si tengo permiso');
             this.organizacionService.get({ limit: 1000 }).subscribe(organizaciones => {
                 this.newOrganizaciones = organizaciones.filter(x => !this.organizacionesUsuario.some(y => x.id === y.id));
+                console.log(this.newOrganizaciones.length);
                 this.showAgregarEfector = (this.newOrganizaciones.length > 0) ? true : false;
             });
         } else {
@@ -102,6 +108,8 @@ export class UsuarioUpdateComponent implements OnInit {
             } else {
                 this.newOrganizaciones = this.organizacionesAuth;
             }
+            console.log(this.newOrganizaciones.length);
+
             this.showAgregarEfector = (this.newOrganizaciones.length > 0) ? true : false;
         }
     }
@@ -123,6 +131,7 @@ export class UsuarioUpdateComponent implements OnInit {
         this.savePermisos();
         this.organizacionSelectPrev = this.organizacionSelect;
         this.loadPermisos();
+        this.getOrgActualAuthUs();
         setTimeout(() => this.hidePermisos = false, 0);
     }
 
@@ -204,5 +213,73 @@ export class UsuarioUpdateComponent implements OnInit {
         } else {
             this.data.emit(null);
         }
+    }
+
+    loadOrganizacion(event?) {
+        if (event && event.query) {
+            let query = {
+                nombre: event.query
+            };
+            this.organizacionService.get(query).subscribe(resultado => {
+                let res2 = resultado.filter((elem: any) => this.userModel.organizaciones.findIndex(item => elem._id === item._id) < 0);
+                console.log(res2);
+                event.callback(res2);
+            });
+        } else {
+            event.callback([]);
+        }
+    }
+
+    copiarAEfectores() {
+        this.organizacionesNuevas.forEach(element => {
+            // this.userModel.organizaciones.push({ _id: element.id, permisos: this.permisos });
+            this.seleccion.organizaciones.push({ _id: element.id, permisos: this.permisos });
+            // this.organizacionSelect.push({_id: element.id, permisos: this.permisos});
+        });
+        let idOrganizaciones = this.seleccion.organizaciones.map(i => i._id);
+
+        this.organizacionService.get({ ids: idOrganizaciones }).subscribe(dataUss => {
+            this.organizacionesUsuario = dataUss;
+            // this.loadUser();
+            // this.getOrgActualAuthUs();
+        });
+        console.log(this.userModel);
+        this.savePermisos();
+        this.usuarioService.save(this.userModel).subscribe(user => {
+            this.plex.info('success', '', 'Usuario guardado');
+            this.sideBarPermisos = false;     // this.data.emit(user);
+            this.organizacionesNuevas = null;
+        });
+
+        // this.organizacionSelect = this.userModel.organizaciones;
+        //    this.onSave();
+    }
+
+    getOrgActualAuthUs() {
+        if (this.organizacionSelect) {
+
+            this.organizacionActualAuthUs = this.userModel.organizaciones.find(x => x._id === this.organizacionSelect._id);
+            console.log(this.organizacionActualAuthUs);
+        }
+    }
+
+    pausar() {
+
+        let textoConfirm;
+        if (!this.organizacionActualAuthUs.permisosPausados) {
+            textoConfirm = 'pausar';
+        } else {
+            textoConfirm = 'reanudar';
+        }
+        this.plex.confirm(`¿Está seguro que desea ${textoConfirm} a este usuario?`).then((resultado) => {
+            if (resultado) {
+                console.log(this.organizacionSelect);
+                console.log(this.userModel.usuario, this.organizacionSelect.id);
+                this.permisosService.actualizarEstadoPermisos(this.userModel.usuario, this.organizacionSelect.id).subscribe(resultado => {
+                    // this.estadoPermisos = resultado.permisosPausados;
+                    this.organizacionActualAuthUs.permisosPausados = resultado.permisosPausados;
+                });
+            }
+        });
     }
 }

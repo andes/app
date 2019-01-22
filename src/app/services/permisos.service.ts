@@ -19,4 +19,9 @@ export class PermisosService {
         return this.server.get('/auth/organizaciones', { params });
     }
 
+    actualizarEstadoPermisos(username, idOrganizacion) {
+        console.log('/auth/estadoPermisos' + '/' + username);
+        return this.server.put('/auth/estadoPermisos' + '/' + username, {idOrganizacion});
+    }
+
 }
