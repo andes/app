@@ -619,8 +619,7 @@ export class PuntoInicioComponent implements OnInit {
         let horaActual = moment(new Date()).format('LT');
         let horaTurno = moment(turno.horaInicio).format('LT');
         return !this.esFutura(this.agendaSeleccionada) && this.agendaSeleccionada.estado !== 'auditada' &&
-            turno.estado !== 'suspendido' && horaTurno > horaActual &&
-            (!turno.asistencia || (turno.asistencia && turno.asistencia === 'asistio')) &&
+            turno.estado !== 'suspendido' && (!turno.asistencia || (turno.asistencia && turno.asistencia === 'asistio')) &&
             turno.paciente && turno.diagnostico.codificaciones.length === 0;
     }
 
