@@ -246,7 +246,7 @@ export class BebeCruComponent implements OnInit {
     }
 
     cancel() {
-        this.router.navigate(['./apps/mpi']);
+        this.router.navigate(['./apps/mpi/busqueda']);
     }
 
     save(event) {
@@ -258,7 +258,7 @@ export class BebeCruComponent implements OnInit {
             this.pacienteService.save(this.bebeModel).subscribe(
                 () => {
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
-                    this.router.navigate(['./apps/mpi']);
+                    this.router.navigate(['./apps/mpi/busqueda']);
                 },
                 () => {
                     this.plex.info('warning', 'Paciente no guardado', 'Error de conexión');
@@ -272,5 +272,4 @@ export class BebeCruComponent implements OnInit {
         this.bebeModel.direccion[0].ubicacion.localidad = null;
         this.bebeModel.direccion[0].ubicacion.provincia = null;
     }
-
 }
