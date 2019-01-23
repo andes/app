@@ -11,6 +11,7 @@ export interface IFrecuentesProfesional {
     };
     frecuentes: [{
         concepto: ISnomedConcept,
+        esSolicitud?: boolean;
         frecuencia: Number
     }];
 }
