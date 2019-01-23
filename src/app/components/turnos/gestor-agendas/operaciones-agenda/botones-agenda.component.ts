@@ -159,7 +159,7 @@ export class BotonesAgendaComponent implements OnInit {
             // Revisión de agenda
             revisionAgenda: (this.cantidadSeleccionadas === 1) && this.puedoRevisar(),
             // Reasignar turnos
-            reasignarTurnos: (this.cantidadSeleccionadas === 1) && this.hayAgendasSuspendidas() && this.hayTurnosSuspendidos() && puedeReasignar,
+            reasignarTurnos: (this.cantidadSeleccionadas === 1) && this.hayTurnosSuspendidos() && puedeReasignar,
             // Imprimir pdf
             listarTurnos: (this.cantidadSeleccionadas > 0) && puedeImprimir,
             // Imprimir pdf carpetas
@@ -192,6 +192,7 @@ export class BotonesAgendaComponent implements OnInit {
             return false;
         }
     }
+
 
     puedoEditar() {
         return this.agendasSeleccionadas.filter((agenda) => {
