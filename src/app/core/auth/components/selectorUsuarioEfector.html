@@ -1,0 +1,112 @@
+<plex-tabs [activeIndex]="pestaniaActiva" (change)="cambio($event)">
+    <plex-tab label="Selección Usuario" color="procedimiento">
+        <div>
+            <div class='row'>
+                <div class='col-11'>
+                    <plex-text [(ngModel)]="textoLibre" (change)="loadUsuarios()" prefix="<i class='mdi mdi-account-search'></i>"
+                        placeholder="Buscar por DNI, nombre o apellido">
+                    </plex-text>
+                </div>
+                <div class='col-1'>
+                    <plex-button *ngIf='!mostrarFiltrosAvanzados' icon="mdi mdi-menu-down" type="primary" (click)='mostrarFiltrosAvanzados = true'></plex-button>
+                    <plex-button *ngIf='mostrarFiltrosAvanzados' icon="mdi mdi-menu-up" type="primary" (click)='mostrarFiltrosAvanzados = false'></plex-button>
+                </div>
+            </div>
+            <ng-container *ngIf='mostrarFiltrosAvanzados'>
+                <plex-select [(ngModel)]="organizacionBusqueda" name="organizacionDestino" (change)="loadUsuarios()"
+                    label="Organización" placeholder="Seleccione la organización" labelField="nombre" (getData)="loadOrganizacion($event)">
+                </plex-select>
+            </ng-container>
+
+            <div *ngIf="users && !users.length" class="alert alert-danger">
+                <i class="mdi mdi-account-alert"></i> El usuario no se ha encontrado
+            </div>
+            <!--Tabla de resultados por SimpleQuery -->
+            <table *ngIf="users && users.length" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Apellido</th>
+                        <th>Nombre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="hover" *ngFor="let user of users  | textFilter:textoLibre ; let i=index" (click)="seleccionarUsuario(user)">
+                        <td>{{user.usuario}}</td>
+                        <td *ngIf="user.apellido; else sinDatos">
+                            {{user.apellido}}
+                        </td>
+                        <td *ngIf="user.nombre; else sinDatos">
+                            {{user.nombre}}
+                        </td>
+                        <ng-template #sinDatos>
+                            <td> SIN DATOS</td>
+                        </ng-template>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </plex-tab>
+    <plex-tab *ngIf="usuarioSeleccionado" label="Selección Organización">
+        <legend>Datos del usuario</legend>
+        <div class="row">
+            <div class="col-4">Nombre: {{usuarioSeleccionado.nombre}}</div>
+            <div class="col-4">Apellido: {{usuarioSeleccionado.apellido}}</div>
+            <div class="col-4">
+                <span *ngIf="profesionalAsociadoUsuario">
+                    <span class="badge-success"> Profesional </span>
+                </span>
+            </div>
+        </div>
+        <!-- A partir de aca  -->
+        <span *ngIf="!hidePermisos">
+            <div class="row">
+                <div class="col-8">
+                    <plex-select [(ngModel)]="organizacionSelect" name="organizacion" [data]="organizacionesUsuario"
+                        [required]="true" (change)="onOrgChange()" labelField="nombre + ', ' + direccion.ubicacion.localidad.nombre">
+                    </plex-select>
+                </div>
+                <div class="col-1" *ngIf="showAgregarEfector">
+                    <plex-button type="success" icon='mdi mdi-plus' (click)="newEfector()"></plex-button>
+                </div>
+                <div class="col-1" *ngIf="showAgregarEfector">
+                    <plex-button *ngIf='organizacionActualAuthUs && !organizacionActualAuthUs.permisosPausados' type="danger"
+                        icon='mdi mdi-stop' (click)='pausar()'></plex-button>
+                    <plex-button *ngIf=' organizacionActualAuthUs && organizacionActualAuthUs.permisosPausados' type="success"
+                        icon='mdi mdi-play' (click)='pausar()'></plex-button>
+
+                </div>
+                <div class="col-1" *ngIf="showAgregarEfector && organizacionActualAuthUs">
+                    <plex-button type="info" icon='mdi mdi-content-copy' (click)="sideBarPermisos = true"></plex-button>
+                </div>
+                <div class="col-1" *ngIf="showAgregarEfector">
+                    <plex-button type="danger" icon='mdi mdi-delete' (click)="deleteEfector()" *ngIf="organizacionesUsuario?.length"></plex-button>
+                </div>
+            </div>
+            <div class="row">&nbsp;</div>
+            <!-- <div *ngIf="organizacionesUsuario.length > 0 && organizacionSelect">
+                <div *ngFor="let permiso of permisos$ | async ">
+                    <arbolPermisos [item]="permiso" [userPermissions]="permisos"></arbolPermisos>
+                </div>
+            </div>
+            <div *ngIf="organizacionesUsuario.length <= 0" class="alert alert-default">
+                <i class="mdi mdi-emoticon-sad"></i> Agregue un efector para modificar sus permisos
+            </div> -->
+            <div *ngIf="organizacionesUsuario.length > 0 && !organizacionSelect" class="alert alert-default">
+                <i class="mdi mdi-emoticon-sad"></i> Seleccione una organizacion
+            </div>
+        </span>
+        <div class="row" *ngIf="hidePermisos">
+            <div class="col-10">
+                <!-- <plex-select label="Nuevo Efector" [(ngModel)]="newOrg" name="nuevaOrganizacion" [data]="newOrganizaciones"
+                    [required]="true" labelField="nombre + ', ' + direccion.ubicacion.localidad.nombre"></plex-select> -->
+            </div>
+            <div class="col-2">
+                <plex-button type="primary" size="sm" label="Agregar" (click)="agregarOrg()"></plex-button>
+            </div>
+        </div>
+        <!-- hasta aca -->
+
+
+    </plex-tab>
+</plex-tabs>

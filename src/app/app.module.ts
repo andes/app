@@ -321,6 +321,8 @@ import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.c
 import { UsuarioCreateComponent } from './components/usuario/usuarioCreate.component';
 import { UsuarioUpdateComponent } from './components/usuario/usuarioUpdate.component';
 import { ArbolPermisosComponent } from './components/usuario/arbolPermisos.component';
+import { GestorUsuarioComponent } from './core/auth/components/gestorUsuario.component';
+import { SelectorUsuarioEfectorComponent } from './core/auth/components/selectorUsuarioEfector.component';
 
 // REPORTES
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
@@ -568,6 +570,7 @@ registerLocaleData(localeEs, 'es');
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
         PermisosComponent, ArbolPermisosComponent,
+        GestorUsuarioComponent, SelectorUsuarioEfectorComponent,
         // AuditoriaPorBloqueComponent,
         PuntoInicioComponent,
         VincularPacientesComponent,
