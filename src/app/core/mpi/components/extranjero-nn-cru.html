@@ -184,7 +184,7 @@
 
                 <!-- FAMILIARES -->
                 <plex-tab label="Relaciones" icon="account-multiple">
-                    <relaciones-pacientes [paciente]="pacienteModel" (arrayBorradas)="actualizarRelacionesBorradas($event)"></relaciones-pacientes>
+                    <relaciones-pacientes [paciente]="pacienteModel" (actualizar)="actualizarRelaciones($event)"></relaciones-pacientes>
                 </plex-tab>
             </plex-tabs>
         </form>

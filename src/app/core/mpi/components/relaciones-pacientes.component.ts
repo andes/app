@@ -23,14 +23,15 @@ export class RelacionesPacientesComponent implements OnInit {
     @Input()
     set paciente(valor: IPaciente) {
         this._paciente = valor;
+        // Se guarda estado de las relaciones al comenzar la edición
         if (valor.relaciones) {
-            this.relacionesIniciales = valor.relaciones;
+            this.relacionesIniciales = valor.relaciones.slice(0, valor.relaciones.length);
         }
     }
     get paciente(): IPaciente {
         return this._paciente;
     }
-    @Output() arrayBorradas: EventEmitter<any[]> = new EventEmitter<any[]>();
+    @Output() actualizar: EventEmitter<any> = new EventEmitter<any>();
     @ViewChild('listadoRel') listado: ElementRef;
 
     _paciente: IPaciente;
@@ -48,7 +49,6 @@ export class RelacionesPacientesComponent implements OnInit {
     public nombrePattern: string;
 
     constructor(
-        private pacienteService: PacienteService,
         private parentescoService: ParentescoService,
         public plex: Plex) { }
 
@@ -57,11 +57,6 @@ export class RelacionesPacientesComponent implements OnInit {
         this.parentescoService.get().subscribe(resultado => {
             this.parentescoModel = resultado;
         });
-
-        // Se guarda estado de las relaciones al comenzar la edición
-        if (this.paciente.relaciones && this.paciente.relaciones.length) {
-            this.relacionesIniciales = this.paciente.relaciones.slice(0, this.paciente.relaciones.length - 1);
-        }
     }
 
     // -------------- SOBRE BUSCADOR ----------------
@@ -75,7 +70,7 @@ export class RelacionesPacientesComponent implements OnInit {
             this.searchClear = false;
             this.loading = false;
             this.actualizarPosiblesRelaciones(pacientes);
-            if (this.paciente.relaciones.length > 2) {
+            if (this.paciente.relaciones && this.paciente.relaciones.length > 2) {
                 // scroll hacia resultado de búsqueda
                 window.setTimeout(() => {
                     this.listado.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -114,7 +109,6 @@ export class RelacionesPacientesComponent implements OnInit {
                 ultimaRelacion = this.paciente.relaciones[this.paciente.relaciones.length - 1];
                 permitirNuevaRelacion = ultimaRelacion.relacion; // Boolean(ultimaRelacion.documento && ultimaRelacion.apellido && ultimaRelacion.nombre && ultimaRelacion.relacion);
             }
-
             if (permitirNuevaRelacion) {
                 this.buscarPacRel = '';
                 let unaRelacion = Object.assign({}, {
@@ -137,11 +131,13 @@ export class RelacionesPacientesComponent implements OnInit {
 
                 // Se inserta nueva relación en array de relaciones del paciente
                 let index = null;
-                if (this.paciente.relaciones) {
+                if (this.paciente.relaciones && this.paciente.relaciones.length) {
                     this.paciente.relaciones.push(unaRelacion);
                 } else {
                     this.paciente.relaciones = [unaRelacion];
                 }
+                // notificamos cambios
+                this.actualizar.emit({ relaciones: this.paciente.relaciones, relacionesBorradas: this.relacionesBorradas });
 
                 // Si esta relación fue borrada anteriormente en esta edición, se quita del arreglo 'relacionesBorradas'
                 index = this.relacionesBorradas.findIndex(rel => rel.documento === unaRelacion.documento);
@@ -164,7 +160,8 @@ export class RelacionesPacientesComponent implements OnInit {
                 this.relacionesBorradas.push(this.paciente.relaciones[i]);
             }
             this.paciente.relaciones.splice(i, 1);
-            this.arrayBorradas.emit(this.relacionesBorradas);
+            // notificamos cambios
+            this.actualizar.emit({ relaciones: this.paciente.relaciones, relacionesBorradas: this.relacionesBorradas });
         }
     }
 }

@@ -125,6 +125,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
     };
 
     public pacientes: IPacienteMatch[] | IPaciente[];
+    changeRelaciones: boolean;
 
     constructor(
         public router: Router,
@@ -193,38 +194,6 @@ export class ExtranjeroNNCruComponent implements OnInit {
 
     // ---------------- PACIENTE -----------------------
 
-    // actualizarDatosPaciente() {
-    //     if (this.paciente.contacto) {
-    //         if (this.paciente.contacto.length <= 0) {
-    //             this.paciente.contacto[0] = this.contacto;
-    //         }
-    //     } else {
-    //         this.paciente.contacto = [this.contacto];
-    //     }
-
-    //     if (this.paciente.direccion) {
-    //         if (this.paciente.direccion.length <= 0) {
-    //             // Si la dirección existe pero esta vacía, completamos la 1er posición del arreglo con el schema default de dirección
-    //             this.paciente.direccion[0] = this.direccion;
-    //         } else {
-    //             if (this.paciente.direccion[0].ubicacion) {
-    //                 if (this.paciente.direccion[0].ubicacion.provincia !== null) {
-    //                     (this.paciente.direccion[0].ubicacion.provincia.nombre === 'Neuquén') ? this.viveProvNeuquen = true : this.viveProvNeuquen = false;
-    //                     this.loadLocalidades(this.paciente.direccion[0].ubicacion.provincia);
-    //                 }
-    //             }
-    //             if (!this.paciente.reportarError) {
-    //                 this.paciente.reportarError = false;
-    //             }
-    //         }
-    //     } else {
-    //         // Si no tenia dirección se le asigna el arreglo con el schema default
-    //         this.paciente.direccion = [this.direccion];
-    //     }
-    //     this.pacienteModel = Object.assign({}, this.paciente);
-    //     this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
-    // }
-
 
     isEmptyObject(obj) {
         for (let prop in obj) {
@@ -237,20 +206,6 @@ export class ExtranjeroNNCruComponent implements OnInit {
 
 
     // ------------------ DATOS BASICOS -------------------------
-
-    // verificarDNISexo(listaSimilares) {
-    //     let i = 0;
-    //     let cond = false;
-    //     let sexoPac = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-    //     while (i < listaSimilares.length && !cond) {
-    //         if ((listaSimilares[i].paciente.documento === this.pacienteModel.documento) && (listaSimilares[i].paciente.sexo === sexoPac)) {
-    //             this.enableIgnorarGuardar = false;
-    //             cond = true;
-    //         }
-    //         i++;
-    //     }
-    //     return cond;
-    // }
 
     completarGenero() {
         if (!this.pacienteModel.genero) {
@@ -359,7 +314,6 @@ export class ExtranjeroNNCruComponent implements OnInit {
                     form.form.controls['valor-' + indice].setErrors(null);
                 } else {
                     form.form.controls['valor-' + indice].setErrors({ 'invalid': true });
-                    console.log(form.form.controls['valor-' + indice]);
                 }
             }
         }, 500);
@@ -381,7 +335,6 @@ export class ExtranjeroNNCruComponent implements OnInit {
         } else {
             this.pacienteModel.contacto = this.contactosBackUp;
         }
-        console.log(this.pacienteModel);
     }
 
     removeContacto(i) {
@@ -436,10 +389,11 @@ export class ExtranjeroNNCruComponent implements OnInit {
         if (this.viveEnNeuquen) {
             pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadNeuquen;
         }
-
         this.pacienteService.save(pacienteGuardar).subscribe(
             resultadoSave => {
-                this.actualizarRelaciones(resultadoSave);
+                if (this.changeRelaciones) {
+                    this.saveRelaciones(resultadoSave);
+                }
                 this.plex.info('success', 'Los datos se actualizaron correctamente');
                 this.router.navigate(['apps/mpi/busqueda']);
             },
@@ -450,7 +404,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
     }
 
     // Borra/agrega relaciones al paciente segun corresponda.
-    actualizarRelaciones(unPaciente) {
+    saveRelaciones(unPaciente) {
         this.pacienteService.save(unPaciente).subscribe(unPacienteSave => {
             if (unPacienteSave) {
                 // Borramos relaciones
@@ -507,8 +461,10 @@ export class ExtranjeroNNCruComponent implements OnInit {
         this.pacienteModel.notas = notasNew;
     }
 
-    actualizarRelacionesBorradas(arrayBorradas: any[]) {
-        this.relacionesBorradas = arrayBorradas;
+    actualizarRelaciones(data: any) {
+        this.changeRelaciones = true;
+        this.pacienteModel.relaciones = data.relaciones;
+        this.relacionesBorradas = data.relacionesBorradas;
     }
 
 }

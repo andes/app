@@ -52,6 +52,7 @@ export class PacienteCruComponent implements OnInit {
     entidadValidadora = '';
     viveEnNeuquen = false;
     viveProvNeuquen = false;
+    changeRelaciones = false;
     posibleDuplicado = false;
     loading = false;
     esEscaneado = false;
@@ -211,7 +212,6 @@ export class PacienteCruComponent implements OnInit {
         this.estadosCiviles = enumerados.getObjEstadoCivil();
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.estados = enumerados.getEstados();
-
     }
 
     private updateTitle(nombre: string) {
@@ -483,7 +483,9 @@ export class PacienteCruComponent implements OnInit {
                         this.plex.info('warning', 'Existen pacientes similares, verifique las sugerencias');
                     }
                 } else {
-                    this.actualizarRelaciones(resultadoSave);
+                    if (this.changeRelaciones) {
+                        this.saveRelaciones(resultadoSave);
+                    }
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
                     this.router.navigate(['apps/mpi/busqueda']);
                 }
@@ -492,10 +494,11 @@ export class PacienteCruComponent implements OnInit {
                 this.plex.info('warning', 'Error guardando el paciente');
             }
         );
+        this.pacienteCache.setPaciente(null);
     }
 
     // Borra/agrega relaciones al paciente segun corresponda.
-    actualizarRelaciones(unPacienteSave) {
+    saveRelaciones(unPacienteSave) {
         if (unPacienteSave) {
             // Borramos relaciones
             if (this.relacionesBorradas.length > 0) {
@@ -585,8 +588,10 @@ export class PacienteCruComponent implements OnInit {
     }
 
 
-    actualizarRelacionesBorradas(arrayBorradas: any[]) {
-        this.relacionesBorradas = arrayBorradas;
+    actualizarRelaciones(data: any) {
+        this.changeRelaciones = true;
+        this.pacienteModel.relaciones = data.relaciones;
+        this.relacionesBorradas = data.relacionesBorradas;
     }
 
 

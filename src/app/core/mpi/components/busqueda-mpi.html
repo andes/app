@@ -19,10 +19,10 @@
                 </div>
             </div>
             <br>
-            <div class="row" *ngIf="resultadoBusqueda && !resultadoBusqueda.length && !searchClear">
-                <div class="col-4 contenedorTipo" (click)="registroBebe()">CARGAR BEBÉ</div>
-                <div class="col-4 contenedorTipo" (click)="registroSinDni()">CARGAR NN O EXTRANJERO</div>
-                <div class="col-4 contenedorTipo" (click)="registroConDni()">CARGAR IDENTIFICADO</div>
+            <div class="row justify-content-center" *ngIf="resultadoBusqueda && !resultadoBusqueda.length && !searchClear">
+                <div class="col-3 contenedorTipo" (click)="registroBebe()">CARGAR BEBÉ</div>
+                <div class="col-3 offset-sm-1 contenedorTipo" (click)="registroSinDni()">CARGAR NN O EXTRANJERO</div>
+                <div class="col-3 offset-sm-1 contenedorTipo" (click)="registroConDni()">CARGAR IDENTIFICADO</div>
             </div>
         </fieldset>
     </plex-layout-main>
