@@ -36,10 +36,8 @@
 
                         <div class="row" *ngIf="turno && turno.profesionales">
                             <div class="col">
-                                <strong>Profesionales:</strong> {{ turno.profesionales |
-                                enumerar:['apellido',
-                                'nombre']
-                                }}
+                                <strong>Profesionales:</strong>
+                                {{ turno.profesionales | enumerar:['apellido','nombre']}}
                             </div>
                         </div>
                         <!-- <br> -->
