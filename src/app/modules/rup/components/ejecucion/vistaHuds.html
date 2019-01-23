@@ -5,11 +5,11 @@
             <!-- Panel Principal -->
             <div class="col-8">
                 <plex-box>
-                    <header>
-                        <div class="page-title">
-                            HUDS
+                    <ng-container *ngIf="!registrosHuds">
+                        <div>
+                            <i class="adi adi-andes-logo"></i>
                         </div>
-                    </header>
+                    </ng-container>
                     <plex-tabs (close)="onCloseTab($event)">
                         <ng-container *ngIf="registrosHuds">
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">
@@ -33,7 +33,7 @@
                                                     Relacionado con:
                                                     <small class="badge badge-info">
                                                         {{ relacion?.cara ? 'diente ' + relacion?.concepto?.term + '
-                                                        (cara ' + relacion?.cara + ')' : relacion.concepto?.term }}
+                                                        (cara ' + relacion?.cara + ')' : relacion?.concepto?.term }}
                                                     </small>
                                                 </ng-container>
                                             </div>

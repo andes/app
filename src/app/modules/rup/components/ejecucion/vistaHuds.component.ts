@@ -10,6 +10,7 @@ import { LogService } from '../../../../services/log.service';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
+import { IPrestacion } from '../../interfaces/prestacion.interface';
 
 @Component({
     selector: 'rup-vistaHuds',
@@ -20,8 +21,8 @@ export class VistaHudsComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true;
 
-
     @Input() paciente: IPaciente;
+    @Input() prestacion: IPrestacion;
     @Output() cambiarPaciente = new EventEmitter<boolean>();
 
     // Defaults de Tabs panel derecho
@@ -51,6 +52,14 @@ export class VistaHudsComponent implements OnInit {
     *
     */
     ngOnInit() {
+
+        this.plex.updateTitle([{
+            route: '/',
+            name: 'ANDES'
+        }, {
+            name: 'HUDS'
+        }]);
+
         // consultamos desde que pagina se ingreso para poder volver a la misma
         this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
             if (resp) {
@@ -86,7 +95,7 @@ export class VistaHudsComponent implements OnInit {
             });
         } else {
             // Loggeo de lo que ve el profesional
-            this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente  });
+            this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
             this.logService.post('rup', 'hudsPantalla', {
                 paciente: {
                     id: this.paciente.id,
