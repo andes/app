@@ -45,8 +45,6 @@ import { MapaEspacioFisicoVistaComponent } from './components/turnos/configuraci
 // ... MPI
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
-import { Auditoria2Component } from './components/auditoria/auditoria2.component';
-import { PacienteDemoComponent } from './modules/mpi/components/demo.component';
 
 // ... Obras sociales
 import { PucoComponent } from './components/puco/puco.component';

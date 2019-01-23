@@ -91,7 +91,7 @@ export class PracticasHojatrabajoComponent implements OnInit {
                         }
                     });
                 } else {
-                    this.plex.alert('', 'Práctica ya ingresada');
+                    this.plex.info('danger', 'Práctica ya ingresada');
                 }
             }
             this.nombreImpresion = '';

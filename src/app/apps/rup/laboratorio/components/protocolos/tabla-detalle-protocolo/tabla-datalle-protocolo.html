@@ -107,7 +107,6 @@
                         </td>
                         <td *ngIf='modo ==="validacion"'>
                             <span style='color:green'>
-                                <!-- <p> {{ practicaCarga.practica.resultado?.resultadosAnteriores | json }}</p> -->
                                 <ng-container *ngIf="practicaCarga.practica.resultadosAnteriores && practicaCarga.practica.resultadosAnteriores.resultados.length > 0">
                                     <span (click)="verHistorialResultados(practicaCarga)">
                                         {{ practicaCarga.practica.resultadosAnteriores.resultados[0].valor }}
