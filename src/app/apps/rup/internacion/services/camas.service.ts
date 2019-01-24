@@ -192,4 +192,12 @@ export class CamasService {
         return this.cambiaEstado(cama.id, dto);
 
     }
+
+    UOxCama(idUO): Observable<any> {
+        let params = {
+            unidadesOrganizativas: idUO
+        };
+        return this.server.get(this.camasUrl, { params: params, showError: true });
+    }
+
 }

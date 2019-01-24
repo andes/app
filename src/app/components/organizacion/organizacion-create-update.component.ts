@@ -23,7 +23,7 @@ import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { ITipoEstablecimiento } from './../../interfaces/ITipoEstablecimiento';
 import { IProvincia } from './../../interfaces/IProvincia';
 import { Router } from '@angular/router';
-
+import { CamasService } from '../../apps/rup/internacion/services/camas.service';
 @Component({
     selector: 'organizacion-create-update',
     templateUrl: 'organizacion-create-update.html'
@@ -39,7 +39,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     tipoComunicacion: any[];
     todasLocalidades: ILocalidad[];
     localidadesNeuquen: any[];
-
+    servicio;
     private paisArgentina = null;
     private provinciaNeuquen = null;
     private barrioNulleado = null;
@@ -124,6 +124,8 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         private tipoEstablecimientoService: TipoEstablecimientoService,
         public plex: Plex,
         public snomed: SnomedService,
+
+        public CamaService: CamasService,
         private router: Router,
     ) { }
 
@@ -274,4 +276,32 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     routeCama() {
         this.router.navigate(['/tm/organizacion/' + this.seleccion.id + '/cama']);
     }
+
+
+    addU0() {
+        if ((this.organizacionModel.unidadesOrganizativas.indexOf(this.servicio) === -1)) {
+            this.organizacionModel.unidadesOrganizativas.push(this.servicio);
+        } else {
+            this.plex.info('warning', 'Unidad organizativa ya cargada');
+        }
+    }
+    deleteUO($event) {
+        if ($event.id) {
+            this.CamaService.UOxCama($event.id).subscribe(camas => {
+                console.log(camas);
+                if (camas.length <= 0) {
+                    this.plex.confirm('¿Desea eliminar?', 'Eliminar unidad organizativa').then((confirmar) => {
+                        let index = this.organizacionModel.unidadesOrganizativas.findIndex((item) => item === $event);
+                        if (confirmar && index >= 0) {
+                            this.organizacionModel.unidadesOrganizativas.splice(index, 1);
+                        }
+                    });
+                } else {
+                    this.plex.info('warning', 'El sector contiene camas', 'No se puede borrar');
+                }
+            });
+        }
+    }
 }
+
+
