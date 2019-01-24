@@ -87,7 +87,6 @@
                 </ul>
             </div>
         </ng-container>
-
         <div>
             <small class="pr-1" *ngIf="getSemanticTagFiltros()">Filtros:</small>
             <i class="text-secondary ml-1">{{ getSemanticTagFiltros() }}</i>
@@ -95,12 +94,10 @@
     </ng-container>
 </div>
 
-
-<ng-container *ngIf="filtroActual !== 'planes'">
+<!-- <ng-container *ngIf="filtroActual !== 'planes'">
     <plex-text label="Buscar" name="buscar" [(ngModel)]="txtABuscar" (change)="buscar()">
     </plex-text>
-</ng-container>
-
+</ng-container> -->
 
 <div class="row huds-busqueda">
     <div class="col">
