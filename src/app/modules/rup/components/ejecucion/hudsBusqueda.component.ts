@@ -5,6 +5,8 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
+import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
+import { dateValidator } from '@andes/plex/src/lib/core/validator.functions';
 @Component({
     selector: 'rup-hudsBusqueda',
     templateUrl: 'hudsBusqueda.html',
@@ -21,7 +23,11 @@ export class HudsBusquedaComponent implements OnInit {
     colapsado = true;
     ordenDesc = true;
     elementosRegistro: any[];
+
     procedimientos: any;
+    // Copia de los procedimientos para el buscador.
+    procedimientosCopia: any[];
+
     problemasActivosAux: any;
     hallazgosCronicosAux: any[];
     hallazgosNoActivosAux: any;
@@ -73,6 +79,10 @@ export class HudsBusquedaComponent implements OnInit {
      */
     public prestaciones: any = [];
     /**
+     * Copia de las prestaciones para aplicar los filtros
+     */
+    public prestacionesCopia: any = [];
+    /**
      * Listado de todos los hallazgos
      */
     public hallazgos: any = [];
@@ -86,7 +96,8 @@ export class HudsBusquedaComponent implements OnInit {
      * Listado de todos los productos (medicamentos)
      */
     public productos: any = [];
-
+    // copia de los productos para el buscador
+    public productosCopia: any = [];
 
     /**
      * Listado de todos los hallazgos
@@ -98,6 +109,9 @@ export class HudsBusquedaComponent implements OnInit {
          */
     public hallazgosNoActivos: any = [];
 
+    public fechaInicio;
+    public fechaFin;
+
     public conceptos = {
         hallazgo: ['hallazgo', 'situación', 'evento'],
         trastorno: ['trastorno'],
@@ -108,7 +122,19 @@ export class HudsBusquedaComponent implements OnInit {
         laboratorios: ['laboratorios'],
     };
 
+    /**
+     * Prestaciones permitidas para el usuario
+     */
+    public tiposPrestacion;
+    /**
+     * Prestacion seleccionada para aplicar el filtro
+     */
+    public prestacionSeleccionada;
+
+    public txtABuscar;
+
     constructor(private servicioPrestacion: PrestacionesService,
+        public servicioTipoPrestacion: TipoPrestacionService,
         public plex: Plex, public auth: Auth) {
     }
 
@@ -123,6 +149,9 @@ export class HudsBusquedaComponent implements OnInit {
             // this.listarProblemasCronicos();
             this.listarHallazgos();
         }
+        this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
+            this.tiposPrestacion = data;
+        });
     }
 
     dragStart(e) {
@@ -504,6 +533,7 @@ export class HudsBusquedaComponent implements OnInit {
                     estado: p.estados[p.estados.length - 1].tipo
                 };
             });
+            this.prestacionesCopia = this.prestaciones;
             this.buscarCDAPacientes();
 
         });
@@ -564,6 +594,7 @@ export class HudsBusquedaComponent implements OnInit {
     listarProcedimientos() {
         this.servicioPrestacion.getByPacienteProcedimiento(this.paciente.id, true).subscribe(procedimientos => {
             this.procedimientos = procedimientos;
+            this.procedimientosCopia = procedimientos;
         });
     }
 
@@ -571,6 +602,7 @@ export class HudsBusquedaComponent implements OnInit {
     listarMedicamentos() {
         this.servicioPrestacion.getByPacienteMedicamento(this.paciente.id, true).subscribe(medicamentos => {
             this.productos = medicamentos;
+            this.productosCopia = medicamentos;
         });
     }
 
@@ -675,7 +707,24 @@ export class HudsBusquedaComponent implements OnInit {
     }
 
     buscar() {
-        // TODO: Implementar :joy:
+        const regex_buscar = new RegExp('.*' + this.txtABuscar + '.*', 'ig');
+        this.hallazgosCronicos = this.hallazgos.filter(a => regex_buscar.test(a.concepto.term) || this.txtABuscar === null);
+        this.procedimientos = this.procedimientosCopia.filter(p => regex_buscar.test(p.concepto.term) || this.txtABuscar === null);
+        this.prestaciones = this.prestacionesCopia.filter(p => regex_buscar.test(p.prestacion.term) || this.txtABuscar === null);
+        this.productos = this.productosCopia.filter(p => regex_buscar.test(p.concepto.term) || this.txtABuscar === null);
     }
 
+    filtrar() {
+        if (this.prestacionSeleccionada) {
+            this.prestaciones = this.prestacionesCopia.filter(p => p.prestacion.conceptId === this.prestacionSeleccionada.conceptId);
+        } else {
+            this.prestaciones = this.prestacionesCopia;
+        }
+        if (this.fechaInicio || this.fechaFin) {
+            this.fechaInicio = this.fechaInicio ? this.fechaInicio : new Date();
+            this.fechaFin = this.fechaFin ? this.fechaFin : new Date();
+            this.prestaciones = this.prestacionesCopia.filter(p => p.fecha >= moment(this.fechaInicio).startOf('day').toDate() &&
+                p.fecha <= moment(this.fechaFin).endOf('day').toDate());
+        }
+    }
 }
