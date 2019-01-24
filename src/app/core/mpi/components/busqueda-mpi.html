@@ -7,6 +7,12 @@
                         (searchClear)="onSearchClear()"></paciente-buscar>
                 </div>
             </div>
+
+            <div class="row justify-content-center">
+                <div class="col-3 contenedorTipo" (click)="registroBebe()">CARGAR BEBÉ</div>
+                <div class="col-3 offset-1 contenedorTipo" (click)="registroSinDni()">CARGAR NN O EXTRANJERO</div>
+                <div class="col-3 offset-1 contenedorTipo" (click)="registroConDni()">CARGAR IDENTIFICADO</div>
+            </div>
             <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
             <div class="row">
@@ -17,12 +23,6 @@
                         <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
                     </div>
                 </div>
-            </div>
-            <br>
-            <div class="row justify-content-center" *ngIf="resultadoBusqueda && !resultadoBusqueda.length && !searchClear">
-                <div class="col-3 contenedorTipo" (click)="registroBebe()">CARGAR BEBÉ</div>
-                <div class="col-3 offset-sm-1 contenedorTipo" (click)="registroSinDni()">CARGAR NN O EXTRANJERO</div>
-                <div class="col-3 offset-sm-1 contenedorTipo" (click)="registroConDni()">CARGAR IDENTIFICADO</div>
             </div>
         </fieldset>
     </plex-layout-main>

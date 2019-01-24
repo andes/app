@@ -12,10 +12,9 @@ import { IProvincia } from './../../../interfaces/IProvincia';
 import { Plex } from '@andes/plex';
 import * as moment from 'moment';
 import { Component, OnInit, } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { PacienteCacheService } from '../services/pacienteCache.service';
 import { BarrioService } from '../../../services/barrio.service';
-import { RelacionesPacientesComponent } from './relaciones-pacientes.component';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'paciente-cru',
@@ -127,7 +126,7 @@ export class PacienteCruComponent implements OnInit {
     public activarApp = false;
 
     constructor(
-        public router: Router,
+        private location: Location,
         private paisService: PaisService,
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
@@ -135,7 +134,6 @@ export class PacienteCruComponent implements OnInit {
         private pacienteService: PacienteService,
         private parentescoService: ParentescoService,
         public appMobile: AppMobileService,
-        public route: ActivatedRoute,
         private pacienteCache: PacienteCacheService,
         public plex: Plex) {
         this.nombrePattern = pacienteService.nombreRegEx.source;
@@ -487,7 +485,7 @@ export class PacienteCruComponent implements OnInit {
                         this.saveRelaciones(resultadoSave);
                     }
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
-                    this.router.navigate(['apps/mpi/busqueda']);
+                    this.location.back();
                 }
             },
             error => {
@@ -574,7 +572,7 @@ export class PacienteCruComponent implements OnInit {
 
     cancel() {
         this.showMobile = false;
-        this.router.navigate(['apps/mpi/busqueda']);
+        this.location.back();
     }
 
     // ---------------- NOTIFICACIONES --------------------

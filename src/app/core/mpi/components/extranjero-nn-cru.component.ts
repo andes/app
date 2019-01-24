@@ -12,8 +12,8 @@ import { ParentescoService } from '../../../services/parentesco.service';
 import { IContacto } from '../../../interfaces/IContacto';
 import * as enumerados from '../../../utils/enumerados';
 import { PacienteService } from '../services/paciente.service';
-import { ActivatedRoute, Router } from '@angular/router';
 import { BarrioService } from '../../../services/barrio.service';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'extranjero-nn-cru',
@@ -128,7 +128,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
     changeRelaciones: boolean;
 
     constructor(
-        public router: Router,
+        private location: Location,
         private plex: Plex,
         private paisService: PaisService,
         private provinciaService: ProvinciaService,
@@ -364,7 +364,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
     // ------------------ SAVE -----------------------------
 
     cancel() {
-        this.router.navigate(['apps/mpi/busqueda']);
+        this.location.back();
     }
 
     save(event) {
@@ -395,7 +395,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
                     this.saveRelaciones(resultadoSave);
                 }
                 this.plex.info('success', 'Los datos se actualizaron correctamente');
-                this.router.navigate(['apps/mpi/busqueda']);
+                this.location.back();
             },
             error => {
                 this.plex.info('warning', 'Error guardando el paciente');

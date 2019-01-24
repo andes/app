@@ -10,8 +10,8 @@ import { IProvincia } from '../../../interfaces/IProvincia';
 import { IDireccion } from '../interfaces/IDireccion';
 import { ParentescoService } from '../../../services/parentesco.service';
 import { PacienteService } from '../services/paciente.service';
-import { Router } from '@angular/router';
 import { PaisService } from '../../../services/pais.service';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'apps/mpi/bebe',
@@ -96,13 +96,13 @@ export class BebeCruComponent implements OnInit {
     parentescoModel: any[];
 
     constructor(
+        private location: Location,
         private plex: Plex,
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
         private parentescoService: ParentescoService,
         private pacienteService: PacienteService,
         private paisService: PaisService,
-        private router: Router
     ) {
         this.plex.updateTitle([{
             route: '/apps/mpi',
@@ -250,7 +250,7 @@ export class BebeCruComponent implements OnInit {
     }
 
     cancel() {
-        this.router.navigate(['./apps/mpi/busqueda']);
+        this.location.back();
     }
 
     save(event) {
@@ -266,7 +266,7 @@ export class BebeCruComponent implements OnInit {
             this.pacienteService.save(this.bebeModel).subscribe(
                 () => {
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
-                    this.router.navigate(['./apps/mpi/busqueda']);
+                    this.location.back();
                 },
                 () => {
                     this.plex.info('warning', 'Paciente no guardado', 'Error de conexión');
