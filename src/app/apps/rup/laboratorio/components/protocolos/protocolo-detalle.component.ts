@@ -187,21 +187,6 @@ export class ProtocoloDetalleComponent
     }
 
     /**
-     * Busca y carga lista de profesionales
-     *
-     * @param {any} $event
-     * @memberof ProtocoloDetalleComponent
-     */
-    loadProfesionales($event) {
-        let query = {
-            nombreCompleto: $event.query
-        };
-        this.servicioProfesional.get(query).subscribe((resultado: any) => {
-            $event.callback(resultado);
-        });
-    }
-
-    /**
      *
      *
      * @memberof ProtocoloDetalleComponent
@@ -397,6 +382,11 @@ export class ProtocoloDetalleComponent
             params.op = 'nuevoProtocoloLaboratorio';
             params.estado = { tipo: 'ejecucion' };
             params.solicitud = solicitud;
+        } else if (this.contextoCache.modo === 'control') {
+            params.solicitud = solicitud;
+            params.paciente = this.modelo.paciente,
+            params.fechaEjecucion = this.modelo.ejecucion.fecha;
+            params.op = 'auditoriaLaboratorio';
         } else if (this.contextoCache.modo === 'validacion' && this.isProtocoloValidado()) {
             params.op = 'estadoPush';
             params.estado = Constantes.estadoValidada;
@@ -431,6 +421,11 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     private async actualizarProtocolo(next) {
+
+        if (this.contextoCache.modo === 'validacion' || this.contextoCache.modo === 'carga') { }  {
+            this.setearEstadosCarga();
+        }
+
         if (this.contextoCache.modo === 'validacion') {
             this.setearEstadosValidacion();
         }
@@ -474,15 +469,33 @@ export class ProtocoloDetalleComponent
      * @private
      * @memberof ProtocoloDetalleComponent
      */
+    private setearEstadosCarga() {
+        this.contextoCache.practicasCargadas.forEach(e => e.valor.estados.push(this.generarEstado('carga')));
+    }
+
+    /**
+     *
+     *
+     * @private
+     * @memberof ProtocoloDetalleComponent
+     */
     private setearEstadosValidacion() {
         let practicasValidar = this.validaciones.filter(e => e.validado && !e.esValorCritico);
-        practicasValidar.forEach(e => e.registroPractica.registro.valor.estados.push( {
-                tipo: 'validada',
-                usuario: this.auth.usuario,
-                fecha: new Date(),
-                pendienteGuardar: true
-            })
-        );
+        practicasValidar.forEach(e => e.registroPractica.registro.valor.estados.push(this.generarEstado('validada')));
+    }
+
+    /**
+     *
+     *
+     * @private
+     * @memberof ProtocoloDetalleComponent
+     */
+    private generarEstado(tipo) {
+        return {
+            tipo: tipo,
+            usuario: this.auth.usuario,
+            fecha: new Date(),
+        };
     }
 
     /**

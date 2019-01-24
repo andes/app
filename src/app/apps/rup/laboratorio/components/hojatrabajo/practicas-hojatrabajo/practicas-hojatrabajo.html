@@ -49,7 +49,7 @@
                     <td>{{practicaHT.practica.nombre}}</td>
                     <td>{{practicaHT.nombre}}</td>
                     <td>
-                        <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practicaHT.practica)"></plex-button>
+                        <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practicaHT.practica.valor.idPractica)"></plex-button>
                     </td>
                     <span *cdkDragPreview>
                     </span>

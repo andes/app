@@ -44,7 +44,7 @@
                         </span>
                     </td>
                     <td>
-                        <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practicaVista)"></plex-button>
+                        <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practicaVista.valor.idPractica)"></plex-button>
                     </td>
                 </tr>
                 <tr class="hover" *ngIf="editarListaPracticas">
@@ -90,7 +90,7 @@
                                 <!-- {{practicaCarga.formatoResultado | json}} -->
                                 <ng-container *ngIf='practicaCarga.registro.valor && !practicaCarga.registro.valor.resultado.sinMuestra'>
                                     <plex-float *ngIf="practicaCarga.practica.resultado.formato && practicaCarga.practica.resultado.formato.tipo === 'Numérico'"
-                                        (change)="actualizarEstadoPractica($event, practicaCarga, 'cargar')"
+                                        (change)="onValorResultadoChange($event, practicaCarga)"
                                         [(ngModel)]="practicaCarga.registro.valor.resultado.valor"></plex-float>
                                     <b *ngIf="practicaCarga.registro.valor.resultado.sinMuestra">Sin muestra</b>
                                 </ng-container>
@@ -138,7 +138,7 @@
                         <!-- <td></td> -->
                         <ng-container *ngIf='modo ==="recepcion" || modo ==="control"'>
                             <td>
-                                <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practica)"></plex-button>
+                                <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practica.valor.idPractica)"></plex-button>
                             </td>
                         </ng-container>
                         <ng-container *ngIf='(modo ==="carga" || modo ==="validacion")'>

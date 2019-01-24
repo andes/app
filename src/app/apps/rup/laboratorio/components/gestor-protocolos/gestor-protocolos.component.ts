@@ -80,9 +80,10 @@ export class GestorProtocolosComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.contextoCache = this.protocoloCacheService.getContextoCache();
+
         if (!this.protocolo) {
             this.resetearProtocolo({});
-            this.contextoCache = this.protocoloCacheService.getContextoCache();
         }
         this.showBotonAceptar = true;
         this.routeParams = this.route.params.subscribe(params => {

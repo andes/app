@@ -1,3 +1,4 @@
+import { ProtocoloCacheService } from './../../../services/protocoloCache.service';
 import { ProfesionalService } from './../../../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import { ProtocoloService } from './../../../services/protocolo.service';
@@ -16,9 +17,12 @@ import { Constantes } from '../../../controllers/constants';
 })
 
 export class TablaDatalleProtocoloComponent implements OnInit {
-    ngOnInit() {
 
+    ngOnInit() {
+        // practicasCargadas.- array de registros cuyos estados se tienen que pasar a actualizados antes de guardar
+        this.protocoloCacheService.getContextoCache().practicasCargadas = [];
     }
+
     @Output() verHistorialResultadosEmitter: EventEmitter<any> = new EventEmitter<any>();
     @Input() modo: any;
     @Input() modelo: any;
@@ -62,6 +66,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         private servicioPractica: PracticaService,
         private servicioProtocolo: ProtocoloService,
         private servicioProfesional: ProfesionalService,
+        private protocoloCacheService: ProtocoloCacheService,
         public plex: Plex,
         public auth: Auth
     ) { }
@@ -182,9 +187,9 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      */
     cargarResultadosAnteriores() {
         let conceptIds = [];
-        this.practicasCarga.forEach( e => conceptIds.push(e.registro.concepto.conceptId) );
+        this.practicasCarga.forEach(e => conceptIds.push(e.registro.concepto.conceptId));
         this.servicioProtocolo.getResultadosAnteriores(this.modelo.paciente.id, conceptIds).subscribe(resultadosAnteriores => {
-            this.practicasCarga.forEach( e => {
+            this.practicasCarga.forEach(e => {
                 let match: any = resultadosAnteriores.filter((res: any) => {
                     return res.conceptIdPractica === e.registro.concepto.conceptId;
                 })[0];
@@ -205,7 +210,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         //     this.servicioProtocolo.getResultadosAnteriores(this.modelo.paciente.id, practicaVista.concepto.conceptId).subscribe(resultadosAnteriores => {
         //         practicaVista.resultadosAnteriores = resultadosAnteriores;
         //     });
-        // });d
+        // });
     }
 
     /**
@@ -253,19 +258,29 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     }
 
     /**
+     * Retorna true si el último estado registrado es de valireturndada, false si no.
+     *
+     * @return
+     * @memberof TablaDatalleProtocolo
+     */
+    isResultadoValidado(reg) {
+        return reg.valor.estados[reg.valor.estados - 1] && reg.valor.estados[reg.valor.estados - 1].tipo === 'validada';
+    }
+
+    /**
      * Elimina una práctica seleccionada tanto de la solicitud como de la ejecución
      *
      * @param {IPractica} practica
      * @memberof TablaDatalleProtocolo
      */
-    async eliminarPractica(practica: IPractica) {
+    async eliminarPractica(practicaId) {
         let practicasSolicitud = this.solicitudProtocolo.solicitudPrestacion.practicas;
-        this.practicasVista.splice(this.practicasVista.findIndex(x => x.id === practica.id), 1);
-        let practicaIndex = practicasSolicitud.findIndex(x => x.id === practica.id);
+        this.practicasVista.splice(this.practicasVista.findIndex(x => x.valor.idPractica === practicaId), 1);
+        let practicaIndex = practicasSolicitud.findIndex(x => x.id === practicaId);
 
-        this.servicioPractica.findByIdsCompletas(practica._id).subscribe((practicasEliminiar) => {
+        this.servicioPractica.findByIdsCompletas(practicaId).subscribe((practicasEliminiar) => {
             this.modelo.ejecucion.registros = this.practicasEjecucion.filter(pe =>
-                !(practicasEliminiar.some((r: any) => r._id === pe._id))
+                !(practicasEliminiar.some((r: any) => r._id === pe.valor.idPractica))
             );
         });
 
@@ -279,7 +294,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      * @memberof TablaDatalleProtocolo
      */
     validarTodas($event) {
-        this.validaciones.forEach( e => e.validado = $event.value);
+        this.validaciones.forEach(e => e.validado = $event.value);
     }
 
     /**
@@ -404,28 +419,17 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      * @param {*} tipo
      * @memberof TablaDatalleProtocolo
      */
-    actualizarEstadoPractica($event, objetoPractica, tipo) {
-        let estado = {
-            tipo: tipo,
-            usuario: this.auth.usuario,
-            fecha: new Date(),
-            pendienteGuardar: true
-        };
-
-        let valor = objetoPractica.registro.valor;
-
-        if (!valor.estados) {
-            valor.estados = [];
-        }
-
-        if (valor.estados.length === 0 || !valor.estados[valor.estados.length - 1].pendienteGuardar) {
-            valor.estados.push(estado);
-        } else {
-            valor.estados[valor.estados.length - 1] = estado;
-        }
-
-        if ($event.value) {
-            this.validaciones.find(e => e.registroPractica.registro._id === objetoPractica.registro._id).esValorCritico = this.verificarValorCritico(objetoPractica);
+    onValorResultadoChange($event, op) {
+        if (!this.isResultadoValidado(op.registro)) {
+            let cache = this.protocoloCacheService.getContextoCache();
+            if (!$event.value) {
+                cache.practicasCargadas = cache.practicasCargadas.filter(e => e !== op.registro);
+            } else if (!cache.practicasCargadas.find(e => { return e === op.registro; })) {
+                cache.practicasCargadas.push(op.registro);
+                if (cache.modo === 'validacion') {
+                    this.validaciones.find(e => e.registroPractica.registro._id === op.registro._id).esValorCritico = this.verificarValorCritico(op);
+                }
+            }
         }
     }
 
@@ -542,7 +546,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      * @memberof TablaDatalleProtocoloComponent
      */
     getValoresCriticosValidados() {
-        return this.validaciones.filter( e => e.esValorCritico && e.validado);
+        return this.validaciones.filter(e => e.esValorCritico && e.validado);
     }
 
 
