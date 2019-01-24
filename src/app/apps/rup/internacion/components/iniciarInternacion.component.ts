@@ -1,3 +1,4 @@
+import { estados } from './../../../../utils/enumerados';
 import { IPaciente } from '../../../../interfaces/IPaciente';
 import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
@@ -37,7 +38,7 @@ export class IniciarInternacionComponent implements OnInit {
     btnIniciarGuardar;
     showEditarCarpetaPaciente = false;
     public ocupaciones = [];
-    public obraSocial: any[];
+    public obraSocial;
     public origenHospitalizacion = [
         { id: 'consultorio externo', nombre: 'Consultorio externo' },
         { id: 'emergencia', nombre: 'Emergencia' },
@@ -67,7 +68,6 @@ export class IniciarInternacionComponent implements OnInit {
     public pacienteAsociado = [
         { id: 'Plan de salud privado o Mutual', nombre: 'Plan de salud privado o Mutual' },
         { id: 'Plan o Seguro público', nombre: 'Plan o Seguro público' },
-        { id: 'Mas de uno', nombre: 'Mas de uno' },
         { id: 'Ninguno', nombre: 'Ninguno' }
     ];
 
@@ -131,7 +131,6 @@ export class IniciarInternacionComponent implements OnInit {
             if (existeRegistro) {
                 this.paciente = this.prestacion.paciente;
                 this.informeIngreso = existeRegistro.valor.informeIngreso;
-
                 // Chequeamos los datos que ya estan registrados para mostrar
                 // los campos que están ocualtos por defecto
                 this.informeIngreso.obraSocial = existeRegistro.valor.informeIngreso.obraSocial;
@@ -179,7 +178,7 @@ export class IniciarInternacionComponent implements OnInit {
                     // Se busca la obra social del paciente y se le asigna
                     this.obraSocialService.get({ dni: this.paciente.documento }).subscribe((os: any) => {
                         if (os && os.length > 0) {
-                            this.obraSocial = [{ nombre: os[0].financiador, codigoFinanciador: os[0].codigoFinanciador }];
+                            this.obraSocial = { nombre: os[0].financiador, codigoFinanciador: os[0].codigoFinanciador };
                             this.informeIngreso.obraSocial = { nombre: os[0].financiador, codigoPuco: os[0].codigoFinanciador };
                         }
                     });
@@ -279,6 +278,24 @@ export class IniciarInternacionComponent implements OnInit {
         this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
     }
 
+    controlarConflictosInternacion(fechaIngreso: Date): boolean {
+        const fechaActual = new Date();
+        // Controlamos que no me carguen una internación a futuro
+        if (fechaIngreso > fechaActual) {
+            this.plex.info('warning', 'La fecha de ingreso no puede ser superior a la fecha actual');
+            return false;
+        }
+
+        // Controlamos conflictos de fechas en el historial de la cama
+        const estadosCama = this.cama.estados;
+        let conflicto = estadosCama.some(estado => estado.fecha >= fechaIngreso && estado.estado !== 'disponile');
+        if (!conflicto) {
+            this.plex.info('warning', 'La cama seleccionada no está disponible');
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Guarda la prestación
      */
@@ -292,7 +309,13 @@ export class IniciarInternacionComponent implements OnInit {
                 this.plex.info('warning', 'Debe seleccionar una organización');
                 return;
             }
+
             this.informeIngreso.fechaIngreso = this.servicioInternacion.combinarFechas(this.fecha, this.hora);
+
+            if (!this.controlarConflictosInternacion(this.informeIngreso.fechaIngreso)) {
+                return;
+            }
+
             // mapeamos los datos en los combos
             this.informeIngreso.situacionLaboral = ((typeof this.informeIngreso.situacionLaboral === 'string')) ? this.informeIngreso.situacionLaboral : (Object(this.informeIngreso.situacionLaboral).nombre);
             this.informeIngreso.nivelInstruccion = ((typeof this.informeIngreso.nivelInstruccion === 'string')) ? this.informeIngreso.nivelInstruccion : (Object(this.informeIngreso.nivelInstruccion).nombre);

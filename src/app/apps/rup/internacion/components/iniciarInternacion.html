@@ -37,9 +37,8 @@
                         </div>
                         <div class="row">
                             <div class="col-md">
-
                                 <plex-select *ngIf="!soloValores && !informeIngreso.obraSocial" [(ngModel)]="informeIngreso.asociado"
-                                    name="asociado" [data]="pacienteAsociado" placeholder="Seleccione... " label="Asociado a"
+                                    name="asociado" [data]="pacienteAsociado" placeholder="Seleccione... " label="Cobertura"
                                     idField="nombre" labelField="nombre">
                                 </plex-select>
                                 <plex-text *ngIf="!soloValores && informeIngreso.obraSocial" [(ngModel)]="informeIngreso.obraSocial.nombre"
@@ -64,7 +63,7 @@
                             </div>
                             <div class="col">
                                 <plex-datetime *ngIf="!soloValores" type="time" [(ngModel)]="hora" [required]="true"
-                                    name="horaIngreso " label="Fecha Ingreso">
+                                    name="horaIngreso " label="Hora Ingreso">
                                 </plex-datetime>
                             </div>
                         </div>
@@ -168,7 +167,7 @@
         </div>
         <div class="row">
             <div class="col-md" *ngIf="informeIngreso.asociado">
-                <b>Asociado a:</b>
+                <b>Cobertura:</b>
                 <p>{{informeIngreso.asociado}}</p>
             </div>
             <div class="col-md" *ngIf="informeIngreso.obraSocial && informeIngreso.obraSocial.nombre">
