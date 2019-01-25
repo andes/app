@@ -209,7 +209,7 @@ export class HudsBusquedaComponent implements OnInit {
             case 'hallazgo':
             case 'trastorno':
             case 'producto':
-                registro.class = registro.concepto.semanticTag;
+                registro.class = this.servicioPrestacion.getCssClass(registro.concepto, null);
                 if (registro.esSolicitud) {
                     registro.class = 'plan';
                 }
