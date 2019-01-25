@@ -285,6 +285,8 @@ export class MapaDeCamasComponent implements OnInit {
                     this.camas = [...this.camas];
                 }
             }
+        } else {
+            this.refresh();
         }
     }
 
@@ -296,6 +298,7 @@ export class MapaDeCamasComponent implements OnInit {
      * @memberof MapaDeCamasComponent
      */
     actualizarMapaDeCamas(dtoAccion) {
+        console.log(dtoAccion);
         switch (dtoAccion.accion) {
             case 'internarPaciente':
                 if (dtoAccion.cama) {
@@ -531,7 +534,6 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     onCamaSelected(event) {
-
         if (!this.camaSeleccionada || this.camaSeleccionada !== event.cama) { // Es la primera vez o selecciono una cama diferente a la que estaba
             this.showEgreso = false;
             this.showIngreso = false;

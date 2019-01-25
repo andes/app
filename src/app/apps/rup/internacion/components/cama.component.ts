@@ -151,6 +151,24 @@ export class CamaComponent implements OnInit {
         });
     }
 
+    public eliminarCama(cama) {
+        this.camasService.getInternacionCama(cama.id).subscribe(internaciones => {
+            if (internaciones.length > 0) {
+                this.plex.info('danger', 'Error al borrar la cama, tuvo internaciones');
+            } else {
+                this.plex.confirm('Eliminar cama "' + cama.nombre + '"', '¿Desea eliminar?').then(confirmacion => {
+                    if (confirmacion) {
+                        this.camasService.eliminarCama(cama.id).subscribe(resultado => {
+                            this.plex.toast('info', cama.nombre, 'Cama eliminada', 4000);
+                            this.evtCama.emit(null);
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+
     public cambiarEstado(cama, estado) {
         let dto = {
             fecha: this.internacionService.combinarFechas(this.fecha, this.hora),
