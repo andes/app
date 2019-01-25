@@ -1,12 +1,10 @@
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, DebugElement } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Component, OnInit, Output, Input, EventEmitter, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
-import { dateValidator } from '@andes/plex/src/lib/core/validator.functions';
+
 @Component({
     selector: 'rup-hudsBusqueda',
     templateUrl: 'hudsBusqueda.html',
@@ -111,6 +109,7 @@ export class HudsBusquedaComponent implements OnInit {
 
     public fechaInicio;
     public fechaFin;
+    public showFiltros = false;
 
     public conceptos = {
         hallazgo: ['hallazgo', 'situación', 'evento'],
@@ -723,7 +722,7 @@ export class HudsBusquedaComponent implements OnInit {
         if (this.fechaInicio || this.fechaFin) {
             this.fechaInicio = this.fechaInicio ? this.fechaInicio : new Date();
             this.fechaFin = this.fechaFin ? this.fechaFin : new Date();
-            this.prestaciones = this.prestacionesCopia.filter(p => p.fecha >= moment(this.fechaInicio).startOf('day').toDate() &&
+            this.prestaciones = this.prestaciones.filter(p => p.fecha >= moment(this.fechaInicio).startOf('day').toDate() &&
                 p.fecha <= moment(this.fechaFin).endOf('day').toDate());
         }
     }

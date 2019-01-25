@@ -93,6 +93,15 @@
         </div>
     </ng-container>
 </div>
+<ng-container *ngIf="filtroActual === 'planes'">
+    <div class="row">
+        <div class="col">
+            <button [title]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" class="btn btn-primary btn-xl p-1 m-1 float-right" (click)="showFiltros = !showFiltros">
+                <i class="mdi mdi-magnify"></i>
+            </button>
+        </div>
+    </div>
+</ng-container>
 
 <!-- <ng-container *ngIf="filtroActual !== 'planes'">
     <plex-text label="Buscar" name="buscar" [(ngModel)]="txtABuscar" (change)="buscar()">
@@ -394,24 +403,26 @@
 
         <!-- Vista: PLANES -->
         <ng-container *ngIf="filtroActual === 'planes'">
+            <ng-container *ngIf="showFiltros">
 
-            <div class="row">
-                <div class="col-12">
-                    <plex-select *ngIf="tiposPrestacion" [(ngModel)]="prestacionSeleccionada" name="nombrePrestacion" label="Prestación"
-                        [data]="tiposPrestacion" labelField="term" (change)="filtrar()">
-                    </plex-select>
+                <div class="row">
+                    <div class="col-12">
+                        <plex-select *ngIf="tiposPrestacion" [(ngModel)]="prestacionSeleccionada" name="nombrePrestacion" label="Prestación"
+                            [data]="tiposPrestacion" labelField="term" (change)="filtrar()">
+                        </plex-select>
+                    </div>
                 </div>
-            </div>
-            <div class="row pb-2">
-                <div class="col-6">
-                    <plex-datetime type="date" [(ngModel)]="fechaInicio" (change)="filtrar()" name="fechaInicio" label="Fecha Desde">
-                    </plex-datetime>
+                <div class="row pb-2">
+                    <div class="col-6">
+                        <plex-datetime type="date" [(ngModel)]="fechaInicio" (change)="filtrar()" name="fechaInicio" label="Fecha Desde">
+                        </plex-datetime>
+                    </div>
+                    <div class="col-6">
+                        <plex-datetime type="date" [(ngModel)]="fechaFin" (change)="filtrar()" name="fechaFin" label="Fecha Hasta">
+                        </plex-datetime>
+                    </div>
                 </div>
-                <div class="col-6">
-                    <plex-datetime type="date" [(ngModel)]="fechaFin" (change)="filtrar()" name="fechaFin" label="Fecha Hasta">
-                    </plex-datetime>
-                </div>
-            </div>
+            </ng-container>
 
             <ul *ngIf="prestaciones && colapsado" class="hover conceptos list-unstyled">
                 <ng-container *ngFor="let prestacion of prestaciones; let iPrestacion = index">
