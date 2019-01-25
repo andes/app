@@ -1,0 +1,42 @@
+<plex-layout [main]="6">
+    <plex-layout-main>
+        <div class="row">
+            <plex-button label="Nuevo perfil" (click)="nuevoPerfil()" type="success"></plex-button>
+        </div>
+        <div class="row">
+            <div class="col">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="w-50">Nombre</th>
+                            <th>Alcance</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover" *ngFor="let perfil of perfiles" (click)="perfilSeleccionado = perfil">
+                            <td>{{perfil.nombre}}</td>
+                            <td>
+                                <plex-badge *ngIf="!perfil.organizacion" type="success">
+                                    GLOBAL </plex-badge>
+                            </td>
+                            <td>
+                                <plex-badge *ngIf="perfil.activo" type="success">
+                                    ACTIVO </plex-badge>
+                                <plex-badge *ngIf="!perfil.activo" type="danger">
+                                    DESACTIVADO </plex-badge>
+                            </td>
+                            <td>
+                                <plex-button icon="delete" type="danger" (click)="deletePerfil(perfil)" title="Borrar2"></plex-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <perfilForm *ngIf="perfilSeleccionado" (perfilGuardado)="perfilGuardado()" [perfil]="perfilSeleccionado"></perfilForm>
+    </plex-layout-sidebar>
+</plex-layout>
