@@ -5,7 +5,8 @@ import * as moment from 'moment';
 
 @Component({
     selector: 'rup-evolucion-problema-default',
-    templateUrl: 'evolucionProblemaDefault.html'
+    templateUrl: 'evolucionProblemaDefault.html',
+    styleUrls: ['evolucionProblemaDefault.scss']
 })
 
 export class EvolucionProblemaDefaultComponent extends RUPComponent implements OnInit {
