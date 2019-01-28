@@ -49,7 +49,7 @@ export class MapaDeCamasComponent implements OnInit {
     public showEgreso = false;
     // Muesta/oculta el loader del sidebar
     public showLoaderSidebar = false;
-
+    public isWorkflowCompleto = false;
     public showResumen = false;
 
     public prestacionPorInternacion;
@@ -64,7 +64,6 @@ export class MapaDeCamasComponent implements OnInit {
     public editarIngreso;
     public accion;
     public conceptosInternacion;
-
     public showEstados = true;
 
     // filtros para el mapa de cama
@@ -108,6 +107,8 @@ export class MapaDeCamasComponent implements OnInit {
         this.elementoRupService.ready.subscribe(() => {
             this.conceptosInternacion = this.elementoRupService.getConceptosInternacion();
         });
+        this.isWorkflowCompleto = this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id);
+        console.log(this.isWorkflowCompleto);
     }
 
 
@@ -262,7 +263,6 @@ export class MapaDeCamasComponent implements OnInit {
                     paciente: null,
                     idInternacion: null
                 };
-
                 this.camasService.cambiaEstado(e.cama.id, dto).subscribe(camaActualizada => {
                     e.cama.ultimoEstado = camaActualizada.ultimoEstado;
                     this.onCamaSelected(e);
@@ -382,12 +382,14 @@ export class MapaDeCamasComponent implements OnInit {
         this.router.navigate(['tm/organizacion/cama']);
     }
 
+    verLE() {
+        this.camasService.showListaEspera = true;
+    }
     public ingresarPaciente() {
-        this.buscandoPaciente = true;
-        this.pacienteSelected = null;
+        // this.buscandoPaciente = true;
+        // this.pacienteSelected = null;
         this.pacientes = null;
-
-        // this.router.navigate(['rup/internacion/crear']);
+        this.accion = 'internarPaciente';
     }
 
     public censoDiario() {
@@ -412,14 +414,16 @@ export class MapaDeCamasComponent implements OnInit {
 
     onDarCama($event) {
         this.prestacion = $event;
-        if ($event) {
-            this.inactive = true;
-            this.filtroEstados('disponible');
-        } else {
-            this.limpiarFiltros();
-            this.refresh();
-        }
-        this.filtrar();
+        this.onPacienteSelected(this.prestacion.paciente);
+        this.prestacionPorInternacion = this.prestacion;
+        // if ($event) {
+        //     //this.inactive = true;
+        //     this.filtroEstados('disponible');
+        // } else {
+        //     this.limpiarFiltros();
+        //     this.refresh();
+        // }
+        // this.filtrar();
     }
 
     mapaDeCamaXFecha(reset) {

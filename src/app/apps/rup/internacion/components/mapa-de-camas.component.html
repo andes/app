@@ -113,7 +113,6 @@
             <!-- Sidebar -->
             <plex-box id="panel-lateral" class="col-4">
                 <plex-loader *ngIf="showLoaderSidebar" type="ball-pulse-sync"></plex-loader>
-
                 <!-- Ingresar un paciente -->
                 <ng-container *ngIf="accion ==='internarPaciente'">
                     <div class="row">
@@ -124,6 +123,7 @@
                         </div>
                     </div>
                     <br>
+
                     <div class="row">
                         <div class="col-8">
                             <!-- Buscador adaptable de MPI -->
@@ -140,7 +140,7 @@
                 <ng-container *ngIf="showIngreso && pacienteSelected">
                     <rup-iniciarInternacion (data)="cerrar($event, 'ingreso')" (accionCama)="actualizarMapaDeCamas($event)"
                         [paciente]="pacienteSelected" [camaSelected]="camaSeleccionada" [prestacion]="prestacionPorInternacion"
-                        [soloValores]="editarIngreso"></rup-iniciarInternacion>
+                        [soloValores]="editarIngreso" [workflowC]="isWorkflowCompleto"></rup-iniciarInternacion>
                 </ng-container>
 
                 <!-- // Ingresar un paciente -->
@@ -386,6 +386,8 @@
                         <plex-button class="" type="primary" label="Censo diario" (click)="censoDiario()" *ngIf="checkAuth('censo')"></plex-button>
                         <plex-button class="" type="primary" label="Censo mensual" (click)="censoMensual()" *ngIf="checkAuth('censo')"></plex-button>
                         <plex-button label="Crear cama" type="primary" (click)="onGestionCamaClick()" *ngIf="checkAuth('cama:create')"></plex-button>
+                        <plex-button *ngIf="isWorkflowCompleto" label="Ingresar paciente" type="primary" (click)="ingresarPaciente()"></plex-button>
+                        <plex-button *ngIf="isWorkflowCompleto" label="Lista de espera" type="primary" (click)="verLE()"></plex-button>
                     </ng-container>
                 </ng-container>
             </plex-box>
@@ -393,6 +395,6 @@
     </section>
     <!-- </form> -->
 </ng-container>
-<!-- <ng-container *ngIf="camasService.showListaEspera && !buscandoPaciente">
+<ng-container *ngIf="camasService.showListaEspera && !buscandoPaciente">
     <listaEsperaInternacion (prestacion)='onDarCama($event)' (showCamas)='camasService.showListaEspera = $event'></listaEsperaInternacion>
-</ng-container> -->
+</ng-container>
