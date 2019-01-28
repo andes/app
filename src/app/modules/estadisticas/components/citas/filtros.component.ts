@@ -1,43 +1,35 @@
 import * as moment from 'moment';
-
-import { Observable } from 'rxjs/Observable';
 import { Component, AfterViewInit, HostBinding, EventEmitter, Output, Input, SimpleChanges, SimpleChange, OnChanges } from '@angular/core';
-
 import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'turnos-filtros',
     template: `
     <div class="row">
+    <div class="col-3">
+            <plex-select label="Tipo de filtro" [data]="opciones" [(ngModel)]="seleccion.tipoDeFiltro" name="tipoDeFiltro" (change)="onChange()"></plex-select>
+        </div>
         <div class="col-3">
             <plex-datetime label="Desde" [max]="hoy" type="date" [(ngModel)]="desde" name="desde" (change)="onChange()"></plex-datetime>
         </div>
         <div class="col-3">
             <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta" (change)="onChange()"></plex-datetime>
         </div>
-        <div class="col-2">
+        <div class="col-3<">
             <plex-button type="success" label="Filtrar" (click)="onChange()" class="vertical-center" ></plex-button>
         </div>
     </div>
     <div class="row">
-        <div class="col-2" *ngIf="params.sexo">
-            <plex-select [data]="params.sexo" [(ngModel)]="seleccion.sexo" (change)="onChange($event)" placeholder="Seleccione..." label="Sexo">
-            </plex-select>
-        </div>
-        <div class="col-2" *ngIf="params.edad">
-            <plex-select [data]="params.edad" [(ngModel)]="seleccion.edad" (change)="onChange($event)" placeholder="Seleccione..." label="Edad">
-            </plex-select>
-        </div>
-        <div class="col-2" *ngIf="params.prestacion">
+        <div class="col-3" *ngIf="params.prestacion">
             <plex-select [data]="params.prestacion" [(ngModel)]="seleccion.prestacion" (change)="onChange($event)" placeholder="Seleccione..." label="Prestacion">
             </plex-select>
         </div>
-        <div class="col-2" *ngIf="params.profesional">
+        <div class="col-3" *ngIf="params.profesional">
             <plex-select [data]="params.profesional" [(ngModel)]="seleccion.profesional" (change)="onChange($event)" placeholder="Seleccione..." label="Profesional">
             </plex-select>
         </div>
-        <div class="col-2" *ngIf="params.administrativo">
-            <plex-select [data]="params.administrativo" [(ngModel)]="seleccion.administrativo" (change)="onChange($event)" placeholder="Seleccione..." label="Administrativo">
+        <div class="col-3" *ngIf="params.estado_turno">
+            <plex-select [multiple]="true" [data]="params.estado_turno" [(ngModel)]="seleccion.estado_turno" (change)="onChange($event)" placeholder="Seleccione..." label="Estado">
             </plex-select>
         </div>
     </div>
@@ -50,16 +42,16 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
     public desde: Date = moment(new Date()).startOf('month').toDate();
     public hasta: Date = new Date();
     public hoy = new Date();
+    public opciones = [{ id: 'agendas', nombre: 'Agendas' }, { id: 'turnos', nombre: 'Turnos' }];
 
     @Input() params: any = {};
     @Output() filter = new EventEmitter();
 
     public seleccion: any = {
-        sexo: null,
-        edad: null,
+        tipoDeFiltro: { id: 'turnos', nombre: 'Turnos' },
         profesional: null,
         prestacion: null,
-        administrativo: null
+        estado_turno: []
     };
 
     constructor(private plex: Plex) { }
@@ -68,20 +60,22 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
         this.onChange();
     }
 
-    onChange () {
+    onChange() {
+
+        let log = this.seleccion.estado_turno ? this.seleccion.estado_turno.map(et => et.id) : undefined
+        console.log(log)
         let params = {
             fechaDesde: this.desde,
             fechaHasta: this.hasta,
-            sexo: this.seleccion.sexo ? this.seleccion.sexo.nombre : undefined,
-            edad: this.seleccion.edad ? this.seleccion.edad.id : undefined,
+            tipoDeFiltro: this.seleccion.tipoDeFiltro ? this.seleccion.tipoDeFiltro.nombre : undefined,
             prestacion: this.seleccion.prestacion ? this.seleccion.prestacion.id : undefined,
             profesional: this.seleccion.profesional ? this.seleccion.profesional.id : undefined,
-            administrativo: this.seleccion.administrativo ? this.seleccion.administrativo.id : undefined
+            estado_turno: this.seleccion.estado_turno ? [this.seleccion.estado_turno] : []
         };
         this.filter.emit(params);
     }
 
-    ngOnChanges (changes: SimpleChanges) {
+    ngOnChanges(changes: SimpleChanges) {
         const name: SimpleChange = changes.name;
     }
 }
