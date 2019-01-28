@@ -25,6 +25,10 @@ export class IPrestacionRegistro {
 
     solicitud: any;
 
+    evoluciones: any;
+    transformado: any;
+    esPrimeraVez: boolean;
+
     createdAt: Date;
 
     constructor(elementoRUP: IElementoRUP, snomedConcept: ISnomedConcept) {
