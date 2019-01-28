@@ -108,7 +108,7 @@ export class HudsBusquedaComponent implements OnInit {
         laboratorios: ['laboratorios'],
     };
 
-    constructor(private servicioPrestacion: PrestacionesService,
+    constructor(public servicioPrestacion: PrestacionesService,
         public plex: Plex, public auth: Auth) {
     }
 
