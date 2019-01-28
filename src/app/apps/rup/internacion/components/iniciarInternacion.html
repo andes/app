@@ -36,6 +36,13 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col-6">
+                                <plex-datetime *ngIf="!soloValores && pedirHoraNac" type="time" [(ngModel)]="informeIngreso.horaNacimiento"
+                                    [required]="pedirHoraNac" [autoFocus]="autoFocus" name="horaNac" label="Hora de nacimiento">
+                                </plex-datetime>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md">
                                 <plex-select *ngIf="!soloValores && !informeIngreso.obraSocial" [(ngModel)]="informeIngreso.asociado"
                                     name="asociado" [data]="pacienteAsociado" placeholder="Seleccione... " label="Cobertura"
@@ -134,44 +141,45 @@
 
         <div class="row">
             <div class="col-md">
-
-                <label>Paciente:</label>
+                <label>Paciente</label>
                 <p>{{ paciente | paciente}}</p>
-
             </div>
             <div class="col-md">
-                <label>Documento:</label>
+                <label>Documento</label>
                 <p>{{ paciente.documento }}</p>
-            </div>
-            <div class="col-md">
-                <label>Fecha de Nacimiento:</label>
-                <p>{{ paciente.fechaNacimiento | fecha }}</p>
             </div>
         </div>
         <div class="row">
             <div class="col-md">
+                <label>Fecha de Nacimiento</label>
+                <p>{{ paciente.fechaNacimiento | fecha }}</p>
+            </div>
+            <div class="col-md" *ngIf="informeIngreso.edadAlIngreso">
+                <label>Edad al ingreso</label>
+                <p>{{ informeIngreso.edadAlIngreso }}</p>
+            </div>
+            <div class="col-md"><br>
                 <plex-button (click)="routeTo('vista', paciente.id)" label="VER HUDS" type="primary btn-sm">
                 </plex-button>
             </div>
+        </div>
+        <div>
 
         </div>
-
-
         <div class="row">
             <div class="col-md" *ngIf="informeIngreso.nroCarpeta">
-                <p>
-                    <b>Nro Carpeta:</b>
-                    {{this.informeIngreso.nroCarpeta}}</p>
+                <label>Nro Carpeta</label>
+                <p>{{this.informeIngreso.nroCarpeta}}</p>
             </div>
 
         </div>
         <div class="row">
             <div class="col-md" *ngIf="informeIngreso.asociado">
-                <b>Cobertura:</b>
+                <label>Cobertura</label>
                 <p>{{informeIngreso.asociado}}</p>
             </div>
             <div class="col-md" *ngIf="informeIngreso.obraSocial && informeIngreso.obraSocial.nombre">
-                <b>Obra Social:</b>
+                <label>Obra Social:</label>
                 <p>{{informeIngreso.obraSocial.nombre}}</p>
             </div>
         </div>
@@ -179,54 +187,45 @@
         <!-- Datos de internacion -->
         <div class="row">
             <div class="col">
-                <p>
-                    <b>Fecha Ingreso:</b>
-                    {{informeIngreso.fechaIngreso | fecha}}</p>
+                <label>Fecha Ingreso</label>
+                <p>{{informeIngreso.fechaIngreso | fecha}} {{ informeIngreso.fechaIngreso | hora }}</p>
             </div>
-        </div>
-        <div class="row">
             <div class="col">
-                <p>
-                    <b>Origen Hospitalización:</b>
-                    {{informeIngreso.origen}} {{informeIngreso.organizacionOrigen ? '| ' +
+                <label>Origen</label>
+                <p> {{informeIngreso.origen}} {{informeIngreso.organizacionOrigen ? '| ' +
                     informeIngreso.organizacionOrigen.nombre : null}}</p>
             </div>
         </div>
         <div class="row">
             <div *ngIf="informeIngreso.profesional" class="col">
-                <p>
-                    <b>Profesional responsable:</b>
-                    {{informeIngreso.profesional | profesional}}</p>
+                <label>
+                    Profesional responsable</label>
+                <p>{{informeIngreso.profesional | profesional}}</p>
             </div>
         </div>
         <div class="row">
             <div *ngIf="informeIngreso.motivo" class="col">
-                <p>
-                    <b>Motivo internación:</b>
-                    {{informeIngreso.motivo}}</p>
+                <label>Motivo internación</label>
+                <p>{{informeIngreso.motivo}}</p>
             </div>
         </div>
-
-
         <!-- Datos estadisticos  -->
         <div class="row">
             <div class="col" *ngIf="informeIngreso.situacionLaboral">
-                <p>
-                    <b>Situacion Laboral:</b>
-                    {{informeIngreso.situacionLaboral}}</p>
+                <label>Situacion Laboral</label>
+                <p>{{informeIngreso.situacionLaboral}}</p>
             </div>
         </div>
         <div class="row">
             <div class="col" *ngIf="informeIngreso.ocupacionHabitual">
-                <b>Ocupación Habitual:</b>
+                <label>Ocupación Habitual</label>
                 <p>{{informeIngreso.ocupacionHabitual}}</p>
             </div>
         </div>
         <div class="row">
             <div class="col" *ngIf="informeIngreso.nivelInstruccion">
-                <p>
-                    <b>Nivel Instrucción:</b>
-                    {{informeIngreso.nivelInstruccion}}</p>
+                <label>Nivel Instrucción</label>
+                <p>{{informeIngreso.nivelInstruccion}}</p>
             </div>
         </div>
 

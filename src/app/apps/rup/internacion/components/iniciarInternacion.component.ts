@@ -16,6 +16,7 @@ import { ProfesionalService } from '../../../../services/profesional.service';
 import { InternacionService } from '../services/internacion.service';
 import { PacienteService } from '../../../../services/paciente.service';
 import { IPrestacionRegistro } from '../../../../modules/rup/interfaces/prestacion.registro.interface';
+import { EdadPipe } from './../../../../pipes/edad.pipe';
 import { IObraSocial } from '../../../../interfaces/IObraSocial';
 
 
@@ -47,6 +48,7 @@ export class IniciarInternacionComponent implements OnInit {
         { id: 'otro', nombre: 'Otro' }
     ];
     public nivelesInstruccion = [
+        { id: 'ninguno', nombre: 'Ninguno' },
         { id: 'primario incompleto', nombre: 'Primario incompleto' },
         { id: 'primario completo', nombre: 'Primario completo' },
         { id: 'secundario incompleto', nombre: 'Secundario incompleto' },
@@ -75,6 +77,8 @@ export class IniciarInternacionComponent implements OnInit {
     public fecha: Date = new Date();
     // Fecha seleccionada
     public hora: Date = new Date();
+    // Hora de nacimiento (para recien nacidos)
+    public pedirHoraNac = false;
     // Tipos de prestacion que el usuario tiene permiso
     public tiposPrestacion: any = [];
     // Tipos de prestacion seleccionada para la internación
@@ -98,6 +102,8 @@ export class IniciarInternacionComponent implements OnInit {
     public carpetaPaciente = null;
     public informeIngreso = {
         fechaIngreso: new Date(),
+        horaNacimiento: new Date(),
+        edadAlIngreso: null,
         origen: null,
         ocupacionHabitual: null,
         situacionLaboral: null,
@@ -131,8 +137,11 @@ export class IniciarInternacionComponent implements OnInit {
             if (existeRegistro) {
                 this.paciente = this.prestacion.paciente;
                 this.informeIngreso = existeRegistro.valor.informeIngreso;
+
                 // Chequeamos los datos que ya estan registrados para mostrar
-                // los campos que están ocualtos por defecto
+                // los campos que están ocultos por defecto
+                this.fecha = this.informeIngreso.fechaIngreso;
+                this.hora = this.informeIngreso.fechaIngreso;
                 this.informeIngreso.obraSocial = existeRegistro.valor.informeIngreso.obraSocial;
                 this.obraSocial = existeRegistro.valor.informeIngreso.obraSocial;
                 if (existeRegistro.valor.informeIngreso.origen && (existeRegistro.valor.informeIngreso.origen === 'Traslado' || existeRegistro.valor.informeIngreso.origen === 'Consultorio externo')) {
@@ -190,10 +199,14 @@ export class IniciarInternacionComponent implements OnInit {
                         }
                     }
                 }
-
             });
         } else {
             this.plex.info('warning', 'El paciente debe ser registrado en MPI');
+        }
+        if (this.paciente.fechaNacimiento) {
+            if (this.servicioInternacion.compareOnlyDate(this.paciente.fechaNacimiento, new Date()) === 0) {
+                this.pedirHoraNac = true;
+            }
         }
         if (this.camaSelected) {
             let camaId = this.camaSelected.id;
@@ -272,9 +285,7 @@ export class IniciarInternacionComponent implements OnInit {
      * Emite un false para ocultar el componente
      */
     cancelar() {
-
         this.data.emit(false);
-
         this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
     }
 
@@ -285,12 +296,15 @@ export class IniciarInternacionComponent implements OnInit {
             this.plex.info('warning', 'La fecha de ingreso no puede ser superior a la fecha actual');
             return false;
         }
-
         // Controlamos conflictos de fechas en el historial de la cama
+        // buscamos que en la fechaHora de ingreso, con un margen de una hora, la cama este disponible
         const estadosCama = this.cama.estados;
-        let conflicto = estadosCama.some(estado => estado.fecha >= fechaIngreso && estado.estado !== 'disponile');
-        if (!conflicto) {
-            this.plex.info('warning', 'La cama seleccionada no está disponible');
+        const fechaFin = new Date(fechaIngreso);
+        fechaFin.setHours(fechaFin.getHours() + 1);
+
+        let conflicto = estadosCama.some(estado => { return estado.fecha > fechaIngreso && estado.fecha > fechaFin && estado.estado !== 'disponible'; });
+        if (conflicto) {
+            this.plex.info('warning', 'La cama seleccionada no está disponible. Por favor controle la fecha y hora de ingreso.');
             return false;
         }
         return true;
@@ -311,7 +325,6 @@ export class IniciarInternacionComponent implements OnInit {
             }
 
             this.informeIngreso.fechaIngreso = this.servicioInternacion.combinarFechas(this.fecha, this.hora);
-
             if (!this.controlarConflictosInternacion(this.informeIngreso.fechaIngreso)) {
                 return;
             }
@@ -322,6 +335,11 @@ export class IniciarInternacionComponent implements OnInit {
             this.informeIngreso.asociado = ((typeof this.informeIngreso.asociado === 'string')) ? this.informeIngreso.asociado : (Object(this.informeIngreso.asociado).nombre);
             this.informeIngreso.ocupacionHabitual = ((typeof this.informeIngreso.ocupacionHabitual === 'string')) ? this.informeIngreso.ocupacionHabitual : (Object(this.informeIngreso.ocupacionHabitual).nombre);
             this.informeIngreso.origen = ((typeof this.informeIngreso.origen === 'string')) ? this.informeIngreso.origen : (Object(this.informeIngreso.origen).nombre);
+            // calcualmos la edad al ingreso
+            if (this.pedirHoraNac) {
+                this.paciente.fechaNacimiento = this.servicioInternacion.combinarFechas(this.paciente.fechaNacimiento, this.informeIngreso.horaNacimiento);
+            }
+            this.informeIngreso.edadAlIngreso = this.servicioInternacion.calcularEdad(this.paciente.fechaNacimiento, this.informeIngreso.fechaIngreso);
 
             if (this.prestacion && this.prestacion.id) {
                 // reemplazamos el Informde de ingreso en la prestacion
@@ -376,8 +394,7 @@ export class IniciarInternacionComponent implements OnInit {
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
 
                 if (this.obraSocial) {
-                    // TODO: Sub-zero wins
-                    nuevaPrestacion.solicitud.obraSocial = { codigoPuco: this.obraSocial[0].codigoFinanciador, nombre: this.obraSocial[0].nombre };
+                    nuevaPrestacion.solicitud.obraSocial = { codigoPuco: this.obraSocial.codigoFinanciador, nombre: this.obraSocial.nombre };
                 }
 
                 this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
@@ -456,9 +473,6 @@ export class IniciarInternacionComponent implements OnInit {
     // permite elegir otro paciente para internar
     buscarOtroPaciente() {
         this.accionCama.emit({ cama: this.cama, accion: 'internarPaciente', otroPaciente: true });
-
-
-
     }
 
 }
