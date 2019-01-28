@@ -130,7 +130,6 @@ export class IniciarInternacionComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        debugger;
         if (this.prestacion) {
             this.btnIniciarGuardar = 'GUARDAR';
             let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
