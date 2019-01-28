@@ -17,7 +17,6 @@ import { PacienteService } from '../../../../services/paciente.service';
 import { IPrestacionRegistro } from '../../../../modules/rup/interfaces/prestacion.registro.interface';
 import { IObraSocial } from '../../../../interfaces/IObraSocial';
 
-
 @Component({
     selector: 'rup-iniciarInternacion',
     templateUrl: 'iniciarInternacion.html'
@@ -29,6 +28,7 @@ export class IniciarInternacionComponent implements OnInit {
     @Input() camaSelected;
     @Input() prestacion;
     @Input() soloValores;
+    @Input() workflowC;
     @Output() data: EventEmitter<any> = new EventEmitter<any>();
     // Emite la cama con el paciente internado
     @Output() accionCama: EventEmitter<any> = new EventEmitter<any>();
@@ -36,6 +36,9 @@ export class IniciarInternacionComponent implements OnInit {
     nroCarpetaOriginal: string;
     btnIniciarGuardar;
     showEditarCarpetaPaciente = false;
+    public listaUnidadesOrganizativas = [];
+    public listadoCamas = [];
+    public paseAunidadOrganizativa: any;
     public ocupaciones = [];
     public obraSocial: any[];
     public origenHospitalizacion = [
@@ -93,7 +96,7 @@ export class IniciarInternacionComponent implements OnInit {
     // public paciente: IPaciente;
     public buscandoPaciente = false;
     public cama = null;
-    public organizacion = null;
+    public organizacion: any;
     public origenExterno = false;
     public carpetaPaciente = null;
     public informeIngreso = {
@@ -107,7 +110,9 @@ export class IniciarInternacionComponent implements OnInit {
         nroCarpeta: null,
         motivo: null,
         organizacionOrigen: null,
-        profesional: null
+        profesional: null,
+        PaseAunidadOrganizativa: null,
+
     };
 
     constructor(private router: Router, private route: ActivatedRoute,
@@ -131,6 +136,7 @@ export class IniciarInternacionComponent implements OnInit {
             if (existeRegistro) {
                 this.paciente = this.prestacion.paciente;
                 this.informeIngreso = existeRegistro.valor.informeIngreso;
+                this.fecha = this.informeIngreso.fechaIngreso;
 
                 // Chequeamos los datos que ya estan registrados para mostrar
                 // los campos que están ocualtos por defecto
@@ -139,6 +145,15 @@ export class IniciarInternacionComponent implements OnInit {
                 if (existeRegistro.valor.informeIngreso.origen && (existeRegistro.valor.informeIngreso.origen === 'Traslado' || existeRegistro.valor.informeIngreso.origen === 'Consultorio externo')) {
                     this.origenExterno = true;
                 }
+                this.informeIngreso.PaseAunidadOrganizativa = this.informeIngreso.PaseAunidadOrganizativa ? this.informeIngreso.PaseAunidadOrganizativa : null;
+                this.camasService.getCamasXFecha(this.auth.organizacion.id, existeRegistro.valor.informeIngreso.fechaIngreso).subscribe(resultado => {
+                    if (resultado) {
+                        let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.conceptId === this.informeIngreso.PaseAunidadOrganizativa.conceptId);
+                        this.listadoCamas = [...lista];
+                    }
+
+
+                });
 
             }
         } else if (this.paciente && this.paciente.id) {
@@ -213,12 +228,14 @@ export class IniciarInternacionComponent implements OnInit {
         }
         this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
             this.organizacion = organizacion;
+            this.listaUnidadesOrganizativas = this.organizacion.unidadesOrganizativas ? this.organizacion.unidadesOrganizativas : [];
         });
 
         // Cargamos todas las ocupaciones
         this.ocupacionService.get().subscribe(rta => {
             this.ocupaciones = rta;
         });
+
     }
 
     actualizarInformeIngreso() {
@@ -299,9 +316,10 @@ export class IniciarInternacionComponent implements OnInit {
             this.informeIngreso.asociado = ((typeof this.informeIngreso.asociado === 'string')) ? this.informeIngreso.asociado : (Object(this.informeIngreso.asociado).nombre);
             this.informeIngreso.ocupacionHabitual = ((typeof this.informeIngreso.ocupacionHabitual === 'string')) ? this.informeIngreso.ocupacionHabitual : (Object(this.informeIngreso.ocupacionHabitual).nombre);
             this.informeIngreso.origen = ((typeof this.informeIngreso.origen === 'string')) ? this.informeIngreso.origen : (Object(this.informeIngreso.origen).nombre);
+            this.informeIngreso.PaseAunidadOrganizativa = this.informeIngreso.PaseAunidadOrganizativa;
 
             if (this.prestacion && this.prestacion.id) {
-                // reemplazamos el Informde de ingreso en la prestacion
+                // reemplazamos el Informe de ingreso en la prestacion
                 let indexInforme = this.prestacion.ejecucion.registros.findIndex(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
                 this.prestacion.ejecucion.registros[indexInforme].valor = { informeIngreso: this.informeIngreso };
                 let cambios = {
@@ -356,7 +374,6 @@ export class IniciarInternacionComponent implements OnInit {
                     // TODO: Sub-zero wins
                     nuevaPrestacion.solicitud.obraSocial = { codigoPuco: this.obraSocial[0].codigoFinanciador, nombre: this.obraSocial[0].nombre };
                 }
-
                 this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
                     if (this.cama) {
                         // vamos a actualizar el estado de la cama
@@ -380,6 +397,8 @@ export class IniciarInternacionComponent implements OnInit {
 
                         });
                     } else {
+
+                        this.plex.info('warning', 'Paciente ingresado a lista de espera');
                         // this.router.navigate(['rup/internacion/ver', prestacion.id]);
                         this.data.emit(false);
                         this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
@@ -419,6 +438,18 @@ export class IniciarInternacionComponent implements OnInit {
             }
             event.callback(organizacionSalida);
         }
+    }
+    selectCamasDisponibles(unidadOrganizativa, fecha, hora) {
+        let f = this.servicioInternacion.combinarFechas(fecha, hora);
+        this.camasService.getCamasXFecha(this.auth.organizacion.id, f).subscribe(resultado => {
+            if (resultado) {
+                let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.conceptId === unidadOrganizativa);
+                this.listadoCamas = [...lista];
+                console.log(this.listadoCamas.length);
+            }
+
+
+        });
     }
 
     // Se usa tanto para guardar como cancelar

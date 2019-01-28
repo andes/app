@@ -41,7 +41,12 @@ export class CamasService {
         };
         return this.server.get(this.camasUrl + '/historial', { params: params });
     }
-
+    getInternacionCama(idCama): Observable<any[]> {
+        let params = {
+            idCama: idCama
+        };
+        return this.server.get(this.camasUrl + '/internacionCama', { params: params });
+    }
 
 
     /**
@@ -65,6 +70,9 @@ export class CamasService {
 
     cambiaEstado(idcama, estado): Observable<any> {
         return this.server.patch(this.camasUrl + '/cambiaEstado/' + idcama, estado);
+    }
+    eliminarCama(idcama): Observable<any> {
+        return this.server.delete(this.camasUrl + '/eliminarCama/' + idcama);
     }
 
     NewEstado(idcama, estado): Observable<any> {
@@ -195,4 +203,12 @@ export class CamasService {
         return this.cambiaEstado(cama.id, dto);
 
     }
+
+    UOxCama(idUO): Observable<any> {
+        let params = {
+            unidadesOrganizativas: idUO
+        };
+        return this.server.get(this.camasUrl, { params: params, showError: true });
+    }
+
 }

@@ -88,6 +88,9 @@
                 <!-- Editar datos de la cama -->
                 <plex-button *ngIf="showEstados" icon="pencil" type="primary btn-sm" (click)="editarCama(cama)">
                 </plex-button>
+                <!-- Eliminar cama -->
+                <plex-button *ngIf="showEstados" icon="close-box" type="danger btn-sm" (click)="eliminarCama(cama)">
+                </plex-button>
             </div>
         </div>
 

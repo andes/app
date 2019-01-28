@@ -23,7 +23,8 @@ export class InternacionService {
         }
     };
 
-    public workflowCompleto = [{ 'id': '57e9670e52df311059bc8964', 'nombre': 'HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON' }];
+    public workflowCompleto = [{ 'id': '57e9670e52df311059bc8964', 'nombre': 'HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON' }, { 'id': '57fcf037326e73143fb48c3a', 'nombre': 'CENTRO DE SALUD PROGRESO' }];
+    // public workflowCompleto = [{ 'id': '57e9670e52df311059bc8964', 'nombre': 'HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON' }];
 
     constructor(private server: Server) { }
 
