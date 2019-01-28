@@ -5,31 +5,29 @@
             <div class="col">
                 <plex-box>
                     <header>
-                        <div class="clearfix">
-                            <div class="page-title">Mapa de camas</div>
-                        </div>
                         <div class="row" *ngIf="camas">
                             <div class="col-2">
                                 <plex-text (keyup)="filtrar()" [(ngModel)]="filtros.nombre" label="Paciente">
                                 </plex-text>
                             </div>
                             <div class="col-3">
-                                <plex-select [disabled]="true" [(ngModel)]="filtros.sector" name="sector" [data]="filtros.opciones.sectores"
-                                    label="Sector" (change)="filtrar()" *ngIf="filtros.opciones.sectores.length"
-                                    [required]="true"></plex-select>
+                                <plex-select [disabled]="true" [(ngModel)]="filtros.sector" [data]="filtros.opciones.sectores"
+                                    label="Sector" (change)="filtrar()" *ngIf="filtros.opciones.sectores.length"></plex-select>
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <plex-select [disabled]="true" [(ngModel)]="filtros.servicio" name="servicio2"
-                                        [data]="filtros.opciones.servicios" label="Unidad Organizativa" (change)="filtrar()"
-                                        *ngIf="filtros.opciones.servicios.length" [required]="true"></plex-select>
+                                    <plex-select [(ngModel)]="filtros.servicio" [data]="filtros.opciones.servicios"
+                                        label="Unidad Organizativa" (change)="filtrar()" *ngIf="filtros.opciones.servicios.length"></plex-select>
                                 </div>
                             </div>
 
-                            <div class="col-3">
-                                <plex-select [disabled]="true" [(ngModel)]="filtros.tipoCama" name="tipoCama" [data]="filtros.opciones.tiposCamas"
-                                    label="Tipo de cama" (change)="filtrar()" *ngIf="filtros.opciones.tiposCamas.length"
-                                    [required]="true"></plex-select>
+                            <div class="col-2">
+                                <plex-select [disabled]="true" [(ngModel)]="filtros.tipoCama" [data]="filtros.opciones.tiposCamas"
+                                    label="Tipo de cama" (change)="filtrar()" *ngIf="filtros.opciones.tiposCamas.length"></plex-select>
+                            </div>
+                            <div class="col-2">
+                                <plex-select [disabled]="true" [(ngModel)]="filtros.censable" [data]="filtros.opciones.censo"
+                                    label="Censable" (change)="filtrar()" *ngIf="filtros.opciones.tiposCamas.length"></plex-select>
                             </div>
                             <!-- Filtros por estado -->
                             <!-- <div class="col-md-3">
@@ -95,8 +93,9 @@
                     <!-- Loader -->
                     <plex-loader *ngIf="loader" type="ball-pulse-sync"></plex-loader>
                     <!-- En caso de que no hay resultados -->
-                    <div *ngIf="!loader && !camas">
-                        No se encontraron resultados
+                    <div *ngIf="camas && camas.length === 0 && !loader" class="alert alert-default">
+                        <i class="mdi mdi-emoticon-sad"></i> No hay resultados que coincidan con los filtros de
+                        búsqueda
                     </div>
                     <div id="mapaCamas" class="row" *ngIf="!loader && camas">
                         <div [ngClass]="{'col-xl-3 col-lg-3 col-md-4 col-sm-6 col-xs-6': showMenu, 'col-md-2': !showMenu, 'selected': cama === camaSeleccionada}"
@@ -169,7 +168,7 @@
                     <plex-tabs [activeIndex]="panelIndex">
 
                         <!-- Tab cama -->
-                        <plex-tab *ngIf="!showEgreso" label="Datos de cama">
+                        <plex-tab *ngIf="!showEgreso" label="Cama">
                             <div class="sidebar-contenedor-texto">
                                 <div class="text-center info-cama-menu">
                                     <h2 class="andes-sidebar-numero {{camaSeleccionada.ultimoEstado.estado}}">{{camaSeleccionada.nombre}}</h2>
@@ -178,6 +177,7 @@
                                     <span class="badge badge-{{camaSeleccionada.ultimoEstado.estado}}" [ngClass]="{ 'badge-success': camaSeleccionada.ultimoEstado.estado === 'desocupada'}">
                                         {{camaSeleccionada.ultimoEstado.estado}}
                                     </span>
+                                    <span class='texto-{{camaSeleccionada.ultimoEstado.estado}}' *ngIf='camaSeleccionada.ultimoEstado.estado === "bloqueada" && camaSeleccionada.ultimoEstado.observaciones'>| {{camaSeleccionada.ultimoEstado.observaciones}}</span>
                                     <!-- Data paciente -->
                                     <div class="andes-contenedor-secundario horizontal centrado">
                                         <img *ngIf="camaSeleccionada.ultimoEstado.estado == 'ocupada'" class="sidebar-imagen-paciente"
@@ -205,20 +205,31 @@
 
                                     <!-- Iconos estado cama-->
                                     <div class="andes-contenedor-iconos">
-                                        <div class="cama-seleccion-icon">
+                                        <div class="cama-seleccion-icon" *ngIf='checkOxigeno(camaSeleccionada)'>
                                             <!-- oxigeno -->
                                             <i class="icon icon-andes-cama-oxigeno"></i>
                                             <p>Oxigeno</p>
                                         </div>
-                                        <div class="cama-seleccion-icon">
+                                        <div class="cama-seleccion-icon" *ngIf='camaSeleccionada.ultimoEstado.esCensable'>
                                             <!-- reparacion -->
                                             <i class="icon icon-andes-cama-herramienta"></i>
                                             <p>Censable</p>
                                         </div>
-                                        <div class="cama-seleccion-icon">
+                                        <div class="cama-seleccion-icon text-center" *ngIf='camaSeleccionada.ultimoEstado.genero'>
                                             <!-- reparacion -->
-                                            <i class="icon icon-andes-cama-herramienta"></i>
-                                            <p>Unisex</p>
+                                            <ng-container *ngIf='!camaSeleccionada.ultimoEstado.genero.conceptId'>
+                                                <i class="mdi mdi-gender-male-female"></i>
+                                                <p>Cama Unisex</p>
+                                            </ng-container>
+                                            <ng-container *ngIf='camaSeleccionada.ultimoEstado.genero.conceptId === "703117000"'>
+                                                <i class="mdi mdi-gender-male"></i>
+                                                <p>Cama Masculina</p>
+                                            </ng-container>
+                                            <ng-container *ngIf='camaSeleccionada.ultimoEstado.genero.conceptId === "703118005"'>
+                                                <i class="mdi mdi-gender-female"></i>
+                                                <p>Cama Femenina</p>
+                                            </ng-container>
+
                                         </div>
                                     </div>
                                 </div>
@@ -241,14 +252,14 @@
                             </footer>
                         </plex-tab>
                         <!-- Resumen -->
-                        <plex-tab *ngIf="prestacionPorInternacion" label="datos de internacion">
+                        <plex-tab *ngIf="prestacionPorInternacion" label="Internacion">
                             <internacion-resumen (data)="editar($event)" [editarEgreso]="showEgreso" [paciente]="prestacionPorInternacion.paciente"
                                 [prestacion]="prestacionPorInternacion" [camaSeleccionada]="camaSeleccionada"
                                 (refreshCamas)="updateCama($event)" (accionCama)="actualizarMapaDeCamas($event)"></internacion-resumen>
                         </plex-tab>
 
                         <!-- Historial de cama -->
-                        <plex-tab *ngIf="!showEgreso" label="Historial de la cama">
+                        <plex-tab *ngIf="!showEgreso" label="Historial">
                             <div class="row">
                                 <div class="col-md">
                                     <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fechaDesde"
@@ -261,8 +272,9 @@
                                     </plex-datetime>
                                 </div>
                             </div>
+                            <hr>
                             <div class="row">
-                                <div class="col-md">
+                                <div class="col-md text-right">
                                     <plex-button label="Buscar" type="primary" (click)="buscarHistorial()">
                                     </plex-button>
                                 </div>
@@ -286,7 +298,7 @@
                                 <tbody>
                                     <tr *ngFor="let movimiento of historial">
                                         <td>
-                                            {{movimiento.fecha | fecha}}
+                                            {{movimiento.fecha | date: "dd/MM/yyyy HH:mm "}}
                                         </td>
                                         <td>
                                             {{movimiento.estado}}
@@ -313,6 +325,14 @@
 
                 <ng-container *ngIf="loadCountFiltros && (!accion && !pacienteSelected)">
 
+                    <div class="text-right">
+                        <plex-button class="marginBtnAccion" type="primary" [title]="'Censo Diario'" icon='mdi mdi-calendar'
+                            (click)="censoDiario()" *ngIf="checkAuth('censo')"></plex-button>
+                        <plex-button class="marginBtnAccion" type="primary" [title]="'Censo Mensual'" icon='mdi mdi-calendar-multiple'
+                            (click)="censoMensual()" *ngIf="checkAuth('censo')"></plex-button>
+                        <plex-button class='marginBtnAccion' type="primary" [title]="'Agregar Cama'" icon='mdi mdi-plus'
+                            (click)="onGestionCamaClick()" *ngIf="checkAuth('cama:create')"></plex-button>
+                    </div>
                     <ng-container>
                         <plex-datetime type="datetime" [(ngModel)]="fecha" name="fecha" label="Fecha" (change)="mapaDeCamaXFecha(false)"></plex-datetime>
                     </ng-container>
@@ -372,7 +392,7 @@
                                 <p>Camas ocupadas</p>
                             </div>
                         </div>
-                        <div class="subcontainer-resumen reparacion">
+                        <!-- <div class="subcontainer-resumen reparacion">
                             <div>
                                 <i class="icon icon-andes-cama-reparacion "></i>
                             </div>
@@ -380,17 +400,30 @@
                                 <h3>{{cantidadXEstado['reparacion'].length}}</h3>
                                 <p>Camas en reparacion</p>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
-                    <ng-container>
+                    <!-- <ng-container>
                         <plex-button class="" type="primary" label="Censo diario" (click)="censoDiario()" *ngIf="checkAuth('censo')"></plex-button>
                         <plex-button class="" type="primary" label="Censo mensual" (click)="censoMensual()" *ngIf="checkAuth('censo')"></plex-button>
                         <plex-button label="Crear cama" type="primary" (click)="onGestionCamaClick()" *ngIf="checkAuth('cama:create')"></plex-button>
-                    </ng-container>
+                    </ng-container> -->
                 </ng-container>
             </plex-box>
         </div>
     </section>
+    <!-- footer -->
+    <!-- Footer -->
+    <footer>
+
+        <div class="row">
+            <div class="col">
+                <plex-button label="Volver" type="danger"></plex-button>
+                <!-- <plex-button label="Guardar {{prestacion?.solicitud?.tipoPrestacion?.term}}" (click)="guardarPrestacion()" type="success" -->
+                <!-- class="float-right"></plex-button> -->
+            </div>
+        </div>
+
+    </footer>
     <!-- </form> -->
 </ng-container>
 <!-- <ng-container *ngIf="camasService.showListaEspera && !buscandoPaciente">

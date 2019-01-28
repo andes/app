@@ -28,7 +28,7 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let pase of pases; let i=index">
-                                <td>{{ pase.estados.fecha |date:'dd-MM-yyyy HH:mm' }}</td>
+                                <td>{{ pase.estados.fecha | date:'dd-MM-yyyy HH:mm' }}</td>
                                 <td>{{ getHabitacionName(pase) + '/' + pase.nombre }}</td>
                                 <td>{{ pase.estados.unidadOrganizativa.term }}</td>
                                 <td>{{ pase.estados.especialidades[0]?.term }}</td>

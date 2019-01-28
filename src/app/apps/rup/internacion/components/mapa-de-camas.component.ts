@@ -1,5 +1,5 @@
 import { estados } from './../../../../utils/enumerados';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -12,6 +12,7 @@ import { OrganizacionService } from '../../../../services/organizacion.service';
 import { CamasService } from '../services/camas.service';
 import { PacienteBuscarResultado } from '../../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 import { ElementosRUPService } from '../../../../modules/rup/services/elementosRUP.service';
+import * as enumerados from './../../../../utils/enumerados';
 
 // ../../../../services/internacion.service
 @Component({
@@ -21,6 +22,7 @@ import { ElementosRUPService } from '../../../../modules/rup/services/elementosR
     encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 export class MapaDeCamasComponent implements OnInit {
+    @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
     // listado de camas de la organizacion
     public camas: any[] = [];
@@ -29,7 +31,7 @@ export class MapaDeCamasComponent implements OnInit {
     // estado de las camas de la organizacion
     public estadoServicio: any = {};
     // tipo de vista del mapa de camas
-    public layout: String = 'grid';
+    // public layout: String = 'grid';
     public organizacion: IOrganizacion;
     public prestacion: any;
     public fecha = new Date;
@@ -78,12 +80,14 @@ export class MapaDeCamasComponent implements OnInit {
         estado: null,
         servicio: null,
         sector: null,
+        censable: null,
         opciones: {
             sectores: [],
             habitaciones: [],
             estados: [],
             servicios: [],
-            tiposCamas: []
+            tiposCamas: [],
+            censo: []
         }
     };
 
@@ -108,6 +112,16 @@ export class MapaDeCamasComponent implements OnInit {
         this.elementoRupService.ready.subscribe(() => {
             this.conceptosInternacion = this.elementoRupService.getConceptosInternacion();
         });
+
+        this.plex.updateTitle([{
+            route: '/',
+            name: 'ANDES'
+        }, {
+            route: '/internacion/camas',
+            name: 'Mapa de camas'
+        }]);
+
+        this.filtros.opciones.censo = enumerados.getObjCenso();
     }
 
 
@@ -121,6 +135,7 @@ export class MapaDeCamasComponent implements OnInit {
         this.loader = true;
         this.camasService.getCamasXFecha(this.auth.organizacion._id, this.fecha).subscribe(camas => {
             this.camas = camas;
+            console.log(this.camas);
             this.countFiltros();
             this.loader = false;
             if (camas) {
@@ -218,13 +233,16 @@ export class MapaDeCamasComponent implements OnInit {
      */
     public filtrar() {
         const regex_nombre = new RegExp('.*' + this.filtros.nombre + '.*', 'ig');
+        let censable = this.filtros.censable ? this.filtros.censable.nombre === 'Censable' ? true : false : null;
         this.camas = this.camasCopy.filter((i) => {
             return (
-                (!this.filtros.sector || i.sectores.findIndex((_s) => _s.id === this.filtros.sector.id) >= 0) &&
+                (!this.filtros.sector || (this.filtros.sector && i.sectores[0]._id === this.filtros.sector.id) ) &&
                 (!this.filtros.tipoCama || (this.filtros.tipoCama && i.tipoCama.conceptId === this.filtros.tipoCama.id)) &&
                 (!this.filtros.estado || (this.filtros.estado && i.ultimoEstado.estado === this.filtros.estado.id)) &&
                 (!this.filtros.servicio || !this.filtros.servicio || (this.filtros.servicio.id && i.ultimoEstado.unidadOrganizativa && i.ultimoEstado.unidadOrganizativa.conceptId === this.filtros.servicio.id)) &&
+                (!this.filtros.censable || (this.filtros.censable && i.ultimoEstado.esCensable === censable)) &&
                 (!this.filtros.nombre || (this.filtros.nombre && i.ultimoEstado && i.ultimoEstado.paciente && (regex_nombre.test(i.ultimoEstado.paciente.nombre) || (regex_nombre.test(i.ultimoEstado.paciente.apellido)) || (regex_nombre.test(i.ultimoEstado.paciente.documento)))))
+
             );
         });
     }
@@ -237,8 +255,10 @@ export class MapaDeCamasComponent implements OnInit {
      * @memberof MapaDeCamasComponent
      */
     public updateCama(e: any) {
+        console.log(e);
         if (e) {
-            this.countFiltros();
+
+
 
             if (e.iniciarInternacion) {
                 this.cambiaTap(1);
@@ -252,8 +272,10 @@ export class MapaDeCamasComponent implements OnInit {
             }
             if (e.desocupaCama) {
                 // vamos a liberar la cama
+                // this.prestacionDelPaciente(e.cama);
+                console.log(this.prestacion);
                 let dto = {
-                    fecha: new Date(),
+                    fecha: e.egresoExiste.valor.InformeEgreso.fechaEgreso,
                     estado: this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible',
                     unidadOrganizativa: e.cama.ultimoEstado.unidadOrganizativa ? e.cama.ultimoEstado.unidadOrganizativa : null,
                     especialidades: e.cama.ultimoEstado.especialidades ? e.cama.ultimoEstado.especialidades : null,
@@ -262,16 +284,17 @@ export class MapaDeCamasComponent implements OnInit {
                     paciente: null,
                     idInternacion: null
                 };
-
                 this.camasService.cambiaEstado(e.cama.id, dto).subscribe(camaActualizada => {
                     e.cama.ultimoEstado = camaActualizada.ultimoEstado;
                     this.onCamaSelected(e);
+                    this.countFiltros();
                 }, (err1) => {
                     this.plex.info('danger', 'Error al intentar desocupar la cama');
                 });
 
                 this.showIngreso = false;
                 this.showEgreso = false;
+
             }
 
             if (e.movimientoCama) {
@@ -356,8 +379,13 @@ export class MapaDeCamasComponent implements OnInit {
                 this.accion = null;
                 this.pacienteSelected = null;
                 break;
+            case 'PrepararCama':
+                this.camaSeleccionada = dtoAccion.cama;
+                this.accion = null;
+                this.pacienteSelected = false;
+                break;
 
-            case 'mostrarResumen':
+                case 'mostrarResumen':
 
                 this.camaSeleccionada = dtoAccion.cama;
                 this.showEgreso = true;
@@ -368,7 +396,10 @@ export class MapaDeCamasComponent implements OnInit {
                 this.prestacionDelPaciente(dtoAccion.cama);
                 break;
 
-        }
+            }
+
+            this.countFiltros();
+
 
     }
 
@@ -531,7 +562,7 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     onCamaSelected(event) {
-
+        console.log(this.camaSeleccionada);
         if (!this.camaSeleccionada || this.camaSeleccionada !== event.cama) { // Es la primera vez o selecciono una cama diferente a la que estaba
             this.showEgreso = false;
             this.showIngreso = false;
@@ -634,7 +665,8 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     buscarHistorial() {
-        this.camasService.getHistorialCama(this.auth.organizacion._id, this.fechaDesde, this.fechaHasta, this.camaSeleccionada.id).subscribe(historial => {
+        this.camasService.getHistorialCama(this.auth.organizacion._id, moment(this.fechaDesde).startOf('day').toDate() , moment(this.fechaHasta).endOf('day').toDate(), this.camaSeleccionada.id).subscribe(historial => {
+          console.log(moment(this.fechaDesde).startOf('day').toDate());
             this.inicioBusqueda = true;
             if (historial.length > 0) {
                 this.historial = historial;
@@ -658,4 +690,8 @@ export class MapaDeCamasComponent implements OnInit {
             this.estadosMode = true;
         }
     }
+
+    checkOxigeno(cama) {
+        return cama.equipamiento.find(e => e.conceptId === '261746005') ? true : false;
+        }
 }

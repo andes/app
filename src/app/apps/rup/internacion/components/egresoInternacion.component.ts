@@ -7,6 +7,7 @@ import { ProcedimientosQuirurgicosService } from '../../../../services/procedimi
 import { Cie10Service } from '../../../../services/term/cie10.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { InternacionService } from '../services/internacion.service';
+import * as moment from 'moment';
 
 @Component({
     selector: 'rup-egresoInternacion',
@@ -23,6 +24,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     @Output() btnIniciarEditarEmit: EventEmitter<any> = new EventEmitter<any>();
     @Output() prestacionGuardada: EventEmitter<any> = new EventEmitter<any>();
 
+    public fechaDeingreso;
     public fechaEgreso: Date = new Date();
     public horaEgreso: Date = new Date();
     public listaUnidadesOrganizativas: any[];
@@ -118,6 +120,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
                 return { id: elem._id, nombre: elem.nombre };
             });
         });
+        this.calcularDiasEstada();
     }
 
     ngOnChanges(changes: any) {
@@ -352,17 +355,24 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     */
     calcularDiasEstada() {
 
-
+        // this.fechaEgreso = new Date();
         if (this.fechaEgreso && this.horaEgreso) {
             this.registro.valor.InformeEgreso.fechaEgreso = this.internacionService.combinarFechas(this.fechaEgreso, this.horaEgreso);
             // vamos a recuperara la fecha de ingreso de la prestacion
             let informeIngreso = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.internacionService.conceptosInternacion.ingreso.conceptId);
             if (informeIngreso) {
-                let fechaIngreso = informeIngreso.valor.informeIngreso.fechaIngreso;
+                let fechaIngreso = moment(informeIngreso.valor.informeIngreso.fechaIngreso);
+                this.fechaDeingreso = fechaIngreso;
                 if (fechaIngreso) {
                     let fechaEgreso = moment(this.registro.valor.InformeEgreso.fechaEgreso);
-                    let diasEstada = fechaEgreso ? fechaEgreso.diff(moment(fechaIngreso), 'days') : '1';
-                    this.registro.valor.InformeEgreso.diasDeEstada = diasEstada;
+                    if ( fechaEgreso.diff(fechaIngreso.startOf('day'), 'days', true) < 0) {
+                        this.plex.info('warning', 'ERROR: La fecha de egreso no puede ser inferior a  ' + moment(fechaIngreso).format('YYYY-MM-DD'));
+                        this.fechaEgreso = new Date();
+                        this.registro.valor.InformeEgreso.diasDeEstada = 1;
+                    } else {
+                        let diasEstada = fechaEgreso ? fechaEgreso.diff(moment(fechaIngreso), 'days') === 0 ? 1 : fechaEgreso.diff(moment(fechaIngreso), 'days')  : '1';
+                        this.registro.valor.InformeEgreso.diasDeEstada = diasEstada;
+                    }
                 }
             }
         }

@@ -15,6 +15,7 @@ export interface ICama {
     unidadOrganizativaOriginal: ISnomedConcept;
     nombre: String;
     tipoCama: ISnomedConcept;
+    observaciones: String;
     equipamiento: [ISnomedConcept]; // oxigeno / bomba / etc
     // ultimo estado de la cama
     ultimoEstado: ICamaEstado;

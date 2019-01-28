@@ -22,7 +22,7 @@ $ocupada: #cb0053;
 $disponible: #8cc63f;
 $reparacion: #f44336;
 $bloqueada: #f44336;
-
+$andes-gris: #a5a1a1;
 /*
 ******************************
 ** MAPA DE CAMAS
@@ -72,7 +72,9 @@ $bloqueada: #f44336;
             padding: 0; // margin-bottom: 1rem;
             border: solid 2px transparent;
             &.selected {
-                border-color: $dark-grey;
+                border-color: $andes-cyan;
+                background-color: #2196f33d;
+                
                 z-index: 4;
             }
         }
@@ -619,13 +621,15 @@ plex-box#panel-lateral>DIV {
         .nav-tabs .nav-item {
             display: flex;
             width: 100%;
+            margin-bottom: unset !important;
+
             a>span {
                 align-self: center;
             }
         }
         .nav-link {
             @extend %base-tab;
-            background-color: $light-grey;
+            background-color: $andes-gris;
             &.active {
                 background-color: $blue !important;
             }
@@ -862,3 +866,13 @@ hr {
         width: 100%;
     }
 }
+
+.marginBtnAccion{
+    margin-left: 2px;
+}
+
+.texto-bloqueada{
+    color:#f44336;
+    margin-left: -15px !important
+}
+

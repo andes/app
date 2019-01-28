@@ -70,6 +70,11 @@ export enum EstadosEspacios {
     'baja permanente'
 }
 
+export enum Censo {
+    'Censable',
+    'No Censable'
+}
+
 export function titleCase(str) {
     return str.toLowerCase().split(' ').map(function (word) {
         return (word.charAt(0).toUpperCase() + word.slice(1));
@@ -93,6 +98,18 @@ export function getObjSexos() {
     let arrSexo = Object.keys(Sexo);
     arrSexo = arrSexo.slice(arrSexo.length / 2);
     let salida = arrSexo.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
+
+export function getObjCenso() {
+    let arrCenso = Object.keys(Censo);
+    arrCenso = arrCenso.slice(arrCenso.length / 2);
+    let salida = arrCenso.map(elem => {
         return {
             'id': elem,
             'nombre': titleCase(elem)

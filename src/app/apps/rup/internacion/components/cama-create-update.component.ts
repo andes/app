@@ -67,6 +67,8 @@ export class CamaCreateUpdateComponent implements OnInit {
                 this.CamaService.getCama(idCama).subscribe(cama => {
                     this.cama = cama;
                     this.estado = Object.assign({}, this.cama.ultimoEstado);
+                    console.log(this.cama);
+
                 });
             }
         });

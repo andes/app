@@ -1,6 +1,6 @@
 <section class="cama-container manual-flip animate-repeat">
     <div class="cama">
-        <div class="card-container front {{cama.ultimoEstado.estado}}">
+        <div class="card-container front {{cama.ultimoEstado.estado}} bg-cama" >
             <!-- Botonera lateral -->
             <div class="card-contenedor-lateral"></div>
             <div class="card-contenedor-central">
@@ -10,6 +10,7 @@
                         <div>{{ getHabitacionName()}}</div>
                         <h3 class="card-titulo">{{cama.nombre}}</h3>
                     </div>
+                    
                     <!-- Icono cama -->
                     <div *ngIf="cama.ultimoEstado.estado !== 'ocupada'" class="data-icon {{cama.ultimoEstado.estado !== 'ocupada' ? cama.ultimoEstado.estado  : cama.ultimoEstado.paciente.sexo}}">
                         <!-- reparacion -->
@@ -34,6 +35,15 @@
                         <!-- reparacion de la cama -->
                         <i *ngIf="cama.ultimoEstado.estado === 'reparacion'" class="icon icon-andes-cama"></i>
                     </div>
+                    <!-- <div class='position-icons'>
+                        <div [ngClass]="{'icono-censable':cama.ultimoEstado.esCensable , 'icono-noCensable':!cama.ultimoEstado.esCensable}"
+                            [title]="cama.ultimoEstado.esCensable ? 'Censable' : ' No censable'">
+                            <i class="icon icon-andes-cama-herramienta"></i>
+                        </div>
+                        <div *ngIf='checkOxigeno(cama)' class="icono-censable" [title]="'Oxigeno'" >
+                                <i class="icon icon-andes-cama-oxigeno"></i>
+                            </div>
+                    </div> -->
                 </div>
 
                 <!-- Boton clave inferior -->

@@ -176,7 +176,7 @@ export class CamasService {
     }
 
 
-    nuevoEstadoCama(cama: ICama, estado: String, fecha: Date) {
+    nuevoEstadoCama(cama: ICama, estado: String, fecha: Date, observacion?: any) {
 
         let dto = {
             fecha: fecha,
@@ -189,6 +189,9 @@ export class CamasService {
             idInternacion: cama.ultimoEstado.idInternacion ? cama.ultimoEstado.idInternacion : null,
             esMovimiento: false
         };
+        if (observacion) {
+            dto['observaciones'] = observacion;
+        }
         return this.cambiaEstado(cama.id, dto);
 
     }

@@ -136,18 +136,23 @@ export class CamaComponent implements OnInit {
     }
 
     public devolverCama(cama) {
-        let dto = {
-            fecha: this.internacionService.combinarFechas(this.fecha, this.hora),
-            estado: cama.ultimoEstado.estado,
-            unidadOrganizativa: cama.unidadOrganizativaOriginal,
-            especialidades: cama.ultimoEstado.especialidades ? cama.ultimoEstado.especialidades : null,
-            esCensable: cama.ultimoEstado.esCensable,
-            genero: cama.ultimoEstado.genero ? cama.ultimoEstado.genero : null,
-            paciente: cama.ultimoEstado.paciente ? cama.ultimoEstado.paciente : null,
-            idInternacion: cama.ultimoEstado.idInternacion ? cama.ultimoEstado.idInternacion : null
-        };
-        this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {
-            this.evtCama.emit(null);
+        this.plex.confirm('Desea devolver la cama a unidad de origen?').then((resultado) => {
+            if (resultado) {
+                let dto = {
+                    fecha: this.internacionService.combinarFechas(this.fecha, this.hora),
+                    estado: cama.ultimoEstado.estado,
+                    unidadOrganizativa: cama.unidadOrganizativaOriginal,
+                    especialidades: cama.ultimoEstado.especialidades ? cama.ultimoEstado.especialidades : null,
+                    esCensable: cama.ultimoEstado.esCensable,
+                    genero: cama.ultimoEstado.genero ? cama.ultimoEstado.genero : null,
+                    paciente: cama.ultimoEstado.paciente ? cama.ultimoEstado.paciente : null,
+                    idInternacion: cama.ultimoEstado.idInternacion ? cama.ultimoEstado.idInternacion : null
+                };
+                this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {
+                    this.cama = camaActualizada;
+                    this.evtCama.emit(null);
+                });
+            }
         });
     }
 
@@ -247,6 +252,10 @@ export class CamaComponent implements OnInit {
         };
         this.camaSelected.emit(salida);
 
+    }
+
+    checkOxigeno(cama) {
+        return cama.equipamiento.find(e => e.conceptId === '261746005') ? true : false;
     }
 
 
