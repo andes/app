@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Observable } from 'rxjs/Observable';
+import { ICama } from '../interfaces/ICama';
 
 @Injectable()
 export class InternacionService {
@@ -45,6 +46,36 @@ export class InternacionService {
 
     getCamaDisponibilidadCenso(params: any): Observable<any[]> {
         return this.server.get(this.url + '/censo/disponibilidad', { params: params });
+    }
+
+    /**
+    * Devuelve si la cama se encuentra disponible para ser ocupada en una fechaHora solicitada
+    * Si paso como parámetro el servicioHospitalario, filtrará las camas que pertenezcan a ese servicio.
+    *
+    * @param {ICama} cama cama a evaluar disponibilidad
+    * @param {Date} fecha fecha en que se desea ocupar
+    * @returns {ICama} cama disponible o null en caso contrario
+    * @memberof InternacionService
+    */
+    esCamaDisponible(cama, fechaIngreso) {
+        let estados = cama.estados;
+        estados.sort((a, b) => {
+            return b.fecha - a.fecha;
+        });
+
+        // chequeamos que la fecha de ingreso sea superior a la fecha de carga disponible de la cama
+        if (estados[estados.length - 1].fecha <= fechaIngreso) {
+            // buscamos el ultimo estado en que la cama estuvo ocupada
+            const estadoEncontrado = estados.find(e => e.estado === 'ocupada');
+            if (estadoEncontrado) {
+                let estadoAux = estados.find(e => e.estado === 'disponible' && e.fecha > estadoEncontrado.fecha && e.fecha < fechaIngreso);
+                if (estadoAux) {
+                    return cama;
+                }
+            }
+        }
+
+        return null;
     }
 
     combinarFechas(fecha1, fecha2) {
