@@ -115,7 +115,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     constructor(
         private obraSocialService: ObraSocialService,
-        private servicioPrestacion: PrestacionesService,
+        public servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
         public plex: Plex, public auth: Auth,
         private router: Router, private route: ActivatedRoute,
