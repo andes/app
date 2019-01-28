@@ -6,8 +6,10 @@
             <div class="col-8">
                 <plex-box>
                     <ng-container *ngIf="!registrosHuds">
-                        <div>
-                            <i class="adi adi-andes-logo"></i>
+                        <div class="contenedor-mensaje">
+                            <div class="mensaje">
+
+                            </div>
                         </div>
                     </ng-container>
                     <plex-tabs (close)="onCloseTab($event)">
@@ -125,6 +127,13 @@
                                 </plex-tab>
                             </ng-container>
                         </ng-container>
+
+                        <plex-tab label="Resumen del Paciente" *ngIf="paciente">
+                            <rup-resumenPaciente-estatico [paciente]="paciente" esTab="true"></rup-resumenPaciente-estatico>
+                            <rup-resumenPaciente-dinamico-nino *ngIf="paciente.edad <= 6" [paciente]="paciente" esTab="true"></rup-resumenPaciente-dinamico-nino>
+                            <rup-resumenPaciente-dinamico *ngIf="paciente.edad > 6" [paciente]="paciente" esTab="true"></rup-resumenPaciente-dinamico>
+                        </plex-tab>
+
                     </plex-tabs>
                 </plex-box>
             </div>

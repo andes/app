@@ -1,0 +1,25 @@
+// TODO: Mover a PLEX
+
+plex-tab {
+    form {
+        border: 1px solid lightgrey;
+        padding: 10px;
+        position: relative;
+        top: -1px;
+        z-index: 0 !important;
+    }
+}
+
+.nav-tabs .nav-item {
+    &.active{
+        z-index: 1 !important;
+    }
+}
+
+.contenedor-mensaje {
+    width: 100%;
+    height: 100%;
+}
+.mensaje {
+    
+}

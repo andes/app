@@ -15,6 +15,7 @@ import { IPrestacion } from '../../interfaces/prestacion.interface';
 @Component({
     selector: 'rup-vistaHuds',
     templateUrl: 'vistaHuds.html',
+    styleUrls: ['vistaHuds.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class VistaHudsComponent implements OnInit {
@@ -43,7 +44,7 @@ export class VistaHudsComponent implements OnInit {
         private router: Router, private route: ActivatedRoute,
         private servicioPaciente: PacienteService,
         private logService: LogService,
-        private servicioPrestacion: PrestacionesService,
+        public servicioPrestacion: PrestacionesService,
         private conceptObserverService: ConceptObserverService) { }
 
     /**
