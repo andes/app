@@ -145,6 +145,9 @@ header {
             padding: .15rem .25rem;
         }
     }
+    &.lote-derivacion {
+        grid-template-columns: repeat(3, minmax(100px, 1fr));
+    }
 }
 
 .gestion-alarmas-container {

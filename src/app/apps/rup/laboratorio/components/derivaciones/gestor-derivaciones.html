@@ -1,0 +1,15 @@
+<plex-layout>
+    <plex-layout-main>
+        <plex-tabs [activeIndex]="accionIndex" (change)="onTabChange($event)">
+            <plex-tab label="Lotes Creados">
+                <gestor-lotes></gestor-lotes>
+            </plex-tab>
+            <plex-tab label="Preparar Lote">
+                <preparar-lote></preparar-lote>
+            </plex-tab>
+            <plex-tab label="Recepcionar">
+                <recepcionar-derivacion></recepcionar-derivacion>
+            </plex-tab>
+        </plex-tabs>
+    </plex-layout-main>
+</plex-layout>

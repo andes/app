@@ -1,4 +1,3 @@
-import { GestorHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/gestor-hojatrabajo/gestor-hojatrabajo.component';
 /*
 Siguiendo las guías de estilo de Angular (https://angular.io/styleguide) dejemos ordenados los imports
 de la siguiente manera:
@@ -87,6 +86,9 @@ import { ReglasComponent } from './components/top/reglas/reglas.component';
 // SIL
 import { LaboratorioComponent } from './apps/rup/laboratorio/components/laboratorio.component';
 import { PuntoInicioLaboratorioComponent } from './apps/rup/laboratorio/components/punto-inicio/punto-inicio.component';
+import { GestorHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/gestor-hojatrabajo/gestor-hojatrabajo.component';
+import { LaboratorioDerivacionesComponent } from './apps/rup/laboratorio/components/derivaciones/gestor-derivaciones.component';
+
 import { VisualizacionReglasComponent } from './components/top/reglas/visualizacionReglas.component';
 
 // Home de Estadisticas
@@ -178,6 +180,7 @@ const appRoutes: Routes = [
   { path: 'laboratorio/protocolos/sinTurno', component: LaboratorioComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/protocolos/sinTurno/:id', component: LaboratorioComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/hojatrabajo', component: GestorHojatrabajoComponent, canActivate: [RoutingGuard] },
+  { path: 'laboratorio/derivaciones', component: LaboratorioDerivacionesComponent, canActivate: [RoutingGuard] },
 
   // Solicitudes
   { path: 'solicitudes', component: SolicitudesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
