@@ -186,8 +186,8 @@
                         <legend>Unidades Organizativas</legend>
                         <div class="row">
                             <div class="col-10">
-                                <plex-select name="servicio" labelField="term" [data]='listadoUO' idField="conceptId"
-                                    [(ngModel)]="servicio" placeholder="Unidades Organizativas:">
+                                <plex-select name="servicio" labelField="term" (getData)="loadListadoUO($event)"
+                                    idField="conceptId" [(ngModel)]="servicio" placeholder="Unidades Organizativas:">
                                 </plex-select>
                             </div>
                             <div class="col-2">
