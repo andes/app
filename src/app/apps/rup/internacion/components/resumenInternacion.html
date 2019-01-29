@@ -4,7 +4,7 @@
         <plex-panel *ngIf="!editarEgreso " tituloPrincipal="Datos del Ingreso" [active]="true" icon="arrow-down-drop-circle-outline">
             <ng-container>
                 <rup-iniciarInternacion (data)="cierraEditar($event)" [paciente]="paciente" [prestacion]="prestacion"
-                    [soloValores]="!editarIngreso">
+                    [soloValores]="!editarIngreso" [paciente]="paciente" [camaSelected]="camaSeleccionada">
                 </rup-iniciarInternacion>
                 <!-- Editar internacion -->
                 <plex-button class="btn btn-block btn-danger btn-sm" type="danger" *ngIf="!editarIngreso && !editarEgreso"

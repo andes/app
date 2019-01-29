@@ -22,6 +22,7 @@ export class CamaCreateUpdateComponent implements OnInit {
     public organizacion: any;
     public unidadOrganizativa = null;
     public sectores: any[] = [];
+    public nuevaCama = true;
 
     public cama: any = {
         organizacion: null,
@@ -63,6 +64,7 @@ export class CamaCreateUpdateComponent implements OnInit {
 
         this.route.params.subscribe(params => {
             if (params && params['idCama']) {
+                this.nuevaCama = false;
                 let idCama = params['idCama'];
                 this.CamaService.getCama(idCama).subscribe(cama => {
                     this.cama = cama;
