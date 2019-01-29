@@ -4,11 +4,13 @@ import { RUPComponent } from '../core/rup.component';
 import * as moment from 'moment';
 import 'moment/locale/es';
 import { isNumber } from 'util';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-grafico-lineal',
     templateUrl: 'graficoLineal.html'
 })
+@RupElement()
 export class GraficoLinealComponent extends RUPComponent implements OnInit {
     // variables para guardar los datosLineales de las prestaciones
     public datosLineales: any[] = [];

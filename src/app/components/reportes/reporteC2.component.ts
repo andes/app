@@ -60,6 +60,7 @@ export class ReporteC2Component implements OnInit {
         this.totalMasculino = this.diagnosticos.map(elem => { return elem.sumaMasculino; }).reduce(this.add, 0);
         this.totalFemenino = this.diagnosticos.map(elem => { return elem.sumaFemenino; }).reduce(this.add, 0);
         this.totalOtro = this.diagnosticos.map(elem => { return elem.sumaOtro; }).reduce(this.add, 0);
+        this.listaPacientes = false; // con esto se oculta la lista de pacientes cuando se genera un nuevo reporte
     }
 
     get diagnosticos(): any {
