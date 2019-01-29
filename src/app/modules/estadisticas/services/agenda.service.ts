@@ -19,4 +19,8 @@ export class EstAgendasService {
         return this.server.get(this.baseURL, { params });
     }
 
+    post (params) {
+        return this.server.post(this.baseURL, params);
+    }
+
 }

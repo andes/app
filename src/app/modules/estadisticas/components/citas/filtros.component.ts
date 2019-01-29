@@ -6,7 +6,7 @@ import { Plex } from '@andes/plex';
     selector: 'turnos-filtros',
     template: `
     <div class="row">
-    <div class="col-3">
+        <div class="col-3">
             <plex-select label="Tipo de filtro" [data]="opciones" [(ngModel)]="seleccion.tipoDeFiltro" name="tipoDeFiltro" (change)="onChange()"></plex-select>
         </div>
         <div class="col-3">
@@ -15,17 +15,17 @@ import { Plex } from '@andes/plex';
         <div class="col-3">
             <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta" (change)="onChange()"></plex-datetime>
         </div>
-        <div class="col-3<">
+        <div class="col-3">
             <plex-button type="success" label="Filtrar" (click)="onChange()" class="vertical-center" ></plex-button>
         </div>
     </div>
     <div class="row">
         <div class="col-3" *ngIf="params.prestacion">
-            <plex-select [data]="params.prestacion" [(ngModel)]="seleccion.prestacion" (change)="onChange($event)" placeholder="Seleccione..." label="Prestacion">
+            <plex-select [multiple]="true" [data]="params.prestacion" [(ngModel)]="seleccion.prestacion" (change)="onChange($event)" placeholder="Seleccione..." label="Prestacion">
             </plex-select>
         </div>
         <div class="col-3" *ngIf="params.profesional">
-            <plex-select [data]="params.profesional" [(ngModel)]="seleccion.profesional" (change)="onChange($event)" placeholder="Seleccione..." label="Profesional">
+            <plex-select [multiple]="true" [data]="params.profesional" [(ngModel)]="seleccion.profesional" (change)="onChange($event)" placeholder="Seleccione..." label="Profesional">
             </plex-select>
         </div>
         <div class="col-3" *ngIf="params.estado_turno">
@@ -62,15 +62,13 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
 
     onChange() {
 
-        let log = this.seleccion.estado_turno ? this.seleccion.estado_turno.map(et => et.id) : undefined
-        console.log(log)
         let params = {
             fechaDesde: this.desde,
             fechaHasta: this.hasta,
-            tipoDeFiltro: this.seleccion.tipoDeFiltro ? this.seleccion.tipoDeFiltro.nombre : undefined,
-            prestacion: this.seleccion.prestacion ? this.seleccion.prestacion.id : undefined,
-            profesional: this.seleccion.profesional ? this.seleccion.profesional.id : undefined,
-            estado_turno: this.seleccion.estado_turno ? [this.seleccion.estado_turno] : []
+            tipoDeFiltro: this.seleccion.tipoDeFiltro ? this.seleccion.tipoDeFiltro.id : undefined,
+            prestacion: this.seleccion.prestacion ? this.seleccion.prestacion.map(pr => pr.id) : undefined,
+            profesional: this.seleccion.profesional ? this.seleccion.profesional.map(prof => prof.id) : undefined,
+            estado_turno: this.seleccion.estado_turno.length ? this.seleccion.estado_turno.map(et => et.id) : undefined
         };
         this.filter.emit(params);
     }

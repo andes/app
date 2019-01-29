@@ -65,16 +65,13 @@ export class CitasComponent implements AfterViewInit {
         this.prestacionData = [];
         this.estadoLabels = [];
         this.estadoData = [];
-
         this.params = {
             organizacion: this.auth.organizacion.id,
             ...$event
         };
-
         // Le pegamos a la consulta de la api de turno..
-        if ($event.tipoDeFiltro === 'Turnos') {
-
-            this.estService.get(this.params).subscribe((data) => {
+        if ($event.tipoDeFiltro === 'turnos') {
+            this.estService.post(this.params).subscribe((data) => {
                 this.data = data[0];
                 this.cargarLosFiltros();
             });
@@ -110,7 +107,6 @@ export class CitasComponent implements AfterViewInit {
         }
 
         if (!(this.copiaTipoDeFiltro === this.params.tipoDeFiltro)) {
-            console.log('setFilter');
             this.setFilters();
         }
     }
