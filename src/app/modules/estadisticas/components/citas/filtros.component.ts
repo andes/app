@@ -32,7 +32,7 @@ import { Plex } from '@andes/plex';
             <plex-select [multiple]="true" [data]="params.estado_turno" [(ngModel)]="seleccion.estado_turno" (change)="onChange($event)" placeholder="Seleccione..." label="Estado">
             </plex-select>
         </div>
-        <div class="col-3" *ngIf="params.tipoTurno">
+        <div class="col-3" *ngIf="seleccion.tipoDeFiltro.id === 'turnos' && params.tipoTurno">
             <plex-select [multiple]="true" [data]="params.tipoTurno" [(ngModel)]="seleccion.tipoTurno" (change)="onChange($event)" placeholder="Seleccione..." label="Tipo Turno">
             </plex-select>
         </div>
@@ -55,7 +55,8 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
         tipoDeFiltro: { id: 'turnos', nombre: 'Turnos' },
         profesional: null,
         prestacion: null,
-        estado_turno: []
+        estado_turno: [],
+        tipoTurno: []
     };
 
     constructor(private plex: Plex) { }
@@ -72,7 +73,8 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
             tipoDeFiltro: this.seleccion.tipoDeFiltro ? this.seleccion.tipoDeFiltro.id : undefined,
             prestacion: this.seleccion.prestacion ? this.seleccion.prestacion.map(pr => pr.id) : undefined,
             profesional: this.seleccion.profesional ? this.seleccion.profesional.map(prof => prof.id) : undefined,
-            estado_turno: this.seleccion.estado_turno.length ? this.seleccion.estado_turno.map(et => et.id) : undefined
+            estado_turno: this.seleccion.estado_turno.length ? this.seleccion.estado_turno.map(et => et.id) : undefined,
+            tipoTurno: this.seleccion.tipoTurno.length ? this.seleccion.tipoTurno.map(tt => tt.id) : undefined
         };
         this.filter.emit(params);
     }

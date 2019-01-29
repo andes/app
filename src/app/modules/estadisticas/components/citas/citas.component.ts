@@ -47,13 +47,13 @@ export class CitasComponent implements AfterViewInit {
     };
 
     public params = {
-        tipoDeFiltro: null
+
     };
 
     public filtros = {
 
     };
-    copiaTipoDeFiltro: any;
+
 
     constructor(private plex: Plex, public auth: Auth, public estService: EstAgendasService) { }
 
@@ -99,7 +99,9 @@ export class CitasComponent implements AfterViewInit {
 
         if (this.data.estado_turno) {
             this.data.estado_turno.forEach((item) => {
+                console.log(item._id);
                 this.estadoLabels.push(item._id);
+
                 this.estadoData.push(item.count);
             });
         }
@@ -111,13 +113,12 @@ export class CitasComponent implements AfterViewInit {
             });
         }
 
-        if (!(this.copiaTipoDeFiltro === this.params.tipoDeFiltro)) {
-            this.setFilters();
-        }
+
+        this.setFilters();
+
     }
 
     setFilters() {
-        this.copiaTipoDeFiltro = this.params.tipoDeFiltro;
         if (this.data.prestacion) {
             this.filtros['prestacion'] = [];
             this.data.prestacion.forEach((item) => {
@@ -143,6 +144,16 @@ export class CitasComponent implements AfterViewInit {
                 this.filtros['estado_turno'].push({
                     id: item._id,
                     nombre: item._id
+                });
+            });
+        }
+
+        if (this.data.tipoTurno) {
+            this.filtros['tipoTurno'] = [];
+            this.data.tipoTurno.forEach((item) => {
+                this.filtros['tipoTurno'].push({
+                    id: item._id.tipoTurno,
+                    nombre: item._id.tipoTurno
                 });
             });
         }
