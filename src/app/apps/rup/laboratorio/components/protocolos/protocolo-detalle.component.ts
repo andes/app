@@ -12,7 +12,7 @@ import { PrestacionesService } from '../../../../../modules/rup/services/prestac
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Constantes } from '../../controllers/constants';
 import { PacienteBuscarResultado } from '../../../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
-import { ProtocoloCacheService } from '../../services/protocoloCache.service';
+import { LaboratorioContextoCacheService } from '../../services/protocoloCache.service';
 
 @Component({
     selector: 'protocolo-detalle',
@@ -89,7 +89,7 @@ export class ProtocoloDetalleComponent
         this.modelo = value;
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
         this.practicasEjecucion = this.modelo.ejecucion.registros;
-        this.contextoCache = this.protocoloCacheService.getContextoCache();
+        this.contextoCache = this.laboratorioContextoCacheService.getContextoCache();
         this.showBotonesGuardar = (this.contextoCache.modo !== 'recepcion');
 
         if (this.practicasEjecucion.length > 0 && (this.contextoCache.modo === Constantes.modoIds.recepcionSinTurno || this.contextoCache.modo === 'recepcion' || this.contextoCache.modo === 'control')) {
@@ -148,7 +148,7 @@ export class ProtocoloDetalleComponent
         private servicioProtocolo: ProtocoloService,
         private servicioProfesional: ProfesionalService,
         private servicioPractica: PracticaService,
-        private protocoloCacheService: ProtocoloCacheService
+        private laboratorioContextoCacheService: LaboratorioContextoCacheService
     ) { }
 
     ngOnInit() {
@@ -559,4 +559,7 @@ export class ProtocoloDetalleComponent
         this.historialResultados = event;
     }
 
+    mostrarEncabezadoProtocolo() {
+        return !this.seleccionPaciente && !this.contextoCache.cargarPorPracticas;
     }
+}

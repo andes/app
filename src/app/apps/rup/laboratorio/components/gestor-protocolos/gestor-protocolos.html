@@ -1,5 +1,5 @@
-<plex-layout main="{{showProtocoloDetalle ? ( ocultarPanelLateral ? 0 : 3) : 12}}">
-    <plex-layout-main *ngIf='!ocultarPanelLateral && contextoCache.modo !== "recepcionSinTurno" '>
+<plex-layout main="{{showProtocoloDetalle ? ( contextoCache.ocultarPanelLateral ? 0 : 3 ) : 12}}">
+    <plex-layout-main *ngIf='!contextoCache.ocultarPanelLateral && contextoCache.modo !== "recepcionSinTurno" '>
 
         <filtros-busqueda-protocolo *ngIf="!showProtocoloDetalle" [modo]='contextoCache.modo' (buscarProtocolosEmmiter)="refreshSelection($event)"></filtros-busqueda-protocolo>
 
@@ -77,7 +77,7 @@
 
                 <ng-container *ngIf="contextoCache.botonesAccion === 'historicoResultados'">
                     <div class="col d-flex flex-row-reverse" *ngIf="showProtocoloDetalle">
-                        <plex-button position="left" type="warning" (click)="salirDeHistoricoResultadoa()" label="Volver"></plex-button>
+                        <plex-button position="left" type="warning" (click)="salirDeHistoricoResultados()" label="Volver"></plex-button>
                     </div>
                 </ng-container>
 

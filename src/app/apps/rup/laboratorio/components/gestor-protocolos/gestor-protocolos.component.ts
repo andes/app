@@ -1,12 +1,12 @@
 import { Constantes } from './../../controllers/constants';
-import { Component, OnInit, Input, ViewChild, EventEmitter, Output, ViewEncapsulation, HostBinding, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, EventEmitter, Output, ViewEncapsulation, HostBinding } from '@angular/core';
 import { ProtocoloDetalleComponent } from '../protocolos/protocolo-detalle.component';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { PacienteService } from '../../../../../services/paciente.service';
 import { ActivatedRoute } from '@angular/router';
-import { ProtocoloCacheService } from '../../services/protocoloCache.service';
+import { LaboratorioContextoCacheService } from '../../services/protocoloCache.service';
 
 
 @Component({
@@ -25,7 +25,6 @@ export class GestorProtocolosComponent implements OnInit {
     public showProtocoloDetalle: Boolean = false;
     public showCargarSolicitud: Boolean = false;
     public showBotonGuardar: Boolean = false;
-    public ocultarPanelLateral: Boolean = false;
     public editarListaPracticas: Boolean = false;
     public showBotonAceptar: Boolean = false;
     public titulo;
@@ -41,7 +40,6 @@ export class GestorProtocolosComponent implements OnInit {
     set setProtocolo(value: any) {
         if (value) {
             this.seleccionarProtocolo({ protocolo: value, index: 0 });
-            this.ocultarPanelLateral = true;
         }
     }
     // @Input() modo: 'puntoInicio' | 'listado' | 'recepcion' | 'control' | 'carga' | 'validacion';
@@ -53,12 +51,10 @@ export class GestorProtocolosComponent implements OnInit {
             this.resetearProtocolo(value);
             this.seleccionarProtocolo({ protocolo: this.protocolo, index: 0 });
             this.editarListaPracticas = true;
-            this.contextoCache.edicionDatosCabecera = true;
-            this.ocultarPanelLateral = true;
             this.showProtocoloDetalle = true;
             this.indexProtocolo = 0;
             this.seleccionPaciente = false;
-            this.contextoCache.mostrarCuerpoProtocolo = true;
+            this.laboratorioContextoCacheService.setPaciente();
         }
     }
 
@@ -76,11 +72,11 @@ export class GestorProtocolosComponent implements OnInit {
         public plex: Plex,
         public servicioPrestaciones: PrestacionesService,
         public auth: Auth,
-        public protocoloCacheService: ProtocoloCacheService,
+        public laboratorioContextoCacheService: LaboratorioContextoCacheService,
     ) { }
 
     ngOnInit() {
-        this.contextoCache = this.protocoloCacheService.getContextoCache();
+        this.contextoCache = this.laboratorioContextoCacheService.getContextoCache();
 
         if (!this.protocolo) {
             this.resetearProtocolo({});
@@ -92,12 +88,10 @@ export class GestorProtocolosComponent implements OnInit {
                 let id = params['id'];
                 this.servicePaciente.getById(id).subscribe(pacienteMPI => {
                     this.paciente = pacienteMPI;
-                    this.ocultarPanelLateral = true;
                     this.mostrarFomularioPacienteSinTurno();
                     this.seleccionPaciente = false;
                     this.seleccionarProtocolo(this.protocolo);
-                    this.protocoloCacheService.cambiarModo(Constantes.modoIds.recepcionSinTurno);
-                    this.contextoCache.mostrarCuerpoProtocolo = false;
+                    this.laboratorioContextoCacheService.ventanillaSinTurno();
                 });
             }
         });
@@ -108,7 +102,7 @@ export class GestorProtocolosComponent implements OnInit {
     }
 
     onTabChange($event) {
-        this.protocoloCacheService.cambiarModo($event);
+        this.laboratorioContextoCacheService.cambiarModo($event);
         this.refreshSelection();
     }
 
@@ -143,7 +137,6 @@ export class GestorProtocolosComponent implements OnInit {
                 registros: []
             }
         };
-        // this.protocolo = IPrestacion.constructor();
     }
 
     /**
@@ -180,8 +173,8 @@ export class GestorProtocolosComponent implements OnInit {
     seleccionarProtocolo(value) {
         // Si se presionó el boton suspender, no se muestran otros protocolos hasta que se confirme o cancele la acción.
         if (value.protocolo) {
-            this.contextoCache.edicionDatosCabecera = false;
-            this.contextoCache.mostrarCuerpoProtocolo = (this.contextoCache.modo !== 'recepcion');
+            this.laboratorioContextoCacheService.seleccionarProtocolo();
+            this.editarListaPracticas = (this.contextoCache.modo !== 'recepcion');
             this.protocolo = value.protocolo;
             this.indexProtocolo = value.index;
             this.showListarProtocolos = false;
@@ -190,8 +183,6 @@ export class GestorProtocolosComponent implements OnInit {
             this.showCargarSolicitud = true;
             this.showBotonAceptar = false;
             this.showBotonGuardar = true;
-            this.editarListaPracticas = (this.contextoCache.modo !== 'recepcion');
-            this.ocultarPanelLateral = (this.contextoCache.modo === 'recepcion') || (this.contextoCache.modo === Constantes.modoIds.recepcionSinTurno);
         }
     }
 
@@ -209,7 +200,7 @@ export class GestorProtocolosComponent implements OnInit {
             this.showListarProtocolos = true;
             this.showProtocoloDetalle = false;
             this.showCargarSolicitud = false;
-            this.ocultarPanelLateral = false;
+            this.contextoCache.ocultarPanelLateral = false;
             this.seleccionPaciente = false;
         }
     }
@@ -233,14 +224,14 @@ export class GestorProtocolosComponent implements OnInit {
         if (this.paciente) {
             this.resetearProtocolo(this.paciente);
             this.seleccionarProtocolo({});
-            this.contextoCache.edicionDatosCabecera = true;
-            // this.ocultarPanelLateral = true;
             this.showListarProtocolos = false;
             this.showProtocoloDetalle = true;
             this.indexProtocolo = 0;
             this.seleccionPaciente = true;
-            this.contextoCache.mostrarCuerpoProtocolo = true;
             this.showBotonAceptar = true;
+
+            this.contextoCache.mostrarCuerpoProtocolo = true;
+            this.contextoCache.edicionDatosCabecera = true;
         }
     }
 
@@ -251,10 +242,10 @@ export class GestorProtocolosComponent implements OnInit {
      */
     aceptarCambios() {
         if (this.contextoCache.modoAVolver) {
-            this.ocultarPanelLateral = false;
-            this.contextoCache.modo = this.contextoCache.modoAVolver;
+
+            this.laboratorioContextoCacheService.aceptarCambiosAuditoriaProtocolo();
             this.protocoloDetalleComponent.guardarSolicitudYVolver();
-            this.contextoCache.modoAVolver = null;
+
         } else {
             this.showBotonAceptar = false;
             this.showBotonGuardar = true;
@@ -270,10 +261,8 @@ export class GestorProtocolosComponent implements OnInit {
      */
     volverAControl() {
         this.protocoloDetalleComponent.cargarCodigosPracticas();
-        this.ocultarPanelLateral = true;
-        this.contextoCache.modoAVolver = this.contextoCache.modo;
-        this.contextoCache.modo = 'control';
-        this.protocoloCacheService.cambiarModo(Constantes.modoIds.control);
+        this.laboratorioContextoCacheService.irAuditoriaProtocolo();
+        this.laboratorioContextoCacheService.cambiarModo(Constantes.modoIds.control);
         this.showBotonAceptar = true;
         this.showBotonGuardar = false;
     }
@@ -292,12 +281,9 @@ export class GestorProtocolosComponent implements OnInit {
      *
      * @memberof GestorProtocolosComponent
      */
-    salirDeHistoricoResultadoa() {
-        this.contextoCache.titulo = Constantes.titulos.validacion;
-        this.contextoCache.botonesAccion = 'validacion';
-        this.contextoCache.mostrarCuerpoProtocolo = true;
-        this.contextoCache.verHistorialResultados = false;
-    }
+    salirDeHistoricoResultados() {
+        this.laboratorioContextoCacheService.salirDeHistoricoResultados();
+        }
 
     /**
      * Guarda en el local storage del browser la selección de filtros de búsqueda para futuras búsquedas

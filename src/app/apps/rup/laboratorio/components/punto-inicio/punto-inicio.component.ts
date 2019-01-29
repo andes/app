@@ -1,5 +1,5 @@
 import { Constantes } from './../../controllers/constants';
-import { ProtocoloCacheService } from './../../services/protocoloCache.service';
+import { LaboratorioContextoCacheService } from './../../services/protocoloCache.service';
 import { IPaciente } from './../../../../../interfaces/IPaciente';
 import { AppMobileService } from './../../../../../services/appMobile.service';
 import { PacienteService } from './../../../../../services/paciente.service';
@@ -56,7 +56,7 @@ export class PuntoInicioLaboratorioComponent implements OnInit, OnDestroy {
     routeParams: any;
 
     constructor(
-        private protocoloCacheService: ProtocoloCacheService,
+        private laboratorioContextoCacheService: LaboratorioContextoCacheService,
         public servicePaciente: PacienteService,
         public auth: Auth,
         public appMobile: AppMobileService,
@@ -105,7 +105,7 @@ export class PuntoInicioLaboratorioComponent implements OnInit, OnDestroy {
     }
 
     recepcionSinTurno() {
-        this.protocoloCacheService.cambiarModo(Constantes.modoIds.recepcionSinTurno);
+        this.laboratorioContextoCacheService.cambiarModo(Constantes.modoIds.recepcionSinTurno);
         this.router.navigate(['/laboratorio/protocolos/sinTurno/' + this.seleccion.id]);
     }
 

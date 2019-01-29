@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ProtocoloCacheService } from '../../../services/protocoloCache.service';
+import { LaboratorioContextoCacheService } from '../../../services/protocoloCache.service';
 
 
 @Component({
@@ -7,7 +7,7 @@ import { ProtocoloCacheService } from '../../../services/protocoloCache.service'
     templateUrl: 'chart-resultados-anteriores.html'
 })
 
-export class CharHistorialResultadoComponent implements OnInit {
+export class ChartHistorialResultadoComponent implements OnInit {
 
     public chart;
     // public puntos: any[] = [];
@@ -21,7 +21,7 @@ export class CharHistorialResultadoComponent implements OnInit {
     @Input() practica;
 
     constructor(
-        public protocoloCache: ProtocoloCacheService
+        public protocoloCache: LaboratorioContextoCacheService
     ) { }
 
 

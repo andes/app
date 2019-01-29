@@ -397,7 +397,7 @@ import { ImpresionHojatrabajoComponent } from './apps/rup/laboratorio/components
 import { EncabezadoHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/encabezado-hojatrabajo/encabezado-hojatrabajo.component';
 import { CargaHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/carga-hojatrabajo/carga-hojatrabajo.component';
 import { GrillaHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/grilla-hojatrabajo/grilla-hojatrabajo.component';
-import { CharHistorialResultadoComponent } from './apps/rup/laboratorio/components/protocolos/chart-resultados-anteriores/chart-resultados-anteriores.component';
+import { ChartHistorialResultadoComponent } from './apps/rup/laboratorio/components/protocolos/chart-resultados-anteriores/chart-resultados-anteriores.component';
 
 
 import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
@@ -681,7 +681,7 @@ registerLocaleData(localeEs, 'es');
         EncabezadoHojatrabajoComponent,
         CargaHojatrabajoComponent,
         GrillaHojatrabajoComponent,
-        CharHistorialResultadoComponent,
+        ChartHistorialResultadoComponent,
 
         // MPI
         PacienteBuscarComponent,

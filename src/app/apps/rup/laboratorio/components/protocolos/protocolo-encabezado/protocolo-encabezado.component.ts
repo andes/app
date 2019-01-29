@@ -1,4 +1,4 @@
-import { ProtocoloCacheService } from './../../../services/protocoloCache.service';
+import { LaboratorioContextoCacheService } from './../../../services/protocoloCache.service';
 import { Input, Output, Component, OnInit, EventEmitter } from '@angular/core';
 
 @Component({
@@ -26,10 +26,10 @@ export class ProtocoloEncabezadoComponent implements OnInit {
     @Output() edicionDatosCabeceraEmitter = new EventEmitter<any>();
     @Output() cambiarPacienteEmitter = new EventEmitter<any>();
 
-    constructor( public protocoloCacheService: ProtocoloCacheService ) { }
+    constructor( public laboratorioContextoCacheService: LaboratorioContextoCacheService ) { }
 
     ngOnInit() {
-        this.contextoCache = this.protocoloCacheService.getContextoCache();
+        this.contextoCache = this.laboratorioContextoCacheService.getContextoCache();
     }
 
     cambiarPaciente() {

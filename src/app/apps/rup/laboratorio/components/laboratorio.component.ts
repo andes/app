@@ -1,5 +1,5 @@
 import { Constantes } from './../controllers/constants';
-import { ProtocoloCacheService } from './../services/protocoloCache.service';
+import { LaboratorioContextoCacheService } from './../services/protocoloCache.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -14,10 +14,10 @@ export class LaboratorioComponent implements OnInit {
     public paciente;
     private contextoCache;
 
-    constructor(public protocoloCacheService: ProtocoloCacheService) { }
+    constructor(public laboratorioContextoCacheService: LaboratorioContextoCacheService) { }
 
     ngOnInit() {
-        this.contextoCache = this.protocoloCacheService.getContextoCache();
+        this.contextoCache = this.laboratorioContextoCacheService.getContextoCache();
         this.mostrarPuntoInicio = this.contextoCache.modo === Constantes.modoIds.recepcionSinTurno;
     }
 
@@ -27,7 +27,7 @@ export class LaboratorioComponent implements OnInit {
     }
 
     recepcionarSinTurno($event) {
-        this.protocoloCacheService.cambiarModo(Constantes.modoIds.recepcionSinTurno);
+        this.laboratorioContextoCacheService.cambiarModo(Constantes.modoIds.recepcionSinTurno);
         this.contextoCache.edicionDatosCabecera = true;
         this.mostrarPuntoInicio = false;
         this.paciente = $event;

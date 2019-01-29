@@ -1,3 +1,4 @@
+import { LaboratorioContextoCacheService } from './../../../services/protocoloCache.service';
 import { PracticaService } from './../../../services/practica.service';
 import { PacienteService } from './../../../../../../services/paciente.service';
 import { HojaTrabajoService } from './../../../services/hojatrabajo.service';
@@ -71,7 +72,8 @@ export class FiltrosBusquedaProtocoloComponent
         private servicioAreaLaboratorio: AreaLaboratorioService,
         private servicioHojaTrabajo: HojaTrabajoService,
         private servicioPaciente: PacienteService,
-        private practicaService: PracticaService
+        private practicaService: PracticaService,
+        private laboratorioContextoCacheService: LaboratorioContextoCacheService
     ) { }
 
     ngOnInit() {
@@ -185,7 +187,12 @@ export class FiltrosBusquedaProtocoloComponent
      * @memberof FiltrosBusquedaProtocoloComponent
      */
     cambiarModoCarga($event) {
+        let cacheContexto = this.laboratorioContextoCacheService.getContextoCache();
+        cacheContexto.cargarPorPracticas = false;
         if ($event.value === 'Análisis') {
+            if (cacheContexto.modo === 'carga') {
+                cacheContexto.cargarPorPracticas = true;
+            }
             this.showSelectArea = true;
             this.showSelectHojaTrabajo = false;
             this.showSelectPracticas = true;

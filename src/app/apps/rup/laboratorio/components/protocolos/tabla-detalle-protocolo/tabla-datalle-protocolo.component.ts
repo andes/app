@@ -1,4 +1,4 @@
-import { ProtocoloCacheService } from './../../../services/protocoloCache.service';
+import { LaboratorioContextoCacheService } from './../../../services/protocoloCache.service';
 import { ProfesionalService } from './../../../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import { ProtocoloService } from './../../../services/protocolo.service';
@@ -10,7 +10,6 @@ import { getRespuestasGestionValoresCriticos } from '../../../../../../utils/enu
 import { Plex } from '@andes/plex';
 import { Constantes } from '../../../controllers/constants';
 
-
 @Component({
     selector: 'tabla-datalle-protocolo',
     templateUrl: 'tabla-datalle-protocolo.html'
@@ -20,7 +19,8 @@ export class TablaDatalleProtocoloComponent implements OnInit {
 
     ngOnInit() {
         // practicasCargadas.- array de registros cuyos estados se tienen que pasar a actualizados antes de guardar
-        this.protocoloCacheService.getContextoCache().practicasCargadas = [];
+        this.cache = this.laboratorioContextoCacheService.getContextoCache();
+        this.cache.practicasCargadas = [];
     }
 
     @Output() verHistorialResultadosEmitter: EventEmitter<any> = new EventEmitter<any>();
@@ -36,8 +36,8 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     @Input() showGestorAlarmas: Boolean;
     showSelectProfesional: Boolean;
     flagMarcarTodas: Boolean = false;
-
     avisoValoresCriticos: any;
+    cache;
 
     validaciones;
     @Input('validaciones')
@@ -45,17 +45,27 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         this.validaciones = value;
     }
 
+    protocolos;
+    @Input('protocolos')
+    set setprotocolos(value) {
+        if (this.laboratorioContextoCacheService.getContextoCache().cargarPorPracticas) {
+            this.protocolos = value;
+            this.cargarListaPracticaCargaModoAnalisis();
+        }
+    }
 
     @Input('practicasEjecucion')
     set pjs(practicasEjecucion) {
-        this.practicasEjecucion = practicasEjecucion;
-        this.cargarListaPracticaCarga().then(() => {
-            this.cargarResultadosAnteriores();
-            if (this.modo === 'validacion') {
-                this.precargarValidaciones();
-            }
-        });
-        this.cargarPracticasVista();
+        if (!this.laboratorioContextoCacheService.getContextoCache().cargarPorPracticas) {
+            this.practicasEjecucion = practicasEjecucion;
+            this.cargarListaPracticaCarga().then(() => {
+                this.cargarResultadosAnteriores();
+                if (this.modo === 'validacion') {
+                    this.precargarValidaciones();
+                }
+            });
+            this.cargarPracticasVista();
+        }
     }
 
     @Input() editarListaPracticas;
@@ -66,7 +76,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         private servicioPractica: PracticaService,
         private servicioProtocolo: ProtocoloService,
         private servicioProfesional: ProfesionalService,
-        private protocoloCacheService: ProtocoloCacheService,
+        private laboratorioContextoCacheService: LaboratorioContextoCacheService,
         public plex: Plex,
         public auth: Auth
     ) { }
@@ -144,6 +154,36 @@ export class TablaDatalleProtocoloComponent implements OnInit {
                 cargarPracticas(this.practicasEjecucion, res);
                 resolve();
             });
+        });
+    }
+
+    /**
+     *
+     *
+     * @returns.
+     * @memberof TablaDatalleProtocolo
+     */
+    cargarListaPracticaCargaModoAnalisis() {
+        return new Promise((resolve) => {
+            this.servicioPractica.findByIdsCompletas(this.busqueda.practicas[0]).subscribe((res: [any]) => {
+                this.cache.titulo += ' | ' + res[0].nombre;
+                this.practicasCarga = [];
+                this.protocolos.forEach( (p: any) => {
+                    // let reg = p.ejecucion.registros.find( r => { return r.valor.idPractica === this.busqueda.practicas[0]._id; }) ;
+                    let reg = p.ejecucion.registros.find( r => { return r.valor.idPractica === this.busqueda.practicas[0]; }) ;
+
+                    this.practicasCarga.push({
+                        registro: reg,
+                        practica: res[0],
+                        datosProtocolo: {
+                            numero: p.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo.numeroCompleto,
+                            fecha: p.ejecucion.fecha,
+                            paciente: p.paciente
+                        }
+                    });
+                });
+            });
+            resolve();
         });
     }
 
@@ -421,12 +461,11 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      */
     onValorResultadoChange($event, op) {
         if (!this.isResultadoValidado(op.registro)) {
-            let cache = this.protocoloCacheService.getContextoCache();
             if (!$event.value) {
-                cache.practicasCargadas = cache.practicasCargadas.filter(e => e !== op.registro);
-            } else if (!cache.practicasCargadas.find(e => { return e === op.registro; })) {
-                cache.practicasCargadas.push(op.registro);
-                if (cache.modo === 'validacion') {
+                this.cache.practicasCargadas = this.cache.practicasCargadas.filter(e => e !== op.registro);
+            } else if (!this.cache.practicasCargadas.find(e => { return e === op.registro; })) {
+                this.cache.practicasCargadas.push(op.registro);
+                if (this.cache.modo === 'validacion') {
                     this.validaciones.find(e => e.registroPractica.registro._id === op.registro._id).esValorCritico = this.verificarValorCritico(op);
                 }
             }
