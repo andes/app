@@ -281,7 +281,6 @@ export class BotonesAgendaComponent implements OnInit {
         while ((b < agenda.bloques.length) && (!flag)) {
             if (agenda.bloques[b].turnos.length) {
                 let lista = agenda.bloques[b].turnos.filter(unTurno => unTurno.asistencia === 'asistio');
-                console.log(lista);
                 if (lista && lista.length) {
                     flag = true;
                 }
