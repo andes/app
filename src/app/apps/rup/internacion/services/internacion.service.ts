@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Observable } from 'rxjs/Observable';
+import { ICama } from '../interfaces/ICama';
 
 @Injectable()
 export class InternacionService {
@@ -48,6 +49,36 @@ export class InternacionService {
         return this.server.get(this.url + '/censo/disponibilidad', { params: params });
     }
 
+    /**
+    * Devuelve si la cama se encuentra disponible para ser ocupada en una fechaHora solicitada
+    * Si paso como parámetro el servicioHospitalario, filtrará las camas que pertenezcan a ese servicio.
+    *
+    * @param {ICama} cama cama a evaluar disponibilidad
+    * @param {Date} fecha fecha en que se desea ocupar
+    * @returns {ICama} cama disponible o null en caso contrario
+    * @memberof InternacionService
+    */
+    esCamaDisponible(cama, fechaIngreso) {
+        let estados = cama.estados;
+        estados.sort((a, b) => {
+            return b.fecha - a.fecha;
+        });
+
+        // chequeamos que la fecha de ingreso sea superior a la fecha de carga disponible de la cama
+        if (estados[estados.length - 1].fecha <= fechaIngreso) {
+            // buscamos el ultimo estado en que la cama estuvo ocupada
+            const estadoEncontrado = estados.find(e => e.estado === 'ocupada');
+            if (estadoEncontrado) {
+                let estadoAux = estados.find(e => e.estado === 'disponible' && e.fecha > estadoEncontrado.fecha && e.fecha < fechaIngreso);
+                if (estadoAux) {
+                    return cama;
+                }
+            }
+        }
+
+        return null;
+    }
+
     combinarFechas(fecha1, fecha2) {
         if (fecha1 && fecha2) {
             let horas: number;
@@ -64,6 +95,69 @@ export class InternacionService {
         } else {
             return null;
         }
+    }
+
+    compareOnlyDate(dateTimeA, dateTimeB) {
+        // new Date(year, month, day, hours, minutes, seconds, milliseconds)
+        let momentA = dateTimeA.setHours(0, 0, 0, 0);
+        let momentB = dateTimeB.setHours(0, 0, 0, 0);
+        if (momentA > momentB) {
+            return 1;
+        } else {
+            if (momentA < momentB) {
+                return -1;
+            } else { return 0; }
+        }
+    }
+
+    calcularEdad(fechaNacimiento: Date, fechaCalculo: Date): any {
+        let edad: any;
+        let fechaNac: any;
+        let fechaActual: Date = fechaCalculo ? fechaCalculo : new Date();
+        let fechaAct: any;
+        let difAnios: any;
+        let difDias: any;
+        let difMeses: any;
+        let difD: any;
+        let difHs: any;
+        let difMn: any;
+
+        fechaNac = moment(fechaNacimiento, 'YYYY-MM-DD HH:mm:ss');
+        fechaAct = moment(fechaActual, 'YYYY-MM-DD HH:mm:ss');
+        difDias = fechaAct.diff(fechaNac, 'd'); // Diferencia en días
+        difAnios = Math.floor(difDias / 365.25);
+        difMeses = Math.floor(difDias / 30.4375);
+        difHs = fechaAct.diff(fechaNac, 'h'); // Diferencia en horas
+        difMn = fechaAct.diff(fechaNac, 'm'); // Diferencia en minutos
+
+        if (difAnios !== 0) {
+            edad = {
+                valor: difAnios,
+                unidad: 'año/s'
+            };
+        } else if (difMeses !== 0) {
+            edad = {
+                valor: difMeses,
+                unidad: 'mes/es'
+            };
+        } else if (difDias !== 0) {
+            edad = {
+                valor: difDias,
+                unidad: 'día/s'
+            };
+        } else if (difHs !== 0) {
+            edad = {
+                valor: difHs,
+                unidad: 'hora/s'
+            };
+        } else if (difMn !== 0) {
+            edad = {
+                valor: difMn,
+                unidad: 'minuto/s'
+            };
+        }
+
+        return (String(edad.valor) + ' ' + edad.unidad);
     }
 
     usaWorkflowCompleto(idOrganizacion: string) {
