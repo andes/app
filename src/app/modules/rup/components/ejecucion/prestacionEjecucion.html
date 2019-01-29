@@ -100,10 +100,13 @@
                                                     <span class="badge-info float-left" *ngIf="registro?.privacy?.scope === 'private'">
                                                         Registro Privado
                                                     </span>
-                                                    <plex-dropdown type="primary" class="dropdown-inline" [right]="true"
+                                                    <!-- Queda comentado hasta que se evaluen ciertas inquitudes. -->
+                                                    <!-- <plex-dropdown type="primary" class="dropdown-inline" [right]="true"
                                                         icon="file-lock" (onOpen)="onChangePrivacy(registro)" [items]="scopePrivacy"
-                                                        title="Privado"></plex-dropdown>
+                                                        title="Privado"></plex-dropdown> -->
                                                 </ng-container>
+
+
                                                 <!--span class="badge badge-{{ (registro.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(registro.concepto) }}">
                                                         {{registro.concepto.semanticTag}}
                                                     </span-->
@@ -352,7 +355,7 @@
                                                             <div class="row">
 
                                                                 <div class="col-12">
-                                                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [params]="this.elementosRUPService.coleccionRetsetId[elemento.concepto.conceptId]"
+                                                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [params]="elementosRUPService.coleccionRetsetId[elemento.concepto.conceptId]"
                                                                         [prestacion]="registro.data" [registro]="elemento" [soloValores]="true"></rup>
                                                                 </div>
                                                             </div>

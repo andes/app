@@ -59,7 +59,6 @@ export class RUPComponent implements OnInit, AfterViewInit {
      * @memberof RUPComponent
      */
     private loadComponent() {
-
         if (!this.registro.privacy) {
             setTimeout(() => {
                 if (this.params && this.params.privacy) {
