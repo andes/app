@@ -8,10 +8,14 @@ export class ProtocoloService {
     constructor(private server: Server) { }
 
     getNumeroProtocolo(idOrganizacion) {
-        return this.server.get(this.laboratorioUrl + 'protocolo/numero?idEfector=' + idOrganizacion, { params: {}, showError: true });
+        return this.server.get(this.laboratorioUrl + 'protocolo/generarNumero?idEfector=' + idOrganizacion, { params: {}, showError: true });
     }
 
     getResultadosAnteriores(idPaciente, practicaConceptIds) {
         return this.server.get(this.laboratorioUrl + 'practicas/resultadosAnteriores', { params: { idPaciente: idPaciente, practicaConceptIds: practicaConceptIds }, showError: true });
+    }
+
+    searchByNumeroProcolo(param) {
+        return this.server.get(this.laboratorioUrl + 'protocolo/numero/' + param, { params: {}, showError: true });
     }
 }
