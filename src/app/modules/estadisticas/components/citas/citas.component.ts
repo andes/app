@@ -30,6 +30,9 @@ export class CitasComponent implements AfterViewInit {
     public estadoLabels = [];
     public estadoData = [];
 
+    public tipoTurnoLabels = [];
+    public tipoTurnoData = [];
+
 
     public barOptions = {
         legend: { display: false },
@@ -65,21 +68,16 @@ export class CitasComponent implements AfterViewInit {
         this.prestacionData = [];
         this.estadoLabels = [];
         this.estadoData = [];
+        this.tipoTurnoLabels = [];
+        this.tipoTurnoData = [];
         this.params = {
             organizacion: this.auth.organizacion.id,
             ...$event
         };
-        // Le pegamos a la consulta de la api de turno..
-        if ($event.tipoDeFiltro === 'turnos') {
-            this.estService.post(this.params).subscribe((data) => {
-                this.data = data[0];
-                this.cargarLosFiltros();
-            });
-        } else {
+        this.estService.post(this.params).subscribe((data) => {
+            this.data = data[0];
             this.cargarLosFiltros();
-            this.data = null;
-            // Llamamos a la consulta de agendas
-        }
+        });
 
     }
 
@@ -103,6 +101,13 @@ export class CitasComponent implements AfterViewInit {
             this.data.estado_turno.forEach((item) => {
                 this.estadoLabels.push(item._id);
                 this.estadoData.push(item.count);
+            });
+        }
+
+        if (this.data.tipoTurno) {
+            this.data.tipoTurno.forEach((item) => {
+                this.tipoTurnoLabels.push(item._id.tipoTurno);
+                this.tipoTurnoData.push(item.total);
             });
         }
 

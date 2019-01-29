@@ -7,7 +7,7 @@ import { Plex } from '@andes/plex';
     template: `
     <div class="row">
         <div class="col-3">
-            <plex-select label="Tipo de filtro" [data]="opciones" [(ngModel)]="seleccion.tipoDeFiltro" name="tipoDeFiltro" (change)="onChange()"></plex-select>
+            <plex-select label="Tipo de filtro" [data]="opciones" [(ngModel)]="seleccion.tipoDeFiltro" name="tipoDeFiltro" (change)="onChange($event)"></plex-select>
         </div>
         <div class="col-3">
             <plex-datetime label="Desde" [max]="hoy" type="date" [(ngModel)]="desde" name="desde" (change)="onChange()"></plex-datetime>
@@ -28,8 +28,12 @@ import { Plex } from '@andes/plex';
             <plex-select [multiple]="true" [data]="params.profesional" [(ngModel)]="seleccion.profesional" (change)="onChange($event)" placeholder="Seleccione..." label="Profesional">
             </plex-select>
         </div>
-        <div class="col-3" *ngIf="params.estado_turno">
+        <div class="col-3" *ngIf="seleccion.tipoDeFiltro.id === 'turnos' && params.estado_turno">
             <plex-select [multiple]="true" [data]="params.estado_turno" [(ngModel)]="seleccion.estado_turno" (change)="onChange($event)" placeholder="Seleccione..." label="Estado">
+            </plex-select>
+        </div>
+        <div class="col-3" *ngIf="params.tipoTurno">
+            <plex-select [multiple]="true" [data]="params.tipoTurno" [(ngModel)]="seleccion.tipoTurno" (change)="onChange($event)" placeholder="Seleccione..." label="Tipo Turno">
             </plex-select>
         </div>
     </div>
