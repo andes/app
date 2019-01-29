@@ -289,7 +289,6 @@ export class BotonesAgendaComponent implements OnInit {
             b++;
         }
 
-        console.log(flag);
         return flag;
     }
 
