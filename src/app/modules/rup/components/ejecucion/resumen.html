@@ -17,7 +17,7 @@
                         <span class="badge badge-info  mdi mdi-link pull-right"></span>
                     </div>
                     <small> Solicitado el
-                        <strong>{{ prestacion.solicitud.fecha | fecha }}</strong>
+                        <strong>{{ prestacion.solicitud.fecha | fecha : 'utc' }}</strong>
                         <span> por {{ prestacion.solicitud.profesional | profesional }}</span>
                         <!--<span *ngIf="!prestacion.ejecucion?.profesionales[0]?.nombreCompleto">(sin profesionales asignados)</span>-->
                     </small>
