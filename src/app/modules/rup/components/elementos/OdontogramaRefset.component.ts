@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { IPrestacionGetParams } from '../../interfaces/prestacionGetParams.interface';
 import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-OdontogramaRefset',
@@ -11,6 +12,7 @@ import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interf
         'OdontogramaRefset.scss'
     ]
 })
+@RupElement()
 export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     ultimoOdontogramaCompleto: any[];

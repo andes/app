@@ -2,13 +2,14 @@
 import { RUPComponent } from './../core/rup.component';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import * as moment from 'moment';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-evolucion-problema-default',
     templateUrl: 'evolucionProblemaDefault.html',
     styleUrls: ['evolucionProblemaDefault.scss']
 })
-
+@RupElement()
 export class EvolucionProblemaDefaultComponent extends RUPComponent implements OnInit {
     public fechaInicio: Date;
     public estado: String; // activo / inactivo / resuleto

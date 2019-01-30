@@ -1,11 +1,13 @@
 import { IPrestacionGetParams } from './../../interfaces/prestacionGetParams.interface';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-SelectPorRefset',
     templateUrl: 'SelectPorRefset.html'
 })
+@RupElement()
 export class SelectPorRefsetComponent extends RUPComponent implements OnInit {
 
     public conceptos: any[] = [];
