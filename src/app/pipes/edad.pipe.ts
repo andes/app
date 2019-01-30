@@ -51,6 +51,9 @@ export class EdadPipe implements PipeTransform {
             };
         }
 
+        edad.valor = !isNaN(edad.valor) ? edad.valor : '';
+        edad.unidad = edad.valor === '' ? '' : edad.unidad;
+
         return (String(edad.valor) + ' ' + edad.unidad);
     }
 }
