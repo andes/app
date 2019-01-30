@@ -36,7 +36,15 @@ img {
         }
         .img-thumbnail {
             display: flex;
-            justify-self: center;
+            // justify-self: center;
+            justify-self: flex-start;
+        }
+        .img-thumbnail-sm {
+            grid-column: 1/3;
+            width: 120px;
+        }
+        h5 {
+            grid-column: 1/3;
         }
     }
 
@@ -50,4 +58,5 @@ img {
             grid-row: 1/3;
         }
     }
+
 }
