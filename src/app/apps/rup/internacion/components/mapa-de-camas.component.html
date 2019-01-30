@@ -146,7 +146,7 @@
 
                 <!-- Desocupar Cama -->
                 <ng-container *ngIf="accion ==='desocupar' && !showEgreso">
-                    <cama-desocupar [cama]="camaSelected" (accionCama)="actualizarMapaDeCamas($event)"></cama-desocupar>
+                    <cama-desocupar [cama]="camaSelected" (accionCama)="actualizarMapaDeCamas($event)" [workflowC]="isWorkflowCompleto"></cama-desocupar>
                 </ng-container>
 
                 <!-- Desbloquear Cama -->
@@ -333,6 +333,10 @@
                             (click)="censoMensual()" *ngIf="checkAuth('censo')"></plex-button>
                         <plex-button class='marginBtnAccion' type="primary" [title]="'Agregar Cama'" icon='mdi mdi-plus'
                             (click)="onGestionCamaClick()" *ngIf="checkAuth('cama:create')"></plex-button>
+                        <plex-button class="marginBtnAccion" type="primary" [title]="'Ingresar paciente'" icon='account-plus'
+                            (click)="ingresarPaciente()" *ngIf="isWorkflowCompleto"></plex-button>
+                        <plex-button class="marginBtnAccion" type="primary" [title]="'Lista de espera'" icon='mdi mdi-timetable'
+                            (click)="verLE()" *ngIf="isWorkflowCompleto"></plex-button>
                     </div>
                     <ng-container>
                         <plex-datetime type="datetime" [(ngModel)]="fecha" name="fecha" label="Fecha" (change)="mapaDeCamaXFecha(false)"></plex-datetime>
@@ -408,8 +412,8 @@
                         <plex-button class="" type="primary" label="Censo mensual" (click)="censoMensual()" *ngIf="checkAuth('censo')"></plex-button>
                         <plex-button label="Crear cama" type="primary" (click)="onGestionCamaClick()" *ngIf="checkAuth('cama:create')"></plex-button>
                     </ng-container> -->
-                    <plex-button *ngIf="isWorkflowCompleto" label="Ingresar paciente" type="primary" (click)="ingresarPaciente()"></plex-button>
-                    <plex-button *ngIf="isWorkflowCompleto" label="Lista de espera" type="primary" (click)="verLE()"></plex-button>
+                    <!-- <plex-button *ngIf="isWorkflowCompleto" label="Ingresar paciente" type="primary" (click)="ingresarPaciente()"></plex-button>
+                    <plex-button *ngIf="isWorkflowCompleto" label="Lista de espera" type="primary" (click)="verLE()"></plex-button> -->
                 </ng-container>
             </plex-box>
         </div>

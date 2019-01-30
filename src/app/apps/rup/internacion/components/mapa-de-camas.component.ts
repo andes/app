@@ -236,7 +236,7 @@ export class MapaDeCamasComponent implements OnInit {
         let censable = this.filtros.censable ? this.filtros.censable.nombre === 'Censable' ? true : false : null;
         this.camas = this.camasCopy.filter((i) => {
             return (
-                (!this.filtros.sector || (this.filtros.sector && i.sectores[0]._id === this.filtros.sector.id) ) &&
+                (!this.filtros.sector || (this.filtros.sector && i.sectores[0]._id === this.filtros.sector.id)) &&
                 (!this.filtros.tipoCama || (this.filtros.tipoCama && i.tipoCama.conceptId === this.filtros.tipoCama.id)) &&
                 (!this.filtros.estado || (this.filtros.estado && i.ultimoEstado.estado === this.filtros.estado.id)) &&
                 (!this.filtros.servicio || !this.filtros.servicio || (this.filtros.servicio.id && i.ultimoEstado.unidadOrganizativa && i.ultimoEstado.unidadOrganizativa.conceptId === this.filtros.servicio.id)) &&
@@ -344,17 +344,25 @@ export class MapaDeCamasComponent implements OnInit {
                 }
                 break;
             case 'movimientoCama':
-                if (dtoAccion.cama && dtoAccion.camaOcupada) {
-                    //  let copiaCamas = JSON.parse(JSON.stringify(this.camas));
-                    let i = this.camas.findIndex(c => c.id === dtoAccion.cama.id);
-                    let indexCambio = this.camas.findIndex(c => c.id === dtoAccion.camaOcupada.id);
-                    this.camas[i] = JSON.parse(JSON.stringify(dtoAccion.cama));
-                    this.camas[indexCambio] = JSON.parse(JSON.stringify(dtoAccion.camaOcupada));
-                    this.camaSeleccionada = dtoAccion.camaOcupada;
-                    this.camas = [...this.camas];
-                    this.accion = null;
-                    this.pacienteSelected = null;
+                if (dtoAccion.cama) {
+                    if (dtoAccion.camaOcupada) {
+                        //  let copiaCamas = JSON.parse(JSON.stringify(this.camas));
+                        let i = this.camas.findIndex(c => c.id === dtoAccion.cama.id);
+                        let indexCambio = this.camas.findIndex(c => c.id === dtoAccion.camaOcupada.id);
+                        this.camas[i] = JSON.parse(JSON.stringify(dtoAccion.cama));
+                        this.camas[indexCambio] = JSON.parse(JSON.stringify(dtoAccion.camaOcupada));
+                        this.camaSeleccionada = dtoAccion.camaOcupada;
+                        this.camas = [...this.camas];
+                        this.accion = null;
+                        this.pacienteSelected = null;
 
+                    } else {
+                        let i = this.camas.findIndex(c => c.id === dtoAccion.cama.id);
+                        this.camas[i] = JSON.parse(JSON.stringify(dtoAccion.cama));
+                        this.camas = [...this.camas];
+                        this.accion = null;
+                        this.pacienteSelected = null;
+                    }
                 }
                 break;
             case 'egresarPaciente':
@@ -388,7 +396,7 @@ export class MapaDeCamasComponent implements OnInit {
                 this.pacienteSelected = false;
                 break;
 
-                case 'mostrarResumen':
+            case 'mostrarResumen':
 
                 this.camaSeleccionada = dtoAccion.cama;
                 this.showEgreso = true;
@@ -399,9 +407,9 @@ export class MapaDeCamasComponent implements OnInit {
                 this.prestacionDelPaciente(dtoAccion.cama);
                 break;
 
-            }
+        }
 
-            this.countFiltros();
+        this.countFiltros();
 
 
     }
@@ -672,8 +680,8 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     buscarHistorial() {
-        this.camasService.getHistorialCama(this.auth.organizacion._id, moment(this.fechaDesde).startOf('day').toDate() , moment(this.fechaHasta).endOf('day').toDate(), this.camaSeleccionada.id).subscribe(historial => {
-          console.log(moment(this.fechaDesde).startOf('day').toDate());
+        this.camasService.getHistorialCama(this.auth.organizacion._id, moment(this.fechaDesde).startOf('day').toDate(), moment(this.fechaHasta).endOf('day').toDate(), this.camaSeleccionada.id).subscribe(historial => {
+            console.log(moment(this.fechaDesde).startOf('day').toDate());
             this.inicioBusqueda = true;
             if (historial.length > 0) {
                 this.historial = historial;
@@ -700,5 +708,5 @@ export class MapaDeCamasComponent implements OnInit {
 
     checkOxigeno(cama) {
         return cama.equipamiento.find(e => e.conceptId === '261746005') ? true : false;
-        }
+    }
 }
