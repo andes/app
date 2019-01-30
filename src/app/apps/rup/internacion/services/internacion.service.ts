@@ -63,14 +63,12 @@ export class InternacionService {
         estados.sort((a, b) => {
             return b.fecha - a.fecha;
         });
-
         // chequeamos que la fecha de ingreso sea superior a la fecha de carga disponible de la cama
         if (estados[estados.length - 1].fecha <= fechaIngreso) {
             // buscamos el ultimo estado en que la cama estuvo ocupada
-            const estadoEncontrado = estados.find(e => e.estado === 'ocupada');
+            const estadoEncontrado = estados.find(e => e.fecha < fechaIngreso);
             if (estadoEncontrado) {
-                let estadoAux = estados.find(e => e.estado === 'disponible' && e.fecha > estadoEncontrado.fecha && e.fecha < fechaIngreso);
-                if (estadoAux) {
+                if (estadoEncontrado.estado === 'disponible') {
                     return cama;
                 }
             }
