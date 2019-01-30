@@ -64,6 +64,15 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
+
+        this.plex.updateTitle([{
+            route: '/',
+            name: 'ANDES'
+        }, {
+            route: '/mpi',
+            name: 'Buscar un paciente'
+        }]);
+
         // controlamos si tiene acceso a MPI
         let autorizado = this.auth.getPermissions('mpi:?').length > 0;
         if (!autorizado) {

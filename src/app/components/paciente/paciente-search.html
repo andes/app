@@ -3,11 +3,11 @@
         <!--Panel central-->
         <div class="col">
             <plex-box>
-                <header *ngIf="modoCompleto">
+                <!-- <header *ngIf="modoCompleto">
                     <div class="page-title">Buscar un paciente</div>
-                </header>
+                </header> -->
                 <plex-text [(ngModel)]="textoLibre" (change)="buscar($event)" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-barcode-scan'></i>"
-                    placeholder="Escanee un documento digital, o escriba un documento/apellido/nombre">
+                    placeholder="Escanee un documento digital, o escriba un documento, apellido o nombre completo">
                 </plex-text>
                 <!--Loader-->
                 <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
@@ -28,27 +28,27 @@
                     </thead>
                     <tbody>
                         <tr class="hover" *ngFor="let paciente of resultado" (click)="seleccionarPaciente(paciente)">
-                            
-                                <td>
-                                    <span *ngIf="paciente.estado == 'validado'" class="badge badge-success">Validado</span>
-                                    <span *ngIf="paciente.estado != 'validado'" class="badge badge-warning" title="Los pacientes temporales son inactivados puedo de un tiempo, a menos que hayan sido validados">Temporal</span>
-                                </td>
-                                <td>
-                                    <span *ngIf="paciente?.documento !== ''">{{paciente.documento}}</span>
-                                    <span *ngIf="paciente?.documento === ''" class="text-danger">Sin documento</span>
-                                </td>
-                                <td>{{paciente | paciente}}</td>
-                                <td>
-                                    <span *ngIf="paciente.fechaNacimiento !== null">
-                                        {{paciente.fechaNacimiento | fecha}}
-                                        <br> {{paciente | edad}}
-                                    </span>
-                                    <span *ngIf="paciente.fechaNacimiento === null" class="text-danger">
-                                        Sin fecha de nacimiento
-                                    </span>
-                                </td>
-                                <td>{{paciente | sexo}}</td>
-                            
+
+                            <td>
+                                <span *ngIf="paciente.estado == 'validado'" class="badge badge-success">Validado</span>
+                                <span *ngIf="paciente.estado != 'validado'" class="badge badge-warning" title="Los pacientes temporales son inactivados puedo de un tiempo, a menos que hayan sido validados">Temporal</span>
+                            </td>
+                            <td>
+                                <span *ngIf="paciente?.documento !== ''">{{paciente.documento}}</span>
+                                <span *ngIf="paciente?.documento === ''" class="text-danger">Sin documento</span>
+                            </td>
+                            <td>{{paciente | paciente}}</td>
+                            <td>
+                                <span *ngIf="paciente.fechaNacimiento !== null">
+                                    {{paciente.fechaNacimiento | fecha}}
+                                    <br> {{paciente | edad}}
+                                </span>
+                                <span *ngIf="paciente.fechaNacimiento === null" class="text-danger">
+                                    Sin fecha de nacimiento
+                                </span>
+                            </td>
+                            <td>{{paciente | sexo}}</td>
+
                         </tr>
                     </tbody>
                 </table>
@@ -79,4 +79,5 @@
 </footer>
 
 <!--Componente de Alta/Modificación-->
-<paciente-create-update *ngIf="showCreateUpdate && !bloquearCreate" [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
+<paciente-create-update *ngIf="showCreateUpdate && !bloquearCreate" [seleccion]="seleccion" [escaneado]="esEscaneado"
+    (data)='afterCreateUpdate($event)'></paciente-create-update>
