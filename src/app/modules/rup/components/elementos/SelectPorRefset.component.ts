@@ -7,7 +7,7 @@ import { RupElement } from '.';
     selector: 'rup-SelectPorRefset',
     templateUrl: 'SelectPorRefset.html'
 })
-@RupElement()
+@RupElement('SelectPorRefsetComponent')
 export class SelectPorRefsetComponent extends RUPComponent implements OnInit {
 
     public conceptos: any[] = [];

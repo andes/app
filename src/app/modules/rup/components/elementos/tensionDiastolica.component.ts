@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-tension-diastolica',
     templateUrl: 'tensionDiastolica.html'
 })
-@RupElement()
+@RupElement('TensionDiastolicaComponent')
 export class TensionDiastolicaComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         // Observa cuando cambia la propiedad 'diastolica' en otro elemento RUP

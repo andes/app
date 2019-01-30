@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-otoemision-oido-izquierdo',
     templateUrl: 'otoemisionOidoIzquierdo.html'
 })
-@RupElement()
+@RupElement('OtoemisionAcusticaDeOidoIzquierdoComponent')
 export class OtoemisionAcusticaDeOidoIzquierdoComponent extends RUPComponent implements OnInit {
     public referenceSet = [];
     ngOnInit() {

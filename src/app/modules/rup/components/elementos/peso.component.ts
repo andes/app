@@ -5,7 +5,7 @@ import { RupElement } from '.';
     selector: 'rup-peso',
     templateUrl: 'peso.html'
 })
-@RupElement()
+@RupElement('PesoComponent')
 export class PesoComponent extends RUPComponent implements OnInit {
     public esRequerido: boolean;
 

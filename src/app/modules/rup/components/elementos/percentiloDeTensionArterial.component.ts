@@ -5,7 +5,7 @@ import { RupElement } from '.';
     selector: 'rup-percentilo-de-tension-arterial',
     templateUrl: 'percentiloDeTensionArterial.html'
 })
-@RupElement()
+@RupElement('PercentiloDeTensionArterialComponent')
 export class PercentiloDeTensionArterialComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         if (!this.soloValores) {

@@ -8,7 +8,7 @@ import { RupElement } from '.';
     selector: 'rup-evolucion-problema-default',
     templateUrl: 'evolucionProblemaDefault.html'
 })
-@RupElement()
+@RupElement('EvolucionProblemaDefaultComponent')
 export class EvolucionProblemaDefaultComponent extends RUPComponent implements OnInit {
     public fechaInicio: Date;
     public estado: String; // activo / inactivo / resuleto

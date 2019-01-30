@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-consulta-nino-sano-e2y3a',
     templateUrl: 'consultaDeNinoSanoE2Y3A.html'
 })
-@RupElement()
+@RupElement('ConsultaDeNinoSanoE2Y3AComponent')
 export class ConsultaDeNinoSanoE2Y3AComponent extends RUPComponent implements OnInit {
     ninoSanoHUDS: any;
     ultimaConsulta: any;

@@ -7,7 +7,7 @@ import { RupElement } from '.';
     selector: 'rup-formula-base',
     templateUrl: 'FormulaBase.html'
 })
-@RupElement()
+@RupElement('FormulaBaseComponent')
 export class FormulaBaseComponent extends RUPComponent implements OnInit {
     public formulaProvider: FormulaBaseService;
     public resultado;

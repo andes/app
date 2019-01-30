@@ -11,7 +11,7 @@ import { RupElement } from '.';
     selector: 'rup-ActividadNoNominalizada',
     templateUrl: 'informeActividadNoNominalizada.html'
 })
-@RupElement()
+@RupElement('InformeActividadNoNominalizadaComponent')
 export class InformeActividadNoNominalizadaComponent extends RUPComponent implements OnInit {
 
     public elegirOtraActividad = false;

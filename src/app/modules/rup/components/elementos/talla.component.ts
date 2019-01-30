@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-talla',
     templateUrl: 'talla.html'
 })
-@RupElement()
+@RupElement('TallaComponent')
 export class TallaComponent extends RUPComponent implements OnInit {
     public esRequerido: boolean;
 
