@@ -1,69 +1,29 @@
-import {
-    AppMobileService
-} from './../../services/appMobile.service';
-import {
-    ParentescoService
-} from './../../services/parentesco.service';
-
-import {
-    IContacto
-} from './../../interfaces/IContacto';
-import {
-    FinanciadorService
-} from './../../services/financiador.service';
-import {
-    IDireccion
-} from './../../interfaces/IDireccion';
-
-import {
-    IFinanciador
-} from './../../interfaces/IFinanciador';
-import {
-    LogService
-} from './../../services/log.service';
-import {
-    BarrioService
-} from './../../services/barrio.service';
-import {
-    LocalidadService
-} from './../../services/localidad.service';
-import {
-    ProvinciaService
-} from './../../services/provincia.service';
-import {
-    PaisService
-} from './../../services/pais.service';
-import {
-    AnsesService,
-} from './../../services/fuentesAutenticas/servicioAnses.service';
-import {
-    PacienteService
-} from './../../services/paciente.service';
+import { AppMobileService } from './../../services/appMobile.service';
+import { ParentescoService } from './../../services/parentesco.service';
+import { IContacto } from './../../interfaces/IContacto';
+import { FinanciadorService } from './../../services/financiador.service';
+import { IDireccion } from './../../interfaces/IDireccion';
+import { IFinanciador } from './../../interfaces/IFinanciador';
+import { LogService } from './../../services/log.service';
+import { BarrioService } from './../../services/barrio.service';
+import { LocalidadService } from './../../services/localidad.service';
+import { ProvinciaService } from './../../services/provincia.service';
+import { PaisService } from './../../services/pais.service';
+import { AnsesService, } from './../../services/fuentesAutenticas/servicioAnses.service';
+import { PacienteService } from './../../services/paciente.service';
 import * as enumerados from './../../utils/enumerados';
-import {
-    IPaciente
-} from './../../interfaces/IPaciente';
-import {
-    IProvincia
-} from './../../interfaces/IProvincia';
-import {
-    Plex
-} from '@andes/plex';
+import { IPaciente } from './../../interfaces/IPaciente';
+import { IProvincia } from './../../interfaces/IProvincia';
+import { Plex } from '@andes/plex';
 import * as moment from 'moment';
-import {
-    FormBuilder
-} from '@angular/forms';
-import {
-    DomSanitizer
-} from '@angular/platform-browser';
-import {
-    Component,
-    OnInit,
-    Output,
-    Input,
-    EventEmitter,
-    HostBinding
-} from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
+import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
+import { RenaperService } from '../../services/fuentesAutenticas/servicioRenaper.service';
+import { IObraSocial } from '../../interfaces/IObraSocial';
+import { SisaService } from '../../services/fuentesAutenticas/servicioSisa.service';
+import { Auth } from '@andes/auth';
+import { ObraSocialService } from '../../services/obraSocial.service';
 
 @Component({
     selector: 'paciente-create-update',
@@ -187,6 +147,17 @@ export class PacienteCreateUpdateComponent implements OnInit {
     public celularAndes: String = '';
     public activarApp = false;
 
+    // Validación RENAPER
+    deshabilitarValidar = false;
+    inconsistenciaDatos = false;
+    nombrePatternValidacion;
+    backUpDatos = [];
+    obraSocial: IObraSocial;    // Si existen mas de dos se muestra solo la de la primera posicion del array
+    permisosRenaper = 'fa:get:renaper';
+    autorizadoRenaper = false;  // check si posee permisos
+    renaper = true;
+
+
     constructor(private formBuilder: FormBuilder, private _sanitizer: DomSanitizer,
         private paisService: PaisService,
         private provinciaService: ProvinciaService,
@@ -196,16 +167,35 @@ export class PacienteCreateUpdateComponent implements OnInit {
         private pacienteService: PacienteService,
         private parentescoService: ParentescoService,
         private ansesService: AnsesService,
+        private renaperService: RenaperService,
+        private sisaService: SisaService,
+        private obraSocialService: ObraSocialService,
+        public auth: Auth,
         public appMobile: AppMobileService,
         private financiadorService: FinanciadorService, public plex: Plex) {
         this.nombrePattern = pacienteService.nombreRegEx.source;
+        this.nombrePatternValidacion = pacienteService.nombreRegEx;
     }
 
     ngOnInit() {
-        // Se cargan los combos
-        // this.financiadorService.get().subscribe(resultado => {
-        //     this.obrasSociales = resultado;
-        // });
+        this.loadObraSocial();
+
+        // Se chequea si el usuario posee permisos para validación por renaper
+        this.autorizadoRenaper = this.auth.check(this.permisosRenaper);
+
+        // this.renaper = (this.pacienteModel.documento.length && this.pacienteModel.sexo !== null);
+
+        this.backUpDatos['nombre'] = this.pacienteModel.nombre;
+        this.backUpDatos['apellido'] = this.pacienteModel.apellido;
+        this.backUpDatos['estado'] = this.pacienteModel.estado;
+        this.backUpDatos['genero'] = this.pacienteModel.genero;
+        this.backUpDatos['fechaNacimiento'] = this.pacienteModel.fechaNacimiento;
+        this.backUpDatos['foto'] = this.pacienteModel.foto;
+        this.backUpDatos['cuil'] = this.pacienteModel.cuil;
+        if (this.pacienteModel.direccion) {
+            this.backUpDatos['direccion'] = this.pacienteModel.direccion[0].valor;
+            this.backUpDatos['codigoPostal'] = this.pacienteModel.direccion[0].codigoPostal;
+        }
 
         this.relacionesBorradas = [];
 
@@ -278,6 +268,141 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 this.mostrarNotas();
             }
         }
+    }
+
+    mostrarRenaper(e) {
+        // Se fija si es el primer tab (index 0)
+        this.renaper = e === 0 ? true : false;
+    }
+
+    renaperVerification(patient) {
+        if (!patient.documento || (patient.sexo.id === 'otro')) {
+            this.plex.info('warning', 'La validación por renaper requiere sexo MASCULINO o FEMENINO.', 'Atención');
+        } else {
+            this.loading = true;
+            let sexoRena = null;
+            let documentoRena = null;
+
+            patient.sexo = ((typeof patient.sexo === 'string')) ? patient.sexo : (Object(patient.sexo).id);
+            sexoRena = patient.sexo === 'masculino' ? 'M' : 'F';
+            documentoRena = patient.documento;
+
+            this.renaperService.get({ documento: documentoRena, sexo: sexoRena }).subscribe(
+                resultado => {
+                    this.deshabilitarValidar = true;
+                    let datos = resultado.datos;
+                    if (resultado.datos.nroError === 0) {
+                        if (patient.estado === 'temporal') {
+                            // Se cargan los datos mínimos para poder consultar matcheo
+                            patient.nombre = datos.nombres;
+                            patient.apellido = datos.apellido;
+                            patient.fechaNacimiento = moment(datos.fechaNacimiento, 'YYYY-MM-DD');
+                            // Se chequea si el paciente actual ya existe como validado.
+                            this.verificaPacienteRepetido().then(validadoExistente => {
+                                if (validadoExistente) {
+                                    patient = this.pacienteModel;
+                                    this.plex.info('info', 'El paciente que está intentando cargar ya se encuentra validado por otra fuente auténtica.');
+                                    this.loading = false;
+                                } else {
+                                    // si nombre y apellido contienen solo caracteres válidos ..
+                                    if (this.nombrePatternValidacion.test(datos.nombres) && this.nombrePatternValidacion.test(datos.apellido)) {
+                                        patient.nombre = datos.nombres;
+                                        patient.apellido = datos.apellido;
+                                        patient.estado = 'validado';
+                                        this.data.emit(patient);
+                                        this.renaper = true;
+                                        this.loading = false;
+                                    } else {
+                                        this.plex.toast('info', 'Reintentando validación', 'Información:', 3500);
+                                        this.getSisa(patient, sexoRena);
+                                    }
+                                    this.pacienteModel.direccion[0].valor = datos.calle + ' ' + datos.numero;
+                                    this.pacienteModel.direccion[0].codigoPostal = datos.cpostal;
+                                    this.pacienteModel.cuil = datos.cuil;
+                                    patient.foto = resultado.datos.foto;
+                                }
+                            });
+                        } else {
+                            //  Se completan datos FALTANTES
+                            if (!this.pacienteModel.direccion[0].valor) {
+                                this.pacienteModel.direccion[0].valor = datos.calle + ' ' + datos.numero;
+                            }
+                            if (!this.pacienteModel.direccion[0].codigoPostal) {
+                                this.pacienteModel.direccion[0].codigoPostal = datos.cpostal;
+                            }
+                            if (!this.pacienteModel.cuil) {
+                                this.pacienteModel.cuil = datos.cuil;
+                            }
+                            patient.foto = resultado.datos.foto;
+                            this.loading = false;
+                        }
+                    } else {
+                        this.deshabilitarValidar = false;
+                        this.plex.info('info', 'Por favor, revisar los datos ingresados.', 'No se encontró información');
+                        this.loading = false;
+                    }
+                });
+        }
+    }
+
+    private getSisa(paciente: any, sexoRena) {
+        let dto = {
+            documento: paciente.documento,
+            sexo: sexoRena,
+        };
+        this.sisaService.getPaciente(dto).subscribe(sisaPaciente => {
+            if (sisaPaciente) {
+                if (this.nombrePatternValidacion.test(sisaPaciente.nombre) && this.nombrePatternValidacion.test(sisaPaciente.apellido)) {
+                    paciente.nombre = sisaPaciente.nombre;
+                    paciente.apellido = sisaPaciente.apellido;
+                    paciente.estado = 'validado';
+                    // this.renaperNotification.emit(true);
+                    this.data.emit(paciente);
+                    this.renaper = true;
+                    this.deshabilitarValidar = true;
+                    this.loading = false;
+                } else {
+                    // this.renaperNotification.emit(false);
+                    this.renaper = false;
+                    this.loading = false;
+                    this.plex.info('info', 'El Nombre y/o apellido contienen caracteres ilegibles. El paciente se registrará como temporal.', 'Información', 5000);
+                }
+            } else {
+                this.plex.info('info', 'Por favor, revisar los datos ingresados.', 'No se encontró información');
+                this.loading = false;
+            }
+        }, err => {
+            this.plex.info('warning', 'Por favor, revisar los datos ingresados.', 'No se encontró información');
+            this.loading = false;
+        });
+    }
+
+    loadObraSocial() {
+        this.obraSocialService.get({ dni: this.pacienteModel.documento }).subscribe(resultado => {
+            if (resultado.length) {
+                this.obraSocial = resultado[0];
+            }
+        });
+    }
+
+    setDatosOriginales(patient) {
+
+        patient.foto = this.backUpDatos['foto'];
+        this.pacienteModel.direccion[0].valor = this.backUpDatos['direccion'];
+        this.pacienteModel.direccion[0].codigoPostal = this.backUpDatos['codigoPostal'];
+
+        if (this.backUpDatos['estado'] === 'temporal') {
+            patient.nombre = this.backUpDatos['nombre'];
+            patient.apellido = this.backUpDatos['apellido'];
+            patient.fechaNacimiento = this.backUpDatos['fechaNacimiento'];
+            patient.cuil = this.backUpDatos['cuil'];
+            patient.estado = this.backUpDatos['estado'];
+            patient.genero = this.backUpDatos['genero'];
+            // this.renaperNotification.emit(false);   // desbloquea los campos requeridos
+            this.renaper = false;
+        }
+
+        this.deshabilitarValidar = false;
     }
 
     isEmptyObject(obj) {
