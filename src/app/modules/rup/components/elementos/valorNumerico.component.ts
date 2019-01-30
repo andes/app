@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-valor-numerico',
     templateUrl: 'valorNumerico.html'
 })
-@RupElement()
+@RupElement('ValorNumericoComponent')
 export class ValorNumericoComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         if (!this.registro.valor) {

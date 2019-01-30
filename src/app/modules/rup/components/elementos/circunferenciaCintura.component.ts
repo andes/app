@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-circunferencia-de-cintura',
     templateUrl: 'circunferenciaCintura.html'
 })
-@RupElement()
+@RupElement('CircunferenciaCinturaComponent')
 export class CircunferenciaCinturaComponent extends RUPComponent implements OnInit {
     ngOnInit() {
 

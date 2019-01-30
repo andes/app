@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-registrar-medidas-antropometricas-m2a',
     templateUrl: 'RegistrarMedidasAntropometricasNinoM2A.html'
 })
-@RupElement()
+@RupElement('RegistrarMedidasAntropometricasNinoM2AComponent')
 export class RegistrarMedidasAntropometricasNinoM2AComponent extends RUPComponent implements OnInit {
 
 

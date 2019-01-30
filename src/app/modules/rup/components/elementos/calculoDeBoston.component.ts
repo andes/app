@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-calculo-boston',
     templateUrl: 'calculoDeBoston.html'
 })
-@RupElement()
+@RupElement('CalculoDeBostonComponent')
 export class CalculoDeBostonComponent extends RUPComponent implements OnInit {
 
     public valorBoston;

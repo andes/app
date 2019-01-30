@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-lactancia',
     templateUrl: 'lactancia.html',
 })
-@RupElement()
+@RupElement('LactanciaComponent')
 export class LactanciaComponent extends RUPComponent implements OnInit {
     public conceptos: any[] = [];
 

@@ -8,7 +8,7 @@ import { RupElement } from '../elementos';
     templateUrl: 'adjuntarDocumento.html',
     styleUrls: ['adjuntarDocumento.scss'],
 })
-@RupElement()
+@RupElement('AdjuntarDocumentoComponent')
 export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     @ViewChildren('upload') childsComponents: QueryList<any>;
     imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];

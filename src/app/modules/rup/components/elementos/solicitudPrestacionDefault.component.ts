@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-solicitudPrestacionDefault',
     templateUrl: 'solicitudPrestacionDefault.html'
 })
-@RupElement()
+@RupElement('SolicitudPrestacionDefaultComponent')
 export class SolicitudPrestacionDefaultComponent extends RUPComponent implements OnInit {
 
     private listaPlanes: any = [];

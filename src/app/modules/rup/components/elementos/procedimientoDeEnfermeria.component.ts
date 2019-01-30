@@ -8,7 +8,7 @@ import { RupElement } from '.';
     selector: 'rup-procedimientoDeEnfermeria',
     templateUrl: 'procedimientoDeEnfermeria.html'
 })
-@RupElement()
+@RupElement('ProcedimientoDeEnfermeriaComponent')
 export class ProcedimientoDeEnfermeriaComponent extends RUPComponent implements OnInit {
 
     ngOnInit() {
