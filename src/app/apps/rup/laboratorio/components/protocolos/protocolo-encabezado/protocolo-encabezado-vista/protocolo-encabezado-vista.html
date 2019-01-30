@@ -1,6 +1,6 @@
 <section class="labs-listado-item" style="width: 100% !important">
     <div class="row">
-        <div class="col-1 centradoVerticalBtn" *ngIf="modo !== 'recepcion'">
+        <div class="col-1 centradoVerticalBtn" *ngIf="modo.nombre !== 'recepcion'">
             <plex-button class="marginRightBtn" type="info" icon="chevron-left" (click)='anterior()'>
             </plex-button>
         </div>
@@ -64,15 +64,15 @@
                 </article>
             </div>
         </div>
-        <div class="col-1 centradoVerticalBtn" *ngIf='modo === "control"'>
+        <div class="col-1 centradoVerticalBtn" *ngIf='modo.nombre === "control"'>
             <plex-button icon="mdi mdi-pencil" class="float-right mr-2 marginLeftBtn" (click)="editarDatosCabecera()"
                 title="Editar datos">
             </plex-button>
         </div>
-        <div class="col-1 centradoVerticalBtn" *ngIf='modo !== "recepcion"'>
+        <div class="col-1 centradoVerticalBtn" *ngIf='modo.nombre !== "recepcion"'>
             <plex-button label="" type="info" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
         </div>
-        <div class="col-1 centradoVerticalBtn" *ngIf='modo !== "recepcion"'>
+        <div class="col-1 centradoVerticalBtn" *ngIf='modo.nombre !== "recepcion"'>
             <plex-button type="info" class='float-right mr-2' icon='chevron-right' (click)='siguiente()' style='margin-left: 10px;'></plex-button>
         </div>
     </div>

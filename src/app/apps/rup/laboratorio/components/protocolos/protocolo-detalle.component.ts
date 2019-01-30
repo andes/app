@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
-import { ProfesionalService } from '../../../../../services/profesional.service';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Constantes } from '../../controllers/constants';
@@ -42,6 +41,7 @@ export class ProtocoloDetalleComponent
     public pacienteActivo;
     public mostrarListaMpi: Boolean = false;
     public contextoCache;
+    public modo;
 
     practicasEjecucion;
     showObservaciones: Boolean = false;
@@ -90,13 +90,18 @@ export class ProtocoloDetalleComponent
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
         this.practicasEjecucion = this.modelo.ejecucion.registros;
         this.contextoCache = this.laboratorioContextoCacheService.getContextoCache();
-        this.showBotonesGuardar = (this.contextoCache.modo !== 'recepcion');
+        this.modo = this.contextoCache.modo;
+        this.showBotonesGuardar = (!this.laboratorioContextoCacheService.isModoRecepcion());
 
-        if (this.practicasEjecucion.length > 0 && (this.contextoCache.modo === Constantes.modoIds.recepcionSinTurno || this.contextoCache.modo === 'recepcion' || this.contextoCache.modo === 'control')) {
+        if (this.practicasEjecucion.length > 0 &&
+                (this.laboratorioContextoCacheService.isModoRecepcionSinTurno()
+                    || this.laboratorioContextoCacheService.isModoRecepcion()
+                    || this.laboratorioContextoCacheService.isModoControl())) {
             this.cargarCodigosPracticas();
         }
 
-        if ((this.contextoCache.modo === Constantes.modoIds.recepcionSinTurno || this.contextoCache.modo === 'recepcion') && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
+        if ((this.laboratorioContextoCacheService.isModoRecepcionSinTurno() || this.laboratorioContextoCacheService.isModoRecepcion())
+            && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
             this.editarDatosCabecera();
         } else {
             // this.aceptarEdicionCabecera();
@@ -146,7 +151,6 @@ export class ProtocoloDetalleComponent
         private servicioOrganizacion: OrganizacionService,
         private servicioPrestacion: PrestacionesService,
         private servicioProtocolo: ProtocoloService,
-        private servicioProfesional: ProfesionalService,
         private servicioPractica: PracticaService,
         private laboratorioContextoCacheService: LaboratorioContextoCacheService
     ) { }
@@ -382,12 +386,12 @@ export class ProtocoloDetalleComponent
             params.op = 'nuevoProtocoloLaboratorio';
             params.estado = { tipo: 'ejecucion' };
             params.solicitud = solicitud;
-        } else if (this.contextoCache.modo === 'control') {
+        } else if (this.laboratorioContextoCacheService.isModoControl()) {
             params.solicitud = solicitud;
             params.paciente = this.modelo.paciente,
             params.fechaEjecucion = this.modelo.ejecucion.fecha;
             params.op = 'auditoriaLaboratorio';
-        } else if (this.contextoCache.modo === 'validacion' && this.isProtocoloValidado()) {
+        } else if (this.laboratorioContextoCacheService.isModoValidacion() && this.isProtocoloValidado()) {
             params.op = 'estadoPush';
             params.estado = Constantes.estadoValidada;
         } else {
@@ -422,18 +426,18 @@ export class ProtocoloDetalleComponent
      */
     private async actualizarProtocolo(next) {
 
-        if (this.contextoCache.modo === 'validacion' || this.contextoCache.modo === 'carga') { }  {
+        if (this.laboratorioContextoCacheService.isModoValidacion() || this.laboratorioContextoCacheService.isModoCarga()) { }  {
             this.setearEstadosCarga();
         }
 
-        if (this.contextoCache.modo === 'validacion') {
+        if (this.laboratorioContextoCacheService.isModoValidacion()) {
             this.setearEstadosValidacion();
         }
 
         this.servicioPrestacion.patch(this.modelo.id, this.getParams()).subscribe(async () => {
 
             let alertasValidadas = [];
-            if (this.contextoCache.modo === 'validacion') {
+            if (this.laboratorioContextoCacheService.isModoValidacion()) {
                 alertasValidadas = this.validaciones.filter(e => e.validado && e.esValorCritico);
             }
 
@@ -446,7 +450,7 @@ export class ProtocoloDetalleComponent
             } else if (next) {
                 this.showGestorAlarmas = false;
                 this.protocolos.splice(this.indexProtocolo, 1);
-                if (this.contextoCache.modo === 'recepcion' || this.protocolos.length === 0) {
+                if (this.laboratorioContextoCacheService.isModoRecepcion() || this.protocolos.length === 0) {
                     this.contextoCache.mostrarCuerpoProtocolo = true;
                     this.volverAListaControEmit.emit();
                 } else {
@@ -506,16 +510,16 @@ export class ProtocoloDetalleComponent
     guardarSolicitud() {
         this.modelo.solicitud.tipoPrestacion = Constantes.conceptoPruebaLaboratorio;
 
-        if (this.contextoCache.modo === 'control' || this.contextoCache.modo === 'recepcion') {
+        if (this.laboratorioContextoCacheService.isModoControl() || this.laboratorioContextoCacheService.isModoRecepcion()) {
             this.solicitudProtocolo.solicitudPrestacion.organizacionDestino = this.auth.organizacion;
             this.solicitudProtocolo.solicitudPrestacion.fechaTomaMuestra = this.fechaTomaMuestra;
 
             // await this.cargarPracticasAEjecucion();
-        } else if (this.contextoCache.modo === 'validacion' && !this.isProtocoloValidado()) {
+        } else if (this.laboratorioContextoCacheService.isModoValidacion() && !this.isProtocoloValidado()) {
             // this.actualizarEstadoValidacion();
         }
 
-        if (this.contextoCache.modo === 'recepcion') {
+        if (this.laboratorioContextoCacheService.isModoRecepcion()) {
             this.iniciarProtocolo();
         } else {
             this.guardarProtocolo(true);

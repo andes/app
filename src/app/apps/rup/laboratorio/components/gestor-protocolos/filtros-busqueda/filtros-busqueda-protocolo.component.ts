@@ -190,7 +190,7 @@ export class FiltrosBusquedaProtocoloComponent
         let cacheContexto = this.laboratorioContextoCacheService.getContextoCache();
         cacheContexto.cargarPorPracticas = false;
         if ($event.value === 'Análisis') {
-            if (cacheContexto.modo === 'carga') {
+            if (this.laboratorioContextoCacheService.isModoCarga()) {
                 cacheContexto.cargarPorPracticas = true;
             }
             this.showSelectArea = true;

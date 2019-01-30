@@ -105,7 +105,7 @@ export class PuntoInicioLaboratorioComponent implements OnInit, OnDestroy {
     }
 
     recepcionSinTurno() {
-        this.laboratorioContextoCacheService.cambiarModo(Constantes.modoIds.recepcionSinTurno);
+        this.laboratorioContextoCacheService.modoRecepcionSinTurno();
         this.router.navigate(['/laboratorio/protocolos/sinTurno/' + this.seleccion.id]);
     }
 

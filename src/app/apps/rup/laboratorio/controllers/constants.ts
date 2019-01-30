@@ -17,21 +17,37 @@ export const Constantes = {
         semanticTag: 'procedimiento'
     },
     estadoValidada: { tipo: 'validada' },
-    titulos : {
-        validacion: 'Validación de Resultados',
-        recepcion: 'Recepcionar Paciente',
-        recepcionSinTurno: 'Recepcionar Paciente Sin Turno',
-        control: 'Auditoría de Protocolos',
-        carga: 'Carga de Resultados',
-        listado: 'Listado'
-    },
-    modoIds: {
-        recepcion: 0,
-        control: 1,
-        carga: 2,
-        validacion: 3,
-        listado: 4,
-        recepcionSinTurno: 5,
+    modos: {
+        recepcion: {
+            id: 0,
+            nombre: 'recepcion',
+            titulo: 'Recepcionar Paciente',
+        },
+        control: {
+            id: 1,
+            nombre: 'control',
+            titulo: 'Auditoría de Protocolos'
+        },
+        carga: {
+            id: 2,
+            nombre: 'carga',
+            titulo: 'Carga de Resultados'
+        },
+        validacion: {
+            id: 3,
+            nombre: 'validacion',
+            titulo: 'Validación de Resultados',
+        },
+        listado: {
+            id: 4,
+            nombre: 'listado',
+            titulo: 'Listado'
+        },
+        recepcionSinTurno: {
+            id: 5,
+            nombre: 'recepcion',
+            titulo: 'Recepcionar Paciente Sin Turno'
+        }
     }
 };
 

@@ -61,7 +61,7 @@ export class GestorProtocolosComponent implements OnInit {
     public indexProtocolo;
     public busqueda;
 
-    public accionIndex = 1;
+    public accionIndex;
 
     @ViewChild(ProtocoloDetalleComponent)
     public protocoloDetalleComponent: ProtocoloDetalleComponent;
@@ -77,6 +77,11 @@ export class GestorProtocolosComponent implements OnInit {
 
     ngOnInit() {
         this.contextoCache = this.laboratorioContextoCacheService.getContextoCache();
+        if (!this.contextoCache.modo) {
+            this.contextoCache.modo = Constantes.modos.carga;
+        }
+
+        this.accionIndex = this.contextoCache.modo ? this.contextoCache.modo.id : 3;
 
         if (!this.protocolo) {
             this.resetearProtocolo({});
@@ -101,6 +106,17 @@ export class GestorProtocolosComponent implements OnInit {
 
     }
 
+    // private autosetTabIndex() {
+    //     let modo = this.contextoCache.modo;
+    //     if (modo === Constantes.)
+    // }
+
+    /**
+     *
+     *
+     * @param {*} $event
+     * @memberof GestorProtocolosComponent
+     */
     onTabChange($event) {
         this.laboratorioContextoCacheService.cambiarModo($event);
         this.refreshSelection();
@@ -152,7 +168,7 @@ export class GestorProtocolosComponent implements OnInit {
             this.areas = $event.areas ? $event.areas : [];
         }
 
-        this.busqueda.estado = this.contextoCache.modo === 'validacion' ? ['pendiente', 'ejecucion'] :  [];
+        this.busqueda.estado = this.laboratorioContextoCacheService.isModoValidacion() ? ['pendiente', 'ejecucion'] :  [];
 
         this.servicioPrestaciones.get(this.busqueda).subscribe(protocolos => {
             this.protocolos = protocolos;
@@ -174,7 +190,7 @@ export class GestorProtocolosComponent implements OnInit {
         // Si se presionó el boton suspender, no se muestran otros protocolos hasta que se confirme o cancele la acción.
         if (value.protocolo) {
             this.laboratorioContextoCacheService.seleccionarProtocolo();
-            this.editarListaPracticas = (this.contextoCache.modo !== 'recepcion');
+            this.editarListaPracticas = (!this.laboratorioContextoCacheService.isModoRecepcion());
             this.protocolo = value.protocolo;
             this.indexProtocolo = value.index;
             this.showListarProtocolos = false;
@@ -192,7 +208,7 @@ export class GestorProtocolosComponent implements OnInit {
      * @memberof PuntoInicioLaboratorioComponent
      */
     volverLista() {
-        if (this.contextoCache.modo === Constantes.modoIds.recepcionSinTurno) {
+        if (this.laboratorioContextoCacheService.isModoRecepcionSinTurno()) {
             // location.reload();
             this.volverAPuntoInicioEmmiter.emit(true);
         } else {
@@ -262,7 +278,7 @@ export class GestorProtocolosComponent implements OnInit {
     volverAControl() {
         this.protocoloDetalleComponent.cargarCodigosPracticas();
         this.laboratorioContextoCacheService.irAuditoriaProtocolo();
-        this.laboratorioContextoCacheService.cambiarModo(Constantes.modoIds.control);
+        this.laboratorioContextoCacheService.modoControl();
         this.showBotonAceptar = true;
         this.showBotonGuardar = false;
     }

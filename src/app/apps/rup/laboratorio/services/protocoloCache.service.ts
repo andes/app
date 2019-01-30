@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 Injectable();
 export class LaboratorioContextoCacheService {
 
-    private contextoCache = new BehaviorSubject<any>({ titulo: null, modo: null });
+    private contextoCache = new BehaviorSubject<any>({ modo: null });
 
     /**
      *
@@ -34,25 +34,38 @@ export class LaboratorioContextoCacheService {
      * @memberof LaboratorioContextoCacheService
      */
     cambiarModo(modoId) {
-        if (modoId === Constantes.modoIds.recepcion) {
-            this.getContextoCache().modo = 'recepcion';
-            this.getContextoCache().titulo = Constantes.titulos.recepcion;
-        } else if (modoId === Constantes.modoIds.recepcionSinTurno) {
-            this.getContextoCache().modo = 'recepcion';
-            this.getContextoCache().titulo = Constantes.titulos.recepcionSinTurno;
-        } else if (modoId === Constantes.modoIds.control) {
-            this.getContextoCache().modo = 'control';
-            this.getContextoCache().titulo = Constantes.titulos.control;
-        } else if (modoId === Constantes.modoIds.carga) {
-            this.getContextoCache().titulo = Constantes.titulos.carga;
-            this.getContextoCache().modo = 'carga';
-        } else if (modoId === Constantes.modoIds.validacion) {
-            this.getContextoCache().titulo = Constantes.titulos.validacion;
-            this.getContextoCache().modo = 'validacion';
-        } else if (modoId === Constantes.modoIds.listado) {
-            this.getContextoCache().titulo = Constantes.titulos.listado;
-            this.getContextoCache().modo = 'listado';
+        if (modoId === Constantes.modos.recepcion.id) {
+            this.getContextoCache().modo = Constantes.modos.recepcion;
+        } else if (modoId === Constantes.modos.recepcionSinTurno.id) {
+            this.modoRecepcionSinTurno();
+        } else if (modoId === Constantes.modos.control.id) {
+            this.modoControl();
+        } else if (modoId === Constantes.modos.carga.id) {
+            this.getContextoCache().modo = Constantes.modos.carga;
+        } else if (modoId === Constantes.modos.validacion.id) {
+            this.getContextoCache().modo = Constantes.modos.validacion;
+        } else if (modoId === Constantes.modos.listado.id) {
+            this.getContextoCache().modo = Constantes.modos.listado;
         }
+    }
+
+
+    /**
+     *
+     *
+     * @memberof LaboratorioContextoCacheService
+     */
+    modoRecepcionSinTurno() {
+        this.getContextoCache().modo = Constantes.modos.recepcionSinTurno;
+    }
+
+    /**
+     *
+     *
+     * @memberof LaboratorioContextoCacheService
+     */
+    modoControl() {
+        this.getContextoCache().modo = Constantes.modos.control;
     }
 
     /**
@@ -63,7 +76,7 @@ export class LaboratorioContextoCacheService {
     irAuditoriaProtocolo() {
         this.getContextoCache().ocultarPanelLateral = true;
         this.getContextoCache().modoAVolver = this.getContextoCache().modo;
-        this.cambiarModo(Constantes.modoIds.control);
+        this.modoControl();
     }
 
     /**
@@ -83,7 +96,7 @@ export class LaboratorioContextoCacheService {
      * @memberof LaboratorioContextoCacheService
      */
     salirDeHistoricoResultados() {
-        this.getContextoCache().titulo = Constantes.titulos.validacion;
+        this.getContextoCache().modo = Constantes.modos.validacion;
         this.getContextoCache().botonesAccion = 'validacion';
         this.getContextoCache().mostrarCuerpoProtocolo = true;
         this.getContextoCache().verHistorialResultados = false;
@@ -96,10 +109,10 @@ export class LaboratorioContextoCacheService {
      */
     seleccionarProtocolo() {
         this.getContextoCache().edicionDatosCabecera = false;
-        this.getContextoCache().mostrarCuerpoProtocolo = (this.getContextoCache().modo !== 'recepcion');
+        this.getContextoCache().mostrarCuerpoProtocolo = (!this.isModoRecepcion());
         this.getContextoCache().ocultarPanelLateral =
-            (this.getContextoCache().modo === 'recepcion')
-            || (this.getContextoCache().modo === Constantes.modoIds.recepcionSinTurno)
+            (this.isModoRecepcion())
+            || (this.isModoRecepcionSinTurno())
             || this.getContextoCache().cargarPorPracticas;
             console.log('this.getContextoCache().ocultarPanelLateral ', this.getContextoCache().ocultarPanelLateral );
     }
@@ -121,9 +134,61 @@ export class LaboratorioContextoCacheService {
      * @memberof LaboratorioContextoCacheService
      */
     ventanillaSinTurno() {
-        this.cambiarModo(Constantes.modoIds.recepcionSinTurno);
+        // this.cambiarModo(Constantes.modoIds.recepcionSinTurno);
+        this.getContextoCache().modo = Constantes.modos.recepcionSinTurno;
         this.getContextoCache().ocultarPanelLateral = true;
         this.getContextoCache().mostrarCuerpoProtocolo = false;
+    }
+
+
+    /**
+     *
+     *
+     * @returns
+     * @memberof LaboratorioContextoCacheService
+     */
+    isModoRecepcion() {
+        return this.getContextoCache().modo === Constantes.modos.recepcion;
+    }
+
+    /**
+     *
+     *
+     * @returns
+     * @memberof LaboratorioContextoCacheService
+     */
+    isModoRecepcionSinTurno() {
+        return this.getContextoCache().modo === Constantes.modos.recepcionSinTurno;
+    }
+
+    /**
+     *
+     *
+     * @returns
+     * @memberof LaboratorioContextoCacheService
+     */
+    isModoControl() {
+        return this.getContextoCache().modo === Constantes.modos.control;
+    }
+
+    /**
+     *
+     *
+     * @returns
+     * @memberof LaboratorioContextoCacheService
+     */
+    isModoCarga() {
+        return this.getContextoCache().modo === Constantes.modos.carga;
+    }
+
+    /**
+     *
+     *
+     * @returns
+     * @memberof LaboratorioContextoCacheService
+     */
+    isModoValidacion() {
+        return this.getContextoCache().modo === Constantes.modos.validacion;
     }
 }
 

@@ -1,5 +1,5 @@
 <plex-layout main="{{showProtocoloDetalle ? ( contextoCache.ocultarPanelLateral ? 0 : 3 ) : 12}}">
-    <plex-layout-main *ngIf='!contextoCache.ocultarPanelLateral && contextoCache.modo !== "recepcionSinTurno" '>
+    <plex-layout-main *ngIf='!contextoCache.ocultarPanelLateral && contextoCache.modo.nombre !== "recepcionSinTurno" '>
 
         <filtros-busqueda-protocolo *ngIf="!showProtocoloDetalle" [modo]='contextoCache.modo' (buscarProtocolosEmmiter)="refreshSelection($event)"></filtros-busqueda-protocolo>
 
@@ -19,7 +19,7 @@
             <div class="clearfix">
                 <div class="page-title">
                     <ng-container *ngIf="!showProtocoloDetalle">
-                        Laboratorio | {{contextoCache.titulo}}
+                        Laboratorio | {{contextoCache.modo.titulo}}
                     </ng-container>
                     <ng-container>
                         Protocolos
@@ -32,9 +32,9 @@
                         <plex-tab label="Carga"></plex-tab>
                         <plex-tab label="Validación"></plex-tab>
                     </plex-tabs>
-                    <ng-container *ngIf="!showProtocoloDetalle && contextoCache.modo === 'recepcion'">
+                    <!-- <ng-container *ngIf="!showProtocoloDetalle && contextoCache.modo === 'recepcion'">
                         <plex-button label="accion clave" type="warning" label="Paciente sin Turno" (click)="mostrarFomularioPacienteSinTurno()"></plex-button>
-                    </ng-container>
+                    </ng-container> -->
                 </nav>
             </div>
         </header>
@@ -49,7 +49,7 @@
                 </div>
 
                 <ng-container *ngIf="contextoCache.botonesAccion !== 'historicoResultados'">
-                    <ng-container *ngIf='contextoCache.modo === "carga" || contextoCache.modo === "validacion"' class="col-2">
+                    <ng-container *ngIf='contextoCache.modo.nombre === "carga" || contextoCache.modo.nombre === "validacion"' class="col-2">
                         <plex-button position="right" type="warning" label="Auditar" class="mr-3" (click)="volverAControl()"></plex-button>
                     </ng-container>
 
@@ -59,14 +59,14 @@
                     </div>
 
                     <ng-container *ngIf='showBotonGuardar'>
-                        <ng-container *ngIf='contextoCache.modo !== "validacion" '>
+                        <ng-container *ngIf='contextoCache.modo.nombre !== "validacion" '>
                             <plex-button position="right" class="float-right mr-1" type="success" label="Guardar"
                                 (click)="guardarSolicitud()"></plex-button>
                             <plex-button position="right" class="float-right mr-1" type="success" label="Guardar + CB"
                                 (click)="guardarSolicitud()"></plex-button>
                         </ng-container>
                         ​
-                        <ng-container *ngIf='contextoCache.modo === "validacion" '>
+                        <ng-container *ngIf='contextoCache.modo.nombre === "validacion" '>
                             <plex-button position="right" class="float-right mr-1" type="success" label="Validar todos"
                                 (click)="guardarSolicitud()"></plex-button>
                             <plex-button position="right" class="float-right mr-1" type="success" label="Validar pendientes"

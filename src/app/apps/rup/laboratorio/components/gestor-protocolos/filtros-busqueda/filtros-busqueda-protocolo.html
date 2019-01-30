@@ -1,4 +1,4 @@
-<div class="filtros-container ml-1" *ngIf='modo === "carga" || modo === "validacion"'>
+<div class="filtros-container ml-1" *ngIf='modo.nombre === "carga" || modo.nombre === "validacion"'>
     <span>
         <plex-radio [data]="modoCargaLaboratorioEnum" label="Modo de carga" (change)="cambiarModoCarga($event)"
             [(ngModel)]="modoCargaLaboratorio" type="horizontal"></plex-radio>
@@ -15,7 +15,7 @@
             label="Prácticas" [data]='practicasFiltro' labelField="nombre" multiple="true" ></plex-select>
     </span>
 </div>
-<div class="filtros-container {{ modo }}">
+<div class="filtros-container {{ modo.nombre }}">
     <span>
         <plex-datetime type="date" [(ngModel)]="busqueda.solicitudDesde" (change)="buscarProtocolos($event,'fechaDesde')"
             name="solicitudDesde" label="Fecha desde" [required]="true" skipBy="day">
@@ -26,7 +26,7 @@
             name="solicitudHasta" label="Fecha hasta" [required]="true" skipBy="day">
         </plex-datetime>
     </span>
-    <span *ngIf='modo !== "recepcion" && !showSelectArea'>
+    <span *ngIf='modo.nombre !== "recepcion" && !showSelectArea'>
         <plex-select [(ngModel)]="busqueda.area" (change)="buscarProtocolos($event,'area')" name="area" label="Área"
             [data]='areas'></plex-select>
     </span>
@@ -54,19 +54,19 @@
                 label="Paciente" placeholder="Ingrese paciente" labelField="nombre + ' ' + apellido" [required]="false"></plex-select>
         </span>
 
-        <span *ngIf='modo ==="carga"'>
+        <span *ngIf='modo.nombre ==="carga"'>
             <plex-select [(ngModel)]="servicio" name="servicio" (getData)="loadServicios($event)" (change)="buscarProtocolos($event,'servicio')"
                 label="Servicio" placeholder="Seleccione el servicio" labelField="term" [multiple]="true" [required]="false"
                 idField="term">
             </plex-select>
         </span>
-        <span *ngIf='modo !== "carga" && modo !== "recepcion"'>
+        <span *ngIf='modo.nombre !== "carga" && modo.nombre !== "recepcion"'>
             <plex-select [(ngModel)]="servicios" name="servicio" (getData)="loadServicios($event)" (change)="buscarProtocolos($event,'servicio')"
                 label="Servicio" placeholder="Seleccione el servicio" labelField="term" [required]="false" idField="term"
                 [multiple]=true>
             </plex-select>
         </span>
-        <ng-container *ngIf='modo !== "recepcion"'>
+        <ng-container *ngIf='modo.nombre !== "recepcion"'>
             <span>
                 <plex-float [(ngModel)]="busqueda.numProtocoloDesde" (change)="buscarProtocolos($event,'numProtocoloDesde')"
                     name="numProtocoloDesde" label="N° protocolo desde"></plex-float>
@@ -79,7 +79,7 @@
                 <plex-select [(ngModel)]="organizacion" (change)="buscarProtocolos($event,'organizacion')" name="organizacion"
                     label="Efector Solicitante" (getData)="loadOrganizaciones($event)"></plex-select>
             </span>
-            <span *ngIf='modo ==="listado"'>
+            <span *ngIf='modo.nombre ==="listado"'>
                 <plex-select [(ngModel)]="estado" (change)="buscarProtocolos($event,'estado')" name="estado" label="Estado"
                     [data]="estadosFiltroEnum"></plex-select>
             </span>

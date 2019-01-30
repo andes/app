@@ -18,7 +18,7 @@ export class LaboratorioComponent implements OnInit {
 
     ngOnInit() {
         this.contextoCache = this.laboratorioContextoCacheService.getContextoCache();
-        this.mostrarPuntoInicio = this.contextoCache.modo === Constantes.modoIds.recepcionSinTurno;
+        this.mostrarPuntoInicio = this.laboratorioContextoCacheService.isModoRecepcionSinTurno();
     }
 
     seleccionarProtocolo($event) {
@@ -27,7 +27,7 @@ export class LaboratorioComponent implements OnInit {
     }
 
     recepcionarSinTurno($event) {
-        this.laboratorioContextoCacheService.cambiarModo(Constantes.modoIds.recepcionSinTurno);
+        this.laboratorioContextoCacheService.cambiarModo(Constantes.modos.recepcionSinTurno);
         this.contextoCache.edicionDatosCabecera = true;
         this.mostrarPuntoInicio = false;
         this.paciente = $event;

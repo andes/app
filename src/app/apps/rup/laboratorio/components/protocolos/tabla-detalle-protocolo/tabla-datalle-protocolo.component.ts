@@ -1,3 +1,4 @@
+import { Constantes } from './../../../controllers/constants';
 import { LaboratorioContextoCacheService } from './../../../services/protocoloCache.service';
 import { ProfesionalService } from './../../../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
@@ -8,7 +9,6 @@ import { Input, Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { getRespuestasGestionValoresCriticos } from '../../../../../../utils/enumerados';
 
 import { Plex } from '@andes/plex';
-import { Constantes } from '../../../controllers/constants';
 
 @Component({
     selector: 'tabla-datalle-protocolo',
@@ -60,7 +60,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
             this.practicasEjecucion = practicasEjecucion;
             this.cargarListaPracticaCarga().then(() => {
                 this.cargarResultadosAnteriores();
-                if (this.modo === 'validacion') {
+                if (this.laboratorioContextoCacheService.isModoValidacion()) {
                     this.precargarValidaciones();
                 }
             });
@@ -166,7 +166,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     cargarListaPracticaCargaModoAnalisis() {
         return new Promise((resolve) => {
             this.servicioPractica.findByIdsCompletas(this.busqueda.practicas[0]).subscribe((res: [any]) => {
-                this.cache.titulo += ' | ' + res[0].nombre;
+                this.cache.modo.titulo += ' | ' + res[0].nombre;
                 this.practicasCarga = [];
                 this.protocolos.forEach( (p: any) => {
                     // let reg = p.ejecucion.registros.find( r => { return r.valor.idPractica === this.busqueda.practicas[0]._id; }) ;
@@ -440,7 +440,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
                         this.practicasEjecucion.push(this.generateRegistroEjecucion(res));
                     });
                     this.cargarListaPracticaCarga().then(() => {
-                        if (this.modo === Constantes.modoIds.validacion) {
+                        if (this.laboratorioContextoCacheService.isModoValidacion()) {
                             this.cargarResultadosAnteriores();
                         }
                     });
@@ -465,7 +465,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
                 this.cache.practicasCargadas = this.cache.practicasCargadas.filter(e => e !== op.registro);
             } else if (!this.cache.practicasCargadas.find(e => { return e === op.registro; })) {
                 this.cache.practicasCargadas.push(op.registro);
-                if (this.cache.modo === 'validacion') {
+                if (this.laboratorioContextoCacheService.isModoValidacion()) {
                     this.validaciones.find(e => e.registroPractica.registro._id === op.registro._id).esValorCritico = this.verificarValorCritico(op);
                 }
             }
