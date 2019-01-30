@@ -20,6 +20,12 @@
                         <canvas baseChart [data]="tipoTurnoData" [labels]="tipoTurnoLabels" chartType="pie"></canvas>
                     </div>
                 </div>
+                <div class="col" *ngIf="estadoAgendaData.length > 0">
+                    <h3>Por estado</h3>
+                    <div>
+                        <canvas baseChart [data]="estadoAgendaData" [labels]="estadoAgendaLabels" chartType="pie"></canvas>
+                    </div>
+                </div>
             </div>
             <div class="row">                
                 <div class="col-10" *ngIf="profesionalData.length > 0">
