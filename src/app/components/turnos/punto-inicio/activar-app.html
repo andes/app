@@ -4,41 +4,32 @@
         <div class="row">
             <div class="col">
                 <h5>
-                    <span style="color: #00A8E0">{{paciente | paciente}}</span>
+                    <span>{{ paciente | paciente }}</span>
                 </h5>
             </div>
         </div>
     </header>
-    <div class="row">
-        <div class="col-12">
-            <i class="mdi mdi-map-marker"></i>
-            <span style="color: #00A8E0">Usuario Andes (E-Mail obligatorio)</span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
+
+
+    <form>
+        <div class="form-group">
+            <label for="email">Usuario Andes (e-mail)</label>
             <plex-text [(ngModel)]="email" [readonly]="!checkPass" name="searchTerm" placeholder="e-mail"></plex-text>
+            <small id="emailHelp" class="form-text text-muted">Dato obligatorio</small>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <i class="mdi mdi-map-marker"></i>
-            <span style="color: #00A8E0">Celular</span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
+        <div class="form-group">
+            <label for="exampleInputPassword1">Celular</label>
             <plex-text [(ngModel)]="celular" [readonly]="!checkPass" name="searchTerm" placeholder="Celular"></plex-text>
         </div>
-    </div>
-    <br>
+        <plex-button *ngIf="!hideButton" label="Activar App Móvil" type="primary" (click)="activarApp()"></plex-button>
+    </form>
 
-    <plex-button *ngIf="!hideButton" label="Activar App Mobile" icon="cloud-check" type="primary" (click)="activarApp()"></plex-button>
-    
+
+
 
     <div>
         <h5>
-            <span style="color: red" *ngIf="message.length > 0">
+            <span class="text-danger" *ngIf="message.length > 0">
                 <i class="mdi mdi-alert-circle-outline"></i>
                 {{message}}
             </span>
