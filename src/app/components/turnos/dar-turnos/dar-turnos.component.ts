@@ -92,7 +92,7 @@ export class DarTurnosComponent implements OnInit {
     turnoDoble = false;
     desplegarOS = false; // Indica si es se requiere seleccionar OS y numero de Afiliado
     numeroAfiliado;
-    telefono: String = '';
+    telefono = '';
     countBloques: any[];
     countTurnos: any = {};
     resultado: any;
@@ -100,7 +100,7 @@ export class DarTurnosComponent implements OnInit {
     esEscaneado = false;
     ultimosTurnos: any[];
     indice = -1;
-    semana: String[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    semana: string[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     permisos = [];
     autorizado = false;
     pacientesSearch = true;

@@ -56,7 +56,7 @@ export class AgregarSobreturnoComponent implements OnInit {
     showSobreturno = true;
     pacientesSearch = false;
     horaTurno = null;
-    telefono: String = '';
+    telefono = '';
     cambioTelefono = false;
 
     public seleccion = null;
