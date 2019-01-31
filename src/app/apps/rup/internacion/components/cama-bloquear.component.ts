@@ -26,17 +26,17 @@ export class CamaBloquearComponent implements OnInit {
 
     ngOnInit() {
 
-     }
+    }
 
     public bloquearCama(event) {
         if (event.formValid) {
             this.cama.ultimoEstado.observaciones = ((typeof this.cama.ultimoEstado.observaciones === 'string')) ? this.cama.ultimoEstado.observaciones : (Object(this.cama.ultimoEstado.observaciones).id);
-            console.log(this.cama.estados);
             this.camasService.nuevoEstadoCama(this.cama, 'bloqueada', this.internacionService.combinarFechas(this.fecha, this.hora), this.cama.ultimoEstado.observaciones).subscribe(camaActualizada => {
                 this.cama.ultimoEstado = camaActualizada.ultimoEstado;
                 this.accionCama.emit({ cama: this.cama, accion: 'bloquearCama' });
             }, (err) => {
-                this.plex.info('danger', err, 'Error');
+                let error = err.message ? err.message : err;
+                this.plex.info('danger', error, 'Error');
             });
         }
     }

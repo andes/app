@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class CamasService {
     public showListaEspera = false;
-    private camasUrl = '/core/tm/camas';  // URL to web api
+    private camasUrl = '/modules/rup/camas';  // URL to web api
     constructor(private server: Server) { }
 
     getCama(id: String): Observable<any> {
@@ -69,7 +69,7 @@ export class CamasService {
     }
 
     cambiaEstado(idcama, estado): Observable<any> {
-        return this.server.patch(this.camasUrl + '/cambiaEstado/' + idcama, estado);
+        return this.server.patch(this.camasUrl + '/cambiaEsto/' + idcama, estado);
     }
     eliminarCama(idcama): Observable<any> {
         return this.server.delete(this.camasUrl + '/eliminarCama/' + idcama);

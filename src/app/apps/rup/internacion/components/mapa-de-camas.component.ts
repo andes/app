@@ -152,7 +152,8 @@ export class MapaDeCamasComponent implements OnInit {
             }
         }, (err) => {
             if (err) {
-                this.plex.info('danger', err, 'Error');
+                let error = err.message ? err.message : err;
+                this.plex.info('danger', error, 'Error');
                 this.router.navigate(['/']);
             }
         });
