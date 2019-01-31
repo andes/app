@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Observable } from 'rxjs/Observable';
 import { ICama } from '../interfaces/ICama';
+import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
 
 @Injectable()
 export class InternacionService {
@@ -63,14 +64,12 @@ export class InternacionService {
         estados.sort((a, b) => {
             return b.fecha - a.fecha;
         });
-
         // chequeamos que la fecha de ingreso sea superior a la fecha de carga disponible de la cama
         if (estados[estados.length - 1].fecha <= fechaIngreso) {
             // buscamos el ultimo estado en que la cama estuvo ocupada
-            const estadoEncontrado = estados.find(e => e.estado === 'ocupada');
+            const estadoEncontrado = estados.find(e => e.fecha < fechaIngreso);
             if (estadoEncontrado) {
-                let estadoAux = estados.find(e => e.estado === 'disponible' && e.fecha > estadoEncontrado.fecha && e.fecha < fechaIngreso);
-                if (estadoAux) {
+                if (estadoEncontrado.estado === 'disponible') {
                     return cama;
                 }
             }
@@ -78,6 +77,30 @@ export class InternacionService {
 
         return null;
     }
+
+    /**
+        * Devuelve los datos del informe de ingreso/egreso de una internacion si lo encuentra, null en caso contrario
+        *         *
+        * @param {IPrestacion} prestacion Internacion
+        * @param {string} tipoRegistro tipo de registro: ingreso o egreso
+        * @returns {object} Objecto con los datos del ingreso
+        * @memberof InternacionService
+        */
+    verRegistro(prestacion, tipoRegistro) {
+        let registro = null;
+        if (tipoRegistro === 'ingreso') {
+            registro = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.conceptosInternacion.ingreso.conceptId);
+        }
+        if (tipoRegistro === 'egreso') {
+            registro = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.conceptosInternacion.egreso.conceptId);
+        }
+
+        if (registro) {
+            return registro.valor;
+        }
+        return null;
+    }
+
 
     combinarFechas(fecha1, fecha2) {
         if (fecha1 && fecha2) {
