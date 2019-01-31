@@ -5,7 +5,7 @@ export interface IDireccion {
     codigoPostal: String;
     ubicacion: IUbicacion;
     ranking: Number;
-    geoReferencia: [Number];
+    geoReferencia: [Number, Number];
     ultimaActualizacion: Date;
     activo: Boolean;
 }

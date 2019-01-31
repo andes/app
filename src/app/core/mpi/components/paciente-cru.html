@@ -209,6 +209,28 @@
                                 </plex-select>
                             </div>
                         </div>
+                        <br>
+                        <!-- MAPA DE GOOGLE -->
+
+                        <div class="row">
+                            <div class="col" *ngIf="!verMapa">
+                                <plex-button class="float-right" label="Ver mapa" position="right" type="success"
+                                    (click)="mostrarMapa(false)"></plex-button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6" *ngIf="verMapa">
+                                <plex-button class="float-left" label="Ocultar mapa" position="right" type="warning"
+                                    (click)="verMapa = false"></plex-button>
+                            </div>
+                            <div class="col-6" *ngIf="verMapa">
+                                <plex-button class="float-right" label="Actualizar" position="right" type="success"
+                                    (click)="mostrarMapa(true)"></plex-button>
+                            </div>
+                        </div>
+
+                        <google-map [mostrar]="verMapa" [latitud]="geoReferenciaAux[0]" [longitud]="geoReferenciaAux[1]"
+                            [infoMarker]="infoMarcador" (changeCoordenadas)="changeCoordenadas($event)"></google-map>
                     </fieldset>
                 </plex-tab>
 

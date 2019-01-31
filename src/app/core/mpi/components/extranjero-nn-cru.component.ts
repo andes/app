@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IPaciente } from '../interfaces/IPaciente';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 import { Plex } from '@andes/plex';
@@ -14,6 +14,7 @@ import * as enumerados from '../../../utils/enumerados';
 import { PacienteService } from '../services/paciente.service';
 import { BarrioService } from '../../../services/barrio.service';
 import { Location } from '@angular/common';
+import { GeoReferenciaService } from '../services/geoReferencia.service';
 
 @Component({
     selector: 'extranjero-nn-cru',
@@ -126,8 +127,12 @@ export class ExtranjeroNNCruComponent implements OnInit {
 
     public pacientes: IPacienteMatch[] | IPaciente[];
     changeRelaciones: boolean;
+    verMapa = false; // boton
+    geoReferenciaAux = []; // Se utiliza para chequear cambios.
+    infoMarcador: String = '';
 
     constructor(
+        private geoReferenciaService: GeoReferenciaService,
         private location: Location,
         private plex: Plex,
         private paisService: PaisService,
@@ -224,6 +229,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
     */
     changeProvNeuquen(event) {
         if (event.value) {
+            this.pacienteModel.direccion[0].ubicacion.provincia = this.provinciaNeuquen;
             this.loadLocalidades(this.provinciaNeuquen);
         } else {
             this.viveEnNeuquen = false;
@@ -239,6 +245,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
      */
     changeLocalidadNeuquen(event) {
         if (event.value) {
+            this.pacienteModel.direccion[0].ubicacion.localidad = this.localidadNeuquen;
             this.loadBarrios(this.localidadNeuquen);
         } else {
             this.barriosNeuquen = [];
@@ -269,6 +276,36 @@ export class ExtranjeroNNCruComponent implements OnInit {
         }
     }
 
+    mostrarMapa(actualizar: boolean) {
+
+        // campos de direccion completos?
+        if (this.pacienteModel.direccion[0].valor && this.pacienteModel.direccion[0].ubicacion.provincia && this.pacienteModel.direccion[0].ubicacion.localidad) {
+            // ya existe georeferencia?
+            if (this.geoReferenciaAux.length && !actualizar) {
+                console.log('muestra georef existente: ', this.geoReferenciaAux);
+                this.verMapa = true;
+            }
+            // no existe georeferencia o se presionó el boton 'actualizar'?
+            if (!this.geoReferenciaAux.length || actualizar) {
+                console.log('calcula georef');
+                // se calcula nueva georeferencia
+                this.geoReferenciaService.post({ direccion: this.pacienteModel.direccion }).subscribe(point => {
+                    if (point) {
+                        this.geoReferenciaAux = [point.lat, point.lng];
+                        this.infoMarcador = this.pacienteModel.direccion[0].valor;
+                        if (this.pacienteModel.direccion[0].ubicacion.barrio) {
+                            this.infoMarcador += ', \n' + this.pacienteModel.direccion[0].ubicacion.barrio.nombre;
+                        }
+                        this.verMapa = true;
+                    } else {
+                        this.plex.toast('danger', 'Dirección no encontrada. Intente con una similar.');
+                    }
+                });
+            }
+        } else {
+            this.plex.toast('info', 'Debe completar datos del domicilio.');
+        }
+    }
 
     // ---------------- CONTACTOS ------------------------------
 
@@ -383,6 +420,9 @@ export class ExtranjeroNNCruComponent implements OnInit {
             return elem;
         });
         pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
+        if (this.pacienteModel.direccion[0].ubicacion.barrio) {
+            pacienteGuardar.direccion[0].ubicacion.barrio = ((typeof this.pacienteModel.direccion[0].ubicacion.barrio === 'string')) ? this.pacienteModel.direccion[0].ubicacion.barrio : (this.pacienteModel.direccion[0].ubicacion.barrio.nombre);
+        }
         if (this.viveProvNeuquen) {
             pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaNeuquen;
         }
@@ -467,4 +507,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
         this.relacionesBorradas = data.relacionesBorradas;
     }
 
+    changeCoordenadas(coordenadas) {
+        this.pacienteModel.direccion[0].geoReferencia = coordenadas;
+    }
 }

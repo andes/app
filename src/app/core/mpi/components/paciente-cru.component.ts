@@ -15,6 +15,7 @@ import { Component, OnInit, } from '@angular/core';
 import { PacienteCacheService } from '../services/pacienteCache.service';
 import { BarrioService } from '../../../services/barrio.service';
 import { Location } from '@angular/common';
+import { GeoReferenciaService } from '../services/geoReferencia.service';
 
 @Component({
     selector: 'paciente-cru',
@@ -125,7 +126,13 @@ export class PacienteCruComponent implements OnInit {
     public celularAndes: String = '';
     public activarApp = false;
 
+    // Google map
+    verMapa = false; // boton
+    geoReferenciaAux = []; // Se utiliza para chequear cambios.
+    infoMarcador: String = '';
+
     constructor(
+        private geoReferenciaService: GeoReferenciaService,
         private location: Location,
         private paisService: PaisService,
         private provinciaService: ProvinciaService,
@@ -282,6 +289,13 @@ export class PacienteCruComponent implements OnInit {
                         (this.paciente.direccion[0].ubicacion.localidad.nombre === 'Neuquén') ? this.viveEnNeuquen = true : (this.viveEnNeuquen = false, this.barrios = null);
                         this.loadBarrios(this.paciente.direccion[0].ubicacion.localidad);
                     }
+                    if (this.paciente.direccion[0].geoReferencia) {
+                        this.geoReferenciaAux = this.paciente.direccion[0].geoReferencia;
+                        this.infoMarcador = this.paciente.direccion[0].valor;
+                        if (this.paciente.direccion[0].ubicacion.barrio) {
+                            this.infoMarcador += ', \n' + this.paciente.direccion[0].ubicacion.barrio.nombre;
+                        }
+                    }
                 }
                 if (!this.paciente.reportarError) {
                     this.paciente.reportarError = false;
@@ -366,6 +380,7 @@ export class PacienteCruComponent implements OnInit {
      */
     changeProvNeuquen(event) {
         if (event.value) {
+            this.pacienteModel.direccion[0].ubicacion.provincia = this.provinciaNeuquen;
             this.loadLocalidades(this.provinciaNeuquen);
         } else {
             this.viveEnNeuquen = false;
@@ -382,12 +397,45 @@ export class PacienteCruComponent implements OnInit {
      */
     changeLocalidadNeuquen(event) {
         if (event.value) {
+            this.pacienteModel.direccion[0].ubicacion.localidad = this.localidadNeuquen;
             this.loadBarrios(this.localidadNeuquen);
         } else {
             this.pacienteModel.direccion[0].ubicacion.localidad = null;
             this.barrios = [];
         }
     }
+
+    mostrarMapa(actualizar: boolean) {
+
+        // campos de direccion completos?
+        if (this.pacienteModel.direccion[0].valor && this.pacienteModel.direccion[0].ubicacion.provincia && this.pacienteModel.direccion[0].ubicacion.localidad) {
+            // ya existe georeferencia?
+            if (this.geoReferenciaAux.length && !actualizar) {
+                console.log('muestra georef existente: ', this.geoReferenciaAux);
+                this.verMapa = true;
+            }
+            // no existe georeferencia o se presionó el boton 'actualizar'?
+            if (!this.geoReferenciaAux.length || actualizar) {
+                console.log('calcula georef');
+                // se calcula nueva georeferencia
+                this.geoReferenciaService.post({ direccion: this.pacienteModel.direccion }).subscribe(point => {
+                    if (point) {
+                        this.geoReferenciaAux = [point.lat, point.lng];
+                        this.infoMarcador = this.pacienteModel.direccion[0].valor;
+                        if (this.pacienteModel.direccion[0].ubicacion.barrio) {
+                            this.infoMarcador += ', \n' + this.pacienteModel.direccion[0].ubicacion.barrio.nombre;
+                        }
+                        this.verMapa = true;
+                    } else {
+                        this.plex.toast('danger', 'Dirección no encontrada. Intente con una similar.');
+                    }
+                });
+            }
+        } else {
+            this.plex.toast('info', 'Debe completar datos del domicilio.');
+        }
+    }
+
 
     // ---------------------- CONTACTOS ---------------------------
 
@@ -466,6 +514,10 @@ export class PacienteCruComponent implements OnInit {
         }
         if (this.viveEnNeuquen) {
             pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadNeuquen;
+        }
+        if (this.geoReferenciaAux.length) {
+            console.log('guarda georef: ', this.geoReferenciaAux);
+            pacienteGuardar.direccion[0].geoReferencia = this.geoReferenciaAux;
         }
 
         this.pacienteService.save(pacienteGuardar).subscribe(
@@ -590,6 +642,10 @@ export class PacienteCruComponent implements OnInit {
         this.changeRelaciones = true;
         this.pacienteModel.relaciones = data.relaciones;
         this.relacionesBorradas = data.relacionesBorradas;
+    }
+
+    changeCoordenadas(coordenadas) {
+        this.geoReferenciaAux = coordenadas;
     }
 
 
