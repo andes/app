@@ -137,10 +137,14 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
             profesional: this.seleccion.profesional ? this.seleccion.profesional.map(prof => {
                 return {id: prof.id, nombre: prof.nombre, apellido: prof.apellido };
             }) : undefined,
-            estado_turno: this.seleccion.estado_turno ? this.seleccion.estado_turno.map(et => et.id) : undefined,
-            estado_agenda: this.seleccion.estado_agenda ? this.seleccion.estado_agenda.map(et => et.id) : undefined,
-            tipoTurno: this.seleccion.tipoTurno ? this.seleccion.tipoTurno.map(tt => tt.id) : undefined
         };
+
+        if (this.seleccion.tipoDeFiltro === 'turnos') {
+            this.params['estado_turno'] = this.seleccion.estado_turno ? this.seleccion.estado_turno.map(et => et.id) : undefined;
+            this.params['tipoTurno'] = this.seleccion.tipoTurno ? this.seleccion.tipoTurno.map(tt => tt.id) : undefined;
+        } else {
+            this.params['estado_agenda'] = this.seleccion.estado_agenda ? this.seleccion.estado_agenda.map(et => et.id) : undefined;
+        }
         this.filter.emit(params);
     }
 
