@@ -1,4 +1,3 @@
-import * as https from 'https';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Server } from '@andes/shared';
@@ -26,7 +25,18 @@ export class UsuarioService {
     getByDni(dni: Number): Observable<any> {
         return this.server.get(this.usuarioUrl + '/' + dni);
     }
-
+    /**
+     * Obtiene los permisos para el usuario y organización pasada por parámetro.
+     * Para identificar al usuario, se pasa su número de documento (matchea con nombre de usuario)
+     * con nombre "dni"
+     * y de la organización solo su id (con nombre "idOrganizacion")
+     * @param {*} params
+     * @returns {Observable<any>}
+     * @memberof UsuarioService
+     */
+    getByDniOrg(params): Observable<any> {
+        return this.server.get(this.usuarioUrl + '/dniOrg/' + params.dni, { params });
+    }
     save(usuario: any): Observable<any> {
         if (usuario.id) {
             return this.server.put(this.usuarioUrl + '/' + usuario.id, usuario);

@@ -25,7 +25,6 @@ export class PerfilFormComponent implements OnInit {
         this.perfilEdit = {} as any;
         Object.assign(this.perfilEdit, value);
         this.esGlobal = this.perfilEdit.organizacion ? false : true;
-        console.log('Perfil pasado por parametro: ', this.perfil);
     }
     @Output() perfilGuardado = new EventEmitter<IPerfilUsuario>();
 
@@ -63,7 +62,6 @@ export class PerfilFormComponent implements OnInit {
         //     };
         //     this.esGlobal = false; // por defecto crea el perfil en local
         // }
-
         this.permisos$ = this.permisosService.get();
     }
 

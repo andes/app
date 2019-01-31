@@ -1,8 +1,7 @@
 import { IProfesional } from './../../../interfaces/IProfesional';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-
-import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, EventEmitter, QueryList, ViewChildren, Output } from '@angular/core';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { UsuarioService } from '../../../services/usuarios/usuario.service';
 import { OrganizacionService } from '../../../services/organizacion.service';
@@ -16,6 +15,16 @@ import { ArbolPermisosComponent } from '../../../components/usuario/arbolPermiso
     templateUrl: 'selectorUsuarioEfector.html'
 })
 export class SelectorUsuarioEfectorComponent {
+    /**
+     * Notifica al componente que contiene a este el usuario seleccionado
+     * @memberof SelectorUsuarioEfectorComponent
+     */
+    @Output() seleccionUsuario = new EventEmitter();
+    /**
+     * Notifica al componente que contiene a este la organización seleccionada
+     * @memberof SelectorUsuarioEfectorComponent
+     */
+    @Output() seleccionOrganizacion = new EventEmitter<IOrganizacion>();
     @ViewChildren(ArbolPermisosComponent) childsComponents: QueryList<ArbolPermisosComponent>;
     /**
    * Indica el índice de la pestaña que se encuentra activa. Por defecto es la primera
@@ -105,12 +114,17 @@ export class SelectorUsuarioEfectorComponent {
 
                         this.organizacionService.get({ ids: idOrganizaciones }).subscribe(dataUss => {
                             this.organizacionesUsuario = dataUss;
+                            if (this.organizacionesUsuario && this.organizacionesUsuario.length > 0) {
+                                this.organizacionSelect = this.organizacionesUsuario[0];
+                                this.onOrgChange();
+                            }
                             this.loadUser();
                             this.getOrgActualAuthUs();
                         });
                     } else {
                         this.loadUser();
                     }
+                    this.seleccionUsuario.emit(this.usuarioSeleccionado);
                 }
             } else {
                 // this.router.navigate(['./inicio']);
@@ -183,6 +197,7 @@ export class SelectorUsuarioEfectorComponent {
         this.textoLibre = null;
         this.cambio(2);
         this.seSeleccionoUsuario();
+        this.seleccionOrganizacion.emit(null);
     }
 
     /**
@@ -197,6 +212,7 @@ export class SelectorUsuarioEfectorComponent {
         this.loadPermisos();
         this.getOrgActualAuthUs();
         setTimeout(() => this.hidePermisos = false, 0);
+        this.seleccionOrganizacion.emit(this.organizacionSelect);
     }
 
     savePermisos() {

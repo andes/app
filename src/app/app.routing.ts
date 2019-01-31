@@ -62,6 +62,7 @@ import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucio
 // USUARIO
 import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
 import { GestorUsuarioComponent } from './core/auth/components/gestorUsuario.component';
+import { GestorPerfilesComponent } from './core/auth/components/gestorPerfiles.component';
 
 // REPORTES
 import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
@@ -157,6 +158,7 @@ const appRoutes: Routes = [
   // Gestion de usuarios
   { path: 'gestionUsuarios', component: BusquedaUsuarioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'gestorUsuarioCambiar', component: GestorUsuarioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'gestionPerfiles', component: GestorPerfilesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // formulario terapeutico
   { path: 'formularioTerapeutico', component: FormTerapeuticoComponent, canActivate: [RoutingNavBar, RoutingGuard] },

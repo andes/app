@@ -61,7 +61,6 @@ export class GestorPerfilesComponent implements OnInit {
     }
 
     deletePerfil(perfilBorrar: IPerfilUsuario) {
-        console.log('perfilABorrar: ', perfilBorrar);
         if (perfilBorrar) {
             this.plex.confirm('¿Está seguro que desea eliminar el perfil?', 'Eliminar Perfil').then((confirmar) => {
                 if (confirmar) {
@@ -71,8 +70,4 @@ export class GestorPerfilesComponent implements OnInit {
             });
         }
     }
-
-
-
-
 }

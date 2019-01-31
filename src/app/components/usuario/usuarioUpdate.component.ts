@@ -243,7 +243,6 @@ export class UsuarioUpdateComponent implements OnInit {
             // this.loadUser();
             // this.getOrgActualAuthUs();
         });
-        console.log(this.userModel);
         this.savePermisos();
         this.usuarioService.save(this.userModel).subscribe(user => {
             this.plex.info('success', '', 'Usuario guardado');
@@ -273,11 +272,8 @@ export class UsuarioUpdateComponent implements OnInit {
         }
         this.plex.confirm(`¿Está seguro que desea ${textoConfirm} a este usuario?`).then((resultado) => {
             if (resultado) {
-                console.log(this.organizacionSelect);
-                console.log(this.userModel.usuario, this.organizacionSelect.id);
-                this.permisosService.actualizarEstadoPermisos(this.userModel.usuario, this.organizacionSelect.id).subscribe(resultado => {
-                    // this.estadoPermisos = resultado.permisosPausados;
-                    this.organizacionActualAuthUs.permisosPausados = resultado.permisosPausados;
+                this.permisosService.actualizarEstadoPermisos(this.userModel.usuario, this.organizacionSelect.id).subscribe(resultado2 => {
+                    this.organizacionActualAuthUs.permisosPausados = resultado2.permisosPausados;
                 });
             }
         });

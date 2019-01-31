@@ -1,8 +1,32 @@
-<plex-layout>
+<plex-layout [main]="6">
     <plex-layout-main>
-        <selectorUsuarioEfector></selectorUsuarioEfector>
+        <selectorUsuarioEfector (seleccionOrganizacion)="seleccionOrganizacion($event)" (seleccionUsuario)="seleccionUsuario($event)"></selectorUsuarioEfector>
     </plex-layout-main>
     <plex-layout-sidebar>
+        <plex-tabs [activeIndex]="pestaniaActiva" (change)="cambio($event)">
 
+            <plex-tab label="Visualizar permisos" color="procedimiento">
+                <permisosVisualizacion *ngIf="usuarioSeleccionado && organizacionSeleccionada" [user]="usuarioSeleccionado"
+                    [org]="organizacionSeleccionada"></permisosVisualizacion>
+                <div *ngIf="!usuarioSeleccionado || !organizacionSeleccionada">
+                    <i class="mdi mdi-emoticon-sad"></i>Seleccione usuario y organización para visualizar sus permisos</div>
+            </plex-tab>
+
+            <plex-tab label="Editar permisos">
+                <div *ngIf="usuarioSeleccionado">
+                    <div class="row">
+                        <plex-button type="success" label="Guardar" (click)="guardar($event)"></plex-button>
+                    </div>
+                    <div *ngFor="let permiso of permisos$ | async">
+                        <arbolPermisos [item]="permiso" [userPermissions]='permisosUsuarioOrg'></arbolPermisos>
+                    </div>
+                </div>
+                <div *ngIf="!usuarioSeleccionado">
+                    <i class="mdi mdi-emoticon-sad"></i>Seleccione un usuario y organización para editar sus
+                    permisos
+                </div>
+            </plex-tab>
+
+        </plex-tabs>
     </plex-layout-sidebar>
 </plex-layout>

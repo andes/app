@@ -11,8 +11,8 @@ export class PermisosService {
 
     constructor(private server: Server) { }
 
-    get(): Observable<any> {
-        return this.server.get(this.permisosUrl);
+    get(params?): Observable<any> {
+        return this.server.get(this.permisosUrl, { params });
     }
 
     organizaciones(params): Observable<any> {
@@ -21,7 +21,6 @@ export class PermisosService {
 
     actualizarEstadoPermisos(username, idOrganizacion) {
         console.log('/auth/estadoPermisos' + '/' + username);
-        return this.server.put('/auth/estadoPermisos' + '/' + username, {idOrganizacion});
+        return this.server.put('/auth/estadoPermisos' + '/' + username, { idOrganizacion });
     }
-
 }

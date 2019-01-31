@@ -88,12 +88,12 @@
                 <div *ngFor="let permiso of permisos$ | async ">
                     <arbolPermisos [item]="permiso" [userPermissions]="permisos"></arbolPermisos>
                 </div>
-            </div>
+            </div> -->
             <div *ngIf="organizacionesUsuario.length <= 0" class="alert alert-default">
                 <i class="mdi mdi-emoticon-sad"></i> Agregue un efector para modificar sus permisos
-            </div> -->
+            </div>
             <div *ngIf="organizacionesUsuario.length > 0 && !organizacionSelect" class="alert alert-default">
-                <i class="mdi mdi-emoticon-sad"></i> Seleccione una organizacion
+                <i class="mdi mdi-emoticon-sad"></i> Seleccione una organización
             </div>
         </span>
         <div class="row" *ngIf="hidePermisos">
