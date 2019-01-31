@@ -14,6 +14,7 @@ import { PacienteBuscarResultado } from '../../../../modules/mpi/interfaces/Paci
 import { ElementosRUPService } from '../../../../modules/rup/services/elementosRUP.service';
 import * as enumerados from './../../../../utils/enumerados';
 
+import { PacienteService } from '../../../../services/paciente.service';
 // ../../../../services/internacion.service
 @Component({
     selector: 'app-mapa-de-camas',
@@ -100,6 +101,8 @@ export class MapaDeCamasComponent implements OnInit {
         private auth: Auth,
         private plex: Plex,
         private router: Router,
+        private servicioPaciente: PacienteService,
+
         public organizacionService: OrganizacionService,
         private internacionService: InternacionService,
         public camasService: CamasService,
@@ -425,8 +428,7 @@ export class MapaDeCamasComponent implements OnInit {
         this.camasService.showListaEspera = true;
     }
     public ingresarPaciente() {
-        // this.buscandoPaciente = true;
-        // this.pacienteSelected = null;
+        this.camaSeleccionada = null;
         this.pacientes = null;
         this.accion = 'internarPaciente';
     }
@@ -453,16 +455,22 @@ export class MapaDeCamasComponent implements OnInit {
 
     onDarCama($event) {
         this.prestacion = $event;
-        this.onPacienteSelected(this.prestacion.paciente);
         this.prestacionPorInternacion = this.prestacion;
+        this.servicioPaciente.getById(this.prestacionPorInternacion.paciente.id).subscribe(paciente => {
+            this.pacienteSelected = paciente;
+            this.onPacienteSelected(this.pacienteSelected);
+        });
         // if ($event) {
-        //     //this.inactive = true;
+        //     this.inactive = true;
         //     this.filtroEstados('disponible');
         // } else {
         //     this.limpiarFiltros();
         //     this.refresh();
         // }
         // this.filtrar();
+
+
+
     }
 
     mapaDeCamaXFecha(reset) {

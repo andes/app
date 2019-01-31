@@ -65,16 +65,18 @@
                         <div class="row">
                             <div class="col">
                                 <plex-datetime *ngIf="!soloValores" type="date" [(ngModel)]="fecha" [required]="true"
-                                    [autoFocus]="autoFocus " name="fechaIngreso " label="Fecha Ingreso">
+                                    [autoFocus]="autoFocus " name="fechaIngreso " label="Fecha Ingreso" (change)="selectCamasDisponibles(informeIngreso.PaseAunidadOrganizativa,fecha,hora)">
                                 </plex-datetime>
                             </div>
-                            <div class="col">
+                            <div class="
+                                    col">
                                 <plex-datetime *ngIf="!soloValores" type="time" [(ngModel)]="hora" [required]="true"
-                                    name="horaIngreso " label="Hora Ingreso">
+                                    name="horaIngreso " label="Hora Ingreso" (change)="selectCamasDisponibles(informeIngreso.PaseAunidadOrganizativa,fecha,hora)">
                                 </plex-datetime>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="
+                                        row">
                             <div class="col-6">
                                 <plex-select *ngIf="!soloValores" [required]="true" [(ngModel)]="informeIngreso.origen"
                                     name="origen" [data]="origenHospitalizacion" placeholder="Seleccione..." label="Origen hospitalización"
@@ -108,20 +110,21 @@
                             <div class="col-md">
                                 <plex-select name="unidadOrganizativa" [data]="listaUnidadesOrganizativas" idField="term"
                                     labelField="term" [(ngModel)]="informeIngreso.PaseAunidadOrganizativa" label="Unidad organizativa"
-                                    (change)="selectCamasDisponibles(informeIngreso.PaseAunidadOrganizativa?.conceptId, fecha, hora)">
+                                    (change)="selectCamasDisponibles(informeIngreso.PaseAunidadOrganizativa, fecha, hora)">
                                 </plex-select>
                             </div>
                         </div>
                         <div class="row" *ngIf="workflowC && !camaSelected && informeIngreso.PaseAunidadOrganizativa">
-                            <div class="col-md" *ngIf="listadoCamas.length > 0">
+                            <div class="col-md" *ngIf="listadoCamas && listadoCamas.length > 0">
                                 <plex-select name="camasDisponibles" [data]="listadoCamas" idField="nombre" labelField="nombre"
                                     [(ngModel)]="cama" label="Camas">
                                 </plex-select>
                             </div>
-                            <div class="col-md" *ngIf="listadoCamas.length  === 0">
+                            <div class="col-md" *ngIf="listadoCamas && listadoCamas.length  === 0">
                                 <h6>
                                     <strong>
-                                        No hay camas disponibles para esta unidad organizativa. El paciente ingresará a
+                                        No hay camas disponibles para esta unidad organizativa. El paciente
+                                        ingresará a
                                         lista de espera. </strong>
                                 </h6>
                             </div>
