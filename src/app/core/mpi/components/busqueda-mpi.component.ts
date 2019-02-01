@@ -7,8 +7,7 @@ import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'busqueda-mpi',
-    templateUrl: 'busqueda-mpi.html',
-    styleUrls: ['busqueda-mpi.scss']
+    templateUrl: 'busqueda-mpi.html'
 })
 export class BusquedaMpiComponent implements OnInit {
 
