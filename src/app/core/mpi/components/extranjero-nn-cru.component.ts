@@ -15,6 +15,8 @@ import { PacienteService } from '../services/paciente.service';
 import { BarrioService } from '../../../services/barrio.service';
 import { Location } from '@angular/common';
 import { GeoReferenciaService } from '../services/geoReferencia.service';
+import { Auth } from '@andes/auth';
+import { OrganizacionService } from '../../../services/organizacion.service';
 
 @Component({
     selector: 'extranjero-nn-cru',
@@ -127,11 +129,12 @@ export class ExtranjeroNNCruComponent implements OnInit {
 
     public pacientes: IPacienteMatch[] | IPaciente[];
     changeRelaciones: boolean;
-    verMapa = false; // boton
     geoReferenciaAux = []; // Se utiliza para chequear cambios.
     infoMarcador: String = '';
 
     constructor(
+        private auth: Auth,
+        private organizacionService: OrganizacionService,
         private geoReferenciaService: GeoReferenciaService,
         private location: Location,
         private plex: Plex,
@@ -183,6 +186,14 @@ export class ExtranjeroNNCruComponent implements OnInit {
             nombre: 'Neuquén'
         }).subscribe(Loc => {
             this.localidadNeuquen = Loc[0];
+        });
+
+        // ubicacion inicial mapa de google
+        this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
+            if (point) {
+                this.geoReferenciaAux = [point.lat, point.lng];
+                this.infoMarcador = this.auth.organizacion.nombre;
+            }
         });
     }
 
@@ -276,32 +287,22 @@ export class ExtranjeroNNCruComponent implements OnInit {
         }
     }
 
-    mostrarMapa(actualizar: boolean) {
-
+    actualizarMapa() {
         // campos de direccion completos?
         if (this.pacienteModel.direccion[0].valor && this.pacienteModel.direccion[0].ubicacion.provincia && this.pacienteModel.direccion[0].ubicacion.localidad) {
-            // ya existe georeferencia?
-            if (this.geoReferenciaAux.length && !actualizar) {
-                console.log('muestra georef existente: ', this.geoReferenciaAux);
-                this.verMapa = true;
-            }
-            // no existe georeferencia o se presionó el boton 'actualizar'?
-            if (!this.geoReferenciaAux.length || actualizar) {
-                console.log('calcula georef');
-                // se calcula nueva georeferencia
-                this.geoReferenciaService.post({ direccion: this.pacienteModel.direccion }).subscribe(point => {
-                    if (point) {
-                        this.geoReferenciaAux = [point.lat, point.lng];
-                        this.infoMarcador = this.pacienteModel.direccion[0].valor;
-                        if (this.pacienteModel.direccion[0].ubicacion.barrio) {
-                            this.infoMarcador += ', \n' + this.pacienteModel.direccion[0].ubicacion.barrio.nombre;
-                        }
-                        this.verMapa = true;
-                    } else {
-                        this.plex.toast('danger', 'Dirección no encontrada. Intente con una similar.');
+            // se calcula nueva georeferencia
+            this.geoReferenciaService.post({ direccion: this.pacienteModel.direccion }).subscribe(point => {
+                if (point) {
+                    this.geoReferenciaAux = [point.lat, point.lng];
+                    this.infoMarcador = this.pacienteModel.direccion[0].valor;
+                    if (this.pacienteModel.direccion[0].ubicacion.barrio) {
+                        this.infoMarcador += ', \n' + this.pacienteModel.direccion[0].ubicacion.barrio.nombre;
                     }
-                });
-            }
+                } else {
+                    this.plex.toast('warning', 'Dirección no encontrada. Intente con una similar.');
+                }
+            });
+
         } else {
             this.plex.toast('info', 'Debe completar datos del domicilio.');
         }

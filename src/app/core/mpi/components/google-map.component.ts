@@ -6,11 +6,11 @@ import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef }
   styleUrls: ['google-map.scss']
 })
 
-export class GoogleMapComponent implements OnInit {
+export class GoogleMapComponent {
 
-  @Input() latitud;
-  @Input() longitud;
-  @Input() infoMarker;
+  @Input() latitud: number;
+  @Input() longitud: number;
+  @Input() infoMarker: string;
   @Input()
   set mostrar(value: boolean) { // variable que indica si se debe mostrar el mapa
     this._mostrar = value;
@@ -28,8 +28,6 @@ export class GoogleMapComponent implements OnInit {
   scrollwheel = false; // zoom con mouse
   _mostrar = false;
 
-  ngOnInit() {
-  }
 
   // Modifica la posicion del marcador
   setMarker(coordenadas) {

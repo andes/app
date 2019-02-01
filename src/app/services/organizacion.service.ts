@@ -25,6 +25,10 @@ export class OrganizacionService {
         return this.server.get(this.organizacionUrl + '/' + id, null);
     }
 
+    getGeoreferencia(id: String): Observable<any> {
+        return this.server.get(this.organizacionUrl + '/georef/' + id, null);
+    }
+
     /**
  * Save. Si le organizacion por parametro tiene id hace put y sino hace post
  *
