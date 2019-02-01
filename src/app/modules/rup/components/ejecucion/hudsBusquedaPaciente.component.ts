@@ -1,4 +1,4 @@
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -15,11 +15,16 @@ export class HudsBusquedaPacienteComponent implements OnInit {
 
     public paciente: IPaciente;
 
-    public showHuds = false;
+    public showHuds: boolean;
 
     public esProfesional = false;
+    routeParams: any;
 
-    constructor(public plex: Plex, public auth: Auth, private router: Router) { }
+    constructor(
+        public plex: Plex,
+        public auth: Auth,
+        private router: Router,
+        private route: ActivatedRoute) { }
 
     ngOnInit() {
         if (!this.auth.profesional && this.auth.getPermissions('huds:?').length <= 0) {
@@ -39,6 +44,11 @@ export class HudsBusquedaPacienteComponent implements OnInit {
     onPacienteSelected(event) {
         this.paciente = event;
         this.showHuds = true;
+        setTimeout(() => {
+            this.routeParams = this.route.params.subscribe(params => {
+                this.router.navigate(['/rup/huds/paciente/' + this.paciente.id]);
+            });
+        }, 0);
     }
 
     onPacienteCancel() {
