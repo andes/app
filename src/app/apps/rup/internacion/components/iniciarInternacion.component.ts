@@ -134,6 +134,7 @@ export class IniciarInternacionComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        console.log(this.paciente.carpetaEfectores);
         if (this.prestacion) {
             this.btnIniciarGuardar = 'GUARDAR';
             let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
@@ -207,6 +208,7 @@ export class IniciarInternacionComponent implements OnInit {
                         }
                     });
                     let indiceCarpeta = -1;
+                    debugger;
                     if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) {
                         indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
                         if (indiceCarpeta > -1) {
@@ -408,6 +410,7 @@ export class IniciarInternacionComponent implements OnInit {
                     this.plex.info('danger', err);
                 });
             } else {
+                debugger;
                 // armamos el elemento data a agregar al array de registros
                 let nuevoRegistro = new IPrestacionRegistro(null, this.snomedIngreso);
                 if (this.obraSocial) {
@@ -512,7 +515,7 @@ export class IniciarInternacionComponent implements OnInit {
     afterComponenteCarpeta(carpetas) {
         // Siempre es 1 sólo el seleccionado cuando se edita una carpeta
         if (carpetas) {
-            this.paciente.carpetaEfectores = carpetas;
+            this.paciente.carpetaEfectores = [];
         }
         this.showEditarCarpetaPaciente = false;
     }
