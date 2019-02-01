@@ -122,6 +122,7 @@ export class HudsBusquedaComponent implements OnInit {
             this.listarPrestaciones();
             // this.listarProblemasCronicos();
             this.listarHallazgos();
+
         }
     }
 
