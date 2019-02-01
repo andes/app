@@ -17,8 +17,8 @@ import { ProfesionalService } from '../../../../services/profesional.service';
         <div class="col-3">
             <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta"></plex-datetime>
         </div>
-        <div class="col-3">
-            <plex-button type="success" label="Filtrar" (click)="onChange()" class="vertical-center" ></plex-button>
+        <div class="col-3 d-flex align-items-end">
+            <plex-button type="success mb-1" label="Filtrar" (click)="onChange()" ></plex-button>
         </div>
     </div>
     <div class="row">

@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { Component, AfterViewInit, HostBinding } from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 
@@ -9,7 +9,7 @@ import { EstAgendasService } from '../../services/agenda.service';
     templateUrl: 'citas.html',
     styleUrls: ['citas.scss']
 })
-export class CitasComponent implements AfterViewInit {
+export class CitasComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
 
     // Filtros
@@ -35,7 +35,6 @@ export class CitasComponent implements AfterViewInit {
 
     public tipoTurnoLabels = [];
     public tipoTurnoData = [];
-
 
     public barOptions = {
         legend: { display: false },
@@ -88,9 +87,20 @@ export class CitasComponent implements AfterViewInit {
 
     constructor(private plex: Plex, public auth: Auth, public estService: EstAgendasService) { }
 
-    ngAfterViewInit() {
-        // this.organizacion = this.auth.organizacion;
+
+    ngOnInit() {
+        this.plex.updateTitle([{
+            route: '/',
+            name: 'ANDES'
+        }, {
+            name: 'Estadísticas'
+        },
+        {
+            name: 'Citas'
+        }
+        ]);
     }
+
 
     filter($event) {
         this.profesionalLabels = [];
