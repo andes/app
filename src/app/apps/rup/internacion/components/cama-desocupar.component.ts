@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Subject } from 'rxjs/Rx';
 import { CamasService } from '../services/camas.service';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -28,6 +29,8 @@ export class DesocuparCamaComponent implements OnInit {
     public listadoCamas = [];
     public paseAunidadOrganizativa: any;
     public camaSeleccionPase;
+    public actualizaTipo = new Subject();
+
 
     // Eventos
     // cama sobre la que estamos trabajando
@@ -40,12 +43,19 @@ export class DesocuparCamaComponent implements OnInit {
     @Output() accionCama: EventEmitter<any> = new EventEmitter<any>();
     // @Output() verInternacionEmit: EventEmitter<any> = new EventEmitter<any>();
 
+
     // Constructor
     constructor(private plex: Plex,
         private auth: Auth,
         private camasService: CamasService,
         public organizacionService: OrganizacionService,
         private internacionService: InternacionService) {
+
+        this.actualizaTipo
+            .debounceTime(1000)
+            .subscribe(val => {
+                this.operacionDesocuparCama();
+            });
 
     }
 
@@ -149,7 +159,6 @@ export class DesocuparCamaComponent implements OnInit {
     }
 
     operacionDesocuparCama() {
-        console.log('this.opcionDesocupar', this.opcionDesocupar);
         if (this.opcionDesocupar === 'movimiento') {
             this.elegirDesocupar = false;
             this.selectCamasDisponibles(this.cama.ultimoEstado.unidadOrganizativa.conceptId, this.fecha, this.hora);
@@ -189,6 +198,8 @@ export class DesocuparCamaComponent implements OnInit {
 
                 });
             }
+        } else {
+            this.elegirDesocupar = true;
         }
     }
 

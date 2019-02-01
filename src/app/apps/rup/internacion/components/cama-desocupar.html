@@ -5,19 +5,19 @@
             <div class="row">
                 <div class="col-md">
                     <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha"
-                        (change)="operacionDesocuparCama()">
+                        (change)="actualizaTipo.next()">
                     </plex-datetime>
                 </div>
                 <div class="col-md">
                     <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="Hora   "
-                        (change)="operacionDesocuparCama()">
+                        (change)="actualizaTipo.next()">
                     </plex-datetime>
                 </div>
             </div>
             <div class="row" *ngIf="elegirDesocupar">
                 <div class="col-md">
                     <plex-radio *ngIf="opcionesDesocupar" [(ngModel)]="opcionDesocupar" [data]="opcionesDesocupar" name="desocupar"
-                        (change)="operacionDesocuparCama()">
+                        (change)="actualizaTipo.next()">
                     </plex-radio>
                 </div>
             </div>

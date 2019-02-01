@@ -82,9 +82,8 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     ngOnInit() {
         // this.iniciaBotonera();
         // Buscamos si la prestacion ya tiene una informe del alta guardado.
-
-        let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.registro.concepto.conceptId);
-        this.registro.valor = existeRegistro ? existeRegistro.valor : null;
+        let existeRegistro = this.internacionService.verRegistro(this.prestacion, 'egreso');
+        this.registro.valor = existeRegistro ? existeRegistro : null;
         if (!this.registro.valor) {
             this.btnIniciarEditarEmit.emit('Iniciar');
             this.registro.valor = {
@@ -242,6 +241,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     guardarPrestacion(isvalid) {
         if (isvalid) {
             let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
+            this.registro.valor.InformeEgreso.fechaEgreso = this.internacionService.combinarFechas(this.fechaEgreso, this.horaEgreso);
             let existeEgreso = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.registro.concepto.conceptId);
             if (!existeEgreso) {
                 registros.push(this.registro);
@@ -361,22 +361,21 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     *
     */
     calcularDiasEstada() {
-        // this.fechaEgreso = new Date();
         if (this.fechaEgreso && this.horaEgreso) {
-            this.registro.valor.InformeEgreso.fechaEgreso = this.internacionService.combinarFechas(this.fechaEgreso, this.horaEgreso);
+            let fechaACargar = this.internacionService.combinarFechas(this.fechaEgreso, this.horaEgreso);
             // vamos a recuperara la fecha de ingreso de la prestacion
-            let informeIngreso = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.internacionService.conceptosInternacion.ingreso.conceptId);
+            let informeIngreso = this.internacionService.verRegistro(this.prestacion, 'ingreso');
             if (informeIngreso) {
-                let fechaIngreso = moment(informeIngreso.valor.informeIngreso.fechaIngreso);
-                this.fechaDeingreso = fechaIngreso;
+                let fechaIngreso = moment(informeIngreso.informeIngreso.fechaIngreso);
                 if (fechaIngreso) {
-                    let fechaEgreso = moment(this.registro.valor.InformeEgreso.fechaEgreso);
+                    let fechaEgreso = moment(fechaACargar);
                     if (fechaEgreso.diff(fechaIngreso, 'days', true) <= 0) {
-                        this.plex.info('warning', 'ERROR: La fecha de egreso no puede ser inferior a  ' + moment(fechaIngreso).format('YYYY-MM-DD'));
-                        this.fechaEgreso = new Date();
-                        this.registro.valor.InformeEgreso.diasDeEstada = 1;
+                        this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a  ' + fechaIngreso.format('YYYY-MM-DD HH:SS'));
+                        // this.fechaEgreso = new Date();
+                        this.registro.valor.InformeEgreso.diasDeEstada = null;
                     } else {
-                        let diasEstada = fechaEgreso ? fechaEgreso.diff(moment(fechaIngreso), 'days') === 0 ? 1 : fechaEgreso.diff(moment(fechaIngreso), 'days') : '1';
+                        let dateDif = fechaEgreso.diff(moment(fechaIngreso), 'days');
+                        let diasEstada = fechaEgreso ? dateDif === 0 ? 1 : fechaEgreso.diff(moment(fechaIngreso), 'days') : '1';
                         this.registro.valor.InformeEgreso.diasDeEstada = diasEstada;
                     }
                 }
