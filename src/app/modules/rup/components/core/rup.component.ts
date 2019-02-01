@@ -19,7 +19,6 @@ import { FinanciadorService } from '../../../../services/financiador.service';
 import { ProcedimientosQuirurgicosService } from '../../../../services/procedimientosQuirurgicos.service';
 import { Cie10Service } from '../../../../services/term/cie10.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
-import { ActivatedRoute } from '@angular/router';
 import { ElementosRUPRegister } from '../elementos';
 
 @Component({
@@ -109,7 +108,6 @@ export class RUPComponent implements OnInit, AfterViewInit {
         public cie10Service: Cie10Service,
         public servicioOrganizacion: OrganizacionService,
         public plex: Plex,
-        public route: ActivatedRoute,
         public agendaService: AgendaService
     ) { }
 
