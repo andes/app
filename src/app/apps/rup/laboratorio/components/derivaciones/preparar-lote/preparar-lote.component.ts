@@ -74,7 +74,7 @@ export class PrepararLoteComponent implements OnInit {
         }
     }
 
-    onChangeSelectArea(evet) {
+    onChangeSelectArea(event) {
         event.callback([]);
     }
 }
