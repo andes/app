@@ -35,8 +35,8 @@ export class CamaBloquearComponent implements OnInit {
                 this.cama.ultimoEstado = camaActualizada.ultimoEstado;
                 this.accionCama.emit({ cama: this.cama, accion: 'bloquearCama' });
             }, (err) => {
-                let error = err.message ? err.message : err;
-                this.plex.info('danger', error, 'Error');
+                // let error = err.message ? err.message : err;
+                this.plex.info('danger', err, 'Error');
             });
         }
     }

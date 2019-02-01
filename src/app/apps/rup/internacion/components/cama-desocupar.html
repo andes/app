@@ -4,11 +4,12 @@
             <legend>Desocupar cama: {{cama.nombre}}</legend>
             <div class="row">
                 <div class="col-md">
-                    <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="" (change)="selectCamasDisponibles(null,fecha,hora)">
+                    <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha"
+                        (change)="operacionDesocuparCama()">
                     </plex-datetime>
                 </div>
                 <div class="col-md">
-                    <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="" (change)="selectCamasDisponibles(null,fecha,hora)">
+                    <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="Hora" (change)="operacionDesocuparCama()">
                     </plex-datetime>
                 </div>
             </div>

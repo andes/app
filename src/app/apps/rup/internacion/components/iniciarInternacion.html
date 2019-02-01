@@ -63,21 +63,19 @@
                     <fieldset>
                         <legend>Datos de la Internación</legend>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-md">
                                 <plex-datetime *ngIf="!soloValores" type="date" [(ngModel)]="fecha" [required]="true"
                                     [autoFocus]="autoFocus " name="fechaIngreso " label="Fecha Ingreso" (change)="selectCamasDisponibles(informeIngreso.PaseAunidadOrganizativa,fecha,hora)">
                                 </plex-datetime>
                             </div>
-                            <div class="
-                                    col">
+                            <div class="col-md">
                                 <plex-datetime *ngIf="!soloValores" type="time" [(ngModel)]="hora" [required]="true"
                                     name="horaIngreso " label="Hora Ingreso" (change)="selectCamasDisponibles(informeIngreso.PaseAunidadOrganizativa,fecha,hora)">
                                 </plex-datetime>
                             </div>
                         </div>
-                        <div class="
-                                        row">
-                            <div class="col-6">
+                        <div class="row">
+                            <div class="col-md">
                                 <plex-select *ngIf="!soloValores" [required]="true" [(ngModel)]="informeIngreso.origen"
                                     name="origen" [data]="origenHospitalizacion" placeholder="Seleccione..." label="Origen hospitalización"
                                     idField="nombre" labelField="nombre" (change)="changeOrigenHospitalizacion($event)">
@@ -85,7 +83,7 @@
                             </div>
                         </div>
                         <div class="row" *ngIf="origenExterno">
-                            <div class="col">
+                            <div class="col-md">
                                 <plex-select [(ngModel)]="informeIngreso.organizacionOrigen" name="organizacion"
                                     (getData)="loadOrganizacion($event)" label="Organización origen" placeholder="Seleccione la organización"
                                     labelField="nombre" [required]="true">
@@ -93,14 +91,14 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-md">
                                 <plex-select *ngIf="!soloValores" label="Profesional responsable" [(ngModel)]="informeIngreso.profesional"
                                     name="profesional" (getData)="loadProfesionales($event)" labelField="apellido+' '+nombre">
                                 </plex-select>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-md">
                                 <plex-text *ngIf="!soloValores" label="Motivo de Internación" name="motivo" [(ngModel)]="informeIngreso.motivo">
                                 </plex-text>
                             </div>
@@ -198,7 +196,6 @@
                 <label>Nro Carpeta</label>
                 <p>{{this.informeIngreso.nroCarpeta}}</p>
             </div>
-
         </div>
         <div class="row">
             <div class="col-md" *ngIf="informeIngreso.asociado">
@@ -255,7 +252,6 @@
                 <p>{{informeIngreso.nivelInstruccion}}</p>
             </div>
         </div>
-
     </ng-container>
 
     <!--Footer-->

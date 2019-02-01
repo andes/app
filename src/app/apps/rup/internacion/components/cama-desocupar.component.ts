@@ -163,24 +163,29 @@ export class DesocuparCamaComponent implements OnInit {
         this.camaSeleccionPase = null;
         this.listadoCamas = null;
         let f = this.internacionService.combinarFechas(fecha, hora);
-        if (unidadOrganizativa) {
-            this.camasService.getCamasXFecha(this.auth.organizacion.id, f).subscribe(resultado => {
-                if (resultado) {
-                    let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.conceptId === unidadOrganizativa);
-                    this.listadoCamas = [...lista];
-                }
+        if (this.filtrosDesocupar()) {
+            if (unidadOrganizativa) {
+                this.camasService.getCamasXFecha(this.auth.organizacion.id, f).subscribe(resultado => {
+                    if (resultado) {
+                        let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.conceptId === unidadOrganizativa);
+                        this.listadoCamas = [...lista];
+                    }
 
-            });
+                });
+            } else {
+                this.camasService.getCamasXFecha(this.auth.organizacion.id, f).subscribe(resultado => {
+                    if (resultado) {
+                        let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.conceptId === this.cama.ultimoEstado.unidadOrganizativa.conceptId);
+                        this.listadoCamas = [...lista];
+                    } else {
+                        this.listadoCamas = [];
+                    }
+
+                });
+            }
         } else {
-            this.camasService.getCamasXFecha(this.auth.organizacion.id, f).subscribe(resultado => {
-                if (resultado) {
-                    let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.conceptId === this.cama.ultimoEstado.unidadOrganizativa.conceptId);
-                    this.listadoCamas = [...lista];
-                } else {
-                    this.listadoCamas = [];
-                }
-
-            });
+            this.opcionDesocupar = null;
+            this.elegirDesocupar = true;
         }
     }
 
