@@ -59,6 +59,14 @@ export class LaboratorioContextoCacheService {
      *
      * @memberof LaboratorioContextoCacheService
      */
+    modoRecepcion() {
+        this.getContextoCache().modo = Constantes.modos.recepcion;
+    }
+    /**
+     *
+     *
+     * @memberof LaboratorioContextoCacheService
+     */
     modoRecepcionSinTurno() {
         this.getContextoCache().modo = Constantes.modos.recepcionSinTurno;
     }

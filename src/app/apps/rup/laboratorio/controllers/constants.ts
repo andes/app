@@ -45,7 +45,7 @@ export const Constantes = {
         },
         recepcionSinTurno: {
             id: 5,
-            nombre: 'recepcion',
+            nombre: 'recepcionSinTurno',
             titulo: 'Recepcionar Paciente Sin Turno'
         }
     }
