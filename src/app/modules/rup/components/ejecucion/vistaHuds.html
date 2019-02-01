@@ -128,10 +128,10 @@
                             </ng-container>
                         </ng-container>
 
-                        <plex-tab label="Resumen del Paciente" *ngIf="paciente">
+                        <plex-tab label="Resumen del Paciente" *ngIf="paciente?.id">
                             <rup-resumenPaciente-estatico [paciente]="paciente" esTab="true"></rup-resumenPaciente-estatico>
-                            <rup-resumenPaciente-dinamico-nino *ngIf="paciente.edad <= 6" [paciente]="paciente" esTab="true"></rup-resumenPaciente-dinamico-nino>
-                            <rup-resumenPaciente-dinamico *ngIf="paciente.edad > 6" [paciente]="paciente" esTab="true"></rup-resumenPaciente-dinamico>
+                            <!-- <rup-resumenPaciente-dinamico-nino *ngIf="paciente.edad <= 6" [paciente]="paciente" esTab="true"></rup-resumenPaciente-dinamico-nino>
+                            <rup-resumenPaciente-dinamico *ngIf="paciente.edad > 6" [paciente]="paciente" esTab="true"></rup-resumenPaciente-dinamico> -->
                         </plex-tab>
 
                     </plex-tabs>
@@ -141,8 +141,8 @@
             <div class="col-4" *ngIf="paciente">
                 <plex-box>
                     <!-- HUDS [hudsBusqueda.component.ts] -->
-                    <rup-hudsBusqueda [registrosHuds]="registrosHuds" (evtHuds)="agregarListadoHuds($event)" [paciente]="paciente"
-                        [prestacionActual]="" [emitirConceptos]="false"></rup-hudsBusqueda>
+                    <rup-hudsBusqueda #huds [registrosHuds]="registrosHuds" (evtHuds)="agregarListadoHuds($event)"
+                        [paciente]="paciente" [prestacionActual]="" [emitirConceptos]="false"></rup-hudsBusqueda>
                 </plex-box>
             </div>
 
