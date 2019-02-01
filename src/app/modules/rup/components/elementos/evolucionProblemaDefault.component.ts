@@ -1,6 +1,6 @@
 
 import { RUPComponent } from './../core/rup.component';
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { RupElement } from '.';
 
@@ -21,7 +21,7 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
     public unaEvolucion;
     public indice = 0;
     public evoluciones;
-    public referentSet = [];
+    public referenceSet = [];
 
     // estadoActual: any = { id: 'activo', nombre: 'Activo' };
     inicioEstimadoUnidad: any = null;
@@ -35,13 +35,13 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
      * entonces inicializamos data como un objeto
      */
     ngOnInit() {
-        // buscamos si el hallazgo pertenece a algún referentSet
+        // buscamos si el hallazgo pertenece a algún referenceSet
         if (this.registro.concepto && this.registro.concepto.refsetIds) {
             this.registro.concepto.refsetIds.forEach(refSet => {
                 Object.keys(this.prestacionesService.refsetsIds).forEach(k => {
                     if (this.prestacionesService.refsetsIds[k] === refSet) {
                         let referencia = k.replace(/_/g, ' ');
-                        this.referentSet.push(referencia);
+                        this.referenceSet.push(referencia);
                     }
                 });
             });
@@ -103,6 +103,18 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
                 }
             }
         }
+        // RELACIONES
+        this.prestacionesService.getById((this.registro as any).idPrestacion).subscribe(prestacion => {
+            this.prestacion = prestacion;
+            this.registro.evoluciones.forEach(evolucion => {
+                if (evolucion.relacionadoCon && evolucion.relacionadoCon.length > 0) {
+                    if (typeof evolucion.relacionadoCon[0] === 'string') {
+                        evolucion.relacionadoCon = evolucion.relacionadoCon.map(x => x = prestacion.ejecucion.registros.find(r => r.id === evolucion.relacionadoCon[0]));
+                    }
+                }
+            });
+        });
+        console.log('ID', this.registro);
     }
 
 
@@ -163,14 +175,14 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
 
     cambiarEvolucion(signo) {
         if (signo === '+') {
-            if (this.indice < (this.evoluciones.length - 1)) {
+            if (this.indice < (this.registro.evoluciones.length - 1)) {
                 this.indice = this.indice + 1;
-                this.unaEvolucion = this.evoluciones[this.indice];
+                this.unaEvolucion = this.registro.evoluciones[this.indice];
             }
         } else {
             if (this.indice > 0) {
                 this.indice = this.indice - 1;
-                this.unaEvolucion = this.evoluciones[this.indice];
+                this.unaEvolucion = this.registro.evoluciones[this.indice];
             }
         }
     }
