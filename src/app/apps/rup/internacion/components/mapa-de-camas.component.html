@@ -145,8 +145,9 @@
                 <!-- // Ingresar un paciente -->
 
                 <!-- Desocupar Cama -->
-                <ng-container *ngIf="accion ==='desocupar' && !showEgreso">
-                    <cama-desocupar [cama]="camaSelected" (accionCama)="actualizarMapaDeCamas($event)" [workflowC]="isWorkflowCompleto"></cama-desocupar>
+                <ng-container *ngIf="accion ==='desocupar' && !showEgreso && prestacionPorInternacion">
+                    <cama-desocupar [cama]="camaSelected" [prestacion]="prestacionPorInternacion" (accionCama)="actualizarMapaDeCamas($event)"
+                        [workflowC]="isWorkflowCompleto"></cama-desocupar>
                 </ng-container>
 
                 <!-- Desbloquear Cama -->

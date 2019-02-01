@@ -141,7 +141,6 @@ export class MapaDeCamasComponent implements OnInit {
         this.loader = true;
         this.camasService.getCamasXFecha(this.auth.organizacion._id, this.fecha).subscribe(camas => {
             this.camas = camas;
-            console.log(this.camas);
             this.countFiltros();
             this.loader = false;
             if (camas) {
@@ -155,7 +154,8 @@ export class MapaDeCamasComponent implements OnInit {
             }
         }, (err) => {
             if (err) {
-                this.plex.info('danger', err, 'Error');
+                let error = err.message ? err.message : err;
+                this.plex.info('danger', error, 'Error');
                 this.router.navigate(['/']);
             }
         });
@@ -264,11 +264,7 @@ export class MapaDeCamasComponent implements OnInit {
      * @memberof MapaDeCamasComponent
      */
     public updateCama(e: any) {
-        console.log(e);
         if (e) {
-
-
-
             if (e.iniciarInternacion) {
                 this.cambiaTap(1);
                 if (e.cama) {
@@ -591,7 +587,6 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     onCamaSelected(event) {
-        console.log(this.camaSeleccionada);
         if (!this.camaSeleccionada || this.camaSeleccionada !== event.cama) { // Es la primera vez o selecciono una cama diferente a la que estaba
             this.showEgreso = false;
             this.showIngreso = false;

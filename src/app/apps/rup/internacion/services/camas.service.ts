@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class CamasService {
     public showListaEspera = false;
-    private camasUrl = '/core/tm/camas';  // URL to web api
+    private camasUrl = '/modules/rup/camas';  // URL to web api
     constructor(private server: Server) { }
 
     getCama(id: String): Observable<any> {
