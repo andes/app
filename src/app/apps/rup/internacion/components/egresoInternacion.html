@@ -5,11 +5,11 @@
                 <ng-container>
                     <div class="row ">
                         <div class="col-6 ">
-                            <plex-datetime type="date" name="fecha-hora" label="Fecha" [(ngModel)]="fechaEgreso" [required]="true" (change)="calcularDiasEstada()">
+                            <plex-datetime type="date" name="fecha-hora" label="Fecha" [(ngModel)]="fechaEgreso" [required]="true" (change)="mySubject.next($event)">
                             </plex-datetime>
                         </div>
                         <div class="col-6 ">
-                            <plex-datetime type="time" name="fecha-hora" label="Hora" [(ngModel)]="horaEgreso" [required]="true" (change)="calcularDiasEstada()">
+                            <plex-datetime type="time" name="fecha-hora" label="Hora" [(ngModel)]="horaEgreso" [required]="true" (change)="mySubject.next($event)">
                             </plex-datetime>
                         </div>
                     </div>
