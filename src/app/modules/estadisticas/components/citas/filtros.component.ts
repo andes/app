@@ -71,8 +71,7 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
         { id: 'disponible', nombre: 'Disponible' },
         { id: 'asignado', nombre: 'Asignado' },
         { id: 'reasignado', nombre: 'Reasignado' },
-        { id: 'suspendido', nombre: 'Suspendido' },
-        { id: 'turnoDoble', nombre: 'Turno Doble' }
+        { id: 'suspendido', nombre: 'Suspendido' }
     ];
 
     public tipoTurnos = [
@@ -127,25 +126,21 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
     }
 
     onChange() {
-        let params = {
+        let filtrosParams = {
             fechaDesde: this.desde,
             fechaHasta: this.hasta,
             tipoDeFiltro: this.seleccion.tipoDeFiltro ? this.seleccion.tipoDeFiltro.id : undefined,
             prestacion: this.seleccion.prestacion ? this.seleccion.prestacion.map(pr => {
-                return { id: pr.conceptId, nombre: pr.term };
+                return {id: pr.conceptId, nombre: pr.term };
             }) : undefined,
             profesional: this.seleccion.profesional ? this.seleccion.profesional.map(prof => {
-                return { id: prof.id, nombre: prof.nombre, apellido: prof.apellido };
+                return {id: prof.id, nombre: prof.nombre, apellido: prof.apellido };
             }) : undefined,
+            estado_turno: this.seleccion.estado_turno && this.seleccion.tipoDeFiltro.id === 'turnos' ? this.seleccion.estado_turno.map(et => et.id) : undefined,
+            tipoTurno: this.seleccion.tipoTurno && this.seleccion.tipoDeFiltro.id === 'turnos' ? this.seleccion.tipoTurno.map(tt => tt.id) : undefined,
+            estado_agenda: this.seleccion.estado_agenda && this.seleccion.tipoDeFiltro.id === 'agendas' ? this.seleccion.estado_agenda.map(et => et.id) : undefined
         };
-
-        if (this.seleccion.tipoDeFiltro === 'turnos') {
-            this.params['estado_turno'] = this.seleccion.estado_turno ? this.seleccion.estado_turno.map(et => et.id) : undefined;
-            this.params['tipoTurno'] = this.seleccion.tipoTurno ? this.seleccion.tipoTurno.map(tt => tt.id) : undefined;
-        } else {
-            this.params['estado_agenda'] = this.seleccion.estado_agenda ? this.seleccion.estado_agenda.map(et => et.id) : undefined;
-        }
-        this.filter.emit(params);
+        this.filter.emit(filtrosParams);
     }
 
     ngOnChanges(changes: SimpleChanges) {
