@@ -72,7 +72,12 @@ export class DesocuparCamaComponent implements OnInit {
     }
 
     filtrosDesocupar() {
+        const fechaActual = new Date();
         const fechaMovimiento = this.internacionService.combinarFechas(this.fecha, this.hora);
+        if (fechaMovimiento > fechaActual) {
+            this.plex.info('danger', 'La fecha y hora del movimiento no puede ser superior a la fecha actual', 'Error');
+            return false;
+        }
         // vamos a buscar la fecha de ingreso del paciente y a comprobar que la fecha del movimiento se
         // realiza entre las fecha de ingreso o egreso (esta última en caso que ya esté registrada)
         const ingreso = this.internacionService.verRegistro(this.prestacion, 'ingreso');
@@ -144,6 +149,7 @@ export class DesocuparCamaComponent implements OnInit {
     }
 
     operacionDesocuparCama() {
+        console.log('this.opcionDesocupar', this.opcionDesocupar);
         if (this.opcionDesocupar === 'movimiento') {
             this.elegirDesocupar = false;
             this.selectCamasDisponibles(this.cama.ultimoEstado.unidadOrganizativa.conceptId, this.fecha, this.hora);
@@ -183,9 +189,6 @@ export class DesocuparCamaComponent implements OnInit {
 
                 });
             }
-        } else {
-            this.opcionDesocupar = null;
-            this.elegirDesocupar = true;
         }
     }
 

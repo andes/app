@@ -9,7 +9,8 @@
                     </plex-datetime>
                 </div>
                 <div class="col-md">
-                    <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="Hora" (change)="operacionDesocuparCama()">
+                    <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="Hora   "
+                        (change)="operacionDesocuparCama()">
                     </plex-datetime>
                 </div>
             </div>
@@ -28,7 +29,6 @@
                     </plex-select>
                 </div>
             </div>
-
             <div class="row" *ngIf="!elegirDesocupar">
                 <div class="col-md" *ngIf="listadoCamas && listadoCamas.length > 0">
                     <plex-select name="camasDisponibles" [required]="true" [data]="listadoCamas" idField="nombre"
