@@ -39,7 +39,7 @@
                                     <td>Sexo</td>
                                     <td>Estado</td>
                                     <td>Sugerencia de pase A</td>
-                                    <td>Ver Internación</td>
+                                    <!-- <td>Ver Internación</td> -->
                                     <td>Internar</td>
                                 </tr>
                             </thead>
@@ -65,11 +65,11 @@
                                             Ninguno
                                         </ng-container>
                                     </td>
-                                    <td>
+                                    <!-- <td>
                                         <plex-button class="btn btn-default  tips" icon="eye" title="Ver internación"
                                             (click)="verInternacion(prestacion.prestacion.id)" *ngIf="prestacion?.prestacion.id">
                                         </plex-button>
-                                    </td>
+                                    </td> -->
                                     <td>
                                         <plex-button type="primary" label="Dar cama" (click)="darCama(prestacion.prestacion)"
                                             *ngIf="prestacion?.prestacion.id">

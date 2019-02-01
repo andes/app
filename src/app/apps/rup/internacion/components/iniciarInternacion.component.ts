@@ -140,7 +140,6 @@ export class IniciarInternacionComponent implements OnInit {
             if (existeRegistro) {
                 this.paciente = this.prestacion.paciente;
                 this.informeIngreso = existeRegistro.valor.informeIngreso;
-                this.fecha = this.informeIngreso.fechaIngreso;
 
                 // Chequeamos los datos que ya estan registrados para mostrar
                 // los campos que están ocultos por defecto
@@ -152,14 +151,17 @@ export class IniciarInternacionComponent implements OnInit {
                     this.origenExterno = true;
                 }
                 this.informeIngreso.PaseAunidadOrganizativa = this.informeIngreso.PaseAunidadOrganizativa ? this.informeIngreso.PaseAunidadOrganizativa : null;
-                this.camasService.getCamasXFecha(this.auth.organizacion.id, existeRegistro.valor.informeIngreso.fechaIngreso).subscribe(resultado => {
-                    if (resultado) {
-                        let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.conceptId === this.informeIngreso.PaseAunidadOrganizativa.conceptId);
-                        this.listadoCamas = [...lista];
-                    }
+                if (this.informeIngreso.PaseAunidadOrganizativa) {
+                    this.camasService.getCamasXFecha(this.auth.organizacion.id, existeRegistro.valor.informeIngreso.fechaIngreso).subscribe(resultado => {
+                        if (resultado) {
+                            let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.conceptId === this.informeIngreso.PaseAunidadOrganizativa.conceptId);
+                            this.listadoCamas = [...lista];
+                        }
 
 
-                });
+                    });
+                }
+
 
             }
         } else if (this.paciente && this.paciente.id) {
@@ -313,10 +315,13 @@ export class IniciarInternacionComponent implements OnInit {
         }
         // Controlamos conflictos de fechas en el historial de la cama
         // buscamos que en la fechaHora de ingreso, con un margen de una hora, la cama este disponible
-        if (!this.servicioInternacion.esCamaDisponible(this.cama, fechaIngreso)) {
-            this.plex.info('warning', 'La cama seleccionada no está disponible en la fecha ingresada. Por favor controle la fecha y hora de ingreso.');
-            return false;
+        if (this.cama) {
+            if (!this.servicioInternacion.esCamaDisponible(this.cama, fechaIngreso)) {
+                this.plex.info('warning', 'La cama seleccionada no está disponible en la fecha ingresada. Por favor controle la fecha y hora de ingreso.');
+                return false;
+            }
         }
+
         return true;
     }
 
@@ -367,24 +372,32 @@ export class IniciarInternacionComponent implements OnInit {
                 };
                 this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe(p => {
                     if (this.cama && !this.cama.ultimoEstado.idInternacion) {
-                        // vamos a actualizar el estado de la cama
-                        let dto = {
-                            fecha: this.informeIngreso.fechaIngreso,
-                            estado: 'ocupada',
-                            unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
-                            especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
-                            esCensable: this.cama.ultimoEstado.esCensable,
-                            genero: this.cama.ultimoEstado.genero ? this.cama.ultimoEstado.genero : null,
-                            paciente: this.paciente,
-                            idInternacion: this.prestacion.id,
-                            esMovimiento: true
-                        };
-                        this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
-                            this.cama.ultimoEstado = camaActualizada.ultimoEstado;
-                            this.accionCama.emit({ cama: this.cama, accion: 'internarPaciente' });
-                            this.data.emit(false);
-                        }, (err1) => {
-                            this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
+
+
+                        let idPaciente = this.paciente ? this.paciente._id : this.prestacion.paciente.id;
+                        this.pacienteService.getById(idPaciente).subscribe(pacienteCompleto => {
+
+                            // vamos a actualizar el estado de la cama
+                            let dto = {
+                                fecha: this.informeIngreso.fechaIngreso,
+                                estado: 'ocupada',
+                                unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
+                                especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
+                                esCensable: this.cama.ultimoEstado.esCensable,
+                                genero: this.cama.ultimoEstado.genero ? this.cama.ultimoEstado.genero : null,
+                                paciente: pacienteCompleto,
+                                idInternacion: this.prestacion.id,
+                                esMovimiento: true
+                            };
+
+
+                            this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
+                                this.cama.ultimoEstado = camaActualizada.ultimoEstado;
+                                this.accionCama.emit({ cama: this.cama, accion: 'internarPaciente' });
+                                this.data.emit(false);
+                            }, (err1) => {
+                                this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
+                            });
                         });
                     } else {
                         this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
@@ -477,17 +490,22 @@ export class IniciarInternacionComponent implements OnInit {
             event.callback(organizacionSalida);
         }
     }
+
     selectCamasDisponibles(unidadOrganizativa, fecha, hora) {
-        let f = this.servicioInternacion.combinarFechas(fecha, hora);
-        this.camasService.getCamasXFecha(this.auth.organizacion.id, f).subscribe(resultado => {
-            if (resultado) {
-                let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.conceptId === unidadOrganizativa);
-                this.listadoCamas = [...lista];
-                console.log(this.listadoCamas.length);
-            }
+        this.cama = null;
+        this.listadoCamas = null;
+        if (unidadOrganizativa) {
+            let f = this.servicioInternacion.combinarFechas(fecha, hora);
+            this.camasService.getCamasXFecha(this.auth.organizacion.id, f).subscribe(resultado => {
+                if (resultado) {
+                    let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.conceptId === unidadOrganizativa.conceptId);
+                    this.listadoCamas = [...lista];
+                }
 
 
-        });
+            });
+        }
+
     }
 
     // Se usa tanto para guardar como cancelar

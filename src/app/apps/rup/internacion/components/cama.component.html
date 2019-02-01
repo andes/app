@@ -1,6 +1,6 @@
 <section class="cama-container manual-flip animate-repeat">
     <div class="cama">
-        <div class="card-container front {{cama.ultimoEstado.estado}} bg-cama" >
+        <div class="card-container front {{cama.ultimoEstado.estado}} bg-cama">
             <!-- Botonera lateral -->
             <div class="card-contenedor-lateral"></div>
             <div class="card-contenedor-central">
@@ -10,7 +10,7 @@
                         <div>{{ getHabitacionName()}}</div>
                         <h3 class="card-titulo">{{cama.nombre}}</h3>
                     </div>
-                    
+
                     <!-- Icono cama -->
                     <div *ngIf="cama.ultimoEstado.estado !== 'ocupada'" class="data-icon {{cama.ultimoEstado.estado !== 'ocupada' ? cama.ultimoEstado.estado  : cama.ultimoEstado.paciente.sexo}}">
                         <!-- reparacion -->
@@ -70,8 +70,8 @@
                     type="success btn-sm" icon="account-plus" (click)="seleccionarCama('internarPaciente');">
                 </plex-button>
                 <!-- Desocupar cama -->
-                <plex-button *ngIf="showEstados && cama.ultimoEstado?.idInternacion" icon="close-box" type="success btn-sm"
-                    (click)="seleccionarCama('desocupar');">
+                <plex-button *ngIf="showEstados && cama.ultimoEstado?.idInternacion" icon="mdi mdi-format-list-bulleted"
+                    type="success btn-sm" (click)="seleccionarCama('desocupar');">
                 </plex-button>
                 <!-- Preparar cama -->
                 <plex-button *ngIf="showEstados && cama.ultimoEstado.estado == 'desocupada' && !readOnly" icon="spray"
