@@ -180,8 +180,8 @@
                                     <span class='texto-{{camaSeleccionada.ultimoEstado.estado}}' *ngIf='camaSeleccionada.ultimoEstado.estado === "bloqueada" && camaSeleccionada.ultimoEstado.observaciones'>|
                                         {{camaSeleccionada.ultimoEstado.observaciones}}</span>
                                     <!-- Data paciente -->
-                                    <div class="andes-contenedor-secundario horizontal centrado">
-                                        <img *ngIf="camaSeleccionada.ultimoEstado.estado == 'ocupada'" class="sidebar-imagen-paciente"
+                                    <div class="andes-contenedor-secundario horizontal centrado" *ngIf="camaSeleccionada.ultimoEstado.estado == 'ocupada'">
+                                        <img  class="sidebar-imagen-paciente"
                                             src="" alt="">
                                         <div class="andes-sidebar-prefix">
                                             <p *ngIf="camaSeleccionada.ultimoEstado?.paciente">
@@ -191,14 +191,14 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <div class="andes-contenedor-secundario horizontal centrado">
-                                        <img *ngIf="camaSeleccionada.ultimoEstado.estado == 'bloqueada'">
+                                    <!-- <div class="andes-contenedor-secundario horizontal centrado" *ngIf="camaSeleccionada.ultimoEstado.estado == 'bloqueada'">
+                                        <img >
                                         <div class="andes-sidebar-prefix">
                                             <p *ngIf="camaSeleccionada.cama?.$action">
                                                 <b>{{camaSeleccionada.cama.$action}}</b>
                                             </p>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <hr class="blanco xs">
                                     <p class="andes-sidebar-subfix">{{camaSeleccionada.sectores[0].nombre}}</p>
                                     <p class="andes-sidebar-subfix {{camaSeleccionada.ultimoEstado.estado}}">{{camaSeleccionada.ultimoEstado.unidadOrganizativa.term}}</p>

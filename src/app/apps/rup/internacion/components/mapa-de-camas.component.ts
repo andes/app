@@ -128,13 +128,13 @@ export class MapaDeCamasComponent implements OnInit {
     refresh(event = null) {
         // Se setea ruta actual
 
-        this.filtros.opciones.censo = enumerados.getObjCenso();
 
         this.servicioPrestacion.notificaRuta({ nombre: 'Mapa de Camas', ruta: 'internacion/camas' });
 
         // verificar permisos
         // buscar camas para la organización
         this.limpiarFiltros();
+        this.filtros.opciones.censo = enumerados.getObjCenso();
         this.loader = true;
         this.camasService.getCamasXFecha(this.auth.organizacion._id, this.fecha).subscribe(camas => {
             this.camas = camas;
@@ -173,13 +173,16 @@ export class MapaDeCamasComponent implements OnInit {
         this.filtros.estado = null;
         this.filtros.servicio = null;
         this.filtros.sector = null;
+        this.filtros.censable = null,
         this.filtros.opciones = {
             sectores: [],
             habitaciones: [],
             estados: [],
             servicios: [],
-            tiposCamas: []
+            tiposCamas: [],
+            censo: []
         };
+
 
         this.camas = this.camasCopy;
     }
