@@ -1,7 +1,7 @@
 <div class="filtros-container ml-1" *ngIf='modo.nombre === "carga" || modo.nombre === "validacion"'>
     <span>
         <plex-radio [data]="modoCargaLaboratorioEnum" label="Modo de carga" (change)="cambiarModoCarga($event)"
-            [(ngModel)]="modoCargaLaboratorio" type="horizontal"></plex-radio>
+            [(ngModel)]="cacheContexto.modoCargaLaboratorio" type="horizontal"></plex-radio>
     </span>
     <span *ngIf='showSelectArea'>
         <plex-select [(ngModel)]="busqueda.area " (change)="onChangeSelectArea($event)" name="area" label="Área" [data]='areas'></plex-select>

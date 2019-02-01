@@ -34,6 +34,10 @@ export class LaboratorioContextoCacheService {
      * @memberof LaboratorioContextoCacheService
      */
     cambiarModo(modoId) {
+        if (modoId !== Constantes.modos.carga.id) {
+            this.getContextoCache().modoCargaLaboratorio = null;
+        }
+
         if (modoId === Constantes.modos.recepcion.id) {
             this.getContextoCache().modo = Constantes.modos.recepcion;
         } else if (modoId === Constantes.modos.recepcionSinTurno.id) {
@@ -74,7 +78,6 @@ export class LaboratorioContextoCacheService {
      * @memberof LaboratorioContextoCacheService
      */
     irAuditoriaProtocolo() {
-        this.getContextoCache().ocultarPanelLateral = true;
         this.getContextoCache().modoAVolver = this.getContextoCache().modo;
         this.modoControl();
     }
@@ -87,7 +90,7 @@ export class LaboratorioContextoCacheService {
     aceptarCambiosAuditoriaProtocolo() {
         this.getContextoCache().ocultarPanelLateral = false;
         this.getContextoCache().modo = this.getContextoCache().modoAVolver;
-        this.getContextoCache().modoAVolver = null;
+        // this.getContextoCache().modoAVolver = null;
     }
 
     /**
@@ -109,12 +112,9 @@ export class LaboratorioContextoCacheService {
      */
     seleccionarProtocolo() {
         this.getContextoCache().edicionDatosCabecera = false;
-        this.getContextoCache().mostrarCuerpoProtocolo = (!this.isModoRecepcion());
+        this.getContextoCache().mostrarCuerpoProtocolo = (!this.isModoRecepcionSinTurno());
         this.getContextoCache().ocultarPanelLateral =
-            (this.isModoRecepcion())
-            || (this.isModoRecepcionSinTurno())
-            || this.getContextoCache().cargarPorPracticas;
-            console.log('this.getContextoCache().ocultarPanelLateral ', this.getContextoCache().ocultarPanelLateral );
+            (this.isModoRecepcionSinTurno()) || this.getContextoCache().cargarPorPracticas;
     }
 
     /**
@@ -123,7 +123,6 @@ export class LaboratorioContextoCacheService {
      * @memberof LaboratorioContextoCacheService
      */
     setPaciente() {
-        this.getContextoCache().edicionDatosCabecera = true;
         this.getContextoCache().ocultarPanelLateral = true;
         this.getContextoCache().mostrarCuerpoProtocolo = true;
     }

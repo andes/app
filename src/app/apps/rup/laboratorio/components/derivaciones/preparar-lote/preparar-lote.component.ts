@@ -1,3 +1,5 @@
+import { OrganizacionService } from './../../../../../../services/organizacion.service';
+import { AreaLaboratorioService } from './../../../services/areaLaboratorio.service';
 import { ProtocoloService } from '../../../services/protocolo.service';
 import { OnInit, Component } from '@angular/core';
 
@@ -11,6 +13,7 @@ import { OnInit, Component } from '@angular/core';
 
 export class PrepararLoteComponent implements OnInit {
     area;
+    areas;
     desde;
     hasta;
     organizacionDestino;
@@ -18,14 +21,61 @@ export class PrepararLoteComponent implements OnInit {
     estado;
 
     constructor(
-        private protocoloService: ProtocoloService
+        private protocoloService: ProtocoloService,
+        private areaLaboratorioService: AreaLaboratorioService,
+        private organizacionService: OrganizacionService
     ) { }
 
     ngOnInit() {
+        this.cargarAreasLaboratorio();
     }
 
+    /**
+     *
+     *
+     * @param {*} $event
+     * @param {*} [x]
+     * @memberof PrepararLoteComponent
+     */
     buscar($event, x?) {
         console.log($event, x);
+    }
+
+    /**
+     *
+     *
+     * @memberof PrepararLoteComponent
+     */
+    private cargarAreasLaboratorio() {
+        this.areaLaboratorioService.get().subscribe((areas: any) => {
+            this.areas = areas.map((area) => {
+                return {
+                    id: area._id,
+                    nombre: area.nombre
+                };
+            });
+        });
+    }
+
+    /**
+     *
+     *
+     * @param {*} event
+     * @memberof PrepararLoteComponent
+     */
+    loadOrganizaciones(event) {
+        if (event.query) {
+            let query = {
+                nombre: event.query
+            };
+            this.organizacionService.get(query).subscribe(event.callback);
+        } else {
+            event.callback([]);
+        }
+    }
+
+    onChangeSelectArea(evet) {
+        event.callback([]);
     }
 }
 

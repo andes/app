@@ -44,7 +44,7 @@
             <div class="clearfix row">
                 <div class="page-title float-left col">
                     <ng-container *ngIf="showProtocoloDetalle">
-                        Laboratorio | {{contextoCache.titulo}}
+                        Laboratorio | {{contextoCache.modo.titulo}}
                     </ng-container>
                 </div>
 
@@ -52,10 +52,13 @@
                     <ng-container *ngIf='contextoCache.modo.nombre === "carga" || contextoCache.modo.nombre === "validacion"' class="col-2">
                         <plex-button position="right" type="warning" label="Auditar" class="mr-3" (click)="volverAControl()"></plex-button>
                     </ng-container>
-
+                    
                     <div class="col d-flex flex-row-reverse" *ngIf="showProtocoloDetalle">
-                        <plex-button *ngIf="showBotonAceptar" position="right" type="success" label="Aceptar" (click)="aceptarCambios()"></plex-button>
-                        <plex-button position="left" type="warning" (click)="volverLista()" label="Volver"></plex-button>
+                        <plex-button *ngIf="showBotonAceptarCambiosHeader" position="right" type="success" label="Aceptar" (click)="aceptarCambiosHeader()"></plex-button>
+
+                        <plex-button *ngIf="showBotonAceptarCambiosAuditoria" position="right" type="success" label="Aceptar" (click)="aceptarCambiosAuditoria()"></plex-button>
+                    
+                        <plex-button position="left" type="warning" (click)="volver()" label="Volver"></plex-button>
                     </div>
 
                     <ng-container *ngIf='showBotonGuardar'>

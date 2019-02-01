@@ -460,6 +460,8 @@ export class ProtocoloDetalleComponent
                     this.cargarProtocolo(this.protocolos[this.indexProtocolo]);
                 }
                 this.plex.toast('success', this.modelo.ejecucion.registros[0].nombre, 'Solicitud guardada', 4000);
+            } else if (this.contextoCache.modoAVolver) {
+                this.contextoCache.modoAVolver = null;
             } else {
                 this.contextoCache.mostrarCuerpoProtocolo = true;
                 this.volverAListaControEmit.emit();

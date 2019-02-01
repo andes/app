@@ -34,7 +34,6 @@ export class FiltrosBusquedaProtocoloComponent
     public pacientes;
     public pacienteActivo;
     public cargaLaboratorioEnum;
-    public modoCargaLaboratorio = 'Lista de protocolos';
     public modoCargaLaboratorioEnum;
     public laboratorioInternoEnum;
     public indexProtocolo;
@@ -44,6 +43,7 @@ export class FiltrosBusquedaProtocoloComponent
     public practicasFiltro;
     public areas = [];
     public servicios = [];
+    public cacheContexto;
     public busqueda = {
         solicitudDesde: new Date(),
         solicitudHasta: new Date(),
@@ -77,6 +77,7 @@ export class FiltrosBusquedaProtocoloComponent
     ) { }
 
     ngOnInit() {
+        this.cacheContexto = this.laboratorioContextoCacheService.getContextoCache();
         this.prioridadesFiltroEnum = enumerados.getPrioridadesFiltroLab();
         this.estadosFiltroEnum = enumerados.getEstadosFiltroLab();
         this.estadosValFiltroEnum = enumerados.getEstadosFiltroLab().slice(1, 4);
@@ -85,6 +86,10 @@ export class FiltrosBusquedaProtocoloComponent
         this.modoCargaLaboratorioEnum = enumerados.getModoCargaLaboratorio();
         this.cargarAreasLaboratorio();
         this.buscarProtocolos();
+        if (!this.cacheContexto.modoCargaLaboratorio) {
+            this.cacheContexto.modoCargaLaboratorio = 'Lista de protocolos';
+        }
+        this.cambiarModoCarga(this.cacheContexto.modoCargaLaboratorio);
     }
 
     cargarAreasLaboratorio() {
@@ -187,11 +192,10 @@ export class FiltrosBusquedaProtocoloComponent
      * @memberof FiltrosBusquedaProtocoloComponent
      */
     cambiarModoCarga($event) {
-        let cacheContexto = this.laboratorioContextoCacheService.getContextoCache();
-        cacheContexto.cargarPorPracticas = false;
+        this.cacheContexto.cargarPorPracticas = false;
         if ($event.value === 'Análisis') {
             if (this.laboratorioContextoCacheService.isModoCarga()) {
-                cacheContexto.cargarPorPracticas = true;
+                this.cacheContexto.cargarPorPracticas = true;
             }
             this.showSelectArea = true;
             this.showSelectHojaTrabajo = false;
@@ -231,7 +235,7 @@ export class FiltrosBusquedaProtocoloComponent
         }
         this.hojaTrabajo = null;
         this.busqueda.practicas = null;
-        this.buscarProtocolos();
+        this.buscarProtocolosEmmiter.emit(null);
     }
 
     /**

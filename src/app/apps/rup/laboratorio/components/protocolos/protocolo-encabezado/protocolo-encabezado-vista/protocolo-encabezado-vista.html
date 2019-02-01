@@ -8,7 +8,7 @@
             <div class="listado-contenedor-secundario">
                 <!-- Modo visualizacion de datos -->
                 <article class="labs-item-numero">
-                    <span *ngIf='solicitudProtocolo.solicitudPrestacion.numeroProtocolo' class="badge" [ngClass]="{'badge-success': modelo.estados[modelo.estados.length -1].tipo === 'validada','badge-danger': modelo.estados[modelo.estados.length -1].tipo === 'pendiente','badge-info':  modelo.estados[modelo.estados.length -1].tipo === 'ejecucion' }" 
+                    <span *ngIf='solicitudProtocolo.solicitudPrestacion.numeroProtocolo' class="badge" [ngClass]="{'badge-success': modelo.estados[modelo.estados.length -1].tipo === 'validada','badge-danger': modelo.estados[modelo.estados.length -1].tipo === 'pendiente','badge-info':  modelo.estados[modelo.estados.length -1].tipo === 'ejecucion' }"
                         style='float: left; margin-right: 20px;'>
                         <h5>
                             <i *ngIf='modelo.paciente.sexo ==="femenino"' class="mdi mdi-gender-female mdi-24px mdi-rotate-45 rosa"></i>

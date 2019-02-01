@@ -26,7 +26,9 @@ export class GestorProtocolosComponent implements OnInit {
     public showCargarSolicitud: Boolean = false;
     public showBotonGuardar: Boolean = false;
     public editarListaPracticas: Boolean = false;
-    public showBotonAceptar: Boolean = false;
+    public showBotonAceptarCambiosAuditoria: Boolean = false;
+    public showBotonAceptarCambiosHeader: Boolean = false;
+
     public titulo;
     public contextoCache;
 
@@ -86,7 +88,6 @@ export class GestorProtocolosComponent implements OnInit {
         if (!this.protocolo) {
             this.resetearProtocolo({});
         }
-        this.showBotonAceptar = true;
         this.routeParams = this.route.params.subscribe(params => {
             console.log(params);
             if (params['id']) {
@@ -119,7 +120,7 @@ export class GestorProtocolosComponent implements OnInit {
      */
     onTabChange($event) {
         this.laboratorioContextoCacheService.cambiarModo($event);
-        this.refreshSelection();
+        this.refreshSelection(this.busqueda);
     }
 
     /**
@@ -162,11 +163,15 @@ export class GestorProtocolosComponent implements OnInit {
      * @param {any} [tipo]
      * @memberof PuntoInicioLaboratorioComponent
      */
-    refreshSelection($event?) {
-        if ($event) {
-            this.busqueda = $event;
-            this.areas = $event.areas ? $event.areas : [];
+    refreshSelection(filtros) {
+        if (!filtros) {
+            this.protocolos.length = 0;
+            return;
         }
+        // if ($event) {
+        this.busqueda = filtros;
+        this.areas = filtros.areas ? filtros.areas : [];
+        // }
 
         this.busqueda.estado = this.laboratorioContextoCacheService.isModoValidacion() ? ['pendiente', 'ejecucion'] :  [];
 
@@ -197,7 +202,7 @@ export class GestorProtocolosComponent implements OnInit {
             this.showProtocoloDetalle = true;
             this.seleccionPaciente = false;
             this.showCargarSolicitud = true;
-            this.showBotonAceptar = false;
+            // this.showBotonAceptar = false;
             this.showBotonGuardar = true;
         }
     }
@@ -207,12 +212,14 @@ export class GestorProtocolosComponent implements OnInit {
      *
      * @memberof PuntoInicioLaboratorioComponent
      */
-    volverLista() {
+    volver() {
         if (this.laboratorioContextoCacheService.isModoRecepcionSinTurno()) {
             // location.reload();
             this.volverAPuntoInicioEmmiter.emit(true);
+        } else if (this.contextoCache.edicionDatosCabecera) {
+            this.aceptarCambiosHeader();
         } else {
-            this.refreshSelection();
+            this.refreshSelection(this.busqueda);
             this.showListarProtocolos = true;
             this.showProtocoloDetalle = false;
             this.showCargarSolicitud = false;
@@ -227,7 +234,8 @@ export class GestorProtocolosComponent implements OnInit {
      * @memberof GestorProtocolosComponent
      */
     editarDatosCabecera() {
-        this.showBotonAceptar = true;
+        this.showBotonAceptarCambiosAuditoria = false;
+        this.showBotonAceptarCambiosHeader = true;
         this.showBotonGuardar = false;
     }
 
@@ -244,7 +252,7 @@ export class GestorProtocolosComponent implements OnInit {
             this.showProtocoloDetalle = true;
             this.indexProtocolo = 0;
             this.seleccionPaciente = true;
-            this.showBotonAceptar = true;
+            // this.showBotonAceptar = true;
 
             this.contextoCache.mostrarCuerpoProtocolo = true;
             this.contextoCache.edicionDatosCabecera = true;
@@ -256,19 +264,26 @@ export class GestorProtocolosComponent implements OnInit {
      *
      * @memberof GestorProtocolosComponent
      */
-    aceptarCambios() {
-        if (this.contextoCache.modoAVolver) {
+    aceptarCambiosAuditoria() {
+        this.showBotonAceptarCambiosAuditoria = false;
+        this.showBotonGuardar = true;
 
+        if (this.contextoCache.modoAVolver) {
             this.laboratorioContextoCacheService.aceptarCambiosAuditoriaProtocolo();
             this.protocoloDetalleComponent.guardarSolicitudYVolver();
-
-        } else {
-            this.showBotonAceptar = false;
-            this.showBotonGuardar = true;
-            this.protocoloDetalleComponent.aceptarEdicionCabecera();
         }
     }
 
+    /**
+     *
+     *
+     * @memberof GestorProtocolosComponent
+     */
+    aceptarCambiosHeader() {
+        this.showBotonAceptarCambiosHeader = false;
+        this.showBotonAceptarCambiosAuditoria = true;
+        this.protocoloDetalleComponent.aceptarEdicionCabecera();
+    }
 
     /**
      *
@@ -279,7 +294,7 @@ export class GestorProtocolosComponent implements OnInit {
         this.protocoloDetalleComponent.cargarCodigosPracticas();
         this.laboratorioContextoCacheService.irAuditoriaProtocolo();
         this.laboratorioContextoCacheService.modoControl();
-        this.showBotonAceptar = true;
+        this.showBotonAceptarCambiosAuditoria = true;
         this.showBotonGuardar = false;
     }
 

@@ -1,4 +1,10 @@
-<h2>Preparar Lote</h2>
+<header>
+    <div class="clearfix">
+        <div class="page-title">
+            Preparar Lote
+        </div>
+    </div>
+</header>
 <div class="filtros-container lote-derivacion ml-1">
     <span>
         <plex-select [(ngModel)]="area" (change)="onChangeSelectArea($event)" name="area" label="Área" [data]='areas'></plex-select>
@@ -15,13 +21,13 @@
     </span>
     <span>
         <plex-select [(ngModel)]="organizacionDestino" (change)="buscar($event)" name="efectorDerivar" label="Efector (A derivar)"
-            [data]='organizaciones'></plex-select>
+            (getData)="loadOrganizaciones($event)"></plex-select>
     </span>
     <span>
         <plex-select [(ngModel)]="practicas" (change)="buscar($event,'practicas')" name="practicas" label="Análisis"
             [data]='practicasFiltro' labelField="nombre" multiple="true"></plex-select>
     </span>
-    <span>
+    <!-- <span>
         <plex-select [(ngModel)]="estado" (change)="buscar($event)" name="estado" label="Estado (de derivación)" [data]='estados'></plex-select>
-    </span>
+    </span> -->
 </div>
