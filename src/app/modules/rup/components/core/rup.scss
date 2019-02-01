@@ -251,6 +251,7 @@ $rotate: -90deg;
     }
 }
 
+
 // TEMP
 .metadato.fundacional {
     .legend {
@@ -397,6 +398,29 @@ $color in $rup_colors {
             background-color: $color;
             mix-blend-mode: hard-light;
         }
+    }
+}
+
+
+// ejemplo resultado: .semantic-badge hallazgo > .icon-rup {}
+@each $tag, $color in $rup_colors {
+    .semantic-badge-#{$tag} {
+        i {
+            border-bottom: 1px solid $color;
+            color: white;
+            background: $color !important;
+            mix-blend-mode: hard-light;
+            // padding-top: 3px;
+            // padding-bottom: 2px;
+            padding: 3px 3px 2px;
+        }
+        i:hover {
+            border: 2px solid $color;
+            box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
+        }
+    }
+    .semantic-text-#{$tag} {
+        color: $color;
     }
 }
 
