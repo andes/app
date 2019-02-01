@@ -9,13 +9,13 @@ import { ProfesionalService } from '../../../../services/profesional.service';
     template: `
     <div class="row">
         <div class="col-3">
-            <plex-select label="Tipo de filtro" [data]="opciones" [(ngModel)]="seleccion.tipoDeFiltro" name="tipoDeFiltro" (change)="onChange($event)"></plex-select>
+            <plex-select label="Tipo de filtro" [data]="opciones" [(ngModel)]="seleccion.tipoDeFiltro" name="tipoDeFiltro"></plex-select>
         </div>
         <div class="col-3">
-            <plex-datetime label="Desde" [max]="hoy" type="date" [(ngModel)]="desde" name="desde" (change)="onChange()"></plex-datetime>
+            <plex-datetime label="Desde" [max]="hoy" type="date" [(ngModel)]="desde" name="desde"></plex-datetime>
         </div>
         <div class="col-3">
-            <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta" (change)="onChange()"></plex-datetime>
+            <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta"></plex-datetime>
         </div>
         <div class="col-3">
             <plex-button type="success" label="Filtrar" (click)="onChange()" class="vertical-center" ></plex-button>
@@ -56,31 +56,31 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
     public hoy = new Date();
     public opciones = [{ id: 'agendas', nombre: 'Agendas' }, { id: 'turnos', nombre: 'Turnos' }];
     public estadosAgendas = [
-        {id: 'planificacion', nombre: 'Planificacion'},
-        {id: 'disponible', nombre: 'Disponible'},
-        {id: 'publicada', nombre: 'Publicada'},
-        {id: 'suspendida', nombre: 'Suspendida'},
-        {id: 'pausada', nombre: 'Pausada'},
-        {id: 'pendienteAsistencia', nombre: 'Pendiente Asistencia'},
-        {id: 'pendienteAuditoria', nombre: 'Pendiente Auditoria'},
-        {id: 'auditada', nombre: 'Auditada'},
-        {id: 'borrada', nombre: 'Borrada'}
+        { id: 'planificacion', nombre: 'Planificacion' },
+        { id: 'disponible', nombre: 'Disponible' },
+        { id: 'publicada', nombre: 'Publicada' },
+        { id: 'suspendida', nombre: 'Suspendida' },
+        { id: 'pausada', nombre: 'Pausada' },
+        { id: 'pendienteAsistencia', nombre: 'Pendiente Asistencia' },
+        { id: 'pendienteAuditoria', nombre: 'Pendiente Auditoria' },
+        { id: 'auditada', nombre: 'Auditada' },
+        { id: 'borrada', nombre: 'Borrada' }
     ];
 
     public estadoTurnos = [
-        {id: 'disponible', nombre: 'Disponible'},
-        {id: 'asignado', nombre: 'Asignado'},
-        {id: 'reasignado', nombre: 'Reasignado'},
-        {id: 'suspendido', nombre: 'Suspendido'},
-        {id: 'turnoDoble', nombre: 'Turno Doble'}
+        { id: 'disponible', nombre: 'Disponible' },
+        { id: 'asignado', nombre: 'Asignado' },
+        { id: 'reasignado', nombre: 'Reasignado' },
+        { id: 'suspendido', nombre: 'Suspendido' },
+        { id: 'turnoDoble', nombre: 'Turno Doble' }
     ];
 
     public tipoTurnos = [
-        {id: 'delDia', nombre: 'Del Dia'},
-        {id: 'programado', nombre: 'Programado'},
-        {id: 'gestion', nombre: 'Gestion'},
-        {id: 'profesional', nombre: 'Profesional'},
-        {id: 'sobreturno', nombre: 'Sobreturno'}
+        { id: 'delDia', nombre: 'Del Dia' },
+        { id: 'programado', nombre: 'Programado' },
+        { id: 'gestion', nombre: 'Gestion' },
+        { id: 'profesional', nombre: 'Profesional' },
+        { id: 'sobreturno', nombre: 'Sobreturno' }
     ];
 
     @Input() params: any = {};
@@ -132,10 +132,10 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
             fechaHasta: this.hasta,
             tipoDeFiltro: this.seleccion.tipoDeFiltro ? this.seleccion.tipoDeFiltro.id : undefined,
             prestacion: this.seleccion.prestacion ? this.seleccion.prestacion.map(pr => {
-                return {id: pr.conceptId, nombre: pr.term };
+                return { id: pr.conceptId, nombre: pr.term };
             }) : undefined,
             profesional: this.seleccion.profesional ? this.seleccion.profesional.map(prof => {
-                return {id: prof.id, nombre: prof.nombre, apellido: prof.apellido };
+                return { id: prof.id, nombre: prof.nombre, apellido: prof.apellido };
             }) : undefined,
         };
 

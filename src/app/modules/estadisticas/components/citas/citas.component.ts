@@ -44,10 +44,38 @@ export class CitasComponent implements AfterViewInit {
                 ticks: {
                     autoSkip: false
                 }
-            }]
+            }],
+            yAxes: [{
+                ticks: {
+                    min: 0,
+                }
+            }],
 
-        }
+        },
     };
+
+
+
+    barColors: Array<any> = [{ backgroundColor: '#5bc0de' }];
+
+
+    chartColors: Array<any> = [{
+        backgroundColor: [
+            '#f1930d',
+            '#ff4a1a',
+            '#f4a03b',
+            '#92278e',
+            '#0070cc',
+            '#00bcb4',
+            '#b9c512',
+            '#111',
+            '#b9c512',
+            '#002738',
+            '#660520',
+            '#a0a0a0',
+            '#8bc43f'
+        ]
+    }];
 
     public params = {
 
