@@ -177,14 +177,14 @@ export class MapaDeCamasComponent implements OnInit {
         this.filtros.servicio = null;
         this.filtros.sector = null;
         this.filtros.censable = null,
-        this.filtros.opciones = {
-            sectores: [],
-            habitaciones: [],
-            estados: [],
-            servicios: [],
-            tiposCamas: [],
-            censo: []
-        };
+            this.filtros.opciones = {
+                sectores: [],
+                habitaciones: [],
+                estados: [],
+                servicios: [],
+                tiposCamas: [],
+                censo: []
+            };
 
 
         this.camas = this.camasCopy;
@@ -291,8 +291,9 @@ export class MapaDeCamasComponent implements OnInit {
                 };
                 this.camasService.cambiaEstado(e.cama.id, dto).subscribe(camaActualizada => {
                     e.cama.ultimoEstado = camaActualizada.ultimoEstado;
+                    this.fecha = new Date();
+                    this.refresh();
                     this.onCamaSelected(e);
-                    this.countFiltros();
                 }, (err1) => {
                     this.plex.info('danger', 'Error al intentar desocupar la cama');
                 });
@@ -326,7 +327,6 @@ export class MapaDeCamasComponent implements OnInit {
      * @memberof MapaDeCamasComponent
      */
     actualizarMapaDeCamas(dtoAccion) {
-        console.log(dtoAccion);
         switch (dtoAccion.accion) {
             case 'internarPaciente':
                 if (dtoAccion.cama) {
@@ -413,8 +413,9 @@ export class MapaDeCamasComponent implements OnInit {
                 break;
 
         }
-
-        this.countFiltros();
+        this.fecha = new Date();
+        this.refresh();
+        // this.countFiltros();
 
 
     }

@@ -224,10 +224,11 @@ export class IniciarInternacionComponent implements OnInit {
             }
         }
         if (this.camaSelected) {
-            let camaId = this.camaSelected.id;
-            this.camasService.getCama(camaId).subscribe(cama => {
-                this.cama = cama;
-            });
+            this.cama = this.camaSelected;
+            // let camaId = this.camaSelected.id;
+            // this.camasService.getCama(camaId).subscribe(cama => {
+            //     this.cama = cama;
+            // });
         } else {
             this.route.params.subscribe(params => {
                 if (params && params['id']) {
@@ -492,7 +493,7 @@ export class IniciarInternacionComponent implements OnInit {
     }
 
     selectCamasDisponibles(unidadOrganizativa, fecha, hora) {
-        this.cama = null;
+        // this.cama = null;
         this.listadoCamas = null;
         if (unidadOrganizativa) {
             let f = this.servicioInternacion.combinarFechas(fecha, hora);

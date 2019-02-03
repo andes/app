@@ -242,7 +242,23 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
         if (isvalid) {
             let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
             this.registro.valor.InformeEgreso.fechaEgreso = this.internacionService.combinarFechas(this.fechaEgreso, this.horaEgreso);
-            let existeEgreso = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.registro.concepto.conceptId);
+            // vamos a controlas que la fecha de egreso sea anterior a la fecha de ingreso
+            let fechaActual = new Date();
+            let ingreso = this.internacionService.verRegistro(this.prestacion, 'ingreso');
+            if (this.registro.valor.InformeEgreso.fechaEgreso > fechaActual || ingreso.informeIngreso.fechaIngreso > this.registro.valor.InformeEgreso.fechaEgreso) {
+                this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a la fecha de ingreso o superior a la fecha actual');
+                return;
+            }
+
+            if (!this.procedimientosObstetricos) {
+                this.registro.valor.InformeEgreso.terminacionEmbarazo = undefined;
+                this.registro.valor.InformeEgreso.edadGestacional = undefined;
+                this.registro.valor.InformeEgreso.paridad = undefined;
+                this.registro.valor.InformeEgreso.tipoParto = undefined;
+                this.registro.valor.InformeEgreso.nacimientos = undefined;
+            }
+
+            let existeEgreso = this.internacionService.verRegistro(this.prestacion, 'egreso');
             if (!existeEgreso) {
                 registros.push(this.registro);
             }

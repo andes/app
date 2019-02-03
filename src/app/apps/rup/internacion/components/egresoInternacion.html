@@ -153,7 +153,6 @@
                                         placeholder="" [required]="procedimientosObstetricos"></plex-int>
                                 </div>
                                 <div class="col-6">
-                                    <label>Tipo de parto</label>
                                     <plex-radio [(ngModel)]="registro.valor.InformeEgreso.tipoParto" label="Tipo de parto"
                                         type="horizontal" [data]="opcionesTipoParto" name="opcionTipoParto">
                                     </plex-radio>
@@ -167,7 +166,6 @@
                                     </div>
 
                                     <div class="col-6">
-                                        <label>Condición al nacer</label>
                                         <plex-radio [(ngModel)]="nacimiento.condicionAlNacer" label="Condición al nacer"
                                             type="horizontal" [data]="opcionesCondicionAlNacer" name="opcionCondNacer-{{i}}">
                                         </plex-radio>
@@ -175,13 +173,11 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-6">
-                                        <label>Terminación</label>
                                         <plex-radio [(ngModel)]="nacimiento.terminacion" label="Terminacion" type="horizontal"
                                             [data]="opcionesTerminacion" name="Terminacion-{{i}}">
                                         </plex-radio>
                                     </div>
                                     <div class="col-6">
-                                        <label>Sexo</label>
                                         <plex-radio [(ngModel)]="nacimiento.sexo" label="Sexo" type="horizontal" [data]="opcionesSexo"
                                             name="Sexo-{{i}}">
                                         </plex-radio>
