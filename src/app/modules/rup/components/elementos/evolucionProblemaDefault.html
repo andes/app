@@ -1,6 +1,6 @@
 <form #form="ngForm" *ngIf="paciente">
 
-    <ng-container *ngIf="!soloValores && referenceSet.length > 0 && registro.valor.estado !== 'transformado'">
+    <!-- <ng-container *ngIf="!soloValores && referenceSet.length > 0 && registro.valor.estado !== 'transformado'">
         <div class="row">
             <div class="col-12">
                 <span *ngIf="hallazgoOrigen" class="badge badge-info">
@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="row">&nbsp;</div>
-    </ng-container>
+    </ng-container> -->
 
     <div *ngIf="!soloValores && registro.valor.estado !== 'transformado'">
         <div *ngIf="elementoRUP && registro">
@@ -164,7 +164,7 @@
                             <i [ngClass]="{'text-black-50': indice === 0, 'hover': indice > 0}" class="mdi mdi-menu-left mdi-36px semantic-text-{{ registro.concepto.semanticTag }}"
                                 (click)="cambiarEvolucion('-')"></i>
                             <!-- fechaCarga es registro.createdAt -->
-                            {{ registro.evoluciones[0].fechaCarga | fecha }}
+                            {{ unaEvolucion.fechaCarga | fecha }}
                             <i [ngClass]="{'text-black-50': indice === registro.evoluciones.length - 1, 'hover': indice < registro.evoluciones.length - 1}"
                                 class="mdi mdi-menu-right mdi-36px semantic-text-{{ registro.concepto.semanticTag }}"
                                 (click)="cambiarEvolucion('+')"></i>
