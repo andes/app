@@ -127,17 +127,21 @@ export class CitasComponent implements OnInit {
 
     cargarLosFiltros() {
         if (this.data.profesionales) {
+            let preDataProfesionales = {data: [], label: 'Turnos'};
             this.data.profesionales.forEach((item) => {
                 this.profesionalLabels.push(item.apellido + ' ' + item.nombre);
-                this.profesionalData.push(item.total);
+                preDataProfesionales.data.push(item.total);
             });
+            this.profesionalData.push(preDataProfesionales);
         }
 
         if (this.data.prestacion) {
+            let preDataPrestaciones = {data: [], label: 'Turnos'};
             this.data.prestacion.forEach((item) => {
                 this.prestacionLabels.push(item.nombre);
-                this.prestacionData.push(item.total);
+                preDataPrestaciones.data.push(item.total);
             });
+            this.prestacionData.push(preDataPrestaciones);
         }
 
         if (this.data.estado_turno) {
