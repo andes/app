@@ -9,7 +9,7 @@ import { RupElement } from '.';
     styleUrls: ['informeEpicrisis.scss'],
     encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
-@RupElement()
+@RupElement('InformeEpicrisisComponent')
 export class InformeEpicrisisComponent extends RUPComponent implements OnInit {
 
     public accordionActive = 0;

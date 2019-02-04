@@ -7,7 +7,7 @@ import { RupElement } from '.';
     selector: 'rup-saturacion-oxigeno',
     templateUrl: 'saturacionOxigeno.html'
 })
-@RupElement()
+@RupElement('SaturacionOxigenoComponent')
 export class SaturacionOxigenoComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         // Observa cuando cambia la propiedad 'SaturacionOxigeno' en otro elemento RUP

@@ -7,7 +7,7 @@ import { RupElement } from '.';
     selector: 'rup-observaciones',
     templateUrl: 'observaciones.html'
 })
-@RupElement()
+@RupElement('ObservacionesComponent')
 export class ObservacionesComponent extends RUPComponent implements OnInit {
     public referentSet = [];
     // suscriptionSeccion: any;

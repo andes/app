@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-tension-arterial',
     templateUrl: '../core/rup.html'
 })
-@RupElement()
+@RupElement('TensionArterialComponent')
 export class TensionArterialComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         // Observa cuando cambia la propiedad 'peso' en otro elemento RUP

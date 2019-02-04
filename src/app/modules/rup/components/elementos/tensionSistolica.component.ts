@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-tension-sistolica',
     templateUrl: 'tensionSistolica.html'
 })
-@RupElement()
+@RupElement('TensionSistolicaComponent')
 export class TensionSistolicaComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         // Observa cuando cambia la propiedad 'Sistolica' en otro elemento RUP

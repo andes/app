@@ -8,7 +8,7 @@ import { RupElement } from '.';
     templateUrl: 'elementoDeRegistro.html',
     styleUrls: ['elementoDeRegistro.scss']
 })
-@RupElement()
+@RupElement('ElementoDeRegistroComponent')
 export class ElementoDeRegistroComponent extends RUPComponent implements OnInit {
 
 

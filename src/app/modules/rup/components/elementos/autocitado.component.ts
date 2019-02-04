@@ -7,7 +7,7 @@ import { RupElement } from '.';
     selector: 'rup-autocitado',
     templateUrl: 'autocitado.html'
 })
-@RupElement()
+@RupElement('AutocitadoComponent')
 export class AutocitadoComponent extends RUPComponent implements OnInit {
     // Tipos de Prestaciones a las que el usuario tiene permiso
     public tiposPrestacion: any = [];

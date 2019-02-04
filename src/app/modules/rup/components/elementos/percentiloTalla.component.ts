@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-percentilo-talla',
     templateUrl: 'percentiloTalla.html'
 })
-@RupElement()
+@RupElement('PercentiloTallaComponent')
 export class PercentiloTallaComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         if (!this.soloValores) {

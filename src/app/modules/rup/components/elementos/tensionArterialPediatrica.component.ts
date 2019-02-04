@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-tension-arterial-pediatrica',
     templateUrl: '../core/rup.html'
 })
-@RupElement()
+@RupElement('TensionArterialPediatricaComponent')
 export class TensionArterialPediatricaComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         this.registro.valor = {

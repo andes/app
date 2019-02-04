@@ -7,7 +7,7 @@ import { RupElement } from '.';
     selector: 'rup-indice-de-masa-corporal',
     templateUrl: 'indiceDeMasaCorporal.html'
 })
-@RupElement()
+@RupElement('IndiceDeMasaCorporalComponent')
 export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnInit {
 
     conceptosRequeridos: any[] = [];

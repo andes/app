@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-hipertensionArterial',
     templateUrl: '../core/rup.html'
 })
-@RupElement()
+@RupElement('HipertensionArterialComponent')
 export class HipertensionArterialComponent extends RUPComponent implements OnInit {
     ngOnInit() {
 
