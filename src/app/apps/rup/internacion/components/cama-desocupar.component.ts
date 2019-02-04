@@ -71,7 +71,7 @@ export class DesocuparCamaComponent implements OnInit {
                 this.organizacion = organizacion;
                 this.listaUnidadesOrganizativas = this.organizacion.unidadesOrganizativas ? this.organizacion.unidadesOrganizativas.filter(o => o.conceptId !== this.cama.ultimoEstado.unidadOrganizativa.conceptId) : [];
                 if (this.listaUnidadesOrganizativas && this.listaUnidadesOrganizativas.length > 0) {
-                    this.opcionesDesocupar.push({ id: 'pase', label: 'Cambiar de unidad' });
+                    this.opcionesDesocupar.push({ id: 'pase', label: 'Cambiar de unidad organizativa' });
                 }
             });
         } else {

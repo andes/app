@@ -144,6 +144,11 @@
 
                 <!-- // Ingresar un paciente -->
 
+                <!-- Ocupar Cama -->
+                <ng-container *ngIf="accion ==='ocupar' && !showEgreso && pacienteSelected && prestacionPorInternacion">
+                    <cama-ocupar [prestacion]="prestacionPorInternacion" [paciente]="pacienteSelected" (accionCama)="actualizarMapaDeCamas($event)"></cama-ocupar>
+                </ng-container>
+
                 <!-- Desocupar Cama -->
                 <ng-container *ngIf="accion ==='desocupar' && !showEgreso && prestacionPorInternacion">
                     <cama-desocupar [cama]="camaSelected" [prestacion]="prestacionPorInternacion" (accionCama)="actualizarMapaDeCamas($event)"
@@ -182,8 +187,7 @@
                                         {{camaSeleccionada.ultimoEstado.observaciones}}</span>
                                     <!-- Data paciente -->
                                     <div class="andes-contenedor-secundario horizontal centrado" *ngIf="camaSeleccionada.ultimoEstado.estado == 'ocupada'">
-                                        <img  class="sidebar-imagen-paciente"
-                                            src="" alt="">
+                                        <img class="sidebar-imagen-paciente" src="" alt="">
                                         <div class="andes-sidebar-prefix">
                                             <p *ngIf="camaSeleccionada.ultimoEstado?.paciente">
                                                 <b>{{camaSeleccionada.ultimoEstado.paciente.apellido}}</b>

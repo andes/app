@@ -264,7 +264,7 @@ import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/compon
 import { OdontogramaRefsetComponent } from './modules/rup/components/elementos/OdontogramaRefset.component';
 import { LactanciaComponent } from './modules/rup/components/elementos/lactancia.component';
 import { IniciarInternacionComponent } from './apps/rup/internacion/components/iniciarInternacion.component';
-import { OcuparCamaComponent } from './apps/rup/internacion/components/ocuparCama.component';
+import { OcuparCamaComponent } from './apps/rup/internacion/components/cama-ocupar.component';
 import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
 import { CensoDiarioComponent } from './apps/rup/internacion/components/censoDiario.component';
 import { CensoMensualComponent } from './apps/rup/internacion/components/censoMensual.component';
@@ -381,7 +381,6 @@ import { FormTerapeuticoDetallePageComponent } from './components/formularioTera
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
 import { CamasService } from './apps/rup/internacion/services/camas.service';
 import { InternacionService } from './apps/rup/internacion/services/internacion.service';
-import { EjecucionInternacionComponent } from './apps/rup/internacion/components/ejecucionInternacion.component';
 import { DesocuparCamaComponent } from './apps/rup/internacion/components/cama-desocupar.component';
 import { ListaEsperaInternacionComponent } from './apps/rup/internacion/components/listaEsperaInternacion.component';
 import { EgresoInternacionComponent } from './apps/rup/internacion/components/egresoInternacion.component';
@@ -526,7 +525,8 @@ let RUPComponentsArray = [
     ProcedimientoDeEnfermeriaComponent,
     CamaBloquearComponent,
     CamaDesbloquearComponent,
-    CamaPrepararComponent
+    CamaPrepararComponent,
+    OcuparCamaComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */

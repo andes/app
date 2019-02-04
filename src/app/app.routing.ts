@@ -80,7 +80,7 @@ import { IniciarInternacionComponent } from './apps/rup/internacion/components/i
 import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
 // Solicitudes
 import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.component';
-import { OcuparCamaComponent } from './apps/rup/internacion/components/ocuparCama.component';
+import { OcuparCamaComponent } from './apps/rup/internacion/components/cama-ocupar.component';
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 import { ReglasComponent } from './components/top/reglas/reglas.component';
