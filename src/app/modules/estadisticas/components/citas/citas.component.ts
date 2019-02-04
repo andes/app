@@ -17,6 +17,7 @@ export class CitasComponent implements OnInit {
     public hasta: Date = new Date();
     public hoy = new Date();
     public organizacion;
+    public tipoDeFiltro;
 
     // Datos
     public data: any;
@@ -119,6 +120,7 @@ export class CitasComponent implements OnInit {
         };
         this.estService.post(this.params).subscribe((data) => {
             this.data = data[0];
+            this.tipoDeFiltro = data[1].tipoDeFiltro === 'turnos' ? 'Turnos' : 'Agendas';
             this.cargarLosFiltros();
         });
 
@@ -127,7 +129,7 @@ export class CitasComponent implements OnInit {
 
     cargarLosFiltros() {
         if (this.data.profesionales) {
-            let preDataProfesionales = {data: [], label: 'Turnos'};
+            let preDataProfesionales = {data: [], label: this.tipoDeFiltro};
             this.data.profesionales.forEach((item) => {
                 this.profesionalLabels.push(item.apellido + ' ' + item.nombre);
                 preDataProfesionales.data.push(item.total);
@@ -136,7 +138,7 @@ export class CitasComponent implements OnInit {
         }
 
         if (this.data.prestacion) {
-            let preDataPrestaciones = {data: [], label: 'Turnos'};
+            let preDataPrestaciones = {data: [], label: this.tipoDeFiltro};
             this.data.prestacion.forEach((item) => {
                 this.prestacionLabels.push(item.nombre);
                 preDataPrestaciones.data.push(item.total);

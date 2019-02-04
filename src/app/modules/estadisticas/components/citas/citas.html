@@ -9,39 +9,41 @@
         <div>
             <turnos-filtros (filter)="filter($event)" [params]="filtros"></turnos-filtros>
             <div class="row">                
-                    <div class="col-7" *ngIf="profesionalData.length > 0">
-                        <h3>Por profesionales</h3>
-                        <div>
-                            <canvas baseChart [colors]="barColors" [datasets]="profesionalData" [options]="barOptions" [labels]="profesionalLabels" chartType="bar"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-5" *ngIf="estadoData.length > 0">
-                        <h3>Por estado</h3>
-                        <div>
-                            <canvas baseChart [colors]="chartColors" [data]="estadoData" [labels]="estadoLabels" chartType="pie"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-5" *ngIf="estadoAgendaData.length > 0">
-                        <h3>Por estado</h3>
-                        <div>
-                            <canvas baseChart [colors]="chartColors" [data]="estadoAgendaData" [labels]="estadoAgendaLabels" chartType="pie"></canvas>
-                        </div>
-                    </div>
-            </div>
-            <div class="row">
-                <div class="col-7" *ngIf="prestacionData.length > 0">
+                <div class="col" *ngIf="prestacionData.length > 0">
                     <h3>Por prestaciones</h3>
                     <div>
                         <canvas baseChart [colors]="barColors" [datasets]="prestacionData" [options]="barOptions" [labels]="prestacionLabels" chartType="bar"></canvas>
                     </div>
                 </div>
-                <div class="col-5" *ngIf="tipoTurnoData.length > 0">
-                        <h3>Por tipo turno</h3>
-                        <div>
-                            <canvas baseChart [colors]="chartColors" [data]="tipoTurnoData" [labels]="tipoTurnoLabels" chartType="pie"></canvas>
-                        </div>
+            </div>
+            <div class="row">    
+                <div class="col-6" *ngIf="estadoData.length > 0">
+                    <h3>Por estado</h3>
+                    <div>
+                        <canvas baseChart [colors]="chartColors" [data]="estadoData" [labels]="estadoLabels" chartType="pie"></canvas>
+                    </div>
+                </div>
+                <div class="col-9" *ngIf="estadoAgendaData.length > 0">
+                    <h3>Por estado</h3>
+                    <div>
+                        <canvas baseChart [colors]="chartColors" [data]="estadoAgendaData" [labels]="estadoAgendaLabels" chartType="pie"></canvas>
+                    </div>
+                </div>
+                <div class="col-6" *ngIf="tipoTurnoData.length > 0">
+                    <h3>Por tipo turno</h3>
+                    <div>
+                        <canvas baseChart [colors]="chartColors" [data]="tipoTurnoData" [labels]="tipoTurnoLabels" chartType="pie"></canvas>
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col" *ngIf="profesionalData.length > 0">
+                    <h3>Por profesionales</h3>
+                    <div>
+                        <canvas baseChart [colors]="barColors" [datasets]="profesionalData" [options]="barOptions" [labels]="profesionalLabels" chartType="bar"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
     </plex-layout-main>
 </plex-layout>
