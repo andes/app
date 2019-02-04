@@ -20,6 +20,7 @@ import { ProcedimientosQuirurgicosService } from '../../../../services/procedimi
 import { Cie10Service } from '../../../../services/term/cie10.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { ElementosRUPRegister } from '../elementos';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'rup',
@@ -108,6 +109,7 @@ export class RUPComponent implements OnInit, AfterViewInit {
         public cie10Service: Cie10Service,
         public servicioOrganizacion: OrganizacionService,
         public plex: Plex,
+        public route: ActivatedRoute,
         public agendaService: AgendaService
     ) { }
 
