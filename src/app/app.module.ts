@@ -355,6 +355,7 @@ import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.c
 import { DetalleSolicitudComponent } from './components/top/solicitudes/detalleSolicitud.component';
 import { AuditarSolicitudComponent } from './components/top/solicitudes/auditarSolicitud.component';
 import { NuevaSolicitudComponent } from './components/top/solicitudes/nuevaSolicitud.component';
+import { AnularSolicitudComponent } from './components/top/solicitudes/anularSolicitud.component';
 
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
@@ -383,65 +384,6 @@ import { CampaniaSaludService } from './apps/campaniaSalud/services/campaniaSalu
 import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campaniaSalud.component';
 import { CampaniaVisualizacionComponent } from './apps/campaniaSalud/components/campaniaVisualizacion.component';
 import { CampaniaFormComponent } from './apps/campaniaSalud/components/campania-create-update.component';
-
-export let RUPRegistry = {
-    'SelectPorRefsetComponent': SelectPorRefsetComponent,
-    'EvolucionProblemaDefaultComponent': EvolucionProblemaDefaultComponent,
-    'InformesComponent': InformesComponent,
-    'NuevaEvolucionProblemaComponent': NuevaEvolucionProblemaComponent,
-    'ObservacionesComponent': ObservacionesComponent,
-    'SaturacionOxigenoComponent': SaturacionOxigenoComponent,
-    'SignosVitalesComponent': SignosVitalesComponent,
-    'SolicitudPrestacionDefaultComponent': SolicitudPrestacionDefaultComponent,
-    'TemperaturaComponent': TemperaturaComponent,
-    'TensionArterialComponent': TensionArterialComponent,
-    'TensionDiastolicaComponent': TensionDiastolicaComponent,
-    'TensionSistolicaComponent': TensionSistolicaComponent,
-    'FrecuenciaCardiacaComponent': FrecuenciaCardiacaComponent,
-    'FrecuenciaRespiratoriaComponent': FrecuenciaRespiratoriaComponent,
-    'AutocitadoComponent': AutocitadoComponent,
-    'ObesidadComponent': ObesidadComponent,
-    'HipertensionArterialComponent': HipertensionArterialComponent,
-    'FiltradoGlomerularComponent': FiltradoGlomerularComponent,
-    'AdjuntarDocumentoComponent': AdjuntarDocumentoComponent,
-    'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
-    'IngresoInternacionComponent': IngresoInternacionComponent,
-    'PasesCamaComponent': PasesCamaComponent,
-    'InformeEpicrisisComponent': InformeEpicrisisComponent,
-    'ElementoDeRegistroComponent': ElementoDeRegistroComponent,
-    'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
-    'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
-    'OdontogramaRefsetComponent': OdontogramaRefsetComponent,
-    'LactanciaComponent': LactanciaComponent,
-    'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
-    'CircunferenciaCinturaComponent': CircunferenciaCinturaComponent,
-    'InformeActividadNoNominalizadaComponent': InformeActividadNoNominalizadaComponent,
-    'PesoComponent': PesoComponent,
-    'PercentiloPesoComponent': PercentiloPesoComponent,
-    'PerimetroCefalicoComponent': PerimetroCefalicoComponent,
-    'PercentiloPerimetroCefalicoComponent': PercentiloPerimetroCefalicoComponent,
-    'TallaComponent': TallaComponent,
-    'PercentiloTallaComponent': PercentiloTallaComponent,
-    'IndiceDeMasaCorporalComponent': IndiceDeMasaCorporalComponent,
-    'PercentiloDeMasaCorporalComponent': PercentiloDeMasaCorporalComponent,
-    'TensionArterialPediatricaComponent': TensionArterialPediatricaComponent,
-    'PercentiloDeTensionArterialComponent': PercentiloDeTensionArterialComponent,
-    'ConsultaDeNinoSanoM2AComponent': ConsultaDeNinoSanoM2AComponent,
-    'ConsultaDeNinoSanoE2Y3AComponent': ConsultaDeNinoSanoE2Y3AComponent,
-    'ConsultaDeNinoSanoE3Y6AComponent': ConsultaDeNinoSanoE3Y6AComponent,
-    'DesarrolloPsicomotorComponent': DesarrolloPsicomotorComponent,
-    'RegistrarMedidasAntropometricasNinoE3Y6AComponent': RegistrarMedidasAntropometricasNinoE3Y6AComponent,
-    'RegistrarMedidasAntropometricasNinoM2AComponent': RegistrarMedidasAntropometricasNinoM2AComponent,
-    'RegistrarMedidasAntropometricasNinoE2Y3AComponent': RegistrarMedidasAntropometricasNinoE2Y3AComponent,
-    'ResumenHistoriaClinicaComponent': ResumenHistoriaClinicaComponent,
-    'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
-    'GraficoLinealComponent': GraficoLinealComponent,
-    'CalculoDeBostonComponent': CalculoDeBostonComponent,
-    'SeleccionBinariaComponent': SeleccionBinariaComponent,
-    'ValorNumericoComponent': ValorNumericoComponent,
-    'FormulaBaseComponent': FormulaBaseComponent,
-    'MoleculaBaseComponent': MoleculaBaseComponent
-};
 
 let RUPComponentsArray = [
     SelectPorRefsetComponent,
@@ -505,7 +447,8 @@ let RUPComponentsArray = [
     SeleccionBinariaComponent,
     ValorNumericoComponent,
     ProcedimientoDeEnfermeriaComponent,
-    MoleculaBaseComponent
+    MoleculaBaseComponent,
+    HeaderPacienteComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -615,6 +558,7 @@ registerLocaleData(localeEs, 'es');
         SolicitudesComponent,
         DetalleSolicitudComponent,
         AuditarSolicitudComponent,
+        AnularSolicitudComponent,
         NuevaSolicitudComponent,
         PrestamosHcComponent,
         ListarSolicitudesComponent,

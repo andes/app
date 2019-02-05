@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-indice-de-masa-corporal',
     templateUrl: 'indiceDeMasaCorporal.html'
 })
+@RupElement('IndiceDeMasaCorporalComponent')
 export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnInit {
 
     conceptosRequeridos: any[] = [];

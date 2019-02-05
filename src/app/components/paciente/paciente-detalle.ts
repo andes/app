@@ -22,6 +22,7 @@ export class PacienteDetalleComponent implements OnInit {
      * @memberof PacienteDetalleComponent
      */
     @Input() mostrarRenaper: Boolean;
+    @Input() orientacion: 'vertical' | 'horizontal' = 'vertical';
     @Input('paciente')
     set paciente(value: IPaciente) {
         this._paciente = value;

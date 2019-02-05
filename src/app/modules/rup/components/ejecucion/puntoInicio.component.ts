@@ -102,6 +102,7 @@ export class PuntoInicioComponent implements OnInit {
 
     // tieneTurnosAsignados: true,
     actualizar() {
+        const idsPrestacionesPermitidas = this.tiposPrestacion.map(t => t.conceptId);
         observableForkJoin(
             // Agendas
             this.servicioAgenda.get({
@@ -117,24 +118,27 @@ export class PuntoInicioComponent implements OnInit {
                 fechaHasta: new Date(),
                 organizacion: this.auth.organizacion.id,
                 sinEstado: 'modificada',
-                ambitoOrigen: 'ambulatorio'
+                ambitoOrigen: 'ambulatorio',
+                tipoPrestaciones: idsPrestacionesPermitidas
             }),
             // buscamos las prestaciones pendientes que este asociadas a un turno para ejecutarlas
             this.servicioPrestacion.get({
+                solicitudHasta: moment(this.fecha).isValid() ? moment(this.fecha).endOf('day').toDate() : new Date(),
                 organizacion: this.auth.organizacion.id,
                 estado: 'pendiente',
-                tieneTurno: 'si',
-                // TODO: filtrar por las prestaciones permitidas
-                // tipoPrestaciones: this.tiposPrestacion.map(tp => { return tp.conceptId; })
+                tieneTurno: true,
+                ambitoOrigen: 'ambulatorio',
+                tipoPrestaciones: idsPrestacionesPermitidas
             })
         ).subscribe(data => {
             this.agendas = data[0];
             this.prestaciones = data[1];
-            // Sumamos las prestaciones pendientes si hubiera
             if (data[2]) {
                 this.prestaciones = [...this.prestaciones, ...data[2]];
             }
+
             if (this.agendas.length) {
+
                 // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
                 this.agendas.forEach(agenda => {
                     agenda['cantidadTurnos'] = 0;
@@ -155,7 +159,7 @@ export class PuntoInicioComponent implements OnInit {
                         });
                     });
 
-                    // busquemos si hy sobreturnos para vincularlos con la prestacion correspondiente
+                    // busquemos si hay sobreturnos para vincularlos con la prestacion correspondiente
                     if (agenda.sobreturnos) {
                         agenda.sobreturnos.forEach(sobreturno => {
                             let indexPrestacion = this.prestaciones.findIndex(prestacion => {
@@ -169,15 +173,14 @@ export class PuntoInicioComponent implements OnInit {
                         });
                     }
                 });
-
             }
 
             this.agendasOriginales = JSON.parse(JSON.stringify(this.agendas));
             // buscamos las que estan fuera de agenda para poder listarlas:
             // son prestaciones sin turno creadas en la fecha seleccionada en el filtro
             this.fueraDeAgenda = this.prestaciones.filter(p => (!p.solicitud.turno &&
-                (p.createdAt >= moment(this.fecha).startOf('day').toDate() &&
-                    p.createdAt <= moment(this.fecha).endOf('day').toDate())
+                (p.ejecucion.fecha >= moment(this.fecha).startOf('day').toDate() &&
+                    p.ejecucion.fecha <= moment(this.fecha).endOf('day').toDate())
                 && p.estados[p.estados.length - 1].createdBy.username === this.auth.usuario.username
                 && (p.estados[p.estados.length - 1].tipo === 'ejecucion' || p.estados[p.estados.length - 1].tipo === 'validada')));
 
@@ -220,7 +223,7 @@ export class PuntoInicioComponent implements OnInit {
         // filtramos por agendas propias o todas menos las propias
         if (this.soloMisAgendas) {
             this.agendas = this.agendas.filter(agenda => {
-                return (agenda.profesionales.find(profesional => {
+                return (agenda.profesionales && agenda.profesionales.find(profesional => {
                     return (profesional.id === this.auth.profesional.id);
                 }));
             });
@@ -604,5 +607,20 @@ export class PuntoInicioComponent implements OnInit {
             this.tienePermisos(turno.tipoPrestacion, turno.prestacion) && condAsistencia);
     }
 
+    /**
+     * Se puede registrar inasistencia de un turno cuando se cumplen todas las validaciones:
+     * la agenda: no es futura, no está auditada
+     * turno: no está suspendido, ya pasó la hora de inicio, profesional no cargó prestación todavía y tiene paciente asignado
+     * @param {*} turno
+     * @returns {Boolean} si debe mostrarse o no el botón para registrar inasistencia
+     * @memberof PuntoInicioComponent
+     */
+    esHabilitadoRegistrarInasistencia(turno): Boolean {
+        let horaActual = moment(new Date()).format('LT');
+        let horaTurno = moment(turno.horaInicio).format('LT');
+        return !this.esFutura(this.agendaSeleccionada) && this.agendaSeleccionada.estado !== 'auditada' &&
+            turno.estado !== 'suspendido' && (!turno.asistencia || (turno.asistencia && turno.asistencia === 'asistio')) &&
+            turno.paciente && turno.diagnostico.codificaciones.length === 0;
+    }
 
 }

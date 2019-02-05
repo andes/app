@@ -1,10 +1,12 @@
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-ingresoInternacion',
     templateUrl: 'ingresoInternacion.html'
 })
+@RupElement('IngresoInternacionComponent')
 export class IngresoInternacionComponent extends RUPComponent implements OnInit {
     public ocupaciones = [];
     public obrasSociales = [];

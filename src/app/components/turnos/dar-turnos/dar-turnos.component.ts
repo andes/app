@@ -27,6 +27,7 @@ import { ListaEsperaService } from '../../../services/turnos/listaEspera.service
 import { SmsService } from './../../../services/turnos/sms.service';
 import { TurnoService } from './../../../services/turnos/turno.service';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
+import { HeaderPacienteComponent } from '../../paciente/headerPaciente.component';
 
 @Component({
     selector: 'dar-turnos',
@@ -173,6 +174,7 @@ export class DarTurnosComponent implements OnInit {
         if (this._pacienteSeleccionado) {
             this.pacientesSearch = false;
             this.showDarTurnos = true;
+            this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this._pacienteSeleccionado });
         }
 
         // Filtra las búsquedas en localStorage para que muestre sólo las del usuario logueado
@@ -917,6 +919,7 @@ export class DarTurnosComponent implements OnInit {
         this.actualizar('');
         this.plex.toast('info', 'El turno se asignó correctamente');
         this.hideDarTurno = false;
+        this.plex.clearNavbar();
 
         if (this._solicitudPrestacion) {
             let params = {
@@ -1042,6 +1045,7 @@ export class DarTurnosComponent implements OnInit {
     afterCreateUpdate(paciente) {
         this.showCreateUpdate = false;
         this.showDarTurnos = true;
+        this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: paciente });
         if (paciente) {
             this.actualizarDatosPaciente(paciente.id);
         } else {
@@ -1071,6 +1075,7 @@ export class DarTurnosComponent implements OnInit {
                             }
                         });
                     }
+                    this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                 });
         } else {
             this.seleccion = paciente;
@@ -1078,6 +1083,7 @@ export class DarTurnosComponent implements OnInit {
             this.escaneado.emit(this.esEscaneado);
             this.selected.emit(this.seleccion);
             this.showDarTurnos = false;
+            this.plex.clearNavbar();
         }
     }
 
@@ -1137,9 +1143,11 @@ export class DarTurnosComponent implements OnInit {
         this.opciones.tipoPrestacion = undefined; // blanquea el filtro de tipo de prestacion en el calendario
         this.opciones.profesional = undefined; // blanquea el filtro de profesionales en el calendario
         this.afterDarTurno.emit(true);
+        this.plex.clearNavbar();
     }
 
     buscarPaciente() {
+        this.plex.clearNavbar();
         this.showDarTurnos = false;
         this.mostrarCalendario = false;
         this.pacientesSearch = true;
@@ -1153,11 +1161,13 @@ export class DarTurnosComponent implements OnInit {
 
     cancelar() {
         this.showDarTurnos = false;
+        this.plex.clearNavbar();
         this.volverAlGestor.emit(true);
     }
 
     volver() {
         this.showDarTurnos = false;
+        this.plex.clearNavbar();
         this.estadoT = 'noSeleccionada';
         this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion en panel de confirma turno
         this.opciones.tipoPrestacion = undefined; // blanquea el filtro de tipo de prestacion en el calendario

@@ -181,7 +181,7 @@ export class HudsBusquedaComponent implements OnInit {
             case 'hallazgo':
             case 'trastorno':
             case 'producto':
-                registro.class = registro.concepto.semanticTag;
+                registro.class = this.servicioPrestacion.getCssClass(registro.concepto, null);
                 if (registro.esSolicitud) {
                     registro.class = 'plan';
                 }
@@ -571,7 +571,6 @@ export class HudsBusquedaComponent implements OnInit {
     listarMedicamentos() {
         this.servicioPrestacion.getByPacienteMedicamento(this.paciente.id, true).subscribe(medicamentos => {
             this.productos = medicamentos;
-            console.log('productos -> ', this.productos);
         });
     }
 
@@ -663,8 +662,6 @@ export class HudsBusquedaComponent implements OnInit {
 
     getSemanticTagFiltros() {
         // let filtro = this.esTurneable(concepto) ? ['planes'] : this.filtroActual;
-        // console.log('conceptos -> ', this.conceptos)
-        // console.log('filtroActual -> ', this.filtroActual)
         let filtro = (this.conceptos[this.filtroActual]) ? this.conceptos[this.filtroActual] : null;
 
         // si estamos en buscador basico nos fijamos si el filtro seleccionado es planes

@@ -1,5 +1,4 @@
 <form class="plex-layout" #form="ngForm">
-    <header-paciente *ngIf="showDarTurnos" [paciente]="paciente"></header-paciente>
     <section class="dar-turnos-section">
         <div class="row calendario-expandido" *ngIf="autorizado && showDarTurnos">
             <!--Panel principal-->
@@ -296,11 +295,13 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
-                                <span *ngIf="!desplegarOS && obraSocialPaciente">
-                                    <label>Obra Social </label>
-                                    <div>{{obraSocialPaciente.financiador}}</div>
-                                </span>
+                            <div *ngIf="agenda.espacioFisico" class="col">
+                                <label>Espacio Físico</label>
+                                <div>{{agenda.espacioFisico.nombre}}</div>
+                            </div>
+                            <div *ngIf="!desplegarOS && obraSocialPaciente" class="col">
+                                <label>Obra Social </label>
+                                <div>{{obraSocialPaciente.financiador}}</div>
                                 <plex-select *ngIf="desplegarOS" label="Obra Social" [(ngModel)]="obraSocialPaciente"
                                     name="obraSocialPaciente" (getData)="loadObrasSociales($event)" labelField="financiador"></plex-select>
                             </div>

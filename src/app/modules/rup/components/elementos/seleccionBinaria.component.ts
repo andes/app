@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-seleccion-binaria',
     templateUrl: 'seleccionBinaria.html'
 })
-
+@RupElement('SeleccionBinariaComponent')
 export class SeleccionBinariaComponent extends RUPComponent implements OnInit {
 
     public options;
