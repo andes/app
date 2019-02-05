@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-talla',
     templateUrl: 'talla.html'
 })
+@RupElement('TallaComponent')
 export class TallaComponent extends RUPComponent implements OnInit {
     public esRequerido: boolean;
 
@@ -309,7 +311,6 @@ export class TallaComponent extends RUPComponent implements OnInit {
     */
 
 }
-
 
 
 

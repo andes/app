@@ -1,11 +1,12 @@
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-circunferencia-de-cintura',
     templateUrl: 'circunferenciaCintura.html'
 })
-
+@RupElement('CircunferenciaCinturaComponent')
 export class CircunferenciaCinturaComponent extends RUPComponent implements OnInit {
     ngOnInit() {
 
