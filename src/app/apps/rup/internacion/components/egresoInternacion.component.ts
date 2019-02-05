@@ -8,6 +8,8 @@ import { Cie10Service } from '../../../../services/term/cie10.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { InternacionService } from '../services/internacion.service';
 import * as moment from 'moment';
+
+import { CamasService } from '../services/camas.service';
 import { Subject } from 'rxjs/Rx';
 
 @Component({
@@ -17,6 +19,7 @@ import { Subject } from 'rxjs/Rx';
 export class EgresoInternacionComponent implements OnInit, OnChanges {
     @HostBinding('class.plex-layout') layout = true;
 
+    @Input() camaSelected;
     @Input() prestacion;
     @Input() soloValores;
     // botonera, input para pasarle por parametro si mostramos o no el btn cerrar o guardar.
@@ -24,7 +27,6 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     @Output() data: EventEmitter<any> = new EventEmitter<any>();
     @Output() btnIniciarEditarEmit: EventEmitter<any> = new EventEmitter<any>();
     @Output() prestacionGuardada: EventEmitter<any> = new EventEmitter<any>();
-
     public fechaDeingreso;
     public fechaEgreso: Date = new Date();
     public horaEgreso: Date = new Date();
@@ -70,7 +72,9 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
         private location: Location,
         public plex: Plex,
         public servicioOrganizacion: OrganizacionService,
-        public internacionService: InternacionService
+        public internacionService: InternacionService,
+        public camasService: CamasService,
+
     ) {
         this.mySubject
             .debounceTime(1000)
@@ -127,6 +131,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
             });
         });
         this.calcularDiasEstada();
+
     }
 
     ngOnChanges(changes: any) {
@@ -385,14 +390,21 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
                 let fechaIngreso = moment(informeIngreso.informeIngreso.fechaIngreso);
                 if (fechaIngreso) {
                     let fechaEgreso = moment(fechaACargar);
-                    if (fechaEgreso.diff(fechaIngreso, 'days', true) <= 0) {
-                        this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a  ' + fechaIngreso.format('YYYY-MM-DD HH:SS'));
+                    if ((fechaEgreso.diff(fechaIngreso, 'days', true) <= 0)) {
+                        this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a  ' + fechaIngreso.format('YYYY-MM-DD HH:mm'));
                         // this.fechaEgreso = new Date();
                         this.registro.valor.InformeEgreso.diasDeEstada = null;
                     } else {
-                        let dateDif = fechaEgreso.diff(moment(fechaIngreso), 'days');
-                        let diasEstada = fechaEgreso ? dateDif === 0 ? 1 : fechaEgreso.diff(moment(fechaIngreso), 'days') : '1';
-                        this.registro.valor.InformeEgreso.diasDeEstada = diasEstada;
+                        let fechaUltimoEstado = moment(this.camaSelected.ultimoEstado.fecha).format('YYYY-MM-DD HH:mm');
+                        if (fechaUltimoEstado && (fechaEgreso.diff(fechaUltimoEstado, 'days', true) <= 0)) {
+                            this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a ' + fechaUltimoEstado);
+                            this.registro.valor.InformeEgreso.diasDeEstada = null;
+                        } else {
+
+                            let dateDif = fechaEgreso.diff(moment(fechaIngreso), 'days');
+                            let diasEstada = fechaEgreso ? dateDif === 0 ? 1 : fechaEgreso.diff(moment(fechaIngreso), 'days') : '1';
+                            this.registro.valor.InformeEgreso.diasDeEstada = diasEstada;
+                        }
                     }
                 }
             }

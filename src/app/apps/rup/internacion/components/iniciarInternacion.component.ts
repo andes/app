@@ -208,7 +208,6 @@ export class IniciarInternacionComponent implements OnInit {
                         }
                     });
                     let indiceCarpeta = -1;
-                    debugger;
                     if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) {
                         indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
                         if (indiceCarpeta > -1) {
@@ -411,7 +410,6 @@ export class IniciarInternacionComponent implements OnInit {
                     this.plex.info('danger', err);
                 });
             } else {
-                debugger;
                 // armamos el elemento data a agregar al array de registros
                 let nuevoRegistro = new IPrestacionRegistro(null, this.snomedIngreso);
                 if (this.obraSocial) {
