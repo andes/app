@@ -1,9 +1,11 @@
 import { RUPComponent } from './../core/rup.component';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { RupElement } from '.';
 @Component({
     selector: 'rup-odontologiaDefault',
     templateUrl: 'odontologiaDefault.html'
 })
+@RupElement('OdontologiaDefaultComponent')
 export class OdontologiaDefaultComponent extends RUPComponent implements OnInit {
     public piezasDentales;
     public carasDentales;

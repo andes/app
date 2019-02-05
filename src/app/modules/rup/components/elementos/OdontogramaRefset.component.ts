@@ -1,10 +1,9 @@
-import { setTimeout } from 'timers';
 import { IPrestacion } from './../../interfaces/prestacion.interface';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { IPrestacionGetParams } from '../../interfaces/prestacionGetParams.interface';
-// import { Plex } from '@andes/plex';
 import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-OdontogramaRefset',
@@ -13,6 +12,7 @@ import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interf
         'OdontogramaRefset.scss'
     ]
 })
+@RupElement('OdontogramaRefsetComponent')
 export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     ultimoOdontogramaCompleto: any[];
@@ -492,4 +492,11 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         this.ocultarTemporales = !this.ocultarTemporales;
     }
 
+    esCuadranteIzquierdo(cuadrante) {
+        return cuadrante.indexOf('Izquierdo') === -1;
+    }
+
+    esCuadranteInferior(cuadrante) {
+        return cuadrante.indexOf('Inferior') === -1;
+    }
 }

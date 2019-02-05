@@ -25,6 +25,8 @@ export class IPrestacionRegistro {
 
     solicitud: any;
 
+    createdAt: Date;
+
     constructor(elementoRUP: IElementoRUP, snomedConcept: ISnomedConcept) {
         this.id = (new ObjectID()).toString();
         this.nombre = snomedConcept.term;

@@ -1,3 +1,44 @@
+/**
+ * Codigo repetido hasta que acomodemos la paleta de colores de PLEX y RUP.
+ * Faltan algunas tareas de refactor más.
+ **/
+
+$problema: #f1930d; // deprecated
+$trastorno: #ff4a1a;
+$hallazgo: #f4a03b;
+$procedimiento: #92278e;
+$solicitud: #0070cc;
+// $productos: #ef0993;
+$producto: #00bcb4;
+$adjunto: #b9c512;
+$todos: #111;
+$otro: #b9c512;
+$invert: #002738;
+$calificador: #660520;
+$laboratorio: #a0a0a0;
+$registro: #8bc43f; // elemento de registro
+// definimos esta lista para poder acceder mediante la funcion map-get() ya que en sass no se puede hacer 
+// la interpolacion del string a una variable directamente
+$plex-tabs-color-extend: (
+    problema: $problema, 
+    calificador: $calificador, 
+    laboratorio: $laboratorio, 
+    trastorno: $trastorno, 
+    situación: $problema, 
+    hallazgo: $hallazgo, 
+    procedimiento: $procedimiento, 
+    regimen: $procedimiento, 
+    entidad: $procedimiento, 
+    solicitud: $solicitud, 
+    producto: $producto, 
+    adjunto: $adjunto, 
+    elementoderegistro: $registro, 
+    invert: $invert, 
+    todos: $todos, 
+    otro: $otro
+);
+
+
 // Plex
 @import '~@andes/plex/src/lib/styles.scss';
 // IMPORTS DE MÓDULOS
