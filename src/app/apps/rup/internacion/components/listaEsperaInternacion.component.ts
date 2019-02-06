@@ -40,19 +40,14 @@ export class ListaEsperaInternacionComponent implements OnInit {
         private internacionService: InternacionService) { }
 
     ngOnInit() {
-        this.parametros = {
-            fechaDesde: '',
-            fechaHasta: ''
-        };
-        this.fechaDesde = new Date();
+        this.fechaDesde = moment(new Date()).subtract(1, 'M').toDate();
         this.fechaHasta = new Date();
         this.parametros = {
             fechaDesde: this.fechaDesde,
             fechaHasta: this.fechaHasta
         };
-        this.prestacionService.getInternacionesPendientes().subscribe(data => {
+        this.prestacionService.getInternacionesPendientes(this.parametros).subscribe(data => {
             this.prestacionesPendientes = data;
-            console.log(this.prestacionesPendientes);
             this.prestacionesPendientesCopy = JSON.parse(JSON.stringify(this.prestacionesPendientes));
 
         });
@@ -94,26 +89,26 @@ export class ListaEsperaInternacionComponent implements OnInit {
                 (!this.select.estados || ((!p.paseDe && !p.esEgreso) && this.select.estados.id === 'ingreso') || p[this.select.estados.id])) &&
                 (!this.select.nombre || (this.select.nombre && (regex_nombre.test(p.prestacion.paciente.nombre) || (regex_nombre.test(p.prestacion.paciente.apellido)) || (regex_nombre.test(p.prestacion.paciente.documento)))));
         });
-        // } else {
-        //     this.prestacionesPendientes = this.prestacionesPendientesCopy;
-        // }
     }
 
 
-    // refreshSelection(value, tipo) {
-    //     if (tipo === 'fechaDesde') {
-    //         let fechaDesde = moment(this.fechaDesde).startOf('day');
-    //         if (fechaDesde.isValid()) {
-    //             this.parametros['horaInicio'] = horaInicio.isValid() ? horaInicio.toDate() : moment().format();
-    //         }
-    //     }
-    //     if (tipo === 'horaFin') {
-    //         let horaFin = moment(this.horaFin).endOf('day');
-    //         if (horaFin.isValid()) {
-    //             this.parametros['horaFin'] = horaFin.isValid() ? horaFin.toDate() : moment().format();
-    //         }
-    //     }
+    refreshSelection(value, tipo) {
+        if (tipo === 'fechaDesde') {
+            let fechaDesde = moment(this.fechaDesde).startOf('day');
+            if (fechaDesde.isValid()) {
+                this.parametros['fechaDesde'] = fechaDesde.isValid() ? fechaDesde.toDate() : moment().format();
+            }
+        }
+        if (tipo === 'fechaHasta') {
+            let fechaHasta = moment(this.fechaHasta).endOf('day');
+            if (fechaHasta.isValid()) {
+                this.parametros['fechaHasta'] = fechaHasta.isValid() ? fechaHasta.toDate() : moment().format();
+            }
+        }
+        this.prestacionService.getInternacionesPendientes(this.parametros).subscribe(data => {
+            this.prestacionesPendientes = data;
 
-    // }
+        });
+    }
 }
 

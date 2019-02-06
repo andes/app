@@ -5,7 +5,7 @@ import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { InternacionService } from '../services/internacion.service';
-
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'cama-ocupar',
@@ -45,7 +45,8 @@ export class OcuparCamaComponent implements OnInit {
         private auth: Auth,
         private camasService: CamasService,
         public organizacionService: OrganizacionService,
-        private internacionService: InternacionService) {
+        private internacionService: InternacionService,
+        private router: Router) {
 
         this.disponibles
             .debounceTime(1000)
@@ -58,6 +59,7 @@ export class OcuparCamaComponent implements OnInit {
     // Métodos (privados y públicos)
 
     ngOnInit() {
+        this.listadoCamas = null;
         // controlamos que llegue una prestación
         if (this.prestacion) {
             this.opcionDesocupar = null;
@@ -124,7 +126,7 @@ export class OcuparCamaComponent implements OnInit {
                 this.camasService.cambioEstadoMovimiento(this.camaSeleccionPase, 'ocupada', this.internacionService.combinarFechas(this.fecha, this.hora), paciente, idInternacion,
                     this.paseAunidadOrganizativa).subscribe(camaCambio => {
                         this.camaSeleccionPase.ultimoEstado = camaCambio.ultimoEstado;
-                        this.accionCama.emit({ cama: this.camaSeleccionPase, accion: 'mostrarResumen' });
+                        this.accionCama.emit({ cama: this.camaSeleccionPase, accion: 'internarPaciente' });
 
                     }, (err1) => {
                         this.plex.info('danger', err1, 'Error');
@@ -148,6 +150,10 @@ export class OcuparCamaComponent implements OnInit {
                 });
             }
         }
+    }
+
+    routeTo(action, id) {
+        this.router.navigate(['rup/' + action + '/', id]);
     }
 
     cancelar() {

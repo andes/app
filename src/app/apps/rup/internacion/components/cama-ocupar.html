@@ -28,6 +28,13 @@
             </div>
             <div class="row">
                 <div class="col-md">
+                    <label>Fecha de Ingreso</label>
+                    <p>{{ prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso | fecha }} {{
+                        prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso | hora }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md">
                     <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha"
                         (change)="disponibles.next()">
                     </plex-datetime>
