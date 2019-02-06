@@ -148,7 +148,7 @@ export class HudsBusquedaComponent implements OnInit {
             // this.listarProblemasCronicos();
             this.listarHallazgos();
         }
-        this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
+        this.servicioTipoPrestacion.get({}).subscribe(data => {
             this.tiposPrestacion = data;
         });
     }
