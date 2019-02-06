@@ -33,12 +33,12 @@
             <plex-bool *ngIf="registro.valor.recetable !== null" type="slide" [(ngModel)]="registro.valor.recetable" label="Recetable" name="recetable"></plex-bool>
         </div>
     </div>
-</ng-container>
-<div class="row">
-    <div class="col-12">
-        <plex-text label="Indicación" multiline="true" rows="5" [(ngModel)]="registro.valor.indicacion" (change)="emitChange()" class="indicacion-default"></plex-text>
+    <div class="row">
+        <div class="col-12">
+            <plex-text label="Indicación" multiline="true" rows="5" [(ngModel)]="registro.valor.indicacion" (change)="emitChange()" class="indicacion-default"></plex-text>
+        </div>
     </div>
-</div>
+</ng-container>
 <div class="row">&nbsp;</div>
 <!--Listado de evoluciones-->
 <ng-container *ngIf="!soloValores && evoluciones && evoluciones.length > 0">
