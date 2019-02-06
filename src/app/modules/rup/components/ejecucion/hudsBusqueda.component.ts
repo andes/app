@@ -148,9 +148,7 @@ export class HudsBusquedaComponent implements OnInit {
             // this.listarProblemasCronicos();
             this.listarHallazgos();
         }
-        this.servicioTipoPrestacion.get({}).subscribe(data => {
-            this.tiposPrestacion = data;
-        });
+
     }
 
     dragStart(e) {
@@ -532,9 +530,9 @@ export class HudsBusquedaComponent implements OnInit {
                     estado: p.estados[p.estados.length - 1].tipo
                 };
             });
+            this.tiposPrestacion = this.prestaciones.map(p => p.prestacion);
             this.prestacionesCopia = this.prestaciones;
             this.buscarCDAPacientes();
-
         });
     }
 
