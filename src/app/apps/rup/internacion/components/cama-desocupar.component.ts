@@ -5,6 +5,7 @@ import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { InternacionService } from '../services/internacion.service';
+import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 
 
 @Component({
@@ -49,7 +50,7 @@ export class DesocuparCamaComponent implements OnInit {
         private auth: Auth,
         private camasService: CamasService,
         public organizacionService: OrganizacionService,
-        private internacionService: InternacionService) {
+        private internacionService: InternacionService, public prestacionesService: PrestacionesService, public CamaService: CamasService) {
 
         this.actualizaTipo
             .debounceTime(1000)
@@ -161,7 +162,16 @@ export class DesocuparCamaComponent implements OnInit {
     operacionDesocuparCama() {
         if (this.opcionDesocupar === 'movimiento') {
             this.elegirDesocupar = false;
-            this.selectCamasDisponibles(this.cama.ultimoEstado.unidadOrganizativa.conceptId, this.fecha, this.hora);
+            let f = this.internacionService.combinarFechas(this.fecha, this.hora);
+
+            this.prestacionesService.getPasesInternacion(this.prestacion.id).subscribe(lista => {
+                let listaFiltrada = lista.filter(c => c.estados.fecha < f);
+                this.CamaService.getCama(listaFiltrada[listaFiltrada.length - 1]._id).subscribe(cama => {
+                    let x = cama.estados.filter(c => c.fecha < f && c.idInternacion === this.prestacion.id);
+                    // this.estado = Object.assign({}, this.cama.ultimoEstado);
+                    this.selectCamasDisponibles(x[x.length - 1].unidadOrganizativa.conceptId, this.fecha, this.hora);
+                });
+            });
         } else {
             if (this.opcionDesocupar === 'pase') {
                 this.elegirDesocupar = false;
@@ -178,11 +188,14 @@ export class DesocuparCamaComponent implements OnInit {
         this.camaSeleccionPase = null;
         this.listadoCamas = null;
         let f = this.internacionService.combinarFechas(fecha, hora);
+
         if (this.filtrosDesocupar()) {
             if (unidadOrganizativa) {
                 this.camasService.getCamasXFecha(this.auth.organizacion.id, f).subscribe(resultado => {
                     if (resultado) {
+                        console.log(resultado);
                         let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.conceptId === unidadOrganizativa);
+                        console.log(lista);
                         this.listadoCamas = [...lista];
                     }
 
@@ -190,7 +203,7 @@ export class DesocuparCamaComponent implements OnInit {
             } else {
                 this.camasService.getCamasXFecha(this.auth.organizacion.id, f).subscribe(resultado => {
                     if (resultado) {
-                        let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.conceptId === this.cama.ultimoEstado.unidadOrganizativa.conceptId);
+                        let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.conceptId === unidadOrganizativa);
                         this.listadoCamas = [...lista];
                     } else {
                         this.listadoCamas = [];

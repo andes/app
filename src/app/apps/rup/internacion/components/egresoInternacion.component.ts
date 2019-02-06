@@ -21,9 +21,12 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     @Input() soloValores;
     // botonera, input para pasarle por parametro si mostramos o no el btn cerrar o guardar.
     @Input() botonera;
+    @Input() cama;
+
     @Output() data: EventEmitter<any> = new EventEmitter<any>();
     @Output() btnIniciarEditarEmit: EventEmitter<any> = new EventEmitter<any>();
     @Output() prestacionGuardada: EventEmitter<any> = new EventEmitter<any>();
+    @Output() desocuparCama: EventEmitter<any> = new EventEmitter<any>();
 
     public fechaDeingreso;
     public fechaEgreso: Date = new Date();
@@ -266,14 +269,26 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
                 op: 'registros',
                 registros: registros
             };
+            console.log(existeEgreso);
             this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
                 this.prestacionGuardada.emit(prestacionEjecutada);
+                // this.desocuparCama.emit(prestacionEjecutada);
                 this.btnIniciarEditarEmit.emit('Editar');
                 this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
                 this.cancelar();
             });
         }
     }
+
+    // desocuparCama() {
+    //     let registros = this.prestacion.ejecucion.registros;
+    //     // nos fijamos si el concepto ya aparece en los registros
+    //     let egresoExiste = registros.find(registro => registro.concepto.conceptId === this.conceptoEgreso.conceptId);
+    //     if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada' &&
+    //         egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
+    //         this.refreshCamas.emit({ cama: this.camaSeleccionada, desocupaCama: true, egresoExiste });
+    //     }
+    // }
 
     /**
      * Cuando selecciona tipo de egreso

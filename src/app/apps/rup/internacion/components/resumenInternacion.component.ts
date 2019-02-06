@@ -49,7 +49,7 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
 
     onEgreso(event) {
         this.prestacion = event;
-        this.comprobarEgresoParaValidar();
+        this.desocuparCama();
     }
 
 

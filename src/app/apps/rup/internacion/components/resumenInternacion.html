@@ -45,7 +45,7 @@
             <ng-container>
                 <div class="andes-contenedor-secundario vertical">
                     <rup-egresoInternacion [botonera]="{cerrar: true, validar: false}" (data)="cierraEditar($event)"
-                        [prestacion]="prestacion" [soloValores]="!editarEgreso" (btnIniciarEditarEmit)="onBtnIniciarEditar($event)"
+                        [prestacion]="prestacion" [soloValores]="!editarEgreso"  (btnIniciarEditarEmit)="onBtnIniciarEditar($event)"
                         (prestacionGuardada)="onEgreso($event)"></rup-egresoInternacion>
                     <ng-container *ngIf="(btnIniciarEditar === 'Iniciar') && !editarEgreso">
                         <h4>No se ha registrado ningún egreso</h4>
