@@ -3,7 +3,7 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
-
+import { InternacionService } from '../services/internacion.service';
 @Component({
     selector: 'listaEsperaInternacion',
     templateUrl: 'listaEsperaInternacion.html'
@@ -14,7 +14,9 @@ export class ListaEsperaInternacionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @Output() showCamas = new EventEmitter<any>();
     @Output() prestacion = new EventEmitter<any>();
-
+    public parametros;
+    public fechaDesde: any;
+    public fechaHasta: any;
     // Lista de prestaciones que actuamente no tienen una cama asignada
     public prestacionesPendientes: any[];
     // Copia de las prestaciones pendientes
@@ -34,13 +36,25 @@ export class ListaEsperaInternacionComponent implements OnInit {
         private route: ActivatedRoute,
         private plex: Plex,
         public auth: Auth,
-        public prestacionService: PrestacionesService) { }
+        public prestacionService: PrestacionesService,
+        private internacionService: InternacionService) { }
 
     ngOnInit() {
+        this.parametros = {
+            fechaDesde: '',
+            fechaHasta: ''
+        };
+        this.fechaDesde = new Date();
+        this.fechaHasta = new Date();
+        this.parametros = {
+            fechaDesde: this.fechaDesde,
+            fechaHasta: this.fechaHasta
+        };
         this.prestacionService.getInternacionesPendientes().subscribe(data => {
             this.prestacionesPendientes = data;
-            // creamos copia para reestablecer luego de los filtros
+            console.log(this.prestacionesPendientes);
             this.prestacionesPendientesCopy = JSON.parse(JSON.stringify(this.prestacionesPendientes));
+
         });
     }
 
@@ -84,5 +98,22 @@ export class ListaEsperaInternacionComponent implements OnInit {
         //     this.prestacionesPendientes = this.prestacionesPendientesCopy;
         // }
     }
+
+
+    // refreshSelection(value, tipo) {
+    //     if (tipo === 'fechaDesde') {
+    //         let fechaDesde = moment(this.fechaDesde).startOf('day');
+    //         if (fechaDesde.isValid()) {
+    //             this.parametros['horaInicio'] = horaInicio.isValid() ? horaInicio.toDate() : moment().format();
+    //         }
+    //     }
+    //     if (tipo === 'horaFin') {
+    //         let horaFin = moment(this.horaFin).endOf('day');
+    //         if (horaFin.isValid()) {
+    //             this.parametros['horaFin'] = horaFin.isValid() ? horaFin.toDate() : moment().format();
+    //         }
+    //     }
+
+    // }
 }
 

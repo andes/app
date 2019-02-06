@@ -15,15 +15,19 @@
                                         id="filtros-nombre" label="Nombre paciente / N. de documento" (keyup)="filtrar()" />
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <!-- <div class="col-3">
                                 <plex-select [(ngModel)]="select.estados" name="estado" [data]="filtros.estados" label="Estado"
                                     (change)="filtrar()"></plex-select>
+                            </div> -->
+                            <div class="col-2">
+                                <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection($event,'fechaDesde')"
+                                    name="fechaDesde" label="Desde" class="fechas" [required]="true">
+                                </plex-datetime>
                             </div>
-                            <div class="col-3">
-
-                            </div>
-                            <div class="col-3">
-
+                            <div class="col-2">
+                                <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection($event,'fechaHasta')"
+                                    name="fechaHasta" label="Hasta" class="fechas" [required]="true">
+                                </plex-datetime>
                             </div>
                         </div>
                     </div>
@@ -37,18 +41,21 @@
                                     <td>Documento</td>
                                     <td>Fecha de nacimiento</td>
                                     <td>Sexo</td>
-                                    <td>Estado</td>
+                                    <td>Fecha de ingreso</td>
+                                    <!-- <td>Estado</td> -->
                                     <td>Sugerencia de pase A</td>
                                     <!-- <td>Ver Internación</td> -->
                                     <td>Internar</td>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let prestacion of prestacionesPendientes">
+                                <tr *ngFor="let prestacion of prestacionesPendientes; let i = index">
                                     <td> {{prestacion.prestacion.paciente | paciente}}</td>
                                     <td>{{prestacion.prestacion.paciente.documento }}</td>
                                     <td>{{prestacion.prestacion.paciente.fechaNacimiento | fecha }}</td>
                                     <td>{{prestacion.prestacion.paciente.sexo }}</td>
+                                    <td>{{prestacion.fechaIngreso | fecha}}
+                                        {{prestacion.fechaIngreso | hora}}</td>
                                     <td *ngIf="prestacion.paseDe || prestacion.esEgreso">
                                         <span *ngIf="prestacion.paseDe">Pase de: </span>
                                         <span *ngIf="prestacion.esEgreso">Egreso: </span>
@@ -56,7 +63,7 @@
                                     <td *ngIf="!prestacion.paseDe && !prestacion.esEgreso">
                                         Ingreso
                                     </td>
-                                    <td>
+                                    <!-- <td>
 
                                         <ng-container *ngIf="prestacion.paseA">
                                             {{prestacion.paseA?.term }}
@@ -64,7 +71,7 @@
                                         <ng-container *ngIf="!prestacion.paseA">
                                             Ninguno
                                         </ng-container>
-                                    </td>
+                                    </td> -->
                                     <!-- <td>
                                         <plex-button class="btn btn-default  tips" icon="eye" title="Ver internación"
                                             (click)="verInternacion(prestacion.prestacion.id)" *ngIf="prestacion?.prestacion.id">
