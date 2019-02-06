@@ -196,7 +196,7 @@ export class BotonesAgendaComponent implements OnInit {
     // Comprueba que haya algún turno con paciente, en estado suspendido
     hayTurnosCodificados(agenda: any) {
         if (!agenda.dinamica) {
-            return agenda.bloques.some((bloque: any) => bloque.turnos.some((turno: any) => turno.asistencia || (turno.diagnostico.codificaciones && turno.diagnostico.codificaciones.length > 0)));
+            return agenda.bloques.some((bloque: any) => bloque.turnos.some((turno: any) => turno.asistencia || (turno.diagnostico && turno.diagnostico.codificaciones && turno.diagnostico.codificaciones.length > 0)));
         } else {
             return false;
         }
