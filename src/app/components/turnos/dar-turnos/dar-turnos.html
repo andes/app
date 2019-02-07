@@ -299,9 +299,11 @@
                                 <label>Espacio Físico</label>
                                 <div>{{agenda.espacioFisico.nombre}}</div>
                             </div>
-                            <div *ngIf="!desplegarOS && obraSocialPaciente" class="col">
-                                <label>Obra Social </label>
-                                <div>{{obraSocialPaciente.financiador}}</div>
+                            <div class="col">
+                                <ng-container *ngIf="!desplegarOS && obraSocialPaciente">
+                                    <label>Obra Social </label>
+                                    <div>{{obraSocialPaciente.financiador}}</div>
+                                </ng-container>
                                 <plex-select *ngIf="desplegarOS" label="Obra Social" [(ngModel)]="obraSocialPaciente"
                                     name="obraSocialPaciente" (getData)="loadObrasSociales($event)" labelField="financiador"></plex-select>
                             </div>
