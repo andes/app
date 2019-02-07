@@ -11,11 +11,11 @@ import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { IProvincia } from './../../../interfaces/IProvincia';
 import { Plex } from '@andes/plex';
 import * as moment from 'moment';
-import { Component, OnInit, } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PacienteCacheService } from '../services/pacienteCache.service';
 import { BarrioService } from '../../../services/barrio.service';
 import { Location } from '@angular/common';
-import { GeoReferenciaService } from '../services/geoReferencia.service';
+import { ApiGoogleService } from '../services/apiGoogle.service';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../services/organizacion.service';
 
@@ -38,7 +38,7 @@ export class PacienteCruComponent implements OnInit {
 
     provincias: IProvincia[] = [];
     pacientesSimilares = [];
-    barrios: any[];
+    barrios: any[] = [];
     localidades: any[] = [];
 
     paisArgentina = null;
@@ -135,7 +135,7 @@ export class PacienteCruComponent implements OnInit {
     constructor(
         private organizacionService: OrganizacionService,
         private auth: Auth,
-        private geoReferenciaService: GeoReferenciaService,
+        private apiGoogleService: ApiGoogleService,
         private location: Location,
         private paisService: PaisService,
         private provinciaService: ProvinciaService,
@@ -305,7 +305,7 @@ export class PacienteCruComponent implements OnInit {
                     // ubicacion inicial mapa de google
                     if (this.paciente.direccion[0].geoReferencia) {
                         this.geoReferenciaAux = this.paciente.direccion[0].geoReferencia;
-                        this.infoMarcador = this.paciente.direccion[0].valor;
+                        this.infoMarcador = this.paciente.direccion[0].valor.toUpperCase();
                         if (this.paciente.direccion[0].ubicacion.barrio) {
                             this.infoMarcador += ', \n' + this.paciente.direccion[0].ubicacion.barrio.nombre;
                         }
@@ -399,6 +399,9 @@ export class PacienteCruComponent implements OnInit {
         } else {
             this.viveEnNeuquen = false;
             this.localidades = [];
+            this.pacienteModel.direccion[0].ubicacion.provincia = null;
+            this.pacienteModel.direccion[0].ubicacion.localidad = null;
+            this.pacienteModel.direccion[0].ubicacion.barrio = null;
         }
     }
 
@@ -415,6 +418,7 @@ export class PacienteCruComponent implements OnInit {
             this.loadBarrios(this.localidadNeuquen);
         } else {
             this.pacienteModel.direccion[0].ubicacion.localidad = null;
+            this.pacienteModel.direccion[0].ubicacion.barrio = null;
             this.barrios = [];
         }
     }
@@ -423,10 +427,10 @@ export class PacienteCruComponent implements OnInit {
         // campos de direccion completos?
         if (this.pacienteModel.direccion[0].valor && this.pacienteModel.direccion[0].ubicacion.provincia && this.pacienteModel.direccion[0].ubicacion.localidad) {
             // se calcula nueva georeferencia
-            this.geoReferenciaService.post({ direccion: this.pacienteModel.direccion }).subscribe(point => {
+            this.apiGoogleService.getGeoreferencia({ direccion: this.pacienteModel.direccion }).subscribe(point => {
                 if (point) {
                     this.geoReferenciaAux = [point.lat, point.lng];
-                    this.infoMarcador = this.pacienteModel.direccion[0].valor;
+                    this.infoMarcador = this.pacienteModel.direccion[0].valor.toUpperCase();
                     if (this.pacienteModel.direccion[0].ubicacion.barrio) {
                         this.infoMarcador += ', \n' + this.pacienteModel.direccion[0].ubicacion.barrio.nombre;
                     }
@@ -439,6 +443,26 @@ export class PacienteCruComponent implements OnInit {
             this.plex.toast('info', 'Debe completar datos del domicilio.');
         }
     }
+
+    // autocompletar(textSearch) {
+    //     console.log(textSearch);
+    //     // let localidad = this.pacienteModel.direccion[0].ubicacion.localidad.nombre;
+    //     // let provincia = this.pacienteModel.direccion[0].ubicacion.provincia.nombre;
+    //     this.apiGoogleService.autocompletar(textSearch.value).subscribe(resp => {
+    //         this.sugerencias = [];
+    //         console.log(resp);
+    //         if (resp.length) {
+    //             this.sugerencias = resp;
+    //             // let i = 0;
+    //             // resp.forEach(elto => {
+    //             //     this.sugerencias.push({ id: i, nombre: elto });
+    //             //     i++;
+    //             // });
+    //             // this.pacienteModel.direccion[0].valor = this.placeAutocomplete;
+    //             console.log(this.sugerencias);
+    //         }
+    //     });
+    // }
 
 
     // ---------------------- CONTACTOS ---------------------------

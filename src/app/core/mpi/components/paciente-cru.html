@@ -177,7 +177,7 @@
                                     </div>
                                 </div>
                                 <div class="row" *ngIf="viveEnNeuquen">
-                                    <div class="col" *ngIf="barrios && barrios.length > 0">
+                                    <div class="col">
                                         <plex-select label="Barrio" [(ngModel)]="pacienteModel.direccion[0].ubicacion.barrio"
                                             name="barrio" [data]="barrios" labelField="nombre">
                                         </plex-select>
@@ -188,6 +188,13 @@
                                         <plex-text label="Dirección" [(ngModel)]="pacienteModel.direccion[0].valor"
                                             name="divValor" placeholder="Ej: Avenida las Flores 1200">
                                         </plex-text>
+                                        <!--table>
+                                            <tbody>
+                                                <tr *ngFor="let unaSugerencia of sugerencias">
+                                                    <td> <span class="d-block">{{unaSugerencia}}</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table-->
                                     </div>
                                 </div>
                             </div>

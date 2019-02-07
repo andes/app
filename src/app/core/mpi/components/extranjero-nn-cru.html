@@ -116,33 +116,33 @@
                             <div class="col-4">
                                 <div class="row">
                                     <div class="col">
-                                        <plex-bool [(ngModel)]="viveProvNeuquen" label="¿Vive en la Provincia de Neuquén?"
-                                            name="viveProvNeuquen" (change)="changeProvNeuquen($event)"></plex-bool>
+                                        <plex-bool [(ngModel)]="viveProvActual" label="¿Vive en la Provincia de Neuquén?"
+                                            name="viveProvActual" (change)="changeProvActual($event)"></plex-bool>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col" *ngIf="viveProvNeuquen">
-                                        <plex-bool [(ngModel)]="viveEnNeuquen" label="¿Vive en Neuquén Capital?" name="viveNQN"
-                                            (change)="changeLocalidadNeuquen($event)"></plex-bool>
+                                    <div class="col" *ngIf="viveProvActual">
+                                        <plex-bool [(ngModel)]="viveLocalidadActual" label="¿Vive en Neuquén Capital?"
+                                            name="viveNQN" (change)="changeLocalidadActual($event)"></plex-bool>
                                     </div>
                                 </div>
 
-                                <div class="row" *ngIf="!viveProvNeuquen">
+                                <div class="row" *ngIf="!viveProvActual">
                                     <div class="col">
                                         <plex-select label="Provincia" [(ngModel)]="pacienteModel.direccion[0].ubicacion.provincia"
                                             name="provincia" [data]="provincias" labelField="nombre" (change)="loadLocalidades(pacienteModel.direccion[0].ubicacion.provincia)">
                                         </plex-select>
                                     </div>
                                 </div>
-                                <div class="row" *ngIf="!viveProvNeuquen || (viveProvNeuquen && !viveEnNeuquen)">
+                                <div class="row" *ngIf="!viveProvActual || (viveProvActual && !viveLocalidadActual)">
                                     <div class="col">
                                         <plex-select label="Localidad" [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad"
                                             name="localidad" [data]="localidades" labelField="nombre" (change)="loadBarrios(pacienteModel.direccion[0].ubicacion.localidad)">
                                         </plex-select>
                                     </div>
                                 </div>
-                                <div class="row" *ngIf="viveEnNeuquen">
-                                    <div class="col" *ngIf="barrios && barrios.length > 0">
+                                <div class="row" *ngIf="viveLocalidadActual">
+                                    <div class="col">
                                         <plex-select label="Barrio" [(ngModel)]="pacienteModel.direccion[0].ubicacion.barrio"
                                             name="barrio" [data]="barrios" labelField="nombre">
                                         </plex-select>
