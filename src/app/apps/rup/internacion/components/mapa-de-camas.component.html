@@ -146,7 +146,8 @@
 
                 <!-- Ocupar Cama -->
                 <ng-container *ngIf="accion ==='ocupar' && !showEgreso && pacienteSelected && prestacionPorInternacion">
-                    <cama-ocupar [prestacion]="prestacionPorInternacion" [paciente]="pacienteSelected" (accionCama)="actualizarMapaDeCamas($event)"></cama-ocupar>
+                    <cama-ocupar [enEspera]="enEspera" [prestacion]="prestacionPorInternacion" [paciente]="pacienteSelected"
+                        (accionCama)="actualizarMapaDeCamas($event)"></cama-ocupar>
                 </ng-container>
 
                 <!-- Desocupar Cama -->

@@ -34,6 +34,8 @@ export class OcuparCamaComponent implements OnInit {
     // Internacion (prestacion) que está ocupando la cama
     @Input() prestacion: any;
     @Input() paciente: any;
+    @Input() enEspera: any;
+
 
     // resultado de la accion realizada sobre la cama
     @Output() accionCama: EventEmitter<any> = new EventEmitter<any>();
@@ -47,7 +49,6 @@ export class OcuparCamaComponent implements OnInit {
         public organizacionService: OrganizacionService,
         private internacionService: InternacionService,
         private router: Router) {
-
         this.disponibles
             .debounceTime(1000)
             .subscribe(val => {
@@ -63,15 +64,18 @@ export class OcuparCamaComponent implements OnInit {
         // controlamos que llegue una prestación
         if (this.prestacion) {
             this.opcionDesocupar = null;
-
+            if (this.enEspera) {
+                this.paseAunidadOrganizativa = this.enEspera.paseA ? this.enEspera.paseA : null;
+            }
             this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
                 this.organizacion = organizacion;
                 this.listaUnidadesOrganizativas = [...this.organizacion.unidadesOrganizativas];
                 if (this.listaUnidadesOrganizativas && this.listaUnidadesOrganizativas.length > 1) {
                     this.elegirUO = true;
+                    this.selectCamasDisponibles(this.paseAunidadOrganizativa);
                 } else {
                     if (this.listaUnidadesOrganizativas && this.listaUnidadesOrganizativas.length === 1) {
-                        this.paseAunidadOrganizativa = this.listaUnidadesOrganizativas[0];
+
                         this.selectCamasDisponibles(this.paseAunidadOrganizativa);
                     }
                 }
@@ -143,6 +147,7 @@ export class OcuparCamaComponent implements OnInit {
             if (unidadOrganizativa) {
                 this.camasService.getCamasXFecha(this.auth.organizacion.id, f).subscribe(resultado => {
                     if (resultado) {
+
                         let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.conceptId === unidadOrganizativa.conceptId);
                         this.listadoCamas = [...lista];
                     }

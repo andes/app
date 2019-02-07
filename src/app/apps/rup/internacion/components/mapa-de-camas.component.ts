@@ -1,5 +1,5 @@
 import { estados } from './../../../../utils/enumerados';
-import { Component, OnInit, ViewEncapsulation, HostBinding } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, HostBinding, ɵConsole } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -56,6 +56,7 @@ export class MapaDeCamasComponent implements OnInit {
     public showResumen = false;
 
     public prestacionPorInternacion;
+    public enEspera;
 
     // Muestra el componente ingreso en el sidebar
     public showIngreso = false;
@@ -278,7 +279,6 @@ export class MapaDeCamasComponent implements OnInit {
             if (e.desocupaCama) {
                 // vamos a liberar la cama
                 // this.prestacionDelPaciente(e.cama);
-                console.log(this.prestacion);
                 let dto = {
                     fecha: e.egresoExiste.valor.InformeEgreso.fechaEgreso,
                     estado: this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible',
@@ -455,14 +455,26 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     onDarCama($event) {
-        this.prestacion = $event;
-        this.prestacionPorInternacion = this.prestacion;
-        this.servicioPaciente.getById(this.prestacionPorInternacion.paciente.id).subscribe(paciente => {
-            this.pacienteSelected = paciente;
-            this.accion = 'ocupar';
-            this.showIngreso = false;
-            // this.onPacienteSelected(this.pacienteSelected);
-        });
+        this.enEspera = $event;
+        if ($event && $event.prestacion) {
+            this.prestacion = $event.prestacion;
+            this.prestacionPorInternacion = this.prestacion;
+        } else {
+            this.prestacion = $event;
+            this.prestacionPorInternacion = this.prestacion;
+        }
+
+        if (this.prestacionPorInternacion) {
+            this.servicioPaciente.getById(this.prestacionPorInternacion.paciente.id).subscribe(paciente => {
+                this.pacienteSelected = paciente;
+                this.accion = 'ocupar';
+                this.showIngreso = false;
+                // this.onPacienteSelected(this.pacienteSelected);
+            });
+        }
+
+
+
 
 
 
@@ -684,7 +696,6 @@ export class MapaDeCamasComponent implements OnInit {
 
     buscarHistorial() {
         this.camasService.getHistorialCama(this.auth.organizacion._id, moment(this.fechaDesde).startOf('day').toDate(), moment(this.fechaHasta).endOf('day').toDate(), this.camaSeleccionada.id).subscribe(historial => {
-            console.log(moment(this.fechaDesde).startOf('day').toDate());
             this.inicioBusqueda = true;
             if (historial.length > 0) {
                 this.historial = historial;

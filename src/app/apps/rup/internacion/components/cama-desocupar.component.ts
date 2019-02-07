@@ -27,7 +27,7 @@ export class DesocuparCamaComponent implements OnInit {
 
     public listaUnidadesOrganizativas = [];
     public listadoCamas = [];
-    public paseAunidadOrganizativa: any;
+    public PaseAunidadOrganizativa: any;
     public camaSeleccionPase;
     public actualizaTipo = new Subject();
 
@@ -122,12 +122,12 @@ export class DesocuparCamaComponent implements OnInit {
                 if (this.opcionDesocupar === 'movimiento' || this.opcionDesocupar === 'pase') {
                     let nuevoEstado = this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible';
                     // Primero desocupamos la cama donde esta el paciente actualmente
-                    this.camasService.cambioEstadoMovimiento(this.cama, nuevoEstado, this.internacionService.combinarFechas(this.fecha, this.hora), null, null, this.paseAunidadOrganizativa).subscribe(camaActualizada => {
+                    this.camasService.cambioEstadoMovimiento(this.cama, nuevoEstado, this.internacionService.combinarFechas(this.fecha, this.hora), null, null, this.PaseAunidadOrganizativa).subscribe(camaActualizada => {
                         this.cama = camaActualizada;
                         if (this.camaSeleccionPase) {
                             // Si hay que hacer un movimiento o pase de cama cambiamos el estado de la cama seleccionada a ocupada
                             this.camasService.cambioEstadoMovimiento(this.camaSeleccionPase, 'ocupada', this.internacionService.combinarFechas(this.fecha, this.hora), paciente, idInternacion,
-                                this.paseAunidadOrganizativa).subscribe(camaCambio => {
+                                this.PaseAunidadOrganizativa).subscribe(camaCambio => {
                                     this.camaSeleccionPase.ultimoEstado = camaCambio.ultimoEstado;
                                     this.opcionDesocupar = null;
                                     this.elegirDesocupar = true;

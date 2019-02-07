@@ -56,13 +56,9 @@
                                     <td>{{prestacion.prestacion.paciente.sexo }}</td>
                                     <td>{{prestacion.fechaIngreso | fecha}}
                                         {{prestacion.fechaIngreso | hora}}</td>
-                                    <td *ngIf="prestacion.paseDe || prestacion.esEgreso">
-                                        <span *ngIf="prestacion.paseDe">Pase de: </span>
-                                        <span *ngIf="prestacion.esEgreso">Egreso: </span>
-                                        {{prestacion.ultimoEstado}}</td>
-                                    <td *ngIf="!prestacion.paseDe && !prestacion.esEgreso">
-                                        Ingreso
-                                    </td>
+                                    <td *ngIf="prestacion.paseA">{{prestacion.paseA.term}}</td>
+                                    <td *ngIf="!prestacion.paseA"></td>
+
                                     <!-- <td>
 
                                         <ng-container *ngIf="prestacion.paseA">
@@ -78,7 +74,7 @@
                                         </plex-button>
                                     </td> -->
                                     <td>
-                                        <plex-button type="primary" label="Dar cama" (click)="darCama(prestacion.prestacion)"
+                                        <plex-button type="primary" label="Dar cama" (click)="darCama(prestacion)"
                                             *ngIf="prestacion?.prestacion.id">
                                             Dar cama
                                         </plex-button>
