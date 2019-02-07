@@ -38,10 +38,10 @@ export class ArancelamientoFormComponent implements OnInit {
     constructor(public auth: Auth, public servicioOS: ObraSocialService, public servicioFA: FacturacionAutomaticaService, public plex: Plex) { }
 
     ngOnInit() {
-        if (this.turno.paciente.obraSocial && this.turno.paciente.obraSocial.numeroAfiliado) {
+        if (this.turno.paciente.obraSocial) {
             this.obraSocial = this.turno.paciente.obraSocial.financiador;
             this.codigoOs = this.turno.paciente.obraSocial ? this.turno.paciente.obraSocial.codigoFinanciador : 0;
-            this.numeroAfiliado = this.turno.paciente.obraSocial.numeroAfiliado;
+            this.numeroAfiliado = this.turno.paciente.obraSocial.numeroAfiliado ? this.turno.paciente.obraSocial.numeroAfiliado : '';
             this.showForm = true;
             setTimeout(() => {
                 this.imprimir();
