@@ -75,6 +75,12 @@ export enum Censo {
     'No Censable'
 }
 
+export enum estadosInternacion {
+    'ejecucion',
+    'validada'
+}
+
+
 export function titleCase(str) {
     return str.toLowerCase().split(' ').map(function (word) {
         return (word.charAt(0).toUpperCase() + word.slice(1));
@@ -238,3 +244,16 @@ export function getObjRelacionTutor() {
     });
     return salida;
 }
+
+export function getObjEstadoInternacion() {
+    let array = Object.keys(estadosInternacion);
+    array = array.slice(array.length / 2);
+    let salida = array.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
+

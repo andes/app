@@ -335,6 +335,11 @@ export class IniciarInternacionComponent implements OnInit {
                 this.plex.info('warning', 'Debe seleccionar un paciente');
                 return;
             }
+
+            if (this.cama === null) {
+                this.plex.info('warning', 'Debe seleccionar una cama');
+                return;
+            }
             if (this.informeIngreso.organizacionOrigen === 'consultorio externo' || this.informeIngreso.organizacionOrigen === 'traslado' && !this.informeIngreso.organizacionOrigen) {
                 this.plex.info('warning', 'Debe seleccionar una organización');
                 return;

@@ -72,6 +72,8 @@ import { ConfiguracionPrestacionVisualizarComponent } from './components/configu
 
 // Internacion
 import { MapaDeCamasComponent } from './apps/rup/internacion/components/mapa-de-camas.component';
+import { ListadoInternacionComponent }  from './apps/rup/internacion/components/listado-internacion.component';
+
 // Solicitudes
 import { CensoDiarioComponent } from './apps/rup/internacion/components/censoDiario.component';
 import { CensoMensualComponent } from './apps/rup/internacion/components/censoMensual.component';
@@ -143,6 +145,7 @@ const appRoutes: Routes = [
   { path: 'rup/buscaHuds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/internacion/censo', component: CensoDiarioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/internacion/censo/mensual', component: CensoMensualComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'rup/internacion/listado', component: ListadoInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // configuracion prestacion
   { path: 'configuracionPrestacion', component: ConfiguracionPrestacionVisualizarComponent, canActivate: [RoutingNavBar, RoutingGuard] },
