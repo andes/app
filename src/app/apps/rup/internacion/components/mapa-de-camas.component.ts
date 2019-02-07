@@ -278,7 +278,6 @@ export class MapaDeCamasComponent implements OnInit {
             if (e.desocupaCama) {
                 // vamos a liberar la cama
                 // this.prestacionDelPaciente(e.cama);
-                console.log(this.prestacion);
                 let dto = {
                     fecha: e.egresoExiste.valor.InformeEgreso.fechaEgreso,
                     estado: this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible',
@@ -684,7 +683,6 @@ export class MapaDeCamasComponent implements OnInit {
 
     buscarHistorial() {
         this.camasService.getHistorialCama(this.auth.organizacion._id, moment(this.fechaDesde).startOf('day').toDate(), moment(this.fechaHasta).endOf('day').toDate(), this.camaSeleccionada.id).subscribe(historial => {
-            console.log(moment(this.fechaDesde).startOf('day').toDate());
             this.inicioBusqueda = true;
             if (historial.length > 0) {
                 this.historial = historial;
