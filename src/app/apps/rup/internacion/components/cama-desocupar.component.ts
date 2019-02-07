@@ -82,6 +82,7 @@ export class DesocuparCamaComponent implements OnInit {
     }
 
     filtrosDesocupar() {
+        debugger;
         const fechaActual = new Date();
         const fechaMovimiento = this.internacionService.combinarFechas(this.fecha, this.hora);
         if (fechaMovimiento > fechaActual) {
@@ -117,6 +118,10 @@ export class DesocuparCamaComponent implements OnInit {
     public desocuparCama(event) {
         if (event.formValid) {
             if (this.filtrosDesocupar()) {
+                if (!this.internacionService.usaWorkflowCompleto(this.auth.organizacion.id) && !this.camaSeleccionPase) {
+                    this.plex.info('danger', 'Debe seleccionar una cama disponible', 'Error');
+                    return false;
+                }
                 let paciente = this.cama.ultimoEstado.paciente;
                 let idInternacion = this.cama.ultimoEstado.idInternacion;
                 if (this.opcionDesocupar === 'movimiento' || this.opcionDesocupar === 'pase') {

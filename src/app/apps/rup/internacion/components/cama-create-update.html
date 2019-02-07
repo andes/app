@@ -12,7 +12,7 @@
                                 [required]="true"></plex-text>
                         </div>
                         <div class="col-4">
-                            <plex-datetime *ngIf="!soloValores" type="datetime" [(ngModel)]="estado.fecha" [required]="nuevaCama"
+                            <plex-datetime *ngIf="nuevaCama" type="datetime" [(ngModel)]="estado.fecha" [required]="nuevaCama"
                                 name="fechaDisponible" label="Disponible desde:">
                             </plex-datetime>
                         </div>
@@ -76,6 +76,9 @@
                 <plex-button label="Cancelar" type="danger" (click)="cancel()"></plex-button>
             </div>
             <div class="col-6 text-right">
+                <!-- Eliminar cama -->
+                <plex-button label="{{btnEliminar}}" *ngIf="cama.id" type="danger" (click)="eliminarCama(cama)">
+                </plex-button>&nbsp;&nbsp;
                 <plex-button label="Guardar" type="success" (click)="save($event)" validateForm="true"></plex-button>
             </div>
         </div>

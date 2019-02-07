@@ -134,7 +134,6 @@ export class IniciarInternacionComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        console.log(this.paciente.carpetaEfectores);
         if (this.prestacion) {
             this.btnIniciarGuardar = 'GUARDAR';
             let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
@@ -274,7 +273,7 @@ export class IniciarInternacionComponent implements OnInit {
             if (this.auth.profesional) {
                 this.servicioProfesional.get({ id: this.auth.profesional.id }).subscribe(resultado => {
                     if (resultado) {
-                        this.informeIngreso.profesional = resultado[0];
+                        this.informeIngreso.profesional = resultado[0] ? resultado[0] : null;
                         let callback = (resultado) ? resultado : null;
                         event.callback([callback]);
                     }

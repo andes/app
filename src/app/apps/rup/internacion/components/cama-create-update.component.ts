@@ -1,3 +1,4 @@
+import { estados } from './../../../../utils/enumerados';
 import { HostBinding, EventEmitter, Component, OnInit, Input, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -23,6 +24,7 @@ export class CamaCreateUpdateComponent implements OnInit {
     public unidadOrganizativa = null;
     public sectores: any[] = [];
     public nuevaCama = true;
+    public btnEliminar = '';
 
     public cama: any = {
         organizacion: null,
@@ -69,6 +71,11 @@ export class CamaCreateUpdateComponent implements OnInit {
                 this.CamaService.getCama(idCama).subscribe(cama => {
                     this.cama = cama;
                     this.estado = Object.assign({}, this.cama.ultimoEstado);
+                    if (this.controlEliminarCama()) {
+                        this.btnEliminar = 'Eliminar cama';
+                    } else {
+                        this.btnEliminar = 'Dar de baja';
+                    }
                 });
             }
         });
@@ -170,6 +177,57 @@ export class CamaCreateUpdateComponent implements OnInit {
         this.snomed.getQuery({ expression: '^2061000013108' }).subscribe(result => {
             $event.callback(result);
         });
+    }
+
+    controlEliminarCama() {
+        if (this.cama && this.cama.id) {
+            let estadosOcupada = this.cama.estados.filter(e => e.estado === 'ocupada');
+            if (estadosOcupada && estadosOcupada.length) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    eliminarCama(cama) {
+        if (this.controlEliminarCama()) {
+            this.plex.confirm('Eliminar cama "' + cama.nombre + '"', '¿Desea eliminar?').then(confirmacion => {
+                if (confirmacion) {
+                    this.CamaService.eliminarCama(cama.id).subscribe(resultado => {
+                        this.plex.info('info', 'La cama fue eliminada');
+                        this.router.navigate(['/internacion/camas']);
+                    });
+                }
+            });
+        } else {
+            if (this.cama.ultimoEstado.estado !== 'ocupada') {
+                // vamos a actualizar el estado de la cama a inctivo
+                let dto = {
+                    fecha: new Date(),
+                    estado: 'inactiva',
+                    unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
+                    especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
+                    esCensable: false,
+                    genero: this.cama.ultimoEstado.genero ? this.cama.ultimoEstado.genero : null,
+                    paciente: null,
+                    idInternacion: null,
+                    esMovimiento: false
+                };
+                this.CamaService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
+                    if (camaActualizada) {
+                        this.plex.info('', 'La cama fue dada de baja');
+                        this.router.navigate(['/internacion/camas']);
+                    }
+
+                }, (err1) => {
+                    this.plex.info('danger', err1, 'Error al intentar dar de baja cama');
+                });
+            } else {
+                this.plex.info('danger', 'No es posible dar de baja una cama ocupada');
+                this.router.navigate(['/internacion/camas']);
+            }
+        }
     }
 
 }
