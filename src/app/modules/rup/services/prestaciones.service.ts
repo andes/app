@@ -1072,6 +1072,17 @@ export class PrestacionesService {
         return this.server.get('/modules/rup/internaciones/ultima/' + (paciente.id ? paciente.id : paciente._id), opt);
     }
 
+        /**
+    * Devuelve el listado de internacion por organizacion
+    *
+
+    * @returns  {array} Listado Organizacion
+    * @memberof PrestacionesService
+    */
+   public listadoInternacion(filtros?) {
+    return this.server.get('/modules/rup/internaciones/listadoInternacion/', { params: filtros, showError: true });
+}
+
 
     /**
    * Devuelve el listado de estados de la/s camas por las que paso la internación

@@ -207,7 +207,6 @@ import { ArancelamientoFormComponent } from './components/turnos/punto-inicio/ar
 import { AutocitarTurnoAgendasComponent } from './components/turnos/autocitar/autocitar.component';
 import { DinamicaFormComponent } from './components/turnos/autocitar/dinamica.component';
 import { MapaEspacioFisicoVistaComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico-vista.component';
-
 import { BuscadorCie10Component } from './components/turnos/gestor-agendas/operaciones-agenda/buscador-cie10.component';
 
 
@@ -388,6 +387,7 @@ import { ResumenInternacionComponent } from './apps/rup/internacion/components/r
 import { CamaBloquearComponent } from './apps/rup/internacion/components/cama-bloquear.component';
 import { CamaDesbloquearComponent } from './apps/rup/internacion/components/cama-desbloquear.component';
 import { CamaPrepararComponent } from './apps/rup/internacion/components/cama-preparar.component';
+import { ListadoInternacionComponent }  from './apps/rup/internacion/components/listado-internacion.component';
 
 
 import { RiesgoCardiovascularService } from './modules/rup/components/formulas/riesgoCardiovascular.service';
@@ -617,6 +617,7 @@ registerLocaleData(localeEs, 'es');
         ...RUPComponentsArray,
         MapaDeCamasComponent,
         CamaComponent,
+        ListadoInternacionComponent,
         PuntoInicioInternacionComponent,
         LaboratoriosComponent,
         ChartComponent,
