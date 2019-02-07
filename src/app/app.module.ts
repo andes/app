@@ -337,6 +337,7 @@ import { ChartsModule } from 'ng2-charts';
 // INTERNACION
 
 import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
+import { EjecucionInternacionComponent } from './apps/rup/internacion/components/ejecucionInternacion.component';
 
 // Mapa de camas
 import { MapaDeCamasComponent } from './apps/rup/internacion/components/mapa-de-camas.component';
@@ -467,13 +468,15 @@ let RUPComponentsArray = [
     CamaBloquearComponent,
     CamaDesbloquearComponent,
     CamaPrepararComponent,
-    OcuparCamaComponent
+    OcuparCamaComponent,
+    EjecucionInternacionComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { ChartComponent } from './modules/rup/components/elementos/chart.component';
 import { UploadFileComponent } from './shared/components/upload-file.component';
 import { CodificacionService } from './modules/rup/services/codificacion.service';
+
 
 
 
