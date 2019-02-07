@@ -179,8 +179,8 @@ export class PuntoInicioComponent implements OnInit {
             // buscamos las que estan fuera de agenda para poder listarlas:
             // son prestaciones sin turno creadas en la fecha seleccionada en el filtro
             this.fueraDeAgenda = this.prestaciones.filter(p => (!p.solicitud.turno &&
-                (p.createdAt >= moment(this.fecha).startOf('day').toDate() &&
-                    p.createdAt <= moment(this.fecha).endOf('day').toDate())
+                (p.ejecucion.fecha >= moment(this.fecha).startOf('day').toDate() &&
+                    p.ejecucion.fecha <= moment(this.fecha).endOf('day').toDate())
                 && p.estados[p.estados.length - 1].createdBy.username === this.auth.usuario.username
                 && (p.estados[p.estados.length - 1].tipo === 'ejecucion' || p.estados[p.estados.length - 1].tipo === 'validada')));
 
@@ -607,5 +607,20 @@ export class PuntoInicioComponent implements OnInit {
             this.tienePermisos(turno.tipoPrestacion, turno.prestacion) && condAsistencia);
     }
 
+    /**
+     * Se puede registrar inasistencia de un turno cuando se cumplen todas las validaciones:
+     * la agenda: no es futura, no está auditada
+     * turno: no está suspendido, ya pasó la hora de inicio, profesional no cargó prestación todavía y tiene paciente asignado
+     * @param {*} turno
+     * @returns {Boolean} si debe mostrarse o no el botón para registrar inasistencia
+     * @memberof PuntoInicioComponent
+     */
+    esHabilitadoRegistrarInasistencia(turno): Boolean {
+        let horaActual = moment(new Date()).format('LT');
+        let horaTurno = moment(turno.horaInicio).format('LT');
+        return !this.esFutura(this.agendaSeleccionada) && this.agendaSeleccionada.estado !== 'auditada' &&
+            turno.estado !== 'suspendido' && (!turno.asistencia || (turno.asistencia && turno.asistencia === 'asistio')) &&
+            turno.paciente && turno.diagnostico.codificaciones.length === 0;
+    }
 
 }

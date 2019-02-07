@@ -1,10 +1,12 @@
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import * as moment from 'moment';
+import { RupElement } from '.';
 @Component({
     selector: 'rup-percentilo-talla',
     templateUrl: 'percentiloTalla.html'
 })
+@RupElement('PercentiloTallaComponent')
 export class PercentiloTallaComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         if (!this.soloValores) {

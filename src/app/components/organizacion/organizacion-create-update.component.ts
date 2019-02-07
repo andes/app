@@ -113,9 +113,11 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         activo: true,
         fechaAlta: new Date(),
         fechaBaja: new Date(),
-        unidadesOrganizativas: [null]
+        unidadesOrganizativas: []
     };
+
     public listadoUO = [];
+
     constructor(
         private organizacionService: OrganizacionService,
         private paisService: PaisService,
@@ -169,34 +171,36 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
 
 
     onSave(valid) {
-        let organizacionGuardar = Object.assign({}, this.organizacionModel);
-        organizacionGuardar.contacto.map(elem => {
-            elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
-            return elem;
-        });
-        if (organizacionGuardar.edificio) {
-            organizacionGuardar.edificio.forEach(e => {
-                if (e.contacto) {
-                    e.contacto.tipo = ((typeof e.contacto.tipo === 'string') ? e.contacto.tipo : (Object(e.contacto.tipo).id));
+        if (valid.formValid) {
+            let organizacionGuardar = Object.assign({}, this.organizacionModel);
+            organizacionGuardar.contacto.map(elem => {
+                elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
+                return elem;
+            });
+            if (organizacionGuardar.edificio) {
+                organizacionGuardar.edificio.forEach(e => {
+                    if (e.contacto) {
+                        e.contacto.tipo = ((typeof e.contacto.tipo === 'string') ? e.contacto.tipo : (Object(e.contacto.tipo).id));
+                    }
+                    e.direccion.ubicacion.pais = this.paisArgentina;
+                    e.direccion.ubicacion.provincia = this.provinciaNeuquen;
+                    e.direccion.ubicacion.barrio = null;
+                });
+            }
+            organizacionGuardar.direccion.ubicacion.pais = this.paisArgentina;
+            organizacionGuardar.direccion.ubicacion.provincia = this.provinciaNeuquen;
+            organizacionGuardar.direccion.ubicacion.barrio = null;
+
+            let operacion = this.organizacionService.save(organizacionGuardar);
+            operacion.subscribe(result => {
+                if (result) {
+                    this.plex.info('success', 'Los datos se actualizaron correctamente');
+                    this.data.emit(result);
+                } else {
+                    this.plex.info('warning', 'ERROR: Ocurrio un problema al actualizar los datos');
                 }
-                e.direccion.ubicacion.pais = this.paisArgentina;
-                e.direccion.ubicacion.provincia = this.provinciaNeuquen;
-                e.direccion.ubicacion.barrio = null;
             });
         }
-        organizacionGuardar.direccion.ubicacion.pais = this.paisArgentina;
-        organizacionGuardar.direccion.ubicacion.provincia = this.provinciaNeuquen;
-        organizacionGuardar.direccion.ubicacion.barrio = null;
-
-        let operacion = this.organizacionService.save(organizacionGuardar);
-        operacion.subscribe(result => {
-            if (result) {
-                this.plex.info('success', 'Los datos se actualizaron correctamente');
-                this.data.emit(result);
-            } else {
-                this.plex.info('warning', 'ERROR: Ocurrio un problema al actualizar los datos');
-            }
-        });
     }
 
     onCancel() {

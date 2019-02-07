@@ -5,11 +5,13 @@ import { IPacienteMatch } from '../../../mpi/interfaces/IPacienteMatch.inteface'
 import { IPaciente } from '../../../../interfaces/IPaciente';
 import { Plex } from '@andes/plex';
 import { PacienteBuscarResultado } from '../../../mpi/interfaces/PacienteBuscarResultado.inteface';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-ActividadNoNominalizada',
     templateUrl: 'informeActividadNoNominalizada.html'
 })
+@RupElement('InformeActividadNoNominalizadaComponent')
 export class InformeActividadNoNominalizadaComponent extends RUPComponent implements OnInit {
 
     public elegirOtraActividad = false;

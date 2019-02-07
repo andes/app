@@ -1,4 +1,4 @@
-<form class="plex-layout" #form="ngForm">
+<form class="plex-layout" #formulario="ngForm">
     <section>
         <div class="row">
             <div class="col">
@@ -10,7 +10,7 @@
                     <div class="row">
                         <div class="col-4">
                             <plex-text label="Código SISA" type="text" name="sisa" [(ngModel)]="organizacionModel.codigo.sisa"
-                                placeholder="Ingrese código SISA"></plex-text>
+                                placeholder="Ingrese código SISA" [required]="true"></plex-text>
                         </div>
                         <div class="col-4">
                             <plex-text label="Código CUIE" name="cuie" [(ngModel)]="organizacionModel.codigo.cuie"
@@ -23,7 +23,7 @@
                     </div>
                     <div class="row">
                         <div class="col-4">
-                            <plex-text type="text" label="Nombre" name="nombre" [(ngModel)]="organizacionModel.nombre"
+                            <plex-text type="text" label="Nombre" name="nombre" [required]="true" [(ngModel)]="organizacionModel.nombre"
                                 placeholder="Ingrese nombre..."></plex-text>
                         </div>
                         <div class="col-4">
@@ -137,7 +137,7 @@
                                                 <div>
                                                     <div class="row">
                                                         <div class="col-4">
-                                                            <plex-select name="localidad22-{{i}}" [(ngModel)]="_unEdificio.direccion.ubicacion.localidad.nombre"
+                                                            <plex-select name="localidad22-{{i}}" [(ngModel)]="_unEdificio.direccion.ubicacion.localidad"
                                                                 [data]="localidadesNeuquen" label="Localidad:">
                                                             </plex-select>
                                                         </div>
@@ -224,7 +224,7 @@
             <div class="col-6 text-right">
                 <plex-button label="Cancelar" icon="close-circle-outline" type="danger" (click)="onCancel()">
                 </plex-button>
-                <plex-button label="Guardar" icon="content-save" type="primary" (click)="onSave($event)">
+                <plex-button label="Guardar" icon="content-save" type="primary" [validateForm]="formulario" (click)="onSave($event)">
                 </plex-button>
             </div>
         </div>
