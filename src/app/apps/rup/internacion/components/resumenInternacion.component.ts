@@ -102,8 +102,7 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
         let registros = this.prestacion.ejecucion.registros;
         // nos fijamos si el concepto ya aparece en los registros
         let egresoExiste = registros.find(registro => registro.concepto.conceptId === this.conceptoEgreso.conceptId);
-        if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada' &&
-            egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
+        if (egresoExiste && egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
             this.refreshCamas.emit({ cama: this.camaSeleccionada, desocupaCama: true, egresoExiste });
         }
     }
@@ -137,8 +136,6 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
                 this.prestacionesService.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                     this.prestacion = prestacion;
                     this.desocuparCama();
-                    this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
-
                     // this.cancelar();
                 }, (err) => {
                     this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
