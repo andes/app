@@ -387,7 +387,7 @@ import { ResumenInternacionComponent } from './apps/rup/internacion/components/r
 import { CamaBloquearComponent } from './apps/rup/internacion/components/cama-bloquear.component';
 import { CamaDesbloquearComponent } from './apps/rup/internacion/components/cama-desbloquear.component';
 import { CamaPrepararComponent } from './apps/rup/internacion/components/cama-preparar.component';
-import { ListadoInternacionComponent }  from './apps/rup/internacion/components/listado-internacion.component';
+import { ListadoInternacionComponent } from './apps/rup/internacion/components/listado-internacion.component';
 
 
 import { RiesgoCardiovascularService } from './modules/rup/components/formulas/riesgoCardiovascular.service';

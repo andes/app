@@ -83,7 +83,6 @@ export class DesocuparCamaComponent implements OnInit {
     }
 
     filtrosDesocupar() {
-        debugger;
         const fechaActual = new Date();
         const fechaMovimiento = this.internacionService.combinarFechas(this.fecha, this.hora);
         if (fechaMovimiento > fechaActual) {
