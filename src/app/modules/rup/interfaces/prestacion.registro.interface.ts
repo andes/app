@@ -4,6 +4,7 @@ import { ObjectID } from 'bson';
 
 export class IPrestacionRegistro {
     id: string;
+    idPrestacion: string;
     // Indica el nombre del registro, calculado por el elementoRUP.
     // Ejemplo: 'Prescripción de novalgina'
     nombre: string;
