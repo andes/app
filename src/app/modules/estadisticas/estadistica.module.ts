@@ -20,6 +20,7 @@ import { CommonModule } from '@angular/common';
 import { EstRupService } from './services/rup-estadisticas.service';
 import { RupPacientesComponent } from './components/rup/rup-pacientes.component';
 import { SnomedService } from './services/snomed.service';
+import { TablaGeolocalizacionComponent } from './components/tabla-geolocalizacion/tabla-geolocalizacion.component';
 
 @NgModule({
     imports: [
@@ -36,7 +37,8 @@ import { SnomedService } from './services/snomed.service';
         HomeComponent,
         FiltrosComponent,
         CitasComponent,
-        RupPacientesComponent
+        RupPacientesComponent,
+        TablaGeolocalizacionComponent
     ],
     entryComponents: [
         HomeComponent,

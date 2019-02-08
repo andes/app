@@ -1,0 +1,18 @@
+<div class="row" *ngIf="columnas && data">
+  <div class="col">
+<table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th *ngFor="let title of columnas[0]" scope="col">{{title}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ciudad of data | keyvalue">
+        <th scope="row">{{ciudad.key}}</th>
+        <td *ngFor="let title of columnas[0], let i = index">{{ciudad.value[columnas[0][i]]}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</div>
