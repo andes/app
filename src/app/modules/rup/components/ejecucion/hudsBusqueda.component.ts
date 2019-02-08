@@ -253,9 +253,9 @@ export class HudsBusquedaComponent implements OnInit {
 
         let elemento = {
             tipo: tipo,
-            data: registro
+            data: registro,
+            ...{ vistaHUDS: tipo !== 'prestacion' ? true : false }
         };
-
 
         // si no existe lo agregamos
         if (index === -1) {
