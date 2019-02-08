@@ -121,6 +121,7 @@ export class VistaHudsComponent implements OnInit {
 
 
     agregarListadoHuds(elemento) {
+
         if (elemento.tipo === 'prestacion') {
             // Limpiar los valores observados al iniciar la ejecución
             // Evita que se autocompleten valores de una consulta anterior
@@ -136,9 +137,15 @@ export class VistaHudsComponent implements OnInit {
                     documento: this.paciente.documento
                 },
                 prestacion: elemento.data.id
-            }).subscribe(() => { return true; });
+            }).subscribe(() => {
+            });
+        } else {
+            // Se obtienen datos de la prestación, para mostrar info contextual del registro
+            this.servicioPrestacion.getById(elemento.data.idPrestacion).subscribe(prestacion => {
+                this.prestacion = prestacion;
+                return true;
+            });
         }
-        // this.registrosHuds = registrosHuds;
     }
     /**
     * Setea el boton volver, Segun la ruta que recibe
