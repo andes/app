@@ -1,6 +1,6 @@
 <form #form="ngForm" *ngIf="paciente">
 
-    <!-- <ng-container *ngIf="!soloValores && referenceSet.length > 0 && registro.valor.estado !== 'transformado'">
+    <ng-container *ngIf="!soloValores && referenceSet.length > 0 && registro.valor.estado !== 'transformado' && !vistaHUDS">
         <div class="row">
             <div class="col-12">
                 <span *ngIf="hallazgoOrigen" class="badge badge-info">
@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="row">&nbsp;</div>
-    </ng-container> -->
+    </ng-container>
 
     <div *ngIf="!soloValores && registro.valor.estado !== 'transformado'">
         <div *ngIf="elementoRUP && registro">
@@ -68,7 +68,7 @@
                     <plex-button *ngIf="indice === 0" type="default" icon="chevron-left" class="mdi-18px"></plex-button>
                 </div>
                 <div class="col-2 text-center border border-left-0 border-right-0 border-secondary pt-2">
-                    {{ unaEvolucion.fechaCarga | fecha }}
+                    {{ evolucionActual?.fechaCarga | fecha }}
                 </div>
                 <div class="col-5 text-right border border-left-0 border-secondary pr-0">
                     <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="info" icon="chevron-right"
@@ -81,24 +81,24 @@
             <div class="row">
                 <div class="col-8">
                     <br>
-                    <strong>Evolución:</strong>
-                    <span [innerHTML]="unaEvolucion.evolucion"></span>
+                    <strong>Evolución:</strong><br>
+                    <span [innerHTML]="evolucionActual.evolucion"></span>
                 </div>
                 <div class="col-4 text-right">
                     <br>
-                    <strong>Profesional:</strong> {{unaEvolucion.profesional }}
+                    <strong>Profesional:</strong> {{ evolucionActual.profesional }}
                 </div>
             </div>
             <div class="row">
-                <div class="col" *ngIf="unaEvolucion.informeRequerido">
+                <div class="col" *ngIf="evolucionActual?.informeRequerido">
                     <hr>
                     <label>Informe Del Encuentro:</label>
-                    <ng-container *ngIf="unaEvolucion.informeRequerido?.valor;then showMensaje else showContenidoValor"></ng-container>
+                    <ng-container *ngIf="evolucionActual.informeRequerido?.valor;then showMensaje else showContenidoValor"></ng-container>
                     <ng-template #showContenidoValor>
                         No tiene registrado el informe
                     </ng-template>
                     <ng-template #showMensaje>
-                        <span [innerHTML]="unaEvolucion.informeRequerido.valor"></span>
+                        <span [innerHTML]="evolucionActual.informeRequerido.valor"></span>
                     </ng-template>
                 </div>
             </div>
@@ -107,16 +107,7 @@
 
     <!-- Hallazgos -->
     <ng-container *ngIf="registro && (soloValores || registro.valor.estado === 'transformado')">
-        <!-- <div class="row">
-            <div class="col-12">
-                <div class="row no-gutters">
-                    <div class="col"> -->
-        <!-- <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">Motivo de consulta principal</small> -->
-        <!-- </div>
-                </div>
-            </div>
-        </div> -->
-        <div class="row">&nbsp;</div>
+
         <div class="row" *ngIf="registro.valor.evolucion">
             <div class="col-8 readonly">
                 <span>Evolución </span>
@@ -134,7 +125,7 @@
         </div>
 
         <!-- Listado de evoluciones al visualizar el hallazgo independiente de una prestacion -->
-        <div class="solo-valores-grid">
+        <div class="solo-valores-grid hallazgos">
             <ng-container *ngIf="registro?.evoluciones">
                 <div class="columna">
                     <div class="concepto prestacion-offset">
@@ -148,7 +139,7 @@
                     </div>
 
                     <div class="divisor">
-                        <div class="evoluciones">
+                        <div class="datos-prestacion">
                             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                                 x="0px" y="0px" width="30px" height="30px" viewBox="0 0 20 20" enable-background="new 0 0 20 20"
                                 xml:space="preserve">
@@ -158,24 +149,33 @@
                                 <polygon fill="#10A6E0" points="13.306,8.31 10.616,8.31 10.616,5.62 8.31,5.62 8.31,8.31 5.62,8.31 5.62,10.616 8.31,10.616 
                                             8.31,13.306 10.616,13.306 10.616,10.616 13.306,10.616" />
                             </svg>
-                            <h5 class="text-primary evoluciones">Evoluciones</h5>
+                            <h5 class="ml-1 text-primary evoluciones">Evoluciones</h5>
                         </div>
                         <div class="justify-content-end nav-fecha">
-                            <i [ngClass]="{'text-black-50': indice === 0, 'hover': indice > 0}" class="mdi mdi-menu-left mdi-36px semantic-text-{{ registro.concepto.semanticTag }}"
-                                (click)="cambiarEvolucion('-')"></i>
+                            <div [ngClass]="{'text-black-50': indice === registro.evoluciones.length - 1, 'hover': indice < registro.evoluciones.length - 1}"
+                                class="menu-left mr-2 semantic-text-{{ registro.concepto.semanticTag }}" (click)="cambiarEvolucion('+')"></div>
+                            {{ evolucionActual?.fechaCarga | fecha }}
+                            <div [ngClass]="{'text-black-50': indice === 0, 'hover': indice > 0}" class="menu-right ml-2 semantic-text-{{ registro.concepto.semanticTag }}"
+                                (click)="cambiarEvolucion('-')"></div>
                             <!-- fechaCarga es registro.createdAt -->
-                            {{ unaEvolucion.fechaCarga | fecha }}
-                            <i [ngClass]="{'text-black-50': indice === registro.evoluciones.length - 1, 'hover': indice < registro.evoluciones.length - 1}"
-                                class="mdi mdi-menu-right mdi-36px semantic-text-{{ registro.concepto.semanticTag }}"
-                                (click)="cambiarEvolucion('+')"></i>
                         </div>
                     </div>
 
                     <!-- <ng-container *ngFor="let evolucion of registro.evoluciones"> -->
-                    <div class="borde-evolucion ml-3 pl-2 pt-1">
+                    <div class="borde-datos ml-3 pl-2 pt-1">
                         <div class="mp-2 mb-2">
-                            <!-- <b>Evolución: </b> -->
-                            <span [innerHTML]="registro.evoluciones[indice].evolucion"></span>
+                            <b>Evolución: </b>
+                            <ng-container *ngIf="registro?.evoluciones[indice]?.evolucion">
+                                <span [innerHTML]="registro.evoluciones[indice].evolucion"></span>
+                            </ng-container>
+                            <b>Informe del Encuentro: </b>
+                            <ng-container *ngIf="evolucionActual?.informeRequerido?.valor">
+                                <div [innerHTML]="evolucionActual.informeRequerido.valor"></div>
+                            </ng-container>
+                            <ng-container *ngIf="!evolucionActual?.informeRequerido?.valor">
+                                <br>
+                                No tiene registrado el informe
+                            </ng-container>
                         </div>
                         <div class="columna-completa align">
                             <b>Estado del trastorno:</b><br>
@@ -224,7 +224,7 @@
                         <div class="columna-completa">
                             <!-- VER QUE FUNCIONEN LAS RELACIONES -->
                             <ng-container *ngFor="let relacion of registro?.evoluciones[indice].relacionadoCon; let r=index">
-                                <ng-container *ngIf="relacion?.concepto">
+                                <ng-container *ngIf="relacion?.concepto?.term">
                                     <b>Relacionado con:</b><br>
                                     <div>
                                         <span class="badge badge-{{ relacion?.concepto?.semanticTag }}">
@@ -242,8 +242,8 @@
                 <div class="columna prestacion-offset">
                     <div class="concepto border-0">&nbsp;</div>
                     <div class="divisor">
-                        <div class="evoluciones">
-                            <svg xml:space="preserve" xmlns:xlink="http://www.w3.org/1999/xlink" height="35px" version="1.1"
+                        <div class="datos-prestacion">
+                            <svg xml:space="preserve" xmlns:xlink="http://www.w3.org/1999/xlink" height="36px" version="1.1"
                                 viewBox="0 0 35 50" width="30px" x="0px" xmlns="http://www.w3.org/2000/svg" y="0px">
                                 <path d="M23.14,0H2.512C1.127,0,0,1.128,0,2.513v35.961c0,1.385,1.127,2.512,2.512,2.512H27.78
                                     c1.385,0,2.513-1.127,2.513-2.512V7.771L23.14,0z M23.734,3.761l3.135,3.408h-3.135V3.761z M28.183,38.471
@@ -260,12 +260,11 @@
 
                             <h5 class="text-primary">Datos de la Prestación</h5>
                         </div>
-                        <div *ngIf="prestacion?.ejecucion?.fecha" class="justify-content-end">
-                            <!-- fechaCarga es registro.createdAt -->
-                            {{ prestacion.ejecucion.fecha| fecha }}
+                        <div *ngIf="prestacion?.ejecucion?.fecha" class="justify-content-end align-items-center">
+                            {{ prestacion.solicitud.fecha | fecha }}
                         </div>
                     </div>
-                    <div class="borde-evolucion ml-3 pl-2 pt-2">
+                    <div class="borde-datos ml-3 pl-2 pt-2">
                         <div *ngIf="prestacion?.solicitud?.profesional" class="columna-datos d-flex justify-content-between mb-2">
                             <span>Prestación: </span> <span class="text-capitalize">{{
                                 prestacion.solicitud.tipoPrestacion.term }}</span>
@@ -281,9 +280,6 @@
                             </div>
                             <ng-container *ngFor="let registro of prestacion?.ejecucion?.registros">
                                 <span class="mb-1">
-                                    <span class="semantic-badge-{{ registro.concepto.semanticTag }}">
-                                        <i class="icon icon-rup-semantic-{{ registro.concepto.semanticTag === 'elemento de registro' ? 'elementoderegistro' : registro.concepto.semanticTag }} {{ registro.concepto.semanticTag === 'elemento de registro' ? 'elementoderegistro' : registro.concepto.semanticTag }}"></i>
-                                    </span>
                                     <span class="badge badge-{{ registro.concepto.semanticTag }}">
                                         {{ registro.concepto.term }}
                                     </span>

@@ -1,6 +1,6 @@
 
 import { RUPComponent } from './../core/rup.component';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import * as moment from 'moment';
 import { RupElement } from '.';
 
@@ -18,7 +18,7 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
     public evolucion: String; //
     public hallazgoHudsCompleto: any; //
     public hallazgoOrigen: any; //
-    public unaEvolucion;
+    public evolucionActual;
     public indice = 0;
     public evoluciones;
     public referenceSet = [];
@@ -72,18 +72,26 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
                 }
             }
         }
-        // RELACIONES
-        this.prestacionesService.getById((this.registro as any).idPrestacion).subscribe(prestacion => {
-            this.prestacion = prestacion;
-            this.registro.evoluciones.forEach(evolucion => {
-                if (evolucion.relacionadoCon && evolucion.relacionadoCon.length > 0) {
-                    if (typeof evolucion.relacionadoCon[0] === 'string') {
-                        evolucion.relacionadoCon = evolucion.relacionadoCon.map(x => x = prestacion.ejecucion.registros.find(r => r.id === evolucion.relacionadoCon[0]));
-                    }
-                }
-            });
-        });
-        console.log('ID', this.registro);
+
+        if (this.soloValores) {
+
+            if (this.registro.evoluciones.length) {
+                this.evolucionActual = this.registro.evoluciones[0];
+                let idPrestacion = this.evolucionActual.informeRequerido ? this.evolucionActual.informeRequerido.idPrestacion : this.evolucionActual.idPrestacion;
+
+                // RELACIONES
+                this.prestacionesService.getById(this.registro.idPrestacion).subscribe(prestacion => {
+                    this.prestacion = prestacion;
+                    this.registro.evoluciones.forEach(evolucion => {
+                        if (evolucion.relacionadoCon && evolucion.relacionadoCon.length > 0) {
+                            if (typeof evolucion.relacionadoCon[0] === 'string') {
+                                evolucion.relacionadoCon = evolucion.relacionadoCon.map(x => x = prestacion.ejecucion.registros.find(r => r.id === evolucion.relacionadoCon[0]));
+                            }
+                        }
+                    });
+                });
+            }
+        }
     }
 
     getHallazgo(idOrigen) {
@@ -102,8 +110,8 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
                         this.evoluciones.shift();
                     }
                     if (this.evoluciones && this.evoluciones.length > 0) {
-                        this.unaEvolucion = this.evoluciones[0];
-                        this.registro.valor.estado = this.registro.valor.estado ? this.registro.valor.estado : (this.unaEvolucion.estado ? this.unaEvolucion.estado : 'activo');
+                        this.evolucionActual = this.evoluciones[0];
+                        this.registro.valor.estado = this.registro.valor.estado ? this.registro.valor.estado : (this.evolucionActual.estado ? this.evolucionActual.estado : 'activo');
                         this.registro.valor.evolucion = this.registro.valor.evolucion ? this.registro.valor.evolucion : '';
                         if (this.registro.concepto.semanticTag === 'hallazgo') {
                             this.registro.valor.fechaInicio = new Date();
@@ -151,6 +159,9 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
 
 
 
+    /**
+     * Media pila, hacer un pipe
+     */
     friendlyDate(fecha) {
         if (this.registro.valor.fechaInicio) {
             let oldDateMoment = moment(fecha, 'YYYY/MM/DD');
@@ -177,26 +188,29 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
 
 
     cambiarEvolucion(signo) {
+        this.evolucionActual = null;
         if (signo === '+') {
             if (this.indice < (this.registro.evoluciones.length - 1)) {
                 this.indice = this.indice + 1;
-                this.unaEvolucion = this.registro.evoluciones[this.indice];
             }
         } else {
             if (this.indice > 0) {
                 this.indice = this.indice - 1;
-                this.unaEvolucion = this.registro.evoluciones[this.indice];
             }
         }
 
-        let idp = (this.unaEvolucion as any).idPrestacion;
+        this.evolucionActual = this.registro.evoluciones[this.indice];
+        this.evolucionActual.fechaCarga = this.registro.evoluciones[this.indice].fechaCarga;
+
+        let idp = (this.evolucionActual as any).informeRequerido.idPrestacion;
+
         if (typeof idp !== 'undefined') {
             this.prestacionesService.getById(idp).subscribe(prestacion => {
                 this.prestacion = prestacion;
                 this.registro.evoluciones.forEach(evolucion => {
                     if (evolucion.relacionadoCon && evolucion.relacionadoCon.length > 0) {
                         if (typeof evolucion.relacionadoCon[0] === 'string') {
-                            evolucion.relacionadoCon = evolucion.relacionadoCon.map(x => x = prestacion.ejecucion.registros.find(r => r.id === evolucion.relacionadoCon[0]));
+                            evolucion.relacionadoCon = evolucion.relacionadoCon.map(x => x = this.prestacion.ejecucion.registros.find(r => r.id === evolucion.relacionadoCon[0]));
                         }
                     }
                 });
