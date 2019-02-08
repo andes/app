@@ -422,6 +422,9 @@ $color in $rup_colors {
     .semantic-text-#{$tag} {
         color: $color;
     }
+    .semantic-border-#{$tag} {
+        border-color: $color;
+    }
 }
 
 .input-group-addon {
@@ -450,7 +453,142 @@ $color in $rup_colors {
     }
 }
 
+.menu-left {
+    width: 0px;
+    height: 0px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 8px solid;
+}
+.menu-right {
+    width: 0px;
+    height: 0px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 8px solid;
+
+}
+
 // Debería ser global (Plex)
 // .bg-inverse {
 //     background-color: #002738 !important;
 // }
+
+@mixin grid-2-columnas($col: 1fr) {
+    display: grid;
+    grid-template-columns: $col $col;
+    grid-column-gap: 40px;
+    .concepto {
+        display: grid;
+        grid-template-columns: .5fr;
+        font-size: 1.75rem;
+        border-bottom: 2px solid gray;
+        margin-bottom: 20px;
+        padding-bottom: 3px;
+        align-items: flex-end;
+        h3 {
+            margin-bottom: 0;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+    }
+}
+
+@mixin grid-columna {
+    
+    .prestacion-offset {
+        display: flex;
+        justify-content: space-between;
+        grid-column: 1/2;
+    }
+    div:not(:first-of-type) {
+        display: grid;
+        grid-template-columns: 1fr .25fr;
+            div:nth-child(2) {
+                display: flex;
+                // justify-content: center;
+            }
+    }
+    .columna-completa {
+        grid-column: 1/3 !important;
+        display: grid !important;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(2, 1fr);
+    
+    }
+    .divisor {
+        border-bottom: 2px solid gray;
+        
+    }
+    .datos-prestacion {
+        display: flex;
+        align-content: center;
+        padding-left: 4px;
+
+        h5 {
+            font-size: 1.5rem;
+        }
+        div {
+            display: flex;
+        
+        }
+    }
+    .borde-datos {
+        border-left: 2px solid gray;
+    }
+}
+
+@mixin grid-columna-datos {
+    .columna-datos {
+        grid-column: 1/3;
+        border-bottom: 2px solid darkgray;
+        span {
+            font-size: 1rem;
+            color: gray;
+        }
+        &.no-border{
+            border-bottom: 0;
+        }
+    }
+}
+
+.solo-valores-grid.hallazgos {
+    
+    @include grid-2-columnas();
+
+    .columna {
+
+        @include grid-columna();
+
+        .evolucion {
+            grid-column: 1/2;
+        }
+        .nav-fecha {
+            align-items: center;
+            height: 30px;
+        }
+        .text-black-50 {
+            color: darkgray;
+        }
+    }
+    
+    @include grid-columna-datos();
+
+    .badge {
+        font-size: 1rem !important; 
+    }
+}
+
+.solo-valores-grid.procedimientos {
+    @include grid-2-columnas();
+    
+    .columna {
+        @include grid-columna();        
+    }
+    
+    @include grid-columna-datos();
+    
+    .badge {
+        font-size: 1rem !important; 
+    }
+}
