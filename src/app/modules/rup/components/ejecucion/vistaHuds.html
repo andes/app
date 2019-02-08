@@ -13,7 +13,7 @@
                         </div>
                     </ng-container>
                     <plex-tabs (close)="onCloseTab($event)">
-                        <ng-container *ngIf="registrosHuds">
+                        <ng-container *ngIf="registrosHuds && prestacion">
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">
                                 <plex-tab [allowClose]="true" [label]="registro.data.concepto.term" [class]="registro.data.class"
                                     [color]="registro.data.class" *ngIf="registro.tipo === 'hallazgo' || registro.tipo === 'medicamento'">
@@ -21,26 +21,23 @@
                                         [params]="elementosRUPService.selectPorRefsetId(registro.data.concepto)"
                                         [prestacion]="prestacion" [paciente]="paciente" [registro]="registro.data"
                                         [soloValores]="true">
+                                        <ng-container *ngIf="registro.data.concepto.semanticTag !== 'trastorno' && registro.data.concepto.semanticTag !== 'hallazgo'">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <span [innerHTML]="servicioPrestacion.mostrarInformeRelacionado(paciente,registro.data, registro.data.concepto)"></span>
+                                                    <ng-container *ngFor="let relacion of registro.data.relacionadoCon; let r=index">
+                                                        Relacionado con:
+                                                        <small class="badge badge-info">
+                                                            {{ relacion?.cara ? 'diente ' + relacion?.concepto?.term +
+                                                            '
+                                                            (cara ' + relacion?.cara + ')' : relacion?.concepto?.term
+                                                            }}
+                                                        </small>
+                                                    </ng-container>
+                                                </div>
+                                            </div>
+                                        </ng-container>
                                     </rup>
-                                    <ng-container *ngIf="registro.data.concepto.semanticTag !== 'trastorno' && registro.data.concepto.semanticTag !== 'hallazgo'">
-                                        <div class="row">
-                                            <div class="col">
-                                                <span [innerHTML]="servicioPrestacion.mostrarInformeRelacionado(paciente,registro.data, registro.data.concepto)"></span>
-                                            </div>
-                                        </div>
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col">
-                                                <ng-container *ngFor="let relacion of registro.data.relacionadoCon; let r=index">
-                                                    Relacionado con:
-                                                    <small class="badge badge-info">
-                                                        {{ relacion?.cara ? 'diente ' + relacion?.concepto?.term + '
-                                                        (cara ' + relacion?.cara + ')' : relacion?.concepto?.term }}
-                                                    </small>
-                                                </ng-container>
-                                            </div>
-                                        </div>
-                                    </ng-container>
                                 </plex-tab>
 
                                 <plex-tab [allowClose]="true" [label]="registro.data.solicitud.tipoPrestacion.term"
@@ -101,10 +98,11 @@
                                                             <div class="row">
 
                                                                 <div class="col-12">
-                                                                    <rup [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)"
+                                                                    <!-- <rup [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)"
                                                                         [params]="elementosRUPService.selectPorRefsetId(elemento.concepto)"
                                                                         [prestacion]="registro.data" [registro]="elemento"
-                                                                        [paciente]="paciente" [soloValores]="true"></rup>
+                                                                        [paciente]="paciente" [soloValores]="true"
+                                                                        [vistaHUDS]="false"></rup> -->
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -128,10 +126,10 @@
                             </ng-container>
                         </ng-container>
 
-                        <plex-tab label="Resumen del Paciente" *ngIf="paciente?.id">
+                        <plex-tab label="Resumen del Paciente" *ngIf="paciente?.id && prestacion">
                             <rup-resumenPaciente-estatico [paciente]="paciente" esTab="true"></rup-resumenPaciente-estatico>
-                            <!-- <rup-resumenPaciente-dinamico-nino *ngIf="paciente.edad <= 6" [paciente]="paciente" esTab="true"></rup-resumenPaciente-dinamico-nino>
-                            <rup-resumenPaciente-dinamico *ngIf="paciente.edad > 6" [paciente]="paciente" esTab="true"></rup-resumenPaciente-dinamico> -->
+                            <rup-resumenPaciente-dinamico-nino *ngIf="paciente?.edad <= 6" [paciente]="paciente" esTab="true"></rup-resumenPaciente-dinamico-nino>
+                            <rup-resumenPaciente-dinamico *ngIf="paciente?.edad > 6" [paciente]="paciente" esTab="true"></rup-resumenPaciente-dinamico>
                         </plex-tab>
 
                     </plex-tabs>

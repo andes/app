@@ -1,13 +1,23 @@
 // TODO: Mover a PLEX
 
-plex-tab {
-    form {
-        border: 1px solid lightgrey;
-        padding: 10px;
-        position: relative;
-        top: -1px;
-        z-index: 0 !important;
+plex-tab  {
+    &
+    rup-evolucion-problema-default, rup-observaciones {
+
+        &>form {
+            border: 1px solid lightgrey;
+            padding: 10px;
+            position: relative;
+            top: -1px;
+            z-index: 0 !important;
+        }
     }
+}
+
+rup-evolucion-problema-default {
+    form ~ form {
+      border: none;
+  }
 }
 
 .nav-tabs .nav-item {
