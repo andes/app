@@ -41,14 +41,14 @@
         </div>
         <!-- Paciente Create Update: se utiliza de forma independiente del paciente-search-turnos
     para una mejor visualizacion de la carga de datos -->
-        <div class="row" *ngIf="showCreateUpdate">
+        <!-- <div class="row" *ngIf="showCreateUpdate">
             <div class="col-12">
                 <div class="panel panel-default">
                     <div class="clear"></div>
-                    <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
                 </div>
             </div>
-        </div>
+        </div> -->
+        <paciente-create-update *ngIf="showCreateUpdate" [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
         <div *ngIf="showArancelamiento">
             <arancelamiento-form [turno]="turnoArancelamiento" (volverAPuntoInicio)='volverAPuntoInicio($event)'>
             </arancelamiento-form>
