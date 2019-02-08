@@ -7,6 +7,7 @@ import { EstAgendasService } from './services/agenda.service';
 // Components
 import { HomeComponent } from './components/home.component';
 import { FiltrosComponent } from './components/citas/filtros.component';
+import { GraficosComponent } from './components/citas/graficos.component';
 
 // Module
 import { PlexModule } from '@andes/plex';
@@ -36,13 +37,15 @@ import { SnomedService } from './services/snomed.service';
         HomeComponent,
         FiltrosComponent,
         CitasComponent,
-        RupPacientesComponent
+        RupPacientesComponent,
+        GraficosComponent
     ],
     entryComponents: [
         HomeComponent,
         FiltrosComponent,
         CitasComponent,
-        RupPacientesComponent
+        RupPacientesComponent,
+        GraficosComponent
     ],
     exports: [],
     providers: [

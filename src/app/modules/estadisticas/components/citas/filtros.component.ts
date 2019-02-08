@@ -8,17 +8,21 @@ import { ProfesionalService } from '../../../../services/profesional.service';
     selector: 'turnos-filtros',
     template: `
     <div class="row">
-        <div class="col-3">
+        <div class="col-2">
             <plex-select label="Tipo de filtro" [data]="opciones" [(ngModel)]="seleccion.tipoDeFiltro" name="tipoDeFiltro"></plex-select>
         </div>
-        <div class="col-3">
+        <div class="col-2">
             <plex-datetime label="Desde" [max]="hoy" type="date" [(ngModel)]="desde" name="desde"></plex-datetime>
         </div>
-        <div class="col-3">
+        <div class="col-2">
             <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta"></plex-datetime>
         </div>
-        <div class="col-3 d-flex align-items-end">
+        <div class="col-4 d-flex align-items-end">
             <plex-button type="success mb-1" label="Filtrar" (click)="onChange()" ></plex-button>
+        </div>
+        <div class="col-2 d-flex align-items-end" (click)="changeTablaGrafico()">
+            <plex-button *ngIf="esTablaGrafico" icon="mdi mdi-chart-pie"></plex-button>
+            <plex-button *ngIf="!esTablaGrafico" icon="mdi mdi-table-large"></plex-button>
         </div>
     </div>
     <div class="row">
@@ -55,6 +59,7 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
     public hasta: Date = new Date();
     public hoy = new Date();
     public opciones = [{ id: 'agendas', nombre: 'Agendas' }, { id: 'turnos', nombre: 'Turnos' }];
+    public esTablaGrafico = false;
     public estadosAgendas = [
         { id: 'planificacion', nombre: 'Planificacion' },
         { id: 'disponible', nombre: 'Disponible' },
@@ -84,6 +89,7 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
 
     @Input() params: any = {};
     @Output() filter = new EventEmitter();
+    @Output() tablaGrafico = new EventEmitter();
 
     public seleccion: any = {
         tipoDeFiltro: { id: 'turnos', nombre: 'Turnos' },
@@ -102,6 +108,11 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
 
     ngAfterViewInit() {
         this.onChange();
+    }
+
+    changeTablaGrafico() {
+        this.esTablaGrafico = !this.esTablaGrafico;
+        this.tablaGrafico.emit(this.esTablaGrafico);
     }
 
     loadProfesionales(event) {
@@ -134,7 +145,7 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
                 return {id: pr.conceptId, nombre: pr.term };
             }) : undefined,
             profesional: this.seleccion.profesional ? this.seleccion.profesional.map(prof => {
-                return {id: prof.id, nombre: prof.nombre, apellido: prof.apellido };
+                return {id: prof.id, nombre: prof.nombre + ' ' + prof.apellido };
             }) : undefined,
             estado_turno: this.seleccion.estado_turno && this.seleccion.tipoDeFiltro.id === 'turnos' ? this.seleccion.estado_turno.map(et => et.id) : undefined,
             tipoTurno: this.seleccion.tipoTurno && this.seleccion.tipoDeFiltro.id === 'turnos' ? this.seleccion.tipoTurno.map(tt => tt.id) : undefined,
