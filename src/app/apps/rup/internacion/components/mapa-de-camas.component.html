@@ -92,12 +92,31 @@
                     </header>
                     <!-- Loader -->
                     <plex-loader *ngIf="loader" type="ball-pulse-sync"></plex-loader>
-                    <!-- En caso de que no hay resultados -->
                     <div *ngIf="camas && camas.length === 0 && !loader" class="alert alert-default">
                         <i class="mdi mdi-emoticon-sad"></i> No hay resultados que coincidan con los filtros de
                         búsqueda
                     </div>
-                    <div id="mapaCamas" class="row" *ngIf="!loader && camas">
+                    <!-- En caso de que no hay resultados-->
+                    <div *ngFor="let lis of arbol; let j = index">
+                        <plex-accordion *ngIf="mostrarArbol">
+                            <plex-panel [active]="accordionActive === j" (toggle)="accordionSeleccionado(j, lis)">
+                                <div plex-accordion-title>
+                                    {{lis.nombre}}
+                                </div>
+                                <div id="mapaCamas" class="row" *ngIf="!loader && lis.hijos">
+                                    <div [ngClass]="{'col-xl-3 col-lg-3 col-md-4 col-sm-6 col-xs-6': showMenu, 'col-md-2': !showMenu, 'selected': cama === camaSeleccionada}"
+                                        *ngFor="let cama of lis.hijos; let i = index">
+                                        <cama [prestacion]="prestacion" [cama]="cama" [showEstados]="estadosMode"
+                                            [readOnly]="historicoMode" [params]="{fecha: fecha, idOrganizacion: auth.organizacion.id}"
+                                            (evtCama)="updateCama($event)" (buscarPaciente)="ingresarPaciente()"
+                                            (camaSelected)="onCamaSelected($event)" (verInternacionEmit)="verInternacion($event)"></cama>
+                                    </div>
+
+                                </div>
+                            </plex-panel>
+                        </plex-accordion>
+                    </div>
+                    <div id="mapaCamas" class="row" *ngIf="!loader && camas && !mostrarArbol">
                         <div [ngClass]="{'col-xl-3 col-lg-3 col-md-4 col-sm-6 col-xs-6': showMenu, 'col-md-2': !showMenu, 'selected': cama === camaSeleccionada}"
                             *ngFor="let cama of camas; let i = index">
                             <cama [prestacion]="prestacion" [cama]="cama" [showEstados]="estadosMode" [readOnly]="historicoMode"

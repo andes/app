@@ -38,7 +38,9 @@ export class MapaDeCamasComponent implements OnInit {
     public fecha = new Date;
     public hoy = new Date;
     public fechaDesde = new Date;
-
+    public listaUnidadesOrganizativas = [];
+    public copiaListaUnidadesOrganizativas = [];
+    public listadoCamas = [];
     public fechaHasta = new Date;
     public loader = true;
     public showMenu = true;
@@ -54,7 +56,6 @@ export class MapaDeCamasComponent implements OnInit {
     public showLoaderSidebar = false;
     public isWorkflowCompleto = false;
     public showResumen = false;
-
     public prestacionPorInternacion;
     public enEspera;
 
@@ -69,7 +70,8 @@ export class MapaDeCamasComponent implements OnInit {
     public accion;
     public conceptosInternacion;
     public showEstados = true;
-
+    public mostrarArbol = false;
+    public accordionActive = 0;
     // filtros para el mapa de cama
     public filtros: any = {
         camas: null,
@@ -91,6 +93,7 @@ export class MapaDeCamasComponent implements OnInit {
             censo: []
         }
     };
+    public arbol: any[] = [];
 
     public panelIndex = 0;
     public pacientes: IPacienteMatch[] | IPaciente[];
@@ -111,11 +114,11 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     ngOnInit() {
+
         this.refresh();
         this.elementoRupService.ready.subscribe(() => {
             this.conceptosInternacion = this.elementoRupService.getConceptosInternacion();
         });
-
         this.plex.updateTitle([{
             route: '/',
             name: 'ANDES'
@@ -126,13 +129,11 @@ export class MapaDeCamasComponent implements OnInit {
 
         this.filtros.opciones.censo = enumerados.getObjCenso();
         this.isWorkflowCompleto = this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id);
+
+
     }
-
-
     refresh(event = null) {
         // Se setea ruta actual
-
-
         this.servicioPrestacion.notificaRuta({ nombre: 'Mapa de Camas', ruta: 'internacion/camas' });
 
         // verificar permisos
@@ -152,7 +153,9 @@ export class MapaDeCamasComponent implements OnInit {
                 this.camasCopy = JSON.parse(JSON.stringify(this.camas));
                 // seteamos las opciones para los filtros del mapa de camas
                 this.setOpcionesFiltros(camas);
+
             }
+
         }, (err) => {
             if (err) {
                 let error = err.message ? err.message : err;
@@ -162,12 +165,20 @@ export class MapaDeCamasComponent implements OnInit {
         });
     }
 
+    public accordionSeleccionado(i) {
+        if (this.accordionActive === i) {
+            this.accordionActive = -1;
+        } else {
+            this.accordionActive = i;
+        }
+    }
     /**
      * Limpiamos los filtros del mapa de camas
      *
  * @memberof MapaDeCamasComponent
  */
     public limpiarFiltros() {
+        this.arbol = [];
         this.filtroActive = '';
         this.filtros.habitacion = null;
         this.filtros.oxigeno = false;
@@ -207,6 +218,7 @@ export class MapaDeCamasComponent implements OnInit {
             this.organizacion = organizacion;
             // Filtros por sector
             this.filtros.opciones.sectores = this.organizacionService.getFlatTree(this.organizacion, false);
+
         });
 
         let existe;
@@ -222,10 +234,12 @@ export class MapaDeCamasComponent implements OnInit {
                 this.filtros.opciones.servicios.push({ 'id': cama.ultimoEstado.unidadOrganizativa.conceptId, 'nombre': cama.ultimoEstado.unidadOrganizativa.term });
             }
 
+
             existe = this.filtros.opciones.tiposCamas.find(tipoCama => tipoCama.id === cama.tipoCama.conceptId);
             if (cama.tipoCama && !existe) {
                 this.filtros.opciones.tiposCamas.push({ 'id': cama.tipoCama.conceptId, 'nombre': cama.tipoCama.term });
             }
+
 
             // TODO: Definir filtros para , oxigeno, etc.
 
@@ -233,15 +247,28 @@ export class MapaDeCamasComponent implements OnInit {
             if (this.filtros.opciones.estados) { this.filtros.opciones.estados.sort((a, b) => a.id - b.id); }
             if (this.filtros.opciones.servicios) { this.filtros.opciones.servicios.sort((a, b) => a.term - b.term); }
             if (this.filtros.opciones.tiposCamas) { this.filtros.opciones.tiposCamas.sort((a, b) => a.term - b.term); }
+            if (this.arbol) { this.arbol.sort((a, b) => a.nombre - b.nombre); }
         });
-    }
+        this.filtros.opciones.servicios.forEach(UO => {
 
+            this.arbol.push({
+                nombre: UO.nombre,
+                hijos: this.camas.filter(c => c.ultimoEstado.unidadOrganizativa.conceptId === UO.id),
+
+            });
+        });
+        if (this.arbol.length > 1) {
+            this.mostrarArbol = true;
+        }
+
+    }
     /**
      * Aplicar filtros al mapa de camas
      *
      * @memberof MapaDeCamasComponent
      */
     public filtrar() {
+        this.mostrarArbol = false;
         const regex_nombre = new RegExp('.*' + this.filtros.nombre + '.*', 'ig');
         let censable = this.filtros.censable ? this.filtros.censable.nombre === 'Censable' ? true : false : null;
         this.camas = this.camasCopy.filter((i) => {
@@ -255,6 +282,12 @@ export class MapaDeCamasComponent implements OnInit {
 
             );
         });
+
+        if (this.arbol.length > 1 && !this.filtros.nombre && !this.filtros.sector && !this.filtros.servicio && !this.filtros.tipoCama && !this.filtros.censable) {
+            this.mostrarArbol = true;
+        }
+
+
     }
 
     /**
@@ -463,7 +496,6 @@ export class MapaDeCamasComponent implements OnInit {
             this.prestacion = $event;
             this.prestacionPorInternacion = this.prestacion;
         }
-
         if (this.prestacionPorInternacion) {
             this.servicioPaciente.getById(this.prestacionPorInternacion.paciente.id).subscribe(paciente => {
                 this.pacienteSelected = paciente;
@@ -472,13 +504,6 @@ export class MapaDeCamasComponent implements OnInit {
                 // this.onPacienteSelected(this.pacienteSelected);
             });
         }
-
-
-
-
-
-
-
     }
 
     mapaDeCamaXFecha(reset) {
