@@ -52,12 +52,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
     // array de resultados a guardar devueltos por RUP
     public data: any[] = [];
 
-    // Variable a pasar al buscador de Snomed.. Indica el tipo de busqueda
-    // public tipoBusqueda = ''; // Por defecto trae TODO
-
-    public loading = false;
-
-
     // ocultar lista cuando no hay resultados
     public hideLista: Boolean = false;
 
@@ -594,16 +588,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             // this.results.buscadorBasico = this.resultsAux = this.results.buscadorBasico;
         }
         this.tengoResultado.emit(true);
-    }
-
-    /**
-     *
-     * @param  $event Recibe un boolean de la busqueda de snomed
-     * Indica cuando se esta buscando y cuando ya termino la busqueda para mostrar
-     * el plex-loader.
-     */
-    public Loader($event) {
-        this.loading = $event;
     }
 
     /**

@@ -46,7 +46,7 @@
             <div class="row">
                 <div class="col-6">
                     <label>Agregar Equipamiento</label>
-                    <snomed-buscar [tipoBusqueda]="tipoBusqueda" (evtData)="agregarEquipamiento($event)"></snomed-buscar>
+                    <snomed-buscar [tipoBusqueda]="tipoBusqueda" (onSearch)="agregarEquipamiento($event)"></snomed-buscar>
                 </div>
             </div>
             <div class="row">

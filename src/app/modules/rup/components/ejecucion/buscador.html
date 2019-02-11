@@ -13,7 +13,7 @@
 
 <!-- Apunta a components/snomed/snomed-buscar.component.ts -->
 <!-- <snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)"></snomed-buscar> -->
-<snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)" *ngIf="(busquedaActual === 'buscadorBasico' || busquedaActual === 'busquedaGuiada' || busquedaActual === 'porConcepto') && autofocus"
+<snomed-buscar (onSearch)="recibeResultados($event)" *ngIf="(busquedaActual === 'buscadorBasico' || busquedaActual === 'busquedaGuiada' || busquedaActual === 'porConcepto') && autofocus"
     [searchTermInput]="search" [autofocus]="autofocus" id="buscador"></snomed-buscar>
 
 <div class="buscador" *ngIf="busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes' || busquedaActual === 'frecuentesTP'">
@@ -24,8 +24,6 @@
 
 <!-- MAESTRO DE PROBLEMAS - BD:tipoProblema -->
 <div class="menu-buscador">
-    <plex-loader *ngIf="loading" type="linear"></plex-loader>
-
     <!-- Botones filtros -->
     <ng-container *ngIf="results">
         <ng-container *ngIf="busquedaActual !== 'busquedaGuiada'">
