@@ -1,11 +1,13 @@
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { Subscription } from 'rxjs/Subscription';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-observaciones',
     templateUrl: 'observaciones.html'
 })
+@RupElement('ObservacionesComponent')
 export class ObservacionesComponent extends RUPComponent implements OnInit {
     public referentSet = [];
     // suscriptionSeccion: any;
@@ -16,6 +18,7 @@ export class ObservacionesComponent extends RUPComponent implements OnInit {
         if (!this.params) {
             this.params = {};
         }
+        this.registro.valor = null;
         this.params.required = this.params && this.params.required ? this.params.required : false;
         this.registro.valido = true;
         // Observa cuando cambia la propiedad 'Sistolica' en otro elemento RUP
