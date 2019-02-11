@@ -19,8 +19,7 @@ export class PerfilUsuarioService {
     postPerfil(perfil: IPerfilUsuario) {
         return this.server.post(this.perfilUrl, perfil);
     }
-    delete(id: string): Observable<any[]> {
-        console.log('servicio! +id: ', id);
-        return this.server.delete(this.perfilUrl + '/' + id);
+    delete(id: any): Observable<any[]> {
+        return this.server.delete(this.perfilUrl + '/' + id, id);
     }
 }

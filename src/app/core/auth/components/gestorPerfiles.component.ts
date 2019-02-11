@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IPerfilUsuario } from '../interfaces/IPerfilUsuario';
 import { PerfilUsuarioService } from './../services/perfilUsuarioService';
-
 @Component({
     selector: 'gestorPerfiles',
     templateUrl: 'gestorPerfiles.html'
@@ -39,7 +38,6 @@ export class GestorPerfilesComponent implements OnInit {
         this.perfilUsuarioService.get({ idOrganizacion: this.auth.organizacion.id }).subscribe(res => {
             this.perfiles = res;
         });
-
     }
 
     /**
@@ -62,10 +60,11 @@ export class GestorPerfilesComponent implements OnInit {
 
     deletePerfil(perfilBorrar: IPerfilUsuario) {
         if (perfilBorrar) {
-            this.plex.confirm('¿Está seguro que desea eliminar el perfil?', 'Eliminar Perfil').then((confirmar) => {
+            this.plex.confirm('¿Está seguro que desea eliminar el perfil?', 'Eliminar Perfil').then((confirmar: boolean) => {
                 if (confirmar) {
-                    this.perfilUsuarioService.delete(perfilBorrar.id).subscribe();
-                    this.recuperarPerfiles();
+                    this.perfilUsuarioService.delete(perfilBorrar.id).subscribe(() => {
+                        this.recuperarPerfiles();
+                    });
                 }
             });
         }

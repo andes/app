@@ -7,26 +7,46 @@
 
             <plex-tab label="Visualizar permisos" color="procedimiento">
                 <permisosVisualizacion *ngIf="usuarioSeleccionado && organizacionSeleccionada" [user]="usuarioSeleccionado"
-                    [org]="organizacionSeleccionada"></permisosVisualizacion>
+                    [org]="organizacionSeleccionada" [permiteAsignarPerfiles]="false" [arbolPermisosCompleto]="arbolPermisosCompleto"></permisosVisualizacion>
                 <div *ngIf="!usuarioSeleccionado || !organizacionSeleccionada">
                     <i class="mdi mdi-emoticon-sad"></i>Seleccione usuario y organización para visualizar sus permisos</div>
             </plex-tab>
 
             <plex-tab label="Editar permisos">
-                <div *ngIf="usuarioSeleccionado">
-                    <div class="row">
+                <div class="row" *ngIf="usuarioSeleccionado">
+                    <div class="col d-flex justify-content-end">
+                        <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
                         <plex-button type="success" label="Guardar" (click)="guardar($event)"></plex-button>
                     </div>
-                    <div *ngFor="let permiso of permisos$ | async">
-                        <arbolPermisos [item]="permiso" [userPermissions]='permisosUsuarioOrg'></arbolPermisos>
+                </div>
+                <div *ngIf="usuarioSeleccionado && organizacionSeleccionada" class="row">
+                    <div class="col-12 mb-2">
+                        <div class="page-title">PERFILES</div>
+                    </div>
+                    <div class="col">
+                        <permisosVisualizacion *ngIf="usuarioSeleccionado && organizacionSeleccionada" [user]="usuarioSeleccionado"
+                            [org]="organizacionSeleccionada" [permiteAsignarPerfiles]="true" (seleccionCheckboxPerfil)="seleccionPerfil($event)"
+                            [arbolPermisosCompleto]="arbolPermisosCompleto"></permisosVisualizacion>
                     </div>
                 </div>
-                <div *ngIf="!usuarioSeleccionado">
-                    <i class="mdi mdi-emoticon-sad"></i>Seleccione un usuario y organización para editar sus
-                    permisos
+                <div *ngIf="usuarioSeleccionado && organizacionSeleccionada" class="row">
+                    <div class="col-12 mb-2">
+                        <div class="page-title">PERMISOS</div>
+                    </div>
+                    <div class="col">
+                        <div *ngFor="let permiso of permisos$ | async">
+                            <arbolPermisos [item]="permiso" [userPermissions]='permisosUsuarioOrg' (seleccionPermiso)="seleccionPermiso($event)"></arbolPermisos>
+                        </div>
+                    </div>
                 </div>
-            </plex-tab>
+                <div *ngIf="!usuarioSeleccionado || !organizacionSeleccionada" class="row">
+                    <div class="col">
+                        <i class="mdi mdi-emoticon-sad"></i>Seleccione un usuario y organización para editar sus
+                        permisos
+                    </div>
+                </div>
 
+            </plex-tab>
         </plex-tabs>
     </plex-layout-sidebar>
 </plex-layout>

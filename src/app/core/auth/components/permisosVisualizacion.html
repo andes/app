@@ -1,24 +1,25 @@
 <div class="row">
-    <div class="col">
-        <table *ngIf="perfilesOrganizacion?.length" class="table table-striped">
-            <tbody>
-                <tr class="hover" *ngFor="let perfil of perfilesOrganizacion">
-                    <td *ngIf="perfil.activo">{{perfil.nombre}}</td>
-                    <td *ngIf="perfil.activo">
-                        <!-- Lo manejo así al If porque es muy pesada la funcion tienePerfilAsignado(perfil)  -->
-                        <div *ngIf="tienePerfilAsignado(perfil); else noTienePerfilAsignado">
-                            <plex-badge type="success">
-                                <i class="mdi mdi-check mdi-18px"></i>
-                            </plex-badge>
-                        </div>
-                        <ng-template #noTienePerfilAsignado>
-                            <plex-badge type="danger">
-                                <i class="mdi mdi-close mdi-18px"></i>
-                            </plex-badge>
-                        </ng-template>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <!-- class = w-100 d-flex align-items-center justify-content-between -->
+    <div class="col" *ngIf="perfilesOrganizacion?.length">
+        <plex-accordion *ngFor="let perfil of perfilesOrganizacion; let i = index">
+            <plex-panel *ngIf="perfil.perfil.activo">
+                <div plex-accordion-title>
+                    {{perfil.perfil.nombre}}
+                    <plex-bool *ngIf="permiteAsignarPerfiles" [(ngModel)]="perfil.checked" class="float-right" (change)="tildarPerfil($event, i)"
+                        type="slide"></plex-bool>
+                    <!-- d-flex justify-content-end -->
+                    <plex-badge *ngIf="!permiteAsignarPerfiles && perfil.checked ; else noTienePerfilAsignado" class="float-right"
+                        type="success">
+                        <i class="mdi mdi-check mdi-18px"></i>
+                    </plex-badge>
+                    <ng-template #noTienePerfilAsignado>
+                        <plex-badge *ngIf="!permiteAsignarPerfiles" class="d-flex justify-content-end" type="danger">
+                            <i class="mdi mdi-close mdi-18px"></i>
+                        </plex-badge>
+                    </ng-template>
+                </div>
+                {{perfil.perfil.permisos}}
+            </plex-panel>
+        </plex-accordion>
     </div>
 </div>

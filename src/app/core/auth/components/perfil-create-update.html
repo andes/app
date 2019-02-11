@@ -2,6 +2,14 @@
     <plex-box>
         <header>
             <div class="row">
+                <div class="col-10">
+                    <plex-button class="text-left" type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
+                </div>
+                <div class="col-2">
+                    <plex-button class="text-right" type="success" label="Guardar" [validateForm]="perfilForm" (click)="guardar($event)"></plex-button>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col">
                     <plex-text label="Nombre" [(ngModel)]="perfilEdit.nombre" name="nombre" [required]="true"></plex-text>
                 </div>
@@ -11,9 +19,6 @@
                 </div>
                 <div class="col">
                     <plex-bool label="¿Está activo?" type="slide" name="activo" [(ngModel)]="perfilEdit.activo"></plex-bool>
-                </div>
-                <div class="col">
-                    <plex-button type="success" label="Guardar" [validateForm]="perfilForm" (click)="guardar($event)"></plex-button>
                 </div>
             </div>
         </header>

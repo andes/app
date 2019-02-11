@@ -95,6 +95,12 @@ export class SelectorUsuarioEfectorComponent {
     private temp;
     private organizacionesAuth: any[] = [];
     public newOrganizaciones: any;
+    /**
+     * Nuevo Efector para el usuario seleccionado
+     * @type {*}
+     * @memberof SelectorUsuarioEfectorComponent
+     */
+    public newOrg: any;
 
     constructor(private plex: Plex, private auth: Auth, private usuarioService: UsuarioService, private organizacionService: OrganizacionService, private permisosService: PermisosService, private profesionalService: ProfesionalService) {
 
@@ -197,7 +203,6 @@ export class SelectorUsuarioEfectorComponent {
         this.textoLibre = null;
         this.cambio(2);
         this.seSeleccionoUsuario();
-        this.seleccionOrganizacion.emit(null);
     }
 
     /**
@@ -250,6 +255,31 @@ export class SelectorUsuarioEfectorComponent {
         this.hidePermisos = true;
     }
 
+    /**
+     * Agrega una organización al 
+     * @memberof SelectorUsuarioEfectorComponent
+     */
+    agregarOrg() {
+        if (this.newOrg) {
+            this.userModel.organizaciones.push({ _id: this.newOrg._id, permisos: [] });
+            this.permisos = [];
+            this.getOrganizaciones();
+            this.organizacionesUsuario.push(this.newOrg);
+            this.organizacionSelect = this.newOrg;
+            this.organizacionSelectPrev = this.organizacionSelect;
+            this.hidePermisos = false;
+            this.seleccionOrganizacion.emit(this.organizacionSelect);
+        }
+    }
+
+    /**
+     * Cancela agregar una nueva organización
+     * @memberof SelectorUsuarioEfectorComponent
+     */
+    cancelarOrg() {
+        this.hidePermisos = false;
+    }
+
     deleteEfector() {
         this.plex.confirm('¿Eliminar todos los permisos de ' + this.organizacionSelect.nombre + '?').then(value => {
             if (value) {
@@ -269,15 +299,13 @@ export class SelectorUsuarioEfectorComponent {
             }
         });
     }
+    /**
+     * Pausa y reanuda los permisos de un usuario para la organización seleccionada
+     * @memberof SelectorUsuarioEfectorComponent
+     */
     pausar() {
-
-        let textoConfirm;
-        if (!this.organizacionActualAuthUs.permisosPausados) {
-            textoConfirm = 'pausar';
-        } else {
-            textoConfirm = 'reanudar';
-        }
-        this.plex.confirm(`¿Está seguro que desea ${textoConfirm} a este usuario?`).then((resultado) => {
+        let textoConfirm = (!this.organizacionActualAuthUs.permisosPausados) ? 'pausar' : 'reanudar';
+        this.plex.confirm(`¿Está seguro que desea ${textoConfirm} a este usuario?`).then((resultado: boolean) => {
             if (resultado) {
                 this.permisosService.actualizarEstadoPermisos(this.userModel.usuario, this.organizacionSelect.id).subscribe(res => {
                     this.organizacionActualAuthUs.permisosPausados = res.permisosPausados;

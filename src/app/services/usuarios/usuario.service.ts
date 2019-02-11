@@ -8,10 +8,12 @@ export class UsuarioService {
 
     private usuarioUrl = '/modules/usuarios';  // URL to web api
 
+    private permisosUrl = '/core/tm/permisos';
+
     constructor(private server: Server) { }
 
     permisos(): Observable<any> {
-        return this.server.get('/auth/permisos');
+        return this.server.get(this.permisosUrl);
     }
 
     get(): Observable<any> {

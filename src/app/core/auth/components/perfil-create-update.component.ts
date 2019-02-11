@@ -86,6 +86,14 @@ export class PerfilFormComponent implements OnInit {
         }
     }
 
+    /**
+     * Cancela la edición/creación de un perfil
+     * @memberof PerfilFormComponent
+     */
+    cancelar() {
+        this.perfilGuardado.emit(null);
+    }
+
     savePermisos() {
         let i = 0;
         this.childsComponents.forEach(child => {

@@ -1,10 +1,10 @@
-import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding, Output, EventEmitter, Input, ViewChildren, QueryList, OnChanges, AfterViewInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
 import { PlexAccordionComponent } from '@andes/plex/src/lib/accordion/accordion.component';
 import { PlexPanelComponent } from '@andes/plex/src/lib/accordion/panel.component';
 import { OrganizacionService } from '../../services/organizacion.service';
+import { IPermiso } from '../../core/auth/interfaces/IPermiso';
 let shiroTrie = require('shiro-trie');
 
 @Component({
@@ -20,11 +20,15 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
     private seleccionados = [];
     private allModule = false;
 
-    @Input() item: any;
+    @Input() item: IPermiso;
 
     @Input() parentPermission: String = '';
     @Input() userPermissions: String[] = [];
-
+    /**
+     * Sirve para notificar que se modificó la selección de permisos, para poder actualizar el listado de perfiles asignados
+     * @memberof ArbolPermisosComponent
+     */
+    @Output() seleccionPermiso = new EventEmitter<{ checked: boolean, permiso: IPermiso }>();
     @ViewChild('panel') accordions: PlexPanelComponent;
     @ViewChildren(ArbolPermisosComponent) childsComponents: QueryList<ArbolPermisosComponent>;
 
@@ -32,7 +36,6 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
     }
 
     constructor(
-        private plex: Plex,
         private servicioTipoPrestacion: TipoPrestacionService,
         private organizacionService: OrganizacionService
     ) { }
@@ -159,6 +162,15 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
             }
         }
         return [];
+    }
+
+    /**
+     * Indica al componente padre que se (des)activó un permiso
+     * @param {*} event
+     * @memberof ArbolPermisosComponent
+     */
+    tildarPermiso(event: any) {
+        this.seleccionPermiso.emit({ checked: event.value, permiso: this.item });
     }
 
 }
