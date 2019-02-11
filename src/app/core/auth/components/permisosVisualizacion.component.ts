@@ -5,13 +5,14 @@ import { PerfilUsuarioService } from './../services/perfilUsuarioService';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { IPerfilUsuario } from '../interfaces/IPerfilUsuario';
-import { agregarPermiso, quitarPermiso } from '../controllers/permisos';
+import { agregarPermiso, quitarPermiso, esPermisoSubpermiso } from '../controllers/permisos';
 
 @Component({
     selector: 'permisosVisualizacion',
     templateUrl: 'permisosVisualizacion.html'
 })
 export class PermisosVisualizacionComponent {
+
     /**
      * Usuario seleccionado para visualizar sus permisos
      * @memberof PermisosVisualizacionComponent
@@ -51,6 +52,21 @@ export class PermisosVisualizacionComponent {
      * @memberof PermisosVisualizacionComponent
      */
     @Input() arbolPermisosCompleto: IPermiso[];
+
+    /**
+     * Arreglo con todos los permisos del usuario para la organización seleccionada
+     * Ejemplo: ['mpi:*', 'internacion:*']
+     * @type {string[]}
+     * @memberof PermisosVisualizacionComponent
+     */
+    @Input()
+    get permisosUsuario(): string[] {
+        return this.permisosUsuarioOrg;
+    }
+    set permisosUsuario(value: string[]) {
+        this.permisosUsuarioOrg = value;
+        this.tildarPerfilesCorrespondientes();
+    }
     /**
      * Sirve para indicar que se deben asignar o quitar los permisos seleccionados
      * @memberof PermisosVisualizacionComponent
@@ -80,12 +96,12 @@ export class PermisosVisualizacionComponent {
     constructor(private perfilUsuarioService: PerfilUsuarioService, private usuarioService: UsuarioService) { }
     async cargar() {
         if (this.usuario) {
-            try {
-                await this.obtenerPermisosUsuario(this.usuario, this.organizacion);
-                // this.permisosUsuarioOrg = getPermisosUsuarioOrg();
-            } catch (err) {
-                return err;
-            }
+            // try {
+            //     await this.obtenerPermisosUsuario(this.usuario, this.organizacion);
+            //     // this.permisosUsuarioOrg = getPermisosUsuarioOrg();
+            // } catch (err) {
+            //     return err;
+            // }
             this.obtenerPerfiles(this.organizacion);
         }
     }
@@ -316,37 +332,7 @@ export class PermisosVisualizacionComponent {
         // mirar si se puede reutilizar el código entre los dos caminos del if. Posiblemente el borrado de los permisos pueda hacerse al ultimo, una sola vez el codigo
         this.seleccionCheckboxPerfil.emit({ checked: this.perfilesOrganizacion[indice].checked, permisos: this.permisosUsuarioOrg });
     }
-    /**
-     * Devuelve un arreglo de los subpermisos al permiso pasado por parámetro
-     * @param {string} permisoUsuario
-     * @returns {string[]}
-     * @memberof PermisosVisualizacionComponent
-     */
-    // buscarSubpermisos(permisoUsuario: string): string[] {
-    //     permisoUsuario = permisoUsuario.substr(0, permisoUsuario.length - 2); // le quito los ultimos dos caracteres = ':*'
-    //     let permUser = permisoUsuario.split(':');
-    //     permUser.splice(permUser.length - 1, 1); // elimino el el ultimo elemento porque es el *
-    //     let permiso: IPermiso;
-    //     let primero = true;
-    //     // con esto obtengo el permiso del cual tiene el *
-    //     permUser.forEach((key: string) => {
-    //         permiso = (primero ? this.arbolPermisosCompleto : permiso.child).find((perm: IPermiso) => {
-    //             return perm.key === key;
-    //         });
-    //         primero = false;
-    //     });
 
-    //     let subpermisos: string[] = [];
-    //     let asterisco: string;
-    //     permiso.child.forEach((subpermiso: IPermiso) => {
-    //         asterisco = '';
-    //         if (subpermiso.child) {
-    //             asterisco = ':*';
-    //         }
-    //         subpermisos.push(permisoUsuario + subpermiso.key + asterisco);
-    //     });
-    //     return subpermisos;
-    // }
     /**
      * Indica si ambos permisos están relacionados de forma ascendente o no
      * Ejemplo:
@@ -402,4 +388,33 @@ export class PermisosVisualizacionComponent {
     //     }
     //     return res;
     // }
+
+    /**
+     * Tilda los perfiles cuando el usuario tiene todos sus permisos
+     * @private
+     * @returns {*}
+     * @memberof PermisosVisualizacionComponent
+     */
+    private tildarPerfilesCorrespondientes(): any {
+        this.perfilesOrganizacion.forEach((perfil: { perfil: IPerfilUsuario, checked: boolean }) => {
+            perfil.checked = !perfil.perfil.permisos.some((permiso: string) => {
+                let bandera = !this.usuarioTienePermiso(permiso);
+                return bandera;
+            });
+        });
+    }
+
+    /**
+     * Indica si el usuario tiene o no el permiso pasado por parámetro
+     * @private
+     * @param {string} permiso
+     * @returns {boolean}
+     * @memberof PermisosVisualizacionComponent
+     */
+    private usuarioTienePermiso(permiso: string): boolean {
+        return this.permisosUsuarioOrg.some((permisoUsuario: string) => {
+            let bandera = permiso === permisoUsuario || esPermisoSubpermiso(permiso, permisoUsuario);
+            return bandera;
+        });
+    }
 }

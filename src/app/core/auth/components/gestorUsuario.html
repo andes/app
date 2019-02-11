@@ -7,9 +7,11 @@
 
             <plex-tab label="Visualizar permisos" color="procedimiento">
                 <permisosVisualizacion *ngIf="usuarioSeleccionado && organizacionSeleccionada" [user]="usuarioSeleccionado"
-                    [org]="organizacionSeleccionada" [permiteAsignarPerfiles]="false" [arbolPermisosCompleto]="arbolPermisosCompleto"></permisosVisualizacion>
+                    [org]="organizacionSeleccionada" [permiteAsignarPerfiles]="false" [arbolPermisosCompleto]="arbolPermisosCompleto"
+                    [permisosUsuario]='permisosUsuarioOrg'></permisosVisualizacion>
                 <div *ngIf="!usuarioSeleccionado || !organizacionSeleccionada">
-                    <i class="mdi mdi-emoticon-sad"></i>Seleccione usuario y organización para visualizar sus permisos</div>
+                    <i class="mdi mdi-emoticon-sad"></i>Seleccione un usuario y organización para visualizar sus
+                    permisos</div>
             </plex-tab>
 
             <plex-tab label="Editar permisos">
@@ -26,7 +28,7 @@
                     <div class="col">
                         <permisosVisualizacion *ngIf="usuarioSeleccionado && organizacionSeleccionada" [user]="usuarioSeleccionado"
                             [org]="organizacionSeleccionada" [permiteAsignarPerfiles]="true" (seleccionCheckboxPerfil)="seleccionPerfil($event)"
-                            [arbolPermisosCompleto]="arbolPermisosCompleto"></permisosVisualizacion>
+                            [arbolPermisosCompleto]="arbolPermisosCompleto" [permisosUsuario]='permisosUsuarioOrg'></permisosVisualizacion>
                     </div>
                 </div>
                 <div *ngIf="usuarioSeleccionado && organizacionSeleccionada" class="row">

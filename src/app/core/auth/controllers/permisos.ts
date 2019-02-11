@@ -41,8 +41,8 @@ export function agregarPermiso(permisosUsuario: string[], permisosAgregar: strin
                         perfilPermisoYaAgregado = true; // para evitar agregar varias veces el mismo permiso del perfil al usuario
                     }
                     return res.borrarPermisoUsuario;
-                } else {
-                    return true;
+                    // } else {
+                    //     return true;
                 }
             }));
         });
@@ -216,4 +216,14 @@ function buscarSubpermisos(permisoUsuario: string, arbolPermisos: IPermiso[]): s
         subpermisos.push(permisoUsuario + ':' + subpermiso.key + asterisco);
     });
     return subpermisos;
+}
+
+/**
+ * Devuelve true cuando el segundo parámetro es subpermiso del primer parámetro
+ * @param {string} permiso
+ * @param {string} subpermiso
+ * @returns {boolean}
+ */
+export function esPermisoSubpermiso(permiso: string, subpermiso: string): boolean {
+    return tieneRelacionAscendente(permiso, subpermiso) && permiso.length < subpermiso.length;
 }

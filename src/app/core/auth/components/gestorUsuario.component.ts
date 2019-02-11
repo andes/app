@@ -129,8 +129,12 @@ export class GestorUsuarioComponent implements OnInit {
         this.childsComponents.forEach(child => {
             this.permisos = [...this.permisos, ...child.generateString()];
         });
-        const indiceOrg = this.usuarioSeleccionado.organizaciones.findIndex((item) => item.id === this.organizacionSeleccionada.id);
+        let indiceOrg = this.usuarioSeleccionado.organizaciones.findIndex((item) => item.id === this.organizacionSeleccionada.id);
+        if (indiceOrg === -1) {
+            indiceOrg = this.usuarioSeleccionado.organizaciones.length - 1;
+        }
         this.usuarioSeleccionado.organizaciones[indiceOrg].permisos = [...this.permisos];
+
     }
 
     /**
@@ -148,9 +152,11 @@ export class GestorUsuarioComponent implements OnInit {
      * @memberof GestorUsuarioComponent
      */
     seleccionPermiso(event: { checked: boolean, permiso: IPermiso }) {
+        console.log('Gestor antes de obtener permiso nuevo: ', this.permisosUsuarioOrg, '  Permiso nuevo: ', event.permiso);
         let arrayPermiso: string[] = [];
         arrayPermiso.push(event.permiso.child ? event.permiso.key + ':*' : event.permiso.key);
         this.permisosUsuarioOrg = event.checked ? agregarPermiso(this.permisosUsuarioOrg, arrayPermiso) : quitarPermiso(this.permisosUsuarioOrg, arrayPermiso, this.arbolPermisosCompleto);
+        console.log('Gestor obtuvo permisos nuevos: ', this.permisosUsuarioOrg);
     }
 }
 

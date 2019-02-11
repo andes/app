@@ -256,7 +256,7 @@ export class SelectorUsuarioEfectorComponent {
     }
 
     /**
-     * Agrega una organización al 
+     * Agrega una organización al usuario
      * @memberof SelectorUsuarioEfectorComponent
      */
     agregarOrg() {
@@ -268,6 +268,7 @@ export class SelectorUsuarioEfectorComponent {
             this.organizacionSelect = this.newOrg;
             this.organizacionSelectPrev = this.organizacionSelect;
             this.hidePermisos = false;
+            // this.seleccionUsuario.emit(this.usuarioSeleccionado);
             this.seleccionOrganizacion.emit(this.organizacionSelect);
         }
     }
