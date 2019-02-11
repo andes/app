@@ -31,7 +31,7 @@
                         <div class="col ">
                             <plex-select *ngIf="listaUnidadesOrganizativas?.length> 0" label="Unidad organizativa de destino"
                                 [(ngModel)]="registro.valor.InformeEgreso.UnidadOrganizativaDestino" name="InformeEgreso.UnidadOrganizativaDestino"
-                                (getData)="loadOrganizacion($event)" placeholder="Seleccione..." required>
+                                (getData)="loadOrganizacion($event)" placeholder="Seleccione..." [required]="true">
                             </plex-select>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                         <div class="col">
                             <plex-select (change)="showProcedimientos_causas()" label="Diagnostico Principal al egreso"
                                 [(ngModel)]="registro.valor.InformeEgreso.diagnosticoPrincipal" name="diagnosticoPrincipal"
-                                (getData)="codigoCIE10($event)" placeholder="buscar..." labelField="nombre" required>
+                                (getData)="codigoCIE10($event)" placeholder="buscar..." labelField="nombre">
                             </plex-select>
                         </div>
                     </div>

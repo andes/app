@@ -65,9 +65,8 @@ export class ListadoInternacionComponent implements OnInit {
         }]);
 
         let unMesAtras = new Date();
-        this.filtros.fechaIngresoDesde = new Date((unMesAtras.setMonth( unMesAtras.getMonth() - 1)));
-        console.log(this.filtros);
-        this.servicioPrestacion.listadoInternacion(this.filtros).subscribe(a => { console.log(a); this.listadoInternacion = a; });
+        this.filtros.fechaIngresoDesde = new Date((unMesAtras.setMonth(unMesAtras.getMonth() - 1)));
+        this.servicioPrestacion.listadoInternacion(this.filtros).subscribe(a => { this.listadoInternacion = a; });
 
         this.estadosInternacion = enumerados.getObjEstadoInternacion();
 
@@ -94,12 +93,12 @@ export class ListadoInternacionComponent implements OnInit {
 
 
     filtrar() {
-        if ( this.filtros.estados) {
+        if (this.filtros.estados) {
             this.filtros['estadoString'] = this.filtros.estados.id;
         } else {
             this.filtros['estadoString'] = '';
         }
-        this.servicioPrestacion.listadoInternacion(this.filtros).subscribe(a => { console.log(a); this.listadoInternacion = a; });
+        this.servicioPrestacion.listadoInternacion(this.filtros).subscribe(a => { this.listadoInternacion = a; });
 
     }
 

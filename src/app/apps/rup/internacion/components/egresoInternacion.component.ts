@@ -270,12 +270,14 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
             let existeEgreso = this.internacionService.verRegistro(this.prestacion, 'egreso');
             if (!existeEgreso) {
                 registros.push(this.registro);
+            } else {
+                let indexRegistro = registros.findIndex(registro => registro.concepto.conceptId === this.internacionService.conceptosInternacion.egreso.conceptId);
+                registros[indexRegistro] = this.registro;
             }
             let params: any = {
                 op: 'registros',
                 registros: registros
             };
-            console.log(existeEgreso);
             this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
                 this.prestacionGuardada.emit(prestacionEjecutada);
                 // this.desocuparCama.emit(prestacionEjecutada);

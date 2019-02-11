@@ -197,9 +197,7 @@ export class DesocuparCamaComponent implements OnInit {
             if (unidadOrganizativa) {
                 this.camasService.getCamasXFecha(this.auth.organizacion.id, f).subscribe(resultado => {
                     if (resultado) {
-                        console.log(resultado);
                         let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.conceptId === unidadOrganizativa);
-                        console.log(lista);
                         this.listadoCamas = [...lista];
                     }
 
