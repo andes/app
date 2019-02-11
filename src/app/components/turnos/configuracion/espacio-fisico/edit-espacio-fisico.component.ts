@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
 export class EditEspacioFisicoComponent implements OnInit {
     estados: (string | any[])[];
     equipamientos = [];
-
+    @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
     @Input() espacioFisicoHijo: IEspacioFisico;
 
     @Output() data: EventEmitter<IEspacioFisico> = new EventEmitter<IEspacioFisico>();

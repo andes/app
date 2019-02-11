@@ -49,7 +49,6 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
 
 
     ngOnInit() {
-        console.log(this.auth.getPermissions('espaciosFisicos:?'));
         if (this.agendaSeleccionada) {
             this.refreshScreen();
         } else {
