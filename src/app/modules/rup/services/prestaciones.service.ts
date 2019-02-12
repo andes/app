@@ -277,7 +277,7 @@ export class PrestacionesService {
                 if (prestacion.ejecucion) {
                     let agregar = prestacion.ejecucion.registros
                         .filter(registro =>
-                            registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'evento')
+                            registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'evento' || registro.concepto.semanticTag === 'situación')
                         .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
                     // COnceptId del informe requerido en en todas las prestaciones ambulatorias
                     if (agregar.length > 0) {
