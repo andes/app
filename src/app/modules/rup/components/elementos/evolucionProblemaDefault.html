@@ -45,8 +45,10 @@
             <!--EVOLUCION DEL PROBLEMA-->
             <div class="row">
                 <div class="col-12">
-                    <plex-text label="Evolución" [(ngModel)]="registro.valor.evolucion" name="evolucion" [height]="100"
-                        [html]="true" [readonly]="false" (change)="emitChange()">
+                    <plex-text label="{{ registro.concepto.semanticTag !== 'trastorno' ? 'Observaciones' : 'Evolución' }}"
+                        placeholder="{{ registro.concepto.semanticTag !== 'trastorno' ? 'Observaciones' : 'Ingrese una evolución' }}"
+                        [(ngModel)]="registro.valor.evolucion" name="evolucion" [height]="100" [html]="true" [readonly]="false"
+                        (change)="emitChange()">
                     </plex-text>
                 </div>
             </div>
@@ -163,10 +165,13 @@
                     <!-- <ng-container *ngFor="let evolucion of registro.evoluciones"> -->
                     <div class="borde-datos ml-3 pl-2 pt-1">
                         <div class="mp-2 mb-2">
-                            <b>Evolución: </b>
                             <ng-container *ngIf="registro?.evoluciones[indice]?.evolucion">
+                                <b>Evolución: </b>
                                 <span [innerHTML]="registro.evoluciones[indice].evolucion"></span>
                             </ng-container>
+                            <!-- <div>
+                            <span [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente, registro?.evoluciones[indice], registro.concepto)"></span>
+                        </div> -->
                             <b>Informe del Encuentro: </b>
                             <ng-container *ngIf="evolucionActual?.informeRequerido?.valor">
                                 <div [innerHTML]="evolucionActual.informeRequerido.valor"></div>
@@ -177,14 +182,18 @@
                             </ng-container>
                         </div>
                         <div class="columna-completa align">
-                            <b>Estado del trastorno:</b><br>
+                            <!-- ({{ registro.concepto.semanticTag }}) -->
+                            <b>Estado:</b><br>
                             <div>
-                                <span class="badge badge-success">
+                                <span *ngIf="registro?.valor?.estado !== ''" class="badge badge-success">
+                                    <ng-container *ngIf="registro?.valor?.estado">
+                                        {{ registro?.valor?.estado }}
+                                    </ng-container>
                                     <ng-container *ngIf="hallazgoHudsCompleto">
                                         {{ hallazgoHudsCompleto.evoluciones[0].estado }}
                                     </ng-container>
                                     <ng-container *ngIf="!hallazgoHudsCompleto && !registro.evoluciones">
-                                        {{ registro.valor.estado}}
+                                        {{ registro.valor.estado }}
                                     </ng-container>
                                     <ng-container *ngIf="!hallazgoHudsCompleto && registro.evoluciones">
                                         {{ registro.evoluciones[0].estado }}
@@ -193,7 +202,7 @@
                                 <ng-container *ngIf="registro?.evoluciones[0].fechaInicio">
                                     ({{ registro.evoluciones[0].fechaInicio | fromNow }})
                                 </ng-container>
-                                <ng-container *ngIf="!registro?.evoluciones[0].fechaInicio">
+                                <ng-container *ngIf="!registro?.evoluciones[0].fechaInicio && !registro?.valor.fechaInicio">
                                     (Sin registro)
                                 </ng-container>
                             </div>
@@ -217,21 +226,22 @@
                                 {{ registro?.evoluciones[indice].profesional }}
                             </span>
                         </div>
-                        <div>
-                            <span [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente, registro?.evoluciones[indice], registro.concepto)"></span>
-                        </div>
+
                         <div class="columna-completa">
                             <!-- VER QUE FUNCIONEN LAS RELACIONES -->
-                            <ng-container *ngFor="let relacion of registro?.evoluciones[indice].relacionadoCon; let r=index">
-                                <ng-container *ngIf="relacion?.concepto?.term">
-                                    <b>Relacionado con:</b><br>
-                                    <div>
+                            <b class="relaciones" *ngIf="registro?.evoluciones[indice]?.relacionadoCon?.length > 0">Relacionado
+                                con:</b>
+                            <div>
+                                <ng-container *ngFor="let relacion of registro?.evoluciones[indice].relacionadoCon; let r=index">
+                                    <ng-container *ngIf="relacion?.concepto?.term">
                                         <span class="badge badge-{{ relacion?.concepto?.semanticTag }}">
-                                            {{ relacion?.concepto?.term }}
+                                            {{ relacion?.cara ? 'diente ' + relacion?.concepto?.term + ' (' +
+                                            (relacion?.cara !== 'pieza completa' ? 'cara ' + relacion?.cara :
+                                            relacion?.cara) + ')' : relacion?.concepto?.term }}
                                         </span>
-                                    </div>
+                                    </ng-container>
                                 </ng-container>
-                            </ng-container>
+                            </div>
                         </div>
                     </div>
 
