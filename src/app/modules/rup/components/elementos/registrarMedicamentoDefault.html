@@ -1,22 +1,21 @@
 <ng-container *ngIf="!soloValores">
     <div class="row">
         <div class="col-6">
-            <label for="">Cantidad</label>
-            <plex-int *ngIf="registro.valor" prefix="Cantidad" placeholder="Ingrese un valor entre 0 y 2000" [(ngModel)]="registro.valor.cantidad"
-                name="cantidad" min="0" max="2000" (change)="emitChange()" required="true">
+            <plex-int label="Cantidad" *ngIf="registro.valor" prefix="Cantidad" placeholder="Ingrese un valor entre 0 y 2000"
+                [(ngModel)]="registro.valor.cantidad" name="cantidad" min="0" max="2000" (change)="emitChange()"
+                required="true">
             </plex-int>
         </div>
         <div class="col-6">
-            <plex-select *ngIf="registro.valor" class="unidades-tiempo" [(ngModel)]="registro.valor.unidad" name="unidad" [data]="unidades"
-                [required]="true" (change)="formatearUnidad()">
+            <plex-select *ngIf="registro.valor" class="unidades-tiempo" [(ngModel)]="registro.valor.unidad" name="unidad"
+                [data]="unidades" [required]="true" (change)="formatearUnidad()">
             </plex-select>
         </div>
     </div>
     <div class="row">
         <div class="col-6">
-            <label for="">Duración</label>
-            <plex-int [(ngModel)]="registro.valor.duracion.cantidad" name="inicioEstimadoUnidad" [required]="true" prefix="Durante"
-                (change)="emitChange()"></plex-int>
+            <plex-int label="Duración" [(ngModel)]="registro.valor.duracion.cantidad" name="inicioEstimadoUnidad"
+                [required]="true" prefix="Durante" (change)="emitChange()"></plex-int>
         </div>
         <div class="col-6">
             <plex-select class="unidades-tiempo" *ngIf="!soloValores" [(ngModel)]="registro.valor.duracion.unidad" name="inicioEstimadoTiempo"
@@ -25,17 +24,19 @@
     </div>
     <div class="row">
         <div class="col-6">
-            <plex-select *ngIf="registro.valor.estado" label="Estado" [(ngModel)]="registro.valor.estado" name="estado" [data]="estados"
-                [required]="true" (change)="formateaEstado()">
+            <plex-select *ngIf="registro.valor.estado" label="Estado" [(ngModel)]="registro.valor.estado" name="estado"
+                [data]="estados" [required]="true" (change)="formateaEstado()">
             </plex-select>
         </div>
         <div class="col-6">
-            <plex-bool *ngIf="registro.valor.recetable !== null" type="slide" [(ngModel)]="registro.valor.recetable" label="Recetable" name="recetable"></plex-bool>
+            <plex-bool *ngIf="registro.valor.recetable !== null" type="slide" display="block" [(ngModel)]="registro.valor.recetable"
+                label="Recetable" name="recetable"></plex-bool>
         </div>
     </div>
     <div class="row">
         <div class="col-12">
-            <plex-text label="Indicación" multiline="true" rows="5" [(ngModel)]="registro.valor.indicacion" (change)="emitChange()" class="indicacion-default"></plex-text>
+            <plex-text label="Indicación" multiline="true" rows="5" [(ngModel)]="registro.valor.indicacion" (change)="emitChange()"
+                class="indicacion-default"></plex-text>
         </div>
     </div>
 </ng-container>
@@ -56,9 +57,10 @@
             {{ unaEvolucion.fechaCarga | fecha }}
         </div>
         <div class="col-5 text-right border border-left-0 border-secondary pr-0">
-            <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="info" icon="chevron-right" class="mdi-18px"
-                (click)="cambiarEvolucion('+') "></plex-button>
-            <plex-button *ngIf="evoluciones.length <= 1 || indice === (evoluciones.length-1)" type="default" icon="chevron-right" class="mdi-18px"></plex-button>
+            <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="info" icon="chevron-right"
+                class="mdi-18px" (click)="cambiarEvolucion('+') "></plex-button>
+            <plex-button *ngIf="evoluciones.length <= 1 || indice === (evoluciones.length-1)" type="default" icon="chevron-right"
+                class="mdi-18px"></plex-button>
         </div>
     </div>
     <div class="row">
