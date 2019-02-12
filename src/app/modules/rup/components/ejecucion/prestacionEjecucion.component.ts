@@ -1,8 +1,6 @@
 import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, ViewChildren, QueryList } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { ObjectID } from 'bson';
-import { DropdownItem } from '@andes/plex';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
@@ -16,7 +14,6 @@ import { ConceptObserverService } from './../../services/conceptObserver.service
 import { IPaciente } from './../../../../interfaces/IPaciente';
 import { ObraSocialService } from './../../../../services/obraSocial.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
-import { Observable } from 'rxjs/Observable';
 import { RUPComponent } from '../core/rup.component';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 
