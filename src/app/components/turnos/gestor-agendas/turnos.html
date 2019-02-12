@@ -43,8 +43,8 @@
                     </div>
                     <div *ngIf="mostrarHeaderCompleto" class="row">
                         <div class="col-12">
-                            <label>Profesionales</label>
-                            <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
+                            <label>Equipo de Salud</label>
+                            <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Equipo de Salud no asignado</span>
                             <ng-container *ngIf="agenda.profesionales">
                                 <div *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}}</div>
                             </ng-container>
@@ -121,7 +121,7 @@
                         <td>Del día</td>
                         <td>Programados</td>
                         <td>Con Llave</td>
-                        <td>Profesional</td>
+                        <td>Equipo de Salud</td>
                     </tr>
                 </thead>
                 <tbody>

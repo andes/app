@@ -19,7 +19,7 @@
                             </div>
                             <div class="col-4">
                                 <plex-select *ngIf="!_solicitudPrestacion?.solicitud" [(ngModel)]="opciones.profesional"
-                                    (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="apellido + ' ' + nombre"
+                                    (getData)="loadProfesionales($event)" placeholder="Equipo de Salud" labelField="apellido + ' ' + nombre"
                                     (change)="filtrar()" name="profesional">
                                 </plex-select>
                                 <plex-select *ngIf="_solicitudPrestacion?.solicitud?.profesional && autocitado"
@@ -98,7 +98,7 @@
                             <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
                                 {{ tipoPrestacion.nombre }}
                             </div>
-                            <!-- Listado de profesionales -->
+                            <!-- Listado de Equipo de Salud -->
                             <div *ngFor="let profesional of agenda.profesionales let i = index">
                                 {{profesional | profesional}}
                             </div>
@@ -129,14 +129,14 @@
                                                 </ng-template>
                                                 <ng-container *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true; then profesionalSolicitud else profesionalComun"></ng-container>
                                                 <ng-template #profesionalComun>
-                                                    <td>Profesional</td>
+                                                    <td>Equipo de Salud</td>
                                                 </ng-template>
                                                 <ng-template #profesionalSolicitud>
                                                     <td>
-                                                        <b>Profesional</b>
+                                                        <b>Equipo de Salud</b>
                                                     </td>
                                                 </ng-template>
-                                                <!-- <td>Profesional</td> -->
+                                                <!-- <td>Equipo de Salud</td> -->
 
                                             </tr>
                                         </thead>
@@ -225,7 +225,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col col-md-12" *ngIf="alternativa.profesionales">
-                                            <label>Profesional: </label>
+                                            <label>Equipo de Salud: </label>
                                             <span *ngFor="let profesional of alternativa.profesionales">{{profesional.nombre}}
                                                 {{profesional.apellido}} - </span>
                                             <br>
@@ -287,7 +287,7 @@
                                 <div *ngIf="turno.tipoPrestacion">
                                     <label>Tipo de prestación</label>{{turno.tipoPrestacion?.nombre}}</div>
                                 <div *ngIf="agenda.profesionales">
-                                    <label>Profesional</label>
+                                    <label>Equipo de Salud</label>
                                     <div *ngFor="let profesional of agenda.profesionales let i = index">{{profesional |
                                         profesional}}
                                     </div>

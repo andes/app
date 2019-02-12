@@ -16,7 +16,7 @@
                     </div>
                     <div class="row" *ngIf="prestacionSeleccionada.createdBy">
                         <div class="col">
-                            <b>Profesional: </b><span>{{prestacionSeleccionada.createdBy.nombreCompleto}}</span>
+                            <b>Equipo de Salud: </b><span>{{prestacionSeleccionada.createdBy.nombreCompleto}}</span>
                         </div>
                     </div>
                     <div class="row">
@@ -60,7 +60,7 @@
                                             <tbody>
                                                 <tr *ngFor="let diagnostico of diagnosticos; let i = index; " class="hover">
                                                     <td>
-                                                        <!-- Boton aprobar diagnostico profesional -->
+                                                        <!-- Boton aprobar diagnostico Equipo de Salud -->
                                                         <plex-button *ngIf="(diagnostico.codificacionProfesional?.snomed?.codigo || diagnostico.codificacionProfesional?.cie10?.codigo) && !diagnostico.codificacionAuditoria?.codigo"
                                                             class="btn btn-sm" type="success" icon="mdi mdi-check"
                                                             title="Aprobar" (click)="aprobar(i)"></plex-button>
@@ -228,7 +228,7 @@
                             <div *ngIf="prestacionSeleccionada && diagnosticos[indiceReparo]?.codificacionProfesional && showReparo">
                                 <div class="row">
                                     <div class="col">
-                                        <h3>Codificación del profesional</h3>
+                                        <h3>Codificación del Equipo de Salud</h3>
                                         <h5>
                                             <label> Codificación Snomed: </label>
                                             {{diagnosticos[indiceReparo].codificacionProfesional.snomed.term}}
@@ -304,7 +304,7 @@
                                         </span>
                                     </small>
                                     <span [ngClass]="{'text-success': true}" *ngIf="prestacion?.paciente?.id && !prestacion?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo && prestacion?.diagnostico?.codificaciones[0]?.codificacionProfesional?.snomed?.term">|
-                                        Registrado por Profesional</span>
+                                        Registrado por Equipo de Salud</span>
                                     <span [ngClass]="{'text-info': true}" *ngIf="prestacion?.paciente?.id && prestacion?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo">|
                                         Auditado</span>
                                 </td>
