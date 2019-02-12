@@ -268,7 +268,6 @@ export class SelectorUsuarioEfectorComponent {
             this.organizacionSelect = this.newOrg;
             this.organizacionSelectPrev = this.organizacionSelect;
             this.hidePermisos = false;
-            // this.seleccionUsuario.emit(this.usuarioSeleccionado);
             this.seleccionOrganizacion.emit(this.organizacionSelect);
         }
     }
@@ -282,11 +281,10 @@ export class SelectorUsuarioEfectorComponent {
     }
 
     deleteEfector() {
-        this.plex.confirm('¿Eliminar todos los permisos de ' + this.organizacionSelect.nombre + '?').then(value => {
+        this.plex.confirm('¿Eliminar todos los permisos de ' + this.organizacionSelect.nombre + '?').then((value: boolean) => {
             if (value) {
                 let index = this.userModel.organizaciones.findIndex(elem => elem._id === this.organizacionSelect._id);
                 this.userModel.organizaciones.splice(index, 1);
-
                 if (this.organizacionesUsuario && this.organizacionesUsuario.length > 0) {
                     let index2 = this.organizacionesUsuario.findIndex(elem => elem.id === this.organizacionSelect.id);
                     this.organizacionesUsuario.splice(index2, 1);
@@ -295,6 +293,8 @@ export class SelectorUsuarioEfectorComponent {
                     // completo, entonces seteo todo el arreglo de nuevo
                     this.organizacionesUsuario = [...this.organizacionesUsuario];
                     this.organizacionSelect = this.organizacionesUsuario ? this.organizacionesUsuario[0] : null;
+
+                    this.usuarioService.save(this.usuarioSeleccionado).subscribe();
                 }
                 this.onOrgChange();
             }
