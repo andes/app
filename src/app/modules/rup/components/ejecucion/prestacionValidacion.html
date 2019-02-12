@@ -14,8 +14,8 @@
                             <plex-button type="info" icon="information" class="" title="Ver Registros de la Solicitud"
                                 *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
                             <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && !prestacion.solicitud.tipoPrestacion.noNominalizada">
-                                <plex-button type="warning" icon="download mdi-14px" class="float-right ml-1" title="Descargar Resúmen PDF" titlePosition="top"
-                                    (click)="descargarResumen()" [disabled]="descargando">
+                                <plex-button type="warning" icon="download mdi-14px" class="float-right ml-1" title="Descargar Resúmen PDF"
+                                    titlePosition="top" (click)="descargarResumen()" [disabled]="descargando">
                                 </plex-button>
                                 <plex-loader type="linear" *ngIf="descargando"></plex-loader>
                             </ng-container>
@@ -163,11 +163,11 @@
                                 <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento /
                                     diagnóstico principal</small>
                                 <!-- <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento / diagnóstico principal</small> -->
-                                <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
+                                <!-- <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
                                     <b>Relacionado con:</b> {{
                                     elemento.relacionadoCon[0]?.concepto?.term[0].toUpperCase() +
                                     elemento.relacionadoCon[0]?.concepto?.term.slice(1)}}
-                                </small>
+                                </small> -->
                                 <ng-container *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada' && asignarTurno[elemento.id]">
                                     <span class="small text-secondary" *ngIf="asignarTurno[elemento.id]?.solicitud && asignarTurno[elemento.id]?.solicitud.turno">
                                         <b>Ya tiene un turno asignado</b>
@@ -216,12 +216,14 @@
                                         <ng-container *ngIf="(elemento.concepto.semanticTag !== 'elemento de registro')">
                                             <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado' && prestacion.solicitud.ambitoOrigen !== 'internacion'"
                                                 title="Establecer como Procedimiento/Diagnóstico principal" class="diagnostico-principal d-flex align-items-end">
-                                                <plex-radio [data]="opcionDiagnosticoPrincipal" label="¿Procedimiento/Diagnóstico principal?" (change)="diagnosticoPrestacion($event, elemento)"
-                                                    [(ngModel)]="elemento.esDiagnosticoPrincipal" type="horizontal"></plex-radio>
+                                                <plex-radio [data]="opcionDiagnosticoPrincipal" label="¿Procedimiento/Diagnóstico principal?"
+                                                    (change)="diagnosticoPrestacion($event, elemento)" [(ngModel)]="elemento.esDiagnosticoPrincipal"
+                                                    type="horizontal"></plex-radio>
                                             </ng-container>
                                             <ng-container *ngIf="codigosCie10 && codigosCie10[elemento.id] && codigosCie10[elemento.id].c2 && prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'"
                                                 class="diagnostico-principal d-flex align-items-end" title="Indicar si es primera vez">
-                                                <plex-radio [data]="opcionPrimeraVez" label="Es primera Vez?" [(ngModel)]="elemento.esPrimeraVez" type="horizontal"></plex-radio>
+                                                <plex-radio [data]="opcionPrimeraVez" label="Es primera Vez?"
+                                                    [(ngModel)]="elemento.esPrimeraVez" type="horizontal"></plex-radio>
                                             </ng-container>
                                         </ng-container>
                                     </div>
