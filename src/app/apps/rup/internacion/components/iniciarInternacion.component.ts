@@ -336,7 +336,7 @@ export class IniciarInternacionComponent implements OnInit {
                 return;
             }
 
-            if (this.cama === null) {
+            if (this.cama === null && !this.workflowC) {
                 this.plex.info('warning', 'Debe seleccionar una cama');
                 return;
             }
