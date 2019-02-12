@@ -24,7 +24,7 @@ export class PerfilFormComponent implements OnInit {
     set perfil(value: IPerfilUsuario) {
         this.perfilEdit = {} as any;
         Object.assign(this.perfilEdit, value);
-        this.esGlobal = this.perfilEdit.organizacion ? false : true;
+        this.esGlobal = !this.perfilEdit.organizacion ? true : false;
     }
     @Output() perfilGuardado = new EventEmitter<IPerfilUsuario>();
 

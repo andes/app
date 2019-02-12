@@ -1,7 +1,10 @@
 <plex-layout [main]="6">
     <plex-layout-main>
-        <div class="row">
-            <div class="col text-right">
+        <div class="row my-3">
+            <div class="col">
+                <div class="page-title float-left">Perfil</div>
+            </div>
+            <div class="col d-flex justify-content-end">
                 <plex-button label="Nuevo perfil" (click)="nuevoPerfil()" type="success"></plex-button>
             </div>
         </div>
@@ -17,7 +20,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="hover" *ngFor="let perfil of perfiles" (click)="perfilSeleccionado = perfil">
+                        <tr class="hover" *ngFor="let perfil of perfiles" (click)="perfilSeleccionado = perfil"
+                            [ngClass]="{'bg-inverse text-white': perfilSeleccionado?.id === perfil.id}">
                             <td>{{perfil.nombre}}</td>
                             <td>
                                 <plex-badge *ngIf="!perfil.organizacion" type="info">

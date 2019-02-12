@@ -1,12 +1,13 @@
 <form #perfilForm="ngForm">
     <plex-box>
         <header>
-            <div class="row">
-                <div class="col-10">
-                    <plex-button class="text-left" type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
+            <div class="row my-3">
+                <div class="col">
+                    <div class="page-title float-left">{{!perfil.id ? 'Crear perfil' : 'Editar perfil'}}</div>
                 </div>
-                <div class="col-2">
-                    <plex-button class="text-right" type="success" label="Guardar" [validateForm]="perfilForm" (click)="guardar($event)"></plex-button>
+                <div class="col d-flex justify-content-end">
+                    <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
+                    <plex-button type="success" label="Guardar" [validateForm]="perfilForm" (click)="guardar($event)"></plex-button>
                 </div>
             </div>
             <div class="row">
@@ -15,7 +16,7 @@
                 </div>
                 <!-- Agregar ngIf para mostrarlo solo cuando tenga permisos para crear un perfil global -->
                 <div class="col">
-                    <plex-bool label="Global" [(ngModel)]="esGlobal" name="esGlobal" (click)="esGlobal = !esGlobal"></plex-bool>
+                    <plex-bool label="Global" [(ngModel)]="esGlobal" type="slide" name="esGlobal" (click)="esGlobal = !esGlobal"></plex-bool>
                 </div>
                 <div class="col">
                     <plex-bool label="¿Está activo?" type="slide" name="activo" [(ngModel)]="perfilEdit.activo"></plex-bool>
