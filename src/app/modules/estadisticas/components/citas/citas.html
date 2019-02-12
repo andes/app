@@ -1,27 +1,27 @@
 <plex-layout>
     <plex-layout-main>
         <div>
-            <turnos-filtros (filter)="filter($event)" (tablaGrafico)="tablaGrafico($event)"></turnos-filtros>
+            <turnos-filtros (filter)="filter($event)" (onDisplayChange)="displayChange($event)"></turnos-filtros>
         </div>
         <div class="row">
             <div class="col">
-                <graph-table *ngIf="graficoTablaPrestacion" [data]="graficoTablaPrestacion" [view]="esTabla"></graph-table>
+                <graph-table type="bar" titulo="Prestaciones" [data]="prestaciones" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>
             </div>
         </div>
         <div class="row">
-            <div class="col" *ngIf="graficoEstadoTurno && tipoDeFiltro === 'Turnos'">
-                <graph-table [data]="graficoEstadoTurno" [view]="esTabla"></graph-table>
+            <div class="col" *ngIf="estadoTurno && tipoDeFiltro === 'Turnos'">
+                <graph-table type="pie" titulo="Estado" [data]="estadoTurno" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>
             </div>
-            <div class="col" *ngIf="graficoTipoTurno && tipoDeFiltro === 'Turnos'">
-                <graph-table [data]="graficoTipoTurno" [view]="esTabla"></graph-table>
+            <div class="col" *ngIf="tipoTurno && tipoDeFiltro === 'Turnos'">
+                <graph-table type="pie" titulo="Tipo" [data]="tipoTurno" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>
             </div>
-            <div class="col" *ngIf="graficoEstadoAgenda && tipoDeFiltro === 'Agendas'">
-                <graph-table [data]="graficoEstadoAgenda" [view]="esTabla"></graph-table>
+            <div class="col" *ngIf="estadoAgenda && tipoDeFiltro === 'Agendas'">
+                <graph-table type="pie" titulo="Estado" [data]="estadoAgenda" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <graph-table *ngIf="graficoTablaProfesional" [data]="graficoTablaProfesional" [view]="esTabla"></graph-table>                
+                <graph-table type="bar" titulo="Profesionales" [data]="profesionales" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>                
             </div>
         </div>
         <div class="row">

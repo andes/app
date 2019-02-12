@@ -1,5 +1,5 @@
-import { Component, OnInit, HostBinding, EventEmitter, Output, Input, OnChanges } from '@angular/core';
-import { Plex } from '@andes/plex';
+import { Component, OnInit, Input } from '@angular/core';
+
 
 @Component({
     templateUrl: 'graficos.html',
@@ -8,6 +8,9 @@ import { Plex } from '@andes/plex';
 
 export class GraficosComponent implements OnInit {
     private _data: any;
+    @Input() titulo = '';
+    @Input() type = 'bar';
+
     @Input('data')
     set data(value: any) {
         this.limpiarData();
@@ -16,29 +19,19 @@ export class GraficosComponent implements OnInit {
         setTimeout(() => {
             this._data = value;
             this.cargarResultados(this._data);
-        }, 1000);
+        }, 100);
     }
     get data(): any {
         return this._data;
     }
 
-    private _view: any;
-    @Input('view')
-    set view(value: any) {
-        this._view = value;
-    }
-    get view(): any {
-        return this._view;
-    }
+    @Input() table;
+    @Input() tipoDeFiltro;
 
-    public valueData;
     public dataTable = [];
     public dataGraph = [];
     public labelsGraph = [];
     public dataTableTotal = 0;
-    public tipoDeFiltro;
-    public titulo;
-    public tipoGrafico;
 
     public barOptions = {
         legend: { display: false },
@@ -81,25 +74,23 @@ export class GraficosComponent implements OnInit {
     }
 
     limpiarData() {
+        this._data = null;
         this.dataTable = [];
         this.dataGraph = [];
         this.labelsGraph = [];
         this.dataTableTotal = 0;
     }
 
-    cargarResultados(value) {
-        if (value && value.data) {
-            this.tipoGrafico = value.tipoGrafico;
-            this.tipoDeFiltro = value.tipoDeFiltro;
-            this.dataGraph = this.tipoGrafico === 'bar' ? [{data: value.data.map(item => item.count), label: this.tipoDeFiltro}] : value.data.map(item => item.count);
-            this.labelsGraph = value.data.map(item => item.nombre ? item.nombre : item._id);
-            this.dataTable = value.data;
-            this.titulo = value.titulo;
+    cargarResultados(data) {
+        if (data) {
+            this.dataGraph = this.type === 'bar' ? [
+                {data: data.map(item => item.count), label: this.tipoDeFiltro}
+            ] : data.map(item => item.count);
+            this.labelsGraph = data.map(item => item.nombre ? item.nombre : item._id);
+            this.dataTable = data;
 
             let sum = 0;
-            value.data.map(function(item) {
-                sum += item.count;
-            });
+            data.forEach((item) => sum += item.count);
             this.dataTableTotal = sum;
         }
     }

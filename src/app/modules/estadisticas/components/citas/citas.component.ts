@@ -24,11 +24,11 @@ export class CitasComponent implements OnInit {
     // Datos
     public data: any;
 
-    public graficoTablaProfesional;
-    public graficoTablaPrestacion;
-    public graficoEstadoTurno;
-    public graficoEstadoAgenda;
-    public graficoTipoTurno;
+    public profesionales;
+    public prestaciones;
+    public estadoTurno;
+    public estadoAgenda;
+    public tipoTurno;
 
     public params = {};
 
@@ -48,7 +48,7 @@ export class CitasComponent implements OnInit {
         ]);
     }
 
-    tablaGrafico($event) {
+    displayChange($event) {
         this.esTabla = $event;
     }
 
@@ -58,33 +58,19 @@ export class CitasComponent implements OnInit {
             ...$event
         };
         this.estService.post(this.params).subscribe((data) => {
-            this.dataGeolocalizacion = data[2];
-            this.data = data[0];
-            this.tipoDeFiltro = data[1].tipoDeFiltro === 'turnos' ? 'Turnos' : 'Agendas';
+            this.dataGeolocalizacion = data.localidades;
+            this.data = data;
+            this.tipoDeFiltro = $event.tipoDeFiltro === 'turnos' ? 'Turnos' : 'Agendas';
             this.cargarLosFiltros();
         });
     }
 
 
     cargarLosFiltros() {
-        if (this.data.profesionales && this.data.profesionales.length) {
-            this.graficoTablaProfesional = {data: this.data.profesionales, tipoDeFiltro: this.tipoDeFiltro, titulo: 'Profesionales', tipoGrafico: 'bar'};
-        }
-
-        if (this.data.prestacion && this.data.prestacion.length) {
-            this.graficoTablaPrestacion = {data: this.data.prestacion, tipoDeFiltro: this.tipoDeFiltro, titulo: 'Prestaciones', tipoGrafico: 'bar'};
-        }
-
-        if (this.data.estado_turno) {
-            this.graficoEstadoTurno = {data: this.data.estado_turno, tipoDeFiltro: this.tipoDeFiltro, titulo: 'Estado', tipoGrafico: 'pie'};
-        }
-
-        if (this.data.estado_agenda) {
-            this.graficoEstadoAgenda = {data: this.data.estado_agenda, tipoDeFiltro: this.tipoDeFiltro, titulo: 'Estado', tipoGrafico: 'pie'};
-        }
-
-        if (this.data.tipoTurno) {
-            this.graficoTipoTurno = {data: this.data.tipoTurno, tipoDeFiltro: this.tipoDeFiltro, titulo: 'Tipo', tipoGrafico: 'pie'};
-        }
+        this.profesionales =  this.data.profesionales;
+        this.prestaciones =  this.data.prestacion;
+        this.estadoTurno =  this.data.estado_turno;
+        this.estadoAgenda =  this.data.estado_agenda;
+        this.tipoTurno =  this.data.tipoTurno;
     }
 }

@@ -88,7 +88,7 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
     ];
 
     @Output() filter = new EventEmitter();
-    @Output() tablaGrafico = new EventEmitter();
+    @Output() onDisplayChange = new EventEmitter();
 
     public seleccion: any = {
         tipoDeFiltro: { id: 'turnos', nombre: 'Turnos' },
@@ -111,7 +111,7 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
 
     changeTablaGrafico() {
         this.esTablaGrafico = !this.esTablaGrafico;
-        this.tablaGrafico.emit(this.esTablaGrafico);
+        this.onDisplayChange.emit(this.esTablaGrafico);
     }
 
     loadProfesionales(event) {
