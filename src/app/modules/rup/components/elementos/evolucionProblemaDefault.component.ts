@@ -7,7 +7,6 @@ import { RupElement } from '.';
 @Component({
     selector: 'rup-evolucion-problema-default',
     templateUrl: 'evolucionProblemaDefault.html',
-    styleUrls: ['evolucionProblemaDefault.scss']
 })
 @RupElement('EvolucionProblemaDefaultComponent')
 export class EvolucionProblemaDefaultComponent extends RUPComponent implements OnInit {
@@ -75,12 +74,12 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
 
         if (this.soloValores) {
 
-            if (this.registro.evoluciones.length) {
+            if (this.registro.evoluciones && this.registro.evoluciones.length) {
                 this.evolucionActual = this.registro.evoluciones[0];
                 let idPrestacion = this.evolucionActual.informeRequerido ? this.evolucionActual.informeRequerido.idPrestacion : this.evolucionActual.idPrestacion;
 
                 // RELACIONES
-                this.prestacionesService.getById(this.registro.idPrestacion).subscribe(prestacion => {
+                this.prestacionesService.getById(this.evolucionActual.idPrestacion).subscribe(prestacion => {
                     this.prestacion = prestacion;
                     this.registro.evoluciones.forEach(evolucion => {
                         if (evolucion.relacionadoCon && evolucion.relacionadoCon.length > 0) {
@@ -202,7 +201,7 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
         this.evolucionActual = this.registro.evoluciones[this.indice];
         this.evolucionActual.fechaCarga = this.registro.evoluciones[this.indice].fechaCarga;
 
-        let idp = (this.evolucionActual as any).informeRequerido.idPrestacion;
+        let idp = (this.evolucionActual as any).informeRequerido.idPrestacion ? (this.evolucionActual as any).informeRequerido.idPrestacion : this.registro.idPrestacion;
 
         if (typeof idp !== 'undefined') {
             this.prestacionesService.getById(idp).subscribe(prestacion => {
