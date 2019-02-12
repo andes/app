@@ -811,18 +811,20 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                 bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
                 bloque.turnos = [];
+                bloque.turnosMobile = bloque.accesoDirectoProgramado > 0 ? bloque.turnosMobile : false;
                 if (!this.dinamica) {
                     if (bloque.pacienteSimultaneos) {
                         bloque.restantesDelDia = bloque.accesoDirectoDelDia * bloque.cantidadSimultaneos;
                         bloque.restantesProgramados = bloque.accesoDirectoProgramado * bloque.cantidadSimultaneos;
                         bloque.restantesGestion = bloque.reservadoGestion * bloque.cantidadSimultaneos;
                         bloque.restantesProfesional = bloque.reservadoProfesional * bloque.cantidadSimultaneos;
-
+                        bloque.restantesMobile = bloque.accesoDirectoProgramado > 0 ? bloque.cupoMobile * bloque.cantidadSimultaneos : 0;
                     } else {
                         bloque.restantesDelDia = bloque.accesoDirectoDelDia;
                         bloque.restantesProgramados = bloque.accesoDirectoProgramado;
                         bloque.restantesGestion = bloque.reservadoGestion;
                         bloque.restantesProfesional = bloque.reservadoProfesional;
+                        bloque.restantesMobile = bloque.accesoDirectoProgramado > 0 ? bloque.cupoMobile : 0;
                     }
 
                     if (this.noNominalizada) {
@@ -870,6 +872,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                     });
                 }
             });
+            console.log('modelo ', this.modelo);
             espOperation = this.serviceAgenda.save(this.modelo);
             espOperation.subscribe(resultado => {
                 this.plex.toast('success', 'La agenda se guardó correctamente');
