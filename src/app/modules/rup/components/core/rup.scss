@@ -434,7 +434,6 @@ $color in $rup_colors {
 }
 
 .form-group {
-    margin-left: 10px;
     &>label {
         margin-bottom: 0 !important;
     }
@@ -514,6 +513,7 @@ $color in $rup_colors {
         display: grid !important;
         grid-template-columns: 1fr;
         grid-template-rows: repeat(2, 1fr);
+        margin-bottom: 10px;
     
     }
     .divisor {
