@@ -1,7 +1,7 @@
 <plex-layout>
     <plex-layout-main>
         <div>
-            <turnos-filtros (filter)="filter($event)" (tablaGrafico)="tablaGrafico($event)" [params]="filtros"></turnos-filtros>
+            <turnos-filtros (filter)="filter($event)" (tablaGrafico)="tablaGrafico($event)"></turnos-filtros>
         </div>
         <div class="row">
             <div class="col">
@@ -24,5 +24,11 @@
                 <graph-table *ngIf="graficoTablaProfesional" [data]="graficoTablaProfesional" [view]="esTabla"></graph-table>                
             </div>
         </div>
+        <div class="row">
+            <div class="col">
+                <app-tabla-geolocalizacion [data]="dataGeolocalizacion"></app-tabla-geolocalizacion>
+            </div>
+        </div>
+       
     </plex-layout-main>
 </plex-layout>

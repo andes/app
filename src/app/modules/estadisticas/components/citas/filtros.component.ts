@@ -87,7 +87,6 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
         { id: 'sobreturno', nombre: 'Sobreturno' }
     ];
 
-    @Input() params: any = {};
     @Output() filter = new EventEmitter();
     @Output() tablaGrafico = new EventEmitter();
 

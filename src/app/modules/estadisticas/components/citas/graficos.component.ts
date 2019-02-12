@@ -11,10 +11,10 @@ export class GraficosComponent implements OnInit {
     @Input('data')
     set data(value: any) {
         this.limpiarData();
-        this._data = value;
         // Es necesario cargar los datos dentro de un setTimout porque si no se saca del DOM
         // el canvas no se actualiza y muestra datos cruzados
         setTimeout(() => {
+            this._data = value;
             this.cargarResultados(this._data);
         }, 1000);
     }
@@ -31,6 +31,7 @@ export class GraficosComponent implements OnInit {
         return this._view;
     }
 
+    public valueData;
     public dataTable = [];
     public dataGraph = [];
     public labelsGraph = [];

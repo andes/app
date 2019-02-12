@@ -19,6 +19,7 @@ export class CitasComponent implements OnInit {
     public organizacion;
     public tipoDeFiltro;
     public esTabla;
+    public dataGeolocalizacion;
 
     // Datos
     public data: any;
@@ -57,6 +58,7 @@ export class CitasComponent implements OnInit {
             ...$event
         };
         this.estService.post(this.params).subscribe((data) => {
+            this.dataGeolocalizacion = data[2];
             this.data = data[0];
             this.tipoDeFiltro = data[1].tipoDeFiltro === 'turnos' ? 'Turnos' : 'Agendas';
             this.cargarLosFiltros();

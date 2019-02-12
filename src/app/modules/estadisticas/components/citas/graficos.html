@@ -1,10 +1,10 @@
-<div class="row">                
-    <div class="col" *ngIf="dataGraph.length > 0 && !view">
+<div class="row" *ngIf="data && data.data && data.data.length">
+    <div class="col" *ngIf="dataGraph && dataGraph.length && labelsGraph && labelsGraph.length && !view">
         <h3>{{tipoDeFiltro}} por {{titulo}}</h3>
-        <div *ngIf="dataGraph && labelsGraph && tipoGrafico === 'bar'">
+        <div *ngIf="tipoGrafico === 'bar'">
             <canvas baseChart [colors]="barColors" [datasets]="dataGraph" [options]="barOptions" [labels]="labelsGraph" chartType="bar"></canvas>
         </div>
-        <div *ngIf="dataGraph && labelsGraph && tipoGrafico === 'pie'">
+        <div *ngIf="tipoGrafico === 'pie'">
             <canvas baseChart [colors]="chartColors" [data]="dataGraph" [labels]="labelsGraph" chartType="pie"></canvas>
         </div>
     </div>
