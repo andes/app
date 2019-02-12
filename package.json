@@ -1,6 +1,6 @@
 {
     "name": "@andes/app",
-    "version": "4.3.4",
+    "version": "4.3.5",
     "description": "Aplicación web para ANDES",
     "angular-cli": {},
     "scripts": {
@@ -28,7 +28,7 @@
         "@andes/auth": "^3.0.1",
         "@andes/icons": "^0.6.1",
         "@andes/match": "^1.1.12",
-        "@andes/plex": "^4.3.1",
+        "@andes/plex": "^4.3.3",
         "@andes/shared": "^3.0.2",
         "@angular/animations": "7.0.0",
         "@angular/cdk": "^7.0.1",

@@ -1,6 +1,7 @@
 import { IPrestacion } from './../../interfaces/prestacion.interface';
 import { Component, OnInit, ViewEncapsulation, EventEmitter, Output } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-InformeEpicrisisComponent',
@@ -8,7 +9,7 @@ import { RUPComponent } from './../core/rup.component';
     styleUrls: ['informeEpicrisis.scss'],
     encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
-
+@RupElement('InformeEpicrisisComponent')
 export class InformeEpicrisisComponent extends RUPComponent implements OnInit {
 
     public accordionActive = 0;

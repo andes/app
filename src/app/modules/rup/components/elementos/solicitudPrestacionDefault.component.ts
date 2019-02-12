@@ -1,10 +1,12 @@
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-solicitudPrestacionDefault',
     templateUrl: 'solicitudPrestacionDefault.html'
 })
+@RupElement('SolicitudPrestacionDefaultComponent')
 export class SolicitudPrestacionDefaultComponent extends RUPComponent implements OnInit {
 
     private listaPlanes: any = [];
