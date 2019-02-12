@@ -91,9 +91,24 @@ export class SelectorUsuarioEfectorComponent {
      * @memberof GestorUsuarioComponent
      */
     public mostrarFiltrosAvanzados = false;
-    public hidePermisos = false;
+    /**
+     * Bandera que indica si se debe mostrar la parte de agregar un efector o no
+     * @memberof SelectorUsuarioEfectorComponent
+     */
+    public agregarEfector = false;
+    /**
+     * Bandera que indica si se debe mostrar la parte de copiar permisos de un efector a otro
+     * @memberof SelectorUsuarioEfectorComponent
+     */
+    public copiarPermisos = false;
     private temp;
     private organizacionesAuth: any[] = [];
+    /**
+     * Nuevas organizaciones que se agregan al clonar los permisos de otro efector
+     * @type {any[]}
+     * @memberof SelectorUsuarioEfectorComponent
+     */
+    public organizacionesNuevas: any[];
     public newOrganizaciones: any;
     /**
      * Nuevo Efector para el usuario seleccionado
@@ -211,12 +226,12 @@ export class SelectorUsuarioEfectorComponent {
      * @memberof SelectorUsuarioEfectorComponent
      */
     onOrgChange() {
-        this.hidePermisos = true;
+        // this.hidePermisos = true;
         this.savePermisos();
         this.organizacionSelectPrev = this.organizacionSelect;
         this.loadPermisos();
         this.getOrgActualAuthUs();
-        setTimeout(() => this.hidePermisos = false, 0);
+        // setTimeout(() => this.hidePermisos = false, 0);
         this.seleccionOrganizacion.emit(this.organizacionSelect);
     }
 
@@ -252,7 +267,8 @@ export class SelectorUsuarioEfectorComponent {
     }
     newEfector() {
         this.savePermisos();
-        this.hidePermisos = true;
+        // this.hidePermisos = true;
+        this.agregarEfector = true;
     }
 
     /**
@@ -267,17 +283,20 @@ export class SelectorUsuarioEfectorComponent {
             this.organizacionesUsuario.push(this.newOrg);
             this.organizacionSelect = this.newOrg;
             this.organizacionSelectPrev = this.organizacionSelect;
-            this.hidePermisos = false;
+            // this.hidePermisos = false;
+            this.agregarEfector = false;
             this.seleccionOrganizacion.emit(this.organizacionSelect);
         }
     }
 
     /**
-     * Cancela agregar una nueva organización
+     * Cancela agregar una nueva organización y copiar permisos
      * @memberof SelectorUsuarioEfectorComponent
      */
-    cancelarOrg() {
-        this.hidePermisos = false;
+    cancelar() {
+        // this.hidePermisos = false;
+        this.agregarEfector = false;
+        this.copiarPermisos = false;
     }
 
     deleteEfector() {
@@ -356,5 +375,26 @@ export class SelectorUsuarioEfectorComponent {
 
             this.showAgregarEfector = (this.newOrganizaciones.length > 0) ? true : false;
         }
+    }
+    copiarAEfectores() {
+        this.organizacionesNuevas.forEach(element => {
+            this.userModel.organizaciones.push({ _id: element.id, permisos: this.permisos });
+            // this.seleccion.organizaciones.push({ _id: element.id, permisos: this.permisos });
+            // this.organizacionSelect.push({_id: element.id, permisos: this.permisos});
+        });
+        // let idOrganizaciones = this.seleccion.organizaciones.map(i => i._id);
+        let idOrganizaciones = this.userModel.organizaciones.map(i => i._id);
+
+        this.organizacionService.get({ ids: idOrganizaciones }).subscribe(dataUss => {
+            this.organizacionesUsuario = dataUss;
+            // this.loadUser();
+            // this.getOrgActualAuthUs();
+        });
+        this.savePermisos();
+        this.usuarioService.save(this.userModel).subscribe(user => {
+            this.plex.info('success', '', 'Usuario guardado');
+            this.organizacionesNuevas = null;
+            this.copiarPermisos = false;
+        });
     }
 }
