@@ -24,7 +24,7 @@ laboratorio: $laboratorio, trastorno: $trastorno, situación: $problema,
 hallazgo: $hallazgo, procedimiento: $procedimiento, regimen: $procedimiento, 
 entidad: $procedimiento, solicitud: $solicitud, plan: $solicitud, 
 producto: $producto, adjunto: $adjunto, elemento: $registro, 
-elementoderegistro: $registro, 'estructura corporal': $registro,
+elementoderegistro: $registro, 'estructura.corporal': $registro,
 invert: $invert, todos: $todos, otro: $otro);
 
 //TODO: hay que unificar los badges de distintas pantallas: tamaño, colores, bordes, espacios...    
