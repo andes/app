@@ -36,7 +36,7 @@
                             <th rowspan="2">Dni</th>
                             <th rowspan="2">Fecha de ingreso</th>
                             <th rowspan="2">Fecha de egreso</th>
-                            <th rowspan="2">estado</th>
+                            <th rowspan="2">Estado</th>
 
                         </tr>
                     </thead>
@@ -65,8 +65,8 @@
             </div>
         </div>
     </plex-layout-main>
-    <plex-layout-sidebar  *ngIf='internacionSelected' >
-            <internacion-resumen [paciente]="internacionSelected.paciente" [prestacion]="internacionSelected"></internacion-resumen>
+    <plex-layout-sidebar *ngIf='internacionSelected'>
+        <internacion-resumen [paciente]="internacionSelected.paciente" [prestacion]="internacionSelected"></internacion-resumen>
     </plex-layout-sidebar>
     <plex-layout-footer>
         <plex-button position="left" label="Volver" type="danger" (click)='volver()'></plex-button>

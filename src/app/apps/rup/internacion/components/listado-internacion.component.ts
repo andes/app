@@ -66,8 +66,8 @@ export class ListadoInternacionComponent implements OnInit {
 
         let unMesAtras = new Date();
         this.filtros.fechaIngresoDesde = new Date((unMesAtras.setMonth(unMesAtras.getMonth() - 1)));
-        this.servicioPrestacion.listadoInternacion(this.filtros).subscribe(a => { this.listadoInternacion = a; });
-
+        this.filtros.fechaIngresoHasta = new Date();
+        this.servicioPrestacion.listadoInternacion(this.filtros).subscribe(a => { debugger; this.listadoInternacion = a; });
         this.estadosInternacion = enumerados.getObjEstadoInternacion();
 
     }
