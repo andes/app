@@ -74,15 +74,14 @@
             </div>
         </ng-container>
         <div class="row">
-            <div class="col-6">
+            <div class="col-10">
                 <small class="pr-1" *ngIf="getSemanticTagFiltros()">Filtros:</small>
                 <i class="text-secondary ml-1">{{ getSemanticTagFiltros() }}</i>
             </div>
-            <div class="col-6">
+            <div class="col-2">
                 <ng-container *ngIf="filtroActual === 'planes'">
-                    <button [title]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" class="btn btn-primary btn-xl p-1 m-1 float-right" (click)="showFiltros = !showFiltros">
-                        <i [class]="showFiltros ? 'mdi mdi-close' : 'mdi mdi-magnify'"></i>
-                    </button>
+                    <plex-button [icon]="showFiltros ? 'mdi mdi-close' : 'mdi mdi-magnify'" size="sm" type="info" [title]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" class="float-right" (click)="showFiltros = !showFiltros">
+                    </plex-button>
                 </ng-container>
             </div>
         </div>
@@ -290,10 +289,9 @@
         <!-- Vista: PLANES -->
         <ng-container *ngIf="filtroActual === 'planes'">
             <ng-container *ngIf="showFiltros">
-
                 <div class="row">
                     <div class="col-12">
-                        <plex-select *ngIf="tiposPrestacion" [(ngModel)]="prestacionSeleccionada" name="nombrePrestacion" label="Prestación"
+                        <plex-select *ngIf="tiposPrestacion" [(ngModel)]="prestacionSeleccionada" label="Prestación"
                             [data]="tiposPrestacion" labelField="term" (change)="filtrar()">
                         </plex-select>
                     </div>
