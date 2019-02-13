@@ -7,7 +7,7 @@ import { InternacionService } from '../services/internacion.service';
     selector: 'internacion-resumen',
     templateUrl: 'resumenInternacion.html',
     styleUrls: ['resumenInternacion.scss'],
-    encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
+     encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 export class ResumenInternacionComponent implements OnInit, OnChanges {
     @Input() prestacion;

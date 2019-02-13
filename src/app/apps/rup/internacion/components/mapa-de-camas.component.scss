@@ -722,7 +722,11 @@ plex-box#panel-lateral>DIV {
         } // Accordions
         plex-accordion plex-panel div.card {
             border: 0px;
+            background-color: transparent !important;
+
             div.card-header {
+                background-color: transparent !important;
+
                 color: $andes-cyan !important;
                 border: solid 2px white;
                 border-radius: 0px;
