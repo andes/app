@@ -186,9 +186,6 @@
                             <b>Estado:</b><br>
                             <div>
                                 <span *ngIf="registro?.valor?.estado !== ''" class="badge badge-success">
-                                    <ng-container *ngIf="registro?.valor?.estado">
-                                        {{ registro?.valor?.estado }}
-                                    </ng-container>
                                     <ng-container *ngIf="hallazgoHudsCompleto">
                                         {{ hallazgoHudsCompleto.evoluciones[0].estado }}
                                     </ng-container>
