@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { IElementoRUP } from '../../interfaces/elementoRUP.interface';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-desarrollo-psicomotor',
     templateUrl: 'desarrolloPsicomotor.html'
 })
+@RupElement('DesarrolloPsicomotorComponent')
 export class DesarrolloPsicomotorComponent extends RUPComponent implements OnInit {
     conceptos: any[];
     seleccionados: any[];

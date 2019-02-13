@@ -1,10 +1,12 @@
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-tension-sistolica',
     templateUrl: 'tensionSistolica.html'
 })
+@RupElement('TensionSistolicaComponent')
 export class TensionSistolicaComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         // Observa cuando cambia la propiedad 'Sistolica' en otro elemento RUP

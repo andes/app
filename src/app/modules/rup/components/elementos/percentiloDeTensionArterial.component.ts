@@ -1,9 +1,11 @@
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
+import { RupElement } from '.';
 @Component({
     selector: 'rup-percentilo-de-tension-arterial',
     templateUrl: 'percentiloDeTensionArterial.html'
 })
+@RupElement('PercentiloDeTensionArterialComponent')
 export class PercentiloDeTensionArterialComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         if (!this.soloValores) {

@@ -159,7 +159,7 @@ export class BotonesAgendaComponent implements OnInit {
             // Revisión de agenda
             revisionAgenda: (this.cantidadSeleccionadas === 1) && this.puedoRevisar(),
             // Reasignar turnos
-            reasignarTurnos: (this.cantidadSeleccionadas === 1) && this.hayAgendasSuspendidas() && this.hayTurnosSuspendidos() && puedeReasignar,
+            reasignarTurnos: (this.cantidadSeleccionadas === 1) && this.hayTurnosSuspendidos() && puedeReasignar,
             // Imprimir pdf
             listarTurnos: (this.cantidadSeleccionadas > 0) && puedeImprimir,
             // Imprimir pdf carpetas
@@ -193,47 +193,42 @@ export class BotonesAgendaComponent implements OnInit {
         }
     }
 
+    // Comprueba que haya algún turno con paciente, en estado suspendido
+    hayTurnosCodificados(agenda: any) {
+        if (!agenda.dinamica) {
+            return agenda.bloques.some((bloque: any) => bloque.turnos.some((turno: any) => turno.asistencia || (turno.diagnostico && turno.diagnostico.codificaciones && turno.diagnostico.codificaciones.length > 0)));
+        } else {
+            return false;
+        }
+    }
+
     puedoEditar() {
-        return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado === 'pendienteAuditoria' || agenda.estado === 'auditada' || agenda.estado === 'pausada' || agenda.estado === 'suspendida';
-        }).length <= 0;
+        return this.agendasSeleccionadas.filter((agenda: any) => agenda.estado === 'pendienteAuditoria' || agenda.estado === 'auditada' || agenda.estado === 'pausada' || agenda.estado === 'suspendida').length <= 0;
     }
 
     puedoSuspender() {
-        return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado !== 'disponible' && agenda.estado !== 'publicada';
-        }).length <= 0;
+        return (!this.hayTurnosCodificados(this.agendasSeleccionadas[0])) && this.agendasSeleccionadas.filter((agenda: any) => agenda.estado !== 'disponible' && agenda.estado !== 'publicada').length <= 0;
     }
 
     puedoDisponer() {
-        let disponer = this.agendasSeleccionadas.filter((agenda) => {
-            return (agenda.estado !== 'planificacion');
-        }).length <= 0;
+        let disponer = this.agendasSeleccionadas.filter((agenda: any) => (agenda.estado !== 'planificacion')).length <= 0;
         return disponer;
     }
 
     puedoPublicar() {
-        return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado !== 'planificacion' && agenda.estado !== 'disponible';
-        }).length <= 0;
+        return this.agendasSeleccionadas.filter((agenda: any) => agenda.estado !== 'planificacion' && agenda.estado !== 'disponible').length <= 0;
     }
 
     puedoBorrar() {
-        return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado !== 'planificacion';
-        }).length <= 0;
+        return this.agendasSeleccionadas.filter((agenda: any) => agenda.estado !== 'planificacion').length <= 0;
     }
 
     puedoPausar() {
-        return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado === 'planificacion' || agenda.estado === 'pausada' || agenda.estado === 'suspendida' || agenda.estado === 'auditada' || agenda.estado === 'pendienteAuditoria';
-        }).length <= 0;
+        return this.agendasSeleccionadas.filter((agenda: any) => agenda.estado === 'planificacion' || agenda.estado === 'pausada' || agenda.estado === 'suspendida' || agenda.estado === 'auditada' || agenda.estado === 'pendienteAuditoria').length <= 0;
     }
 
     puedoReanudar() {
-        return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado !== 'pausada';
-        }).length <= 0;
+        return this.agendasSeleccionadas.filter((agenda: any) => agenda.estado !== 'pausada').length <= 0;
     }
 
     puedoAgregar() {
@@ -243,14 +238,11 @@ export class BotonesAgendaComponent implements OnInit {
 
     puedoRevisar() {
         let agenda = this.agendasSeleccionadas[0];
-        // return (agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria' || agenda.estado === 'auditada');
         return ((agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria' || agenda.estado === 'publicada' || agenda.estado === 'auditada') && moment(agenda.horaFin).isBefore(moment(new Date())));
     }
 
     puedoImprimirCarpetas() {
-        return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria' || agenda.estado === 'auditada' || agenda.estado === 'pausada' || agenda.estado === 'suspendida';
-        }).length <= 0;
+        return !this.agendasSeleccionadas.some((agenda: any) => agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria' || agenda.estado === 'auditada' || agenda.estado === 'pausada' || agenda.estado === 'suspendida');
     }
 
     // Verifica que las agendas seleccionadas tengan al menos un turno de acceso directo poder para publicar la agenda
