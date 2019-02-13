@@ -1,6 +1,7 @@
+import { ObjectID } from 'bson';
 
 export interface IPractica {
-    id: string;
+    id: ObjectID;
     _id: any;
     codigo: string;
     codigoNomenclador: string;

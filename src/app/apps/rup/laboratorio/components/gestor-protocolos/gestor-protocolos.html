@@ -89,7 +89,7 @@
 
         <!-- DETALLE DE PROTOCOLO -->
         <protocolo-detalle *ngIf="showProtocoloDetalle" [protocolo]="protocolo" [indexProtocolo]="indexProtocolo"
-            [protocolos]="protocolos" [seleccionPaciente]="seleccionPaciente" (volverAListaControEmit)="volverLista()"
+            [protocolos]="protocolos" [seleccionPaciente]="seleccionPaciente" (volverAListaControEmit)="volver()"
             [editarListaPracticas]="editarListaPracticas" [busqueda]='busqueda' (edicionDatosCabeceraEmitter)="editarDatosCabecera()"></protocolo-detalle>
 
     </plex-layout-sidebar>

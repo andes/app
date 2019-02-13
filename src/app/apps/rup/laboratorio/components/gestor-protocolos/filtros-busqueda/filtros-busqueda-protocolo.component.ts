@@ -59,7 +59,8 @@ export class FiltrosBusquedaProtocoloComponent
         organizacion: null,
         estado: [],
         practicas: null,
-        area: null
+        area: null,
+        organizacionDestino: this.auth.organizacion._id
     };
 
     mostrarMasOpciones = false;

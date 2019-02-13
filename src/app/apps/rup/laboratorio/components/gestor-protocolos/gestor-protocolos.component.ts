@@ -1,12 +1,12 @@
 import { Constantes } from './../../controllers/constants';
 import { Component, OnInit, Input, ViewChild, EventEmitter, Output, ViewEncapsulation, HostBinding } from '@angular/core';
 import { ProtocoloDetalleComponent } from '../protocolos/protocolo-detalle.component';
-import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { PacienteService } from '../../../../../services/paciente.service';
 import { ActivatedRoute } from '@angular/router';
 import { LaboratorioContextoCacheService } from '../../services/protocoloCache.service';
+import { ProtocoloService } from '../../services/protocolo.service';
 
 
 @Component({
@@ -72,7 +72,7 @@ export class GestorProtocolosComponent implements OnInit {
         public servicePaciente: PacienteService,
         private route: ActivatedRoute,
         public plex: Plex,
-        public servicioPrestaciones: PrestacionesService,
+        public protocoloService: ProtocoloService,
         public auth: Auth,
         public laboratorioContextoCacheService: LaboratorioContextoCacheService,
     ) { }
@@ -89,7 +89,6 @@ export class GestorProtocolosComponent implements OnInit {
             this.resetearProtocolo({});
         }
         this.routeParams = this.route.params.subscribe(params => {
-            console.log(params);
             if (params['id']) {
                 let id = params['id'];
                 this.servicePaciente.getById(id).subscribe(pacienteMPI => {
@@ -102,15 +101,6 @@ export class GestorProtocolosComponent implements OnInit {
             }
         });
     }
-
-    setModo() {
-
-    }
-
-    // private autosetTabIndex() {
-    //     let modo = this.contextoCache.modo;
-    //     if (modo === Constantes.)
-    // }
 
     /**
      *
@@ -175,7 +165,7 @@ export class GestorProtocolosComponent implements OnInit {
 
         this.busqueda.estado = this.laboratorioContextoCacheService.isModoValidacion() ? ['pendiente', 'ejecucion'] :  [];
 
-        this.servicioPrestaciones.get(this.busqueda).subscribe(protocolos => {
+        this.protocoloService.get(this.busqueda).subscribe(protocolos => {
             this.protocolos = protocolos;
         }, err => {
             if (err) {
@@ -281,7 +271,7 @@ export class GestorProtocolosComponent implements OnInit {
      */
     aceptarCambiosHeader() {
         this.showBotonAceptarCambiosHeader = false;
-        this.showBotonAceptarCambiosAuditoria = true;
+        this.showBotonGuardar = true;
         this.protocoloDetalleComponent.aceptarEdicionCabecera();
     }
 
@@ -291,7 +281,6 @@ export class GestorProtocolosComponent implements OnInit {
      * @memberof GestorProtocolosComponent
      */
     volverAControl() {
-        this.protocoloDetalleComponent.cargarCodigosPracticas();
         this.laboratorioContextoCacheService.irAuditoriaProtocolo();
         this.laboratorioContextoCacheService.modoControl();
         this.showBotonAceptarCambiosAuditoria = true;

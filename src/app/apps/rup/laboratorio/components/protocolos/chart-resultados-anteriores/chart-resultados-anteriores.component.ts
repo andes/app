@@ -18,7 +18,7 @@ export class ChartHistorialResultadoComponent implements OnInit {
     public barChartData: any[] = [];
     public contextoCache;
 
-    @Input() practica;
+    @Input() historialResultados;
 
     constructor(
         public protocoloCache: LaboratorioContextoCacheService
@@ -27,17 +27,17 @@ export class ChartHistorialResultadoComponent implements OnInit {
 
     ngOnInit() {
         this.contextoCache = this.protocoloCache.getContextoCache();
-        this.contextoCache.titulo = 'Histórico de resultados: ' +  this.practica.nombre;
+        this.contextoCache.titulo = 'Histórico de resultados: ' +  this.historialResultados.practica.nombre;
         this.contextoCache.botonesAccion = 'historicoResultados';
         this.generarEtiquetasCurva();
     }
 
     generarDatosCurva() {
         this.barChartData = [
-            { data: this.practica.resultadosAnteriores.resultados.map( (e: any)  => { return e.valor; } ).reverse(), label: 'Valor ()', fill: false }
+            { data: this.historialResultados.resultadosAnteriores.resultados.map( (e: any)  => { return e.valor; } ).reverse(), label: 'Valor ()', fill: false }
         ];
 
-        this.barChartLabels = this.practica.resultadosAnteriores.resultados.map( (e: any)  => { return moment(e.fecha).format('DD-MM-YYYY'); } );
+        this.barChartLabels = this.historialResultados.resultadosAnteriores.resultados.map( (e: any)  => { return moment(e.fecha).format('DD-MM-YYYY'); } );
 
         this.setChartOptions();
     }
@@ -59,46 +59,19 @@ export class ChartHistorialResultadoComponent implements OnInit {
             // maintainAspectRatio: false,
             title: {
                 display: true,
-                text: 'Evolución de ' + this.practica.nombre,
+                text: 'Evolución de ' + this.historialResultados.practica.nombre,
             },
             scales: {
                 yAxes: [{
                     scaleLabel: {
                         display: true,
-                        labelString: 'Valores (' + this.practica.unidadMedida.nombre + ')',
+                        labelString: 'Valores (' + this.historialResultados.practica.unidadMedida.nombre + ')',
                     },
                     ticks: {
                         beginAtZero: true
                     }
                 }]
-                // ,
-                // xAxes: [{
-                //     type: 'time',
-                //     time: {
-                //         min: moment(this.practica.resultadosAnteriores.resultados[this.practica.resultadosAnteriores.resultados.length - 1].fecha).subtract(0.5, 'days'),
-                //         max: moment(this.practica.resultadosAnteriores.resultados[0].fecha).add(0.5, 'days'),
-                //         unit: 'month',
-                //         tooltipFormat: 'DD/MM/YYYY',
-                //         unitStepSize: 0.5,
-                //         round: 'hour',
-                //     }
-                // }],
-            },
-
-            // tooltips: {
-            //     callbacks: {
-            //         // Use the footer callback to display the sum of the items showing in the tooltip
-            //         footer: function (tooltipItems, _data) {
-            //             let text = [];
-            //             tooltipItems.forEach(function (tooltipItem) {
-            //                 text.push('Profesional: ' + data[tooltipItem.index].profesional.nombreCompleto);
-            //                 text.push('Prestación: ' + data[tooltipItem.index].tipoPrestacion.term);
-            //             });
-
-            //             return text;
-            //         },
-            //     }
-            // }
+             }
         };
     }
 }

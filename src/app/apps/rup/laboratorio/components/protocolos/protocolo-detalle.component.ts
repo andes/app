@@ -1,3 +1,4 @@
+import { PrestacionesService } from './../../../../../modules/rup/services/prestaciones.service';
 import { TablaDatalleProtocoloComponent } from './tabla-detalle-protocolo/tabla-datalle-protocolo.component';
 import { PracticaService } from './../../services/practica.service';
 import { ProtocoloService } from './../../services/protocolo.service';
@@ -7,7 +8,7 @@ import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
-import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
+import {     } from '../../../../../modules/rup/services/prestaciones.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Constantes } from '../../controllers/constants';
 import { PacienteBuscarResultado } from '../../../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
@@ -93,40 +94,12 @@ export class ProtocoloDetalleComponent
         this.modo = this.contextoCache.modo;
         this.showBotonesGuardar = (!this.laboratorioContextoCacheService.isModoRecepcion());
 
-        if (this.practicasEjecucion.length > 0 &&
-                (this.laboratorioContextoCacheService.isModoRecepcionSinTurno()
-                    || this.laboratorioContextoCacheService.isModoRecepcion()
-                    || this.laboratorioContextoCacheService.isModoControl())) {
-            this.cargarCodigosPracticas();
-        }
-
         if ((this.laboratorioContextoCacheService.isModoRecepcionSinTurno() || this.laboratorioContextoCacheService.isModoRecepcion())
             && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
             this.editarDatosCabecera();
         } else {
             // this.aceptarEdicionCabecera();
         }
-    }
-
-    /**
-     *
-     *
-     * @memberof ProtocoloDetalleComponent
-     */
-    cargarCodigosPracticas() {
-        let ids = this.practicasEjecucion.map((reg) => { return reg.valor.idPractica; });
-        this.servicioPractica.getCodigosPracticas(ids).subscribe(idsCodigos => {
-            this.practicasEjecucion.forEach(reg => {
-                let p = idsCodigos.filter((idCodigo) => {
-                    return idCodigo._id === reg.valor.idPractica;
-                })[0];
-
-                if (p) {
-                    reg.codigo = p.codigo;
-                    reg.area = p.area;
-                }
-            });
-        });
     }
 
     /**
@@ -361,7 +334,7 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     async guardarProtocolo(next) {
-        if (this.modelo.id) {
+        if (this.modelo._id) {
             this.actualizarProtocolo(next);
         } else {
             this.guardarNuevoProtocolo();
@@ -409,7 +382,7 @@ export class ProtocoloDetalleComponent
      */
     private guardarNuevoProtocolo() {
         this.modelo.estados = [{ tipo: 'ejecucion' }];
-        this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
+        this.servicioProtocolo.post(this.modelo).subscribe(respuesta => {
             this.contextoCache.mostrarCuerpoProtocolo = true;
             this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
             this.volverAListaControEmit.emit();
@@ -434,8 +407,8 @@ export class ProtocoloDetalleComponent
             this.setearEstadosValidacion();
         }
 
-        this.servicioPrestacion.patch(this.modelo.id, this.getParams()).subscribe(async () => {
-
+        // this.servicioPrestacion.patch(this.modelo._id, this.getParams()).subscribe(async () => {
+        this.servicioProtocolo.patch({ registros: this.modelo.ejecucion.registros }).subscribe(async () => {
             let alertasValidadas = [];
             if (this.laboratorioContextoCacheService.isModoValidacion()) {
                 alertasValidadas = this.validaciones.filter(e => e.validado && e.esValorCritico);
@@ -487,7 +460,7 @@ export class ProtocoloDetalleComponent
      */
     private setearEstadosValidacion() {
         let practicasValidar = this.validaciones.filter(e => e.validado && !e.esValorCritico);
-        practicasValidar.forEach(e => e.registroPractica.registro.valor.estados.push(this.generarEstado('validada')));
+        practicasValidar.forEach(e => e.registroPractica.valor.estados.push(this.generarEstado('validada')));
     }
 
     /**
@@ -560,9 +533,14 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     showHistorialResultados(event) {
-        this.contextoCache.mostrarCuerpoProtocolo = false;
-        this.contextoCache.verHistorialResultados = true;
-        this.historialResultados = event;
+        this.servicioProtocolo.getResultadosAnteriores(event.paciente.id, [event.practica.concepto.conceptId]).subscribe( (resultadosAnteriores) => {
+            this.historialResultados = {
+                practica: event.practica,
+                resultadosAnteriores: resultadosAnteriores[0]
+            };
+            this.contextoCache.mostrarCuerpoProtocolo = false;
+            this.contextoCache.verHistorialResultados = true;
+        });
     }
 
     mostrarEncabezadoProtocolo() {
