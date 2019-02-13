@@ -47,6 +47,11 @@ export class PacienteService {
         });
     }
 
+    // Búsqueda tipo SEARCH por elastic según condiciones.
+    getSearch(params: any): Observable<any[]> {
+        return this.server.get(this.pacienteUrl + '/search', { params: params, showError: true });
+    }
+
     get(params: PacienteSearch): Observable<IPaciente[]> {
         return this.server.get(this.pacienteUrl, { params: params, showError: true });
     }
