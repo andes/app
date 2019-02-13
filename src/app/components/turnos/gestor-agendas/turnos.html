@@ -137,7 +137,8 @@
                         <td>{{delDia ? (arrayDelDia[k]
                             < 0 ? 0: arrayDelDia[k]) : (bloque.restantesDelDia < 0 ? 0:bloque.restantesDelDia)}}</td>
                         <td>{{delDia ? 0 : bloque.restantesProgramados}}
-                            <span *ngIf="bloque.restantesMobile>0">&nbsp;({{bloque.restantesMobile}} app)</span>
+                            <span *ngIf="!delDia && bloque.restantesMobile>0">&nbsp;({{bloque.restantesMobile}}
+                                app)</span>
                         </td>
                         <td>{{delDia ? 0 : bloque.restantesGestion}}</td>
                         <td>{{delDia ? 0 : bloque.restantesProfesional}}</td>
