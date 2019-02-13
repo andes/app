@@ -137,7 +137,7 @@ export class BotonesAgendaComponent implements OnInit {
             // Se puede editar sólo una agenda que esté en estado planificacion o disponible
             editarAgenda: (this.cantidadSeleccionadas === 1) && this.puedoEditar() && puedeEditar,
             // Se pueden suspender agendas que estén en estado disponible o publicada...
-            suspenderAgenda: (this.cantidadSeleccionadas === 1 && this.puedoSuspender() && puedeSuspender && !this.tienePrestacionIniciada(this.agendasSeleccionadas[0])),
+            suspenderAgenda: (this.cantidadSeleccionadas === 1 && this.puedoSuspender() && puedeSuspender),
             // Se pueden pasar a disponible cualquier agenda en estado planificacion
             pasarDisponibleAgenda: (this.cantidadSeleccionadas > 0 && this.puedoDisponer() && puedeHabilitar),
             // Se pueden publicar todas las agendas que estén en estado planificacion, o si estado disponible y no tiene *sólo* turnos reservados
@@ -193,48 +193,42 @@ export class BotonesAgendaComponent implements OnInit {
         }
     }
 
+    // Comprueba que haya algún turno con paciente, en estado suspendido
+    hayTurnosCodificados(agenda: any) {
+        if (!agenda.dinamica) {
+            return agenda.bloques.some((bloque: any) => bloque.turnos.some((turno: any) => turno.asistencia || (turno.diagnostico && turno.diagnostico.codificaciones && turno.diagnostico.codificaciones.length > 0)));
+        } else {
+            return false;
+        }
+    }
 
     puedoEditar() {
-        return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado === 'pendienteAuditoria' || agenda.estado === 'auditada' || agenda.estado === 'pausada' || agenda.estado === 'suspendida';
-        }).length <= 0;
+        return this.agendasSeleccionadas.filter((agenda: any) => agenda.estado === 'pendienteAuditoria' || agenda.estado === 'auditada' || agenda.estado === 'pausada' || agenda.estado === 'suspendida').length <= 0;
     }
 
     puedoSuspender() {
-        return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado !== 'disponible' && agenda.estado !== 'publicada';
-        }).length <= 0;
+        return (!this.hayTurnosCodificados(this.agendasSeleccionadas[0])) && this.agendasSeleccionadas.filter((agenda: any) => agenda.estado !== 'disponible' && agenda.estado !== 'publicada').length <= 0;
     }
 
     puedoDisponer() {
-        let disponer = this.agendasSeleccionadas.filter((agenda) => {
-            return (agenda.estado !== 'planificacion');
-        }).length <= 0;
+        let disponer = this.agendasSeleccionadas.filter((agenda: any) => (agenda.estado !== 'planificacion')).length <= 0;
         return disponer;
     }
 
     puedoPublicar() {
-        return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado !== 'planificacion' && agenda.estado !== 'disponible';
-        }).length <= 0;
+        return this.agendasSeleccionadas.filter((agenda: any) => agenda.estado !== 'planificacion' && agenda.estado !== 'disponible').length <= 0;
     }
 
     puedoBorrar() {
-        return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado !== 'planificacion';
-        }).length <= 0;
+        return this.agendasSeleccionadas.filter((agenda: any) => agenda.estado !== 'planificacion').length <= 0;
     }
 
     puedoPausar() {
-        return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado === 'planificacion' || agenda.estado === 'pausada' || agenda.estado === 'suspendida' || agenda.estado === 'auditada' || agenda.estado === 'pendienteAuditoria';
-        }).length <= 0;
+        return this.agendasSeleccionadas.filter((agenda: any) => agenda.estado === 'planificacion' || agenda.estado === 'pausada' || agenda.estado === 'suspendida' || agenda.estado === 'auditada' || agenda.estado === 'pendienteAuditoria').length <= 0;
     }
 
     puedoReanudar() {
-        return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado !== 'pausada';
-        }).length <= 0;
+        return this.agendasSeleccionadas.filter((agenda: any) => agenda.estado !== 'pausada').length <= 0;
     }
 
     puedoAgregar() {
@@ -244,14 +238,11 @@ export class BotonesAgendaComponent implements OnInit {
 
     puedoRevisar() {
         let agenda = this.agendasSeleccionadas[0];
-        // return (agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria' || agenda.estado === 'auditada');
         return ((agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria' || agenda.estado === 'publicada' || agenda.estado === 'auditada') && moment(agenda.horaFin).isBefore(moment(new Date())));
     }
 
     puedoImprimirCarpetas() {
-        return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria' || agenda.estado === 'auditada' || agenda.estado === 'pausada' || agenda.estado === 'suspendida';
-        }).length <= 0;
+        return !this.agendasSeleccionadas.some((agenda: any) => agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria' || agenda.estado === 'auditada' || agenda.estado === 'pausada' || agenda.estado === 'suspendida');
     }
 
     // Verifica que las agendas seleccionadas tengan al menos un turno de acceso directo poder para publicar la agenda
@@ -273,22 +264,6 @@ export class BotonesAgendaComponent implements OnInit {
         } else {
             return false;
         }
-    }
-
-    tienePrestacionIniciada(agenda: IAgenda) {
-        let flag = false;
-        let b = 0;
-        while ((b < agenda.bloques.length) && (!flag)) {
-            if (agenda.bloques[b].turnos.length) {
-                let lista = agenda.bloques[b].turnos.filter(unTurno => unTurno.asistencia === 'asistio');
-                if (lista && lista.length) {
-                    flag = true;
-                }
-            }
-            b++;
-        }
-
-        return flag;
     }
 
     // Botón editar agenda
