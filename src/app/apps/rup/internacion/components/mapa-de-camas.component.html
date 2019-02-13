@@ -261,7 +261,7 @@
                         <!-- Resumen -->
                         <plex-tab *ngIf="prestacionPorInternacion" label="Internacion">
                             <internacion-resumen (data)="editar($event)" [editarEgreso]="showEgreso" [paciente]="prestacionPorInternacion.paciente"
-                                [prestacion]="prestacionPorInternacion" [camaSeleccionada]="camaSeleccionada"
+                                [prestacion]="prestacionPorInternacion" [soloValores]="false" [camaSeleccionada]="camaSeleccionada"
                                 (refreshCamas)="updateCama($event)" (accionCama)="actualizarMapaDeCamas($event)"></internacion-resumen>
                         </plex-tab>
 

@@ -18,9 +18,46 @@ import { Subject } from 'rxjs/Rx';
 })
 export class EgresoInternacionComponent implements OnInit, OnChanges {
     @HostBinding('class.plex-layout') layout = true;
-
+    private _prestacion: any;
+    @Input()
+    set prestacion(value: any) {
+        this._prestacion = value;
+        let existeRegistro = this.internacionService.verRegistro(this._prestacion, 'egreso');
+        if (existeRegistro) {
+            this.registro.valor = existeRegistro;
+        } else {
+            this.fechaEgreso = new Date();
+            this.horaEgreso = new Date();
+            this.registro.valor = {
+                InformeEgreso: {
+                    fechaEgreso: null,
+                    nacimientos: [
+                        {
+                            pesoAlNacer: null,
+                            condicionAlNacer: null,
+                            terminacion: null,
+                            sexo: null
+                        }
+                    ],
+                    procedimientosQuirurgicos: [
+                        {
+                            procedimiento: null,
+                            fecha: null
+                        }
+                    ],
+                    causaExterna: {
+                        producidaPor: null,
+                        lugar: null,
+                        comoSeProdujo: null
+                    }
+                }
+            };
+        }
+    }
+    get prestacion(): any {
+        return this._prestacion;
+    }
     @Input() camaSelected;
-    @Input() prestacion;
     @Input() soloValores;
     // botonera, input para pasarle por parametro si mostramos o no el btn cerrar o guardar.
     @Input() botonera;
@@ -90,10 +127,15 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     ngOnInit() {
         // this.iniciaBotonera();
         // Buscamos si la prestacion ya tiene una informe del alta guardado.
-        let existeRegistro = this.internacionService.verRegistro(this.prestacion, 'egreso');
-        this.registro.valor = existeRegistro ? existeRegistro : null;
+
+
+    }
+
+    ngOnChanges(changes: any) {
         if (!this.registro.valor) {
             this.btnIniciarEditarEmit.emit('Iniciar');
+            this.fechaEgreso = new Date();
+            this.horaEgreso = new Date();
             this.registro.valor = {
                 InformeEgreso: {
                     fechaEgreso: null,
@@ -135,12 +177,6 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
             });
         });
         this.calcularDiasEstada();
-
-    }
-
-    ngOnChanges(changes: any) {
-        // this.hayInformeEgreso = true;
-        // this.soloValores = false;
     }
 
     /**
@@ -288,15 +324,6 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
         }
     }
 
-    // desocuparCama() {
-    //     let registros = this.prestacion.ejecucion.registros;
-    //     // nos fijamos si el concepto ya aparece en los registros
-    //     let egresoExiste = registros.find(registro => registro.concepto.conceptId === this.conceptoEgreso.conceptId);
-    //     if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada' &&
-    //         egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
-    //         this.refreshCamas.emit({ cama: this.camaSeleccionada, desocupaCama: true, egresoExiste });
-    //     }
-    // }
 
     /**
      * Cuando selecciona tipo de egreso
@@ -413,20 +440,20 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
                         // this.fechaEgreso = new Date();
                         this.registro.valor.InformeEgreso.diasDeEstada = null;
                     } else {
-                        let fechaUltimoEstado = moment(this.camaSelected.ultimoEstado.fecha).format('YYYY-MM-DD HH:mm');
-                        if (fechaUltimoEstado && (fechaEgreso.diff(fechaUltimoEstado, 'days', true) <= 0)) {
-                            this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a ' + fechaUltimoEstado);
-                            this.registro.valor.InformeEgreso.diasDeEstada = null;
-                        } else {
-
-                            let dateDif = fechaEgreso.diff(moment(fechaIngreso), 'days');
-                            let diasEstada = fechaEgreso ? dateDif === 0 ? 1 : fechaEgreso.diff(moment(fechaIngreso), 'days') : '1';
-                            this.registro.valor.InformeEgreso.diasDeEstada = diasEstada;
+                        if (this.camaSelected) {
+                            let fechaUltimoEstado = moment(this.camaSelected.ultimoEstado.fecha).format('YYYY-MM-DD HH:mm');
+                            if (fechaUltimoEstado && (fechaEgreso.diff(fechaUltimoEstado, 'days', true) <= 0)) {
+                                this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a ' + fechaUltimoEstado);
+                                this.registro.valor.InformeEgreso.diasDeEstada = null;
+                                return;
+                            }
                         }
+                        let dateDif = fechaEgreso.diff(moment(fechaIngreso), 'days');
+                        let diasEstada = fechaEgreso ? dateDif === 0 ? 1 : fechaEgreso.diff(moment(fechaIngreso), 'days') : '1';
+                        this.registro.valor.InformeEgreso.diasDeEstada = diasEstada;
                     }
                 }
             }
         }
     }
-
 }

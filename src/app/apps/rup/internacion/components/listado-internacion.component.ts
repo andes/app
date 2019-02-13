@@ -1,26 +1,19 @@
-import { estados } from '../../../../utils/enumerados';
 import { Component, OnInit, ViewEncapsulation, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { InternacionService } from '../services/internacion.service';
-import { IOrganizacion } from '../../../../interfaces/IOrganizacion';
-import { IPacienteMatch } from '../../../../modules/mpi/interfaces/IPacienteMatch.inteface';
-import { IPaciente } from '../../../../interfaces/IPaciente';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { CamasService } from '../services/camas.service';
-import { PacienteBuscarResultado } from '../../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
-import { ElementosRUPService } from '../../../../modules/rup/services/elementosRUP.service';
 import * as enumerados from '../../../../utils/enumerados';
-
-import { PacienteService } from '../../../../services/paciente.service';
 // ../../../../services/internacion.service
 @Component({
     selector: 'app-listado-internacion',
     templateUrl: './listado-internacion.html',
     styleUrls: [
-        'listado-internacion.scss'
+        'listado-internacion.scss',
+        'mapa-de-camas.component.scss'
     ],
     encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
@@ -40,17 +33,16 @@ export class ListadoInternacionComponent implements OnInit {
     public estadosInternacion;
     public listadoInternacion;
     public internacionSelected;
+    public showEgreso = false;
+    public soloValores = true;
     constructor(
         public servicioPrestacion: PrestacionesService,
         private auth: Auth,
         private plex: Plex,
         private router: Router,
-        private servicioPaciente: PacienteService,
-
         public organizacionService: OrganizacionService,
         private internacionService: InternacionService,
-        public camasService: CamasService,
-        private elementoRupService: ElementosRUPService) {
+        public camasService: CamasService) {
     }
 
     ngOnInit() {
@@ -103,6 +95,17 @@ export class ListadoInternacionComponent implements OnInit {
     }
 
     seleccionarInternacion(internacion) {
-        this.internacionSelected = internacion;
+        this.soloValores = true;
+        this.showEgreso = false;
+        this.internacionSelected = null;
+        this.internacionSelected = Object.assign({}, internacion);
     }
+
+    actualizarListado(event) {
+        // Si viene event.desocupaCama significa que se cargaron los datos de egreso
+        if (event.desocupaCama) {
+            this.filtrar();
+        }
+    }
+
 }
