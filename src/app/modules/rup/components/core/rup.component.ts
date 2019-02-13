@@ -11,7 +11,6 @@ import { IElementoRUP } from './../../interfaces/elementoRUP.interface';
 import { IPaciente } from './../../../../interfaces/IPaciente';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
-import { RUPRegistry } from '../../../../app.module';
 import { AdjuntosService } from '../../services/adjuntos.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SnomedService } from '../../../../services/term/snomed.service';
@@ -21,6 +20,7 @@ import { ProcedimientosQuirurgicosService } from '../../../../services/procedimi
 import { Cie10Service } from '../../../../services/term/cie10.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { ActivatedRoute } from '@angular/router';
+import { ElementosRUPRegister } from '../elementos';
 
 @Component({
     selector: 'rup',
@@ -61,7 +61,7 @@ export class RUPComponent implements OnInit, AfterViewInit {
     private loadComponent() {
 
         // Cargamos el componente
-        const component = RUPRegistry[this.elementoRUP.componente];
+        const component = ElementosRUPRegister.get(this.elementoRUP.componente).component;
         const componentFactory = this.componentFactoryResolver.resolveComponentFactory(component as any);
         const componentReference = this.viewContainerRef.createComponent(componentFactory);
 

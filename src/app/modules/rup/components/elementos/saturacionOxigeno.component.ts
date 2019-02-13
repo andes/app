@@ -2,10 +2,12 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 
 import * as moment from 'moment';
+import { RupElement } from '.';
 @Component({
     selector: 'rup-saturacion-oxigeno',
     templateUrl: 'saturacionOxigeno.html'
 })
+@RupElement('SaturacionOxigenoComponent')
 export class SaturacionOxigenoComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         // Observa cuando cambia la propiedad 'SaturacionOxigeno' en otro elemento RUP

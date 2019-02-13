@@ -1,11 +1,13 @@
 import { Component, OnInit, ReflectiveInjector } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { FormulaBaseService, FormularRegister } from '../formulas/index';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-formula-base',
     templateUrl: 'FormulaBase.html'
 })
+@RupElement('FormulaBaseComponent')
 export class FormulaBaseComponent extends RUPComponent implements OnInit {
     public formulaProvider: FormulaBaseService;
     public resultado;
@@ -32,11 +34,6 @@ export class FormulaBaseComponent extends RUPComponent implements OnInit {
 
 
 }
-
-
-
-
-
 
 
 

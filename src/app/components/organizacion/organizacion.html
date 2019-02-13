@@ -31,28 +31,34 @@
                 <table *ngIf="datos && datos.length" class="table table-fixed">
                     <tbody>
                         <tr class="hover" *ngFor="let organizacion of datos">
-                            <td>{{organizacion.codigo.sisa}}</td>
-                            <td>{{organizacion.nombre}}</td>
-                            <td>
+                            <td width="20%">
+                                <ng-container *ngIf="organizacion.codigo && organizacion.codigo.sisa">
+                                    {{organizacion.codigo.sisa}}
+                                </ng-container>
+                            </td>
+                            <td width="30%">{{organizacion.nombre}}</td>
+                            <td width="10%" class="text-center">
                                 <p>{{organizacion.nivelComplejidad}}</p>
                             </td>
-                            <td>
-                                <plex-bool type="slide" [(ngModel)]="organizacion.activo" label="" name="organizacion.activo" (click)="activate(organizacion)"></plex-bool>
+                            <td width="10%" class="text-center">
+                                <plex-bool type="slide" [(ngModel)]="organizacion.activo" label="" name="organizacion.activo"
+                                    (click)="activate(organizacion)"></plex-bool>
                             </td>
-                            <td class="text-center">
+                            <td width="20%" class="text-center">
                                 <plex-button *ngIf="checkAuth('edit')" type="primary" label="Editar" (click)="onEdit(organizacion)"></plex-button>
-                                <plex-button *ngIf="checkAuth('sectores', organizacion.id)" type="primary" label="Ver sectores" (click)="routeSectores(organizacion.id)"></plex-button>
+                                <plex-button *ngIf="checkAuth('sectores', organizacion.id)" type="primary" label="Ver sectores"
+                                    (click)="routeSectores(organizacion.id)"></plex-button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
                 <plex-loader *ngIf="loader"></plex-loader>
                 <div *ngIf="finScroll" class="alert alert-warning">
-                    <p style="text-align: center;"> No se encontraron más resultados </p>
+                    <p style="text-align: center;"> No se encontraron resultados </p>
                 </div>
             </plex-box>
         </div>
-    </div>    
+    </div>
 </section>
 
 <footer *ngIf="!showcreate">

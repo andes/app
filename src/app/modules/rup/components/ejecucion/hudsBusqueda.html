@@ -439,10 +439,12 @@
                                                     <div class="row p-0 m-0">
                                                         <div class="col-10 p-0 m-0">
                                                             <div class="sugerido">
-                                                                <small>Fecha: {{ prestacion.fecha | fecha }}</small>
+                                                                <small>Fecha: {{ prestacion.fecha | fecha : 'utc' }}</small>
                                                                 <br>
-                                                                <small>Profesional: {{ prestacion.profesional |
-                                                                    profesional}}</small>
+                                                                <small>
+                                                                    Profesional: 
+                                                                    {{ prestacion.profesional | profesional }}
+                                                                </small>
                                                             </div>
                                                         </div>
                                                     </div>

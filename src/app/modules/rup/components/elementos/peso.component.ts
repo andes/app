@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
+import { RupElement } from '.';
 @Component({
     selector: 'rup-peso',
     templateUrl: 'peso.html'
 })
+@RupElement('PesoComponent')
 export class PesoComponent extends RUPComponent implements OnInit {
     public esRequerido: boolean;
 
