@@ -1,18 +1,16 @@
 import { Component, Input, OnInit, EventEmitter, Output, ViewEncapsulation, HostBinding, DebugElement } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Plex } from '@andes/plex';
-import { EdadPipe } from './../../../../pipes/edad.pipe';
 import { Auth } from '@andes/auth';
 import { FacturacionAutomaticaService } from './../../../../services/facturacionAutomatica.service';
 import { ObraSocialService } from './../../../../services/obraSocial.service';
-import { IObraSocial } from '../../../../interfaces/IObraSocial';
+import { OrganizacionService } from '../../../../services/organizacion.service';
 @Component({
     selector: 'arancelamiento-form',
     templateUrl: 'arancelamiento-form.html',
     styleUrls: ['arancelamiento-form.scss'],
     encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
-
-
 export class ArancelamientoFormComponent implements OnInit {
 
     turnoSeleccionado: any;
@@ -23,6 +21,16 @@ export class ArancelamientoFormComponent implements OnInit {
     showForm = false;
     idOrganizacion = this.auth.organizacion.id;
     codigoNomenclador: string;
+
+    fotoFirma: string;
+    nombreFirma: string;
+    aclaracion1Firma: string;
+    aclaracion2Firma: string;
+    aclaracion3Firma: string;
+
+    get muestraFirma () {
+        return this.fotoFirma && this.fotoFirma.length > 0;
+    }
 
     @Input('turno')
     set turno(value: any) {
@@ -35,9 +43,25 @@ export class ArancelamientoFormComponent implements OnInit {
     @Output() volverAPuntoInicio: EventEmitter<any> = new EventEmitter<any>();
     @HostBinding('class.plex-layout') layout = true;
 
-    constructor(public auth: Auth, public servicioOS: ObraSocialService, public servicioFA: FacturacionAutomaticaService, public plex: Plex) { }
+    constructor(
+        public auth: Auth,
+        public servicioOS: ObraSocialService,
+        public servicioFA: FacturacionAutomaticaService,
+        public plex: Plex,
+        public organizacionService: OrganizacionService,
+        public sanitizer: DomSanitizer) { }
 
     ngOnInit() {
+        this.organizacionService.configuracion(this.auth.organizacion.id).subscribe((config) => {
+            if (config['arancelamiento.firma']) {
+                this.fotoFirma = config['arancelamiento.firma'];
+                this.nombreFirma = config['arancelamiento.nombre'];
+                this.aclaracion1Firma = config['arancelamiento.aclaracion1'];
+                this.aclaracion2Firma = config['arancelamiento.aclaracion2'];
+                this.aclaracion3Firma = config['arancelamiento.aclaracion3'];
+
+            }
+        });
         if (this.turno.paciente.obraSocial && this.turno.paciente.obraSocial.numeroAfiliado) {
             this.obraSocial = this.turno.paciente.obraSocial.financiador;
             this.codigoOs = this.turno.paciente.obraSocial ? this.turno.paciente.obraSocial.codigoFinanciador : 0;
