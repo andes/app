@@ -13,12 +13,12 @@
 
                 <div class="col-2">
                     <plex-datetime type="date" (change)='filtrar()' [(ngModel)]="filtros.fechaIngresoDesde" name="fechaIngreso"
-                        label="Ingreso desde" [required]="true">
+                        label="Desde" [required]="true">
                     </plex-datetime>
                 </div>
 
                 <div class="col-2">
-                    <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoHasta" name='fechaEgreso' label="Ingreso hasta"
+                    <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoHasta" name='fechaEgreso' label="Hasta"
                         (change)="filtrar()"></plex-datetime>
                 </div>
                 <div class="col-3">
