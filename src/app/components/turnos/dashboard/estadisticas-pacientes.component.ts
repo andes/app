@@ -18,7 +18,7 @@ import { IObraSocial } from '../../../interfaces/IObraSocial';
 })
 
 export class EstadisticasPacientesComponent implements OnInit {
-
+    activo: number;
     nroCarpeta: any;
     public _paciente: IPaciente;
     turnosPaciente: any;
@@ -58,6 +58,7 @@ export class EstadisticasPacientesComponent implements OnInit {
         private obraSocialService: ObraSocialService) { }
 
     ngOnInit() {
+        this.activo = 1;
         // Se cargan los datos calculados
         let hoy = {
             fechaDesde: moment().startOf('month').toDate(),

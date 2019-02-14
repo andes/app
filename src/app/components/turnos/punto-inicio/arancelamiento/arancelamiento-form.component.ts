@@ -5,6 +5,7 @@ import { Auth } from '@andes/auth';
 import { FacturacionAutomaticaService } from './../../../../services/facturacionAutomatica.service';
 import { ObraSocialService } from './../../../../services/obraSocial.service';
 import { IObraSocial } from '../../../../interfaces/IObraSocial';
+import { AlertPromise } from 'selenium-webdriver';
 @Component({
     selector: 'arancelamiento-form',
     templateUrl: 'arancelamiento-form.html',
@@ -93,6 +94,11 @@ export class ArancelamientoFormComponent implements OnInit {
     }
 
     imprimir() {
+
+        this.servicioFA.post(this.turnoSeleccionado).subscribe(prestacion => {
+
+        });
+
         window.print();
     }
 }

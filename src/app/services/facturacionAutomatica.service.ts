@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Observable } from 'rxjs/Observable';
+import { observable } from 'rxjs';
 
 @Injectable()
 export class FacturacionAutomaticaService {
@@ -17,5 +18,9 @@ export class FacturacionAutomaticaService {
 
     get(opciones: any): Observable<any> {
         return this.server.get(this.url + '/configFacturacionAutomatica/', { params: opciones });
+    }
+
+    post(prestacion: any): Observable<any> {
+        return this.server.post(this.url + '/facturaArancelamiento', prestacion);
     }
 }
