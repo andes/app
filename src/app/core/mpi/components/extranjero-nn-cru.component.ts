@@ -17,6 +17,7 @@ import { Location } from '@angular/common';
 import { ApiGoogleService } from '../services/apiGoogle.service';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { Auth } from '@andes/auth';
+import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 
 @Component({
     selector: 'extranjero-nn-cru',
@@ -40,8 +41,9 @@ export class ExtranjeroNNCruComponent implements OnInit {
     barrios: any[] = [];
 
     paisArgentina = null;
-    provinciaNeuquen = null;
-    localidadNeuquen = null;
+    provinciaActual = null;
+    localidadActual = null;
+    organizacionActual = null;
     validado = false;
     noPoseeContacto = false;
     contactosBackUp = [];
@@ -176,27 +178,21 @@ export class ExtranjeroNNCruComponent implements OnInit {
             this.provincias = rta;
         });
 
-        this.provinciaService.get({
-            nombre: 'Neuquén'
-        }).subscribe(Prov => {
-            this.provinciaNeuquen = Prov[0];
+        this.organizacionService.getById(this.auth.organizacion.id).subscribe((org: IOrganizacion) => {
+            if (org) {
+                this.organizacionActual = org;
+                this.provinciaActual = org.direccion.ubicacion.provincia;
+                this.localidadActual = org.direccion.ubicacion.localidad;
+            }
         });
-
-        this.localidadService.get({
-            nombre: 'Neuquén'
-        }).subscribe(Loc => {
-            this.localidadNeuquen = Loc[0];
+        // ubicacion inicial mapa de google en seccion domicilio
+        // Por defecto el mapa se posiciona referenciando al centro de salud actual
+        this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
+            if (point) {
+                this.geoReferenciaAux = [point.lat, point.lng];
+                this.infoMarcador = this.auth.organizacion.nombre;
+            }
         });
-
-        // ubicacion inicial mapa de google
-        if (!this.pacienteModel.direccion[0].geoReferencia) {
-            this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
-                if (point) {
-                    this.geoReferenciaAux = [point.lat, point.lng];
-                    this.infoMarcador = this.auth.organizacion.nombre;
-                }
-            });
-        }
     }
 
     private updateTitle(nombre: string) {
@@ -240,10 +236,10 @@ export class ExtranjeroNNCruComponent implements OnInit {
     *
     * @memberOf PacienteCreateUpdateComponent
     */
-    changeProvNeuquen(event) {
+    changeProvActual(event) {
         if (event.value) {
-            this.pacienteModel.direccion[0].ubicacion.provincia = this.provinciaNeuquen;
-            this.loadLocalidades(this.provinciaNeuquen);
+            this.pacienteModel.direccion[0].ubicacion.provincia = this.provinciaActual;
+            this.loadLocalidades(this.provinciaActual);
         } else {
             this.viveEnNeuquen = false;
             this.localidades = [];
@@ -259,10 +255,10 @@ export class ExtranjeroNNCruComponent implements OnInit {
      *
      * @memberOf PacienteCreateUpdateComponent
      */
-    changeLocalidadNeuquen(event) {
+    changeLocalidadActual(event) {
         if (event.value) {
-            this.pacienteModel.direccion[0].ubicacion.localidad = this.localidadNeuquen;
-            this.loadBarrios(this.localidadNeuquen);
+            this.pacienteModel.direccion[0].ubicacion.localidad = this.localidadActual;
+            this.loadBarrios(this.localidadActual);
         } else {
             this.pacienteModel.direccion[0].ubicacion.localidad = null;
             this.pacienteModel.direccion[0].ubicacion.barrio = null;
@@ -294,32 +290,22 @@ export class ExtranjeroNNCruComponent implements OnInit {
         }
     }
 
-    mostrarMapa(actualizar: boolean) {
-
+    actualizarMapa() {
         // campos de direccion completos?
         if (this.pacienteModel.direccion[0].valor && this.pacienteModel.direccion[0].ubicacion.provincia && this.pacienteModel.direccion[0].ubicacion.localidad) {
-            // ya existe georeferencia?
-            if (this.geoReferenciaAux.length && !actualizar) {
-                console.log('muestra georef existente: ', this.geoReferenciaAux);
-                this.verMapa = true;
-            }
-            // no existe georeferencia o se presionó el boton 'actualizar'?
-            if (!this.geoReferenciaAux.length || actualizar) {
-                console.log('calcula georef');
-                // se calcula nueva georeferencia
-                this.apiGoogleService.getGeoreferencia({ direccion: this.pacienteModel.direccion }).subscribe(point => {
-                    if (point) {
-                        this.geoReferenciaAux = [point.lat, point.lng];
-                        this.infoMarcador = this.pacienteModel.direccion[0].valor.toUpperCase();
-                        if (this.pacienteModel.direccion[0].ubicacion.barrio) {
-                            this.infoMarcador += ', \n' + this.pacienteModel.direccion[0].ubicacion.barrio.nombre;
-                        }
-                        this.verMapa = true;
-                    } else {
-                        this.plex.toast('danger', 'Dirección no encontrada. Intente con una similar.');
+            // se calcula nueva georeferencia
+            this.apiGoogleService.getGeoreferencia({ direccion: this.pacienteModel.direccion }).subscribe(point => {
+                if (point) {
+                    this.geoReferenciaAux = [point.lat, point.lng];
+                    this.infoMarcador = this.pacienteModel.direccion[0].valor.toUpperCase();
+                    if (this.pacienteModel.direccion[0].ubicacion.barrio) {
+                        this.infoMarcador += ', \n' + this.pacienteModel.direccion[0].ubicacion.barrio.nombre.toUpperCase();
                     }
-                });
-            }
+                } else {
+                    this.plex.toast('warning', 'Dirección no encontrada. Señale manualmente en el mapa.');
+                }
+            });
+
         } else {
             this.plex.toast('info', 'Debe completar datos del domicilio.');
         }
@@ -442,10 +428,10 @@ export class ExtranjeroNNCruComponent implements OnInit {
             pacienteGuardar.direccion[0].ubicacion.barrio = ((typeof this.pacienteModel.direccion[0].ubicacion.barrio === 'string')) ? this.pacienteModel.direccion[0].ubicacion.barrio : (this.pacienteModel.direccion[0].ubicacion.barrio.nombre);
         }
         if (this.viveProvNeuquen) {
-            pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaNeuquen;
+            pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaActual;
         }
         if (this.viveEnNeuquen) {
-            pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadNeuquen;
+            pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadActual;
         }
         this.pacienteService.save(pacienteGuardar).subscribe(
             resultadoSave => {

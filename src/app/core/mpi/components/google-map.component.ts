@@ -10,7 +10,15 @@ export class GoogleMapComponent {
 
   @Input() latitud: number;
   @Input() longitud: number;
-  @Input() infoMarker: string;
+  @Input()
+  set infoMarker(value: String) { // infoMarker el mapa
+    this._infoMarker = value;
+  }
+  get infoMarker() {
+    return this._infoMarker;
+  }
+
+
   @Input()
   set mostrar(value: boolean) { // variable que indica si se debe mostrar el mapa
     this._mostrar = value;
@@ -26,6 +34,7 @@ export class GoogleMapComponent {
   zoom = 13;
   zoomControl = true; // control de zoom (+/-)
   scrollwheel = false; // zoom con mouse
+  _infoMarker: String = '';
   _mostrar = false;
 
 

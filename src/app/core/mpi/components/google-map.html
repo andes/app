@@ -5,7 +5,7 @@
         <agm-map [(latitude)]="latitud" [(longitude)]="longitud" [(zoom)]="zoom" [zoomControl]="zoomControl"
             [scrollwheel]="scrollwheel" (mapDblClick)="setMarker($event)">
             <agm-marker [(latitude)]="latitud" [(longitude)]="longitud" [markerDraggable]="draggable" (dragEnd)='setMarker($event)'>
-                <agm-info-window #infoWindow [isOpen]="infoMarker.length">{{infoMarker}}</agm-info-window>
+                <agm-info-window #infoWindow [isOpen]="infoMarker.length">{{_infoMarker}}</agm-info-window>
             </agm-marker>
         </agm-map>
     </div>

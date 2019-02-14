@@ -18,6 +18,7 @@ import { Location } from '@angular/common';
 import { ApiGoogleService } from '../services/apiGoogle.service';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../services/organizacion.service';
+import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 
 @Component({
     selector: 'paciente-cru',
@@ -42,8 +43,9 @@ export class PacienteCruComponent implements OnInit {
     localidades: any[] = [];
 
     paisArgentina = null;
-    provinciaNeuquen = null;
-    localidadNeuquen = null;
+    provinciaActual = null;
+    localidadActual = null;
+    organizacionActual = null;
     validado = false;
     noPoseeDNI = false;
     noPoseeContacto = false;
@@ -52,8 +54,8 @@ export class PacienteCruComponent implements OnInit {
     enableIgnorarGuardar = false;
     sugerenciaAceptada = false;
     entidadValidadora = '';
-    viveEnNeuquen = false;
-    viveProvNeuquen = false;
+    viveLocActual = false;
+    viveProvActual = false;
     changeRelaciones = false;
     posibleDuplicado = false;
     loading = false;
@@ -202,18 +204,6 @@ export class PacienteCruComponent implements OnInit {
             this.provincias = rta;
         });
 
-        this.provinciaService.get({
-            nombre: 'Neuquén'
-        }).subscribe(Prov => {
-            this.provinciaNeuquen = Prov[0];
-        });
-
-        this.localidadService.get({
-            nombre: 'Neuquén'
-        }).subscribe(Loc => {
-            this.localidadNeuquen = Loc[0];
-        });
-
         this.showCargar = false;
         this.sexos = enumerados.getObjSexos();
         this.generos = enumerados.getObjGeneros();
@@ -221,8 +211,16 @@ export class PacienteCruComponent implements OnInit {
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.estados = enumerados.getEstados();
 
-        // ubicacion inicial mapa de google
+        this.organizacionService.getById(this.auth.organizacion.id).subscribe((org: IOrganizacion) => {
+            if (org) {
+                this.organizacionActual = org;
+                this.provinciaActual = org.direccion.ubicacion.provincia;
+                this.localidadActual = org.direccion.ubicacion.localidad;
+            }
+        });
+        // ubicacion inicial mapa de google en seccion domicilio
         if (!this.pacienteModel.direccion[0].geoReferencia) {
+            // si el paciente aún no está georeferenciado, el mapa se posiciona referenciando al centro de salud actual
             this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
                 if (point) {
                     this.geoReferenciaAux = [point.lat, point.lng];
@@ -295,11 +293,11 @@ export class PacienteCruComponent implements OnInit {
             } else {
                 if (this.paciente.direccion[0].ubicacion) {
                     if (this.paciente.direccion[0].ubicacion.provincia !== null) {
-                        (this.paciente.direccion[0].ubicacion.provincia.nombre === 'Neuquén') ? this.viveProvNeuquen = true : this.viveProvNeuquen = false;
+                        (this.paciente.direccion[0].ubicacion.provincia.nombre === 'Neuquén') ? this.viveProvActual = true : this.viveProvActual = false;
                         this.loadLocalidades(this.paciente.direccion[0].ubicacion.provincia);
                     }
                     if (this.paciente.direccion[0].ubicacion.localidad !== null) {
-                        (this.paciente.direccion[0].ubicacion.localidad.nombre === 'Neuquén') ? this.viveEnNeuquen = true : (this.viveEnNeuquen = false, this.barrios = null);
+                        (this.paciente.direccion[0].ubicacion.localidad.nombre === 'Neuquén') ? this.viveLocActual = true : (this.viveLocActual = false, this.barrios = null);
                         this.loadBarrios(this.paciente.direccion[0].ubicacion.localidad);
                     }
                     // ubicacion inicial mapa de google
@@ -307,7 +305,7 @@ export class PacienteCruComponent implements OnInit {
                         this.geoReferenciaAux = this.paciente.direccion[0].geoReferencia;
                         this.infoMarcador = this.paciente.direccion[0].valor.toUpperCase();
                         if (this.paciente.direccion[0].ubicacion.barrio) {
-                            this.infoMarcador += ', \n' + this.paciente.direccion[0].ubicacion.barrio.nombre;
+                            this.infoMarcador += ', \n' + this.paciente.direccion[0].ubicacion.barrio.nombre.toUpperCase();
                         }
                     }
                 }
@@ -388,16 +386,16 @@ export class PacienteCruComponent implements OnInit {
     }
 
     /**
-     * Change del plex-bool viveProvNeuquen
+     * Change del plex-bool viveProvActual
      * carga las localidades correspondientes a Neuquén
      * @param {any} event
      */
-    changeProvNeuquen(event) {
+    changeProvActual(event) {
         if (event.value) {
-            this.pacienteModel.direccion[0].ubicacion.provincia = this.provinciaNeuquen;
-            this.loadLocalidades(this.provinciaNeuquen);
+            this.pacienteModel.direccion[0].ubicacion.provincia = this.provinciaActual;
+            this.loadLocalidades(this.provinciaActual);
         } else {
-            this.viveEnNeuquen = false;
+            this.viveLocActual = false;
             this.localidades = [];
             this.pacienteModel.direccion[0].ubicacion.provincia = null;
             this.pacienteModel.direccion[0].ubicacion.localidad = null;
@@ -412,10 +410,10 @@ export class PacienteCruComponent implements OnInit {
      *
      * @memberOf PacienteCreateUpdateComponent
      */
-    changeLocalidadNeuquen(event) {
+    changeLocalidadActual(event) {
         if (event.value) {
-            this.pacienteModel.direccion[0].ubicacion.localidad = this.localidadNeuquen;
-            this.loadBarrios(this.localidadNeuquen);
+            this.pacienteModel.direccion[0].ubicacion.localidad = this.localidadActual;
+            this.loadBarrios(this.localidadActual);
         } else {
             this.pacienteModel.direccion[0].ubicacion.localidad = null;
             this.pacienteModel.direccion[0].ubicacion.barrio = null;
@@ -432,10 +430,10 @@ export class PacienteCruComponent implements OnInit {
                     this.geoReferenciaAux = [point.lat, point.lng];
                     this.infoMarcador = this.pacienteModel.direccion[0].valor.toUpperCase();
                     if (this.pacienteModel.direccion[0].ubicacion.barrio) {
-                        this.infoMarcador += ', \n' + this.pacienteModel.direccion[0].ubicacion.barrio.nombre;
+                        this.infoMarcador += ', \n' + this.pacienteModel.direccion[0].ubicacion.barrio.nombre.toUpperCase();
                     }
                 } else {
-                    this.plex.toast('warning', 'Dirección no encontrada. Intente con una similar.');
+                    this.plex.toast('warning', 'Dirección no encontrada. Señale manualmente en el mapa.');
                 }
             });
 
@@ -537,11 +535,11 @@ export class PacienteCruComponent implements OnInit {
             return elem;
         });
         pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
-        if (this.viveProvNeuquen) {
-            pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaNeuquen;
+        if (this.viveProvActual) {
+            pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaActual;
         }
-        if (this.viveEnNeuquen) {
-            pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadNeuquen;
+        if (this.viveLocActual) {
+            pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadActual;
         }
         if (this.geoReferenciaAux.length) {
             console.log('guarda georef: ', this.geoReferenciaAux);
