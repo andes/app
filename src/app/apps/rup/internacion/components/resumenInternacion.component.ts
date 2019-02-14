@@ -10,11 +10,41 @@ import { InternacionService } from '../services/internacion.service';
     encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 export class ResumenInternacionComponent implements OnInit, OnChanges {
-    @Input() prestacion;
+    private _prestacion: any;
+    private _editarEgreso: Boolean;
+    @Input()
+    set prestacion(value: any) {
+        this._prestacion = value;
+        this.btnIniciarEditar = 'Editar';
+        this.editarEgreso = this.editarEgreso ? this.editarEgreso : false;
+        this.editarIngreso = false;
+        if (this._prestacion.estados[this._prestacion.estados.length - 1].tipo === 'validada') {
+            this.puedeEditar = false;
+        } else {
+            let existeRegistro = this.servicioInternacion.verRegistro(this._prestacion, 'egreso');
+            if (!existeRegistro) {
+                this.btnIniciarEditar = 'Iniciar';
+                this.puedeEditar = true;
+            }
+
+        }
+    }
+    get prestacion(): any {
+        return this._prestacion;
+    }
+
+    @Input()
+    set editarEgreso(value: any) {
+        this._editarEgreso = value;
+    }
+    get editarEgreso(): any {
+        return this._editarEgreso;
+    }
+
     @Input() paciente;
     @Input() camaSeleccionada;
     @Input() soloValores;
-    @Input() editarEgreso;
+
     @Output() data: EventEmitter<any> = new EventEmitter<any>();
     @Output() refreshCamas: EventEmitter<any> = new EventEmitter<any>();
 
@@ -22,6 +52,9 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
     public editarIngreso = false;
     public btnIniciarEditar;
     public mostrarValidacion = false;
+    // Rotacion flechita
+    public flechita = false;
+    public puedeEditar = true;
 
     public conceptoEgreso = this.servicioInternacion.conceptosInternacion.egreso;
 
@@ -34,13 +67,16 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
 
 
 
-    ngOnInit() { }
+    ngOnInit() {
+    }
 
-    ngOnChanges() {
+    ngOnChanges(changes) {
+        // this.prestacionSelected = Object.assign({}, this.prestacion);
+        this.comprobarEgresoParaValidar();
         this.prestacionesService.getPasesInternacion(this.prestacion.id).subscribe(lista => {
             this.pases = lista;
         });
-        this.comprobarEgresoParaValidar();
+
     }
 
     onBtnIniciarEditar(event) {
@@ -85,7 +121,7 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
         }
     }
 
-    cierraEditar(event) {
+     cierraEditar() {
         this.editarIngreso = false;
         this.editarEgreso = false;
     }
@@ -108,12 +144,10 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
     }
 
     comprobarEgresoParaValidar() {
-        let registros = this.prestacion.ejecucion.registros;
         // nos fijamos si el concepto ya aparece en los registros
-        let egresoExiste = registros.find(registro => registro.concepto.conceptId === this.conceptoEgreso.conceptId);
-
+        let egresoExiste = this.servicioInternacion.verRegistro(this.prestacion, 'egreso');
         if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada') {
-            if (egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
+            if (egresoExiste.InformeEgreso.fechaEgreso && egresoExiste.InformeEgreso.tipoEgreso) {
                 this.mostrarValidacion = true;
             } else {
                 this.mostrarValidacion = false;
@@ -132,14 +166,28 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
             if (!validar) {
                 return false;
             } else {
-                let planes = [];
-                this.prestacionesService.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
-                    this.prestacion = prestacion;
-                    this.desocuparCama();
-                    // this.cancelar();
-                }, (err) => {
-                    this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
-                });
+                let egresoExiste = this.servicioInternacion.verRegistro(this.prestacion, 'egreso');
+                if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada') {
+                    if (egresoExiste.InformeEgreso.fechaEgreso && egresoExiste.InformeEgreso.tipoEgreso &&
+                        egresoExiste.InformeEgreso.diagnosticoPrincipal) {
+                        let planes = [];
+                        this.prestacionesService.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
+                            this.prestacion = prestacion;
+                            if (this.camaSeleccionada) {
+                                this.desocuparCama();
+                            } else {
+                                this.refreshCamas.emit({ cama: null, desocupaCama: true, egresoExiste });
+                            }
+
+                        }, (err) => {
+                            this.plex.info('danger', 'ERROR: No es posible validar la prestación');
+                        });
+                    } else {
+                        this.plex.info('danger', 'ERROR: Debe completar los datos mínimos de egreso para validar la internación');
+                    }
+                } else {
+                    this.plex.info('danger', 'ERROR: Debe completar los datos mínimos de egreso para validar la internación');
+                }
             }
         });
 
@@ -173,8 +221,7 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
         });
     }
 
-    // Rotacion flechita
-    flechita = false;
+
     rotarFlechita(event) {
         this.flechita = !this.flechita;
     }

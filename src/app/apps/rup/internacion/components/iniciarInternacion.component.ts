@@ -24,9 +24,25 @@ import { IPrestacionRegistro } from '../../../../modules/rup/interfaces/prestaci
 export class IniciarInternacionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
 
+    private _prestacion: any;
+    @Input()
+    set prestacion(value: any) {
+        this._prestacion = value;
+        if (this._prestacion) {
+            let existeRegistro = this.servicioInternacion.verRegistro(this._prestacion, 'ingreso');
+            if (existeRegistro) {
+                this.paciente = this._prestacion.paciente;
+                this.informeIngreso = existeRegistro.informeIngreso;
+            }
+        }
+
+    }
+    get prestacion(): any {
+        return this._prestacion;
+    }
+
     @Input() paciente;
     @Input() camaSelected;
-    @Input() prestacion;
     @Input() soloValores;
     @Input() workflowC;
     @Output() data: EventEmitter<any> = new EventEmitter<any>();

@@ -13,18 +13,17 @@
 
                 <div class="col-2">
                     <plex-datetime type="date" (change)='filtrar()' [(ngModel)]="filtros.fechaIngresoDesde" name="fechaIngreso"
-                        label="Fecha Ingreso desde" [required]="true">
+                        label="Ingreso desde" [required]="true">
                     </plex-datetime>
                 </div>
 
                 <div class="col-2">
-                    <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoHasta" name='fechaEgreso' label="Fecha Ingreso hasta"
+                    <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoHasta" name='fechaEgreso' label="Ingreso hasta"
                         (change)="filtrar()"></plex-datetime>
                 </div>
                 <div class="col-3">
                     <plex-select [(ngModel)]="filtros.estados" [data]='estadosInternacion' label="Estado" (change)="filtrar()"></plex-select>
                 </div>
-
             </div>
         </header>
         <div class='row'>
@@ -41,7 +40,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let internacion of listadoInternacion, let indice = index" (click)='seleccionarInternacion(internacion)'>
+                        <tr *ngFor="let internacion of listadoInternacion, let indice = index" [ngClass]="{'bg-inverse text-white': (this.internacionSelected && this.internacionSelected.id === internacion.id)}"
+                            (click)='seleccionarInternacion(internacion)'>
                             <td>
                                 {{internacion.paciente | paciente }}
                             </td>
@@ -49,27 +49,28 @@
                                 {{internacion.paciente.documento}}
                             </td>
                             <td>
-                                {{devuelveFecha(internacion,"ingreso") | fecha}}
+                                {{devuelveFecha(internacion,"ingreso") | fecha}} {{devuelveFecha(internacion,"ingreso")
+                                | hora}}
                             </td>
                             <td>
                                 <span *ngIf='devuelveFecha(internacion,"egreso")'>
-                                    {{devuelveFecha(internacion,"egreso") | fecha}}</span>
+                                    {{devuelveFecha(internacion,"egreso") | fecha}}
+                                    {{devuelveFecha(internacion,"egreso") | hora}}</span>
                             </td>
                             <td>
                                 <span> {{internacion.estados[internacion.estados.length - 1].tipo}}</span>
                             </td>
                         </tr>
-
                     </tbody>
                 </table>
             </div>
         </div>
     </plex-layout-main>
-    <plex-layout-sidebar *ngIf='internacionSelected'>
-        <internacion-resumen [paciente]="internacionSelected.paciente" [prestacion]="internacionSelected"></internacion-resumen>
+    <plex-layout-sidebar id="panel-lateral" *ngIf='internacionSelected'>
+        <internacion-resumen *ngIf='internacionSelected' [editarEgreso]="showEgreso" [paciente]="internacionSelected.paciente"
+            [prestacion]="internacionSelected" [soloValores]="soloValores" (refreshCamas)="actualizarListado($event)"></internacion-resumen>
     </plex-layout-sidebar>
     <plex-layout-footer>
         <plex-button position="left" label="Volver" type="danger" (click)='volver()'></plex-button>
-
     </plex-layout-footer>
 </plex-layout>

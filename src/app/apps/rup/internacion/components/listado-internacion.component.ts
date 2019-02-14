@@ -1,34 +1,27 @@
-import { estados } from '../../../../utils/enumerados';
-import { Component, OnInit, ViewEncapsulation, HostBinding } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, HostBinding, ViewChildren, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { InternacionService } from '../services/internacion.service';
-import { IOrganizacion } from '../../../../interfaces/IOrganizacion';
-import { IPacienteMatch } from '../../../../modules/mpi/interfaces/IPacienteMatch.inteface';
-import { IPaciente } from '../../../../interfaces/IPaciente';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { CamasService } from '../services/camas.service';
-import { PacienteBuscarResultado } from '../../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
-import { ElementosRUPService } from '../../../../modules/rup/services/elementosRUP.service';
 import * as enumerados from '../../../../utils/enumerados';
+import { ResumenInternacionComponent } from './resumenInternacion.component';
 
-import { PacienteService } from '../../../../services/paciente.service';
 // ../../../../services/internacion.service
 @Component({
     selector: 'app-listado-internacion',
     templateUrl: './listado-internacion.html',
     styleUrls: [
-        'listado-internacion.scss'
+        'listado-internacion.scss',
+        'mapa-de-camas.component.scss'
     ],
     encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 export class ListadoInternacionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
-
-
-
+    @ViewChildren(ResumenInternacionComponent) Resumen: ResumenInternacionComponent;
     // filtros para el mapa de cama
     public filtros: any = {
         documento: null,
@@ -40,17 +33,16 @@ export class ListadoInternacionComponent implements OnInit {
     public estadosInternacion;
     public listadoInternacion;
     public internacionSelected;
+    public showEgreso = false;
+    public soloValores = true;
     constructor(
         public servicioPrestacion: PrestacionesService,
         private auth: Auth,
         private plex: Plex,
         private router: Router,
-        private servicioPaciente: PacienteService,
-
         public organizacionService: OrganizacionService,
         private internacionService: InternacionService,
-        public camasService: CamasService,
-        private elementoRupService: ElementosRUPService) {
+        public camasService: CamasService) {
     }
 
     ngOnInit() {
@@ -67,7 +59,7 @@ export class ListadoInternacionComponent implements OnInit {
         let unMesAtras = new Date();
         this.filtros.fechaIngresoDesde = new Date((unMesAtras.setMonth(unMesAtras.getMonth() - 1)));
         this.filtros.fechaIngresoHasta = new Date();
-        this.servicioPrestacion.listadoInternacion(this.filtros).subscribe(a => { debugger; this.listadoInternacion = a; });
+        this.servicioPrestacion.listadoInternacion(this.filtros).subscribe(a => { this.listadoInternacion = a; });
         this.estadosInternacion = enumerados.getObjEstadoInternacion();
 
     }
@@ -103,6 +95,22 @@ export class ListadoInternacionComponent implements OnInit {
     }
 
     seleccionarInternacion(internacion) {
-        this.internacionSelected = internacion;
+        this.soloValores = true;
+        this.showEgreso = false;
+        this.internacionSelected = null;
+        this.internacionSelected = Object.assign({}, internacion);
+        if ((this.Resumen as any).first.editarEgreso) {
+            (this.Resumen as any).first.editarEgreso = false;
+        }
+
+        // this.Resumen.cierraEditar();
     }
+
+    actualizarListado(event) {
+        // Si viene event.desocupaCama significa que se cargaron los datos de egreso
+        if (event.desocupaCama) {
+            this.filtrar();
+        }
+    }
+
 }
