@@ -41,8 +41,7 @@ export class AuditoriaComponent implements OnInit {
   showMensaje = false;
   pacientesReportados: IPaciente[] = [];
   corregirPaciente: Number = null;  // posicion delnpaciente a modificar (reporte de errores)
-  permisosActivarVincular = false;
-  permisosReporteErrores = false;
+  showBotonesReporte = false;
 
   constructor(
     public auth: Auth,
@@ -56,14 +55,9 @@ export class AuditoriaComponent implements OnInit {
 
   // Cargamos todos los pacientes temporales y activos
   ngOnInit() {
-    if (this.auth.getPermissions('auditoriaPacientes:?').length < 1) {
+    if (!this.auth.check('auditoriaPacientes:lectura')) {
       this.router.navigate(['./inicio']);
     }
-    let permisos = this.auth.getPermissions('auditoriaPacientes:?');
-    /* En caso que no posea permisos de 'activar/vincular' no se mostrará el footer y sus botones de acción. Pero
-    se podrá visualizar el buscador y detalles de paciente <----------- (Para corregir) */
-    this.permisosActivarVincular = (permisos.find((p: string) => p === 'activar/vincular') !== undefined);
-    this.permisosReporteErrores = (permisos.find((p: string) => p === 'reporteErrores') !== undefined);
 
     this.onLoadData();
   }
@@ -100,20 +94,36 @@ export class AuditoriaComponent implements OnInit {
   }
 
   onSelectReportados(paciente: any): void {
-    if (paciente) {
-      this.pacienteSelected = paciente;
-    } else {
-      this.pacienteSelected = null;
+    if (!this.showBotonesReporte) {
+      if (paciente) {
+        this.pacienteSelected = paciente;
+      } else {
+        this.pacienteSelected = null;
+      }
     }
   }
 
-  guardarCorreccion(paciente: IPaciente): void {
+  onSelectCorregir(index, paciente) {
+    if (this.auth.check('auditoriaPacientes:edicion:reporteErrores')) {
+      if (!this.showBotonesReporte) {
+        this.corregirPaciente = index;
+        this.showBotonesReporte = true;
+        this.pacienteSelected = paciente;
+      }
+    }
+  }
+
+  guardarCorreccion(): void {
     this.plex.confirm('Desea continuar?', 'La información que está por cambiar modificará información sensible del paciente y tendrá repercusión en su Historia de Salud.').then((confirmar) => {
       if (confirmar) {
-        paciente.reportarError = false;
-        paciente.notaError = '';
+        this.pacienteSelected.reportarError = false;
+        this.pacienteSelected.notaError = '';
         this.corregirPaciente = null;
-        this.pacienteService.save(paciente).subscribe(() => { this.getReportados(); });
+        this.showBotonesReporte = false;
+        this.pacienteService.save(this.pacienteSelected).subscribe(() => {
+          this.pacienteSelected = null;
+          this.getReportados();
+        });
       }
     });
   }
@@ -221,13 +231,14 @@ export class AuditoriaComponent implements OnInit {
   }
 
   vincular() {
-    if (!this.pacienteSelected) {
-      return null;
+    if (this.auth.check('auditoriaPacientes:edicion:activar/vincular')) {
+      if (!this.pacienteSelected) {
+        return null;
+      }
+      this.showVincular = true;
+      this.showAuditoria = false;
+      this.router.navigate(['apps/mpi/auditoria/vincular-pacientes', { idPaciente: this.pacienteSelected.id }]);
     }
-    this.showVincular = true;
-    this.showAuditoria = false;
-    this.router.navigate(['apps/mpi/auditoria/vincular-pacientes', { idPaciente: this.pacienteSelected.id }]);
-
   }
 
   cancelar() {
@@ -340,21 +351,25 @@ export class AuditoriaComponent implements OnInit {
   }
 
   activar(pac: IPaciente, index: number) {
-    this.pacienteService.enable(pac).subscribe(res => {
-      this.plex.toast('success', 'Paciente Activado');
-      this.getInactivos();
-    });
+    if (this.auth.check('auditoriaPacientes:edicion:activar/vincular')) {
+      this.pacienteService.enable(pac).subscribe(res => {
+        this.plex.toast('success', 'Paciente Activado');
+        this.getInactivos();
+      });
+    }
   }
   desactivar(pac: IPaciente, index: number) {
-    // si el paciente tiene otros pacientes en su array de identificadores, no lo podemos desactivar
-    if (pac.identificadores && pac.identificadores.filter(identificador => identificador.entidad === 'ANDES').length > 0) {
-      this.plex.info('warning', 'Existen otros pacientes vinculados a este paciente', 'No Permitido');
-    } else {
-      this.pacienteService.disable(pac).subscribe(res => {
-        this.pacientes.splice(index, 1);
-        this.pacienteSelected = null;
-        this.plex.toast('info', 'Paciente Desactivado');
-      });
+    if (this.auth.check('auditoriaPacientes:edicion:activar/vincular')) {
+      // si el paciente tiene otros pacientes en su array de identificadores, no lo podemos desactivar
+      if (pac.identificadores && pac.identificadores.filter(identificador => identificador.entidad === 'ANDES').length > 0) {
+        this.plex.info('warning', 'Existen otros pacientes vinculados a este paciente', 'No Permitido');
+      } else {
+        this.pacienteService.disable(pac).subscribe(res => {
+          this.pacientes.splice(index, 1);
+          this.pacienteSelected = null;
+          this.plex.toast('info', 'Paciente Desactivado');
+        });
+      }
     }
   }
 }
