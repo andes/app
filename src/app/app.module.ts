@@ -229,7 +229,7 @@ import { PrestacionValidacionComponent } from './modules/rup/components//ejecuci
 import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
 import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
-import { VistaCDAComponent } from './modules/rup/components/ejecucion/vistaCDA.component';
+import { VistaCDAComponent } from './modules/rup/components/cda/vistaCDA.component';
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
 import { ResumenPacienteDinamicoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
@@ -237,8 +237,6 @@ import { ResumenPacienteDinamicoNinoComponent } from './modules/rup/components/e
 
 
 // Legacy para RUP
-import { LaboratoriosComponent } from './modules/rup/components/laboratorios/laboratorios.component';
-// import { RUPRegistry } from './modules/rup/components/core/rup-.registry';
 // TODO: ver con JGabriel!!!
 import { SelectPorRefsetComponent } from './modules/rup/components/elementos/SelectPorRefset.component';
 import { TensionSistolicaComponent } from './modules/rup/components/elementos/tensionSistolica.component';
@@ -547,7 +545,6 @@ registerLocaleData(localeEs, 'es');
         MapaDeCamasComponent,
         CamaComponent,
         PuntoInicioInternacionComponent,
-        LaboratoriosComponent,
         ChartComponent,
         OrganizacionSectoresComponent,
         EgresoInternacionComponent,
