@@ -84,21 +84,24 @@ export class CensoDiarioComponent implements OnInit {
     }
 
     descargarCenso() {
-        setTimeout(() => {
+        // let content = '';
+        // let tabla = document.getElementById('tabla');
+        // content += tabla.innerHTML;
+        // let scssFile = '../censo/censoDiario';
+        let params = {
+            listadoCenso: this.listadoCenso, resumenCenso: this.resumenCenso,
+            organizacion: this.organizacion, fecha: moment(this.fecha).endOf('day'),
+            unidad: this.organizacionSeleccionada
+        };
 
-            let content = '';
-            let tabla = document.getElementById('tabla');
-            content += tabla.innerHTML;
-            let scssFile = '../censo/censoDiario';
-            this.servicioDocumentos.descargar(content, scssFile).subscribe(data => {
-                if (data) {
-                    // Generar descarga como PDF
-                    this.descargarArchivo(data, { type: 'application/pdf' });
-                } else {
-                    // Fallback a impresión normal desde el navegador
-                    window.print();
-                }
-            });
+        this.servicioDocumentos.descargarCenso(params).subscribe(data => {
+            if (data) {
+                // Generar descarga como PDF
+                this.descargarArchivo(data, { type: 'application/pdf' });
+            } else {
+                // Fallback a impresión normal desde el navegador
+                window.print();
+            }
         });
     }
 
