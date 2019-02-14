@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, HostBinding } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, HostBinding, ViewChildren, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -7,6 +7,8 @@ import { PrestacionesService } from '../../../../modules/rup/services/prestacion
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { CamasService } from '../services/camas.service';
 import * as enumerados from '../../../../utils/enumerados';
+import { ResumenInternacionComponent } from './resumenInternacion.component';
+
 // ../../../../services/internacion.service
 @Component({
     selector: 'app-listado-internacion',
@@ -19,9 +21,7 @@ import * as enumerados from '../../../../utils/enumerados';
 })
 export class ListadoInternacionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
-
-
-
+    @ViewChildren(ResumenInternacionComponent) Resumen: ResumenInternacionComponent;
     // filtros para el mapa de cama
     public filtros: any = {
         documento: null,
@@ -59,7 +59,6 @@ export class ListadoInternacionComponent implements OnInit {
         let unMesAtras = new Date();
         this.filtros.fechaIngresoDesde = new Date((unMesAtras.setMonth(unMesAtras.getMonth() - 1)));
         this.servicioPrestacion.listadoInternacion(this.filtros).subscribe(a => { this.listadoInternacion = a; });
-
         this.estadosInternacion = enumerados.getObjEstadoInternacion();
 
     }
@@ -99,6 +98,11 @@ export class ListadoInternacionComponent implements OnInit {
         this.showEgreso = false;
         this.internacionSelected = null;
         this.internacionSelected = Object.assign({}, internacion);
+        if ((this.Resumen as any).first.editarEgreso) {
+            (this.Resumen as any).first.editarEgreso = false;
+        }
+
+        // this.Resumen.cierraEditar();
     }
 
     actualizarListado(event) {

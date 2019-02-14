@@ -121,7 +121,7 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
         }
     }
 
-    cierraEditar(event) {
+     cierraEditar() {
         this.editarIngreso = false;
         this.editarEgreso = false;
     }

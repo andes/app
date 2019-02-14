@@ -66,7 +66,7 @@
         </div>
     </plex-layout-main>
     <plex-layout-sidebar id="panel-lateral" *ngIf='internacionSelected'>
-        <internacion-resumen *ngIf='internacionSelected' [paciente]="internacionSelected.paciente" [prestacion]="internacionSelected"
+        <internacion-resumen *ngIf='internacionSelected' [editarEgreso]="showEgreso" [paciente]="internacionSelected.paciente" [prestacion]="internacionSelected"
             [soloValores]="soloValores" (refreshCamas)="actualizarListado($event)"></internacion-resumen>
     </plex-layout-sidebar>
     <plex-layout-footer>
