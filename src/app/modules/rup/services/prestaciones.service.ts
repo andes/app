@@ -688,6 +688,7 @@ export class PrestacionesService {
      * @memberof PrestacionesService
      */
     inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null, _profesional: any = null): any {
+        console.log(_profesional);
         let pacientePrestacion;
         if (!paciente) {
             pacientePrestacion = undefined;
@@ -732,9 +733,9 @@ export class PrestacionesService {
             if (_profesional) {
                 profesional = {
                     id: _profesional.id,
-                    nombre: this.auth.usuario.nombre,
-                    apellido: this.auth.usuario.apellido,
-                    documento: this.auth.usuario.documento
+                    nombre: _profesional.nombre,
+                    apellido: _profesional.apellido,
+                    documento: _profesional.documento
                 };
             } else {
                 profesional = {
@@ -749,8 +750,8 @@ export class PrestacionesService {
                 // profesional logueado
                 profesional:
                 {
-                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    id: profesional.id, nombre: profesional.nombre,
+                    apellido: profesional.apellido, documento: profesional.documento
                 },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
