@@ -194,13 +194,16 @@ export class IniciarInternacionComponent implements OnInit {
                         this.router.navigate(['/internacion/camas']);
                     } else {
 
-                        console.log('aca', resultado);
                         let existeEgreso = this.internacionService.verRegistro(resultado.ultimaInternacion, 'egreso');
                         // y no esta ocupando cama lo pasamos directamente a ocupar una cama
                         if (!existeEgreso) {
-                            this.plex.info('warning', 'El paciente tiene una internación en ejecución');
+                            this.plex.info('warning', 'El paciente tiene una internación en ejecución y todavia no egreso');
                             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
-                            this.servicioPrestacion.getById(resultado.ultimaInternacion.id).subscribe(prestacion => {
+                            this.data.emit(false);
+                            this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
+
+                        } else {
+                                                      this.servicioPrestacion.getById(resultado.ultimaInternacion.id).subscribe(prestacion => {
                                 this.prestacion = prestacion;
                                 let existeRegistro = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
                                 if (existeRegistro) {

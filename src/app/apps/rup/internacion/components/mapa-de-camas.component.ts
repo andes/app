@@ -462,6 +462,10 @@ export class MapaDeCamasComponent implements OnInit {
         this.router.navigate(['tm/organizacion/cama']);
     }
 
+    verLI() {
+        this.router.navigate(['rup/internacion/listado']);
+    }
+
     verLE() {
         this.camasService.showListaEspera = true;
     }
