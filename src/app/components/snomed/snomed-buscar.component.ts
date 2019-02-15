@@ -1,32 +1,7 @@
 import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { SnomedService } from './../../services/term/snomed.service';
-
-export function Unsubscribe() {
-    return (target, key, descriptor) => {
-        const original = descriptor.value;
-        let subscriptions;
-
-        function unsubscribe() {
-            if (subscriptions && subscriptions.unsubscribe) {
-                subscriptions.unsubscribe();
-                subscriptions = null;
-            }
-        }
-
-        descriptor.value = function () {
-            unsubscribe();
-            const temp = original.apply(this, arguments);
-            if (!temp) {
-                unsubscribe();
-            } else {
-                subscriptions = temp;
-            }
-
-            return temp;
-        };
-    };
-}
+import { Unsubscribe } from '@andes/shared';
 
 @Component({
     selector: 'snomed-buscar',
