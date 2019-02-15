@@ -86,7 +86,7 @@ export class VistaHudsComponent implements OnInit {
             });
         } else {
             // Loggeo de lo que ve el profesional
-            this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente  });
+            this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
             this.logService.post('rup', 'hudsPantalla', {
                 paciente: {
                     id: this.paciente.id,
@@ -98,6 +98,17 @@ export class VistaHudsComponent implements OnInit {
                 }
             }).subscribe(() => { return true; });
         }
+
+        this.plex.updateTitle([{
+            route: '/',
+            name: 'ANDES'
+        }, {
+            route: '/rup',
+            name: 'RUP'
+        }, {
+            name: 'Historia Única De Salud'
+        }]);
+
     }
 
     redirect(pagina: string) {
