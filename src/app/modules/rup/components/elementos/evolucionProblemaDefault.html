@@ -272,17 +272,17 @@
                     </div>
                     <div class="borde-datos ml-3 pl-2 pt-2">
                         <div *ngIf="prestacion?.solicitud?.profesional" class="columna-datos d-flex justify-content-between mb-2">
-                            <span>Prestación: </span> <span class="text-capitalize">{{
+                            <b>Prestación: </b> <span class="text-capitalize">{{
                                 prestacion.solicitud.tipoPrestacion.term }}</span>
                         </div>
                         <div *ngIf="prestacion?.solicitud?.profesional" class="columna-datos d-flex justify-content-between mb-2">
-                            <span>Profesional: </span> <span class="text-capitalize">
+                            <b>Profesional: </b> <span class="text-capitalize">
                                 {{ prestacion.solicitud.profesional.apellido }}, {{
                                 prestacion.solicitud.profesional.nombre }}</span>
                         </div>
                         <div class="columna-completa">
                             <div class="columna-datos no-border d-flex justify-content-between mb-2">
-                                <span>Otros registros de la Prestación: </span>
+                                <b>Otros registros de la Prestación: </b>
                             </div>
                             <ng-container *ngFor="let registro of prestacion?.ejecucion?.registros">
                                 <span class="mb-1">
