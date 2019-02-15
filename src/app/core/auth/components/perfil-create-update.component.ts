@@ -70,6 +70,7 @@ export class PerfilFormComponent implements OnInit {
                 this.perfilEdit.organizacion = null;
             }
             (this.perfilEdit.id ? this.perfilUsuarioService.putPerfil(this.perfilEdit) : this.perfilUsuarioService.postPerfil(this.perfilEdit)).subscribe(res => {
+                this.plex.toast('success', 'Perfil guardado');
                 this.perfilGuardado.emit(res);
             });
         } else {
