@@ -247,7 +247,6 @@ export class MapaDeCamasComponent implements OnInit {
             if (this.filtros.opciones.estados) { this.filtros.opciones.estados.sort((a, b) => a.id - b.id); }
             if (this.filtros.opciones.servicios) { this.filtros.opciones.servicios.sort((a, b) => a.term - b.term); }
             if (this.filtros.opciones.tiposCamas) { this.filtros.opciones.tiposCamas.sort((a, b) => a.term - b.term); }
-            if (this.arbol) { this.arbol.sort((a, b) => a.nombre - b.nombre); }
         });
         this.filtros.opciones.servicios.forEach(UO => {
 
@@ -259,6 +258,11 @@ export class MapaDeCamasComponent implements OnInit {
         });
         if (this.arbol.length > 1) {
             this.mostrarArbol = true;
+            this.arbol.sort(function (a, b) {
+                let nombre1 = a.nombre;
+                let nombre2 = b.nombre;
+                return nombre1 > nombre2 ? 1 : -1;
+            });
         }
 
     }

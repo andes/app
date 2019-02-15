@@ -127,14 +127,19 @@ export class OcuparCamaComponent implements OnInit {
                 let paciente = this.paciente;
                 let idInternacion = this.prestacion.id;
                 this.cama = this.camaSeleccionPase;
-                this.camasService.cambioEstadoMovimiento(this.camaSeleccionPase, 'ocupada', this.internacionService.combinarFechas(this.fecha, this.hora), paciente, idInternacion,
-                    this.paseAunidadOrganizativa).subscribe(camaCambio => {
-                        this.camaSeleccionPase.ultimoEstado = camaCambio.ultimoEstado;
-                        this.accionCama.emit({ cama: this.camaSeleccionPase, accion: 'internarPaciente' });
+                if (this.cama) {
+                    this.camasService.cambioEstadoMovimiento(this.camaSeleccionPase, 'ocupada', this.internacionService.combinarFechas(this.fecha, this.hora), paciente, idInternacion,
+                        this.paseAunidadOrganizativa).subscribe(camaCambio => {
+                            this.camaSeleccionPase.ultimoEstado = camaCambio.ultimoEstado;
+                            this.accionCama.emit({ cama: this.camaSeleccionPase, accion: 'internarPaciente' });
 
-                    }, (err1) => {
-                        this.plex.info('danger', err1, 'Error');
-                    });
+                        }, (err1) => {
+                            this.plex.info('danger', err1, 'Error');
+                        });
+                } else {
+                    this.plex.info('warning', 'Debe seleccionar una cama');
+                }
+
             }
         }
     }
@@ -150,6 +155,8 @@ export class OcuparCamaComponent implements OnInit {
 
                         let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.conceptId === unidadOrganizativa.conceptId);
                         this.listadoCamas = [...lista];
+                    } else {
+                        this.listadoCamas = [];
                     }
 
                 });

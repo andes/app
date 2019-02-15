@@ -1,6 +1,6 @@
 <form #formEgreso="ngForm" *ngIf="!soloValores">
     <section class="andes-tab">
-        <div class="row" *ngIf="prestacion && registro.valor">
+        <div class="row" *ngIf="prestacion">
             <div class="col-12">
                 <ng-container>
                     <div class="row ">
@@ -199,6 +199,10 @@
                 <!-- Footer -->
                 <footer class="andes-contenedor-botones horizontal between">
                     <plex-button *ngIf="botonera?.cerrar" class="float-left " type="danger " label="Cerrar" (click)="cancelar() "></plex-button>
+
+                    <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo != 'validada' "
+                        label="Validar" (click)="validarPrestacion(formEgreso.form.valid) " type="warning" validateForm="true "
+                        class="float-right "></plex-button>
                     <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo != 'validada' "
                         label="Guardar" (click)="guardarPrestacion(formEgreso.form.valid) " type="success "
                         validateForm="true " class="float-right "></plex-button>
@@ -213,7 +217,7 @@
 </form>
 
 <!-- Visualizacion de datos de egreso -->
-<ng-container *ngIf="soloValores">
+<ng-container *ngIf="soloValores && registro.valor">
     <!-- Fecha -->
     <div class="row" *ngIf="registro.valor.InformeEgreso.fechaEgreso">
         <div class="col">
