@@ -18,7 +18,7 @@
                         </plex-badge>
                     </ng-template>
                 </div>
-                {{perfil.perfil.permisos}}
+                <span [innerHTML]="imprimirPermisos(perfil.perfil.permisos)"></span>
             </plex-panel>
         </plex-accordion>
     </div>

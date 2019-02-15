@@ -5,7 +5,7 @@ import { ArbolPermisosComponent } from './../../../components/usuario/arbolPermi
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { IPermiso } from './../interfaces/IPermiso';
 import { PermisosService } from '../../../services/permisos.service';
-import { agregarPermiso, quitarPermiso } from '../controllers/permisos';
+import { agregarPermiso, quitarPermiso, obtenerPermisosParaMostrar } from '../controllers/permisos';
 @Component({
     selector: 'gestorUsuario',
     templateUrl: 'gestorUsuario.html'
@@ -101,8 +101,9 @@ export class GestorUsuarioComponent implements OnInit {
      * @memberof GestorUsuarioComponent
      */
     guardar(event) {
-        this.plex.confirm('Se guardará el usuario con los siguientes permisos: \n' + this.permisosUsuarioOrg +
-            '\n ¿Desea continuar?', 'Aceptar').then((confirmar: boolean) => {
+        this.plex.confirm('Se guardarán los siguientes permisos: <br>' + obtenerPermisosParaMostrar(this.permisosUsuarioOrg, this.arbolPermisosCompleto) +
+            '<br>¿Desea continuar?',
+            'Guardar Permisos', 'Guardar').then((confirmar: boolean) => {
                 if (confirmar) {
                     this.savePermisos();
                     this.usuarioService.save(this.usuarioSeleccionado).subscribe();
@@ -156,7 +157,6 @@ export class GestorUsuarioComponent implements OnInit {
         let arrayPermiso: string[] = [];
         arrayPermiso.push(event.permiso.child ? event.permiso.key + ':*' : event.permiso.key);
         this.permisosUsuarioOrg = event.checked ? agregarPermiso(this.permisosUsuarioOrg, arrayPermiso) : quitarPermiso(this.permisosUsuarioOrg, arrayPermiso, this.arbolPermisosCompleto);
-        console.log('Gestor obtuvo permisos nuevos: ', this.permisosUsuarioOrg);
     }
 }
 

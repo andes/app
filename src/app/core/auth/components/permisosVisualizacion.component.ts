@@ -5,7 +5,7 @@ import { PerfilUsuarioService } from './../services/perfilUsuarioService';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { IPerfilUsuario } from '../interfaces/IPerfilUsuario';
-import { agregarPermiso, quitarPermiso, esPermisoSubpermiso } from '../controllers/permisos';
+import { agregarPermiso, quitarPermiso, esPermisoSubpermiso, obtenerPermisosParaMostrar } from '../controllers/permisos';
 
 @Component({
     selector: 'permisosVisualizacion',
@@ -65,6 +65,7 @@ export class PermisosVisualizacionComponent {
     }
     set permisosUsuario(value: string[]) {
         this.permisosUsuarioOrg = value;
+        console.log('Visualizacion, entro permisos: ', this.permisosUsuarioOrg);
         this.tildarPerfilesCorrespondientes();
     }
     /**
@@ -334,68 +335,13 @@ export class PermisosVisualizacionComponent {
     }
 
     /**
-     * Indica si ambos permisos están relacionados de forma ascendente o no
-     * Ejemplo:
-     * tieneRelacionAscendente(mpi:*, mpi:nuevoPaciente)            = true
-     * tieneRelacionAscendente(mpi:*, citas)                        = false
-     * tieneRelacionAscendente(mpi:matching:get, mpi:matching:put)  = false
-     * @param {string} permisoPerfil
-     * @param {string} permisoUsuario
-     * @returns {boolean}
-     * @memberof PermisosVisualizacionComponent
-     */
-    // tieneRelacionAscendente(permisoPerfil: string, permisoUsuario: string): boolean {
-    //     let permPerf = permisoPerfil.split(':');
-    //     let permUser = permisoUsuario.split(':');
-    //     let esAscendente = true;
-    //     let i = 0;
-    //     while (i < permPerf.length && i < permUser.length && esAscendente) {
-    //         if (permPerf[i] !== permUser[i] && permPerf[i] !== '*' && permUser[i] !== '*') {
-    //             esAscendente = false;
-    //         }
-    //         i++;
-    //     }
-    //     return esAscendente;
-    // }
-
-    /**
-     * Compara el nivel del permiso del usuario con el del perfil
-     * @param {string} permisoPerfil
-     * @param {string} permisoUsuario
-     * @returns {string}
-     * @memberof PermisosVisualizacionComponent
-     */
-    // nivelArbolPermisoUsuarioPerfil(permisoPerfil: [string], permisoUsuario: [string]): string {
-    //     let res: string;
-    //     let i = 0;
-    //     while (i < permisoPerfil.length && i < permisoUsuario.length) {
-    //         if (permisoPerfil[i] !== permisoUsuario[i]) { // si es igual, avanzo para ver hasta donde son diferentes
-    //             if (permisoPerfil[i] === '*') {
-    //                 // permisoUsuario a:b:c:d       permisoPerfil a:*       borrar todos los permisos del usuario que empiecen con a:BORRAR
-    //                 // permisoPerfil es padre del permiso usuario, borrar a partir permisoPerfil[i-1]
-    //             } else if (permisoUsuario[i] === '*') {
-    //                 // permisoUsuario a:*         permisoPerfil a:b:c:d:*
-    //                 // Obtener todos los hijos de a
-    //                 // Eliminar todos los permisos que comiencen con a:b:c:d (si permisoPerfil es hoja, es uno solo, break)
-    //                 // permisoUsuario es padre del permiso perfil. Buscar todos los hermanos del permisoPerfil[i]
-    //             } else {
-    //                 // permisoUsuario a:b       permisoPerfil a:x
-    //                 // no hacer nada
-    //             }
-    //         }
-
-    //         i++;
-    //     }
-    //     return res;
-    // }
-
-    /**
      * Tilda los perfiles cuando el usuario tiene todos sus permisos
      * @private
      * @returns {*}
      * @memberof PermisosVisualizacionComponent
      */
     private tildarPerfilesCorrespondientes(): any {
+        debugger;
         this.perfilesOrganizacion.forEach((perfil: { perfil: IPerfilUsuario, checked: boolean }) => {
             perfil.checked = !perfil.perfil.permisos.some((permiso: string) => {
                 let bandera = !this.usuarioTienePermiso(permiso);
@@ -416,5 +362,12 @@ export class PermisosVisualizacionComponent {
             let bandera = permiso === permisoUsuario || esPermisoSubpermiso(permiso, permisoUsuario);
             return bandera;
         });
+    }
+
+    public imprimirPermisos(permisos: string[]): string {
+        // console.log('Visualizacion, imprimirPermisos: permisos - arbol', permisos, this.arbolPermisosCompleto);
+        let a = obtenerPermisosParaMostrar(permisos, this.arbolPermisosCompleto);
+        // console.log(a);
+        return a;
     }
 }
