@@ -128,6 +128,7 @@ export class IniciarInternacionComponent implements OnInit {
         public ocupacionService: OcupacionService,
         public snomedService: SnomedService,
         private location: Location,
+        private internacionService: InternacionService,
         public servicioProfesional: ProfesionalService,
         public servicioInternacion: InternacionService,
         public pacienteService: PacienteService
@@ -176,20 +177,26 @@ export class IniciarInternacionComponent implements OnInit {
                         this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
                         this.router.navigate(['/internacion/camas']);
                     } else {
+
+                        console.log('aca', resultado);
+                        let existeEgreso = this.internacionService.verRegistro(resultado.ultimaInternacion, 'egreso');
                         // y no esta ocupando cama lo pasamos directamente a ocupar una cama
-                        this.plex.info('warning', 'El paciente tiene una internación en ejecución');
-                        // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
-                        this.servicioPrestacion.getById(resultado.ultimaInternacion.id).subscribe(prestacion => {
-                            this.prestacion = prestacion;
-                            let existeRegistro = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
-                            if (existeRegistro) {
-                                // Carga la información completa del paciente
-                                this.pacienteService.getById(prestacion.paciente.id).subscribe(paciente => {
-                                    this.paciente = paciente;
-                                    this.informeIngreso = existeRegistro.valor.informeIngreso;
-                                });
-                            }
-                        });
+                        if (!existeEgreso) {
+                            this.plex.info('warning', 'El paciente tiene una internación en ejecución');
+                            // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
+                            this.servicioPrestacion.getById(resultado.ultimaInternacion.id).subscribe(prestacion => {
+                                this.prestacion = prestacion;
+                                let existeRegistro = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
+                                if (existeRegistro) {
+                                    // Carga la información completa del paciente
+                                    this.pacienteService.getById(prestacion.paciente.id).subscribe(paciente => {
+                                        this.paciente = paciente;
+                                        this.informeIngreso = existeRegistro.valor.informeIngreso;
+                                    });
+                                }
+                            });
+                        }
+
                     }
                 } else {
                     // Chequeamos si el paciente tiene una internacion validad anterios para copiar los datos
