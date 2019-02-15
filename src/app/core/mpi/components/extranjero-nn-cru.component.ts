@@ -51,8 +51,8 @@ export class ExtranjeroNNCruComponent implements OnInit {
     enableIgnorarGuardar = false;
     sugerenciaAceptada = false;
     entidadValidadora = '';
-    viveEnNeuquen = false;
-    viveProvNeuquen = false;
+    viveLocActual = false;
+    viveProvActual = false;
     posibleDuplicado = false;
     altoMacheo = false;
     loading = false;
@@ -230,7 +230,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
     // ---------------------- DOMICILIO -----------------------
 
     /**
-    * Change del plex-bool viveProvNeuquen
+    * Change del plex-bool viveProvActual
     * carga las localidades correspondientes a Neuquén
     * @param {any} event
     *
@@ -241,7 +241,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
             this.pacienteModel.direccion[0].ubicacion.provincia = this.provinciaActual;
             this.loadLocalidades(this.provinciaActual);
         } else {
-            this.viveEnNeuquen = false;
+            this.viveLocActual = false;
             this.localidades = [];
             this.pacienteModel.direccion[0].ubicacion.provincia = null;
             this.pacienteModel.direccion[0].ubicacion.localidad = null;
@@ -427,10 +427,10 @@ export class ExtranjeroNNCruComponent implements OnInit {
         if (this.pacienteModel.direccion[0].ubicacion.barrio) {
             pacienteGuardar.direccion[0].ubicacion.barrio = ((typeof this.pacienteModel.direccion[0].ubicacion.barrio === 'string')) ? this.pacienteModel.direccion[0].ubicacion.barrio : (this.pacienteModel.direccion[0].ubicacion.barrio.nombre);
         }
-        if (this.viveProvNeuquen) {
+        if (this.viveProvActual) {
             pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaActual;
         }
-        if (this.viveEnNeuquen) {
+        if (this.viveLocActual) {
             pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadActual;
         }
         this.pacienteService.save(pacienteGuardar).subscribe(

@@ -94,6 +94,9 @@ export class BebeCruComponent implements OnInit {
     localidadesNeuquen: any[] = [];
     provincias: IProvincia[] = [];
     parentescoModel: any[];
+    hoy = moment().endOf('day').toDate();
+    disableGuardar = false;
+    enableIgnorarGuardar = false;
 
     constructor(
         private location: Location,
@@ -279,5 +282,9 @@ export class BebeCruComponent implements OnInit {
         this.bebeModel.direccion[0].valor = null;
         this.bebeModel.direccion[0].ubicacion.localidad = null;
         this.bebeModel.direccion[0].ubicacion.provincia = null;
+    }
+
+    notasNotification(notasNew) {
+        this.bebeModel.notas = notasNew;
     }
 }

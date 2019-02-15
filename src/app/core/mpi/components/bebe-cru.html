@@ -25,7 +25,7 @@
                         </div>
                         <div class="row">
                             <div class="col-4">
-                                <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="validado"
+                                <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="bebeModel.estado === 'validado'"
                                     (change)="disableGuardar = false; enableIgnorarGuardar = false;" [(ngModel)]="bebeModel.fechaNacimiento"
                                     name="fechaNacimiento" [required]="true">
                                 </plex-datetime>
@@ -148,7 +148,7 @@
 
                 <!-- NOTAS -->
                 <plex-tab label="Notas" icon="file-multiple">
-                    <notas-paciente [notas]="bebeModel.notas-paciente"></notas-paciente>
+                    <notas-paciente [notas]="bebeModel.notas" (notasNew)="notasNotification($event)"></notas-paciente>
                 </plex-tab>
 
             </plex-tabs>
