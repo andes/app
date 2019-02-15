@@ -1,6 +1,6 @@
 <plex-accordion *ngIf="item.child">
     <plex-panel (toggle)="expand($event)" #panel>
-        <div plex-accordion-title title="{{item.comment}}">
+        <div plex-accordion-title title="{{item.comment ? item.comment : item.title}}">
             {{item.title}}
             <span *ngIf="allModule">(todos)</span>
             <plex-bool *ngIf="!item.avoidAll" class="float-right" (change)="expand($event)" [(ngModel)]="allModule"
@@ -14,8 +14,7 @@
 </plex-accordion>
 <div *ngIf="item.type">
 
-    <plex-bool [(ngModel)]="state" *ngIf="item.type === 'boolean'" label="{{item.title}}" title="{{item.comment}}" type="slide"
-        (change)="tildarPermiso($event)">
+    <plex-bool [(ngModel)]="state" *ngIf="item.type === 'boolean'" label="{{item.title}}" type="slide" (change)="tildarPermiso($event)">
     </plex-bool>
 
     <div *ngIf="item.type !== 'boolean'">
