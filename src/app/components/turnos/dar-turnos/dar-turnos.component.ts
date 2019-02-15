@@ -822,7 +822,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     private guardarTurno(agd: IAgenda) {
-        if (this.numeroAfiliado) {
+        if (this.numeroAfiliado && this.obraSocialPaciente) {
             this.obraSocialPaciente.numeroAfiliado = this.numeroAfiliado;
         }
         let pacienteSave = {
