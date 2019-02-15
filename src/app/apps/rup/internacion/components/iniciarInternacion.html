@@ -93,7 +93,7 @@
                         <div class="row">
                             <div class="col-md">
                                 <plex-select *ngIf="!soloValores" label="Profesional responsable" [(ngModel)]="informeIngreso.profesional"
-                                    name="profesional" (getData)="loadProfesionales($event)"  [required]="true"  labelField="apellido+' '+nombre">
+                                    name="profesional" (getData)="loadProfesionales($event)"  [required]="!auth.profesional"  labelField="apellido+' '+nombre">
                                 </plex-select>
                             </div>
                         </div>
