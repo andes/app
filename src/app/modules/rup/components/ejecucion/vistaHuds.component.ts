@@ -58,7 +58,7 @@ export class VistaHudsComponent implements OnInit {
             route: '/',
             name: 'ANDES'
         }, {
-            name: 'HUDS'
+            name: 'Historia Única De Salud'
         }]);
 
         // consultamos desde que pagina se ingreso para poder volver a la misma
