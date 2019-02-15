@@ -226,25 +226,12 @@ export class SelectorUsuarioEfectorComponent {
      * @memberof SelectorUsuarioEfectorComponent
      */
     onOrgChange() {
-        // this.hidePermisos = true;
-        this.savePermisos();
         this.organizacionSelectPrev = this.organizacionSelect;
         this.loadPermisos();
         this.getOrgActualAuthUs();
-        // setTimeout(() => this.hidePermisos = false, 0);
         this.seleccionOrganizacion.emit(this.organizacionSelect);
     }
 
-    savePermisos() {
-        let permisos = [];
-        this.childsComponents.forEach(child => {
-            permisos = [...permisos, ...child.generateString()];
-        });
-        this.temp = this.userModel.organizaciones.find(item => String(item._id) === (this.organizacionSelectPrev ? String(this.organizacionSelectPrev._id) : null));
-        if (this.temp) {
-            this.temp.permisos = permisos;
-        }
-    }
     /**
      * Carga los las organizaciones (y los permisos correspondientes a cada una de ellas) si tiene alguna.
      *
@@ -265,11 +252,6 @@ export class SelectorUsuarioEfectorComponent {
             this.organizacionActualAuthUs = this.userModel.organizaciones.find(x => x._id === this.organizacionSelect._id);
         }
     }
-    newEfector() {
-        this.savePermisos();
-        // this.hidePermisos = true;
-        this.agregarEfector = true;
-    }
 
     /**
      * Agrega una organización al usuario
@@ -283,20 +265,29 @@ export class SelectorUsuarioEfectorComponent {
             this.organizacionesUsuario.push(this.newOrg);
             this.organizacionSelect = this.newOrg;
             this.organizacionSelectPrev = this.organizacionSelect;
-            // this.hidePermisos = false;
             this.agregarEfector = false;
             this.seleccionOrganizacion.emit(this.organizacionSelect);
         }
     }
 
     /**
-     * Cancela agregar una nueva organización y copiar permisos
+     * Cancela agregar una nueva organización
      * @memberof SelectorUsuarioEfectorComponent
      */
-    cancelar() {
-        // this.hidePermisos = false;
+    cancelarAgregarEfector() {
         this.agregarEfector = false;
+        this.newOrg = null;
+    }
+
+    /**
+     * Inicializa las variables utilizadas para dejar limpio la copia de permisos
+     * Se utiliza cuando cancela y también cuando se guarda con éxito la copia de los permisos,
+     * para dejarlo limpio para otra copia de permisos
+     * @memberof SelectorUsuarioEfectorComponent
+     */
+    cancelarCopiarPermisos() {
         this.copiarPermisos = false;
+        this.organizacionesNuevas = [];
     }
 
     deleteEfector() {
@@ -312,7 +303,6 @@ export class SelectorUsuarioEfectorComponent {
                     // completo, entonces seteo todo el arreglo de nuevo
                     this.organizacionesUsuario = [...this.organizacionesUsuario];
                     this.organizacionSelect = this.organizacionesUsuario ? this.organizacionesUsuario[0] : null;
-
                     this.usuarioService.save(this.usuarioSeleccionado).subscribe();
                 }
                 this.onOrgChange();
@@ -334,7 +324,6 @@ export class SelectorUsuarioEfectorComponent {
         });
     }
     loadUser() {
-        // this.showUpdate = true;
         this.userModel.id = this.usuarioSeleccionado.id;
         this.userModel.usuario = this.usuarioSeleccionado.usuario;
         this.userModel.nombre = this.usuarioSeleccionado.nombre;
@@ -377,24 +366,19 @@ export class SelectorUsuarioEfectorComponent {
         }
     }
     copiarAEfectores() {
-        this.organizacionesNuevas.forEach(element => {
-            this.userModel.organizaciones.push({ _id: element.id, permisos: this.permisos });
-            // this.seleccion.organizaciones.push({ _id: element.id, permisos: this.permisos });
-            // this.organizacionSelect.push({_id: element.id, permisos: this.permisos});
-        });
-        // let idOrganizaciones = this.seleccion.organizaciones.map(i => i._id);
-        let idOrganizaciones = this.userModel.organizaciones.map(i => i._id);
+        if (this.organizacionesNuevas) {
+            this.organizacionesNuevas.forEach(element => {
+                this.userModel.organizaciones.push({ _id: element.id, permisos: this.permisos });
+            });
+            let idOrganizaciones = this.userModel.organizaciones.map(i => i._id);
 
-        this.organizacionService.get({ ids: idOrganizaciones }).subscribe(dataUss => {
-            this.organizacionesUsuario = dataUss;
-            // this.loadUser();
-            // this.getOrgActualAuthUs();
-        });
-        this.savePermisos();
-        this.usuarioService.save(this.userModel).subscribe(user => {
-            this.plex.info('success', '', 'Usuario guardado');
-            this.organizacionesNuevas = null;
-            this.copiarPermisos = false;
-        });
+            this.organizacionService.get({ ids: idOrganizaciones }).subscribe(dataUss => {
+                this.organizacionesUsuario = dataUss;
+            });
+            this.usuarioService.save(this.userModel).subscribe(user => {
+                this.plex.info('success', '', 'Usuario guardado');
+                this.cancelarCopiarPermisos();
+            });
+        }
     }
 }

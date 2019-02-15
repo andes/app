@@ -21,7 +21,6 @@
             <div *ngIf="users && !users.length" class="alert alert-danger">
                 <i class="mdi mdi-account-alert"></i> El usuario no se ha encontrado
             </div>
-            <!--Tabla de resultados por SimpleQuery -->
             <table *ngIf="users && users.length" class="table table-striped">
                 <thead>
                     <tr>
@@ -48,15 +47,13 @@
         </div>
     </plex-tab>
     <plex-tab *ngIf="usuarioSeleccionado" label="Selección Organización">
-        <!-- <legend>Datos del usuario</legend> -->
-
         <div class="row my-3">
             <div class="col">
                 <div class="page-title float-left">Datos del Usuario</div>
             </div>
             <div class="col d-flex justify-content-end">
                 <ng-container *ngIf="showAgregarEfector">
-                    <plex-button type="success" icon='mdi mdi-plus' (click)="newEfector()" title='Agregar Efector'></plex-button>
+                    <plex-button type="success" icon='mdi mdi-plus' (click)="agregarEfector = true" title='Agregar Efector'></plex-button>
                 </ng-container>
                 <ng-container *ngIf="showAgregarEfector">
                     <plex-button *ngIf='organizacionActualAuthUs && !organizacionActualAuthUs.permisosPausados' type="danger"
@@ -89,7 +86,7 @@
             </div>
         </div>
 
-        <!-- A partir de aca  -->
+
         <div *ngIf="!agregarEfector" class="row">
             <div class="col">
                 <plex-select [(ngModel)]="organizacionSelect" name="organizacion" [data]="organizacionesUsuario"
@@ -99,34 +96,18 @@
             </div>
         </div>
         <div class="row">&nbsp;</div>
-        <!-- <div *ngIf="organizacionesUsuario.length > 0 && organizacionSelect">
-                <div *ngFor="let permiso of permisos$ | async ">
-                    <arbolPermisos [item]="permiso" [userPermissions]="permisos"></arbolPermisos>
-                </div>
-            </div> -->
         <div *ngIf="organizacionesUsuario.length <= 0" class="alert alert-default">
             <i class="mdi mdi-emoticon-sad"></i> Agregue un efector para modificar sus permisos
         </div>
         <div *ngIf="organizacionesUsuario.length > 0 && !organizacionSelect" class="alert alert-default">
             <i class="mdi mdi-emoticon-sad"></i> Seleccione una organización
         </div>
-        <!-- <div class="row" *ngIf="hidePermisos">
-            <div class="col-9">
-                <plex-select [(ngModel)]="newOrg" name="nuevaOrganizacion" [data]="newOrganizaciones" [required]="true"
-                    labelField="nombre + ', ' + direccion.ubicacion.localidad.nombre" placeholder="Seleccione efector"></plex-select>
-            </div>
-            <div class="col-3 d-flex justify-content-end align-items-start">
-                <plex-button type="primary" size="sm" label="Agregar" (click)="agregarOrg()"></plex-button>
-                <plex-button type="danger" size="sm" label="Cancelar" (click)="cancelarOrg()"></plex-button>
-            </div>
-        </div> -->
-
         <div class="row my-3" *ngIf="agregarEfector">
             <div class="col mb-3">
                 <div class="page-title d-flex justify-content-start">Nuevo Efector</div>
             </div>
             <div class="col mb-3 d-flex justify-content-end">
-                <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
+                <plex-button type="danger" label="Cancelar" (click)="cancelarAgregarEfector()"></plex-button>
                 <plex-button type="primary" label="Agregar" (click)="agregarOrg()"></plex-button>
             </div>
             <div class="col-12">
@@ -139,7 +120,7 @@
                 <div class="page-title d-flex justify-content-start">Copiar Permisos</div>
             </div>
             <div class="col mb-3 d-flex justify-content-end">
-                <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
+                <plex-button type="danger" label="Cancelar" (click)="cancelarCopiarPermisos()"></plex-button>
                 <plex-button type="primary" label="Agregar" (click)="copiarAEfectores()"></plex-button>
             </div>
             <div class="col-12">
@@ -149,6 +130,5 @@
                 </plex-select>
             </div>
         </div>
-        <!-- hasta aca -->
     </plex-tab>
 </plex-tabs>

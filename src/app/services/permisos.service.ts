@@ -20,7 +20,6 @@ export class PermisosService {
     }
 
     actualizarEstadoPermisos(username, idOrganizacion) {
-        console.log('/auth/estadoPermisos' + '/' + username);
         return this.server.put('/auth/estadoPermisos' + '/' + username, { idOrganizacion });
     }
 }

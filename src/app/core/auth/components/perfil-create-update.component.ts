@@ -53,15 +53,6 @@ export class PerfilFormComponent implements OnInit {
     constructor(public auth: Auth, private permisosService: PermisosService, private perfilUsuarioService: PerfilUsuarioService, private plex: Plex) { }
 
     ngOnInit() {
-        // if (!this.perfilEdit) {
-        //     this.perfilEdit = {
-        //         nombre: '',
-        //         permisos: [''],
-        //         organizacion: null,
-        //         activo: false
-        //     };
-        //     this.esGlobal = false; // por defecto crea el perfil en local
-        // }
         this.permisos$ = this.permisosService.get();
     }
 
@@ -94,15 +85,15 @@ export class PerfilFormComponent implements OnInit {
         this.perfilGuardado.emit(null);
     }
 
+    /**
+     * Setea los permisos del perfil de acuerdo al árbol de permisos
+     * @memberof PerfilFormComponent
+     */
     savePermisos() {
         let i = 0;
         this.childsComponents.forEach(child => {
             this.permisos = [...this.permisos, ...child.generateString()];
         });
         this.perfilEdit.permisos = this.permisos;
-        // this.temp = this.userModel.organizaciones.find(item => String(item._id) === (this.organizacionSelectPrev ? String(this.organizacionSelectPrev._id) : null));
-        // if (this.temp) {
-        //     this.temp.permisos = permisos;
-        // }
     }
 }
