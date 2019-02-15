@@ -352,6 +352,7 @@
                 <ng-container *ngIf="loadCountFiltros && (!accion && !pacienteSelected)">
 
                     <div class="text-right">
+                            
                         <plex-button class="marginBtnAccion" type="primary" [title]="'Censo Diario'" icon='mdi mdi-calendar'
                             (click)="censoDiario()" *ngIf="checkAuth('censo')"></plex-button>
                         <plex-button class="marginBtnAccion" type="primary" [title]="'Censo Mensual'" icon='mdi mdi-calendar-multiple'
@@ -362,6 +363,8 @@
                             (click)="ingresarPaciente()" *ngIf="isWorkflowCompleto"></plex-button>
                         <plex-button class="marginBtnAccion" type="primary" [title]="'Lista de espera'" icon='mdi mdi-timetable'
                             (click)="verLE()" *ngIf="isWorkflowCompleto"></plex-button>
+                            <plex-button class="marginBtnAccion" type="primary" [title]="'Listado Internacion'" icon='mdi mdi-format-list-bulleted'
+                            (click)="verLI()" *ngIf="isWorkflowCompleto"></plex-button>
                     </div>
                     <ng-container>
                         <plex-datetime type="datetime" [(ngModel)]="fecha" name="fecha" label="Fecha" (change)="mapaDeCamaXFecha(false)"></plex-datetime>
