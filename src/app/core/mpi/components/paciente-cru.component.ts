@@ -542,7 +542,6 @@ export class PacienteCruComponent implements OnInit {
             pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadActual;
         }
         if (this.geoReferenciaAux.length) {
-            console.log('guarda georef: ', this.geoReferenciaAux);
             pacienteGuardar.direccion[0].geoReferencia = this.geoReferenciaAux;
         }
 

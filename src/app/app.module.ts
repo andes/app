@@ -491,6 +491,7 @@ import { UploadFileComponent } from './shared/components/upload-file.component';
 import { BebeCruComponent } from './core/mpi/components/bebe-cru.component';
 import { NotaComponent } from './core/mpi/components/notas-paciente.component';
 import { PacienteCacheService } from './core/mpi/services/pacienteCache.service';
+import { HistorialBusquedaService } from './core/mpi/services/historialBusqueda.service';
 
 
 registerLocaleData(localeEs, 'es');
@@ -696,7 +697,8 @@ registerLocaleData(localeEs, 'es');
         ConfiguracionPrestacionService,
         PrestacionLegacyService,
         PacienteCacheService,
-        ApiGoogleService
+        ApiGoogleService,
+        HistorialBusquedaService
     ]
 })
 

@@ -4,6 +4,7 @@ import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
 import { PacienteCacheService } from '../services/pacienteCache.service';
 import { Auth } from '@andes/auth';
+import { HistorialBusquedaService } from '../services/historialBusqueda.service';
 
 @Component({
     selector: 'busqueda-mpi',
@@ -16,8 +17,10 @@ export class BusquedaMpiComponent implements OnInit {
     searchClear = true;    // True si el campo de búsqueda se encuentra vacío
     showPacienteCru = false;
     pacienteSeleccionado = null;
+    busquedasRecientes: IPaciente[] = [];
 
     constructor(
+        private historialBusquedaService: HistorialBusquedaService,
         private pacienteCache: PacienteCacheService,
         private plex: Plex,
         private router: Router,
@@ -30,6 +33,7 @@ export class BusquedaMpiComponent implements OnInit {
             // Si no está autorizado redirect al home
             this.router.navigate(['./inicio']);
         }
+        this.busquedasRecientes = this.historialBusquedaService.get();
     }
 
     private updateTitle(nombre: string) {
@@ -64,6 +68,7 @@ export class BusquedaMpiComponent implements OnInit {
 
     onPacienteSelected(paciente: IPaciente) {
         if (paciente) {
+            this.historialBusquedaService.add(paciente);
             this.pacienteCache.setPaciente(paciente);
             this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru
         }
