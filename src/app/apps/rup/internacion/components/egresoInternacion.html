@@ -198,18 +198,14 @@
                 </ng-container>
                 <!-- Footer -->
                 <footer class="andes-contenedor-botones horizontal between">
-                    <plex-button *ngIf="botonera?.cerrar" class="float-left " type="danger " label="Cerrar" (click)="cancelar() "></plex-button>
-
+                    <plex-button *ngIf="botonera?.cerrar" type="danger" label="Cerrar" (click)="cancelar() "></plex-button>&nbsp;
                     <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo != 'validada' "
-                        label="Validar" (click)="validarPrestacion(formEgreso.form.valid) " type="warning" validateForm="true "
-                        class="float-right "></plex-button>
+                        label="Validar" (click)="validarPrestacion(formEgreso.form.valid) " type="warning" validateForm="true "></plex-button>&nbsp;
                     <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo != 'validada' "
                         label="Guardar" (click)="guardarPrestacion(formEgreso.form.valid) " type="success "
-                        validateForm="true " class="float-right "></plex-button>
-
-
-                    <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo==='validada' && botonera?.validar"
-                        label="Romper Validación" (click)="romperValidacion() " type="danger " class="float-right "></plex-button>
+                        validateForm="true "></plex-button>&nbsp;
+                    <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo==='validada'"
+                        label="Romper Validación" (click)="romperValidacion() " type="danger "></plex-button>
                 </footer>
             </div>
         </div>

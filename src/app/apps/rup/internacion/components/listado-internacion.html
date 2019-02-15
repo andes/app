@@ -3,11 +3,11 @@
         <header>
             <div class="row">
                 <div class="col-2">
-                    <plex-text (keyup)="filtrar()" [(ngModel)]="filtros.documento" label="Documento">
+                    <plex-text (change)="filtrar()" [(ngModel)]="filtros.documento" label="Documento">
                     </plex-text>
                 </div>
                 <div class="col-2">
-                    <plex-text (keyup)="filtrar()" [(ngModel)]="filtros.apellido" label="Apellido">
+                    <plex-text (change)="filtrar()" [(ngModel)]="filtros.apellido" label="Apellido">
                     </plex-text>
                 </div>
 

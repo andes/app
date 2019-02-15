@@ -46,8 +46,6 @@ export class ListadoInternacionComponent implements OnInit {
     }
 
     ngOnInit() {
-
-
         this.plex.updateTitle([{
             route: '/',
             name: 'ANDES'
@@ -99,7 +97,7 @@ export class ListadoInternacionComponent implements OnInit {
         this.showEgreso = false;
         this.internacionSelected = null;
         this.internacionSelected = Object.assign({}, internacion);
-        if ((this.Resumen as any).first.editarEgreso) {
+        if ((this.Resumen as any).first && (this.Resumen as any).first.editarEgreso) {
             (this.Resumen as any).first.editarEgreso = false;
         }
 
