@@ -78,7 +78,7 @@ export class ListarSolicitudesComponent implements OnInit {
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
 
     private _pacienteSeleccionado: any;
-    private paciente: IPaciente;
+    public paciente: IPaciente;
     obraSocialPaciente: IObraSocial;
     pacientesSearch = false;
     seleccion = null;

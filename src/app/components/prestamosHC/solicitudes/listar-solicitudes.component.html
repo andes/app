@@ -125,14 +125,14 @@
                                         </td>
                                         <!-- Fecha de Actualización de la HUDS digitalizada -->
                                         <td>
+                                            <!-- {{carpeta.ultimoCDA|json}} -->
                                             <span *ngIf="carpeta.ultimoCDA[0]">
                                                 Fecha: <b>{{carpeta.ultimoCDA[0].fecha | fecha}}</b>
                                                 <br> Responsable: <b>{{carpeta.ultimoCDA[0].profesional.apellido}}
                                                     {{carpeta.ultimoCDA[0].profesional.nombre}}</b>
                                                 <br>
-                                                <a href="javascript:void(0)" (click)="descargar(carpeta.ultimoCDA[0].adjuntos)">
+                                                <a href="javascript:void(0)" (click)="descargar(carpeta.ultimoCDA[0].adjuntos[0])">
                                                     Descargar documento adjunto
-                                                    <!-- <i class="mdi mdi-36px mdi-file-pdf"></i> -->
                                                 </a>
                                             </span>
                                         </td>
@@ -145,13 +145,11 @@
                                             </span>
                                         </td>
                                         <!-- Estado -->
-                                        <td *ngIf="carpeta.estado == 'En archivo'">
-                                            <plex-button type="primary" label="Prestar" (click)="prestar(carpeta)"
+                                        <td>
+                                            <plex-button *ngIf="carpeta.estado == 'En archivo'" type="primary" label="Prestar" (click)="prestar(carpeta)"
                                                 [disabled]="carpetasSeleccionadas.length > 0">
                                             </plex-button>
-                                        </td>
-                                        <td *ngIf="carpeta.estado == 'Prestada'">
-                                            <span class="badge-warning float-left">Prestada</span>
+                                            <span *ngIf="carpeta.estado == 'Prestada'" class="badge-warning float-left">Prestada</span>
                                         </td>
                                     </tr>
                                 </tbody>
