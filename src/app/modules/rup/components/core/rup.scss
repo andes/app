@@ -550,6 +550,14 @@ $color in $rup_colors {
     }
 }
 
+.solo-valores-grid.hallazgos, .solo-valores-grid.cda {
+    border: 1px solid lightgrey;
+    padding: 10px;
+    position: relative;
+    top: -1px;
+    z-index: 0 !important;
+}
+
 .solo-valores-grid.procedimientos {
     @include grid-2-columnas();
     
@@ -563,3 +571,4 @@ $color in $rup_colors {
         font-size: 1rem !important; 
     }
 }
+
