@@ -278,6 +278,35 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
         this.data.emit(false);
     }
 
+    controlRegistrosGuardar() {
+        let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
+        this.registro.valor.InformeEgreso.fechaEgreso = this.internacionService.combinarFechas(this.fechaEgreso, this.horaEgreso);
+        // vamos a controlas que la fecha de egreso sea anterior a la fecha de ingreso
+        let fechaActual = new Date();
+        let ingreso = this.internacionService.verRegistro(this.prestacion, 'ingreso');
+        if (this.registro.valor.InformeEgreso.fechaEgreso > fechaActual || ingreso.informeIngreso.fechaIngreso > this.registro.valor.InformeEgreso.fechaEgreso) {
+            this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a la fecha de ingreso o superior a la fecha actual');
+            return null;
+        }
+
+        if (!this.procedimientosObstetricos) {
+            this.registro.valor.InformeEgreso.terminacionEmbarazo = undefined;
+            this.registro.valor.InformeEgreso.edadGestacional = undefined;
+            this.registro.valor.InformeEgreso.paridad = undefined;
+            this.registro.valor.InformeEgreso.tipoParto = undefined;
+            this.registro.valor.InformeEgreso.nacimientos = undefined;
+        }
+
+        let existeEgreso = this.internacionService.verRegistro(this.prestacion, 'egreso');
+        if (!existeEgreso) {
+            registros.push(this.registro);
+        } else {
+            let indexRegistro = registros.findIndex(registro => registro.concepto.conceptId === this.internacionService.conceptosInternacion.egreso.conceptId);
+            registros[indexRegistro] = this.registro;
+        }
+        return registros;
+    }
+
 
     /**
      * Guardamos la prestacion y retornamos
@@ -285,41 +314,58 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
      */
     guardarPrestacion(isvalid) {
         if (isvalid) {
-            let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
-            this.registro.valor.InformeEgreso.fechaEgreso = this.internacionService.combinarFechas(this.fechaEgreso, this.horaEgreso);
-            // vamos a controlas que la fecha de egreso sea anterior a la fecha de ingreso
-            let fechaActual = new Date();
-            let ingreso = this.internacionService.verRegistro(this.prestacion, 'ingreso');
-            if (this.registro.valor.InformeEgreso.fechaEgreso > fechaActual || ingreso.informeIngreso.fechaIngreso > this.registro.valor.InformeEgreso.fechaEgreso) {
-                this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a la fecha de ingreso o superior a la fecha actual');
-                return;
+            let registros = this.controlRegistrosGuardar();
+            if (registros) {
+                let params: any = {
+                    op: 'registros',
+                    registros: registros
+                };
+                this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
+                    this.prestacionGuardada.emit(prestacionEjecutada);
+                    // this.desocuparCama.emit(prestacionEjecutada);
+                    this.btnIniciarEditarEmit.emit('Editar');
+                    this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
+                    this.cancelar();
+                });
             }
+        }
+    }
 
-            if (!this.procedimientosObstetricos) {
-                this.registro.valor.InformeEgreso.terminacionEmbarazo = undefined;
-                this.registro.valor.InformeEgreso.edadGestacional = undefined;
-                this.registro.valor.InformeEgreso.paridad = undefined;
-                this.registro.valor.InformeEgreso.tipoParto = undefined;
-                this.registro.valor.InformeEgreso.nacimientos = undefined;
-            }
-
-            let existeEgreso = this.internacionService.verRegistro(this.prestacion, 'egreso');
-            if (!existeEgreso) {
-                registros.push(this.registro);
-            } else {
-                let indexRegistro = registros.findIndex(registro => registro.concepto.conceptId === this.internacionService.conceptosInternacion.egreso.conceptId);
-                registros[indexRegistro] = this.registro;
-            }
-            let params: any = {
-                op: 'registros',
-                registros: registros
-            };
-            this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
-                this.prestacionGuardada.emit(prestacionEjecutada);
-                // this.desocuparCama.emit(prestacionEjecutada);
-                this.btnIniciarEditarEmit.emit('Editar');
-                this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
-                this.cancelar();
+    /**
+     * Guardamos y validamos  la prestacion y volvemos
+     * al mapa de camas
+     */
+    validarPrestacion(isvalid) {
+        if (isvalid) {
+            this.plex.confirm('Luego de validar la prestación ya no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
+                if (!validar) {
+                    return false;
+                } else {
+                    debugger;
+                    let registros = this.controlRegistrosGuardar();
+                    this.prestacion.ejecucion.registros = registros;
+                    let egresoExiste = this.internacionService.verRegistro(this.prestacion, 'egreso');
+                    if (registros && egresoExiste.InformeEgreso.fechaEgreso && egresoExiste.InformeEgreso.tipoEgreso &&
+                        egresoExiste.InformeEgreso.diagnosticoPrincipal) {
+                        let planes = [];
+                        this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
+                            this.prestacion = prestacion;
+                            if (this.camaSelected) {
+                                this.prestacionGuardada.emit(prestacion);
+                                this.btnIniciarEditarEmit.emit('Editar');
+                                this.plex.info('success', 'Prestacion guardada correctamente', 'Prestacion guardada');
+                                this.cancelar();
+                            } else {
+                                this.plex.info('success', 'Prestacion guardada correctamente', 'Prestacion guardada');
+                                this.prestacionGuardada.emit(prestacion);
+                                this.cancelar();
+                            }
+                        });
+                    } else {
+                        this.plex.info('danger', 'ERROR: Los datos de egreso no estan completos');
+                        return;
+                    }
+                }
             });
         }
     }
