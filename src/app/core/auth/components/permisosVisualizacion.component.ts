@@ -65,7 +65,6 @@ export class PermisosVisualizacionComponent {
     }
     set permisosUsuario(value: string[]) {
         this.permisosUsuarioOrg = value;
-        console.log('Visualizacion, entro permisos: ', this.permisosUsuarioOrg);
         this.tildarPerfilesCorrespondientes();
     }
     /**
@@ -103,7 +102,7 @@ export class PermisosVisualizacionComponent {
             // } catch (err) {
             //     return err;
             // }
-            this.obtenerPerfiles(this.organizacion);
+            this.obtenerPerfilesActivos(this.organizacion);
         }
     }
     /**
@@ -111,11 +110,13 @@ export class PermisosVisualizacionComponent {
      * @param {IOrganizacion} org
      * @memberof PermisosVisualizacionComponent
      */
-    obtenerPerfiles(org: IOrganizacion) {
+    obtenerPerfilesActivos(org: IOrganizacion) {
         this.perfilesOrganizacion = [];
         this.perfilUsuarioService.get({ idOrganizacion: org ? org.id : null }).subscribe((res: IPerfilUsuario[]) => {
             res.forEach(async (perfil: IPerfilUsuario) => {
-                this.perfilesOrganizacion.push({ perfil: perfil, checked: await this.tienePerfilAsignado(perfil) });
+                if (perfil.activo) {
+                    this.perfilesOrganizacion.push({ perfil: perfil, checked: await this.tienePerfilAsignado(perfil) });
+                }
             });
         });
     }
@@ -127,22 +128,9 @@ export class PermisosVisualizacionComponent {
      * @memberof PermisosVisualizacionComponent
      */
     tienePerfilAsignado(perfil: IPerfilUsuario): boolean {
-
-        if (this.permisosUsuarioOrg && this.permisosUsuarioOrg.length) {
-            let i = 0;
-            let cumpleTodosLosPermisos = true;
-            while (i < perfil.permisos.length && cumpleTodosLosPermisos) {
-                let permisoPerfilDividido = perfil.permisos[i].split(':');
-                let permisoEncontrado = this.permisosUsuarioOrg.find((permisoUsuario: string) => {
-                    return permisoUsuario === perfil.permisos[i] || this.esPermisoUsuarioMayorCategoriaPermisoPerfil(permisoPerfilDividido, permisoUsuario.split(':'));
-                });
-                if (!permisoEncontrado) {
-                    cumpleTodosLosPermisos = false;
-                }
-                i++;
-            }
-            return cumpleTodosLosPermisos;
-        }
+        return !perfil.permisos.some((permiso: string) => { // some trae todos los permisos del perfil que no tiene el usuario. Debe ser vacío, por eso está negado
+            return !this.usuarioTienePermiso(permiso); // bandera devuelve si no tiene el permiso
+        });
     }
 
     /**
@@ -160,20 +148,20 @@ export class PermisosVisualizacionComponent {
      * @see esPermisoUsuarioMenorCategoriaPermisoPerfil(string[],string[]): boolean
      * @memberof PermisosVisualizacionComponent
      */
-    private esPermisoUsuarioMayorCategoriaPermisoPerfil(arrayPermisoPerfil: string[], arrayPermisoUsuario: string[]): boolean {
-        if (arrayPermisoPerfil.length < arrayPermisoUsuario.length) {
-            return false;
-        }
-        let i = 0;
-        let bandera = true;
-        while (i < arrayPermisoUsuario.length && bandera) {
-            if (arrayPermisoPerfil[i] !== arrayPermisoUsuario[i] && arrayPermisoUsuario[i] !== '*') {
-                bandera = false;
-            }
-            i++;
-        }
-        return bandera;
-    }
+    // private esPermisoUsuarioMayorCategoriaPermisoPerfil(arrayPermisoPerfil: string[], arrayPermisoUsuario: string[]): boolean {
+    //     if (arrayPermisoPerfil.length < arrayPermisoUsuario.length) {
+    //         return false;
+    //     }
+    //     let i = 0;
+    //     let bandera = true;
+    //     while (i < arrayPermisoUsuario.length && bandera) {
+    //         if (arrayPermisoPerfil[i] !== arrayPermisoUsuario[i] && arrayPermisoUsuario[i] !== '*') {
+    //             bandera = false;
+    //         }
+    //         i++;
+    //     }
+    //     return bandera;
+    // }
 
 
     /**
@@ -228,125 +216,18 @@ export class PermisosVisualizacionComponent {
      */
     tildarPerfil(event: any, indice: number) {
         let permisosPerfilTildado = this.perfilesOrganizacion[indice].perfil.permisos;
-        // let arregloPermisosAgregar: string[] = [];
-        // let arregloPermisosBorrar: string[] = [];
-        if (event.value) {
-            this.permisosUsuarioOrg = agregarPermiso(this.permisosUsuarioOrg, permisosPerfilTildado);
-
-            // *********************************  Esto estaba funcionando bien  *****************************************************
-            // // agregar permiso
-            // if (!this.permisosUsuarioOrg.length) {
-            //     // si está vacío, agrego todos los permisos del perfil, sin verificarlos
-            //     arregloPermisosAgregar = permisosPerfilTildado;
-            // } else {
-            //     permisosPerfilTildado.forEach((permisoPerfil: string) => {
-            //         let perfilPermisoYaAgregado = false;
-            //         // al arreglopermisosBorrar le voy agregrando los permisos del usuario que son de menor categoría que los que ya tiene el usuario
-
-            //         arregloPermisosBorrar = arregloPermisosBorrar.concat(this.permisosUsuarioOrg.filter((permisoUsuario: string) => {
-            //             if (permisoPerfil !== permisoUsuario) { // si es el mismo permiso, no hago nada
-            //                 let res = this.esPermisoUsuarioMenorCategoriaPermisoPerfil(permisoPerfil.split(':'), permisoUsuario.split(':'));
-
-            //                 if (res.agregarPermisoPerfil && !perfilPermisoYaAgregado) {
-            //                     arregloPermisosAgregar.push(permisoPerfil);
-            //                     perfilPermisoYaAgregado = true; // para evitar agregar varias veces el mismo permiso del perfil al usuario
-            //                 }
-            //                 return res.borrarPermisoUsuario;
-            //             }
-            //         }));
-            //     });
-            // }
-
-            // // procedo a borrar del usuario todos los permisos que se encuentran en el arreglo de borrar
-            // arregloPermisosBorrar.forEach((permisoBorrrar: string) => {
-            //     this.permisosUsuarioOrg.splice(this.permisosUsuarioOrg.indexOf(permisoBorrrar), 1);
-            // });
-
-            // this.permisosUsuarioOrg = this.permisosUsuarioOrg.concat(arregloPermisosAgregar);
-            // **************************************************************************************
-
-        } else { // destilda el perfil, quito todos los permisos del perfil
-            this.permisosUsuarioOrg = quitarPermiso(this.permisosUsuarioOrg, permisosPerfilTildado, this.arbolPermisosCompleto);
-
-
-            // Ejemplo de borrar
-
-            // permisos perfil         permisos usuario
-            // reportes                reportes
-            // matriculaciones:*       matriculaciones:profesionales:getProfesional
-            //                         matriculaciones:turnos:*
-
-            // tm:especialidad:*       tm:especialidad:postEspecialidad
-            //                         tm:organizacion:create
-            //                         tm:organizacion:edit
-
-            // cda:get                 cda:*
-
-
-            // El usuario debería quedar así:
-            //                         tm:organizacion:create
-            //                         tm:organizacion:edit
-            //                         cda:list
-            //                         cda:post
-            //                         cda:organizacion
-            //                         cda:paciente
-
-            // Emtonces por cada permiso del perfil quitado hay 4 opciones:
-            // - Los permisos son iguales  (reportes - reportes)
-            // - Perfil Mayor categoría usuario (matriculaciones:* - matriculaciones:profesionales)
-            // - Perfil Menor categoría usuario (cda:get - cda:*)
-            // - Perfil Igual categoría usuario (tm:especialidad - tm:organizacion)
-
-
-            // permisosPerfilTildado.forEach((permisoPerfil: string) => {
-            //     this.permisosUsuarioOrg = this.permisosUsuarioOrg.filter((permisoUsuario: string) => {
-            //         // reportes - reportes se filtra con permisoPerfil !== permisoUsuario
-            //         if (permisoPerfil === permisoUsuario) {
-            //             return false;
-            //         }
-            //         if (this.tieneRelacionAscendente(permisoPerfil, permisoUsuario)) {
-            //             if (permisoPerfil.length < permisoUsuario.length) { // si el permiso del perfil es ascendente del permiso del usuario
-            //                 let longitudPermiso = permisoPerfil.indexOf('*') === -1 ? permisoPerfil.length : permisoPerfil.length - 2;
-            //                 return permisoUsuario.substr(0, longitudPermiso) !== permisoPerfil;
-            //             } else { // si el permiso del perfil es descendente del permiso del usuario
-            //                 // buscar todos los hermanos del permiso del perfil. Borrar todos
-            //                 // perfil= mpi:paciente:*   usuario = mpi:*
-            //                 let longitudPermiso = permisoPerfil.indexOf('*') === -1 ? permisoPerfil.length : permisoPerfil.length - 2;
-            //                 let filtroPermiso = permisoPerfil.substr(0, longitudPermiso);
-
-
-            //                 // estos son los permisos que debo agregar al usuario
-            //                 let subpermisos = this.buscarSubpermisos(permisoUsuario);
-            //                 arregloPermisosAgregar = arregloPermisosAgregar.concat(subpermisos.filter((subpermiso: string) => {
-            //                     return subpermiso.substr(0, filtroPermiso.length) !== filtroPermiso;
-            //                 }));
-            //             }
-
-            //         } else {
-            //             return true; // no tienen nada que ver los permisos   mpi:*   turnos:*
-            //         }
-            //     });
-            // });
-
-            // this.permisosUsuarioOrg = this.permisosUsuarioOrg.concat(arregloPermisosAgregar);
-        }
-        // mirar si se puede reutilizar el código entre los dos caminos del if. Posiblemente el borrado de los permisos pueda hacerse al ultimo, una sola vez el codigo
+        this.permisosUsuarioOrg = event.value ? agregarPermiso(this.permisosUsuarioOrg, permisosPerfilTildado) : quitarPermiso(this.permisosUsuarioOrg, permisosPerfilTildado, this.arbolPermisosCompleto);
         this.seleccionCheckboxPerfil.emit({ checked: this.perfilesOrganizacion[indice].checked, permisos: this.permisosUsuarioOrg });
     }
 
     /**
      * Tilda los perfiles cuando el usuario tiene todos sus permisos
      * @private
-     * @returns {*}
      * @memberof PermisosVisualizacionComponent
      */
-    private tildarPerfilesCorrespondientes(): any {
-        debugger;
+    private tildarPerfilesCorrespondientes() {
         this.perfilesOrganizacion.forEach((perfil: { perfil: IPerfilUsuario, checked: boolean }) => {
-            perfil.checked = !perfil.perfil.permisos.some((permiso: string) => {
-                let bandera = !this.usuarioTienePermiso(permiso);
-                return bandera;
-            });
+            perfil.checked = this.tienePerfilAsignado(perfil.perfil);
         });
     }
 
@@ -365,9 +246,6 @@ export class PermisosVisualizacionComponent {
     }
 
     public imprimirPermisos(permisos: string[]): string {
-        // console.log('Visualizacion, imprimirPermisos: permisos - arbol', permisos, this.arbolPermisosCompleto);
-        let a = obtenerPermisosParaMostrar(permisos, this.arbolPermisosCompleto);
-        // console.log(a);
-        return a;
+        return obtenerPermisosParaMostrar(permisos, this.arbolPermisosCompleto);
     }
 }
