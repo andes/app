@@ -47,8 +47,8 @@ export class GestorPerfilesComponent implements OnInit {
     nuevoPerfil() {
         this.perfilSeleccionado = {
             nombre: null,
-            permisos: null,
-            organizacion: null,
+            permisos: [],
+            organizacion: this.auth.organizacion.id,
             activo: false
         };
     }
@@ -63,6 +63,7 @@ export class GestorPerfilesComponent implements OnInit {
             this.plex.confirm('¿Está seguro que desea eliminar el perfil?', 'Eliminar Perfil').then((confirmar: boolean) => {
                 if (confirmar) {
                     this.perfilUsuarioService.delete(perfilBorrar.id).subscribe(() => {
+                        this.perfilSeleccionado = null;
                         this.recuperarPerfiles();
                     });
                 }
