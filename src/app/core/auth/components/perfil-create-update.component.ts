@@ -64,13 +64,9 @@ export class PerfilFormComponent implements OnInit {
     guardar(event) {
         if (event.formValid) {
             this.savePermisos();
-            if (!this.esGlobal) { // si es local
-                this.perfilEdit.organizacion = this.auth.organizacion.id;
-            } else if (this.perfilEdit.organizacion) { // si es global y tiene cargada una organización, borro la organización (paso de local a global)
-                this.perfilEdit.organizacion = null;
-            }
+            this.perfilEdit.organizacion = !this.esGlobal ? this.auth.organizacion.id : null;
             (this.perfilEdit.id ? this.perfilUsuarioService.putPerfil(this.perfilEdit) : this.perfilUsuarioService.postPerfil(this.perfilEdit)).subscribe(res => {
-                this.plex.toast('success', 'Perfil guardado');
+                this.plex.toast('success', this.perfilEdit.id ? 'Perfil guardado' : 'Perfil creado');
                 this.perfilGuardado.emit(res);
             });
         } else {

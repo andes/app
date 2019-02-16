@@ -102,7 +102,7 @@ export class GestorUsuarioComponent implements OnInit {
      */
     guardar(event) {
         this.plex.confirm('Se guardarán los siguientes permisos: <br>' + obtenerPermisosParaMostrar(this.permisosUsuarioOrg, this.arbolPermisosCompleto) +
-            '<br>¿Desea continuar?',
+            '<br><br>¿Desea continuar?',
             'Guardar Permisos', 'Guardar').then((confirmar: boolean) => {
                 if (confirmar) {
                     this.savePermisos();
@@ -144,7 +144,7 @@ export class GestorUsuarioComponent implements OnInit {
      * @memberof GestorUsuarioComponent
      */
     seleccionPerfil(event: { checked: boolean, permisos: string[] }) {
-        this.permisosUsuarioOrg = [...event.permisos];
+        this.permisosUsuarioOrg = event.permisos;
     }
 
     /**
@@ -153,7 +153,6 @@ export class GestorUsuarioComponent implements OnInit {
      * @memberof GestorUsuarioComponent
      */
     seleccionPermiso(event: { checked: boolean, permiso: IPermiso }) {
-        console.log('Gestor antes de obtener permiso nuevo: ', this.permisosUsuarioOrg, '  Permiso nuevo: ', event.permiso);
         let arrayPermiso: string[] = [];
         arrayPermiso.push(event.permiso.child ? event.permiso.key + ':*' : event.permiso.key);
         this.permisosUsuarioOrg = event.checked ? agregarPermiso(this.permisosUsuarioOrg, arrayPermiso) : quitarPermiso(this.permisosUsuarioOrg, arrayPermiso, this.arbolPermisosCompleto);

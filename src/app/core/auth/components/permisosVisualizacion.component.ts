@@ -1,4 +1,3 @@
-import { ArbolPermisosComponent } from './../../../components/usuario/arbolPermisos.component';
 import { IPermiso } from './../interfaces/IPermiso';
 import { UsuarioService } from './../../../services/usuarios/usuario.service';
 import { PerfilUsuarioService } from './../services/perfilUsuarioService';

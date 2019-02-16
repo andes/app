@@ -14,7 +14,8 @@
 </plex-accordion>
 <div *ngIf="item.type">
 
-    <plex-bool [(ngModel)]="state" *ngIf="item.type === 'boolean'" label="{{item.title}}" type="slide" (change)="tildarPermiso($event)">
+    <plex-bool [(ngModel)]="state" *ngIf="item.type === 'boolean'" label="{{item.title}}" type="slide" (change)="tildarPermiso($event)"
+        title="{{item.comment ? item.comment : item.title}}">
     </plex-bool>
 
     <div *ngIf="item.type !== 'boolean'">
