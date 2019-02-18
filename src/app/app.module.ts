@@ -378,6 +378,7 @@ import { LaboratorioContextoCacheService } from './apps/rup/laboratorio/services
 import { ProtocoloService } from './apps/rup/laboratorio/services/protocolo.service';
 import { PracticaService } from './apps/rup/laboratorio/services/practica.service';
 import { HojaTrabajoService } from './apps/rup/laboratorio/services/hojatrabajo.service';
+import { LoteDerivacionService } from './apps/rup/laboratorio/services/loteDerivacion.service';
 import { AreaLaboratorioService } from './apps/rup/laboratorio/services/areaLaboratorio.service';
 import { LaboratorioComponent } from './apps/rup/laboratorio/components/laboratorio.component';
 import { FiltrosBusquedaProtocoloComponent } from './apps/rup/laboratorio/components/gestor-protocolos/filtros-busqueda/filtros-busqueda-protocolo.component';
@@ -402,6 +403,7 @@ import { LaboratorioDerivacionesComponent } from './apps/rup/laboratorio/compone
 import { RecepcionarDerivacionesComponent } from './apps/rup/laboratorio/components/derivaciones/recepcionar-derivacion/recepcionar-derivacion.component';
 import { GestorLotesComponent } from './apps/rup/laboratorio/components/derivaciones/gestor-lotes/gestor-lotes.component';
 import { PrepararLoteComponent } from './apps/rup/laboratorio/components/derivaciones/preparar-lote/preparar-lote.component';
+import { ListaProtocolosLotesComponent } from './apps/rup/laboratorio/components/derivaciones/preparar-lote/lista-protocolos-lotes/lista-protocolos-lotes.component';
 
 import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 // Configuracion prestaciones
@@ -689,7 +691,7 @@ registerLocaleData(localeEs, 'es');
         RecepcionarDerivacionesComponent,
         GestorLotesComponent,
         PrepararLoteComponent,
-
+        ListaProtocolosLotesComponent,
 
         // MPI
         PacienteBuscarComponent,
@@ -747,6 +749,7 @@ registerLocaleData(localeEs, 'es');
         PacienteService,
         PracticaService,
         HojaTrabajoService,
+        LoteDerivacionService,
         ProtocoloService,
         LaboratorioContextoCacheService,
         AreaLaboratorioService,

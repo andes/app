@@ -1,3 +1,4 @@
+import { Constantes } from './../../controllers/constants';
 import { PrestacionesService } from './../../../../../modules/rup/services/prestaciones.service';
 import { TablaDatalleProtocoloComponent } from './tabla-detalle-protocolo/tabla-datalle-protocolo.component';
 import { PracticaService } from './../../services/practica.service';
@@ -8,9 +9,9 @@ import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
-import {     } from '../../../../../modules/rup/services/prestaciones.service';
+import {  } from '../../../../../modules/rup/services/prestaciones.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
-import { Constantes } from '../../controllers/constants';
+import {  } from '../../controllers/constants';
 import { PacienteBuscarResultado } from '../../../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 import { LaboratorioContextoCacheService } from '../../services/protocoloCache.service';
 
@@ -321,6 +322,14 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     iniciarProtocolo() {
+        if (this.laboratorioContextoCacheService.isModoControl() || this.laboratorioContextoCacheService.isModoRecepcion()) {
+            this.solicitudProtocolo.solicitudPrestacion.organizacionDestino = this.auth.organizacion;
+            // Verificar utilidad de este bloque
+            this.solicitudProtocolo.solicitudPrestacion.fechaTomaMuestra = this.fechaTomaMuestra;
+            // await this.cargarPracticasAEjecucion();
+        }
+
+        this.modelo.solicitud.tipoPrestacion = Constantes.conceptoPruebaLaboratorio;
         let organizacionSolicitud = this.auth.organizacion.id;
         this.servicioProtocolo.getNumeroProtocolo(organizacionSolicitud).subscribe(numeroProtocolo => {
             this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo = numeroProtocolo;
@@ -335,7 +344,12 @@ export class ProtocoloDetalleComponent
      */
     async guardarProtocolo(next) {
         if (this.modelo._id) {
-            this.actualizarProtocolo(next);
+            if (this.laboratorioContextoCacheService.isModoControl()) {
+                this.actualizarAuditoriaProtocolo(next);
+            } else if (this.laboratorioContextoCacheService.isModoCarga()
+                || this.laboratorioContextoCacheService.isModoValidacion()) {
+                this.actualizarProtocoloRegistrosEjecucion(next);
+            }
         } else {
             this.guardarNuevoProtocolo();
         }
@@ -397,7 +411,39 @@ export class ProtocoloDetalleComponent
      * @returns
      * @memberof ProtocoloDetalleComponent
      */
-    private async actualizarProtocolo(next) {
+    private async actualizarAuditoriaProtocolo(next) {
+
+        this.servicioPrestacion.patch(this.modelo._id, this.getParams()).subscribe(async () => {
+            if (next) {
+                this.protocolos.splice(this.indexProtocolo, 1);
+                if (this.laboratorioContextoCacheService.isModoRecepcion() || this.protocolos.length === 0) {
+                    this.contextoCache.mostrarCuerpoProtocolo = true;
+                    this.volverAListaControEmit.emit();
+                } else {
+                    if (!this.protocolos[this.indexProtocolo]) {
+                        this.indexProtocolo = this.protocolos.length - 1;
+                    }
+                    this.cargarProtocolo(this.protocolos[this.indexProtocolo]);
+                }
+                this.plex.toast('success', this.modelo.ejecucion.registros[0].nombre, 'Solicitud guardada', 4000);
+            } else if (this.contextoCache.modoAVolver) {
+                this.contextoCache.modoAVolver = null;
+            } else {
+                this.contextoCache.mostrarCuerpoProtocolo = true;
+                this.volverAListaControEmit.emit();
+            }
+        });
+    }
+
+    /**
+     *
+     *
+     * @private
+     * @param {*} next
+     * @returns
+     * @memberof ProtocoloDetalleComponent
+     */
+    private async actualizarProtocoloRegistrosEjecucion(next) {
 
         if (this.laboratorioContextoCacheService.isModoValidacion() || this.laboratorioContextoCacheService.isModoCarga()) { }  {
             this.setearEstadosCarga();
@@ -483,14 +529,9 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     guardarSolicitud() {
-        this.modelo.solicitud.tipoPrestacion = Constantes.conceptoPruebaLaboratorio;
 
-        if (this.laboratorioContextoCacheService.isModoControl() || this.laboratorioContextoCacheService.isModoRecepcion()) {
-            this.solicitudProtocolo.solicitudPrestacion.organizacionDestino = this.auth.organizacion;
-            this.solicitudProtocolo.solicitudPrestacion.fechaTomaMuestra = this.fechaTomaMuestra;
 
-            // await this.cargarPracticasAEjecucion();
-        } else if (this.laboratorioContextoCacheService.isModoValidacion() && !this.isProtocoloValidado()) {
+        if (this.laboratorioContextoCacheService.isModoValidacion() && !this.isProtocoloValidado()) {
             // this.actualizarEstadoValidacion();
         }
 

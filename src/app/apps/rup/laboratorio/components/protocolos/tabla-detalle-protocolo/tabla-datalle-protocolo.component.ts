@@ -23,7 +23,13 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     }
 
     @Output() verHistorialResultadosEmitter: EventEmitter<any> = new EventEmitter<any>();
-    @Input() modo: any;
+    // @Input() modo: any;
+    modo: any;
+    @Input('modo')
+    set mm(m) {
+        this.modo = m;
+    }
+
     @Input() modelo: any;
     @Input() solicitudProtocolo: any;
     @Input() busqueda: any;
@@ -305,7 +311,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
             let existe = this.solicitudProtocolo.solicitudPrestacion.practicas.findIndex(x => x.conceptId === practica.concepto.conceptId);
 
             if (existe === -1) {
-                this.solicitudProtocolo.solicitudPrestacion.practicas.push(practica.concepto);
+                this.solicitudProtocolo.solicitudPrestacion.practicas.push(practica);
                 let practicaEjecucion = this.generateRegistroEjecucion(practica);
                 this.practicasVista.push(practicaEjecucion);
 

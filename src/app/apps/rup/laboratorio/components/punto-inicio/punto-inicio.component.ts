@@ -1,4 +1,3 @@
-import { Constantes } from './../../controllers/constants';
 import { LaboratorioContextoCacheService } from './../../services/protocoloCache.service';
 import { IPaciente } from './../../../../../interfaces/IPaciente';
 import { AppMobileService } from './../../../../../services/appMobile.service';

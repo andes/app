@@ -15,7 +15,6 @@ export class LaboratorioDerivacionesComponent implements OnInit {
     }
 
     onTabChange($event) {
-        console.log('onTabChange', $event);
     }
 }
 

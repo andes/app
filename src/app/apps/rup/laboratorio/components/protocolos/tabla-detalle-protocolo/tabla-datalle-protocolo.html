@@ -1,4 +1,4 @@
-<ng-container *ngIf='!showGestorAlarmas && !cache.cargarPorPracticas'>
+<ng-container *ngIf='modo && !showGestorAlarmas && !cache.cargarPorPracticas'>
     <table class="table table-striped table-sm">
         <thead>
             <th *ngIf='modo.nombre ==="recepcionSinTurno" || modo.nombre ==="recepcion" || modo.nombre ==="control"' style='width: 100px;'>Cód.</th>

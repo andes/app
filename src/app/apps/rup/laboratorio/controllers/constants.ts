@@ -48,6 +48,11 @@ export const Constantes = {
             nombre: 'recepcionSinTurno',
             titulo: 'Recepcionar Paciente Sin Turno'
         }
+    },
+    estadosLotes: {
+        preparado: 'preparado',
+        transporte:  'en transporte',
+        recibido: 'recibido'
     }
 };
 

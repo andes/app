@@ -1,0 +1,24 @@
+<table *ngIf='protocolos' class="table able-striped table-sm"> 
+    <thead>
+        <th></th>
+        <th>Practica</th>
+        <th>Nro.</th>
+        <th>Fecha *</th>
+        <th>DNI</th>
+        <th>Apellidos y Nombres</th>
+    </thead>
+    <tbody>
+        <ng-container *ngFor="let protocolo of protocolos" >
+            <tr class="hover" *ngFor="let registro of protocolo.ejecucion.registros">
+                <td>
+                    <plex-bool type="checkbox" [(ngModel)]='valoresCheckboxes[registro._id].value' (change)="onCheckboxChange($event, protocolo, registro)" name="validarTodos"></plex-bool>
+                </td>
+                <td>{{ registro.nombre }}</td>
+                <td>{{ protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto }}</td>
+                <td>{{ protocolo.ejecucion.fecha | fecha }}</td>
+                <td>{{protocolo.paciente.documento}}</td>
+                <td>{{protocolo.paciente.apellido}} {{protocolo.paciente.nombre}}</td>
+            </tr>
+        </ng-container>
+    </tbody>
+</table>

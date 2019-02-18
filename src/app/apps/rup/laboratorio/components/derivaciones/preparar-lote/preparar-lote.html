@@ -3,31 +3,31 @@
         <div class="page-title">
             Preparar Lote
         </div>
+        <plex-button position="right" type="success" label="Crear Lote" class="mr-3" (click)="guardarLoteDerivacion()"></plex-button>
     </div>
 </header>
 <div class="filtros-container lote-derivacion ml-1">
     <span>
-        <plex-select [(ngModel)]="area" (change)="onChangeSelectArea($event)" name="area" label="Área" [data]='areas'></plex-select>
-    </span>
+        <plex-select [(ngModel)]="organizacionDerivacion" (change)="buscar($event, 'organizacionDerivacion')" name="efectorDerivar" label="Efector (A derivar)"
+            (getData)="loadOrganizaciones($event)"></plex-select>
+    </span>        
     <span>
         <plex-datetime type="date" [(ngModel)]="desde" (change)="buscar($event,'fechaDesde')" name="solicitudDesde"
             label="Fecha desde" [required]="true" skipBy="day">
         </plex-datetime>
     </span>
     <span>
-        <plex-datetime type="date" [(ngModel)]="gasta" (change)="buscar($event,'fechaHasta')" name="solicitudHasta"
+        <plex-datetime type="date" [(ngModel)]="hasta" (change)="buscar($event,'fechaHasta')" name="solicitudHasta"
             label="Fecha hasta" [required]="true" skipBy="day">
         </plex-datetime>
     </span>
     <span>
-        <plex-select [(ngModel)]="organizacionDestino" (change)="buscar($event)" name="efectorDerivar" label="Efector (A derivar)"
-            (getData)="loadOrganizaciones($event)"></plex-select>
+        <plex-select [(ngModel)]="area" (change)="onChangeSelectArea($event)" name="area" label="Área" [data]='areas'></plex-select>
     </span>
     <span>
         <plex-select [(ngModel)]="practicas" (change)="buscar($event,'practicas')" name="practicas" label="Análisis"
             [data]='practicasFiltro' labelField="nombre" multiple="true"></plex-select>
     </span>
-    <!-- <span>
-        <plex-select [(ngModel)]="estado" (change)="buscar($event)" name="estado" label="Estado (de derivación)" [data]='estados'></plex-select>
-    </span> -->
 </div>
+
+<lista-protocolos-lotes *ngIf='protocolos.length > 0' [protocolos]="protocolos" [lote]="lote"></lista-protocolos-lotes>
