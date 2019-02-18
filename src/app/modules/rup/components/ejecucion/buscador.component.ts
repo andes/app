@@ -1,5 +1,4 @@
 import { Plex } from '@andes/plex';
-import { SemanticTag } from './../../interfaces/semantic-tag.type';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, SimpleChanges, OnChanges, Renderer2 } from '@angular/core';
 import { PrestacionesService } from '../../services/prestaciones.service';
@@ -8,6 +7,7 @@ import { Auth } from '@andes/auth';
 import { IPrestacion } from './../../interfaces/prestacion.interface';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
 import { ISnomedSearchResult } from './../../interfaces/snomedSearchResult.interface';
+import { SnomedBuscarService } from '../../../../components/snomed/snomed-buscar.service';
 
 @Component({
     selector: 'rup-buscador',
@@ -123,6 +123,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         private frecuentesProfesionalService: FrecuentesProfesionalService,
         private auth: Auth, private elementoRUP: ElementosRUPService,
         public servicioPrestacion: PrestacionesService,
+        private buscadorServide: SnomedBuscarService,
         public renderer: Renderer2,
         private plex: Plex) {
     }
@@ -370,6 +371,8 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             }
             if ((busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes' || busquedaActual === 'frecuentesTP') && this.search) {
                 this.buscar();
+            } else {
+                this.buscadorServide.search(this.search);
             }
         }
         this.autofocus = true;

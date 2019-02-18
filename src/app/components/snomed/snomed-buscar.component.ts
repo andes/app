@@ -1,7 +1,8 @@
-import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { SnomedService } from './../../services/term/snomed.service';
 import { Unsubscribe } from '@andes/shared';
+import { SnomedBuscarService } from './snomed-buscar.service';
 
 @Component({
     selector: 'snomed-buscar',
@@ -12,52 +13,34 @@ import { Unsubscribe } from '@andes/shared';
     ]
 })
 
-export class SnomedBuscarComponent implements OnInit, OnChanges {
-
-    public conceptosTurneables: any[];
-    // searchTermInput: Acá podemos enviarle como input un string
-    // para que busque en SNOMED. ATENCION: al mandar este input se oculta
-    // el text field para ingresar la busqueda a mano
-    @Input() searchTermInput: String;
-    // tipo de busqueda a realizar por: problemas / procedimientos /
+export class SnomedBuscarComponent implements OnInit, OnDestroy {
     @Input() tipoBusqueda: String;
-    // output de informacion que devuelve el componente
-    // @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
-    // Output que devuelve los resultados de la busqueda
-    @Output() onSearch: EventEmitter<any> = new EventEmitter<any>();
-
     @Input() autofocus: Boolean = true;
 
-    // termino a buscar en SNOMED
+    @Output() onSearch: EventEmitter<any> = new EventEmitter<any>();
+
     public searchTerm: String = '';
     public loading = false;
+    private _suscribe = null;
 
     constructor(
         private SNOMED: SnomedService,
-        private plex: Plex
+        private plex: Plex,
+        private buscadorService: SnomedBuscarService
     ) {
     }
 
     ngOnInit() {
-        if (this.searchTermInput) {
-            this.busquedaManual();
-        }
+        this._suscribe = this.buscadorService.onChange.subscribe((text) => {
+            this.searchTerm = text;
+            this.buscar();
+        });
     }
 
-    ngOnChanges(changes: any) {
-        if (this.searchTermInput) {
-            // this.busquedaManual();
-        }
+    ngOnDestroy() {
+        this._suscribe.unsubscribe();
     }
 
-    // iniciar busqueda es un metodo creado para poder buscar cuando
-    // ejecuto alguna acción en base al Input() _searchTerm
-    // (que viene desde otro componente)
-    // Si ese Input() no viene definido usa uno propio este componente
-    busquedaManual() {
-        this.searchTerm = this.searchTermInput;
-        this.buscar();
-    }
 
     /**
      * Buscar trastornos o hallazgos en el servicio de SNOMED

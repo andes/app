@@ -16,9 +16,9 @@ import { ConceptObserverService } from './../../services/conceptObserver.service
 import { IPaciente } from './../../../../interfaces/IPaciente';
 import { ObraSocialService } from './../../../../services/obraSocial.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
-import { Observable } from 'rxjs/Observable';
 import { RUPComponent } from '../core/rup.component';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
+import { SnomedBuscarService } from '../../../../components/snomed/snomed-buscar.service';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -123,7 +123,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         private servicioPaciente: PacienteService,
         private servicioAgenda: AgendaService,
         private conceptObserverService: ConceptObserverService,
-        private servicioSnomed: SnomedService) {
+        private servicioSnomed: SnomedService, private buscadorService: SnomedBuscarService) {
 
 
     }
