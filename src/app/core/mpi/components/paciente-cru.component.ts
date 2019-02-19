@@ -509,6 +509,21 @@ export class PacienteCruComponent implements OnInit {
         }
     }
 
+    verificarCorreoValido(indice, form) {
+        let formato = new RegExp(/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/);
+        let mail = String(this.pacienteModel.contacto[indice].valor);
+        form.form.controls['valor-' + indice].setErrors(null);  // con cada caracter nuevo 'limpia' el error y reevalúa
+        window.setTimeout(() => {
+            if (mail) {
+                if (formato.test(mail)) {
+                    form.form.controls['valor-' + indice].setErrors(null);
+                } else {
+                    form.form.controls['valor-' + indice].setErrors({ 'invalid': true });
+                }
+            }
+        }, 500);
+    }
+
     onFocusout(type, value) {
 
         let item = null;
@@ -527,6 +542,9 @@ export class PacienteCruComponent implements OnInit {
             }
         }
     }
+
+    // ------------------------------------------------------------------
+
 
     save(event, ignoreCheck = false) {
         if (!event.formValid) {
