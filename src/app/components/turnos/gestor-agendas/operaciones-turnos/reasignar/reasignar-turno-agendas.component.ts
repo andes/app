@@ -219,8 +219,8 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     }
 
     hayTurnosDisponibles(agenda: any) {
-        let profesionalOrigen = this.agendaAReasignar.profesionales.length > 0 ? this.agendaAReasignar.profesionales[0].id : null;
-        let profesionalDestino = agenda.profesionales.length > 0 ? agenda.profesionales[0]._id : null;
+        let profesionalOrigen = (this.agendaAReasignar.profesionales && this.agendaAReasignar.profesionales.length > 0) ? this.agendaAReasignar.profesionales[0].id : null;
+        let profesionalDestino = (agenda.profesionales && agenda.profesionales.length > 0) ? agenda.profesionales[0]._id : null;
         return agenda.bloques.filter(bloque => {
             return (bloque.restantesDelDia > 0 && moment(bloque.horaInicio).isSame(this.hoy, 'day')) ||
                 (bloque.restantesProgramados > 0 && moment(bloque.horaInicio).isAfter(this.hoy, 'day') ||

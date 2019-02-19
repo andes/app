@@ -1,13 +1,14 @@
 import * as moment from 'moment';
-import { Component, AfterViewInit, HostBinding } from '@angular/core';
+import { Component, AfterViewInit, HostBinding, OnInit } from '@angular/core';
 import { EstRupService } from '../../services/rup-estadisticas.service';
 import { SnomedService } from '../../services/snomed.service';
+import { Plex } from '@andes/plex';
 
 @Component({
     templateUrl: 'rup-pacientes.html',
     styleUrls: ['rup-pacientes.scss']
 })
-export class RupPacientesComponent implements AfterViewInit {
+export class RupPacientesComponent implements AfterViewInit, OnInit {
     @HostBinding('class.plex-layout') layout = true;
 
     showData = false;
@@ -28,7 +29,19 @@ export class RupPacientesComponent implements AfterViewInit {
     public registros = [];
     public tablas: any = [];
 
-    constructor(public estService: EstRupService, public snomed: SnomedService) { }
+    constructor(
+        public estService: EstRupService,
+        public snomed: SnomedService,
+        private plex: Plex
+    ) { }
+
+    ngOnInit() {
+        this.plex.updateTitle([
+            { route: '/', name: 'ANDES' },
+            { name: 'Dashboard', route: '/dashboard' },
+            { name: 'RUP' }
+        ]);
+    }
 
     ngAfterViewInit() {
         this.snomed.getQuery({ expression: '<1651000013107' }).subscribe((result) => {
