@@ -90,7 +90,7 @@
             </div>
             <div class="col-2">
                 <ng-container *ngIf="filtroActual === 'planes'">
-                    <plex-button [icon]="showFiltros ? 'mdi mdi-close' : 'mdi mdi-magnify'" size="sm" type="info" [title]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" class="float-right" (click)="showFiltros = !showFiltros">
+                    <plex-button [icon]="showFiltros ? 'mdi mdi-close' : 'mdi mdi-magnify'" size="sm" type="info" [title]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" class="float-right" (click)="toogleFiltros()">
                     </plex-button>
                 </ng-container>
             </div>

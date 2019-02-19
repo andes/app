@@ -160,6 +160,14 @@ export class HudsBusquedaComponent implements OnInit {
         this._onDragEnd.emit(e);
     }
 
+    toogleFiltros() {
+        this.showFiltros = !this.showFiltros;
+        if (!this.showFiltros) {
+            this.fechaInicio = this.fechaFin = this.prestacionSeleccionada = null;
+            this.filtrar();
+        }
+    }
+
     /**
      * Actualiza la vista. En un futuro, podría cargar a demanda los datos requeridos
      *
