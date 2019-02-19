@@ -2,6 +2,8 @@ $adi-font-path: '~@andes/icons/fonts/';
 @import '~@andes/icons/scss/andes-icons';
 @import '~@andes/plex/src/lib/css/variables';
 
+@import './functions';
+
 // Variables
 $problema: #f1930d; // deprecated
 $trastorno: #ff4a1a;
@@ -21,7 +23,7 @@ $registro: #8bc43f; // elemento de registro
 // la interpolacion del string a una variable directamente
 $rup_colors: (problema: $problema, calificador: $calificador, 
 laboratorio: $laboratorio, trastorno: $trastorno, situación: $problema, 
-hallazgo: $hallazgo, procedimiento: $procedimiento, regimen: $procedimiento, 
+hallazgo: $hallazgo, procedimiento: $procedimiento, 'régimen.tratamiento': $procedimiento, régimen: $procedimiento, 
 entidad: $procedimiento, solicitud: $solicitud, plan: $solicitud, 
 producto: $producto, adjunto: $adjunto, elemento: $registro, 
 elementoderegistro: $registro, 'estructura.corporal': $registro,
