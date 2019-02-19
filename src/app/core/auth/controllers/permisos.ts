@@ -212,9 +212,6 @@ function
             }
         }
 
-        let permisosFiltrados = arregloImprimir.filter((perm: string) => {
-            return filtro === perm.substr(0, filtro.length);
-        });
 
         // imprimir filtro
         if (keysYaImpresas && !keysYaImpresas.find((key: string) => { return key === filtro; })) {
@@ -239,16 +236,16 @@ function
                             res += '- ' + permisoEncontrado.title;
                             break;
                         case 'prestacion':
-                            // servicioTipoPrestacion.get({ id: agregar[2] }).subscribe((data: ITipoPrestacion[]) => {
+                            // servicioTipoPrestacion.get({ id: [agregar[2]] }).subscribe((data: ITipoPrestacion[]) => {
                             //     if (data.length) {
+                            //         console.log('Permisos data', data);
                             //         res += '- ' + data[0].term;
                             //     } else {
                             //         console.log('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nEntro en el false\n\n\n\n\n\n');
                             //     }
-                            //     console.log('prestaciones: ', data);
-                            // permisoEncontrado = null;
-                            res += '- ' + agregar[2];
+                            //     permisoEncontrado = null;
                             // });
+                            res += '- ' + agregar[2];
                             break;
                         case 'organizacion':
                             res += '- ' + agregar[3];
@@ -264,6 +261,9 @@ function
         }
 
         if (nivel < permArray.length - 1) {
+            let permisosFiltrados = arregloImprimir.filter((perm: string) => {
+                return filtro === perm.substr(0, filtro.length);
+            });
             res = obtenerArreglosMismoNivel(permisosFiltrados, nivel + 1, res, keysYaImpresas, arbolPermisos, permisoEncontrado, servicioTipoPrestacion);
             return res;
         }

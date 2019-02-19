@@ -88,7 +88,7 @@ export class PermisosVisualizacionComponent {
      * @type {[{IPerfilUsuario, boolean}]}
      * @memberof PermisosVisualizacionComponent
      */
-    public perfilesOrganizacion: { perfil: IPerfilUsuario, checked: boolean }[] = [];
+    public perfilesOrganizacion: { perfil: IPerfilUsuario, checked: boolean, permisos: string }[] = [];
 
     public usuario = null;
     public organizacion: IOrganizacion = null;
@@ -109,7 +109,7 @@ export class PermisosVisualizacionComponent {
         this.perfilUsuarioService.get({ idOrganizacion: org ? org.id : null }).subscribe((res: IPerfilUsuario[]) => {
             res.forEach((perfil: IPerfilUsuario) => {
                 if (perfil.activo) {
-                    this.perfilesOrganizacion.push({ perfil: perfil, checked: this.tienePerfilAsignado(perfil) });
+                    this.perfilesOrganizacion.push({ perfil: perfil, checked: this.tienePerfilAsignado(perfil), permisos: this.imprimirPermisos(perfil.permisos) });
                 }
             });
         });
@@ -239,7 +239,7 @@ export class PermisosVisualizacionComponent {
         });
     }
 
-    public imprimirPermisos(permisos: string[]): string {
+    private imprimirPermisos(permisos: string[]): string {
         return obtenerPermisosParaMostrar(permisos, this.arbolPermisosCompleto, this.servicioTipoPrestacion);
     }
 }

@@ -25,7 +25,7 @@ export class SelectorUsuarioEfectorComponent {
      * @memberof SelectorUsuarioEfectorComponent
      */
     @Output() seleccionOrganizacion = new EventEmitter<IOrganizacion>();
-    @ViewChildren(ArbolPermisosComponent) childsComponents: QueryList<ArbolPermisosComponent>;
+    // @ViewChildren(ArbolPermisosComponent) childsComponents: QueryList<ArbolPermisosComponent>;
     /**
    * Indica el índice de la pestaña que se encuentra activa. Por defecto es la primera
    *
@@ -137,9 +137,9 @@ export class SelectorUsuarioEfectorComponent {
                             this.organizacionesUsuario = dataUss;
                             if (this.organizacionesUsuario && this.organizacionesUsuario.length > 0) {
                                 //     this.organizacionSelect = this.organizacionesUsuario[0];
-                                this.organizacionSelect = null;
                                 this.onOrgChange();
                             }
+                            this.organizacionSelect = null;
                             this.loadUser();
                             this.getOrgActualAuthUs();
                         });

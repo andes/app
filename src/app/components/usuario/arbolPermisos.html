@@ -26,6 +26,7 @@
             </plex-bool>
         </h5>
         <plex-select [multiple]="true" [readonly]="all" [(ngModel)]="seleccionados" (getData)="loadData(item.type, $event)"
-            placeholder="Seleccione los elementos con permisos" (change)="selectChange()" name="plexSelect" idField="id"></plex-select>
+            placeholder="Seleccione los elementos con permisos" (change)="selectChange($event)" name="plexSelect"
+            idField="id"></plex-select>
     </div>
 </div>
