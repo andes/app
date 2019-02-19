@@ -25,6 +25,12 @@ export class PerfilFormComponent implements OnInit {
         this.perfilEdit = {} as any;
         Object.assign(this.perfilEdit, value);
         this.esGlobal = !this.perfilEdit.organizacion ? true : false;
+
+        this.puedeModificarAlcance = (!this.perfilEdit.id && this.auth.check('usuarios:perfil:crear:global') && this.auth.check('usuarios:perfil:crear:local')) ||
+            (this.perfilEdit.id && this.auth.check('usuarios:perfil:modificar:global') && this.auth.check('usuarios:perfil:modificar:local'));
+        this.puedeModificar = (!this.perfilEdit.id && this.auth.check('usuarios:perfil:modificar:global')) ||
+            (this.perfilEdit.id && this.auth.check('usuarios:perfil:modificar:local'));
+
     }
     @Output() perfilGuardado = new EventEmitter<IPerfilUsuario>();
 
@@ -44,8 +50,18 @@ export class PerfilFormComponent implements OnInit {
      * @memberof PerfilFormComponent
      */
     esGlobal: boolean;
-
-
+    /**
+     * Indica si se debe mostrar el bool que permite modificar el alcance del perfil
+     * @type {boolean}
+     * @memberof PerfilFormComponent
+     */
+    puedeModificarAlcance: boolean;
+    /**
+     * Indica si se debe mostrar los datos del perfil para poder modificarlos o no
+     * @type {boolean}
+     * @memberof PerfilFormComponent
+     */
+    puedeModificar: boolean;
 
     public permisos$: any;
     public permisos: any[] = [];

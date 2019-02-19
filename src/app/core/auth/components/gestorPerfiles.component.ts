@@ -23,11 +23,31 @@ export class GestorPerfilesComponent implements OnInit {
      * @memberof GestorPerfilesComponent
      */
     public perfilSeleccionado: IPerfilUsuario;
+    public puedeBorrarGlobal: boolean;
+    public puedeBorrarLocal: boolean;
+    /**
+     * Indica si el usuario puede crear un perfil local. Se discrimina con el global porque es necesario al momento
+     * de setear el nuevo perfil
+     * @type {boolean}
+     * @memberof GestorPerfilesComponent
+     */
+    public puedeCrearLocal: boolean;
+    /**
+     * Indica si el usuario puede crear un perfil global. Se discrimina con el local porque es necesario al momento
+     * de setear el nuevo perfil
+     * @type {boolean}
+     * @memberof GestorPerfilesComponent
+     */
+    public puedeCrearGlobal: boolean;
 
     constructor(private perfilUsuarioService: PerfilUsuarioService, private auth: Auth, private plex: Plex) { }
 
     ngOnInit() {
         this.recuperarPerfiles();
+        this.puedeBorrarGlobal = this.auth.check('usuarios:perfil:eliminar:global');
+        this.puedeBorrarLocal = this.auth.check('usuarios:perfil:eliminar:local');
+        this.puedeCrearLocal = this.auth.check('usuarios:perfil:crear:local');
+        this.puedeCrearGlobal = this.auth.check('usuarios:perfil:crear:global');
     }
 
     /**
@@ -48,7 +68,7 @@ export class GestorPerfilesComponent implements OnInit {
         this.perfilSeleccionado = {
             nombre: null,
             permisos: [],
-            organizacion: this.auth.organizacion.id,
+            organizacion: (this.puedeCrearGlobal && !this.puedeCrearLocal) ? null : this.auth.organizacion.id,
             activo: false
         };
     }

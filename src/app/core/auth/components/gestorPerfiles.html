@@ -5,7 +5,8 @@
                 <div class="page-title float-left">Perfil</div>
             </div>
             <div class="col d-flex justify-content-end">
-                <plex-button label="Nuevo perfil" (click)="nuevoPerfil()" type="success"></plex-button>
+                <plex-button *ngIf="puedeCrearGlobal || puedeCrearLocal" label="Nuevo perfil" (click)="nuevoPerfil()"
+                    type="success"></plex-button>
             </div>
         </div>
         <div class="row">
@@ -36,7 +37,8 @@
                                     DESACTIVADO </plex-badge>
                             </td>
                             <td>
-                                <plex-button icon="delete" type="danger" (click)="deletePerfil(perfil)" title="Borrar"></plex-button>
+                                <plex-button *ngIf="(perfil.organizacion && puedeBorrarLocal) || (!perfil.organizacion && puedeBorrarGlobal)"
+                                    icon="delete" type="danger" (click)="deletePerfil(perfil)" title="Borrar"></plex-button>
                             </td>
                         </tr>
                     </tbody>

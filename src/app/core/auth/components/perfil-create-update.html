@@ -1,4 +1,4 @@
-<form #perfilForm="ngForm">
+<form #perfilForm="ngForm" *ngIf="(perfil.id && puedeModificar) || !perfil.id">
     <div class="row my-3">
         <div class="col">
             <div class="page-title float-left">{{!perfil.id ? 'Crear perfil' : 'Editar perfil'}}</div>
@@ -9,14 +9,14 @@
         </div>
     </div>
     <div class="row">
-        <div class="col">
+        <div class="col-6">
             <plex-text label="Nombre" [(ngModel)]="perfilEdit.nombre" name="nombre" [required]="true"></plex-text>
         </div>
         <!-- Agregar ngIf para mostrarlo solo cuando tenga permisos para crear un perfil global -->
-        <div class="col">
+        <div class="col d-flex align-items-end" *ngIf="puedeModificarAlcance">
             <plex-bool label="Global" [(ngModel)]="esGlobal" type="slide" name="esGlobal" (click)="esGlobal = !esGlobal"></plex-bool>
         </div>
-        <div class="col">
+        <div class="col d-flex align-items-end">
             <plex-bool label="¿Está activo?" type="slide" name="activo" [(ngModel)]="perfilEdit.activo"></plex-bool>
         </div>
     </div>
@@ -25,3 +25,6 @@
         <arbolPermisos [item]="permiso" [userPermissions]="perfilEdit.permisos"></arbolPermisos>
     </div>
 </form>
+<span *ngIf="(perfil.id && !puedeModificar)">
+    <i class="mdi mdi-emoticon-sad"></i>No dispone los permisos para visualizar el perfil
+</span>
