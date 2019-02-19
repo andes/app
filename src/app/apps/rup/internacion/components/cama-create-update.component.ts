@@ -8,6 +8,7 @@ import { InternacionService } from '../services/internacion.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { CamasService } from '../services/camas.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'cama-create-update',
@@ -46,7 +47,8 @@ export class CamaCreateUpdateComponent implements OnInit {
         idInternacion: null,
         esMovimiento: false
     };
-
+    public checkNombre = new Subject();
+    public disabledSave = false;
     constructor(
         public plex: Plex,
         public organizacionService: OrganizacionService,
@@ -54,9 +56,19 @@ export class CamaCreateUpdateComponent implements OnInit {
         private route: ActivatedRoute,
         private authService: Auth,
         private router: Router,
+        private auth: Auth,
         public snomed: SnomedService,
         private internacionService: InternacionService
-    ) { }
+    ) {
+
+
+        this.checkNombre
+            .debounceTime(1000)
+            .subscribe(val => {
+                this.validarNombre();
+            });
+
+    }
 
     ngOnInit() {
         this.organizacionService.getById(this.authService.organizacion.id).subscribe(organizacion => {
@@ -227,6 +239,31 @@ export class CamaCreateUpdateComponent implements OnInit {
                 this.plex.info('danger', 'No es posible dar de baja una cama ocupada');
                 this.router.navigate(['/internacion/camas']);
             }
+        }
+    }
+
+    checkAuth(permiso) {
+        return this.auth.check('internacion:' + permiso);
+    }
+
+    validarNombre() {
+        if (this.estado.unidadOrganizativa && this.estado.unidadOrganizativa.conceptId) {
+            this.verificaDatos();
+        }
+    }
+
+    verificaDatos() {
+        if (this.estado.unidadOrganizativa) {
+            this.CamaService.getCamas({ unidadesOrganizativas: this.estado.unidadOrganizativa.conceptId }).subscribe(x => {
+                const regex_nombre = new RegExp('.*' +  this.cama.nombre + '.*', 'ig');
+                let res = x.filter(cama => { return regex_nombre.test((cama.nombre as string)); });
+                if (res.length > 0) {
+                    this.plex.info('info', 'Ya existe una cama con este nombre');
+                    this.disabledSave = true;
+                }
+
+            }
+            );
         }
     }
 

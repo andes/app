@@ -94,7 +94,7 @@ export class MapaDeCamasComponent implements OnInit {
         }
     };
     public arbol: any[] = [];
-
+    public altaBajaCama = false;
     public panelIndex = 0;
     public pacientes: IPacienteMatch[] | IPaciente[];
     public pacienteActivo: IPaciente;
@@ -129,7 +129,7 @@ export class MapaDeCamasComponent implements OnInit {
 
         this.filtros.opciones.censo = enumerados.getObjCenso();
         this.isWorkflowCompleto = this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id);
-
+        this.altaBajaCama = this.auth.getPermissions('internacion:cama:create?').length > 0 && this.auth.getPermissions('internacion:cama:baja?').length > 0;
 
     }
     refresh(event = null) {

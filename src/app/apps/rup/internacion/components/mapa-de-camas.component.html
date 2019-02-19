@@ -352,7 +352,7 @@
                 <ng-container *ngIf="loadCountFiltros && (!accion && !pacienteSelected)">
 
                     <div class="text-right">
-                            
+
                         <plex-button class="marginBtnAccion" type="primary" [title]="'Censo Diario'" icon='mdi mdi-calendar'
                             (click)="censoDiario()" *ngIf="checkAuth('censo')"></plex-button>
                         <plex-button class="marginBtnAccion" type="primary" [title]="'Censo Mensual'" icon='mdi mdi-calendar-multiple'
@@ -363,7 +363,7 @@
                             (click)="ingresarPaciente()" *ngIf="isWorkflowCompleto"></plex-button>
                         <plex-button class="marginBtnAccion" type="primary" [title]="'Lista de espera'" icon='mdi mdi-timetable'
                             (click)="verLE()" *ngIf="isWorkflowCompleto"></plex-button>
-                            <plex-button class="marginBtnAccion" type="primary" [title]="'Listado Internacion'" icon='mdi mdi-format-list-bulleted'
+                        <plex-button class="marginBtnAccion" type="primary" [title]="'Listado Internacion'" icon='mdi mdi-format-list-bulleted'
                             (click)="verLI()" *ngIf="isWorkflowCompleto"></plex-button>
                     </div>
                     <ng-container>
@@ -395,8 +395,33 @@
                             </div>
                         </div>
                     </div>
+                    <ng-container *ngIf='!isWorkflowCompleto'>
+                        <div class="container-resumen">
+
+                            <div class="subcontainer-resumen bloqueada">
+                                <div>
+                                    <i class="icon icon-andes-cama-bloqueada"></i>
+                                </div>
+                                <div class="texto-resumen">
+                                    <h3>{{cantidadXEstado['bloqueada'].length}}</h3>
+                                    <p>Camas bloqueadas</p>
+                                </div>
+                            </div>
+                            <div class="subcontainer-resumen ocupada">
+                                <div>
+                                    <i class="icon icon-andes-cama-ocupada"></i>
+                                </div>
+                                <div class="texto-resumen">
+                                    <h3>{{cantidadXEstado['ocupada'].length}}</h3>
+                                    <p>Camas ocupadas</p>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf='isWorkflowCompleto'>
+
                     <div class="container-resumen">
-                        <div class="subcontainer-resumen desocupada">
+                        <div class="subcontainer-resumen desocupada" >
                             <div>
                                 <i class="icon icon-andes-cama-desocupada"></i>
                             </div>
@@ -435,6 +460,7 @@
                             </div>
                         </div> -->
                     </div>
+                </ng-container>
                     <!-- <ng-container>
                         <plex-button class="" type="primary" label="Censo diario" (click)="censoDiario()" *ngIf="checkAuth('censo')"></plex-button>
                         <plex-button class="" type="primary" label="Censo mensual" (click)="censoMensual()" *ngIf="checkAuth('censo')"></plex-button>

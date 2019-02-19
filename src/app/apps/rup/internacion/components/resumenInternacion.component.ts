@@ -7,7 +7,7 @@ import { InternacionService } from '../services/internacion.service';
     selector: 'internacion-resumen',
     templateUrl: 'resumenInternacion.html',
     styleUrls: ['resumenInternacion.scss'],
-     encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
+    encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 export class ResumenInternacionComponent implements OnInit, OnChanges {
     private _prestacion: any;
@@ -73,6 +73,7 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
     ngOnChanges(changes) {
         // this.prestacionSelected = Object.assign({}, this.prestacion);
         this.comprobarEgresoParaValidar();
+        console.log(this.prestacion.id);
         this.prestacionesService.getPasesInternacion(this.prestacion.id).subscribe(lista => {
             this.pases = lista;
         });
@@ -121,7 +122,7 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
         }
     }
 
-     cierraEditar() {
+    cierraEditar() {
         this.editarIngreso = false;
         this.editarEgreso = false;
     }
@@ -208,11 +209,15 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
                     // hacemos el patch y luego creamos los planes
                     let cambioEstado: any = {
                         op: 'romperValidacion',
-                        estado: { tipo: 'ejecucion', idOrigenModifica: prestacionModificada.id }
+                        estado: { tipo: 'ejecucion', idOrigenModifica: prestacionModificada.id },
+                        desdeInternacion: true
                     };
                     // Vamos a cambiar el estado de la prestación a ejecucion
                     this.prestacionesService.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
                         this.prestacion = prestacion;
+
+                        this.mostrarValidacion = true;
+                        this.refreshCamas.emit({ cama: null, desocupaCama: true });
                     }, (err) => {
                         this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
                     });
@@ -225,5 +230,51 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
     rotarFlechita(event) {
         this.flechita = !this.flechita;
     }
+
+
+    // romperValidacion() {
+    //     this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación').then(validar => {
+    //         if (!validar) {
+    //             return false;
+    //         } else {
+    //             // guardamos una copia de la prestacion antes de romper la validacion.
+    //             // let prestacionCopia = JSON.parse(JSON.stringify(this.prestacion));
+    //             const prestacionCopia = this.prestacion;
+
+    //             // Agregamos el estado de la prestacion copiada.
+    //             let estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia._id };
+
+    //             // Guardamos la prestacion copia
+    //             this.prestacionesService.clonar(prestacionCopia, estado).subscribe(prestacionClonada => {
+
+    //                 let prestacionModificada = prestacionClonada;
+
+    //                 // hacemos el patch y luego creamos los planes
+    //                 let cambioEstado: any = {
+    //                     op: 'romperValidacion',
+    //                     estado: { tipo: 'ejecucion', idOrigenModifica: prestacionModificada.id }
+    //                 };
+
+
+    //                 // Vamos a cambiar el estado de la prestación a ejecucion
+    //                 this.prestacionesService.patch(this.prestacion._id, cambioEstado).subscribe(prestacion => {
+    //                     this.prestacion = prestacion;
+    //                     // chequeamos si es no nominalizada si
+    //                     if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+    //                         // actualizamos las prestaciones de la HUDS
+    //                         this.prestacionesService.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+    //                         });
+    //                     } else {
+    //                     }
+
+    //                 }, (err) => {
+    //                     this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
+    //                 });
+
+    //             });
+    //         }
+
+    //     });
+    // }
 
 }
