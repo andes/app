@@ -48,9 +48,8 @@
                                 {{censo.dataCenso.ultimoEstado.paciente.documento}}
                             </td>
                             <td>
-                                <ng-container *ngFor="let sector of censo.dataCenso.cama.sectores">
-                                    {{sector.nombre}} /
-                                </ng-container>
+                                {{ censo.dataCenso.cama.sectores[0].nombre}} /
+
                                 {{censo.dataCenso.cama.nombre}}
                             </td>
                             <td>

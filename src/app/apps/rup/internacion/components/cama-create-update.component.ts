@@ -260,6 +260,8 @@ export class CamaCreateUpdateComponent implements OnInit {
                 if (res.length > 0) {
                     this.plex.info('info', 'Ya existe una cama con este nombre');
                     this.disabledSave = true;
+                } else {
+                    this.disabledSave = false;
                 }
 
             }

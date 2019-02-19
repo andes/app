@@ -61,11 +61,11 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6">
-                            <plex-int name="diasDeEstada" label="Otros días de estada" suffix="Días" [(ngModel)]="registro.valor.InformeEgreso.diasEstadaOtrasCircunstancias"
+                        <div class="col-6" *ngIf='registro.valor.InformeEgreso.otrasCircunstancias'>
+                            <plex-int name="diasDeEstada"  label="Otros días de estada" suffix="Días" [(ngModel)]="registro.valor.InformeEgreso.diasEstadaOtrasCircunstancias"
                                 placeholder=""></plex-int>
                         </div>
-                        <div class="col-6">
+                        <div class="col-{{registro.valor.InformeEgreso.otrasCircunstancias ? 6 : 12}}">
                             <label></label>
                             <plex-int name="diasDePermisoDeSalida" label="Días de permiso de salida" suffix="Días"
                                 [(ngModel)]="registro.valor.InformeEgreso.diasDePermisoDeSalida" placeholder=""></plex-int>
