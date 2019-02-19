@@ -95,12 +95,6 @@ export class PermisosVisualizacionComponent {
     constructor(private perfilUsuarioService: PerfilUsuarioService, private usuarioService: UsuarioService) { }
     async cargar() {
         if (this.usuario) {
-            // try {
-            //     await this.obtenerPermisosUsuario(this.usuario, this.organizacion);
-            //     // this.permisosUsuarioOrg = getPermisosUsuarioOrg();
-            // } catch (err) {
-            //     return err;
-            // }
             this.obtenerPerfilesActivos(this.organizacion);
         }
     }
@@ -112,9 +106,9 @@ export class PermisosVisualizacionComponent {
     obtenerPerfilesActivos(org: IOrganizacion) {
         this.perfilesOrganizacion = [];
         this.perfilUsuarioService.get({ idOrganizacion: org ? org.id : null }).subscribe((res: IPerfilUsuario[]) => {
-            res.forEach(async (perfil: IPerfilUsuario) => {
+            res.forEach((perfil: IPerfilUsuario) => {
                 if (perfil.activo) {
-                    this.perfilesOrganizacion.push({ perfil: perfil, checked: await this.tienePerfilAsignado(perfil) });
+                    this.perfilesOrganizacion.push({ perfil: perfil, checked: this.tienePerfilAsignado(perfil) });
                 }
             });
         });
