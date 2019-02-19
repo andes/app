@@ -180,6 +180,14 @@ export class PacienteCruComponent implements OnInit {
                     } else {
                         this.plex.info('warning', 'Paciente inexistente', 'Error');
                     }
+                } else {
+                    // ubicacion inicial mapa de google cuando no se cargó ningun paciente
+                    this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
+                        if (point) {
+                            this.geoReferenciaAux = [point.lat, point.lng];
+                            this.infoMarcador = this.auth.organizacion.nombre;
+                        }
+                    });
                 }
             });
         });
@@ -218,16 +226,6 @@ export class PacienteCruComponent implements OnInit {
                 this.localidadActual = org.direccion.ubicacion.localidad;
             }
         });
-        // ubicacion inicial mapa de google en seccion domicilio
-        if (!this.pacienteModel.direccion[0].geoReferencia) {
-            // si el paciente aún no está georeferenciado, el mapa se posiciona referenciando al centro de salud actual
-            this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
-                if (point) {
-                    this.geoReferenciaAux = [point.lat, point.lng];
-                    this.infoMarcador = this.auth.organizacion.nombre;
-                }
-            });
-        }
     }
 
     private updateTitle(nombre: string) {
@@ -292,21 +290,13 @@ export class PacienteCruComponent implements OnInit {
                 this.paciente.direccion[0] = this.direccion;
             } else {
                 if (this.paciente.direccion[0].ubicacion) {
-                    if (this.paciente.direccion[0].ubicacion.provincia !== null) {
-                        (this.paciente.direccion[0].ubicacion.provincia.nombre === 'Neuquén') ? this.viveProvActual = true : this.viveProvActual = false;
+                    if (this.paciente.direccion[0].ubicacion.provincia) {
+                        (this.paciente.direccion[0].ubicacion.provincia.nombre === this.provinciaActual.nombre) ? this.viveProvActual = true : this.viveProvActual = false;
                         this.loadLocalidades(this.paciente.direccion[0].ubicacion.provincia);
                     }
-                    if (this.paciente.direccion[0].ubicacion.localidad !== null) {
-                        (this.paciente.direccion[0].ubicacion.localidad.nombre === 'Neuquén') ? this.viveLocActual = true : (this.viveLocActual = false, this.barrios = null);
+                    if (this.paciente.direccion[0].ubicacion.localidad) {
+                        (this.paciente.direccion[0].ubicacion.localidad.nombre === this.localidadActual.nombre) ? this.viveLocActual = true : (this.viveLocActual = false, this.barrios = null);
                         this.loadBarrios(this.paciente.direccion[0].ubicacion.localidad);
-                    }
-                    // ubicacion inicial mapa de google
-                    if (this.paciente.direccion[0].geoReferencia) {
-                        this.geoReferenciaAux = this.paciente.direccion[0].geoReferencia;
-                        this.infoMarcador = this.paciente.direccion[0].valor.toUpperCase();
-                        if (this.paciente.direccion[0].ubicacion.barrio) {
-                            this.infoMarcador += ', \n' + this.paciente.direccion[0].ubicacion.barrio.nombre.toUpperCase();
-                        }
                     }
                 }
                 if (!this.paciente.reportarError) {
@@ -320,6 +310,7 @@ export class PacienteCruComponent implements OnInit {
 
         this.pacienteModel = Object.assign({}, this.paciente);
         this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
+        this.inicializarMapaDefault();
 
         // Se piden los datos para app mobile en la 1er carga del paciente
         if (!this.paciente.id) {
@@ -418,6 +409,25 @@ export class PacienteCruComponent implements OnInit {
             this.pacienteModel.direccion[0].ubicacion.localidad = null;
             this.pacienteModel.direccion[0].ubicacion.barrio = null;
             this.barrios = [];
+        }
+    }
+
+    inicializarMapaDefault() {
+        // ubicacion inicial mapa de google
+        if (this.pacienteModel.direccion[0].geoReferencia) {
+            this.geoReferenciaAux = this.pacienteModel.direccion[0].geoReferencia;
+            this.infoMarcador = this.pacienteModel.direccion[0].valor.toUpperCase();
+            if (this.pacienteModel.direccion[0].ubicacion.barrio) {
+                this.infoMarcador += ', ' + this.pacienteModel.direccion[0].ubicacion.barrio.nombre.toUpperCase();
+            }
+        } else {
+            // ubicacion inicial mapa de google cuando el paciente no tiene georeferencia cargada
+            this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
+                if (point) {
+                    this.geoReferenciaAux = [point.lat, point.lng];
+                    this.infoMarcador = this.auth.organizacion.nombre;
+                }
+            });
         }
     }
 
@@ -649,6 +659,7 @@ export class PacienteCruComponent implements OnInit {
 
     cancel() {
         this.showMobile = false;
+        this.pacienteCache.setPaciente(null);
         this.location.back();
     }
 

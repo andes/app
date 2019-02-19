@@ -95,40 +95,40 @@
 
                         <div class="row">
                             <div class="col-6">
-                                <plex-bool [(ngModel)]="viveProvNeuquen" label="¿Vive en la Provincia de Neuquén?" name="viveProvNeuquen"
-                                    (change)="changeProvNeuquen($event)"></plex-bool>
+                                <plex-bool *ngIf="provinciaActual" [(ngModel)]="viveProvActual" label="¿Vive en la Provincia de {{provinciaActual.nombre}}?"
+                                    name="viveProvActual" (change)="changeProvActual($event)"></plex-bool>
                             </div>
-                            <div class="col-6" *ngIf="viveProvNeuquen">
-                                <plex-bool [(ngModel)]="viveEnNeuquen" label="¿Vive en Neuquén Capital?" name="viveNQN"
-                                    (change)="changeLocalidadNeuquen($event)"></plex-bool>
+                            <div class="col-6" *ngIf="viveProvActual">
+                                <plex-bool *ngIf="localidadActual" [(ngModel)]="viveLocActual" label="¿Vive en {{localidadActual.nombre}}?"
+                                    name="viveLocActual" (change)="changeLocalidadActual($event)"></plex-bool>
                             </div>
                         </div>
-                        <div *ngIf="viveProvNeuquen">
-                            <div class="row" *ngIf="viveEnNeuquen">
+                        <div *ngIf="viveProvActual">
+                            <div class="row" *ngIf="viveLocActual">
                                 <div class="col-6">
-                                    <plex-text label="Dirección" [(ngModel)]="bebeModel.direccion[0].valor" name="divValor"
+                                    <plex-text label="Dirección" [(ngModel)]="bebeModel.direccion[0].valor" name="direccion"
                                         placeholder="Ej: Avenida las Flores 1200">
                                     </plex-text>
                                 </div>
 
                             </div>
-                            <div class="row" *ngIf="!viveEnNeuquen">
+                            <div class="row" *ngIf="!viveLocActual">
                                 <div class="col">
-                                    <plex-text label="Dirección" [(ngModel)]="bebeModel.direccion[0].valor" name="divValor"
+                                    <plex-text label="Dirección" [(ngModel)]="bebeModel.direccion[0].valor" name="direccion"
                                         placeholder="Ej: Avenida las Flores 1200">
                                     </plex-text>
                                 </div>
                                 <div class="col">
                                     <plex-select label="Localidad" [(ngModel)]="bebeModel.direccion[0].ubicacion.localidad"
-                                        name="localidad" [data]="localidadesNeuquen" labelField="nombre">
+                                        name="localidad" [data]="localidades" labelField="nombre">
                                     </plex-select>
                                 </div>
 
                             </div>
                         </div>
-                        <div class="row" *ngIf="!viveProvNeuquen">
+                        <div class="row" *ngIf="!viveProvActual">
                             <div class="col">
-                                <plex-text label="Dirección" [(ngModel)]="bebeModel.direccion[0].valor" name="divValor"
+                                <plex-text label="Dirección" [(ngModel)]="bebeModel.direccion[0].valor" name="direccion"
                                     placeholder="Ej: Avenida las Flores 1200">
                                 </plex-text>
                             </div>
@@ -139,7 +139,7 @@
                             </div>
                             <div class="col">
                                 <plex-select label="Localidad" [(ngModel)]="bebeModel.direccion[0].ubicacion.localidad"
-                                    name="localidad" [data]="localidadesNeuquen" labelField="nombre">
+                                    name="localidad" [data]="localidades" labelField="nombre">
                                 </plex-select>
                             </div>
                         </div>

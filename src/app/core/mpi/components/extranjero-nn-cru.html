@@ -72,7 +72,7 @@
                                 </div>
                                 <div class="col-4" *ngIf="!noPoseeContacto">
                                     <plex-button title="Agregar contacto" titlePosition="left" type="primary btn-sm"
-                                        icon="phone-plus" (click)="addContacto('celular', '')"></plex-button>
+                                        icon="phone-plus" name="agregarContacto" (click)="addContacto('celular', '')"></plex-button>
                                 </div>
                             </div>
                             <div class="row" *ngFor="let _unContacto of pacienteModel.contacto; let i = index">
@@ -101,7 +101,8 @@
                                     <div class="col-md-2" *ngIf="i > 0">
                                         <br>
                                         <br>
-                                        <plex-button label="" type="danger btn-sm" icon="close" (click)="removeContacto(i)"></plex-button>
+                                        <plex-button label="" type="danger btn-sm" icon="close" name="removerContacto"
+                                            (click)="removeContacto(i)"></plex-button>
                                     </div>
                                 </ng-container>
                             </div>
@@ -123,7 +124,7 @@
                                 <div class="row">
                                     <div class="col" *ngIf="viveProvActual">
                                         <plex-bool *ngIf="localidadActual" [(ngModel)]="viveLocActual" label="¿Vive en {{localidadActual.nombre}}?"
-                                            name="viveNQN" (change)="changeLocalidadActual($event)"></plex-bool>
+                                            name="viveLocActual" (change)="changeLocalidadActual($event)"></plex-bool>
                                     </div>
                                 </div>
 
@@ -151,15 +152,8 @@
                                 <div class="row">
                                     <div class="col">
                                         <plex-text label="Dirección" [(ngModel)]="pacienteModel.direccion[0].valor"
-                                            name="divValor" placeholder="Ej: Avenida las Flores 1200">
+                                            name="direccion" placeholder="Ej: Avenida las Flores 1200">
                                         </plex-text>
-                                        <!--table>
-                                            <tbody>
-                                                <tr *ngFor="let unaSugerencia of sugerencias">
-                                                    <td> <span class="d-block">{{unaSugerencia}}</span></td>
-                                                </tr>
-                                            </tbody>
-                                        </table-->
                                     </div>
                                 </div>
                             </div>

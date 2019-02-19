@@ -12,6 +12,9 @@ import { ParentescoService } from '../../../services/parentesco.service';
 import { PacienteService } from '../services/paciente.service';
 import { PaisService } from '../../../services/pais.service';
 import { Location } from '@angular/common';
+import { IOrganizacion } from '../../../interfaces/IOrganizacion';
+import { OrganizacionService } from '../../../services/organizacion.service';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'apps/mpi/bebe',
@@ -86,19 +89,21 @@ export class BebeCruComponent implements OnInit {
     public showBuscador = true;
 
     paisArgentina = null;
-    provinciaNeuquen = null;
-    localidadNeuquen = null;
-    viveProvNeuquen = false;
-    viveEnNeuquen = false;
-    barriosNeuquen: any[];
-    localidadesNeuquen: any[] = [];
+    provinciaActual = null;
+    localidadActual = null;
+    viveProvActual = false;
+    viveLocActual = false;
+    localidades: any[] = [];
     provincias: IProvincia[] = [];
     parentescoModel: any[];
     hoy = moment().endOf('day').toDate();
     disableGuardar = false;
     enableIgnorarGuardar = false;
+    organizacionActual = null;
 
     constructor(
+        private organizacionService: OrganizacionService,
+        private auth: Auth,
         private location: Location,
         private plex: Plex,
         private provinciaService: ProvinciaService,
@@ -133,16 +138,24 @@ export class BebeCruComponent implements OnInit {
             this.provincias = rta;
         });
 
-        this.provinciaService.get({
-            nombre: 'Neuquén'
-        }).subscribe(Prov => {
-            this.provinciaNeuquen = Prov[0];
-        });
+        // this.provinciaService.get({
+        //     nombre: 'Neuquén'
+        // }).subscribe(Prov => {
+        //     this.provinciaActual = Prov[0];
+        // });
 
-        this.localidadService.get({
-            nombre: 'Neuquén'
-        }).subscribe(Loc => {
-            this.localidadNeuquen = Loc[0];
+        // this.localidadService.get({
+        //     nombre: 'Neuquén'
+        // }).subscribe(Loc => {
+        //     this.localidadActual = Loc[0];
+        // });
+
+        this.organizacionService.getById(this.auth.organizacion.id).subscribe((org: IOrganizacion) => {
+            if (org) {
+                this.organizacionActual = org;
+                this.provinciaActual = org.direccion.ubicacion.provincia;
+                this.localidadActual = org.direccion.ubicacion.localidad;
+            }
         });
     }
 
@@ -182,16 +195,16 @@ export class BebeCruComponent implements OnInit {
                 paciente.direccion && paciente.direccion[0].ubicacion && paciente.direccion[0].ubicacion.provincia
                 && paciente.direccion[0].ubicacion.provincia.nombre === 'Neuquén') {
 
-                this.viveProvNeuquen = true;
+                this.viveProvActual = true;
                 this.bebeModel.direccion[0].valor = paciente.direccion[0].valor;
                 this.bebeModel.direccion[0].ubicacion.provincia = paciente.direccion[0].ubicacion.provincia;
 
                 if (paciente.direccion[0].ubicacion.localidad && paciente.direccion[0].ubicacion.localidad.nombre === 'Neuquén') {
-                    this.viveEnNeuquen = true;
+                    this.viveLocActual = true;
                     this.bebeModel.direccion[0].ubicacion.localidad = paciente.direccion[0].ubicacion.localidad;
                 } else {
                     this.localidadService.getXProvincia(paciente.direccion[0].ubicacion.provincia.id).subscribe(result => {
-                        this.localidadesNeuquen = result;
+                        this.localidades = result;
                         this.bebeModel.direccion[0].ubicacion.localidad = paciente.direccion[0].ubicacion.localidad;
                     });
                 }
@@ -206,21 +219,23 @@ export class BebeCruComponent implements OnInit {
         }
     }
     /**
-    * Change del plex-bool viveProvNeuquen
+    * Change del plex-bool viveProvActual
     * carga las localidades correspondientes a Neuquén
     * @param {any} event
     *
     * @memberOf PacienteCreateUpdateComponent
     */
-    changeProvNeuquen(event) {
+    changeProvActual(event) {
         if (event.value) {
-            this.loadLocalidades(this.provinciaNeuquen);
-            this.bebeModel.direccion[0].ubicacion.provincia = this.provinciaNeuquen;
+            this.bebeModel.direccion[0].ubicacion.provincia = this.provinciaActual;
+            this.loadLocalidades(this.provinciaActual);
         } else {
+            this.viveLocActual = false;
+            this.localidades = [];
             this.bebeModel.direccion[0].ubicacion.provincia = null;
-            this.localidadesNeuquen = [];
+            this.bebeModel.direccion[0].ubicacion.localidad = null;
+            // this.bebeModel.direccion[0].ubicacion.barrio = null;
         }
-
     }
     loadProvincias(event, pais) {
         if (pais && pais.id) {
@@ -236,9 +251,9 @@ export class BebeCruComponent implements OnInit {
      *
      * @memberOf PacienteCreateUpdateComponent
      */
-    changeLocalidadNeuquen(event) {
+    changeLocalidadActual(event) {
         if (event.value) {
-            this.bebeModel.direccion[0].ubicacion.localidad = this.localidadNeuquen;
+            this.bebeModel.direccion[0].ubicacion.localidad = this.localidadActual;
         } else {
             this.bebeModel.direccion[0].ubicacion.localidad = null;
         }
@@ -247,7 +262,7 @@ export class BebeCruComponent implements OnInit {
     loadLocalidades(provincia) {
         if (provincia && provincia.id) {
             this.localidadService.getXProvincia(provincia.id).subscribe(result => {
-                this.localidadesNeuquen = result;
+                this.localidades = result;
             });
         }
     }

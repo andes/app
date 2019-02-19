@@ -156,9 +156,9 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col" *ngIf="viveProvActual">
+                                    <div class="col">
                                         <plex-bool *ngIf="localidadActual" [(ngModel)]="viveLocActual" label="¿Vive en {{localidadActual.nombre}}?"
-                                            name="viveNQN" (change)="changeLocalidadActual($event)"></plex-bool>
+                                            name="viveLocActual" (change)="changeLocalidadActual($event)"></plex-bool>
                                     </div>
                                 </div>
 
@@ -186,7 +186,7 @@
                                 <div class="row">
                                     <div class="col">
                                         <plex-text label="Dirección" [(ngModel)]="pacienteModel.direccion[0].valor"
-                                            name="divValor" placeholder="Ej: Avenida las Flores 1200">
+                                            name="direccion" placeholder="Ej: Avenida las Flores 1200">
                                         </plex-text>
                                         <!--table>
                                             <tbody>
