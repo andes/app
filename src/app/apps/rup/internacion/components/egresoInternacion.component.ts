@@ -341,7 +341,6 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
                 if (!validar) {
                     return false;
                 } else {
-                    debugger;
                     let registros = this.controlRegistrosGuardar();
                     this.prestacion.ejecucion.registros = registros;
                     let egresoExiste = this.internacionService.verRegistro(this.prestacion, 'egreso');
