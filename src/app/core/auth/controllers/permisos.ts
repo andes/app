@@ -1,4 +1,6 @@
 import { IPermiso } from '../interfaces/IPermiso';
+import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
+import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 /*
 * Indica las posibles relaciones entre dos permisos
 */
@@ -168,10 +170,11 @@ export function esPermisoSubpermiso(permiso: string, subpermiso: string): boolea
  * @export
  * @param {string[]} permisosImprimir
  * @param {IPermiso[]} arbolPermisos
+ * @param { TipoPrestacionService } servicioTipoPrestacion
  * @returns {string}
  */
-export function obtenerPermisosParaMostrar(permisosImprimir: string[], arbolPermisos: IPermiso[]): string {
-    return obtenerArreglosMismoNivel(permisosImprimir, 0, '', [], arbolPermisos);
+export function obtenerPermisosParaMostrar(permisosImprimir: string[], arbolPermisos: IPermiso[], servicioTipoPrestacion: TipoPrestacionService): string {
+    return obtenerArreglosMismoNivel(permisosImprimir, 0, '', [], arbolPermisos, null, servicioTipoPrestacion);
 }
 
 /**
@@ -192,15 +195,16 @@ export function obtenerPermisosParaMostrar(permisosImprimir: string[], arbolPerm
  * @param {string} res
  * @param {string[]} keysYaImpresas
  * @param {IPermiso[]} arbolPermisos
+ * @param {IPermiso[]} child
  * @returns {string}
  */
 function
-    obtenerArreglosMismoNivel(arregloImprimir: string[], nivel: number, res: string, keysYaImpresas: string[], arbolPermisos: IPermiso[]): string { // mpi:paciente:crear  0
+    obtenerArreglosMismoNivel(arregloImprimir: string[], nivel: number, res: string, keysYaImpresas: string[], arbolPermisos: IPermiso[], child: IPermiso, servicioTipoPrestacion: TipoPrestacionService): string { // mpi:paciente:crear  0
     arregloImprimir.forEach((permiso: string) => {
         let primero = res === '';
         let permArray = permiso.split(':'); // turnos   agenda   *
         let filtro = '';
-
+        let permisoEncontrado: IPermiso;
         for (let i = 0; i <= nivel; i++) {
             filtro += permArray[i];
             if (i < nivel) {
@@ -218,7 +222,8 @@ function
             let agregar = filtro.split(':');
 
             if (primero) {
-                res += '- ' + obtenerTituloPermiso(filtro, nivel, arbolPermisos);
+                permisoEncontrado = obtenerTituloPermiso(filtro, nivel, arbolPermisos, child);
+                res += '- ' + permisoEncontrado.title;
             } else {
                 if (agregar[nivel] === '*') {
                     res += ' (todos)';
@@ -227,34 +232,54 @@ function
                     for (let i = 0; i < nivel; i++) {
                         res += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
                     }
-                    res += '- ' + obtenerTituloPermiso(filtro, nivel, arbolPermisos);
+                    let tipo = child ? child.type : 'null';
+                    switch (tipo) {
+                        case 'boolean':
+                            permisoEncontrado = obtenerTituloPermiso(filtro, nivel, arbolPermisos, child);
+                            res += '- ' + permisoEncontrado.title;
+                            break;
+                        case 'prestacion':
+                            // servicioTipoPrestacion.get({ id: agregar[2] }).subscribe((data: ITipoPrestacion[]) => {
+                            //     if (data.length) {
+                            //         res += '- ' + data[0].term;
+                            //     } else {
+                            //         console.log('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nEntro en el false\n\n\n\n\n\n');
+                            //     }
+                            //     console.log('prestaciones: ', data);
+                            // permisoEncontrado = null;
+                            res += '- ' + agregar[2];
+                            // });
+                            break;
+                        case 'organizacion':
+                            res += '- ' + agregar[3];
+                            break;
+                        default:
+                            permisoEncontrado = obtenerTituloPermiso(filtro, nivel, arbolPermisos, child);
+                            res += '- ' + permisoEncontrado.title;
+                    }
+                    // permisoEncontrado = obtenerTituloPermiso(filtro, nivel, arbolPermisos, child);
+                    // res += '- ' + permisoEncontrado.title;
                 }
             }
         }
 
         if (nivel < permArray.length - 1) {
-            res = obtenerArreglosMismoNivel(permisosFiltrados, nivel + 1, res, keysYaImpresas, arbolPermisos);
+            res = obtenerArreglosMismoNivel(permisosFiltrados, nivel + 1, res, keysYaImpresas, arbolPermisos, permisoEncontrado, servicioTipoPrestacion);
             return res;
         }
     });
     return res;
 }
 
-function obtenerTituloPermiso(permisoString: string, nivel: number, arbolPermisos: IPermiso[]): string {
+function obtenerTituloPermiso(permisoString: string, nivel: number, arbolPermisos?: IPermiso[], permiso?: IPermiso): IPermiso {
     // permisoString = a:b:c:d    nivel: 2  -> debe traer el titulo de c
     let res = '';
     let keys = permisoString.split(':');
-    let permiso: IPermiso;
-    // let primero = true;
-    let i = 0;
-
-    while (i <= nivel && i < keys.length) {
-        permiso = (i === 0 ? arbolPermisos : permiso.child).find((perm: IPermiso) => {
-            return perm.key === keys[i];
-        });
-        i++;
-    }
-    return permiso.title;
+    let permisoBuscado: IPermiso;
+    permisoBuscado = (permiso ? permiso.child : arbolPermisos).find((perm: IPermiso) => {
+        return perm.key === keys[nivel];
+    });
+    return permisoBuscado;
 }
 
 

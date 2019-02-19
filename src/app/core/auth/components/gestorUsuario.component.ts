@@ -6,6 +6,7 @@ import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { IPermiso } from './../interfaces/IPermiso';
 import { PermisosService } from '../../../services/permisos.service';
 import { agregarPermiso, quitarPermiso, obtenerPermisosParaMostrar } from '../controllers/permisos';
+import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 @Component({
     selector: 'gestorUsuario',
     templateUrl: 'gestorUsuario.html'
@@ -61,7 +62,7 @@ export class GestorUsuarioComponent implements OnInit {
      * @memberof GestorUsuarioComponent
      */
     public arbolPermisosCompleto: IPermiso[];
-    constructor(private permisosService: PermisosService, private usuarioService: UsuarioService, private plex: Plex) { }
+    constructor(private permisosService: PermisosService, private usuarioService: UsuarioService, private plex: Plex, private servicioTipoPrestacion: TipoPrestacionService) { }
     ngOnInit() {
         this.permisos$ = this.permisosService.get();
         this.usuarioService.permisos().subscribe(res => { this.arbolPermisosCompleto = res; });
@@ -101,7 +102,7 @@ export class GestorUsuarioComponent implements OnInit {
      * @memberof GestorUsuarioComponent
      */
     guardar(event) {
-        this.plex.confirm('Se guardarán los siguientes permisos: <br>' + obtenerPermisosParaMostrar(this.permisosUsuarioOrg, this.arbolPermisosCompleto) +
+        this.plex.confirm('Se guardarán los siguientes permisos: <br>' + obtenerPermisosParaMostrar(this.permisosUsuarioOrg, this.arbolPermisosCompleto, this.servicioTipoPrestacion) +
             '<br><br>¿Desea continuar?',
             'Guardar Permisos', 'Guardar').then((confirmar: boolean) => {
                 if (confirmar) {

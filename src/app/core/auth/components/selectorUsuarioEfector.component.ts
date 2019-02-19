@@ -136,7 +136,8 @@ export class SelectorUsuarioEfectorComponent {
                         this.organizacionService.get({ ids: idOrganizaciones }).subscribe(dataUss => {
                             this.organizacionesUsuario = dataUss;
                             if (this.organizacionesUsuario && this.organizacionesUsuario.length > 0) {
-                                this.organizacionSelect = this.organizacionesUsuario[0];
+                                //     this.organizacionSelect = this.organizacionesUsuario[0];
+                                this.organizacionSelect = null;
                                 this.onOrgChange();
                             }
                             this.loadUser();
