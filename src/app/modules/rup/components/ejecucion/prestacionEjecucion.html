@@ -387,13 +387,7 @@
                                     </div>
                                 </plex-tab>
 
-                                <plex-tab [label]="registro.data.prestacion.snomed.term" [allowClose]="true" [class]="registro.data.class"
-                                    *ngIf="registro.tipo === 'laboratorio'">
-
-                                    <lab [laboratorio]="registro"></lab>
-                                </plex-tab>
-                                <plex-tab [label]="registro.data.prestacion.snomed.term" [allowClose]="true" [class]="registro.data.class"
-                                    *ngIf="registro.tipo === 'cda'">
+                                <plex-tab [label]="registro.data.prestacion.snomed.term" [allowClose]="true" [class]="registro.data.class">
 
                                     <vista-cda [registro]="registro"></vista-cda>
                                 </plex-tab>

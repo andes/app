@@ -108,6 +108,17 @@ export class VistaHudsComponent implements OnInit {
                 }
             }).subscribe(() => { return true; });
         }
+
+        this.plex.updateTitle([{
+            route: '/',
+            name: 'ANDES'
+        }, {
+            route: '/rup',
+            name: 'RUP'
+        }, {
+            name: 'Historia Única De Salud'
+        }]);
+
     }
 
     redirect(pagina: string) {

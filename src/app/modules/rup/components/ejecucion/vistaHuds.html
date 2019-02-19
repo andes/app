@@ -45,11 +45,11 @@
                                     <h4 class="text-capitalize">{{ registro.data.solicitud.tipoPrestacion.term }}</h4>
                                     <div class="row">
                                         <div class="col-6">
-                                            <b> Fecha: </b> 
+                                            <b> Fecha: </b>
                                             {{ registro.data.ejecucion.fecha | date: 'EEE dd/MM/yyyy HH:MM' }}
                                         </div>
                                         <div class="col-6" *ngIf="(registro.data.ejecucion.fecha - registro.data.solicitud.fecha) > 1000 ">
-                                            <b> Solicitada el: </b> 
+                                            <b> Solicitada el: </b>
                                             {{ registro.data.solicitud.fecha | date: 'EEE dd/MM/yyyy HH:MM' }}
                                         </div>
                                         <div class="col-12">
@@ -117,15 +117,11 @@
 
                                 </plex-tab>
 
-                                <plex-tab [allowClose]="true" [label]="registro.data.prestacion.snomed.term" [class]="registro.data.class"
-                                    *ngIf="registro.tipo === 'laboratorio'">
-                                    <lab [laboratorio]="registro"></lab>
-                                </plex-tab>
-
-                                <plex-tab [allowClose]="true" [label]="registro.data.prestacion.snomed.term" [class]="registro.data.class"
-                                    *ngIf="registro.tipo === 'cda'">
+                                <plex-tab *ngIf="registro.data?.prestacion?.snomed?.term" [allowClose]="true" [label]="registro.data.prestacion.snomed.term"
+                                    [class]="registro.data.class">
                                     <vista-cda [registro]="registro"></vista-cda>
                                 </plex-tab>
+
                             </ng-container>
                         </ng-container>
 
