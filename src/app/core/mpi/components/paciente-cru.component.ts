@@ -153,8 +153,43 @@ export class PacienteCruComponent implements OnInit {
 
     ngOnInit() {
         this.updateTitle('Registrar un paciente');
+        this.relacionesBorradas = [];
+
+        // Se cargan los parentescos para las relaciones
+        this.parentescoService.get().subscribe(resultado => {
+            this.parentescoModel = resultado;
+        });
+
+        // Set País Argentina
+        this.paisService.get({
+            nombre: 'Argentina'
+        }).subscribe(arg => {
+            this.paisArgentina = arg[0];
+        });
+
+        // Cargamos todas las provincias
+        this.provinciaService.get({}).subscribe(rta => {
+            this.provincias = rta;
+        });
+
+        this.showCargar = false;
+        this.sexos = enumerados.getObjSexos();
+        this.generos = enumerados.getObjGeneros();
+        this.estadosCiviles = enumerados.getObjEstadoCivil();
+        this.tipoComunicacion = enumerados.getObjTipoComunicacion();
+        this.estados = enumerados.getEstados();
+
+        this.organizacionService.getById(this.auth.organizacion.id).subscribe((org: IOrganizacion) => {
+            if (org) {
+                this.organizacionActual = org;
+                this.provinciaActual = org.direccion.ubicacion.provincia;
+                this.localidadActual = org.direccion.ubicacion.localidad;
+            }
+        });
+
         // obtiene el paciente cacheado
         this.pacienteCache.getPaciente().subscribe(res => {
+            // consulta a la cache si el paciente fue escaneado o no
             this.pacienteCache.getScanState().subscribe(result => {
                 this.escaneado = result;
                 if (res) {
@@ -190,41 +225,6 @@ export class PacienteCruComponent implements OnInit {
                     });
                 }
             });
-        });
-        // consulta a la cache si el paciente fue escaneado o no
-
-        this.relacionesBorradas = [];
-
-        // Se cargan los parentescos para las relaciones
-        this.parentescoService.get().subscribe(resultado => {
-            this.parentescoModel = resultado;
-        });
-
-        // Set País Argentina
-        this.paisService.get({
-            nombre: 'Argentina'
-        }).subscribe(arg => {
-            this.paisArgentina = arg[0];
-        });
-
-        // Cargamos todas las provincias
-        this.provinciaService.get({}).subscribe(rta => {
-            this.provincias = rta;
-        });
-
-        this.showCargar = false;
-        this.sexos = enumerados.getObjSexos();
-        this.generos = enumerados.getObjGeneros();
-        this.estadosCiviles = enumerados.getObjEstadoCivil();
-        this.tipoComunicacion = enumerados.getObjTipoComunicacion();
-        this.estados = enumerados.getEstados();
-
-        this.organizacionService.getById(this.auth.organizacion.id).subscribe((org: IOrganizacion) => {
-            if (org) {
-                this.organizacionActual = org;
-                this.provinciaActual = org.direccion.ubicacion.provincia;
-                this.localidadActual = org.direccion.ubicacion.localidad;
-            }
         });
     }
 
@@ -291,6 +291,7 @@ export class PacienteCruComponent implements OnInit {
             } else {
                 if (this.paciente.direccion[0].ubicacion) {
                     if (this.paciente.direccion[0].ubicacion.provincia) {
+                        console.log(this.provinciaActual.nombre);
                         (this.paciente.direccion[0].ubicacion.provincia.nombre === this.provinciaActual.nombre) ? this.viveProvActual = true : this.viveProvActual = false;
                         this.loadLocalidades(this.paciente.direccion[0].ubicacion.provincia);
                     }
@@ -362,6 +363,9 @@ export class PacienteCruComponent implements OnInit {
 
     loadLocalidades(provincia) {
         if (provincia && provincia.id) {
+            if (provincia.id === this.provinciaActual.id) {
+                this.viveProvActual = true;
+            }
             this.localidadService.getXProvincia(provincia.id).subscribe(result => {
                 this.localidades = result;
             });
@@ -370,6 +374,9 @@ export class PacienteCruComponent implements OnInit {
 
     loadBarrios(localidad) {
         if (localidad && localidad.id) {
+            if (localidad.id === this.localidadActual.id) {
+                this.viveLocActual = true;
+            }
             this.barriosService.getXLocalidad(localidad.id).subscribe(result => {
                 this.barrios = result;
             });
@@ -745,6 +752,14 @@ export class PacienteCruComponent implements OnInit {
                     this.pacienteModel = resultado.paciente;
                     if (!this.pacienteModel.contacto) {
                         this.pacienteModel.contacto = [this.contacto];
+                    }
+                    if (this.pacienteModel.direccion[0].ubicacion.provincia) {
+                        (this.pacienteModel.direccion[0].ubicacion.provincia.nombre === this.provinciaActual.nombre) ? this.viveProvActual = true : this.viveProvActual = false;
+                        this.loadLocalidades(this.pacienteModel.direccion[0].ubicacion.provincia);
+                    }
+                    if (this.pacienteModel.direccion[0].ubicacion.localidad) {
+                        (this.pacienteModel.direccion[0].ubicacion.localidad.nombre === this.localidadActual.nombre) ? this.viveLocActual = true : (this.viveLocActual = false, this.barrios = null);
+                        this.loadBarrios(this.pacienteModel.direccion[0].ubicacion.localidad);
                     }
                     this.validado = true;
                     this.showDeshacer = true;

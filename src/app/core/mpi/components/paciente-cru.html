@@ -103,7 +103,7 @@
                                 </div>
                                 <div class="col-4" *ngIf="!noPoseeContacto">
                                     <plex-button title="Agregar contacto" titlePosition="left" type="primary btn-sm"
-                                        icon="phone-plus" (click)="addContacto('celular', '')"></plex-button>
+                                        icon="phone-plus" name="agregarContacto" (click)="addContacto('celular', '')"></plex-button>
                                 </div>
                             </div>
                             <div class="row" *ngFor="let _unContacto of pacienteModel.contacto; let i = index">
@@ -152,7 +152,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col">
+                                    <div class="col" *ngIf="viveProvActual">
                                         <plex-bool *ngIf="localidadActual" [(ngModel)]="viveLocActual" label="¿Vive en {{localidadActual.nombre}}?"
                                             name="viveLocActual" (change)="changeLocalidadActual($event)"></plex-bool>
                                     </div>
