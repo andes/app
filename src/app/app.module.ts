@@ -158,7 +158,7 @@ import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.compone
 import { PacienteCruComponent } from './core/mpi/components/paciente-cru.component';
 import { GoogleMapComponent } from './core/mpi/components/google-map.component';
 import { ApiGoogleService } from './core/mpi/services/apiGoogle.service';
-import { BotonesRegistroComponent } from './core/mpi/components/botones-registro.component';
+import { BotonesRegistroComponent } from './core/mpi/components/mpi-botones-registro.component';
 
 
 // PUCO/ObraSocial

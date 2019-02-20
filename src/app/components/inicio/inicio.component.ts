@@ -23,7 +23,6 @@ export class InicioComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         window.setTimeout(() => {
-            this.plex.updateTitle('ANDES | Apps Neuquinas de Salud');
             this.denied = true;
             if (this.auth.getPermissions('turnos:?').length > 0) {
                 if (this.auth.getPermissions('turnos:planificarAgenda:?').length > 0) {

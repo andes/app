@@ -74,16 +74,18 @@ export class BusquedaMpiComponent implements OnInit {
         }
     }
 
-    registroBebe() {
-        this.router.navigate(['apps/mpi/bebe']);
-    }
-
-    registroSinDni() {
-        this.router.navigate(['apps/mpi/sinDni']);
-    }
-
-    registroConDni() {
-        this.router.navigate(['apps/mpi/paciente']);
+    nuevoRegistro(tipo) {
+        switch (tipo) {
+            case 'bebe':
+                this.router.navigate(['apps/mpi/bebe']);
+                break;
+            case 'sinDni':
+                this.router.navigate(['apps/mpi/sinDni']);
+                break;
+            case 'identificado':
+                this.router.navigate(['apps/mpi/paciente']);
+                break;
+        }
     }
 
     // --------------------------------------------------

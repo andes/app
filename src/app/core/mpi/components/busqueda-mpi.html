@@ -8,7 +8,7 @@
                 </div>
             </div>
 
-            <botones-registro (bebeSelected)="registroBebe()" (sinDniSelected)="registroSinDni()" (identificado)="registroConDni()"></botones-registro>
+            <mpi-botones-registro (seleccion)="nuevoRegistro($event)"></mpi-botones-registro>
             <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
             <div class="row">

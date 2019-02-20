@@ -9,7 +9,7 @@
         </div>
 
         <!-- BOTONES DE REGISTRO MPI -->
-        <botones-registro (bebeSelected)="registroBebe()" (sinDniSelected)="registroSinDni()" (identificado)="registroConDni()"></botones-registro>
+        <mpi-botones-registro (seleccion)="nuevoRegistro($event)"></mpi-botones-registro>
 
         <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
@@ -85,6 +85,7 @@
 
 <!--Components-->
 <dar-turnos *ngIf="autorizado && showDarTurnos" [pacienteSeleccionado]="paciente" [solicitudPrestacion]="solicitudPrestacion"
-    (afterDarTurno)="afterDarTurno($event); updateTitle()"></dar-turnos>
+    (afterDarTurno)="afterDarTurno($event)"></dar-turnos>
 
-<arancelamiento-form *ngIf="showArancelamiento" [turno]="turnoArancelamiento" (volverAPuntoInicio)="volverAPuntoInicio($event); updateTitle('Gestión de pacientes')"></arancelamiento-form>
+<arancelamiento-form *ngIf=" showArancelamiento" [turno]="turnoArancelamiento" (volverAPuntoInicio)="volverAPuntoInicio($event); updateTitle('Gestión de pacientes')">
+</arancelamiento-form>

@@ -65,13 +65,13 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.autorizado = this.auth.getPermissions('turnos:puntoInicio:?').length > 0;
         this.puedeDarTurno = this.auth.getPermissions('turnos:puntoInicio:darTurnos:?').length > 0;
         this.puedeCrearSolicitud = this.auth.getPermissions('turnos:puntoInicio:solicitud:?').length > 0;
-        this.updateTitle('Gestión de pacientes');
+        this.updateTitle('Punto de inicio');
     }
 
     private updateTitle(nombre: string) {
         this.plex.updateTitle([{
             route: 'inicio',
-            name: 'Punto de inicio'
+            name: 'CITAS'
         }, {
             name: nombre
         }]);
@@ -106,16 +106,18 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
     // ------------- SOBRE LISTA RESULTADO --------------
 
-    registroBebe() {
-        this.router.navigate(['apps/mpi/bebe']);
-    }
-
-    registroSinDni() {
-        this.router.navigate(['apps/mpi/sinDni']);
-    }
-
-    registroConDni() {
-        this.router.navigate(['apps/mpi/paciente']);
+    nuevoRegistro(tipo) {
+        switch (tipo) {
+            case 'bebe':
+                this.router.navigate(['apps/mpi/bebe']);
+                break;
+            case 'sinDni':
+                this.router.navigate(['apps/mpi/sinDni']);
+                break;
+            case 'identificado':
+                this.router.navigate(['apps/mpi/paciente']);
+                break;
+        }
     }
 
     // -----------------------------------------------
@@ -131,6 +133,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showArancelamiento = false;
         this.showDashboard = true;
     }
+
     onPacienteSelected(paciente: IPaciente): void {
         this.paciente = paciente;
         if (paciente.id) {
@@ -202,7 +205,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         } else {
             this.showDarTurnos = false;
         }
-        this.updateTitle('Gestión de pacientes');
+        this.updateTitle('Punto de inicio');
     }
 
     handleBlanqueo(event) {
@@ -268,7 +271,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showMostrarEstadisticasPacientes = true;
         this.showIngresarSolicitud = false;
         this.showMostrarTurnosPaciente = false;
-        this.updateTitle('Gestión de pacientes');
+        this.updateTitle('Punto de inicio');
     }
 
     cancelarSolicitudVentanilla() {
