@@ -476,6 +476,7 @@ let RUPComponentsArray = [
 import { ChartComponent } from './modules/rup/components/elementos/chart.component';
 import { UploadFileComponent } from './shared/components/upload-file.component';
 import { CodificacionService } from './modules/rup/services/codificacion.service';
+import { PasesListadoInternacionComponent } from './apps/rup/internacion/components/pasesListadoInternacion.component';
 
 
 
@@ -562,6 +563,7 @@ registerLocaleData(localeEs, 'es');
         MapaDeCamasComponent,
         CamaComponent,
         ListadoInternacionComponent,
+        PasesListadoInternacionComponent,
         PuntoInicioInternacionComponent,
         LaboratoriosComponent,
         ChartComponent,

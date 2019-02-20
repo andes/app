@@ -626,6 +626,7 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     onCamaSelected(event) {
+        console.log(this.camaSeleccionada, event.cama);
         if (!this.camaSeleccionada || this.camaSeleccionada !== event.cama) { // Es la primera vez o selecciono una cama diferente a la que estaba
             this.showEgreso = false;
             this.showIngreso = false;
