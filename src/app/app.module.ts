@@ -404,6 +404,9 @@ import { RecepcionarDerivacionesComponent } from './apps/rup/laboratorio/compone
 import { GestorLotesComponent } from './apps/rup/laboratorio/components/derivaciones/gestor-lotes/gestor-lotes.component';
 import { PrepararLoteComponent } from './apps/rup/laboratorio/components/derivaciones/preparar-lote/preparar-lote.component';
 import { ListaProtocolosLotesComponent } from './apps/rup/laboratorio/components/derivaciones/preparar-lote/lista-protocolos-lotes/lista-protocolos-lotes.component';
+import { ReporteResultadosIndexComponent } from './apps/rup/laboratorio/components/reportes/resultados/index.component';
+import { ReporteResultadosFiltrosComponent } from './apps/rup/laboratorio/components/reportes/resultados/filtros-busqueda/filtros-busqueda-protocolo.component';
+import { ReportesResultadoListaProtocolosComponent } from './apps/rup/laboratorio/components/reportes/resultados/lista-protocolos/lista-protocolos.component';
 
 import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 // Configuracion prestaciones
@@ -692,6 +695,9 @@ registerLocaleData(localeEs, 'es');
         GestorLotesComponent,
         PrepararLoteComponent,
         ListaProtocolosLotesComponent,
+        ReporteResultadosIndexComponent,
+        ReporteResultadosFiltrosComponent,
+        ReportesResultadoListaProtocolosComponent,
 
         // MPI
         PacienteBuscarComponent,

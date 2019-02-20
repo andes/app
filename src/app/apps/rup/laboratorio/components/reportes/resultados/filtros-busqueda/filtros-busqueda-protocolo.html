@@ -1,0 +1,61 @@
+<div class="filtros-container ">
+    <span>
+        <plex-select [(ngModel)]="busqueda.areas" (change)="buscarProtocolos($event,'areas')" name="areas" label="Áreas"
+            [data]='areas' [multiple]="true"></plex-select>
+    </span>
+
+    <span>
+        <plex-datetime type="date" [(ngModel)]="busqueda.solicitudDesde" (change)="buscarProtocolos($event,'fechaDesde')"
+            name="solicitudDesde" label="Fecha desde" [required]="true" skipBy="day">
+        </plex-datetime>
+    </span>
+    <span>
+        <plex-datetime type="date" [(ngModel)]="busqueda.solicitudHasta" (change)="buscarProtocolos($event,'fechaHasta')"
+            name="solicitudHasta" label="Fecha hasta" [required]="true" skipBy="day">
+        </plex-datetime>
+    </span>
+    <span>
+        <plex-float [(ngModel)]="busqueda.numProtocoloDesde" (change)="buscarProtocolos($event,'numProtocoloDesde')"
+            name="numProtocoloDesde" label="N° protocolo desde"></plex-float>
+    </span>
+    <span>
+        <plex-float [(ngModel)]="busqueda.numProtocoloHasta" (change)="buscarProtocolos($event,'numProtocoloHasta')"
+            name="numProtocoloHasta" label="N° protocolo hasta"></plex-float>
+    </span>
+
+    <span>
+        <plex-select [(ngModel)]="busqueda.prioridad" (change)="buscarProtocolos($event,'prioridad')" name="prioridad"
+            label="Prioridad" [data]="prioridadesFiltroEnum"></plex-select>
+    </span>
+    <span>
+        <plex-select [(ngModel)]="busqueda.origen" (change)="buscarProtocolos($event,'origen')" name="origen" label="Origen"
+            [data]="origenEnum"></plex-select>
+    </span>
+    <span>
+        <plex-select [(ngModel)]="organizacion" (change)="buscarProtocolos($event,'organizacion')" name="organizacion"
+            label="Efector Solicitante" (getData)="loadOrganizaciones($event)"></plex-select>
+    </span>
+    <span>
+        <plex-select [(ngModel)]="paciente" name="paciente" (getData)="loadPacientes($event)" (change)="buscarProtocolos($event,'paciente')"
+            label="Paciente" placeholder="Ingrese paciente" labelField="nombre + ' ' + apellido" [required]="false"></plex-select>
+    </span>
+
+    <span>
+        <plex-select [(ngModel)]="servicio" name="servicio" (getData)="loadServicios($event)" (change)="buscarProtocolos($event,'servicio')"
+            label="Servicio" placeholder="Seleccione el servicio" labelField="term" [multiple]="true" [required]="false"
+            idField="term">
+        </plex-select>
+    </span>
+    <span>
+        <plex-select [(ngModel)]="servicios" name="servicio" (getData)="loadServicios($event)" (change)="buscarProtocolos($event,'servicio')"
+            label="Servicio" placeholder="Seleccione el servicio" labelField="term" [required]="false" idField="term"
+            [multiple]=true>
+        </plex-select>
+    </span>
+    <span>
+        <plex-select [(ngModel)]="estado" (change)="buscarProtocolos($event,'estado')" name="estado" label="Estado"
+            [data]="estadosFiltroEnum"></plex-select>
+    </span>
+    <br>
+    <hr>
+</div>
