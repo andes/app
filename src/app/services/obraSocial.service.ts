@@ -20,6 +20,10 @@ export class ObraSocialService {
         return this.server.get(this.url + '/puco/', { params: opciones, showError: showError });
     }
 
+    getPaciente(opciones: any, showError = true): Observable<IObraSocial[]> {
+        return this.server.get(this.url + '/paciente/', { params: opciones, showError: showError });
+    }
+
     getPadrones(opciones: any): Observable<any[]> {
         return this.server.get(this.url + '/puco/padrones', { params: opciones });
     }
