@@ -52,12 +52,12 @@
                     <ng-container *ngIf='contextoCache.modo.nombre === "carga" || contextoCache.modo.nombre === "validacion"' class="col-2">
                         <plex-button position="right" type="warning" label="Auditar" class="mr-3" (click)="volverAControl()"></plex-button>
                     </ng-container>
-                    
+
                     <div class="col d-flex flex-row-reverse" *ngIf="showProtocoloDetalle">
                         <plex-button *ngIf="showBotonAceptarCambiosHeader" position="right" type="success" label="Aceptar" (click)="aceptarCambiosHeader()"></plex-button>
 
                         <plex-button *ngIf="showBotonAceptarCambiosAuditoria" position="right" type="success" label="Aceptar" (click)="aceptarCambiosAuditoria()"></plex-button>
-                    
+
                         <plex-button position="left" type="warning" (click)="volver()" label="Volver"></plex-button>
                     </div>
 
@@ -86,7 +86,6 @@
 
             </div>
         </header>
-XXXX
         <!-- DETALLE DE PROTOCOLO -->
         <protocolo-detalle *ngIf="showProtocoloDetalle" [protocolo]="protocolo" [indexProtocolo]="indexProtocolo"
             [protocolos]="protocolos" [seleccionPaciente]="seleccionPaciente" (volverAListaControEmit)="volver()"
