@@ -37,6 +37,8 @@ export class EstadisticasPacientesComponent implements OnInit {
     }
 
     @Output() showArancelamientoForm = new EventEmitter<any>();
+    @Output() obraSocialEmit = new EventEmitter<any>();
+
 
     pacienteSeleccionado: IPaciente;
     public fechaDesde: any;
@@ -77,9 +79,11 @@ export class EstadisticasPacientesComponent implements OnInit {
     }
 
     loadObraSocial() {
-        this.obraSocialService.get({ dni: this._paciente.documento }).subscribe(resultado => {
+        // TODO: si es en colegio médico hay que buscar en el paciente
+        this.obraSocialService.getPaciente({ dni: this._paciente.documento }).subscribe(resultado => {
             if (resultado.length) {
                 this.obraSocial = resultado[0];
+                this.obraSocialEmit.emit(this.obraSocial);
             }
         });
     }
