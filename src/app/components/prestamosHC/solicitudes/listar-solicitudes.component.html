@@ -106,7 +106,7 @@
                                             {{carpeta.datosSolicitudManual.prestacion?.term}}
                                         </td>
                                         <!-- Profesional -->
-                                        <td *ngIf="carpeta.datosPrestamo?.turno">
+                                        <td *ngIf="carpeta.datosPrestamo?.turno?.profesionales">
                                             {{carpeta.datosPrestamo.turno.profesionales |
                                             enumerar:['apellido','nombre'] }}
                                         </td>
@@ -125,8 +125,7 @@
                                         </td>
                                         <!-- Fecha de Actualización de la HUDS digitalizada -->
                                         <td>
-                                            <!-- {{carpeta.ultimoCDA|json}} -->
-                                            <span *ngIf="carpeta.ultimoCDA[0]">
+                                            <span *ngIf="carpeta.ultimoCDA && carpeta.ultimoCDA[0]">
                                                 Fecha: <b>{{carpeta.ultimoCDA[0].fecha | fecha}}</b>
                                                 <br> Responsable: <b>{{carpeta.ultimoCDA[0].profesional.apellido}}
                                                     {{carpeta.ultimoCDA[0].profesional.nombre}}</b>
@@ -138,10 +137,12 @@
                                         </td>
                                         <!-- Boton para subir HUDS digitalizada -->
                                         <td>
-                                            <upload-file label="Adjuntar HUDS" [extensiones]="['pdf']" (onUpload)="onUpload($event, carpeta)"></upload-file>
-                                            <br><br>
-                                            <span *ngIf="errorExt===i">
-                                                <span class="badge-danger">Archivo inválido. Solo se admite PDF</span>
+                                            <span *ngIf="carpeta.numero !== ''">
+                                                <upload-file label="Adjuntar HUDS" [extensiones]="['pdf']" (onUpload)="onUpload($event, carpeta)"></upload-file>
+                                                <br><br>
+                                                <span *ngIf="errorExt===i">
+                                                    <span class="badge-danger">Archivo inválido. Solo se admite PDF</span>
+                                                </span>
                                             </span>
                                         </td>
                                         <!-- Estado -->
@@ -150,6 +151,7 @@
                                                 [disabled]="carpetasSeleccionadas.length > 0">
                                             </plex-button>
                                             <span *ngIf="carpeta.estado == 'Prestada'" class="badge-warning float-left">Prestada</span>
+                                            <span *ngIf="carpeta.numero === ''" class="badge-danger float-left">No existe</span>
                                         </td>
                                     </tr>
                                 </tbody>
