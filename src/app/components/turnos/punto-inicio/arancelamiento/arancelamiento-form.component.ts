@@ -94,11 +94,6 @@ export class ArancelamientoFormComponent implements OnInit {
     }
 
     imprimir() {
-
-        this.servicioFA.post(this.turnoSeleccionado).subscribe(prestacion => {
-
-        });
-
         window.print();
     }
 }
