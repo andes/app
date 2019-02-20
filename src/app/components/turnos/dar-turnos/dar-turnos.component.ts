@@ -54,6 +54,7 @@ export class DarTurnosComponent implements OnInit {
     get pacienteSeleccionado() {
         return this._pacienteSeleccionado;
     }
+    @Input() obraSocialInput: any;
 
     @Input('solicitudPrestacion')
     set solicitudPrestacion(value: any) {
@@ -194,16 +195,21 @@ export class DarTurnosComponent implements OnInit {
                 this.verificarTelefono(pacienteMPI);
                 this.obtenerCarpetaPaciente();
                 if (this.paciente.documento) {
-                    if (this.paciente.financiador && this.paciente.financiador[0]) {
+                    // Si el efector es colegio médico verifica el financiador del paciente
+                    if (this.paciente.financiador && this.paciente.financiador[0] && this.desplegarObraSocial()) {
                         this.obraSocialPaciente = this.paciente.financiador[0] as any;
                         this.numeroAfiliado = (this.paciente.financiador[0] as any).numeroAfiliado;
                     } else {
-                        this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
-                            if (resultado && resultado.length > 0) {
-                                this.obraSocialPaciente = resultado[0];
-                                this.obraSocialPaciente.id = (resultado[0] as any).idFinanciador;
-                            }
-                        });
+                        if (this.obraSocialInput) {
+                            this.obraSocialPaciente = this.obraSocialInput;
+                        } else {
+                            this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
+                                if (resultado && resultado.length > 0) {
+                                    this.obraSocialPaciente = resultado[0];
+                                    this.obraSocialPaciente.id = (resultado[0] as any).idFinanciador;
+                                }
+                            });
+                        }
                     }
                 }
             });
@@ -1068,8 +1074,8 @@ export class DarTurnosComponent implements OnInit {
                     if (!this.paciente.scan) {
                         this.servicePaciente.patch(paciente.id, { op: 'updateScan', scan: paciente.scan }).subscribe();
                     }
-                    if (this.paciente.documento) {
-                        this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
+                    if (this.paciente.documento && !this.obraSocialInput) {
+                        this.servicioOS.getPaciente({ dni: this.paciente.documento }).subscribe(resultado => {
                             if (resultado) {
                                 this.obraSocialPaciente = resultado[0];
                             }
