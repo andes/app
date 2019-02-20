@@ -144,7 +144,7 @@ export class GestorProtocolosComponent implements OnInit {
             paciente: turno ? turno.paciente : paciente,
             solicitud: {
                 esSolicitud: true,
-                tipoPrestacion: turno ? turno.tipoPrestacion : null,
+                tipoPrestacion: turno ? turno.tipoPrestacion : Constantes.conceptoPruebaLaboratorio,
                 organizacion: turno ? turno.organizacion : this.auth.organizacion,
                 profesional: turno ? turno.updatedBy : {},
                 ambitoOrigen: null,
