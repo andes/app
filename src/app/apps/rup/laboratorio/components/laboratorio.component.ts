@@ -9,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 export class LaboratorioComponent implements OnInit {
 
     public mostrarPuntoInicio;
-
+    public turno;
     public protocolo;
     public paciente;
     private contextoCache;
@@ -31,6 +31,13 @@ export class LaboratorioComponent implements OnInit {
         this.contextoCache.edicionDatosCabecera = true;
         this.mostrarPuntoInicio = false;
         this.paciente = $event;
+    }
+
+    recepcionarTurno($event) {
+        this.turno = $event.turno;
+        this.contextoCache.edicionDatosCabecera = false;
+        this.laboratorioContextoCacheService.modoRecepcion();
+        this.mostrarPuntoInicio = false;
     }
 
     volverAPuntoInicio($event) {

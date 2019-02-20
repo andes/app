@@ -179,6 +179,7 @@ const appRoutes: Routes = [
   { path: 'laboratorio/protocolos', component: LaboratorioComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/protocolos/sinTurno', component: LaboratorioComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/protocolos/sinTurno/:id', component: LaboratorioComponent, canActivate: [RoutingGuard] },
+  { path: 'laboratorio/protocolos/turno', component: LaboratorioComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/hojatrabajo', component: GestorHojatrabajoComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/derivaciones', component: LaboratorioDerivacionesComponent, canActivate: [RoutingGuard] },
 

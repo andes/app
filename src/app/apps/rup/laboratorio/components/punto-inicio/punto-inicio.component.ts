@@ -22,7 +22,7 @@ export class PuntoInicioLaboratorioComponent implements OnInit, OnDestroy {
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
     @Output() seleccionarProtocoloEmitter: EventEmitter<any> = new EventEmitter<any>();
     @Output() pacienteSinTurnoEmitter: EventEmitter<any> = new EventEmitter<any>();
-
+    @Output() pacienteConTurnoEmitter: EventEmitter<any> = new EventEmitter<any>();
 
     public puedeCrearSolicitud = false;
     public puedeAutocitar = false;
@@ -108,6 +108,18 @@ export class PuntoInicioLaboratorioComponent implements OnInit, OnDestroy {
         this.laboratorioContextoCacheService.modoRecepcion();
         this.router.navigate(['/laboratorio/protocolos/sinTurno/' + this.seleccion.id]);
     }
+
+    /**
+     *
+     *
+     * @memberof PuntoInicioLaboratorioComponent
+     */
+    recepcionarConTurno(turno) {
+        this.laboratorioContextoCacheService.getContextoCache().turno = turno;
+        this.laboratorioContextoCacheService.modoRecepcion();
+        this.router.navigate(['/laboratorio/protocolos/turno/']);
+    }
+
 
     showArancelamientoForm(turno) {
         this.turnoArancelamiento = turno;

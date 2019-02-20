@@ -13,20 +13,20 @@
                     </div>
                 </div> -->
                 <div class="row">
-                    <!-- <div class="col-12" *ngIf="!showCreateUpdate">
+                    <div class="col-12" *ngIf="!showCreateUpdate">
                         <paciente-search-turnos (selected)="onPacienteSelected($event)" [puedeCrearSolicitud]="puedeCrearSolicitud"
                             [puedeDarTurno]="puedeDarTurno" [modoCompleto]="false" [resultadoCreateUpdate]="resultadoCreate" [puedeDarTurno]="puedeDarTurno"
                             [puedeCrearSolicitud]="puedeCrearSolicitud"
                             (blanqueaInput)="handleBlanqueo($event)" (sinResultados)="handleBlanqueo($event)"
                             (createUpdate)="actualizarPaciente($event)" (operacion)="verificarOperacion($event)"></paciente-search-turnos>
-                    </div> -->
+                    </div>
                     <div class="col">
 
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="paciente-buscar" class="form-control-label">Buscar paciente</label>
                             <paciente-buscar *ngIf="!showCreateUpdate" (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
                                 (searchClear)="searchStart()"></paciente-buscar>
-                        </div>
+                        </div> -->
 
                         <div class="paciente-seleccionado" *ngIf="seleccion?.id">
                             <img *ngIf="seleccion.foto" src="{{ seleccion.foto }}" alt="">
@@ -83,12 +83,13 @@
             <plex-box>
                 <fieldset>
                     <legend>Lista de solicitudes</legend>
-                    <!-- <estadisticas-agendas></estadisticas-agendas> -->
+                    <!-- <estadisticas-agendas></estadisticas-agendas> --> 
                     <plex-button *ngIf="seleccion?.id" label="Recepción sin turno" type="warning" (click)="recepcionSinTurno($event)"
                         class="d-flex flex-row-reverse"></plex-button>
 
                     <punto-inicio-listado-solicitudes *ngIf="seleccion?.id && showListaSolicitudes" [paciente]="paciente"
-                        (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)' (pacienteSinTurnoEmitter)='recepcionarSinTurno($event)'></punto-inicio-listado-solicitudes>
+                        (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)'
+                        (pacienteConTurnoEmitter)='recepcionarConTurno($event)'></punto-inicio-listado-solicitudes>
                 </fieldset>
                 <!-- <div *ngIf="showMostrarEstadisticasPacientes" type="info">
                     <estadisticas-pacientes [paciente]="paciente" (showArancelamientoForm)="showArancelamientoForm($event)"></estadisticas-pacientes>
@@ -103,9 +104,9 @@
             </plex-box>
         </div>
     </div>
-    <!-- Paciente Create Update: se utiliza de forma independiente del paciente-search-turnos
+    <!-- Paciente Create Update: se utiliza de forma independiente del 
     para una mejor visualizacion de la carga de datos -->
-    <div class="row" *ngIf="showCreateUpdate">
+    <!-- <div class="row" *ngIf="showCreateUpdate">
         <div class="col-12">
             <div class="panel panel-default">
                 <div class="clear"></div>
@@ -116,9 +117,8 @@
     <div *ngIf="showArancelamiento">
         <arancelamiento-form [turno]="turnoArancelamiento" (volverAPuntoInicio)='volverAPuntoInicio($event)'>
         </arancelamiento-form>
-    </div>
+    </div> -->
 </section>
 
-<!--Components-->
-<dar-turnos *ngIf="autorizado && showDarTurnos" [pacienteSeleccionado]="paciente" [solicitudPrestacion]="solicitudPrestacion"
-    (afterDarTurno)="afterDarTurno($event)"></dar-turnos>
+<!-- <dar-turnos *ngIf="autorizado && showDarTurnos" [pacientesSeleccionado]="paciente" [solicitudPrestacion]="solicitudPrestacion"
+    (afterDarTurno)="afterDarTurno($event)"></dar-turnos> -->

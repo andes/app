@@ -1,14 +1,15 @@
-import { PrestacionesService } from './../../../../../../modules/rup/services/prestaciones.service';
+import { LaboratorioContextoCacheService } from './../../../services/protocoloCache.service';
+import { TurnoService } from './../../../../../../services/turnos/turno.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { IPaciente } from '../../../../../../interfaces/IPaciente';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'punto-inicio-listado-solicitudes',
   templateUrl: './listado-solicitudes.html',
 })
 export class ListadoSolicitudesComponent implements OnInit {
   @Output() seleccionarProtocoloEmitter: EventEmitter<any> = new EventEmitter<any>();
-  @Output() pacienteSinTurnoEmitter: EventEmitter<any> = new EventEmitter<any>();
+  @Output() pacienteConTurnoEmitter: EventEmitter<any> = new EventEmitter<any>();
   paciente: IPaciente;
   @Input('paciente')
   set setpaciente(value: any) {
@@ -18,11 +19,13 @@ export class ListadoSolicitudesComponent implements OnInit {
     }
   }
 
-  public protocolos: any[];
+  public turnos: any[];
   public modo = 'puntoInicio';
 
   constructor(
-    public servicioPrestaciones: PrestacionesService
+    public turnoService: TurnoService,
+    public laboratorioContextoCacheService: LaboratorioContextoCacheService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -34,14 +37,8 @@ export class ListadoSolicitudesComponent implements OnInit {
    * @memberof ListadoSolicitudesComponent
    */
   buscarSolicitudes(paciente) {
-    let params = {
-      estado: ['pendiente'],
-      pacienteDocumento: paciente.documento,
-      tipoPrestacionSolicititud: '15220000'
-    };
-
-    this.servicioPrestaciones.get(params).subscribe(protocolos => {
-      this.protocolos = protocolos;
+    this.turnoService.get({ pacienteId: paciente._id, tipoPrestacion: '15220000' }).subscribe(turnos => {
+      this.turnos = turnos;
     });
   }
 
@@ -55,4 +52,14 @@ export class ListadoSolicitudesComponent implements OnInit {
     this.seleccionarProtocoloEmitter.emit($event);
   }
 
+  /**
+   *
+   *
+   * @memberof ListadoSolicitudesComponent
+   */
+  recepcionar(value) {
+    console.log(value);
+    this.laboratorioContextoCacheService.modoRecepcion();
+    this.pacienteConTurnoEmitter.emit(value);
+  }
 }

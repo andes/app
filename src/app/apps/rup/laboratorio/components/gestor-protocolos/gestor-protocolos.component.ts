@@ -44,6 +44,15 @@ export class GestorProtocolosComponent implements OnInit {
             this.seleccionarProtocolo({ protocolo: value, index: 0 });
         }
     }
+
+    @Input('turno')
+    set turno(turno: any) {
+        if (turno) {
+            this.resetearProtocolo(null, turno);
+
+        }
+    }
+
     // @Input() modo: 'puntoInicio' | 'listado' | 'recepcion' | 'control' | 'carga' | 'validacion';
     modoAVolver: 'puntoInicio' | 'listado' | 'recepcion' | 'control' | 'carga' | 'validacion';
 
@@ -88,18 +97,30 @@ export class GestorProtocolosComponent implements OnInit {
         if (!this.protocolo) {
             this.resetearProtocolo({});
         }
-        this.routeParams = this.route.params.subscribe(params => {
-            if (params['id']) {
-                let id = params['id'];
-                this.servicePaciente.getById(id).subscribe(pacienteMPI => {
-                    this.paciente = pacienteMPI;
-                    this.mostrarFomularioPacienteSinTurno();
-                    this.seleccionPaciente = false;
-                    this.seleccionarProtocolo(this.protocolo);
-                    this.laboratorioContextoCacheService.ventanillaSinTurno();
-                });
-            }
-        });
+        console.log(this.route.snapshot.routeConfig );
+        if (this.route.snapshot.routeConfig.path === 'laboratorio/protocolos/turno') {
+            this.resetearProtocolo(null, this.contextoCache.turno);
+            this.mostrarFomularioPacienteSinTurno();
+            this.seleccionPaciente = false;
+            this.seleccionarProtocolo(this.protocolo);
+            this.laboratorioContextoCacheService.ventanillaSinTurno();
+            this.showProtocoloDetalle = true;
+            this.showListarProtocolos = false;
+        } else {
+            this.routeParams = this.route.params.subscribe(params => {
+                if (params['id']) {
+                    let id = params['id'];
+                    this.servicePaciente.getById(id).subscribe(pacienteMPI => {
+                        this.paciente = pacienteMPI;
+                        this.mostrarFomularioPacienteSinTurno();
+                        this.seleccionPaciente = false;
+                        this.seleccionarProtocolo(this.protocolo);
+                        this.laboratorioContextoCacheService.ventanillaSinTurno();
+                    });
+                }
+            });
+        }
+
     }
 
     /**
@@ -118,16 +139,16 @@ export class GestorProtocolosComponent implements OnInit {
      *
      * @memberof PuntoInicioLaboratorioComponent
      */
-    resetearProtocolo(paciente) {
+    resetearProtocolo(paciente?, turno?) {
         this.protocolo = {
-            paciente: paciente,
+            paciente: turno ? turno.paciente : paciente,
             solicitud: {
                 esSolicitud: true,
-                tipoPrestacion: null,
-                organizacion: this.auth.organizacion,
-                profesional: {},
+                tipoPrestacion: turno ? turno.tipoPrestacion : null,
+                organizacion: turno ? turno.organizacion : this.auth.organizacion,
+                profesional: turno ? turno.updatedBy : {},
                 ambitoOrigen: null,
-                fecha: new Date(),
+                fecha: turno ? turno.horaInicio : new Date(),
                 registros: [{
                     nombre: 'Prueba de Laboratorio',
                     concepto: Constantes.conceptoPruebaLaboratorio,

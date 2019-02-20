@@ -1,3 +1,10 @@
-<hr>
-<lista-protocolos [protocolos]="protocolos" [modo]="modo" (seleccionarProtocoloEmitter)="seleccionarProtocolo($event)"
-[showProtocoloDetalle]='showProtocoloDetalle'></lista-protocolos>
+<table>
+    <th>Fecha</th>
+    <th></th>
+    <tbody>
+        <tr *ngFor='let turno of turnos' >
+            <td>{{ turno.horaInicio | fecha }} </td>
+            <td><plex-button label="Recepcionar" type="success" (click)="recepcionar(turno)"></plex-button></td>
+        </tr>
+    </tbody>
+</table>
