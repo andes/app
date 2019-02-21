@@ -55,14 +55,6 @@
                         </button>
                     </li>
                     <li class="">
-                        <small *ngIf="getCantidadResultados('otros')" class="badge badge-otro ml-1 float-right" [ngClass]="{'active': filtroActual === 'otros'}">{{
-                            getCantidadResultados('otros')}}</small>
-                        <button (click)="filtroBuscador('otros')" [ngClass]="{'active': filtroActual === 'otros'}" class="btn btn-block p-0 btn-otro">
-                            <i class="icon icon-rup-semantic-elementoderegistro"></i>
-                            ELEM.REG.
-                        </button>
-                    </li>
-                    <li class="">
                         <small *ngIf="getCantidadResultados('laboratorios')" class="badge badge-otro ml-1 float-right" [ngClass]="{'active': filtroActual === 'laboratorios'}">{{
                             getCantidadResultados('laboratorios')}}</small>
                         <button (click)="filtroBuscador('laboratorios')" [ngClass]="{'active': filtroActual === 'laboratorios'}" class="btn btn-block p-0 btn-laboratorio">
@@ -442,55 +434,6 @@
             <div *ngIf="productos.length === 0">No hay medicamentos registrados</div>
         </ng-container>
 
-
-        <!-- Vista: ELEMENTOS DE REGISTRO
-        <ng-container *ngIf="filtroActual === 'otros'">
-            <div *ngIf="elementosRegistro && colapsado" class="conceptos hover list-unstyled">
-                <ul class="conceptos list-unstyled">
-                    <ng-container *ngFor="let elementoRegistro of elementosRegistro; let iCronico = index">
-                        <li>
-                            <div class="rup-card mini elementoderegistro" [ngClass]="{'active': estaEnTabs(elementoRegistro, 'hallazgo')}">
-                                <div class="rup-header">
-                                    <div class="rup-border rup-border-elementoderegistro">
-                                        <div class="row p-0 m-0 border-secondary border-left-0">
-                                            <div class="col-10 p-0 m-0">
-                                                <div class="row m-0 p-0">
-                                                    <ng-container *ngIf="emitirConceptos">
-                                                        <div class="icon-rup " draggable [dragScope]="_dragScope"
-                                                            [dragClass]="_dragOverClass" [dragData]="{'tipo': 'elementoderegistro','data': elementoRegistro, 'huds': true}"
-                                                            (onDragStart)="dragStart($event)" (onDragEnd)="dragEnd($event)">
-                                                            <i class="icon icon-rup-semantic-elementoderegistro"></i>
-                                                        </div>
-                                                    </ng-container>
-                                                    <ng-container *ngIf="!emitirConceptos">
-                                                        <div class="icon-rup">
-                                                            <i class="icon icon-rup-semantic-elementoderegistro"></i>
-                                                        </div>
-                                                    </ng-container>
-                                                    <div class="col p-0 pl-2 float-left" (click)="devolverRegistrosHuds(elementoRegistro, 'hallazgo')">
-                                                        {{ elementoRegistro.concepto.term }}
-                                                        <div class="row p-0 m-0">
-                                                            <div class="col-10 p-0 m-0">
-                                                                <ng-container *ngIf="elementoRegistro">
-                                                                    <small class="sugerido">Creado:
-                                                                        {{elementoRegistro.updatedAt | fecha:[]:true}}
-                                                                    </small>
-                                                                </ng-container>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ng-container>
-                </ul>
-                <div *ngIf="elementosRegistro.length === 0">No hay Elementos de registro registrados</div>
-            </div>
-        </ng-container> -->
 
         <!-- Vista: LABORATORIOS -->
         <ng-container *ngIf="filtroActual === 'laboratorios'">

@@ -305,6 +305,7 @@ export class PrestacionesService {
                 if (!registroEncontrado && registro.valor) {
                     let dato = {
                         idPrestacion: registro.idPrestacion,
+                        idRegistro: registro.id,
                         concepto: registro.concepto,
                         prestaciones: [registro.idPrestacion],
                         evoluciones: [{
@@ -472,6 +473,8 @@ export class PrestacionesService {
                 if (!registroEncontrado && registro.valor) {
                     let dato = {
                         concepto: registro.concepto,
+                        idRegistro: registro.id,
+                        idPrestacion: registro.idPrestacion,
                         prestaciones: [registro.idPrestacion],
                         evoluciones: [{
                             idRegistro: registro.id,

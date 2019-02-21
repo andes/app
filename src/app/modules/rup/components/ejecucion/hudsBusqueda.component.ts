@@ -21,8 +21,6 @@ export class HudsBusquedaComponent implements OnInit {
     colapsadoCronicos = true;
     colapsado = true;
     ordenDesc = true;
-    elementosRegistro: any[];
-
     procedimientos: any;
     // Copia de los procedimientos para el buscador.
     procedimientosCopia: any[];
@@ -226,11 +224,7 @@ export class HudsBusquedaComponent implements OnInit {
                 }
                 index = this.registrosHuds.findIndex(r => {
                     if (r.data.concepto && (r.data.concepto.semanticTag === 'hallazgo' || r.data.concepto.semanticTag === 'trastorno' || r.data.concepto.semanticTag === 'producto' || r.data.concepto.semanticTag === 'procedimiento' || r.data.concepto.semanticTag === 'entidad observable') && r.data.concepto.id === registro.concepto.id) {
-                        if (r.data.createdAt === registro.createdAt && r.data.updatedAt === registro.updatedAt) {
-                            return 1;
-                        } else {
-                            return 0;
-                        }
+                        return (r.data.idPrestacion === registro.idPrestacion && r.data.idRegistro === registro.idRegistro);
                     }
                 });
                 break;
@@ -267,11 +261,7 @@ export class HudsBusquedaComponent implements OnInit {
                 registro.class = registro.concepto.semanticTag;
                 index = this.registrosHuds.findIndex(r => {
                     if ((r.data.concepto.semanticTag === 'hallazgo' || r.data.concepto.semanticTag === 'producto' || r.data.concepto.semanticTag === 'procedimiento') && r.data.concepto.id === registro.concepto.id) {
-                        if (r.data.createdAt === registro.createdAt && r.data.updatedAt === registro.updatedAt) {
-                            return 1;
-                        } else {
-                            return 0;
-                        }
+                        return (r.data.createdAt === registro.createdAt && r.data.updatedAt === registro.updatedAt);
                     }
                 });
                 break;
@@ -279,11 +269,7 @@ export class HudsBusquedaComponent implements OnInit {
                 registro.class = 'laboratorio';
                 index = this.registrosHuds.findIndex(r => {
                     if (r.tipo === 'cda' && r.data.prestacion.snomed.semanticTag === 'elemento de registro') {
-                        if (r.data.fecha === registro.fecha) {
-                            return 1;
-                        } else {
-                            return 0;
-                        }
+                        return (r.data.fecha === registro.fecha);
                     }
                 });
                 break;
@@ -323,15 +309,24 @@ export class HudsBusquedaComponent implements OnInit {
 
         for (let i = 0; i < this.registrosHuds.length; i++) {
             const _registro = this.registrosHuds[i].data;
-
             // console.log('registro, _registro', registro, _registro);
 
-            if (_registro && _registro.concepto && registro.concepto) {
-                if (_registro.concepto.conceptId === registro.concepto.conceptId && _registro.createdAt === registro.createdAt) {
+            if (_registro && registro.idPrestacion) {
+                if (registro.idRegistro && _registro.idRegistro && registro.idRegistro === _registro.idRegistro) {
+                    return true;
+                } else if (registro.id && _registro.id && registro.id === _registro.id) {
                     return true;
                 }
-            } else if (_registro && _registro.createdAt && _registro.createdAt === registro.createdAt) {
-                return true;
+            } else {
+                if (registro.tipo && registro.tipo === 'rup') {
+                    if (registro.data.id === _registro.id) {
+                        return true;
+                    }
+                } else if (registro.tipo === 'cda' ) {
+                    if (registro.data.cda_id === _registro.cda_id) {
+                        return true;
+                    }
+                }
             }
         }
     }
@@ -464,27 +459,6 @@ export class HudsBusquedaComponent implements OnInit {
 
         }
 
-        // Ordenar ELEMENTOS DE REGISTRO
-        // (fecha === updatedAt)
-        // (alfa === concepto.term)
-        if (this.filtroActual === 'otros') {
-            this.elementosRegistro.sort((a, b) => {
-                if (tipoOrden === 'fecha') {
-                    if (this.ordenDesc) {
-                        return b.updatedAt - a.updatedAt;
-                    } else {
-                        return a.updatedAt - b.updatedAt;
-                    }
-                } else if (tipoOrden === 'alfa') {
-                    if (this.ordenDesc) {
-                        return b.concepto.term.localeCompare(a.concepto.term);
-                    } else {
-                        return a.concepto.term.localeCompare(b.concepto.term);
-                    }
-                }
-            });
-        }
-
         // Ordenar LABORATORIOS
         // (fecha === createddAt)
         // (alfa === concepto.term)
@@ -558,8 +532,6 @@ export class HudsBusquedaComponent implements OnInit {
             this.listarProblemasActivos();
             this.listarProcedimientos();
             this.listarMedicamentos();
-            this.listarElementosDeRegistro();
-
         });
     }
 
@@ -616,15 +588,6 @@ export class HudsBusquedaComponent implements OnInit {
         });
     }
 
-    // Trae los medicamentos registrados para el paciente
-    listarElementosDeRegistro() {
-        // filtramos los odontogramas
-
-        this.servicioPrestacion.getByPacienteElementosRegistro(this.paciente.id, true).subscribe(elementosRegistro => {
-
-            this.elementosRegistro = elementosRegistro.filter(e => e.concepto.conceptId !== this.servicioPrestacion.elementosRegistros.odontograma);
-        });
-    }
 
     // Trae los cdas registrados para el paciente
     buscarCDAPacientes() {
