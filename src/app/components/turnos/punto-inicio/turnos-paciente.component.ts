@@ -84,7 +84,6 @@ export class TurnosPacienteComponent implements OnInit {
     }
 
     printArancelamiento(turno) {
-        debugger;
         if (this.cambioMotivo) {
             let data = {
                 motivoConsulta: turno.motivoConsulta
