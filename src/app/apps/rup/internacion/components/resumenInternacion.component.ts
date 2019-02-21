@@ -76,6 +76,10 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
         this.comprobarEgresoParaValidar();
         this.prestacionesService.getPasesInternacion(this.prestacion.id).subscribe(lista => {
             this.pases = lista;
+            this.pases.sort((a, b) => {
+                return a.estados.fecha < b.estados.fecha ? 1 : -1;
+            });
+
         });
 
     }
