@@ -3,7 +3,7 @@
     <plex-accordion>
         <plex-panel *ngIf="!editarEgreso " tituloPrincipal="Datos del Ingreso" [active]="true" icon="arrow-down-drop-circle-outline">
             <ng-container>
-                <rup-iniciarInternacion (data)="cierraEditar($event)" [paciente]="paciente" [prestacion]="prestacion"
+                <rup-iniciarInternacion [desdeListadoInternacion]='desdeListadoInternacion' (data)="cierraEditar($event)" [paciente]="paciente" [prestacion]="prestacion"
                     [soloValores]="!editarIngreso" [paciente]="paciente" [camaSelected]="camaSeleccionada">
                 </rup-iniciarInternacion>
                 <!-- Editar internacion -->
