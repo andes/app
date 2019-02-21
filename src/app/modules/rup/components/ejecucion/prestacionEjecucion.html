@@ -286,8 +286,7 @@
                                     </ng-container>
                                 </plex-tab>
 
-                                <plex-tab [label]="registro.data.solicitud.tipoPrestacion.term" [class]="registro.data.class"
-                                    *ngIf="registro.tipo === 'prestacion'">
+                                <plex-tab [label]="registro.data.solicitud.tipoPrestacion.term" [class]="registro.data.class" [allowClose]="true" *ngIf="registro.tipo === 'prestacion'">
                                     <h4 class="text-capitalize">{{ registro.data.solicitud.tipoPrestacion.term }}</h4>
                                     <div class="row">
                                         <div class="col-12">

@@ -15,14 +15,21 @@
     border-width: 2px;
 }
 
+.buscador-resultados {
+    height: calc(100% - 220px);
+    cdk-virtual-scroll-viewport {
+        height: 100%;
+    }
+}
+
 .menu-buscador {
     .container-filtros {
         // width: 103%;
         // overflow: scroll;
         // position: relative;
         // height: auto;
-        padding: 5px 0;
-        margin: 10px 0;
+        padding: 2px 0;
+        margin: 5px 0;
     }
     .filtros {
         align-items: center;
