@@ -211,4 +211,8 @@ export class CamasService {
         return this.server.get(this.camasUrl, { params: params, showError: true });
     }
 
+    getCamaXUnidOrg(){
+
+    }
+
 }

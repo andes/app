@@ -9,7 +9,7 @@
                     <div class="row">
                         <div class="col-8">
                             <plex-text [(ngModel)]="cama.nombre" name="nombre" label="Nombre" placeholder="nombre"
-                                [required]="true"></plex-text>
+                                [required]="true" (change)="checkNombre.next()"></plex-text>
                         </div>
                         <div class="col-4">
                             <plex-datetime *ngIf="nuevaCama" type="datetime" [(ngModel)]="estado.fecha" [required]="nuevaCama"
@@ -35,7 +35,7 @@
                     <div class="row">
                         <div class="col-4">
                             <plex-select name="servicio" [required]="true" [data]="organizacion?.unidadesOrganizativas"
-                                idField="term" labelField="term" [(ngModel)]="estado.unidadOrganizativa" label="Unidad organizativa">
+                                idField="term" labelField="term" (change)='verificaDatos()' [(ngModel)]="estado.unidadOrganizativa" label="Unidad organizativa">
                             </plex-select>
                         </div>
                         <div class="col-4">
@@ -77,9 +77,9 @@
             </div>
             <div class="col-6 text-right">
                 <!-- Eliminar cama -->
-                <plex-button label="{{btnEliminar}}" *ngIf="cama.id" type="danger" (click)="eliminarCama(cama)">
+                <plex-button label="{{btnEliminar}}" *ngIf="cama.id && checkAuth('cama:baja')"  type="danger" (click)="eliminarCama(cama)">
                 </plex-button>&nbsp;&nbsp;
-                <plex-button label="Guardar" type="success" (click)="save($event)" validateForm="true"></plex-button>
+                <plex-button label="Guardar" type="success" (click)="save($event)" [disabled]='disabledSave' validateForm="true"></plex-button>
             </div>
         </div>
     </footer>

@@ -72,6 +72,7 @@ export class CensoDiarioComponent implements OnInit {
             this.servicioInternacion.getInfoCenso(params).subscribe((respuesta: any) => {
                 this.listadoCenso = respuesta.censoDiario.map(c => c.censo).filter(item => item);
                 this.resumenCenso = respuesta.resumen;
+                console.log(this.listadoCenso);
 
             });
         }

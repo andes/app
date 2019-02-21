@@ -328,6 +328,9 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
                     this.cancelar();
                 });
             }
+        } else {
+            this.plex.info('info', 'ERROR: Los datos de egreso no estan completos');
+            return;
         }
     }
 
@@ -366,6 +369,9 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
                     }
                 }
             });
+        } else {
+            this.plex.info('info', 'ERROR: Los datos de egreso no estan completos');
+
         }
     }
 

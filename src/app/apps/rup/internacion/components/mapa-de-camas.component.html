@@ -395,37 +395,62 @@
                             </div>
                         </div>
                     </div>
-                    <div class="container-resumen">
-                        <div class="subcontainer-resumen desocupada">
-                            <div>
-                                <i class="icon icon-andes-cama-desocupada"></i>
+                    <ng-container *ngIf='!isWorkflowCompleto'>
+                        <div class="container-resumen">
+
+                            <div class="subcontainer-resumen bloqueada">
+                                <div>
+                                    <i class="icon icon-andes-cama-bloqueada"></i>
+                                </div>
+                                <div class="texto-resumen">
+                                    <h3>{{cantidadXEstado['bloqueada'].length}}</h3>
+                                    <p>Camas bloqueadas</p>
+                                </div>
                             </div>
-                            <div class="texto-resumen">
-                                <h3>{{cantidadXEstado['desocupada'].length}}</h3>
-                                <p>Camas desocupadas</p>
-                            </div>
-                        </div>
-                        <div class="subcontainer-resumen bloqueada">
-                            <div>
-                                <i class="icon icon-andes-cama-bloqueada"></i>
-                            </div>
-                            <div class="texto-resumen">
-                                <h3>{{cantidadXEstado['bloqueada'].length}}</h3>
-                                <p>Camas bloqueadas</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container-resumen">
-                        <div class="subcontainer-resumen ocupada">
-                            <div>
-                                <i class="icon icon-andes-cama-ocupada"></i>
-                            </div>
-                            <div class="texto-resumen">
-                                <h3>{{cantidadXEstado['ocupada'].length}}</h3>
-                                <p>Camas ocupadas</p>
+                            <div class="subcontainer-resumen ocupada">
+                                <div>
+                                    <i class="icon icon-andes-cama-ocupada"></i>
+                                </div>
+                                <div class="texto-resumen">
+                                    <h3>{{cantidadXEstado['ocupada'].length}}</h3>
+                                    <p>Camas ocupadas</p>
+                                </div>
                             </div>
                         </div>
-                        <!-- <div class="subcontainer-resumen reparacion">
+                    </ng-container>
+                    <ng-container *ngIf='isWorkflowCompleto'>
+
+                        <div class="container-resumen">
+                            <div class="subcontainer-resumen desocupada">
+                                <div>
+                                    <i class="icon icon-andes-cama-desocupada"></i>
+                                </div>
+                                <div class="texto-resumen">
+                                    <h3>{{cantidadXEstado['desocupada'].length}}</h3>
+                                    <p>Camas desocupadas</p>
+                                </div>
+                            </div>
+                            <div class="subcontainer-resumen bloqueada">
+                                <div>
+                                    <i class="icon icon-andes-cama-bloqueada"></i>
+                                </div>
+                                <div class="texto-resumen">
+                                    <h3>{{cantidadXEstado['bloqueada'].length}}</h3>
+                                    <p>Camas bloqueadas</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container-resumen">
+                            <div class="subcontainer-resumen ocupada">
+                                <div>
+                                    <i class="icon icon-andes-cama-ocupada"></i>
+                                </div>
+                                <div class="texto-resumen">
+                                    <h3>{{cantidadXEstado['ocupada'].length}}</h3>
+                                    <p>Camas ocupadas</p>
+                                </div>
+                            </div>
+                            <!-- <div class="subcontainer-resumen reparacion">
                             <div>
                                 <i class="icon icon-andes-cama-reparacion "></i>
                             </div>
@@ -434,7 +459,8 @@
                                 <p>Camas en reparacion</p>
                             </div>
                         </div> -->
-                    </div>
+                        </div>
+                    </ng-container>
                     <!-- <ng-container>
                         <plex-button class="" type="primary" label="Censo diario" (click)="censoDiario()" *ngIf="checkAuth('censo')"></plex-button>
                         <plex-button class="" type="primary" label="Censo mensual" (click)="censoMensual()" *ngIf="checkAuth('censo')"></plex-button>
