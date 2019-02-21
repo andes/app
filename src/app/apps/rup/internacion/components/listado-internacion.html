@@ -67,8 +67,9 @@
         </div>
     </plex-layout-main>
     <plex-layout-sidebar id="panel-lateral" class="sideBar" *ngIf='internacionSelected'>
-        <internacion-resumen *ngIf='internacionSelected' [editarEgreso]="showEgreso" [paciente]="internacionSelected.paciente"
-            [prestacion]="internacionSelected" [soloValores]="soloValores" (refreshCamas)="actualizarListado($event)"></internacion-resumen>
+        <internacion-resumen *ngIf='internacionSelected' [desdeListadoInternacion]="true" [editarEgreso]="showEgreso"
+            [paciente]="internacionSelected.paciente" [prestacion]="internacionSelected" [soloValores]="soloValores"
+            (refreshCamas)="actualizarListado($event)"></internacion-resumen>
     </plex-layout-sidebar>
     <plex-layout-footer>
         <plex-button position="left" label="Volver" type="danger" (click)='volver()'></plex-button>

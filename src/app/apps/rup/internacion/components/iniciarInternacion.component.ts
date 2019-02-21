@@ -40,7 +40,7 @@ export class IniciarInternacionComponent implements OnInit {
     get prestacion(): any {
         return this._prestacion;
     }
-
+    @Input() desdeListadoInternacion;
     @Input() paciente;
     @Input() camaSelected;
     @Input() soloValores;
@@ -362,7 +362,7 @@ export class IniciarInternacionComponent implements OnInit {
                 return;
             }
 
-            if (this.cama === null && !this.workflowC) {
+            if (this.cama === null && !this.workflowC && !this.desdeListadoInternacion) {
                 this.plex.info('warning', 'Debe seleccionar una cama');
                 return;
             }
