@@ -40,6 +40,7 @@ export class IniciarInternacionComponent implements OnInit {
     get prestacion(): any {
         return this._prestacion;
     }
+    @Input() desdeListadoInternacion = false;
 
     @Input() paciente;
     @Input() camaSelected;
@@ -361,8 +362,9 @@ export class IniciarInternacionComponent implements OnInit {
                 this.plex.info('warning', 'Debe seleccionar un paciente');
                 return;
             }
+            this.informeIngreso.fechaIngreso = this.servicioInternacion.combinarFechas(this.fecha, this.hora);
 
-            if (this.cama === null && !this.workflowC) {
+            if (this.cama === null && !this.workflowC && !this.desdeListadoInternacion) {
                 this.plex.info('warning', 'Debe seleccionar una cama');
                 return;
             }
@@ -371,7 +373,6 @@ export class IniciarInternacionComponent implements OnInit {
                 return;
             }
 
-            this.informeIngreso.fechaIngreso = this.servicioInternacion.combinarFechas(this.fecha, this.hora);
 
 
             if (!this.controlarConflictosInternacion(this.informeIngreso.fechaIngreso)) {

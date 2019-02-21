@@ -19,6 +19,8 @@ import { Subject } from 'rxjs/Rx';
 export class EgresoInternacionComponent implements OnInit, OnChanges {
     @HostBinding('class.plex-layout') layout = true;
     private _prestacion: any;
+        @Input() desdeListadoInternacion = false;
+
     @Input()
     set prestacion(value: any) {
         this._prestacion = value;

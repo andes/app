@@ -175,10 +175,8 @@ export class PasesListadoInternacionComponent implements OnInit {
 
         if (this.opcionDesocupar === 'movimiento') {
             this.elegirDesocupar = false;
-            console.log(this.prestacion);
             this.prestacionesService.getPasesInternacion(this.prestacion.id).subscribe(lista => {
                 let listaFiltrada = lista.filter(c => c.estados.fecha < f);
-                console.log(listaFiltrada);
                 // this.cama = listaFiltrada[listaFiltrada.length - 1];
                 this.CamaService.getCama(listaFiltrada[listaFiltrada.length - 1]._id).subscribe(cama => {
                     this.cama = cama;
@@ -193,7 +191,6 @@ export class PasesListadoInternacionComponent implements OnInit {
                 this.listadoCamas = null;
                 this.prestacionesService.getPasesInternacion(this.prestacion.id).subscribe(lista => {
                     let listaFiltrada = lista.filter(c => c.estados.fecha < f);
-                    console.log(listaFiltrada);
                     // this.cama = listaFiltrada[listaFiltrada.length - 1];
                     this.CamaService.getCama(listaFiltrada[listaFiltrada.length - 1]._id).subscribe(cama => {
                         this.cama = cama;
@@ -204,7 +201,6 @@ export class PasesListadoInternacionComponent implements OnInit {
                 });
             } else {
                 if (this.opcionDesocupar === 'egreso') {
-                    this.accionCama.emit({ cama: this.cama, accion: 'egresarPaciente' });
                 }
             }
         }

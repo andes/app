@@ -176,6 +176,7 @@ export class HudsBusquedaComponent implements OnInit {
     }
 
     devolverRegistrosHuds(registro, tipo) {
+        debugger;
         let index;
         switch (tipo) {
             case 'hallazgo':
@@ -198,6 +199,9 @@ export class HudsBusquedaComponent implements OnInit {
             case 'prestacion':
                 // Se populan las relaciones usando el _id
                 if (registro.tipo === 'rup') {
+                    if (registro.prestacion.conceptId === '32485007') {
+                        tipo = 'internacion';
+                    }
                     registro = registro.data;
                     if (registro.ejecucion.registros) {
                         registro.ejecucion.registros.forEach(reg => {

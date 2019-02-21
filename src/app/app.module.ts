@@ -469,7 +469,8 @@ let RUPComponentsArray = [
     CamaDesbloquearComponent,
     CamaPrepararComponent,
     OcuparCamaComponent,
-    EjecucionInternacionComponent
+    EjecucionInternacionComponent,
+    EgresoInternacionComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -568,7 +569,6 @@ registerLocaleData(localeEs, 'es');
         LaboratoriosComponent,
         ChartComponent,
         OrganizacionSectoresComponent,
-        EgresoInternacionComponent,
         ResumenInternacionComponent,
         ListaEsperaInternacionComponent,
 

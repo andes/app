@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, HostBinding, ViewChildren, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, HostBinding, ViewChildren, ViewChild, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
