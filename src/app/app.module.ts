@@ -157,7 +157,7 @@ import { RelacionesPacientesComponent } from './core/mpi/components/relaciones-p
 import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
 import { PacienteCruComponent } from './core/mpi/components/paciente-cru.component';
 import { GoogleMapComponent } from './core/mpi/components/google-map.component';
-import { ApiGoogleService } from './core/mpi/services/apiGoogle.service';
+import { GeoreferenciaService } from './core/mpi/services/georeferencia.service';
 import { BotonesRegistroComponent } from './core/mpi/components/mpi-botones-registro.component';
 
 
@@ -697,7 +697,7 @@ registerLocaleData(localeEs, 'es');
         ConfiguracionPrestacionService,
         PrestacionLegacyService,
         PacienteCacheService,
-        ApiGoogleService,
+        GeoreferenciaService,
         HistorialBusquedaService
     ]
 })

@@ -15,7 +15,7 @@ import { Component, OnInit } from '@angular/core';
 import { PacienteCacheService } from '../services/pacienteCache.service';
 import { BarrioService } from '../../../services/barrio.service';
 import { Location } from '@angular/common';
-import { ApiGoogleService } from '../services/apiGoogle.service';
+import { GeoreferenciaService } from '../services/georeferencia.service';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
@@ -137,7 +137,7 @@ export class PacienteCruComponent implements OnInit {
     constructor(
         private organizacionService: OrganizacionService,
         private auth: Auth,
-        private apiGoogleService: ApiGoogleService,
+        private apiGoogleService: GeoreferenciaService,
         private location: Location,
         private paisService: PaisService,
         private provinciaService: ProvinciaService,
@@ -291,7 +291,6 @@ export class PacienteCruComponent implements OnInit {
             } else {
                 if (this.paciente.direccion[0].ubicacion) {
                     if (this.paciente.direccion[0].ubicacion.provincia) {
-                        console.log(this.provinciaActual.nombre);
                         (this.paciente.direccion[0].ubicacion.provincia.nombre === this.provinciaActual.nombre) ? this.viveProvActual = true : this.viveProvActual = false;
                         this.loadLocalidades(this.paciente.direccion[0].ubicacion.provincia);
                     }
@@ -441,8 +440,10 @@ export class PacienteCruComponent implements OnInit {
     actualizarMapa() {
         // campos de direccion completos?
         if (this.pacienteModel.direccion[0].valor && this.pacienteModel.direccion[0].ubicacion.provincia && this.pacienteModel.direccion[0].ubicacion.localidad) {
+            let direccionCompleta = this.pacienteModel.direccion[0].valor + ', ' + this.pacienteModel.direccion[0].ubicacion.localidad.nombre
+                + ', ' + this.pacienteModel.direccion[0].ubicacion.provincia.nombre;
             // se calcula nueva georeferencia
-            this.apiGoogleService.getGeoreferencia({ direccion: this.pacienteModel.direccion }).subscribe(point => {
+            this.apiGoogleService.getGeoreferencia({ direccion: direccionCompleta }).subscribe(point => {
                 if (point) {
                     this.geoReferenciaAux = [point.lat, point.lng];
                     this.infoMarcador = this.pacienteModel.direccion[0].valor.toUpperCase();

@@ -3,8 +3,8 @@ import { Observable } from 'rxjs';
 import { Server } from '@andes/shared';
 
 @Injectable()
-export class ApiGoogleService {
-    private url = '/modules/googleServices';  // URL to web api
+export class GeoreferenciaService {
+    private url = '/modules/georeferencia';  // URL to web api
 
     constructor(private server: Server) { }
     /**
@@ -13,7 +13,7 @@ export class ApiGoogleService {
  * @returns opciones
      */
     autocompletar(texto: String): Observable<any> {
-        return this.server.get(this.url + '/getGoogleAutocomplete/' + texto);
+        return this.server.get(this.url + '/autocompletar', { params: texto });
     }
 
     /**
@@ -22,6 +22,6 @@ export class ApiGoogleService {
      * @returns point: [lat, lng] o null
      */
     getGeoreferencia(direccion: any): Observable<any> {
-        return this.server.post(this.url + '/getGooglePoint', direccion);
+        return this.server.get(this.url + '/georeferenciar', { params: direccion });
     }
 }
