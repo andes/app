@@ -9,29 +9,20 @@ import { RupElement } from '.';
 })
 @RupElement('SelectPorRefsetComponent')
 export class SelectPorRefsetComponent extends RUPComponent implements OnInit {
-
-    public conceptos: any[] = [];
-
-    // Hace falta un valor único para usar como nombre de cada grupo de radiobutton
-    public unique: number = new Date().getTime();
+    public values = [];
+    public unique = Date.now();
 
     ngOnInit() {
-
         if (!this.registro.valor) {
             this.registro.valor = [];
         }
 
         if (this.params) {
-
-            // Conceptos de Refset
-            if (this.params.refsetId) {
-                this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
-                    this.conceptos = resultado;
-                });
-            } else if (this.params.query) {
-                // Soporte para cualquier tipo de query
-                this.snomedService.getQuery({ expression: this.params.query }).subscribe(resultado => {
-                    this.conceptos = resultado;
+            if (this.params.preload) {
+                this.snomedService.getQuery({ expression: this.params.query }).subscribe(conceptos => {
+                    this.values = conceptos.map(elem => {
+                        return { id: elem.conceptId, nombre: elem.term, concepto: elem };
+                    });
                 });
             }
 
@@ -61,14 +52,14 @@ export class SelectPorRefsetComponent extends RUPComponent implements OnInit {
         }
     }
 
-    loadConceptos($event) {
-        let conceptosSelect = this.conceptos.map(elem => {
-            return { id: elem.conceptId, nombre: elem.term, concepto: elem };
-        });
-        $event.callback(conceptosSelect);
-    }
-
-    selectRadio(concepto) {
-        this.registro.valor = { concepto: concepto };
+    loadData($event) {
+        if ($event.query.length > 0) {
+            this.snomedService.getQuery({ expression: this.params.query, field: 'term', words: $event.query }).subscribe(resultado => {
+                let conceptosSelect = resultado.map(elem => {
+                    return { id: elem.conceptId, nombre: elem.term, concepto: elem };
+                });
+                $event.callback(conceptosSelect);
+            });
+        }
     }
 }
