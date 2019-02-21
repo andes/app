@@ -172,8 +172,6 @@ const appRoutes: Routes = [
   { path: 'top/reglas', component: ReglasComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'top/reglasVisualizacion', component: VisualizacionReglasComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
-  /* ELIMINAR ==> */ { path: 'dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },
-
   // TODO: Verificar si estas rutas todavía son válidas, y ubicarlas en los módulos correspondientes
   /* VERIFICAR ==> */ { path: 'tipoprestaciones', component: TipoPrestacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
@@ -182,7 +180,7 @@ const appRoutes: Routes = [
   { path: 'selectOrganizacion', component: SelectOrganizacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'login', component: LoginComponent, canActivate: [RoutingNavBar] },
 
-  { path: 'estadisticas', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'dashboard', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingNavBar, RoutingGuard] },
   // Campañas Salud
   { path: 'campaniasSalud', component: CampaniaSaludComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 

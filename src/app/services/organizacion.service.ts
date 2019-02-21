@@ -2,12 +2,27 @@ import { Server } from '@andes/shared';
 import { IOrganizacion } from './../interfaces/IOrganizacion';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { environment } from '../../environments/environment';
 
+// Prototipo de Decorador cache. Proximamente se implementa de forma global.
+function Cache({key}) {
+    let _cache: any = {};
+    return function ( target: any, propertyKey: string, descriptor: PropertyDescriptor ) {
+        const fn = descriptor.value as Function;
+        descriptor.value = function (...args) {
+            const objectKey = key ? (typeof key === 'string' ? args[0][key] : args[0]) : 'default';
+            if (!_cache[objectKey]) {
+                return fn.call(this, args).do(x => _cache[objectKey] = x);
+            } else {
+                return new Observable(resultado => resultado.next(_cache[objectKey]));
+            }
+        };
+        return descriptor;
+    };
+}
 @Injectable()
 export class OrganizacionService {
     private organizacionUrl = '/core/tm/organizaciones';  // URL to web api
-    constructor(private server: Server) { }
+    constructor(public server: Server) { }
 
     /**
      * Metodo get. Trae el objeto organizacion.
@@ -26,13 +41,13 @@ export class OrganizacionService {
     }
 
     /**
- * Save. Si le organizacion por parametro tiene id hace put y sino hace post
- *
- * @param {IOrganizacion} organizacion guarda una organizacion
- * @returns {Observable<IOrganizacion>} retorna un observable
- *
- * @memberof OrganizacionService
- */
+     * Save. Si le organizacion por parametro tiene id hace put y sino hace post
+     *
+     * @param {IOrganizacion} organizacion guarda una organizacion
+     * @returns {Observable<IOrganizacion>} retorna un observable
+     *
+     * @memberof OrganizacionService
+     */
     save(organizacion: IOrganizacion): Observable<IOrganizacion> {
         if (organizacion.id) {
             return this.server.put(this.organizacionUrl + '/' + organizacion.id, organizacion);
@@ -60,6 +75,10 @@ export class OrganizacionService {
         return this.save(establecimiento);
     }
 
+    @Cache({ key: true })
+    configuracion(id: String) {
+        return this.server.get(`${this.organizacionUrl}/${id}/configuracion`);
+    }
 
     /**
      * Funciones sobre sectores y unidades organizativas de la orgazacion

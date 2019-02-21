@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
-import { Observable } from 'rxjs/Observable';
 import { Auth } from '@andes/auth';
 import { AppComponent } from '../../app.component';
+import { OrganizacionService } from '../../services/organizacion.service';
 
 @Component({
     templateUrl: 'selectOrganizacion.html',
@@ -13,7 +13,13 @@ import { AppComponent } from '../../app.component';
 export class SelectOrganizacionComponent implements OnInit {
     public organizaciones = null;
     public organizacionElegida;
-    constructor(private plex: Plex, private auth: Auth, private router: Router, public appComponent: AppComponent) { }
+    constructor(
+        private plex: Plex,
+        private auth: Auth,
+        private router: Router,
+        public appComponent: AppComponent,
+        public organizacionService: OrganizacionService
+    ) { }
 
     ngOnInit() {
         this.auth.organizaciones().subscribe(data => {
@@ -30,6 +36,7 @@ export class SelectOrganizacionComponent implements OnInit {
 
     seleccionar(unaOrg) {
         this.auth.setOrganizacion(unaOrg).subscribe((data) => {
+            this.organizacionService.configuracion(this.auth.organizacion.id).subscribe((config) => {});
             this.plex.updateUserInfo({ usuario: this.auth.usuario });
             this.appComponent.checkPermissions();
             this.router.navigate(['inicio']);
