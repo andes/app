@@ -26,8 +26,8 @@ import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
 import { SmsService } from './../../../services/turnos/sms.service';
 import { TurnoService } from './../../../services/turnos/turno.service';
-import { IObraSocial } from '../../../interfaces/IObraSocial';
 import { HeaderPacienteComponent } from '../../paciente/headerPaciente.component';
+import { IFinanciador } from '../../../interfaces/IFinanciador';
 
 @Component({
     selector: 'dar-turnos',
@@ -124,7 +124,7 @@ export class DarTurnosComponent implements OnInit {
     reqfiltros = false;
     permitirTurnoDoble = false;
     carpetaEfector: any;
-    obraSocialPaciente: IObraSocial;
+    obraSocialPaciente: IFinanciador;
     motivoConsulta: string;
 
     // Muestra sólo las agendas a las que se puede asignar el turno (oculta las "con/sin alternativa")
