@@ -40,7 +40,7 @@ export class IniciarInternacionComponent implements OnInit {
     get prestacion(): any {
         return this._prestacion;
     }
-    @Input() desdeListadoInternacion = false;
+    @Input() desdeListadoInternacion ;
 
     @Input() paciente;
     @Input() camaSelected;
