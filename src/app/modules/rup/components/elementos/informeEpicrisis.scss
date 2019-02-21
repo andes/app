@@ -162,7 +162,7 @@
         }
     }
 
-    .grid-item-0,
+   
     .grid-item-1 {
         grid-column: 1 / 3;
         grid-auto-rows: 100px;
@@ -175,7 +175,15 @@
         }
     }
 
-
+    .grid-item-0 {
+        grid-auto-rows: 100px;
+        .titulo,
+        .contenido {
+            padding: 5px 0;
+            margin: 0;
+            border-bottom: 1px solid black;
+        }
+    }
 
     /* grid-gap: 5px; */
     // min-height: 100vh;
