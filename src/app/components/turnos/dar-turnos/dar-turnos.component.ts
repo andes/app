@@ -203,10 +203,10 @@ export class DarTurnosComponent implements OnInit {
                         if (this.obraSocialInput) {
                             this.obraSocialPaciente = this.obraSocialInput;
                         } else {
-                            this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
+                            this.servicioOS.getPaciente({ dni: this.paciente.documento }).subscribe(resultado => {
                                 if (resultado && resultado.length > 0) {
                                     this.obraSocialPaciente = resultado[0];
-                                    this.obraSocialPaciente.id = (resultado[0] as any).idFinanciador;
+                                    // this.obraSocialPaciente.id = (resultado[0] as any).idFinanciador;
                                 }
                             });
                         }
