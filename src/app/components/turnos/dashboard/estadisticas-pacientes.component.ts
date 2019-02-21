@@ -11,6 +11,7 @@ import { TurnoService } from '../../../services/turnos/turno.service';
 import { LogPacienteService } from '../../../services/logPaciente.service';
 import { ObraSocialService } from '../../../services/obraSocial.service';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
+import { IFinanciador } from '../../../interfaces/IFinanciador';
 
 @Component({
     selector: 'estadisticas-pacientes',
@@ -48,7 +49,7 @@ export class EstadisticasPacientesComponent implements OnInit {
     anulaciones = 0;
     idOrganizacion = this.auth.organizacion.id;
     carpetaEfector: any;
-    obraSocial: IObraSocial;
+    obraSocial: IFinanciador;
 
     // Inicialización
     constructor(
