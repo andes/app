@@ -73,7 +73,6 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
     ngOnChanges(changes) {
         // this.prestacionSelected = Object.assign({}, this.prestacion);
         this.comprobarEgresoParaValidar();
-        console.log(this.prestacion.id);
         this.prestacionesService.getPasesInternacion(this.prestacion.id).subscribe(lista => {
             this.pases = lista;
         });
