@@ -28,6 +28,7 @@ import { SmsService } from './../../../services/turnos/sms.service';
 import { TurnoService } from './../../../services/turnos/turno.service';
 import { HeaderPacienteComponent } from '../../paciente/headerPaciente.component';
 import { IFinanciador } from '../../../interfaces/IFinanciador';
+import { ObraSocialCacheService } from '../../../services/obraSocialCache.service';
 
 @Component({
     selector: 'dar-turnos',
@@ -54,7 +55,6 @@ export class DarTurnosComponent implements OnInit {
     get pacienteSeleccionado() {
         return this._pacienteSeleccionado;
     }
-    @Input() obraSocialInput: any;
 
     @Input('solicitudPrestacion')
     set solicitudPrestacion(value: any) {
@@ -156,7 +156,8 @@ export class DarTurnosComponent implements OnInit {
         public smsService: SmsService,
         public plex: Plex,
         public auth: Auth,
-        private router: Router) { }
+        private router: Router,
+        private osService: ObraSocialCacheService) { }
 
     ngOnInit() {
         this.hoy = new Date();
@@ -200,16 +201,10 @@ export class DarTurnosComponent implements OnInit {
                         this.obraSocialPaciente = this.paciente.financiador[0] as any;
                         this.numeroAfiliado = (this.paciente.financiador[0] as any).numeroAfiliado;
                     } else {
-                        if (this.obraSocialInput) {
-                            this.obraSocialPaciente = this.obraSocialInput;
-                        } else {
-                            this.servicioOS.getPaciente({ dni: this.paciente.documento }).subscribe(resultado => {
-                                if (resultado && resultado.length > 0) {
-                                    this.obraSocialPaciente = resultado[0];
-                                    // this.obraSocialPaciente.id = (resultado[0] as any).idFinanciador;
-                                }
-                            });
-                        }
+
+                        this.osService.getFinanciadorPacienteCache().subscribe((financiador) => {
+                            this.obraSocialPaciente = financiador;
+                        });
                     }
                 }
             });
@@ -1074,11 +1069,9 @@ export class DarTurnosComponent implements OnInit {
                     if (!this.paciente.scan) {
                         this.servicePaciente.patch(paciente.id, { op: 'updateScan', scan: paciente.scan }).subscribe();
                     }
-                    if (this.paciente.documento && !this.obraSocialInput) {
-                        this.servicioOS.getPaciente({ dni: this.paciente.documento }).subscribe(resultado => {
-                            if (resultado) {
-                                this.obraSocialPaciente = resultado[0];
-                            }
+                    if (this.paciente.documento) {
+                        this.osService.getFinanciadorPacienteCache().subscribe((financiador) => {
+                            this.obraSocialPaciente = financiador;
                         });
                     }
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });

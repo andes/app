@@ -54,6 +54,5 @@
     </section>
     <!--Components-->
     <dar-turnos *ngIf="autorizado && showDarTurnos" [pacienteSeleccionado]="paciente"
-        [obraSocialInput]="obraSocialPaciente" [solicitudPrestacion]="solicitudPrestacion"
-        (afterDarTurno)="afterDarTurno($event)"></dar-turnos>
+        [solicitudPrestacion]="solicitudPrestacion" (afterDarTurno)="afterDarTurno($event)"></dar-turnos>
 </form>

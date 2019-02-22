@@ -12,7 +12,7 @@ export class ObraSocialCacheService {
      * Obtiene los datos de la obra social asociada a un paciente
      */
 
-    getFinanciadorPacienteCache(): Observable<IFinanciador[]> {
+    getFinanciadorPacienteCache(): Observable<IFinanciador> {
         return this.financiadorPacienteCache.asObservable();
     }
 
