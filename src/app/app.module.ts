@@ -380,6 +380,7 @@ import { PracticaService } from './apps/rup/laboratorio/services/practica.servic
 import { HojaTrabajoService } from './apps/rup/laboratorio/services/hojatrabajo.service';
 import { LoteDerivacionService } from './apps/rup/laboratorio/services/loteDerivacion.service';
 import { AreaLaboratorioService } from './apps/rup/laboratorio/services/areaLaboratorio.service';
+import { ReportesLaboratorioService } from './apps/rup/laboratorio/services/reportes';
 import { LaboratorioComponent } from './apps/rup/laboratorio/components/laboratorio.component';
 import { FiltrosBusquedaProtocoloComponent } from './apps/rup/laboratorio/components/gestor-protocolos/filtros-busqueda/filtros-busqueda-protocolo.component';
 import { GestorProtocolosComponent } from './apps/rup/laboratorio/components/gestor-protocolos/gestor-protocolos.component';
@@ -759,6 +760,7 @@ registerLocaleData(localeEs, 'es');
         ProtocoloService,
         LaboratorioContextoCacheService,
         AreaLaboratorioService,
+        ReportesLaboratorioService,
         FinanciadorService,
         ParentescoService,
         appRoutingProviders,

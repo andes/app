@@ -5,7 +5,8 @@
 
         <br>
         <hr>
-
+        <plex-button *ngIf="showBotonDescargar" label="Descargar Reportes" type="success" (click)="descargarReportes()"></plex-button>
+        
         <reportes-resultado-lista-protocolos [protocolos]='protocolos' ></reportes-resultado-lista-protocolos   >
 
         <div *ngIf="!protocolos?.length" class="alert alert-default">

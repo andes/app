@@ -1,10 +1,10 @@
+import { ReportesLaboratorioService } from './../../../services/reportes';
 import { LaboratorioContextoCacheService } from './../../../services/protocoloCache.service';
-import { Auth } from '@andes/auth';
 import { ProtocoloService } from './../../../services/protocolo.service';
 import { Plex } from '@andes/plex';
-import { ActivatedRoute } from '@angular/router';
 import { PacienteService } from './../../../../../../services/paciente.service';
-import { Component, OnInit, Input, ViewChild, EventEmitter, Output, ViewEncapsulation, HostBinding } from '@angular/core';
+// import { descargarReportesResultados } from './../../../controllers/reportes';
+import { Component, OnInit, EventEmitter, Output, ViewEncapsulation, HostBinding } from '@angular/core';
 
 
 @Component({
@@ -18,38 +18,21 @@ export class ReporteResultadosIndexComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
 
     @Output() volverAPuntoInicioEmmiter: EventEmitter<any> = new EventEmitter<any>();
-    public seleccionPaciente: Boolean = false;
-    public showListarProtocolos: Boolean = true;
-    public showProtocoloDetalle: Boolean = false;
-    public showCargarSolicitud: Boolean = false;
-    public showBotonGuardar: Boolean = false;
-    public editarListaPracticas: Boolean = false;
-    public showBotonAceptarCambiosAuditoria: Boolean = false;
-    public showBotonAceptarCambiosHeader: Boolean = false;
-
-    public titulo;
-    public contextoCache;
 
     public areas = [];
-
-
     public busqueda;
-
     public protocolos: any[];
-    public protocolo: any;
-    routeParams: any;
-
+    public showBotonDescargar = true;
 
     constructor(
         public servicePaciente: PacienteService,
-        private route: ActivatedRoute,
         public plex: Plex,
         public protocoloService: ProtocoloService,
-        public auth: Auth,
         public laboratorioContextoCacheService: LaboratorioContextoCacheService,
+        public reportesLaboratorioService: ReportesLaboratorioService
     ) { }
 
-    ngOnInit() {  }
+    ngOnInit() { }
 
     /**
      * Realiza la búsqueda de prestaciones según selección de filtros
@@ -65,10 +48,10 @@ export class ReporteResultadosIndexComponent implements OnInit {
         }
         // if ($event) {
         this.busqueda = filtros;
-        this.areas = filtros.areas ? filtros.areas : [];
+        this.busqueda.areas = filtros.areas && filtros.areas.length > 0 ? filtros.areas.map(e => { return e.id; }) : [];
         // }
 
-        this.busqueda.estado = this.laboratorioContextoCacheService.isModoValidacion() ? ['pendiente', 'ejecucion'] :  [];
+        this.busqueda.estado = this.laboratorioContextoCacheService.isModoValidacion() ? ['pendiente', 'ejecucion'] : [];
 
         this.protocoloService.get(this.busqueda).subscribe(protocolos => {
             this.protocolos = protocolos;
@@ -76,6 +59,19 @@ export class ReporteResultadosIndexComponent implements OnInit {
             if (err) {
                 this.plex.info('danger', err);
             }
+        });
+    }
+
+
+    /**
+     *
+     *
+     * @param {*} protocolos
+     * @memberof ReporteResultadosIndexComponent
+     */
+    descargarReportes() {
+        this.reportesLaboratorioService.reporteResultados(this.protocolos).subscribe( res => {
+            console.log(res);
         });
     }
 }
