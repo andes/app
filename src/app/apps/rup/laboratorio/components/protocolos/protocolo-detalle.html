@@ -85,7 +85,7 @@
             </div>
 
         </plex-tab>
-        <plex-tab *ngIf='modo.nombre === "recepcion" || modo.nombre === "control"' label="Diagnóstico">
+        <plex-tab *ngIf='false && modo.nombre === "recepcion" || modo.nombre === "control"' label="Diagnóstico">
             <div class="row">
                 <div class="col-12">
                     <plex-text [(ngModel)]="solicitudProtocolo.solicitudPrestacion.diagnostico" label="Diagnóstico"
@@ -93,7 +93,7 @@
                 </div>
             </div>
         </plex-tab>
-        <plex-tab label="Incidencias"></plex-tab>
+        <plex-tab *ngIf='false' label="Incidencias"></plex-tab>
     </plex-tabs>
     <!--OBSERVACIONES - RECEPCION-->
     <div class="row">
