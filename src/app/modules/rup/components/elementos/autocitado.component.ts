@@ -1,9 +1,13 @@
 import { RUPComponent } from './../core/rup.component';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { RupElement } from '.';
+
+
 @Component({
     selector: 'rup-autocitado',
     templateUrl: 'autocitado.html'
 })
+@RupElement('AutocitadoComponent')
 export class AutocitadoComponent extends RUPComponent implements OnInit {
     // Tipos de Prestaciones a las que el usuario tiene permiso
     public tiposPrestacion: any = [];
@@ -35,3 +39,4 @@ export class AutocitadoComponent extends RUPComponent implements OnInit {
         }
     }
 }
+

@@ -1,10 +1,12 @@
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-pasesCama',
     templateUrl: 'pasesCama.html'
 })
+@RupElement('PasesCamaComponent')
 export class PasesCamaComponent extends RUPComponent implements OnInit {
 
     public pases: any[] = [];

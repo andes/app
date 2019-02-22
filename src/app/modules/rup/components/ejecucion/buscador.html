@@ -45,7 +45,7 @@
                         </small>
 
                         <button (click)="filtroBuscadorSnomed('hallazgos')" [ngClass]="{'active': filtroActual === 'hallazgos'}" [disabled]="!wizardActivo && getCantidadResultados('hallazgos') === 0"
-                            class="btn btn-block btn-hallazgo" [plexWizard]="1" [title]="tooltips.hallazgos">
+                            class="btn btn-block btn-hallazgo" [plexWizard]="1">
                             <i class="icon icon-rup-semantic-hallazgo"></i>
                             HALLAZGOS
                         </button>
@@ -56,7 +56,7 @@
                         </small>
 
                         <button (click)="filtroBuscadorSnomed('trastornos')" [ngClass]="{'active': filtroActual === 'trastornos'}" [disabled]="!wizardActivo && getCantidadResultados('trastornos') === 0"
-                            class="btn btn-block btn-trastorno" [plexWizard]="2" [title]="tooltips.trastornos">
+                            class="btn btn-block btn-trastorno" [plexWizard]="2">
                             <i class="icon icon-rup-semantic-trastorno"></i>
                             TRASTORNOS
                         </button>
@@ -67,7 +67,7 @@
                         </small>
 
                         <button (click)="filtroBuscadorSnomed('procedimientos')" [ngClass]="{'active': filtroActual === 'procedimientos'}" [disabled]="!wizardActivo && getCantidadResultados('procedimientos') === 0"
-                            class="btn btn-block btn-procedimiento" [plexWizard]="3" [title]="tooltips.procedimientos">
+                            class="btn btn-block btn-procedimiento" [plexWizard]="3">
                             <i class="icon icon-rup-semantic-procedimiento"></i>
                             PROCEDIM.
                         </button>
@@ -76,7 +76,7 @@
                         <small *ngIf="getCantidadResultados('planes')" class="badge badge-solicitud ml-1 float-right" [ngClass]="{'active': filtroActual === 'planes'}">{{ getCantidadResultados('planes')}}</small>
 
                         <button (click)="filtroBuscadorSnomed('planes')" class="btn btn-block btn-solicitud" [ngClass]="{'active': filtroActual === 'planes'}"
-                            [disabled]="!wizardActivo && getCantidadResultados('planes') === 0" [plexWizard]="4" [title]="tooltips.planes">
+                            [disabled]="!wizardActivo && getCantidadResultados('planes') === 0" [plexWizard]="4">
                             <i class="icon icon-rup-semantic-plan"></i>
                             SOLICITUDES
                         </button>
@@ -87,7 +87,7 @@
                         </small>
 
                         <button (click)="filtroBuscadorSnomed('productos')" [ngClass]="{'active': filtroActual === 'productos'}" [disabled]="!wizardActivo && getCantidadResultados('productos') === 0"
-                            class="btn btn-block btn-producto" [plexWizard]="5" [title]="tooltips.productos">
+                            class="btn btn-block btn-producto" [plexWizard]="5">
                             <i class="icon icon-rup-semantic-producto"></i>
                             INSUMOS
                         </button>
@@ -133,53 +133,48 @@
 </div>
 
 <!-- RESULTADOS PRINCIPALES -->
-<div *ngIf="filtroActual && results && results[busquedaActual][filtroActual]  && results[busquedaActual][filtroActual].length > 0">
-
-    <ul class="conceptos list-unstyled">
-        <ng-container *ngFor="let item of results[busquedaActual][filtroActual]">
-            <li>
-                <div class="rup-card mini" [ngClass]="servicioPrestacion.getCssClass(item, filtroActual)">
-                    <div class="rup-header">
-                        <div class="icon-rup drag-handle p-0 pt-1" draggable [dragScope]="['registros-rup' , 'vincular-registros-rup']" [dragData]="item"
-                            (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                            <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(item, filtroActual)}}"></i>
-                        </div>
-                        <div class="rup-border">
-                            <div class="row p-0 m-0 border-secondary border-left-0">
-                                <div class="col-6 p-0 m-0">
-                                    <div class="p-0 pl-2" [ngClass]="{'actions-left': filtroActual === 'equipamientos'}">
-                                        {{item.term}}
-                                        <span *ngIf="item.frecuencia" class="small">
-                                            ({{item.frecuencia}})
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="col-6 p-0 m-0">
-                                    <div class="p-0 pt-1 pr-1 float-right">
-                                        <small class="badge badge-{{ servicioPrestacion.getCssClass(item, filtroActual) }} text-default">
-                                            {{ (item.plan || filtroActual === 'planes' || esTurneable(item)) ? 'solicitud' : item.semanticTag }}
-                                        </small>
-                                        <button (click)="seleccionarConcepto(item)" class="btn btn-sm btn-primary btn-icon-rup p-0">
-                                            <i class="mdi mdi-plus"></i>
-                                        </button>
-                                    </div>
-                                </div>
+<div *ngIf="filtroActual && results && results[busquedaActual][filtroActual]  && results[busquedaActual][filtroActual].length > 0" class="buscador-resultados">
+    <cdk-virtual-scroll-viewport [itemSize]="55">
+        <div *cdkVirtualFor="let item of results[busquedaActual][filtroActual]" class="rup-card mini" [ngClass]="servicioPrestacion.getCssClass(item, filtroActual)">
+            <div class="rup-header">
+                <div class="icon-rup drag-handle p-0 pt-1" draggable [dragScope]="['registros-rup' , 'vincular-registros-rup']" [dragData]="item"
+                    (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                    <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(item, filtroActual)}}"></i>
+                </div>
+                <div class="rup-border">
+                    <div class="row p-0 m-0 border-secondary border-left-0">
+                        <div class="col-6 p-0 m-0">
+                            <div class="p-0 pl-2" [ngClass]="{'actions-left': filtroActual === 'equipamientos'}">
+                                {{item.term}}
+                                <span *ngIf="item.frecuencia" class="small">
+                                    ({{item.frecuencia}})
+                                </span>
                             </div>
-                            <div class="row p-0 m-0">
-                                <div class="col-12 p-0 m-0 ml-2">
-                                    <ng-container *ngIf="busquedaActual === 'sugeridos'">
-                                        <span *ngIf="item?.sugeridoPor" class="sugerido">
-                                            <i>Sugerido por {{ item.sugeridoPor }}</i>
-                                        </span>
-                                    </ng-container>
-                                </div>
+                        </div>
+                        <div class="col-6 p-0 m-0">
+                            <div class="p-0 pt-1 pr-1 float-right">
+                                <small class="badge badge-{{ servicioPrestacion.getCssClass(item, filtroActual) }} text-default">
+                                    {{ (item.plan || filtroActual === 'planes' || esTurneable(item)) ? 'solicitud' : item.semanticTag }}
+                                </small>
+                                <button (click)="seleccionarConcepto(item)" class="btn btn-sm btn-primary btn-icon-rup p-0">
+                                    <i class="mdi mdi-plus"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
+                    <div class="row p-0 m-0">
+                        <div class="col-12 p-0 m-0 ml-2">
+                            <ng-container *ngIf="busquedaActual === 'sugeridos'">
+                                <span *ngIf="item?.sugeridoPor" class="sugerido">
+                                    <i>Sugerido por {{ item.sugeridoPor }}</i>
+                                </span>
+                            </ng-container>
+                        </div>
+                    </div>
                 </div>
-            </li>
-        </ng-container>
-    </ul>
+            </div>
+        </div> 
+    </cdk-virtual-scroll-viewport> 
 </div>
 
 

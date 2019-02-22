@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-calculo-boston',
     templateUrl: 'calculoDeBoston.html'
 })
-
+@RupElement('CalculoDeBostonComponent')
 export class CalculoDeBostonComponent extends RUPComponent implements OnInit {
 
     public valorBoston;

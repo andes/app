@@ -1,11 +1,12 @@
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-lactancia',
     templateUrl: 'lactancia.html',
-
 })
+@RupElement('LactanciaComponent')
 export class LactanciaComponent extends RUPComponent implements OnInit {
     public conceptos: any[] = [];
 

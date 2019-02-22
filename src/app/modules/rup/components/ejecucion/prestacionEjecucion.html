@@ -245,7 +245,7 @@
                         <ng-container *ngIf="registrosHuds">
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">
 
-                                <plex-tab [label]="registro.data.concepto.term" [allowClose]="true" [class]="registro.data.class" *ngIf="registro.tipo === 'hallazgo' || registro.tipo === 'medicamento' || registro.tipo === 'procedimiento'">
+                                <plex-tab [label]="registro.data.concepto.term" [allowClose]="true" [class]="registro.data.class" [color]="registro.data.class" *ngIf="registro.tipo === 'hallazgo' || registro.tipo === 'medicamento' || registro.tipo === 'procedimiento'">
                                     <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)"
                                         [params]="this.elementosRUPService.coleccionRetsetId[registro.data.concepto.conceptId]"
                                         [prestacion]="prestacion" [registro]="registro.data" [soloValores]="true">
@@ -270,18 +270,24 @@
                                     </ng-container>
                                 </plex-tab>
 
-                                <plex-tab [label]="registro.data.solicitud.tipoPrestacion.term" [class]="registro.data.class" *ngIf="registro.tipo === 'prestacion'">
+                                <plex-tab [label]="registro.data.solicitud.tipoPrestacion.term" [class]="registro.data.class" [allowClose]="true" *ngIf="registro.tipo === 'prestacion'">
                                     <h4 class="text-capitalize">{{ registro.data.solicitud.tipoPrestacion.term }}</h4>
                                     <div class="row">
                                         <div class="col-12">
-                                            <b>Fecha: </b> {{registro.data.solicitud.fecha | date: 'EEE dd/MM/yyyy HH:MM'}}
+                                            <b> Fecha: </b> 
+                                            {{registro.data.ejecucion.fecha | date: 'EEE dd/MM/yyyy HH:MM'}}
+                                        </div>
+                                        <div class="col-6" *ngIf="(registro.data.ejecucion.fecha - registro.data.solicitud.fecha) > 1000 ">
+                                            <b> Solicitada el: </b> 
+                                            {{ registro.data.solicitud.fecha | date: 'EEE dd/MM/yyyy HH:MM' }}
                                         </div>
                                         <div class="col-12">
-                                            <b>Solicitada por el profesional: </b>{{ registro.data.solicitud.profesional | profesional
-                                            }}
+                                            <b> Solicitada por el profesional: </b>
+                                            {{ registro.data.solicitud.profesional | profesional }}
                                         </div>
                                         <div class="col-12">
-                                            <b>Desde la Organización: </b> {{ registro.data.solicitud.organizacion.nombre }}
+                                            <b> Desde la Organización: </b> 
+                                            {{ registro.data.solicitud.organizacion.nombre }}
                                         </div>
                                     </div>
                                     <div class="row">
@@ -376,7 +382,7 @@
             <!-- Panel Buscador SNOMED + HUDS -->
             <div class="col-4 tabs-buscador-huds pr-0" *ngIf="prestacion">
                 <plex-box>
-                    <plex-tabs [activeIndex]="panelIndex" *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada">
+                    <plex-tabs [activeIndex]="panelIndex" *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada" size="full">
                         <plex-tab label="Buscador" (click)="panelIndex = 0">
                             <rup-buscador [prestacion]="prestacion" [frecuentesTipoPrestacion]="masFrecuentes" [conceptoFrecuente]="conceptoFrecuente"
                                 [showFrecuentesTipoPrestacion]="tengoResultado" (tagBusqueda)="getTipoBusqueda($event)" (tengoResultado)="recibeSitengoResultado($event)"

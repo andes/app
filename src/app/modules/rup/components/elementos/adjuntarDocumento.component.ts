@@ -1,17 +1,16 @@
 import { Component, Output, Input, EventEmitter, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
-import * as moment from 'moment';
-import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from '../../../../../environments/environment';
+import { RupElement } from '../elementos';
 
 @Component({
     selector: 'rup-adjuntar-documento',
     templateUrl: 'adjuntarDocumento.html',
     styleUrls: ['adjuntarDocumento.scss'],
 })
+@RupElement('AdjuntarDocumentoComponent')
 export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     @ViewChildren('upload') childsComponents: QueryList<any>;
-
     imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
     extensions = [
         // Documentos
@@ -197,3 +196,4 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     }
 
 }
+// ElementosRUPRegister.register('AdjuntarDocumentoComponent', AdjuntarDocumentoComponent);

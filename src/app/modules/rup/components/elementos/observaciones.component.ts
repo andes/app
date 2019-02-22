@@ -1,11 +1,13 @@
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { Subscription } from 'rxjs/Subscription';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-observaciones',
     templateUrl: 'observaciones.html'
 })
+@RupElement('ObservacionesComponent')
 export class ObservacionesComponent extends RUPComponent implements OnInit {
     public referentSet = [];
     // suscriptionSeccion: any;
