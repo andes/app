@@ -18,4 +18,8 @@ export class FacturacionAutomaticaService {
     get(opciones: any): Observable<any> {
         return this.server.get(this.url + '/configFacturacionAutomatica/', { params: opciones });
     }
+
+    post(prestacion: any): Observable<any> {
+        return this.server.post(this.url + '/facturaArancelamiento', prestacion);
+    }
 }
