@@ -1,17 +1,22 @@
 <ng-container *ngIf="!soloValores && elementoRUP.requeridos && elementoRUP.requeridos.length">
     <div class="row align-items-center m-0 p-0">
-        <div class="col-6">
+        <div class="col-4">
             <form #form="ngForm">
-                <plex-select [(ngModel)]="registro.valor.unidadOrganizativa" name="servicio2" [data]="unidadesOrganizativas"
+                <plex-select [(ngModel)]="registro.valor.unidadOrganizativa" name="servicio" [data]="unidadesOrganizativas"
                     idField="conceptId" labelField="term" label="Unidad Organizativa" [required]="true"></plex-select>
             </form>
         </div>
         <div class="col-3">
-            <plex-datetime type="date" [(ngModel)]="registro.valor.fecha" name="fechaEpicrisis" label="Fecha de Epicrisis"
+            <plex-datetime type="date" [(ngModel)]="registro.valor.fechaDesde" name="fechaEpicrisis" label="Ocupo la cama" title="fecha en la que ocupo la cama"
                 [required]="true">
             </plex-datetime>
         </div>
-        <div class="col-3 mt-4">
+        <div class="col-3">
+            <plex-datetime type="date" [(ngModel)]="registro.valor.fechaHasta" name="fechaEpicrisis" label="Desocupa la cama" title="fecha en la que desocupo la cama"
+                [required]="true">
+            </plex-datetime>
+        </div>
+        <div class="col-2 mt-4">
             <plex-button label="{{ mensajeAccionAccordion }} Todos" type="primary btn-sm" (click)="desplegarAccordions()"></plex-button>
             <!-- <plex-button label="Árbol de relaciones" type="primary btn-sm" (click)="VerArbolRelaciones()"></plex-button> -->
         </div>
@@ -52,7 +57,7 @@
     </plex-accordion>
 </ng-container>
 <ng-container *ngIf="soloValores">
-    <div class="grid-container">
+    <div class="grid-container2">
         <div class="grid-item-0">
             <div class="titulo d-flex align-items-center">
                 <i class="adi adi-hospital mr-2"></i>
@@ -65,12 +70,24 @@
         <div class="grid-item-0">
             <div class="titulo d-flex align-items-center">
                 <i class="mdi mdi-calendar mr-2 mb-1"></i>
-                <strong>Fecha de la epicrisis:</strong>
+                <strong>Fecha en la que se ocupo la cama:</strong>
             </div>
             <div class="contenido text-capitalize">
-                {{ registro.valor.fecha | date }}
+                {{ registro.valor.fechaDesde | date }}
             </div>
         </div>
+
+        <div class="grid-item-0">
+            <div class="titulo d-flex align-items-center">
+                <i class="mdi mdi-calendar mr-2 mb-1"></i>
+                <strong>Fecha en la que se desocupa la cama:</strong>
+            </div>
+            <div class="contenido text-capitalize">
+                {{ registro.valor.fechaHasta | date }}
+            </div>
+        </div>
+    </div>
+    <div class="grid-container">
         <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
             <div class="grid-item-{{i+1}}">
                 <div class="rup-card rup-clear {{ (item.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(item.concepto) }}">
