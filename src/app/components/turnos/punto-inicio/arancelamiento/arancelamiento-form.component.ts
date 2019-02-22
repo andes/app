@@ -28,7 +28,7 @@ export class ArancelamientoFormComponent implements OnInit {
     aclaracion2Firma: string;
     aclaracion3Firma: string;
 
-    get muestraFirma () {
+    get muestraFirma() {
         return this.fotoFirma && this.fotoFirma.length > 0;
     }
 
@@ -62,23 +62,25 @@ export class ArancelamientoFormComponent implements OnInit {
 
             }
         });
-        if (this.turno.paciente.obraSocial) {
-            this.obraSocial = this.turno.paciente.obraSocial.financiador;
-            this.codigoOs = this.turno.paciente.obraSocial ? this.turno.paciente.obraSocial.codigoFinanciador : 0;
-            this.numeroAfiliado = this.turno.paciente.obraSocial.numeroAfiliado ? this.turno.paciente.obraSocial.numeroAfiliado : '';
-            this.showForm = true;
-            setTimeout(() => {
-                this.imprimir();
-                this.volverAPuntoInicio.emit();
-            }, 100);
-        } else {
-            this.servicioOS.get({ dni: this.turnoSeleccionado.paciente.documento }).subscribe(resultado => {
-                this.servicioFA.get({ conceptId: this.turnoSeleccionado.tipoPrestacion.conceptId }).subscribe(resultadoFA => {
-                    if (resultadoFA && resultadoFA.length > 0) {
-                        this.codigoNomenclador = resultadoFA[0].nomencladorRecuperoFinanciero;
-                    } else {
-                        this.codigoNomenclador = '';
-                    }
+
+        this.servicioFA.get({ conceptId: this.turnoSeleccionado.tipoPrestacion.conceptId }).subscribe(resultadoFA => {
+            if (resultadoFA && resultadoFA.length > 0  && resultadoFA[0].recuperoFinanciero) {
+                this.codigoNomenclador = resultadoFA[0].recuperoFinanciero.codigo;
+            } else {
+                this.codigoNomenclador = '';
+            }
+
+            if (this.turno.paciente.obraSocial) {
+                this.obraSocial = this.turno.paciente.obraSocial.financiador;
+                this.codigoOs = this.turno.paciente.obraSocial ? this.turno.paciente.obraSocial.codigoFinanciador : 0;
+                this.numeroAfiliado = this.turno.paciente.obraSocial.numeroAfiliado ? this.turno.paciente.obraSocial.numeroAfiliado : '';
+                this.showForm = true;
+                setTimeout(() => {
+                    this.imprimir();
+                    this.volverAPuntoInicio.emit();
+                }, 100);
+            } else {
+                this.servicioOS.get({ dni: this.turnoSeleccionado.paciente.documento }).subscribe(resultado => {
                     if (resultado && resultado.length > 0) {
                         this.obraSocial = resultado[0].financiador;
                         this.codigoOs = resultado[0].codigoFinanciador;
@@ -91,9 +93,12 @@ export class ArancelamientoFormComponent implements OnInit {
                         this.imprimir();
                         this.volverAPuntoInicio.emit();
                     }, 100);
+
                 });
-            });
-        }
+            }
+
+        });
+
     }
 
     getNroCarpeta() {
