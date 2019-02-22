@@ -28,7 +28,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col" *ngIf="turno && turno.horaInicio">
-                                        <span>{{ turno.horaInicio | date:"EEEE" | uppercase }} {{ turno.horaInicio | fecha
+                                        <span>{{ turno.horaInicio | date:"EEEE" | uppercase }} {{ turno.horaInicio |
+                                            fecha
                                             }}
                                         </span>
                                         <span *ngIf="turno.horaInicio">
