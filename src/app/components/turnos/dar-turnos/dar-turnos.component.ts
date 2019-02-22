@@ -300,8 +300,13 @@ export class DarTurnosComponent implements OnInit {
             'usuario': this.auth.usuario,
             'organizacion': this.auth.organizacion
         };
-        if (this.busquedas.length === 10) {
+
+        if (this.busquedas.length >= 10) {
             this.busquedas.pop();
+        }
+
+        if (this.cacheBusquedas.length >= 100) {
+            this.cacheBusquedas.pop(); // Limitamos a una cache global a las últimas 100 búsquedas globales en todos los efectores
         }
 
         if (search.tipoPrestacion || search.profesional) {
