@@ -104,7 +104,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
                             this.esOperacion = false;
                         } else {
                             this.showMostrarEstadisticasPacientes = true;
-                            this.showMostrarTurnosPaciente = false;
+                            this.c = false;
                             this.showActivarApp = false;
                             this.showIngresarSolicitud = false;
                         }
