@@ -85,7 +85,7 @@
                         </ng-container>
                     </ng-container>
                     <ng-container *ngIf="practicaCarga.valor.practica.categoria === 'simple'">
-                        <td class="text-left align-middle estado"> 
+                        <td class="text-left align-middle estado">
                             <p>
                                 <ng-container *ngIf='practicaCarga.valor && !practicaCarga.valor.resultado.sinMuestra'>
                                     <plex-float *ngIf="practicaCarga.valor.practica.resultado.formato && practicaCarga.valor.practica.resultado.formato.tipo === 'Numérico'"
@@ -94,11 +94,11 @@
                                 </ng-container>
 
                                 <plex-button *ngIf='verificarValorCritico(practicaCarga.valor)' type="danger" title="Aceptar Valores Críticos"
-                                    icon="mdi mdi-alert" (click)="verObservaciones()">
+                                    icon="mdi mdi-alert" (click)="return">
                                 </plex-button>
 
                                 <plex-button *ngIf='!verificarValorCritico(practicaCarga.valor) && verificarValorReferencia(practicaCarga.valor)'
-                                    type="warning" title="Aceptar Valores Críticos" icon="mdi mdi-alert" (click)="verObservaciones()">
+                                    type="warning" title="Aceptar Valores Críticos" icon="mdi mdi-alert" (click)="return">
                                 </plex-button>
 
                             </p>
@@ -106,7 +106,7 @@
                         <td *ngIf='modo.nombre ==="validacion"'>
                             <span style='color:green'>
                                 <ng-container *ngIf="getResultadoAnterior(practicaCarga)">
-                                    <span (click)="verHistorialResultados(practicaCarga)"> 
+                                    <span (click)="verHistorialResultados(practicaCarga)">
                                         {{ getResultadoAnterior(practicaCarga).valor }}
                                         &nbsp;
                                         <br>
