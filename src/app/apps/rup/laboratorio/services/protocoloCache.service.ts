@@ -34,6 +34,7 @@ export class LaboratorioContextoCacheService {
      * @memberof LaboratorioContextoCacheService
      */
     cambiarModo(modoId) {
+        modoId ++;
         if (modoId !== Constantes.modos.carga.id) {
             this.getContextoCache().modoCargaLaboratorio = null;
         }
@@ -196,6 +197,10 @@ export class LaboratorioContextoCacheService {
      */
     isModoValidacion() {
         return this.getContextoCache().modo === Constantes.modos.validacion;
+    }
+
+    getModo() {
+        return this.getContextoCache().modo;
     }
 }
 

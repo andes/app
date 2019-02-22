@@ -27,7 +27,7 @@
                 </div>
                 <nav>
                     <plex-tabs [activeIndex]="accionIndex" (change)="onTabChange($event)" *ngIf="!showProtocoloDetalle">
-                        <plex-tab label="Recepción"></plex-tab>
+                        <!-- <plex-tab label="Recepción"></plex-tab> -->
                         <plex-tab label="Auditoría"></plex-tab>
                         <plex-tab label="Carga"></plex-tab>
                         <plex-tab label="Validación"></plex-tab>
@@ -64,7 +64,7 @@
                             <plex-button position="right" class="float-right mr-1" type="success" label="Guardar"
                                 (click)="guardarSolicitud()"></plex-button>
                             <plex-button position="right" class="float-right mr-1" type="success" label="Guardar + CB"
-                                (click)="guardarSolicitud()"></plex-button>
+                                (click)="guardarSolicitud()" *ngIf="false"></plex-button>
                         </ng-container>
                         ​
                         <ng-container *ngIf='contextoCache.modo.nombre === "validacion" '>

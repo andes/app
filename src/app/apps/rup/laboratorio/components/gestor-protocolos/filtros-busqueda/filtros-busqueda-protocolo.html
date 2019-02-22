@@ -51,7 +51,7 @@
     <div class="filtros-container">
         <span>
             <plex-select [(ngModel)]="paciente" name="paciente" (getData)="loadPacientes($event)" (change)="buscarProtocolos($event,'paciente')"
-                label="Paciente" placeholder="Ingrese paciente" labelField="nombre + ' ' + apellido" [required]="false"></plex-select>
+                label="Paciente" placeholder="Ingrese paciente" labelField="nombre + ' ' + apellido + '' + documento" [required]="false"></plex-select>
         </span>
 
         <span *ngIf='modo.nombre ==="carga"'>

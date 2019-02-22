@@ -308,8 +308,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     */
     async seleccionarPractica(practica: IPractica) {
         if (practica) {
-            let existe = this.solicitudProtocolo.solicitudPrestacion.practicas.findIndex(x => x.conceptId === practica.concepto.conceptId);
-
+            let existe = this.solicitudProtocolo.solicitudPrestacion.practicas.findIndex(x => x.concepto.conceptId === practica.concepto.conceptId);
             if (existe === -1) {
                 this.solicitudProtocolo.solicitudPrestacion.practicas.push(practica);
                 let practicaEjecucion = this.generateRegistroEjecucion(practica);

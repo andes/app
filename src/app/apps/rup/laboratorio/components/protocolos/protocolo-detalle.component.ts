@@ -9,9 +9,9 @@ import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
-import {  } from '../../../../../modules/rup/services/prestaciones.service';
+import { } from '../../../../../modules/rup/services/prestaciones.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
-import {  } from '../../controllers/constants';
+import { } from '../../controllers/constants';
 import { PacienteBuscarResultado } from '../../../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 import { LaboratorioContextoCacheService } from '../../services/protocoloCache.service';
 
@@ -330,11 +330,11 @@ export class ProtocoloDetalleComponent
         }
 
         this.modelo.solicitud.tipoPrestacion = Constantes.conceptoPruebaLaboratorio;
-        let organizacionSolicitud = this.auth.organizacion.id;
-        this.servicioProtocolo.getNumeroProtocolo(organizacionSolicitud).subscribe(numeroProtocolo => {
-            this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo = numeroProtocolo;
-            this.guardarProtocolo(true);
-        });
+        // let organizacionSolicitud = this.auth.organizacion.id;
+        // this.servicioProtocolo.getNumeroProtocolo(organizacionSolicitud).subscribe(numeroProtocolo => {
+        //     this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo = numeroProtocolo;
+        this.guardarProtocolo(true);
+        // });
     }
 
     /**
@@ -376,7 +376,7 @@ export class ProtocoloDetalleComponent
         } else if (this.laboratorioContextoCacheService.isModoControl()) {
             params.solicitud = solicitud;
             params.paciente = this.modelo.paciente,
-            params.fechaEjecucion = this.modelo.ejecucion.fecha;
+                params.fechaEjecucion = this.modelo.ejecucion.fecha;
             params.op = 'auditoriaLaboratorio';
         } else if (this.laboratorioContextoCacheService.isModoValidacion() && this.isProtocoloValidado()) {
             params.op = 'estadoPush';
@@ -445,7 +445,7 @@ export class ProtocoloDetalleComponent
      */
     private async actualizarProtocoloRegistrosEjecucion(next) {
 
-        if (this.laboratorioContextoCacheService.isModoValidacion() || this.laboratorioContextoCacheService.isModoCarga()) { }  {
+        if (this.laboratorioContextoCacheService.isModoValidacion() || this.laboratorioContextoCacheService.isModoCarga()) { } {
             this.setearEstadosCarga();
         }
 
@@ -462,7 +462,7 @@ export class ProtocoloDetalleComponent
 
             if (alertasValidadas.length > 0 && await this.confirmarValoresCriticos(alertasValidadas)) {
                 this.validaciones = this.validaciones.filter(e => e.validado && e.esValorCritico);
-                this.validaciones.forEach( e => e.esValorCritico = false);
+                this.validaciones.forEach(e => e.esValorCritico = false);
                 this.showGestorAlarmas = true;
                 this.contextoCache.titulo = 'Gestor de alarmas';
 
@@ -529,12 +529,9 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     guardarSolicitud() {
-
-
         if (this.laboratorioContextoCacheService.isModoValidacion() && !this.isProtocoloValidado()) {
             // this.actualizarEstadoValidacion();
         }
-
         if (this.laboratorioContextoCacheService.isModoRecepcion()) {
             this.iniciarProtocolo();
         } else {
@@ -574,7 +571,7 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     showHistorialResultados(event) {
-        this.servicioProtocolo.getResultadosAnteriores(event.paciente.id, [event.practica.concepto.conceptId]).subscribe( (resultadosAnteriores) => {
+        this.servicioProtocolo.getResultadosAnteriores(event.paciente.id, [event.practica.concepto.conceptId]).subscribe((resultadosAnteriores) => {
             this.historialResultados = {
                 practica: event.practica,
                 resultadosAnteriores: resultadosAnteriores[0]
