@@ -181,6 +181,9 @@ export class DarTurnosComponent implements OnInit {
         // Filtra las búsquedas en localStorage para que muestre sólo las del usuario y organización donde se encuentra logueado
         if (this.busquedas.length > 0) {
             this.busquedas = this.busquedas.filter(busqueda => {
+                return busqueda.organizacion;
+            });
+            this.busquedas = this.busquedas.filter(busqueda => {
                 return busqueda.usuario && busqueda.usuario.documento === this.auth.usuario.documento && busqueda.organizacion.id === this.auth.organizacion.id;
             });
         }
