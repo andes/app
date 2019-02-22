@@ -260,7 +260,7 @@
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">
 
                                 <plex-tab [label]="registro.data.concepto.term" [allowClose]="true" [class]="registro.data.class"
-                                    [color]="registro.data.class" *ngIf="registro.tipo === 'hallazgo' || registro.tipo === 'medicamento' || registro.tipo === 'procedimiento'">
+                                    [color]="registro.data.class" *ngIf="registro.tipo === 'concepto'">
                                     <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)"
                                         [params]="this.elementosRUPService.coleccionRetsetId[registro.data.concepto.conceptId]"
                                         [prestacion]="prestacion" [registro]="registro.data" [soloValores]="true">
@@ -286,7 +286,7 @@
                                     </ng-container>
                                 </plex-tab>
 
-                                <plex-tab [label]="registro.data.solicitud.tipoPrestacion.term" [class]="registro.data.class" [allowClose]="true" *ngIf="registro.tipo === 'prestacion'">
+                                <plex-tab [label]="registro.data.solicitud.tipoPrestacion.term" [class]="registro.data.class" [allowClose]="true" *ngIf="registro.tipo === 'rup'">
                                     <h4 class="text-capitalize">{{ registro.data.solicitud.tipoPrestacion.term }}</h4>
                                     <div class="row">
                                         <div class="col-12">
@@ -386,8 +386,7 @@
                                     </div>
                                 </plex-tab>
 
-                                <plex-tab [label]="registro.data.prestacion.snomed.term" [allowClose]="true" [class]="registro.data.class">
-
+                                <plex-tab [label]="registro.data.prestacion.snomed.term" [allowClose]="true" [class]="registro.data.class" *ngIf="registro.tipo === 'cda'" >
                                     <vista-cda [registro]="registro"></vista-cda>
                                 </plex-tab>
                             </ng-container>

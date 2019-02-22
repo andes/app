@@ -27,7 +27,7 @@ export class VistaHudsComponent implements OnInit {
     @Output() cambiarPaciente = new EventEmitter<boolean>();
 
     // Defaults de Tabs panel derecho
-    public panelIndex = 0;
+    public activeTab = 0;
     public mostrarPI = false;
     public mostrarCambiaPaciente = false;
 
@@ -127,13 +127,16 @@ export class VistaHudsComponent implements OnInit {
     }
 
     public onCloseTab($event) {
+        debugger;
+        if (this.activeTab > $event) {
+            this.activeTab--;
+        }
         this.registrosHuds.splice($event, 1);
     }
 
 
     agregarListadoHuds(elemento) {
-
-        if (elemento.tipo === 'prestacion') {
+        if (elemento.tipo === 'rup') {
             // Limpiar los valores observados al iniciar la ejecución
             // Evita que se autocompleten valores de una consulta anterior
             this.conceptObserverService.destroy();
@@ -152,11 +155,12 @@ export class VistaHudsComponent implements OnInit {
             });
         } else {
             // Se obtienen datos de la prestación, para mostrar info contextual del registro
-            this.servicioPrestacion.getById(elemento.data.idPrestacion).subscribe(prestacion => {
-                this.prestacion = prestacion;
-                return true;
-            });
+            // this.servicioPrestacion.getById(elemento.data.idPrestacion).subscribe(prestacion => {
+            //     this.prestacion = prestacion;
+            //     return true;
+            // });
         }
+        this.activeTab = this.registrosHuds.length - 1;
     }
     /**
     * Setea el boton volver, Segun la ruta que recibe
