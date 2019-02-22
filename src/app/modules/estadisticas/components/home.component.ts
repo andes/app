@@ -27,4 +27,8 @@ export class HomeComponent implements OnInit {
         this.router.navigate(['citas'], { relativeTo: this.route });
     }
 
+    toTOP() {
+        this.router.navigate(['top'], { relativeTo: this.route });
+    }
+
 }

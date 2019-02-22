@@ -1,0 +1,51 @@
+<plex-layout>
+    <plex-layout-main>
+        <!-- <div class="col-3">
+            <plex-select [(ngModel)]="organizacion" name="organizacion" (getData)="loadOrganizacion($event)"
+                label="Organización origen" placeholder="Seleccione la organización" labelField="nombre"
+                (change)="cargarSolicitudes()">
+            </plex-select>
+        </div> -->
+        <!-- <div class="col-3">
+            <plex-select [(ngModel)]="prestacionDestino" (change)="cargarSolicitudes()" (getData)="loadPrestaciones($event)"
+                name="prestacionDestino" label="Prestación destino" ngModelOptions="{standalone: true}">
+            </plex-select>
+        </div> -->
+        <!-- <div class="col-3">
+            <plex-select [(ngModel)]="estado" (change)="cargarSolicitudes()" [data]="estados" name="estado"
+                label="Estado" ngModelOptions="{standalone: true}">
+            </plex-select>
+        </div> -->
+        <div>
+            <!-- <solicitudes-filtros (filter)="filter($event)" (onDisplayChange)="displayChange($event)"></solicitudes-filtros> -->
+            <solicitudes-filtros (filter)="filter($event)"></solicitudes-filtros>
+        </div>
+        <!-- <div class="row">
+            <div class="col">
+                <graph-table type="bar" titulo="Prestaciones" [data]="prestaciones" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col" *ngIf="estadoTurno && tipoDeFiltro === 'Turnos'">
+                <graph-table type="pie" titulo="Estado" [data]="estadoTurno" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>
+            </div>
+            <div class="col" *ngIf="tipoTurno && tipoDeFiltro === 'Turnos'">
+                <graph-table type="pie" titulo="Tipo" [data]="tipoTurno" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>
+            </div>
+            <div class="col" *ngIf="estadoAgenda && tipoDeFiltro === 'Agendas'">
+                <graph-table type="pie" titulo="Estado" [data]="estadoAgenda" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <graph-table type="bar" titulo="Profesionales" [data]="profesionales" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>                
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <tabla-2d [data]="dataGeolocalizacion"></tabla-2d>
+            </div>
+        </div> -->
+       
+    </plex-layout-main>
+</plex-layout>
