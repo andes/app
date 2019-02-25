@@ -296,7 +296,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
                 practica: practica
             }
         };
-        console.log(practicaEjecucion);
+        // console.log(practicaEjecucion);
         return practicaEjecucion;
     }
 
