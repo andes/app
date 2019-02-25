@@ -239,6 +239,7 @@ export class PacienteCruComponent implements OnInit {
     // ---------------- PACIENTE -----------------------
 
     onSelect(paciente: IPaciente) {
+        this.showDeshacer = false;
         this.paciente = Object.assign({}, paciente);
         this.actualizarDatosPaciente();
         this.disableGuardar = false;
@@ -586,7 +587,6 @@ export class PacienteCruComponent implements OnInit {
 
         this.pacienteService.save(pacienteGuardar).subscribe(
             (resultadoSave: any) => {
-                debugger;
                 // Existen sugerencias de pacientes similares?
                 if (resultadoSave.resultadoMatching && resultadoSave.resultadoMatching.length > 0) {
                     this.pacientesSimilares = this.escaneado ? resultadoSave.resultadoMatching.filter(elem => elem.paciente.estado === 'validado') : resultadoSave.resultadoMatching;
