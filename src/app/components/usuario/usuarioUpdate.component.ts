@@ -1,10 +1,8 @@
 import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding, Output, EventEmitter, Input, QueryList, ViewChildren } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Server } from '@andes/shared';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
-import * as enumerados from './../../utils/enumerados';
 // Services
 import { UsuarioService } from '../../services/usuarios/usuario.service';
 import { ProvinciaService } from './../../services/provincia.service';
@@ -28,16 +26,14 @@ export class UsuarioUpdateComponent implements OnInit {
     private organizacionSelect = null;
     private organizacionSelectPrev = null;
 
-    private timeoutHandle: number;
     private temp;
     private organizacionesAuth: any[] = [];
 
-    public btnEliminar: boolean;
     public showAgregarEfector: boolean;
     public newOrganizaciones: any;
     public newOrg: any;
     public hidePermisos = false;
-    public organizacionesUsuario: any[] = [];
+    public organizacionesUsuario: IOrganizacion[] = [];
     public permisos$: any;
     public showCreate = false;
     public showUpdate = false;
@@ -88,12 +84,11 @@ export class UsuarioUpdateComponent implements OnInit {
         this.organizacionSelect = (this.organizacionesUsuario.length > 0) ? this.organizacionesUsuario[0] : null;
         this.organizacionSelectPrev = (this.organizacionesUsuario.length > 0) ? this.organizacionesUsuario[0] : null;
 
-        // Si el usuario puede agregar efectores, se listan todos los disponibles
+        // Si el usuario puede agregar efectores, se listan todos los disponibles (que no tenga todavía)
         if (this.auth.check('usuarios:agregarEfector')) {
-            this.organizacionService.get({limit: 1000}).subscribe(organizaciones => {
-                this.newOrganizaciones = organizaciones;
+            this.organizacionService.get({ limit: 1000 }).subscribe(organizaciones => {
+                this.newOrganizaciones = organizaciones.filter(x => !this.organizacionesUsuario.some(y => x.id === y.id));
                 this.showAgregarEfector = (this.newOrganizaciones.length > 0) ? true : false;
-                this.btnEliminar = (this.organizacionesUsuario.length > 0) ? true : false;
             });
         } else {
 
@@ -108,7 +103,6 @@ export class UsuarioUpdateComponent implements OnInit {
                 this.newOrganizaciones = this.organizacionesAuth;
             }
             this.showAgregarEfector = (this.newOrganizaciones.length > 0) ? true : false;
-            this.btnEliminar = (this.organizacionesUsuario.length > 0) ? true : false;
         }
     }
 
@@ -154,9 +148,8 @@ export class UsuarioUpdateComponent implements OnInit {
      */
     loadPermisos() {
         this.temp = this.userModel.organizaciones.find(item =>
-            String(item._id) === String(this.organizacionSelectPrev._id)
+            String(item._id) === (this.organizacionSelectPrev ? String(this.organizacionSelectPrev._id) : null)
         );
-
         if (this.temp) {
             this.permisos = this.temp.permisos;
         } else {
@@ -169,8 +162,18 @@ export class UsuarioUpdateComponent implements OnInit {
             if (value) {
                 let index = this.userModel.organizaciones.findIndex(elem => elem._id === this.organizacionSelect._id);
                 this.userModel.organizaciones.splice(index, 1);
-                this.getOrganizaciones();
 
+                if (this.organizacionesUsuario && this.organizacionesUsuario.length > 0) {
+                    let index2 = this.organizacionesUsuario.findIndex(elem => elem.id === this.organizacionSelect.id);
+                    this.organizacionesUsuario.splice(index2, 1);
+                    // es necesario hacer esto para que angular se dé cuenta de que el arreglo organizacionesUsuario se modificó.
+                    // Si simplemente se borra uno de los ítems del arreglo, angular no actualiza la visual. Es necesario modificarlo
+                    // completo, entonces seteo todo el arreglo de nuevo
+                    this.organizacionesUsuario = [...this.organizacionesUsuario];
+                    this.organizacionSelect = this.organizacionesUsuario ? this.organizacionesUsuario[0] : null;
+                }
+
+                this.onOrgChange();
             }
         });
     }
@@ -180,7 +183,7 @@ export class UsuarioUpdateComponent implements OnInit {
         this.childsComponents.forEach(child => {
             permisos = [...permisos, ...child.generateString()];
         });
-        this.temp = this.userModel.organizaciones.find(item => String(item._id) === String(this.organizacionSelectPrev._id));
+        this.temp = this.userModel.organizaciones.find(item => String(item._id) === (this.organizacionSelectPrev ? String(this.organizacionSelectPrev._id) : null));
         if (this.temp) {
             this.temp.permisos = permisos;
         }
@@ -190,12 +193,16 @@ export class UsuarioUpdateComponent implements OnInit {
     onSave() {
         this.savePermisos();
         this.usuarioService.save(this.userModel).subscribe(user => {
-            this.plex.info('success', '', 'Usuario guardado', );
+            this.plex.info('success', '', 'Usuario guardado');
             this.data.emit(user);
         });
     }
 
     onCancel() {
-        this.data.emit(null);
+        if (this.hidePermisos) {
+            this.hidePermisos = false;
+        } else {
+            this.data.emit(null);
+        }
     }
 }

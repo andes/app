@@ -221,6 +221,12 @@ export class RevisionAgendaComponent implements OnInit {
 
     aprobar(index) {
         this.diagnosticos[index].codificacionAuditoria = this.diagnosticos[index].codificacionProfesional.cie10;
+        // En el caso que aprueben el primer diagnóstico, se aprueba el resto
+        if (index === 0) {
+            for (let j = 1; j < this.diagnosticos.length; j++) {
+                this.diagnosticos[j].codificacionAuditoria = this.diagnosticos[j].codificacionProfesional.cie10;
+            }
+        }
         this.onSave();
     }
     /**
@@ -367,7 +373,7 @@ export class RevisionAgendaComponent implements OnInit {
      * @param {any} reparo
      * @memberof RevisionAgendaComponent
      */
-    repararDiagnostico(reparo) {
+    repararDiagnostico(reparo: any) {
         if (reparo) {
             this.diagnosticos[this.indiceReparo].codificacionAuditoria = reparo;
             this.showReparo = false;

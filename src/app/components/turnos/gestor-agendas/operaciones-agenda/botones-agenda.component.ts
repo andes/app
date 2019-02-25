@@ -137,7 +137,7 @@ export class BotonesAgendaComponent implements OnInit {
             // Se puede editar sólo una agenda que esté en estado planificacion o disponible
             editarAgenda: (this.cantidadSeleccionadas === 1) && this.puedoEditar() && puedeEditar,
             // Se pueden suspender agendas que estén en estado disponible o publicada...
-            suspenderAgenda: (this.cantidadSeleccionadas === 1 && this.puedoSuspender() && puedeSuspender),
+            suspenderAgenda: (this.cantidadSeleccionadas === 1 && this.puedoSuspender() && puedeSuspender && !this.tienePrestacionIniciada(this.agendasSeleccionadas[0])),
             // Se pueden pasar a disponible cualquier agenda en estado planificacion
             pasarDisponibleAgenda: (this.cantidadSeleccionadas > 0 && this.puedoDisponer() && puedeHabilitar),
             // Se pueden publicar todas las agendas que estén en estado planificacion, o si estado disponible y no tiene *sólo* turnos reservados
@@ -159,7 +159,7 @@ export class BotonesAgendaComponent implements OnInit {
             // Revisión de agenda
             revisionAgenda: (this.cantidadSeleccionadas === 1) && this.puedoRevisar(),
             // Reasignar turnos
-            reasignarTurnos: (this.cantidadSeleccionadas === 1) && (this.hayAgendasSuspendidas() || this.hayTurnosSuspendidos()) && puedeReasignar,
+            reasignarTurnos: (this.cantidadSeleccionadas === 1) && this.hayTurnosSuspendidos() && puedeReasignar,
             // Imprimir pdf
             listarTurnos: (this.cantidadSeleccionadas > 0) && puedeImprimir,
             // Imprimir pdf carpetas
@@ -192,6 +192,7 @@ export class BotonesAgendaComponent implements OnInit {
             return false;
         }
     }
+
 
     puedoEditar() {
         return this.agendasSeleccionadas.filter((agenda) => {
@@ -272,6 +273,22 @@ export class BotonesAgendaComponent implements OnInit {
         } else {
             return false;
         }
+    }
+
+    tienePrestacionIniciada(agenda: IAgenda) {
+        let flag = false;
+        let b = 0;
+        while ((b < agenda.bloques.length) && (!flag)) {
+            if (agenda.bloques[b].turnos.length) {
+                let lista = agenda.bloques[b].turnos.filter(unTurno => unTurno.asistencia === 'asistio');
+                if (lista && lista.length) {
+                    flag = true;
+                }
+            }
+            b++;
+        }
+
+        return flag;
     }
 
     // Botón editar agenda

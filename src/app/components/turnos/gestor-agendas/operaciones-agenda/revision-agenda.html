@@ -326,10 +326,8 @@
                             <!--Header completo-->
                             <div *ngIf="mostrarHeaderCompleto" class="row">
                                 <div class="col-12">
-                                    <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{
-                                    agenda.horaInicio
-                                    | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin
-                                    |
+                                    <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio
+                                    | fecha}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin |
                                     date: 'HH:mm'}} hs
                                 </div>
                             </div>

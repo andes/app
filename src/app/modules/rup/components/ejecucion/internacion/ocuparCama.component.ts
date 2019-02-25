@@ -1,16 +1,12 @@
 import { PrestacionesService } from './../../../services/prestaciones.service';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
-import { Observable } from 'rxjs';
-import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, HostBinding } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
-import * as moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { FinanciadorService } from '../../../../../services/financiador.service';
 import { OcupacionService } from '../../../../../services/ocupacion/ocupacion.service';
-import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.interface';
 import { SnomedService } from '../../../../../services/term/snomed.service';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import { ElementosRUPService } from '../../../services/elementosRUP.service';

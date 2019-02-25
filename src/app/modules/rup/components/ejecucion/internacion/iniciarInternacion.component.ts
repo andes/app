@@ -1,11 +1,7 @@
 import { PrestacionesService } from './../../../services/prestaciones.service';
-import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
-import { Observable } from 'rxjs';
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
-import * as moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { OcupacionService } from '../../../../../services/ocupacion/ocupacion.service';
@@ -17,7 +13,6 @@ import { CamasService } from '../../../services/camas.service';
 import { ProfesionalService } from '../../../../../services/profesional.service';
 import { ObraSocialService } from '../../../../../services/obraSocial.service';
 import { PacienteService } from '../../../../../core/mpi/services/paciente.service';
-import { IObraSocial } from '../../../../../interfaces/IObraSocial';
 import { InternacionService } from '../../../services/internacion.service';
 
 @Component({
@@ -38,7 +33,7 @@ export class IniciarInternacionComponent implements OnInit {
     btnIniciarGuardar;
     showEditarCarpetaPaciente = false;
     public ocupaciones = [];
-    public obraSocial: IObraSocial[];
+    public obraSocial: any[];
     public origenHospitalizacion = [
         { id: 'consultorio externo', nombre: 'Consultorio externo' },
         { id: 'emergencia', nombre: 'Emergencia' },

@@ -13,6 +13,10 @@ export class PacienteCacheService {
         this.pacienteCache.next(paciente);
     }
 
+    getPacienteValor(): IPaciente {
+        return this.pacienteCache.value;
+    }
+
     getPaciente(): Observable<any> {
         return this.pacienteCache.asObservable();
     }
@@ -25,8 +29,8 @@ export class PacienteCacheService {
         this.isScannedCache.next(scanState);
     }
 
-    getScanState(): Observable<boolean> {
-        return this.isScannedCache.asObservable();
+    getScanState(): boolean {
+        return this.isScannedCache.value;
     }
 
     clearScanState() {

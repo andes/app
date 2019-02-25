@@ -19,6 +19,7 @@ export class ArancelamientoFormComponent implements OnInit {
     efector = this.auth.organizacion.nombre;
     obraSocial: String;
     codigoOs: Number;
+    numeroAfiliado: String;
     showForm = false;
     idOrganizacion = this.auth.organizacion.id;
     codigoNomenclador: string;
@@ -37,27 +38,38 @@ export class ArancelamientoFormComponent implements OnInit {
     constructor(public auth: Auth, public servicioOS: ObraSocialService, public servicioFA: FacturacionAutomaticaService, public plex: Plex) { }
 
     ngOnInit() {
-        this.servicioOS.get({ dni: this.turnoSeleccionado.paciente.documento }).subscribe(resultado => {
-            this.servicioFA.get({ conceptId: this.turnoSeleccionado.tipoPrestacion.conceptId }).subscribe(resultadoFA => {
-                if (resultadoFA && resultadoFA.length > 0) {
-                    this.codigoNomenclador = resultadoFA[0].nomencladorRecuperoFinanciero;
-                } else {
-                    this.codigoNomenclador = '';
-                }
-                if (resultado && resultado.length > 0) {
-                    this.obraSocial = resultado[0].financiador;
-                    this.codigoOs = resultado[0].codigoFinanciador;
-                } else {
-                    this.obraSocial = null;
-                    this.codigoOs = null;
-                }
-                this.showForm = true;
-                setTimeout(() => {
-                    this.imprimir();
-                    this.volverAPuntoInicio.emit();
-                }, 100);
+        if (this.turno.paciente.obraSocial && this.turno.paciente.obraSocial.numeroAfiliado) {
+            this.obraSocial = this.turno.paciente.obraSocial.financiador;
+            this.codigoOs = this.turno.paciente.obraSocial ? this.turno.paciente.obraSocial.codigoFinanciador : 0;
+            this.numeroAfiliado = this.turno.paciente.obraSocial.numeroAfiliado;
+            this.showForm = true;
+            setTimeout(() => {
+                this.imprimir();
+                this.volverAPuntoInicio.emit();
+            }, 100);
+        } else {
+            this.servicioOS.get({ dni: this.turnoSeleccionado.paciente.documento }).subscribe(resultado => {
+                this.servicioFA.get({ conceptId: this.turnoSeleccionado.tipoPrestacion.conceptId }).subscribe(resultadoFA => {
+                    if (resultadoFA && resultadoFA.length > 0) {
+                        this.codigoNomenclador = resultadoFA[0].nomencladorRecuperoFinanciero;
+                    } else {
+                        this.codigoNomenclador = '';
+                    }
+                    if (resultado && resultado.length > 0) {
+                        this.obraSocial = resultado[0].financiador;
+                        this.codigoOs = resultado[0].codigoFinanciador;
+                    } else {
+                        this.obraSocial = null;
+                        this.codigoOs = null;
+                    }
+                    this.showForm = true;
+                    setTimeout(() => {
+                        this.imprimir();
+                        this.volverAPuntoInicio.emit();
+                    }, 100);
+                });
             });
-        });
+        }
     }
 
     getNroCarpeta() {

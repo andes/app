@@ -15,7 +15,7 @@
                             <div class="row">
                                 <div class="col">
                                     <label>Agenda </label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio
-                                    | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin |
+                                    | fecha}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin |
                                     date: 'HH:mm'}} hs
                                 </div>
                                 <div class="col">
@@ -25,7 +25,8 @@
 
                                 <div class="col">
                                     <label>Profesionales</label>
-                                    <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
+                                    <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no
+                                        asignado</span>
                                     <ng-container *ngIf="agenda.profesionales">
                                         <div>{{agenda.profesionales | enumerar:['apellido','nombre']}}</div>
                                     </ng-container>
@@ -39,16 +40,17 @@
                         <thead>
                             <tr>
                                 <th colspan="14">&raquo; Bloque
-                                    <span *ngIf="bloque.descripcion"> {{ bloque.descripcion }} </span> de {{ bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin
+                                    <span *ngIf="bloque.descripcion"> {{ bloque.descripcion }} </span> de {{
+                                    bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin
                                     | date: 'HH:mm'}} hs
                                 </th>
                             </tr>
                             <tr>
                                 <th>Hora Turno</th>
                                 <th>DNI | Nro. Carpeta</th>
-                                <!-- <th>Obra Social</th> -->
+                                <th >Obra Social</th>
                                 <th>Apellidos y Nombres</th>
-                                <th>Fecha Nacimiento</th>
+                                <th>Fecha Nac</th>
                                 <th>Sexo</th>
                                 <th>Diagnóstico</th>
                                 <th>Primera Vez</th>
@@ -69,30 +71,35 @@
                                 <td>
                                     <span *ngIf="turno?.paciente?.id">
                                         <small>
-                                            <span *ngIf="turno.paciente.documento !== ''">{{ turno.paciente.documento | number }}</span>
+                                            <span *ngIf="turno.paciente.documento !== ''">{{ turno.paciente.documento |
+                                                number }}</span>
                                             <span *ngIf="turno.paciente.documento === ''">Sin documento (temporal)</span>
                                         </small>
                                     </span>
                                     <span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0">
                                         <small> | </small>
                                         <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">
-                                            <small *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null">{{carpeta.nroCarpeta}} </small>
+                                            <small *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null">{{carpeta.nroCarpeta}}
+                                            </small>
                                         </span>
                                         <small *ngIf="turno.tipoTurno === 'profesional'" class="text-danger">(autocitado)</small>
                                     </span>
                                 </td>
                                 <!-- OBRA SOCIAL -->
-                                <!-- <td></td> -->
+                                <td><span *ngIf="turno?.paciente?.obraSocial?.financiador"><small>{{turno.paciente.obraSocial.financiador}}</small></span>
+                                    <br><span *ngIf="turno?.paciente?.obraSocial?.numeroAfiliado">{{turno.paciente.obraSocial.numeroAfiliado}}</span></td>
                                 <td>
                                     <small *ngIf="turno?.paciente?.id">{{ turno.paciente | paciente }}</small>
-                                    <small [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</small>
+                                    <small [ngClass]="{'text-+danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno
+                                        Doble</small>
                                     <small [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</small>
                                 </td>
                                 <td>
-                                    <small *ngIf="turno?.paciente?.id && turno?.paciente?.fechaNacimiento">{{ turno.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</small>
+                                    <small *ngIf="turno?.paciente?.id && turno?.paciente?.fechaNacimiento">{{ turno.paciente.fechaNacimiento | fecha }}</small>
                                 </td>
                                 <td>
-                                    <small *ngIf="turno?.paciente?.id && turno?.paciente?.sexo">{{ turno.paciente | sexo }}</small>
+                                    <small *ngIf="turno?.paciente?.id && turno?.paciente?.sexo">{{ turno.paciente |
+                                        sexo }}</small>
                                 </td>
                                 <td style="width:350px"></td>
                                 <td></td>
@@ -112,7 +119,7 @@
                             <tr>
                                 <th>Hora Turno</th>
                                 <th>DNI | Nro. Carpeta</th>
-                                <!-- <th>Obra Social</th> -->
+                                <th >Obra Social</th>
                                 <th>Apellidos y Nombres</th>
                                 <th>Fecha Nacimiento</th>
                                 <th>Sexo</th>
@@ -133,29 +140,33 @@
                                 <td>
                                     <span *ngIf="sobreturno?.paciente?.id">
                                         <small>
-                                            <span *ngIf="sobreturno.paciente.documento !== ''">{{ sobreturno.paciente.documento | number }}</span>
+                                            <span *ngIf="sobreturno.paciente.documento !== ''">{{
+                                                sobreturno.paciente.documento | number }}</span>
                                             <span *ngIf="sobreturno.paciente.documento === ''">Sin documento (temporal)</span>
                                         </small>
                                     </span>
                                     <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.carpetaEfectores?.length > 0">
                                         <small> | </small>
                                         <span *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores">
-                                            <small *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null">{{carpeta.nroCarpeta}} </small>
+                                            <small *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null">{{carpeta.nroCarpeta}}
+                                            </small>
                                         </span>
                                         <small *ngIf="sobreturno.tipoTurno === 'profesional'" class="text-danger">(autocitado)</small>
                                     </span>
                                 </td>
                                 <!-- OBRA SOCIAL -->
-                                <!-- <td></td> -->
+                                <td><small>{{sobreturno?.paciente?.obraSocial?.financiador}}</small>  </td>
+
                                 <td>
                                     <small *ngIf="sobreturno?.paciente?.id">{{ sobreturno.paciente | paciente }}</small>
                                     <small [ngClass]="{'text-danger': sobreturno.estado === 'suspendido'}" *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</small>
                                 </td>
                                 <td>
-                                    <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.fechaNacimiento">{{ sobreturno.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</small>
+                                    <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.fechaNacimiento">{{ sobreturno.paciente.fechaNacimiento | fecha }}</small>
                                 </td>
                                 <td>
-                                    <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.sexo">{{ sobreturno.paciente | sexo }}</small>
+                                    <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.sexo">{{
+                                        sobreturno.paciente | sexo }}</small>
                                 </td>
                                 <td style="width:350px"></td>
                                 <td></td>
@@ -188,16 +199,4 @@
             No tiene permisos para ejecutar esta acción
         </div>
     </div>
-
-    <!--Footer-->
-    <!-- <footer>
-        <div class="row">
-            <div class="col text-left">
-                <plex-button type="primary" icon="mdi mdi-arrow-left" label="Volver al gestor" (click)="cancelar()"></plex-button>
-            </div>
-
-            <div class="col-1 text-right">
-            </div>
-        </div>
-    </footer> -->
 </form>

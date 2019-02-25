@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'google-map',
@@ -18,38 +18,18 @@ export class GoogleMapComponent {
     return this._infoMarker;
   }
 
-
-  @Input()
-  set mostrar(value: boolean) { // variable que indica si se debe mostrar el mapa
-    this._mostrar = value;
-    this.mostrarOcultarMapa();
-  }
-  get mostrar() {
-    return this._mostrar;
-  }
   @Output() changeCoordenadas = new EventEmitter<any[]>();
-  @ViewChild('mapa') mapa: ElementRef;
 
   draggable = true;  // marcador arrastrable?
   zoom = 13;
   zoomControl = true; // control de zoom (+/-)
   scrollwheel = false; // zoom con mouse
-  _infoMarker: String = '';
-  _mostrar = false;
+  _infoMarker: String = null;
 
-
-  // Modifica la posicion del marcador
+  // Notifica que la posición del marcador fue modificada manualmente
   setMarker(coordenadas) {
     this.latitud = coordenadas.coords.lat;
     this.longitud = coordenadas.coords.lng;
     this.changeCoordenadas.emit([this.latitud, this.longitud]);
-  }
-
-  mostrarOcultarMapa() {
-    if (this.mostrar) {
-      window.setTimeout(() => {
-        this.mapa.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 200);
-    }
   }
 }

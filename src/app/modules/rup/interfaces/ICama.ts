@@ -1,5 +1,4 @@
 import { ISnomedConcept } from './snomed-concept.interface';
-import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { ICamaEstado } from './ICamaEstado';
 
 export interface ICama {

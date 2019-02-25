@@ -2,7 +2,6 @@ import { Plex } from '@andes/plex';
 import { IPacienteRelacion } from './../interfaces/IPacienteRelacion.inteface';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
-import { Observable } from 'rxjs/Observable';
 import { ObraSocialService } from '../../../services/obraSocial.service';
 import { ProfeService } from '../../../services/profe.service';
 import { Subscription } from 'rxjs/Subscription';

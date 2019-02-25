@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { PacienteService } from '../../core/mpi/services/paciente.service';
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
-import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 import { DocumentoEscaneado, DocumentoEscaneados } from './documento-escaneado.const';
 import { Auth } from '@andes/auth';
 import { LogService } from './../../services/log.service';
@@ -32,6 +31,8 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
     public showCreateUpdate = false;
     public mostrarNuevo = false;
     public autoFocus = 0;
+
+
     /**
      * Indica si muestra el botón Cancelar/Volver en el footer
      */
@@ -329,8 +330,8 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                         type: 'multimatch',
                         cadenaInput: this.textoLibre
                     }).subscribe(resultado => {
-                        this.loading = false;
                         this.resultado = resultado;
+                        this.loading = false;
                         this.esEscaneado = false;
                         this.mostrarNuevo = this.auth.check('mpi:nuevoPaciente');
                     }, (err) => {

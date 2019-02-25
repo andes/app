@@ -105,6 +105,7 @@ export class ReglasComponent {
 
   deleteOrganizacion(indice) {
     this.reglas.splice(indice, 1);
+    this.reglaActiva = -1;
   }
 
   addPrestacion() {
@@ -152,20 +153,24 @@ export class ReglasComponent {
     if (this.reglas && this.reglas.length > 0) {
       condiciones = this.reglas.every(regla => regla.destino && regla.destino.organizacion && regla.destino.prestacion
         && regla.destino && regla.origen.organizacion && regla.origen.prestaciones && regla.origen.prestaciones.length > 0);
-    }
-    if (condiciones) {
-      let data = {
-        reglas: this.reglas
-      };
-      let operation = this.servicioReglas.save(data);
-      operation.subscribe((resultado) => {
-        this.plex.toast('success', 'Las reglas se guardaron correctamente');
-        this.limpiarForm();
-        this.prestacionDestino = {};
-      });
-    } else {
-      this.plex.info('info', 'Debe completar los datos de las reglas');
+      if (condiciones) {
+        let data = {
+          reglas: this.reglas
+        };
+        let operation = this.servicioReglas.save(data);
+        operation.subscribe((resultado) => {
+          this.plex.toast('success', 'Las reglas se guardaron correctamente');
+          this.limpiarForm();
+          this.prestacionDestino = {};
+        });
+      } else {
+        this.plex.info('info', 'Debe completar los datos de las reglas');
 
+      }
+    } else {
+      this.servicioReglas.delete({ prestacionDestino: this.prestacionDestino.conceptId, organizacionDestino: this.organizacionDestino.id }).subscribe((resu) => {
+        this.plex.toast('success', 'Las reglas se actualizaron correctamente');
+      });
     }
   }
 

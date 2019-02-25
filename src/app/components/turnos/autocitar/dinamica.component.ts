@@ -1,5 +1,3 @@
-import { IPrestacion } from './../../../modules/rup/interfaces/prestacion.interface';
-
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
