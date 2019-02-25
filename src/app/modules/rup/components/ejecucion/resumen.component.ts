@@ -58,33 +58,6 @@ export class ResumenComponent implements OnInit {
     }
 
     /**
-     * Mostrar indicadores de valores registrados
-     *
-     * @memberof ResumenComponent
-     */
-    /*
-    cargarIndicadores() {
-        // Indicador de Peso
-        this.servicioPrestacionPaciente.getByKey({ key: 'peso', idPaciente: this.prestacion.paciente.id })
-            .subscribe(prestacion => {
-                if (prestacion && prestacion.length > 0) {
-                    this.prestacionPeso = prestacion[0];
-                }
-            });
-
-
-
-        // Indicador de Talla
-        this.servicioPrestacionPaciente.getByKey({ key: 'talla', idPaciente: this.prestacion.paciente.id })
-            .subscribe(prestacion => {
-                if (prestacion && prestacion.length > 0) {
-                    this.prestacionTalla = prestacion[0];
-                }
-            });
-    }
-    */
-
-    /**
      * Para iniciar una ejecución cambiamos estado a ejecución
      *
      * @param {any} id: _id de la prestacion a ejecutar

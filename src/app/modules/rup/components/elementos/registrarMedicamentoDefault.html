@@ -67,14 +67,14 @@
         <div class="col-7">
             <strong> Profesional: </strong>{{unaEvolucion.profesional }}
             <br>
-            <strong>Estado</strong> {{unaEvolucion.estado}} /
-            <strong>Cantidad</strong> {{unaEvolucion.cantidad}} {{unaEvolucion.unidad}}
+            <strong>Estado</strong> {{unaEvolucion.valor.estado}} /
+            <strong>Cantidad</strong> {{unaEvolucion.valor.cantidad}} {{unaEvolucion.valor.unidad}}
             <br>
-            <strong>Durante</strong> {{unaEvolucion.duracion.cantidad}} {{unaEvolucion.duracion.unidad}} /
-            <strong>{{unaEvolucion.recetable ? 'Recetable' : 'No recetable' }}</strong>
+            <strong>Durante</strong> {{unaEvolucion.valor.duracion.cantidad}} {{unaEvolucion.valor.duracion.unidad}} /
+            <strong>{{unaEvolucion.valor.recetable ? 'Recetable' : 'No recetable' }}</strong>
         </div>
         <div class="col-5">
-            <strong>Indicación:</strong> {{unaEvolucion.indicacion}}
+            <strong>Indicación:</strong> {{unaEvolucion.valor.indicacion}}
         </div>
     </div>
 </ng-container>
@@ -113,12 +113,12 @@
                             <strong> Profesional: </strong>{{evolucionM.profesional }}
                             <br>
                             <strong>Estado</strong> {{evolucionM.estado}} /
-                            <strong>Cantidad</strong> {{evolucionM.cantidad}} {{evolucionM.unidad}}
+                            <strong>Cantidad</strong> {{evolucionM.valor.cantidad}} {{evolucionM.valor.unidad}}
                             <br>
-                            <strong>Durante</strong> {{evolucionM.duracion.cantidad}} {{evolucionM.duracion.unidad}} /
-                            <strong>{{evolucionM.recetable ? 'Recetable' : 'No recetable' }}</strong>
+                            <strong>Durante</strong> {{evolucionM.valor.duracion.cantidad}} {{evolucionM.valor.duracion.unidad}} /
+                            <strong>{{evolucionM.valor.recetable ? 'Recetable' : 'No recetable' }}</strong>
                             <br>
-                            <strong>Indicación:</strong> {{evolucionM.indicacion}}
+                            <strong>Indicación:</strong> {{evolucionM.valor.indicacion}}
                             <br>
                             <br>
                         </div>

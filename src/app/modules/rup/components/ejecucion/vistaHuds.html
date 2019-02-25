@@ -12,11 +12,11 @@
                             </div>
                         </div>
                     </ng-container>
-                    <plex-tabs (close)="onCloseTab($event)">
-                        <ng-container *ngIf="registrosHuds && prestacion">
+                    <plex-tabs (close)="onCloseTab($event)" [activeIndex]="activeTab">
+                        <ng-container *ngIf="registrosHuds">
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">
                                 <plex-tab [allowClose]="true" [label]="registro.data.concepto.term" [class]="registro.data.class"
-                                    [color]="registro.data.class" *ngIf="registro.tipo === 'hallazgo' || registro.tipo === 'medicamento'">
+                                    [color]="registro.data.class" *ngIf="registro.tipo === 'concepto'">
                                     <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)"
                                         [params]="elementosRUPService.selectPorRefsetId(registro.data.concepto)"
                                         [prestacion]="prestacion" [paciente]="paciente" [registro]="registro.data"
@@ -41,7 +41,7 @@
                                 </plex-tab>
 
                                 <plex-tab [allowClose]="true" [label]="registro.data.solicitud.tipoPrestacion.term"
-                                    [class]="registro.data.class" color="solicitud" *ngIf="registro.tipo === 'prestacion'">
+                                    [class]="registro.data.class" color="solicitud" *ngIf="registro.tipo === 'rup'">
                                     <h4 class="text-capitalize">{{ registro.data.solicitud.tipoPrestacion.term }}</h4>
                                     <div class="row">
                                         <div class="col-6">
@@ -117,7 +117,7 @@
 
                                 </plex-tab>
 
-                                <plex-tab *ngIf="registro.data?.prestacion?.snomed?.term" [allowClose]="true" [label]="registro.data.prestacion.snomed.term"
+                                <plex-tab *ngIf="registro.tipo === 'cda'" [allowClose]="true" [label]="registro.data.prestacion.snomed.term"
                                     [class]="registro.data.class">
                                     <vista-cda [registro]="registro"></vista-cda>
                                 </plex-tab>
@@ -125,11 +125,11 @@
                             </ng-container>
                         </ng-container>
 
-                        <plex-tab label="Resumen del Paciente" *ngIf="paciente?.id && prestacion">
+                        <!-- <plex-tab label="Resumen del Paciente" *ngIf="paciente?.id">
                             <rup-resumenPaciente-estatico [paciente]="paciente" esTab="true"></rup-resumenPaciente-estatico>
                             <rup-resumenPaciente-dinamico-nino *ngIf="paciente?.edad <= 6" [paciente]="paciente" esTab="true"></rup-resumenPaciente-dinamico-nino>
                             <rup-resumenPaciente-dinamico *ngIf="paciente?.edad > 6" [paciente]="paciente" esTab="true"></rup-resumenPaciente-dinamico>
-                        </plex-tab>
+                        </plex-tab> -->
 
                     </plex-tabs>
                 </plex-box>

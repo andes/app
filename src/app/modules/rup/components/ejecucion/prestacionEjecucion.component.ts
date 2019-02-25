@@ -520,7 +520,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         if (this.prestacion && this.prestacion.ejecucion.registros && this.prestacion.ejecucion.registros.length) {
             // TODO:: Por ahora la vinculacion automatica es solo con INFORME DEL ENCUENTRO
-            let registroRequerido = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === '371531000');
+            let registroRequerido = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === PrestacionesService.InformeDelEncuentro);
             if (registroRequerido) {
                 nuevoRegistro.relacionadoCon.push(registroRequerido);
             }
@@ -617,7 +617,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             // Buscar si es hallazgo o trastorno buscar primero si ya existe en Huds
             if ((snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación') && (!this.elementoRUP.reglas || !this.elementoRUP.reglas.requeridos || !this.elementoRUP.reglas.requeridos.relacionesMultiples)) {
-                this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
+                this.servicioPrestacion.getUnTrastornoPaciente(this.paciente.id, snomedConcept)
                     .subscribe(dato => {
                         if (dato) {
                             // buscamos si es cronico
@@ -1144,6 +1144,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         // Limpiar los valores observados al iniciar la ejecución
         // Evita que se autocompleten valores de una consulta anterior
         this.conceptObserverService.destroy();
+        this.activeTab = this.registrosHuds.length - 1;
         // this.registrosHuds = registrosHuds;
     }
 
