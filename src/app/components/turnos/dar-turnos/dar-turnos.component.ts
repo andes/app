@@ -92,7 +92,7 @@ export class DarTurnosComponent implements OnInit {
     turnoDoble = false;
     desplegarOS = false; // Indica si es se requiere seleccionar OS y numero de Afiliado
     numeroAfiliado;
-    telefono: String = '';
+    telefono = '';
     countBloques: any[];
     countTurnos: any = {};
     resultado: any;
@@ -100,7 +100,7 @@ export class DarTurnosComponent implements OnInit {
     esEscaneado = false;
     ultimosTurnos: any[];
     indice = -1;
-    semana: String[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    semana: string[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     permisos = [];
     autorizado = false;
     pacientesSearch = true;
@@ -108,8 +108,8 @@ export class DarTurnosComponent implements OnInit {
     cambioTelefono = false;
     showCreateUpdate = false;
     tipoTurno: string;
-    tiposTurnosSelect: String;
-    tiposTurnosLabel: String;
+    tiposTurnosSelect: string;
+    tiposTurnosLabel: string;
     filtradas: any = [];
     hoy: Date;
     bloque: IBloque;
@@ -441,7 +441,7 @@ export class DarTurnosComponent implements OnInit {
 
                 this.alternativas = [];
                 // Tipo de Prestación, para poder filtrar las agendas
-                let tipoPrestacion: String = this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : '';
+                let tipoPrestacion: string = this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : '';
                 // Se filtran los bloques segun el filtro tipoPrestacion
                 this.bloques = this.agenda.bloques.filter(
                     function (value) {
@@ -619,7 +619,7 @@ export class DarTurnosComponent implements OnInit {
         this.seleccionarAgenda(this.alternativas[indice]);
     }
 
-    verAgenda(direccion: String) {
+    verAgenda(direccion: string) {
         if (this.agendas) {
             // Asegurar que no nos salimos del rango de agendas (agendas.length)
             let enRango = direccion === 'der' ? ((this.indice + 1) < this.agendas.length) : ((this.indice - 1) >= 0);
