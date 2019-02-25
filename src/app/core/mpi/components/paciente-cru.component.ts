@@ -727,6 +727,7 @@ export class PacienteCruComponent implements OnInit {
         this.disableValidar = true;
         this.loading = true;
         this.pacienteService.validar(this.pacienteModel).subscribe(resultado => {
+            this.loading = false;
             if (resultado.validado) {
                 this.setBackup();
                 this.validado = true;
@@ -746,31 +747,11 @@ export class PacienteCruComponent implements OnInit {
                 if (!this.pacienteModel.cuil && resultado.paciente.cuil) {
                     this.pacienteModel.cuil = resultado.paciente.cuil;
                 }
-                this.plex.info('success', '¡Paciente Validado!');
+                this.plex.toast('success', '¡Paciente Validado!');
             } else {
-                // ya existia paciente validado anteriormente
-                if (resultado.paciente.id) {
-                    this.pacienteModel = resultado.paciente;
-                    if (!this.pacienteModel.contacto) {
-                        this.pacienteModel.contacto = [this.contacto];
-                    }
-                    if (this.pacienteModel.direccion[0].ubicacion.provincia) {
-                        (this.pacienteModel.direccion[0].ubicacion.provincia.nombre === this.provinciaActual.nombre) ? this.viveProvActual = true : this.viveProvActual = false;
-                        this.loadLocalidades(this.pacienteModel.direccion[0].ubicacion.provincia);
-                    }
-                    if (this.pacienteModel.direccion[0].ubicacion.localidad) {
-                        (this.pacienteModel.direccion[0].ubicacion.localidad.nombre === this.localidadActual.nombre) ? this.viveLocActual = true : (this.viveLocActual = false, this.barrios = null);
-                        this.loadBarrios(this.pacienteModel.direccion[0].ubicacion.localidad);
-                    }
-                    this.validado = true;
-                    this.showDeshacer = true;
-                    this.plex.info('info', 'El paciente que está intentando cargar ya se encontraba validado por otra fuente auténtica', 'Aviso');
-                } else {
-                    this.plex.toast('danger', 'Validación Fallida');
-                    this.disableValidar = false;
-                }
+                this.plex.toast('danger', 'Validación Fallida');
+                this.disableValidar = false;
             }
-            this.loading = false;
         });
     }
 
