@@ -49,7 +49,6 @@ import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { PucoComponent } from './components/puco/puco.component';
 
 // ... RUP
-import { ResumenComponent } from './modules/rup/components/ejecucion/resumen.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
 import { PrestacionEjecucionComponent } from './modules/rup/components/ejecucion/prestacionEjecucion.component';
 import { PrestacionValidacionComponent } from './modules/rup/components/ejecucion/prestacionValidacion.component';
@@ -133,7 +132,6 @@ const appRoutes: Routes = [
   { path: 'rup/internacion/crear', component: IniciarInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/internacion/crear/:id', component: IniciarInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/internacion/ocuparCama/:idCama/:idInternacion', component: OcuparCamaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/resumen/:id', component: ResumenComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/validacion/:id', component: PrestacionValidacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/auditoriaRUP', component: AuditoriaPrestacionPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },

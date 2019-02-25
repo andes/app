@@ -225,7 +225,6 @@ import { CamasService } from './modules/rup/services/camas.service';
 import { ConceptObserverService } from './modules/rup/services/conceptObserver.service';
 import { PrestacionCrearComponent } from './modules/rup/components/ejecucion/prestacionCrear.component';
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
-import { ResumenComponent } from './modules/rup/components/ejecucion/resumen.component';
 import { PrestacionValidacionComponent } from './modules/rup/components//ejecucion/prestacionValidacion.component';
 import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
@@ -525,7 +524,6 @@ registerLocaleData(localeEs, 'es');
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         MapaEspacioFisicoVistaComponent,
-        ResumenComponent,
         PrestacionCrearComponent,
         PrestacionEjecucionComponent,
         PrestacionValidacionComponent,

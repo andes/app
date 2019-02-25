@@ -127,10 +127,6 @@ export class VistaHudsComponent implements OnInit {
     }
 
     public onCloseTab($event) {
-        debugger;
-        if (this.activeTab > $event) {
-            this.activeTab--;
-        }
         this.registrosHuds.splice($event, 1);
     }
 
