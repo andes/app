@@ -137,7 +137,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
     constructor(
         private organizacionService: OrganizacionService,
         private auth: Auth,
-        private apiGoogleService: GeoreferenciaService,
+        private georeferenciaService: GeoreferenciaService,
         private location: Location,
         private plex: Plex,
         private paisService: PaisService,
@@ -268,6 +268,9 @@ export class ExtranjeroNNCruComponent implements OnInit {
 
     loadBarrios(localidad) {
         if (localidad && localidad.id) {
+            if (localidad.id === this.localidadActual.id) {
+                this.viveLocActual = true;
+            }
             this.barriosService.getXLocalidad(localidad.id).subscribe(result => {
                 this.barrios = result;
             });
@@ -284,6 +287,9 @@ export class ExtranjeroNNCruComponent implements OnInit {
 
     loadLocalidades(provincia) {
         if (provincia && provincia.id) {
+            if (provincia.id === this.provinciaActual.id) {
+                this.viveProvActual = true;
+            }
             this.localidadService.getXProvincia(provincia.id).subscribe(result => {
                 this.localidades = result;
             });
@@ -296,13 +302,14 @@ export class ExtranjeroNNCruComponent implements OnInit {
             let direccionCompleta = this.pacienteModel.direccion[0].valor + ', ' + this.pacienteModel.direccion[0].ubicacion.localidad.nombre
                 + ', ' + this.pacienteModel.direccion[0].ubicacion.provincia.nombre;
             // se calcula nueva georeferencia
-            this.apiGoogleService.getGeoreferencia({ direccion: direccionCompleta }).subscribe(point => {
+            this.georeferenciaService.getGeoreferencia({ direccion: direccionCompleta }).subscribe(point => {
                 if (point) {
                     this.geoReferenciaAux = [point.lat, point.lng];
-                    this.infoMarcador = this.pacienteModel.direccion[0].valor.toUpperCase();
-                    if (this.pacienteModel.direccion[0].ubicacion.barrio) {
-                        this.infoMarcador += ', \n' + this.pacienteModel.direccion[0].ubicacion.barrio.nombre.toUpperCase();
-                    }
+                    this.infoMarcador = '';
+                    // this.infoMarcador = this.pacienteModel.direccion[0].valor.toUpperCase();
+                    // if (this.pacienteModel.direccion[0].ubicacion.barrio) {
+                    //     this.infoMarcador += ', \n' + this.pacienteModel.direccion[0].ubicacion.barrio.nombre.toUpperCase();
+                    // }
                 } else {
                     this.plex.toast('warning', 'Dirección no encontrada. Señale manualmente en el mapa.');
                 }

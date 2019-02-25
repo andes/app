@@ -138,7 +138,7 @@ export class PacienteCruComponent implements OnInit {
     constructor(
         private organizacionService: OrganizacionService,
         private auth: Auth,
-        private apiGoogleService: GeoreferenciaService,
+        private georeferenciaService: GeoreferenciaService,
         private location: Location,
         private paisService: PaisService,
         private provinciaService: ProvinciaService,
@@ -445,9 +445,10 @@ export class PacienteCruComponent implements OnInit {
             let direccionCompleta = this.pacienteModel.direccion[0].valor + ', ' + this.pacienteModel.direccion[0].ubicacion.localidad.nombre
                 + ', ' + this.pacienteModel.direccion[0].ubicacion.provincia.nombre;
             // se calcula nueva georeferencia
-            this.apiGoogleService.getGeoreferencia({ direccion: direccionCompleta }).subscribe(point => {
+            this.georeferenciaService.getGeoreferencia({ direccion: direccionCompleta }).subscribe(point => {
                 if (point) {
                     this.geoReferenciaAux = [point.lat, point.lng];
+                    this.infoMarcador = '';
                     // this.infoMarcador = this.pacienteModel.direccion[0].valor.toUpperCase();
                     // if (this.pacienteModel.direccion[0].ubicacion.barrio) {
                     //     this.infoMarcador += ', \n' + this.pacienteModel.direccion[0].ubicacion.barrio.nombre.toUpperCase();
