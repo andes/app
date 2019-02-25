@@ -1,9 +1,10 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding } from '@angular/core';
-import * as moment from 'moment';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
+import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
+import { OrganizacionService } from '../../../services/organizacion.service';
 
 @Component({
     selector: 'solicitudes',
@@ -21,7 +22,7 @@ export class SolicitudesComponent implements OnInit {
     solicitudTurno: any;
     labelVolver = 'Lista de Solicitudes';
     showAuditar = false;
-    public autorizado = false;
+    public permisos;
     public showCargarSolicitud = false;
     public showBotonCargarSolicitud = true;
     public prestaciones = [];
@@ -44,24 +45,39 @@ export class SolicitudesComponent implements OnInit {
     public pacienteSolicitud: any;
     public activeTab = 0;
     public showSidebar = false;
+    public mostrarMasOpciones = false;
+    public organizacion;
+    public prestacionesPermisos = [];
+    public permisosReglas;
+    public permisoAnular = false;
+    public showAnular = false;
+    public prestacionDestino;
+    public estado;
+    public estados = [
+        { id: 'auditoria', nombre: 'AUDITORIA' },
+        { id: 'pendiente', nombre: 'PENDIENTE' },
+        { id: 'rechazada', nombre: 'RECHAZADA' },
+        { id: 'turnoDado', nombre: 'TURNO DADO' },
+        { id: 'anulada', nombre: 'ANULADA' }
+    ];
     prestacionSeleccionada: any;
+
 
     constructor(
         private auth: Auth,
         private plex: Plex,
         private servicioPrestacion: PrestacionesService,
-        public servicioTurnos: TurnoService
+        public servicioTipoPrestacion: TipoPrestacionService,
+        public servicioTurnos: TurnoService,
+        public servicioOrganizacion: OrganizacionService
     ) { }
 
     ngOnInit() {
-        this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        this.permisosReglas = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:reglas:?')[0] === '*' : false;
+        this.prestacionesPermisos = this.auth.getPermissions('solicitudes:tipoPrestacion:?');
+        this.permisoAnular = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:anular:?')[0] === '*' : false;
         this.showCargarSolicitud = false;
-
         this.cargarSolicitudes();
-        // Está autorizado para ver esta pantalla?
-        if (!this.autorizado) {
-
-        }
     }
 
     filtrarPaciente() {
@@ -95,11 +111,33 @@ export class SolicitudesComponent implements OnInit {
                 );
             });
             this.setearArreglos();
-            // console.log('pe ', PE);
         } else {
             this.prestacionesEntrada = this.entradaCache;
             this.prestacionesSalida = this.salidaCache;
         }
+    }
+
+    loadOrganizacion(event) {
+        if (event.query) {
+            let query = {
+                nombre: event.query
+            };
+            this.servicioOrganizacion.get(query).subscribe(event.callback);
+        } else {
+            event.callback([]);
+        }
+    }
+
+    loadPrestaciones(event) {
+        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
+            let dataF;
+            if (this.prestacionesPermisos[0] === '*') {
+                dataF = data;
+            } else {
+                dataF = data.filter((x) => { return this.prestacionesPermisos.indexOf(x.id) >= 0; });
+            }
+            event.callback(dataF);
+        });
     }
 
     cambio(activeTab) {
@@ -146,6 +184,7 @@ export class SolicitudesComponent implements OnInit {
         this.pacienteSeleccionado = prestacionSolicitud.paciente;
         this.showDarTurnos = true;
     }
+
     cancelar(prestacionSolicitud) {
         this.plex.confirm('¿Realmente quiere cancelar la solicitud?', 'Atención').then((confirmar) => {
             if (confirmar) {
@@ -162,7 +201,15 @@ export class SolicitudesComponent implements OnInit {
                 });
             }
         });
+    }
 
+    anular(arrayPrestaciones, indice) {
+        let indicePrestacion = this.prestaciones.findIndex((prest: any) => { return prest.id === arrayPrestaciones[indice].id; });
+        this.solicitudSeleccionada = this.prestaciones[indicePrestacion].solicitud;
+        this.prestacionSeleccionada = this.prestaciones[indicePrestacion];
+        this.pacienteSolicitud = this.prestaciones[indicePrestacion].paciente;
+        this.showAnular = true;
+        this.showSidebar = false;
     }
 
     volverDarTurno() {
@@ -192,15 +239,37 @@ export class SolicitudesComponent implements OnInit {
     cargarSolicitudes() {
         if (this.fechaDesde && this.fechaHasta) {
             let params = {
-                estado: [
-                    'auditoria', // solicitudes a ser auditadas, pueden pasar a rechazadas o a pendientes
-                    'pendiente', // solicitudes pendientes pueden tener o no turno asociado, están pendientes de ejecución
-                    'rechazada', // solicitudes rechazadas en el proceso de auditoría
-                    'validada'   // solicitudes validadas, si tienen turno asociado veremos la información
-                ],
                 solicitudDesde: this.fechaDesde,
                 solicitudHasta: this.fechaHasta
             };
+            if (this.estado) {
+                if (this.estado.id !== 'turnoDado') {
+                    params['estados'] = [this.estado.id];
+                    if (this.estado.id === 'pendiente') {
+                        params['tieneTurno'] = false;
+                    }
+                } else {
+                    params['tieneTurno'] = true;
+                }
+            } else {
+                params['estados'] = [
+                    'auditoria',
+                    'pendiente',
+                    'rechazada',
+                    'validada'
+                ];
+            }
+            if (this.organizacion) {
+                params['organizacionOrigen'] = this.organizacion.id;
+            }
+            if (this.prestacionDestino) {
+                params['prestacionDestino'] = this.prestacionDestino.id;
+            } else {
+                if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {
+                    params['tipoPrestaciones'] = this.prestacionesPermisos;
+                }
+            }
+
             this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
                 this.prestaciones = resultado;
                 this.prestacionesSalida = resultado.filter((prest: any) => { return (prest.solicitud.organizacionOrigen) ? (this.auth.organizacion.id === prest.solicitud.organizacionOrigen.id) : false; });
@@ -390,6 +459,24 @@ export class SolicitudesComponent implements OnInit {
                     respuesta => {
                         this.cargarSolicitudes();
                         this.plex.toast('danger', '', 'Solicitud Rechazada');
+                    }
+                );
+            }
+        }
+    }
+
+    returnAnular(event) {
+        this.showAnular = false;
+        if (event.status === false) {
+            if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
+                let patch = {
+                    op: 'estadoPush',
+                    estado: { tipo: 'anulada', motivoRechazo: event.motivo }
+                };
+                this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
+                    respuesta => {
+                        this.cargarSolicitudes();
+                        this.plex.toast('danger', '', 'Solicitud Anulada');
                     }
                 );
             }

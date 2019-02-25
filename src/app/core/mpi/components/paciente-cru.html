@@ -197,7 +197,7 @@
 
                             <!-- MAPA DE GOOGLE -->
                             <div class="col-8">
-                                <google-map [mostrar]="true" [latitud]="geoReferenciaAux[0]" [longitud]="geoReferenciaAux[1]"
+                                <google-map [latitud]="geoReferenciaAux[0]" [longitud]="geoReferenciaAux[1]"
                                     [infoMarker]="infoMarcador" (changeCoordenadas)="changeCoordenadas($event)"></google-map>
 
                                 <plex-button class="float-right" label="Actualizar" position="right" type="success"

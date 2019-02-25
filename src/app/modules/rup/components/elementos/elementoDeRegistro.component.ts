@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
 import { Subscription } from 'rxjs/Subscription';
+import { RupElement } from '.';
 @Component({
     selector: 'rup-ElementoDeRegistroComponent',
     templateUrl: 'elementoDeRegistro.html',
     styleUrls: ['elementoDeRegistro.scss']
 })
-
+@RupElement('ElementoDeRegistroComponent')
 export class ElementoDeRegistroComponent extends RUPComponent implements OnInit {
 
 
@@ -37,9 +38,11 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
     conceptoSeleccionado: any;
 
     ngOnInit() {
-        this.registro.registros.forEach((registro: any) => {
-            this.itemsRegistros[registro.id] = { collapse: true, items: null };
-        });
+        if (this.registro && this.registro.registros) {
+            this.registro.registros.forEach((registro: any) => {
+                this.itemsRegistros[registro.id] = { collapse: true, items: null };
+            });
+        }
         this.params.required = this.params.required ? this.params.required : false;
         // buscamos si existe por parametro alguna restriccion en los conceptos.
         if (this.params.refsetId) {

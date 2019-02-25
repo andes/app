@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
 import { Plex } from '@andes/plex';
 import * as moment from 'moment';

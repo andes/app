@@ -1,15 +1,15 @@
-import { SnomedService } from '../../../../services/term/snomed.service';
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { IPacienteMatch } from '../../../mpi/interfaces/IPacienteMatch.inteface';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
-import { Plex } from '@andes/plex';
 import { PacienteBuscarResultado } from '../../../mpi/interfaces/PacienteBuscarResultado.inteface';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-ActividadNoNominalizada',
     templateUrl: 'informeActividadNoNominalizada.html'
 })
+@RupElement('InformeActividadNoNominalizadaComponent')
 export class InformeActividadNoNominalizadaComponent extends RUPComponent implements OnInit {
 
     public elegirOtraActividad = false;

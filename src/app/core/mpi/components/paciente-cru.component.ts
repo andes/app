@@ -19,6 +19,7 @@ import { GeoreferenciaService } from '../services/georeferencia.service';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
+import { Subscriber, Subscription } from 'rxjs';
 
 @Component({
     selector: 'paciente-cru',
@@ -155,6 +156,19 @@ export class PacienteCruComponent implements OnInit {
         this.updateTitle('Registrar un paciente');
         this.relacionesBorradas = [];
 
+        this.organizacionService.getById(this.auth.organizacion.id).subscribe((org: IOrganizacion) => {
+            if (org) {
+                this.organizacionActual = org;
+                this.provinciaActual = org.direccion.ubicacion.provincia;
+                this.localidadActual = org.direccion.ubicacion.localidad;
+
+                // Cargamos todas las provincias
+                this.provinciaService.get({}).subscribe(rta => {
+                    this.provincias = rta;
+                });
+            }
+        });
+
         // Se cargan los parentescos para las relaciones
         this.parentescoService.get().subscribe(resultado => {
             this.parentescoModel = resultado;
@@ -167,11 +181,6 @@ export class PacienteCruComponent implements OnInit {
             this.paisArgentina = arg[0];
         });
 
-        // Cargamos todas las provincias
-        this.provinciaService.get({}).subscribe(rta => {
-            this.provincias = rta;
-        });
-
         this.showCargar = false;
         this.sexos = enumerados.getObjSexos();
         this.generos = enumerados.getObjGeneros();
@@ -179,53 +188,42 @@ export class PacienteCruComponent implements OnInit {
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.estados = enumerados.getEstados();
 
-        this.organizacionService.getById(this.auth.organizacion.id).subscribe((org: IOrganizacion) => {
-            if (org) {
-                this.organizacionActual = org;
-                this.provinciaActual = org.direccion.ubicacion.provincia;
-                this.localidadActual = org.direccion.ubicacion.localidad;
-            }
-        });
-
         // obtiene el paciente cacheado
-        this.pacienteCache.getPaciente().subscribe(res => {
-            // consulta a la cache si el paciente fue escaneado o no
-            this.pacienteCache.getScanState().subscribe(result => {
-                this.escaneado = result;
-                if (res) {
-                    this.paciente = JSON.parse(JSON.stringify(res));
-                    if (this.paciente.id) {
-                        // Busco el paciente en mongodb
-                        this.pacienteService.getById(this.paciente.id).subscribe(resultado => {
-                            if (resultado) {
-                                if (!resultado.scan) {
-                                    resultado.scan = this.paciente.scan;
-                                }
-                                if (this.escaneado && resultado.estado !== 'validado') {
-                                    resultado.nombre = this.paciente.nombre.toUpperCase();
-                                    resultado.apellido = this.paciente.apellido.toUpperCase();
-                                    resultado.fechaNacimiento = this.paciente.fechaNacimiento;
-                                    resultado.sexo = this.paciente.sexo;
-                                    resultado.documento = this.paciente.documento;
-                                }
-                                this.paciente = Object.assign({}, resultado);
-                            }
-                            this.actualizarDatosPaciente();
-                        });
-                    } else {
-                        this.plex.info('warning', 'Paciente inexistente', 'Error');
-                    }
-                } else {
-                    // ubicacion inicial mapa de google cuando no se cargó ningun paciente
-                    this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
-                        if (point) {
-                            this.geoReferenciaAux = [point.lat, point.lng];
-                            this.infoMarcador = this.auth.organizacion.nombre;
+        this.paciente = this.pacienteCache.getPacienteValor();
+        // consulta a la cache si el paciente fue escaneado o no
+        this.escaneado = this.pacienteCache.getScanState();
+
+        if (this.paciente) {
+            if (this.paciente.id) {
+                // Busco el paciente en mongodb
+                this.pacienteService.getById(this.paciente.id).subscribe(resultado => {
+                    if (resultado) {
+                        if (!resultado.scan) {
+                            resultado.scan = this.paciente.scan;
                         }
-                    });
+                        if (this.escaneado && resultado.estado !== 'validado') {
+                            resultado.nombre = this.paciente.nombre.toUpperCase();
+                            resultado.apellido = this.paciente.apellido.toUpperCase();
+                            resultado.fechaNacimiento = this.paciente.fechaNacimiento;
+                            resultado.sexo = this.paciente.sexo;
+                            resultado.documento = this.paciente.documento;
+                        }
+                        this.paciente = Object.assign({}, resultado);
+                    }
+                    this.actualizarDatosPaciente();
+                });
+            } else {
+                this.plex.info('warning', 'Paciente inexistente', 'Error');
+            }
+        } else {
+            // ubicacion inicial mapa de google cuando no se cargó ningun paciente
+            this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
+                if (point) {
+                    this.geoReferenciaAux = [point.lat, point.lng];
+                    this.infoMarcador = this.auth.organizacion.nombre;
                 }
             });
-        });
+        }
     }
 
     private updateTitle(nombre: string) {
@@ -291,11 +289,15 @@ export class PacienteCruComponent implements OnInit {
             } else {
                 if (this.paciente.direccion[0].ubicacion) {
                     if (this.paciente.direccion[0].ubicacion.provincia) {
-                        (this.paciente.direccion[0].ubicacion.provincia.nombre === this.provinciaActual.nombre) ? this.viveProvActual = true : this.viveProvActual = false;
+                        if (this.provinciaActual) {
+                            (this.paciente.direccion[0].ubicacion.provincia.nombre === this.provinciaActual.nombre) ? this.viveProvActual = true : this.viveProvActual = false;
+                        }
                         this.loadLocalidades(this.paciente.direccion[0].ubicacion.provincia);
                     }
                     if (this.paciente.direccion[0].ubicacion.localidad) {
-                        (this.paciente.direccion[0].ubicacion.localidad.nombre === this.localidadActual.nombre) ? this.viveLocActual = true : (this.viveLocActual = false, this.barrios = null);
+                        if (this.localidadActual) {
+                            (this.paciente.direccion[0].ubicacion.localidad.nombre === this.localidadActual.nombre) ? this.viveLocActual = true : (this.viveLocActual = false, this.barrios = null);
+                        }
                         this.loadBarrios(this.paciente.direccion[0].ubicacion.localidad);
                     }
                 }
@@ -422,10 +424,10 @@ export class PacienteCruComponent implements OnInit {
         // ubicacion inicial mapa de google
         if (this.pacienteModel.direccion[0].geoReferencia) {
             this.geoReferenciaAux = this.pacienteModel.direccion[0].geoReferencia;
-            this.infoMarcador = this.pacienteModel.direccion[0].valor.toUpperCase();
-            if (this.pacienteModel.direccion[0].ubicacion.barrio) {
-                this.infoMarcador += ', ' + this.pacienteModel.direccion[0].ubicacion.barrio.nombre.toUpperCase();
-            }
+            // this.infoMarcador = this.pacienteModel.direccion[0].valor;
+            // if (this.pacienteModel.direccion[0].ubicacion.barrio) {
+            //     this.infoMarcador += ', ' + this.pacienteModel.direccion[0].ubicacion.barrio.nombre.toUpperCase();
+            // }
         } else {
             // ubicacion inicial mapa de google cuando el paciente no tiene georeferencia cargada
             this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
@@ -446,10 +448,10 @@ export class PacienteCruComponent implements OnInit {
             this.apiGoogleService.getGeoreferencia({ direccion: direccionCompleta }).subscribe(point => {
                 if (point) {
                     this.geoReferenciaAux = [point.lat, point.lng];
-                    this.infoMarcador = this.pacienteModel.direccion[0].valor.toUpperCase();
-                    if (this.pacienteModel.direccion[0].ubicacion.barrio) {
-                        this.infoMarcador += ', \n' + this.pacienteModel.direccion[0].ubicacion.barrio.nombre.toUpperCase();
-                    }
+                    // this.infoMarcador = this.pacienteModel.direccion[0].valor.toUpperCase();
+                    // if (this.pacienteModel.direccion[0].ubicacion.barrio) {
+                    //     this.infoMarcador += ', \n' + this.pacienteModel.direccion[0].ubicacion.barrio.nombre.toUpperCase();
+                    // }
                 } else {
                     this.plex.toast('warning', 'Dirección no encontrada. Señale manualmente en el mapa.');
                 }
@@ -582,7 +584,8 @@ export class PacienteCruComponent implements OnInit {
         }
 
         this.pacienteService.save(pacienteGuardar).subscribe(
-            resultadoSave => {
+            (resultadoSave: any) => {
+                debugger;
                 // Existen sugerencias de pacientes similares?
                 if (resultadoSave.resultadoMatching && resultadoSave.resultadoMatching.length > 0) {
                     this.pacientesSimilares = this.escaneado ? resultadoSave.resultadoMatching.filter(elem => elem.paciente.estado === 'validado') : resultadoSave.resultadoMatching;
@@ -605,7 +608,7 @@ export class PacienteCruComponent implements OnInit {
                 this.plex.info('warning', 'Error guardando el paciente');
             }
         );
-        this.pacienteCache.setPaciente(null);
+        this.pacienteCache.clearPaciente();
     }
 
     // Borra/agrega relaciones al paciente segun corresponda.
@@ -685,7 +688,8 @@ export class PacienteCruComponent implements OnInit {
 
     cancel() {
         this.showMobile = false;
-        this.pacienteCache.setPaciente(null);
+        this.pacienteCache.clearPaciente();
+        this.pacienteCache.clearScanState();
         this.location.back();
     }
 

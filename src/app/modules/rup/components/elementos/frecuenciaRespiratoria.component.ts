@@ -8,11 +8,12 @@ import {
     EventEmitter,
     OnInit
 } from '@angular/core';
+import { RupElement } from '.';
 @Component({
     selector: 'rup-frecuencia-respiratoria',
     templateUrl: 'frecuenciaRespiratoria.html'
 })
-
+@RupElement('FrecuenciaRespiratoriaComponent')
 export class FrecuenciaRespiratoriaComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         // Observa cuando cambia la propiedad 'frecuencia respiratoria' en otro elemento RUP

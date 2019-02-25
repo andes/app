@@ -185,6 +185,16 @@ export class TurnosComponent implements OnInit {
         return this.turnosSeleccionados.length > 0;
     }
 
+    /**
+     * Devuelve true si uno de los turnos seleccionados tiene un diagnóstico.
+     * Devuelve falso solo cuando ninguno de los turnos tiene diagnóstico.
+     * @returns {Boolean}
+     * @memberof TurnosComponent
+     */
+    tienenDiagnostico(): Boolean {
+        return this.turnosSeleccionados.some(x => { return x.diagnostico.codificaciones.length > 0; });
+    }
+
     ningunoConEstado(estado) {
         for (let x = 0; x < this.turnosSeleccionados.length; x++) {
             if (this.turnosSeleccionados[x].estado === estado) {
@@ -248,20 +258,20 @@ export class TurnosComponent implements OnInit {
         let puedeMarcarTurnDoble = this.auth.getPermissions('turnos:turnos:turnoDoble:').length > 0;
         this.botones = {
             // Dar asistencia: el turno está con paciente asignado, sin asistencia ==> pasa a estar con paciente asignado, con asistencia
-            darAsistencia: puedeRegistrarAsistencia && this.agendaNoCerrada() && this.tienenPacientes() && this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.ningunoConEstado('suspendido')) && this.agendaHoy(),
+            darAsistencia: puedeRegistrarAsistencia && this.agendaNoCerrada() && this.tienenPacientes() && this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.ningunoConEstado('suspendido')) && this.agendaHoy() && !this.tienenDiagnostico(),
             // Sacar asistencia: el turno está con paciente asignado, con asistencia ==> pasa a estar "sin asistencia" (mantiene el paciente)
-            sacarAsistencia: puedeRegistrarAsistencia && this.agendaNoCerrada() && this.tienenAsistencia() && this.tienenPacientes(),
+            sacarAsistencia: puedeRegistrarAsistencia && this.agendaNoCerrada() && this.tienenAsistencia() && this.tienenPacientes() && !this.tienenDiagnostico(),
             // Suspender turno: El turno no tiene asistencia ==> el estado pasa a "suspendido"
-            suspenderTurno: puedeSuspenderTurno && this.agendaNoCerrada() && this.agendaNoSuspendida() && this.noTienenAsistencia() && this.ningunoConEstado('suspendido') && this.ningunoConEstado('turnoDoble'),
+            suspenderTurno: puedeSuspenderTurno && this.agendaNoCerrada() && this.agendaNoSuspendida() && this.noTienenAsistencia() && this.ningunoConEstado('suspendido') && this.ningunoConEstado('turnoDoble') && !this.tienenDiagnostico(),
             // Liberar turno: está "asignado" ==> el estado pasa a "disponible" y se elimina el paciente
-            liberarTurno: puedeLiberarTurno && this.agendaNoCerrada() && (this.turnosSeleccionados.length === 1 && !this.turnosSeleccionados[0].sobreturno && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia() && this.todosConEstado('asignado')),
+            liberarTurno: puedeLiberarTurno && this.agendaNoCerrada() && (this.turnosSeleccionados.length === 1 && !this.turnosSeleccionados[0].sobreturno && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia() && this.todosConEstado('asignado')) && !this.tienenDiagnostico(),
             // Pasar paciente a la lista de espera: está "asignado" pero sin asistencia ==> Pasa a la "bolsa de gatos"
             listaDeEspera: this.agendaNoCerrada() && this.agendaNoSuspendida() && this.todosConEstado('asignado') && this.noTienenAsistencia(),
             // Se verifica si el siguiente turno se encuentra disponible
             turnoDoble: puedeMarcarTurnDoble && this.turnosSeleccionados.length === 1 && this.agendaNoCerrada() && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia()
                 && this.todosConEstado('asignado') && this.siguienteDisponible(),
             // Se puede quitar turno doble sólo si está en ese estado
-            quitarTurnoDoble: puedeMarcarTurnDoble && this.turnosSeleccionados.length === 1 && this.agendaNoCerrada() && this.agendaNoSuspendida() && this.todosConEstado('turnoDoble') && !this.isDobleSuspendido(),
+            quitarTurnoDoble: puedeMarcarTurnDoble && this.turnosSeleccionados.length === 1 && this.agendaNoCerrada() && this.agendaNoSuspendida() && this.todosConEstado('turnoDoble') && !this.isDobleSuspendido() && !this.tienenDiagnostico(),
             // Enviar SMS
             // sms: this.agendaNoSuspendida() && this.todosConEstado('asignado') && this.todosConEstado('suspendido') && this.noTienenAsistencia() && (!this.hayTurnosTarde()),
             nota: this.agendaNoCerrada() && this.turnosSeleccionados.length > 0,

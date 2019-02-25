@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ParentescoService } from '../../../services/parentesco.service';
-import { PacienteService } from '../services/paciente.service';
 import { IPaciente } from '../interfaces/IPaciente';
 
 @Component({

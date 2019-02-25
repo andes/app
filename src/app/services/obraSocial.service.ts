@@ -23,4 +23,9 @@ export class ObraSocialService {
     getPadrones(opciones: any): Observable<any[]> {
         return this.server.get(this.url + '/puco/padrones', { params: opciones });
     }
+
+    getListado(opciones: any): Observable<any[]> {
+        return this.server.get(this.url + '/', { params: opciones });
+    }
+
 }

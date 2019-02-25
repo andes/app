@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IPaciente } from '../interfaces/IPaciente';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 import { Plex } from '@andes/plex';
 import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRelacion.inteface';

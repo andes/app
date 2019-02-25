@@ -1,5 +1,5 @@
-import { Component, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
+import { Component, Output, EventEmitter, OnInit, OnDestroy, Input } from '@angular/core';
 import * as moment from 'moment';
 import { DocumentoEscaneado, DocumentoEscaneados } from './../../../components/paciente/documento-escaneado.const';
 import { LogService } from './../../../services/log.service';
@@ -30,6 +30,9 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
     @Output() searchStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() searchEnd: EventEmitter<PacienteBuscarResultado> = new EventEmitter<PacienteBuscarResultado>();
     @Output() searchClear: EventEmitter<any> = new EventEmitter<any>();
+
+    // Flag indica filtrar inactivos
+    @Input() filtrarInactivos = true;
 
     constructor(private plex: Plex, private pacienteService: PacienteService, private logService: LogService) {
     }
@@ -161,6 +164,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                                 fechaNacimiento: pacienteEscaneado.fechaNacimiento,
                                 escaneado: true
                             }).subscribe(resultadoSuggest => {
+
                                 // 1.3.1. Si no encontró ninguno, finaliza la búsqueda
                                 if (!resultadoSuggest.length) {
                                     return this.searchEnd.emit({ pacientes: [], err: null });
@@ -200,7 +204,9 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                         type: 'multimatch',
                         cadenaInput: textoLibre
                     }).subscribe(
-                        resultado => this.searchEnd.emit({ pacientes: resultado, err: null }),
+                        resultado => {
+                            this.searchEnd.emit({ pacientes: resultado, err: null });
+                        },
                         (err) => this.searchEnd.emit({ pacientes: [], err: err })
                     );
                 }

@@ -1,7 +1,5 @@
-import { Plex } from '@andes/plex';
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, Input, EventEmitter } from '@angular/core';
 import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
-import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'header-paciente',
