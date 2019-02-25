@@ -13,23 +13,27 @@
                     <plex-tabs (close)="onCloseTab($event)">
                         <ng-container *ngIf="registrosHuds">
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">
-                                <plex-tab [allowClose]="true" [label]="registro.data.concepto.term" [class]="registro.data.class"
-                                    [color]="registro.data.class" *ngIf="registro.tipo === 'hallazgo' || registro.tipo === 'medicamento'">
+                                <plex-tab [allowClose]="true" [label]="registro.data.concepto.term"
+                                    [class]="registro.data.class" [color]="registro.data.class"
+                                    *ngIf="registro.tipo === 'hallazgo' || registro.tipo === 'medicamento'">
                                     <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)"
                                         [params]="elementosRUPService.selectPorRefsetId(registro.data.concepto)"
                                         [prestacion]="prestacion" [paciente]="paciente" [registro]="registro.data"
                                         [soloValores]="true">
                                     </rup>
-                                    <ng-container *ngIf="registro.data.concepto.semanticTag !== 'trastorno' && registro.data.concepto.semanticTag !== 'hallazgo'">
+                                    <ng-container
+                                        *ngIf="registro.data.concepto.semanticTag !== 'trastorno' && registro.data.concepto.semanticTag !== 'hallazgo'">
                                         <div class="row">
                                             <div class="col">
-                                                <span [innerHTML]="servicioPrestacion.mostrarInformeRelacionado(paciente,registro.data, registro.data.concepto)"></span>
+                                                <span
+                                                    [innerHTML]="servicioPrestacion.mostrarInformeRelacionado(paciente,registro.data, registro.data.concepto)"></span>
                                             </div>
                                         </div>
                                         <hr>
                                         <div class="row">
                                             <div class="col">
-                                                <ng-container *ngFor="let relacion of registro.data.relacionadoCon; let r=index">
+                                                <ng-container
+                                                    *ngFor="let relacion of registro.data.relacionadoCon; let r=index">
                                                     Relacionado con:
                                                     <small class="badge badge-info">
                                                         {{ relacion?.cara ? 'diente ' + relacion?.concepto?.term + '
@@ -42,33 +46,41 @@
                                 </plex-tab>
 
                                 <plex-tab [allowClose]="true" [label]="registro.data.solicitud.tipoPrestacion.term"
-                                    [class]="registro.data.class" color="solicitud" *ngIf="registro.tipo === 'prestacion'">
+                                    [class]="registro.data.class" color="solicitud"
+                                    *ngIf="registro.tipo === 'prestacion'">
                                     <h4 class="text-capitalize">{{ registro.data.solicitud.tipoPrestacion.term }}</h4>
                                     <div class="row">
-                                        <div class="col-12">
-                                            <b>Fecha: </b> {{ registro.data.solicitud.fecha | date: 'EEE
-                                            dd/MM/yyyyHH:MM' }}
+                                        <div class="col-6">
+                                            <b> Fecha: </b>
+                                            {{ registro.data.ejecucion.fecha | date: 'EEE dd/MM/yyyy HH:MM' }}
+                                        </div>
+                                        <div class="col-6"
+                                            *ngIf="(registro.data.ejecucion.fecha - registro.data.solicitud.fecha) > 1000 ">
+                                            <b> Solicitada el: </b>
+                                            {{ registro.data.solicitud.fecha | date: 'EEE dd/MM/yyyy HH:MM' }}
                                         </div>
                                         <div class="col-12">
-                                            <b>Solicitada por el profesional: </b>{{
-                                            registro.data.solicitud.profesional | profesional
-                                            }}
+                                            <b> Solicitada por el profesional: </b>
+                                            {{ registro.data.solicitud.profesional | profesional }}
                                         </div>
                                         <div class="col-12">
-                                            <b>Desde la Organización: </b> {{
-                                            registro.data.solicitud.organizacion.nombre }}
+                                            <b> Desde la Organización: </b>
+                                            {{ registro.data.solicitud.organizacion.nombre }}
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
                                             <hr>
                                             <h4>Registros de la consulta:</h4>
-                                            <ng-container *ngFor="let elemento of registro.data.ejecucion.registros; let i = index">
+                                            <ng-container
+                                                *ngFor="let elemento of registro.data.ejecucion.registros; let i = index">
 
-                                                <div class="rup-card {{ elemento.esSolicitud ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">
+                                                <div
+                                                    class="rup-card {{ elemento.esSolicitud ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">
                                                     <div class="rup-header">
                                                         <div class="icon-rup">
-                                                            <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(elemento.concepto)}}"></i>
+                                                            <i
+                                                                class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(elemento.concepto)}}"></i>
                                                         </div>
                                                         <div class="title">
                                                             <ng-container *ngIf="elemento?.nombre">
@@ -77,13 +89,15 @@
                                                             </ng-container>
                                                         </div>
                                                         <div class="actions">
-                                                            <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0"
+                                                            <small
+                                                                *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0"
                                                                 class="badge badge-info">
                                                                 <b>Relacionado con:</b> {{
                                                                 elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
                                                                 + elemento.relacionadoCon[0].concepto.term.slice(1)}}
                                                             </small>
-                                                            <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">
+                                                            <small class="badge badge-info"
+                                                                *ngIf="elemento.esDiagnosticoPrincipal">
                                                                 Procedimiento / diagnóstico principal
                                                             </small>
                                                         </div>
@@ -101,8 +115,9 @@
                                                                 <div class="col-12">
                                                                     <rup [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)"
                                                                         [params]="elementosRUPService.selectPorRefsetId(elemento.concepto)"
-                                                                        [prestacion]="registro.data" [registro]="elemento"
-                                                                        [paciente]="paciente" [soloValores]="true"></rup>
+                                                                        [prestacion]="registro.data"
+                                                                        [registro]="elemento" [paciente]="paciente"
+                                                                        [soloValores]="true"></rup>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -114,13 +129,13 @@
 
                                 </plex-tab>
 
-                                <plex-tab [allowClose]="true" [label]="registro.data.prestacion.snomed.term" [class]="registro.data.class"
-                                    *ngIf="registro.tipo === 'laboratorio'">
+                                <plex-tab [allowClose]="true" [label]="registro.data.prestacion.snomed.term"
+                                    [class]="registro.data.class" *ngIf="registro.tipo === 'laboratorio'">
                                     <lab [laboratorio]="registro"></lab>
                                 </plex-tab>
 
-                                <plex-tab [allowClose]="true" [label]="registro.data.prestacion.snomed.term" [class]="registro.data.class"
-                                    *ngIf="registro.tipo === 'cda'">
+                                <plex-tab [allowClose]="true" [label]="registro.data.prestacion.snomed.term"
+                                    [class]="registro.data.class" *ngIf="registro.tipo === 'cda'">
                                     <vista-cda [registro]="registro"></vista-cda>
                                 </plex-tab>
                             </ng-container>
@@ -132,8 +147,8 @@
             <div class="col-4" *ngIf="paciente">
                 <plex-box>
                     <!-- HUDS [hudsBusqueda.component.ts] -->
-                    <rup-hudsBusqueda [registrosHuds]="registrosHuds" (evtHuds)="agregarListadoHuds($event)" [paciente]="paciente"
-                        [prestacionActual]="" [emitirConceptos]="false"></rup-hudsBusqueda>
+                    <rup-hudsBusqueda [registrosHuds]="registrosHuds" (evtHuds)="agregarListadoHuds($event)"
+                        [paciente]="paciente" [prestacionActual]="" [emitirConceptos]="false"></rup-hudsBusqueda>
                 </plex-box>
             </div>
 

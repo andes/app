@@ -1,56 +1,22 @@
-import {
-    AppMobileService
-} from './../../services/appMobile.service';
-import {
-    ParentescoService
-} from './../../services/parentesco.service';
-import {
-    IContacto
-} from './../../interfaces/IContacto';
-import {
-    FinanciadorService
-} from './../../services/financiador.service';
-import {
-    IDireccion
-} from '../../core/mpi/interfaces/IDireccion';
-import {
-    LogService
-} from './../../services/log.service';
-import {
-    BarrioService
-} from './../../services/barrio.service';
-import {
-    LocalidadService
-} from './../../services/localidad.service';
-import {
-    ProvinciaService
-} from './../../services/provincia.service';
-import {
-    PaisService
-} from './../../services/pais.service';
-import {
-    AnsesService,
-} from './../../services/fuentesAutenticas/servicioAnses.service';
-import {
-    PacienteService
-} from '../../core/mpi/services/paciente.service';
+import { AppMobileService } from './../../services/appMobile.service';
+import { ParentescoService } from './../../services/parentesco.service';
+import { IContacto } from './../../interfaces/IContacto';
+import { FinanciadorService } from './../../services/financiador.service';
+import { IDireccion } from '../../core/mpi/interfaces/IDireccion';
+import { LogService } from './../../services/log.service';
+import { BarrioService } from './../../services/barrio.service';
+import { LocalidadService } from './../../services/localidad.service';
+import { ProvinciaService } from './../../services/provincia.service';
+import { PaisService } from './../../services/pais.service';
+import { AnsesService, } from './../../services/fuentesAutenticas/servicioAnses.service';
+import { PacienteService } from '../../core/mpi/services/paciente.service';
 import * as enumerados from './../../utils/enumerados';
-import {
-    IPaciente
-} from '../../core/mpi/interfaces/IPaciente';
-import {
-    IProvincia
-} from './../../interfaces/IProvincia';
-import {
-    Plex
-} from '@andes/plex';
+import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
+import { IProvincia } from './../../interfaces/IProvincia';
+import { Plex } from '@andes/plex';
 import * as moment from 'moment';
-import {
-    FormBuilder
-} from '@angular/forms';
-import {
-    DomSanitizer
-} from '@angular/platform-browser';
+import { FormBuilder } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 import {
     Component,
     OnInit,

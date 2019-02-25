@@ -54,7 +54,6 @@ export class AppComponent {
 
         if (this.auth.getPermissions('mpi:?').length > 0) {
             accessList.push({ label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: '/apps/mpi/busqueda' });
-            accessList.push({ label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: 'apps/mpi' });
         }
         if (this.auth.getPermissions('auditoriaPacientes:?').length > 0) {
             accessList.push({ label: 'Auditoría MPI', icon: 'account-search', route: 'apps/mpi/auditoria' });

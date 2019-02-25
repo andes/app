@@ -1,4 +1,4 @@
-import { OnInit, Input, Component, EventEmitter, Output } from '@angular/core';
+import { OnInit, Component, EventEmitter, Output } from '@angular/core';
 import { PacienteService } from '../../core/mpi/services/paciente.service';
 import { Plex } from '@andes/plex';
 import { PacienteBuscarResultado } from '../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';

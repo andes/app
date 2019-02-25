@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, HostBinding } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { ISnomedConcept } from '../../../interfaces/snomed-concept.interface';

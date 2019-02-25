@@ -79,7 +79,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         name: 0.10,
         gender: 0.3,
         birthDate: 0.05
-      };
+    };
     validado = false;
     noPoseeContacto = false;
     constructor(private formBuilder: FormBuilder,
@@ -179,7 +179,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                             datos.forEach(profCandidato => {
                                 this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
                                 const prof = {
-                                    sexo: profCandidato.sexo.toString().toLowerCase(),
+                                    sexo: (profCandidato.sexo) ? profCandidato.sexo.toString().toLowerCase() : profCandidato.sexo,
                                     nombre: profCandidato.nombre,
                                     apellido: profCandidato.apellido,
                                     fechaNacimiento: profCandidato.fechaNacimiento,

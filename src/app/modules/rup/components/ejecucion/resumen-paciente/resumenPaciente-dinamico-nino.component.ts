@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, HostBinding } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { ResumenPacienteDinamicoService } from '../../../services/resumenPaciente-dinamico.service';

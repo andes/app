@@ -2,8 +2,8 @@
     <plex-box>
         <div class="text-center">
             <div class="logo"></div>
-            <div *ngIf="!denied" class="row">
-                <div *ngIf="mpi" class="col-4">
+            <div *ngIf="!denied" class="andes-inicio row">
+                <div *ngIf="mpi" class="col-xs-12 col-sm-6 col-md-4">
                     <div class="boton color-celeste" routerLink="/apps/mpi/busqueda">
                         <i class="icono mdi mdi-account-multiple-outline"></i>
                         <div class="titulo">MPI</div>
@@ -74,18 +74,17 @@
                     </div>
                 </div>
             </div>
-            <<<<<<< HEAD=======>>>>>>> master
 
-                <div *ngIf="denied" class="row">
-                    <div class="col">
-                        <div class="boton color-amarillo">
-                            <i class="icono mdi mdi-alert"></i>
-                            <div class="titulo">ATENCIÓN</div>
-                            <div class="subtitulo">PERMISOS DE APLICACIONES</div>
-                            <div class="detalle">Ud. no posee permisos para ningún módulo de ANDES</div>
-                        </div>
+            <div *ngIf="denied" class="row">
+                <div class="col">
+                    <div class="boton color-amarillo">
+                        <i class="icono mdi mdi-alert"></i>
+                        <div class="titulo">ATENCIÓN</div>
+                        <div class="subtitulo">PERMISOS DE APLICACIONES</div>
+                        <div class="detalle">Ud. no posee permisos para ningún módulo de ANDES</div>
                     </div>
                 </div>
+            </div>
 
         </div>
     </plex-box>

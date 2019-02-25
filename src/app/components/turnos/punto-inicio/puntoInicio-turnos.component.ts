@@ -46,6 +46,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     resultadoCreate;
     turnoArancelamiento: any;
     showArancelamiento = false;
+    showTab = 0;
     private esOperacion = false;
 
     loading = false;
@@ -259,6 +260,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     afterDarTurno(pac) {
         this.showDarTurnos = false;
         this.showDashboard = true;
+        this.showTab = 1;
         if (this.paciente && this.paciente.id) {
             this.onPacienteSelected(this.paciente);
             if (pac && pac.carpetaEfectores && pac.carpetaEfectores.length > 0) {

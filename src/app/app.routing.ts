@@ -47,6 +47,7 @@ import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cru.component';
 import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
 import { PacienteCruComponent } from './core/mpi/components/paciente-cru.component';
+import { BebeCruComponent } from './core/mpi/components/bebe-cru.component';
 
 // ... Obras sociales
 import { PucoComponent } from './components/puco/puco.component';
@@ -74,15 +75,18 @@ import { CantidadConsultaXPrestacionComponent } from './components/reportes/cant
 import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
 
 // Internacion
-import { MapaDeCamasComponent } from './modules/rup/components/internacion/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
-import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
+import { MapaDeCamasComponent } from './apps/rup/internacion/components/mapa-de-camas.component';
+import { ListadoInternacionComponent } from './apps/rup/internacion/components/listado-internacion.component';
+
+// Solicitudes
+import { CensoDiarioComponent } from './apps/rup/internacion/components/censoDiario.component';
+import { CensoMensualComponent } from './apps/rup/internacion/components/censoMensual.component';
+import { CamaCreateUpdateComponent } from './apps/rup/internacion/components/cama-create-update.component';
+import { IniciarInternacionComponent } from './apps/rup/internacion/components/iniciarInternacion.component';
 import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
 // Solicitudes
 import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.component';
-import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
-import { CensoDiarioComponent } from './modules/rup/components/internacion/censo/censoDiario.component';
-import { CensoMensualComponent } from './modules/rup/components/internacion/censo/censoMensual.component';
-import { CamaCreateUpdateComponent } from './modules/rup/components/internacion/mapa-de-camas/cama/cama-create-update.component';
+import { OcuparCamaComponent } from './apps/rup/internacion/components/cama-ocupar.component';
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 import { ReglasComponent } from './components/top/reglas/reglas.component';
@@ -91,7 +95,6 @@ import { VisualizacionReglasComponent } from './components/top/reglas/visualizac
 // Home de Estadisticas
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
 import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
-import { BebeCruComponent } from './core/mpi/components/bebe-cru.component';
 import { VincularPacientesComponent } from './components/auditoria/vincular-pacientes.component';
 
 
@@ -150,6 +153,7 @@ const appRoutes: Routes = [
   { path: 'rup/buscaHuds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/internacion/censo', component: CensoDiarioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/internacion/censo/mensual', component: CensoMensualComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'rup/internacion/listado', component: ListadoInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // configuracion prestacion
   { path: 'configuracionPrestacion', component: ConfiguracionPrestacionVisualizarComponent, canActivate: [RoutingNavBar, RoutingGuard] },
@@ -180,8 +184,6 @@ const appRoutes: Routes = [
   { path: 'top/reglas', component: ReglasComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'top/reglasVisualizacion', component: VisualizacionReglasComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
-  /* ELIMINAR ==> */ { path: 'dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },
-
   // TODO: Verificar si estas rutas todavía son válidas, y ubicarlas en los módulos correspondientes
   /* VERIFICAR ==> */ { path: 'tipoprestaciones', component: TipoPrestacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
@@ -191,6 +193,7 @@ const appRoutes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [RoutingNavBar] },
 
   { path: 'estadisticas', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'dashboard', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingNavBar, RoutingGuard] },
   // Campañas Salud
   { path: 'campaniasSalud', component: CampaniaSaludComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 

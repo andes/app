@@ -1,3 +1,5 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { Plex } from '@andes/plex';
 import { Component, AfterViewInit, HostBinding, Input } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { AppComponent } from './../../../../app.component';
