@@ -5,7 +5,7 @@ import { RupElement } from '.';
     selector: 'rup-odontologiaDefault',
     templateUrl: 'odontologiaDefault.html'
 })
-@RupElement()
+@RupElement('OdontologiaDefaultComponent')
 export class OdontologiaDefaultComponent extends RUPComponent implements OnInit {
     public piezasDentales;
     public carasDentales;

@@ -194,7 +194,7 @@ export class DarTurnosComponent implements OnInit {
                 this.verificarTelefono(pacienteMPI);
                 this.obtenerCarpetaPaciente();
                 if (this.paciente.documento) {
-                    if (this.paciente.financiador[0]) {
+                    if (this.paciente.financiador && this.paciente.financiador[0]) {
                         this.obraSocialPaciente = this.paciente.financiador[0] as any;
                         this.numeroAfiliado = (this.paciente.financiador[0] as any).numeroAfiliado;
                     } else {
@@ -822,7 +822,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     private guardarTurno(agd: IAgenda) {
-        if (this.numeroAfiliado) {
+        if (this.numeroAfiliado && this.obraSocialPaciente) {
             this.obraSocialPaciente.numeroAfiliado = this.numeroAfiliado;
         }
         let pacienteSave = {

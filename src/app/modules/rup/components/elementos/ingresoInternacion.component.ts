@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-ingresoInternacion',
     templateUrl: 'ingresoInternacion.html'
 })
-@RupElement()
+@RupElement('IngresoInternacionComponent')
 export class IngresoInternacionComponent extends RUPComponent implements OnInit {
     public ocupaciones = [];
     public obrasSociales = [];

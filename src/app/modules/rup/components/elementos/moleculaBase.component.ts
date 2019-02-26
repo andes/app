@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-molecula-base',
     templateUrl: '../core/rup.html'
 })
-@RupElement()
+@RupElement('MoleculaBaseComponent')
 export class MoleculaBaseComponent extends RUPComponent implements OnInit {
 
     ngOnInit() {

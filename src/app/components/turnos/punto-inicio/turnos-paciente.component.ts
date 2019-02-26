@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
+import { FacturacionAutomaticaService } from './../../../services/facturacionAutomatica.service';
 import * as moment from 'moment';
 
 // Interfaces
@@ -56,7 +57,8 @@ export class TurnosPacienteComponent implements OnInit {
     @Output() showArancelamientoForm = new EventEmitter<any>();
 
     // Inicialización
-    constructor(public serviceTurno: TurnoService, public serviceAgenda: AgendaService, public plex: Plex, public auth: Auth) { }
+    constructor(public servicioFA: FacturacionAutomaticaService,
+        public serviceTurno: TurnoService, public serviceAgenda: AgendaService, public plex: Plex, public auth: Auth) { }
 
     ngOnInit() {
         this.puedeRegistrarAsistencia = this.auth.getPermissions('turnos:turnos:registrarAsistencia').length > 0;
@@ -76,6 +78,8 @@ export class TurnosPacienteComponent implements OnInit {
     showArancelamiento(turno) {
         this.turnoArancelamiento = turno;
         this.showMotivoConsulta = true;
+        // this.servicioFA.post(turno).subscribe(prestacion => {
+        // });
     }
 
     printArancelamiento(turno) {

@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-obesidad',
     templateUrl: '../core/rup.html'
 })
-@RupElement()
+@RupElement('ObesidadComponent')
 export class ObesidadComponent extends RUPComponent implements OnInit {
     ngOnInit() {
 

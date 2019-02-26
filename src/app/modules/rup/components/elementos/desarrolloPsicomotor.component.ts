@@ -7,7 +7,7 @@ import { RupElement } from '.';
     selector: 'rup-desarrollo-psicomotor',
     templateUrl: 'desarrolloPsicomotor.html'
 })
-@RupElement()
+@RupElement('DesarrolloPsicomotorComponent')
 export class DesarrolloPsicomotorComponent extends RUPComponent implements OnInit {
     conceptos: any[];
     seleccionados: any[];

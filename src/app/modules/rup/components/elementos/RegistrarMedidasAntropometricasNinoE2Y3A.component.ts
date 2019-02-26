@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-registrar-medidas-antropometricas-e2y3a',
     templateUrl: '../core/rup.html'
 })
-@RupElement()
+@RupElement('RegistrarMedidasAntropometricasNinoE2Y3AComponent')
 export class RegistrarMedidasAntropometricasNinoE2Y3AComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         this.registro.valor = {

@@ -7,7 +7,7 @@ import { RupElement } from '.';
     selector: 'rup-percentiloPerimetroCefalico',
     templateUrl: 'percentiloPerimetroCefalico.html'
 })
-@RupElement()
+@RupElement('PercentiloPerimetroCefalicoComponent')
 export class PercentiloPerimetroCefalicoComponent extends RUPComponent implements OnInit {
 
     ngOnInit() {

@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-resumenHistoriaClinica',
     templateUrl: 'resumenHistoriaClinica.html'
 })
-@RupElement()
+@RupElement('ResumenHistoriaClinicaComponent')
 export class ResumenHistoriaClinicaComponent extends RUPComponent implements OnInit {
     public referentSet = [];
     ngOnInit() {
