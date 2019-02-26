@@ -304,12 +304,9 @@ export class ExtranjeroNNCruComponent implements OnInit {
             // se calcula nueva georeferencia
             this.georeferenciaService.getGeoreferencia({ direccion: direccionCompleta }).subscribe(point => {
                 if (point) {
-                    this.geoReferenciaAux = [point.lat, point.lng];
+                    this.geoReferenciaAux = [point.lat, point.lng]; // se actualiza vista de mapa
+                    this.pacienteModel.direccion[0].geoReferencia = [point.lat, point.lng]; // Se asigna nueva georeferencia al paciente
                     this.infoMarcador = '';
-                    // this.infoMarcador = this.pacienteModel.direccion[0].valor.toUpperCase();
-                    // if (this.pacienteModel.direccion[0].ubicacion.barrio) {
-                    //     this.infoMarcador += ', \n' + this.pacienteModel.direccion[0].ubicacion.barrio.nombre.toUpperCase();
-                    // }
                 } else {
                     this.plex.toast('warning', 'Dirección no encontrada. Señale manualmente en el mapa.');
                 }
@@ -521,6 +518,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
     }
 
     changeCoordenadas(coordenadas) {
-        this.pacienteModel.direccion[0].geoReferencia = coordenadas;
+        this.geoReferenciaAux = coordenadas;    // Se actualiza vista del mapa
+        this.pacienteModel.direccion[0].geoReferencia = coordenadas;    // Se asigna nueva georeferencia al paciente
     }
 }

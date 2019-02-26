@@ -132,7 +132,7 @@ export class PacienteCruComponent implements OnInit {
     public activarApp = false;
 
     // Google map
-    geoReferenciaAux = []; // Se utiliza para chequear cambios.
+    geoReferenciaAux = []; // Coordenadas para la vista del mapa.
     infoMarcador: String = '';
 
     constructor(
@@ -425,10 +425,7 @@ export class PacienteCruComponent implements OnInit {
         // ubicacion inicial mapa de google
         if (this.pacienteModel.direccion[0].geoReferencia) {
             this.geoReferenciaAux = this.pacienteModel.direccion[0].geoReferencia;
-            // this.infoMarcador = this.pacienteModel.direccion[0].valor;
-            // if (this.pacienteModel.direccion[0].ubicacion.barrio) {
-            //     this.infoMarcador += ', ' + this.pacienteModel.direccion[0].ubicacion.barrio.nombre.toUpperCase();
-            // }
+            this.infoMarcador = '';
         } else {
             // ubicacion inicial mapa de google cuando el paciente no tiene georeferencia cargada
             this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
@@ -448,12 +445,9 @@ export class PacienteCruComponent implements OnInit {
             // se calcula nueva georeferencia
             this.georeferenciaService.getGeoreferencia({ direccion: direccionCompleta }).subscribe(point => {
                 if (point) {
-                    this.geoReferenciaAux = [point.lat, point.lng];
+                    this.geoReferenciaAux = [point.lat, point.lng]; // se actualiza vista de mapa
+                    this.pacienteModel.direccion[0].geoReferencia = [point.lat, point.lng]; // Se asigna nueva georeferencia al paciente
                     this.infoMarcador = '';
-                    // this.infoMarcador = this.pacienteModel.direccion[0].valor.toUpperCase();
-                    // if (this.pacienteModel.direccion[0].ubicacion.barrio) {
-                    //     this.infoMarcador += ', \n' + this.pacienteModel.direccion[0].ubicacion.barrio.nombre.toUpperCase();
-                    // }
                 } else {
                     this.plex.toast('warning', 'Dirección no encontrada. Señale manualmente en el mapa.');
                 }
@@ -580,9 +574,6 @@ export class PacienteCruComponent implements OnInit {
         }
         if (this.viveLocActual) {
             pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadActual;
-        }
-        if (this.geoReferenciaAux.length) {
-            pacienteGuardar.direccion[0].geoReferencia = this.geoReferenciaAux;
         }
 
         this.pacienteService.save(pacienteGuardar).subscribe(
@@ -712,7 +703,8 @@ export class PacienteCruComponent implements OnInit {
     }
 
     changeCoordenadas(coordenadas) {
-        this.geoReferenciaAux = coordenadas;
+        this.geoReferenciaAux = coordenadas;    // Se actualiza vista del mapa
+        this.pacienteModel.direccion[0].geoReferencia = coordenadas;    // Se asigna nueva georeferencia al paciente
     }
 
 
