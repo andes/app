@@ -119,6 +119,7 @@ export class HudsBusquedaComponent implements OnInit {
         producto: ['producto', 'objeto físico', 'medicamento clínico'],
         elementoderegistro: ['elemento de registro'],
         laboratorios: ['laboratorios'],
+        vacunas: ['vacunas'],
     };
 
     /**
@@ -447,26 +448,6 @@ export class HudsBusquedaComponent implements OnInit {
         this.ordenDesc = !this.ordenDesc;
     }
 
-
-    colapsarRegistros(tipo = null) {
-        if (!tipo) {
-            this.colapsado = !this.colapsado;
-        } else {
-            switch (tipo) {
-                case 'crónicos':
-                    this.colapsadoCronicos = !this.colapsadoCronicos;
-                    break;
-                case 'activos':
-                    this.colapsadoActivos = !this.colapsadoActivos;
-                    break;
-                case 'otros':
-                    this.colapsadoOtros = !this.colapsadoOtros;
-                    break;
-            }
-        }
-    }
-
-
     listarPrestaciones() {
         this.servicioPrestacion.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
             this.prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada').map(p => {
@@ -521,21 +502,6 @@ export class HudsBusquedaComponent implements OnInit {
             } return element;
         });
     }
-
-    // Trae los problemas crónicos (por SNOMED refsetId)
-    // listarProblemasCronicos() {
-    //     this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
-    //         // Buscamos si es crónico
-    //         this.hallazgosCronicos = this.hallazgosCronicosAux = hallazgos.filter((hallazgo) => {
-    //             if (hallazgo.concepto && hallazgo.concepto.refsetIds) {
-    //                 return hallazgo.concepto.refsetIds.find(cronico => {
-    //                     return cronico === this.servicioPrestacion.refsetsIds.cronico;
-    //                 });
-    //             }
-    //         });
-
-    //     });
-    // }
 
     // Trae los problemas activos NO crónicos
     listarProblemasActivos() {
@@ -599,32 +565,30 @@ export class HudsBusquedaComponent implements OnInit {
         });
     }
 
-    getCantidadResultados(a: any) {
-        // TODO: Implementar :joy:
+    getCantidadResultados(type: any) {
+        switch (type) {
+            case 'todos':
+                return this.todos.length;
+            case 'hallazgo':
+                return this.hallazgos.length;
+            case 'trastorno':
+                return this.trastornos.length;
+            case 'procedimiento':
+                return this.procedimientos.length;
+            case 'planes':
+                return this.prestaciones.length;
+            case 'producto':
+                return this.productos.length;
+            case 'laboratorios':
+                return this.laboratorios.length;
+            case 'vacunas':
+                return this.vacunas.length;
+        }
     }
 
     filtroBuscador(key: any) {
         this.colapsado = true;
         this.filtroActual = key;
-        // this.problemasActivos = this.problemasActivosAux;
-        // this.hallazgosNoActivos = this.hallazgosNoActivosAux;
-        // this.hallazgosCronicos = this.hallazgosCronicosAux;
-        // if (this.filtroActual === 'hallazgo' || this.filtroActual === 'trastorno') {
-        //     this.problemasActivos = this.problemasActivos.filter(h => {
-        //         return this.conceptos[this.filtroActual].includes(h.concepto.semanticTag);
-        //     });
-        //     this.hallazgosNoActivos = this.hallazgosNoActivos.filter(h => {
-        //         return this.conceptos[this.filtroActual].includes(h.concepto.semanticTag);
-        //     });
-        //     this.hallazgosCronicos = this.hallazgosCronicos.filter(h => {
-        //         return this.conceptos[this.filtroActual].includes(h.concepto.semanticTag);
-        //     });
-        // } else {
-        //     if (this.filtroActual === 'laboratorios') {
-        //         // this.listarLaboratorios();
-        //     }
-
-        // }
     }
 
     getSemanticTagFiltros() {

@@ -64,7 +64,7 @@
                     </li>
                     <li class="">
                         <small *ngIf="getCantidadResultados('vacunas')" class="badge badge-vacuna ml-1 float-right"
-                            [ngClass]="{'active': filtroActual === 'vacunas'}">{{ getCantidadResultados('vacunas')}}</small>
+                            [ngClass]="{'active': filtroActual === 'vacunas'}">{{ getCantidadResultados('vacunas') }}</small>
 
                         <button (click)="filtroBuscador('vacunas')" [ngClass]="{'active': filtroActual === 'vacunas'}"
                             class="btn btn-block p-0 btn-vacuna">
