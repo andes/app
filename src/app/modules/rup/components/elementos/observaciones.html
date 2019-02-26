@@ -6,7 +6,6 @@
         <plex-text [html]="true" [(ngModel)]="registro.valor" id="observaciones" name="observaciones" placeholder="Ingrese una evolución"
             (change)="emitChange()" [required]="params?.required"></plex-text>
     </ng-container>
-
     <p *ngIf="soloValores" class="readonly">
         <label for="observaciones" *ngIf="!params">
             Observación

@@ -1,5 +1,6 @@
 import { ICie10 } from '../../../interfaces/ICie10';
 import { ISnomedConcept } from './snomed-concept.interface';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 interface ICodificacion {
     codificacionProfesional?: {

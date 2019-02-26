@@ -64,4 +64,19 @@ export class DocumentosService {
             .map(this.extractData)
             .catch(this.handleError);
     }
+
+    descargarCenso(data): Observable<any> {
+
+        let headers = new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('jwt') ? 'JWT ' + window.sessionStorage.getItem('jwt') : null
+        });
+
+        let options = new RequestOptions({ headers: headers, responseType: ResponseContentType.Blob, method: RequestMethod.Post });
+        return this.http.post(this.pdfURL + '/censo', data, options)
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
+
+
 }

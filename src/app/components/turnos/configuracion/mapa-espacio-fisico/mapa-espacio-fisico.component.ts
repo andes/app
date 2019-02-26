@@ -49,7 +49,6 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
 
 
     ngOnInit() {
-        console.log(this.auth.getPermissions('espaciosFisicos:?'));
         if (this.agendaSeleccionada) {
             this.refreshScreen();
         } else {
@@ -153,7 +152,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
             let start_time = moment(agenda.horaInicio);
             let end_time = moment(agenda.horaFin);
             if (start_time >= this._start && end_time <= this._end) {
-                if (agenda.espacioFisico) {
+                if (agenda.espacioFisico && (agenda.estado === 'disponible' || agenda.estado === 'publicada')) {
                     let _id = agenda.espacioFisico.id;
                     let temp = matrix.find(item => item.id === _id);
                     if (temp) {

@@ -1,6 +1,8 @@
 
 import { forkJoin as observableForkJoin } from 'rxjs';
-import { Component, OnInit, HostBinding } from '@angular/core';
+import { estados } from './../../../../utils/enumerados';
+
+import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { Auth } from '@andes/auth';

@@ -80,10 +80,10 @@ export class DarTurnosComponent implements OnInit {
     // usamos este output para volver al componente de validacion de rup
     @Output() volverValidacion = new EventEmitter<any>();
 
-    private _pacienteSeleccionado: any;
-    private _solicitudPrestacion: any; // TODO: cambiar por IPrestacion cuando esté
-    private paciente: IPaciente;
-    private opciones: any = {};
+    public _pacienteSeleccionado: any;
+    public _solicitudPrestacion: any; // TODO: cambiar por IPrestacion cuando esté
+    public paciente: IPaciente;
+    public opciones: any = {};
     public agenda: IAgenda;
     public agendas: IAgenda[];
     public estadosAgenda = EstadosAgenda;
@@ -141,7 +141,7 @@ export class DarTurnosComponent implements OnInit {
     private indiceBloque: number;
     private busquedas: any[] = localStorage.getItem('busquedas') ? JSON.parse(localStorage.getItem('busquedas')) : [];
     private eventoProfesional: any = null;
-    private mostrarCalendario = false;
+    public mostrarCalendario = false;
 
     constructor(
         public serviceProfesional: ProfesionalService,
@@ -194,7 +194,7 @@ export class DarTurnosComponent implements OnInit {
                 this.verificarTelefono(pacienteMPI);
                 this.obtenerCarpetaPaciente();
                 if (this.paciente.documento) {
-                    if (this.paciente.financiador[0]) {
+                    if (this.paciente.financiador && this.paciente.financiador[0]) {
                         this.obraSocialPaciente = this.paciente.financiador[0] as any;
                         this.numeroAfiliado = (this.paciente.financiador[0] as any).numeroAfiliado;
                     } else {
@@ -822,7 +822,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     private guardarTurno(agd: IAgenda) {
-        if (this.numeroAfiliado) {
+        if (this.numeroAfiliado && this.obraSocialPaciente) {
             this.obraSocialPaciente.numeroAfiliado = this.numeroAfiliado;
         }
         let pacienteSave = {
