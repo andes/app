@@ -37,9 +37,11 @@ export class ListadoSolicitudesComponent implements OnInit {
    * @memberof ListadoSolicitudesComponent
    */
   buscarSolicitudes(paciente) {
-    this.turnoService.get({ pacienteId: paciente._id, tipoPrestacion: '15220000' }).subscribe(turnos => {
-      this.turnos = turnos;
-    });
+    if (paciente._id) {
+      this.turnoService.get({ pacienteId: paciente._id, tipoPrestacion: '15220000' }).subscribe(turnos => {
+        this.turnos = turnos;
+      });
+    }
   }
 
   /**

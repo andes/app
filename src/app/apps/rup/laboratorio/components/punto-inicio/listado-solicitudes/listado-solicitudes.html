@@ -1,6 +1,6 @@
-<table>
+<table *ngIf='turnos?.length > 0'>
     <th>Fecha</th>
-    <th></th>
+    <th>Acción</th>
     <tbody>
         <tr *ngFor='let turno of turnos' >
             <td>{{ turno.horaInicio | fecha }} </td>
