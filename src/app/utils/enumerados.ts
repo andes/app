@@ -103,8 +103,8 @@ export enum EstadosEspacios {
 export enum EstadosLabo {
     'pendiente',
     'ejecucion',
-    'validada',
-    'todos'
+    'validada'
+    // ,'todos'
 }
 
 export enum EstadoHojaTrabajo {

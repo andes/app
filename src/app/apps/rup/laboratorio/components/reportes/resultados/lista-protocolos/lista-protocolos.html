@@ -1,0 +1,39 @@
+<ng-container *ngIf="protocolos && protocolos.length > 0">
+    <div class="table-grid table-grid-head">
+        <span>
+            <plex-bool type="checkbox" (change)="onCheckboxChange($event, protocolo, registro)" name="validarTodos"></plex-bool>
+        </span>
+        <span>Nro.</span>
+        <span>Fecha</span>
+        <span>Documento</span>
+        <span>Apellidos y Nombres</span>
+        <span>Origen</span>
+        <span>Prioridad</span>
+        <span>Estado</span>
+    </div>
+
+    <div class="table-grid" *ngFor="let protocolo of protocolos; let i=index">
+        <span>
+            <plex-bool type="checkbox" name="validado" (change)="clickValidar($event)" name="clickValidar"></plex-bool>
+        </span>
+        <span>
+            {{ protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto }}
+        </span>
+        <span>{{ protocolo.solicitud.fecha | fecha }}</span>
+        <span>{{protocolo.paciente.documento}}</span>
+        <span>{{protocolo.paciente.apellido}} {{protocolo.paciente.nombre}}</span>
+        <span>{{protocolo.solicitud.ambitoOrigen}}</span>
+        <span>
+            <plex-badge *ngIf="protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.prioridad?.nombre === 'Urgencia'"
+                type="danger">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
+            <plex-badge *ngIf="protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.prioridad?.nombre === 'Normal'"
+                type="success">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
+        </span>
+        <span>
+            <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'ejecucion'" type="warning">{{protocolo.estados[protocolo.estados.length
+                -1].tipo}}</plex-badge>
+            <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'validada'" type="info">{{protocolo.estados[protocolo.estados.length
+                -1].tipo}}</plex-badge>
+        </span>
+    </div>
+</ng-container>

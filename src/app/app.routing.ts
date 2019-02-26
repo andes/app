@@ -88,6 +88,7 @@ import { LaboratorioComponent } from './apps/rup/laboratorio/components/laborato
 import { PuntoInicioLaboratorioComponent } from './apps/rup/laboratorio/components/punto-inicio/punto-inicio.component';
 import { GestorHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/gestor-hojatrabajo/gestor-hojatrabajo.component';
 import { LaboratorioDerivacionesComponent } from './apps/rup/laboratorio/components/derivaciones/gestor-derivaciones.component';
+import { ReporteResultadosIndexComponent } from './apps/rup/laboratorio/components/reportes/resultados/index.component';
 
 import { VisualizacionReglasComponent } from './components/top/reglas/visualizacionReglas.component';
 
@@ -182,6 +183,7 @@ const appRoutes: Routes = [
   { path: 'laboratorio/protocolos/turno', component: LaboratorioComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/hojatrabajo', component: GestorHojatrabajoComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/derivaciones', component: LaboratorioDerivacionesComponent, canActivate: [RoutingGuard] },
+  { path: 'laboratorio/reportes/resultados', component: ReporteResultadosIndexComponent, canActivate: [RoutingGuard] },
 
   // Solicitudes
   { path: 'solicitudes', component: SolicitudesComponent, canActivate: [RoutingNavBar, RoutingGuard] },

@@ -1,0 +1,27 @@
+<plex-layout main='12'>
+    <plex-layout-main>
+
+        <reporte-resultados-filtros (buscarProtocolosEmmiter)="refreshSelection($event)" ></reporte-resultados-filtros>
+
+        <br>
+        <hr>
+        <plex-button *ngIf="showBotonDescargar" label="Descargar Reportes" type="success" (click)="descargarReportes()"></plex-button>
+        
+        <reportes-resultado-lista-protocolos [protocolos]='protocolos' ></reportes-resultado-lista-protocolos   >
+
+        <div *ngIf="!protocolos?.length" class="alert alert-default">
+            <i class="mdi mdi-emoticon-sad"></i> No hay protocolos que coincidan con los filtros de búsqueda
+        </div>
+
+        <header>
+            <div class="clearfix">
+                <div class="page-title">
+                    <ng-container>
+                        BUSCAR RESULTADOS
+                    </ng-container>
+                </div>
+            </div>
+        </header>
+    </plex-layout-main>
+    
+</plex-layout>

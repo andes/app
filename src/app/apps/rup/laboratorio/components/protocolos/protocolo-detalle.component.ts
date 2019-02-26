@@ -452,7 +452,6 @@ export class ProtocoloDetalleComponent
             this.setearEstadosValidacion();
         }
 
-        // this.servicioPrestacion.patch(this.modelo._id, this.getParams()).subscribe(async () => {
         this.servicioProtocolo.patch({ registros: this.modelo.ejecucion.registros }).subscribe(async () => {
             let alertasValidadas = [];
             if (this.laboratorioContextoCacheService.isModoValidacion()) {
