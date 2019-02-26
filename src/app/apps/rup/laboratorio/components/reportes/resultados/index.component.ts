@@ -1,11 +1,10 @@
 import { ReportesLaboratorioService } from './../../../services/reportes';
-import { LaboratorioContextoCacheService } from './../../../services/protocoloCache.service';
 import { ProtocoloService } from './../../../services/protocolo.service';
 import { Plex } from '@andes/plex';
 import { PacienteService } from './../../../../../../services/paciente.service';
-// import { descargarReportesResultados } from './../../../controllers/reportes';
 import { Component, OnInit, EventEmitter, Output, ViewEncapsulation, HostBinding } from '@angular/core';
-
+import { saveAs } from 'file-saver';
+import { Slug } from 'ng2-slugify';
 
 @Component({
     selector: 'reporte-resultados-index',
@@ -23,12 +22,12 @@ export class ReporteResultadosIndexComponent implements OnInit {
     public busqueda;
     public protocolos: any[];
     public showBotonDescargar = true;
+    private slug = new Slug('default'); // para documento pdf
 
     constructor(
         public servicePaciente: PacienteService,
         public plex: Plex,
         public protocoloService: ProtocoloService,
-        public laboratorioContextoCacheService: LaboratorioContextoCacheService,
         public reportesLaboratorioService: ReportesLaboratorioService
     ) { }
 
@@ -51,8 +50,6 @@ export class ReporteResultadosIndexComponent implements OnInit {
         this.busqueda.areas = filtros.areas && filtros.areas.length > 0 ? filtros.areas.map(e => { return e.id; }) : [];
         // }
 
-        this.busqueda.estado = this.laboratorioContextoCacheService.isModoValidacion() ? ['pendiente', 'ejecucion'] : [];
-
         this.protocoloService.get(this.busqueda).subscribe(protocolos => {
             this.protocolos = protocolos;
         }, err => {
@@ -62,7 +59,6 @@ export class ReporteResultadosIndexComponent implements OnInit {
         });
     }
 
-
     /**
      *
      *
@@ -70,8 +66,13 @@ export class ReporteResultadosIndexComponent implements OnInit {
      * @memberof ReporteResultadosIndexComponent
      */
     descargarReportes() {
-        this.reportesLaboratorioService.reporteResultados(this.protocolos).subscribe( res => {
-            console.log(res);
+        this.reportesLaboratorioService.reporteResultados(this.protocolos).subscribe(data => {
+            if (data) {
+                saveAs(
+                    new Blob([data], { type: 'application/pdf' }),
+                    this.slug.slugify(moment().format('DD-MM-YYYY-hmmss')) + '.pdf'
+                );
+            }
         });
     }
 }

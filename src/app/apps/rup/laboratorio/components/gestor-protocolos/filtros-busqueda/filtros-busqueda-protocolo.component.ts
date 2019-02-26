@@ -117,7 +117,7 @@ export class FiltrosBusquedaProtocoloComponent
             } else if (tipo === 'hojaTrabajo') {
                 this.busqueda.practicas = this.hojaTrabajo ? this.hojaTrabajo.practicas.map(p => { return p.id; }) : [];
             } else if (tipo === 'practicas') {
-                this.busqueda.practicas = this.busqueda.practicas.map( e => { return e.id; } );
+                this.busqueda.practicas = this.busqueda.practicas.map(e => { return e.id; });
             } else if (tipo === 'origen') {
                 this.busqueda.origen = this.busqueda.origen ? this.busqueda.origen.id : null;
             } else if (tipo === 'prioridad') {
@@ -264,14 +264,14 @@ export class FiltrosBusquedaProtocoloComponent
         this.plex.toast('success', 'Se recordará su selección de filtro en sus próximas sesiones.', 'Información', 3000);
     }
 
-    /**
-     *
-     *
-     * @memberof FiltrosBusquedaProtocoloComponent
-     */
-    filtrarPaciente() {
-        this.buscarProtocolosEmmiter.emit(this.busqueda);
-    }
+    // /**
+    //  *
+    //  *
+    //  * @memberof FiltrosBusquedaProtocoloComponent
+    //  */
+    // filtrarPaciente() {
+    //     this.buscarProtocolosEmmiter.emit(this.busqueda);
+    // }
 }
 
 

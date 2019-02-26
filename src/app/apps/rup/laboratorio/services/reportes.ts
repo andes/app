@@ -1,11 +1,15 @@
+
+import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
-import { Server } from '@andes/shared';
+import { Http, ResponseContentType, RequestMethod } from '@angular/http';
+import { Headers, RequestOptions } from '@angular/http';
+import { environment } from '../../../../../environments/environment';
 
 @Injectable()
 export class ReportesLaboratorioService {
-    private reportesUrl = '/modules/rup/laboratorio/reportes/';
+    private reportesUrl = environment.API + '/modules/rup/laboratorio/reportes/';
 
-    constructor(private server: Server) { }
+    constructor(private http: Http) { }
 
     /**
      * @param {PracticaSearch} params
@@ -13,8 +17,28 @@ export class ReportesLaboratorioService {
      * @memberof PracticaService
      */
     reporteResultados(protocolos) {
-        return this.server.post(this.reportesUrl + 'resultados/', protocolos).map((value) => {
-            return value;
+        let headers = new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('jwt') ? 'JWT ' + window.sessionStorage.getItem('jwt') : null
         });
+        let options = new RequestOptions({ headers: headers, responseType: ResponseContentType.Blob, method: RequestMethod.Post });
+
+        return this.http.post(this.reportesUrl + 'resultados/', protocolos, options)
+            .map(res => res.blob())
+            .catch(this.handleError);
+    }
+
+    /**
+     *
+     *
+     * @private
+     * @param {*} error
+     * @returns
+     * @memberof ReportesLaboratorioService
+     */
+    private handleError(error: any) {
+        let errMsg = (error.message) ? error.message :
+            error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+        return Observable.throw(errMsg);
     }
 }

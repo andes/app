@@ -15,7 +15,6 @@ export class DocumentosService {
 
     descargar(html: string, scssFile = null, horizontal = false): Observable<any> {
 
-        let htmlPdf = { html: Buffer.from(html).toString('base64') };
         let headers = new Headers({
             'Content-Type': 'application/json',
             'Authorization': window.sessionStorage.getItem('jwt') ? 'JWT ' + window.sessionStorage.getItem('jwt') : null
