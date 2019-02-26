@@ -97,7 +97,6 @@ export class GestorProtocolosComponent implements OnInit {
         if (!this.protocolo) {
             this.resetearProtocolo({});
         }
-        console.log(this.route.snapshot.routeConfig );
         if (this.route.snapshot.routeConfig.path === 'laboratorio/protocolos/turno') {
             this.resetearProtocolo(null, this.contextoCache.turno);
             this.mostrarFomularioPacienteSinTurno();

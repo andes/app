@@ -444,8 +444,7 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     private async actualizarProtocoloRegistrosEjecucion(next) {
-
-        if (this.laboratorioContextoCacheService.isModoValidacion() || this.laboratorioContextoCacheService.isModoCarga()) { } {
+        if (this.laboratorioContextoCacheService.isModoValidacion() || this.laboratorioContextoCacheService.isModoCarga()) {
             this.setearEstadosCarga();
         }
 
@@ -529,9 +528,6 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     guardarSolicitud() {
-        if (this.laboratorioContextoCacheService.isModoValidacion() && !this.isProtocoloValidado()) {
-            // this.actualizarEstadoValidacion();
-        }
         if (this.laboratorioContextoCacheService.isModoRecepcion()) {
             this.iniciarProtocolo();
         } else {
