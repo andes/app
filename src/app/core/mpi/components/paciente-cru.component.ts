@@ -733,7 +733,10 @@ export class PacienteCruComponent implements OnInit {
         this.loading = true;
         this.pacienteService.validar(this.pacienteModel).subscribe(resultado => {
             this.loading = false;
-            if (resultado.validado) {
+            if (resultado.existente) {
+                this.plex.info('info', 'El paciente que está cargando ya existe en el sistema', 'Atención');
+                this.pacienteModel = resultado.paciente;
+            } else if (resultado.validado) {
                 this.setBackup();
                 this.validado = true;
                 this.showDeshacer = true;
