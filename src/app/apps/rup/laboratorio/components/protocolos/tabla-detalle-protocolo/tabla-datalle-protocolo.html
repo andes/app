@@ -255,13 +255,13 @@
         <tbody>
             <tr class="hover" *ngFor="let alarma of validaciones">
                 <td>
-                    {{alarma.registroPractica.practica.nombre}}
+                    {{ alarma.registroPractica.nombre}}
                 </td>
                 <td>
-                    {{ alarma.registroPractica.registro.valor.resultado.valor }}
+                    {{ alarma.registroPractica.valor.resultado.valor }}
                 </td>
                 <td>
-                    {{ alarma.registroPractica.practica.unidadMedida.nombre }}
+                    {{ alarma.registroPractica.valor.practica.unidadMedida.nombre }}
                 </td>
             </tr>
         </tbody>
