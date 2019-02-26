@@ -64,10 +64,10 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         if (!this.laboratorioContextoCacheService.getContextoCache().cargarPorPracticas) {
             this.practicasEjecucion = practicasEjecucion;
             // this.cargarListaPracticaCarga().then(() => {
-                // this.cargarResultadosAnteriores();
-                if (this.laboratorioContextoCacheService.isModoValidacion()) {
-                    this.precargarValidaciones();
-                }
+            // this.cargarResultadosAnteriores();
+            if (this.laboratorioContextoCacheService.isModoValidacion()) {
+                this.precargarValidaciones();
+            }
             // });
             this.cargarPracticasVista();
         }
@@ -482,11 +482,20 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      * @memberof TablaDatalleProtocoloComponent
      */
     verHistorialResultados(element) {
-        this.verHistorialResultadosEmitter.emit({paciente: this.modelo.paciente, practica:  element.valor.practica} );
+        this.verHistorialResultadosEmitter.emit({ paciente: this.modelo.paciente, practica: element.valor.practica });
     }
 
     getResultadoAnterior(practicaCarga) {
         return practicaCarga.valor.resultadoAnterior && practicaCarga.valor.resultadoAnterior[0] ?
             practicaCarga.valor.resultadoAnterior[0] : null;
+    }
+
+    getOpcionesSeleccionSimple($event, opciones) {
+        $event.callback(opciones.map(e => {
+            return {
+                'id': e,
+                'nombre': e
+            };
+        }));
     }
 }
