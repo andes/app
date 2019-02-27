@@ -76,6 +76,7 @@ export class AppComponent {
             accessList.push({ label: 'Solicitudes', icon: 'mdi mdi-open-in-app', route: '/solicitudes' });
         }
 
+
         // faltan permisos
         if (this.auth.getPermissions('formularioTerapeutico:?').length > 0) {
             accessList.push({ label: 'Formulario Terapeutico', icon: 'mdi mdi-needle', route: '/formularioTerapeutico' });
@@ -83,6 +84,8 @@ export class AppComponent {
         this.menuList.push({ label: 'Página principal', icon: 'home', route: '/inicio' });
         this.menuList.push({ label: 'Padrones', icon: 'magnify', route: '/puco' });
 
+        // Agregar permisos para este buscador
+        this.menuList.push({ label: 'Buscador de turnos y prestaciones', icon: 'table-search', route: '/buscador' });
         accessList.forEach((permiso) => {
             this.menuList.push(permiso);
         });
