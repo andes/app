@@ -32,7 +32,7 @@ export class EstadisticasPacientesComponent implements OnInit {
         this._paciente = value;
 
     }
-    get agenda(): any {
+    get paciente(): any {
         return this._paciente;
     }
 
@@ -77,7 +77,7 @@ export class EstadisticasPacientesComponent implements OnInit {
     }
 
     loadObraSocial() {
-        this.obraSocialService.get({ dni: this._paciente.documento }).subscribe(resultado => {
+        this.obraSocialService.get({ dni: this.paciente.documento }).subscribe(resultado => {
             if (resultado.length) {
                 this.obraSocial = resultado[0];
             }
@@ -91,9 +91,9 @@ export class EstadisticasPacientesComponent implements OnInit {
     getPaciente() {
         this.servicePaciente.getById(this.pacienteSeleccionado.id).subscribe(
             pacienteMPI => {
-                this._paciente = pacienteMPI;
-                if (this._paciente && this._paciente.id) {
-                    let datosTurno = { pacienteId: this._paciente.id };
+                this.paciente = pacienteMPI;
+                if (this.paciente && this.paciente.id) {
+                    let datosTurno = { pacienteId: this.paciente.id };
                     let cantInasistencias = 0;
                     // Se muestra la cantidad de turnos otorgados e inasistencias
                     this.serviceTurno.getHistorial(datosTurno).subscribe(turnos => {
@@ -116,7 +116,7 @@ export class EstadisticasPacientesComponent implements OnInit {
                     });
 
                     // Se muestra la cantidad de turnos anulados
-                    let datosLog = { idPaciente: this._paciente.id, operacion: 'turnos:liberar' };
+                    let datosLog = { idPaciente: this.paciente.id, operacion: 'turnos:liberar' };
                     this.serviceLogPaciente.get(datosLog).subscribe(logs => {
                         if (logs && logs.length) {
                             this.anulaciones = logs.length;

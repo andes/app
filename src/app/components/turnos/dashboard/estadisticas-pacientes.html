@@ -8,7 +8,7 @@
                 <div class="row">
                     <div class="col">
                         <h5>
-                            <span class="text-primary">{{_paciente | paciente}}</span>
+                            <span class="text-primary">{{paciente | paciente}}</span>
                         </h5>
                     </div>
                 </div>
@@ -25,32 +25,32 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-6" *ngIf="_paciente?.documento !== ''">
-                    {{_paciente.documento | number}}
+                <div class="col-6" *ngIf="paciente?.documento !== ''">
+                    {{paciente.documento | number}}
                 </div>
-                <div class="col-6" *ngIf="_paciente && _paciente.fechaNacimiento !== null">
-                    {{_paciente.fechaNacimiento | date:'dd-MM-yyyy'}} ({{_paciente | edad}})
+                <div class="col-6" *ngIf="paciente && paciente.fechaNacimiento !== null">
+                    {{paciente.fechaNacimiento | date:'dd-MM-yyyy'}} ({{paciente | edad}})
                 </div>
             </div>
             <div class="row">
-                <div class="col-6" *ngIf="_paciente?.direccion && _paciente.direccion[0]?.valor && _paciente.direccion.length > 0">
+                <div class="col-6" *ngIf="paciente?.direccion && paciente.direccion[0]?.valor && paciente.direccion.length > 0">
                     <i class="mdi mdi-map-marker"></i>
                     <span class="text-primary">Dirección</span>
                 </div>
-                <div class="col-6" *ngIf="_paciente?.contacto && _paciente.contacto[0]?.valor && _paciente.contacto.length > 0">
+                <div class="col-6" *ngIf="paciente?.contacto && paciente.contacto[0]?.valor && paciente.contacto.length > 0">
                     <i class="mdi mdi-cellphone-android"></i>
                     <span class="text-primary">Teléfono</span>
                 </div>
             </div>
             <div class="row">
-                <div class="col-6" *ngIf="_paciente?.direccion && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
-                    {{_paciente.direccion[0].valor}}
+                <div class="col-6" *ngIf="paciente?.direccion && paciente.direccion[0]?.valor !== '' && paciente.direccion.length > 0">
+                    {{paciente.direccion[0].valor}}
                 </div>
-                <div class="col-6" *ngIf="_paciente?.id && _paciente.contacto && _paciente.contacto.length > 0">
-                    {{_paciente.contacto[0].valor}}
+                <div class="col-6" *ngIf="paciente?.id && paciente.contacto && paciente.contacto.length > 0">
+                    {{paciente.contacto[0].valor}}
                 </div>
             </div>
-            <div class="row" *ngIf="_paciente?.financiador && _paciente.financiador[0]?.nombre">
+            <div class="row" *ngIf="paciente?.financiador && paciente.financiador[0]?.nombre">
                 <div class="col-6">
                     <i class="mdi mdi-account-card-details"></i>
                     <span class="text-primary">Obra Social</span>
@@ -60,16 +60,16 @@
                     <span class="text-primary">Número de Afiliado</span>
                 </div>
             </div>
-            <div class="row" *ngIf="_paciente?.financiador && _paciente.financiador[0]?.nombre">
+            <div class="row" *ngIf="paciente?.financiador && paciente.financiador[0]?.nombre">
                 <div class="col-6">
-                    {{_paciente.financiador[0].financiador}}
+                    {{paciente.financiador[0].financiador}}
                 </div>
                 <div class="col-6">
-                    {{_paciente.financiador[0].numeroAfiliado}}
+                    {{paciente.financiador[0].numeroAfiliado}}
                 </div>
             </div>
             <br>
-            <update-contacto-direccion [paciente]="_paciente"></update-contacto-direccion>
+            <update-contacto-direccion [paciente]="paciente"></update-contacto-direccion>
         </fieldset>
 
     </plex-tab>

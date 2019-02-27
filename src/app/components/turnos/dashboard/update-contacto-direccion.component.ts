@@ -126,6 +126,7 @@ export class UpdateContactoDireccionComponent implements OnInit {
     removeContacto(i) {
         if (i >= 0) {
             this.arrayContactos.splice(i, 1);
+            this.disableGuardar = false;
         }
     }
 
