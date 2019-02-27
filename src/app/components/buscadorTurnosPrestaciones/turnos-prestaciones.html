@@ -1,0 +1,32 @@
+<plex-layout main="9">
+    <plex-layout-main>
+        <header>
+            <h3>Buscador de turnos y prestaciones</h3>
+        </header>
+        <table *ngIf="busquedas?.length" class="table table-striped table-sm">
+            <thead>
+                <th>Fecha</th>
+                <th>Paciente</th>
+                <th>Financiador</th>
+                <th>Tipo de Prestación</th>
+                <th>Equipo de Salud</th>
+                <th>Estado</th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let busqueda of busquedas; let i=index" class="hover">
+                    <td>{{busqueda.fecha | date: "dd/MM/yyyy HH:mm "}}</td>
+                    <td>{{busqueda.paciente | paciente}}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <header>
+            Detalle del turno / la prestación
+        </header>
+    </plex-layout-sidebar>
+</plex-layout>
