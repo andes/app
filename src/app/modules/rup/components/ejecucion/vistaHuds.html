@@ -126,7 +126,7 @@
                                 <plex-tab [allowClose]="true" [label]="'internacion'" [class]="registro.data.class"
                                 *ngIf="registro.tipo === 'internacion'">
 
-                                <internacion-resumen [paciente]="registro.data.paciente"
+                                <internacion-resumen [paciente]="registro.data.paciente" [mostrarBtnRomper]='false'
                                 [prestacion]="registro.data" [soloValores]="true" ></internacion-resumen>
                                 <!-- <vista-cda [registro]="registro"></vista-cda> -->
                             </plex-tab>

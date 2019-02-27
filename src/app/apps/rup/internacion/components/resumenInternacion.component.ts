@@ -13,7 +13,9 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
     private _prestacion: any;
     private _editarEgreso: Boolean;
     @Input() desdeListadoInternacion ;
+    @Input() mostrarBtnRomper = true; ;
 
+    
     @Input()
     set prestacion(value: any) {
         this._prestacion = value;

@@ -32,8 +32,7 @@ export class PasesListadoInternacionComponent implements OnInit {
     public fecha = new Date();
     public hora = new Date();
     public opcionesDesocupar = [
-        { id: 'movimiento', label: 'Cambiar de cama' },
-        { id: 'egreso', label: 'Egresar al paciente' }];
+        { id: 'movimiento', label: 'Cambiar de cama' }];
 
     public listaUnidadesOrganizativas = [];
     public listadoCamas = [];
