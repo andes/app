@@ -39,7 +39,6 @@ export class FiltrosBusquedaProtocoloComponent
     public indexProtocolo;
     public turnosRecepcion;
     public hojasTrabajo = [];
-    // public practicas = [];
     public practicasFiltro;
     public areas = [];
     public servicios = [];
@@ -58,6 +57,7 @@ export class FiltrosBusquedaProtocoloComponent
         tipoPrestacionSolicititud: '15220000',
         organizacion: null,
         estado: [],
+        estadoFiltrar: 'validada',
         practicas: null,
         area: null,
         organizacionDestino: this.auth.organizacion._id

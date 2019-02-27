@@ -45,7 +45,7 @@ export class ListaProtocolosLotesComponent implements OnInit {
 
             registrosPracticas.push(registroPractica);
         } else if (!event.value && registrosPracticas.indexOf(registro) > -1) {
-            registrosPracticas = registrosPracticas.filter( (e) => { return e._id === registro._id; });
+            registrosPracticas = registrosPracticas.filter( e =>  e._id === registro._id );
         }
     }
 }

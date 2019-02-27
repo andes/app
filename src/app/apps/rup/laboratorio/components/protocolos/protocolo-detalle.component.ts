@@ -343,15 +343,20 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     async guardarProtocolo(next) {
-        if (this.modelo._id) {
+        if (!this.modelo._id) {
+            this.guardarNuevoProtocolo();
+        } else {
             if (this.laboratorioContextoCacheService.isModoControl()) {
                 this.actualizarAuditoriaProtocolo(next);
-            } else if (this.laboratorioContextoCacheService.isModoCarga()
-                || this.laboratorioContextoCacheService.isModoValidacion()) {
+            } else if (this.laboratorioContextoCacheService.isModoCarga() || this.laboratorioContextoCacheService.isModoValidacion()) {
+                this.setearEstadosCarga();
+
+                if (this.laboratorioContextoCacheService.isModoValidacion()) {
+                    this.actualizarEstadosValidacionPracticas();
+                }
+
                 this.actualizarProtocoloRegistrosEjecucion(next);
             }
-        } else {
-            this.guardarNuevoProtocolo();
         }
     }
 
@@ -444,25 +449,22 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     private async actualizarProtocoloRegistrosEjecucion(next) {
-        if (this.laboratorioContextoCacheService.isModoValidacion() || this.laboratorioContextoCacheService.isModoCarga()) {
-            this.setearEstadosCarga();
+        let params: any = { registros: this.modelo.ejecucion.registros };
+
+        if (this.validarPrestacion()) {
+            params.estado = Constantes.estadoValidada;
+            params.idProtocolo = this.modelo._id;
         }
 
-        if (this.laboratorioContextoCacheService.isModoValidacion()) {
-            this.setearEstadosValidacion();
-        }
 
-        this.servicioProtocolo.patch({ registros: this.modelo.ejecucion.registros }).subscribe(async () => {
+        this.servicioProtocolo.patch(params).subscribe(async () => {
             let alertasValidadas = [];
             if (this.laboratorioContextoCacheService.isModoValidacion()) {
                 alertasValidadas = this.validaciones.filter(e => e.validado && e.esValorCritico);
             }
 
             if (alertasValidadas.length > 0 && await this.confirmarValoresCriticos(alertasValidadas)) {
-                this.validaciones = this.validaciones.filter(e => e.validado && e.esValorCritico);
-                this.validaciones.forEach(e => e.esValorCritico = false);
-                this.showGestorAlarmas = true;
-                this.contextoCache.titulo = 'Gestor de alarmas';
+                this.irAGestorAlarmas();
 
             } else if (next) {
                 this.showGestorAlarmas = false;
@@ -492,6 +494,19 @@ export class ProtocoloDetalleComponent
      * @private
      * @memberof ProtocoloDetalleComponent
      */
+    private irAGestorAlarmas() {
+        this.validaciones = this.validaciones.filter(e => e.validado && e.esValorCritico);
+        this.validaciones.forEach(e => e.esValorCritico = false);
+        this.showGestorAlarmas = true;
+        this.contextoCache.titulo = 'Gestor de alarmas';
+    }
+
+    /**
+     *
+     *
+     * @private
+     * @memberof ProtocoloDetalleComponent
+     */
     private setearEstadosCarga() {
         this.contextoCache.practicasCargadas.forEach(e => e.valor.estados.push(this.generarEstado('carga')));
     }
@@ -502,9 +517,19 @@ export class ProtocoloDetalleComponent
      * @private
      * @memberof ProtocoloDetalleComponent
      */
-    private setearEstadosValidacion() {
+    private actualizarEstadosValidacionPracticas() {
         let practicasValidar = this.validaciones.filter(e => e.validado && !e.esValorCritico);
         practicasValidar.forEach(e => e.registroPractica.valor.estados.push(this.generarEstado('validada')));
+    }
+
+    /**
+     *
+     *
+     * @private
+     * @memberof ProtocoloDetalleComponent
+     */
+    private validarPrestacion() {
+        return !this.modelo.estados.some( o => o.tipo === 'validada') && this.modelo.ejecucion.registros.every( r => r.valor.estados.some( e => e.tipo === 'validada'));
     }
 
     /**
