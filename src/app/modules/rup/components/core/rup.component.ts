@@ -47,6 +47,7 @@ export class RUPComponent implements OnInit, AfterViewInit {
     @Input() opcionales: any;
     public mensaje: any = {};
 
+
     // Eventos
     @Output() change: EventEmitter<any> = new EventEmitter<any>();
     @Output() ejecutarConcepto: EventEmitter<any> = new EventEmitter<any>();

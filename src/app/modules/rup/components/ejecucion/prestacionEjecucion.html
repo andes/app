@@ -274,11 +274,11 @@
                                     <h4 class="text-capitalize">{{ registro.data.solicitud.tipoPrestacion.term }}</h4>
                                     <div class="row">
                                         <div class="col-12">
-                                            <b> Fecha: </b> 
+                                            <b> Fecha: </b>
                                             {{registro.data.ejecucion.fecha | date: 'EEE dd/MM/yyyy HH:MM'}}
                                         </div>
                                         <div class="col-6" *ngIf="(registro.data.ejecucion.fecha - registro.data.solicitud.fecha) > 1000 ">
-                                            <b> Solicitada el: </b> 
+                                            <b> Solicitada el: </b>
                                             {{ registro.data.solicitud.fecha | date: 'EEE dd/MM/yyyy HH:MM' }}
                                         </div>
                                         <div class="col-12">
@@ -286,7 +286,7 @@
                                             {{ registro.data.solicitud.profesional | profesional }}
                                         </div>
                                         <div class="col-12">
-                                            <b> Desde la Organización: </b> 
+                                            <b> Desde la Organización: </b>
                                             {{ registro.data.solicitud.organizacion.nombre }}
                                         </div>
                                     </div>
