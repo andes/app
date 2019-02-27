@@ -1,10 +1,5 @@
 <div class="filtros-container ">
     <span>
-        <plex-select [(ngModel)]="busqueda.areas" (change)="buscarProtocolos($event,'areas')" name="areas" label="Áreas"
-            [data]='areas' [multiple]="true"></plex-select>
-    </span>
-
-    <span>
         <plex-datetime type="date" [(ngModel)]="busqueda.solicitudDesde" (change)="buscarProtocolos($event,'fechaDesde')"
             name="solicitudDesde" label="Fecha desde" [required]="true" skipBy="day">
         </plex-datetime>
@@ -13,6 +8,10 @@
         <plex-datetime type="date" [(ngModel)]="busqueda.solicitudHasta" (change)="buscarProtocolos($event,'fechaHasta')"
             name="solicitudHasta" label="Fecha hasta" [required]="true" skipBy="day">
         </plex-datetime>
+    </span>
+    <span>
+        <plex-select [(ngModel)]="busqueda.areas" (change)="buscarProtocolos($event,'areas')" name="areas" label="Áreas"
+            [data]='areas' [multiple]="true"></plex-select>
     </span>
     <span>
         <plex-float [(ngModel)]="busqueda.numProtocoloDesde" (change)="buscarProtocolos($event,'numProtocoloDesde')"

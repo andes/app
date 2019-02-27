@@ -37,6 +37,8 @@
     }
     &.puntoInicio {
         grid-template-columns: repeat(5, 1fr);
+    }&.reporteResultados {
+        grid-template-columns: repeat(8, 1fr);
     }
     &.paciente {
         grid-template-columns: 120px repeat(4, 1fr);

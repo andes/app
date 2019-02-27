@@ -15,13 +15,12 @@ import { Slug } from 'ng2-slugify';
 
 export class ReporteResultadosIndexComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
-
     @Output() volverAPuntoInicioEmmiter: EventEmitter<any> = new EventEmitter<any>();
 
     public areas = [];
     public busqueda;
     public protocolos: any[];
-    public showBotonDescargar = true;
+    public idsProtocolosSeleccionados;
     private slug = new Slug('default'); // para documento pdf
 
     constructor(
@@ -45,12 +44,12 @@ export class ReporteResultadosIndexComponent implements OnInit {
             this.protocolos.length = 0;
             return;
         }
-        // if ($event) {
+
         this.busqueda = filtros;
         this.busqueda.areas = filtros.areas && filtros.areas.length > 0 ? filtros.areas.map(e => { return e.id; }) : [];
-        // }
 
         this.protocoloService.get(this.busqueda).subscribe(protocolos => {
+            this.cargarArrayProtocolosSeleccionados(protocolos);
             this.protocolos = protocolos;
         }, err => {
             if (err) {
@@ -62,11 +61,24 @@ export class ReporteResultadosIndexComponent implements OnInit {
     /**
      *
      *
+     * @private
+     * @memberof ReporteResultadosIndexComponent
+     */
+    private cargarArrayProtocolosSeleccionados(protocolos) {
+        this.idsProtocolosSeleccionados = {};
+        protocolos.forEach(e => this.idsProtocolosSeleccionados[e._id] = false );
+    }
+
+    /**
+     *
+     *
      * @param {*} protocolos
      * @memberof ReporteResultadosIndexComponent
      */
     descargarReportes() {
-        this.reportesLaboratorioService.reporteResultados(this.protocolos).subscribe(data => {
+        this.reportesLaboratorioService.reporteResultados(this.protocolos.filter(
+            p => this.idsProtocolosSeleccionados[p._id] )
+        ).subscribe(data => {
             if (data) {
                 saveAs(
                     new Blob([data], { type: 'application/pdf' }),
