@@ -96,11 +96,11 @@
                 <ul *ngIf="todos && colapsado" class="hover conceptos list-unstyled">
                         <ng-container *ngFor="let registro of todos">
                             <li>
-                                <div class="rup-card mini {{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}" [ngClass]="{'active': isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
-                                    (click)="devolverRegistrosHuds(registro, 'concepto')">
+                                <div class="rup-card mini {{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
+                                    (click)="emitTabs(registro, 'concepto')">
                                     <div class="rup-header">
                                         <div class="rup-border rup-border-{{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}" 
-                                             [ngClass]="{'active': isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
+                                             [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
                                             <div class="row p-0 m-0 border-secondary border-left-0">
                                                 <div class="col-10 p-0 m-0">
                                                     <div class="row m-0 p-0">
@@ -143,10 +143,10 @@
                 <ul *ngIf="hallazgos && colapsado" class="hover conceptos list-unstyled">
                     <ng-container *ngFor="let registro of hallazgos">
                         <li>
-                            <div class="rup-card mini hallazgo" [ngClass]="{'active': isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
-                                (click)="devolverRegistrosHuds(registro, 'concepto')">
+                            <div class="rup-card mini hallazgo" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
+                                (click)="emitTabs(registro, 'concepto')">
                                 <div class="rup-header">
-                                    <div class="rup-border rup-border-hallazgo" [ngClass]="{'active': isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
+                                    <div class="rup-border rup-border-hallazgo" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
                                         <div class="row p-0 m-0 border-secondary border-left-0">
                                             <div class="col-10 p-0 m-0">
                                                 <div class="row m-0 p-0">
@@ -189,10 +189,10 @@
                 <ul *ngIf="trastornos && colapsado" class="hover conceptos list-unstyled">
                     <ng-container *ngFor="let registro of trastornos">
                         <li>
-                            <div class="rup-card mini trastorno" [ngClass]="{'active': isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
-                                (click)="devolverRegistrosHuds(registro, 'concepto')">
+                            <div class="rup-card mini trastorno" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
+                                (click)="emitTabs(registro, 'concepto')">
                                 <div class="rup-header">
-                                    <div class="rup-border rup-border-trastorno" [ngClass]="{'active': isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
+                                    <div class="rup-border rup-border-trastorno" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
                                         <div class="row p-0 m-0 border-secondary border-left-0">
                                             <div class="col-10 p-0 m-0">
                                                 <div class="row m-0 p-0">
@@ -244,10 +244,10 @@
             <ul *ngIf="procedimientos && colapsado" class="hover conceptos list-unstyled">
                 <ng-container *ngFor="let registro of procedimientos; let iPrestacion = index">
                     <li>
-                        <div class="rup-card mini procedimiento" [ngClass]="{'active': isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
-                            (click)="devolverRegistrosHuds(registro, 'concepto')">
+                        <div class="rup-card mini procedimiento" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
+                            (click)="emitTabs(registro, 'concepto')">
                             <div class="rup-header">
-                                <div class="rup-border rup-border-procedimiento" [ngClass]="{'active': isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
+                                <div class="rup-border rup-border-procedimiento" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
                                     <div class="row p-0 m-0 border-secondary border-left-0">
                                         <div class="col-10 p-0 m-0">
                                             <div class="row m-0 p-0">
@@ -306,12 +306,12 @@
             </ng-container>
 
             <ul *ngIf="prestaciones && colapsado" class="hover conceptos list-unstyled">
-                <ng-container *ngFor="let prestacion of prestaciones; let iPrestacion = index">
+                <ng-container *ngFor="let prestacion of prestaciones">
                     <li>
-                        <div class="rup-card mini solicitud" [ngClass]="{'active': isOpen(prestacion, prestacion.tipo)}"
-                            (click)="devolverRegistrosHuds(prestacion, prestacion.tipo)">
+                        <div class="rup-card mini solicitud" [ngClass]="{'active': huds.isOpen(prestacion.data, prestacion.tipo)}"
+                            (click)="emitTabs(prestacion, prestacion.tipo)">
                             <div class="rup-header">
-                                <div class="rup-border rup-border-solicitud">
+                                <div class="rup-border rup-border-solicitud"  [ngClass]="{'active': huds.isOpen(prestacion.data, prestacion.tipo)}">
                                     <div class="row p-0 m-0 border-secondary border-left-0">
                                         <div class="col-10 p-0 m-0">
                                             <div class="row m-0 p-0">
@@ -355,7 +355,7 @@
             <ul *ngIf="productos && colapsado" class="conceptos hover list-unstyled">
                 <ng-container *ngFor="let registro of productos; let iCronico = index">
                     <li>
-                        <div class="rup-card mini producto" [ngClass]="{'active': isOpen(registro, 'concepto')}">
+                        <div class="rup-card mini producto" [ngClass]="{'active': huds.isOpen(registro, 'concepto')}">
                             <div class="rup-header">
                                 <div class="rup-border rup-border-producto">
                                     <div class="row p-0 m-0 border-secondary border-left-0">
@@ -373,7 +373,7 @@
                                                         <i class="icon icon-rup-semantic-producto"></i>
                                                     </div>
                                                 </ng-container>
-                                                <div class="col p-0 pl-2 float-left" (click)="devolverRegistrosHuds(registro, 'concepto')">
+                                                <div class="col p-0 pl-2 float-left" (click)="emitTabs(registro, 'concepto')">
                                                     {{ registro.concepto.term }}
                                                     <div class="row p-0 m-0">
                                                         <div class="col-10 p-0 m-0">
@@ -414,7 +414,7 @@
                 <ul class="conceptos list-unstyled">
                     <ng-container *ngFor="let laboratorio of laboratorios">
                         <li>
-                            <div class="rup-card mini laboratorio" [ngClass]="{'active': isOpen(laboratorio, 'cda')}">
+                            <div class="rup-card mini laboratorio" [ngClass]="{'active': huds.isOpen(laboratorio.data, 'cda')}">
                                 <div class="rup-header">
                                     <div class="rup-border rup-border-laboratorio">
                                         <div class="row p-0 m-0 border-secondary border-left-0">
@@ -432,7 +432,7 @@
                                                             <i class="icon mdi mdi-flask-empty-outline"></i>
                                                         </div>
                                                     </ng-container>
-                                                    <div class="col p-0 pl-2 float-left" (click)="devolverRegistrosHuds(laboratorio, 'cda')">
+                                                    <div class="col p-0 pl-2 float-left" (click)="emitTabs(laboratorio, 'cda')">
                                                         {{ laboratorio?.prestacion.term }}
                                                         <div class="row p-0 m-0">
                                                             <div class="col-10 p-0 m-0">
@@ -484,7 +484,7 @@
                 <ul class="conceptos list-unstyled">
                     <ng-container *ngFor="let unaVacuna of vacunas; let iVacuna = index">
                         <li>
-                            <div class="rup-card mini vacuna" [ngClass]="{'active': isOpen(unaVacuna, 'cda')}">
+                            <div class="rup-card mini vacuna" [ngClass]="{'active': huds.isOpen(unaVacuna, 'cda')}">
                                 <div class="rup-header">
                                     <div class="rup-border rup-border-vacuna">
 
@@ -503,7 +503,7 @@
                                                             <i class="icon mdi mdi-eyedropper-variant"></i>
                                                         </div>
                                                     </ng-container>
-                                                    <div class="col p-0 pl-2 float-left" (click)="devolverRegistrosHuds(unaVacuna, 'cda')">
+                                                    <div class="col p-0 pl-2 float-left" (click)="emitTabs(unaVacuna.data, 'cda')">
                                                         {{ unaVacuna?.prestacion.term }}
                                                         <div class="row p-0 m-0">
                                                             <div class="col-10 p-0 m-0">

@@ -5,16 +5,9 @@
             <!-- Panel Principal -->
             <div class="col-8">
                 <plex-box>
-                    <ng-container *ngIf="!registrosHuds">
-                        <div class="contenedor-mensaje">
-                            <div class="mensaje">
-
-                            </div>
-                        </div>
-                    </ng-container>
-                    <plex-tabs (close)="onCloseTab($event)" [activeIndex]="activeTab">
-                        <ng-container *ngIf="registrosHuds">
-                            <ng-container *ngFor="let registro of (huds.registrosHUDS | async)">
+                    <plex-tabs (close)="onCloseTab($event)" [activeIndex]="huds.activeTab">
+                        <ng-container>
+                            <ng-container *ngFor="let registro of huds.registrosHUDS | async">
                                 <plex-tab [allowClose]="true" [label]="registro.data.concepto.term" [class]="registro.data.class"
                                     [color]="registro.data.class" *ngIf="registro.tipo === 'concepto'">
                                     <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)"
@@ -137,9 +130,7 @@
             <!-- HUDS -->
             <div class="col-4" *ngIf="paciente">
                 <plex-box>
-                    <!-- HUDS [hudsBusqueda.component.ts] -->
-                    <rup-hudsBusqueda #huds [registrosHuds]="registrosHuds" (evtHuds)="agregarListadoHuds($event)"
-                        [paciente]="paciente" [prestacionActual]="" [emitirConceptos]="false"></rup-hudsBusqueda>
+                    <rup-hudsBusqueda #huds [paciente]="paciente" [emitirConceptos]="false"></rup-hudsBusqueda>
                 </plex-box>
             </div>
 

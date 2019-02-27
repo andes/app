@@ -5,7 +5,7 @@
             <!-- Panel Principal -->
             <div class="col-8">
                 <plex-box>
-                    <plex-tabs [hidden]="showDatosSolicitud" [activeIndex]="activeTab" (close)="onCloseTab($event)">
+                    <plex-tabs [hidden]="showDatosSolicitud" [activeIndex]="huds.activeTab" (close)="onCloseTab($event)">
 
                         <plex-tab [label]="(prestacion.ejecucion.registros && prestacion.ejecucion.registros.length) ? 'Registros de esta consulta (' + prestacion.ejecucion.registros.length + ')' : 'Registros de esta consulta '">
 
@@ -256,8 +256,8 @@
                                 [paciente]="paciente"></rup-resumenPaciente-dinamico>
                         </plex-tab>
 
-                        <ng-container *ngIf="registrosHuds">
-                            <ng-container *ngFor="let registro of registrosHuds; let i = index">
+                        <ng-container>
+                            <ng-container *ngFor="let registro of huds.registrosHUDS | async">
 
                                 <plex-tab [label]="registro.data.concepto.term" [allowClose]="true" [class]="registro.data.class"
                                     [color]="registro.data.class" *ngIf="registro.tipo === 'concepto'">
@@ -410,9 +410,9 @@
                         </plex-tab>
                         <plex-tab label="Historia de Salud" (click)="panelIndex = 1">
                             <!-- HUDS [hudsBusqueda.component.ts] -->
-                            <rup-hudsBusqueda [registrosHuds]="registrosHuds" [paciente]="prestacion?.paciente"
-                                [prestacionActual]="prestacion.id" [_dragScope]="'registros-rup'" (evtData)="ejecutarConceptoHuds($event)"
-                                (evtHuds)="agregarListadoHuds($event)" (_onDragStart)="arrastrandoConcepto(true)"
+                            <rup-hudsBusqueda [paciente]="prestacion?.paciente"
+                                [_dragScope]="'registros-rup'" (evtData)="ejecutarConceptoHuds($event)"
+                                (_onDragStart)="arrastrandoConcepto(true)"
                                 (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
                         </plex-tab>
                     </plex-tabs>
