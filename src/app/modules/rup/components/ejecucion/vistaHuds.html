@@ -14,7 +14,7 @@
                     </ng-container>
                     <plex-tabs (close)="onCloseTab($event)" [activeIndex]="activeTab">
                         <ng-container *ngIf="registrosHuds">
-                            <ng-container *ngFor="let registro of registrosHuds; let i = index">
+                            <ng-container *ngFor="let registro of (huds.registrosHUDS | async)">
                                 <plex-tab [allowClose]="true" [label]="registro.data.concepto.term" [class]="registro.data.class"
                                     [color]="registro.data.class" *ngIf="registro.tipo === 'concepto'">
                                     <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)"

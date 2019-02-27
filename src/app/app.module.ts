@@ -460,6 +460,8 @@ import { FormTerapeuticoDetallePageComponent } from './components/formularioTera
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
 import { UploadFileComponent } from './shared/components/upload-file.component';
 import { CodificacionService } from './modules/rup/services/codificacion.service';
+import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
+import { HUDSService } from './modules/rup/services/huds.service';
 
 
 
@@ -671,7 +673,9 @@ registerLocaleData(localeEs, 'es');
         SeleccionBinariaComponent,
         CampaniaSaludService,
         SeleccionBinariaComponent,
-        PacienteCreateUpdateComponent
+        PacienteCreateUpdateComponent,
+        SnomedBuscarService,
+        HUDSService
     ]
 })
 

@@ -5,6 +5,7 @@ import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 
+import { HUDSService } from '../../services/huds.service';
 @Component({
     selector: 'rup-hudsBusqueda',
     templateUrl: 'hudsBusqueda.html',
@@ -137,7 +138,8 @@ export class HudsBusquedaComponent implements OnInit {
         private servicioPrestacion: PrestacionesService,
         public servicioTipoPrestacion: TipoPrestacionService,
         public plex: Plex,
-        public auth: Auth
+        public auth: Auth,
+        public huds: HUDSService
     ) {
     }
 
@@ -251,7 +253,8 @@ export class HudsBusquedaComponent implements OnInit {
         };
         // si no existe lo agregamos
         if (index === -1) {
-            this.registrosHuds.push(elemento);
+            // this.registrosHuds.push(elemento);
+            this.huds.addRegistro(registro);
         } else {
             // si existe lo quitamos
             this.registrosHuds.splice(index, 1);

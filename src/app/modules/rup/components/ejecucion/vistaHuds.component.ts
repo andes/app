@@ -11,6 +11,7 @@ import { PrestacionesService } from '../../services/prestaciones.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
+import { HUDSService } from '../../services/huds.service';
 
 @Component({
     selector: 'rup-vistaHuds',
@@ -39,13 +40,18 @@ export class VistaHudsComponent implements OnInit {
     public btnVolver = 'VOLVER';
     public rutaVolver;
 
-    constructor(public elementosRUPService: ElementosRUPService,
-        public plex: Plex, public auth: Auth,
-        private router: Router, private route: ActivatedRoute,
+    constructor(
+        public elementosRUPService: ElementosRUPService,
+        public plex: Plex,
+        public auth: Auth,
+        private router: Router,
+        private route: ActivatedRoute,
         private servicioPaciente: PacienteService,
         private logService: LogService,
-        public servicioPrestacion: PrestacionesService,
-        private conceptObserverService: ConceptObserverService) { }
+        private servicioPrestacion: PrestacionesService,
+        private conceptObserverService: ConceptObserverService,
+        public huds: HUDSService
+    ) { }
 
     /**
     *Inicializamos con el id del paciente
