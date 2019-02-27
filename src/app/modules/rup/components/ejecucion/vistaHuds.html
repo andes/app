@@ -45,18 +45,21 @@
                                     [class]="registro.data.class" color="solicitud" *ngIf="registro.tipo === 'prestacion'">
                                     <h4 class="text-capitalize">{{ registro.data.solicitud.tipoPrestacion.term }}</h4>
                                     <div class="row">
-                                        <div class="col-12">
-                                            <b>Fecha: </b> {{ registro.data.solicitud.fecha | date: 'EEE
-                                            dd/MM/yyyyHH:MM' }}
+                                        <div class="col-6">
+                                            <b> Fecha: </b> 
+                                            {{ registro.data.ejecucion.fecha | date: 'EEE dd/MM/yyyy HH:MM' }}
+                                        </div>
+                                        <div class="col-6" *ngIf="(registro.data.ejecucion.fecha - registro.data.solicitud.fecha) > 1000 ">
+                                            <b> Solicitada el: </b> 
+                                            {{ registro.data.solicitud.fecha | date: 'EEE dd/MM/yyyy HH:MM' }}
                                         </div>
                                         <div class="col-12">
-                                            <b>Solicitada por el profesional: </b>{{
-                                            registro.data.solicitud.profesional | profesional
-                                            }}
+                                            <b> Solicitada por el profesional: </b>
+                                            {{ registro.data.solicitud.profesional | profesional }}
                                         </div>
                                         <div class="col-12">
-                                            <b>Desde la Organización: </b> {{
-                                            registro.data.solicitud.organizacion.nombre }}
+                                            <b> Desde la Organización: </b>
+                                            {{ registro.data.solicitud.organizacion.nombre }}
                                         </div>
                                     </div>
                                     <div class="row">

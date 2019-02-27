@@ -267,6 +267,4 @@ export class CamaComponent implements OnInit {
         this.listadoCamas = [];
     }
 
-    
-
 }

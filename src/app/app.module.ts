@@ -20,6 +20,7 @@ import { LOCALE_ID } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 // Global
 import { PlexModule } from '@andes/plex';
@@ -494,6 +495,7 @@ registerLocaleData(localeEs, 'es');
         HttpModule,
         PlexModule,
         AuthModule,
+        ScrollingModule,
         NgDragDropModule.forRoot(),
         ChartsModule,
         routing,

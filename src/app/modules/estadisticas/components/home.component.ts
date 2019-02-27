@@ -1,26 +1,30 @@
-import { Component, AfterViewInit, HostBinding } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, HostBinding, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Plex } from '@andes/plex';
 
 @Component({
     templateUrl: 'home.html',
     styleUrls: ['home.scss']
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
 
 
-    constructor(private router: Router) { }
+    constructor(private router: Router, private plex: Plex, private route: ActivatedRoute) { }
 
-    ngAfterViewInit() {
-        // this.organizacion = this.auth.organizacion;
+    ngOnInit() {
+        this.plex.updateTitle([
+            { route: '/', name: 'ANDES' },
+            { name: 'Dashboard' }
+        ]);
     }
 
     toRUP() {
-        this.router.navigate(['estadisticas/ambulatorio']);
+        this.router.navigate(['ambulatorio'], { relativeTo: this.route });
     }
 
     toCITAS() {
-        this.router.navigate(['estadisticas/citas']);
+        this.router.navigate(['citas'], { relativeTo: this.route });
     }
 
 }

@@ -308,6 +308,7 @@ export class PrestacionesService {
                         concepto: registro.concepto,
                         prestaciones: [registro.idPrestacion],
                         evoluciones: [{
+                            idPrestacion: registro.idPrestacion,
                             idRegistro: registro.id,
                             fechaCarga: registro.createdAt,
                             profesional: registro.createdBy.nombreCompleto,
@@ -688,7 +689,6 @@ export class PrestacionesService {
      * @memberof PrestacionesService
      */
     inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null, _profesional: any = null): any {
-        console.log(_profesional);
         let pacientePrestacion;
         if (!paciente) {
             pacientePrestacion = undefined;
@@ -1073,16 +1073,16 @@ export class PrestacionesService {
         return this.server.get('/modules/rup/internaciones/ultima/' + (paciente.id ? paciente.id : paciente._id), opt);
     }
 
-        /**
-    * Devuelve el listado de internacion por organizacion
-    *
+    /**
+* Devuelve el listado de internacion por organizacion
+*
 
-    * @returns  {array} Listado Organizacion
-    * @memberof PrestacionesService
-    */
-   public listadoInternacion(filtros?) {
-    return this.server.get('/modules/rup/internaciones/listadoInternacion/', { params: filtros, showError: true });
-}
+* @returns  {array} Listado Organizacion
+* @memberof PrestacionesService
+*/
+    public listadoInternacion(filtros?) {
+        return this.server.get('/modules/rup/internaciones/listadoInternacion/', { params: filtros, showError: true });
+    }
 
 
     /**

@@ -65,7 +65,7 @@ export class ListadoInternacionComponent implements OnInit {
 
 
     volver() {
-        this.router.navigate(['/internacion/inicio']);
+        this.router.navigate(['/internacion/camas']);
     }
 
     devuelveFecha(internacion, tipo) {
