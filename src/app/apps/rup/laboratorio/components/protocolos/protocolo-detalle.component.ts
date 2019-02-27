@@ -578,7 +578,7 @@ export class ProtocoloDetalleComponent
     async confirmarValoresCriticos(alertasValidadas) {
         let msg = 'Se encontraron resultados críticos para los siguientes análisis: ';
         alertasValidadas.forEach(e => {
-            msg += e.registroPractica.practica.nombre + ', ';
+            msg += e.registroPractica.nombre + ', ';
         });
 
         return await this.plex.confirm(msg.substring(0, msg.length - 2) + '. ¿Desea confirmar estos valores?');
