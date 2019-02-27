@@ -1,0 +1,557 @@
+import { estados } from './../../../../utils/enumerados';
+import { IPaciente } from '../../../../interfaces/IPaciente';
+import { Observable } from 'rxjs/Observable';
+import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Location } from '@angular/common';
+import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
+import { CamasService } from '../services/camas.service';
+import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
+import { OrganizacionService } from '../../../../services/organizacion.service';
+import { ObraSocialService } from '../../../../services/obraSocial.service';
+import { OcupacionService } from '../../../../services/ocupacion/ocupacion.service';
+import { SnomedService } from '../../../../services/term/snomed.service';
+import { ProfesionalService } from '../../../../services/profesional.service';
+import { InternacionService } from '../services/internacion.service';
+import { PacienteService } from '../../../../services/paciente.service';
+import { IPrestacionRegistro } from '../../../../modules/rup/interfaces/prestacion.registro.interface';
+
+@Component({
+    selector: 'rup-iniciarInternacion',
+    templateUrl: 'iniciarInternacion.html'
+})
+export class IniciarInternacionComponent implements OnInit {
+    @HostBinding('class.plex-layout') layout = true;
+
+    private _prestacion: any;
+    @Input()
+    set prestacion(value: any) {
+        this._prestacion = value;
+        if (this._prestacion) {
+            let existeRegistro = this.servicioInternacion.verRegistro(this._prestacion, 'ingreso');
+            if (existeRegistro) {
+                this.paciente = this._prestacion.paciente;
+                this.informeIngreso = existeRegistro.informeIngreso;
+            }
+        }
+
+    }
+    get prestacion(): any {
+        return this._prestacion;
+    }
+    @Input() desdeListadoInternacion;
+    @Input() paciente;
+    @Input() camaSelected;
+    @Input() soloValores;
+    @Input() workflowC;
+    @Output() data: EventEmitter<any> = new EventEmitter<any>();
+    // Emite la cama con el paciente internado
+    @Output() accionCama: EventEmitter<any> = new EventEmitter<any>();
+    @Output() otroPaciente: EventEmitter<any> = new EventEmitter<any>();
+    nroCarpetaOriginal: string;
+    btnIniciarGuardar;
+    showEditarCarpetaPaciente = false;
+    public listaUnidadesOrganizativas = [];
+    public listadoCamas = [];
+    public paseAunidadOrganizativa: any;
+    public ocupaciones = [];
+    public obraSocial;
+    public origenHospitalizacion = [
+        { id: 'consultorio externo', nombre: 'Consultorio externo' },
+        { id: 'emergencia', nombre: 'Emergencia' },
+        { id: 'traslado', nombre: 'Traslado' },
+        { id: 'sala de parto', nombre: 'Sala de parto' },
+        { id: 'otro', nombre: 'Otro' }
+    ];
+    public nivelesInstruccion = [
+        { id: 'ninguno', nombre: 'Ninguno' },
+        { id: 'primario incompleto', nombre: 'Primario incompleto' },
+        { id: 'primario completo', nombre: 'Primario completo' },
+        { id: 'secundario incompleto', nombre: 'Secundario incompleto' },
+        { id: 'secundario completo', nombre: 'Secundario completo' },
+        { id: 'Ciclo EGB (1 y 2) incompleto', nombre: 'Ciclo EGB (1 y 2) incompleto' },
+        { id: 'Ciclo EGB (1 y 2) completo', nombre: 'Ciclo EGB (1 y 2) completo' },
+        { id: 'Ciclo EGB 3 incompleto', nombre: 'Ciclo EGB 3 incompleto' },
+        { id: 'Ciclo EGB 3 completo', nombre: 'Ciclo EGB 3 completo' },
+        { id: 'Polimodal incompleto', nombre: 'Polimodal incompleto' },
+        { id: 'Polimodal completo', nombre: 'Polimodal completo' },
+        { id: 'terciario/universitario incompleto', nombre: 'Terciario/Universitario incompleto' },
+        { id: 'terciario/universitario completo', nombre: 'Terciario/Universitario completo' }
+    ];
+    public situacionesLaborales = [
+        { id: 'Trabaja o está de licencia', nombre: 'Trabaja o está de licencia' },
+        { id: 'No trabaja y busca trabajo', nombre: 'No trabaja y busca trabajo' },
+        { id: 'No trabaja y no busca trabajo', nombre: 'No trabaja y no busca trabajo' }
+    ];
+    public pacienteAsociado = [
+        { id: 'Plan de salud privado o Mutual', nombre: 'Plan de salud privado o Mutual' },
+        { id: 'Plan o Seguro público', nombre: 'Plan o Seguro público' },
+        { id: 'Ninguno', nombre: 'Ninguno' }
+    ];
+
+    // Fecha seleccionada
+    public fecha: Date = new Date();
+    // Fecha seleccionada
+    public hora: Date = new Date();
+    // Hora de nacimiento (para recien nacidos)
+    public pedirHoraNac = false;
+    // Tipos de prestacion que el usuario tiene permiso
+    public tiposPrestacion: any = [];
+    // Tipos de prestacion seleccionada para la internación
+    // TODO:: PREGUNTAR SI VAN A EXISTIR VARIOS CONCEPTOS DE INTERNACIÓN
+    public tipoPrestacionSeleccionada = {
+        fsn: 'admisión hospitalaria (procedimiento)',
+        semanticTag: 'procedimiento',
+        conceptId: '32485007',
+        term: 'internación'
+    };
+
+    // armamos el registro para los datos del formulario de ingreso hospitalario
+    public snomedIngreso: any = this.servicioInternacion.conceptosInternacion.ingreso;
+
+    // Paciente sleccionado
+    // public paciente: IPaciente;
+    public buscandoPaciente = false;
+    public cama = null;
+    public organizacion: any;
+    public origenExterno = false;
+    public carpetaPaciente = null;
+    public informeIngreso = {
+        fechaIngreso: new Date(),
+        horaNacimiento: new Date(),
+        edadAlIngreso: null,
+        origen: null,
+        ocupacionHabitual: null,
+        situacionLaboral: null,
+        nivelInstruccion: null,
+        asociado: null,
+        obraSocial: null,
+        nroCarpeta: null,
+        motivo: null,
+        organizacionOrigen: null,
+        profesional: null,
+        PaseAunidadOrganizativa: null,
+
+    };
+
+    constructor(private router: Router, private route: ActivatedRoute,
+        private plex: Plex, public auth: Auth,
+        public camasService: CamasService,
+        private servicioPrestacion: PrestacionesService,
+        private organizacionService: OrganizacionService,
+        public obraSocialService: ObraSocialService,
+        public ocupacionService: OcupacionService,
+        public snomedService: SnomedService,
+        private location: Location,
+        private internacionService: InternacionService,
+        public servicioProfesional: ProfesionalService,
+        public servicioInternacion: InternacionService,
+        public pacienteService: PacienteService
+    ) { }
+
+    ngOnInit() {
+        if (this.prestacion) {
+            this.btnIniciarGuardar = 'GUARDAR';
+            let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
+            if (existeRegistro) {
+                this.paciente = this.prestacion.paciente;
+                this.informeIngreso = existeRegistro.valor.informeIngreso;
+
+                // Chequeamos los datos que ya estan registrados para mostrar
+                // los campos que están ocultos por defecto
+                this.fecha = this.informeIngreso.fechaIngreso;
+                this.hora = this.informeIngreso.fechaIngreso;
+                this.informeIngreso.obraSocial = existeRegistro.valor.informeIngreso.obraSocial;
+                this.obraSocial = existeRegistro.valor.informeIngreso.obraSocial;
+                if (existeRegistro.valor.informeIngreso.origen && (existeRegistro.valor.informeIngreso.origen === 'Traslado' || existeRegistro.valor.informeIngreso.origen === 'Consultorio externo')) {
+                    this.origenExterno = true;
+                }
+                this.informeIngreso.PaseAunidadOrganizativa = this.informeIngreso.PaseAunidadOrganizativa ? this.informeIngreso.PaseAunidadOrganizativa : null;
+                if (this.informeIngreso.PaseAunidadOrganizativa) {
+                    this.camasService.getCamasXFecha(this.auth.organizacion.id, existeRegistro.valor.informeIngreso.fechaIngreso).subscribe(resultado => {
+                        if (resultado) {
+                            let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.conceptId === this.informeIngreso.PaseAunidadOrganizativa.conceptId);
+                            this.listadoCamas = [...lista];
+                        }
+
+
+                    });
+                }
+
+
+            }
+        } else if (this.paciente && this.paciente.id) {
+            this.btnIniciarGuardar = 'INICIAR';
+            this.servicioPrestacion.internacionesXPaciente(this.paciente, 'ejecucion', this.auth.organizacion.id).subscribe(resultado => {
+                // Si el paciente ya tiene una internacion en ejecucion
+                if (resultado) {
+                    if (resultado.cama) {
+                        this.plex.info('warning', 'El paciente registra una internación en ejecución y está ocupando una cama');
+                        // Salimos del iniciar internacion
+                        this.data.emit(false);
+                        this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
+                        this.router.navigate(['/internacion/camas']);
+                    } else {
+
+                        let existeEgreso = this.internacionService.verRegistro(resultado.ultimaInternacion, 'egreso');
+                        // y no esta ocupando cama lo pasamos directamente a ocupar una cama
+                        if (!existeEgreso) {
+                            this.plex.info('warning', 'El paciente tiene una internación en ejecución y todavia no egreso');
+                            // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
+                            this.data.emit(false);
+                            this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
+
+                        } else {
+                                                      this.servicioPrestacion.getById(resultado.ultimaInternacion.id).subscribe(prestacion => {
+                                this.prestacion = prestacion;
+                                let existeRegistro = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
+                                if (existeRegistro) {
+                                    // Carga la información completa del paciente
+                                    this.pacienteService.getById(prestacion.paciente.id).subscribe(paciente => {
+                                        this.paciente = paciente;
+                                        this.informeIngreso = existeRegistro.valor.informeIngreso;
+                                    });
+                                }
+                            });
+                        }
+
+                    }
+                } else {
+                    // Chequeamos si el paciente tiene una internacion validad anterios para copiar los datos
+                    this.servicioPrestacion.internacionesXPaciente(this.paciente, 'validada', null).subscribe(datosInternacion => {
+                        if (datosInternacion) {
+                            this.informeIngreso = this.buscarRegistroInforme(datosInternacion.ultimaInternacion);
+                        }
+                        this.buscandoPaciente = false;
+                    });
+                    // Se busca la obra social del paciente y se le asigna
+                    this.obraSocialService.get({ dni: this.paciente.documento }).subscribe((os: any) => {
+                        if (os && os.length > 0) {
+                            this.obraSocial = { nombre: os[0].financiador, codigoFinanciador: os[0].codigoFinanciador };
+                            this.informeIngreso.obraSocial = { nombre: os[0].financiador, codigoPuco: os[0].codigoFinanciador };
+                        }
+                    });
+                    let indiceCarpeta = -1;
+                    if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) {
+                        indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
+                        if (indiceCarpeta > -1) {
+                            this.informeIngreso.nroCarpeta = this.paciente.carpetaEfectores[indiceCarpeta].nroCarpeta;
+                        }
+                    }
+                }
+            });
+        } else {
+            this.plex.info('warning', 'El paciente debe ser registrado en MPI');
+        }
+        if (this.paciente.fechaNacimiento) {
+            if (this.servicioInternacion.compareOnlyDate(new Date(this.paciente.fechaNacimiento), new Date()) === 0) {
+                this.pedirHoraNac = true;
+            }
+        }
+        if (this.camaSelected) {
+            this.cama = this.camaSelected;
+            // let camaId = this.camaSelected.id;
+            // this.camasService.getCama(camaId).subscribe(cama => {
+            //     this.cama = cama;
+            // });
+        } else {
+            this.route.params.subscribe(params => {
+                if (params && params['id']) {
+                    let id = params['id'];
+                    this.camasService.getCama(id).subscribe(cama => {
+                        this.cama = cama;
+                    });
+                }
+            });
+        }
+        this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
+            this.organizacion = organizacion;
+            this.listaUnidadesOrganizativas = this.organizacion.unidadesOrganizativas ? this.organizacion.unidadesOrganizativas : [];
+        });
+
+        // Cargamos todas las ocupaciones
+        this.ocupacionService.get().subscribe(rta => {
+            this.ocupaciones = rta;
+        });
+
+    }
+
+    actualizarInformeIngreso() {
+
+    }
+
+    routeTo(action, id) {
+        this.router.navigate(['rup/' + action + '/', id]);
+    }
+
+    loadProfesionales(event) {
+        let listaProfesionales = [];
+        if (event.query) {
+            let query = {
+                nombreCompleto: event.query
+            };
+            this.servicioProfesional.get(query).subscribe(resultado => {
+                listaProfesionales = resultado;
+                event.callback(listaProfesionales);
+            });
+        } else {
+            if (this.auth.profesional) {
+                this.servicioProfesional.get({ id: this.auth.profesional.id }).subscribe(resultado => {
+                    if (resultado) {
+                        this.informeIngreso.profesional = resultado[0] ? resultado[0] : null;
+                        let callback = (resultado) ? resultado : null;
+                        event.callback([callback]);
+                    }
+                });
+            } else {
+                let profesionalSalida = [];
+                if (this.informeIngreso && this.informeIngreso.profesional) {
+                    profesionalSalida = [this.informeIngreso.profesional];
+                }
+                event.callback(profesionalSalida);
+            }
+        }
+    }
+
+    buscarRegistroInforme(internacion) {
+        let registros = internacion.ejecucion.registros;
+        let informe = registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
+        return informe;
+    }
+
+
+    onPacienteCancel() {
+        this.buscandoPaciente = false;
+    }
+
+    /**
+     * Emite un false para ocultar el componente
+     */
+    cancelar() {
+        this.data.emit(false);
+        this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
+    }
+
+    controlarConflictosInternacion(fechaIngreso: Date): boolean {
+        const fechaActual = new Date();
+        // Controlamos que no me carguen una internación a futuro
+        if (fechaIngreso > fechaActual) {
+            this.plex.info('warning', 'La fecha de ingreso no puede ser superior a la fecha actual');
+            return false;
+        }
+        // Controlamos conflictos de fechas en el historial de la cama
+        // buscamos que en la fechaHora de ingreso, con un margen de una hora, la cama este disponible
+        if (this.cama) {
+            if (!this.servicioInternacion.esCamaDisponible(this.cama, fechaIngreso)) {
+                this.plex.info('warning', 'La cama seleccionada no está disponible en la fecha ingresada. Por favor controle la fecha y hora de ingreso.');
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Guarda la prestación
+     */
+    guardar(valid) {
+        if (valid.formValid) {
+            if (!this.paciente) {
+                this.plex.info('warning', 'Debe seleccionar un paciente');
+                return;
+            }
+
+            if (this.cama === null && !this.workflowC && !this.desdeListadoInternacion) {
+                this.plex.info('warning', 'Debe seleccionar una cama');
+                return;
+            }
+            if (this.informeIngreso.organizacionOrigen === 'consultorio externo' || this.informeIngreso.organizacionOrigen === 'traslado' && !this.informeIngreso.organizacionOrigen) {
+                this.plex.info('warning', 'Debe seleccionar una organización');
+                return;
+            }
+
+            this.informeIngreso.fechaIngreso = this.servicioInternacion.combinarFechas(this.fecha, this.hora);
+
+
+            if (!this.controlarConflictosInternacion(this.informeIngreso.fechaIngreso)) {
+                return;
+            }
+
+            // mapeamos los datos en los combos
+            this.informeIngreso.situacionLaboral = ((typeof this.informeIngreso.situacionLaboral === 'string')) ? this.informeIngreso.situacionLaboral : (Object(this.informeIngreso.situacionLaboral).nombre);
+            this.informeIngreso.nivelInstruccion = ((typeof this.informeIngreso.nivelInstruccion === 'string')) ? this.informeIngreso.nivelInstruccion : (Object(this.informeIngreso.nivelInstruccion).nombre);
+            this.informeIngreso.asociado = ((typeof this.informeIngreso.asociado === 'string')) ? this.informeIngreso.asociado : (Object(this.informeIngreso.asociado).nombre);
+            this.informeIngreso.ocupacionHabitual = ((typeof this.informeIngreso.ocupacionHabitual === 'string')) ? this.informeIngreso.ocupacionHabitual : (Object(this.informeIngreso.ocupacionHabitual).nombre);
+            this.informeIngreso.origen = ((typeof this.informeIngreso.origen === 'string')) ? this.informeIngreso.origen : (Object(this.informeIngreso.origen).nombre);
+            this.informeIngreso.PaseAunidadOrganizativa = this.informeIngreso.PaseAunidadOrganizativa;
+
+            // calcualmos la edad al ingreso
+            if (this.paciente.fechaNacimiento) {
+                if (this.pedirHoraNac) {
+                    this.paciente.fechaNacimiento = this.servicioInternacion.combinarFechas(this.paciente.fechaNacimiento, this.informeIngreso.horaNacimiento);
+                }
+                this.informeIngreso.edadAlIngreso = this.servicioInternacion.calcularEdad(this.paciente.fechaNacimiento, this.informeIngreso.fechaIngreso);
+            }
+
+            if (this.prestacion && this.prestacion.id) {
+                // reemplazamos el Informe de ingreso en la prestacion
+                let indexInforme = this.prestacion.ejecucion.registros.findIndex(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
+                this.prestacion.ejecucion.registros[indexInforme].valor = { informeIngreso: this.informeIngreso };
+                let cambios = {
+                    op: 'registros',
+                    registros: this.prestacion.ejecucion.registros
+                };
+                this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe(p => {
+                    if (this.cama && !this.cama.ultimoEstado.idInternacion) {
+
+
+                        let idPaciente = this.paciente ? this.paciente._id : this.prestacion.paciente.id;
+                        this.pacienteService.getById(idPaciente).subscribe(pacienteCompleto => {
+
+                            // vamos a actualizar el estado de la cama
+                            let dto = {
+                                fecha: this.informeIngreso.fechaIngreso,
+                                estado: 'ocupada',
+                                unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
+                                especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
+                                esCensable: this.cama.ultimoEstado.esCensable,
+                                genero: this.cama.ultimoEstado.genero ? this.cama.ultimoEstado.genero : null,
+                                paciente: pacienteCompleto,
+                                idInternacion: this.prestacion.id,
+                                esMovimiento: true
+                            };
+
+
+                            this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
+                                this.cama.ultimoEstado = camaActualizada.ultimoEstado;
+                                this.accionCama.emit({ cama: this.cama, accion: 'internarPaciente' });
+                                this.data.emit(false);
+                            }, (err1) => {
+                                this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
+                            });
+                        });
+                    } else {
+                        this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
+                        this.data.emit(false);
+                    }
+
+                }, (err) => {
+                    this.plex.info('danger', err);
+                });
+            } else {
+                // armamos el elemento data a agregar al array de registros
+                let nuevoRegistro = new IPrestacionRegistro(null, this.snomedIngreso);
+                if (this.obraSocial) {
+                    this.informeIngreso.obraSocial = this.obraSocial;
+                }
+                nuevoRegistro.valor = { informeIngreso: this.informeIngreso };
+                // el concepto snomed del tipo de prestacion para la internacion
+                let conceptoSnomed = this.tipoPrestacionSeleccionada;
+
+                // creamos la prestacion de internacion y agregamos el registro de ingreso
+                let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, this.tipoPrestacionSeleccionada, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso, null, this.informeIngreso.profesional);
+                nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
+                nuevaPrestacion.paciente['_id'] = this.paciente.id;
+
+                if (this.obraSocial) {
+                    nuevaPrestacion.solicitud.obraSocial = { codigoPuco: this.obraSocial.codigoFinanciador, nombre: this.obraSocial.nombre };
+                }
+                this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+                    if (this.cama) {
+                        // vamos a actualizar el estado de la cama
+                        let dto = {
+                            fecha: this.informeIngreso.fechaIngreso,
+                            estado: 'ocupada',
+                            unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
+                            especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
+                            esCensable: this.cama.ultimoEstado.esCensable,
+                            genero: this.cama.ultimoEstado.genero ? this.cama.ultimoEstado.genero : null,
+                            paciente: this.paciente,
+                            idInternacion: prestacion.id,
+                            esMovimiento: true
+                        };
+                        this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
+                            this.cama.ultimoEstado = camaActualizada.ultimoEstado;
+                            this.accionCama.emit({ cama: this.cama, accion: 'internarPaciente' });
+                            // this.data.emit(false);
+                        }, (err1) => {
+                            this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
+
+                        });
+                    } else {
+
+                        this.plex.info('warning', 'Paciente ingresado a lista de espera');
+                        // this.router.navigate(['rup/internacion/ver', prestacion.id]);
+                        this.data.emit(false);
+                        this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
+
+                    }
+
+                }, (err) => {
+                    this.plex.info('danger', 'La prestación no pudo ser registrada. Por favor verifica la conectividad de la red.');
+                });
+            }
+        }
+
+    }
+
+    onReturn() {
+        this.router.navigate(['/internacion/camas']);
+    }
+
+    changeOrigenHospitalizacion(event) {
+        if (event.value.id === 'consultorio externo' || event.value.id === 'traslado') {
+            this.origenExterno = true;
+        } else {
+            this.origenExterno = false;
+        }
+    }
+
+    loadOrganizacion(event) {
+        if (event.query) {
+            let query = {
+                nombre: event.query
+            };
+            this.organizacionService.get(query).subscribe(event.callback);
+        } else {
+            let organizacionSalida = [];
+            if (this.informeIngreso && this.informeIngreso.organizacionOrigen) {
+                organizacionSalida = [this.informeIngreso.organizacionOrigen];
+            }
+            event.callback(organizacionSalida);
+        }
+    }
+
+    selectCamasDisponibles(unidadOrganizativa, fecha, hora) {
+        // this.cama = null;
+        this.listadoCamas = null;
+        if (unidadOrganizativa) {
+            let f = this.servicioInternacion.combinarFechas(fecha, hora);
+            this.camasService.getCamasXFecha(this.auth.organizacion.id, f).subscribe(resultado => {
+                if (resultado) {
+                    let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.conceptId === unidadOrganizativa.conceptId);
+                    this.listadoCamas = [...lista];
+                }
+
+
+            });
+        }
+
+    }
+
+    // Se usa tanto para guardar como cancelar
+    afterComponenteCarpeta(carpetas) {
+        // Siempre es 1 sólo el seleccionado cuando se edita una carpeta
+        if (carpetas) {
+            this.paciente.carpetaEfectores = [];
+        }
+        this.showEditarCarpetaPaciente = false;
+    }
+
+    // permite elegir otro paciente para internar
+    buscarOtroPaciente() {
+        this.accionCama.emit({ cama: this.cama, accion: 'internarPaciente', otroPaciente: true });
+    }
+
+}

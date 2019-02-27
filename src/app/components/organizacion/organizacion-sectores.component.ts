@@ -5,7 +5,7 @@ import { OrganizacionService } from './../../services/organizacion.service';
 import { IOrganizacion, ISectores } from './../../interfaces/IOrganizacion';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ISnomedConcept } from '../../modules/rup/interfaces/snomed-concept.interface';
-import { CamasService } from '../../modules/rup/services/camas.service';
+import { CamasService } from '../../apps/rup/internacion/services/camas.service';
 
 @Component({
     selector: 'organizacion-sectores',
@@ -40,7 +40,7 @@ export class OrganizacionSectoresComponent implements OnInit {
     ) { }
 
     public unidadID: String = '2441000013103';
-
+    public sectoresIniciales: any[] = [];
     public ambienteHospitalarioQuery: String = '^2391000013102';
     public unidadesOrganizativasQuery: String = '<<284548004';
 
@@ -80,9 +80,23 @@ export class OrganizacionSectoresComponent implements OnInit {
      * Vuelve al listado de organizaciones
      */
 
+
     onCancel() {
-        this.router.navigate(['tm/organizacion']);
+        if (this.sectoresIniciales.length === 0) {
+            this.sectoresIniciales = JSON.parse(JSON.stringify(this.organizacion.mapaSectores));
+        }
+        this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Desea volver?').then(confirmado => {
+            if (confirmado) {
+                this.router.navigate(['tm/organizacion']);
+            } else {
+                return;
+            }
+        });
+
     }
+
+
+
 
     /**
      * Agrega un sector root
