@@ -74,12 +74,6 @@ export class ProtocoloDetalleComponent
             this.cargarProtocolo(value);
         }
     }
-    public activo = 1;
-
-    public cambio(value: number) {
-        this.plex.toast('info', 'Tab seleccionado: ' + value);
-        this.activo = value;
-    }
 
     /**
      *
@@ -98,8 +92,8 @@ export class ProtocoloDetalleComponent
         if ((this.laboratorioContextoCacheService.isModoRecepcionSinTurno() || this.laboratorioContextoCacheService.isModoRecepcion())
             && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
             this.editarDatosCabecera();
-        } else {
-            // this.aceptarEdicionCabecera();
+        } else if (this.laboratorioContextoCacheService.isModoCarga() || this.laboratorioContextoCacheService.isModoValidacion()) {
+            this.convertirResultadosValoresAObjetos();
         }
     }
 
@@ -449,13 +443,12 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     private async actualizarProtocoloRegistrosEjecucion(next) {
-        let params: any = { registros: this.modelo.ejecucion.registros };
+        this.convertirResultadosObjetosAValores();
+        let params: any = { idProtocolo: this.modelo._id, registros: this.modelo.ejecucion.registros };
 
         if (this.validarPrestacion()) {
             params.estado = Constantes.estadoValidada;
-            params.idProtocolo = this.modelo._id;
         }
-
 
         this.servicioProtocolo.patch(params).subscribe(async () => {
             let alertasValidadas = [];
@@ -467,18 +460,8 @@ export class ProtocoloDetalleComponent
                 this.irAGestorAlarmas();
 
             } else if (next) {
-                this.showGestorAlarmas = false;
-                this.protocolos.splice(this.indexProtocolo, 1);
-                if (this.laboratorioContextoCacheService.isModoRecepcion() || this.protocolos.length === 0) {
-                    this.contextoCache.mostrarCuerpoProtocolo = true;
-                    this.volverAListaControEmit.emit();
-                } else {
-                    if (!this.protocolos[this.indexProtocolo]) {
-                        this.indexProtocolo = this.protocolos.length - 1;
-                    }
-                    this.cargarProtocolo(this.protocolos[this.indexProtocolo]);
-                }
-                this.plex.toast('success', this.modelo.ejecucion.registros[0].nombre, 'Solicitud guardada', 4000);
+                this.cargarProximoProtocolo();
+
             } else if (this.contextoCache.modoAVolver) {
                 this.contextoCache.modoAVolver = null;
             } else {
@@ -486,6 +469,50 @@ export class ProtocoloDetalleComponent
                 this.volverAListaControEmit.emit();
             }
         });
+    }
+
+    /**
+     *
+     *
+     * @private
+     * @memberof ProtocoloDetalleComponent
+     */
+    private cargarProximoProtocolo() {
+        this.showGestorAlarmas = false;
+        this.protocolos.splice(this.indexProtocolo, 1);
+        if (this.laboratorioContextoCacheService.isModoRecepcion() || this.protocolos.length === 0) {
+            this.contextoCache.mostrarCuerpoProtocolo = true;
+            this.volverAListaControEmit.emit();
+        } else {
+            if (!this.protocolos[this.indexProtocolo]) {
+                this.indexProtocolo = this.protocolos.length - 1;
+            }
+            this.cargarProtocolo(this.protocolos[this.indexProtocolo]);
+        }
+        this.plex.toast('success', this.modelo.ejecucion.registros[0].nombre, 'Solicitud guardada', 4000);
+    }
+    /**
+     *
+     *
+     * @private
+     * @memberof ProtocoloDetalleComponent
+     */
+    private convertirResultadosObjetosAValores() {
+        this.modelo.ejecucion.registros
+            .filter(  r => r.valor.practica.resultado.formato.tipo === 'Predefenidos (Selección simple)' && r.valor.resultado.valor )
+            .forEach( r => r.valor.resultado.valor = r.valor.resultado.valor.nombre);
+    }
+
+    /**
+     *
+     *
+     * @private
+     * @memberof ProtocoloDetalleComponent
+     */
+    private convertirResultadosValoresAObjetos() {
+        this.modelo.ejecucion.registros
+            .filter(  r => r.valor.practica.resultado.formato.tipo === 'Predefenidos (Selección simple)' && r.valor.resultado.valor )
+            .forEach( r => r.valor.resultado.valor = { id: r.valor.resultado.valor, nombre: r.valor.resultado.valor } );
     }
 
     /**

@@ -2,11 +2,11 @@ import { Constantes } from './../../../controllers/constants';
 import { LaboratorioContextoCacheService } from './../../../services/protocoloCache.service';
 import { ProfesionalService } from './../../../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
-import { ProtocoloService } from './../../../services/protocolo.service';
 import { IPractica } from '../../../interfaces/practica/IPractica';
 import { PracticaService } from '../../../services/practica.service';
 import { Input, Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { getRespuestasGestionValoresCriticos } from '../../../../../../utils/enumerados';
+import { generateRegistroEjecucion } from '../../../controllers/protocolos/tabla-detalle-protocolo/tabla-datalle-protocolo.controller';
 import { Plex } from '@andes/plex';
 
 @Component({
@@ -23,19 +23,14 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     }
 
     @Output() verHistorialResultadosEmitter: EventEmitter<any> = new EventEmitter<any>();
-    // @Input() modo: any;
-    modo: any;
-    @Input('modo')
-    set mm(m) {
-        this.modo = m;
-    }
-
+    @Input() modo: any;
     @Input() modelo: any;
     @Input() solicitudProtocolo: any;
     @Input() busqueda: any;
     @Input() alertasValidadas = [];
     @Input() showGestorAlarmas: Boolean;
-    // practicasCarga = [];
+    @Input() validaciones;
+
     practicasVista = [];
     practicasEjecucion = [];
     alertasValReferencia = [];
@@ -43,12 +38,6 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     flagMarcarTodas: Boolean = false;
     avisoValoresCriticos: any;
     cache;
-
-    validaciones;
-    @Input('validaciones')
-    set setVs(value) {
-        this.validaciones = value;
-    }
 
     protocolos;
     @Input('protocolos')
@@ -63,12 +52,9 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     set pjs(practicasEjecucion) {
         if (!this.laboratorioContextoCacheService.getContextoCache().cargarPorPracticas) {
             this.practicasEjecucion = practicasEjecucion;
-            // this.cargarListaPracticaCarga().then(() => {
-            // this.cargarResultadosAnteriores();
             if (this.laboratorioContextoCacheService.isModoValidacion()) {
                 this.precargarValidaciones();
             }
-            // });
             this.cargarPracticasVista();
         }
     }
@@ -79,7 +65,6 @@ export class TablaDatalleProtocoloComponent implements OnInit {
 
     constructor(
         private servicioPractica: PracticaService,
-        private servicioProtocolo: ProtocoloService,
         private servicioProfesional: ProfesionalService,
         private laboratorioContextoCacheService: LaboratorioContextoCacheService,
         public plex: Plex,
@@ -220,11 +205,15 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      * @memberof TablaDatalleProtocolo
      */
     actualizarEstadoValidacion() {
-        let protocoloValidado = this.practicasEjecucion.every((practica) => {
-            return practica.resultado.validado;
-        });
+        // let protocoloValidado = this.practicasEjecucion.every((practica) => {
+        //     return practica.resultado.validado;
+        // });
 
-        if (protocoloValidado) {
+        // if (protocoloValidado) {
+        //     this.modelo.estados.push(Constantes.estadoValidada);
+        // }
+
+        if (this.practicasEjecucion.every( p =>  p.resultado.validado )) {
             this.modelo.estados.push(Constantes.estadoValidada);
         }
     }
@@ -264,43 +253,6 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     }
 
     /**
-     *
-     *
-     * @param {*} practica
-     * @returns
-     * @memberof TablaDatalleProtocoloComponent
-     */
-    generateRegistroEjecucion(practica) {
-        let practicaEjecucion: any = {
-            codigo: practica.codigo,
-            destacado: false,
-            esSolicitud: false,
-            esDiagnosticoPrincipal: false,
-            relacionadoCon: practica.requeridos.map((req) => { return req._id; }),
-            nombre: practica.nombre,
-            concepto: practica.concepto,
-            valor: {
-                idPractica: practica._id,
-                nivel: practica.nivel,
-                resultado: {
-                    valor: null,
-                    sinMuestra: false,
-                    validado: false
-                },
-                estados: [{
-                    tipo: 'pendiente',
-                    usuario: this.auth.usuario,
-                    fecha: new Date()
-                }],
-                organizacionDestino: this.auth.organizacion,
-                practica: practica
-            }
-        };
-        // console.log(practicaEjecucion);
-        return practicaEjecucion;
-    }
-
-    /**
     * Incluye una nueva práctica seleccionada tanto a la solicitud como a la ejecución
     *
     * @param {IPractica} practica
@@ -311,12 +263,12 @@ export class TablaDatalleProtocoloComponent implements OnInit {
             let existe = this.solicitudProtocolo.solicitudPrestacion.practicas.findIndex(x => x.concepto.conceptId === practica.concepto.conceptId);
             if (existe === -1) {
                 this.solicitudProtocolo.solicitudPrestacion.practicas.push(practica);
-                let practicaEjecucion = this.generateRegistroEjecucion(practica);
+                let practicaEjecucion = generateRegistroEjecucion(this.auth.usuario, this.auth.organizacion, practica);
                 this.practicasVista.push(practicaEjecucion);
 
                 this.servicioPractica.findByIdsCompletas(practica._id).subscribe((resultados) => {
                     resultados.forEach(res => {
-                        this.practicasEjecucion.push(this.generateRegistroEjecucion(res));
+                        this.practicasEjecucion.push(generateRegistroEjecucion(this.auth.usuario, this.auth.organizacion, res));
                     });
                 });
             } else {
@@ -333,11 +285,11 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      * @param {*} tipo
      * @memberof TablaDatalleProtocolo
      */
-    onValorResultadoChange($event, op) {
+    onValorResultadoChange(event, op) {
         if (!this.isResultadoValidado(op)) {
-            if (!$event.value) {
+            if (!event.value) {
                 this.cache.practicasCargadas = this.cache.practicasCargadas.filter(e => e !== op);
-            } else if (!this.cache.practicasCargadas.find(e => { return e === op; })) {
+            } else if (!this.cache.practicasCargadas.find(e => e === op )) {
                 this.cache.practicasCargadas.push(op);
                 if (this.laboratorioContextoCacheService.isModoValidacion()) {
                     this.validaciones.find(e => e.registroPractica._id === op._id).esValorCritico = this.verificarValorCritico(op);
@@ -354,12 +306,6 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     verificarValorResultado(objetoPractica) {
         const resultado = objetoPractica.registro.valor.resultado;
         if (resultado && resultado.valor && objetoPractica.practica.categoria !== 'compuesta') {
-            let alerta = {
-                registro: objetoPractica.registro,
-                practica: objetoPractica.practica,
-                resultado: resultado
-            };
-
             // TODO: Debe tomar valores de referencia según presentación actica y edad y sexo de paciente, NO el primero de todos por edefecto, como está actulamente-
 
             this.alertasValReferencia = this.alertasValReferencia.filter(e => e.id !== objetoPractica.registro._id);
@@ -368,7 +314,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
                 // this.alertasValCriticos.push(alerta);
             } else {
                 if (this.verificarValorReferencia(objetoPractica.valor)) {
-                    this.alertasValReferencia.push(alerta);
+                    this.alertasValReferencia.push( { registro: objetoPractica.registro, practica: objetoPractica.practica, resultado: resultado });
                 }
             }
         }
@@ -414,12 +360,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      * @memberof ProtocoloDetalleComponent
      */
     loadProfesionales($event) {
-        let query = {
-            nombreCompleto: $event.query
-        };
-        this.servicioProfesional.get(query).subscribe((resultado: any) => {
-            $event.callback(resultado);
-        });
+        this.servicioProfesional.get({ nombreCompleto: $event.query }).subscribe( resultado => $event.callback(resultado) );
     }
 
     /**
@@ -433,11 +374,11 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     }
 
     /**
- * Busca y carga lista de profesionales
- *
- * @param {any} $event
- * @memberof ProtocoloDetalleComponent
- */
+     * Busca y carga lista de profesionales
+     *
+     * @param {any} $event
+     * @memberof ProtocoloDetalleComponent
+     */
     changeRespuestaGestionValoresCriticos($event) {
         const rtas = getRespuestasGestionValoresCriticos();
         if ($event.value) {
