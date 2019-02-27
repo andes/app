@@ -129,7 +129,8 @@
                         <small *ngIf="registro.transformado" class="badge badge-info">
                             Transformado en:
                             <strong>{{ registro.transformado.concepto.term ? registro.transformado.concepto.term : ''
-                                }}</strong>
+                                }}
+                            </strong>
                         </small>
                     </div>
                 </div>
@@ -157,10 +158,10 @@
             <div class="col">
                 <ng-container *ngIf="registro?.evoluciones">
                     <div class="row">
-                        <div class="col-8 title" *ngIf="registro.concepto">
+                        <div class="col-6 title" *ngIf="registro.concepto">
                             <b>{{registro.concepto.term[0].toUpperCase() + registro.concepto.term.slice(1)}}</b>
                         </div>
-                        <div class="col-4 text-right">
+                        <div class="col-6 text-right">
                             <b>Fecha de Inicio estimada: </b>
                             <ng-container *ngIf="registro?.evoluciones[0].fechaInicio">
                                 {{ registro.evoluciones[0].fechaInicio | fromNow }}
@@ -171,18 +172,44 @@
                         </div>
                         <hr>
                     </div>
-                    <div *ngFor="let evolucion of registro.evoluciones" class="row ml-1">
-                        <div class="col-6">
-                            <b>Evolución: </b>
-                            <span [innerHTML]="evolucion.evolucion"></span>
+                    <ng-container *ngFor="let evolucion of registro.evoluciones">
+                        <div class="row ml-1">
+                            <div class="col-6">
+                                <b>Evolución: </b>
+                                <span [innerHTML]="evolucion.evolucion"></span>
+                            </div>
+                            <div class="col-6">
+                                <b>Fecha de Carga: </b> {{ evolucion.fechaCarga | fecha }}
+                                <br>
+                                <b>Profesional: </b> {{evolucion.profesional }}
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <b>Fecha de Carga: </b> {{ evolucion.fechaCarga | fecha }}
-                            <br>
-                            <b>Profesional: </b> {{evolucion.profesional }}
+                        <div class="row ml-1">
+                            <div class="col">
+                                <span [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente,evolucion,registro.concepto)"></span>
+                            </div>
                         </div>
-                        <div class="col-12">&nbsp;</div>
-                    </div>
+                        <div class="row ml-1">
+                            <div class="col">
+                                <ng-container *ngFor="let relacion of evolucion.relacionadoCon; let r=index">
+                                    <div *ngIf="relacion.concepto && (relacion.concepto.conceptId != prestacionesService.conceptosSnomed.InformeEncuentro)">
+                                        Relacionado con:
+                                        <small class="badge badge-info">
+                                            {{ relacion.concepto?.term }}
+                                        </small>
+                                    </div>
+
+                                </ng-container>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <hr>
+                    </ng-container>
+
                 </ng-container>
             </div>
         </div>

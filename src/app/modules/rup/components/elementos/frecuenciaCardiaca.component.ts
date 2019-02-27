@@ -1,10 +1,12 @@
 import { RUPComponent } from './../core/rup.component';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-frecuencia-cardiaca',
     templateUrl: 'frecuenciaCardiaca.html'
 })
+@RupElement('FrecuenciaCardiacaComponent')
 export class FrecuenciaCardiacaComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         let paciente = this.paciente;

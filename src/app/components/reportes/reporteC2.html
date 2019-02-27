@@ -2,7 +2,7 @@
     <div class="col-8">
         <table *ngIf="diagnosticos.length>0" class="table table-striped table-sm">
             <thead>
-                <th>Codigo</th>
+                <th>Código</th>
                 <th>Descripción</th>
                 <th>Descripción General</th>
                 <th style="text-align:center">Total Consultas</th>
@@ -26,64 +26,64 @@
             <tbody>
                 <tr *ngFor="let diagnostico of diagnosticos; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': seleccionada[i]}"
                     (click)="datosPacientes(i)">
-                    <td>
+                    <td *ngIf="diagnostico.total >0">
                         {{ diagnostico.codigo }}
                     </td>
-                    <td>
+                    <td *ngIf="diagnostico.total >0">
                         {{ diagnostico.nombre }}
                     </td>
-                    <td>
+                    <td *ngIf="diagnostico.total >0">
                         {{ diagnostico.reporteC2 }}
                     </td>
-                    <td style="text-align:center" [ngClass]="{'font-weight-bold': true}">
+                    <td *ngIf="diagnostico.total >0" style="text-align:center" [ngClass]="{'font-weight-bold': true}">
                         {{ diagnostico.total }}
                     </td>
-                    <td *ngIf="!diagnostico.sumaLactante" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMenor6m > 0}">
+                    <td *ngIf="!diagnostico.sumaLactante && diagnostico.total >0" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMenor6m > 0}">
                         {{ diagnostico.sumaMenor6m }}
                     </td>
-                    <td *ngIf="!diagnostico.sumaLactante" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma711m > 0}">
+                    <td *ngIf="!diagnostico.sumaLactante && diagnostico.total >0" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma711m > 0}">
                         {{ diagnostico.suma711m }}
                     </td>
-                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma1 > 0}">
+                    <td *ngIf="diagnostico.total >0" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma1 > 0}">
                         {{ diagnostico.suma1 }}
                     </td>
-                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma24 > 0}">
+                    <td *ngIf="diagnostico.total >0" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma24 > 0}">
                         {{ diagnostico.suma24 }}
                     </td>
-                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma59 > 0}">
+                    <td *ngIf="diagnostico.total >0" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma59 > 0}">
                         {{ diagnostico.suma59 }}
                     </td>
-                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma1014 > 0}">
+                    <td *ngIf="diagnostico.total >0" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma1014 > 0}">
                         {{ diagnostico.suma1014 }}
                     </td>
-                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma1519 > 0}">
+                    <td *ngIf="diagnostico.total >0" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma1519 > 0}">
                         {{ diagnostico.suma1519 }}
                     </td>
-                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma2024 > 0}">
+                    <td *ngIf="diagnostico.total >0" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma2024 > 0}">
                         {{ diagnostico.suma2024 }}
                     </td>
-                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma2534 > 0}">
+                    <td *ngIf="diagnostico.total >0" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma2534 > 0}">
                         {{ diagnostico.suma2534 }}
                     </td>
-                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma3544 > 0}">
+                    <td *ngIf="diagnostico.total >0" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma3544 > 0}">
                         {{ diagnostico.suma3544 }}
                     </td>
-                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma4564 > 0}">
+                    <td *ngIf="diagnostico.total >0" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma4564 > 0}">
                         {{ diagnostico.suma4564 }}
                     </td>
-                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma6574 > 0}">
+                    <td *ngIf="diagnostico.total >0" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma6574 > 0}">
                         {{ diagnostico.suma6574 }}
                     </td>
-                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMayor75 > 0}">
+                    <td *ngIf="diagnostico.total >0" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMayor75 > 0}">
                         {{ diagnostico.sumaMayor75 }}
                     </td>
-                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMasculino > 0}">
+                    <td *ngIf="diagnostico.total >0" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMasculino > 0}">
                         {{ diagnostico.sumaMasculino }}
                     </td>
-                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaFemenino > 0}">
+                    <td *ngIf="diagnostico.total >0" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaFemenino > 0}">
                         {{ diagnostico.sumaFemenino }}
                     </td>
-                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaOtro > 0}">
+                    <td *ngIf="diagnostico.total >0" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaOtro > 0}">
                         {{ diagnostico.sumaOtro }}
                     </td>
                 </tr>
@@ -120,9 +120,9 @@
 
     </div>
     <!--Panel Pacientes-->
-    <div class="col-4">
+    <div class="col-4" *ngIf="listaPacientes">
         <plex-box>
-            <fieldset *ngIf="listaPacientes">
+            <fieldset>
                 <legend>Listado de Pacientes {{diagnostico.reporteC2}}</legend>
                 <table class="table table-striped table-sm">
                     <thead>

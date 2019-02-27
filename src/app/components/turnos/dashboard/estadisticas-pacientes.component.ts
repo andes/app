@@ -23,6 +23,7 @@ export class EstadisticasPacientesComponent implements OnInit {
     public _paciente: IPaciente;
     turnosPaciente: any;
     ultimosTurnos: any;
+    @Input() showTab: Number = 0;
     @Input('paciente')
     set paciente(value: any) {
         this.turnosOtorgados = 0;

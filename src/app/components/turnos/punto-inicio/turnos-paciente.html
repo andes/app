@@ -36,9 +36,15 @@
 
                         <div class="row" *ngIf="turno && turno.profesionales">
                             <div class="col">
-                                <strong>Profesionales:</strong> {{ turno.profesionales | enumerar:['apellido',
-                                'nombre']
-                                }}
+                                <strong>Profesionales:</strong>
+                                {{ turno.profesionales | enumerar:['apellido','nombre']}}
+                            </div>
+                        </div>
+                        <!-- <br> -->
+                        <div class="row" *ngIf="turno && turno.espacioFisico">
+                            <div class="col">
+                                <strong>Espacio Físico:</strong>
+                                {{turno.espacioFisico.nombre}}
                             </div>
                         </div>
                         <br>
@@ -51,12 +57,12 @@
                             <div class="col-4" *ngIf="puedeRegistrarAsistencia && turno.asistencia !== 'asistio'&& isToday(turno)">
                                 <plex-button type="success" label="Dar Asistencia" (click)="eventosTurno(turno, 'darAsistencia')"></plex-button>
                             </div>
-                            <div class="col-4" *ngIf="puedeRegistrarAsistencia && turno.asistencia === 'asistio' && isToday(turno)">
+                            <div class="col-4" *ngIf="puedeRegistrarAsistencia && turno.asistencia === 'asistio' && isToday(turno) && turno.diagnostico.codificaciones.length == 0">
 
                                 <plex-button type="warning" label="Quitar Asistencia" (click)="eventosTurno(turno,'sacarAsistencia')"></plex-button>
                             </div>
                             <div class="col-4">
-                                <plex-button type="info" label="Arancelamiento" (click)="showArancelamiento(turno)"></plex-button>
+                                <plex-button type="info" label="Recupero" (click)="showArancelamiento(turno)"></plex-button>
                             </div>
                         </div>
                     </div>

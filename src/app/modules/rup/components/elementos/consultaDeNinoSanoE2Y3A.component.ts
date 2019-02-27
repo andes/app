@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
+import { RupElement } from '.';
 
 @Component({
     selector: 'rup-consulta-nino-sano-e2y3a',
     templateUrl: 'consultaDeNinoSanoE2Y3A.html'
 })
+@RupElement('ConsultaDeNinoSanoE2Y3AComponent')
 export class ConsultaDeNinoSanoE2Y3AComponent extends RUPComponent implements OnInit {
     ninoSanoHUDS: any;
     ultimaConsulta: any;

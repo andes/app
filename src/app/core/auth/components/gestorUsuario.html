@@ -9,13 +9,13 @@
                 <permisosVisualizacion *ngIf="usuarioSeleccionado && organizacionSeleccionada" [user]="usuarioSeleccionado"
                     [org]="organizacionSeleccionada" [permiteAsignarPerfiles]="false" [arbolPermisosCompleto]="arbolPermisosCompleto"
                     [permisosUsuario]='permisosUsuarioOrg'></permisosVisualizacion>
-                <div *ngIf="!usuarioSeleccionado || !organizacionSeleccionada">
+                <div *ngIf="!usuarioSeleccionado || !organizacionSeleccionada" class="mt-5">
                     <i class="mdi mdi-emoticon-sad"></i>Seleccione un usuario y organización para visualizar sus
                     permisos</div>
             </plex-tab>
 
             <plex-tab label="Editar permisos">
-                <div class="row" *ngIf="usuarioSeleccionado">
+                <div *ngIf="usuarioSeleccionado && organizacionSeleccionada" class="row">
                     <div class="col d-flex justify-content-end">
                         <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
                         <plex-button type="success" label="Guardar" (click)="guardar($event)"></plex-button>
@@ -25,15 +25,15 @@
                     <div class="col-12 mb-2">
                         <div class="page-title">PERFILES</div>
                     </div>
-                    <div class="col">
-                        <permisosVisualizacion *ngIf="usuarioSeleccionado && organizacionSeleccionada" [user]="usuarioSeleccionado"
-                            [org]="organizacionSeleccionada" [permiteAsignarPerfiles]="true" (seleccionCheckboxPerfil)="seleccionPerfil($event)"
+                    <div class="col" *ngIf="permisosUsuarioOrg">
+                        <permisosVisualizacion [user]="usuarioSeleccionado" [org]="organizacionSeleccionada"
+                            [permiteAsignarPerfiles]="true" (seleccionCheckboxPerfil)="seleccionPerfil($event)"
                             [arbolPermisosCompleto]="arbolPermisosCompleto" [permisosUsuario]='permisosUsuarioOrg'></permisosVisualizacion>
                     </div>
                 </div>
                 <div *ngIf="usuarioSeleccionado && organizacionSeleccionada" class="row">
                     <div class="col-12 mb-2">
-                        <div class="page-title">PERMISOS</div>
+                        <div class="page-title mt-5">PERMISOS</div>
                     </div>
                     <div class="col">
                         <div *ngFor="let permiso of permisos$ | async">
@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div *ngIf="!usuarioSeleccionado || !organizacionSeleccionada" class="row">
-                    <div class="col">
+                    <div class="col mt-5">
                         <i class="mdi mdi-emoticon-sad"></i>Seleccione un usuario y organización para editar sus
                         permisos
                     </div>

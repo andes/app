@@ -22,13 +22,13 @@
                         <div class="row">
                             <div class="{{showEditarAgendaPanel && agendasSeleccionadas?.length === 1 ? 'col-6' : 'col-3'}}">
                                 <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection($event,'fechaDesde')"
-                                    name="fechaDesde" label="Desde" class="fechas">
+                                    name="fechaDesde" label="Desde" class="fechas" [max]="fechaHasta">
                                 </plex-datetime>
                                 <!-- <plex-button type="info" icon="chevron-right"></plex-button> -->
                             </div>
                             <div class="{{showEditarAgendaPanel && agendasSeleccionadas?.length === 1 ? 'col-6' : 'col-3'}}">
                                 <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection($event,'fechaHasta')"
-                                    name="fechaHasta" label="Hasta" class="fechas">
+                                    name="fechaHasta" label="Hasta" class="fechas" [min]="fechaDesde">
                                 </plex-datetime>
                             </div>
                             <div class="{{showEditarAgendaPanel && agendasSeleccionadas?.length === 1 ? 'col-8' : 'col-4'}}">
@@ -86,7 +86,7 @@
                                 </td>
                                 <td (click)="verAgenda(agenda, false, $event)">
                                     <div class="datos-agenda">{{agenda.horaInicio | date: 'EEE' | uppercase }}
-                                        {{agenda.horaInicio | date: 'dd/MM/yyyy'}}
+                                        {{agenda.horaInicio | fecha}}
                                         <i class="mdi mdi-clock" title="Horario inicio/fin"></i> {{agenda.horaInicio |
                                         date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs
                                         -

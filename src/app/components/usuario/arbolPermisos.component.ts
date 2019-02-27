@@ -102,6 +102,10 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
         // console.log(this.seleccionados);
         // [TODO] no notifica que se selecciono un permiso (prestacion)
         // this.seleccionPermiso.emit({ checked: event.value, permiso: this.item });
+        setTimeout(() => {
+
+            console.log('Cambio prestaciones: ', event);
+        }, 100);
     }
 
     loadData(type, event) {
