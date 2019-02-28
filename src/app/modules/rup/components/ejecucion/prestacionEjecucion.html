@@ -290,8 +290,8 @@
                             </rup-resumenPaciente-estatico>
                             <rup-resumenPaciente-dinamico-nino *ngIf="paciente.edad <= 6" [paciente]="paciente">
                             </rup-resumenPaciente-dinamico-nino>
-                            <rup-resumenPaciente-dinamico *ngIf="paciente.edad > 6" [prestacion]="prestacion"
-                                [paciente]="paciente"></rup-resumenPaciente-dinamico>
+                            <rup-resumenPaciente-dinamico *ngIf="paciente.edad > 6" [paciente]="paciente">
+                            </rup-resumenPaciente-dinamico>
                         </plex-tab>
 
                         <ng-container *ngIf="registrosHuds">
@@ -303,7 +303,8 @@
                                     <rup [paciente]="paciente"
                                         [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)"
                                         [params]="this.elementosRUPService.coleccionRetsetId[registro.data.concepto.conceptId]"
-                                        [prestacion]="prestacion" [registro]="registro.data" [soloValores]="true">
+                                        [prestacion]="prestacion" [registro]="registro.data.registros[0]"
+                                        [soloValores]="true">
                                     </rup>
                                     <ng-container
                                         *ngIf="registro.data.concepto.semanticTag !== 'trastorno' && registro.data.concepto.semanticTag !== 'hallazgo'">
