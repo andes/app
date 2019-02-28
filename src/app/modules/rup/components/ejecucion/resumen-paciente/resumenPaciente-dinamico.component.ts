@@ -3,7 +3,6 @@ import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../../interfaces/IPaciente';
 import { ISnomedConcept } from '../../../interfaces/snomed-concept.interface';
 import { ElementosRUPService } from '../../../services/elementosRUP.service';
-import { IPrestacion } from '../../../interfaces/prestacion.interface';
 
 @Component({
     selector: 'rup-resumenPaciente-dinamico',
@@ -12,7 +11,6 @@ import { IPrestacion } from '../../../interfaces/prestacion.interface';
 
 export class ResumenPacienteDinamicoComponent implements OnInit {
     @Input() paciente: IPaciente;
-    @Input() prestacion: IPrestacion;
 
     public graficos: any[] = [];
     public conceptos: ISnomedConcept[] = [
@@ -24,15 +22,15 @@ export class ResumenPacienteDinamicoComponent implements OnInit {
         },
         {
             conceptId: '710996002',
-            fsn: 'monitorización de la talla (régimen/tratamiento)',
+            fsn: 'seguimiento de la talla (régimen/tratamiento)',
             semanticTag: 'régimen/tratamiento',
-            term: 'monitorización de la talla'
+            term: 'seguimiento de la talla'
         },
         {
-            fsn: 'control de la tensión sanguínea (régimen/tratamiento)',
+            fsn: 'control de la tensión arterial (régimen/tratamiento)',
             semanticTag: 'régimen/tratamiento',
             conceptId: '135840009',
-            term: 'monitoreo de la tensión sanguínea'
+            term: 'monitoreo de la tensión arterial'
         }
     ];
 
