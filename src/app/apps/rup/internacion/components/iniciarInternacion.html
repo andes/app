@@ -103,6 +103,14 @@
                                 </plex-text>
                             </div>
                         </div>
+                        <div class="row">
+                                <div class="col-md">
+                                        <plex-select name="especialidad" [required]="true" (getData)="loadEspecialidades($event)"
+                                        idField="term" labelField="term" [(ngModel)]="informeIngreso.especialidades" [multiple]="true"
+                                        label="Especialidad/es" >
+                                    </plex-select>
+                                </div>
+                            </div>
                         <div class="row" *ngIf="workflowC && !camaSelected">
                             <div class="col-md">
                                 <plex-select name="unidadOrganizativa" [data]="listaUnidadesOrganizativas" idField="term"
