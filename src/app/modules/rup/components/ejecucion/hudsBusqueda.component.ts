@@ -589,7 +589,7 @@ export class HudsBusquedaComponent implements OnInit {
 
             // DEjamos el resto de los CDAS y los unimos a las prestaciones
             const filtro = this.cdas.filter(cda => {
-                return cda.prestacion.conceptId !==  TipoPrestacionService.Vacunas_CDA_ID && cda.prestacion.conceptId !==  TipoPrestacionService.Laboratorio_CDA_ID;
+                return cda.prestacion.conceptId !== TipoPrestacionService.Vacunas_CDA_ID && cda.prestacion.conceptId !== TipoPrestacionService.Laboratorio_CDA_ID;
             });
 
             this.prestaciones = [...this.prestaciones, ...filtro];
