@@ -1,4 +1,3 @@
-import { SemanticTag } from './../../interfaces/semantic-tag.type';
 import { Component, OnInit, HostBinding, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Plex } from '@andes/plex';
@@ -10,7 +9,6 @@ import { LogService } from '../../../../services/log.service';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
-import { IPrestacion } from '../../interfaces/prestacion.interface';
 
 @Component({
     selector: 'rup-vistaHuds',
@@ -23,7 +21,6 @@ export class VistaHudsComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
 
     @Input() paciente: IPaciente;
-    @Input() prestacion: IPrestacion;
     @Output() cambiarPaciente = new EventEmitter<boolean>();
 
     // Defaults de Tabs panel derecho
@@ -109,16 +106,6 @@ export class VistaHudsComponent implements OnInit {
             }).subscribe(() => { return true; });
         }
 
-        this.plex.updateTitle([{
-            route: '/',
-            name: 'ANDES'
-        }, {
-            route: '/rup',
-            name: 'RUP'
-        }, {
-            name: 'Historia Única De Salud'
-        }]);
-
     }
 
     redirect(pagina: string) {
@@ -127,7 +114,6 @@ export class VistaHudsComponent implements OnInit {
     }
 
     public onCloseTab($event) {
-        debugger;
         if (this.activeTab > $event) {
             this.activeTab--;
         }
