@@ -7,13 +7,18 @@
 <!-- Moléculas -->
 <ng-template #moleculaRup>
     <ng-container *ngIf="elementoRUP && elementoRUP.requeridos && elementoRUP.requeridos.length">
-        <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
-            <div *ngIf="item.elementoRUP" class="col-{{ item.style.columns }} mr-{{ item.style?.offset ? item.style.offset : '0' }}">
-                <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
-                    [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange($event)"
-                    (ejecutarConcepto)="emitEjecutarConcepto(prestacion)">
-                </rup>
-            </div>
-        </ng-container>
+        <div class="row">
+            <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
+
+                <div *ngIf="item.elementoRUP" class="col-{{ item.style.columns }} mr-{{ item.style?.offset ? item.style.offset : '0' }}">
+                    <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
+                        [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange($event)"
+                        (ejecutarConcepto)="emitEjecutarConcepto(prestacion)">
+                    </rup>
+                </div>
+
+            </ng-container>
+        </div>
+
     </ng-container>
 </ng-template>
