@@ -52,8 +52,6 @@
                                     </div>
 
                                     <!-- Contenedor del registro RUP -->
-
-
                                     <div
                                         class="rup-card {{ (registro.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(registro.concepto) }}">
                                         <div class="rup-header">
@@ -81,17 +79,6 @@
                                                             <b class="clearfix"
                                                                 *ngIf="registro?.relacionadoCon">Relacionado
                                                                 con: </b>
-                                                            <!-- <ng-container *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length > 0 && (!elementoRUP?.reglas?.requeridos?.relacionesMultiples)">
-                                                                        <small class="badge badge-info text-uppercase">
-                                                                            {{ registro.relacionadoCon[0].concepto.term }}
-                                                                        </small>
-                                                                        <a href="javascript:void(0);" (click)="desvincular(registro, registro.relacionadoCon[0])"
-                                                                            class="desvincular" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
-                                                                            title="Desvincular" class="btn btn-sm btn-primary">
-                                                                            <i class="mdi mdi-link-variant-off"></i>
-                                                                        </a>
-                                                                    </ng-container> -->
-
                                                             <ng-container>
                                                                 <ng-container
                                                                     *ngFor="let relacion of registro.relacionadoCon; let r=index">
@@ -394,7 +381,6 @@
                                                                 <ng-container
                                                                     *ngIf="relacion.valor?.piezas && registro.concepto.conceptId === '173291009'">
                                                                     <span *ngFor="let pieza of relacion.valor.piezas">
-                                                                        <!-- {{pieza | json }} -->
                                                                         <span *ngIf="pieza.cara === 'pieza'"
                                                                             class="badge badge-info">
                                                                             {{ pieza.concepto.term }} / pieza completa
@@ -405,7 +391,6 @@
                                                                 <ng-container
                                                                     *ngIf="relacion.valor?.piezas && registro.concepto.conceptId === '67784006'">
                                                                     <span *ngFor="let pieza of relacion.valor.piezas">
-                                                                        <!-- {{pieza | json }} -->
                                                                         <span *ngIf="pieza.cara !== 'pieza'"
                                                                             class="badge badge-info">
                                                                             {{ pieza.concepto.term }} / cara {{
