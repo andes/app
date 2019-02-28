@@ -213,7 +213,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         //     this.modelo.estados.push(Constantes.estadoValidada);
         // }
 
-        if (this.practicasEjecucion.every( p =>  p.resultado.validado )) {
+        if (this.practicasEjecucion.every(p => p.resultado.validado)) {
             this.modelo.estados.push(Constantes.estadoValidada);
         }
     }
@@ -286,10 +286,36 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      * @memberof TablaDatalleProtocolo
      */
     onValorResultadoChange(event, op) {
+        this.formatearDecimales(op.valor);
+        this.actualzarEstadoDeCargas(op, event.value);
+    }
+
+    /**
+     *
+     *
+     * @private
+     * @param {*} op
+     * @memberof TablaDatalleProtocoloComponent
+     */
+    private formatearDecimales(valorRegistro) {
+        if (valorRegistro.practica.resultado.formato.decimales) {
+            return valorRegistro.resultado.valor = Number.parseFloat(valorRegistro.resultado.valor).toFixed(valorRegistro.practica.resultado.formato.decimales);
+            // valor = Number.parseFloat(valorRegistro.resultado.valor).toFixed(valorRegistro.practica.resultado.formato.decimales);
+        }
+    }
+
+    /**
+     *
+     *
+     * @private
+     * @param {*} op
+     * @memberof TablaDatalleProtocoloComponent
+     */
+    private actualzarEstadoDeCargas(op, valor) {
         if (!this.isResultadoValidado(op)) {
-            if (!event.value) {
+            if (!valor) {
                 this.cache.practicasCargadas = this.cache.practicasCargadas.filter(e => e !== op);
-            } else if (!this.cache.practicasCargadas.find(e => e === op )) {
+            } else if (!this.cache.practicasCargadas.find(e => e === op)) {
                 this.cache.practicasCargadas.push(op);
                 if (this.laboratorioContextoCacheService.isModoValidacion()) {
                     this.validaciones.find(e => e.registroPractica._id === op._id).esValorCritico = this.verificarValorCritico(op);
@@ -314,7 +340,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
                 // this.alertasValCriticos.push(alerta);
             } else {
                 if (this.verificarValorReferencia(objetoPractica.valor)) {
-                    this.alertasValReferencia.push( { registro: objetoPractica.registro, practica: objetoPractica.practica, resultado: resultado });
+                    this.alertasValReferencia.push({ registro: objetoPractica.registro, practica: objetoPractica.practica, resultado: resultado });
                 }
             }
         }
@@ -360,7 +386,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      * @memberof ProtocoloDetalleComponent
      */
     loadProfesionales($event) {
-        this.servicioProfesional.get({ nombreCompleto: $event.query }).subscribe( resultado => $event.callback(resultado) );
+        this.servicioProfesional.get({ nombreCompleto: $event.query }).subscribe(resultado => $event.callback(resultado));
     }
 
     /**
@@ -417,7 +443,6 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     }
 
     /**
-     *
      *
      * @param {*} element
      * @memberof TablaDatalleProtocoloComponent
