@@ -6,7 +6,7 @@
         <label class="text-capitalize">{{registro.concepto.term}}</label>
     </ng-template>
     <div class="row">
-        <div [ngClass]="{'col-5': !soloValores, 'col-12': soloValores}">
+        <div *ngIf="!params.allDroppable" [ngClass]="{'col-5': !soloValores, 'col-12': soloValores}">
             <textarea *ngIf="!soloValores" class="form-control" [ngClass]="{'svgTextarea': !registro?.valor }"
                 [(ngModel)]="registro.valor" rows="6" id="descripcion" name="descripcion" [required]="params.required"></textarea>
             <p *ngIf="soloValores" class="readonly mb-5">
@@ -15,7 +15,7 @@
             </p>
         </div>
         <!-- Area droppable del elemento -->
-        <div [ngClass]="{'col-7': !soloValores, 'col-12': soloValores}" droppable [dropScope]="'registros-rup'"
+        <div [ngClass]="{'col-7': !soloValores  && !params.allDroppable, 'col-12': soloValores || params.allDroppable}" droppable [dropScope]="'registros-rup'"
             [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)">
             <div *ngIf="soloValores && registro?.registros?.length === 0" class="add mt-4">
                 No hay registros vinculados
