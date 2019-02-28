@@ -20,7 +20,11 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     private hoy;
     private fechaDesde: any;
     private fechaHasta: any;
+    private sumar;
+    private sinOS;
+    private showPrestacion;
     public arrayEstados;
+    prestacion: any;
 
     constructor(
         private auth: Auth,
@@ -30,6 +34,8 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.arrayEstados = [{ id: 'Sin registro de asistencia', nombre: 'Sin registro de asistencia' }, { id: 'Ausente', nombre: 'Ausente' }, { id: 'Presente con registro del profesional', nombre: 'Presente con registro del profesional' }, { id: 'Presente sin registro del profesional', nombre: 'Presente sin registro del profesional' }];
         this.mostrarMasOpciones = false;
+        this.sumar = false;
+        this.sinOS = false;
         this.parametros = {
             fechaDesde: '',
             fechaHasta: '',
@@ -41,6 +47,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         };
         // Por defecto mostramos agendas y prestaciones de hoy
         this.hoy = true;
+        this.showPrestacion = false;
         this.initialize();
 
         this.fechaDesde = new Date();
@@ -121,18 +128,32 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
                 this.parametros['idProfesional'] = '';
             }
         }
+        if (tipo === 'estado') {
+            if (value.value) {
+                this.parametros['estado'] = value.value.id;
+            } else {
+                this.parametros['estado'] = '';
+            }
+        }
         if (tipo === 'financiador') {
             if (value.value) {
-                this.parametros['financiador'] = value.value.id;
+                this.parametros['financiador'] = value.value.nombre;
             } else {
                 this.parametros['financiador'] = '';
             }
         }
-        if (tipo === 'estado') {
-            if (value.value !== null) {
-                this.parametros['estado'] = value.value.id;
+        if (tipo === 'sumar') {
+            if (value.value) {
+                this.parametros['financiador'] = 'SUMAR';
             } else {
-                this.parametros['estado'] = '';
+                this.parametros['financiador'] = '';
+            }
+        }
+        if (tipo === 'sinOS') {
+            if (value.value) {
+                this.parametros['financiador'] = 'No posee';
+            } else {
+                this.parametros['financiador'] = '';
             }
         }
         this.buscar(this.parametros);
@@ -183,6 +204,13 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             }
             event.callback([]);
         }
+    }
+
+    mostrarPrestacion(datos) {
+        debugger;
+        this.showPrestacion = true;
+        this.prestacion = datos;
+
     }
 
 }

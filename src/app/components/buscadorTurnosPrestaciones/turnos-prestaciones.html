@@ -1,4 +1,4 @@
-<plex-layout main="9">
+<plex-layout main="{{ showPrestacion  ? '8' : '12'}}">
     <plex-layout-main>
         <header>
             <!--Botones / Acciones-->
@@ -37,15 +37,22 @@
                         labelField="apellido+' '+nombre" ngModelOptions="{standalone: true}">
                     </plex-select>
                 </div>
-                <div class="col-4">
-                    <plex-select [(ngModel)]="financiadores" (change)="refreshSelection($event,'financiador')" name="financiador"
-                        (getData)="loadFinanciadores($event)" label="Financiador" placeholder="Buscar por financiador">
-                    </plex-select>
-                </div>
-                <div class="col-4">
+                <div class="col-3">
                     <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')" name="estado" [data]="arrayEstados"
                         label="Estado" placeholder="Buscar por estado" ngModelOptions="{standalone: true}">
                     </plex-select>
+                </div>
+                <div *ngIf="!sumar && !sinOS" class="col-3">
+                    <plex-select [(ngModel)]="financiadores" (change)="refreshSelection($event,'financiador')" name="financiador"
+                        (getData)="loadFinanciadores($event)" label="Financiador" placeholder="Buscar por financiador">
+                    </plex-select>
+
+                </div>
+                <div class="col-2">
+                    <plex-bool *ngIf="!sinOS" [(ngModel)]="sumar" type="slide" (change)="refreshSelection($event, 'sumar')"
+                        label="Sumar" name="sumar"></plex-bool>
+                    <plex-bool *ngIf="!sumar" [(ngModel)]="sinOS" type="slide" (change)="refreshSelection($event, 'sinOS')"
+                        label="Sin obra social" name="sinOS"></plex-bool>
                 </div>
             </div>
         </header>
@@ -60,11 +67,11 @@
                 <th>Estado</th>
             </thead>
             <tbody>
-                <tr *ngFor="let busqueda of busquedas; let i=index" class="hover">
-                    <td>{{busqueda.fecha | date: "dd/MM/yyyy HH:mm "}}</td>
+                <tr *ngFor="let busqueda of busquedas; let i=index" class="hover" (click)="mostrarPrestacion(busqueda)">
+                    <td>{{busqueda.fecha | date: "dd/MM/yyyy HH:mm " }}</td>
                     <td>{{busqueda.paciente | paciente}}</td>
                     <td>{{busqueda.financiador ? busqueda.financiador.financiador: 'No posee'}}</td>
-                    <td>{{busqueda.prestacion.nombre}}</td>
+                    <td>{{busqueda.prestacion?.nombre}}</td>
                     <div class="nombres-profesionales">
                         <span *ngIf="busqueda.profesionales?.length == 0" class="text-danger">Profesional
                             no asignado</span>
@@ -78,9 +85,123 @@
             </tbody>
         </table>
     </plex-layout-main>
-    <plex-layout-sidebar>
+    <!-- Prestacion -->
+    <plex-layout-sidebar *ngIf="showPrestacion">
         <header>
-            Detalle del turno / la prestación
+            <div class="clearfix">
+                <div class="page-title float-left">Detalle de la prestación</div>
+            </div>
         </header>
+        <div class="clearfix">
+            <div class="page-subtitle float-left">Paciente</div>
+        </div>
+        <div class="col">
+            <div class="full-col" *ngIf="prestacion.paciente.apellido">
+                <label class="block">Apellido y nombre</label>
+                <span>{{prestacion.paciente | paciente}}</span>
+            </div>
+
+            <div *ngIf="prestacion.paciente.documento !== ''">
+                <label class="block">Documento</label>
+                <span>{{ prestacion.paciente.documento | number }}</span>
+            </div>
+
+            <div *ngIf="prestacion.paciente.estado">
+                <label class="block">Estado</label>
+                <span *ngIf="prestacion.paciente.estado === 'validado'" class="badge badge-success">
+                    {{ prestacion.paciente.estado | uppercase }}
+                </span>
+                <span *ngIf="_paciente.estado !== 'validado'" class="badge-warning">
+                    {{ prestacion.paciente.estado | uppercase }}
+                </span>
+            </div>
+
+            <div *ngIf="prestacion.paciente.documento === ''">
+                <label class="block">Documento</label>
+                <span class="text-danger">Sin documento</span>
+            </div>
+            <div *ngIf="prestacion.paciente.fechaNacimiento !== null">
+                <label>Fecha de Nacimiento</label>
+                <span>{{ prestacion.paciente.fechaNacimiento | date: "dd/MM/yyyy " }}</span>
+            </div>
+            <div *ngIf="prestacion.paciente.fechaNacimiento === null">
+                <label>Fecha de Nacimiento</label>
+                <span class="text-danger">Sin fecha de nacimiento</span>
+            </div>
+            <div>
+                <label>Edad</label>
+                <span>{{ prestacion.paciente | edad }}</span>
+            </div>
+            <div class="full-col" *ngIf="prestacion.paciente.sexo">
+                <label>Sexo / Género</label>
+                <span>{{ prestacion.paciente | sexo }}</span>
+            </div>
+            <div class="full-col" *ngIf="prestacion.paciente.cuil">
+                <div>
+                    <label>Cuil</label>
+                    <span>{{ prestacion.paciente.cuil }}</span>
+                </div>
+                <div>
+                    <label>Obra Social</label>
+                    <span *ngIf="obraSocial">{{ prestacion.paciente.obraSocial.financiador }}</span>
+                    <span *ngIf="!obraSocial">Sin obra social</span>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="page-subtitle float-left">Detalle de la prestación</div>
+        </div>
+
+        <div class="col">
+            <div *ngIf="prestacion.tipoPrestacion">
+                <label>Tipo de prestación</label>{{prestacion.tipoPrestacion?.nombre}}</div>
+            <div *ngIf="prestacion.profesionales">
+                <label>Profesional</label>
+                <div *ngFor="let profesional of prestacion.profesionales let i = index">{{profesional |
+                    profesional}}
+                </div>
+            </div>
+            <div>
+                <label>Fecha de la prestación</label>
+                <span>{{ prestacion.fecha | fecha }}</span>
+            </div>
+            <div>
+                <label>Estado</label>
+                <span>{{ prestacion.estado }}</span>
+            </div>
+            <div *ngIf="prestacion.financiador?.financiador">
+                <label>Obra social</label>
+                <span>{{prestacion.financiador.financiador}}</span>
+            </div>
+            <div *ngIf="!prestacion.financiador">
+                <label>Obra social</label>
+                <span>No posee</span>
+            </div>
+            <div *ngIf="prestacion.prestacion.nombre">
+                <label>Prestación</label>
+                <span>{{prestacion.prestacion.nombre}}</span>
+            </div>
+        </div>
+        <div *ngIf="prestacion.turno?.diagnostico?.codificaciones.length > 0" class="clearfix">
+            <div class="page-subtitle float-left">Auditoría</div>
+        </div>
+        <div class="col">
+            <div *ngIf="prestacion.turno?.diagnostico?.codificaciones.length > 0">
+                <label>Codificación auditoría</label>
+                <div *ngFor="let cod of prestacion.turno.diagnostico.codificaciones">
+                    <label>Snomed: </label>
+                    <div *ngIf="cod.codificacionProfesional.snomed">
+                        {{cod.codificacionProfesional.snomed.term}}
+                    </div>
+                    <label>Cie10: </label>
+                    <div *ngIf="cod.codificacionProfesional.cie10">
+                        {{cod.codificacionProfesional.cie10.codigo}}
+                        {{cod.codificacionProfesional.cie10.nombre}}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </plex-layout-sidebar>
 </plex-layout>
