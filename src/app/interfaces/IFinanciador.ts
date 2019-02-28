@@ -3,4 +3,7 @@ export interface IFinanciador {
     nombre: String;
     financiador: String;
     numeroAfiliado?: String;
+    prepaga?: Boolean;
+    idObraSocial?: Number;
+    id: String;
 }

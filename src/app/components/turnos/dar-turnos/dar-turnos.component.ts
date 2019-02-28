@@ -196,16 +196,9 @@ export class DarTurnosComponent implements OnInit {
                 this.verificarTelefono(pacienteMPI);
                 this.obtenerCarpetaPaciente();
                 if (this.paciente.documento) {
-                    // Si el efector es colegio médico verifica el financiador del paciente
-                    if (this.paciente.financiador && this.paciente.financiador[0] && this.desplegarObraSocial()) {
-                        this.obraSocialPaciente = this.paciente.financiador[0] as any;
-                        this.numeroAfiliado = (this.paciente.financiador[0] as any).numeroAfiliado;
-                    } else {
-
-                        this.osService.getFinanciadorPacienteCache().subscribe((financiador) => {
-                            this.obraSocialPaciente = financiador;
-                        });
-                    }
+                    this.osService.getFinanciadorPacienteCache().subscribe((financiador) => {
+                        this.obraSocialPaciente = financiador;
+                    });
                 }
             });
     }
@@ -271,7 +264,7 @@ export class DarTurnosComponent implements OnInit {
 
     loadObrasSociales(event) {
         if (event.query) {
-            let query = { nombre: event.query };
+            let query = { nombre: event.query, prepaga: true };
             this.servicioOS.getListado(query).subscribe(
                 resultado => {
                     resultado = resultado.map(os => {
@@ -282,7 +275,7 @@ export class DarTurnosComponent implements OnInit {
                 }
             );
         } else {
-            this.servicioOS.getListado({}).subscribe(
+            this.servicioOS.getListado({ prepaga: true }).subscribe(
                 resultado => {
                     event.callback(resultado);
                 }

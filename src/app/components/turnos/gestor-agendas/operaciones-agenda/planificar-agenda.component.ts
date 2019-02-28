@@ -414,16 +414,12 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 }
                 this.validarTodo();
             }
-            // console.log('elementoActivo ', this.elementoActivo);
             if (texto === 'fin' && !this.modelo.intercalar) {
                 this.modelo.bloques.sort(this.compararBloques);
             }
             this.modelo.bloques.forEach((bloque, index) => {
                 bloque.indice = index;
             });
-            // console.log('elementoActivo ', this.elementoActivo);
-            // this.bloqueActivo = this.elementoActivo.indice;
-            // this.activarBloque(this.elementoActivo.indice);
         }
 
     }

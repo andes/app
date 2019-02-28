@@ -82,7 +82,7 @@ export class EstadisticasPacientesComponent implements OnInit {
 
     loadObraSocial() {
         // TODO: si es en colegio médico hay que buscar en el paciente
-        this.obraSocialService.getPaciente({ dni: this._paciente.documento }).subscribe(resultado => {
+        this.obraSocialService.getPaciente({ dni: this._paciente.documento, sexo: this._paciente.sexo }).subscribe(resultado => {
             if (resultado.length) {
                 this.obraSocial = resultado[0];
                 this.obraSocialEmit.emit(this.obraSocial);
