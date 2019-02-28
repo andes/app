@@ -450,7 +450,10 @@ let RUPComponentsArray = [
     ProcedimientoDeEnfermeriaComponent,
     MoleculaBaseComponent,
     HeaderPacienteComponent,
-    VistaRegistroComponent
+    VistaRegistroComponent,
+    VistaProcedimientoComponent,
+    VistaPrestacionComponent,
+    VistaContextoPrestacionComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -465,6 +468,9 @@ import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/
 import { UploadFileComponent } from './shared/components/upload-file.component';
 import { CodificacionService } from './modules/rup/services/codificacion.service';
 import { VistaRegistroComponent } from './modules/rup/components/huds/vistaRegistro';
+import { VistaProcedimientoComponent } from './modules/rup/components/huds/vistaProcedimiento';
+import { VistaContextoPrestacionComponent } from './modules/rup/components/huds/vistaContextoPrestacion';
+import { VistaPrestacionComponent } from './modules/rup/components/huds/vistaPrestacion';
 
 
 
@@ -557,6 +563,9 @@ registerLocaleData(localeEs, 'es');
         ResumenInternacionComponent,
         ListaEsperaInternacionComponent,
         VistaRegistroComponent,
+        VistaProcedimientoComponent,
+        VistaPrestacionComponent,
+        VistaContextoPrestacionComponent,
 
         // Solicitudes
         SolicitudesComponent,
