@@ -13,6 +13,14 @@
                         </div>
                     </ng-container>
                     <plex-tabs (close)="onCloseTab($event)" [activeIndex]="activeTab">
+                        <plex-tab label="Resumen del Paciente" *ngIf="elementosRUPService.ready | async">
+                            <rup-resumenPaciente-estatico [paciente]="paciente" esTab="true">
+                            </rup-resumenPaciente-estatico>
+                            <rup-resumenPaciente-dinamico-nino *ngIf="paciente?.edad <= 6" [paciente]="paciente"
+                                esTab="true"></rup-resumenPaciente-dinamico-nino>
+                            <rup-resumenPaciente-dinamico *ngIf="paciente?.edad > 6" [paciente]="paciente" esTab="true">
+                            </rup-resumenPaciente-dinamico>
+                        </plex-tab>
                         <ng-container *ngIf="registrosHuds">
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">
                                 <plex-tab [allowClose]="true" [label]="registro.data.concepto.term"
@@ -43,15 +51,6 @@
 
                             </ng-container>
                         </ng-container>
-
-                        <plex-tab label="Resumen del Paciente" *ngIf="elementosRUPService.ready | async">
-                            <rup-resumenPaciente-estatico [paciente]="paciente" esTab="true">
-                            </rup-resumenPaciente-estatico>
-                            <rup-resumenPaciente-dinamico-nino *ngIf="paciente?.edad <= 6" [paciente]="paciente"
-                                esTab="true"></rup-resumenPaciente-dinamico-nino>
-                            <rup-resumenPaciente-dinamico *ngIf="paciente?.edad > 6" [paciente]="paciente" esTab="true">
-                            </rup-resumenPaciente-dinamico>
-                        </plex-tab>
 
                     </plex-tabs>
                 </plex-box>
