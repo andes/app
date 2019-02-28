@@ -1,6 +1,7 @@
 import { IElementoRUP } from './elementoRUP.interface';
 import { ISnomedConcept } from './snomed-concept.interface';
 import { ObjectID } from 'bson';
+import { IPaciente } from '../../../interfaces/IPaciente';
 
 export class IPrestacionRegistro {
     id: string;
@@ -31,6 +32,9 @@ export class IPrestacionRegistro {
     esPrimeraVez: boolean;
 
     createdAt: Date;
+
+    // Virtuales 🤷
+    paciente: IPaciente;
 
     constructor(elementoRUP: IElementoRUP, snomedConcept: ISnomedConcept) {
         this.id = (new ObjectID()).toString();
