@@ -126,6 +126,7 @@ export class IniciarInternacionComponent implements OnInit {
         ocupacionHabitual: null,
         situacionLaboral: null,
         nivelInstruccion: null,
+        especialidades: [],
         asociado: null,
         obraSocial: null,
         nroCarpeta: null,
@@ -148,10 +149,12 @@ export class IniciarInternacionComponent implements OnInit {
         private internacionService: InternacionService,
         public servicioProfesional: ProfesionalService,
         public servicioInternacion: InternacionService,
-        public pacienteService: PacienteService
+        public pacienteService: PacienteService,
+        public snomed: SnomedService
     ) { }
 
     ngOnInit() {
+
         if (this.prestacion) {
             this.btnIniciarGuardar = 'GUARDAR';
             let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
@@ -204,7 +207,7 @@ export class IniciarInternacionComponent implements OnInit {
                             this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
 
                         } else {
-                                                      this.servicioPrestacion.getById(resultado.ultimaInternacion.id).subscribe(prestacion => {
+                            this.servicioPrestacion.getById(resultado.ultimaInternacion.id).subscribe(prestacion => {
                                 this.prestacion = prestacion;
                                 let existeRegistro = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
                                 if (existeRegistro) {
@@ -297,7 +300,7 @@ export class IniciarInternacionComponent implements OnInit {
                 event.callback(listaProfesionales);
             });
         } else {
-            if (this.auth.profesional) {
+            if (this.auth.profesional && !this.informeIngreso.profesional) {
                 this.servicioProfesional.get({ id: this.auth.profesional.id }).subscribe(resultado => {
                     if (resultado) {
                         this.informeIngreso.profesional = resultado[0] ? resultado[0] : null;
@@ -493,6 +496,9 @@ export class IniciarInternacionComponent implements OnInit {
                     this.plex.info('danger', 'La prestación no pudo ser registrada. Por favor verifica la conectividad de la red.');
                 });
             }
+        } else {
+            this.plex.info('info', 'ERROR: Los datos de ingreso no estan completos');
+            return;
         }
 
     }
@@ -554,5 +560,26 @@ export class IniciarInternacionComponent implements OnInit {
     buscarOtroPaciente() {
         this.accionCama.emit({ cama: this.cama, accion: 'internarPaciente', otroPaciente: true });
     }
+
+
+    loadEspecialidades($event) {
+        this.snomed.getQuery({ expression: '<<394733009' }).subscribe(result => {
+            if (!this.informeIngreso.especialidades && this.camaSelected) {
+
+
+                this.informeIngreso.especialidades = this.camaSelected.ultimoEstado.especialidades.map(x => {
+                    return {
+                        conceptId: x.conceptId,
+                        fsn: x.fsn,
+                        semanticTag: x.semanticTag,
+                        term: x.term
+                    };
+                });
+            }
+            $event.callback(result);
+        });
+    }
+
+
 
 }

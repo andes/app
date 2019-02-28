@@ -100,6 +100,7 @@ export class MapaDeCamasComponent implements OnInit {
     public pacienteActivo: IPaciente;
     public historial: any[] = [];
     public inicioBusqueda = false;
+    public createTemporal = false;
     constructor(
         public servicioPrestacion: PrestacionesService,
         private auth: Auth,
@@ -449,7 +450,9 @@ export class MapaDeCamasComponent implements OnInit {
 
         }
         this.fecha = new Date();
-        this.refresh();
+        if (!dtoAccion.otroPaciente) {
+            this.refresh();
+        }
         // this.countFiltros();
 
 
@@ -626,7 +629,6 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     onCamaSelected(event) {
-        console.log(this.camaSeleccionada, event.cama);
         if (!this.camaSeleccionada || this.camaSeleccionada !== event.cama) { // Es la primera vez o selecciono una cama diferente a la que estaba
             this.showEgreso = false;
             this.showIngreso = false;
@@ -759,5 +761,19 @@ export class MapaDeCamasComponent implements OnInit {
     }
     volver() {
         this.router.navigate(['/internacion/inicio']);
+    }
+
+
+    pacienteTemporal() {
+        this.createTemporal = true;
+    }
+
+    afterPacienteTemp(paciente) {
+        this.pacienteSelected = paciente;
+        this.createTemporal = false;
+        this.accion = null;
+        this.showIngreso = true;
+        this.editarIngreso = false;
+        this.prestacionPorInternacion = null; // BORRAR
     }
 }

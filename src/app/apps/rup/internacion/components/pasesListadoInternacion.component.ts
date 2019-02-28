@@ -79,7 +79,6 @@ export class PasesListadoInternacionComponent implements OnInit {
             this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
                 this.organizacion = organizacion;
                 this.listaUnidadesOrganizativas = this.organizacion.unidadesOrganizativas;
-                console.log(  this.organizacion);
                 if (this.listaUnidadesOrganizativas && this.listaUnidadesOrganizativas.length > 0) {
                     this.opcionesDesocupar.push({ id: 'pase', label: 'Cambiar de unidad organizativa' });
                 }
