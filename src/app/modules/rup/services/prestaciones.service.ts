@@ -290,7 +290,7 @@ export class PrestacionesService {
                         registros = [...registros, ...conceptos];
                     }
                 });
-                registros = registros.sort((a, b) => a.createdAt - b.createdAt );
+                registros = registros.sort((a, b) => a.createdAt - b.createdAt);
 
                 let registroSalida = [];
                 registros.forEach(registro => {
@@ -421,12 +421,12 @@ export class PrestacionesService {
      */
     getUnTrastornoPaciente(idPaciente: any, concepto: any): Observable<any> {
         return this.getByPacienteTrastorno(idPaciente, true).pipe(map(hallazgos => {
-                return hallazgos.find(registro => {
-                    if ((registro.concepto.conceptId === concepto.conceptId) && (registro.evoluciones[0].esCronico || registro.evoluciones[0].estado === 'activo')) {
-                        return registro;
-                    }
-                });
-            }
+            return hallazgos.find(registro => {
+                if ((registro.concepto.conceptId === concepto.conceptId) && (registro.evoluciones[0].esCronico || registro.evoluciones[0].estado === 'activo')) {
+                    return registro;
+                }
+            });
+        }
         ));
         // }
     }
@@ -809,7 +809,7 @@ export class PrestacionesService {
     public getCssClass(conceptoSNOMED, esSolicitud) {
         let clase = conceptoSNOMED.semanticTag;
 
-        if (conceptoSNOMED.plan  || this.esTurneable(conceptoSNOMED) || (typeof esSolicitud !== 'undefined' && esSolicitud)) {
+        if (conceptoSNOMED.plan || this.esTurneable(conceptoSNOMED) || (typeof esSolicitud !== 'undefined' && esSolicitud)) {
             clase = 'solicitud';
         } else if (conceptoSNOMED.semanticTag === 'régimen/tratamiento') {
             clase = 'regimen';
