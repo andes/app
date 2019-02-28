@@ -213,7 +213,6 @@ export class PasesListadoInternacionComponent implements OnInit {
             if (unidadOrganizativa) {
                 this.camasService.getCamasXFecha(this.auth.organizacion.id, f).subscribe(resultado => {
                     if (resultado) {
-                        console.log(resultado);
                         let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.conceptId === unidadOrganizativa);
                         this.listadoCamas = [...lista];
                     }
