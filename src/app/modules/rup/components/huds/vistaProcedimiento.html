@@ -32,6 +32,7 @@
 
                 <div class="borde-datos ml-3 pl-2 pt-1" *ngIf="prestacion">
                     <div class="mp-2 mb-2">
+                        <b>Registros de la consulta: </b>
                         <rup class="columna-completa align"
                             [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)"
                             [prestacion]="prestacion" [paciente]="paciente" [registro]="registro.registros[0]"
