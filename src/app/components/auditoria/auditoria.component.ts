@@ -64,7 +64,7 @@ export class AuditoriaComponent implements OnInit {
     this.permisoEdicion = this.auth.check('auditoriaPacientes:edicion');
     this.permisoVincular = this.auth.check('auditoriaPacientes:vincular');
     if (this.permisoEdicion && !this.permisoVincular) {
-      this.getReportados(); // Si el usuario solo tiene permisos de edicion es necesario obtener los datos aquí 
+      this.getReportados(); // Si el usuario solo tiene permisos de edicion es necesario obtener los datos aquí
     }
     this.onLoadData();
   }
