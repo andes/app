@@ -25,6 +25,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     private sumar;
     private sinOS;
     private showPrestacion;
+    private loading;
     public arrayEstados;
     prestacion: any;
     router: any;
@@ -39,6 +40,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         this.mostrarMasOpciones = false;
         this.sumar = false;
         this.sinOS = false;
+        this.loading = true;
         this.parametros = {
             fechaDesde: '',
             fechaHasta: '',
@@ -93,12 +95,15 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
 
         this.turnosPrestacionesService.get(params).subscribe((data) => {
             this.busquedas = this.ordenarPorFecha(data);
+            this.loading = false;
         });
 
     }
     buscar(parametros) {
+        this.loading = true;
         this.turnosPrestacionesService.get(parametros).subscribe((data) => {
             this.busquedas = this.ordenarPorFecha(data);
+            this.loading = false;
         });
     }
     refreshSelection(value, tipo) {
@@ -160,8 +165,11 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
                     this.parametros['financiador'] = '';
                 }
             }
+            if (tipo === 'filter') {
+                this.buscar(this.parametros);
+            }
 
-            this.buscar(this.parametros);
+            // this.buscar(this.parametros);
         }
 
     }
