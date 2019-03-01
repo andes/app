@@ -208,6 +208,7 @@ import { ArancelamientoFormComponent } from './components/turnos/punto-inicio/ar
 import { AutocitarTurnoAgendasComponent } from './components/turnos/autocitar/autocitar.component';
 import { DinamicaFormComponent } from './components/turnos/autocitar/dinamica.component';
 import { MapaEspacioFisicoVistaComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico-vista.component';
+import { MapaImplementacionAndesComponent } from '../app/apps/mapa/components/mapaimplementacionandes.component';
 
 import { BuscadorCie10Component } from './components/turnos/gestor-agendas/operaciones-agenda/buscador-cie10.component';
 
@@ -385,6 +386,10 @@ import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campania
 import { CampaniaVisualizacionComponent } from './apps/campaniaSalud/components/campaniaVisualizacion.component';
 import { CampaniaFormComponent } from './apps/campaniaSalud/components/campania-create-update.component';
 
+//Andes
+import { MapaService } from './apps/mapa/services/mapa.service';
+
+
 let RUPComponentsArray = [
     SelectPorRefsetComponent,
     AutocitadoComponent,
@@ -525,6 +530,7 @@ registerLocaleData(localeEs, 'es');
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         MapaEspacioFisicoVistaComponent,
+        MapaImplementacionAndesComponent,
         ResumenComponent,
         PrestacionCrearComponent,
         PrestacionEjecucionComponent,
@@ -673,6 +679,7 @@ registerLocaleData(localeEs, 'es');
         FormulaBaseService,
         SeleccionBinariaComponent,
         CampaniaSaludService,
+        MapaService,
         SeleccionBinariaComponent,
         PacienteCreateUpdateComponent
     ]

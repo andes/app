@@ -1,0 +1,92 @@
+<plex-layout main="8">
+  <plex-layout-main>
+      <!-- Contenedor principal -->
+      <div class="row">
+        <div class="col">
+            
+<agm-map 
+[latitude]="lat"
+[longitude]="lng"
+[zoom]="zoom"
+[disableDefaultUI]="false"
+[zoomControl]="false"
+>
+<agm-marker 
+    *ngFor="let m of markers; let i = index"
+    (markerClick)="clickedMarker(m.infofiltro, i)"
+    [latitude]="m.lat"
+    [longitude]="m.lng"
+    [markerDraggable]="m.draggable"    
+    [iconUrl] ="m.iconColorMarker"
+    (dragEnd)="markerDragEnd(m, $event)"
+         
+    >
+    
+  <agm-info-window>
+        <strong [innerHTML]="m.infofiltro"></strong>
+ </agm-info-window>
+</agm-marker>
+
+<agm-circle [latitude]="lat + 0.3" [longitude]="lng" 
+    [radius]="5000"
+    [fillColor]="'red'"
+    [circleDraggable]="false"
+    [editable]="false">
+</agm-circle>
+
+</agm-map>
+
+            
+        </div>
+    </div>
+  </plex-layout-main>
+  <plex-layout-sidebar>
+      <!-- Contenedor lateral -->
+      <form #formulario="ngForm">
+          <fieldset>
+              <legend>Mostrar organizaciones que implementen:</legend>
+              <div class="row">
+                  
+              </div>
+              <div class="row">
+                  <div class="col">
+                      <plex-bool [(ngModel)]="checkfiltros.checkmpi" type="checkbox" label="Punto de acreditación" class="mpi color" name="puntoAcreditacion" (change)="filtrar()"> </plex-bool>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col">
+                      <plex-bool [(ngModel)]="checkfiltros.checkcitas"  type="checkbox" label="Agenda & Turnos" class="citas color" name="agendaTurno" (change)="filtrar()"></plex-bool>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col">
+                      <plex-bool [(ngModel)]="checkfiltros.checkmobile" type="checkbox" label="Turnos vía App Móvil" class="mobile color" name="turnoAM" (change)="filtrar()"></plex-bool>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col">
+                      <plex-bool [(ngModel)]="checkfiltros.checkrup" type="checkbox" label="Registros Asistenciales" class="rup color" name="registroAsistencial" (change)="filtrar()"></plex-bool>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col">
+                      <plex-bool [(ngModel)]="checkfiltros.checktop" type="checkbox" label="Tránsito de pacientes" class="top color"  name="transitoPaciente" (change)="filtrar()"></plex-bool>
+                  </div>
+              </div>
+            
+ 
+          </fieldset>
+          
+           
+          <div class="mt-2 bg-primary text-white">
+                <p class="text-lg-left">Organizaciones implementadas</p>
+                 <div class="row" class="text-center">
+                       <h1 [innerHTML]="markers.length"></h1>
+                </div>
+          
+           
+         </div>
+            
+      </form>
+  </plex-layout-sidebar>
+</plex-layout>
