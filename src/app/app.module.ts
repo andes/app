@@ -227,6 +227,7 @@ import { PrestacionValidacionComponent } from './modules/rup/components//ejecuci
 import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
 import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
+import { VistaPrestacionComponent } from './modules/rup/components/ejecucion/vistaPrestacion.component';
 import { VistaCDAComponent } from './modules/rup/components/ejecucion/vistaCDA.component';
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
@@ -555,6 +556,7 @@ registerLocaleData(localeEs, 'es');
         HudsBusquedaComponent,
         BuscadorComponent,
         VistaHudsComponent,
+        VistaPrestacionComponent,
         VistaCDAComponent,
         HudsBusquedaPacienteComponent,
         PacienteBuscarComponent,

@@ -1,4 +1,4 @@
-<plex-layout main="{{ showPrestacion  ? '8' : '12'}}">
+<plex-layout main="{{ showPrestacion  ? '6' : '12'}}">
     <plex-layout-main>
         <header>
             <!--Botones / Acciones-->
@@ -182,26 +182,12 @@
                 <span>{{prestacion.prestacion.nombre}}</span>
             </div>
         </div>
-        <div *ngIf="prestacion.turno?.diagnostico?.codificaciones.length > 0" class="clearfix">
-            <div class="page-subtitle float-left">Auditoría</div>
+        <div *ngIf="prestacion.idPrestacion">
+            <rup-vistaPrestacion [idPrestacion]="prestacion.idPrestacion"></rup-vistaPrestacion>
         </div>
-        <div class="col">
-            <div *ngIf="prestacion.turno?.diagnostico?.codificaciones.length > 0">
-                <label>Codificación auditoría</label>
-                <div *ngFor="let cod of prestacion.turno.diagnostico.codificaciones">
-                    <label>Snomed: </label>
-                    <div *ngIf="cod.codificacionProfesional.snomed">
-                        {{cod.codificacionProfesional.snomed.term}}
-                    </div>
-                    <label>Cie10: </label>
-                    <div *ngIf="cod.codificacionProfesional.cie10">
-                        {{cod.codificacionProfesional.cie10.codigo}}
-                        {{cod.codificacionProfesional.cie10.nombre}}
-                    </div>
-                </div>
 
-            </div>
-        </div>
+        <br>
+        <plex-button label="Cerrar" type="info" (click)="onClose()"></plex-button>
 
     </plex-layout-sidebar>
 </plex-layout>

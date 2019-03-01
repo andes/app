@@ -7,9 +7,11 @@ import { ProfesionalService } from '../../services/profesional.service';
 import { ObraSocialService } from '../../services/obraSocial.service';
 
 
+
 @Component({
     selector: 'turnos-prestaciones',
     templateUrl: 'turnos-prestaciones.html',
+
 })
 
 export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
@@ -25,11 +27,12 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     private showPrestacion;
     public arrayEstados;
     prestacion: any;
+    router: any;
 
     constructor(
         private auth: Auth,
         private turnosPrestacionesService: TurnosPrestacionesService, public servicioPrestacion: TipoPrestacionService, public serviceProfesional: ProfesionalService,
-        private servicioOS: ObraSocialService,
+        private servicioOS: ObraSocialService
     ) { }
     ngOnInit() {
         this.arrayEstados = [{ id: 'Sin registro de asistencia', nombre: 'Sin registro de asistencia' }, { id: 'Ausente', nombre: 'Ausente' }, { id: 'Presente con registro del profesional', nombre: 'Presente con registro del profesional' }, { id: 'Presente sin registro del profesional', nombre: 'Presente sin registro del profesional' }];
@@ -99,64 +102,68 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         });
     }
     refreshSelection(value, tipo) {
-        if (tipo === 'fechaDesde') {
-            let fechaDesde = moment(this.fechaDesde).startOf('day');
-            if (fechaDesde.isValid()) {
-                this.parametros['fechaDesde'] = fechaDesde.isValid() ? fechaDesde.toDate() : moment().format();
-                this.parametros['organizacion'] = this.auth.organizacion._id;
+        let fechaDesde = this.fechaDesde ? moment(this.fechaDesde).startOf('day') : null;
+        let fechaHasta = this.fechaHasta ? moment(this.fechaHasta).startOf('day') : null;
+        if (fechaDesde && fechaDesde.isValid() && fechaHasta && fechaHasta.isValid()) {
+            if (tipo === 'fechaDesde') {
+                if (fechaDesde.isValid()) {
+                    this.parametros['fechaDesde'] = fechaDesde.isValid() ? fechaDesde.toDate() : moment().format();
+                    this.parametros['organizacion'] = this.auth.organizacion._id;
+                }
             }
-        }
-        if (tipo === 'fechaHasta') {
-            let fechaHasta = moment(this.fechaHasta).endOf('day');
-            if (fechaHasta.isValid()) {
-                this.parametros['fechaHasta'] = fechaHasta.isValid() ? fechaHasta.toDate() : moment().format();
-                this.parametros['organizacion'] = this.auth.organizacion._id;
+            if (tipo === 'fechaHasta') {
+                if (fechaHasta.isValid()) {
+                    this.parametros['fechaHasta'] = fechaHasta.isValid() ? fechaHasta.toDate() : moment().format();
+                    this.parametros['organizacion'] = this.auth.organizacion._id;
+                }
             }
-        }
-        if (tipo === 'prestaciones') {
-            if (value.value !== null) {
-                this.parametros['prestacion'] = value.value._id;
-                delete this.parametros['prestaciones'];
-            } else {
-                this.parametros['prestacion'] = '';
+            if (tipo === 'prestaciones') {
+                if (value.value !== null) {
+                    this.parametros['prestacion'] = value.value._id;
+                    delete this.parametros['prestaciones'];
+                } else {
+                    this.parametros['prestacion'] = '';
+                }
             }
-        }
-        if (tipo === 'profesionales') {
-            if (value.value) {
-                this.parametros['idProfesional'] = value.value.id;
-            } else {
-                this.parametros['idProfesional'] = '';
+            if (tipo === 'profesionales') {
+                if (value.value) {
+                    this.parametros['idProfesional'] = value.value.id;
+                } else {
+                    this.parametros['idProfesional'] = '';
+                }
             }
-        }
-        if (tipo === 'estado') {
-            if (value.value) {
-                this.parametros['estado'] = value.value.id;
-            } else {
-                this.parametros['estado'] = '';
+            if (tipo === 'estado') {
+                if (value.value) {
+                    this.parametros['estado'] = value.value.id;
+                } else {
+                    this.parametros['estado'] = '';
+                }
             }
-        }
-        if (tipo === 'financiador') {
-            if (value.value) {
-                this.parametros['financiador'] = value.value.nombre;
-            } else {
-                this.parametros['financiador'] = '';
+            if (tipo === 'financiador') {
+                if (value.value) {
+                    this.parametros['financiador'] = value.value.nombre;
+                } else {
+                    this.parametros['financiador'] = '';
+                }
             }
-        }
-        if (tipo === 'sumar') {
-            if (value.value) {
-                this.parametros['financiador'] = 'SUMAR';
-            } else {
-                this.parametros['financiador'] = '';
+            if (tipo === 'sumar') {
+                if (value.value) {
+                    this.parametros['financiador'] = 'SUMAR';
+                } else {
+                    this.parametros['financiador'] = '';
+                }
             }
-        }
-        if (tipo === 'sinOS') {
-            if (value.value) {
-                this.parametros['financiador'] = 'No posee';
-            } else {
-                this.parametros['financiador'] = '';
+            if (tipo === 'sinOS') {
+                if (value.value) {
+                    this.parametros['financiador'] = 'No posee';
+                } else {
+                    this.parametros['financiador'] = '';
+                }
             }
+
+            this.buscar(this.parametros);
         }
-        this.buscar(this.parametros);
+
     }
     ordenarPorFecha(registros) {
         return registros.sort((a, b) => {
@@ -207,10 +214,14 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     }
 
     mostrarPrestacion(datos) {
-        debugger;
         this.showPrestacion = true;
         this.prestacion = datos;
 
+    }
+
+    onClose() {
+        this.showPrestacion = false;
+        this.prestacion = null;
     }
 
 }
