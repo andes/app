@@ -108,7 +108,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     }
     refreshSelection(value, tipo) {
         let fechaDesde = this.fechaDesde ? moment(this.fechaDesde).startOf('day') : null;
-        let fechaHasta = this.fechaHasta ? moment(this.fechaHasta).startOf('day') : null;
+        let fechaHasta = this.fechaHasta ? moment(this.fechaHasta).endOf('day') : null;
         if (fechaDesde && fechaDesde.isValid() && fechaHasta && fechaHasta.isValid()) {
             if (tipo === 'fechaDesde') {
                 if (fechaDesde.isValid()) {
