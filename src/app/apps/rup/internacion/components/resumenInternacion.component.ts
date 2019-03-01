@@ -12,7 +12,7 @@ import { InternacionService } from '../services/internacion.service';
 export class ResumenInternacionComponent implements OnInit, OnChanges {
     private _prestacion: any;
     private _editarEgreso: Boolean;
-    @Input() desdeListadoInternacion ;
+    @Input() desdeListadoInternacion;
     @Input() mostrarBtnRomper = true;
 
 

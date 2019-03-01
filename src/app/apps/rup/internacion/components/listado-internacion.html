@@ -69,17 +69,17 @@
     <plex-layout-sidebar id="panel-lateral" class="sideBar" *ngIf='internacionSelected'>
 
         <header *ngIf='!mostrarPases'>
-            <div class="page-title float-left">Datos de la cama</div>
-            <plex-button label="Pases" type="primary" class="float-right" (click)='mostrarPases = true'></plex-button>
+            <div class="page-title float-left">Datos de la internación</div>
 
         </header>
         <ng-container *ngIf='!mostrarPases'>
             <internacion-resumen *ngIf='internacionSelected' [editarEgreso]="showEgreso" [paciente]="internacionSelected.paciente"
-                [prestacion]="internacionSelected" [desdeListadoInternacion]='true' [soloValores]="soloValores" (refreshCamas)="actualizarListado($event)"></internacion-resumen>
+                [prestacion]="internacionSelected" [desdeListadoInternacion]='true' [soloValores]="soloValores"
+                (refreshCamas)="actualizarListado($event)"></internacion-resumen>
+
         </ng-container>
         <ng-container *ngIf='mostrarPases'>
             <app-pases-listado-internacion [cama]="null" [prestacion]="internacionSelected" (cancelarPases)='mostrarPases = false'></app-pases-listado-internacion>
-
         </ng-container>
     </plex-layout-sidebar>
     <plex-layout-footer>
