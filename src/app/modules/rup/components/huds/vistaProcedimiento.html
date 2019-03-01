@@ -1,5 +1,5 @@
 <ng-container>
-    <div class="solo-valores-grid procedimientos">
+    <div class="solo-valores-grid procedimientos" [ngClass]="{'odontograma': registro.concepto.term === 'odontograma'}">
         <ng-container *ngIf="registro?.evoluciones">
             <div class="columna">
                 <div class="concepto prestacion-offset">
@@ -36,6 +36,7 @@
                         <rup class="columna-completa align"
                             [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)"
                             [prestacion]="prestacion" [paciente]="paciente" [registro]="registro.registros[0]"
+                            [params]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud).params"
                             [soloValores]="true">
                         </rup>
                         <span
