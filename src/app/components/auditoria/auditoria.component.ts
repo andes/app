@@ -63,7 +63,9 @@ export class AuditoriaComponent implements OnInit {
     }
     this.permisoEdicion = this.auth.check('auditoriaPacientes:edicion');
     this.permisoVincular = this.auth.check('auditoriaPacientes:vincular');
-
+    if (this.permisoEdicion && !this.permisoVincular) {
+      this.getReportados(); // Si el usuario solo tiene permisos de edicion es necesario obtener los datos aquí 
+    }
     this.onLoadData();
   }
 
@@ -170,6 +172,9 @@ export class AuditoriaComponent implements OnInit {
     }
     if (panelIndex === 2) {
       this.getInactivos();
+    }
+    if (panelIndex === 3) {
+      this.getReportados();
     }
     this.showDetallePaciente = false;
     this.enableActivar = false;
