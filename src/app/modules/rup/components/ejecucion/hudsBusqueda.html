@@ -502,7 +502,7 @@
                 </ul>
                 <div *ngIf="laboratorios.length === 0">No hay Laboratorios registrados</div>
             </div>
-        </ng-container> -->
+        </ng-container>
 
         <!-- Vista: VACUNAS -->
         <ng-container *ngIf="filtroActual === 'vacunas'">
@@ -536,7 +536,8 @@
                                                         <div class="icon-rup" draggable [dragScope]="_dragScope"
                                                             [dragClass]="_dragOverClass"
                                                             [dragData]="{'tipo': 'vacuna','data': unaVacuna, 'huds': true}"
-                                                            (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                                                            (onDragStart)="dragStart($event)"
+                                                            (onDragEnd)="dragEnd($event)">
                                                             <i class="icon mdi mdi-eyedropper-variant"></i>
                                                         </div>
                                                     </ng-container>
@@ -598,7 +599,7 @@
                 <ul class="conceptos list-unstyled">
                     <ng-container *ngFor="let unaVacuna of vacunas; let iVacuna = index">
                         <li>
-                            <div class="rup-card mini vacuna" [ngClass]="{'active': estaEnTabs(unaVacuna, 'vacuna')}">
+                            <div class="rup-card mini vacuna" [ngClass]="{'active': isOpen(unaVacuna, 'vacuna')}">
                                 <div class="rup-header">
                                     <div class="rup-border rup-border-vacuna">
 
