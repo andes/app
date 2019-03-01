@@ -80,7 +80,7 @@
                     <td>{{busqueda.fecha | date: "dd/MM/yyyy HH:mm " }}</td>
                     <td>{{busqueda.paciente | paciente}}</td>
                     <td>{{busqueda.financiador ? busqueda.financiador.financiador : 'No posee'}}</td>
-                    <td>{{busqueda.prestacion?.nombre}}</td>
+                    <td>{{busqueda.prestacion?.term}}</td>
                     <div class="nombres-profesionales">
                         <span *ngIf="busqueda.profesionales?.length == 0" class="text-danger">Profesional
                             no asignado</span>
@@ -165,8 +165,8 @@
         </div>
 
         <div *ngIf="prestacion.idPrestacion" class="col">
-            <div *ngIf="prestacion.tipoPrestacion">
-                <label>Tipo de prestación</label>{{prestacion.tipoPrestacion?.nombre}}</div>
+            <div *ngIf="prestacion.prestacion">
+                <label>Tipo de prestación</label>{{prestacion.prestacion?.term}}</div>
             <div *ngIf="prestacion.profesionales">
                 <label>Profesional</label>
                 <div *ngFor="let profesional of prestacion.profesionales let i = index">{{profesional |
@@ -189,9 +189,9 @@
                 <label>Obra social</label>
                 <span>No posee</span>
             </div>
-            <div *ngIf="prestacion.prestacion.nombre">
+            <div *ngIf="prestacion.prestacion.term">
                 <label>Prestación</label>
-                <span>{{prestacion.prestacion.nombre}}</span>
+                <span>{{prestacion.prestacion.term}}</span>
             </div>
         </div>
         <div *ngIf="prestacion.idPrestacion">
