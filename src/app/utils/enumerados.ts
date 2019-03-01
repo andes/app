@@ -72,7 +72,7 @@ export enum EstadosEspacios {
 
 export enum TipoIdentificacion {
     'pasaporte',
-    'dni extranjero'
+    'dniExtranjero'
 }
 
 export enum Censo {
