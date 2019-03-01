@@ -25,7 +25,7 @@
                     </svg>
                     <h5 class="ml-1 text-primary evoluciones">Evoluciones</h5>
                 </div>
-                <div class="justify-content-end nav-fecha">
+                <div class="d-inline-flex justify-content-end nav-fecha">
                     <div [ngClass]="{'text-black-50': indice === registro.evoluciones.length - 1, 'hover': indice < registro.evoluciones.length - 1}"
                         class="menu-left mr-2 semantic-text-{{ registro.concepto.semanticTag }}"
                         (click)="cambiarEvolucion('+')"></div>

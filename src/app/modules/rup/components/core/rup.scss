@@ -450,11 +450,12 @@ $color in $rup_colors {
 .anteriores {
     width: 100%;
     div {
-        border: 1px solid #ccc;
+        border: 1px solid #aaa;
     }
 }
 
 .menu-left {
+    // display: inline-flex;
     width: 0px;
     height: 0px;
     border-top: 8px solid transparent;
@@ -462,6 +463,7 @@ $color in $rup_colors {
     border-right: 8px solid;
 }
 .menu-right {
+    // display: inline-flex;
     width: 0px;
     height: 0px;
     border-top: 8px solid transparent;
@@ -478,9 +480,9 @@ $color in $rup_colors {
 
 // VISTA HUDS
 
-@mixin grid-2-columnas($col: 1fr) {
+@mixin grid-columnas($cols: (1fr 1fr)) {
     display: grid;
-    grid-template-columns: $col $col;
+    grid-template-columns: $cols;
     grid-column-gap: 40px;
     .concepto {
         display: grid;
@@ -508,7 +510,10 @@ $color in $rup_colors {
         grid-column: 1/2;
     }
     div:not(:first-of-type) {
-        &:not(.medicamento) {
+        &:not(.medicamento)
+        &:not(.col-12)
+        &:not(.col-6)
+        &:not(.diente-container) { 
             display: grid;
             grid-template-columns: 1fr .25fr;
                 div:nth-child(2) {
@@ -536,6 +541,9 @@ $color in $rup_colors {
     
     }
     .divisor {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         border-bottom: 2px solid gray;
         
     }
@@ -582,7 +590,7 @@ $color in $rup_colors {
 
 .solo-valores-grid.hallazgos {
     
-    @include grid-2-columnas();
+    @include grid-columnas();
 
     .columna {
 
@@ -610,12 +618,13 @@ $color in $rup_colors {
 .solo-valores-grid.hallazgos, 
 .solo-valores-grid.cda, 
 .solo-valores-grid.procedimientos, 
-.prestaciones {
+.solo-valores-grid.prestaciones {
     @include fix-tab-space();
 }
 
 .solo-valores-grid.procedimientos {
-    @include grid-2-columnas();
+    
+    @include grid-columnas();
     
     .columna {
         @include grid-columna();        
@@ -626,7 +635,26 @@ $color in $rup_colors {
     .badge {
         font-size: 1rem !important; 
     }
+
 }
+
+.solo-valores-grid.odontograma {
+    
+    @include grid-columnas();
+    
+    .columna {
+        @include grid-columna();        
+    }
+    
+    @include grid-columna-datos();
+    
+    .badge {
+        font-size: 1rem !important; 
+    }
+
+}
+
+
 
 observaciones {
     form {
