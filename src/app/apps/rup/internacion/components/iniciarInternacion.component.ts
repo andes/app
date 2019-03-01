@@ -40,8 +40,8 @@ export class IniciarInternacionComponent implements OnInit {
     get prestacion(): any {
         return this._prestacion;
     }
-    @Input() desdeListadoInternacion ;
 
+    @Input() desdeListadoInternacion;
     @Input() paciente;
     @Input() camaSelected;
     @Input() soloValores;
@@ -57,6 +57,7 @@ export class IniciarInternacionComponent implements OnInit {
     public listadoCamas = [];
     public paseAunidadOrganizativa: any;
     public ocupaciones = [];
+    public especialidades = [];
     public obraSocial;
     public origenHospitalizacion = [
         { id: 'consultorio externo', nombre: 'Consultorio externo' },
@@ -279,6 +280,8 @@ export class IniciarInternacionComponent implements OnInit {
             this.ocupaciones = rta;
         });
 
+        this.loadEspecialidades();
+
     }
 
     actualizarInformeIngreso() {
@@ -493,7 +496,7 @@ export class IniciarInternacionComponent implements OnInit {
                     }
 
                 }, (err) => {
-                    this.plex.info('danger', 'La prestación no pudo ser registrada. Por favor verifica la conectividad de la red.');
+                    this.plex.info('danger', 'ERROR: La prestación no pudo ser registrada');
                 });
             }
         } else {
@@ -562,12 +565,12 @@ export class IniciarInternacionComponent implements OnInit {
     }
 
 
-    loadEspecialidades($event) {
+    loadEspecialidades() {
         this.snomed.getQuery({ expression: '<<394733009' }).subscribe(result => {
-            if (!this.informeIngreso.especialidades && this.camaSelected) {
-
-
-                this.informeIngreso.especialidades = this.camaSelected.ultimoEstado.especialidades.map(x => {
+            this.especialidades = [...result];
+            if ((!this.informeIngreso.especialidades || (this.informeIngreso.especialidades && this.informeIngreso.especialidades.length <= 0))
+                && this.camaSelected) {
+                let especialidadesCama = this.camaSelected.ultimoEstado.especialidades.map(x => {
                     return {
                         conceptId: x.conceptId,
                         fsn: x.fsn,
@@ -575,8 +578,8 @@ export class IniciarInternacionComponent implements OnInit {
                         term: x.term
                     };
                 });
+                this.informeIngreso.especialidades = [...especialidadesCama];
             }
-            $event.callback(result);
         });
     }
 
