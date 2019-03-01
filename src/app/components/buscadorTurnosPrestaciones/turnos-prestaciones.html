@@ -75,7 +75,8 @@
                 <th>Estado</th>
             </thead>
             <tbody>
-                <tr *ngFor="let busqueda of busquedas; let i=index" class="hover" (click)="mostrarPrestacion(busqueda)">
+                <tr *ngFor="let busqueda of busquedas; let i=index" class="hover" (click)="mostrarPrestacion(busqueda)"
+                    [ngClass]="{'bg-inverse text-white': busqueda.seleccionada}">
                     <td>{{busqueda.fecha | date: "dd/MM/yyyy HH:mm " }}</td>
                     <td>{{busqueda.paciente | paciente}}</td>
                     <td>{{busqueda.financiador ? busqueda.financiador.financiador : 'No posee'}}</td>

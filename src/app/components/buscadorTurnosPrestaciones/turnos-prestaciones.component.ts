@@ -224,7 +224,10 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     mostrarPrestacion(datos) {
         this.showPrestacion = true;
         this.prestacion = datos;
-
+        this.busquedas.map(item => {
+            item.seleccionada = false;
+        });
+        datos.seleccionada = true;
     }
 
     onClose() {
