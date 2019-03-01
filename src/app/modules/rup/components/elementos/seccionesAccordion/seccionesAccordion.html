@@ -24,24 +24,24 @@
                         <span *ngIf="!rupInstance.isValid" class="badge badge-danger mr-4 align-self-center">
                             Hay registros incompletos
                         </span>
-                        <span *ngIf="!registro[i].registros.length && i > 0 && rupInstance.isValid" class="badge badge-warning mr-4 align-self-center">
+                        <span *ngIf="!registro.registros[i].length && i > 0 && rupInstance.isValid" class="badge badge-warning mr-4 align-self-center">
                             No hay conceptos registrados
                         </span>
-                        <span *ngIf="registro[i].registros.length && rupInstance.isValid" class="badge badge-info mr-4 align-self-center">
-                            {{ registro[i].registros.length }} Conceptos registrados
+                        <span *ngIf="registro.registros[i].length && rupInstance.isValid" class="badge badge-info mr-4 align-self-center">
+                            {{ registro.registros[i].length }} Conceptos registrados
                         </span>
                         <plex-button [icon]=" accordionActive === i || desplegarTodo ? 'chevron-left' : 'chevron-down' "
                             type="primary btn-sm btn-collapse">
                         </plex-button>
                     </div>
                     <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
-                        [registro]="registro[i]" [soloValores]="soloValores" (change)="emitChange()" #rupInstance>
+                        [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()" #rupInstance>
                     </rup>
                 </plex-panel>
             </ng-container>
             <ng-template #ShowSinAccordion>
                 <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
-                    [registro]="registro[i]" [soloValores]="soloValores" (change)="emitChange()" #rupInstance>
+                    [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()" #rupInstance>
                 </rup>
             </ng-template>
         </ng-container>
@@ -66,7 +66,7 @@
                     </div>
                     <div class="contenedor-conceptos ml-3 pl-3">
                         <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
-                            [registro]="registro[i]" [soloValores]="soloValores" (change)="emitChange()" #rupInstance>
+                            [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()" #rupInstance>
                         </rup>
                     </div>
                     <hr>

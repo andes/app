@@ -1,9 +1,3 @@
-<!-- Este es un elemento RUP -->
-<!-- accordion lo pasamos por param -->
-<ng-container *ngIf="elementoRUP.params && elementoRUP.params['accordion']; else moleculaRup">
-    <rup-seccionesAccordion [elementoRUP]="elementoRUP" [registro]="registro.registros" [prestacion]="prestacion"
-        [soloValores]="soloValores"></rup-seccionesAccordion>
-</ng-container>
 <!-- Moléculas -->
 <ng-template #moleculaRup>
     <ng-container *ngIf="elementoRUP && elementoRUP.requeridos && elementoRUP.requeridos.length">
