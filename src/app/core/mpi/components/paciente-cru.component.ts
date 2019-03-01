@@ -60,7 +60,6 @@ export class PacienteCruComponent implements OnInit {
     changeRelaciones = false;
     posibleDuplicado = false;
     loading = false;
-    esEscaneado = false;
     autoFocus = 0;
     hoy = moment().endOf('day').toDate();
     showCargar: boolean;
@@ -213,7 +212,18 @@ export class PacienteCruComponent implements OnInit {
                     this.actualizarDatosPaciente();
                 });
             } else {
-                this.plex.info('warning', 'Paciente inexistente', 'Error');
+                if (this.escaneado) {
+                    this.pacienteModel.nombre = this.paciente.nombre.toUpperCase();
+                    this.pacienteModel.apellido = this.paciente.apellido.toUpperCase();
+                    this.pacienteModel.fechaNacimiento = this.paciente.fechaNacimiento;
+                    this.pacienteModel.sexo = this.paciente.sexo;
+                    this.pacienteModel.documento = this.paciente.documento;
+                    this.pacienteModel.estado = 'validado';
+                    this.paciente = Object.assign({}, this.pacienteModel);
+                    this.actualizarDatosPaciente();
+                } else {
+                    this.plex.info('warning', 'Paciente inexistente', 'Error');
+                }
             }
         } else {
             // ubicacion inicial mapa de google cuando no se cargó ningun paciente
@@ -320,6 +330,7 @@ export class PacienteCruComponent implements OnInit {
             this.checkPass = true;
             this.activarApp = true;
         }
+        console.log('fin: ', this.paciente);
     }
 
 
