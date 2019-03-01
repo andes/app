@@ -55,7 +55,6 @@ export class IniciarInternacionComponent implements OnInit {
     public listaUnidadesOrganizativas = [];
     public listadoCamas = [];
     public paseAunidadOrganizativa: any;
-    public ocupaciones = [];
     public obraSocial;
     public origenHospitalizacion = [
         { id: 'consultorio externo', nombre: 'Consultorio externo' },
@@ -271,9 +270,6 @@ export class IniciarInternacionComponent implements OnInit {
         });
 
         // Cargamos todas las ocupaciones
-        this.ocupacionService.get().subscribe(rta => {
-            this.ocupaciones = rta;
-        });
 
     }
 
@@ -284,7 +280,25 @@ export class IniciarInternacionComponent implements OnInit {
     routeTo(action, id) {
         this.router.navigate(['rup/' + action + '/', id]);
     }
+    getOcupaciones(event) {
+        if (event && event.query) {
+            let query = {
+                nombre: event.query
 
+            };
+            this.ocupacionService.get(query).subscribe((rta) => {
+                rta.map(dato => { dato.nom = '(' + dato.codigo + ') ' + dato.nombre; });
+                event.callback(rta);
+            });
+
+        } else {
+            let ocupacionHabitual = [];
+            if (this.informeIngreso.ocupacionHabitual) {
+                ocupacionHabitual = [this.informeIngreso.ocupacionHabitual];
+            }
+            event.callback(ocupacionHabitual);
+        }
+    }
     loadProfesionales(event) {
         let listaProfesionales = [];
         if (event.query) {

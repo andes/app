@@ -97,6 +97,9 @@ export class ListadoInternacionComponent implements OnInit {
         this.showEgreso = false;
         this.internacionSelected = null;
         this.internacionSelected = Object.assign({}, internacion);
+        if ((this.Resumen as any).first && (this.Resumen as any).first.puedeEditar) {
+            (this.Resumen as any).first.puedeEditar = true;
+        }
         if ((this.Resumen as any).first && (this.Resumen as any).first.editarEgreso) {
             (this.Resumen as any).first.editarEgreso = false;
         }
