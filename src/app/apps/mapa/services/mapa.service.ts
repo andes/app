@@ -18,6 +18,4 @@ export class MapaService {
     get(): Observable<IMapa[]> {
         return this.server.get(this.mapaUrl);
     }
-
-
 }

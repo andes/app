@@ -18,6 +18,6 @@ export interface IMapa {
     lat: number;
     label?: string;
     draggable: boolean;
-    infofiltro?:string;
-    iconColorMarker?:string;
+    infofiltro?: string;
+    iconColorMarker?: string;
 }

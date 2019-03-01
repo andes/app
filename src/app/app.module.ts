@@ -386,7 +386,7 @@ import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campania
 import { CampaniaVisualizacionComponent } from './apps/campaniaSalud/components/campaniaVisualizacion.component';
 import { CampaniaFormComponent } from './apps/campaniaSalud/components/campania-create-update.component';
 
-//Andes
+// Andes
 import { MapaService } from './apps/mapa/services/mapa.service';
 
 
