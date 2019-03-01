@@ -286,7 +286,7 @@ export class IniciarInternacionComponent implements OnInit {
                 nombre: event.query
 
             };
-            this.ocupacionService.get(query).subscribe((rta) => {
+            this.ocupacionService.getParams(query).subscribe((rta) => {
                 rta.map(dato => { dato.nom = '(' + dato.codigo + ') ' + dato.nombre; });
                 event.callback(rta);
             });
