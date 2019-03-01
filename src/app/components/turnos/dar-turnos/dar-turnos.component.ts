@@ -194,7 +194,7 @@ export class DarTurnosComponent implements OnInit {
                 this.verificarTelefono(pacienteMPI);
                 this.obtenerCarpetaPaciente();
                 if (this.paciente.documento) {
-                    if (this.paciente.financiador[0]) {
+                    if (this.paciente.financiador && this.paciente.financiador[0]) {
                         this.obraSocialPaciente = this.paciente.financiador[0] as any;
                         this.numeroAfiliado = (this.paciente.financiador[0] as any).numeroAfiliado;
                     } else {
@@ -674,9 +674,13 @@ export class DarTurnosComponent implements OnInit {
         if (indiceCarpeta === -1) {
             // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
             this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
-                if (carpeta.nroCarpeta) {
-                    this.carpetaEfector.nroCarpeta = carpeta.nroCarpeta;
-                    this.changeCarpeta = true;
+                // Si la carpeta en carpetaPaciente tiene una longitud mayor a 0, se filtra por organización para obtener nroCarpeta.
+                if (carpeta.length > 0) {
+                    let carpetaE = carpeta[0].carpetaEfectores.find((carpetaEf: any) => carpetaEf.organizacion._id === this.auth.organizacion.id);
+                    if (carpetaE.nroCarpeta) {
+                        this.carpetaEfector.nroCarpeta = carpetaE.nroCarpeta;
+                        this.changeCarpeta = true;
+                    }
                 }
             });
         }
@@ -822,7 +826,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     private guardarTurno(agd: IAgenda) {
-        if (this.numeroAfiliado) {
+        if (this.numeroAfiliado && this.obraSocialPaciente) {
             this.obraSocialPaciente.numeroAfiliado = this.numeroAfiliado;
         }
         let pacienteSave = {
