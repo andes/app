@@ -21,39 +21,45 @@
                 </div>
                 <div class='col-3'>
                     <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event,'prestaciones')"
-                        (getData)="loadPrestaciones($event)" name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
+                        (getData)="loadPrestaciones($event)" name="prestaciones" label="Prestación"
+                        ngModelOptions="{standalone: true}">
                     </plex-select>
                 </div>
                 <div class='col-2'>
-                    <plex-button type="success" icon="calendar-search" label="Buscar" (click)="refreshSelection($event, 'filter')"></plex-button>
+                    <plex-button type="success" icon="calendar-search" label="Buscar"
+                        (click)="refreshSelection($event, 'filter')"></plex-button>
                 </div>
                 <div class='col-1 text-right'>
-                    <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
+                    <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
+                        (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
                 </div>
             </div>
             <div class="row" *ngIf="mostrarMasOpciones">
                 <div class="col-4">
                     <plex-select [(ngModel)]="profesionales" (change)="refreshSelection($event, 'profesionales')"
-                        (getData)="loadEquipoSalud($event)" name="profesionales" label="Equipo de salud" placeholder="Buscar por equipo de salud"
-                        labelField="apellido+' '+nombre" ngModelOptions="{standalone: true}">
+                        (getData)="loadEquipoSalud($event)" name="profesionales" label="Equipo de salud"
+                        placeholder="Buscar por equipo de salud" labelField="apellido+' '+nombre"
+                        ngModelOptions="{standalone: true}">
                     </plex-select>
                 </div>
                 <div class="col-3">
-                    <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')" name="estado" [data]="arrayEstados"
-                        label="Estado" placeholder="Buscar por estado" ngModelOptions="{standalone: true}">
+                    <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')" name="estado"
+                        [data]="arrayEstados" label="Estado" placeholder="Buscar por estado"
+                        ngModelOptions="{standalone: true}">
                     </plex-select>
                 </div>
                 <div *ngIf="!sumar && !sinOS" class="col-3">
-                    <plex-select [(ngModel)]="financiadores" (change)="refreshSelection($event,'financiador')" name="financiador"
-                        (getData)="loadFinanciadores($event)" label="Financiador" placeholder="Buscar por financiador">
+                    <plex-select [(ngModel)]="financiadores" (change)="refreshSelection($event,'financiador')"
+                        name="financiador" (getData)="loadFinanciadores($event)" label="Financiador"
+                        placeholder="Buscar por financiador">
                     </plex-select>
 
                 </div>
                 <div class="col-2">
-                    <plex-bool *ngIf="!sinOS" [(ngModel)]="sumar" type="slide" (change)="refreshSelection($event, 'sumar')"
-                        label="Sumar" name="sumar"></plex-bool>
-                    <plex-bool *ngIf="!sumar" [(ngModel)]="sinOS" type="slide" (change)="refreshSelection($event, 'sinOS')"
-                        label="Sin obra social" name="sinOS"></plex-bool>
+                    <plex-bool *ngIf="!sinOS" [(ngModel)]="sumar" type="slide"
+                        (change)="refreshSelection($event, 'sumar')" label="Sumar" name="sumar"></plex-bool>
+                    <plex-bool *ngIf="!sumar" [(ngModel)]="sinOS" type="slide"
+                        (change)="refreshSelection($event, 'sinOS')" label="Sin obra social" name="sinOS"></plex-bool>
                 </div>
             </div>
         </header>
@@ -153,8 +159,11 @@
         <div class="clearfix">
             <div class="page-subtitle float-left">Detalle de la prestación</div>
         </div>
+        <div *ngIf="!prestacion.idPrestacion" class="col">
+            <span class="text-danger">La prestación no ha sido iniciada</span>
+        </div>
 
-        <div class="col">
+        <div *ngIf="prestacion.idPrestacion" class="col">
             <div *ngIf="prestacion.tipoPrestacion">
                 <label>Tipo de prestación</label>{{prestacion.tipoPrestacion?.nombre}}</div>
             <div *ngIf="prestacion.profesionales">
