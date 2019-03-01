@@ -42,6 +42,8 @@ export class AuditoriaComponent implements OnInit {
   pacientesReportados: IPaciente[] = [];
   corregirPaciente: Number = null;  // posicion delnpaciente a modificar (reporte de errores)
   showBotonesReporte = false;
+  permisoEdicion: Boolean;
+  permisoVincular: Boolean;
 
   constructor(
     public auth: Auth,
@@ -55,9 +57,12 @@ export class AuditoriaComponent implements OnInit {
 
   // Cargamos todos los pacientes temporales y activos
   ngOnInit() {
-    if (!this.auth.check('auditoriaPacientes:lectura')) {
+    if (!(this.auth.getPermissions('auditoriaPacientes:?').length > 0)) {
       this.router.navigate(['./inicio']);
+      return;
     }
+    this.permisoEdicion = this.auth.check('auditoriaPacientes:edicion');
+    this.permisoVincular = this.auth.check('auditoriaPacientes:vincular');
 
     this.onLoadData();
   }
@@ -104,7 +109,7 @@ export class AuditoriaComponent implements OnInit {
   }
 
   onSelectCorregir(index, paciente) {
-    if (this.auth.check('auditoriaPacientes:edicion:reporteErrores')) {
+    if (this.permisoEdicion) {
       if (!this.showBotonesReporte) {
         this.corregirPaciente = index;
         this.showBotonesReporte = true;
@@ -165,9 +170,6 @@ export class AuditoriaComponent implements OnInit {
     }
     if (panelIndex === 2) {
       this.getInactivos();
-    }
-    if (panelIndex === 3) {
-      this.getReportados();
     }
     this.showDetallePaciente = false;
     this.enableActivar = false;
@@ -231,7 +233,7 @@ export class AuditoriaComponent implements OnInit {
   }
 
   vincular() {
-    if (this.auth.check('auditoriaPacientes:edicion:activar/vincular')) {
+    if (this.permisoVincular) {
       if (!this.pacienteSelected) {
         return null;
       }
@@ -351,7 +353,7 @@ export class AuditoriaComponent implements OnInit {
   }
 
   activar(pac: IPaciente, index: number) {
-    if (this.auth.check('auditoriaPacientes:edicion:activar/vincular')) {
+    if (this.permisoVincular) {
       this.pacienteService.enable(pac).subscribe(res => {
         this.plex.toast('success', 'Paciente Activado');
         this.getInactivos();
@@ -359,7 +361,7 @@ export class AuditoriaComponent implements OnInit {
     }
   }
   desactivar(pac: IPaciente, index: number) {
-    if (this.auth.check('auditoriaPacientes:edicion:activar/vincular')) {
+    if (this.permisoVincular) {
       // si el paciente tiene otros pacientes en su array de identificadores, no lo podemos desactivar
       if (pac.identificadores && pac.identificadores.filter(identificador => identificador.entidad === 'ANDES').length > 0) {
         this.plex.info('warning', 'Existen otros pacientes vinculados a este paciente', 'No Permitido');
