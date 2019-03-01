@@ -133,6 +133,13 @@
                                                                     [required]="true"></plex-text>
                                                             </div>
                                                         </div>
+                                                        <div class="row pt-2">
+                                                            <div class="col">
+                                                                <plex-button *ngIf="showBotonesReporte" class="float-left" label="Cancelar" type="danger" 
+                                                                    (click)="corregirPaciente = null; showBotonesReporte = false"></plex-button>
+                                                                <plex-button *ngIf="showBotonesReporte" class="float-right" label="Guardar" type="success" (click)="guardarCorreccion()">                                                                        </plex-button>
+                                                            </div>
+                                                        </div>
                                                     </span>
                                                 </td>
                                                 <td>
@@ -147,19 +154,6 @@
                                                     <span *ngIf="corregirPaciente !== i">
                                                         <plex-button label="Corregir" type="info" (click)="onSelectCorregir(i, paciente)"></plex-button>
                                                     </span>
-                                                    <!--span *ngIf="corregirPaciente === i">
-                                                        <div class="row">
-                                                            <div class="col">
-                                                                <plex-button label="Guardar" type="success" (click)="guardarCorreccion(paciente)"></plex-button>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col">
-                                                                <plex-button label="Cancelar" type="danger" (click)="corregirPaciente = null"></plex-button>
-                                                            </div>
-                                                        </div>
-                                                    </span>
-                                                </td-->
                                             </tr>
                                         </tbody>
                                     </table>
@@ -174,14 +168,12 @@
     <plex-layout-sidebar>
         <paciente-panel [paciente]="pacienteSelected" [permitirseleccionarRelacion]="false"> </paciente-panel>
     </plex-layout-sidebar>
-    <plex-layout-footer *ngIf="showBotonesReporte || showCandidatos || (enableVincular && !showCandidatos) || enableVinculados || enableActivar">
+    <plex-layout-footer *ngIf="showCandidatos || (enableVincular && !showCandidatos) || enableVinculados || enableActivar">
         <plex-button position="left" *ngIf="showCandidatos" label="Cancelar" type="danger" (click)="cancelar()"></plex-button>
         <plex-button *ngIf="enableVincular && !showCandidatos && pacienteSelected?.activo" class="pr-2" position="right"
             label="Desactivar" type="danger" (click)="desactivar(pacienteSelected)"></plex-button>
         <plex-button *ngIf="enableActivar && !showCandidatos" position="right" label="Activar" type="success" (click)="activar(pacienteSelected)"></plex-button>
         <plex-button *ngIf="enableVincular && !showCandidatos" position="right" label="Vincular" type="warning" (click)="vincular(pacienteSelected);pacientes=null"></plex-button>
         <plex-button *ngIf="enableVinculados" position="right" label="Ver Vinculados" type="primary" (click)="vincular(pacienteSelected)"></plex-button>
-        <plex-button *ngIf="showBotonesReporte" label="Guardar" type="success" position="right" (click)="guardarCorreccion()"></plex-button>
-        <plex-button *ngIf="showBotonesReporte" label="Cancelar" type="danger" position="left" (click)="corregirPaciente = null; showBotonesReporte = false"></plex-button>
     </plex-layout-footer>
 </plex-layout>
