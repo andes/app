@@ -1,3 +1,8 @@
+@import '../../../../../../src/app/modules/rup/components/variables.scss';
+
+.selectize-control {
+    top: 6px;
+}
 .labs-listado-item {
     border: 1px #000 solid;
     display: inline-table;
@@ -26,6 +31,15 @@
 //     margin-bottom: 0rem;
 // }
 
+.bg-invert {
+    background-color: $invert !important;
+    color: #FFF !important;
+}
+
+.white {
+    color: #FFF !important;
+}
+
 .table-grid {
     display: grid;
     grid-template-columns: repeat(11, 1fr);
@@ -39,8 +53,10 @@
         grid-template-columns: repeat(5, 1fr);
     }&.reporteResultados {
         grid-template-columns: repeat(8, 1fr);
-    }
-    &.paciente {
+    }&.lista-lateral {
+        grid-template-columns: repeat(3, 1fr);
+        
+    }&.paciente {
         grid-template-columns: 120px repeat(4, 1fr);
         &>span {
             justify-items: left;
@@ -78,7 +94,6 @@
     &:nth-child(even) {
         background: #ddd;
     }
-
 }
 
 .table-grid-head {

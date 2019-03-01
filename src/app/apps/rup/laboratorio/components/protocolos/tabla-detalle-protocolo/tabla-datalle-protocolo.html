@@ -13,13 +13,13 @@
                 class="float-center">UM</th>
             <th *ngIf='modo.nombre !=="recepcionSinTurno" && modo.nombre !=="control" && modo.nombre !=="recepcion"'
                 class="float-center">VR</th>
+            <th class="float-center" *ngIf='modo.nombre !=="control" && modo.nombre !=="recepcion"'>Estado</th>
+            <th *ngIf='modo.nombre === "recepcion" || modo.nombre === "control"'>Acciones</th>
             <th class="float-center" *ngIf='modo.nombre === "validacion"'>
                 <div>
                     <plex-bool type="checkbox" [(ngModel)]="flagMarcarTodas" (change)="validarTodas($event)" name="validarTodos"></plex-bool>
                 </div>Validar
             </th>
-            <th class="float-center" *ngIf='modo.nombre !=="control" && modo.nombre !=="recepcion"'>Estado</th>
-            <th *ngIf='modo.nombre === "recepcion" || modo.nombre === "control"'>Acciones</th>
             <th *ngIf='modo.nombre === "carga" || modo.nombre === "validacion"'>Observs.</th>
         </thead>
         <tbody>
@@ -142,19 +142,8 @@
                                 {{practicaCarga.valor.practica.presentaciones[0].valoresReferencia[0].valorMaximo}}
                             </ng-container>
                         </td>
-                        <ng-container *ngIf='modo.nombre ==="validacion"'>
-                            <td>
-                                <plex-bool type="checkbox" [(ngModel)]="validaciones[i].validado" name="validado"
-                                    (change)="clickValidar($event)" name="clickValidar"></plex-bool>
-                            </td>
-                        </ng-container>
-                        <!-- <td></td> -->
-                        <ng-container *ngIf='modo.nombre ==="recepcion" || modo.nombre ==="control"'>
-                            <td>
-                                <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practica.valor.idPractica)"></plex-button>
-                            </td>
-                        </ng-container>
-                        <ng-container *ngIf='(modo.nombre ==="carga" || modo.nombre ==="validacion")'>
+
+                        <ng-container>
                             <td class="small text-success">
                                 <ng-container *ngIf="practicaCarga.valor.estados.length > 0">
                                     {{practicaCarga.valor.estados[practicaCarga.valor.estados.length-1]?.tipo}}:
@@ -163,16 +152,18 @@
                                     <br />{{practicaCarga.valor.estados[practicaCarga.valor.estados.length-1]?.fecha
                                     | date: 'dd/MM/yyyy' }}</ng-container>
                             </td>
+                            <ng-container *ngIf='modo.nombre ==="validacion"'>
+                                <td>
+                                    <plex-bool type="checkbox" [(ngModel)]="validaciones[i].validado" name="validado"
+                                        (change)="clickValidar($event)" name="clickValidar"></plex-bool>
+                                </td>
+                            </ng-container>
                             <td>
                                 <plex-button type="info" title="Observaciones" icon="mdi mdi-file-document" (click)="verObservaciones()">
                                 </plex-button>
                             </td>
                         </ng-container>
                     </ng-container>
-                    <!-- <td>
-                    <plex-button type="danger" icon="close-circle-outline" title="Guardar" (click)="cerrarObservacion()">
-                    </plex-button>
-                </td> -->
 
                 </tr>
             </ng-container>

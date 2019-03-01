@@ -3,11 +3,8 @@
 
         <filtros-busqueda-protocolo *ngIf="!showProtocoloDetalle" [modo]='contextoCache.modo' (buscarProtocolosEmmiter)="refreshSelection($event)"></filtros-busqueda-protocolo>
 
-        <br *ngIf="!showProtocoloDetalle">
-        <hr *ngIf="!showProtocoloDetalle">
-
         <!-- LISTA DE PROTOCOLOS -->
-        <lista-protocolos [protocolos]='protocolos' [modo]='contextoCache.modo' (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)'
+        <lista-protocolos [protocolos]='protocolos' [modo]='contextoCache.modo' [indiceSeleccionado]='indiceSeleccionado' (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)'
             [showProtocoloDetalle]='showProtocoloDetalle' (edicionDatosCabeceraEmitter)='editarDatosCabecera()'></lista-protocolos>
 
         <!--VISUALIZACIÓN DE PROTOCOLOS CONTROL -->
@@ -20,9 +17,6 @@
                 <div class="page-title">
                     <ng-container *ngIf="!showProtocoloDetalle">
                         Laboratorio | {{contextoCache.modo.titulo}}
-                    </ng-container>
-                    <ng-container>
-                        Protocolos
                     </ng-container>
                 </div>
                 <nav>

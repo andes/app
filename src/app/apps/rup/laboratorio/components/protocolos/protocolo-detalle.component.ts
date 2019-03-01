@@ -1,11 +1,10 @@
 import { Constantes } from './../../controllers/constants';
 import { PrestacionesService } from './../../../../../modules/rup/services/prestaciones.service';
 import { TablaDatalleProtocoloComponent } from './tabla-detalle-protocolo/tabla-datalle-protocolo.component';
-import { PracticaService } from './../../services/practica.service';
 import { ProtocoloService } from './../../services/protocolo.service';
 import { Input, Output, Component, OnInit, HostBinding, EventEmitter, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
@@ -106,7 +105,6 @@ export class ProtocoloDetalleComponent
     setProtocoloSelected(protocolo: IPrestacion) {
         this.modelo = protocolo;
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
-        // this.practicasEjecucion = this.modelo.ejecucion.registros;
     }
 
     getcargarProtocolo() {
@@ -114,12 +112,12 @@ export class ProtocoloDetalleComponent
     }
 
     constructor(public plex: Plex, private formBuilder: FormBuilder,
+        private activatedRoute: ActivatedRoute,
         private router: Router,
         public auth: Auth,
         private servicioOrganizacion: OrganizacionService,
         private servicioPrestacion: PrestacionesService,
         private servicioProtocolo: ProtocoloService,
-        private servicioPractica: PracticaService,
         private laboratorioContextoCacheService: LaboratorioContextoCacheService
     ) { }
 
@@ -213,8 +211,6 @@ export class ProtocoloDetalleComponent
     searchStart() {
         this.listado = null;
         this.seleccion = null;
-        // this.router.navigate(['/laboratorio/recepcion/']);
-
     }
 
     /**
@@ -394,11 +390,18 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     private guardarNuevoProtocolo() {
+        this.contextoCache.turno = null;
         this.modelo.estados = [{ tipo: 'ejecucion' }];
         this.servicioProtocolo.post(this.modelo).subscribe(respuesta => {
-            this.contextoCache.mostrarCuerpoProtocolo = true;
             this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
-            this.volverAListaControEmit.emit();
+            this.activatedRoute.params.subscribe(params => {
+                if (params['id']) {
+                    this.router.navigate(['/laboratorio/recepcion/']);
+                } else {
+                    this.contextoCache.mostrarCuerpoProtocolo = true;
+                    this.volverAListaControEmit.emit();
+                }
+            });
         });
     }
 

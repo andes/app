@@ -1,10 +1,10 @@
-<section class="labs-listado-item" style="width: 100% !important">
-    <div class="row">
-        <div class="col-1 centradoVerticalBtn" *ngIf="modo.nombre !== 'recepcion'">
+<section class="labs-listado-item w-100">
+    <div class="row p-2">
+        <div class="col-1 ml-2 centradoVerticalBtn" *ngIf="modo.nombre !== 'recepcion'">
             <plex-button class="marginRightBtn" type="info" icon="chevron-left" (click)='anterior()'>
             </plex-button>
         </div>
-        <div class="col" class="centradoVerticalBtn">
+        <div class="col centradoVerticalBtn">
             <div class="listado-contenedor-secundario">
                 <!-- Modo visualizacion de datos -->
                 <article class="labs-item-numero">
@@ -65,7 +65,7 @@
             </div>
         </div>
         <div class="col-1 centradoVerticalBtn" *ngIf='modo.nombre === "control"'>
-            <plex-button icon="mdi mdi-pencil" class="float-right mr-2 marginLeftBtn" (click)="editarDatosCabecera()"
+            <plex-button icon="mdi mdi-pencil" (click)="editarDatosCabecera()"
                 title="Editar datos">
             </plex-button>
         </div>
@@ -73,7 +73,8 @@
             <plex-button label="" type="info" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
         </div>
         <div class="col-1 centradoVerticalBtn" *ngIf='modo.nombre !== "recepcion"'>
-            <plex-button type="info" class='float-right mr-2' icon='chevron-right' (click)='siguiente()' style='margin-left: 10px;'></plex-button>
+            <plex-button type="info" icon='chevron-right' (click)='siguiente()'></plex-button>
         </div>
     </div>
 </section>
+<hr>

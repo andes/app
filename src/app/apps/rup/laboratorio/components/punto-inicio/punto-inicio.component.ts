@@ -92,7 +92,6 @@ export class PuntoInicioLaboratorioComponent implements OnInit, OnDestroy {
         this.listado = null;
         this.seleccion = null;
         this.router.navigate(['/laboratorio/recepcion/']);
-
     }
 
     searchEnd(resultado: PacienteBuscarResultado) {
@@ -103,10 +102,9 @@ export class PuntoInicioLaboratorioComponent implements OnInit, OnDestroy {
         }
     }
 
-    recepcionSinTurno() {
-        // this.laboratorioContextoCacheService.modoRecepcionSinTurno();
+    recepcion() {
         this.laboratorioContextoCacheService.modoRecepcion();
-        this.router.navigate(['/laboratorio/protocolos/sinTurno/' + this.seleccion.id]);
+        this.router.navigate(['/laboratorio/protocolos/turnos/' + this.seleccion.id]);
     }
 
     /**
@@ -116,8 +114,7 @@ export class PuntoInicioLaboratorioComponent implements OnInit, OnDestroy {
      */
     recepcionarConTurno(turno) {
         this.laboratorioContextoCacheService.getContextoCache().turno = turno;
-        this.laboratorioContextoCacheService.modoRecepcion();
-        this.router.navigate(['/laboratorio/protocolos/turno/']);
+        this.recepcion();
     }
 
 
