@@ -79,8 +79,8 @@
 
         </ng-container>
         <ng-container *ngIf='mostrarPases'>
-            <app-pases-listado-internacion [cama]="null" [prestacion]="internacionSelected" (verInternacionEmit)="mostrarPases = false"
-                (cancelarPases)='mostrarPases = false'></app-pases-listado-internacion>
+            <app-pases-listado-internacion [cama]="null" [workflowC]="false" [prestacion]="internacionSelected"
+                (verInternacionEmit)="mostrarPases = false" (cancelarPases)='mostrarPases = false'></app-pases-listado-internacion>
         </ng-container>
     </plex-layout-sidebar>
     <plex-layout-footer>
