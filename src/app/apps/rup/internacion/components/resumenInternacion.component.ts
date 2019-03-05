@@ -51,6 +51,7 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
 
     @Output() data: EventEmitter<any> = new EventEmitter<any>();
     @Output() refreshCamas: EventEmitter<any> = new EventEmitter<any>();
+    @Output() mostrarPase: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
     public pases;
     public editarIngreso = false;
@@ -234,6 +235,10 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
         this.flechita = !this.flechita;
     }
 
+
+    registrarPase() {
+        this.mostrarPase.emit(true);
+    }
 
     // romperValidacion() {
     //     this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación').then(validar => {

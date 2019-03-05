@@ -43,7 +43,7 @@
                     <div class="row" *ngIf="desdeListadoInternacion">
                         <div class="col">
                             <plex-button label="Cargar movimiento de cama" type="primary" [size]="block" *ngIf="desdeListadoInternacion && prestacion && prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada'"
-                                (click)='mostrarPases = true'></plex-button>
+                                (click)='registrarPase()'></plex-button>
                         </div>
                     </div>
                 </section>

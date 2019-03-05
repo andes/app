@@ -23,7 +23,7 @@ import { Subject } from 'rxjs';
     encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 export class PasesListadoInternacionComponent implements OnInit {
-  // Propiedades privadas
+    // Propiedades privadas
 
     // Propiedades públicas
     public organizacion: any;
@@ -50,7 +50,7 @@ export class PasesListadoInternacionComponent implements OnInit {
 
     // resultado de la accion realizada sobre la cama
     @Output() cancelarPases: EventEmitter<any> = new EventEmitter<any>();
-    // @Output() verInternacionEmit: EventEmitter<any> = new EventEmitter<any>();
+    @Output() verInternacionEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
 
     // Constructor
@@ -73,7 +73,7 @@ export class PasesListadoInternacionComponent implements OnInit {
     ngOnInit() {
 
         // controlamos que llegue una cama y una prestación
-        if (this.prestacion ) {
+        if (this.prestacion) {
             this.opcionDesocupar = null;
             this.elegirDesocupar = true;
             this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
@@ -143,7 +143,7 @@ export class PasesListadoInternacionComponent implements OnInit {
                                     this.camaSeleccionPase.ultimoEstado = camaCambio.ultimoEstado;
                                     this.opcionDesocupar = null;
                                     this.elegirDesocupar = true;
-                                    // emitimos las camas modificadas
+                                    this.verInternacionEmit.emit(true);
 
                                 }, (err1) => {
                                     this.plex.info('danger', err1, 'Error');

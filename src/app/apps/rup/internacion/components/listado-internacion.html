@@ -75,11 +75,12 @@
         <ng-container *ngIf='!mostrarPases'>
             <internacion-resumen *ngIf='internacionSelected' [editarEgreso]="showEgreso" [paciente]="internacionSelected.paciente"
                 [prestacion]="internacionSelected" [desdeListadoInternacion]='true' [soloValores]="soloValores"
-                (refreshCamas)="actualizarListado($event)"></internacion-resumen>
+                (refreshCamas)="actualizarListado($event)" (mostrarPase)="mostrarPases = true"></internacion-resumen>
 
         </ng-container>
         <ng-container *ngIf='mostrarPases'>
-            <app-pases-listado-internacion [cama]="null" [prestacion]="internacionSelected" (cancelarPases)='mostrarPases = false'></app-pases-listado-internacion>
+            <app-pases-listado-internacion [cama]="null" [prestacion]="internacionSelected" (verInternacionEmit)="mostrarPases = false"
+                (cancelarPases)='mostrarPases = false'></app-pases-listado-internacion>
         </ng-container>
     </plex-layout-sidebar>
     <plex-layout-footer>
