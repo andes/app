@@ -22,9 +22,9 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     @Input()
     set prestacion(value: any) {
         this._prestacion = value;
-        let existeRegistro = this.internacionService.verRegistro(this._prestacion, 'egreso');
+        let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.internacionService.conceptosInternacion.egreso.conceptId);
         if (existeRegistro) {
-            this.registro.valor = existeRegistro;
+            this.registro = existeRegistro;
         } else {
             this.fechaEgreso = new Date();
             this.horaEgreso = new Date();

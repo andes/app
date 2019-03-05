@@ -237,10 +237,13 @@
     <!-- Detalle  -->
     <div class="row" *ngIf="registro.valor.InformeEgreso.diagnosticoPrincipal">
         <div class="col">
-            {{registro | json}}
             <b>Diagnostico Principal al egreso</b>
             <p>{{registro.valor.InformeEgreso.diagnosticoPrincipal.codigo}} -
                 {{registro.valor.InformeEgreso.diagnosticoPrincipal.nombre}}
+            </p>
+            <p *ngIf="registro.valor.InformeEgreso.diagnosticoPrincipal.c2">Es primera vez:
+                <span *ngIf="registro.esPrimeraVez">SI</span>
+                <span *ngIf="!registro.esPrimeraVez">NO</span>
             </p>
         </div>
     </div>
