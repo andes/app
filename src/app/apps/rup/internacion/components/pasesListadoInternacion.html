@@ -1,4 +1,4 @@
-<div >
+<div>
     <form #formReparada="ngForm">
         <fieldset>
             <legend>Desocupar cama</legend>
@@ -50,7 +50,7 @@
                     </plex-button>
                 </div>
                 <div class="col-md text-right">
-                    <plex-button label="Guardar" type="success" icon="check" [validateForm]="formReparada" (click)="desocuparCama($event, cama, 'desocupada')"
+                    <plex-button label="Guardar" type="success" icon="check" [validateForm]="formReparada" (click)="desocuparCama($event)"
                         [disabled]="elegirDesocupar">
                     </plex-button>
 
