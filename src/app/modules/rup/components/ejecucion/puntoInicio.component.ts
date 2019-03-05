@@ -16,6 +16,7 @@ import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { IPaciente } from '../../../../interfaces/IPaciente';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
+import { SubscriptionLike as ISubscription } from 'rxjs';
 
 
 @Component({
@@ -50,6 +51,8 @@ export class PuntoInicioComponent implements OnInit {
     public prestacionSeleccion: any;
     public paciente: any;
 
+    // ultima request que se almacena con el subscribe
+    private lastRequest: ISubscription;
 
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
@@ -103,7 +106,11 @@ export class PuntoInicioComponent implements OnInit {
     // tieneTurnosAsignados: true,
     actualizar() {
         const idsPrestacionesPermitidas = this.tiposPrestacion.map(t => t.conceptId);
-        observableForkJoin(
+        if (this.lastRequest) {
+            this.lastRequest.unsubscribe();
+        }
+
+        this.lastRequest = observableForkJoin(
             // Agendas
             this.servicioAgenda.get({
                 fechaDesde: moment(this.fecha).isValid() ? moment(this.fecha).startOf('day').toDate() : new Date(),
