@@ -113,7 +113,7 @@
                             <ng-container *ngFor=" let procedimiento of registro.valor.InformeEgreso.procedimientosQuirurgicos; let i = index ">
                                 <div class="row">
                                     <div class="col-6">
-                                        <plex-select label="Procedimientos" [(ngModel)]="procedimiento.procedimientosQuirurgicos"
+                                        <plex-select label="Procedimientos" [(ngModel)]="procedimiento.procedimiento"
                                             name="InformeEgreso.procedimientoQuirurgico-{{i}}" (getData)="getListaProcedimientosQuirurgicos($event)"
                                             placeholder="Seleccione..." labelField="nom">
                                         </plex-select>
@@ -237,6 +237,7 @@
     <!-- Detalle  -->
     <div class="row" *ngIf="registro.valor.InformeEgreso.diagnosticoPrincipal">
         <div class="col">
+            {{registro | json}}
             <b>Diagnostico Principal al egreso</b>
             <p>{{registro.valor.InformeEgreso.diagnosticoPrincipal.codigo}} -
                 {{registro.valor.InformeEgreso.diagnosticoPrincipal.nombre}}
@@ -249,7 +250,8 @@
             <b>Otros Diagnósticos</b>
             <ul class="list-unstyled">
                 <li class="" *ngFor="let otroDiagnostico of registro.valor.InformeEgreso.otrosDiagnosticos">
-                    <p>{{ otroDiagnostico.nombre }}</p>
+                    <p>{{ otroDiagnostico.nombre }}
+                    </p>
                 </li>
             </ul>
         </div>
@@ -277,13 +279,13 @@
     <fieldset>
         <legend class="small" *ngIf="registro.valor.InformeEgreso.procedimientosQuirurgicos && registro.valor.InformeEgreso.procedimientosQuirurgicos.lenght > 0">Procedimientos
             Quirúrgicos y Obstétricos</legend>
-        <div class="row" *ngIf="registro.valor.InformeEgreso.procedimientosQuirurgicos && registro.valor.InformeEgreso.procedimientosQuirurgicos[0].procedimiento !== null">
+        <div class="row" *ngIf="registro.valor.InformeEgreso.procedimientosQuirurgicos && registro.valor.InformeEgreso.procedimientosQuirurgicos.length > 0">
             <div class="col">
                 <b>Procedimientos Quirúrgicos</b>
                 <ul class="list-unstyled">
-                    <li class="" *ngFor="let procedimiento of registro.valor.InformeEgreso.procedimientosQuirurgicos">
-                        <p *ngIf="procedimiento.procedimiento">{{ procedimiento.procedimiento.nombre}}</p>
-                        <p *ngIf="procedimiento.fecha"> | {{procedimiento.fecha | date}}</p>
+                    <li class="" *ngFor="let p of registro.valor.InformeEgreso.procedimientosQuirurgicos">
+                        <span *ngIf="p.procedimiento">{{ p.procedimiento.nombre}}</span>
+                        <span *ngIf="p.fecha"> | {{p.fecha | date}}</span>
                     </li>
                 </ul>
             </div>
