@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { RUPComponent } from '../../core/rup.component';
+import { RupElement } from '..';
 
 
 @Component({
@@ -9,13 +10,8 @@ import { RUPComponent } from '../../core/rup.component';
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['seccionesAccordion.scss'],
 })
-
+@RupElement('SeccionesAccordionComponent')
 export class SeccionesAccordionComponent extends RUPComponent implements OnInit {
-
-    @Input() elementoRUP;
-    @Input() registro;
-    @Input() prestacion;
-    @Input() soloValores;
 
     public accordionActive = 0;
     public unidadesOrganizativas = [];
