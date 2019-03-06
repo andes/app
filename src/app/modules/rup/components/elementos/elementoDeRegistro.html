@@ -40,9 +40,7 @@
                                 </div>
                                 <div class="title">
                                     {{registro.nombre}}
-
                                     <div class="vinculadoCon" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))">
-
                                         <span class="badge badge-info">
                                             {{registro.relacionadoCon[0].concepto.term }}
                                         </span>
@@ -69,14 +67,9 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="rup-body" [hidden]="itemsRegistros[registro.id]?.collapse || confirmarEliminar || confirmarDesvincular[registro.id]">
+                            <div class="rup-body">
                                 <!-- ... Body -->
                                 <div class="content">
-                                    <!-- <div *ngIf="registro && !registro.valido">
-                                        <span class="badge badge-danger">
-                                            Debe completar los datos
-                                        </span>
-                                    </div> -->
                                     <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)"
                                         [prestacion]="prestacion" [paciente]="paciente" [registro]="registro"
                                         [soloValores]="soloValores" [params]="elementosRUPService.selectPorRefsetId(registro.concepto)"></rup>
