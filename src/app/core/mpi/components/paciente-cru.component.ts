@@ -215,7 +215,7 @@ export class PacienteCruComponent implements OnInit {
                 if (this.escaneado) {
                     this.pacienteModel.nombre = this.paciente.nombre.toUpperCase();
                     this.pacienteModel.apellido = this.paciente.apellido.toUpperCase();
-                    this.pacienteModel.fechaNacimiento = this.paciente.fechaNacimiento;
+                    this.pacienteModel.fechaNacimiento = moment(this.paciente.fechaNacimiento).toDate();
                     this.pacienteModel.sexo = this.paciente.sexo;
                     this.pacienteModel.documento = this.paciente.documento;
                     this.pacienteModel.estado = 'validado';
