@@ -82,7 +82,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
 
         let fechaNacimiento = null;
         if (documento.grupoFechaNacimiento > 0) {
-            fechaNacimiento = moment(datos[documento.grupoFechaNacimiento], 'DD/MM/YYYY');
+            fechaNacimiento = moment(datos[documento.grupoFechaNacimiento], 'DD/MM/YYYY').format('YYYY-MM-DD').toString();
         }
 
         return {
