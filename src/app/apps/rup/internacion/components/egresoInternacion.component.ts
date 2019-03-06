@@ -24,9 +24,9 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     @Input()
     set prestacion(value: any) {
         this._prestacion = value;
-        let existeRegistro = this.internacionService.verRegistro(this._prestacion, 'egreso');
+        let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.internacionService.conceptosInternacion.egreso.conceptId);
         if (existeRegistro) {
-            this.registro.valor = existeRegistro;
+            this.registro = existeRegistro;
         } else {
             this.fechaEgreso = new Date();
             this.horaEgreso = new Date();
@@ -43,7 +43,6 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
                     ],
                     procedimientosQuirurgicos: [
                         {
-                            procedimiento: null,
                             fecha: null
                         }
                     ],
@@ -92,15 +91,19 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     public opcionesSexo = [{ id: 'Femenino', label: 'Femenino' }, { id: 'Masculino', label: 'Masculino' }, { id: 'Indeterminado', label: 'Indeterminado' }];
 
 
-
+    public opcionPrimeraVez = [
+        { id: true, label: 'Si' },
+        { id: false, label: 'No' }
+    ];
     public procedimientosObstetricos = false;
+    public procedimientosObstetricosNoReq = false;
     public ExisteCausaExterna = false;
     public mostrarValidacion = false;
     public registro = {
         destacado: false,
         esSolicitud: false,
         esDiagnosticoPrincipal: false,
-        esPrimeraVez: false,
+        esPrimeraVez: undefined,
         relacionadoCon: [],
         nombre: 'alta del paciente',
         concepto: this.internacionService.conceptosInternacion.egreso,
@@ -172,12 +175,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
             this.showProcedimientos_causas();
             this.btnIniciarEditarEmit.emit('Editar');
         }
-        // // Cargamos todos los procedimientos.
-        this.procedimientosQuirurgicosService.get(null).subscribe(rta => {
-            this.listaProcedimientosQuirurgicos = rta.map(elem => {
-                return { id: elem._id, nombre: elem.nombre };
-            });
-        });
+
         this.calcularDiasEstada();
     }
 
@@ -213,7 +211,27 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     /**
      * Captura el evento del select y busca el codigo CIE10
      * @param event
-     */
+*/
+
+    getListaProcedimientosQuirurgicos(event) {
+        if (event && event.query) {
+            let query = {
+                nombre: event.query
+
+            };
+            this.procedimientosQuirurgicosService.get(query).subscribe((rta) => {
+                rta.map(dato => { dato.nom = '(' + dato.codigo + ') ' + dato.nombre; });
+                event.callback(rta);
+            });
+
+        } else {
+            let procedimientoQuirurgico = [];
+            if (this.registro.valor.InformeEgreso.procedimientosQuirurgicos) {
+                procedimientoQuirurgico = [this.registro.valor.InformeEgreso.procedimientosQuirurgicos];
+            }
+            event.callback(procedimientoQuirurgico);
+        }
+    }
     codigoCIE10(event) {
         if (event && event.query) {
             let query = {
@@ -224,6 +242,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
                 datos.map(dato => { dato.nombre = '(' + dato.codigo + ') ' + dato.nombre; });
                 event.callback(datos);
             });
+
         } else {
             let callback = [];
             if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
@@ -260,7 +279,6 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
 
     addProcedimientoQuirurgico() {
         let nuevoProcedimiento = Object.assign({}, {
-            procedimiento: null,
             fecha: null
         });
         this.registro.valor.InformeEgreso.procedimientosQuirurgicos.push(nuevoProcedimiento);
@@ -290,13 +308,22 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
             this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a la fecha de ingreso o superior a la fecha actual');
             return null;
         }
-
+        if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
+            this.registro.esDiagnosticoPrincipal = true;
+        }
         if (!this.procedimientosObstetricos) {
             this.registro.valor.InformeEgreso.terminacionEmbarazo = undefined;
             this.registro.valor.InformeEgreso.edadGestacional = undefined;
             this.registro.valor.InformeEgreso.paridad = undefined;
             this.registro.valor.InformeEgreso.tipoParto = undefined;
-            this.registro.valor.InformeEgreso.nacimientos = undefined;
+            this.registro.valor.InformeEgreso.nacimientos = [
+                {
+                    pesoAlNacer: null,
+                    condicionAlNacer: null,
+                    terminacion: null,
+                    sexo: null
+                }
+            ];
         }
 
         let existeEgreso = this.internacionService.verRegistro(this.prestacion, 'egreso');
@@ -315,6 +342,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
      * al mapa de camas
      */
     guardarPrestacion(isvalid) {
+
         if (isvalid) {
             let registros = this.controlRegistrosGuardar();
             if (registros) {
@@ -341,6 +369,8 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
      * al mapa de camas
      */
     validarPrestacion(isvalid) {
+
+
         if (isvalid) {
             this.plex.confirm('Luego de validar la prestación ya no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
                 if (!validar) {
@@ -384,28 +414,42 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
      * de unidades organizativas
      */
     selecOrganizacionDestino() {
-        if (this.registro.valor.InformeEgreso.tipoEgreso.nombre === 'Traslado' || this.registro.valor.InformeEgreso.tipoEgreso.nombre === 'Consultorio externo') {
-            // nos fijamos si ya tenemos la info en la copia.
-            if (this.copiaListaUnidadesOrganizativas.length) {
-                this.listaUnidadesOrganizativas = this.copiaListaUnidadesOrganizativas;
+        if (this.registro.valor.InformeEgreso.tipoEgreso) {
+            if (this.registro.valor.InformeEgreso.tipoEgreso.nombre === 'Traslado') {
+                // nos fijamos si ya tenemos la info en la copia.
+                if (this.copiaListaUnidadesOrganizativas.length) {
+                    this.listaUnidadesOrganizativas = this.copiaListaUnidadesOrganizativas;
+                } else {
+                    let params;
+                    this.servicioOrganizacion.get(params).subscribe(organizaciones => {
+                        this.listaUnidadesOrganizativas = organizaciones;
+                        // Dejamos una copia para no volver a llamar a la API.
+                        this.copiaListaUnidadesOrganizativas = JSON.parse(JSON.stringify(this.listaUnidadesOrganizativas));
+                    });
+                }
             } else {
-                let params;
-                this.servicioOrganizacion.get(params).subscribe(organizaciones => {
-                    this.listaUnidadesOrganizativas = organizaciones;
-                    // Dejamos una copia para no volver a llamar a la API.
-                    this.copiaListaUnidadesOrganizativas = JSON.parse(JSON.stringify(this.listaUnidadesOrganizativas));
-                });
+                this.listaUnidadesOrganizativas = [];
             }
-        } else {
-            this.listaUnidadesOrganizativas = [];
         }
+
     }
 
 
     showProcedimientos_causas() {
+        this.procedimientosObstetricos = false;
+        this.procedimientosObstetricosNoReq = false;
+        this.registro.valor.InformeEgreso.nacimientos = [
+            {
+                pesoAlNacer: null,
+                condicionAlNacer: null,
+                terminacion: null,
+                sexo: null
+            }
+        ];
         let regexCIECausasExternas = new RegExp('^S|^T');
         // let regexCIEProcedimientosQuirurgicos = new RegExp('^O8[0-4].[0-9]|O60.1|O60.2');
-        let regexCIEProcedimientosObstetricos = new RegExp('^O8[0-4].[0-9]|O60.1|O60.2|O0[0-9].[0-9]');
+        let regexCIEProcedimientosObstetricos = new RegExp('^O8[0-4].[0-9]|O60.1|O60.2');
+        let regexCIEProcedimientosObstetricosNoReq = new RegExp('^O0[0-6].[0-9]');
         // let codigosProcedimientos = ['O80.1', 'O80.8', 'O81.0', 'O81.2', 'O81.3', 'O81.5', 'O82.9', 'O82.2', 'O83.1',
         //     'O82.1', 'O83.4', 'O83.9', 'O83.2', 'O84.0', 'O84.2', 'O84.9', 'O80.9',
         //     'O81.4', 'O82.8', 'O83.3', 'O84.1', 'O80.0', 'O83.8', 'O84.8', 'O83.0',
@@ -424,8 +468,17 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
             this.ExisteCausaExterna = regexCIECausasExternas.test(this.registro.valor.InformeEgreso.diagnosticoPrincipal.codigo);
         }
 
+        if (this.registro.valor.InformeEgreso.otrosDiagnosticos) {
+            this.ExisteCausaExterna = regexCIECausasExternas.test(this.registro.valor.InformeEgreso.otrosDiagnosticos.codigo);
+        }
+
         if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
             this.procedimientosObstetricos = regexCIEProcedimientosObstetricos.test(this.registro.valor.InformeEgreso.diagnosticoPrincipal.codigo);
+            this.procedimientosObstetricosNoReq = regexCIEProcedimientosObstetricosNoReq.test(this.registro.valor.InformeEgreso.diagnosticoPrincipal.codigo);
+        }
+        if (this.registro.valor.InformeEgreso.otrosDiagnosticos) {
+            this.procedimientosObstetricos = regexCIEProcedimientosObstetricos.test(this.registro.valor.InformeEgreso.otrosDiagnosticos.codigo);
+            this.procedimientosObstetricosNoReq = regexCIEProcedimientosObstetricosNoReq.test(this.registro.valor.InformeEgreso.otrosDiagnosticos.codigo);
         }
     }
 

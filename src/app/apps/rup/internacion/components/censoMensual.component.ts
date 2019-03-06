@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
+import { Component, OnInit, HostBinding } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -19,23 +19,20 @@ import { InternacionService } from '../services/internacion.service';
 export class CensoMensualComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
 
-
+    public parametros;
     public organizacion;
-    public fecha = new Date();
-    public fechaHasta;
-    public organizacionSeleccionada;
-    public listadoCenso = [];
-    public ingresoEgreso = {};
-    public resumenCensoTotal;
+    public fechaDesde: any;
+    public fechaHasta: any;
+    public unidadOrganizativa;
+    public resumenCensoTotal = [];
+    public listaUnidadesOrganizativas = [];
 
-    public snomedEgreso = {
-        conceptId: '58000006',
-        term: 'alta del paciente',
-        fsn: 'alta del paciente (procedimiento)',
-        semanticTag: 'procedimiento'
-    };
-
-
+    public diasFuncionamientoV;
+    public promedioDisponibleV;
+    public pacienteDiaV;
+    public mortalidadHospitalariaV;
+    public promedioPermanenciaV;
+    public giroV;
     public totalResumenCenso = {
         existencia0: 0,
         ingresos: 0,
@@ -50,11 +47,10 @@ export class CensoMensualComponent implements OnInit {
         disponibles0: 0,
         count: 0
     };
-    // Usa el keymap 'default'
+
     private slug = new Slug('default');
 
     public paramsCensoDiario: any;
-    public showCensoDiario = false;
 
     constructor(private router: Router, private route: ActivatedRoute,
         private plex: Plex, public auth: Auth,
@@ -65,27 +61,17 @@ export class CensoMensualComponent implements OnInit {
         private servicioInternacion: InternacionService) { }
 
     ngOnInit() {
-
         this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
             this.organizacion = organizacion;
+            this.listaUnidadesOrganizativas = this.organizacion.unidadesOrganizativas ? this.organizacion.unidadesOrganizativas : [];
         });
+        this.fechaDesde = moment(new Date()).subtract(1, 'M').toDate();
+        this.fechaHasta = new Date();
+        this.resumenCensoTotal = null;
     }
 
-    generarCenso() {
-        let params = {
-            fechaDesde: moment(this.fecha).endOf('day'),
-            fechaHasta: moment(this.fechaHasta).endOf('day'),
-            unidad: this.organizacionSeleccionada.conceptId
-        };
-
-        this.servicioInternacion.getCensoMensual(params).subscribe((respuesta: any) => {
-            this.resumenCensoTotal = respuesta;
-            this.totalCenso();
-        });
-    }
-
-
-    totalCenso() {
+    reseteaBusqueda() {
+        this.resumenCensoTotal = null;
         this.totalResumenCenso = {
             existencia0: 0,
             ingresos: 0,
@@ -100,44 +86,81 @@ export class CensoMensualComponent implements OnInit {
             disponibles0: 0,
             count: 0
         };
+    }
+
+
+    generarCenso() {
+        if (this.fechaDesde && this.fechaHasta && this.unidadOrganizativa) {
+            if (this.fechaDesde <= this.fechaHasta) {
+                this.parametros = {
+                    fechaDesde: this.fechaDesde,
+                    fechaHasta: this.fechaHasta,
+                    unidad: this.unidadOrganizativa.conceptId,
+                    organizacion: this.organizacion.id
+                };
+                this.servicioInternacion.getCensoMensual(this.parametros).subscribe((respuesta: any) => {
+                    this.resumenCensoTotal = respuesta ? respuesta : [];
+                    if (this.resumenCensoTotal) {
+                        this.totalCenso();
+
+                    }
+                });
+            } else {
+                this.plex.info('danger', 'La fecha desde no puede ser mayor a la fecha hasta', 'Error');
+            }
+
+        }
+
+        this.reseteaBusqueda();
+
+    }
+
+
+    totalCenso() {
         this.resumenCensoTotal.forEach(element => {
-            this.totalResumenCenso.existencia0 += element.resumen.existencia0;
-            this.totalResumenCenso.ingresos += element.resumen.ingresos;
-            this.totalResumenCenso.pasesDe += element.resumen.pasesDe;
-            this.totalResumenCenso.egresosAlta += element.resumen.egresosAlta;
-            this.totalResumenCenso.egresosDefuncion += element.resumen.egresosDefuncion;
-            this.totalResumenCenso.pasesA += element.resumen.pasesA;
-            this.totalResumenCenso.existencia24 += element.resumen.existencia24;
-            this.totalResumenCenso.ingresoEgresoDia += element.resumen.ingresoEgresoDia;
-            this.totalResumenCenso.pacientesDia += element.resumen.pacientesDia;
-            this.totalResumenCenso.disponibles24 += element.resumen.disponibles24;
-            this.totalResumenCenso.disponibles0 += element.resumen.disponibles0;
+            this.totalResumenCenso.existencia0 += element.censo.existencia0;
+            this.totalResumenCenso.ingresos += element.censo.ingresos;
+            this.totalResumenCenso.pasesDe += element.censo.pasesDe;
+            this.totalResumenCenso.egresosAlta += element.censo.egresosAlta;
+            this.totalResumenCenso.egresosDefuncion += element.censo.egresosDefuncion;
+            this.totalResumenCenso.pasesA += element.censo.pasesA;
+            this.totalResumenCenso.existencia24 += element.censo.existencia24;
+            this.totalResumenCenso.ingresoEgresoDia += element.censo.ingresoEgresoDia;
+            this.totalResumenCenso.pacientesDia += element.censo.pacientesDia;
+            this.totalResumenCenso.disponibles24 += element.censo.disponibles24;
             this.totalResumenCenso.count++;
 
         });
     }
 
-    reseteaBusqueda() {
-        this.listadoCenso = [];
-    }
-
-
     descargarCensoMensual() {
-        setTimeout(() => {
+        let datosCensoTotal = {
+            diasF: this.diasFuncionamientoV,
+            promDis: this.promedioDisponibleV,
+            pacDia: this.pacienteDiaV,
+            mortHosp: this.mortalidadHospitalariaV,
+            promPer: this.promedioPermanenciaV,
+            giroCama: this.giroV
+        };
+        let params = {
+            usuario: this.auth.usuario.nombreCompleto,
+            listadoCenso: this.resumenCensoTotal,
+            resumenCenso: this.totalResumenCenso,
+            datosCenso: datosCensoTotal,
+            organizacion: this.organizacion,
+            fechaDesde: moment(this.fechaDesde).startOf('day'),
+            fechaHasta: moment(this.fechaHasta).endOf('day'),
+            unidad: this.unidadOrganizativa
+        };
 
-            let content = '';
-            let tabla = document.getElementById('tabla');
-            content += tabla.innerHTML;
-            let scssFile = '../censo/censoDiario';
-            this.servicioDocumentos.descargar(content, scssFile, true).subscribe(data => {
-                if (data) {
-                    // Generar descarga como PDF
-                    this.descargarArchivo(data, { type: 'application/pdf' });
-                } else {
-                    // Fallback a impresión normal desde el navegador
-                    window.print();
-                }
-            });
+        this.servicioDocumentos.descargar(params).subscribe(data => {
+            if (data) {
+                // Generar descarga como PDF
+                this.descargarArchivo(data, { type: 'application/pdf' });
+            } else {
+                // Fallback a impresión normal desde el navegador
+                window.print();
+            }
         });
     }
 
@@ -154,48 +177,42 @@ export class CensoMensualComponent implements OnInit {
         this.router.navigate(['/internacion/camas']);
     }
 
-
-
-    // Nos lleva al censo diario con la fecha seleccionada.
-    CensoDiario(fecha) {
-        let parametro = {
-            fecha: fecha,
-            organizacion: this.organizacionSeleccionada
-        };
-        this.paramsCensoDiario = parametro;
-        this.showCensoDiario = true;
-    }
-
-
     diasFuncionamiento() {
-        return this.totalResumenCenso.count;
+        this.diasFuncionamientoV = this.totalResumenCenso.count.toFixed(2);
+        return this.diasFuncionamientoV;
     }
 
     promedioDisponible() {
-        return Math.round(this.totalResumenCenso.disponibles24 / this.totalResumenCenso.count);
+        this.promedioDisponibleV = Math.round(this.totalResumenCenso.disponibles24 / this.totalResumenCenso.count).toFixed(2);
+        return this.promedioDisponibleV;
     }
 
     pacienteDia() {
-        return Math.round(this.totalResumenCenso.pacientesDia / this.totalResumenCenso.count);
+        this.pacienteDiaV = Math.round(this.totalResumenCenso.pacientesDia / this.totalResumenCenso.count).toFixed(2);
+        return this.pacienteDiaV;
     }
 
     mortalidadHospitalaria() {
+
         let total = this.totalResumenCenso.pasesA + this.totalResumenCenso.egresosAlta
             + this.totalResumenCenso.egresosDefuncion;
-        return total === 0 ? 0 : this.totalResumenCenso.egresosDefuncion / (total);
+        this.mortalidadHospitalariaV = total === 0 ? 0 : (this.totalResumenCenso.egresosDefuncion / (total)).toFixed(2);
+        return this.mortalidadHospitalariaV;
     }
 
     promedioPermanencia() {
         let total = this.totalResumenCenso.pasesA + this.totalResumenCenso.egresosAlta
             + this.totalResumenCenso.egresosDefuncion;
-        return total === 0 ? 0 : this.totalResumenCenso.pacientesDia / (total);
+        this.promedioPermanenciaV = total === 0 ? 0 : (this.totalResumenCenso.pacientesDia / (total)).toFixed(2);
+        return this.promedioPermanenciaV;
     }
 
     giro() {
         let total = this.totalResumenCenso.pasesA + this.totalResumenCenso.egresosAlta
             + this.totalResumenCenso.egresosDefuncion;
         let promedio = this.promedioDisponible();
-        return promedio === 0 ? 0 : total / promedio;
+        this.giroV = promedio === 0 ? 0 : (total / promedio).toFixed(2);
+        return this.giroV;
     }
 
 

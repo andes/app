@@ -43,13 +43,19 @@
                                 (getData)="codigoCIE10($event)" placeholder="buscar..." labelField="nombre">
                             </plex-select>
                         </div>
+                        <div class="col" *ngIf="registro.valor.InformeEgreso.diagnosticoPrincipal && registro.valor.InformeEgreso.diagnosticoPrincipal.c2">
+                            <plex-radio [data]="opcionPrimeraVez" label="Es primera Vez?" [(ngModel)]="registro.esPrimeraVez"
+                                [required]="true" name="esPrimeraVez" type="horizontal">
+                            </plex-radio>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <plex-select label="Otros Diagnósticos" [(ngModel)]="registro.valor.InformeEgreso.otrosDiagnosticos"
-                                name="otrosDiagnosticos" (getData)="codigoCIE10($event)" [multiple]="true" placeholder="buscar..."
+                            <plex-select (change)="showProcedimientos_causas()" label="Otro Diagnóstico" [(ngModel)]="registro.valor.InformeEgreso.otrosDiagnosticos"
+                                name="otrosDiagnosticos" (getData)="codigoCIE10($event)" placeholder="buscar..."
                                 labelField="nombre">
                             </plex-select>
+
                         </div>
                     </div>
 
@@ -62,7 +68,7 @@
                     </div>
                     <div class="row">
                         <div class="col-6" *ngIf='registro.valor.InformeEgreso.otrasCircunstancias'>
-                            <plex-int name="diasDeEstada"  label="Otros días de estada" suffix="Días" [(ngModel)]="registro.valor.InformeEgreso.diasEstadaOtrasCircunstancias"
+                            <plex-int name="diasDeEstada" label="Otros días de estada" suffix="Días" [(ngModel)]="registro.valor.InformeEgreso.diasEstadaOtrasCircunstancias"
                                 placeholder=""></plex-int>
                         </div>
                         <div class="col-{{registro.valor.InformeEgreso.otrasCircunstancias ? 6 : 12}}">
@@ -103,14 +109,16 @@
                     <div class="row">&nbsp;</div>
                     <fieldset>
                         <legend class="small">Procedimientos Quirúrgicos</legend>
-                        <ng-container *ngIf="listaProcedimientosQuirurgicos && listaProcedimientosQuirurgicos.length > 0">
+                        <ng-container>
                             <ng-container *ngFor=" let procedimiento of registro.valor.InformeEgreso.procedimientosQuirurgicos; let i = index ">
                                 <div class="row">
                                     <div class="col-6">
-                                        <plex-select label="Procedimientos" [(ngModel)]="procedimiento.procedimientosQuirurgicos"
-                                            name="InformeEgreso.procedimientoQuirurgico-{{i}}" [data]="listaProcedimientosQuirurgicos"
-                                            placeholder="Seleccione..." labelField="nombre">
+                                        <plex-select label="Procedimientos" [(ngModel)]="procedimiento.procedimiento"
+                                            name="InformeEgreso.procedimientoQuirurgico-{{i}}" (getData)="getListaProcedimientosQuirurgicos($event)"
+                                            placeholder="Seleccione..." labelField="nom">
                                         </plex-select>
+
+
                                     </div>
                                     <div class="col-6">
                                         <plex-datetime name="fecha-procedimientoQuirurgico-{{i}}" label="Fecha" type="date"
@@ -132,10 +140,10 @@
                         </ng-container>
                     </fieldset>
                     <div class="row">&nbsp;</div>
-                    <fieldset *ngIf="procedimientosObstetricos">
+                    <fieldset *ngIf="procedimientosObstetricos || procedimientosObstetricosNoReq">
                         <legend class="small">Procedimientos Obstétricos
                         </legend>
-                        <div *ngIf="procedimientosObstetricos">
+                        <div *ngIf="procedimientosObstetricos || procedimientosObstetricosNoReq">
                             <div class="row">
                                 <div class="col-6">
                                     <plex-datetime name="fechaTerminacion" label="Fecha terminación" type="date"
@@ -158,7 +166,7 @@
                                     </plex-radio>
                                 </div>
                             </div>
-                            <ng-container *ngFor=" let nacimiento of registro.valor.InformeEgreso.nacimientos; let i = index ">
+                            <ng-container *ngFor="let nacimiento of registro.valor.InformeEgreso.nacimientos; let i = index">
                                 <div class="row">
                                     <div class="col-6">
                                         <plex-int suffix="g" name="peso-{{i}}" label="Peso al nacer" [(ngModel)]="nacimiento.pesoAlNacer"
@@ -233,6 +241,10 @@
             <p>{{registro.valor.InformeEgreso.diagnosticoPrincipal.codigo}} -
                 {{registro.valor.InformeEgreso.diagnosticoPrincipal.nombre}}
             </p>
+            <p *ngIf="registro.valor.InformeEgreso.diagnosticoPrincipal.c2">Es primera vez:
+                <span *ngIf="registro.esPrimeraVez">SI</span>
+                <span *ngIf="!registro.esPrimeraVez">NO</span>
+            </p>
         </div>
     </div>
     <!-- Otros diagnosticos -->
@@ -241,7 +253,8 @@
             <b>Otros Diagnósticos</b>
             <ul class="list-unstyled">
                 <li class="" *ngFor="let otroDiagnostico of registro.valor.InformeEgreso.otrosDiagnosticos">
-                    <p>{{ otroDiagnostico.nombre }}</p>
+                    <p>{{ otroDiagnostico.nombre }}
+                    </p>
                 </li>
             </ul>
         </div>
@@ -269,13 +282,13 @@
     <fieldset>
         <legend class="small" *ngIf="registro.valor.InformeEgreso.procedimientosQuirurgicos && registro.valor.InformeEgreso.procedimientosQuirurgicos.lenght > 0">Procedimientos
             Quirúrgicos y Obstétricos</legend>
-        <div class="row" *ngIf="registro.valor.InformeEgreso.procedimientosQuirurgicos && registro.valor.InformeEgreso.procedimientosQuirurgicos[0].procedimiento !== null">
+        <div class="row" *ngIf="registro.valor.InformeEgreso.procedimientosQuirurgicos && registro.valor.InformeEgreso.procedimientosQuirurgicos.length > 0">
             <div class="col">
                 <b>Procedimientos Quirúrgicos</b>
                 <ul class="list-unstyled">
-                    <li class="" *ngFor="let procedimiento of registro.valor.InformeEgreso.procedimientosQuirurgicos">
-                        <p *ngIf="procedimiento.procedimiento">{{ procedimiento.procedimiento.nombre}}</p>
-                        <p *ngIf="procedimiento.fecha"> | {{procedimiento.fecha | date}}</p>
+                    <li class="" *ngFor="let p of registro.valor.InformeEgreso.procedimientosQuirurgicos">
+                        <span *ngIf="p.procedimiento">{{ p.procedimiento.nombre}}</span>
+                        <span *ngIf="p.fecha"> | {{p.fecha | date}}</span>
                     </li>
                 </ul>
             </div>

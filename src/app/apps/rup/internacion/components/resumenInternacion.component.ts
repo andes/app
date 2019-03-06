@@ -12,6 +12,8 @@ import { InternacionService } from '../services/internacion.service';
 export class ResumenInternacionComponent implements OnInit, OnChanges {
     private _prestacion: any;
     private _editarEgreso: Boolean;
+
+    private _puedeEditar: Boolean;
     @Input() desdeListadoInternacion;
     @Input() mostrarBtnRomper = true;
 
@@ -21,6 +23,7 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
         this._prestacion = value;
         this.btnIniciarEditar = 'Editar';
         this.editarEgreso = this.editarEgreso ? this.editarEgreso : false;
+        this.puedeEditar = this.puedeEditar ? this.puedeEditar : true;
         this.editarIngreso = false;
         if (this._prestacion.estados[this._prestacion.estados.length - 1].tipo === 'validada') {
             this.puedeEditar = false;
@@ -45,6 +48,13 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
         return this._editarEgreso;
     }
 
+    set puedeEditar(value: any) {
+        this._puedeEditar = value;
+    }
+    get puedeEditar(): any {
+        return this._puedeEditar;
+    }
+
     @Input() paciente;
     @Input() camaSeleccionada;
     @Input() soloValores;
@@ -59,7 +69,7 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
     public mostrarValidacion = false;
     // Rotacion flechita
     public flechita = false;
-    public puedeEditar = true;
+    // public puedeEditar = true;
 
     public conceptoEgreso = this.servicioInternacion.conceptosInternacion.egreso;
 
@@ -80,6 +90,10 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
         this.comprobarEgresoParaValidar();
         this.prestacionesService.getPasesInternacion(this.prestacion.id).subscribe(lista => {
             this.pases = lista;
+            this.pases.sort((a, b) => {
+                return a.estados.fecha < b.estados.fecha ? 1 : -1;
+            });
+
         });
 
     }

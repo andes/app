@@ -169,7 +169,7 @@ export class IniciarInternacionComponent implements OnInit {
                 this.hora = this.informeIngreso.fechaIngreso;
                 this.informeIngreso.obraSocial = existeRegistro.valor.informeIngreso.obraSocial;
                 this.obraSocial = existeRegistro.valor.informeIngreso.obraSocial;
-                if (existeRegistro.valor.informeIngreso.origen && (existeRegistro.valor.informeIngreso.origen === 'Traslado' || existeRegistro.valor.informeIngreso.origen === 'Consultorio externo')) {
+                if (existeRegistro.valor.informeIngreso.origen && (existeRegistro.valor.informeIngreso.origen === 'Traslado')) {
                     this.origenExterno = true;
                 }
                 this.informeIngreso.PaseAunidadOrganizativa = this.informeIngreso.PaseAunidadOrganizativa ? this.informeIngreso.PaseAunidadOrganizativa : null;
@@ -276,9 +276,6 @@ export class IniciarInternacionComponent implements OnInit {
         });
 
         // Cargamos todas las ocupaciones
-        this.ocupacionService.get().subscribe(rta => {
-            this.ocupaciones = rta;
-        });
 
         this.loadEspecialidades();
 
@@ -291,7 +288,25 @@ export class IniciarInternacionComponent implements OnInit {
     routeTo(action, id) {
         this.router.navigate(['rup/' + action + '/', id]);
     }
+    getOcupaciones(event) {
+        if (event && event.query) {
+            let query = {
+                nombre: event.query
 
+            };
+            this.ocupacionService.getParams(query).subscribe((rta) => {
+                rta.map(dato => { dato.nom = '(' + dato.codigo + ') ' + dato.nombre; });
+                event.callback(rta);
+            });
+
+        } else {
+            let ocupacionHabitual = [];
+            if (this.informeIngreso.ocupacionHabitual) {
+                ocupacionHabitual = [this.informeIngreso.ocupacionHabitual];
+            }
+            event.callback(ocupacionHabitual);
+        }
+    }
     loadProfesionales(event) {
         let listaProfesionales = [];
         if (event.query) {
@@ -374,7 +389,7 @@ export class IniciarInternacionComponent implements OnInit {
                 this.plex.info('warning', 'Debe seleccionar una cama');
                 return;
             }
-            if (this.informeIngreso.organizacionOrigen === 'consultorio externo' || this.informeIngreso.organizacionOrigen === 'traslado' && !this.informeIngreso.organizacionOrigen) {
+            if (this.informeIngreso.organizacionOrigen === 'traslado' && !this.informeIngreso.organizacionOrigen) {
                 this.plex.info('warning', 'Debe seleccionar una organización');
                 return;
             }
@@ -511,10 +526,11 @@ export class IniciarInternacionComponent implements OnInit {
     }
 
     changeOrigenHospitalizacion(event) {
-        if (event.value.id === 'consultorio externo' || event.value.id === 'traslado') {
+        if (event.value.id === 'traslado') {
             this.origenExterno = true;
         } else {
             this.origenExterno = false;
+            this.informeIngreso.organizacionOrigen = null;
         }
     }
 

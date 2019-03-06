@@ -522,7 +522,7 @@ export class MapaDeCamasComponent implements OnInit {
             this.historicoMode = false;
             this.fecha = new Date();
         }
-        this.showEstadosMet();
+        // this.showEstadosMet();
         this.refresh();
     }
 
@@ -748,13 +748,13 @@ export class MapaDeCamasComponent implements OnInit {
         this.historial = [];
     }
 
-    showEstadosMet() {
-        if (moment(this.fecha).format('DD/MM/YYYY') !== moment(this.hoy).format('DD/MM/YYYY')) {
-            this.estadosMode = false;
-        } else {
-            this.estadosMode = true;
-        }
-    }
+    // showEstadosMet() {
+    //     if (moment(this.fecha).format('DD/MM/YYYY') !== moment(this.hoy).format('DD/MM/YYYY')) {
+    //         this.estadosMode = false;
+    //     } else {
+    //         this.estadosMode = true;
+    //     }
+    // }
 
     checkOxigeno(cama) {
         return cama.equipamiento.find(e => e.conceptId === '261746005') ? true : false;
