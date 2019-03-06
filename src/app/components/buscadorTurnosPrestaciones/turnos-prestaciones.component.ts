@@ -100,6 +100,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
 
     }
     buscar(parametros) {
+        this.showPrestacion = false;
         this.loading = true;
         this.turnosPrestacionesService.get(parametros).subscribe((data) => {
             this.busquedas = this.ordenarPorFecha(data);
