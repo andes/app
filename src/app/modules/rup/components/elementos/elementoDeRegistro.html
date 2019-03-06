@@ -41,6 +41,7 @@
                                 <div class="title">
                                     {{registro.nombre}}
                                     <div class="vinculadoCon" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))">
+
                                         <span class="badge badge-info">
                                             {{registro.relacionadoCon[0].concepto.term }}
                                         </span>
@@ -67,7 +68,7 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="rup-body">
+                            <div class="rup-body" [hidden]="confirmarEliminar || confirmarDesvincular[registro.id]">
                                 <!-- ... Body -->
                                 <div class="content">
                                     <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)"
