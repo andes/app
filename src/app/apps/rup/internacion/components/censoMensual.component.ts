@@ -88,6 +88,7 @@ export class CensoMensualComponent implements OnInit {
         };
     }
 
+
     generarCenso() {
         if (this.fechaDesde && this.fechaHasta && this.unidadOrganizativa) {
             if (this.fechaDesde <= this.fechaHasta) {

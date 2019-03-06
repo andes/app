@@ -30,6 +30,7 @@ export class ListadoInternacionComponent implements OnInit {
         fechaIngresoDesde: null,
         estado: null
     };
+    public mostrarPases = false;
     public estadosInternacion;
     public listadoInternacion;
     public internacionSelected;
@@ -96,15 +97,11 @@ export class ListadoInternacionComponent implements OnInit {
         this.soloValores = true;
         this.showEgreso = false;
         this.internacionSelected = null;
+        this.mostrarPases = false;
         this.internacionSelected = Object.assign({}, internacion);
         if ((this.Resumen as any).first && (this.Resumen as any).first.puedeEditar) {
             (this.Resumen as any).first.puedeEditar = true;
         }
-        if ((this.Resumen as any).first && (this.Resumen as any).first.editarEgreso) {
-            (this.Resumen as any).first.editarEgreso = false;
-        }
-
-        // this.Resumen.cierraEditar();
     }
 
     actualizarListado(event) {

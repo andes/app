@@ -18,24 +18,34 @@
         <plex-panel *ngIf="!editarIngreso && !editarEgreso" tituloPrincipal="Movimientos de Cama" icon="arrow-down-drop-circle-outline">
             <ng-container>
                 <section class="andes-contenedor-secundario vertical">
-                    <table class="table table-dark table-sm">
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Cama</th>
-                                <th>Unidad organizativa</th>
-                                <th>Especialidad</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let pase of pases; let i=index">
-                                <td>{{ pase.estados.fecha | fecha }}, {{ pase.estados.fecha | hora }}</td>
-                                <td>{{ getHabitacionName(pase) + '/' + pase.nombre }}</td>
-                                <td>{{ pase.estados.unidadOrganizativa.term }}</td>
-                                <td>{{ pase.estados.especialidades[0]?.term }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="row">
+                        <div class="col">
+                            <table class="table table-dark table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Cama</th>
+                                        <th>Unidad organizativa</th>
+                                        <th>Especialidad</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let pase of pases; let i=index">
+                                        <td>{{ pase.estados.fecha | date:'dd-MM-yyyy HH:mm' }}</td>
+                                        <td>{{ getHabitacionName(pase) + '/' + pase.nombre }}</td>
+                                        <td>{{ pase.estados.unidadOrganizativa.term }}</td>
+                                        <td>{{ pase.estados.especialidades[0]?.term }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="desdeListadoInternacion">
+                        <div class="col">
+                            <plex-button label="Cargar movimiento de cama" type="primary" [size]="block" *ngIf="desdeListadoInternacion && prestacion && prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada'"
+                                (click)='registrarPase()'></plex-button>
+                        </div>
+                    </div>
                 </section>
             </ng-container>
         </plex-panel>
@@ -61,7 +71,7 @@
     <div class="pt-3">
         <plex-button *ngIf="prestacion && mostrarValidacion && prestacion.estados[prestacion.estados.length - 1].tipo !='validada'"
             label="Validar Internación" (click)="validar()" type="success btn-block"></plex-button>
-        <plex-button *ngIf="prestacion  && prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'" label="Romper Internación"
-            (click)="romperValidacion()" type="danger btn-block"></plex-button>
+        <plex-button *ngIf="prestacion && mostrarBtnRomper && prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'"
+            label="Romper Internación" (click)="romperValidacion()" type="danger btn-block"></plex-button>
     </div>
 </ng-container>

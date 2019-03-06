@@ -117,6 +117,14 @@
                                 </plex-text>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md">
+                                <plex-select name="especialidad" [required]="true" [data]="especialidades" idField="term"
+                                    labelField="term" [(ngModel)]="informeIngreso.especialidades" [multiple]="true"
+                                    label="Especialidad/es">
+                                </plex-select>
+                            </div>
+                        </div>
                         <div class="row" *ngIf="workflowC && !camaSelected">
                             <div class="col-md">
                                 <plex-select name="unidadOrganizativa" [data]="listaUnidadesOrganizativas" idField="term"
@@ -203,7 +211,6 @@
             </div>
         </div>
         <div>
-
         </div>
         <div class="row">
             <div class="col-md" *ngIf="informeIngreso.nroCarpeta">
@@ -245,6 +252,16 @@
             <div *ngIf="informeIngreso.motivo" class="col">
                 <label>Motivo internación</label>
                 <p>{{informeIngreso.motivo}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div *ngIf="informeIngreso.especialidades" class="col">
+                <label>Especialidad/es</label>
+                <p>
+                    <span *ngFor="let especialidad of informeIngreso.especialidades">
+                        {{especialidad.term}} /
+                    </span>
+                </p>
             </div>
         </div>
         <!-- Datos estadisticos  -->

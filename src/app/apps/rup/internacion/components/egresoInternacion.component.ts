@@ -19,6 +19,8 @@ import { Subject } from 'rxjs/Rx';
 export class EgresoInternacionComponent implements OnInit, OnChanges {
     @HostBinding('class.plex-layout') layout = true;
     private _prestacion: any;
+    @Input() desdeListadoInternacion = false;
+
     @Input()
     set prestacion(value: any) {
         this._prestacion = value;
@@ -545,15 +547,15 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
                         this.registro.valor.InformeEgreso.diasDeEstada = null;
                     } else {
                         if (this.camaSelected) {
-                            let fechaUltimoEstado = moment(this.camaSelected.ultimoEstado.fecha).format('YYYY-MM-DD HH:mm');
+                            let fechaUltimoEstado = moment(this.camaSelected.ultimoEstado.fecha, 'YYYY-MM-DD HH:mm');
                             if (fechaUltimoEstado && (fechaEgreso.diff(fechaUltimoEstado, 'days', true) <= 0)) {
                                 this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a ' + fechaUltimoEstado);
                                 this.registro.valor.InformeEgreso.diasDeEstada = null;
                                 return;
                             }
                         }
-                        let dateDif = fechaEgreso.diff(moment(fechaIngreso), 'days');
-                        let diasEstada = fechaEgreso ? dateDif === 0 ? 1 : fechaEgreso.diff(moment(fechaIngreso), 'days') : '1';
+                        let dateDif = fechaEgreso.diff(fechaIngreso, 'days');
+                        let diasEstada = fechaEgreso ? dateDif === 0 ? 1 : fechaEgreso.diff(fechaIngreso, 'days') : '1';
                         this.registro.valor.InformeEgreso.diasDeEstada = diasEstada;
                     }
                 }

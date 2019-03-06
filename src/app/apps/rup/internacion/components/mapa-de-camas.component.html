@@ -1,4 +1,4 @@
-<ng-container *ngIf="!camasService.showListaEspera">
+<ng-container *ngIf="!camasService.showListaEspera && !createTemporal">
     <section class="plex-layout">
         <div class="row">
             <!-- Contenedor principal -->
@@ -152,6 +152,13 @@
                         </div>
                     </div>
                     <paciente-listado [pacientes]="pacientes" [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
+                    <br>
+                    <!-- <div *ngIf="pacientes && !pacientes.length " class="alert alert-info">
+                        <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente
+                    </div> -->
+                    <plex-button *ngIf="pacientes && !pacientes.length " type="info" class='float-right' label="Agregar paciente temporal"
+                        (click)="pacienteTemporal()"></plex-button>
+
                 </ng-container>
                 <!-- Se incia la internacion con el paciente seleccionado -->
                 <!-- <ng-container *ngIf="!accion && showIngreso && pacienteSelected"> -->
@@ -489,4 +496,9 @@
 </ng-container>
 <ng-container *ngIf="camasService.showListaEspera && !buscandoPaciente">
     <listaEsperaInternacion (prestacion)='onDarCama($event)' (showCamas)='camasService.showListaEspera = $event'></listaEsperaInternacion>
+</ng-container>
+<ng-container *ngIf="createTemporal">
+
+    <paciente-create-update [seleccion]="null" (internacionPacienteTemp)='afterPacienteTemp($event)' ></paciente-create-update>
+
 </ng-container>
