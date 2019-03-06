@@ -40,6 +40,7 @@ export class IniciarInternacionComponent implements OnInit {
     get prestacion(): any {
         return this._prestacion;
     }
+
     @Input() desdeListadoInternacion;
     @Input() paciente;
     @Input() camaSelected;
@@ -56,6 +57,7 @@ export class IniciarInternacionComponent implements OnInit {
     public listadoCamas = [];
     public paseAunidadOrganizativa: any;
     public ocupaciones = [];
+    public especialidades = [];
     public obraSocial;
     public origenHospitalizacion = [
         { id: 'consultorio externo', nombre: 'Consultorio externo' },
@@ -125,6 +127,7 @@ export class IniciarInternacionComponent implements OnInit {
         ocupacionHabitual: null,
         situacionLaboral: null,
         nivelInstruccion: null,
+        especialidades: [],
         asociado: null,
         obraSocial: null,
         nroCarpeta: null,
@@ -147,10 +150,12 @@ export class IniciarInternacionComponent implements OnInit {
         private internacionService: InternacionService,
         public servicioProfesional: ProfesionalService,
         public servicioInternacion: InternacionService,
-        public pacienteService: PacienteService
+        public pacienteService: PacienteService,
+        public snomed: SnomedService
     ) { }
 
     ngOnInit() {
+
         if (this.prestacion) {
             this.btnIniciarGuardar = 'GUARDAR';
             let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
@@ -203,7 +208,7 @@ export class IniciarInternacionComponent implements OnInit {
                             this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
 
                         } else {
-                                                      this.servicioPrestacion.getById(resultado.ultimaInternacion.id).subscribe(prestacion => {
+                            this.servicioPrestacion.getById(resultado.ultimaInternacion.id).subscribe(prestacion => {
                                 this.prestacion = prestacion;
                                 let existeRegistro = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
                                 if (existeRegistro) {
@@ -275,6 +280,8 @@ export class IniciarInternacionComponent implements OnInit {
             this.ocupaciones = rta;
         });
 
+        this.loadEspecialidades();
+
     }
 
     actualizarInformeIngreso() {
@@ -296,7 +303,7 @@ export class IniciarInternacionComponent implements OnInit {
                 event.callback(listaProfesionales);
             });
         } else {
-            if (this.auth.profesional) {
+            if (this.auth.profesional && !this.informeIngreso.profesional) {
                 this.servicioProfesional.get({ id: this.auth.profesional.id }).subscribe(resultado => {
                     if (resultado) {
                         this.informeIngreso.profesional = resultado[0] ? resultado[0] : null;
@@ -361,6 +368,7 @@ export class IniciarInternacionComponent implements OnInit {
                 this.plex.info('warning', 'Debe seleccionar un paciente');
                 return;
             }
+            this.informeIngreso.fechaIngreso = this.servicioInternacion.combinarFechas(this.fecha, this.hora);
 
             if (this.cama === null && !this.workflowC && !this.desdeListadoInternacion) {
                 this.plex.info('warning', 'Debe seleccionar una cama');
@@ -371,7 +379,6 @@ export class IniciarInternacionComponent implements OnInit {
                 return;
             }
 
-            this.informeIngreso.fechaIngreso = this.servicioInternacion.combinarFechas(this.fecha, this.hora);
 
 
             if (!this.controlarConflictosInternacion(this.informeIngreso.fechaIngreso)) {
@@ -489,9 +496,12 @@ export class IniciarInternacionComponent implements OnInit {
                     }
 
                 }, (err) => {
-                    this.plex.info('danger', 'La prestación no pudo ser registrada. Por favor verifica la conectividad de la red.');
+                    this.plex.info('danger', 'ERROR: La prestación no pudo ser registrada');
                 });
             }
+        } else {
+            this.plex.info('info', 'ERROR: Los datos de ingreso no estan completos');
+            return;
         }
 
     }
@@ -553,5 +563,26 @@ export class IniciarInternacionComponent implements OnInit {
     buscarOtroPaciente() {
         this.accionCama.emit({ cama: this.cama, accion: 'internarPaciente', otroPaciente: true });
     }
+
+
+    loadEspecialidades() {
+        this.snomed.getQuery({ expression: '<<394733009' }).subscribe(result => {
+            this.especialidades = [...result];
+            if ((!this.informeIngreso.especialidades || (this.informeIngreso.especialidades && this.informeIngreso.especialidades.length <= 0))
+                && this.camaSelected) {
+                let especialidadesCama = this.camaSelected.ultimoEstado.especialidades.map(x => {
+                    return {
+                        conceptId: x.conceptId,
+                        fsn: x.fsn,
+                        semanticTag: x.semanticTag,
+                        term: x.term
+                    };
+                });
+                this.informeIngreso.especialidades = [...especialidadesCama];
+            }
+        });
+    }
+
+
 
 }

@@ -77,6 +77,7 @@ export class CensoMensualComponent implements OnInit {
             fechaHasta: moment(this.fechaHasta).endOf('day'),
             unidad: this.organizacionSeleccionada.conceptId
         };
+
         this.servicioInternacion.getCensoMensual(params).subscribe((respuesta: any) => {
             this.resumenCensoTotal = respuesta;
             this.totalCenso();
