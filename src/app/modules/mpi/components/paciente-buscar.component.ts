@@ -196,7 +196,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                                             return this.searchEnd.emit({ pacientes: [pacienteActualizado], err: null });
                                         }
                                     } else {
-                                        return this.searchEnd.emit({ pacientes: [], err: null });
+                                        return this.searchEndScan.emit({ paciente: pacienteEscaneado, escaneado: true, scan: textoLibre, err: null });
                                     }
                                 }
                             });
