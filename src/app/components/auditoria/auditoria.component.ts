@@ -137,30 +137,6 @@ export class AuditoriaComponent implements OnInit {
         this.showAuditoria = false;
     }
 
-    validar(fuenteAutentica) {
-        this.plex.showLoader();
-        if (this.pacienteSelected.entidadesValidadoras.indexOf('sisa') < 0 && fuenteAutentica === 'sisa') {
-            this.servicioSisa.get(this.pacienteSelected).subscribe(res => {
-                this.verificarDatosFA(res, 'sisa');
-                this.plex.hideLoader();
-            });
-        }
-        if (this.pacienteSelected.entidadesValidadoras.indexOf('renaper') < 0 && fuenteAutentica === 'renaper') {
-            this.servicioRenaper.get(this.pacienteSelected).subscribe(res => {
-                this.verificarDatosFA(res, 'renaper');
-                this.plex.hideLoader();
-            });
-        }
-        if (this.pacienteSelected.estado !== 'validado') {
-            if (this.datosFA && this.datosFA.matcheos && this.datosFA.matcheos.matcheo < 90) {
-                this.checkPrestaciones();
-            } else {
-                this.rechazarValidacion();
-            }
-        }
-    }
-
-
     operationLink(pacienteToFix, paciente) {
         this.patientToFix = pacienteToFix;
         this.patient = paciente;
@@ -202,52 +178,6 @@ export class AuditoriaComponent implements OnInit {
                     });
                 });
             }
-        });
-    }
-
-    rechazarValidacion() {
-        this.pacienteService.save(this.pacienteSelected).subscribe(result => {
-            this.plex.info('danger', '', 'Paciente no encontrado');
-        });
-    }
-
-    verificarDatosFA(data, fa) {
-        this.plex.hideLoader();
-        // Registramos el intento de validación con cada fuente auténtica
-        this.pacienteSelected.entidadesValidadoras.push(fa);
-        this.datosFA = data;
-        if (this.datosFA.matcheos && this.datosFA.matcheos.matcheo === 100) {
-            this.validarPaciente(fa);
-            this.enableValidar = false;
-            return true;
-        }
-        if (this.datosFA.matcheos && this.datosFA.matcheos.matcheo >= 93 &&
-            this.pacienteSelected.sexo === this.datosFA.matcheos.datosPaciente.sexo &&
-            this.pacienteSelected.documento === this.datosFA.matcheos.datosPaciente.documento) {
-            this.validarPaciente(fa);
-            this.enableValidar = false;
-            return true;
-        } else {
-            return false;
-        }
-
-    }
-
-    validarPaciente(fa) {
-        // No corregir el nombre con sintys ni anses porque
-        // no tiene separado el nombre y el apellido
-        if (fa === 'renaper') {
-            this.pacienteSelected.nombre = this.datosFA.matcheos.datosPaciente.nombre;
-            this.pacienteSelected.apellido = this.datosFA.matcheos.datosPaciente.apellido;
-        }
-        if (fa === 'sisa') {
-            this.pacienteSelected.nombre = this.datosFA.matcheos.datosPaciente.nombre;
-            this.pacienteSelected.apellido = this.datosFA.matcheos.datosPaciente.apellido;
-        }
-        this.pacienteSelected.fechaNacimiento = this.datosFA.matcheos.datosPaciente.fechaNacimiento;
-        this.pacienteSelected.estado = 'validado';
-        this.pacienteService.save(this.pacienteSelected).subscribe(result => {
-            this.plex.info('success', '', 'Validación Exitosa');
         });
     }
 
