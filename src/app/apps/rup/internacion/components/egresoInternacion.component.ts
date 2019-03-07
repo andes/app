@@ -434,6 +434,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     showProcedimientos_causas() {
         this.procedimientosObstetricos = false;
         this.procedimientosObstetricosNoReq = false;
+        this.ExisteCausaExterna = false;
         this.registro.valor.InformeEgreso.nacimientos = [
             {
                 pesoAlNacer: null,
@@ -465,17 +466,33 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
         }
 
         if (this.registro.valor.InformeEgreso.otrosDiagnosticos) {
-            this.ExisteCausaExterna = regexCIECausasExternas.test(this.registro.valor.InformeEgreso.otrosDiagnosticos.codigo);
+            let diagCausaExterna = this.registro.valor.InformeEgreso.otrosDiagnosticos.filter(d => regexCIECausasExternas.test(d.codigo));
+            if (diagCausaExterna && diagCausaExterna.length > 0) {
+                this.ExisteCausaExterna = true;
+            }
         }
 
         if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
             this.procedimientosObstetricos = regexCIEProcedimientosObstetricos.test(this.registro.valor.InformeEgreso.diagnosticoPrincipal.codigo);
             this.procedimientosObstetricosNoReq = regexCIEProcedimientosObstetricosNoReq.test(this.registro.valor.InformeEgreso.diagnosticoPrincipal.codigo);
         }
+
         if (this.registro.valor.InformeEgreso.otrosDiagnosticos) {
-            this.procedimientosObstetricos = regexCIEProcedimientosObstetricos.test(this.registro.valor.InformeEgreso.otrosDiagnosticos.codigo);
-            this.procedimientosObstetricosNoReq = regexCIEProcedimientosObstetricosNoReq.test(this.registro.valor.InformeEgreso.otrosDiagnosticos.codigo);
+            let diagObstetitricos = this.registro.valor.InformeEgreso.otrosDiagnosticos.filter(d => regexCIEProcedimientosObstetricosNoReq.test(d.codigo));
+            if (diagObstetitricos && diagObstetitricos.length > 0) {
+                this.procedimientosObstetricosNoReq = true;
+            }
         }
+
+        if (this.registro.valor.InformeEgreso.otrosDiagnosticos) {
+            let diagObstetitricosReq = this.registro.valor.InformeEgreso.otrosDiagnosticos.filter(d => regexCIEProcedimientosObstetricos.test(d.codigo));
+            if (diagObstetitricosReq && diagObstetitricosReq.length > 0) {
+                this.procedimientosObstetricos = true;
+            }
+        }
+
+
+
     }
 
     searchComoSeProdujo(event) {

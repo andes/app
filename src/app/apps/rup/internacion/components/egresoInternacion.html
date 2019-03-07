@@ -52,7 +52,7 @@
                     <div class="row">
                         <div class="col">
                             <plex-select (change)="showProcedimientos_causas()" label="Otro Diagnóstico" [(ngModel)]="registro.valor.InformeEgreso.otrosDiagnosticos"
-                                name="otrosDiagnosticos" (getData)="codigoCIE10($event)" placeholder="buscar..."
+                                name="otrosDiagnosticos" (getData)="codigoCIE10($event)" [multiple]="true" placeholder="buscar..."
                                 labelField="nombre">
                             </plex-select>
 
@@ -252,10 +252,9 @@
         <div class="col">
             <b>Otros Diagnósticos</b>
             <ul class="list-unstyled">
+                <li class="" *ngFor="let otroDiagnostico of registro.valor.InformeEgreso.otrosDiagnosticos">
+                    <p>{{ otroDiagnostico.nombre }}
                 <li>
-                    <p>{{ registro.valor.InformeEgreso.otrosDiagnosticos.nombre }}
-                    </p>
-                </li>
             </ul>
         </div>
     </div>
