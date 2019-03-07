@@ -3,8 +3,8 @@
 
         <div class="row">
             <div class="col-md">
-                <paciente-buscar (searchStart)="onSearchStart()"
-                    (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)" (searchClear)="onSearchClear()">
+                <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
+                    (searchClear)="onSearchClear()">
                 </paciente-buscar>
             </div>
         </div>
@@ -31,8 +31,7 @@
                         <tr class="hover">
                             <td>
                                 <span *ngIf="paciente.estado == 'validado'" class="badge badge-success">Validado</span>
-                                <span *ngIf="paciente.estado != 'validado'" class="badge badge-warning"
-                                    title="Los pacientes temporales sin validar se inactivan luego de un tiempo">Temporal</span>
+                                <span *ngIf="paciente.estado != 'validado'" class="badge badge-warning" title="Los pacientes temporales sin validar se inactivan luego de un tiempo">Temporal</span>
                                 {{ paciente | paciente }}
                                 <br>
                                 <b>Documento: </b>
@@ -51,24 +50,20 @@
                                 <span>{{paciente.sexo}}</span>
                             </td>
                             <td>
-                                <plex-button *ngIf="puedeDarTurno" title="Dar Turno" icon="calendar-plus"
-                                    (click)="verificarOperacion('darTurno', paciente)"></plex-button>
+                                <plex-button *ngIf="puedeDarTurno" title="Dar Turno" icon="calendar-plus" (click)="verificarOperacion('darTurno', paciente)"></plex-button>
                             </td>
                             <td>
-                                <plex-button *ngIf="puedeCrearSolicitud" title="Solicitudes" icon="open-in-app"
-                                    (click)="verificarOperacion('ingresarSolicitud', paciente)"></plex-button>
+                                <plex-button *ngIf="puedeCrearSolicitud" title="Solicitudes" icon="open-in-app" (click)="verificarOperacion('ingresarSolicitud', paciente)"></plex-button>
                             </td>
                             <td>
-                                <plex-button title="Activar App" icon="cellphone-android"
-                                    (click)="verificarOperacion('activarApp', paciente)"></plex-button>
+                                <plex-button title="Activar App" icon="cellphone-android" (click)="verificarOperacion('activarApp', paciente)"></plex-button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-        </div> -->
-        <paciente-create-update *ngIf="showCreateUpdate" [seleccion]="seleccion" [escaneado]="esEscaneado"
-            (data)='afterCreateUpdate($event)'></paciente-create-update>
+        </div>
+        <paciente-create-update *ngIf="showCreateUpdate" [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
         <div *ngIf="showArancelamiento">
             <arancelamiento-form [turno]="turnoArancelamiento" (volverAPuntoInicio)='volverAPuntoInicio($event)'>
             </arancelamiento-form>
@@ -86,8 +81,7 @@
             </estadisticas-pacientes>
         </div>
         <div *ngIf="showIngresarSolicitud" type="info">
-            <solicitud-turno-ventanilla [paciente]="paciente"
-                (cancelarSolicitudVentanilla)="cancelarSolicitudVentanilla($event)"
+            <solicitud-turno-ventanilla [paciente]="paciente" (cancelarSolicitudVentanilla)="cancelarSolicitudVentanilla($event)"
                 (mostrarDarTurnoSolicitud)="darTurnoSolicitud($event)"></solicitud-turno-ventanilla>
         </div>
         <div *ngIf="showActivarApp" type="info">
@@ -97,9 +91,8 @@
 </plex-layout>
 
 <!--Components-->
-<dar-turnos *ngIf="autorizado && showDarTurnos" [pacienteSeleccionado]="paciente"
-    [solicitudPrestacion]="solicitudPrestacion" (afterDarTurno)="afterDarTurno($event)"></dar-turnos>
+<dar-turnos *ngIf="autorizado && showDarTurnos" [pacienteSeleccionado]="paciente" [solicitudPrestacion]="solicitudPrestacion"
+    (afterDarTurno)="afterDarTurno($event)"></dar-turnos>
 
-<arancelamiento-form *ngIf=" showArancelamiento" [turno]="turnoArancelamiento"
-    (volverAPuntoInicio)="volverAPuntoInicio($event); updateTitle('Gestión de pacientes')">
+<arancelamiento-form *ngIf=" showArancelamiento" [turno]="turnoArancelamiento" (volverAPuntoInicio)="volverAPuntoInicio($event); updateTitle('Gestión de pacientes')">
 </arancelamiento-form>
