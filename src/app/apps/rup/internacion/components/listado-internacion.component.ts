@@ -73,7 +73,7 @@ export class ListadoInternacionComponent implements OnInit {
         if (tipo === 'ingreso') {
             return informe.informeIngreso.fechaIngreso;
         } else {
-            return informe ? informe.InformeEgreso.fechaEgreso : '';
+            return informe ? informe.InformeEgreso.fechaEgreso : null;
 
         }
     }

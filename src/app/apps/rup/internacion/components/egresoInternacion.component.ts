@@ -41,11 +41,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
                             sexo: null
                         }
                     ],
-                    procedimientosQuirurgicos: [
-                        {
-                            fecha: null
-                        }
-                    ],
+                    procedimientosQuirurgicos: [],
                     causaExterna: {
                         producidaPor: null,
                         lugar: null,
@@ -249,9 +245,9 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
                 callback.push(this.registro.valor.InformeEgreso.diagnosticoPrincipal);
             }
             if (this.registro.valor.InformeEgreso.otrosDiagnosticos) {
-                this.registro.valor.InformeEgreso.otrosDiagnosticos.forEach(element => {
-                    callback.push(element);
-                });
+
+                callback.push(this.registro.valor.InformeEgreso.otrosDiagnosticos);
+
             }
             if (this.registro.valor.InformeEgreso.causaExterna && this.registro.valor.InformeEgreso.causaExterna.comoSeProdujo) {
                 callback.push(this.registro.valor.InformeEgreso.causaExterna.comoSeProdujo);
@@ -311,20 +307,21 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
         if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
             this.registro.esDiagnosticoPrincipal = true;
         }
-        if (!this.procedimientosObstetricos) {
-            this.registro.valor.InformeEgreso.terminacionEmbarazo = undefined;
-            this.registro.valor.InformeEgreso.edadGestacional = undefined;
-            this.registro.valor.InformeEgreso.paridad = undefined;
-            this.registro.valor.InformeEgreso.tipoParto = undefined;
-            this.registro.valor.InformeEgreso.nacimientos = [
-                {
-                    pesoAlNacer: null,
-                    condicionAlNacer: null,
-                    terminacion: null,
-                    sexo: null
-                }
-            ];
-        }
+        debugger;
+        // if (!this.procedimientosObstetricos) {
+        //     this.registro.valor.InformeEgreso.terminacionEmbarazo = undefined;
+        //     this.registro.valor.InformeEgreso.edadGestacional = undefined;
+        //     this.registro.valor.InformeEgreso.paridad = undefined;
+        //     this.registro.valor.InformeEgreso.tipoParto = undefined;
+        //     this.registro.valor.InformeEgreso.nacimientos = [
+        //         {
+        //             pesoAlNacer: null,
+        //             condicionAlNacer: null,
+        //             terminacion: null,
+        //             sexo: null
+        //         }
+        //     ];
+        // }
 
         let existeEgreso = this.internacionService.verRegistro(this.prestacion, 'egreso');
         if (!existeEgreso) {
