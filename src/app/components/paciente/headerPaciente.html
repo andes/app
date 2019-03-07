@@ -21,9 +21,6 @@
             <ng-container *ngIf="paciente.fechaNacimiento === null">
                 <b>Sin fecha de nacimiento (temporal)</b>
             </ng-container>
-            <ng-container *ngFor="let n of paciente.notas; let i = index">
-                <strong> Nota {{i+1}}: </strong> {{n.nota}}
-            </ng-container>
         </div>
     </div>
     <div class="popover popover-bottom" *ngIf="!hidePopup">

@@ -19,7 +19,6 @@ import { GeoreferenciaService } from '../services/georeferencia.service';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
-import { Subscriber, Subscription } from 'rxjs';
 
 @Component({
     selector: 'paciente-cru',
@@ -330,7 +329,6 @@ export class PacienteCruComponent implements OnInit {
             this.checkPass = true;
             this.activarApp = true;
         }
-        console.log('fin: ', this.paciente);
     }
 
 
@@ -398,7 +396,7 @@ export class PacienteCruComponent implements OnInit {
 
     /**
      * Change del plex-bool viveProvActual
-     * carga las localidades correspondientes a Neuquén
+     * carga las localidades correspondientes a la provincia del efector
      * @param {any} event
      */
     changeProvActual(event) {
@@ -416,7 +414,7 @@ export class PacienteCruComponent implements OnInit {
 
     /**
      * Change del plex-bool viveNQN
-     * carga los barrios de Neuquén
+     * carga los barrios de la provincia del efector
      * @param {any} event
      *
      * @memberOf PacienteCreateUpdateComponent
