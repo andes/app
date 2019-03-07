@@ -4,7 +4,6 @@
         <div class="row">
             <div class="col-md">
                 <paciente-buscar (searchStart)="onSearchStart()"
-                    (searchEndScan)="searchEndScan($event.paciente,$event.escaneado)"
                     (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)" (searchClear)="onSearchClear()">
                 </paciente-buscar>
             </div>
