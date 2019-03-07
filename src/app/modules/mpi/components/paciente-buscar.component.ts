@@ -31,7 +31,6 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
     // Eventos
     @Output() searchStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() searchEnd: EventEmitter<PacienteBuscarResultado> = new EventEmitter<PacienteBuscarResultado>();
-    @Output() searchEndScan: EventEmitter<any> = new EventEmitter<any>();
     @Output() searchClear: EventEmitter<any> = new EventEmitter<any>();
 
     // Flag indica filtrar inactivos
@@ -171,7 +170,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
 
                                 // 1.3.1. Si no encontró ninguno, ingresa a registro de pacientes ya que es escaneado
                                 if (!resultadoSuggest.length) {
-                                    return this.searchEndScan.emit({ paciente: pacienteEscaneado, escaneado: true, scan: textoLibre, err: null });
+                                    return this.searchEnd.emit({ pacientes: [pacienteEscaneado], escaneado: true, scan: textoLibre, err: null });
                                 }
                                 // 1.3.2. Busca a uno con el mismo código de barras
                                 let match = resultadoSuggest.find(i => i.paciente.scan && i.paciente.scan === textoLibre);
@@ -196,7 +195,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                                             return this.searchEnd.emit({ pacientes: [pacienteActualizado], err: null });
                                         }
                                     } else {
-                                        return this.searchEndScan.emit({ paciente: pacienteEscaneado, escaneado: true, scan: textoLibre, err: null });
+                                        return this.searchEnd.emit({ pacientes: [pacienteEscaneado], escaneado: true, scan: textoLibre, err: null });
                                     }
                                 }
                             });

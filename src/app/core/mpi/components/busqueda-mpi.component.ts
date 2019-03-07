@@ -53,20 +53,16 @@ export class BusquedaMpiComponent implements OnInit {
 
     searchEnd(pacientes: IPaciente[], escaneado: boolean) {
         this.searchClear = false;
-        this.escaneado = (escaneado === true);
+        this.escaneado = escaneado;
         this.loading = false;
-        this.resultadoBusqueda = pacientes;
+        if (escaneado && pacientes.length === 1 && (!pacientes[0].id || (pacientes[0].estado === 'temporal' && pacientes[0].scan))) {
+            this.pacienteCache.setPaciente(pacientes[0]);
+            this.pacienteCache.setScanState(this.escaneado);
+            this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru
+        } else {
+            this.resultadoBusqueda = pacientes;
+        }
     }
-
-    searchEndScan(paciente: IPaciente, escaneado: boolean) {
-        this.searchClear = false;
-        this.escaneado = (escaneado === true);
-        this.loading = false;
-        this.pacienteCache.setPaciente(paciente);
-        this.pacienteCache.setScanState(this.escaneado);
-        this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru
-    }
-
 
     onSearchClear() {
         this.searchClear = true;
