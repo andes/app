@@ -149,11 +149,10 @@ import { ProcedimientosQuirurgicosService } from './services/procedimientosQuiru
 import { SectoresItemComponent } from './components/organizacion/sectores-item/sectores-item.component';
 // ... MPI
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
-import { PacienteCreateUpdateComponent } from './components/paciente/paciente-create-update.component';
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { PacienteDetalleComponent } from './components/paciente/paciente-detalle';
-import { PacienteDetalleActualizarComponent } from './components/paciente/paciente-detalle-actualizar.component';
+
 import { PacienteBuscarComponent } from './modules/mpi/components/paciente-buscar.component';
 import { PacienteListadoComponent } from './modules/mpi/components/paciente-listado.component';
 import { PacientePanelComponent } from './modules/mpi/components/paciente-panel.component';
@@ -519,7 +518,7 @@ registerLocaleData(localeEs, 'es');
         ProfesionalCreateUpdateComponent,
         UploadFileComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
-        PacienteCreateUpdateComponent, PacienteDetalleComponent, PacienteSearchComponent, DashboardComponent,
+        PacienteSearchComponent, PacienteDetalleComponent, DashboardComponent,
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, HoraPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
         FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, DinamicaFormComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
@@ -559,7 +558,6 @@ registerLocaleData(localeEs, 'es');
         SnomedBuscarComponent,
         DetalleAgendaComponent,
         HeaderPacienteComponent,
-        PacienteDetalleActualizarComponent,
         HudsBusquedaComponent,
         BuscadorComponent,
         VistaHudsComponent,
@@ -713,8 +711,7 @@ registerLocaleData(localeEs, 'es');
         FormulaBaseService,
         SeleccionBinariaComponent,
         CampaniaSaludService,
-        SeleccionBinariaComponent,
-        PacienteCreateUpdateComponent
+        SeleccionBinariaComponent
     ]
 })
 
