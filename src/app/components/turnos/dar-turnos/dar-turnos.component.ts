@@ -198,6 +198,7 @@ export class DarTurnosComponent implements OnInit {
                 if (this.paciente.documento) {
                     this.osService.getFinanciadorPacienteCache().subscribe((financiador) => {
                         this.obraSocialPaciente = financiador;
+                        this.desplegarOS = this.desplegarObraSocial();
                     });
                 }
             });
@@ -1182,6 +1183,9 @@ export class DarTurnosComponent implements OnInit {
     * por el momento esto solo es posible desde el efector: Centro médico integral (colegio médico)
     */
     desplegarObraSocial() {
-        return this.auth.organizacion._id === '5a5e3f7e0bd5677324737244';
+        let puco = this.obraSocialPaciente && this.obraSocialPaciente.codigoPuco ? true : false;
+        return (this.auth.organizacion._id === '5a5e3f7e0bd5677324737244' && !puco);
     }
+
+
 }
