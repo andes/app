@@ -82,7 +82,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
 
         let fechaNacimiento = null;
         if (documento.grupoFechaNacimiento > 0) {
-            fechaNacimiento = moment(datos[documento.grupoFechaNacimiento], 'DD/MM/YYYY');
+            fechaNacimiento = moment(datos[documento.grupoFechaNacimiento], 'DD/MM/YYYY').format('YYYY-MM-DD').toString();
         }
 
         return {
@@ -196,7 +196,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                                             return this.searchEnd.emit({ pacientes: [pacienteActualizado], err: null });
                                         }
                                     } else {
-                                        return this.searchEnd.emit({ pacientes: [], err: null });
+                                        return this.searchEndScan.emit({ paciente: pacienteEscaneado, escaneado: true, scan: textoLibre, err: null });
                                     }
                                 }
                             });
