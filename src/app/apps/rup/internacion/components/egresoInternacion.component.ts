@@ -307,7 +307,6 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
         if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
             this.registro.esDiagnosticoPrincipal = true;
         }
-        debugger;
         // if (!this.procedimientosObstetricos) {
         //     this.registro.valor.InformeEgreso.terminacionEmbarazo = undefined;
         //     this.registro.valor.InformeEgreso.edadGestacional = undefined;
