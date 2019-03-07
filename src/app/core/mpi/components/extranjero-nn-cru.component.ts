@@ -83,20 +83,6 @@ export class ExtranjeroNNCruComponent implements OnInit {
         ultimaActualizacion: new Date()
     };
 
-    public relacion: IPacienteRelacion = {
-        relacion: {
-            id: '',
-            nombre: '',
-            opuesto: ''
-        },
-        referencia: '',
-        nombre: '',
-        apellido: '',
-        documento: '',
-        fechaNacimiento: null,
-        sexo: ''
-    };
-
     public pacienteModel: IPaciente = {
         id: null,
         documento: '',
