@@ -90,13 +90,19 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.searchClear = false;
         this.loading = false;
         this.pacienteCache.setScanState(escaneado);
-
         if (escaneado && pacientes.length === 1) {
-            this.esEscaneado = escaneado;
             this.onPacienteSelected(pacientes[0]);
         } else {
             this.resultadoBusqueda = pacientes;
         }
+    }
+
+    searchEndScan(paciente: IPaciente, escaneado: boolean) {
+        this.searchClear = false;
+        this.loading = false;
+        this.pacienteCache.setPaciente(paciente);
+        this.pacienteCache.setScanState(escaneado);
+        this.onPacienteSelected(paciente);
     }
 
     onSearchClear() {
@@ -137,48 +143,27 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
     onPacienteSelected(paciente: IPaciente): void {
         this.paciente = paciente;
-        if (paciente.id) {
-            if (paciente.estado === 'temporal' && paciente.scan) {
-                this.seleccion = paciente;
-                if (paciente.scan) {
-                    this.esEscaneado = true;
-                }
-                this.escaneado.emit(this.esEscaneado);
-                this.showCreateUpdate = true;
-                this.showDarTurnos = false;
-                this.showDashboard = false;
-            } else {
-                this.servicePaciente.getById(paciente.id).subscribe(
-                    pacienteMPI => {
-                        this.paciente = pacienteMPI;
-                        // Si el paciente previamente persistido no posee string de scan, y tenemos scan, actualizamos el pac.
-                        if (!this.paciente.scan && paciente.scan) {
-                            this.servicePaciente.patch(paciente.id, { op: 'updateScan', scan: paciente.scan }).subscribe();
-                        }
-                        this.showMostrarEstadisticasAgendas = false;
-                        if (this.esOperacion) {
-                            this.esOperacion = false;
-                        } else {
-                            this.showMostrarEstadisticasPacientes = true;
-                            this.showMostrarTurnosPaciente = false;
-                            this.showActivarApp = false;
-                            this.showIngresarSolicitud = false;
-                        }
-                    });
-            }
+        if (!paciente.id || (paciente.estado === 'temporal' && paciente.scan)) {
+            this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru
         } else {
-            this.showMostrarEstadisticasAgendas = false;
-            this.showMostrarEstadisticasPacientes = false;
-            this.showIngresarSolicitud = false;
-            this.seleccion = paciente;
-            if (paciente.scan) {
-                this.esEscaneado = true;
-            }
-            this.escaneado.emit(this.esEscaneado);
-            this.selected.emit(this.seleccion);
-            this.showCreateUpdate = true;
-            this.showDarTurnos = false;
-            this.showDashboard = false;
+            this.servicePaciente.getById(paciente.id).subscribe(
+                pacienteMPI => {
+                    this.paciente = pacienteMPI;
+                    // Si el paciente previamente persistido no posee string de scan, y tenemos scan, actualizamos el pac.
+                    if (!this.paciente.scan && paciente.scan) {
+                        this.servicePaciente.patch(paciente.id, { op: 'updateScan', scan: paciente.scan }).subscribe();
+                    }
+                    this.showMostrarEstadisticasAgendas = false;
+                    if (this.esOperacion) {
+                        this.esOperacion = false;
+                    } else {
+                        this.showMostrarEstadisticasPacientes = true;
+                        this.showMostrarTurnosPaciente = false;
+                        this.showActivarApp = false;
+                        this.showIngresarSolicitud = false;
+                    }
+                }
+            );
         }
     }
 
@@ -202,7 +187,8 @@ export class PuntoInicioTurnosComponent implements OnInit {
                         this.showMostrarTurnosPaciente = false;
                         this.showActivarApp = false;
                     }
-                });
+                }
+            );
         } else {
             this.showDarTurnos = false;
         }
