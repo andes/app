@@ -8,6 +8,7 @@ import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
+import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
 
 @Component({
     selector: 'sobreturno',
@@ -21,6 +22,10 @@ export class AgregarSobreturnoComponent implements OnInit {
     carpetaEfector: any;
     private _agenda: any;
     private _revision: any;
+
+    loading = false;
+    resultadoBusqueda: IPaciente[] = [];
+    searchClear = true;    // True si el campo de búsqueda se encuentra vacío
 
     @HostBinding('class.plex-layout') layout = true;
 
@@ -65,6 +70,7 @@ export class AgregarSobreturnoComponent implements OnInit {
 
 
     constructor(
+        private pacienteCache: PacienteCacheService,
         public plex: Plex,
         public serviceAgenda: AgendaService,
         public servicioTipoPrestacion: TipoPrestacionService,
@@ -106,25 +112,51 @@ export class AgregarSobreturnoComponent implements OnInit {
         }
     }
 
-    afterSearch(paciente: IPaciente): void {
-        if (paciente.id) {
-            this.servicePaciente.getById(paciente.id).subscribe(
+    // -------------- SOBRE BUSCADOR ----------------
+
+    onSearchStart() {
+        this.esEscaneado = false;
+        this.paciente = null;
+        this.loading = true;
+    }
+
+    onSearchEnd(pacientes: IPaciente[], escaneado: boolean) {
+        this.searchClear = false;
+        this.loading = false;
+        this.pacienteCache.setScanState(escaneado);
+        if (escaneado && pacientes.length === 1 && (!pacientes[0].id || (pacientes[0].estado === 'temporal' && pacientes[0].scan))) {
+            this.pacienteCache.setPaciente(pacientes[0]);
+            this.pacienteCache.setScanState(escaneado);
+            this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru
+        } else {
+            this.servicePaciente.getById(pacientes[0].id).subscribe(
                 pacienteMPI => {
                     this.paciente = pacienteMPI;
                     this.verificarTelefono(this.paciente);
                     this.obtenerCarpetaPaciente();
                     this.showSobreturno = true;
                     this.pacientesSearch = false;
-                    window.setTimeout(() => this.pacientesSearch = false, 100);
                 });
-        } else {
-            this.seleccion = paciente;
-            // this.verificarTelefono(this.seleccion);
-            this.esEscaneado = true;
-            this.escaneado.emit(this.esEscaneado);
-            this.selected.emit(this.seleccion);
-            this.pacientesSearch = false;
-            this.showCreateUpdate = true;
+        }
+    }
+
+    onSearchClear() {
+        this.searchClear = true;
+        this.resultadoBusqueda = [];
+        this.paciente = null;
+    }
+
+    nuevoRegistro(tipo) {
+        switch (tipo) {
+            case 'bebe':
+                this.router.navigate(['apps/mpi/bebe']);
+                break;
+            case 'sinDni':
+                this.router.navigate(['apps/mpi/sinDni']);
+                break;
+            case 'identificado':
+                this.router.navigate(['apps/mpi/paciente']);
+                break;
         }
     }
 
