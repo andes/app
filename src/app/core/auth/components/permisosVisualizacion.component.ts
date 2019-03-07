@@ -4,8 +4,9 @@ import { PerfilUsuarioService } from './../services/perfilUsuarioService';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { IPerfilUsuario } from '../interfaces/IPerfilUsuario';
-import { agregarPermiso, quitarPermiso, esPermisoSubpermiso, obtenerPermisosParaMostrar } from '../controllers/permisos';
+import { agregarPermiso, quitarPermiso, esPermisoSubpermiso, obtenerPrestacionesDePermisos, obtenerArreglosMismoNivel } from '../controllers/permisos';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
+import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 
 @Component({
     selector: 'permisosVisualizacion',
@@ -68,10 +69,16 @@ export class PermisosVisualizacionComponent {
         this.tildarPerfilesCorrespondientes();
     }
     /**
+     * Todas las prestaciones turneables. De este arreglo se obtienen los nombres de las prestaciones dado un id. Es necesario que sea diferente de null
+     * @type {ITipoPrestacion[]}
+     * @memberof PermisosVisualizacionComponent
+     */
+    @Input() prestacionesTurneables: ITipoPrestacion[];
+    /**
      * Sirve para indicar que se deben asignar o quitar los permisos seleccionados
      * @memberof PermisosVisualizacionComponent
      */
-    @Output() seleccionCheckboxPerfil = new EventEmitter<{ checked: boolean, permisos: string[] }>();
+    @Output() seleccionCheckboxPerfil = new EventEmitter<{ checked: boolean, permisos: string[] }>(); // TODO: Quitar el checked que no es necesario
     // @ViewChildren(ArbolPermisosComponent) childsComponents: QueryList<ArbolPermisosComponent>;
 
     /**
@@ -109,10 +116,19 @@ export class PermisosVisualizacionComponent {
         this.perfilUsuarioService.get({ idOrganizacion: org ? org.id : null }).subscribe((res: IPerfilUsuario[]) => {
             res.forEach((perfil: IPerfilUsuario) => {
                 if (perfil.activo) {
-                    this.perfilesOrganizacion.push({ perfil: perfil, checked: this.tienePerfilAsignado(perfil), permisos: this.imprimirPermisos(perfil.permisos) });
+                    this.imprimirPermisos(perfil);
+                    // this.perfilesOrganizacion.push({ perfil: perfil, checked: this.tienePerfilAsignado(perfil), permisos: this.imprimirPermisos(perfil.permisos) });
                 }
             });
         });
+    }
+
+    private imprimirPermisos(perfil: IPerfilUsuario): string {
+        obtenerPrestacionesDePermisos(perfil.permisos, this.servicioTipoPrestacion).subscribe((prestaciones: ITipoPrestacion[]) => {
+            let res = obtenerArreglosMismoNivel(perfil.permisos, 0, '', [], this.arbolPermisosCompleto, null, prestaciones);
+            this.perfilesOrganizacion.push({ perfil: perfil, checked: this.tienePerfilAsignado(perfil), permisos: res });
+        });
+        return null;
     }
 
     /**
@@ -237,9 +253,5 @@ export class PermisosVisualizacionComponent {
             let bandera = permiso === permisoUsuario || esPermisoSubpermiso(permiso, permisoUsuario);
             return bandera;
         });
-    }
-
-    private imprimirPermisos(permisos: string[]): string {
-        return obtenerPermisosParaMostrar(permisos, this.arbolPermisosCompleto, this.servicioTipoPrestacion);
     }
 }

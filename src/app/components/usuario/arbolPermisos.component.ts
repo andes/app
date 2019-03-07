@@ -1,3 +1,4 @@
+import { ITipoPrestacion } from './../../interfaces/ITipoPrestacion';
 import { Component, OnInit, HostBinding, Output, EventEmitter, Input, ViewChildren, QueryList, OnChanges, AfterViewInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
@@ -5,6 +6,7 @@ import { PlexAccordionComponent } from '@andes/plex/src/lib/accordion/accordion.
 import { PlexPanelComponent } from '@andes/plex/src/lib/accordion/panel.component';
 import { OrganizacionService } from '../../services/organizacion.service';
 import { IPermiso } from '../../core/auth/interfaces/IPermiso';
+import { viewParentEl } from '@angular/core/src/view/util';
 let shiroTrie = require('shiro-trie');
 
 @Component({
@@ -12,26 +14,41 @@ let shiroTrie = require('shiro-trie');
     templateUrl: 'arbolPermisos.html'
 })
 
-export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit {
+export class ArbolPermisosComponent implements OnChanges, AfterViewInit {
 
     private shiro = shiroTrie.new();
     private state = false;
     private all = false;
-    private seleccionados = [];
+    /**
+     * IDs de las prestaciones u organizaciones seleccionadas
+     * @memberof ArbolPermisosComponent
+     */
+    public seleccionados = [];
     private allModule = false;
-
+    /**
+     * Permisos del usuario antes de comenzar a editarlos
+     * @private
+     * @type {string[]}
+     * @memberof ArbolPermisosComponent
+     */
+    private permisosOriginales: String[] = [];
     @Input() item: IPermiso;
 
     @Input() parentPermission: String = '';
     @Input() userPermissions: String[] = [];
     /**
+     * Todas las prestaciones turneables. De este arreglo se obtienen los nombres de las prestaciones dado un id. Es necesario que sea diferente de null
+     * @type {ITipoPrestacion[]}
+     * @memberof ArbolPermisosComponent
+     */
+    @Input() prestacionesTurneables: ITipoPrestacion[];
+    /**
      * Sirve para notificar que se modificó la selección de permisos, para poder actualizar el listado de perfiles asignados
      * @memberof ArbolPermisosComponent
      */
-    @Output() seleccionPermiso = new EventEmitter<{ checked: boolean, permiso: IPermiso }>();
+    @Output() seleccionPermiso = new EventEmitter<{ checked: boolean, permiso: string }>();
     @ViewChild('panel') accordions: PlexPanelComponent;
     @ViewChildren(ArbolPermisosComponent) childsComponents: QueryList<ArbolPermisosComponent>;
-
     ngAfterViewInit() {
     }
 
@@ -54,12 +71,14 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
         }
     }
 
-    public ngOnInit() {
-        this.refresh();
-    }
+    // public ngOnInit() { // No tiene sentido porque es igual al ngOnChanges el cual se ejecuta siempre que se modifica las entradas, incluyendo la primera vez (cuando se ejecuta ngOnInit)
+    //     this.refresh();
+    //     this.permisosOriginales = [...this.userPermissions];
+    // }
 
     public ngOnChanges() {
         this.refresh();
+        this.permisosOriginales = [...this.userPermissions];
     }
 
     refresh() {
@@ -99,18 +118,83 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
     }
 
     selectChange(event) {
-        // console.log(this.seleccionados);
-        // [TODO] no notifica que se selecciono un permiso (prestacion)
-        // this.seleccionPermiso.emit({ checked: event.value, permiso: this.item });
-        setTimeout(() => {
+        let prefijo = '';
+        switch (this.parentPermission) {
+            case 'rup':
+                prefijo = 'rup:tipoPrestacion';
+                break;
+            case 'turnos:planificarAgenda':
+                prefijo = 'turnos:planificarAgenda:prestacion';
+                break;
+            case 'turnos:darTurnos':
+                prefijo = 'turnos:darTurnos:prestacion';
+                break;
+            case 'solicitudes':
+                prefijo = 'solicitudes:tipoPrestacion';
+                break;
+            case 'tm:organizacion':
+                prefijo = 'tm:organizacion:sectores';
+        }
+        let arrayIdSelect = [];
+        if (this.seleccionados) { // esto lo hago porque trae duplicados algunas prestaciones TODO: arreglar de raiz (ver por que se ponen dos veces)
+            let selectSinRepetir = [];
+            this.seleccionados.forEach(elem => {
+                if (arrayIdSelect.indexOf(elem.id) === -1) {
+                    arrayIdSelect.push(elem.id);
+                    selectSinRepetir.push(elem);
+                }
+            });
+            this.seleccionados = [...selectSinRepetir];
+        }
 
-            console.log('Cambio prestaciones: ', event);
-        }, 100);
+        /*
+        Tengo dos arreglos
+        1. Permisos originales
+        2. Ids de las prestaciones seleccionadas
+
+        Debo obtener de los permisos originales, todos los ids de las prestaciones y compararlos con los ids del segundo arreglo
+        */
+        // let idPrestacionesSeleccionadas = new Set(this.seleccionados);
+
+        let arrayIdPrestacionesOriginales = [];
+        let i = 0;
+        let permiso;
+        while (i < this.permisosOriginales.length) {
+            permiso = this.permisosOriginales[i];
+            if (permiso.substr(0, prefijo.length) === prefijo) {
+                arrayIdPrestacionesOriginales.push(permiso.substr(prefijo.length + 1)); // +1 por los dos puntos
+            } else if (arrayIdPrestacionesOriginales.length > 0) { // como los permisos estan ordenados, puedo cortar si ya se dejaron de encontrar permisos que cumplan el prefijo
+                break;
+            }
+            i++;
+        }
+
+        let arrayIdPrestacionesModificadas = null;
+        let cantSeleccionados = this.seleccionados ? this.seleccionados.length : 0;
+        if (cantSeleccionados > arrayIdPrestacionesOriginales.length) { // si agrego prestacion
+            arrayIdPrestacionesModificadas = arrayIdSelect.filter(id => {
+                return arrayIdPrestacionesOriginales.indexOf(id) === -1; // devuelve los que no tiene
+            });
+        } else if (cantSeleccionados < arrayIdPrestacionesOriginales.length) { // si quito prestacion
+            arrayIdPrestacionesModificadas = arrayIdPrestacionesOriginales.filter(id => {
+                return arrayIdSelect.indexOf(id) === -1; // devuelve los que no tiene
+            });
+        } // si es igual no hago nada
+
+        if (arrayIdPrestacionesModificadas) {
+            arrayIdPrestacionesModificadas.forEach(id => {
+                let json = {
+                    checked: cantSeleccionados > arrayIdPrestacionesOriginales.length,
+                    permiso: prefijo + ':' + id
+                };
+                this.seleccionPermiso.emit(json);
+            });
+        }
     }
 
     loadData(type, event) {
-        // [TODO] Agregar parametros de busqueda en el JSON de permisos. Ej: { turneable: 1 }
-        // [TODO] Filtrar otras tipos de datos
+        // TODO: Agregar parametros de busqueda en el JSON de permisos. Ej: { turneable: 1 }
+        // TODO: Filtrar otras tipos de datos
         switch (type) {
             case 'prestacion':
                 let query: any = {};
@@ -176,7 +260,19 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
      * @memberof ArbolPermisosComponent
      */
     tildarPermiso(event: any) {
-        this.seleccionPermiso.emit({ checked: event.value, permiso: this.item });
+        if (!event.permiso) { // TODO: no manejar con event.value porque es de javascript y no angular
+            // this.seleccionPermiso.emit({ checked: event.value, permiso: this.item.key });
+            let permiso = '';
+            if (this.parentPermission !== '') {
+                permiso += this.parentPermission + ':';
+            }
+            permiso += this.item.key;
+            if (this.item.child) {
+                permiso += ':*';
+            }
+            this.seleccionPermiso.emit({ checked: event.value, permiso: permiso });
+        } else {
+            this.seleccionPermiso.emit(event); // vino de una selección
+        }
     }
-
 }

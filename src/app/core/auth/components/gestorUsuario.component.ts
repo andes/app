@@ -5,8 +5,9 @@ import { ArbolPermisosComponent } from './../../../components/usuario/arbolPermi
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { IPermiso } from './../interfaces/IPermiso';
 import { PermisosService } from '../../../services/permisos.service';
-import { agregarPermiso, quitarPermiso, obtenerPermisosParaMostrar } from '../controllers/permisos';
+import { agregarPermiso, quitarPermiso, obtenerPrestacionesDePermisos, obtenerArreglosMismoNivel } from '../controllers/permisos';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
+import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 @Component({
     selector: 'gestorUsuario',
     templateUrl: 'gestorUsuario.html'
@@ -62,10 +63,20 @@ export class GestorUsuarioComponent implements OnInit {
      * @memberof GestorUsuarioComponent
      */
     public arbolPermisosCompleto: IPermiso[];
+    /**
+     * Todas las prestaciones turneables de la base de datos. Se mantiene en cache para ahorrar consultas a la API
+     * @private
+     * @type {ITipoPrestacion[]}
+     * @memberof GestorUsuarioComponent
+     */
+    public prestacionesTurneables: ITipoPrestacion[] = null;
     constructor(private permisosService: PermisosService, private usuarioService: UsuarioService, private plex: Plex, private servicioTipoPrestacion: TipoPrestacionService) { }
     ngOnInit() {
         this.permisos$ = this.permisosService.get();
         this.usuarioService.permisos().subscribe(res => { this.arbolPermisosCompleto = res; });
+        this.servicioTipoPrestacion.get('').subscribe(res => {
+            this.prestacionesTurneables = res;
+        });
     }
 
     /**
@@ -102,15 +113,18 @@ export class GestorUsuarioComponent implements OnInit {
      * @memberof GestorUsuarioComponent
      */
     guardar(event) {
-        this.plex.confirm('Se guardarán los siguientes permisos: <br>' + obtenerPermisosParaMostrar(this.permisosUsuarioOrg, this.arbolPermisosCompleto, this.servicioTipoPrestacion) +
-            '<br><br>¿Desea continuar?',
-            'Guardar Permisos', 'Guardar').then((confirmar: boolean) => {
-                if (confirmar) {
-                    this.savePermisos();
-                    this.usuarioService.save(this.usuarioSeleccionado).subscribe();
-                    this.cambio(0);
-                }
-            });
+        obtenerPrestacionesDePermisos(this.permisosUsuarioOrg, this.servicioTipoPrestacion).subscribe((prestaciones: ITipoPrestacion[]) => {
+            let respuesta = obtenerArreglosMismoNivel(this.permisosUsuarioOrg, 0, '', [], this.arbolPermisosCompleto, null, prestaciones);
+            this.plex.confirm('Se guardarán los siguientes permisos: <br>' + respuesta +
+                '<br><br>¿Desea continuar?',
+                'Guardar Permisos', 'Guardar').then((confirmar: boolean) => {
+                    if (confirmar) {
+                        this.savePermisos();
+                        this.usuarioService.save(this.usuarioSeleccionado).subscribe();
+                        this.cambio(0);
+                    }
+                });
+        });
     }
 
     /**
@@ -145,17 +159,19 @@ export class GestorUsuarioComponent implements OnInit {
      * @memberof GestorUsuarioComponent
      */
     seleccionPerfil(event: { checked: boolean, permisos: string[] }) {
+        console.log('Permisos obtenidos de la seleccion perfil: ', event.permisos);
         this.permisosUsuarioOrg = event.permisos;
     }
 
     /**
      * Sincroniza los permisos del árbol de permisos con los perfiles
-     * @param {{ checked: boolean, permiso: IPermiso }} event
+     * @param {{ checked: boolean, permiso: string }} event
      * @memberof GestorUsuarioComponent
      */
-    seleccionPermiso(event: { checked: boolean, permiso: IPermiso }) {
+    seleccionPermiso(event: { checked: boolean, permiso: string }) {
         let arrayPermiso: string[] = [];
-        arrayPermiso.push(event.permiso.child ? event.permiso.key + ':*' : event.permiso.key);
+        arrayPermiso.push(event.permiso);
+        // arrayPermiso.push(event.permiso.child ? event.permiso.key + ':*' : event.permiso.key);
         this.permisosUsuarioOrg = event.checked ? agregarPermiso(this.permisosUsuarioOrg, arrayPermiso) : quitarPermiso(this.permisosUsuarioOrg, arrayPermiso, this.arbolPermisosCompleto);
     }
 }
