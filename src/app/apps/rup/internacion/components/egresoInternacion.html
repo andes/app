@@ -52,7 +52,7 @@
                     <div class="row">
                         <div class="col">
                             <plex-select (change)="showProcedimientos_causas()" label="Otro Diagnóstico" [(ngModel)]="registro.valor.InformeEgreso.otrosDiagnosticos"
-                                name="otrosDiagnosticos" (getData)="codigoCIE10($event)" placeholder="buscar..."
+                                name="otrosDiagnosticos" (getData)="codigoCIE10($event)" [multiple]="true" placeholder="buscar..."
                                 labelField="nombre">
                             </plex-select>
 
@@ -254,8 +254,7 @@
             <ul class="list-unstyled">
                 <li class="" *ngFor="let otroDiagnostico of registro.valor.InformeEgreso.otrosDiagnosticos">
                     <p>{{ otroDiagnostico.nombre }}
-                    </p>
-                </li>
+                <li>
             </ul>
         </div>
     </div>
@@ -296,8 +295,7 @@
     </fieldset>
     <!-- Datos del evento obstétrico -->
     <fieldset>
-        <legend *ngIf="registro.valor.InformeEgreso.terminacionEmbarazo" class="small">Procedimientos Obstétricos
-        </legend>
+        <legend *ngIf="registro.valor.InformeEgreso.terminacionEmbarazo" class="small">Procedimientos Obstétricos</legend>
         <div class="row">
             <div class="col" *ngIf="registro.valor.InformeEgreso.terminacionEmbarazo">
                 <b>Fecha terminación</b>
@@ -319,18 +317,17 @@
             </div>
         </div>
         <ng-container *ngFor="let unNacimiento of registro.valor.InformeEgreso.nacimientos">
-            <div class="row" *ngIf="registro.valor.InformeEgreso.nacimientos">
-
+            <div class="row">
                 <div class="col" *ngIf="unNacimiento.pesoAlNacer">
                     <b>Peso al nacer</b>
-                    <p>{{unNacimiento.pesoAlNacer}} g</p>
+                    <p>{{unNacimiento.pesoAlNacer}}</p>
                 </div>
                 <div class="col" *ngIf="unNacimiento.condicionAlNacer">
                     <b>Condición al nacer</b>
                     <p>{{unNacimiento.condicionAlNacer}}</p>
                 </div>
             </div>
-            <div class="row" *ngIf="registro.valor.InformeEgreso.nacimientos">
+            <div class="row">
                 <div class="col" *ngIf="unNacimiento.terminacion">
                     <b>Terminación</b>
                     <p>{{unNacimiento.terminacion}}</p>

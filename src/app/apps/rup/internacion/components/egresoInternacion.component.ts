@@ -41,11 +41,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
                             sexo: null
                         }
                     ],
-                    procedimientosQuirurgicos: [
-                        {
-                            fecha: null
-                        }
-                    ],
+                    procedimientosQuirurgicos: [],
                     causaExterna: {
                         producidaPor: null,
                         lugar: null,
@@ -249,9 +245,9 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
                 callback.push(this.registro.valor.InformeEgreso.diagnosticoPrincipal);
             }
             if (this.registro.valor.InformeEgreso.otrosDiagnosticos) {
-                this.registro.valor.InformeEgreso.otrosDiagnosticos.forEach(element => {
-                    callback.push(element);
-                });
+
+                callback.push(this.registro.valor.InformeEgreso.otrosDiagnosticos);
+
             }
             if (this.registro.valor.InformeEgreso.causaExterna && this.registro.valor.InformeEgreso.causaExterna.comoSeProdujo) {
                 callback.push(this.registro.valor.InformeEgreso.causaExterna.comoSeProdujo);
@@ -311,20 +307,20 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
         if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
             this.registro.esDiagnosticoPrincipal = true;
         }
-        if (!this.procedimientosObstetricos) {
-            this.registro.valor.InformeEgreso.terminacionEmbarazo = undefined;
-            this.registro.valor.InformeEgreso.edadGestacional = undefined;
-            this.registro.valor.InformeEgreso.paridad = undefined;
-            this.registro.valor.InformeEgreso.tipoParto = undefined;
-            this.registro.valor.InformeEgreso.nacimientos = [
-                {
-                    pesoAlNacer: null,
-                    condicionAlNacer: null,
-                    terminacion: null,
-                    sexo: null
-                }
-            ];
-        }
+        // if (!this.procedimientosObstetricos) {
+        //     this.registro.valor.InformeEgreso.terminacionEmbarazo = undefined;
+        //     this.registro.valor.InformeEgreso.edadGestacional = undefined;
+        //     this.registro.valor.InformeEgreso.paridad = undefined;
+        //     this.registro.valor.InformeEgreso.tipoParto = undefined;
+        //     this.registro.valor.InformeEgreso.nacimientos = [
+        //         {
+        //             pesoAlNacer: null,
+        //             condicionAlNacer: null,
+        //             terminacion: null,
+        //             sexo: null
+        //         }
+        //     ];
+        // }
 
         let existeEgreso = this.internacionService.verRegistro(this.prestacion, 'egreso');
         if (!existeEgreso) {
@@ -438,6 +434,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     showProcedimientos_causas() {
         this.procedimientosObstetricos = false;
         this.procedimientosObstetricosNoReq = false;
+        this.ExisteCausaExterna = false;
         this.registro.valor.InformeEgreso.nacimientos = [
             {
                 pesoAlNacer: null,
@@ -469,17 +466,33 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
         }
 
         if (this.registro.valor.InformeEgreso.otrosDiagnosticos) {
-            this.ExisteCausaExterna = regexCIECausasExternas.test(this.registro.valor.InformeEgreso.otrosDiagnosticos.codigo);
+            let diagCausaExterna = this.registro.valor.InformeEgreso.otrosDiagnosticos.filter(d => regexCIECausasExternas.test(d.codigo));
+            if (diagCausaExterna && diagCausaExterna.length > 0) {
+                this.ExisteCausaExterna = true;
+            }
         }
 
         if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
             this.procedimientosObstetricos = regexCIEProcedimientosObstetricos.test(this.registro.valor.InformeEgreso.diagnosticoPrincipal.codigo);
             this.procedimientosObstetricosNoReq = regexCIEProcedimientosObstetricosNoReq.test(this.registro.valor.InformeEgreso.diagnosticoPrincipal.codigo);
         }
+
         if (this.registro.valor.InformeEgreso.otrosDiagnosticos) {
-            this.procedimientosObstetricos = regexCIEProcedimientosObstetricos.test(this.registro.valor.InformeEgreso.otrosDiagnosticos.codigo);
-            this.procedimientosObstetricosNoReq = regexCIEProcedimientosObstetricosNoReq.test(this.registro.valor.InformeEgreso.otrosDiagnosticos.codigo);
+            let diagObstetitricos = this.registro.valor.InformeEgreso.otrosDiagnosticos.filter(d => regexCIEProcedimientosObstetricosNoReq.test(d.codigo));
+            if (diagObstetitricos && diagObstetitricos.length > 0) {
+                this.procedimientosObstetricosNoReq = true;
+            }
         }
+
+        if (this.registro.valor.InformeEgreso.otrosDiagnosticos) {
+            let diagObstetitricosReq = this.registro.valor.InformeEgreso.otrosDiagnosticos.filter(d => regexCIEProcedimientosObstetricos.test(d.codigo));
+            if (diagObstetitricosReq && diagObstetitricosReq.length > 0) {
+                this.procedimientosObstetricos = true;
+            }
+        }
+
+
+
     }
 
     searchComoSeProdujo(event) {
