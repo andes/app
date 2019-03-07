@@ -75,6 +75,9 @@ export class AppComponent {
         if (this.auth.getPermissions('solicitudes:?').length > 0) {
             accessList.push({ label: 'Solicitudes', icon: 'mdi mdi-open-in-app', route: '/solicitudes' });
         }
+        if (this.auth.check('internacion:mapaDeCamas')) {
+            accessList.push({ label: 'Mapa de camas', icon: 'mdi mdi-bed-empty', route: '/internacion/camas' });
+        }
 
         // faltan permisos
         if (this.auth.getPermissions('formularioTerapeutico:?').length > 0) {
