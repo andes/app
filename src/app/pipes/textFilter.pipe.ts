@@ -14,7 +14,6 @@ export class TextFilterPipe implements PipeTransform {
         }
         // value = value.trim();
         // PARCHE HASTA CONTAR CON INTERFAZ DE PERMISOS
-        console.log(value);
         items.forEach((item: any) => item.usuario = item.usuario ? item.usuario.toString() : '');
         let res1: any = items.filter((item: any) =>
 
@@ -27,12 +26,12 @@ export class TextFilterPipe implements PipeTransform {
                     this.idOrg = value.toString();
                 }
                 return x.id === value.toString();
-            }) > -1) :  '')
+            }) > -1) : '')
         );
 
         return res1;
-            // let g = res1.filter((item1: any) => { return item1.organizaciones.findIndex(item => item._id === value.toString()) > 0; });
-            // return g;
+        // let g = res1.filter((item1: any) => { return item1.organizaciones.findIndex(item => item._id === value.toString()) > 0; });
+        // return g;
         // if (this.idOrg) {
         //     let g = res1.filter((item1: any) => { return item1.organizaciones.findIndex(item => item._id === this.idOrg) > 0; });
         //     return g;

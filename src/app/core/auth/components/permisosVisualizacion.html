@@ -1,7 +1,7 @@
 <div class="row">
     <!-- class = w-100 d-flex align-items-center justify-content-between -->
     <div class="col" *ngIf="perfilesOrganizacion?.length">
-        <plex-accordion *ngFor="let perfil of perfilesOrganizacion; let i = index">
+        <plex-accordion *ngFor="let perfil of perfilesOrganizacion; let i = index" class="hover">
             <plex-panel *ngIf="perfil.perfil.activo">
                 <div plex-accordion-title>
                     {{perfil.perfil.nombre}}

@@ -1,4 +1,4 @@
-<plex-accordion *ngIf="item.child">
+<plex-accordion *ngIf="item.child" class="hover">
     <plex-panel (toggle)="expand($event)" #panel>
         <div plex-accordion-title title="{{item.comment ? item.comment : item.title}}">
             {{item.title}}
