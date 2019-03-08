@@ -113,12 +113,9 @@ export class PermisosVisualizacionComponent {
      */
     obtenerPerfilesActivos(org: IOrganizacion) {
         this.perfilesOrganizacion = [];
-        this.perfilUsuarioService.get({ idOrganizacion: org ? org.id : null }).subscribe((res: IPerfilUsuario[]) => {
+        this.perfilUsuarioService.get({ idOrganizacion: org ? org.id : null, activo: true }).subscribe((res: IPerfilUsuario[]) => {
             res.forEach((perfil: IPerfilUsuario) => {
-                if (perfil.activo) {
-                    this.imprimirPermisos(perfil);
-                    // this.perfilesOrganizacion.push({ perfil: perfil, checked: this.tienePerfilAsignado(perfil), permisos: this.imprimirPermisos(perfil.permisos) });
-                }
+                this.imprimirPermisos(perfil);
             });
         });
     }
