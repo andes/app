@@ -1057,37 +1057,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     cancelarCambioPaciente() {
         this.showCambioPaciente = false;
     }
-    cambiarElPaciente($event) {
-        this.plex.confirm('¿Esta seguro que desea cambiar al paciente actual con el paciente ' + $event.nombre + ' ' + $event.apellido + '?').then(resultado => {
-            if (resultado) {
-                let params: any = {
-                    op: 'paciente',
-                    paciente: {
-                        id: $event.id,
-                        nombre: $event.nombre,
-                        apellido: $event.apellido,
-                        documento: $event.documento,
-                        telefono: $event.telefono,
-                        sexo: $event.sexo,
-                        fechaNacimiento: $event.fechaNacimiento
-                    }
-                };
-
-                this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
-                    this.plex.toast('success', 'El paciente se actualizo correctamente', 'Paciente actualizado');
-                    this.servicioPrestacion.getById(this.prestacion.id).subscribe(prestacion => {
-                        this.prestacion = prestacion;
-                        // Completamos los datos del nuevo paciente seleccionado
-                        this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
-                            this.paciente = paciente;
-                        });
-                        this.showCambioPaciente = false;
-                    });
-                });
-            }
-        });
-    }
-
+   
     mostrarDatosSolicitud(bool) {
         this.showDatosSolicitud = bool;
     }
