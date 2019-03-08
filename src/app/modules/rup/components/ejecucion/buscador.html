@@ -16,10 +16,8 @@
 <!-- Fin Tipo de búsqueda -->
 
 <!-- Apunta a components/snomed/snomed-buscar.component.ts -->
-<!-- <snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)"></snomed-buscar> -->
-<snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)"
-    *ngIf="(busquedaActual === 'buscadorBasico' || busquedaActual === 'busquedaGuiada' || busquedaActual === 'porConcepto') && autofocus"
-    [searchTermInput]="search" [autofocus]="autofocus" id="buscador"></snomed-buscar>
+<snomed-buscar (onSearch)="recibeResultados($event)" *ngIf="(busquedaActual === 'buscadorBasico' || busquedaActual === 'busquedaGuiada' || busquedaActual === 'porConcepto') && autofocus"
+     [autofocus]="autofocus" id="buscador"></snomed-buscar>
 
 <div class="buscador"
     *ngIf="busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes' || busquedaActual === 'frecuentesTP'">
@@ -27,12 +25,8 @@
     </plex-text>
 </div>
 
-<!-- {{ busquedaRefSet | json }} -->
-
 <!-- MAESTRO DE PROBLEMAS - BD:tipoProblema -->
 <div class="menu-buscador">
-    <plex-loader *ngIf="loading" type="linear"></plex-loader>
-
     <!-- Botones filtros -->
     <ng-container *ngIf="results">
         <ng-container *ngIf="busquedaActual !== 'busquedaGuiada'">
@@ -163,8 +157,7 @@
 <div *ngIf="filtroActual && results && results[busquedaActual][filtroActual]  && results[busquedaActual][filtroActual].length > 0"
     class="buscador-resultados">
     <cdk-virtual-scroll-viewport [itemSize]="55">
-        <div *cdkVirtualFor="let item of results[busquedaActual][filtroActual]" class="rup-card mini"
-            [ngClass]="servicioPrestacion.getCssClass(item, filtroActual === 'plan')">
+        <div *cdkVirtualFor="let item of results[busquedaActual][filtroActual]" class="rup-card mini" [ngClass]="servicioPrestacion.getCssClass(item, filtroActual === 'plan')">
             <div class="rup-header">
                 <div class="icon-rup drag-handle p-0 pt-1" draggable
                     [dragScope]="['registros-rup' , 'vincular-registros-rup']" [dragData]="item"
@@ -183,8 +176,7 @@
                         </div>
                         <div class="col-6 p-0 m-0">
                             <div class="p-0 pt-1 pr-1 float-right">
-                                <small
-                                    class="badge badge-{{ servicioPrestacion.getCssClass(item, filtroActual === 'plan') }} text-default">
+                                <small class="badge badge-{{ servicioPrestacion.getCssClass(item, filtroActual === 'plan') }} text-default">
                                     {{ (item.plan || filtroActual === 'planes' || esTurneable(item)) ? 'solicitud' : item.semanticTag }}
                                 </small>
                                 <button (click)="seleccionarConcepto(item)"
@@ -242,13 +234,11 @@
                         <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)"
                             (onDragEnd)="dragEnd($e)">
 
-                            <div class="rup-card mini"
-                                [ngClass]="(items.nombre === 'planes') ? 'plan' : servicioPrestacion.getCssClass(item, filtroActual === 'plan')">
+                            <div class="rup-card mini" [ngClass]="(items.nombre === 'planes') ? 'plan' : servicioPrestacion.getCssClass(item, filtroActual === 'plan')">
                                 <div class="rup-header">
                                     <div class="icon-rup drag-handle p-0 pt-1">
                                         <!-- <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i> -->
-                                        <i
-                                            class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(item, filtroActual === 'plan')}}"></i>
+                                        <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(item, filtroActual === 'plan')}}"></i>
                                     </div>
 
                                     <div class="rup-border">

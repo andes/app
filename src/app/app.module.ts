@@ -224,7 +224,6 @@ import { AdjuntosService } from './modules/rup/services/adjuntos.service';
 import { ConceptObserverService } from './modules/rup/services/conceptObserver.service';
 import { PrestacionCrearComponent } from './modules/rup/components/ejecucion/prestacionCrear.component';
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
-import { ResumenComponent } from './modules/rup/components/ejecucion/resumen.component';
 import { PrestacionValidacionComponent } from './modules/rup/components//ejecucion/prestacionValidacion.component';
 import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
@@ -485,6 +484,8 @@ import { VistaProcedimientoComponent } from './modules/rup/components/huds/vista
 import { VistaContextoPrestacionComponent } from './modules/rup/components/huds/vistaContextoPrestacion';
 import { VistaPrestacionComponent } from './modules/rup/components/huds/vistaPrestacion';
 
+import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
+import { HUDSService } from './modules/rup/services/huds.service';
 
 
 
@@ -549,7 +550,6 @@ registerLocaleData(localeEs, 'es');
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         MapaEspacioFisicoVistaComponent,
-        ResumenComponent,
         PrestacionCrearComponent,
         PrestacionEjecucionComponent,
         PrestacionValidacionComponent,
@@ -703,7 +703,9 @@ registerLocaleData(localeEs, 'es');
         SeleccionBinariaComponent,
         CampaniaSaludService,
         SeleccionBinariaComponent,
-        PacienteCreateUpdateComponent
+        PacienteCreateUpdateComponent,
+        SnomedBuscarService,
+        HUDSService
     ]
 })
 

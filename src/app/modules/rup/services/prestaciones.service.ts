@@ -426,9 +426,7 @@ export class PrestacionesService {
                     return registro;
                 }
             });
-        }
-        ));
-        // }
+        }));
     }
 
     /**

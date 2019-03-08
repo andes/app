@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostBinding, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -9,6 +9,8 @@ import { LogService } from '../../../../services/log.service';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
+import { IPrestacion } from '../../interfaces/prestacion.interface';
+import { HUDSService } from '../../services/huds.service';
 
 @Component({
     selector: 'rup-vistaHuds',
@@ -16,7 +18,7 @@ import { HeaderPacienteComponent } from '../../../../components/paciente/headerP
     styleUrls: ['vistaHuds.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class VistaHudsComponent implements OnInit {
+export class VistaHudsComponent implements OnInit, OnDestroy {
 
     @HostBinding('class.plex-layout') layout = true;
 
@@ -25,24 +27,25 @@ export class VistaHudsComponent implements OnInit {
 
     // Defaults de Tabs panel derecho
     public activeTab = 0;
-    public mostrarPI = false;
     public mostrarCambiaPaciente = false;
-
-    // Array de registros de la HUDS a agregar en tabs
-    public registrosHuds: any[] = [];
 
     // boton de volver cuando la ejecucion tiene motivo de internacion.
     // Por defecto vuelve al mapa de camas
     public btnVolver = 'VOLVER';
     public rutaVolver;
 
-    constructor(public elementosRUPService: ElementosRUPService,
-        public plex: Plex, public auth: Auth,
-        private router: Router, private route: ActivatedRoute,
+    constructor(
+        public elementosRUPService: ElementosRUPService,
+        public plex: Plex,
+        public auth: Auth,
+        private router: Router,
+        private route: ActivatedRoute,
         private servicioPaciente: PacienteService,
         private logService: LogService,
-        public servicioPrestacion: PrestacionesService,
-        private conceptObserverService: ConceptObserverService) { }
+        private servicioPrestacion: PrestacionesService,
+        private conceptObserverService: ConceptObserverService,
+        public huds: HUDSService
+    ) { }
 
     /**
     *Inicializamos con el id del paciente
@@ -71,10 +74,6 @@ export class VistaHudsComponent implements OnInit {
 
         if (!this.auth.profesional && this.auth.getPermissions('huds:?').length <= 0) {
             this.redirect('inicio');
-        }
-
-        if (this.auth.profesional) {
-            this.mostrarPI = true;
         }
 
         if (!this.auth.profesional && this.auth.getPermissions('huds:?').length > 0) {
@@ -108,46 +107,19 @@ export class VistaHudsComponent implements OnInit {
 
     }
 
+    ngOnDestroy() {
+        this.huds.clear();
+    }
+
     redirect(pagina: string) {
         this.router.navigate(['./' + pagina]);
         return false;
     }
 
-    public onCloseTab($event) {
-        if (this.activeTab > $event) {
-            this.activeTab--;
-        }
-        this.registrosHuds.splice($event, 1);
+    public onCloseTab(index) {
+        this.huds.remove(index);
     }
 
-
-    agregarListadoHuds(elemento) {
-        if (elemento.tipo === 'rup') {
-            // Limpiar los valores observados al iniciar la ejecución
-            // Evita que se autocompleten valores de una consulta anterior
-            this.conceptObserverService.destroy();
-            // Loggeo de lo que ve el médico
-            this.logService.post('rup', 'hudsPrestacion', {
-                paciente: {
-                    id: this.paciente.id,
-                    nombre: this.paciente.nombre,
-                    apellido: this.paciente.apellido,
-                    sexo: this.paciente.sexo,
-                    fechaNacimiento: this.paciente.fechaNacimiento,
-                    documento: this.paciente.documento
-                },
-                prestacion: elemento.data.id
-            }).subscribe(() => {
-            });
-        } else {
-            // Se obtienen datos de la prestación, para mostrar info contextual del registro
-            // this.servicioPrestacion.getById(elemento.data.idPrestacion).subscribe(prestacion => {
-            //     this.prestacion = prestacion;
-            //     return true;
-            // });
-        }
-        this.activeTab = this.registrosHuds.length - 1;
-    }
     /**
     * Setea el boton volver, Segun la ruta que recibe
     * Si no recibe ninguna por defecto setea RUP (el punto de inicio de RUP)
