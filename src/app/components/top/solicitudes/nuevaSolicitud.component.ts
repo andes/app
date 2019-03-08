@@ -39,6 +39,11 @@ export class NuevaSolicitudComponent implements OnInit {
     indice;
     documentos = [];
 
+    // ---- Variables asociadas a componentes paciente buscar y paciente listado
+    resultadoBusqueda = null;
+    pacienteSelected = null;
+    loading = false;
+
 
     imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
     extensions = [
@@ -117,10 +122,42 @@ export class NuevaSolicitudComponent implements OnInit {
         });
     }
 
-    seleccionarPaciente(paciente: any): void {
-        this.paciente = paciente;
-        this.showSeleccionarPaciente = false;
+    // -------------- SOBRE BUSCADOR PACIENTES ----------------
+
+    searchStart() {
+        this.paciente = null;
+        this.loading = true;
     }
+
+    searchEnd(resultado) {
+        this.loading = false;
+        if (resultado.err) {
+            this.plex.info('danger', resultado.err);
+            return;
+        }
+        this.resultadoBusqueda = resultado.pacientes;
+    }
+
+    onSearchClear() {
+        this.resultadoBusqueda = [];
+        this.paciente = null;
+    }
+
+    // ----------------------------------
+
+    // Componente paciente-listado
+
+    seleccionarPaciente(paciente): void {
+        this.resultadoBusqueda = [];
+        this.showSeleccionarPaciente = false;
+        if (paciente && paciente.id) {
+            this.paciente = paciente;
+        } else {
+            this.plex.info('warning', 'Paciente no encontrado', '¡Error!');
+        }
+
+    }
+    // ----------------------------------
 
     loadOrganizacion(event) {
         if (event.query) {
