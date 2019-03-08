@@ -18,9 +18,11 @@ import { Subject } from 'rxjs/Rx';
 })
 export class EgresoInternacionComponent implements OnInit, OnChanges {
     @HostBinding('class.plex-layout') layout = true;
-    private _prestacion: any;
-    @Input() desdeListadoInternacion = false;
 
+    @Input() desdeListadoInternacion = false;
+    public registro;
+
+    private _prestacion: any;
     @Input()
     set prestacion(value: any) {
         this._prestacion = value;
@@ -30,22 +32,31 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
         } else {
             this.fechaEgreso = new Date();
             this.horaEgreso = new Date();
-            this.registro.valor = {
-                InformeEgreso: {
-                    fechaEgreso: null,
-                    nacimientos: [
-                        {
-                            pesoAlNacer: null,
-                            condicionAlNacer: null,
-                            terminacion: null,
-                            sexo: null
+            this.registro = {
+                destacado: false,
+                esSolicitud: false,
+                esDiagnosticoPrincipal: false,
+                esPrimeraVez: undefined,
+                relacionadoCon: [],
+                nombre: 'alta del paciente',
+                concepto: this.internacionService.conceptosInternacion.egreso,
+                valor: {
+                    InformeEgreso: {
+                        fechaEgreso: null,
+                        nacimientos: [
+                            {
+                                pesoAlNacer: null,
+                                condicionAlNacer: null,
+                                terminacion: null,
+                                sexo: null
+                            }
+                        ],
+                        procedimientosQuirurgicos: [],
+                        causaExterna: {
+                            producidaPor: null,
+                            lugar: null,
+                            comoSeProdujo: null
                         }
-                    ],
-                    procedimientosQuirurgicos: [],
-                    causaExterna: {
-                        producidaPor: null,
-                        lugar: null,
-                        comoSeProdujo: null
                     }
                 }
             };
@@ -95,16 +106,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     public procedimientosObstetricosNoReq = false;
     public ExisteCausaExterna = false;
     public mostrarValidacion = false;
-    public registro = {
-        destacado: false,
-        esSolicitud: false,
-        esDiagnosticoPrincipal: false,
-        esPrimeraVez: undefined,
-        relacionadoCon: [],
-        nombre: 'alta del paciente',
-        concepto: this.internacionService.conceptosInternacion.egreso,
-        valor: null
-    };
+
     mySubject = new Subject();
     constructor(
         public servicioPrestacion: PrestacionesService,
