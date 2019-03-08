@@ -66,6 +66,9 @@ export class PermisosVisualizacionComponent {
     }
     set permisosUsuario(value: string[]) {
         this.permisosUsuarioOrg = value;
+        if (this.perfilesOrganizacion && this.perfilesOrganizacion.length) {
+            this.tildarPerfilesCorrespondientes();
+        }
     }
     /**
      * Todas las prestaciones turneables. De este arreglo se obtienen los nombres de las prestaciones dado un id. Es necesario que sea diferente de null
@@ -103,7 +106,6 @@ export class PermisosVisualizacionComponent {
     async cargar() {
         if (this.usuario) {
             this.obtenerPerfilesActivos(this.organizacion);
-            this.tildarPerfilesCorrespondientes();
         }
     }
     /**
@@ -117,6 +119,9 @@ export class PermisosVisualizacionComponent {
             res.forEach((perfil: IPerfilUsuario) => {
                 this.imprimirPermisos(perfil);
             });
+            if (this.permisosUsuarioOrg && this.permisosUsuarioOrg.length) {
+                this.tildarPerfilesCorrespondientes();
+            }
         });
     }
 

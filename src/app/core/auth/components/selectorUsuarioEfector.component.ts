@@ -200,8 +200,10 @@ export class SelectorUsuarioEfectorComponent {
             let query = {
                 nombre: event.query
             };
+            let organizacionesFiltradas: IOrganizacion[] = [];
             this.organizacionService.get(query).subscribe(resultado => {
-                event.callback(resultado);
+                organizacionesFiltradas = resultado.filter(x => !this.organizacionesUsuario.some(y => x.id === y.id));
+                event.callback(organizacionesFiltradas);
             });
         } else {
             event.callback([]);
