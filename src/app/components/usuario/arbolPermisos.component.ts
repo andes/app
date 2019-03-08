@@ -16,7 +16,7 @@ export class ArbolPermisosComponent implements OnChanges, AfterViewInit {
     private state = false;
     private all = false;
     /**
-     * IDs de las prestaciones u organizaciones seleccionadas
+     * ITipoPrestaciones[] o IOrganizacion[] seleccionadas
      * @memberof ArbolPermisosComponent
      */
     public seleccionados = [];

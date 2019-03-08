@@ -55,16 +55,16 @@
                 <ng-container *ngIf="showAgregarEfector">
                     <plex-button type="success" icon='mdi mdi-plus' (click)="agregarEfector = true" title='Agregar Efector'></plex-button>
                 </ng-container>
-                <ng-container *ngIf="showAgregarEfector && organizacionSelect">
+                <ng-container *ngIf="showAgregarEfector && organizacionPermisos">
                     <plex-button *ngIf='organizacionActualAuthUs && !organizacionActualAuthUs.permisosPausados' type="danger"
                         icon='mdi mdi-pause' (click)='pausar()' title='Pausar'></plex-button>
                     <plex-button *ngIf=' organizacionActualAuthUs && organizacionActualAuthUs.permisosPausados' type="success"
                         icon='mdi mdi-play' (click)='pausar()' title='Reanudar'></plex-button>
                 </ng-container>
-                <ng-container *ngIf="showAgregarEfector && organizacionActualAuthUs && organizacionSelect">
+                <ng-container *ngIf="showAgregarEfector && organizacionActualAuthUs && organizacionPermisos">
                     <plex-button type="info" icon='mdi mdi-content-copy' (click)="copiarPermisos = true" title='Copiar Permisos'></plex-button>
                 </ng-container>
-                <ng-container *ngIf="showAgregarEfector && organizacionSelect">
+                <ng-container *ngIf="showAgregarEfector && organizacionPermisos">
                     <plex-button type="danger" icon='mdi mdi-delete' (click)="deleteEfector()" *ngIf="organizacionesUsuario?.length"
                         title='Quitar Efector'></plex-button>
                 </ng-container>
@@ -89,7 +89,7 @@
 
         <div *ngIf="!agregarEfector" class="row">
             <div class="col">
-                <plex-select [(ngModel)]="organizacionSelect" name="organizacion" [data]="organizacionesUsuario"
+                <plex-select [(ngModel)]="organizacionPermisos" name="organizacion" [data]="organizacionesUsuario"
                     (change)="onOrgChange()" labelField="nombre + ', ' + direccion.ubicacion.localidad.nombre"
                     [readonly]="copiarPermisos">
                 </plex-select>
@@ -99,7 +99,7 @@
         <div *ngIf="organizacionesUsuario.length <= 0" class="alert alert-default">
             <i class="mdi mdi-emoticon-sad"></i> Agregue un efector para modificar sus permisos
         </div>
-        <div *ngIf="organizacionesUsuario.length > 0 && !organizacionSelect" class="alert alert-default">
+        <div *ngIf="organizacionesUsuario.length > 0 && !organizacionPermisos" class="alert alert-default">
             <i class="mdi mdi-emoticon-sad"></i> Seleccione una organización
         </div>
         <div class="row my-3" *ngIf="agregarEfector">

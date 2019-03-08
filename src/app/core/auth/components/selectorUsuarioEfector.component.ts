@@ -78,7 +78,7 @@ export class SelectorUsuarioEfectorComponent {
      * @private
      * @memberof SelectorUsuarioEfectorComponent
      */
-    public organizacionSelect = null; // TODO cambiarle nombre a organizacionPermisos
+    public organizacionPermisos = null;
     private organizacionSelectPrev = null;
 
     public organizacionesUsuario: IOrganizacion[] = [];
@@ -136,7 +136,7 @@ export class SelectorUsuarioEfectorComponent {
                         this.organizacionService.get({ ids: idOrganizaciones }).subscribe(dataUss => {
                             this.organizacionesUsuario = dataUss;
                             if (this.organizacionesUsuario && this.organizacionesUsuario.length > 0) {
-                                this.organizacionSelect = this.organizacionesUsuario[0];
+                                this.organizacionPermisos = this.organizacionesUsuario[0];
                                 this.onOrgChange();
                             }
                             // this.organizacionSelect = null;
@@ -227,10 +227,10 @@ export class SelectorUsuarioEfectorComponent {
      * @memberof SelectorUsuarioEfectorComponent
      */
     onOrgChange() {
-        this.organizacionSelectPrev = this.organizacionSelect;
+        this.organizacionSelectPrev = this.organizacionPermisos;
         this.loadPermisos();
         this.getOrgActualAuthUs();
-        this.seleccionOrganizacion.emit(this.organizacionSelect);
+        this.seleccionOrganizacion.emit(this.organizacionPermisos);
     }
 
     /**
@@ -249,8 +249,8 @@ export class SelectorUsuarioEfectorComponent {
         }
     }
     getOrgActualAuthUs() {
-        if (this.organizacionSelect) {
-            this.organizacionActualAuthUs = this.userModel.organizaciones.find(x => x._id === this.organizacionSelect._id);
+        if (this.organizacionPermisos) {
+            this.organizacionActualAuthUs = this.userModel.organizaciones.find(x => x._id === this.organizacionPermisos._id);
         }
     }
 
@@ -264,10 +264,10 @@ export class SelectorUsuarioEfectorComponent {
             this.permisos = [];
             this.getOrganizaciones();
             this.organizacionesUsuario.push(this.newOrg);
-            this.organizacionSelect = this.newOrg;
-            this.organizacionSelectPrev = this.organizacionSelect;
+            this.organizacionPermisos = this.newOrg;
+            this.organizacionSelectPrev = this.organizacionPermisos;
             this.agregarEfector = false;
-            this.seleccionOrganizacion.emit(this.organizacionSelect);
+            this.seleccionOrganizacion.emit(this.organizacionPermisos);
         }
     }
 
@@ -292,18 +292,18 @@ export class SelectorUsuarioEfectorComponent {
     }
 
     deleteEfector() {
-        this.plex.confirm('¿Eliminar todos los permisos de ' + this.organizacionSelect.nombre + '?').then((value: boolean) => {
+        this.plex.confirm('¿Eliminar todos los permisos de ' + this.organizacionPermisos.nombre + '?').then((value: boolean) => {
             if (value) {
-                let index = this.userModel.organizaciones.findIndex(elem => elem._id === this.organizacionSelect._id);
+                let index = this.userModel.organizaciones.findIndex(elem => elem._id === this.organizacionPermisos._id);
                 this.userModel.organizaciones.splice(index, 1);
                 if (this.organizacionesUsuario && this.organizacionesUsuario.length > 0) {
-                    let index2 = this.organizacionesUsuario.findIndex(elem => elem.id === this.organizacionSelect.id);
+                    let index2 = this.organizacionesUsuario.findIndex(elem => elem.id === this.organizacionPermisos.id);
                     this.organizacionesUsuario.splice(index2, 1);
                     // es necesario hacer esto para que angular se dé cuenta de que el arreglo organizacionesUsuario se modificó.
                     // Si simplemente se borra uno de los ítems del arreglo, angular no actualiza la visual. Es necesario modificarlo
                     // completo, entonces seteo todo el arreglo de nuevo
                     this.organizacionesUsuario = [...this.organizacionesUsuario];
-                    this.organizacionSelect = this.organizacionesUsuario ? this.organizacionesUsuario[0] : null;
+                    this.organizacionPermisos = this.organizacionesUsuario ? this.organizacionesUsuario[0] : null;
                     this.usuarioService.save(this.usuarioSeleccionado).subscribe();
                 }
                 this.onOrgChange();
@@ -318,7 +318,7 @@ export class SelectorUsuarioEfectorComponent {
         let textoConfirm = (!this.organizacionActualAuthUs.permisosPausados) ? 'pausar' : 'reanudar';
         this.plex.confirm(`¿Está seguro que desea ${textoConfirm} a este usuario?`).then((resultado: boolean) => {
             if (resultado) {
-                this.permisosService.actualizarEstadoPermisos(this.userModel.usuario, this.organizacionSelect.id).subscribe(res => {
+                this.permisosService.actualizarEstadoPermisos(this.userModel.usuario, this.organizacionPermisos.id).subscribe(res => {
                     this.organizacionActualAuthUs.permisosPausados = res.permisosPausados;
                 });
             }
@@ -341,7 +341,7 @@ export class SelectorUsuarioEfectorComponent {
     * @memberof UsuarioUpdateComponent
     */
     getOrganizaciones() {
-        this.organizacionSelect = (this.organizacionesUsuario.length > 0) ? this.organizacionesUsuario[0] : null;
+        this.organizacionPermisos = (this.organizacionesUsuario.length > 0) ? this.organizacionesUsuario[0] : null;
         this.organizacionSelectPrev = (this.organizacionesUsuario.length > 0) ? this.organizacionesUsuario[0] : null;
 
         // Si el usuario puede agregar efectores, se listan todos los disponibles (que no tenga todavía)

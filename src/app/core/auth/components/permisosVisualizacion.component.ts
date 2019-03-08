@@ -66,7 +66,6 @@ export class PermisosVisualizacionComponent {
     }
     set permisosUsuario(value: string[]) {
         this.permisosUsuarioOrg = value;
-        this.tildarPerfilesCorrespondientes();
     }
     /**
      * Todas las prestaciones turneables. De este arreglo se obtienen los nombres de las prestaciones dado un id. Es necesario que sea diferente de null
@@ -78,7 +77,7 @@ export class PermisosVisualizacionComponent {
      * Sirve para indicar que se deben asignar o quitar los permisos seleccionados
      * @memberof PermisosVisualizacionComponent
      */
-    @Output() seleccionCheckboxPerfil = new EventEmitter<{ checked: boolean, permisos: string[] }>(); // TODO: Quitar el checked que no es necesario
+    @Output() seleccionCheckboxPerfil = new EventEmitter<{ permisos: string[] }>();
     // @ViewChildren(ArbolPermisosComponent) childsComponents: QueryList<ArbolPermisosComponent>;
 
     /**
@@ -104,6 +103,7 @@ export class PermisosVisualizacionComponent {
     async cargar() {
         if (this.usuario) {
             this.obtenerPerfilesActivos(this.organizacion);
+            this.tildarPerfilesCorrespondientes();
         }
     }
     /**
@@ -120,7 +120,7 @@ export class PermisosVisualizacionComponent {
         });
     }
 
-    private imprimirPermisos(perfil: IPerfilUsuario): string {
+    private imprimirPermisos(perfil: IPerfilUsuario) {
         // obtenerPrestacionesDePermisos(perfil.permisos, this.servicioTipoPrestacion).subscribe((prestaciones: ITipoPrestacion[]) => {
         //     let res = obtenerArreglosMismoNivel(perfil.permisos, 0, '', [], this.arbolPermisosCompleto, null, prestaciones);
         //     this.perfilesOrganizacion.push({ perfil: perfil, checked: this.tienePerfilAsignado(perfil), permisos: res });
@@ -128,7 +128,6 @@ export class PermisosVisualizacionComponent {
         let prestaciones = obtenerPrestacionesDePermisos(perfil.permisos, this.prestacionesTurneables);
         let res = obtenerArreglosMismoNivel(perfil.permisos, 0, '', [], this.arbolPermisosCompleto, null, prestaciones);
         this.perfilesOrganizacion.push({ perfil: perfil, checked: this.tienePerfilAsignado(perfil), permisos: res });
-        return null;
     }
 
     /**
@@ -137,7 +136,7 @@ export class PermisosVisualizacionComponent {
      * @returns {boolean}
      * @memberof PermisosVisualizacionComponent
      */
-    tienePerfilAsignado(perfil: IPerfilUsuario): boolean {
+    private tienePerfilAsignado(perfil: IPerfilUsuario): boolean {
         return !perfil.permisos.some((permiso: string) => { // some trae todos los permisos del perfil que no tiene el usuario. Debe ser vacío, por eso está negado
             return !this.usuarioTienePermiso(permiso); // bandera devuelve si no tiene el permiso
         });
@@ -227,7 +226,7 @@ export class PermisosVisualizacionComponent {
     tildarPerfil(event: any, indice: number) {
         let permisosPerfilTildado = this.perfilesOrganizacion[indice].perfil.permisos;
         this.permisosUsuarioOrg = event.value ? agregarPermiso(this.permisosUsuarioOrg, permisosPerfilTildado) : quitarPermiso(this.permisosUsuarioOrg, permisosPerfilTildado, this.arbolPermisosCompleto);
-        this.seleccionCheckboxPerfil.emit({ checked: this.perfilesOrganizacion[indice].checked, permisos: this.permisosUsuarioOrg });
+        this.seleccionCheckboxPerfil.emit({ permisos: this.permisosUsuarioOrg });
     }
 
     /**

@@ -6,10 +6,11 @@
         <plex-tabs [activeIndex]="pestaniaActiva" (change)="cambio($event)">
 
             <plex-tab label="Visualizar permisos" color="procedimiento">
-                <permisosVisualizacion *ngIf="usuarioSeleccionado && organizacionSeleccionada && prestacionesTurneables"
-                    [user]="usuarioSeleccionado" [org]="organizacionSeleccionada" [permiteAsignarPerfiles]="false"
-                    [arbolPermisosCompleto]="arbolPermisosCompleto" [permisosUsuario]='permisosUsuarioOrg'
-                    [prestacionesTurneables]="prestacionesTurneables"></permisosVisualizacion>
+                <div class="mt-5 hover" *ngIf="usuarioSeleccionado && organizacionSeleccionada && prestacionesTurneables && permisosUsuarioOrg">
+                    <permisosVisualizacion [user]="usuarioSeleccionado" [org]="organizacionSeleccionada"
+                        [permiteAsignarPerfiles]="false" [arbolPermisosCompleto]="arbolPermisosCompleto"
+                        [permisosUsuario]='permisosUsuarioOrg' [prestacionesTurneables]="prestacionesTurneables"></permisosVisualizacion>
+                </div>
                 <div *ngIf="!usuarioSeleccionado || !organizacionSeleccionada" class="mt-5">
                     <i class="mdi mdi-emoticon-sad"></i>Seleccione un usuario y organización para visualizar sus
                     permisos</div>
