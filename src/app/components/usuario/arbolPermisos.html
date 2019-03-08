@@ -8,7 +8,7 @@
         </div>
         <div *ngFor="let child of item.child; let indiceChild = index">
             <arbolPermisos [item]="child" [parentPermission]="makePermission()" [userPermissions]="userPermissions"
-                (seleccionPermiso)="tildarPermiso($event)"></arbolPermisos>
+                (seleccionPermiso)="tildarPermiso($event)" [prestacionesTurneables]="prestacionesTurneables"></arbolPermisos>
         </div>
     </plex-panel>
 </plex-accordion>

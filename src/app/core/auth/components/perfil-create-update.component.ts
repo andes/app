@@ -5,6 +5,7 @@ import { ArbolPermisosComponent } from './../../../components/usuario/arbolPermi
 import { PermisosService } from '../../../services/permisos.service';
 import { PerfilUsuarioService } from './../services/perfilUsuarioService';
 import { IPerfilUsuario } from '../interfaces/IPerfilUsuario';
+import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 @Component({
     selector: 'perfilForm',
     templateUrl: 'perfil-create-update.html'
@@ -32,6 +33,12 @@ export class PerfilFormComponent implements OnInit {
             (this.perfilEdit.id && this.auth.check('usuarios:perfil:modificar:local'));
 
     }
+    /**
+   * Todas las prestaciones turneables. De este arreglo se obtienen los nombres de las prestaciones dado un id. Es necesario que sea diferente de null
+   * @type {ITipoPrestacion[]}
+   * @memberof ArbolPermisosComponent
+   */
+    @Input() prestacionesTurneables: ITipoPrestacion[];
     @Output() perfilGuardado = new EventEmitter<IPerfilUsuario>();
 
     @ViewChildren(ArbolPermisosComponent) childsComponents: QueryList<ArbolPermisosComponent>;

@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IPerfilUsuario } from '../interfaces/IPerfilUsuario';
 import { PerfilUsuarioService } from './../services/perfilUsuarioService';
+import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
+import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 @Component({
     selector: 'gestorPerfiles',
     templateUrl: 'gestorPerfiles.html'
@@ -39,8 +41,14 @@ export class GestorPerfilesComponent implements OnInit {
      * @memberof GestorPerfilesComponent
      */
     public puedeCrearGlobal: boolean;
-
-    constructor(private perfilUsuarioService: PerfilUsuarioService, private auth: Auth, private plex: Plex) { }
+    /**
+     * Todas las prestaciones turneables de la base de datos. Se mantiene en cache para ahorrar consultas a la API
+     * @private
+     * @type {ITipoPrestacion[]}
+     * @memberof GestorUsuarioComponent
+     */
+    public prestacionesTurneables: ITipoPrestacion[] = null;
+    constructor(private perfilUsuarioService: PerfilUsuarioService, private auth: Auth, private plex: Plex, private servicioTipoPrestacion: TipoPrestacionService) { }
 
     ngOnInit() {
         this.recuperarPerfiles();
@@ -48,6 +56,9 @@ export class GestorPerfilesComponent implements OnInit {
         this.puedeBorrarLocal = this.auth.check('usuarios:perfil:eliminar:local');
         this.puedeCrearLocal = this.auth.check('usuarios:perfil:crear:local');
         this.puedeCrearGlobal = this.auth.check('usuarios:perfil:crear:global');
+        this.servicioTipoPrestacion.get('').subscribe(res => {
+            this.prestacionesTurneables = res;
+        });
     }
 
     /**

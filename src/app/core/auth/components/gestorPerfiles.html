@@ -47,6 +47,7 @@
         </div>
     </plex-layout-main>
     <plex-layout-sidebar>
-        <perfilForm *ngIf="perfilSeleccionado" (perfilGuardado)="perfilGuardado()" [perfil]="perfilSeleccionado"></perfilForm>
+        <perfilForm *ngIf="perfilSeleccionado && prestacionesTurneables" (perfilGuardado)="perfilGuardado()" [perfil]="perfilSeleccionado"
+            [prestacionesTurneables]="prestacionesTurneables"></perfilForm>
     </plex-layout-sidebar>
 </plex-layout>

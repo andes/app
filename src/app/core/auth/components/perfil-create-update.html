@@ -22,7 +22,7 @@
     </div>
     <div class="row">&nbsp;</div>
     <div *ngFor="let permiso of permisos$ | async ">
-        <arbolPermisos [item]="permiso" [userPermissions]="perfilEdit.permisos"></arbolPermisos>
+        <arbolPermisos [item]="permiso" [userPermissions]="perfilEdit.permisos" [prestacionesTurneables]="prestacionesTurneables"></arbolPermisos>
     </div>
 </form>
 <span *ngIf="(perfil.id && !puedeModificar)">

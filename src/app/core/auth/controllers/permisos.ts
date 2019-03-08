@@ -182,12 +182,13 @@ export function obtenerPermisosParaMostrar(permisosImprimir: string[], arbolPerm
 /**
  * Obtiene en una sola llamada a la base de datos, todas las prestaciones de los permisos a imprimir, sin importar de qué permiso se trate
  * @param {*} permisosImprimir
- * @param {TipoPrestacionService} servicioTipoPrestacion
- * @returns {Observable<ITipoPrestacion[]>}
+ * @param {ITipoPrestacion[]} prestacionesTurneables
+ * @returns {ITipoPrestacion[]}
  */
-export function obtenerPrestacionesDePermisos(permisosImprimir, servicioTipoPrestacion): Observable<ITipoPrestacion[]> {
+export function obtenerPrestacionesDePermisos(permisosImprimir, prestacionesTurneables): ITipoPrestacion[] {
     let idPrestaciones = [];
     let idPrestacion;
+    let prestaciones: ITipoPrestacion[] = [];
     permisosImprimir.forEach((permiso: string) => {
         // Si se trata de unas de las opciones de permiso type = 'prestacion'
         if (permiso.substr(0, 'rup:tipoPrestacion'.length) === 'rup:tipoPrestacion'
@@ -198,10 +199,13 @@ export function obtenerPrestacionesDePermisos(permisosImprimir, servicioTipoPres
             idPrestacion = permisoDividido[permisoDividido.length - 1];
             if (idPrestacion !== '*' && idPrestaciones.indexOf(idPrestacion) === -1) {
                 idPrestaciones.push(idPrestacion);
+                prestaciones.push(prestacionesTurneables.find((prestacion: ITipoPrestacion) => {
+                    return idPrestacion === prestacion.id;
+                }));
             }
         }
     });
-    return servicioTipoPrestacion.get({ id: idPrestaciones });
+    return prestaciones;
 }
 
 /**
@@ -223,7 +227,7 @@ export function obtenerPrestacionesDePermisos(permisosImprimir, servicioTipoPres
  * @param {string[]} keysYaImpresas
  * @param {IPermiso[]} arbolPermisos
  * @param {IPermiso[]} child
- * @param {ITipoPrestacion} prestaciones
+ * @param {ITipoPrestacion[]} prestaciones
  * @returns {string}
  */
 export function

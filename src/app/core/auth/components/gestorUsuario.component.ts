@@ -113,18 +113,18 @@ export class GestorUsuarioComponent implements OnInit {
      * @memberof GestorUsuarioComponent
      */
     guardar(event) {
-        obtenerPrestacionesDePermisos(this.permisosUsuarioOrg, this.servicioTipoPrestacion).subscribe((prestaciones: ITipoPrestacion[]) => {
-            let respuesta = obtenerArreglosMismoNivel(this.permisosUsuarioOrg, 0, '', [], this.arbolPermisosCompleto, null, prestaciones);
-            this.plex.confirm('Se guardarán los siguientes permisos: <br>' + respuesta +
-                '<br><br>¿Desea continuar?',
-                'Guardar Permisos', 'Guardar').then((confirmar: boolean) => {
-                    if (confirmar) {
-                        this.savePermisos();
-                        this.usuarioService.save(this.usuarioSeleccionado).subscribe();
-                        this.cambio(0);
-                    }
-                });
-        });
+        let prestaciones = obtenerPrestacionesDePermisos(this.permisosUsuarioOrg, this.prestacionesTurneables);
+        let respuesta = obtenerArreglosMismoNivel(this.permisosUsuarioOrg, 0, '', [], this.arbolPermisosCompleto, null, prestaciones);
+
+        this.plex.confirm('Se guardarán los siguientes permisos: <br>' + respuesta +
+            '<br><br>¿Desea continuar?',
+            'Guardar Permisos', 'Guardar').then((confirmar: boolean) => {
+                if (confirmar) {
+                }
+            });
+        this.savePermisos();
+        this.usuarioService.save(this.usuarioSeleccionado).subscribe();
+        this.cambio(0);
     }
 
     /**

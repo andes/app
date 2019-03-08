@@ -124,10 +124,13 @@ export class PermisosVisualizacionComponent {
     }
 
     private imprimirPermisos(perfil: IPerfilUsuario): string {
-        obtenerPrestacionesDePermisos(perfil.permisos, this.servicioTipoPrestacion).subscribe((prestaciones: ITipoPrestacion[]) => {
-            let res = obtenerArreglosMismoNivel(perfil.permisos, 0, '', [], this.arbolPermisosCompleto, null, prestaciones);
-            this.perfilesOrganizacion.push({ perfil: perfil, checked: this.tienePerfilAsignado(perfil), permisos: res });
-        });
+        // obtenerPrestacionesDePermisos(perfil.permisos, this.servicioTipoPrestacion).subscribe((prestaciones: ITipoPrestacion[]) => {
+        //     let res = obtenerArreglosMismoNivel(perfil.permisos, 0, '', [], this.arbolPermisosCompleto, null, prestaciones);
+        //     this.perfilesOrganizacion.push({ perfil: perfil, checked: this.tienePerfilAsignado(perfil), permisos: res });
+        // });
+        let prestaciones = obtenerPrestacionesDePermisos(perfil.permisos, this.prestacionesTurneables);
+        let res = obtenerArreglosMismoNivel(perfil.permisos, 0, '', [], this.arbolPermisosCompleto, null, prestaciones);
+        this.perfilesOrganizacion.push({ perfil: perfil, checked: this.tienePerfilAsignado(perfil), permisos: res });
         return null;
     }
 

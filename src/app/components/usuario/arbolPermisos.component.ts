@@ -1,12 +1,8 @@
 import { ITipoPrestacion } from './../../interfaces/ITipoPrestacion';
-import { Component, OnInit, HostBinding, Output, EventEmitter, Input, ViewChildren, QueryList, OnChanges, AfterViewInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
-import { PlexAccordionComponent } from '@andes/plex/src/lib/accordion/accordion.component';
+import { Component, Output, EventEmitter, Input, ViewChildren, QueryList, OnChanges, AfterViewInit, ViewChild } from '@angular/core';
 import { PlexPanelComponent } from '@andes/plex/src/lib/accordion/panel.component';
 import { OrganizacionService } from '../../services/organizacion.service';
 import { IPermiso } from '../../core/auth/interfaces/IPermiso';
-import { viewParentEl } from '@angular/core/src/view/util';
 let shiroTrie = require('shiro-trie');
 
 @Component({
@@ -53,7 +49,6 @@ export class ArbolPermisosComponent implements OnChanges, AfterViewInit {
     }
 
     constructor(
-        private servicioTipoPrestacion: TipoPrestacionService,
         private organizacionService: OrganizacionService
     ) { }
 
@@ -70,11 +65,6 @@ export class ArbolPermisosComponent implements OnChanges, AfterViewInit {
             }
         }
     }
-
-    // public ngOnInit() { // No tiene sentido porque es igual al ngOnChanges el cual se ejecuta siempre que se modifica las entradas, incluyendo la primera vez (cuando se ejecuta ngOnInit)
-    //     this.refresh();
-    //     this.permisosOriginales = [...this.userPermissions];
-    // }
 
     public ngOnChanges() {
         this.refresh();
@@ -97,9 +87,14 @@ export class ArbolPermisosComponent implements OnChanges, AfterViewInit {
                         // [TODO] Buscar según el tipo
                         switch (this.item.type) {
                             case 'prestacion':
-                                this.servicioTipoPrestacion.get({ id: items }).subscribe((data) => {
-                                    this.seleccionados = [...data];
+                                let prestaciones: ITipoPrestacion[] = [];
+                                items.forEach((item: string) => {
+                                    let prestacion = this.prestacionesTurneables.find((prest: ITipoPrestacion) => {
+                                        return prest.id === item;
+                                    });
+                                    prestaciones.push(prestacion);
                                 });
+                                this.seleccionados = prestaciones;
                                 break;
                             case 'organizacion':
                                 this.organizacionService.get({ ids: items }).subscribe((data) => {
@@ -147,15 +142,6 @@ export class ArbolPermisosComponent implements OnChanges, AfterViewInit {
             this.seleccionados = [...selectSinRepetir];
         }
 
-        /*
-        Tengo dos arreglos
-        1. Permisos originales
-        2. Ids de las prestaciones seleccionadas
-
-        Debo obtener de los permisos originales, todos los ids de las prestaciones y compararlos con los ids del segundo arreglo
-        */
-        // let idPrestacionesSeleccionadas = new Set(this.seleccionados);
-
         let arrayIdPrestacionesOriginales = [];
         let i = 0;
         let permiso;
@@ -200,12 +186,18 @@ export class ArbolPermisosComponent implements OnChanges, AfterViewInit {
                 let query: any = {};
                 if (event.query) {
                     query.term = event.query;
+                    let prestacionesFiltradas = this.prestacionesTurneables.filter((prestacion: ITipoPrestacion) => {
+                        return prestacion.term === query.term;
+                    });
+                    // this.servicioTipoPrestacion.get(query).subscribe((data) => {
+                    //     data = [...data, ...this.seleccionados || []];
+                    //     event.callback(data);
+                    // });
+                    event.callback([prestacionesFiltradas, ...this.seleccionados]);
+                } else {
+                    event.callback([...this.prestacionesTurneables, ...this.seleccionados]); // TODO: por que agrega el seleccionados?
                 }
 
-                this.servicioTipoPrestacion.get(query).subscribe((data) => {
-                    data = [...data, ...this.seleccionados || []];
-                    event.callback(data);
-                });
                 break;
         }
     }
