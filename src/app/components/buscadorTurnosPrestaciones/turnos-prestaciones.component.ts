@@ -15,21 +15,21 @@ import { ObraSocialService } from '../../services/obraSocial.service';
 })
 
 export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
-    private busquedas;
-    private mostrarMasOpciones;
+    public busquedas;
+    public mostrarMasOpciones;
     private lastRequest: ISubscription;
     private parametros;
     private hoy;
-    private fechaDesde: any;
-    private fechaHasta: any;
+    public fechaDesde: any;
+    public fechaHasta: any;
     private sumar;
     private sinOS;
-    private showPrestacion;
-    private loading;
+    public showPrestacion;
+    public loading;
     public arrayEstados;
     prestacion: any;
     router: any;
-
+    public prestaciones;
     constructor(
         private auth: Auth,
         private turnosPrestacionesService: TurnosPrestacionesService, public servicioPrestacion: TipoPrestacionService, public serviceProfesional: ProfesionalService,

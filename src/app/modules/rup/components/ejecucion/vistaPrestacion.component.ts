@@ -38,7 +38,7 @@ export class VistaPrestacionComponent implements OnInit {
         return this._idPrestacion;
     }
 
-    private registro: any;
+    public registro: any;
     private paciente: IPaciente;
 
     constructor(public elementosRUPService: ElementosRUPService,
