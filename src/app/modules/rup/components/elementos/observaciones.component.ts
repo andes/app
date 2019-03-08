@@ -22,13 +22,13 @@ export class ObservacionesComponent extends RUPComponent implements OnInit {
         this.registro.valido = true;
         // Observa cuando cambia la propiedad 'Sistolica' en otro elemento RUP
         if (!this.soloValores) {
-            this.conceptObserverService.observe(this.registro).subscribe((data) => {
-                // No soy yo mismo
-                if (this.registro !== data && this.registro.valor !== data.valor) {
-                    this.registro.valor = data.valor;
-                    this.emitChange(false);
-                }
-            });
+            // this.conceptObserverService.observe(this.registro).subscribe((data) => {
+            //     // No soy yo mismo
+            //     if (this.registro !== data && this.registro.valor !== data.valor) {
+            //         this.registro.valor = data.valor;
+            //         this.emitChange(false);
+            //     }
+            // });
 
             this.suscriptionBuscador = this.prestacionesService.notifySelection.subscribe(() => {
                 this.seleccionado = this.prestacionesService.getRefSetData();
