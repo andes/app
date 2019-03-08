@@ -148,7 +148,6 @@ import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion
 import { ProcedimientosQuirurgicosService } from './services/procedimientosQuirurgicos.service';
 import { SectoresItemComponent } from './components/organizacion/sectores-item/sectores-item.component';
 // ... MPI
-import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { PacienteDetalleComponent } from './components/paciente/paciente-detalle';
@@ -201,7 +200,6 @@ import { PopoverAuditComponent } from './components/popover-audit/popover-audit.
 import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/puntoInicio-turnos.component';
 import { EstadisticasAgendasComponent } from './components/turnos/dashboard/estadisticas-agendas.component';
 import { EstadisticasPacientesComponent } from './components/turnos/dashboard/estadisticas-pacientes.component';
-import { PacienteSearchTurnosComponent } from './components/turnos/punto-inicio/paciente-search-turnos.component';
 import { TurnosPacienteComponent } from './components/turnos/punto-inicio/turnos-paciente.component';
 import { DashboardCodificacionComponent } from './components/turnos/dashboard/dashboard-codificacion.component';
 import { ActivarAppComponent } from './components/turnos/punto-inicio/activar-app.component';
@@ -518,7 +516,7 @@ registerLocaleData(localeEs, 'es');
         ProfesionalCreateUpdateComponent,
         UploadFileComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
-        PacienteSearchComponent, PacienteDetalleComponent, DashboardComponent,
+        PacienteDetalleComponent, DashboardComponent,
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, HoraPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
         FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, DinamicaFormComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
@@ -541,7 +539,7 @@ registerLocaleData(localeEs, 'es');
         LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
         AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
         HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
-        PacienteSearchTurnosComponent, TurnosPacienteComponent, DashboardCodificacionComponent,
+        TurnosPacienteComponent, DashboardCodificacionComponent,
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
         BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
         ReporteC2Component,

@@ -19,7 +19,6 @@ import { RoutingGuard, RoutingNavBar } from './app.routings-guard.class';
 // Componentes
 
 // ... Tablas Maestras
-import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
@@ -116,7 +115,6 @@ const appRoutes: Routes = [
   { path: 'tm/mapa_espacio_fisico', component: MapaEspacioFisicoVistaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // MPI
-  { path: 'apps/mpi', component: PacienteSearchComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'apps/mpi/busqueda', component: BusquedaMpiComponent, canActivate: [RoutingGuard] },
   { path: 'apps/mpi/bebe', component: BebeCruComponent, canActivate: [RoutingGuard] },
   { path: 'apps/mpi/sinDni', component: ExtranjeroNNCruComponent, canActivate: [RoutingGuard] },
