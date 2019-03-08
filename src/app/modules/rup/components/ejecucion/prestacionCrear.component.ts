@@ -43,6 +43,11 @@ export class PrestacionCrearComponent implements OnInit {
      */
     public showDarTurnos = false;
 
+    // ---- Variables asociadas a componentes paciente buscar y paciente listado
+    resultadoBusqueda = null;
+    pacienteSelected = null;
+    loading = false;
+
     constructor(private router: Router,
         private route: ActivatedRoute,
         private plex: Plex, public auth: Auth,
@@ -63,14 +68,7 @@ export class PrestacionCrearComponent implements OnInit {
 
     }
 
-    onPacienteSelected(paciente: IPaciente) {
-        if (paciente.id) {
-            this.paciente = paciente;
-            this.buscandoPaciente = false;
-        } else {
-            this.plex.info('warning', 'El paciente debe ser registrado en MPI');
-        }
-    }
+
 
     onPacienteCancel() {
         this.buscandoPaciente = false;
@@ -270,4 +268,44 @@ export class PrestacionCrearComponent implements OnInit {
     irResumen(id) {
         this.router.navigate(['rup/validacion/', id]);
     }
+
+    // -------------- SOBRE BUSCADOR PACIENTES ----------------
+
+    searchStart() {
+        this.paciente = null;
+        this.loading = true;
+    }
+
+    searchEnd(resultado) {
+        this.loading = false;
+        if (resultado.err) {
+            this.plex.info('danger', resultado.err);
+            return;
+        }
+        this.resultadoBusqueda = resultado.pacientes;
+    }
+
+    onSearchClear() {
+        this.resultadoBusqueda = [];
+        this.paciente = null;
+    }
+
+    // ----------------------------------
+
+    // Componente paciente-listado
+
+    onSelect(paciente: IPaciente): void {
+        // Es un paciente existente en ANDES??
+        if (paciente && paciente.id) {
+            this.paciente = paciente;
+            this.buscandoPaciente = false;
+
+        } else {
+            this.plex.info('warning', 'Paciente no encontrado', '¡Error!');
+        }
+        this.resultadoBusqueda = [];
+    }
+    // ----------------------------------
+
+
 }
