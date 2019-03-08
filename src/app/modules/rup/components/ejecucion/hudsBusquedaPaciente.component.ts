@@ -18,6 +18,11 @@ export class HudsBusquedaPacienteComponent implements OnInit {
     public showHuds = false;
 
     public esProfesional = false;
+    // ---- Variables asociadas a componentes paciente buscar y paciente listado
+    resultadoBusqueda = null;
+    pacienteSelected = null;
+    loading = false;
+
 
     constructor(public plex: Plex, public auth: Auth, private router: Router) { }
 
@@ -36,10 +41,7 @@ export class HudsBusquedaPacienteComponent implements OnInit {
         return false;
     }
 
-    onPacienteSelected(event) {
-        this.paciente = event;
-        this.showHuds = true;
-    }
+
 
     onPacienteCancel() {
         this.router.navigate(['rup']);
@@ -49,4 +51,41 @@ export class HudsBusquedaPacienteComponent implements OnInit {
         this.showHuds = false;
     }
 
+    // -------------- SOBRE BUSCADOR PACIENTES ----------------
+
+    searchStart() {
+        this.paciente = null;
+        this.loading = true;
+    }
+
+    searchEnd(resultado) {
+        this.loading = false;
+        if (resultado.err) {
+            this.plex.info('danger', resultado.err);
+            return;
+        }
+        this.resultadoBusqueda = resultado.pacientes;
+    }
+
+    onSearchClear() {
+        this.resultadoBusqueda = [];
+        this.paciente = null;
+    }
+
+    // ----------------------------------
+
+    // Componente paciente-listado
+
+    onSelect(paciente: IPaciente): void {
+        this.resultadoBusqueda = [];
+        // Es un paciente existente en ANDES??
+        if (paciente && paciente.id) {
+            this.paciente = paciente;
+            this.showHuds = true;
+
+        } else {
+            this.plex.info('warning', 'Paciente no encontrado', '¡Error!');
+        }
+    }
+    // ----------------------------------
 }
