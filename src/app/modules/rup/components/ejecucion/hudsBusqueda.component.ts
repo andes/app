@@ -28,7 +28,7 @@ export class HudsBusquedaComponent implements OnInit {
     problemasActivosAux: any;
     hallazgosCronicosAux: any[];
     hallazgosNoActivosAux: any;
-    filtroActual: any = 'todos';
+    filtroActual: any = 'planes';
     public loading = false;
 
     public cdas = [];

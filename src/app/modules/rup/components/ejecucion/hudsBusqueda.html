@@ -6,7 +6,17 @@
         <ng-container>
             <div class="container-filtros">
                 <ul class="botones-filtros">
-                    <li class="">
+                    <li>
+                        <small *ngIf="getCantidadResultados('planes')" class="badge badge-solicitud ml-1 float-right"
+                            [ngClass]="{'active': filtroActual === 'planes'}">{{
+                            getCantidadResultados('planes')}}</small>
+                        <button (click)="filtroBuscador('planes')" class="btn btn-block p-0 btn-solicitud"
+                            [ngClass]="{'active': filtroActual === 'planes'}">
+                            <i class="icon mdi mdi-clipboard-check-outline"></i>
+                            PRESTACIONES
+                        </button>
+                    </li>
+                    <li>
                         <small *ngIf="getCantidadResultados('todos')" class="badge badge-todos ml-1 float-right"
                             [ngClass]="{'active': filtroActual === 'todos'}">{{
                             getCantidadResultados('todos')}}</small>
@@ -16,7 +26,7 @@
                             TODOS
                         </button>
                     </li>
-                    <li class="">
+                    <li>
                         <small *ngIf="getCantidadResultados('hallazgo')" class="badge badge-hallazgo ml-1 float-right"
                             [ngClass]="{'active': filtroActual === 'hallazgo'}">{{
                             getCantidadResultados('hallazgo')}}</small>
@@ -26,7 +36,7 @@
                             HALLAZGOS
                         </button>
                     </li>
-                    <li class="">
+                    <li>
                         <small *ngIf="getCantidadResultados('trastorno')" class="badge badge-trastorno ml-1 float-right"
                             [ngClass]="{'active': filtroActual === 'trastorno'}">{{
                             getCantidadResultados('trastorno')}}</small>
@@ -37,7 +47,7 @@
                             TRASTORNOS
                         </button>
                     </li>
-                    <li class="">
+                    <li>
                         <small *ngIf="getCantidadResultados('procedimiento')"
                             class="badge badge-procedimiento ml-1 float-right"
                             [ngClass]="{'active': filtroActual === 'procedimiento'}">{{
@@ -49,17 +59,7 @@
                             PROC.
                         </button>
                     </li>
-                    <li class="">
-                        <small *ngIf="getCantidadResultados('planes')" class="badge badge-solicitud ml-1 float-right"
-                            [ngClass]="{'active': filtroActual === 'planes'}">{{
-                            getCantidadResultados('planes')}}</small>
-                        <button (click)="filtroBuscador('planes')" class="btn btn-block p-0 btn-solicitud"
-                            [ngClass]="{'active': filtroActual === 'planes'}">
-                            <i class="icon mdi mdi-clipboard-check-outline"></i>
-                            PRESTACIONES
-                        </button>
-                    </li>
-                    <li class="">
+                    <li>
                         <small *ngIf="getCantidadResultados('producto')" class="badge badge-producto ml-1 float-right"
                             [ngClass]="{'active': filtroActual === 'producto'}">{{
                             getCantidadResultados('producto')}}</small>
@@ -69,7 +69,7 @@
                             PRODUCTOS
                         </button>
                     </li>
-                    <li class="">
+                    <li>
                         <small *ngIf="getCantidadResultados('laboratorios')" class="badge badge-otro ml-1 float-right"
                             [ngClass]="{'active': filtroActual === 'laboratorios'}">{{
                             getCantidadResultados('laboratorios')}}</small>
@@ -80,7 +80,7 @@
                             LABOS
                         </button>
                     </li>
-                    <li class="">
+                    <li>
                         <small *ngIf="getCantidadResultados('vacunas')" class="badge badge-vacuna ml-1 float-right"
                             [ngClass]="{'active': filtroActual === 'vacunas'}">{{ getCantidadResultados('vacunas')}}</small>
 
