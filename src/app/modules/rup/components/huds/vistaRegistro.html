@@ -47,7 +47,7 @@
                         [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente, registro, registro.concepto)"></span>
                 </div>
                 <div class="columna-completa align">
-                    <b>Estado:</b><br>
+                    <b>Estado:</b>
                     <div>
                         <span *ngIf="registro?.valor?.estado !== ''" class="badge badge-success">
                             <ng-container *ngIf="!hallazgoHudsCompleto && !registro.evoluciones">
