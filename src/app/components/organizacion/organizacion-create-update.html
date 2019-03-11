@@ -184,16 +184,33 @@
                     </fieldset>
                     <fieldset>
                         <legend>Unidades Organizativas</legend>
-
                         <div class="row">
-                            <div class="col-6">
-                                <plex-select *ngIf="listadoUO && listadoUO.length" [multiple]="true" name="servicios"
-                                    labelField="term" [data]='listadoUO' idField="conceptId" [(ngModel)]="organizacionModel.unidadesOrganizativas"
-                                    label="Unidades Organizativas:">
+                            <div class="col-10">
+                                <plex-select name="servicio" labelField="term" (getData)="loadListadoUO($event)"
+                                    idField="conceptId" [(ngModel)]="servicio" placeholder="Unidades Organizativas:">
                                 </plex-select>
                             </div>
+                            <div class="col-2">
+                                <plex-button icon="plus" type="success btn-sm" title="Agregar unidades organizativas"
+                                    (click)="addU0()">
+                                </plex-button>
+                            </div>
                         </div>
-
+                        <br>
+                        <div class="row">
+                            <div class="col">
+                                <div class="list-group">
+                                    <div *ngFor="let unidadOrganizativa of organizacionModel.unidadesOrganizativas; let i = index"
+                                        class="list-group-item justify-content-between hover">
+                                        <div>
+                                            <span *ngIf="unidadOrganizativa?.term">{{unidadOrganizativa.term}}</span>
+                                        </div>
+                                        <plex-button icon="delete" type="primary" (click)="deleteUO(unidadOrganizativa)">
+                                        </plex-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </fieldset>
 
                 </plex-box>
