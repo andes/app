@@ -870,7 +870,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                     });
                 }
             });
-            console.log('modelo ', this.modelo);
             espOperation = this.serviceAgenda.save(this.modelo);
             espOperation.subscribe(resultado => {
                 this.plex.toast('success', 'La agenda se guardó correctamente');
