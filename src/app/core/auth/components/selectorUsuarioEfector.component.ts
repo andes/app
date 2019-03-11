@@ -25,6 +25,11 @@ export class SelectorUsuarioEfectorComponent {
      * @memberof SelectorUsuarioEfectorComponent
      */
     @Output() seleccionOrganizacion = new EventEmitter<IOrganizacion>();
+    /**
+     * Indica si la pestaña de selección de usuario es la que se encuentra activa
+     * @memberof SelectorUsuarioEfectorComponent
+     */
+    @Output() pestaniaUsuarioActiva = new EventEmitter<boolean>();
     // @ViewChildren(ArbolPermisosComponent) childsComponents: QueryList<ArbolPermisosComponent>;
     /**
    * Indica el índice de la pestaña que se encuentra activa. Por defecto es la primera
@@ -169,6 +174,7 @@ export class SelectorUsuarioEfectorComponent {
      */
     public cambio(value: number) {
         this.pestaniaActiva = value;
+        this.pestaniaUsuarioActiva.emit(this.pestaniaActiva === 0);
     }
 
     /**

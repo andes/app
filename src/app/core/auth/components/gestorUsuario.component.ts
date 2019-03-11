@@ -35,11 +35,6 @@ export class GestorUsuarioComponent implements OnInit {
     public pestaniaActiva = 0;
 
     /**
-     * Todos los permisos posibles que se pueden asignar a un usuario
-     * @type {*}
-     * @memberof GestorUsuarioComponent
-     */
-    /**
      * Permisos del usuario para la organización seleccionada
      * @type {any[]}
      * @memberof GestorUsuarioComponent
@@ -70,6 +65,14 @@ export class GestorUsuarioComponent implements OnInit {
      * @memberof GestorUsuarioComponent
      */
     public prestacionesTurneables: ITipoPrestacion[] = null;
+
+    /**
+     * Indica si la pestaña de selección de usuario está activa para ocultar el contenido de las pestañas visualizar
+     * y editar permisos
+     * @type {boolean}
+     * @memberof GestorUsuarioComponent
+     */
+    public pestaniaUsuarioActiva = true;
     constructor(private permisosService: PermisosService, private usuarioService: UsuarioService, private plex: Plex, private servicioTipoPrestacion: TipoPrestacionService) { }
     ngOnInit() {
         this.permisos$ = this.permisosService.get();
@@ -165,6 +168,10 @@ export class GestorUsuarioComponent implements OnInit {
         arrayPermiso.push(event.permiso);
         // arrayPermiso.push(event.permiso.child ? event.permiso.key + ':*' : event.permiso.key);
         this.permisosUsuarioOrg = event.checked ? agregarPermiso(this.permisosUsuarioOrg, arrayPermiso) : quitarPermiso(this.permisosUsuarioOrg, arrayPermiso, this.arbolPermisosCompleto);
+    }
+
+    cambioPestaniaMain(event: boolean) {
+        this.pestaniaUsuarioActiva = event;
     }
 }
 

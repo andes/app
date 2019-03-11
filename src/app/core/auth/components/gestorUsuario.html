@@ -1,29 +1,30 @@
 <plex-layout [main]="6">
     <plex-layout-main>
-        <selectorUsuarioEfector (seleccionOrganizacion)="seleccionOrganizacion($event)" (seleccionUsuario)="seleccionUsuario($event)"></selectorUsuarioEfector>
+        <selectorUsuarioEfector (seleccionOrganizacion)="seleccionOrganizacion($event)" (seleccionUsuario)="seleccionUsuario($event)"
+            (pestaniaUsuarioActiva)="cambioPestaniaMain($event)"></selectorUsuarioEfector>
     </plex-layout-main>
     <plex-layout-sidebar>
         <plex-tabs [activeIndex]="pestaniaActiva" (change)="cambio($event)">
 
             <plex-tab label="Visualizar permisos" color="procedimiento">
-                <div class="mt-5 hover" *ngIf="usuarioSeleccionado && organizacionSeleccionada && prestacionesTurneables && permisosUsuarioOrg">
+                <div class="mt-5 hover" *ngIf="!pestaniaUsuarioActiva && usuarioSeleccionado && organizacionSeleccionada && prestacionesTurneables && permisosUsuarioOrg">
                     <permisosVisualizacion [user]="usuarioSeleccionado" [org]="organizacionSeleccionada"
                         [permiteAsignarPerfiles]="false" [arbolPermisosCompleto]="arbolPermisosCompleto"
                         [permisosUsuario]='permisosUsuarioOrg' [prestacionesTurneables]="prestacionesTurneables"></permisosVisualizacion>
                 </div>
-                <div *ngIf="!usuarioSeleccionado || !organizacionSeleccionada" class="mt-5">
+                <div *ngIf="pestaniaUsuarioActiva || !usuarioSeleccionado || !organizacionSeleccionada" class="mt-5">
                     <i class="mdi mdi-emoticon-sad"></i>Seleccione un usuario y organización para visualizar sus
                     permisos</div>
             </plex-tab>
 
             <plex-tab label="Editar permisos">
-                <div *ngIf="usuarioSeleccionado && organizacionSeleccionada" class="row">
+                <div *ngIf="!pestaniaUsuarioActiva && usuarioSeleccionado && organizacionSeleccionada" class="row">
                     <div class="col d-flex justify-content-end">
                         <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
                         <plex-button type="success" label="Guardar" (click)="guardar($event)"></plex-button>
                     </div>
                 </div>
-                <div *ngIf="usuarioSeleccionado && organizacionSeleccionada" class="row">
+                <div *ngIf="!pestaniaUsuarioActiva && usuarioSeleccionado && organizacionSeleccionada" class="row">
                     <div class="col-12 mb-2">
                         <div class="page-title">PERFILES</div>
                     </div>
@@ -34,7 +35,7 @@
                             [prestacionesTurneables]="prestacionesTurneables"></permisosVisualizacion>
                     </div>
                 </div>
-                <div *ngIf="usuarioSeleccionado && organizacionSeleccionada" class="row">
+                <div *ngIf="!pestaniaUsuarioActiva && usuarioSeleccionado && organizacionSeleccionada" class="row">
                     <div class="col-12 mb-2">
                         <div class="page-title mt-5">PERMISOS</div>
                     </div>
@@ -45,7 +46,7 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="!usuarioSeleccionado || !organizacionSeleccionada" class="row">
+                <div *ngIf="pestaniaUsuarioActiva || !usuarioSeleccionado || !organizacionSeleccionada" class="row">
                     <div class="col mt-5">
                         <i class="mdi mdi-emoticon-sad"></i>Seleccione un usuario y organización para editar sus
                         permisos
