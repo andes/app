@@ -229,6 +229,7 @@ import { PrestacionValidacionComponent } from './modules/rup/components//ejecuci
 import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
 import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
+import { VistaPrestacionComponent } from './modules/rup/components/ejecucion/vistaPrestacion.component';
 import { VistaCDAComponent } from './modules/rup/components/ejecucion/vistaCDA.component';
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
@@ -327,6 +328,8 @@ import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiag
 import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
 import { EncabezadoReportesComponent } from './components/reportes/encabezadoReportes.component';
 
+import { TurnosPrestacionesComponent } from './components/buscadorTurnosPrestaciones/turnos-prestaciones.component';
+import { TurnosPrestacionesService } from './components/buscadorTurnosPrestaciones/services/turnos-prestaciones.service';
 
 // Locales
 import { AppComponent } from './app.component';
@@ -557,6 +560,7 @@ registerLocaleData(localeEs, 'es');
         HudsBusquedaComponent,
         BuscadorComponent,
         VistaHudsComponent,
+        VistaPrestacionComponent,
         VistaCDAComponent,
         HudsBusquedaPacienteComponent,
         PacienteBuscarComponent,
@@ -617,7 +621,10 @@ registerLocaleData(localeEs, 'es');
         // Campañas Salud
         CampaniaSaludComponent,
         CampaniaVisualizacionComponent,
-        CampaniaFormComponent
+        CampaniaFormComponent,
+
+        // Buscador de turnos y prestaciones
+        TurnosPrestacionesComponent,
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
@@ -698,7 +705,8 @@ registerLocaleData(localeEs, 'es');
         SeleccionBinariaComponent,
         CampaniaSaludService,
         SeleccionBinariaComponent,
-        PacienteCreateUpdateComponent
+        PacienteCreateUpdateComponent,
+        TurnosPrestacionesService
     ]
 })
 
