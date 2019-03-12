@@ -131,6 +131,20 @@ export class PasesListadoInternacionComponent implements OnInit {
                 }
                 let paciente = this.cama.ultimoEstado.paciente;
                 let idInternacion = this.cama.ultimoEstado.idInternacion;
+                if (!paciente) {
+                    let f = this.internacionService.combinarFechas(this.fecha, this.hora);
+
+                    this.prestacionesService.getPasesInternacion(this.prestacion.id).subscribe(lista => {
+                        let listaFiltrada = lista.filter(c => c.estados.fecha < f);
+                        // this.cama = listaFiltrada[listaFiltrada.length - 1];
+                        this.CamaService.getCama(listaFiltrada[listaFiltrada.length - 1]._id).subscribe(cama => {
+                            let camaOcupada = this.cama.estados.find(x => x.fecha < f && x.estado === 'ocupada');
+
+                            paciente = camaOcupada.paciente;
+                            idInternacion = camaOcupada.idInternacion;
+                        });
+                    });
+                }
                 if (this.opcionDesocupar === 'movimiento' || this.opcionDesocupar === 'pase') {
                     let nuevoEstado = this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible';
                     // Primero desocupamos la cama donde esta el paciente actualmente
