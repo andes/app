@@ -119,6 +119,16 @@ enum RespuestasGestionValoresCriticos {
     'Máxima emergencia',
     'Corrección de resultado'
 }
+export enum Censo {
+    'Censable',
+    'No Censable'
+}
+
+export enum estadosInternacion {
+    'ejecucion',
+    'validada'
+}
+
 
 export function titleCase(str) {
     return str.toLowerCase().split(' ').map(function (word) {
@@ -143,6 +153,18 @@ export function getObjSexos() {
     let arrSexo = Object.keys(Sexo);
     arrSexo = arrSexo.slice(arrSexo.length / 2);
     let salida = arrSexo.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
+
+export function getObjCenso() {
+    let arrCenso = Object.keys(Censo);
+    arrCenso = arrCenso.slice(arrCenso.length / 2);
+    let salida = arrCenso.map(elem => {
         return {
             'id': elem,
             'nombre': titleCase(elem)
@@ -354,3 +376,16 @@ export function getRespuestasGestionValoresCriticos() {
     });
     return salida;
 }
+
+export function getObjEstadoInternacion() {
+    let array = Object.keys(estadosInternacion);
+    array = array.slice(array.length / 2);
+    let salida = array.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
+

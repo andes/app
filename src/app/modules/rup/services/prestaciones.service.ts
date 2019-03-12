@@ -746,9 +746,9 @@ export class PrestacionesService {
             if (_profesional) {
                 profesional = {
                     id: _profesional.id,
-                    nombre: this.auth.usuario.nombre,
-                    apellido: this.auth.usuario.apellido,
-                    documento: this.auth.usuario.documento
+                    nombre: _profesional.nombre,
+                    apellido: _profesional.apellido,
+                    documento: _profesional.documento
                 };
             } else {
                 profesional = {
@@ -763,8 +763,8 @@ export class PrestacionesService {
                 // profesional logueado
                 profesional:
                 {
-                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    id: profesional.id, nombre: profesional.nombre,
+                    apellido: profesional.apellido, documento: profesional.documento
                 },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
@@ -1086,6 +1086,17 @@ export class PrestacionesService {
         return this.server.get('/modules/rup/internaciones/ultima/' + (paciente.id ? paciente.id : paciente._id), opt);
     }
 
+    /**
+* Devuelve el listado de internacion por organizacion
+*
+
+* @returns  {array} Listado Organizacion
+* @memberof PrestacionesService
+*/
+    public listadoInternacion(filtros?) {
+        return this.server.get('/modules/rup/internaciones/listadoInternacion/', { params: filtros, showError: true });
+    }
+
 
     /**
    * Devuelve el listado de estados de la/s camas por las que paso la internación
@@ -1107,7 +1118,8 @@ export class PrestacionesService {
      *
      * @memberof PrestacionesService
      */
-    getInternacionesPendientes(options: any = {}): Observable<IPrestacion[]> {
-        return this.server.get(this.prestacionesUrl + '/sincama', options);
+    getInternacionesPendientes(params: any = {}): Observable<IPrestacion[]> {
+        return this.server.get(this.prestacionesUrl + '/sincama', { params: params, showError: true });
     }
+
 }
