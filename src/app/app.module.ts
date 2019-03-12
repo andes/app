@@ -472,7 +472,8 @@ let RUPComponentsArray = [
     CamaDesbloquearComponent,
     CamaPrepararComponent,
     OcuparCamaComponent,
-    EjecucionInternacionComponent
+    EjecucionInternacionComponent,
+    EgresoInternacionComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -483,6 +484,7 @@ import { VistaRegistroComponent } from './modules/rup/components/huds/vistaRegis
 import { VistaProcedimientoComponent } from './modules/rup/components/huds/vistaProcedimiento';
 import { VistaContextoPrestacionComponent } from './modules/rup/components/huds/vistaContextoPrestacion';
 import { VistaPrestacionComponent } from './modules/rup/components/huds/vistaPrestacion';
+import { PasesListadoInternacionComponent } from './apps/rup/internacion/components/pasesListadoInternacion.component';
 
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
 import { HUDSService } from './modules/rup/services/huds.service';
@@ -571,10 +573,10 @@ registerLocaleData(localeEs, 'es');
         MapaDeCamasComponent,
         CamaComponent,
         ListadoInternacionComponent,
+        PasesListadoInternacionComponent,
         PuntoInicioInternacionComponent,
         ChartComponent,
         OrganizacionSectoresComponent,
-        EgresoInternacionComponent,
         ResumenInternacionComponent,
         ListaEsperaInternacionComponent,
         VistaRegistroComponent,

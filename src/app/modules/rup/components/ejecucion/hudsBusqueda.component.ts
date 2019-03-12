@@ -218,6 +218,9 @@ export class HudsBusquedaComponent implements OnInit {
                 break;
             case 'rup':
                 registro = registro.data;
+                if (registro.prestacion.conceptId === '32485007') {
+                    tipo = 'internacion';
+                }
                 if (registro.ejecucion.registros) {
                     registro.ejecucion.registros.forEach(reg => {
                         if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {

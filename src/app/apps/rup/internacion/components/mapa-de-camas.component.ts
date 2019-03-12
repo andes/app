@@ -100,6 +100,7 @@ export class MapaDeCamasComponent implements OnInit {
     public pacienteActivo: IPaciente;
     public historial: any[] = [];
     public inicioBusqueda = false;
+    public createTemporal = false;
     constructor(
         public servicioPrestacion: PrestacionesService,
         private auth: Auth,
@@ -449,7 +450,9 @@ export class MapaDeCamasComponent implements OnInit {
 
         }
         this.fecha = new Date();
-        this.refresh();
+        if (!dtoAccion.otroPaciente) {
+            this.refresh();
+        }
         // this.countFiltros();
 
 
@@ -519,7 +522,7 @@ export class MapaDeCamasComponent implements OnInit {
             this.historicoMode = false;
             this.fecha = new Date();
         }
-        this.showEstadosMet();
+        // this.showEstadosMet();
         this.refresh();
     }
 
@@ -745,18 +748,32 @@ export class MapaDeCamasComponent implements OnInit {
         this.historial = [];
     }
 
-    showEstadosMet() {
-        if (moment(this.fecha).format('DD/MM/YYYY') !== moment(this.hoy).format('DD/MM/YYYY')) {
-            this.estadosMode = false;
-        } else {
-            this.estadosMode = true;
-        }
-    }
+    // showEstadosMet() {
+    //     if (moment(this.fecha).format('DD/MM/YYYY') !== moment(this.hoy).format('DD/MM/YYYY')) {
+    //         this.estadosMode = false;
+    //     } else {
+    //         this.estadosMode = true;
+    //     }
+    // }
 
     checkOxigeno(cama) {
         return cama.equipamiento.find(e => e.conceptId === '261746005') ? true : false;
     }
     volver() {
         this.router.navigate(['/internacion/inicio']);
+    }
+
+
+    pacienteTemporal() {
+        this.createTemporal = true;
+    }
+
+    afterPacienteTemp(paciente) {
+        this.pacienteSelected = paciente;
+        this.createTemporal = false;
+        this.accion = null;
+        this.showIngreso = true;
+        this.editarIngreso = false;
+        this.prestacionPorInternacion = null; // BORRAR
     }
 }
