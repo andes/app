@@ -1,0 +1,11 @@
+<plex-button type="primary float-right" label="agregar indicacion" (click)="agregarRegistro()"></plex-button>
+<div class="row">
+    <ng-container *ngFor="let registro of registro.registros; let i = index">
+        <div *ngIf="elementoRUP.requeridos[0].elementoRUP" class="col-{{ elementoRUP.requeridos[0].style.columns }} mr-{{ elementoRUP.requeridos[0].style?.offset ? elementoRUP.requeridos[0].style.offset : '0' }}">
+            <rup [elementoRUP]=" elementoRUP.requeridos[0].elementoRUP" [paciente]="paciente" [params]="elementoRUP.requeridos[0].params" [prestacion]="prestacion"
+                [registro]="registro" [soloValores]="soloValores" (change)="emitChange($event)"
+                (ejecutarConcepto)="emitEjecutarConcepto(prestacion)">
+            </rup>
+        </div>
+    </ng-container>
+</div>

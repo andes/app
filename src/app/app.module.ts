@@ -298,6 +298,7 @@ import { SeleccionBinariaComponent } from './modules/rup/components/elementos/se
 import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico.component';
 import { MoleculaBaseComponent } from './modules/rup/components/elementos/moleculaBase.component';
 import { SeccionesAccordionComponent } from './modules/rup/components/elementos/seccionesAccordion/seccionesAccordion.component';
+import { PlanIndicacionComponent } from './modules/rup/components/elementos/internacion/planDeIndicacion/planDeIndicacion.component';
 
 import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria.component';
 
@@ -473,13 +474,15 @@ let RUPComponentsArray = [
     CamaPrepararComponent,
     OcuparCamaComponent,
     EjecucionInternacionComponent,
-    SeccionesAccordionComponent
+    SeccionesAccordionComponent,
+    PlanIndicacionComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { ChartComponent } from './modules/rup/components/elementos/chart.component';
 import { UploadFileComponent } from './shared/components/upload-file.component';
 import { CodificacionService } from './modules/rup/services/codificacion.service';
+
 
 
 
