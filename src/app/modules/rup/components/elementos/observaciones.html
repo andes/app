@@ -1,14 +1,11 @@
 <form #form="ngForm">
     <ng-container *ngIf="!soloValores">
-        <label for="observaciones" *ngIf="!params">
-            Observación
-        </label>
-        <plex-text [html]="true" [(ngModel)]="registro.valor" id="observaciones" name="observaciones" placeholder="Ingrese una evolución"
+        <plex-text [label]="params?.title ? params.title : 'Observaciones'" [html]="!params?.html ? params?.html : true" [(ngModel)]="registro.valor" id="observaciones" name="observaciones" placeholder="Ingrese una evolución"
             (change)="emitChange()" [required]="params?.required"></plex-text>
     </ng-container>
     <p *ngIf="soloValores" class="readonly">
         <label for="observaciones" *ngIf="!params">
-            Observación
+            {{params.title ? params.title : 'Observación'}}
         </label>
         <ng-container>
             <span [innerHTML]="registro.valor"></span>
