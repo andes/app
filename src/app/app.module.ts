@@ -85,6 +85,8 @@ import { SmsService } from './services/turnos/sms.service';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
+import { ObraSocialCacheService } from './services/obraSocialCache.service';
+
 import { ProfeService } from './services/profe.service';
 import { ReglasComponent } from './components/top/reglas/reglas.component';
 import { VisualizacionReglasComponent } from './components/top/reglas/visualizacionReglas.component';
@@ -654,6 +656,7 @@ registerLocaleData(localeEs, 'es');
         AdjuntosService,
         TipoPrestacionService,
         ObraSocialService,
+        ObraSocialCacheService,
         ProfeService,
         PeriodoPadronesPucoService,
         PeriodoPadronesProfeService,

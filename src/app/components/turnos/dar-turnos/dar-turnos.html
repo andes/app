@@ -320,7 +320,13 @@
                             </div>
                             <div class="col">
                                 <ng-container *ngIf="!desplegarOS && obraSocialPaciente">
-                                    <label>Obra Social </label>
+                                    <label
+                                        *ngIf="obraSocialPaciente && obraSocialPaciente.financiador && obraSocialPaciente.financiador!=='SUMAR'">Obra
+                                        Social </label>
+                                    <label
+                                        *ngIf="obraSocialPaciente && obraSocialPaciente.financiador && obraSocialPaciente.financiador==='SUMAR'">Financiador
+                                    </label>
+
                                     <div>{{obraSocialPaciente.financiador}}</div>
                                 </ng-container>
                                 <plex-select *ngIf="desplegarOS" label="Obra Social" [(ngModel)]="obraSocialPaciente"
@@ -330,8 +336,8 @@
                         </div>
                         <div class="row" *ngIf="desplegarOS && obraSocialPaciente">
                             <div class="col">
-                                <plex-text label="Número de Afiliado" name="numeroAfiliado"
-                                    [(ngModel)]="numeroAfiliado"></plex-text>
+                                <plex-text label="Número de Afiliado" name="obraSocialPaciente.numeroAfiliado"
+                                    [(ngModel)]="obraSocialPaciente.numeroAfiliado"></plex-text>
                             </div>
                         </div>
                         <div class="row">
