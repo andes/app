@@ -17,10 +17,6 @@ export class HudsBusquedaComponent implements OnInit {
     laboratoriosFS: any;
     laboratorios: any = [];
     vacunas: any = [];
-    colapsadoOtros = true;
-    colapsadoActivos = true;
-    colapsadoCronicos = true;
-    colapsado = true;
     ordenDesc = true;
     procedimientos: any = [];
     // Copia de los procedimientos para el buscador.
@@ -217,10 +213,10 @@ export class HudsBusquedaComponent implements OnInit {
                 }
                 break;
             case 'rup':
-                registro = registro.data;
                 if (registro.prestacion.conceptId === '32485007') {
                     tipo = 'internacion';
                 }
+                registro = registro.data;
                 if (registro.ejecucion.registros) {
                     registro.ejecucion.registros.forEach(reg => {
                         if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {
@@ -356,7 +352,6 @@ export class HudsBusquedaComponent implements OnInit {
     }
 
     filtroBuscador(key: any) {
-        this.colapsado = true;
         this.filtroActual = key;
     }
 

@@ -113,7 +113,7 @@
     <div class="col">
         <!-- Vista: TODOS -->
         <ng-container *ngIf="filtroActual === 'todos'">
-                <ul *ngIf="todos && colapsado" class="hover conceptos list-unstyled">
+                <ul *ngIf="todos" class="hover conceptos list-unstyled">
                         <ng-container *ngFor="let registro of todos">
                             <li>
                                 <div class="rup-card mini {{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
@@ -160,7 +160,7 @@
 
         <!-- Vista: HALLAZGOS -->
         <ng-container *ngIf="filtroActual === 'hallazgo'">
-                <ul *ngIf="hallazgos && colapsado" class="hover conceptos list-unstyled">
+                <ul *ngIf="hallazgos" class="hover conceptos list-unstyled">
                     <ng-container *ngFor="let registro of hallazgos">
                         <li>
                             <div class="rup-card mini hallazgo" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
@@ -206,7 +206,7 @@
             
         <!-- Vista: HALLAZGOS -->
         <ng-container *ngIf="filtroActual === 'trastorno'">
-                <ul *ngIf="trastornos && colapsado" class="hover conceptos list-unstyled">
+                <ul *ngIf="trastornos" class="hover conceptos list-unstyled">
                     <ng-container *ngFor="let registro of trastornos">
                         <li>
                             <div class="rup-card mini trastorno" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
@@ -261,7 +261,7 @@
 
         <!-- Vista: PROCEDIMIENTOS -->
         <ng-container *ngIf="filtroActual === 'procedimiento'">
-            <ul *ngIf="procedimientos && colapsado" class="hover conceptos list-unstyled">
+            <ul *ngIf="procedimientos" class="hover conceptos list-unstyled">
                 <ng-container *ngFor="let registro of procedimientos; let iPrestacion = index">
                     <li>
                         <div class="rup-card mini procedimiento" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
@@ -324,7 +324,7 @@
                 </div>
             </ng-container>
 
-            <ul *ngIf="prestaciones && colapsado" class="hover conceptos list-unstyled">
+            <ul *ngIf="prestaciones" class="hover conceptos list-unstyled">
                 <ng-container *ngFor="let prestacion of prestaciones">
                     <li>
                         <div class="rup-card mini solicitud" [ngClass]="{'active': huds.isOpen(prestacion.data, prestacion.tipo)}"
@@ -349,7 +349,7 @@
                                                                 <br>
                                                                 <small>
                                                                     Profesional:
-                                                                    {{ prestacion.profesional | profesional }}
+                                                                    {{ prestacion.profesional }}
                                                                 </small>
                                                             </div>
                                                         </div>
@@ -375,7 +375,7 @@
 
         <!-- Vista: PRODUCTOS -->
         <ng-container *ngIf="filtroActual === 'producto'">
-            <ul *ngIf="productos && colapsado" class="conceptos hover list-unstyled">
+            <ul *ngIf="productos" class="conceptos hover list-unstyled">
                 <ng-container *ngFor="let registro of productos; let iCronico = index">
                     <li>
                         <div class="rup-card mini producto" [ngClass]="{'active': huds.isOpen(registro, 'concepto')}">
@@ -433,7 +433,7 @@
 
         <!-- Vista: LABORATORIOS -->
         <ng-container *ngIf="filtroActual === 'laboratorios'">
-            <div *ngIf="laboratorios && laboratorios.length > 0 && colapsado" class="conceptos hover list-unstyled">
+            <div *ngIf="laboratorios && laboratorios.length > 0" class="conceptos hover list-unstyled">
                 <ul class="conceptos list-unstyled">
                     <ng-container *ngFor="let laboratorio of laboratorios">
                         <li>
@@ -502,7 +502,7 @@
                 </div>
             </div> -->
 
-            <div *ngIf="vacunas && vacunas.length > 0 && colapsado" class="conceptos hover list-unstyled">
+            <div *ngIf="vacunas && vacunas.length > 0" class="conceptos hover list-unstyled">
 
                 <ul class="conceptos list-unstyled">
                     <ng-container *ngFor="let unaVacuna of vacunas; let iVacuna = index">
