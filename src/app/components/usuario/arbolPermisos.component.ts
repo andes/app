@@ -13,14 +13,14 @@ let shiroTrie = require('shiro-trie');
 export class ArbolPermisosComponent implements OnChanges, AfterViewInit {
 
     private shiro = shiroTrie.new();
-    private state = false;
-    private all = false;
+    public state = false;
+    public all;
     /**
      * ITipoPrestaciones[] o IOrganizacion[] seleccionadas
      * @memberof ArbolPermisosComponent
      */
     public seleccionados = [];
-    private allModule = false;
+    public allModule = false;
     /**
      * Permisos del usuario antes de comenzar a editarlos
      * @private
