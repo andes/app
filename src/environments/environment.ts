@@ -8,7 +8,7 @@ let _package = require('../../package.json');
 export const environment = {
   production: false,
   environmentName: 'development',
-  API: 'https://test.andes.gob.ar/api',
+  API: 'https://app.andes.gob.ar/api',
   APIStatusCheck: false,
   version: _package.version
 };

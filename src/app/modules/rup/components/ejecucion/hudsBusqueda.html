@@ -308,20 +308,17 @@
             <ng-container *ngIf="showFiltros">
                 <div class="row">
                     <div class="col-12">
-                        <plex-select *ngIf="tiposPrestacion" [(ngModel)]="prestacionSeleccionada" label="Prestación"
-                            [data]="tiposPrestacion" labelField="term" (change)="filtrar()">
+                        <plex-select [(ngModel)]="prestacionSeleccionada" label="Prestación" [data]="tiposPrestacion" idField="conceptId" labelField="term" (change)="filtrar()">
                         </plex-select>
                     </div>
                 </div>
                 <div class="row pb-2">
                     <div class="col-6">
-                        <plex-datetime type="date" [(ngModel)]="fechaInicio" (change)="filtrar()" name="fechaInicio"
-                            label="Fecha Desde">
+                        <plex-datetime type="date" [(ngModel)]="fechaInicio" (change)="filtrar()" name="fechaInicio" label="Fecha Desde">
                         </plex-datetime>
                     </div>
                     <div class="col-6">
-                        <plex-datetime type="date" [(ngModel)]="fechaFin" (change)="filtrar()" name="fechaFin"
-                            label="Fecha Hasta">
+                        <plex-datetime type="date" [(ngModel)]="fechaFin" (change)="filtrar()" name="fechaFin" label="Fecha Hasta">
                         </plex-datetime>
                     </div>
                 </div>
@@ -345,8 +342,10 @@
                                                     <div class="row p-0 m-0">
                                                         <div class="col-10 p-0 m-0">
                                                             <div class="sugerido">
-                                                                <small>Fecha:
-                                                                    {{ prestacion.fecha | fecha : 'utc' }}</small>
+                                                                <small>
+                                                                    Fecha:
+                                                                    {{ prestacion.fecha | fecha : 'utc' }}
+                                                                </small>
                                                                 <br>
                                                                 <small>
                                                                     Profesional:
@@ -360,8 +359,8 @@
                                         </div>
                                         <div class="col-2 p-0 m-0">
                                             <div class="p-0 pt-1 pr-1 float-right">
-                                                <small
-                                                    class="badge badge-{{prestacion.estado}} text-default p-1">{{prestacion.estado}}
+                                                <small class="badge badge-{{prestacion.estado}} text-default p-1">
+                                                    {{prestacion.estado}}
                                                 </small>
                                             </div>
                                         </div>

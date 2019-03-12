@@ -5,11 +5,9 @@
             <!-- Panel Principal -->
             <div class="col-8">
                 <plex-box>
-                    <plex-tabs [hidden]="showDatosSolicitud" [activeIndex]="huds.activeTab" (close)="onCloseTab($event)">
+                    <plex-tabs [hidden]="showDatosSolicitud" [activeIndex]="activeIndex" (close)="onCloseTab($event)">
 
-                        <plex-tab
-                            [label]="(prestacion.ejecucion.registros && prestacion.ejecucion.registros.length) ? 'Registros de esta consulta (' + prestacion.ejecucion.registros.length + ')' : 'Registros de esta consulta '">
-
+                        <plex-tab label="Registros de esta consulta">
                             <div class="row"
                                 *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length">
                                 <div class="col-9">
@@ -25,9 +23,6 @@
                                         (click)="colapsarPrestaciones(); collapse = true;" class="btn btn-primary">
                                         <i class="mdi mdi-chevron-left" [ngClass]="{'spin' : !collapse}"></i>
                                     </button>
-                                    <!-- <a href="javascript:void(0);" title="Quitar todos los registros" (click)="eliminaTodosLosRegistros()" class="btn btn-danger desvincular float-right">
-                                                    <i class="mdi mdi-delete"></i>
-                                                </a> -->
                                 </div>
                             </div>
 
@@ -280,7 +275,7 @@
                             <rup-resumenPaciente-dinamico *ngIf="paciente.edad > 6" [paciente]="paciente">
                             </rup-resumenPaciente-dinamico>
                         </plex-tab>
-                        <ng-container *ngFor="let registro of huds.registrosHUDS | async">
+                        <ng-container *ngFor="let registro of registrosHUDS">
                             <plex-tab [allowClose]="true" [label]="registro.data.concepto.term"
                                 [class]="registro.data.class" [color]="registro.data.class"
                                 *ngIf="registro.tipo === 'concepto'">
@@ -298,12 +293,10 @@
                             </plex-tab>
                             <plex-tab [allowClose]="true" [label]="registro.data.solicitud.tipoPrestacion.term"
                                 [class]="registro.data.class" color="solicitud" *ngIf="registro.tipo === 'rup'">
-                                <vista-prestacion [registro]="registro.data">
-                                </vista-prestacion>
+                                <vista-prestacion [prestacion]="registro.data" [paciente]="paciente"></vista-prestacion>
                             </plex-tab>
 
-                            <plex-tab *ngIf="registro.tipo === 'cda'" [allowClose]="true" [label]="registro.data.prestacion.snomed.term"
-                                [class]="registro.data.class">
+                            <plex-tab *ngIf="registro.tipo === 'cda'" [allowClose]="true" [label]="registro.data.prestacion.snomed.term" [class]="registro.data.class">
                                 <vista-cda [registro]="registro"></vista-cda>
                             </plex-tab>
                         </ng-container> 
@@ -326,7 +319,6 @@
                             </rup-buscador>
                         </plex-tab>
                         <plex-tab label="Historia de Salud" (click)="panelIndex = 1">
-                            <!-- HUDS [hudsBusqueda.component.ts] -->
                             <rup-hudsBusqueda [paciente]="prestacion?.paciente"
                                 [_dragScope]="'registros-rup'" (evtData)="ejecutarConceptoHuds($event)"
                                 (_onDragStart)="arrastrandoConcepto(true)"
@@ -360,11 +352,9 @@
                 </div>
                 <div *ngIf="confirmarEliminar && scopeEliminar == 'footer'">
                     ¿Seguro que quiere quitar {{conceptoAEliminar.term}} de la consulta?
-
                     <div>
                         <button class="btn btn-danger p-1" (click)="confirmarEliminar = false;">Cancelar</button> |
                         <button class="btn btn-success p-1" (click)="eliminarRegistro()">Quitar</button>
-
                     </div>
                 </div>
             </div>

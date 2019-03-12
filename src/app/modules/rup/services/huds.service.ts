@@ -25,13 +25,13 @@ export class HUDSService {
      */
     private push(elemento: ElementoHUDS) {
         this._registrosHUDS = [...this._registrosHUDS, elemento];
-        this._obsRegistros.next(this._registrosHUDS);
+        this._obsRegistros.next([...this._registrosHUDS]);
         this.activeTab = this._registrosHUDS.length;
     }
 
     public remove(index) {
         this._registrosHUDS.splice(index, 1);
-        this._obsRegistros.next(this._registrosHUDS);
+        this._obsRegistros.next([...this._registrosHUDS]);
 
     }
 

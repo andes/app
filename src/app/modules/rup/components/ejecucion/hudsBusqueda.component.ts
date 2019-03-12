@@ -62,11 +62,18 @@ export class HudsBusquedaComponent implements OnInit {
     /**
      * Listado de prestaciones validadas
      */
-    public prestaciones: any = [];
+    private _prestaciones: any = [];
+    private prestacionesCopia: any = [];
+    get prestaciones () {
+        return this._prestaciones;
+    }
+    set prestaciones (value) {
+        this._prestaciones = value.sort((a, b) => b.fecha - a.fecha);
+        this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
+    }
     /**
      * Copia de las prestaciones para aplicar los filtros
      */
-    public prestacionesCopia: any = [];
     /**
      * Listado de todos los hallazgos
      */
@@ -245,7 +252,7 @@ export class HudsBusquedaComponent implements OnInit {
                     estado: lastState.tipo
                 };
             });
-            this.tiposPrestacion = this.prestaciones.map(p => p.prestacion);
+            // this.tiposPrestacion = this.prestaciones.map(p => p.prestacion);
             this.prestacionesCopia = this.prestaciones;
             this.buscarCDAPacientes();
         });
@@ -318,9 +325,9 @@ export class HudsBusquedaComponent implements OnInit {
             });
 
             this.prestaciones = [...this.prestaciones, ...filtro];
-
-            // vamos a ordenar la prestaciones por fecha
-            this.prestaciones = this.prestaciones.sort((a, b) => b.fecha - a.fecha);
+            this.prestacionesCopia = this.prestaciones;
+            // this.tiposPrestacion = this.prestaciones.map(p => p.prestacion);
+            // this.prestaciones = this.prestaciones.sort((a, b) => b.fecha - a.fecha);
         });
     }
 

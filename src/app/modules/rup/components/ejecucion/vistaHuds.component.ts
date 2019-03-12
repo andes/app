@@ -9,9 +9,8 @@ import { LogService } from '../../../../services/log.service';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
-import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { HUDSService } from '../../services/huds.service';
-
+import { Location } from '@angular/common';
 @Component({
     selector: 'rup-vistaHuds',
     templateUrl: 'vistaHuds.html',
@@ -22,13 +21,12 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
 
     @HostBinding('class.plex-layout') layout = true;
 
-    @Input() paciente: IPaciente;
     @Output() cambiarPaciente = new EventEmitter<boolean>();
+    paciente: IPaciente = null;
+    public activeIndex: Number = 0;
 
-    // Defaults de Tabs panel derecho
-    public activeTab = 0;
     public mostrarCambiaPaciente = false;
-
+    public registros = [];
     // boton de volver cuando la ejecucion tiene motivo de internacion.
     // Por defecto vuelve al mapa de camas
     public btnVolver = 'VOLVER';
@@ -40,6 +38,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         public auth: Auth,
         private router: Router,
         private route: ActivatedRoute,
+        private location: Location,
         private servicioPaciente: PacienteService,
         private logService: LogService,
         private servicioPrestacion: PrestacionesService,
@@ -53,7 +52,6 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     *
     */
     ngOnInit() {
-
         this.plex.updateTitle([{
             route: '/',
             name: 'ANDES'
@@ -61,6 +59,12 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
             name: 'Historia Única De Salud'
         }]);
 
+        this.huds.registrosHUDS.subscribe((datos) => {
+            if (this.registros.length < datos.length) {
+                this.activeIndex = datos.length + 1;
+            }
+            this.registros = [...datos];
+        });
         // consultamos desde que pagina se ingreso para poder volver a la misma
         this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
             if (resp) {
@@ -79,7 +83,6 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         if (!this.auth.profesional && this.auth.getPermissions('huds:?').length > 0) {
             this.mostrarCambiaPaciente = true;
         }
-
 
         if (!this.paciente) {
             this.route.params.subscribe(params => {
@@ -117,7 +120,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     }
 
     public onCloseTab(index) {
-        this.huds.remove(index);
+        this.huds.remove(index - 1);
     }
 
     /**
@@ -125,9 +128,8 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     * Si no recibe ninguna por defecto setea RUP (el punto de inicio de RUP)
     * @param ruta
     */
-    volver(ruta = null) {
-        ruta = ruta ? ruta : 'rup';
-        this.router.navigate([ruta]);
+    volver() {
+        this.location.back();
     }
 
     evtCambiaPaciente() {

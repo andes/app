@@ -31,7 +31,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     @HostBinding('class.plex-layout') layout = true;
     @ViewChildren(RUPComponent) rupElements: QueryList<any>;
 
-    public activeTab = 0;
     public obraSocialPaciente;
 
     // prestacion actual en ejecucion
@@ -81,6 +80,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     public masFrecuentes: any[] = [];
 
     // Defaults de Tabs panel derecho
+    public activeIndex = 0;
     public panelIndex = 0;
 
     public prestacionValida = true;
@@ -108,6 +108,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     public rutaVolver;
 
     public flagValid = true;
+
+    public registrosHUDS = [];
 
     constructor(
         private obraSocialService: ObraSocialService,
@@ -140,6 +142,13 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                 this.btnVolver = resp.nombre;
                 this.rutaVolver = resp.ruta;
             }
+        });
+
+        this.huds.registrosHUDS.subscribe((datos) => {
+            if (this.registrosHUDS.length < datos.length) {
+                this.activeIndex = datos.length + 2;
+            }
+            this.registrosHUDS = [...datos];
         });
 
         this.servicioPrestacion.clearRefSetData();
@@ -246,7 +255,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
      */
 
     public onCloseTab(index) {
-        this.huds.remove(index);
+        this.huds.remove(index - 2);
     }
 
     /**
