@@ -31,7 +31,7 @@
     <ng-container *ngIf="results">
         <ng-container *ngIf="busquedaActual !== 'busquedaGuiada'">
             <div class="container-filtros">
-                <ul class="botones-filtros" [plexWizard]="0">
+                <ul class="botones-filtros">
                     <li>
                         <small *ngIf="getCantidadResultados('todos')" class="badge badge-todos ml-1 float-right"
                             [ngClass]="{'active': filtroActual === 'todos'}">{{ getCantidadResultados('todos')}}</small>
@@ -51,7 +51,7 @@
                         <button (click)="filtroBuscadorSnomed('hallazgos')"
                             [ngClass]="{'active': filtroActual === 'hallazgos'}"
                             [disabled]="!wizardActivo && getCantidadResultados('hallazgos') === 0"
-                            class="btn btn-block btn-hallazgo" [plexWizard]="1">
+                            class="btn btn-block btn-hallazgo">
                             <i class="icon icon-rup-semantic-hallazgo"></i>
                             HALLAZGOS
                         </button>
@@ -66,7 +66,7 @@
                         <button (click)="filtroBuscadorSnomed('trastornos')"
                             [ngClass]="{'active': filtroActual === 'trastornos'}"
                             [disabled]="!wizardActivo && getCantidadResultados('trastornos') === 0"
-                            class="btn btn-block btn-trastorno" [plexWizard]="2">
+                            class="btn btn-block btn-trastorno">
                             <i class="icon icon-rup-semantic-trastorno"></i>
                             TRASTORNOS
                         </button>
@@ -81,7 +81,7 @@
                         <button (click)="filtroBuscadorSnomed('procedimientos')"
                             [ngClass]="{'active': filtroActual === 'procedimientos'}"
                             [disabled]="!wizardActivo && getCantidadResultados('procedimientos') === 0"
-                            class="btn btn-block btn-procedimiento" [plexWizard]="3">
+                            class="btn btn-block btn-procedimiento">
                             <i class="icon icon-rup-semantic-procedimiento"></i>
                             PROCEDIM.
                         </button>
@@ -92,7 +92,7 @@
 
                         <button (click)="filtroBuscadorSnomed('planes')" class="btn btn-block btn-solicitud"
                             [ngClass]="{'active': filtroActual === 'planes'}"
-                            [disabled]="!wizardActivo && getCantidadResultados('planes') === 0" [plexWizard]="4">
+                            [disabled]="!wizardActivo && getCantidadResultados('planes') === 0">
                             <i class="icon icon-rup-semantic-plan"></i>
                             SOLICITUDES
                         </button>
@@ -106,7 +106,7 @@
                         <button (click)="filtroBuscadorSnomed('productos')"
                             [ngClass]="{'active': filtroActual === 'productos'}"
                             [disabled]="!wizardActivo && getCantidadResultados('productos') === 0"
-                            class="btn btn-block btn-producto" [plexWizard]="5">
+                            class="btn btn-block btn-producto">
                             <i class="icon icon-rup-semantic-producto"></i>
                             INSUMOS
                         </button>

@@ -1,6 +1,6 @@
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, SimpleChanges, OnChanges, Renderer2 } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, SimpleChanges, OnChanges, Renderer2 } from '@angular/core';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { FrecuentesProfesionalService } from '../../services/frecuentesProfesional.service';
 import { Auth } from '@andes/auth';
@@ -15,13 +15,8 @@ import { SnomedBuscarService } from '../../../../components/snomed/snomed-buscar
     styleUrls: ['buscador.scss']
 })
 
-export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
-    private wizardActivo = false; // Se usa para evitar que los botones aparezcan deshabilitados
-
+export class BuscadorComponent implements OnInit, OnChanges {
     autofocus: any;
-
-    // @Input() elementoRUPprestacion;
-    // @Input() resultados;
     @Input() _draggable: Boolean = false; // TODO Ver si lo sacamos.
     // Son los mas frecuentes del elemento rup.(tipo de prestación)
     @Input() frecuentesTipoPrestacion;
@@ -218,35 +213,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             'tipoPrestacion': this.prestacion.solicitud.tipoPrestacion.conceptId
         };
         return this.frecuentesProfesionalService.getXPrestacion(queryFTP).toPromise();
-    }
-
-    ngAfterViewInit() {
-        // Espera un segundo para que el padre termine de acomodar los contenidos
-        setTimeout(() => {
-            this.wizardActivo = true;
-            let promise = this.plex.wizard({
-                id: 'rup:buscador:botones',
-                updatedOn: moment('2018-09-01').toDate(),
-                steps: [
-                    { title: 'Nuevo buscador', content: 'Presentamos una forma más fácil de buscar los conceptos para registrar en la consulta' },
-                    { title: 'Hallazgos', content: this.tooltips.hallazgos },
-                    { title: 'Trastornos', content: this.tooltips.trastornos },
-                    { title: 'Procedimientos', content: this.tooltips.procedimientos },
-                    { title: 'Solicitudes', content: this.tooltips.planes },
-                    { title: 'Insumos', content: this.tooltips.productos },
-                ],
-                forceShow: false,
-                fullScreen: false,
-                showNumbers: false
-            });
-
-            // Devuelve una promise sólo si se mostró el wizard
-            if (promise) {
-                promise.then(() => this.wizardActivo = false);
-            } else {
-                this.wizardActivo = false;
-            }
-        }, 1000);
     }
 
     /**
