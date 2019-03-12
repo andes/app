@@ -21,6 +21,7 @@
                             <div class="col-4">
                                 <plex-select *ngIf="!_solicitudPrestacion?.solicitud" [(ngModel)]="opciones.profesional"
                                     (getData)="loadProfesionales($event)" placeholder="Equipo de Salud"
+
                                     labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
                                 </plex-select>
                                 <plex-select *ngIf="_solicitudPrestacion?.solicitud?.profesional && autocitado"
@@ -88,11 +89,13 @@
                             <!-- Botones para ver más agendas -->
                             <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-left" class="text-lg"
                                 title="Agenda anterior" (click)="verAgenda('izq')"></plex-button>
-                            <!-- <span>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}}</span> -->
                             <span>{{ agenda.horaInicio | date: 'EEE d MMM' }}
                                 <div class="badge badge-{{ estadosAgenda[agenda.estado].class }}">
                                     {{ estadosAgenda[agenda.estado].nombre }}</div>
                             </span>
+                            <div *ngIf="estadoT==='dinamica'">
+                                {{agenda.horaInicio | date: 'HH:mm'}}-{{agenda.horaFin | date: 'HH:mm'}}
+                            </div>
                             <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-right" class="text-lg"
                                 title="Agenda siguiente" (click)="verAgenda('der')"></plex-button>
                             <!-- /Botones para ver más agendas -->
@@ -241,7 +244,9 @@
                                     </div>
                                     <div class="row">
                                         <div class="col col-md-12" *ngIf="alternativa.profesionales">
+
                                             <label>Equipo de Salud: </label>
+
                                             <span
                                                 *ngFor="let profesional of alternativa.profesionales">{{profesional.nombre}}
                                                 {{profesional.apellido}} - </span>
@@ -316,15 +321,17 @@
                                 <label>Espacio Físico</label>
                                 <div>{{agenda.espacioFisico.nombre}}</div>
                             </div>
-                            <div *ngIf="!desplegarOS && obraSocialPaciente" class="col">
-                                <label>Obra Social </label>
-                                <div>{{obraSocialPaciente.financiador}}</div>
+                            <div class="col">
+                                <ng-container *ngIf="!desplegarOS && obraSocialPaciente">
+                                    <label>Obra Social </label>
+                                    <div>{{obraSocialPaciente.financiador}}</div>
+                                </ng-container>
                                 <plex-select *ngIf="desplegarOS" label="Obra Social" [(ngModel)]="obraSocialPaciente"
                                     name="obraSocialPaciente" (getData)="loadObrasSociales($event)"
                                     labelField="financiador"></plex-select>
                             </div>
                         </div>
-                        <div class="row" *ngIf="desplegarOS">
+                        <div class="row" *ngIf="desplegarOS && obraSocialPaciente">
                             <div class="col">
                                 <plex-text label="Número de Afiliado" name="numeroAfiliado"
                                     [(ngModel)]="numeroAfiliado"></plex-text>
