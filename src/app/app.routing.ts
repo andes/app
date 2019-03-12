@@ -160,8 +160,7 @@ const appRoutes: Routes = [
   { path: 'prestamosHC', component: PrestamosHcComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // Gestion de usuarios
-  { path: 'gestionUsuarios', component: BusquedaUsuarioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'gestorUsuarioCambiar', component: GestorUsuarioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'gestionUsuarios', component: GestorUsuarioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'gestionPerfiles', component: GestorPerfilesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // formulario terapeutico

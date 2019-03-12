@@ -75,6 +75,9 @@ export class AppComponent {
         if (this.auth.getPermissions('solicitudes:?').length > 0) {
             accessList.push({ label: 'Solicitudes', icon: 'mdi mdi-open-in-app', route: '/solicitudes' });
         }
+        if (this.auth.getPermissions('usuarios:?').length > 0) {
+            accessList.push({ label: 'Gestión de usuarios', icon: 'mdi mdi-account-key', route: '/gestionUsuarios' });
+        }
 
         // faltan permisos
         if (this.auth.getPermissions('formularioTerapeutico:?').length > 0) {
