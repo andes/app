@@ -7,5 +7,7 @@
             </rup>
         </div>
     </ng-container>
-    <plex-button *ngIf="!soloValores" type="primary float-right" label="agregar indicacion" (click)="agregarRegistro()"></plex-button>
+    <div class="col">
+        <plex-button *ngIf="!soloValores" type="primary float-right" [label]="params?.btnLabel ? params?.btnLabel : 'Agregar'" (click)="agregarRegistro()"></plex-button>
+    </div>
 </div>
