@@ -198,7 +198,7 @@ export class HudsBusquedaComponent implements OnInit {
                 }
                 break;
             case 'rup':
-                if (registro.prestacion.conceptId === '32485007') {
+                if (registro.prestacion.conceptId === PrestacionesService.InternacionPrestacion.conceptId) {
                     tipo = 'internacion';
                 }
                 registro = registro.data;

@@ -23,6 +23,12 @@ export class PrestacionesService {
         producto: ['producto', 'objeto físico', 'medicamento clínico'],
         elementoderegistro: ['elemento de registro']
     };
+    public static InternacionPrestacion = {
+        fsn: 'admisión hospitalaria (procedimiento)',
+        semanticTag: 'procedimiento',
+        conceptId: '32485007',
+        term: 'internación'
+    };
 
     @Output() notifySelection: EventEmitter<any> = new EventEmitter<any>();
 
