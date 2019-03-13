@@ -221,18 +221,24 @@ export class HudsBusquedaComponent implements OnInit {
                 }
                 index = this.registrosHuds.findIndex(r => r.tipo === 'concepto' && r.data.idRegistro === registro.idRegistro);
                 break;
-            case 'rup':
-                registro = registro.data;
-                if (registro.ejecucion.registros) {
-                    registro.ejecucion.registros.forEach(reg => {
-                        if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {
-                            if (typeof reg.relacionadoCon[0] === 'string') {
-                                reg.relacionadoCon = reg.relacionadoCon.map((idRegistroRel) => {
-                                    return registro.ejecucion.registros.find(r => r.id === idRegistroRel || r.concepto.conceptId === idRegistroRel);
-                                });
+            case 'prestacion':
+                // Se populan las relaciones usando el _id
+                if (registro.tipo === 'rup') {
+                    if (registro.prestacion.conceptId === '32485007') {
+                        tipo = 'internacion';
+                    }
+                    registro = registro.data;
+                    if (registro.ejecucion.registros) {
+                        registro.ejecucion.registros.forEach(reg => {
+                            if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {
+                                if (typeof reg.relacionadoCon[0] === 'string') {
+                                    reg.relacionadoCon = reg.relacionadoCon.map((idRegistroRel) => {
+                                        return registro.ejecucion.registros.find(r => r.id === idRegistroRel || r.concepto.conceptId === idRegistroRel);
+                                    });
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
                 index = this.registrosHuds.findIndex(r => r.tipo === 'rup' && r.data.id === registro.id);
                 break;
