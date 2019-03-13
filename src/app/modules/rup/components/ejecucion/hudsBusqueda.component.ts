@@ -128,6 +128,11 @@ export class HudsBusquedaComponent implements OnInit {
             this.listarPrestaciones();
             this.listarConceptos();
         }
+        // Cuando se inicia una prestación debemos volver a consultar si hay CDA nuevos al ratito.
+        // [TODO] Ser notificado via websockets
+        setTimeout(() => {
+            this.buscarCDAPacientes();
+        }, 1000 * 30);
 
     }
 
@@ -307,8 +312,8 @@ export class HudsBusquedaComponent implements OnInit {
             const filtro = this.cdas.filter(cda => {
                 return cda.prestacion.conceptId !==  TipoPrestacionService.Vacunas_CDA_ID && cda.prestacion.conceptId !==  TipoPrestacionService.Laboratorio_CDA_ID;
             });
-
-            this.prestaciones = [...this.prestaciones, ...filtro];
+            // Filtramos por CDA para poder recargar los estudiosc
+            this.prestaciones = [...this.prestaciones.filter(e => e.tipo !== 'cda'), ...filtro];
             this.prestacionesCopia = this.prestaciones;
             this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
         });
@@ -364,7 +369,7 @@ export class HudsBusquedaComponent implements OnInit {
     filtrar() {
         if (this.prestacionSeleccionada.length > 0) {
             const prestacionesTemp = this.prestacionSeleccionada.map(e => e.conceptId);
-            this.prestaciones = this.prestacionesCopia.filter(p => prestacionesTemp.includes(p.prestacion.conceptId));
+            this.prestaciones = this.prestacionesCopia.filter(p => prestacionesTemp.find(e => e === p.prestacion.conceptId));
         } else {
             this.prestaciones = this.prestacionesCopia;
         }
