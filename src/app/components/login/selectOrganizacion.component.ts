@@ -22,6 +22,7 @@ export class SelectOrganizacionComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.plex.updateTitle('Seleccione una organización');
         this.auth.organizaciones().subscribe(data => {
             if (data) {
                 this.organizaciones = data;
@@ -34,9 +35,9 @@ export class SelectOrganizacionComponent implements OnInit {
         });
     }
 
-    seleccionar(unaOrg) {
-        this.auth.setOrganizacion(unaOrg).subscribe((data) => {
-            this.organizacionService.configuracion(this.auth.organizacion.id).subscribe((config) => {});
+    seleccionar(organizacion) {
+        this.auth.setOrganizacion(organizacion).subscribe(() => {
+            this.organizacionService.configuracion(this.auth.organizacion.id).subscribe(() => {});
             this.plex.updateUserInfo({ usuario: this.auth.usuario });
             this.appComponent.checkPermissions();
             this.router.navigate(['inicio']);
