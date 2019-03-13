@@ -478,13 +478,15 @@ let RUPComponentsArray = [
     CamaDesbloquearComponent,
     CamaPrepararComponent,
     OcuparCamaComponent,
-    EjecucionInternacionComponent
+    EjecucionInternacionComponent,
+    EgresoInternacionComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { ChartComponent } from './modules/rup/components/elementos/chart.component';
 import { UploadFileComponent } from './shared/components/upload-file.component';
 import { CodificacionService } from './modules/rup/services/codificacion.service';
+import { PasesListadoInternacionComponent } from './apps/rup/internacion/components/pasesListadoInternacion.component';
 
 
 
@@ -573,11 +575,11 @@ registerLocaleData(localeEs, 'es');
         MapaDeCamasComponent,
         CamaComponent,
         ListadoInternacionComponent,
+        PasesListadoInternacionComponent,
         PuntoInicioInternacionComponent,
         LaboratoriosComponent,
         ChartComponent,
         OrganizacionSectoresComponent,
-        EgresoInternacionComponent,
         ResumenInternacionComponent,
         ListaEsperaInternacionComponent,
 
