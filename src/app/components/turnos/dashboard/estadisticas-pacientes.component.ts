@@ -11,6 +11,7 @@ import { TurnoService } from '../../../services/turnos/turno.service';
 import { LogPacienteService } from '../../../services/logPaciente.service';
 import { ObraSocialService } from '../../../services/obraSocial.service';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
+import { IFinanciador } from '../../../interfaces/IFinanciador';
 
 @Component({
     selector: 'estadisticas-pacientes',
@@ -38,6 +39,8 @@ export class EstadisticasPacientesComponent implements OnInit {
     }
 
     @Output() showArancelamientoForm = new EventEmitter<any>();
+    @Output() obraSocialEmit = new EventEmitter<any>();
+
 
     pacienteSeleccionado: IPaciente;
     public fechaDesde: any;
@@ -47,7 +50,7 @@ export class EstadisticasPacientesComponent implements OnInit {
     anulaciones = 0;
     idOrganizacion = this.auth.organizacion.id;
     carpetaEfector: any;
-    obraSocial: IObraSocial;
+    obraSocial: IFinanciador;
 
     // Inicialización
     constructor(
@@ -78,9 +81,11 @@ export class EstadisticasPacientesComponent implements OnInit {
     }
 
     loadObraSocial() {
-        this.obraSocialService.get({ dni: this._paciente.documento }).subscribe(resultado => {
+        // TODO: si es en colegio médico hay que buscar en el paciente
+        this.obraSocialService.getPaciente({ dni: this._paciente.documento, sexo: this._paciente.sexo }).subscribe(resultado => {
             if (resultado.length) {
                 this.obraSocial = resultado[0];
+                this.obraSocialEmit.emit(this.obraSocial);
             }
         });
     }

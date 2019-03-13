@@ -420,8 +420,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             this.modelo.bloques.forEach((bloque, index) => {
                 bloque.indice = index;
             });
-            // this.bloqueActivo = this.elementoActivo.indice;
-            // this.activarBloque(this.elementoActivo.indice);
         }
 
     }
