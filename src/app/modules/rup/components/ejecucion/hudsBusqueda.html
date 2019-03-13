@@ -308,7 +308,7 @@
             <ng-container *ngIf="showFiltros">
                 <div class="row">
                     <div class="col-12">
-                        <plex-select [(ngModel)]="prestacionSeleccionada" label="Prestación" [data]="tiposPrestacion" idField="conceptId" labelField="term" (change)="filtrar()">
+                        <plex-select [(ngModel)]="prestacionSeleccionada" label="Prestación" [data]="tiposPrestacion" idField="conceptId" labelField="term" (change)="filtrar()" [multiple]="true">
                         </plex-select>
                     </div>
                 </div>

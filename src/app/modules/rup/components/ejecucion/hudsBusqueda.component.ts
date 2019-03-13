@@ -18,11 +18,10 @@ export class HudsBusquedaComponent implements OnInit {
     laboratorios: any = [];
     vacunas: any = [];
     ordenDesc = true;
+
     procedimientos: any = [];
-    // Copia de los procedimientos para el buscador.
     procedimientosCopia: any[];
 
-    problemasActivosAux: any;
     hallazgosCronicosAux: any[];
     hallazgosNoActivosAux: any;
     filtroActual: any = 'planes';
@@ -51,13 +50,12 @@ export class HudsBusquedaComponent implements OnInit {
      */
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
-    /**
-     * Vista actual
-     */
-    public vista = 'hallazgos';
+
     /**
      * Listado de prestaciones validadas
      */
+    public tiposPrestacion = [];
+    public prestacionSeleccionada = [];
     private _prestaciones: any = [];
     private prestacionesCopia: any = [];
     get prestaciones () {
@@ -65,7 +63,6 @@ export class HudsBusquedaComponent implements OnInit {
     }
     set prestaciones (value) {
         this._prestaciones = value.sort((a, b) => b.fecha - a.fecha);
-        this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
     }
     /**
      * Copia de las prestaciones para aplicar los filtros
@@ -89,11 +86,6 @@ export class HudsBusquedaComponent implements OnInit {
     public productosCopia: any = [];
 
     /**
-     * Listado de todos los hallazgos
-     */
-    public problemasActivos: any = [];
-
-    /**
          * Listado de todos los hallazgos no activos
          */
     public hallazgosNoActivos: any = [];
@@ -113,14 +105,7 @@ export class HudsBusquedaComponent implements OnInit {
         vacunas: ['vacunas'],
     };
 
-    /**
-     * Prestaciones permitidas para el usuario
-     */
-    public tiposPrestacion;
-    /**
-     * Prestacion seleccionada para aplicar el filtro
-     */
-    public prestacionSeleccionada;
+
 
     public txtABuscar;
 
@@ -251,8 +236,8 @@ export class HudsBusquedaComponent implements OnInit {
                     estado: lastState.tipo
                 };
             });
-            // this.tiposPrestacion = this.prestaciones.map(p => p.prestacion);
             this.prestacionesCopia = this.prestaciones;
+            this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
             this.buscarCDAPacientes();
         });
     }
@@ -325,8 +310,7 @@ export class HudsBusquedaComponent implements OnInit {
 
             this.prestaciones = [...this.prestaciones, ...filtro];
             this.prestacionesCopia = this.prestaciones;
-            // this.tiposPrestacion = this.prestaciones.map(p => p.prestacion);
-            // this.prestaciones = this.prestaciones.sort((a, b) => b.fecha - a.fecha);
+            this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
         });
     }
 
@@ -378,8 +362,9 @@ export class HudsBusquedaComponent implements OnInit {
     }
 
     filtrar() {
-        if (this.prestacionSeleccionada) {
-            this.prestaciones = this.prestacionesCopia.filter(p => p.prestacion.conceptId === this.prestacionSeleccionada.conceptId);
+        if (this.prestacionSeleccionada.length > 0) {
+            const prestacionesTemp = this.prestacionSeleccionada.map(e => e.conceptId);
+            this.prestaciones = this.prestacionesCopia.filter(p => prestacionesTemp.includes(p.prestacion.conceptId));
         } else {
             this.prestaciones = this.prestacionesCopia;
         }
