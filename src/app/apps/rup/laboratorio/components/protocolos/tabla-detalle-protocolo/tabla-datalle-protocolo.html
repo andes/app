@@ -75,9 +75,12 @@
                     <td>
                         <ng-container *ngFor="let m of practicaCarga.margen">&nbsp;&nbsp;&nbsp;</ng-container>
                         <!-- MERS CODE: estilos inline provisorios, pendiente decisión de UI/UX -->
-                        <span *ngIf="!(practicaCarga.valor.practica.categoria === 'simple')" style='color: #5BC0F4; font-weight: bold; font-size: 18px;'>{{practicaCarga.valor.practica.nombre}}</span>
-                        <ng-container *ngIf="practicaCarga.valor.practica.categoria === 'simple'">
-                            {{practicaCarga.valor.practica.nombre}}</ng-container>
+                        <span *ngIf="!(practicaCarga.valor.practica.categoria === 'simple')" class="ml-{{2*practicaCarga.valor.nivel}}" style='color: #5BC0F4; font-weight: bold; font-size: 18px;'>{{practicaCarga.valor.practica.nombre}}</span>
+                        <ng-container *ngIf="practicaCarga.valor.practica.categoria === 'simple'" class="">
+                            <span class="ml-{{2*practicaCarga.valor.nivel}}" >
+                                {{practicaCarga.valor.practica.nombre}}
+                            </span>
+                        </ng-container>
                     </td>
                     <ng-container *ngIf="!(practicaCarga.valor.practica.categoria === 'simple') ">
                         <td></td>
