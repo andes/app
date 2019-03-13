@@ -47,15 +47,6 @@ export class EjecucionInternacionComponent implements OnInit {
     public fecha: Date = new Date();
     // Tipos de prestacion que el usuario tiene permiso
     public tiposPrestacion: any = [];
-    // Tipos de prestacion seleccionada para la internación
-    // TODO:: PREGUNTAR SI VAN A EXISTIR VARIOS CONCEPTOS DE INTERNACIÓN
-    public tipoPrestacionSeleccionada = {
-        fsn: 'admisión hospitalaria (procedimiento)',
-        semanticTag: 'procedimiento',
-        conceptId: '32485007',
-        term: 'internación'
-    };
-
     // prestacion actual en ejecucion
     public prestacion: any;
     // Paciente sleccionado

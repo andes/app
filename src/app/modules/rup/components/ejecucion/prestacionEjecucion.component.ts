@@ -1,5 +1,5 @@
 import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, ViewChildren, QueryList, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -16,6 +16,8 @@ import { ObraSocialService } from './../../../../services/obraSocial.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
 import { RUPComponent } from '../core/rup.component';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
+import { SnomedBuscarService } from '../../../../components/snomed/snomed-buscar.service';
+import { HUDSService } from '../../services/huds.service';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -24,12 +26,11 @@ import { HeaderPacienteComponent } from '../../../../components/paciente/headerP
     // Use to disable CSS Encapsulation for this component
     encapsulation: ViewEncapsulation.None
 })
-export class PrestacionEjecucionComponent implements OnInit {
+export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     idAgenda: any;
     @HostBinding('class.plex-layout') layout = true;
     @ViewChildren(RUPComponent) rupElements: QueryList<any>;
 
-    public activeTab = 0;
     public obraSocialPaciente;
 
     // prestacion actual en ejecucion
@@ -79,10 +80,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     public masFrecuentes: any[] = [];
 
     // Defaults de Tabs panel derecho
+    public activeIndex = 0;
     public panelIndex = 0;
-
-    // Array de registros de la HUDS a agregar en tabs
-    public registrosHuds: any[] = [];
 
     public prestacionValida = true;
     public mostrarMensajes = false;
@@ -110,6 +109,8 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     public flagValid = true;
 
+    public registrosHUDS = [];
+
     constructor(
         private obraSocialService: ObraSocialService,
         public servicioPrestacion: PrestacionesService,
@@ -120,9 +121,10 @@ export class PrestacionEjecucionComponent implements OnInit {
         private servicioPaciente: PacienteService,
         private servicioAgenda: AgendaService,
         private conceptObserverService: ConceptObserverService,
-        private servicioSnomed: SnomedService) {
-
-
+        private servicioSnomed: SnomedService,
+        private buscadorService: SnomedBuscarService,
+        public huds: HUDSService
+    ) {
     }
 
     /**
@@ -140,6 +142,13 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.btnVolver = resp.nombre;
                 this.rutaVolver = resp.ruta;
             }
+        });
+
+        this.huds.registrosHUDS.subscribe((datos) => {
+            if (this.registrosHUDS.length < datos.length) {
+                this.activeIndex = datos.length + 2;
+            }
+            this.registrosHUDS = [...datos];
         });
 
         this.servicioPrestacion.clearRefSetData();
@@ -237,12 +246,16 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
     }
 
+    ngOnDestroy() {
+        this.huds.clear();
+    }
+
     /**
      *
      */
 
-    public onCloseTab($event) {
-        this.registrosHuds.splice($event - 2, 1);
+    public onCloseTab(index) {
+        this.huds.remove(index - 2);
     }
 
     /**
@@ -1138,14 +1151,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
         }
         this.tengoResultado = false;
-    }
-
-    agregarListadoHuds(registrosHuds) {
-        // Limpiar los valores observados al iniciar la ejecución
-        // Evita que se autocompleten valores de una consulta anterior
-        this.conceptObserverService.destroy();
-        this.activeTab = this.registrosHuds.length - 1;
-        // this.registrosHuds = registrosHuds;
     }
 
     // Actualiza ambas columnas de registros según las relaciones

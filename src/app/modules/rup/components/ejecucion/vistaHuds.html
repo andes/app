@@ -1,88 +1,53 @@
-<form class="plex-layout" #form="ngForm">
-    <!-- Sección principal -->
-    <section class="plex-layout prestacionEjecucion" *ngIf="paciente">
-        <div class="row">
-            <!-- Panel Principal -->
-            <div class="col-8">
-                <plex-box>
-                    <ng-container *ngIf="!registrosHuds">
-                        <div class="contenedor-mensaje">
-                            <div class="mensaje">
+<plex-layout [main]="8" *ngIf="paciente">
+    <plex-layout-main>
+        <plex-tabs (close)="onCloseTab($event)" [activeIndex]="activeIndex" *ngIf="elementosRUPService.ready | async">
+            <plex-tab label="Resumen del Paciente">
+                <rup-resumenPaciente-estatico [paciente]="paciente" esTab="true">
+                </rup-resumenPaciente-estatico>
+                <rup-resumenPaciente-dinamico-nino *ngIf="paciente?.edad <= 6" [paciente]="paciente" esTab="true">
+                </rup-resumenPaciente-dinamico-nino>
+                <rup-resumenPaciente-dinamico *ngIf="paciente?.edad > 6" [paciente]="paciente" esTab="true">
+                </rup-resumenPaciente-dinamico>
+            </plex-tab>
+            <ng-container *ngFor="let registro of registros">
 
-                            </div>
-                        </div>
-                    </ng-container>
-                    <plex-tabs (close)="onCloseTab($event)" [activeIndex]="activeTab">
-                        <plex-tab label="Resumen del Paciente" *ngIf="elementosRUPService.ready | async">
-                            <rup-resumenPaciente-estatico [paciente]="paciente" esTab="true">
-                            </rup-resumenPaciente-estatico>
-                            <rup-resumenPaciente-dinamico-nino *ngIf="paciente?.edad <= 6" [paciente]="paciente"
-                                esTab="true"></rup-resumenPaciente-dinamico-nino>
-                            <rup-resumenPaciente-dinamico *ngIf="paciente?.edad > 6" [paciente]="paciente" esTab="true">
-                            </rup-resumenPaciente-dinamico>
-                        </plex-tab>
-                        <ng-container *ngIf="registrosHuds">
-                            <ng-container *ngFor="let registro of registrosHuds; let i = index">
-                                <plex-tab [allowClose]="true" [label]="registro.data.concepto.term"
-                                    [class]="registro.data.class" [color]="registro.data.class"
-                                    *ngIf="registro.tipo === 'concepto'">
+                <plex-tab [allowClose]="true" [label]="registro.data.concepto.term" [class]="registro.data.class"
+                    [color]="registro.data.class" *ngIf="registro.tipo === 'concepto'">
 
-                                    <vista-registro
-                                        *ngIf="registro.data.class === 'hallazgo' || registro.data.class === 'trastorno'"
-                                        [registro]="registro.data" [paciente]="paciente">
-                                    </vista-registro>
+                    <vista-registro *ngIf="registro.data.class === 'hallazgo' || registro.data.class === 'trastorno'"
+                        [registro]="registro.data" [paciente]="paciente">
+                    </vista-registro>
 
-                                    <vista-procedimiento
-                                        *ngIf="registro.data.class === 'procedimiento' || registro.data.class === 'elementoderegistro' || registro.data.class === 'producto'"
-                                        [registro]="registro.data" [paciente]="paciente">
-                                    </vista-procedimiento>
+                    <vista-procedimiento
+                        *ngIf="registro.data.class === 'procedimiento' || registro.data.class === 'elementoderegistro' || registro.data.class === 'producto'"
+                        [registro]="registro.data" [paciente]="paciente">
+                    </vista-procedimiento>
+                </plex-tab>
 
-                                </plex-tab>
-                                <plex-tab [allowClose]="true" [label]="registro.data.solicitud.tipoPrestacion.term"
-                                    [class]="registro.data.class" color="solicitud" *ngIf="registro.tipo === 'rup'">
-                                    <vista-prestacion [registro]="registro.data">
-                                    </vista-prestacion>
-                                </plex-tab>
+                <plex-tab [allowClose]="true" [label]="registro.data.solicitud.tipoPrestacion.term"
+                    [class]="registro.data.class" color="solicitud" *ngIf="registro.tipo === 'rup'">
+                    <vista-prestacion [prestacion]="registro.data" [paciente]="paciente">
+                    </vista-prestacion>
+                </plex-tab>
 
-                                <plex-tab *ngIf="registro.tipo === 'cda'" [allowClose]="true"
-                                    [label]="registro.data.prestacion.snomed.term" [class]="registro.data.class">
-                                    <vista-cda [registro]="registro"></vista-cda>
-                                </plex-tab>
-                                <plex-tab [allowClose]="true" [label]="'internacion'" [class]="registro.data.class"
-                                    *ngIf="registro.tipo === 'internacion'">
+                <plex-tab *ngIf="registro.tipo === 'cda'" [allowClose]="true"
+                    [label]="registro.data.prestacion.snomed.term" [class]="registro.data.class">
+                    <vista-cda [registro]="registro"></vista-cda>
+                </plex-tab>
 
-                                    <internacion-resumen [paciente]="registro.data.paciente" [mostrarBtnRomper]='false'
-                                        [prestacion]="registro.data" [soloValores]="true"></internacion-resumen>
-                                    <!-- <vista-cda [registro]="registro"></vista-cda> -->
-                                </plex-tab>
-                            </ng-container>
-                        </ng-container>
+                <plex-tab [allowClose]="true" [label]="'internacion'" [class]="registro.data.class"
+                    *ngIf="registro.tipo === 'internacion'">
+                    <internacion-resumen [paciente]="registro.data.paciente" [mostrarBtnRomper]='false'
+                        [prestacion]="registro.data" [soloValores]="true"></internacion-resumen>
+                </plex-tab>
 
-                    </plex-tabs>
-                </plex-box>
-            </div>
-            <!-- HUDS -->
-            <div class="col-4" *ngIf="paciente">
-                <plex-box>
-                    <!-- HUDS [hudsBusqueda.component.ts] -->
-                    <rup-hudsBusqueda #huds [registrosHuds]="registrosHuds" (evtHuds)="agregarListadoHuds($event)"
-                        [paciente]="paciente" [prestacionActual]="" [emitirConceptos]="false"></rup-hudsBusqueda>
-                </plex-box>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-
-        <div class="row">
-            <div class="col">
-                <plex-button label="{{btnVolver}}" (click)="volver(rutaVolver)" type="info"></plex-button>
-                <!-- <plex-button label="Guardar {{prestacion?.solicitud?.tipoPrestacion?.term}}" (click)="guardarPrestacion()" type="success" -->
-                <!-- class="float-right"></plex-button> -->
-            </div>
-        </div>
-
-    </footer>
-</form>
+            </ng-container>
+        </plex-tabs>
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <rup-hudsBusqueda #huds [paciente]="paciente" [emitirConceptos]="false"></rup-hudsBusqueda>
+    </plex-layout-sidebar>
+    <plex-layout-footer>
+        <plex-button position="left" label="VOLVER" (click)="volver()" type="info"></plex-button>
+    </plex-layout-footer>
+</plex-layout>

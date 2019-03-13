@@ -3,6 +3,7 @@ import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interf
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
+import { IPaciente } from '../../../../interfaces/IPaciente';
 
 @Component({
     selector: 'vista-prestacion',
@@ -12,7 +13,8 @@ import { ElementosRUPService } from '../../services/elementosRUP.service';
 
 export class VistaPrestacionComponent implements OnInit {
 
-    @Input() registro: IPrestacionRegistro;
+    @Input() paciente: IPaciente;
+    // @Input() registro: IPrestacionRegistro;
     @Input() prestacion: IPrestacion;
     @Input() evolucionActual: any;
     @Input() indice = 0;
@@ -21,9 +23,10 @@ export class VistaPrestacionComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.prestacionesService.getByPaciente(this.registro.paciente.id).subscribe(prestacion => {
-            this.prestacion = prestacion.find(x => x.id === this.registro.id);
-        });
+        console.log(this.prestacion);
+        // this.prestacionesService.getByPaciente(this.registro.paciente.id).subscribe(prestacion => {
+        //     this.prestacion = prestacion.find(x => x.id === this.registro.id);
+        // });
     }
 
     getTimestamp(fecha) {

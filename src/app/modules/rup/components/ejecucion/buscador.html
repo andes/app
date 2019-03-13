@@ -16,10 +16,8 @@
 <!-- Fin Tipo de búsqueda -->
 
 <!-- Apunta a components/snomed/snomed-buscar.component.ts -->
-<!-- <snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)"></snomed-buscar> -->
-<snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)"
-    *ngIf="(busquedaActual === 'buscadorBasico' || busquedaActual === 'busquedaGuiada' || busquedaActual === 'porConcepto') && autofocus"
-    [searchTermInput]="search" [autofocus]="autofocus" id="buscador"></snomed-buscar>
+<snomed-buscar (onSearch)="recibeResultados($event)" *ngIf="(busquedaActual === 'buscadorBasico' || busquedaActual === 'busquedaGuiada' || busquedaActual === 'porConcepto') && autofocus"
+     [autofocus]="autofocus" id="buscador"></snomed-buscar>
 
 <div class="buscador"
     *ngIf="busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes' || busquedaActual === 'frecuentesTP'">
@@ -27,17 +25,13 @@
     </plex-text>
 </div>
 
-<!-- {{ busquedaRefSet | json }} -->
-
 <!-- MAESTRO DE PROBLEMAS - BD:tipoProblema -->
 <div class="menu-buscador">
-    <plex-loader *ngIf="loading" type="linear"></plex-loader>
-
     <!-- Botones filtros -->
     <ng-container *ngIf="results">
         <ng-container *ngIf="busquedaActual !== 'busquedaGuiada'">
             <div class="container-filtros">
-                <ul class="botones-filtros" [plexWizard]="0">
+                <ul class="botones-filtros">
                     <li>
                         <small *ngIf="getCantidadResultados('todos')" class="badge badge-todos ml-1 float-right"
                             [ngClass]="{'active': filtroActual === 'todos'}">{{ getCantidadResultados('todos')}}</small>
@@ -57,7 +51,7 @@
                         <button (click)="filtroBuscadorSnomed('hallazgos')"
                             [ngClass]="{'active': filtroActual === 'hallazgos'}"
                             [disabled]="!wizardActivo && getCantidadResultados('hallazgos') === 0"
-                            class="btn btn-block btn-hallazgo" [plexWizard]="1">
+                            class="btn btn-block btn-hallazgo">
                             <i class="icon icon-rup-semantic-hallazgo"></i>
                             HALLAZGOS
                         </button>
@@ -72,7 +66,7 @@
                         <button (click)="filtroBuscadorSnomed('trastornos')"
                             [ngClass]="{'active': filtroActual === 'trastornos'}"
                             [disabled]="!wizardActivo && getCantidadResultados('trastornos') === 0"
-                            class="btn btn-block btn-trastorno" [plexWizard]="2">
+                            class="btn btn-block btn-trastorno">
                             <i class="icon icon-rup-semantic-trastorno"></i>
                             TRASTORNOS
                         </button>
@@ -87,7 +81,7 @@
                         <button (click)="filtroBuscadorSnomed('procedimientos')"
                             [ngClass]="{'active': filtroActual === 'procedimientos'}"
                             [disabled]="!wizardActivo && getCantidadResultados('procedimientos') === 0"
-                            class="btn btn-block btn-procedimiento" [plexWizard]="3">
+                            class="btn btn-block btn-procedimiento">
                             <i class="icon icon-rup-semantic-procedimiento"></i>
                             PROCEDIM.
                         </button>
@@ -98,7 +92,7 @@
 
                         <button (click)="filtroBuscadorSnomed('planes')" class="btn btn-block btn-solicitud"
                             [ngClass]="{'active': filtroActual === 'planes'}"
-                            [disabled]="!wizardActivo && getCantidadResultados('planes') === 0" [plexWizard]="4">
+                            [disabled]="!wizardActivo && getCantidadResultados('planes') === 0">
                             <i class="icon icon-rup-semantic-plan"></i>
                             SOLICITUDES
                         </button>
@@ -112,7 +106,7 @@
                         <button (click)="filtroBuscadorSnomed('productos')"
                             [ngClass]="{'active': filtroActual === 'productos'}"
                             [disabled]="!wizardActivo && getCantidadResultados('productos') === 0"
-                            class="btn btn-block btn-producto" [plexWizard]="5">
+                            class="btn btn-block btn-producto">
                             <i class="icon icon-rup-semantic-producto"></i>
                             INSUMOS
                         </button>
@@ -163,8 +157,7 @@
 <div *ngIf="filtroActual && results && results[busquedaActual][filtroActual]  && results[busquedaActual][filtroActual].length > 0"
     class="buscador-resultados">
     <cdk-virtual-scroll-viewport [itemSize]="55">
-        <div *cdkVirtualFor="let item of results[busquedaActual][filtroActual]" class="rup-card mini"
-            [ngClass]="servicioPrestacion.getCssClass(item, filtroActual === 'plan')">
+        <div *cdkVirtualFor="let item of results[busquedaActual][filtroActual]" class="rup-card mini" [ngClass]="servicioPrestacion.getCssClass(item, filtroActual === 'plan')">
             <div class="rup-header">
                 <div class="icon-rup drag-handle p-0 pt-1" draggable
                     [dragScope]="['registros-rup' , 'vincular-registros-rup']" [dragData]="item"
@@ -183,8 +176,7 @@
                         </div>
                         <div class="col-6 p-0 m-0">
                             <div class="p-0 pt-1 pr-1 float-right">
-                                <small
-                                    class="badge badge-{{ servicioPrestacion.getCssClass(item, filtroActual === 'plan') }} text-default">
+                                <small class="badge badge-{{ servicioPrestacion.getCssClass(item, filtroActual === 'plan') }} text-default">
                                     {{ (item.plan || filtroActual === 'planes' || esTurneable(item)) ? 'solicitud' : item.semanticTag }}
                                 </small>
                                 <button (click)="seleccionarConcepto(item)"
@@ -242,13 +234,11 @@
                         <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)"
                             (onDragEnd)="dragEnd($e)">
 
-                            <div class="rup-card mini"
-                                [ngClass]="(items.nombre === 'planes') ? 'plan' : servicioPrestacion.getCssClass(item, filtroActual === 'plan')">
+                            <div class="rup-card mini" [ngClass]="(items.nombre === 'planes') ? 'plan' : servicioPrestacion.getCssClass(item, filtroActual === 'plan')">
                                 <div class="rup-header">
                                     <div class="icon-rup drag-handle p-0 pt-1">
                                         <!-- <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i> -->
-                                        <i
-                                            class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(item, filtroActual === 'plan')}}"></i>
+                                        <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(item, filtroActual === 'plan')}}"></i>
                                     </div>
 
                                     <div class="rup-border">
