@@ -4,7 +4,7 @@ plex-tab  {
     &
     rup-evolucion-problema-default, rup-observaciones {
 
-        &>form {
+        &:first-child form {
             border: 1px solid lightgrey;
             padding: 10px;
             position: relative;
