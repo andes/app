@@ -25,23 +25,15 @@ $rotate: -90deg;
                 border-bottom: 2px solid #ccc;
                 border-right: 2px solid #ccc;
             }
-            .rup-border {
-                width: 100%;
-                border-top: 2px solid #ccc;
-                border-bottom: 2px solid #ccc;
-                border-right: 2px solid #ccc;
-            }
-        }
-        &:hover {
-            background: #eee;
+            // &:hover {
+            //     background: #eee;
+            // }
         }
         .rup-border {
-            &:hover {
-                background: #eee;
-                border-right: 2px solid $blue;
-                border-bottom: 2px solid $blue;
-                border-top: 2px solid $blue;
-            }
+            width: 100%;
+            border-top: 2px solid #ccc;
+            border-bottom: 2px solid #ccc;
+            border-right: 2px solid #ccc;
         }
         @each $tag,
         $color in $rup_colors {

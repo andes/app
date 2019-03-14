@@ -114,50 +114,30 @@
         <!-- Vista: TODOS -->
         <ng-container *ngIf="filtroActual === 'todos'">
             <ul *ngIf="todos" class="hover conceptos list-unstyled">
-                <ng-container *ngFor="let registro of todos">
-                    <li>
-                        <div class="rup-card mini {{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}"
-                            [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
-                            (click)="emitTabs(registro, 'concepto')">
-                            <div class="rup-header">
-                                <div class="rup-border rup-border-{{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}"
-                                    [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
-                                    <div class="row p-0 m-0 border-secondary border-left-0">
-                                        <div class="col-10 p-0 m-0">
-                                            <div class="row m-0 p-0">
-                                                <div class="col-2 icon-rup drag-handle">
-                                                    <i
-                                                        class="icon icon-rup-semantic-{{ servicioPrestacion.getIcon(registro.concepto, registro.esSolicitud) }}"></i>
-                                                </div>
-                                                <div class="col p-0 pl-2 float-left">
-                                                    {{ registro.concepto.term }}
-                                                    <div class="row p-0 m-0">
-                                                        <div class="col-10 p-0 m-0">
-                                                            <div class="sugerido">
-                                                                <small>
-                                                                    Creada:
-                                                                    {{ registro.evoluciones[0].fechaCarga | fecha }}</small>
-                                                                <br>
-                                                                <small>Profesional:
-                                                                    {{
-                                                                            registro.evoluciones[0].profesional}}</small>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-2 p-0 m-0">
-                                            <div class="p-0 pt-1 pr-1 float-right">
-                                            </div>
-                                        </div>
+                <li *ngFor="let registro of todos">
+                    <div class="rup-card mini {{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}"
+                        [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
+                        (click)="emitTabs(registro, 'concepto')">
+                        <div
+                            class="rup-header rup-border rup-border-{{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}">
+                            <div class="row m-0 p-0">
+                                <div class="col-2 icon-rup drag-handle">
+                                    <i
+                                        class="icon icon-rup-semantic-{{ servicioPrestacion.getIcon(registro.concepto, registro.esSolicitud) }}"></i>
+                                </div>
+                                <div class="col p-0 pl-2">
+                                    {{ registro.concepto.term }}
+                                    <div class="concepto">
+                                        <span>
+                                            {{ registro.evoluciones[0].fechaCarga | fecha }}</span>
+                                        <span>
+                                            {{ registro.evoluciones[0].profesional }}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </li>
-                </ng-container>
+                    </div>
+                </li>
             </ul>
         </ng-container>
 
