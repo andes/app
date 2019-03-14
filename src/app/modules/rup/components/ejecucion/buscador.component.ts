@@ -94,7 +94,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     public copiaFiltroActual: any;
 
-    private opcionDesplegada: String = null;
+    public opcionDesplegada: String = null;
 
     public search; // buscador de sugeridos y mis frecuentes
     private ultimoTipoBusqueda: any;
