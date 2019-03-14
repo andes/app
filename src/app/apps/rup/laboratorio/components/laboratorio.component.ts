@@ -20,15 +20,7 @@ export class LaboratorioComponent implements OnInit {
         this.contextoCache = this.laboratorioContextoCacheService.getContextoCache();
         this.mostrarPuntoInicio = this.laboratorioContextoCacheService.isModoRecepcionSinTurno();
         if (!this.mostrarPuntoInicio) {
-            this.laboratorioContextoCacheService.setContextoCache({
-                cargarPorPracticas: false,
-                modo: {
-                    id: 3,
-                    nombre: 'validacion',
-                    titulo: 'Validación de Resultados'
-                },
-                modoCargaLaboratorio: null,
-            });
+            this.laboratorioContextoCacheService.resetContexto();
         }
     }
 
