@@ -24,7 +24,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
     // el concepto que seleccionamos para eliminar lo guradamos aca.
     public conceptoAEliminar: any;
 
-    public scopeEliminar: String;
+    public scopeEliminar: string;
 
     public conceptosPermitidos: any[] = [];
 
