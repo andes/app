@@ -44,10 +44,10 @@
                                                 <b class="card-title">Agenda: {{ agenda.horaInicio | fecha }}
                                                     <br>{{ agenda.horaInicio | date: 'HH:mm' }} a {{ agenda.horaFin | date: 'HH:mm'
                                                     }} hs</b>
-                                                <p class="card-text" *ngIf="agenda.profesionales?.length > 0">Profesionales: {{ agenda.profesionales | enumerar:['apellido', 'nombre']
+                                                <p class="card-text" *ngIf="agenda.profesionales?.length > 0">Equipo de Salud: {{ agenda.profesionales | enumerar:['apellido', 'nombre']
                                                     }}
                                                 </p>
-                                                <p class="card-text text-danger" *ngIf="agenda.profesionales?.length === 0">Sin profesional asignado</p>
+                                                <p class="card-text text-danger" *ngIf="agenda.profesionales?.length === 0">Sin Equipo de Salud asignado</p>
                                                 <br>
                                                 <button class="btn btn-sm btn-primary" (click)="toggleExpandir(indiceAgenda)">
                                                     <i class="mdi mdi-calendar-clock"></i> ver horarios

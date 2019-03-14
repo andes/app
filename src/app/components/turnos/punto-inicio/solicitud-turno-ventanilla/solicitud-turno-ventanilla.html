@@ -60,20 +60,20 @@
                 </plex-select>
             </div>
         </div>
-        <!-- Profesional Origen -->
+        <!-- Equipo de Salud Origen -->
         <div class="row">
             <div class="col">
                 <plex-select [(ngModel)]="modelo.solicitud.profesionalOrigen" name="profesionalOrigen" (getData)="loadProfesionales($event)"
-                    label="Profesional solicitante" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre"
+                    label="Equipo de Salud solicitante" placeholder="Escriba el apellido del Equipo de Salud" labelField="apellido + ' ' + nombre"
                     [required]="true">
                 </plex-select>
             </div>
         </div>
-        <!-- Profesional Destino -->
+        <!-- Equipo de Salud Destino -->
         <div class="row">
             <div class="col" *ngIf="!autocitado">
-                <plex-select *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.profesional" label="Profesional destino"
-                    name="profesional" (getData)="loadProfesionales($event)" placeholder="Escriba el apellido de un Profesional"
+                <plex-select *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.profesional" label="Equipo de Salud destino"
+                    name="profesional" (getData)="loadProfesionales($event)" placeholder="Escriba el apellido de un Equipo de Salud"
                     labelField="apellido + ' ' + nombre">
                 </plex-select>
             </div>
