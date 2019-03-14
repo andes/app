@@ -80,7 +80,7 @@ export class AppComponent {
         }
 
         if (this.auth.getPermissions('internacion:?').length > 0) {
-            accessList.push({ label: 'Internación - Mapa de cama', icon: 'mdi mdi-open-in-app', route: '/internacion/camas' });
+            accessList.push({ label: 'Internación - Mapa de cama', icon: 'mdi mdi-minus', route: '/internacion/camas' });
         }
 
         // faltan permisos
