@@ -502,8 +502,8 @@ export class ProtocoloDetalleComponent
      */
     private convertirResultadosObjetosAValores() {
         this.modelo.ejecucion.registros
-            .filter(  r => r.valor.practica.resultado.formato.tipo === 'Predefenidos (Selección simple)' && r.valor.resultado.valor )
-            .forEach( r => r.valor.resultado.valor = r.valor.resultado.valor.nombre);
+            .filter(r => r.valor.practica.resultado.formato.tipo === 'Predefenidos (Selección simple)' && r.valor.resultado.valor)
+            .forEach(r => r.valor.resultado.valor = r.valor.resultado.valor.nombre);
     }
 
     /**
@@ -514,8 +514,8 @@ export class ProtocoloDetalleComponent
      */
     private convertirResultadosValoresAObjetos() {
         this.modelo.ejecucion.registros
-            .filter(  r => r.valor.practica.resultado.formato.tipo === 'Predefenidos (Selección simple)' && r.valor.resultado.valor )
-            .forEach( r => r.valor.resultado.valor = { id: r.valor.resultado.valor, nombre: r.valor.resultado.valor } );
+            .filter(r => r.valor.practica.resultado.formato.tipo === 'Predefenidos (Selección simple)' && r.valor.resultado.valor)
+            .forEach(r => r.valor.resultado.valor = { id: r.valor.resultado.valor, nombre: r.valor.resultado.valor });
     }
 
     /**
@@ -559,7 +559,7 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     private validarPrestacion() {
-        return !this.modelo.estados.some( o => o.tipo === 'validada') && this.modelo.ejecucion.registros.every( r => r.valor.estados.some( e => e.tipo === 'validada'));
+        return !this.modelo.estados.some(o => o.tipo === 'validada') && this.modelo.ejecucion.registros.every(r => r.valor.estados.some(e => e.tipo === 'validada'));
     }
 
     /**
@@ -585,6 +585,9 @@ export class ProtocoloDetalleComponent
         if (this.laboratorioContextoCacheService.isModoRecepcion()) {
             this.iniciarProtocolo();
         } else {
+            if (this.laboratorioContextoCacheService.isModoRecepcionSinTurno()) {
+                this.laboratorioContextoCacheService.cambiarModo(2);
+            }
             this.guardarProtocolo(true);
         }
     }

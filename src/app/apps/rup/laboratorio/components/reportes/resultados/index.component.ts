@@ -15,7 +15,6 @@ import { Slug } from 'ng2-slugify';
 
 export class ReporteResultadosIndexComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
-    @Output() volverAPuntoInicioEmmiter: EventEmitter<any> = new EventEmitter<any>();
 
     public areas = [];
     public busqueda;
@@ -66,7 +65,7 @@ export class ReporteResultadosIndexComponent implements OnInit {
      */
     private cargarArrayProtocolosSeleccionados(protocolos) {
         this.idsProtocolosSeleccionados = {};
-        protocolos.forEach(e => this.idsProtocolosSeleccionados[e._id] = false );
+        protocolos.forEach(e => this.idsProtocolosSeleccionados[e._id] = false);
     }
 
     /**
@@ -77,7 +76,7 @@ export class ReporteResultadosIndexComponent implements OnInit {
      */
     descargarReportes() {
         this.reportesLaboratorioService.reporteResultados(this.protocolos.filter(
-            p => this.idsProtocolosSeleccionados[p._id] )
+            p => this.idsProtocolosSeleccionados[p._id])
         ).subscribe(data => {
             if (data) {
                 saveAs(
