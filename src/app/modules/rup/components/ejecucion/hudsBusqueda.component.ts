@@ -110,7 +110,7 @@ export class HudsBusquedaComponent implements OnInit {
     public txtABuscar;
 
     constructor(
-        private servicioPrestacion: PrestacionesService,
+        public servicioPrestacion: PrestacionesService,
         public servicioTipoPrestacion: TipoPrestacionService,
         public plex: Plex,
         public auth: Auth,

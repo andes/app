@@ -113,161 +113,172 @@
     <div class="col">
         <!-- Vista: TODOS -->
         <ng-container *ngIf="filtroActual === 'todos'">
-                <ul *ngIf="todos" class="hover conceptos list-unstyled">
-                        <ng-container *ngFor="let registro of todos">
-                            <li>
-                                <div class="rup-card mini {{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
-                                    (click)="emitTabs(registro, 'concepto')">
-                                    <div class="rup-header">
-                                        <div class="rup-border rup-border-{{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}" 
-                                             [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
-                                            <div class="row p-0 m-0 border-secondary border-left-0">
-                                                <div class="col-10 p-0 m-0">
-                                                    <div class="row m-0 p-0">
-                                                        <div class="col-2 icon-rup drag-handle">
-                                                            <i class="icon icon-rup-semantic-{{ servicioPrestacion.getIcon(registro.concepto, registro.esSolicitud) }}"></i>
-                                                        </div>
-                                                        <div class="col p-0 pl-2 float-left">
-                                                            {{ registro.concepto.term }}
-                                                            <div class="row p-0 m-0">
-                                                                <div class="col-10 p-0 m-0">
-                                                                    <div class="sugerido">
-                                                                        <small>
-                                                                            Creada: 
-                                                                            {{ registro.evoluciones[0].fechaCarga | fecha }}</small>
-                                                                        <br>
-                                                                        <small>Profesional: {{
+            <ul *ngIf="todos" class="hover conceptos list-unstyled">
+                <ng-container *ngFor="let registro of todos">
+                    <li>
+                        <div class="rup-card mini {{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}"
+                            [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
+                            (click)="emitTabs(registro, 'concepto')">
+                            <div class="rup-header">
+                                <div class="rup-border rup-border-{{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}"
+                                    [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
+                                    <div class="row p-0 m-0 border-secondary border-left-0">
+                                        <div class="col-10 p-0 m-0">
+                                            <div class="row m-0 p-0">
+                                                <div class="col-2 icon-rup drag-handle">
+                                                    <i
+                                                        class="icon icon-rup-semantic-{{ servicioPrestacion.getIcon(registro.concepto, registro.esSolicitud) }}"></i>
+                                                </div>
+                                                <div class="col p-0 pl-2 float-left">
+                                                    {{ registro.concepto.term }}
+                                                    <div class="row p-0 m-0">
+                                                        <div class="col-10 p-0 m-0">
+                                                            <div class="sugerido">
+                                                                <small>
+                                                                    Creada:
+                                                                    {{ registro.evoluciones[0].fechaCarga | fecha }}</small>
+                                                                <br>
+                                                                <small>Profesional:
+                                                                    {{
                                                                             registro.evoluciones[0].profesional}}</small>
-                                                                    </div>
-                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-        
-                                                <div class="col-2 p-0 m-0">
-                                                    <div class="p-0 pt-1 pr-1 float-right">
-                                                    </div>
-                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-2 p-0 m-0">
+                                            <div class="p-0 pt-1 pr-1 float-right">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </li>
-                        </ng-container>
-                    </ul>
-            </ng-container>
+                            </div>
+                        </div>
+                    </li>
+                </ng-container>
+            </ul>
+        </ng-container>
 
         <!-- Vista: HALLAZGOS -->
         <ng-container *ngIf="filtroActual === 'hallazgo'">
-                <ul *ngIf="hallazgos" class="hover conceptos list-unstyled">
-                    <ng-container *ngFor="let registro of hallazgos">
-                        <li>
-                            <div class="rup-card mini hallazgo" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
-                                (click)="emitTabs(registro, 'concepto')">
-                                <div class="rup-header">
-                                    <div class="rup-border rup-border-hallazgo" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
-                                        <div class="row p-0 m-0 border-secondary border-left-0">
-                                            <div class="col-10 p-0 m-0">
-                                                <div class="row m-0 p-0">
-                                                    <div class="col-2 icon-rup drag-handle">
-                                                        <i class="icon icon-rup-semantic-hallazgo"></i>
-                                                    </div>
-                                                    <div class="col p-0 pl-2 float-left">
-                                                        {{ registro.concepto.term }}
-                                                        <div class="row p-0 m-0">
-                                                            <div class="col-10 p-0 m-0">
-                                                                <div class="sugerido">
-                                                                    <small>
-                                                                        Creada: 
-                                                                        {{ registro.evoluciones[0].fechaCarga | fecha }}</small>
-                                                                    <br>
-                                                                    <small>Profesional: {{
+            <ul *ngIf="hallazgos" class="hover conceptos list-unstyled">
+                <ng-container *ngFor="let registro of hallazgos">
+                    <li>
+                        <div class="rup-card mini hallazgo"
+                            [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
+                            (click)="emitTabs(registro, 'concepto')">
+                            <div class="rup-header">
+                                <div class="rup-border rup-border-hallazgo"
+                                    [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
+                                    <div class="row p-0 m-0 border-secondary border-left-0">
+                                        <div class="col-10 p-0 m-0">
+                                            <div class="row m-0 p-0">
+                                                <div class="col-2 icon-rup drag-handle">
+                                                    <i class="icon icon-rup-semantic-hallazgo"></i>
+                                                </div>
+                                                <div class="col p-0 pl-2 float-left">
+                                                    {{ registro.concepto.term }}
+                                                    <div class="row p-0 m-0">
+                                                        <div class="col-10 p-0 m-0">
+                                                            <div class="sugerido">
+                                                                <small>
+                                                                    Creada:
+                                                                    {{ registro.evoluciones[0].fechaCarga | fecha }}</small>
+                                                                <br>
+                                                                <small>Profesional: {{
                                                                         registro.evoluciones[0].profesional}}</small>
-                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-    
-                                            <div class="col-2 p-0 m-0">
-                                                <div class="p-0 pt-1 pr-1 float-right">
-                                                </div>
+                                        </div>
+
+                                        <div class="col-2 p-0 m-0">
+                                            <div class="p-0 pt-1 pr-1 float-right">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </li>
-                    </ng-container>
-                </ul>
-            </ng-container>  
-            
+                        </div>
+                    </li>
+                </ng-container>
+            </ul>
+        </ng-container>
+
         <!-- Vista: HALLAZGOS -->
         <ng-container *ngIf="filtroActual === 'trastorno'">
-                <ul *ngIf="trastornos" class="hover conceptos list-unstyled">
-                    <ng-container *ngFor="let registro of trastornos">
-                        <li>
-                            <div class="rup-card mini trastorno" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
-                                (click)="emitTabs(registro, 'concepto')">
-                                <div class="rup-header">
-                                    <div class="rup-border rup-border-trastorno" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
-                                        <div class="row p-0 m-0 border-secondary border-left-0">
-                                            <div class="col-10 p-0 m-0">
-                                                <div class="row m-0 p-0">
-                                                    <div class="col-2 icon-rup drag-handle">
-                                                        <i class="icon icon-rup-semantic-trastorno"></i>
-                                                    </div>
-                                                    <div class="col p-0 pl-2 float-left">
-                                                        {{ registro.concepto.term }}
-                                                        <div class="row p-0 m-0">
-                                                            <div class="col-10 p-0 m-0">
-                                                                <div class="sugerido">
-                                                                    <small>
-                                                                        Ultima evolución: 
-                                                                        {{ registro.evoluciones[0].fechaCarga | fecha }}</small>
-                                                                    <br>
-                                                                    <small>Profesional: {{
+            <ul *ngIf="trastornos" class="hover conceptos list-unstyled">
+                <ng-container *ngFor="let registro of trastornos">
+                    <li>
+                        <div class="rup-card mini trastorno"
+                            [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
+                            (click)="emitTabs(registro, 'concepto')">
+                            <div class="rup-header">
+                                <div class="rup-border rup-border-trastorno"
+                                    [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
+                                    <div class="row p-0 m-0 border-secondary border-left-0">
+                                        <div class="col-10 p-0 m-0">
+                                            <div class="row m-0 p-0">
+                                                <div class="col-2 icon-rup drag-handle">
+                                                    <i class="icon icon-rup-semantic-trastorno"></i>
+                                                </div>
+                                                <div class="col p-0 pl-2 float-left">
+                                                    {{ registro.concepto.term }}
+                                                    <div class="row p-0 m-0">
+                                                        <div class="col-10 p-0 m-0">
+                                                            <div class="sugerido">
+                                                                <small>
+                                                                    Ultima evolución:
+                                                                    {{ registro.evoluciones[0].fechaCarga | fecha }}</small>
+                                                                <br>
+                                                                <small>Profesional: {{
                                                                         registro.evoluciones[0].profesional}}</small>
-                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-    
-                                            <div class="col-2 p-0 m-0">
-                                                <div class="p-0 pt-1 pr-1 float-right">
-                                                    <ng-container *ngIf="registro.evoluciones">
-                                                        <small class="badge badge-success text-default p-1">
-                                                            {{ registro.evoluciones[registro.evoluciones.length-1].estado }}
-                                                        </small>
-                                                    </ng-container>
-                                                    <button class="btn btn-sm btn-primary btn-icon-rup p-0" *ngIf="emitirConceptos" (click)="devolverHallazgo(registro, 'hallazgo')"
-                                                            title="Agregar a la consulta" titlePosition="left">
-                                                        <i class="mdi mdi-plus"></i>
-                                                    </button>
-                                                </div>
+                                        </div>
+
+                                        <div class="col-2 p-0 m-0">
+                                            <div class="p-0 pt-1 pr-1 float-right">
+                                                <ng-container *ngIf="registro.evoluciones">
+                                                    <small class="badge badge-success text-default p-1">
+                                                        {{ registro.evoluciones[registro.evoluciones.length-1].estado }}
+                                                    </small>
+                                                </ng-container>
+                                                <button class="btn btn-sm btn-primary btn-icon-rup p-0"
+                                                    *ngIf="emitirConceptos"
+                                                    (click)="devolverHallazgo(registro, 'hallazgo')"
+                                                    title="Agregar a la consulta" titlePosition="left">
+                                                    <i class="mdi mdi-plus"></i>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </li>
-                    </ng-container>
-                </ul>
-            </ng-container>    
+                        </div>
+                    </li>
+                </ng-container>
+            </ul>
+        </ng-container>
 
         <!-- Vista: PROCEDIMIENTOS -->
         <ng-container *ngIf="filtroActual === 'procedimiento'">
             <ul *ngIf="procedimientos" class="hover conceptos list-unstyled">
                 <ng-container *ngFor="let registro of procedimientos; let iPrestacion = index">
                     <li>
-                        <div class="rup-card mini procedimiento" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
+                        <div class="rup-card mini procedimiento"
+                            [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
                             (click)="emitTabs(registro, 'concepto')">
                             <div class="rup-header">
-                                <div class="rup-border rup-border-procedimiento" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
+                                <div class="rup-border rup-border-procedimiento"
+                                    [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
                                     <div class="row p-0 m-0 border-secondary border-left-0">
                                         <div class="col-10 p-0 m-0">
                                             <div class="row m-0 p-0">
@@ -279,7 +290,8 @@
                                                     <div class="row p-0 m-0">
                                                         <div class="col-10 p-0 m-0">
                                                             <div class="sugerido">
-                                                                <small>Creada: {{ registro.evoluciones[0].fechaCarga | fecha }}</small>
+                                                                <small>Creada:
+                                                                    {{ registro.evoluciones[0].fechaCarga | fecha }}</small>
                                                                 <br>
                                                                 <small>Profesional: {{
                                                                         registro.evoluciones[0].profesional}}</small>
@@ -308,17 +320,20 @@
             <ng-container *ngIf="showFiltros">
                 <div class="row">
                     <div class="col-12">
-                        <plex-select [(ngModel)]="prestacionSeleccionada" label="Prestación" [data]="tiposPrestacion" idField="conceptId" labelField="term" (change)="filtrar()" [multiple]="true">
+                        <plex-select [(ngModel)]="prestacionSeleccionada" label="Prestación" [data]="tiposPrestacion"
+                            idField="conceptId" labelField="term" (change)="filtrar()" [multiple]="true">
                         </plex-select>
                     </div>
                 </div>
                 <div class="row pb-2">
                     <div class="col-6">
-                        <plex-datetime type="date" [(ngModel)]="fechaInicio" (change)="filtrar()" name="fechaInicio" label="Fecha Desde">
+                        <plex-datetime type="date" [(ngModel)]="fechaInicio" (change)="filtrar()" name="fechaInicio"
+                            label="Fecha Desde">
                         </plex-datetime>
                     </div>
                     <div class="col-6">
-                        <plex-datetime type="date" [(ngModel)]="fechaFin" (change)="filtrar()" name="fechaFin" label="Fecha Hasta">
+                        <plex-datetime type="date" [(ngModel)]="fechaFin" (change)="filtrar()" name="fechaFin"
+                            label="Fecha Hasta">
                         </plex-datetime>
                     </div>
                 </div>
@@ -327,10 +342,12 @@
             <ul *ngIf="prestaciones" class="hover conceptos list-unstyled">
                 <ng-container *ngFor="let prestacion of prestaciones">
                     <li>
-                        <div class="rup-card mini solicitud" [ngClass]="{'active': huds.isOpen(prestacion.data, prestacion.tipo)}"
+                        <div class="rup-card mini solicitud"
+                            [ngClass]="{'active': huds.isOpen(prestacion.data, prestacion.tipo)}"
                             (click)="emitTabs(prestacion, prestacion.tipo)">
                             <div class="rup-header">
-                                <div class="rup-border rup-border-solicitud"  [ngClass]="{'active': huds.isOpen(prestacion.data, prestacion.tipo)}">
+                                <div class="rup-border rup-border-solicitud"
+                                    [ngClass]="{'active': huds.isOpen(prestacion.data, prestacion.tipo)}">
                                     <div class="row p-0 m-0 border-secondary border-left-0">
                                         <div class="col-10 p-0 m-0">
                                             <div class="row m-0 p-0">
@@ -386,7 +403,8 @@
                                             <div class="row m-0 p-0">
                                                 <ng-container *ngIf="emitirConceptos">
                                                     <div class="icon-rup" draggable [dragScope]="_dragScope"
-                                                        [dragClass]="_dragOverClass" [dragData]="{'tipo': 'producto','data': registro, 'huds': true}"
+                                                        [dragClass]="_dragOverClass"
+                                                        [dragData]="{'tipo': 'producto','data': registro, 'huds': true}"
                                                         (onDragStart)="dragStart($event)" (onDragEnd)="dragEnd($event)">
                                                         <i class="icon icon-rup-semantic-producto"></i>
                                                     </div>
@@ -396,13 +414,14 @@
                                                         <i class="icon icon-rup-semantic-producto"></i>
                                                     </div>
                                                 </ng-container>
-                                                <div class="col p-0 pl-2 float-left" (click)="emitTabs(registro, 'concepto')">
+                                                <div class="col p-0 pl-2 float-left"
+                                                    (click)="emitTabs(registro, 'concepto')">
                                                     {{ registro.concepto.term }}
                                                     <div class="row p-0 m-0">
                                                         <div class="col-10 p-0 m-0">
                                                             <ng-container *ngIf="registro.evoluciones">
                                                                 <small class="sugerido">
-                                                                    último registro: 
+                                                                    último registro:
                                                                     {{ registro.evoluciones[0].fechaCarga | fecha }}
                                                                 </small>
                                                             </ng-container>
@@ -437,7 +456,8 @@
                 <ul class="conceptos list-unstyled">
                     <ng-container *ngFor="let laboratorio of laboratorios">
                         <li>
-                            <div class="rup-card mini laboratorio" [ngClass]="{'active': huds.isOpen(laboratorio.data, 'cda')}">
+                            <div class="rup-card mini laboratorio"
+                                [ngClass]="{'active': huds.isOpen(laboratorio.data, 'cda')}">
                                 <div class="rup-header">
                                     <div class="rup-border rup-border-laboratorio">
                                         <div class="row p-0 m-0 border-secondary border-left-0">
@@ -445,8 +465,10 @@
                                                 <div class="row m-0 p-0">
                                                     <ng-container *ngIf="emitirConceptos">
                                                         <div class="icon-rup" draggable [dragScope]="_dragScope"
-                                                            [dragClass]="_dragOverClass" [dragData]="{'tipo': 'laboratorio','data': laboratorio, 'huds': true}"
-                                                            (onDragStart)="dragStart($event)" (onDragEnd)="dragEnd($event)">
+                                                            [dragClass]="_dragOverClass"
+                                                            [dragData]="{'tipo': 'laboratorio','data': laboratorio, 'huds': true}"
+                                                            (onDragStart)="dragStart($event)"
+                                                            (onDragEnd)="dragEnd($event)">
                                                             <i class="icon mdi mdi-flask-empty-outline"></i>
                                                         </div>
                                                     </ng-container>
@@ -455,7 +477,8 @@
                                                             <i class="icon mdi mdi-eyedropper-variant"></i>
                                                         </div>
                                                     </ng-container>
-                                                    <div class="col p-0 pl-2 float-left" (click)="emitTabs(laboratorio, 'cda')">
+                                                    <div class="col p-0 pl-2 float-left"
+                                                        (click)="emitTabs(laboratorio, 'cda')">
                                                         {{ laboratorio?.prestacion.term }}
                                                         <div class="row p-0 m-0">
                                                             <div class="col-10 p-0 m-0">
@@ -488,20 +511,6 @@
 
         <!-- Vista: VACUNAS -->
         <ng-container *ngIf="filtroActual === 'vacunas'">
-            <!-- <div class="vista-titulo">Vacunas
-                <div *ngIf="vacunas?.length > 0" class="float-right">
-                    <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('fecha')">
-                        <i class="mdi mdi-calendar-clock"></i>
-                    </button>
-                    <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('alfa')">
-                        <i class="mdi mdi-sort-alphabetical"></i>
-                    </button>
-                    <button class="btn btn-primary btn-sm p-0" (click)="colapsarRegistros()">
-                        <i class="mdi mdi-menu-down"></i>
-                    </button>
-                </div>
-            </div> -->
-
             <div *ngIf="vacunas && vacunas.length > 0" class="conceptos hover list-unstyled">
 
                 <ul class="conceptos list-unstyled">
@@ -518,7 +527,7 @@
                                                         <div class="icon-rup" draggable [dragScope]="_dragScope"
                                                             [dragClass]="_dragOverClass"
                                                             [dragData]="{'tipo': 'vacuna','data': unaVacuna, 'huds': true}"
-                                                            (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                                                            (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($event)">
                                                             <i class="icon mdi mdi-eyedropper-variant"></i>
                                                         </div>
                                                     </ng-container>
@@ -527,7 +536,8 @@
                                                             <i class="icon mdi mdi-eyedropper-variant"></i>
                                                         </div>
                                                     </ng-container>
-                                                    <div class="col p-0 pl-2 float-left" (click)="emitTabs(unaVacuna.data, 'cda')">
+                                                    <div class="col p-0 pl-2 float-left"
+                                                        (click)="emitTabs(unaVacuna.data, 'cda')">
                                                         {{ unaVacuna?.prestacion.term }}
                                                         <div class="row p-0 m-0">
                                                             <div class="col-10 p-0 m-0">
