@@ -122,16 +122,22 @@ export class DesocuparCamaComponent implements OnInit {
                     this.plex.info('danger', 'Debe seleccionar una cama disponible', 'Error');
                     return false;
                 }
-                let paciente = this.cama.ultimoEstado.paciente;
-                let idInternacion = this.cama.ultimoEstado.idInternacion;
+
+                const fechaMovimiento = this.internacionService.combinarFechas(this.fecha, this.hora);
                 if (this.opcionDesocupar === 'movimiento' || this.opcionDesocupar === 'pase') {
                     let nuevoEstado = this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible';
                     // Primero desocupamos la cama donde esta el paciente actualmente
-                    this.camasService.cambioEstadoMovimiento(this.cama, nuevoEstado, this.internacionService.combinarFechas(this.fecha, this.hora), null, null, this.PaseAunidadOrganizativa).subscribe(camaActualizada => {
+                    const filtroEstado = this.cama.estados.filter(c => c.fecha < fechaMovimiento && c.idInternacion === this.prestacion.id);
+                    const ultimoEstado = filtroEstado[filtroEstado.length - 1];
+                    const paciente = ultimoEstado.paciente;
+                    const idInternacion = ultimoEstado.idInternacion;
+                    this.camasService.cambioEstadoMovimiento(this.cama.id, ultimoEstado, nuevoEstado, fechaMovimiento, null, null, this.PaseAunidadOrganizativa).subscribe(camaActualizada => {
                         this.cama = camaActualizada;
                         if (this.camaSeleccionPase) {
                             // Si hay que hacer un movimiento o pase de cama cambiamos el estado de la cama seleccionada a ocupada
-                            this.camasService.cambioEstadoMovimiento(this.camaSeleccionPase, 'ocupada', this.internacionService.combinarFechas(this.fecha, this.hora), paciente, idInternacion,
+                            const filtroEstadoPase = this.camaSeleccionPase.estados.filter(c => c.fecha < fechaMovimiento);
+                            const ultimoEstadoPase = filtroEstadoPase[filtroEstado.length - 1];
+                            this.camasService.cambioEstadoMovimiento(this.camaSeleccionPase.id, ultimoEstadoPase, 'ocupada', fechaMovimiento, paciente, idInternacion,
                                 this.PaseAunidadOrganizativa).subscribe(camaCambio => {
                                     this.camaSeleccionPase.ultimoEstado = camaCambio.ultimoEstado;
                                     this.opcionDesocupar = null;
