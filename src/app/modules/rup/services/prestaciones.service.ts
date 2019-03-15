@@ -287,7 +287,8 @@ export class PrestacionesService {
                                     relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : [],
                                     valor: registro.valor
                                 }],
-                                registros: [registro]
+                                registros: [registro],
+                                organizacion: prestaciones.find(x => x.id === registro.idPrestacion).solicitud.organizacion
                             };
                             registroSalida.push(dato);
                         } else {
@@ -306,7 +307,8 @@ export class PrestacionesService {
                                 idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : ultimaEvolucion.idRegistroGenerado,
                                 informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
                                 relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : [],
-                                valor: registro.valor
+                                valor: registro.valor,
+                                organizacion: prestaciones.find(x => x.id === registro.idPrestacion).solicitud.organizacion
                             };
                             registroEncontrado.prestaciones.push(registro.idPrestacion);
                             registroEncontrado.evoluciones.push(nuevaEvolucion);
