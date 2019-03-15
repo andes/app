@@ -4,9 +4,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 // Prototipo de Decorador cache. Proximamente se implementa de forma global.
-function Cache({key}) {
+function Cache({ key }) {
     let _cache: any = {};
-    return function ( target: any, propertyKey: string, descriptor: PropertyDescriptor ) {
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const fn = descriptor.value as Function;
         descriptor.value = function (...args) {
             const objectKey = key ? (typeof key === 'string' ? args[0][key] : args[0]) : 'default';
@@ -139,6 +139,14 @@ export class OrganizacionService {
             }
         }
     }
-
+    /**
+     * Devuelve el nombre del estado de la organizacion pasada por parámetro
+     * @param {IOrganizacion} organizacion
+     * @returns {string}
+     * @memberof OrganizacionService
+     */
+    getEstado(organizacion: IOrganizacion): string {
+        return organizacion.activo ? 'Habilitado' : 'No disponible';
+    }
 
 }

@@ -44,7 +44,7 @@
                         <div>
                             <div class="row">
                                 <div class="col-12">
-                                    <plex-text label="Detalle de Domicilio:" name="valorDomicilio" [(ngModel)]="organizacionModel.direccion.valor"
+                                    <plex-text label="Detalle de Domicilio" name="valorDomicilio" [(ngModel)]="organizacionModel.direccion.valor"
                                         placeholder="Ej: Belgrano 1547 - Piso 2 - Departamento 3...."></plex-text>
                                 </div>
                             </div>
@@ -52,11 +52,11 @@
                                 <div class="row">
                                     <div class="col-4">
                                         <plex-select name="localidad" [data]="localidadesNeuquen" [(ngModel)]="organizacionModel.direccion.ubicacion.localidad"
-                                            label="Localidad:">
+                                            label="Localidad">
                                         </plex-select>
                                     </div>
                                     <div class="col-4">
-                                        <plex-text label="Código Postal:" name="codigoPostal" [(ngModel)]="organizacionModel.direccion.codigoPostal"
+                                        <plex-text label="Código Postal" name="codigoPostal" [(ngModel)]="organizacionModel.direccion.codigoPostal"
                                             placeholder="Ingrese CP..."></plex-text>
                                     </div>
                                 </div>
@@ -75,23 +75,23 @@
                             <div class="row" *ngFor="let _unContacto of organizacionModel.contacto; let i = index">
                                 <div class="col-4">
                                     <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}"
-                                        placeholder="Seleccione..." label="Tipo:">
+                                        placeholder="Seleccione..." label="Tipo">
                                     </plex-select>
                                 </div>
                                 <div class="col-4">
                                     <span *ngIf="_unContacto.tipo && _unContacto.tipo.id">
-                                        <plex-text *ngIf="_unContacto.tipo.id !== 'celular'" label="Dato:" [(ngModel)]="_unContacto.valor"
+                                        <plex-text *ngIf="_unContacto.tipo.id !== 'celular'" label="Dato" [(ngModel)]="_unContacto.valor"
                                             name="valor-{{i}}">
                                         </plex-text>
-                                        <plex-phone label="Numero:" *ngIf="_unContacto.tipo.id === 'celular'"
+                                        <plex-phone label="Numero" *ngIf="_unContacto.tipo.id === 'celular'"
                                             [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000" name="valor-{{i}}">
                                         </plex-phone>
                                     </span>
                                     <span *ngIf="_unContacto.tipo && !_unContacto.tipo.id">
-                                        <plex-text *ngIf="_unContacto.tipo !== 'celular'" label="Dato:" [(ngModel)]="_unContacto.valor"
+                                        <plex-text *ngIf="_unContacto.tipo !== 'celular'" label="Dato" [(ngModel)]="_unContacto.valor"
                                             name="valor2-{{i}}">
                                         </plex-text>
-                                        <plex-phone label="Numero:" *ngIf="_unContacto.tipo === 'celular'" [(ngModel)]="_unContacto.valor"
+                                        <plex-phone label="Numero" *ngIf="_unContacto.tipo === 'celular'" [(ngModel)]="_unContacto.valor"
                                             placeholder="Ej: 2990000000" name="valor-{{i}}">
                                         </plex-phone>
                                     </span>
@@ -118,7 +118,7 @@
                                         <div class="col-12">
                                             <div class="row">
                                                 <div class="col-4">
-                                                    <plex-text label="Descripción:" name="descripcion2-{{i}}"
+                                                    <plex-text label="Descripción" name="descripcion2-{{i}}"
                                                         [(ngModel)]="_unEdificio.descripcion"></plex-text>
                                                 </div>
                                                 <div class="col-4 text-right">
@@ -130,7 +130,7 @@
                                             <div>
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <plex-text label="Detalle de Domicilio:" name="valorDomicilio2-{{i}}"
+                                                        <plex-text label="Detalle de Domicilio" name="valorDomicilio2-{{i}}"
                                                             [(ngModel)]="_unEdificio.direccion.valor" placeholder="Ej: Belgrano 1547 - Piso 2 - Departamento 3...."></plex-text>
                                                     </div>
                                                 </div>
@@ -138,11 +138,11 @@
                                                     <div class="row">
                                                         <div class="col-4">
                                                             <plex-select name="localidad22-{{i}}" [(ngModel)]="_unEdificio.direccion.ubicacion.localidad"
-                                                                [data]="localidadesNeuquen" label="Localidad:">
+                                                                [data]="localidadesNeuquen" label="Localidad">
                                                             </plex-select>
                                                         </div>
                                                         <div class="col-4">
-                                                            <plex-text label="Código Postal:" name="codigoPosta2-{{i}}"
+                                                            <plex-text label="Código Postal" name="codigoPosta2-{{i}}"
                                                                 [(ngModel)]="_unEdificio.direccion.codigoPostal"
                                                                 placeholder="Ingrese CP..."></plex-text>
                                                         </div>
@@ -152,24 +152,24 @@
                                             <div class="row" *ngIf="_unEdificio.contacto">
                                                 <div class="col-4">
                                                     <plex-select [(ngModel)]="_unEdificio.contacto.tipo" [data]="tipoComunicacion"
-                                                        name="tipo2-{{i}}" placeholder="Seleccione..." label="Tipo:">
+                                                        name="tipo2-{{i}}" placeholder="Seleccione..." label="Tipo">
                                                     </plex-select>
                                                 </div>
                                                 <div class="col-4">
                                                     <span *ngIf="_unEdificio.contacto.tipo && _unEdificio.contacto.tipo.id">
                                                         <plex-text *ngIf="_unEdificio.contacto.tipo.id !== 'celular'"
-                                                            label="Dato:" [(ngModel)]="_unEdificio.contacto.valor" name="valor3-{{i}}">
+                                                            label="Dato" [(ngModel)]="_unEdificio.contacto.valor" name="valor3-{{i}}">
                                                         </plex-text>
-                                                        <plex-phone label="Numero:" *ngIf="_unEdificio.contacto.tipo.id === 'celular'"
+                                                        <plex-phone label="Numero" *ngIf="_unEdificio.contacto.tipo.id === 'celular'"
                                                             [(ngModel)]="_unEdificio.contacto.valor" placeholder="Ej: 2990000000"
                                                             name="valor3-{{i}}">
                                                         </plex-phone>
                                                     </span>
                                                     <span *ngIf="_unEdificio.contacto.tipo && !_unEdificio.contacto.tipo.id">
                                                         <plex-text *ngIf="_unEdificio.contacto.tipo !== 'celular'"
-                                                            label="Dato:" [(ngModel)]="_unEdificio.contacto.valor" name="valor3-{{i}}">
+                                                            label="Dato" [(ngModel)]="_unEdificio.contacto.valor" name="valor3-{{i}}">
                                                         </plex-text>
-                                                        <plex-phone label="Numero:" *ngIf="_unEdificio.contacto.tipo === 'celular'"
+                                                        <plex-phone label="Numero" *ngIf="_unEdificio.contacto.tipo === 'celular'"
                                                             [(ngModel)]="_unEdificio.contacto.valor" placeholder="Ej: 2990000000"
                                                             name="valor3-{{i}}">
                                                         </plex-phone>
@@ -187,7 +187,7 @@
                         <div class="row">
                             <div class="col-10">
                                 <plex-select name="servicio" labelField="term" (getData)="loadListadoUO($event)"
-                                    idField="conceptId" [(ngModel)]="servicio" placeholder="Unidades Organizativas:">
+                                    idField="conceptId" [(ngModel)]="servicio" placeholder="Unidades Organizativas">
                                 </plex-select>
                             </div>
                             <div class="col-2">

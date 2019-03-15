@@ -1,5 +1,5 @@
 
-import {debounceTime} from 'rxjs/operators';
+import { debounceTime } from 'rxjs/operators';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { OrganizacionService } from './../../services/organizacion.service';
 import { Component, OnInit, HostBinding } from '@angular/core';
@@ -18,44 +18,31 @@ export class OrganizacionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
     showcreate = false;
     datos: IOrganizacion[] = [];
-    searchForm: FormGroup;
     seleccion: IOrganizacion;
-    value: any;
     skip = 0;
     nombre = '';
-    activo: boolean = null;
+    activo = true;
     loader = false;
     finScroll = false;
     tengoDatos = true;
-    checked = true;
 
     constructor(private formBuilder: FormBuilder,
-        private organizacionService: OrganizacionService,
+        public organizacionService: OrganizacionService,
         private auth: Auth,
         private router: Router) { }
 
     ngOnInit() {
-        this.searchForm = this.formBuilder.group({
-            nombre: [''],
-            activo: true
-        });
-
-        this.searchForm.valueChanges.pipe(debounceTime(200)).subscribe((value) => {
-            this.value = value;
-            this.skip = 0;
-            this.loadDatos(false);
-        });
         this.loadDatos();
     }
 
-    checkAuth (permiso, id) {
-        return this.auth.check('tm:organizacion:' + permiso + (id ? ':' + id : '') );
+    checkAuth(permiso, id) {
+        return this.auth.check('tm:organizacion:' + permiso + (id ? ':' + id : ''));
     }
 
     loadDatos(concatenar: boolean = false) {
         let parametros = {
-            activo: this.value && this.value.activo,
-            nombre: this.value && this.value.nombre,
+            activo: this.activo,
+            nombre: this.nombre,
             skip: this.skip,
             limit: limit
         };
@@ -83,15 +70,15 @@ export class OrganizacionComponent implements OnInit {
         this.loadDatos();
     }
 
-    onDisable(objOrganizacion: IOrganizacion) {
-        this.organizacionService.disable(objOrganizacion)
-            .subscribe(dato => this.loadDatos()); // Bind to view
-    }
+    // onDisable(objOrganizacion: IOrganizacion) { // no se esta usando en ningun lado 14/03/2019
+    //     this.organizacionService.disable(objOrganizacion)
+    //         .subscribe(dato => this.loadDatos()); // Bind to view
+    // }
 
-    onEnable(objOrganizacion: IOrganizacion) {
-        this.organizacionService.enable(objOrganizacion)
-            .subscribe(dato => this.loadDatos()); // Bind to view
-    }
+    // onEnable(objOrganizacion: IOrganizacion) { // no se esta usando en ningun lado 14/03/2019
+    //     this.organizacionService.enable(objOrganizacion)
+    //         .subscribe(dato => this.loadDatos()); // Bind to view
+    // }
 
     activate(objOrganizacion: IOrganizacion) {
         if (objOrganizacion.activo) {
@@ -118,5 +105,10 @@ export class OrganizacionComponent implements OnInit {
     }
     routeSectores(id) {
         this.router.navigate(['/tm/organizacion/' + id + '/sectores']);
+    }
+
+    aplicarFiltroBusqueda() {
+        this.skip = 0;
+        this.loadDatos(false);
     }
 }
