@@ -7,17 +7,26 @@
         <plex-tabs [activeIndex]="pestaniaActiva" (change)="cambio($event)">
 
             <plex-tab label="Visualizar permisos" color="procedimiento">
-                <div class="hover" *ngIf="!pestaniaUsuarioActiva && usuarioSeleccionado && organizacionSeleccionada && prestacionesTurneables && permisosUsuarioOrg">
-                    <div class="col-12 mt-5">
-                        <div class="page-title">AGRUPACIÓN DE PERMISOS</div>
+                <div class="row mt-4 mb-1" *ngIf="!pestaniaUsuarioActiva && usuarioSeleccionado && organizacionSeleccionada && prestacionesTurneables && permisosUsuarioOrg">
+                    <div class="col">
+                        <div class="page-title float-left">Agrupación de permisos</div>
                     </div>
-                    <permisosVisualizacion [user]="usuarioSeleccionado" [org]="organizacionSeleccionada"
-                        [permiteAsignarPerfiles]="false" [arbolPermisosCompleto]="arbolPermisosCompleto"
-                        [permisosUsuario]='permisosUsuarioOrg' [prestacionesTurneables]="prestacionesTurneables"></permisosVisualizacion>
+                    <div class="col d-flex justify-content-end" *ngIf="!pestaniaUsuarioActiva && usuarioSeleccionado && organizacionSeleccionada && puedeVerPerfiles">
+                        <plex-button type="info" label="Ver Agrupaciones" (click)="navegarAPerfiles()"></plex-button>
+                    </div>
                 </div>
-                <div *ngIf="pestaniaUsuarioActiva || !usuarioSeleccionado || !organizacionSeleccionada" class="mt-5">
-                    <i class="mdi mdi-emoticon-sad"></i>Seleccione un usuario y organización para visualizar sus
-                    permisos</div>
+                <div class="row">
+                    <div class="col-12 hover" *ngIf="!pestaniaUsuarioActiva && usuarioSeleccionado && organizacionSeleccionada && prestacionesTurneables && permisosUsuarioOrg">
+                        <permisosVisualizacion [user]="usuarioSeleccionado" [org]="organizacionSeleccionada"
+                            [permiteAsignarPerfiles]="false" [arbolPermisosCompleto]="arbolPermisosCompleto"
+                            [permisosUsuario]='permisosUsuarioOrg' [prestacionesTurneables]="prestacionesTurneables"></permisosVisualizacion>
+                    </div>
+                </div>
+                <div class="row" *ngIf="pestaniaUsuarioActiva || !usuarioSeleccionado || !organizacionSeleccionada">
+                    <div class="mt-5">
+                        <i class="mdi mdi-emoticon-sad"></i>Seleccione un usuario y organización para visualizar sus
+                        permisos</div>
+                </div>
             </plex-tab>
 
             <plex-tab label="Editar permisos">

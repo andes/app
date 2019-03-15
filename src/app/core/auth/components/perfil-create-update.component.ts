@@ -31,7 +31,6 @@ export class PerfilFormComponent implements OnInit {
             (this.perfilEdit.id && this.auth.check('usuarios:perfil:modificar:global') && this.auth.check('usuarios:perfil:modificar:local'));
         this.puedeModificar = (!this.perfilEdit.id && this.auth.check('usuarios:perfil:modificar:global')) ||
             (this.perfilEdit.id && this.auth.check('usuarios:perfil:modificar:local'));
-
     }
     /**
    * Todas las prestaciones turneables. De este arreglo se obtienen los nombres de las prestaciones dado un id. Es necesario que sea diferente de null
@@ -86,14 +85,18 @@ export class PerfilFormComponent implements OnInit {
      */
     guardar(event) {
         if (event.formValid) {
-            this.savePermisos();
-            this.perfilEdit.organizacion = !this.esGlobal ? this.auth.organizacion.id : null;
-            (this.perfilEdit.id ? this.perfilUsuarioService.putPerfil(this.perfilEdit) : this.perfilUsuarioService.postPerfil(this.perfilEdit)).subscribe(res => {
-                this.plex.toast('success', this.perfilEdit.id ? 'Perfil guardado' : 'Perfil creado');
-                this.perfilGuardado.emit(res);
-            });
+            if (!this.perfilEdit.permisos.length) {
+                this.savePermisos();
+                this.perfilEdit.organizacion = !this.esGlobal ? this.auth.organizacion.id : null;
+                (this.perfilEdit.id ? this.perfilUsuarioService.putPerfil(this.perfilEdit) : this.perfilUsuarioService.postPerfil(this.perfilEdit)).subscribe(res => {
+                    this.plex.toast('success', this.perfilEdit.id ? 'Agrupación de permisos guardada' : 'Agrupación de permisos creada');
+                    this.perfilGuardado.emit(res);
+                });
+            } else {
+                this.plex.info('danger', 'Debe ingresar por lo menos un permiso');
+            }
         } else {
-            this.plex.info('warning', 'Completar datos requeridos');
+            this.plex.info('danger', 'Completar datos requeridos');
         }
     }
 

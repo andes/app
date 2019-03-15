@@ -161,7 +161,7 @@ const appRoutes: Routes = [
 
   // Gestion de usuarios
   { path: 'gestionUsuarios', component: GestorUsuarioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'gestionPerfiles', component: GestorPerfilesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'gestionAgrupaciones', component: GestorPerfilesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // formulario terapeutico
   { path: 'formularioTerapeutico', component: FormTerapeuticoComponent, canActivate: [RoutingNavBar, RoutingGuard] },

@@ -2,10 +2,11 @@
     <plex-layout-main>
         <div class="row my-3">
             <div class="col">
-                <div class="page-title float-left">Perfil</div>
+                <div class="page-title float-left">Agrupación de permisos</div>
             </div>
             <div class="col d-flex justify-content-end">
-                <plex-button *ngIf="puedeCrearGlobal || puedeCrearLocal" label="Nuevo perfil" (click)="nuevoPerfil()"
+                <plex-button label="Volver" (click)="volver()" type="info"></plex-button>
+                <plex-button *ngIf="puedeCrearGlobal || puedeCrearLocal" label="Nueva agrupación" (click)="nuevoPerfil()"
                     type="success"></plex-button>
             </div>
         </div>

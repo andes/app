@@ -8,6 +8,8 @@ import { PermisosService } from '../../../services/permisos.service';
 import { agregarPermiso, quitarPermiso, obtenerPrestacionesDePermisos, obtenerArreglosMismoNivel } from '../controllers/permisos';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
+import { Auth } from '@andes/auth';
+import { Router } from '@angular/router';
 @Component({
     selector: 'gestorUsuario',
     templateUrl: 'gestorUsuario.html'
@@ -73,8 +75,16 @@ export class GestorUsuarioComponent implements OnInit {
      * @memberof GestorUsuarioComponent
      */
     public pestaniaUsuarioActiva = true;
-    constructor(private permisosService: PermisosService, private usuarioService: UsuarioService, private plex: Plex, private servicioTipoPrestacion: TipoPrestacionService) { }
+    public puedeVerPerfiles = false;
+    constructor(private permisosService: PermisosService, private usuarioService: UsuarioService, private plex: Plex, private servicioTipoPrestacion: TipoPrestacionService, private auth: Auth,
+        private router: Router) { }
     ngOnInit() {
+        if (this.auth.getPermissions('usuarios:?').length < 1) {
+            this.router.navigate(['./inicio']);
+        }
+        if (this.auth.getPermissions('usuarios:perfil:?').length > 0) {
+            this.puedeVerPerfiles = true;
+        }
         this.permisos$ = this.permisosService.get();
         this.usuarioService.permisos().subscribe(res => { this.arbolPermisosCompleto = res; });
         this.servicioTipoPrestacion.get('').subscribe(res => {
@@ -172,6 +182,10 @@ export class GestorUsuarioComponent implements OnInit {
 
     cambioPestaniaMain(event: boolean) {
         this.pestaniaUsuarioActiva = event;
+    }
+
+    navegarAPerfiles() {
+        this.router.navigate(['./gestionAgrupaciones']);
     }
 }
 
