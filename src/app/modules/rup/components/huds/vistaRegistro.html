@@ -29,7 +29,8 @@
                     <div [ngClass]="{'text-black-50': indice === registro.evoluciones.length - 1, 'hover': indice < registro.evoluciones.length - 1}"
                         class="menu-left mr-2 semantic-text-{{ registro.concepto.semanticTag }}"
                         (click)="cambiarEvolucion('+')"></div>
-                    {{ registro.evoluciones[indice].fechaInicio | fecha }}
+                    {{ (registro.evoluciones[indice]?.fechaInicio ? registro.evoluciones[indice].fechaInicio : registro.evoluciones[indice].fechaCarga) | fecha }}
+
                     <div [ngClass]="{'text-black-50': indice === 0, 'hover': indice > 0}"
                         class="menu-right ml-2 semantic-text-{{ registro.concepto.semanticTag }}"
                         (click)="cambiarEvolucion('-')"></div>
