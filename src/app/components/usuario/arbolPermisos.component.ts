@@ -73,7 +73,7 @@ export class ArbolPermisosComponent implements OnChanges, AfterViewInit {
 
     refresh() {
         this.initShiro();
-        if (this.item.type) {
+        if (this.item.type) { // si tiene type es porque es hoja
             if (this.item.type === 'boolean') {
                 this.state = this.shiro.check(this.makePermission() + ':?');
             } else {
@@ -105,7 +105,7 @@ export class ArbolPermisosComponent implements OnChanges, AfterViewInit {
                     }
                 }
             }
-        } else {
+        } else { // tiene hijos
             let permisos = this.makePermission();
             let items: String[] = this.shiro.permissions(permisos + ':?');
             this.allModule = items.length > 0 && items.indexOf('*') >= 0;
@@ -206,6 +206,7 @@ export class ArbolPermisosComponent implements OnChanges, AfterViewInit {
 
     private initShiro() {
         this.shiro.reset();
+        this.seleccionados = []; // borro los permisos que no son booleanos (los select de tipo prestación y organización)
         this.shiro.add(this.userPermissions);
     }
 
