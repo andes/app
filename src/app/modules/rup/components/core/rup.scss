@@ -17,6 +17,8 @@ $rotate: -90deg;
     &.mini {
         margin-bottom: 2px;
         .rup-header {
+            display: grid;
+            grid-template-columns: 55px 1fr 120px;
             .icon-rup {
                 border-right: 2px solid #ccc;
             }
@@ -25,9 +27,16 @@ $rotate: -90deg;
                 border-bottom: 2px solid #ccc;
                 border-right: 2px solid #ccc;
             }
-            // &:hover {
-            //     background: #eee;
-            // }
+            .datos {
+                display: grid;
+                .profesional {
+    
+                }
+                .efector {
+                    font-style: oblique;
+                    font-size: 0.75rem;
+                }
+            }
         }
         .rup-border {
             width: 100%;
@@ -93,7 +102,6 @@ $rotate: -90deg;
     .rup-header {
         text-transform: capitalize;
         display: flex;
-        .icon-rup,
         .title,
         .actions {
             padding: 5px;
@@ -217,7 +225,6 @@ $rotate: -90deg;
     .rup-header {
         text-transform: capitalize;
         display: flex;
-        .icon-rup,
         .title,
         .actions {
             padding: 5px;
