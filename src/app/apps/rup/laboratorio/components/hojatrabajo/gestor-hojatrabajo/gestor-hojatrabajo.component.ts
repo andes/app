@@ -5,6 +5,7 @@ import { IHojaTrabajo } from '../../../interfaces/practica/hojaTrabajo/IHojaTrab
 import { HojaTrabajoService } from '../../../services/hojatrabajo.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Plex } from '@andes/plex';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'gestor-hojatrabajo',
@@ -26,10 +27,14 @@ export class GestorHojatrabajoComponent implements OnInit {
         private plex: Plex,
         private servicioHojaTrabajo: HojaTrabajoService,
         private areaLaboratorioService: AreaLaboratorioService,
-        private auth: Auth
+        private auth: Auth,
+        private router: Router
     ) { }
 
     ngOnInit() {
+        if (!this.auth.getPermissions('laboratorio:imprimir:?').length) {
+            this.router.navigate(['./inicio']);
+        }
         this.loadAreas();
         this.agregarHojaTrabajo();
     }
@@ -93,7 +98,7 @@ export class GestorHojatrabajoComponent implements OnInit {
     loadAreas() {
         this.areaLaboratorioService.get().subscribe((areas: any) => {
             return this.areas = areas.map((area) => {
-               return {
+                return {
                     id: area._id,
                     nombre: area.nombre
                 };

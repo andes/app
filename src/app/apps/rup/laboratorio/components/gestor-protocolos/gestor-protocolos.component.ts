@@ -72,6 +72,9 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
     public indexProtocolo;
     public busqueda;
     public accionIndex;
+    public permisoCarga;
+    public permisoValidacion;
+    public permisoAuditoria;
 
     @ViewChild(ProtocoloDetalleComponent)
     public protocoloDetalleComponent: ProtocoloDetalleComponent;
@@ -91,7 +94,13 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
     }
 
     ngOnInit() {
+        this.permisoCarga = this.auth.getPermissions('laboratorio:cargar:?').length;
+        this.permisoAuditoria = this.auth.getPermissions('laboratorio:auditar:?').length;
+        this.permisoValidacion = this.auth.getPermissions('laboratorio:validar:?').length;
         this.contextoCache = this.laboratorioContextoCacheService.getContextoCache();
+        if (!this.permisoAuditoria && !this.permisoCarga && !this.permisoValidacion) {
+            this.router.navigate(['./inicio']);
+        }
         if (!this.contextoCache.modo) {
             this.contextoCache.modo = Constantes.modos.carga;
         }

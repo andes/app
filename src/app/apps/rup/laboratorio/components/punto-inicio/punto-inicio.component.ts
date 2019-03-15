@@ -63,9 +63,9 @@ export class PuntoInicioLaboratorioComponent implements OnInit, OnDestroy {
         private plex: Plex) { }
 
     ngOnInit() {
-        this.autorizado = this.auth.getPermissions('turnos:puntoInicio:?').length > 0;
-        this.puedeDarTurno = this.puedeDarTurno && this.auth.getPermissions('turnos:puntoInicio:darTurnos:?').length > 0;
-        this.puedeCrearSolicitud = this.puedeCrearSolicitud && this.auth.getPermissions('turnos:puntoInicio:solicitud:?').length > 0;
+        if (!this.auth.getPermissions('laboratorio:recibir:?').length) {
+            this.router.navigate(['./inicio']);
+        }
 
         this.routeParams = this.route.params.subscribe(params => {
             if (params['id'] && !this.seleccion) {
