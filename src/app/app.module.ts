@@ -87,6 +87,8 @@ import { SmsService } from './services/turnos/sms.service';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
+import { ObraSocialCacheService } from './services/obraSocialCache.service';
+
 import { ProfeService } from './services/profe.service';
 import { ReglasComponent } from './components/top/reglas/reglas.component';
 import { VisualizacionReglasComponent } from './components/top/reglas/visualizacionReglas.component';
@@ -228,7 +230,8 @@ import { PrestacionValidacionComponent } from './modules/rup/components//ejecuci
 import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
 import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
-import { VistaCDAComponent } from './modules/rup/components/huds/vistaCDA.component';
+import { VistaPrestacionComponent } from './modules/rup/components/ejecucion/vistaPrestacion.component';
+import { VistaCDAComponent } from './modules/rup/components/ejecucion/vistaCDA.component';
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
 import { ResumenPacienteDinamicoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
@@ -324,6 +327,8 @@ import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiag
 import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
 import { EncabezadoReportesComponent } from './components/reportes/encabezadoReportes.component';
 
+import { TurnosPrestacionesComponent } from './components/buscadorTurnosPrestaciones/turnos-prestaciones.component';
+import { TurnosPrestacionesService } from './components/buscadorTurnosPrestaciones/services/turnos-prestaciones.service';
 
 // Locales
 import { AppComponent } from './app.component';
@@ -562,6 +567,7 @@ registerLocaleData(localeEs, 'es');
         HudsBusquedaComponent,
         BuscadorComponent,
         VistaHudsComponent,
+        VistaPrestacionComponent,
         VistaCDAComponent,
         HudsBusquedaPacienteComponent,
         PacienteBuscarComponent,
@@ -625,7 +631,10 @@ registerLocaleData(localeEs, 'es');
         // Campañas Salud
         CampaniaSaludComponent,
         CampaniaVisualizacionComponent,
-        CampaniaFormComponent
+        CampaniaFormComponent,
+
+        // Buscador de turnos y prestaciones
+        TurnosPrestacionesComponent,
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
@@ -664,6 +673,7 @@ registerLocaleData(localeEs, 'es');
         AdjuntosService,
         TipoPrestacionService,
         ObraSocialService,
+        ObraSocialCacheService,
         ProfeService,
         PeriodoPadronesPucoService,
         PeriodoPadronesProfeService,
@@ -708,6 +718,7 @@ registerLocaleData(localeEs, 'es');
         PacienteCreateUpdateComponent,
         SnomedBuscarService,
         HUDSService
+        TurnosPrestacionesService
     ]
 })
 
