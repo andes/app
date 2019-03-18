@@ -230,8 +230,8 @@ import { PrestacionValidacionComponent } from './modules/rup/components//ejecuci
 import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
 import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
-import { VistaPrestacionComponent } from './modules/rup/components/ejecucion/vistaPrestacion.component';
-import { VistaCDAComponent } from './modules/rup/components/ejecucion/vistaCDA.component';
+import { VistaPrestacionComponent } from './modules/rup/components/huds/vistaPrestacion';
+import { VistaCDAComponent } from './modules/rup/components/huds/vistaCDA.component';
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
 import { ResumenPacienteDinamicoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
@@ -488,7 +488,6 @@ import { CodificacionService } from './modules/rup/services/codificacion.service
 import { VistaRegistroComponent } from './modules/rup/components/huds/vistaRegistro';
 import { VistaProcedimientoComponent } from './modules/rup/components/huds/vistaProcedimiento';
 import { VistaContextoPrestacionComponent } from './modules/rup/components/huds/vistaContextoPrestacion';
-import { VistaPrestacionComponent } from './modules/rup/components/huds/vistaPrestacion';
 import { PasesListadoInternacionComponent } from './apps/rup/internacion/components/pasesListadoInternacion.component';
 
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
@@ -567,7 +566,6 @@ registerLocaleData(localeEs, 'es');
         HudsBusquedaComponent,
         BuscadorComponent,
         VistaHudsComponent,
-        VistaPrestacionComponent,
         VistaCDAComponent,
         HudsBusquedaPacienteComponent,
         PacienteBuscarComponent,
@@ -717,7 +715,7 @@ registerLocaleData(localeEs, 'es');
         SeleccionBinariaComponent,
         PacienteCreateUpdateComponent,
         SnomedBuscarService,
-        HUDSService
+        HUDSService,
         TurnosPrestacionesService
     ]
 })
