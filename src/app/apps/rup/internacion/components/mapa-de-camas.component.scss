@@ -880,3 +880,11 @@ hr {
     margin-left: -15px !important
 }
 
+.selected {
+    border-color: $andes-cyan;
+    background-color: #2196f33d;
+
+    z-index: 4;
+}
+
+
