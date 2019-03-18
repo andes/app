@@ -813,10 +813,11 @@ export class PrestacionesService {
      * @memberof PrestacionesService
      */
     public getCssClass(conceptoSNOMED, esSolicitud) {
+
         let clase = conceptoSNOMED.semanticTag;
 
         if (conceptoSNOMED.plan || this.esTurneable(conceptoSNOMED) || (typeof esSolicitud !== 'undefined' && esSolicitud)) {
-            clase = 'solicitud';
+            clase = 'plan';
         } else if (conceptoSNOMED.semanticTag === 'régimen/tratamiento') {
             clase = 'regimen';
         } else if (conceptoSNOMED.semanticTag === 'elemento de registro') {
@@ -827,6 +828,10 @@ export class PrestacionesService {
             clase = 'producto';
         } else if (conceptoSNOMED.semanticTag === 'entidad observable') {
             clase = 'procedimiento';
+        } else if (conceptoSNOMED.conceptId === '4241000179101') {
+            clase = 'laboratorio';
+        } else if (conceptoSNOMED.conceptId === '33879002') {
+            clase = 'vacuna';
         }
 
         return clase;
