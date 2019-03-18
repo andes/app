@@ -55,18 +55,18 @@
                                 {{ registro.valor.estado }}
                             </ng-container>
                             <ng-container *ngIf="!hallazgoHudsCompleto && registro.evoluciones">
-                                {{ registro.evoluciones[0].estado }}
+                                {{ registro.evoluciones[indice].estado }}
                             </ng-container>
                         </span>
-                        <ng-container *ngIf="registro?.evoluciones?.length">
-                            ({{ registro.evoluciones[0].fechaInicio | fromNow }})
-                        </ng-container>
-                        <ng-container *ngIf="registro?.valor?.fechaInicio">
+                        <small *ngIf="registro?.evoluciones?.length">
+                            ({{ (registro.evoluciones[indice]?.fechaInicio ? registro.evoluciones[indice].fechaInicio : registro.evoluciones[indice].fechaCarga) | fromNow }})
+                        </small>
+                        <small *ngIf="registro?.valor?.fechaInicio">
                             ({{ registro.valor.fechaInicio | fromNow }})
-                        </ng-container>
-                        <ng-container *ngIf="!registro?.evoluciones?.length && !registro?.valor.fechaInicio">
+                        </small>
+                        <small *ngIf="!registro?.evoluciones?.length && !registro?.valor.fechaInicio">
                             (Sin registro)
-                        </ng-container>
+                        </small>
                     </div>
                 </div>
                 <div class="d-flex" *ngIf="registro.esPrimeraVez">
