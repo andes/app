@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
 import { RupElement } from '.';
+import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
 
 @Component({
     selector: 'rup-seleccion-binaria',
@@ -9,9 +10,10 @@ import { RupElement } from '.';
 @RupElement('SeleccionBinariaComponent')
 export class SeleccionBinariaComponent extends RUPComponent implements OnInit {
 
-    public options;
-    public valor;
-    public label;
+    public options: any;
+    public valor: any;
+    public label: any;
+    private newRegistro: IPrestacionRegistro;
 
     ngOnInit() {
         this.label = this.params && this.params.title ? this.params.title : this.registro.concepto.term;
@@ -24,7 +26,11 @@ export class SeleccionBinariaComponent extends RUPComponent implements OnInit {
     }
 
     onChange() {
-        this.registro.valor = this.options.find(i => i.id === this.valor);
+        this.registro.valor = this.options.find((i: any) => i.id === this.valor);
+        if (this.registro.valor.value) {
+            this.newRegistro = new IPrestacionRegistro(null, this.registro.valor.value);
+            this.registro.registros = [...this.registro.registros, this.newRegistro];
+        }
         this.emitChange();
     }
 
