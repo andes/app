@@ -308,12 +308,13 @@ export class SelectorUsuarioEfectorComponent {
                 if (this.organizacionesUsuario && this.organizacionesUsuario.length > 0) {
                     let index2 = this.organizacionesUsuario.findIndex(elem => elem.id === this.organizacionPermisos.id);
                     this.organizacionesUsuario.splice(index2, 1);
-                    // es necesario hacer esto para que angular se dé cuenta de que el arreglo organizacionesUsuario se modificó.
-                    // Si simplemente se borra uno de los ítems del arreglo, angular no actualiza la visual. Es necesario modificarlo
-                    // completo, entonces seteo todo el arreglo de nuevo
-                    this.organizacionesUsuario = [...this.organizacionesUsuario];
                     this.organizacionPermisos = this.organizacionesUsuario ? this.organizacionesUsuario[0] : null;
-                    this.usuarioService.save(this.usuarioSeleccionado).subscribe();
+                    this.usuarioService.save(this.usuarioSeleccionado).subscribe(user => {
+                        // es necesario hacer esto para que angular se dé cuenta de que el arreglo organizacionesUsuario se modificó.
+                        // Si simplemente se borra uno de los ítems del arreglo, angular no actualiza la visual. Es necesario modificarlo
+                        // completo, entonces seteo todo el arreglo de nuevo
+                        this.organizacionesUsuario = [...this.organizacionesUsuario];
+                    });
                 }
                 this.onOrgChange();
             }
