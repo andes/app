@@ -1,3 +1,4 @@
+import { DesocuparCamaComponent } from './cama-desocupar.component';
 import { Component, OnInit, ViewEncapsulation, HostBinding, ViewChildren, ViewChild, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
@@ -73,7 +74,7 @@ export class ListadoInternacionComponent implements OnInit {
         if (tipo === 'ingreso') {
             return informe.informeIngreso.fechaIngreso;
         } else {
-            return informe ? informe.InformeEgreso.fechaEgreso : '';
+            return informe ? informe.InformeEgreso.fechaEgreso : null;
 
         }
     }
@@ -108,6 +109,36 @@ export class ListadoInternacionComponent implements OnInit {
         // Si viene event.desocupaCama significa que se cargaron los datos de egreso
         if (event.desocupaCama) {
             this.filtrar();
+            this.desocuparCama(event.egresoExiste, event.cama);
+        }
+    }
+
+
+    desocuparCama(egreso, unaCama) {
+        let dto;
+        if (!unaCama) {
+            let fechaEgreso = egreso.valor.InformeEgreso.fechaEgreso;
+            this.servicioPrestacion.getPasesInternacion(this.internacionSelected.id).subscribe(lista => {
+                let listaFiltrada = lista.filter(c => c.estados.fecha < fechaEgreso);
+                this.camasService.getCama(listaFiltrada[listaFiltrada.length - 1]._id).subscribe(cama => {
+                    if (cama) {
+                        dto = {
+                            fecha: egreso.valor.InformeEgreso.fechaEgreso,
+                            estado: this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible',
+                            unidadOrganizativa: cama.ultimoEstado.unidadOrganizativa ? cama.ultimoEstado.unidadOrganizativa : null,
+                            especialidades: cama.ultimoEstado.especialidades ? cama.ultimoEstado.especialidades : null,
+                            esCensable: cama.ultimoEstado.esCensable,
+                            genero: cama.ultimoEstado.genero ? cama.ultimoEstado.genero : null,
+                            paciente: null,
+                            idInternacion: null
+                        };
+                        this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {
+                        }, (err1) => {
+                            this.plex.info('danger', 'Error al intentar desocupar la cama');
+                        });
+                    }
+                });
+            });
         }
     }
 
