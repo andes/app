@@ -78,14 +78,21 @@ export class AppComponent {
         if (this.auth.getPermissions('usuarios:?').length > 0) {
             accessList.push({ label: 'Gestión de usuarios', icon: 'mdi mdi-account-key', route: '/gestionUsuarios' });
         }
+        if (this.auth.getPermissions('turnosPrestaciones:buscar').length > 0) {
+            accessList.push({ label: 'Buscador de turnos y prestaciones', icon: 'table-search', route: '/buscador' });
+        }
+
+        if (this.auth.getPermissions('internacion:?').length > 0) {
+            accessList.push({ label: 'Internación - Mapa de cama', icon: 'mdi mdi-minus', route: '/internacion/camas' });
+        }
 
         // faltan permisos
         if (this.auth.getPermissions('formularioTerapeutico:?').length > 0) {
             accessList.push({ label: 'Formulario Terapeutico', icon: 'mdi mdi-needle', route: '/formularioTerapeutico' });
         }
+
         this.menuList.push({ label: 'Página principal', icon: 'home', route: '/inicio' });
         this.menuList.push({ label: 'Padrones', icon: 'magnify', route: '/puco' });
-
         accessList.forEach((permiso) => {
             this.menuList.push(permiso);
         });
