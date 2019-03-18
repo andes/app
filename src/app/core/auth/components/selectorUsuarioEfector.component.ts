@@ -174,8 +174,11 @@ export class SelectorUsuarioEfectorComponent {
      * @memberof GestorUsuarioComponent
      */
     public cambio(value: number) {
-        this.pestaniaActiva = value;
-        this.pestaniaUsuarioActiva.emit(this.pestaniaActiva === 0);
+        // entra cuando cancela copiar los permisos o agregar un nuevo efector mientras se tiene abierto las sugerencias. Esto no permite que entre
+        if (typeof value === 'number') {
+            this.pestaniaActiva = value;
+            this.pestaniaUsuarioActiva.emit(this.pestaniaActiva === 0);
+        }
     }
 
     /**
