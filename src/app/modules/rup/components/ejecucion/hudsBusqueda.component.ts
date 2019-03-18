@@ -14,6 +14,7 @@ import { HUDSService } from '../../services/huds.service';
     encapsulation: ViewEncapsulation.None
 })
 export class HudsBusquedaComponent implements OnInit {
+
     laboratoriosFS: any;
     laboratorios: any = [];
     vacunas: any = [];
@@ -24,6 +25,19 @@ export class HudsBusquedaComponent implements OnInit {
 
     hallazgosCronicosAux: any[];
     hallazgosNoActivosAux: any;
+
+
+    filtros: any = [
+        { titulo: 'PRESTACIONES', key: 'prestaciones', icon: 'plan' },
+        { titulo: 'TODOS', key: 'todos', icon: 'todos' },
+        { titulo: 'HALLAZGOS', key: 'hallazgos', icon: 'hallazgo' },
+        { titulo: 'TRASTORNOS', key: 'trastornos', icon: 'trastorno' },
+        { titulo: 'PROC', key: 'procedimientos', icon: 'procedimiento' },
+        { titulo: 'PRODUCTOS', key: 'productos', icon: 'producto' },
+        { titulo: 'LABOS', key: 'laboratorios', icon: 'laboratorio' },
+        { titulo: 'VACUNAS', key: 'vacunas', icon: 'vacuna' }
+    ];
+
     filtroActual: any = 'prestaciones';
     public loading = false;
 
@@ -321,14 +335,16 @@ export class HudsBusquedaComponent implements OnInit {
                     estado: 'validada',
                 };
             });
-            // filtramos las vacunas y laboratorios por ahora para que se listan por separado
+
+            // Filtramos las vacunas y laboratorios por ahora para que se listan por separado
             this.resultadoRegistros.vacunas = this.cdas.filter(cda => cda.prestacion.conceptId === TipoPrestacionService.Vacunas_CDA_ID);
             this.resultadoRegistros.laboratorios = this.cdas.filter(cda => cda.prestacion.conceptId === TipoPrestacionService.Laboratorio_CDA_ID);
 
-            // DEjamos el resto de los CDAS y los unimos a las prestaciones
+            // Dejamos el resto de los CDAS y los unimos a las prestaciones
             const filtro = this.cdas.filter(cda => {
                 return cda.prestacion.conceptId !== TipoPrestacionService.Vacunas_CDA_ID && cda.prestacion.conceptId !== TipoPrestacionService.Laboratorio_CDA_ID;
             });
+
             // Filtramos por CDA para poder recargar los estudiosc
             this.resultadoRegistros.prestaciones = [...this.resultadoRegistros.prestaciones.filter(e => e.tipo !== 'cda'), ...filtro];
             this.prestacionesCopia = this.resultadoRegistros.prestaciones;
