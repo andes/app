@@ -136,7 +136,7 @@
     </div>
 </section>
 <ng-container *ngIf='modoFlat'>
-    <div class='row camaModoFlat' >
+    <div class='row camaModoFlat'>
         <div class='col-2 centerBadge ' (click)="seleccionarCama('mostrarResumen');">
             <div [ngClass]="{ 'badge-success': cama.ultimoEstado.estado === 'disponible',
             'badge-warning': cama.ultimoEstado.estado === 'desocupada', 
@@ -147,6 +147,12 @@
                 class="badge ">
                 {{cama.ultimoEstado.estado}}
             </div>
+        </div>
+        <div class='col-2' (click)="seleccionarCama('mostrarResumen');">
+            <label>Cama</label>
+
+            {{cama.nombre}}
+
         </div>
         <div class='col-3' (click)="seleccionarCama('mostrarResumen');">
             <label>Paciente</label>
@@ -159,15 +165,10 @@
             </ng-container>
         </div>
         <div class='col-3' (click)="seleccionarCama('mostrarResumen');">
-            <label>Sector</label>
-           {{cama.ultimoEstado.unidadOrganizativa.term}} | {{ cama.sectores[0].nombre}}
+            <label>Unidad organizativa</label>
+            {{cama.ultimoEstado.unidadOrganizativa.term}} | {{ cama.sectores[0].nombre}}
         </div>
-        <div class='col-2' (click)="seleccionarCama('mostrarResumen');">
-            <label>Cama</label>
 
-            {{cama.nombre}}
-
-        </div>
         <div class='col-2'>
             <label>Acciones</label>
             <!-- Internar paciente -->
