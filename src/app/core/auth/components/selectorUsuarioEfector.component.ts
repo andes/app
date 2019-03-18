@@ -21,10 +21,11 @@ export class SelectorUsuarioEfectorComponent {
      */
     @Output() seleccionUsuario = new EventEmitter();
     /**
-     * Notifica al componente que contiene a este la organización seleccionada
+     * Notifica al componente que contiene a este la organización seleccionada y si es nueva (sin permisos)
+     * o si la tenía cargada de antes (con permisos)
      * @memberof SelectorUsuarioEfectorComponent
      */
-    @Output() seleccionOrganizacion = new EventEmitter<IOrganizacion>();
+    @Output() seleccionOrganizacion = new EventEmitter<{ org: IOrganizacion, esNueva: boolean }>();
     /**
      * Indica si la pestaña de selección de usuario es la que se encuentra activa
      * @memberof SelectorUsuarioEfectorComponent
@@ -238,7 +239,7 @@ export class SelectorUsuarioEfectorComponent {
         this.organizacionSelectPrev = this.organizacionPermisos;
         this.loadPermisos();
         this.getOrgActualAuthUs();
-        this.seleccionOrganizacion.emit(this.organizacionPermisos);
+        this.seleccionOrganizacion.emit({ org: this.organizacionPermisos, esNueva: false });
     }
 
     /**
@@ -275,7 +276,7 @@ export class SelectorUsuarioEfectorComponent {
             this.organizacionPermisos = this.newOrg;
             this.organizacionSelectPrev = this.organizacionPermisos;
             this.agregarEfector = false;
-            this.seleccionOrganizacion.emit(this.organizacionPermisos);
+            this.seleccionOrganizacion.emit({ org: this.organizacionPermisos, esNueva: true });
         }
     }
 

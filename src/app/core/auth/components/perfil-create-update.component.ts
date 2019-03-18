@@ -38,6 +38,7 @@ export class PerfilFormComponent implements OnInit {
    * @memberof ArbolPermisosComponent
    */
     @Input() prestacionesTurneables: ITipoPrestacion[];
+    @Input() perfilesGlobLocOrg: IPerfilUsuario[];
     @Output() perfilGuardado = new EventEmitter<IPerfilUsuario>();
 
     @ViewChildren(ArbolPermisosComponent) childsComponents: QueryList<ArbolPermisosComponent>;
@@ -48,26 +49,26 @@ export class PerfilFormComponent implements OnInit {
      * @type { IPerfilUsuario }
      * @memberof PerfilFormComponent
      */
-    perfilEdit: IPerfilUsuario;
+    public perfilEdit: IPerfilUsuario;
     /**
      * Booleano que indica si el perfil a crear/editar tiene alcance Global o solo Local. Sirve para saber
      * si la organización donde está logueado el usuario debe guardarse en el perfil
      * @type {boolean}
      * @memberof PerfilFormComponent
      */
-    esGlobal: boolean;
+    public esGlobal: boolean;
     /**
      * Indica si se debe mostrar el bool que permite modificar el alcance del perfil
      * @type {boolean}
      * @memberof PerfilFormComponent
      */
-    puedeModificarAlcance: boolean;
+    public puedeModificarAlcance: boolean;
     /**
      * Indica si se debe mostrar los datos del perfil para poder modificarlos o no
      * @type {boolean}
      * @memberof PerfilFormComponent
      */
-    puedeModificar: boolean;
+    public puedeModificar: boolean;
 
     public permisos$: any;
     public permisos: any[] = [];
@@ -83,20 +84,27 @@ export class PerfilFormComponent implements OnInit {
      * @param {*} event
      * @memberof PerfilFormComponent
      */
-    guardar(event) {
-        if (event.formValid) {
-            if (!this.perfilEdit.permisos.length) {
-                this.savePermisos();
-                this.perfilEdit.organizacion = !this.esGlobal ? this.auth.organizacion.id : null;
-                (this.perfilEdit.id ? this.perfilUsuarioService.putPerfil(this.perfilEdit) : this.perfilUsuarioService.postPerfil(this.perfilEdit)).subscribe(res => {
-                    this.plex.toast('success', this.perfilEdit.id ? 'Agrupación de permisos guardada' : 'Agrupación de permisos creada');
-                    this.perfilGuardado.emit(res);
-                });
-            } else {
-                this.plex.info('danger', 'Debe ingresar por lo menos un permiso');
-            }
-        } else {
+    public guardar(event) {
+        if (!event.formValid) {
             this.plex.info('danger', 'Completar datos requeridos');
+        } else {
+            this.cargarPermisosDelArbol();
+            if (this.perfilEdit.permisos.length < 1) {
+                this.plex.info('danger', 'Debe ingresar por lo menos un permiso');
+            } else {
+                let perfilMismoPermisos = this.perfilesGlobLocOrg.find((perfil: IPerfilUsuario) => {
+                    return perfil.permisos.toString() === this.perfilEdit.permisos.toString();
+                });
+                if (perfilMismoPermisos) {
+                    this.plex.info('warning', 'La agrupación ' + perfilMismoPermisos.nombre + ' tiene los mismos permisos.');
+                } else {
+                    this.perfilEdit.organizacion = !this.esGlobal ? this.auth.organizacion.id : null;
+                    (this.perfilEdit.id ? this.perfilUsuarioService.putPerfil(this.perfilEdit) : this.perfilUsuarioService.postPerfil(this.perfilEdit)).subscribe(res => {
+                        this.plex.toast('success', this.perfilEdit.id ? 'Agrupación de permisos guardada' : 'Agrupación de permisos creada');
+                        this.perfilGuardado.emit(res);
+                    });
+                }
+            }
         }
     }
 
@@ -104,7 +112,7 @@ export class PerfilFormComponent implements OnInit {
      * Cancela la edición/creación de un perfil
      * @memberof PerfilFormComponent
      */
-    cancelar() {
+    public cancelar() {
         this.perfilGuardado.emit(null);
     }
 
@@ -112,7 +120,7 @@ export class PerfilFormComponent implements OnInit {
      * Setea los permisos del perfil de acuerdo al árbol de permisos
      * @memberof PerfilFormComponent
      */
-    savePermisos() {
+    private cargarPermisosDelArbol() {
         let i = 0;
         this.childsComponents.forEach(child => {
             this.permisos = [...this.permisos, ...child.generateString()];

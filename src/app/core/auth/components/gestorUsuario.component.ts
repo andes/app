@@ -106,9 +106,12 @@ export class GestorUsuarioComponent implements OnInit {
         this.usuarioSeleccionado = user;
     }
 
-    seleccionOrganizacion(org: IOrganizacion) {
-        this.organizacionSeleccionada = org;
+    seleccionOrganizacion(event: { org: IOrganizacion, esNueva: boolean }) {
+        this.organizacionSeleccionada = event.org;
         this.obtenerPermisosUsuario(this.usuarioSeleccionado, this.organizacionSeleccionada);
+        if (event.esNueva) {
+            this.cambio(1); // Cambia a pestaña edición de permisos
+        }
     }
 
     obtenerPermisosUsuario(usuario, organizacion: IOrganizacion) {
@@ -126,11 +129,15 @@ export class GestorUsuarioComponent implements OnInit {
      * @memberof GestorUsuarioComponent
      */
     guardar(event) {
-        let prestaciones = obtenerPrestacionesDePermisos(this.permisosUsuarioOrg, this.prestacionesTurneables);
-        let respuesta = obtenerArreglosMismoNivel(this.permisosUsuarioOrg, 0, '', [], this.arbolPermisosCompleto, null, prestaciones);
-        this.savePermisos();
-        this.usuarioService.save(this.usuarioSeleccionado).subscribe();
-        this.cambio(0);
+        if (this.permisosUsuarioOrg.length > 0) {
+            let prestaciones = obtenerPrestacionesDePermisos(this.permisosUsuarioOrg, this.prestacionesTurneables);
+            let respuesta = obtenerArreglosMismoNivel(this.permisosUsuarioOrg, 0, '', [], this.arbolPermisosCompleto, null, prestaciones);
+            this.savePermisos();
+            this.usuarioService.save(this.usuarioSeleccionado).subscribe();
+            this.cambio(0);
+        } else {
+            this.plex.info('danger', 'Debe ingresar por lo menos un permiso');
+        }
     }
 
     /**
