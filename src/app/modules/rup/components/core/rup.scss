@@ -18,7 +18,7 @@ $rotate: -90deg;
         margin-bottom: 2px;
         .rup-header {
             display: grid;
-            grid-template-columns: 55px 1fr 135px;
+            grid-template-columns: 55px 1fr minmax(135px, 160px);
             .icon-rup {
                 border-right: 2px solid #ccc;
             }
@@ -29,6 +29,9 @@ $rotate: -90deg;
             }
             .datos {
                 display: grid;
+                b {
+                    text-transform: capitalize;
+                }
                 .profesional {
     
                 }
@@ -101,14 +104,18 @@ $rotate: -90deg;
         }
     }
     .rup-header {
-        text-transform: capitalize;
         display: flex;
         .title,
         .actions {
             padding: 5px;
         }
+        .badge {
+            padding: 0.25em 0.4em;
+        }
         .btn-icon-rup {
             line-height: 1.3em;
+            height: 20px;
+            padding: 0 2px;
         }
         .icon-rup {
             font-size: 1.2rem;
