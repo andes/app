@@ -193,6 +193,7 @@ export class PasesListadoInternacionComponent implements OnInit {
         if (this.opcionDesocupar === 'movimiento' || this.opcionDesocupar === 'pase') {
             this.listadoCamas = null;
             this.elegirDesocupar = false;
+            this.cama = this.buscarCamaOcupada();
             if (this.cama) {
                 let unidadOrganizativa = this.cama.estados.unidadOrganizativa;
                 this.selectCamasDisponibles(unidadOrganizativa.conceptId, this.fecha, this.hora);
