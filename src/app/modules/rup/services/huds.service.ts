@@ -40,7 +40,7 @@ export class HUDSService {
      * @param registro Elemento seleccionado en hudsBusqueda.
      * @param tipo 'cda' 'rup' 'concepto'.
      */
-    public toogle (registro: Registro, tipo: string) {
+    public toogle(registro: Registro, tipo: string) {
         const index = this.index(registro, tipo);
         if (index === -1) {
             const elemento: ElementoHUDS = {
@@ -74,7 +74,7 @@ export class HUDSService {
                         break;
                     case 'rup':
                     case 'cda':
-                        if (registro.id === _registro.id) {
+                        if ((registro.id || registro.data.id) === _registro.id) {
                             return i;
                         }
                         break;
