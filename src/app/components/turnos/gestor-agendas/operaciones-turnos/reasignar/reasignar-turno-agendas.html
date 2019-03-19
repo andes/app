@@ -13,7 +13,8 @@
                 <div class="col">
                     Paciente: {{turnoSeleccionado.paciente | paciente }}
                     <small>
-                        <span *ngIf="turnoSeleccionado.paciente.documento !== ''">| DNI {{turnoSeleccionado.paciente.documento | number}}</span>
+                        <span *ngIf="turnoSeleccionado.paciente.documento !== ''">| DNI
+                            {{turnoSeleccionado.paciente.documento | number}}</span>
                         <span *ngIf="turnoSeleccionado.paciente.documento === ''">| Sin documento (temporal)</span>
                     </small>
                     <br>
@@ -41,14 +42,18 @@
                     <div class="row">
                         <!-- AGENDA ORIGEN -->
                         <div class="col-6 text-warning" *ngIf="agendaAReasignar?.horaInicio">
-                            <b>{{agendaAReasignar?.horaInicio | date: 'EEEE' | uppercase }} {{agendaAReasignar?.horaInicio |
-                                fecha}} de {{agendaAReasignar?.horaInicio | date: 'HH:mm'}} a {{agendaAReasignar?.horaFin
+                            <b>{{agendaAReasignar?.horaInicio | date: 'EEEE' | uppercase }}
+                                {{agendaAReasignar?.horaInicio |
+                                fecha}} de {{agendaAReasignar?.horaInicio | date: 'HH:mm'}} a
+                                {{agendaAReasignar?.horaFin
                                 | date: 'HH:mm'}} hs</b>
                         </div>
                         <!-- AGENDA DESTINO -->
                         <div class="col-6 text-info" *ngIf="agendaDestino?.agenda">
-                            <b>{{agendaDestino?.agenda?.horaInicio | date: 'EEEE' | uppercase }} {{ agendaDestino?.agenda?.horaInicio
-                                | fecha}} de {{ agendaDestino?.agenda.horaInicio | date: 'HH:mm' }} a {{ agendaDestino?.agenda?.horaFin
+                            <b>{{agendaDestino?.agenda?.horaInicio | date: 'EEEE' | uppercase }} {{
+                                agendaDestino?.agenda?.horaInicio
+                                | fecha}} de {{ agendaDestino?.agenda.horaInicio | date: 'HH:mm' }} a {{
+                                agendaDestino?.agenda?.horaFin
                                 | date:'HH:mm' }} hs
                             </b>
                         </div>
@@ -64,14 +69,14 @@
                         </div>
                     </div>
                     <div class="row" *ngIf="agendaAReasignar?.horaInicio && agendaDestino?.agenda">
-                        <!-- PROFESIONALES ORIGEN -->
+                        <!-- Equipo de Salud ORIGEN -->
                         <div class="col-6 text-warning" *ngIf="agendaAReasignar?.profesionales?.length > 0">
-                            Profesionales:
+                            Equipo de Salud:
                             <b>{{ agendaAReasignar?.profesionales | enumerar:['apellido', 'nombre'] }}</b>
                         </div>
-                        <!-- PROFESIONALES DESTINO -->
+                        <!-- Equipo de Salud DESTINO -->
                         <div class="col-6 text-info" *ngIf="agendaDestino?.agenda?.profesionales?.length > 0">
-                            Profesionales:
+                            Equipo de Salud:
                             <b>{{ agendaDestino?.agenda?.profesionales | enumerar:['apellido', 'nombre'] }}</b>
                         </div>
                     </div>
@@ -98,10 +103,13 @@
                     <div *ngIf="hayTurnosDisponibles(agenda)" class="col-6">
                         <div class="card">
                             <div class="card-block">
-                                <h5 class="card-title">Agenda: {{ agenda.horaInicio | date: 'dd/MM/yyyy' }} de {{ agenda.horaInicio | date: 'HH:mm'
+                                <h5 class="card-title">Agenda: {{ agenda.horaInicio | date: 'dd/MM/yyyy' }} de {{
+                                    agenda.horaInicio | date: 'HH:mm'
                                     }} a {{ agenda.horaFin | date: 'HH:mm' }} hs</h5>
-                                <p class="card-text" *ngIf="agenda.profesionales?.length > 0">Profesionales: {{ agenda.profesionales | enumerar:['apellido', 'nombre'] }}</p>
-                                <p class="card-text text-danger" *ngIf="agenda.profesionales?.length === 0">Sin profesional asignado</p>
+                                <p class="card-text" *ngIf="agenda.profesionales?.length > 0">Equipo de Salud: {{
+                                    agenda.profesionales | enumerar:['apellido', 'nombre'] }}</p>
+                                <p class="card-text text-danger" *ngIf="agenda.profesionales?.length === 0">Sin equipo
+                                    de salud asignado</p>
                                 <div *ngFor="let bloque of agenda.bloques; let indiceBloque = index">
                                     <div *ngIf="existePrestacion(bloque, turnoSeleccionado.tipoPrestacion.id)">
                                         <div *ngFor="let turno of bloque.turnos; let indiceTurno = index">
@@ -111,25 +119,28 @@
                                             </div>
                                             <ng-container *ngIf="turno.horaInicio && (getFecha(hoy) === getFecha(agenda.horaInicio) && getHora(turno.horaInicio) > getHora(hoy)) || (getFecha(hoy) !== getFecha(agenda.horaInicio))">
                                                 <div class="reasignar" *ngIf="!bloque.pacienteSimultaneos && !bloque.citarPorBloque && !esTurnoDoble(turnoSeleccionado)">
-                                                    <div *ngIf="turno.estado === 'disponible'" class="text-center p-2 mb-1 hover outline-dashed-default" [appHover]="'text-info outline-info'"
-                                                        (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
+                                                    <div *ngIf="turno.estado === 'disponible'" class="text-center p-2 mb-1 hover outline-dashed-default"
+                                                        [appHover]="'text-info outline-info'" (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
                                                         {{turno.horaInicio | date: 'HH:mm'}}
                                                     </div>
                                                 </div>
                                                 <div *ngIf="esTurnoDoble(turnoSeleccionado)">
-                                                    <div *ngIf="turno.estado === 'disponible' && siguienteDisponible(bloque, turno, indiceTurno)" class="text-center p-2 mb-1 hover outline-dashed-default"
+                                                    <div *ngIf="turno.estado === 'disponible' && siguienteDisponible(bloque, turno, indiceTurno)"
+                                                        class="text-center p-2 mb-1 hover outline-dashed-default"
                                                         [appHover]="'text-info outline-info'" (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
                                                         {{turno.horaInicio | date: 'HH:mm'}}
                                                     </div>
                                                 </div>
                                                 <div *ngIf="bloque.pacienteSimultaneos && !esTurnoDoble(turnoSeleccionado)">
-                                                    <div *ngIf="turno.estado === 'disponible' && primerSimultaneoDisponible(bloque, turno, indiceTurno)" class="text-center p-2 mb-1 hover outline-dashed-default"
+                                                    <div *ngIf="turno.estado === 'disponible' && primerSimultaneoDisponible(bloque, turno, indiceTurno)"
+                                                        class="text-center p-2 mb-1 hover outline-dashed-default"
                                                         [appHover]="'text-info outline-info'" (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
                                                         {{turno.horaInicio | date: 'HH:mm'}}
                                                     </div>
                                                 </div>
                                                 <div *ngIf="bloque.citarPorBloque  && !esTurnoDoble(turnoSeleccionado)">
-                                                    <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, indiceTurno)" class="text-center p-2 mb-1 hover outline-dashed-default"
+                                                    <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, indiceTurno)"
+                                                        class="text-center p-2 mb-1 hover outline-dashed-default"
                                                         [appHover]="'text-info outline-info'" (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
                                                         {{turno.horaInicio | date: 'HH:mm'}}
                                                     </div>
