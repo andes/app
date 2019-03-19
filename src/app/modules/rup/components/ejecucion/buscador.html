@@ -10,7 +10,7 @@
             [ngClass]="{'active': busquedaActual === 'buscadorBasico'}">BUSCADOR BÁSICO
         </button>
         <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('frecuentesTP')"
-            [ngClass]="{'active': busquedaActual === 'frecuentesTP'}">FRECUENTES POR PRESTACION</button>
+            [ngClass]="{'active': busquedaActual === 'frecuentesTP'}">FRECUENTES POR PRESTACIÓN</button>
     </div>
 </div>
 <!-- Fin Tipo de búsqueda -->
@@ -44,20 +44,6 @@
                             [disabled]="!wizardActivo && getCantidadResultados(filtro.key) === 0">
                             <i class="adi adi-rup-semantic-{{ filtro.icon }}"></i>
                             {{ filtro.titulo }}
-                        </button>
-                    </li>
-
-                    <li>
-                        <small *ngIf="getCantidadResultados('productos')" class="badge badge-producto ml-1 float-right"
-                            [ngClass]="{'active': filtroActual === 'productos'}">{{ getCantidadResultados('productos')}}
-                        </small>
-
-                        <button (click)="filtroBuscadorSnomed('productos')"
-                            [ngClass]="{'active': filtroActual === 'productos'}"
-                            [disabled]="!wizardActivo && getCantidadResultados('productos') === 0"
-                            class="btn btn-block btn-producto">
-                            <i class="icon icon-rup-semantic-producto"></i>
-                            INSUMOS
                         </button>
                     </li>
                 </ul>
@@ -108,44 +94,33 @@
     <cdk-virtual-scroll-viewport [itemSize]="55">
         <div *cdkVirtualFor="let item of results[busquedaActual][filtroActual]" class="rup-card mini"
             [ngClass]="servicioPrestacion.getCssClass(item, filtroActual === 'plan')">
-            <div class="rup-header">
-                <div class="icon-rup drag-handle p-0 pt-1" draggable
+            <div
+                class="rup-header rup-border rup-border-{{ servicioPrestacion.getCssClass(item, filtroActual === 'plan') }}">
+                <div class="icon-rup drag-handle d-flex align-items-center justify-content-center" draggable
                     [dragScope]="['registros-rup' , 'vincular-registros-rup']" [dragData]="item"
                     (onDragStart)="dragStart($event)" (onDragEnd)="dragEnd($event)">
                     <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(item, filtroActual === 'plan')}}"></i>
                 </div>
-                <div class="rup-border">
-                    <div class="row p-0 m-0 border-secondary border-left-0">
-                        <div class="col-6 p-0 m-0">
-                            <div class="p-0 pl-2" [ngClass]="{'actions-left': filtroActual === 'equipamientos'}">
-                                {{item.term}}
-                                <span *ngIf="item.frecuencia" class="small">
-                                    ({{item.frecuencia}})
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-6 p-0 m-0">
-                            <div class="p-0 pt-1 pr-1 float-right">
-                                <small
-                                    class="badge badge-{{ servicioPrestacion.getCssClass(item, filtroActual === 'plan') }} text-default">
-                                    {{ (item.plan || filtroActual === 'planes' || esTurneable(item)) ? 'solicitud' : item.semanticTag }}
-                                </small>
-                                <button (click)="seleccionarConcepto(item)"
-                                    class="btn btn-sm btn-primary btn-icon-rup p-0">
-                                    <i class="mdi mdi-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row p-0 m-0">
-                        <div class="col-12 p-0 m-0 ml-2">
-                            <ng-container *ngIf="busquedaActual === 'sugeridos'">
-                                <span *ngIf="item?.sugeridoPor" class="sugerido">
-                                    <i>Sugerido por {{ item.sugeridoPor }}</i>
-                                </span>
-                            </ng-container>
-                        </div>
-                    </div>
+                <div class="datos pl-2">
+                    <b>{{item.term}}</b>
+                    <ng-container *ngIf="busquedaActual === 'sugeridos'">
+                        <span *ngIf="item?.sugeridoPor" class="sugerido">
+                            <i>Sugerido por {{ item.sugeridoPor }}</i>
+                        </span>
+                    </ng-container>
+                    <small *ngIf="item.frecuencia" class="small">
+                        ({{ item.frecuencia | pluralizar:['vez', 'veces'] }})
+                    </small>
+                </div>
+                <div class="d-flex justify-content-end align-items-start p-2">
+                    <small
+                        class="badge badge-{{ servicioPrestacion.getCssClass(item, filtroActual === 'plan') }} text-default">
+                        {{ (item.plan || filtroActual === 'planes' || esTurneable(item)) ? 'solicitud' : item.semanticTag }}
+                    </small>
+                    <button (click)="seleccionarConcepto(item)" class="btn btn-sm btn-success btn-icon-rup"
+                        title="Agregar a la consulta" titlePosition="left">
+                        <i class="mdi mdi-plus"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -165,8 +140,7 @@
                             <b>{{ items.nombre[0].toUpperCase() + items.nombre.slice(1) }}</b>
                         </div>
                         <div class="col-2 m-0 p-0">
-                            <button class="btn btn btn-primary btn-icon-rup p-0 float-right"
-                                (click)="desplegar(items.nombre)"
+                            <button class="btn btn btn-primary btn-icon-rup" (click)="desplegar(items.nombre)"
                                 [ngClass]="{'disabled': items.valor.length === 0, 'bg-inverse': opcionDesplegada === items.nombre}">
                                 <i *ngIf="opcionDesplegada !== items.nombre" class="mdi mdi-chevron-down"></i>
                                 <i *ngIf="opcionDesplegada === items.nombre" class="mdi mdi-chevron-up"></i>
@@ -182,7 +156,7 @@
                     <ng-container *ngFor="let item of items.valor">
 
                         <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($event)"
-                            (onDragEnd)="dragEnd($e)">
+                            (onDragEnd)="dragEnd($event)">
 
                             <div class="rup-card mini"
                                 [ngClass]="(items.nombre === 'planes') ? 'plan' : servicioPrestacion.getCssClass(item, filtroActual === 'plan')">
