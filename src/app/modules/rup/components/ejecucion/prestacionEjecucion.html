@@ -230,10 +230,10 @@
 
                                 <!-- Drop area -->
                                 <div droppable [dropScope]="'orden-registros-rup'"
-                                    (onDrop)="moverRegistro(registros.length, $event)"
+                                    (onDrop)="moverRegistro(prestacion.ejecucion.registros.length, $event)"
                                     [dragOverClass]="'drop-posicion-hover'" [hidden]="!isDraggingRegistro"
                                     class="drop-posicion"
-                                    *ngIf="registros && registros.length && registros.length !== posicionOnDrag">
+                                    *ngIf="prestacion.ejecucion.registros && prestacion.ejecucion.registros.length && prestacion.ejecucion.registros.length !== posicionOnDrag">
                                     Mover a esta posición
                                 </div>
                             </div>
