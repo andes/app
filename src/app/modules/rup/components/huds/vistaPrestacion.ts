@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, Input } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
@@ -10,15 +10,18 @@ import { IPaciente } from '../../../../interfaces/IPaciente';
     encapsulation: ViewEncapsulation.None,
 })
 
-export class VistaPrestacionComponent {
+export class VistaPrestacionComponent implements OnInit {
 
     @Input() paciente: IPaciente;
-    // @Input() registro: IPrestacionRegistro;
     @Input() prestacion: IPrestacion;
     @Input() evolucionActual: any;
     @Input() indice = 0;
 
     constructor(public prestacionesService: PrestacionesService, public elementosRUPService: ElementosRUPService) {
+    }
+
+    ngOnInit() {
+
     }
 
     getTimestamp(fecha) {
