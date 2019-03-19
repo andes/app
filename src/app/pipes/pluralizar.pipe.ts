@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 /**
- * Ejemplo:
+ * Ejemplo A: 1 | pluralizar:['turno','turnos'] => 1 turno
+ * Ejemplo B: 55 | pluralizar:['turno','turnos'] => 55 turnos
  */
 @Pipe({ name: 'pluralizar' })
 export class PluralizarPipe implements PipeTransform {
