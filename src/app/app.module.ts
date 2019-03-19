@@ -217,7 +217,7 @@ import { BuscadorCie10Component } from './components/turnos/gestor-agendas/opera
 import { RUPComponent } from './modules/rup/components/core/rup.component';
 import { ElementosRUPService } from './modules/rup/services/elementosRUP.service';
 import { BuscadorComponent } from './modules/rup/components/ejecucion/buscador.component';
-import { HudsBusquedaComponent } from './modules/rup/components/ejecucion/hudsBusqueda.component';
+import { BuscadorHUDSComponent } from './modules/rup/components/ejecucion/buscadorHUDS.component';
 import { PrestacionesService } from './modules/rup/services/prestaciones.service';
 import { AdjuntosService } from './modules/rup/services/adjuntos.service';
 
@@ -559,7 +559,7 @@ registerLocaleData(localeEs, 'es');
         DetalleAgendaComponent,
         HeaderPacienteComponent,
         PacienteDetalleActualizarComponent,
-        HudsBusquedaComponent,
+        BuscadorHUDSComponent,
         BuscadorComponent,
         VistaHudsComponent,
         VistaCDAComponent,
