@@ -71,8 +71,10 @@
         <ul *ngIf="resultadoRegistros[filtroActual]" class="hover conceptos list-unstyled">
             <li *ngFor="let registro of resultadoRegistros[filtroActual]">
                 <div class="rup-card mini {{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}"
-                    [ngClass]="{'active': huds.isOpen(registro, (registro.tipo ? registro.tipo: 'concepto')), 'solicitud': registro.esSolicitud}">
-
+                    [ngClass]="{
+                        'active': huds.isOpen(registro, (registro.tipo ? registro.tipo : 'concepto')), 
+                        'solicitud' : registro.esSolicitud
+                    }">
                     <div
                         class="rup-header rup-border rup-border-{{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}">
                         <div class="icon-rup drag-handle d-flex align-items-center justify-content-center"
