@@ -409,7 +409,8 @@ export class BuscadorHUDSComponent implements OnInit {
     }
 
     filtrar() {
-        this.resultadoRegistros.prestaciones = this.prestacionesCopia;
+
+        this.resultadoRegistros.prestaciones = JSON.parse(JSON.stringify(this.prestacionesCopia));
 
         let pre, org;
         if (this.prestacionSeleccionada && this.prestacionSeleccionada.length > 0) {
