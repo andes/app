@@ -1,4 +1,4 @@
-import { PrestacionesService } from './../../services/prestaciones.service';
+import { PrestacionesService } from '../../services/prestaciones.service';
 import { Component, OnInit, Output, Input, EventEmitter, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
@@ -6,14 +6,15 @@ import { Auth } from '@andes/auth';
 import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 
 import { HUDSService } from '../../services/huds.service';
+
 @Component({
-    selector: 'rup-hudsBusqueda',
-    templateUrl: 'hudsBusqueda.html',
-    styleUrls: ['hudsBusqueda.scss', 'buscador.scss'],
+    selector: 'rup-buscador-huds',
+    templateUrl: 'buscadorHUDS.html',
+    styleUrls: ['buscadorHUDS.scss', 'buscador.scss'],
     // Use to disable CSS Encapsulation for this component
     encapsulation: ViewEncapsulation.None
 })
-export class HudsBusquedaComponent implements OnInit {
+export class BuscadorHUDSComponent implements OnInit {
 
     laboratoriosFS: any;
     laboratorios: any = [];
@@ -70,8 +71,10 @@ export class HudsBusquedaComponent implements OnInit {
      */
     public tiposPrestacion = [];
     public prestacionSeleccionada = [];
+    public organizacionSeleccionada = [];
     private _prestaciones: any = [];
     private prestacionesCopia: any = [];
+    organizaciones: any[];
     get prestaciones() {
         return this._prestaciones;
     }
@@ -173,7 +176,8 @@ export class HudsBusquedaComponent implements OnInit {
     toogleFiltros() {
         this.showFiltros = !this.showFiltros;
         if (!this.showFiltros) {
-            this.fechaInicio = this.fechaFin = this.prestacionSeleccionada = null;
+            this.fechaInicio = this.fechaFin = null;
+            this.prestacionSeleccionada = this.organizacionSeleccionada = [];
             this.filtrar();
         }
     }
@@ -270,7 +274,9 @@ export class HudsBusquedaComponent implements OnInit {
                 };
             });
             this.prestacionesCopia = this.resultadoRegistros.prestaciones;
-            this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
+            this.tiposPrestacion = this.resultadoRegistros.prestaciones.map(p => p.concepto);
+            this.organizaciones = this.resultadoRegistros.prestaciones.map(p => p.organizacion);
+
             this.buscarCDAPacientes();
         });
     }
@@ -348,7 +354,10 @@ export class HudsBusquedaComponent implements OnInit {
             // Filtramos por CDA para poder recargar los estudiosc
             this.resultadoRegistros.prestaciones = [...this.resultadoRegistros.prestaciones.filter(e => e.tipo !== 'cda'), ...filtro];
             this.prestacionesCopia = this.resultadoRegistros.prestaciones;
-            this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
+            // this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
+            this.tiposPrestacion = this.resultadoRegistros.prestaciones.map(p => p.concepto);
+            this.organizaciones = this.resultadoRegistros.prestaciones.map(p => p.organizacion);
+
         });
     }
 
@@ -400,12 +409,25 @@ export class HudsBusquedaComponent implements OnInit {
     }
 
     filtrar() {
-        if (this.prestacionSeleccionada.length > 0) {
+        this.resultadoRegistros.prestaciones = this.prestacionesCopia;
+
+        let pre, org;
+        if (this.prestacionSeleccionada && this.prestacionSeleccionada.length > 0) {
             const prestacionesTemp = this.prestacionSeleccionada.map(e => e.conceptId);
-            this.resultadoRegistros.prestaciones = this.prestacionesCopia.filter(p => prestacionesTemp.find(e => e === p.prestacion.conceptId));
-        } else {
-            this.resultadoRegistros.prestaciones = this.prestacionesCopia;
+            pre = this.prestacionesCopia.filter(p => prestacionesTemp.find(e => e === p.concepto.conceptId));
+            this.resultadoRegistros.prestaciones = pre;
         }
+
+        if (this.organizacionSeleccionada && this.organizacionSeleccionada.length > 0) {
+            const organizacionesTemp = this.organizacionSeleccionada.map(e => e.id);
+            org = this.prestacionesCopia.filter(p => organizacionesTemp.find(e => e === p.organizacion.id));
+            this.resultadoRegistros.prestaciones = org;
+        }
+
+        if (pre && org) {
+            this.resultadoRegistros.prestaciones = Array.from([...pre, ...org]);
+        }
+
         if (this.fechaInicio || this.fechaFin) {
             this.fechaInicio = this.fechaInicio ? this.fechaInicio : new Date();
             this.fechaFin = this.fechaFin ? this.fechaFin : new Date();
