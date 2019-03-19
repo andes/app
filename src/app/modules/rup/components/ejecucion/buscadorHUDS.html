@@ -27,7 +27,7 @@
         <div class="col-2 d-flex justify-content-end">
             <ng-container *ngIf="filtroActual === 'prestaciones'">
                 <plex-button [icon]="showFiltros ? 'mdi mdi-close' : 'mdi mdi-magnify'" size="sm" type="info"
-                    [title]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" titlePosition="left"
+                    [title]="showFiltros ? 'Ocultar filtros' : 'Mostrar filtros'" titlePosition="left"
                     (click)="toogleFiltros()">
                 </plex-button>
             </ng-container>
