@@ -1,5 +1,5 @@
 <!-- MAESTRO DE PROBLEMAS - BD:tipoProblema -->
-<div class="menu-buscador">
+<div class="menu-buscador mb-2">
     <plex-loader class="float-right" *ngIf="loading" type="ball-pulse"></plex-loader>
     <!-- Botones filtros  -->
     <ng-container>
@@ -24,10 +24,10 @@
             <small class="pr-1" *ngIf="getSemanticTagFiltros()">Filtros:</small>
             <i class="text-secondary ml-1">{{ getSemanticTagFiltros() }}</i>
         </div>
-        <div class="col-2">
+        <div class="col-2 d-flex justify-content-end">
             <ng-container *ngIf="filtroActual === 'prestaciones'">
                 <plex-button [icon]="showFiltros ? 'mdi mdi-close' : 'mdi mdi-magnify'" size="sm" type="info"
-                    [title]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" class="float-right"
+                    [title]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" titlePosition="left"
                     (click)="toogleFiltros()">
                 </plex-button>
             </ng-container>
@@ -36,13 +36,19 @@
 </div>
 <div class="row huds-busqueda">
     <div class="col">
-
         <ng-container *ngIf="filtroActual === 'prestaciones'">
             <ng-container *ngIf="showFiltros">
                 <div class="row">
                     <div class="col-12">
                         <plex-select [(ngModel)]="prestacionSeleccionada" label="Prestación" [data]="tiposPrestacion"
                             idField="conceptId" labelField="term" (change)="filtrar()" [multiple]="true">
+                        </plex-select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <plex-select [(ngModel)]="organizacionSeleccionada" label="Organización" [data]="organizaciones"
+                            idField="id" labelField="nombre" (change)="filtrar()" [multiple]="true">
                         </plex-select>
                     </div>
                 </div>
@@ -66,21 +72,26 @@
             <li *ngFor="let registro of resultadoRegistros[filtroActual]">
                 <div class="rup-card mini {{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}"
                     [ngClass]="{'active': huds.isOpen(registro, (registro.tipo ? registro.tipo: 'concepto')), 'solicitud': registro.esSolicitud}">
+
                     <div
                         class="rup-header rup-border rup-border-{{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}">
                         <div class="icon-rup drag-handle d-flex align-items-center justify-content-center"
                             (click)="emitTabs(registro, (registro.tipo ? registro.tipo: 'concepto'))">
                             <i
-                                class="icon icon-rup-semantic-{{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}"></i>
+                                class="adi adi-rup-semantic-{{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}"></i>
                         </div>
+
                         <div class="datos pl-2"
                             (click)="emitTabs(registro, (registro.tipo ? registro.tipo: 'concepto'))">
-                            <b>{{ registro.concepto.term }}</b>
+                            <b><span [ngClass]="{'bg-warning': prestacionSeleccionada?.length > 0}">
+                                    {{ registro.concepto.term }}</span></b>
                             <div class="profesional">
                                 {{ registro?.evoluciones ? registro.evoluciones[0].profesional : registro.profesional }}
                             </div>
                             <div class="efector">
-                                {{ registro.organizacion.nombre }}
+                                <span [ngClass]="{'bg-warning': organizacionSeleccionada?.length > 0}">
+                                    {{ registro.organizacion.nombre }}
+                                </span>
                             </div>
                         </div>
                         <div class="d-flex justify-content-end align-items-start p-2"
@@ -94,9 +105,9 @@
                                 {{ registro.evoluciones[registro.evoluciones.length - 1].estado }}
                             </small>
                             <button *ngIf="emitirConceptos && filtroActual === 'trastornos'"
-                                class="btn btn-success btn-sm" title="Agregar a la consulta" titlePosition="left"
-                                (click)="devolverHallazgo(registro, 'hallazgo')">
-                                <i class="adi adi-huds adi-"></i>
+                                class="btn btn-sm btn-success btn-icon-rup" title="Agregar a la consulta"
+                                titlePosition="left" (click)="devolverHallazgo(registro, 'hallazgo')">
+                                <i class="mdi mdi-plus"></i>
                             </button>
                         </div>
                     </div>
