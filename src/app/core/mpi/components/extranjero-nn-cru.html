@@ -33,14 +33,13 @@
                             </div>
                             <div class="col-4">
                                 <plex-select label="Tipo de identificación" [(ngModel)]="pacienteModel.tipoIdentificacion"
-                                    [data]="tipoIdentificacion" [readonly]="validado" required="true" name="tipoIdentificacion"
+                                    [data]="tipoIdentificacion" [readonly]="validado" name="tipoIdentificacion"
                                     placeholder="Seleccione..">
                                 </plex-select>
                             </div>
                             <div class="col-4">
                                 <plex-int label="Número de identificación" [max]="99999999" [readonly]="validado"
-                                    [(ngModel)]="pacienteModel.numeroIdentificacion" name="numeroIdentificacion"
-                                    required="true">
+                                    [(ngModel)]="pacienteModel.numeroIdentificacion" name="numeroIdentificacion">
                                 </plex-int>
                             </div>
                         </div>
