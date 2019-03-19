@@ -11,7 +11,7 @@
                             Registro Privado
                         </small>
                         <span
-                              class="badge badge-{{ !registro.esSolicitud ? registro.concepto.semanticTag : 'solicitud' }}">
+                            class="badge badge-{{ !registro.esSolicitud ? registro.concepto.semanticTag : 'solicitud' }}">
                             {{ !registro.esSolicitud ? registro.concepto.semanticTag : 'Solicitud' }}
                         </span>
                     </div>
@@ -19,10 +19,10 @@
                 <div class="divisor">
                     <div class="datos-prestacion">
                         <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                             xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30px" height="30px"
-                             viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve">
+                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30px" height="30px"
+                            viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve">
                             <path fill="#10A6E0"
-                                  d="M0,9.461c0,5.219,4.246,9.464,9.464,9.464c5.216,0,9.462-4.245,9.462-9.464C18.926,4.244,14.68,0,9.464,0
+                                d="M0,9.461c0,5.219,4.246,9.464,9.464,9.464c5.216,0,9.462-4.245,9.462-9.464C18.926,4.244,14.68,0,9.464,0
                                             c-1.907,0-3.764,0.582-5.33,1.648L2.681,0.194L1.512,4.679L6,3.51L4.981,2.492c1.332-0.855,2.886-1.323,4.483-1.323
                                             c4.574,0,8.295,3.718,8.295,8.292c0,4.573-3.721,8.295-8.295,8.295s-8.295-3.722-8.295-8.295H0z" />
                             <polygon fill="#10A6E0" points="13.306,8.31 10.616,8.31 10.616,5.62 8.31,5.62 8.31,8.31 5.62,8.31 5.62,10.616 8.31,10.616 
@@ -39,19 +39,17 @@
                     <div class="mp-2 mb-2">
                         <b>Registros de la consulta: </b>
                         <rup class="columna-completa align"
-                             [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)"
-                             [prestacion]="prestacion" [paciente]="paciente" [registro]="registro.registros[0]"
-                             [params]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud).params"
-                             [soloValores]="true">
+                            [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)"
+                            [prestacion]="prestacion" [paciente]="paciente" [registro]="registro.registros[0]"
+                            [params]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud).params"
+                            [soloValores]="true">
                         </rup>
                         <span
-                              [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente, registro, registro.concepto)"></span>
+                            [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente, registro, registro.concepto)"></span>
                     </div>
 
-
-
                     <div class="columna-completa">
-                        <b>Profesionales: </b><br>
+                        <b>Profesionales: </b>
                         <span>
                             {{ registro?.evoluciones[indice].profesional }}
                         </span>
@@ -60,11 +58,10 @@
                     <div class="columna-completa">
                         <!-- VER QUE FUNCIONEN LAS RELACIONES -->
                         <b class="relaciones"
-                           *ngIf="registro?.evoluciones[indice]?.relacionadoCon?.length > 0">Relacionado
-                            con:</b>
+                            *ngIf="registro?.evoluciones[indice]?.relacionadoCon?.length > 0">Relacionado con:</b>
                         <div>
                             <ng-container
-                                          *ngFor="let relacion of registro?.evoluciones[indice].relacionadoCon; let r=index">
+                                *ngFor="let relacion of registro?.evoluciones[indice].relacionadoCon; let r=index">
                                 <ng-container *ngIf="relacion?.concepto?.term">
                                     <span class="badge badge-{{ relacion?.concepto?.semanticTag }}">
                                         {{ relacion | relacionRUP }}
