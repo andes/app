@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
-import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
+import { Component, ViewEncapsulation, Input } from '@angular/core';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
@@ -11,7 +10,7 @@ import { IPaciente } from '../../../../interfaces/IPaciente';
     encapsulation: ViewEncapsulation.None,
 })
 
-export class VistaPrestacionComponent implements OnInit {
+export class VistaPrestacionComponent {
 
     @Input() paciente: IPaciente;
     // @Input() registro: IPrestacionRegistro;
@@ -20,13 +19,6 @@ export class VistaPrestacionComponent implements OnInit {
     @Input() indice = 0;
 
     constructor(public prestacionesService: PrestacionesService, public elementosRUPService: ElementosRUPService) {
-    }
-
-    ngOnInit() {
-        console.log(this.prestacion);
-        // this.prestacionesService.getByPaciente(this.registro.paciente.id).subscribe(prestacion => {
-        //     this.prestacion = prestacion.find(x => x.id === this.registro.id);
-        // });
     }
 
     getTimestamp(fecha) {
