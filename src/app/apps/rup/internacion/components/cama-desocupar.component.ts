@@ -31,7 +31,7 @@ export class DesocuparCamaComponent implements OnInit {
     public PaseAunidadOrganizativa: any;
     public camaSeleccionPase;
     public actualizaTipo = new Subject();
-
+    public listaPasesCama = [];
 
     // Eventos
     // cama sobre la que estamos trabajando
@@ -74,6 +74,9 @@ export class DesocuparCamaComponent implements OnInit {
                 if (this.listaUnidadesOrganizativas && this.listaUnidadesOrganizativas.length > 0) {
                     this.opcionesDesocupar.push({ id: 'pase', label: 'Cambiar de unidad organizativa' });
                 }
+                this.prestacionesService.getPasesInternacion(this.prestacion.id).subscribe(lista => {
+                    this.listaPasesCama = lista;
+                });
             });
         } else {
             this.plex.info('danger', 'Parámetros incorrectos', 'Error');
@@ -169,19 +172,34 @@ export class DesocuparCamaComponent implements OnInit {
         }
     }
 
+    /**
+     * Busca entre los pases de la internacion la cama que ocupaba en la fecha seleccionada
+     */
+    private buscarCamaOcupada() {
+        if (this.filtrosDesocupar()) {
+            let fechaMovimiento = this.internacionService.combinarFechas(this.fecha, this.hora);
+            let listaFiltrada = this.listaPasesCama.filter(c => c.estados.fecha <= fechaMovimiento);
+            if (listaFiltrada && listaFiltrada.length > 0) {
+                const camaOcupada = listaFiltrada[listaFiltrada.length - 1];
+                return camaOcupada;
+            }
+        }
+        return null;
+    }
+
     operacionDesocuparCama() {
         if (this.opcionDesocupar === 'movimiento') {
             this.elegirDesocupar = false;
-            let f = this.internacionService.combinarFechas(this.fecha, this.hora);
+            this.listadoCamas = null;
+            this.elegirDesocupar = false;
+            const camaOcupada = this.buscarCamaOcupada();
+            if (camaOcupada) {
+                let unidadOrganizativa = camaOcupada.estados.unidadOrganizativa;
+                this.selectCamasDisponibles(unidadOrganizativa.conceptId, this.fecha, this.hora);
+            } else {
+                this.elegirDesocupar = true;
+            }
 
-            this.prestacionesService.getPasesInternacion(this.prestacion.id).subscribe(lista => {
-                let listaFiltrada = lista.filter(c => c.estados.fecha < f);
-                this.CamaService.getCama(listaFiltrada[listaFiltrada.length - 1]._id).subscribe(cama => {
-                    let x = cama.estados.filter(c => c.fecha < f && c.idInternacion === this.prestacion.id);
-                    // this.estado = Object.assign({}, this.cama.ultimoEstado);
-                    this.selectCamasDisponibles(x[x.length - 1].unidadOrganizativa.conceptId, this.fecha, this.hora);
-                });
-            });
         } else {
             if (this.opcionDesocupar === 'pase') {
                 this.elegirDesocupar = false;

@@ -190,13 +190,15 @@ export class PasesListadoInternacionComponent implements OnInit {
     }
 
     operacionDesocuparCama() {
-        let fechaMovimiento = this.internacionService.combinarFechas(this.fecha, this.hora);
         if (this.opcionDesocupar === 'movimiento' || this.opcionDesocupar === 'pase') {
             this.listadoCamas = null;
             this.elegirDesocupar = false;
-            this.cama = this.buscarCamaOcupada();
-            let unidadOrganizativa = this.cama.estados.unidadOrganizativa;
-            this.selectCamasDisponibles(unidadOrganizativa.conceptId, this.fecha, this.hora);
+            if (this.cama) {
+                let unidadOrganizativa = this.cama.estados.unidadOrganizativa;
+                this.selectCamasDisponibles(unidadOrganizativa.conceptId, this.fecha, this.hora);
+            } else {
+                this.elegirDesocupar = true;
+            }
         }
     }
 
