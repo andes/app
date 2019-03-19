@@ -12,8 +12,8 @@
             </div>
 
             <div class="col">
-                <label>Profesionales</label>
-                <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
+                <label>Equipo de Salud</label>
+                <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Equipo de Salud no asignado</span>
                 <ng-container *ngIf="agenda.profesionales">
                     <div>{{agenda.profesionales | enumerar:['apellido','nombre']}}</div>
                 </ng-container>
