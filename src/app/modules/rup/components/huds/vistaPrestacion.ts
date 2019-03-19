@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, Input, HostBinding } from '@angular/core';
+import { Component, ViewEncapsulation, Input } from '@angular/core';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
@@ -14,7 +14,6 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
 })
 
 export class VistaPrestacionComponent {
-    @HostBinding('class.plex-layout') layout = true;
 
     @Input() paciente: IPaciente;
     @Input() prestacion: IPrestacion;
@@ -25,26 +24,6 @@ export class VistaPrestacionComponent {
         public servicioPrestacion: PrestacionesService,
         private servicioPaciente: PacienteService,
         public elementosRUPService: ElementosRUPService) {
-    }
-
-    private _idPrestacion;
-    @Input()
-    set idPrestacion(value: any) {
-        this.paciente = null;
-        this._idPrestacion = value;
-        this.elementosRUPService.ready.subscribe((resultado) => {
-            if (resultado) {
-                this.servicioPrestacion.getById(this.idPrestacion).subscribe(prestacion => {
-                    this.prestacion = prestacion;
-                    this.servicioPaciente.getById(this.prestacion.paciente.id).subscribe(paciente => {
-                        this.paciente = paciente;
-                    });
-                });
-            }
-        });
-    }
-    get idPrestacion(): any {
-        return this._idPrestacion;
     }
 
     getTimestamp(fecha) {
