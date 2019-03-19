@@ -7,11 +7,12 @@
         <plex-tabs [activeIndex]="pestaniaActiva" (change)="cambio($event)">
 
             <plex-tab label="Visualizar permisos" color="procedimiento">
-                <div class="row mt-4 mb-1" *ngIf="!pestaniaUsuarioActiva && usuarioSeleccionado && organizacionSeleccionada && prestacionesTurneables && permisosUsuarioOrg">
-                    <div class="col">
-                        <div class="page-title float-left">Agrupación de permisos</div>
+                <div *ngIf="!pestaniaUsuarioActiva && usuarioSeleccionado && organizacionSeleccionada && prestacionesTurneables && permisosUsuarioOrg"
+                    class="row mt-4 mb-1">
+                    <div class="col-8">
+                        <div class="page-title float-left">Agrupación de Permisos</div>
                     </div>
-                    <div class="col d-flex justify-content-end" *ngIf="!pestaniaUsuarioActiva && usuarioSeleccionado && organizacionSeleccionada && puedeVerPerfiles">
+                    <div class="col-4 d-flex justify-content-end" *ngIf="!pestaniaUsuarioActiva && usuarioSeleccionado && organizacionSeleccionada && puedeVerPerfiles">
                         <plex-button type="info" label="Ver Agrupaciones" (click)="navegarAPerfiles()"></plex-button>
                     </div>
                 </div>
@@ -23,22 +24,21 @@
                     </div>
                 </div>
                 <div class="row" *ngIf="pestaniaUsuarioActiva || !usuarioSeleccionado || !organizacionSeleccionada">
-                    <div class="mt-5">
+                    <div class="col mt-5">
                         <i class="mdi mdi-emoticon-sad"></i>Seleccione un usuario y organización para visualizar sus
-                        permisos</div>
+                        permisos
+                    </div>
                 </div>
             </plex-tab>
 
             <plex-tab label="Editar permisos">
-                <div *ngIf="!pestaniaUsuarioActiva && usuarioSeleccionado && organizacionSeleccionada" class="row">
-                    <div class="col d-flex justify-content-end">
+                <div *ngIf="!pestaniaUsuarioActiva && usuarioSeleccionado && organizacionSeleccionada" class="row mt-4 mb-1">
+                    <div class="col-8">
+                        <div class="page-title">PERMISOS</div>
+                    </div>
+                    <div class="col-4 d-flex justify-content-end">
                         <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
                         <plex-button type="success" label="Guardar" (click)="guardar($event)"></plex-button>
-                    </div>
-                </div>
-                <div *ngIf="!pestaniaUsuarioActiva && usuarioSeleccionado && organizacionSeleccionada" class="row">
-                    <div class="col-12 mb-2">
-                        <div class="page-title">PERMISOS</div>
                     </div>
                     <div class="col" *ngIf="permisosUsuarioOrg && prestacionesTurneables">
                         <div *ngFor="let permiso of permisos$ | async">
