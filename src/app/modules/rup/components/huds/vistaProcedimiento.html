@@ -43,10 +43,8 @@
                             [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente, registro, registro.concepto)"></span>
                     </div>
 
-
-
                     <div class="columna-completa">
-                        <b>Profesionales: </b><br>
+                        <b>Profesionales: </b>
                         <span>
                             {{ registro?.evoluciones[indice].profesional }}
                         </span>
@@ -55,8 +53,7 @@
                     <div class="columna-completa">
                         <!-- VER QUE FUNCIONEN LAS RELACIONES -->
                         <b class="relaciones"
-                            *ngIf="registro?.evoluciones[indice]?.relacionadoCon?.length > 0">Relacionado
-                            con:</b>
+                            *ngIf="registro?.evoluciones[indice]?.relacionadoCon?.length > 0">Relacionado con:</b>
                         <div>
                             <ng-container
                                 *ngFor="let relacion of registro?.evoluciones[indice].relacionadoCon; let r=index">
