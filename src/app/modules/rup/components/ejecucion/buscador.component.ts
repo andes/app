@@ -112,6 +112,18 @@ export class BuscadorComponent implements OnInit, OnChanges {
         planes: 'Incluye todos los procedimientos/prácticas que se solicitan o planifican a futuro.<br><br>Ejemplos: Consulta de Neurología, Resonancia Magnética, Placa de torax',
         productos: 'Incluye medicamentos e insumos<br><br>Ejemplos: Amoxicilina 500 mg en capsulas, Acido Clavulánico, etc.',
     };
+
+    filtros: any = [
+        { titulo: 'PRESTACIONES', key: 'prestaciones', icon: 'plan' },
+        { titulo: 'TODOS', key: 'todos', icon: 'todos' },
+        { titulo: 'HALLAZGOS', key: 'hallazgos', icon: 'hallazgo' },
+        { titulo: 'TRASTORNOS', key: 'trastornos', icon: 'trastorno' },
+        { titulo: 'PROC', key: 'procedimientos', icon: 'procedimiento' },
+        { titulo: 'PRODUCTOS', key: 'productos', icon: 'producto' },
+        { titulo: 'LABOS', key: 'laboratorios', icon: 'laboratorio' },
+        { titulo: 'VACUNAS', key: 'vacunas', icon: 'vacuna' }
+    ];
+
     secciones: any;
 
     constructor(public servicioTipoPrestacion: TipoPrestacionService,
