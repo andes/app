@@ -1,6 +1,9 @@
 @import './variables';
 
 
+.bg-hilite {
+    background-color: $hilite;
+}
 // TODO: Crear paquete NPM con las fonts
 @import '../../assets/font.css';
 $rotate: -90deg;
