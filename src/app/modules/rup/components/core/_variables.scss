@@ -23,6 +23,8 @@ $vacuna: #11910D;
 // definimos esta lista para poder acceder mediante la funcion map-get() ya que en sass no se puede hacer 
 // la interpolacion del string a una variable directamente
 
+$hilite: #fffb8f;
+
 $rup_colors: (
     problema: $problema, 
     calificador: $calificador, 
