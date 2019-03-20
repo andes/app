@@ -76,6 +76,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
     @Input() isScan: IPaciente;
     @Input() escaneado: Boolean;
     @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
+    @Output() internacionPacienteTemp = new EventEmitter();
+
 
     foto = '';
     estados = [];
@@ -589,6 +591,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     });
                 }
                 this.data.emit(unPacienteSave);
+                this.internacionPacienteTemp.emit(unPacienteSave);
+
                 this.plex.info('success', 'Los datos se actualizaron correctamente');
             } else {
                 this.plex.info('warning', 'ERROR: Ocurrió un problema al actualizar los datos');

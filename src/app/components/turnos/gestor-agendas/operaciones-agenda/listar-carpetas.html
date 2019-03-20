@@ -14,7 +14,7 @@
                 <table *ngFor="let agenda of agendasSeleccionadas">
                     <thead>
                         <th colspan="14">
-                            <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
+                            <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Equipo de Salud no asignado</span>
                             <span *ngIf="agenda.profesionales?.length > 0">* {{ agenda.profesionales | enumerar:['apellido','nombre'] }}</span>
                         </th>
                     </thead>

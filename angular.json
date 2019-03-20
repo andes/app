@@ -15,7 +15,6 @@
             "index": "src/index.html",
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.json",
-            "showCircularDependencies": false,
             "assets": [
               {
                 "glob": "**/*",

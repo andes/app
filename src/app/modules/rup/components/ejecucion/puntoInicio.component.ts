@@ -16,6 +16,7 @@ import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { IPaciente } from '../../../../interfaces/IPaciente';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
+import { SubscriptionLike as ISubscription } from 'rxjs';
 
 
 @Component({
@@ -50,6 +51,8 @@ export class PuntoInicioComponent implements OnInit {
     public prestacionSeleccion: any;
     public paciente: any;
 
+    // ultima request que se almacena con el subscribe
+    private lastRequest: ISubscription;
 
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
@@ -103,7 +106,11 @@ export class PuntoInicioComponent implements OnInit {
     // tieneTurnosAsignados: true,
     actualizar() {
         const idsPrestacionesPermitidas = this.tiposPrestacion.map(t => t.conceptId);
-        observableForkJoin(
+        if (this.lastRequest) {
+            this.lastRequest.unsubscribe();
+        }
+
+        this.lastRequest = observableForkJoin(
             // Agendas
             this.servicioAgenda.get({
                 fechaDesde: moment(this.fecha).isValid() ? moment(this.fecha).startOf('day').toDate() : new Date(),
@@ -179,8 +186,8 @@ export class PuntoInicioComponent implements OnInit {
             // buscamos las que estan fuera de agenda para poder listarlas:
             // son prestaciones sin turno creadas en la fecha seleccionada en el filtro
             this.fueraDeAgenda = this.prestaciones.filter(p => (!p.solicitud.turno &&
-                (p.createdAt >= moment(this.fecha).startOf('day').toDate() &&
-                    p.createdAt <= moment(this.fecha).endOf('day').toDate())
+                (p.ejecucion.fecha >= moment(this.fecha).startOf('day').toDate() &&
+                    p.ejecucion.fecha <= moment(this.fecha).endOf('day').toDate())
                 && p.estados[p.estados.length - 1].createdBy.username === this.auth.usuario.username
                 && (p.estados[p.estados.length - 1].tipo === 'ejecucion' || p.estados[p.estados.length - 1].tipo === 'validada')));
 
@@ -223,7 +230,7 @@ export class PuntoInicioComponent implements OnInit {
         // filtramos por agendas propias o todas menos las propias
         if (this.soloMisAgendas) {
             this.agendas = this.agendas.filter(agenda => {
-                return (agenda.profesionales.find(profesional => {
+                return (agenda.profesionales && agenda.profesionales.find(profesional => {
                     return (profesional.id === this.auth.profesional.id);
                 }));
             });
@@ -607,5 +614,20 @@ export class PuntoInicioComponent implements OnInit {
             this.tienePermisos(turno.tipoPrestacion, turno.prestacion) && condAsistencia);
     }
 
+    /**
+     * Se puede registrar inasistencia de un turno cuando se cumplen todas las validaciones:
+     * la agenda: no es futura, no está auditada
+     * turno: no está suspendido, ya pasó la hora de inicio, profesional no cargó prestación todavía y tiene paciente asignado
+     * @param {*} turno
+     * @returns {Boolean} si debe mostrarse o no el botón para registrar inasistencia
+     * @memberof PuntoInicioComponent
+     */
+    esHabilitadoRegistrarInasistencia(turno): Boolean {
+        let horaActual = moment(new Date()).format('LT');
+        let horaTurno = moment(turno.horaInicio).format('LT');
+        return !this.esFutura(this.agendaSeleccionada) && this.agendaSeleccionada.estado !== 'auditada' &&
+            turno.estado !== 'suspendido' && (!turno.asistencia || (turno.asistencia && turno.asistencia === 'asistio')) &&
+            turno.paciente && turno.diagnostico.codificaciones.length === 0;
+    }
 
 }

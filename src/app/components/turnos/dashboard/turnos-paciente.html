@@ -28,7 +28,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col" *ngIf="turno && turno.horaInicio">
-                                        <span>{{ turno.horaInicio | date:"EEEE" | uppercase }} {{ turno.horaInicio | fecha
+                                        <span>{{ turno.horaInicio | date:"EEEE" | uppercase }} {{ turno.horaInicio |
+                                            fecha
                                             }}
                                         </span>
                                         <span *ngIf="turno.horaInicio">
@@ -38,7 +39,7 @@
 
                                 <div class="row" *ngIf="turno && turno.profesionales">
                                     <div class="col">
-                                        <strong>Profesionales:</strong> {{ turno.profesionales | enumerar:['apellido',
+                                        <strong>Equipo de Salud:</strong> {{ turno.profesionales | enumerar:['apellido',
                                         'nombre']
                                         }}
                                     </div>
@@ -58,7 +59,7 @@
                                         <plex-button type="warning" label="Quitar Asistencia" (click)="eventosTurno(turno,'sacarAsistencia')"></plex-button>
                                     </div>
                                     <div class="col">
-                                        <plex-button type="info" label="Arancelamiento" (click)="showArancelamiento(turno)"></plex-button>
+                                        <plex-button type="info" label="Recupero" (click)="showArancelamiento(turno)"></plex-button>
                                     </div>
                                 </div>
                             </div>

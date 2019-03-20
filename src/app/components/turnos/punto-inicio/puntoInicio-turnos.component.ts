@@ -36,6 +36,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     public showActivarApp = false;
     public showIngresarSolicitud = false;
     public paciente: IPaciente;
+    public obraSocialPaciente: any;
     public autorizado = false;
     solicitudPrestacion: any = null; // Es la solicitud que se pasa como input a darTurnos
     operacionTurnos = '';
@@ -49,6 +50,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     resultadoCreate;
     turnoArancelamiento: any;
     showArancelamiento = false;
+    showTab = 0;
     private esOperacion = false;
 
 
@@ -70,6 +72,10 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showDashboard = false;
         this.showArancelamiento = true;
 
+    }
+
+    obraSocialEmit(obraSocial: any) {
+        this.obraSocialPaciente = obraSocial;
     }
 
     volverAPuntoInicio() {
@@ -202,6 +208,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     afterDarTurno(pac) {
         this.showDarTurnos = false;
         this.showDashboard = true;
+        this.showTab = 1;
         if (this.paciente && this.paciente.id) {
             this.paciente = pac;
             // this.onPacienteSelected(this.paciente);

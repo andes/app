@@ -2,7 +2,6 @@ import { Router } from '@angular/router';
 import { Component, OnInit, Input, Output, EventEmitter, HostBinding } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Observable } from 'rxjs/Observable';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import * as moment from 'moment';
@@ -41,8 +40,8 @@ export class ClonarAgendaComponent implements OnInit {
     public agendasFiltradas: any[] = [];
     private agendas: IAgenda[] = []; // Agendas del mes seleccionado
     private inicioMesMoment: moment.Moment;
-    private inicioMesDate;
-    private finMesDate;
+    private inicioMesDate: Date;
+    private finMesDate: Date;
     private original = true;
     private inicioAgenda: Date;
 
@@ -128,7 +127,7 @@ export class ClonarAgendaComponent implements OnInit {
         }
     }
 
-    public cambiarMes(signo) {
+    public cambiarMes(signo: string) {
         if (signo === '+') {
             this.fecha = moment(this.fecha).add(1, 'M').toDate();
         } else {
@@ -162,7 +161,7 @@ export class ClonarAgendaComponent implements OnInit {
                     let actualFin = moment(actual.horaFin).format('HH:mm');
                     band = actual.estado !== 'suspendida';
                     band = band && moment(dia.fecha).isSame(moment(actual.horaInicio), 'day');
-                    band = band && ((originalIni <= actualIni && actualIni <= originalFin) || (originalIni <= actualFin && actualFin <= originalFin));
+                    band = band && ((originalIni <= actualIni && actualIni < originalFin) || (originalIni < actualFin && actualFin <= originalFin));
                     return band;
                 }
             );
@@ -171,7 +170,7 @@ export class ClonarAgendaComponent implements OnInit {
                 if (filtro.length === 0) {
                     this.seleccionados.push(dia.fecha.getTime());
                 } else {
-                    // contatenamos en agendasFiltradas las agendas del nuevo día seleccionado y luego verificamos conflictos
+                    // concatenamos en agendasFiltradas las agendas del nuevo día seleccionado y luego verificamos conflictos
                     filtro.forEach((fil) => {
                         let aux = this.agendasFiltradas.map(elem => { return elem.id; });
                         if (aux.indexOf(fil.id) < 0) {
@@ -202,7 +201,7 @@ export class ClonarAgendaComponent implements OnInit {
             }
         }
     }
-    // Verifica si existen conflictos con las agendas existentes en ese dia
+
     /**
      * Verifica entre las agendas filtradas si existen conflictos de profesional o espacio físico.
      *
@@ -239,22 +238,6 @@ export class ClonarAgendaComponent implements OnInit {
         return false;
     }
 
-    combinarFechas(fecha1, fecha2) {
-        if (fecha1 && fecha2) {
-            let horas: number;
-            let minutes: number;
-            let auxiliar: Date;
-
-            auxiliar = new Date(fecha1);
-            horas = fecha2.getHours();
-            minutes = fecha2.getMinutes();
-            auxiliar.setHours(horas, minutes, 0, 0);
-            return auxiliar;
-        } else {
-            return null;
-        }
-    }
-
     public clonar() {
         if (this.seleccionados.length > 1) { // >1 porque el primer elemento es la agenda original
             this.plex.confirm('¿Está seguro que desea realizar la clonación?').then(conf => {
@@ -266,7 +249,7 @@ export class ClonarAgendaComponent implements OnInit {
                         clones: this.seleccionados
                     };
                     this.serviceAgenda.clonar(data).subscribe(resultado => {
-                        this.plex.info('success', 'La Agenda se clonó correctamente').then(ok => {
+                        this.plex.info('success', 'La Agenda se clonó correctamente').then(() => {
                             this.volverAlGestor.emit(true);
                         });
                     },

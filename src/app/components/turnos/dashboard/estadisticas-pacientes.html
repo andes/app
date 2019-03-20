@@ -1,4 +1,4 @@
-<plex-tabs>
+<plex-tabs size="full" [activeIndex]="showTab">
     <plex-tab icon="information" label="Datos">
         <!--Header de estadisticas-->
         <fieldset>
@@ -50,8 +50,30 @@
                     {{paciente.contacto[0].valor}}
                 </div>
             </div>
-            <div class="row" *ngIf="paciente?.financiador?.length">
-                <div class="col-6" *ngIf="paciente.financiador[0].nombre">
+            <div class="row" *ngIf="obraSocial">
+                <div class="col-6" *ngIf="obraSocial.financiador === 'SUMAR'">
+                    <i class="mdi mdi-account-card-details"></i>
+                    <span class="text-primary">Financiador</span>
+                </div>
+                <div class="col-6" *ngIf="obraSocial.financiador !== 'SUMAR'">
+                    <i class="mdi mdi-account-card-details"></i>
+                    <span class="text-primary">Obra Social</span>
+                </div>
+                <div class="col-6" *ngIf="obraSocial.numeroAfiliado">
+                    <i class="mdi mdi-card-text-outline"></i>
+                    <span class="text-primary">Número de Afiliado</span>
+                </div>
+            </div>
+            <div class="row" *ngIf="obraSocial && obraSocial.financiador">
+                <div class="col-6">
+                    {{obraSocial.financiador}}
+                </div>
+                <div class="col-6" *ngIf="obraSocial.numeroAfiliado">
+                    {{obraSocial.numeroAfiliado}}
+                </div>
+            </div>
+            <!-- <div class="row" *ngIf="_paciente?.financiador && _paciente.financiador[0]?.nombre">
+                <div class="col-6">
                     <i class="mdi mdi-account-card-details"></i>
                     <span class="text-primary">Obra Social</span>
                 </div>
@@ -67,15 +89,15 @@
                 <div class="col-6" *ngIf="paciente.financiador[0].numeroAfiliado">
                     {{paciente.financiador[0].numeroAfiliado}}
                 </div>
-            </div>
+            </div-->
             <br>
             <update-contacto-direccion [paciente]="paciente"></update-contacto-direccion>
         </fieldset>
 
     </plex-tab>
     <plex-tab icon="clock" label="Turnos">
-        <turnos-paciente [turnos]="turnosPaciente" [operacion]="'operacionTurnos'" (turnosPacienteChanged)="getPaciente()"
-            (showArancelamientoForm)="arancelamiento($event)"></turnos-paciente>
+        <turnos-paciente [turnos]="turnosPaciente" [operacion]="'operacionTurnos'"
+            (turnosPacienteChanged)="getPaciente()" (showArancelamientoForm)="arancelamiento($event)"></turnos-paciente>
     </plex-tab>
     <plex-tab icon="history" label="Historial">
         <fieldset>
@@ -83,9 +105,11 @@
                 <li *ngFor="let turno of ultimosTurnos let i=index" class="list-group-item" [appHover]="'active'">
                     <div class="list-group-item-text">
                         <div>
-                            <span *ngIf="turno.estado === 'asignado' || turno.estado === 'turnoDoble'" class="badge badge-success">
+                            <span *ngIf="turno.estado === 'asignado' || turno.estado === 'turnoDoble'"
+                                class="badge badge-success">
                                 ASIGNADO</span>
-                            <span *ngIf="turno.estado === 'liberado' || turno.estado === 'suspendido' " class="badge badge-danger">
+                            <span *ngIf="turno.estado === 'liberado' || turno.estado === 'suspendido' "
+                                class="badge badge-danger">
                                 {{turno.estado | uppercase}}</span>
 
                             | {{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}}
