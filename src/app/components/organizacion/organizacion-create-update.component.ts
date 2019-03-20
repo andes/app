@@ -1,19 +1,15 @@
 import { SnomedService } from './../../services/term/snomed.service';
 import { Plex } from '@andes/plex';
-import { Server } from '@andes/shared';
-import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import * as enumerados from './../../utils/enumerados';
+
 // Services
-import { BarrioService } from './../../services/barrio.service';
 import { TipoEstablecimientoService } from './../../services/tipoEstablecimiento.service';
 import { OrganizacionService } from './../../services/organizacion.service';
 import { PaisService } from './../../services/pais.service';
 import { ProvinciaService } from './../../services/provincia.service';
 import { LocalidadService } from './../../services/localidad.service';
 // Interfaces
-import { IPais } from './../../interfaces/IPais';
-import { IBarrio } from './../../interfaces/IBarrio';
 import { ILocalidad } from './../../interfaces/ILocalidad';
 import { IUbicacion } from './../../interfaces/IUbicacion';
 import { IEdificio } from './../../interfaces/IEdificio';
@@ -21,12 +17,12 @@ import { IDireccion } from './../../interfaces/IDireccion';
 import { IContacto } from './../../interfaces/IContacto';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { ITipoEstablecimiento } from './../../interfaces/ITipoEstablecimiento';
-import { IProvincia } from './../../interfaces/IProvincia';
 import { Router } from '@angular/router';
 import { CamasService } from '../../apps/rup/internacion/services/camas.service';
 @Component({
     selector: 'organizacion-create-update',
-    templateUrl: 'organizacion-create-update.html'
+    templateUrl: 'organizacion-create-update.html',
+    styles: [`agm-map { height: 300px; }`]
 })
 export class OrganizacionCreateUpdateComponent implements OnInit {
 
@@ -118,6 +114,34 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
 
     public listadoUO = [];
 
+    public noPoseeContacto = !this.seleccion ? true : (!this.seleccion.contacto ? true : false); // Indica si está tildado o no el checkbox de si tiene contacto la organizacion
+    private contactosCache = []; // se guardan los contactos ingresados en cache para poder recuperarlos en caso de equivocacion al tildar checkbox "no posee contacto"
+    public noPoseeEdificio = !this.seleccion ? true : (!this.seleccion.edificio ? true : false); // Indica si está tildado o no el checkbox de si quiere cargar edificios o no
+    private edificiosCache = []; // se guardan los edficios ingresados en cache para poder recuperarlos en caso de equivocacion al tildar checkbox "no posee edificio"
+
+    // Datos para el mapa
+    // initial center position for the map
+    public lat = -38.95735;
+    public lng = -68.045533333333;
+
+    public zoom = 12;
+    // zoomControl = true; // control de zoom (+/-)
+    // scrollwheel = false; // zoom con mouse
+    // _infoMarker = '';
+    // urliconmarker = { url: '' };
+
+    public markers: {
+        coordenadas?: {
+            longitud: number;
+            latitud: number;
+        };
+        lng: number;
+        lat: number;
+        draggable: boolean;
+        infofiltro?: string;
+    }[] = [];
+
+
     constructor(
         private organizacionService: OrganizacionService,
         private paisService: PaisService,
@@ -132,6 +156,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.updateTitle('Editar organización');
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.tipoEstablecimientoService.get().subscribe(resultado => {
             this.tiposEstablecimiento = resultado;
@@ -140,9 +165,18 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         if (this.seleccion && this.seleccion.id) {
             this.organizacionService.getById(this.seleccion.id).subscribe(resultado => {
                 Object.assign(this.organizacionModel, resultado);
+                if (this.organizacionModel && this.organizacionModel.direccion && this.organizacionModel.direccion.geoReferencia && this.organizacionModel.direccion.geoReferencia.length === 2) {
+                    this.lat = this.organizacionModel.direccion.geoReferencia[0];
+                    this.lng = this.organizacionModel.direccion.geoReferencia[1];
+                    this.markers.push({
+                        lat: this.organizacionModel.direccion.geoReferencia[0],
+                        lng: this.organizacionModel.direccion.geoReferencia[1],
+                        draggable: false,
+                        infofiltro: '<center><b>' + this.organizacionModel.nombre + '</b><br>' + this.organizacionModel.direccion.valor + '</center>'
+                    });
+                }
             });
         }
-
 
         // Set País Argentina
         this.paisService.get({
@@ -158,7 +192,12 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
             this.loadLocalidades(this.provinciaNeuquen);
         });
 
+
+
+
+
     }
+
     loadListadoUO(event) {
         this.snomed.getQuery({ expression: this.expression }).subscribe((result) => {
             this.organizacionModel.unidadesOrganizativas.forEach((uo) => {
@@ -310,6 +349,36 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                 }
             });
         }
+    }
+
+    /**
+     * Guarda los contactos cuando se tilda "no posee contactos", para recuperarlos en caso de destildar el box
+     * @memberof OrganizacionCreateUpdateComponent
+     */
+    limpiarContacto() {
+        if (this.noPoseeContacto) {
+            this.contactosCache = this.organizacionModel.contacto;
+            this.organizacionModel.contacto = [this.contacto];
+        } else if (this.contactosCache && this.contactosCache.length) {
+            this.organizacionModel.contacto = this.contactosCache;
+        }
+    }
+    /**
+    * Guarda los edificios cuando se tilda "no posee edificios", para recuperarlos en caso de destildar el box
+    * @memberof OrganizacionCreateUpdateComponent
+    */
+    limpiarEdificio() {
+        if (this.noPoseeEdificio) {
+            this.edificiosCache = this.organizacionModel.edificio;
+            this.organizacionModel.edificio = [this.edificio];
+        } else if (this.edificiosCache && this.edificiosCache.length) {
+            this.organizacionModel.edificio = this.edificiosCache;
+        } else {
+            this.addEdificio();
+        }
+    }
+    private updateTitle(nombre: string) {
+        this.plex.updateTitle('Tablas maestras / ' + nombre);
     }
 }
 

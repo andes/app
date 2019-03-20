@@ -6,6 +6,7 @@ import { Component, OnInit, HostBinding } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
 
 const limit = 25;
 
@@ -29,10 +30,16 @@ export class OrganizacionComponent implements OnInit {
     constructor(private formBuilder: FormBuilder,
         public organizacionService: OrganizacionService,
         private auth: Auth,
-        private router: Router) { }
+        private router: Router,
+        private plex: Plex) { }
 
     ngOnInit() {
+        this.updateTitle('Organizaciones');
         this.loadDatos();
+    }
+
+    private updateTitle(nombre: string) {
+        this.plex.updateTitle('Tablas maestras / ' + nombre);
     }
 
     checkAuth(permiso, id) {

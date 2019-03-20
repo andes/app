@@ -3,18 +3,17 @@
         <div class="col">
             <plex-box type="primary">
                 <header>
-                    <div class="col">
-                        <div class="page-title">Organizaciones</div>
-                    </div>
                     <div class="row">
                         <div class="col">
-                            <plex-text [(ngModel)]="nombre" label="Nombre" name="nombre" placeholder="Ingresar nombre..."
-                                (change)="loadDatos()">
+                            <plex-text [(ngModel)]="nombre" label="Nombre" name="nombre"
+                                placeholder="Ingresar nombre..." (change)="loadDatos()">
                             </plex-text>
                         </div>
-                        <div class="col mt-4">
-                            <plex-button class="col d-flex justify-content-end" type="success" label="Nueva Organizacion"
-                                (click)="showcreate = !showcreate" *ngIf="checkAuth('create')"></plex-button>
+                        <div class="col d-flex justify-content-end mt-4">
+                            <plex-button type="primary" label="Validar Todos SISA" *ngIf="checkAuth('edit')">
+                            </plex-button>
+                            <plex-button type="success" label="Nueva Organización" (click)="showcreate = !showcreate"
+                                *ngIf="checkAuth('create')"></plex-button>
                         </div>
                     </div>
                     <table style="table-layout:fixed" class="table table-fixed">
@@ -48,9 +47,10 @@
                                     {{organizacionService.getEstado(organizacion)}} </plex-badge>
                             </td>
                             <td width="20%" class="text-center">
-                                <plex-button *ngIf="checkAuth('edit')" type="primary" label="Editar" (click)="onEdit(organizacion)"></plex-button>
-                                <plex-button *ngIf="checkAuth('sectores', organizacion.id)" type="primary" label="Ver sectores"
-                                    (click)="routeSectores(organizacion.id)"></plex-button>
+                                <plex-button *ngIf="checkAuth('edit')" type="primary" label="Editar"
+                                    (click)="onEdit(organizacion)"></plex-button>
+                                <plex-button *ngIf="checkAuth('sectores', organizacion.id)" type="primary"
+                                    label="Ver sectores" (click)="routeSectores(organizacion.id)"></plex-button>
                             </td>
                         </tr>
                     </tbody>
@@ -65,4 +65,5 @@
 </section>
 
 <!--Componente de Alta/Modificación-->
-<organizacion-create-update *ngIf="showcreate" [seleccion]="seleccion" (data)='onReturn($event)'></organizacion-create-update>
+<organizacion-create-update *ngIf="showcreate" [seleccion]="seleccion" (data)='onReturn($event)'>
+</organizacion-create-update>
