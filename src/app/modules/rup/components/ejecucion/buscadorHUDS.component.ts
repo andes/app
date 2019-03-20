@@ -35,8 +35,8 @@ export class BuscadorHUDSComponent implements OnInit {
         { titulo: 'TRASTORNOS', key: 'trastornos', icon: 'trastorno' },
         { titulo: 'PROC', key: 'procedimientos', icon: 'procedimiento' },
         { titulo: 'PRODUCTOS', key: 'productos', icon: 'producto' },
+        { titulo: 'VACUNAS', key: 'vacunas', icon: 'vacuna' },
         { titulo: 'LABOS', key: 'laboratorios', icon: 'laboratorio' },
-        { titulo: 'VACUNAS', key: 'vacunas', icon: 'vacuna' }
     ];
 
     filtroActual: any = 'prestaciones';
