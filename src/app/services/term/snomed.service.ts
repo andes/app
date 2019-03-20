@@ -10,7 +10,7 @@ export class SnomedService {
     constructor(private server: Server) {
     }
 
-    @Cache({ key : 'search' })
+    @Cache({ key: 'search' })
     get(params: any): Observable<any[]> {
         return this.server.get(this.snomedURL, { params: params, showError: true });
     }
@@ -21,6 +21,9 @@ export class SnomedService {
 
     getQuery(params: any): Observable<any[]> {
         return this.server.get(this.snomedURLexpression, { params: params, showError: true });
+    }
+    capitalize(concepto, key = 'term') {
+        return concepto[key].split(' ').map(x => x[0].toLocaleUpperCase() + x.slice(1)).join(' ');
     }
 
 }
