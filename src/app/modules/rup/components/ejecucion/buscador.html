@@ -104,7 +104,7 @@
                 <div class="datos pl-2">
                     <b>{{item.term}}</b>
                     <ng-container *ngIf="busquedaActual === 'sugeridos'">
-                        <span *ngIf="item?.sugeridoPor" class="sugerido">
+                        <span *ngIf="item?.sugeridoPor" class="sugerido d-flex align-items-end justify-content-start">
                             <i>Sugerido por {{ item.sugeridoPor }}</i>
                         </span>
                     </ng-container>
