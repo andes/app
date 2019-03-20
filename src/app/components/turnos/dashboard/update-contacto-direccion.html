@@ -7,15 +7,15 @@
             <div class="row" *ngFor="let _unContacto of arrayContactos; let i = index">
                 <div class="col-5">
                     <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}" [required]="i <= 0"
-                        label="Tipo:" (change)="changeTipoContacto(i, _unContacto.tipo)">
+                        label="Tipo" (change)="changeTipoContacto(i, _unContacto.tipo)">
                     </plex-select>
                 </div>
                 <div class="col-5">
                     <span *ngIf="_unContacto.tipo">
-                        <plex-phone *ngIf="_unContacto.tipo === 'fijo' || _unContacto.tipo.id === 'fijo'" label="Número:"
+                        <plex-phone *ngIf="_unContacto.tipo === 'fijo' || _unContacto.tipo.id === 'fijo'" label="Número"
                             [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000" name="valor-{{i}}" (keyup)="disableGuardar = false">
                         </plex-phone>
-                        <plex-phone label="Número:" *ngIf="_unContacto.tipo === 'celular' || _unContacto.tipo.id === 'celular'"
+                        <plex-phone label="Número" *ngIf="_unContacto.tipo === 'celular' || _unContacto.tipo.id === 'celular'"
                             [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000" name="valor-{{i}}" (keyup)="disableGuardar = false">
                         </plex-phone>
                     </span>

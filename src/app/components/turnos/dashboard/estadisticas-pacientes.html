@@ -25,46 +25,46 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-6" *ngIf="paciente?.documento !== ''">
+                <div class="col-6" *ngIf="paciente?.documento">
                     {{paciente.documento | number}}
                 </div>
-                <div class="col-6" *ngIf="paciente && paciente.fechaNacimiento !== null">
+                <div class="col-6" *ngIf="paciente && paciente.fechaNacimiento">
                     {{paciente.fechaNacimiento | date:'dd-MM-yyyy'}} ({{paciente | edad}})
                 </div>
             </div>
             <div class="row">
-                <div class="col-6" *ngIf="paciente?.direccion && paciente.direccion[0]?.valor && paciente.direccion.length > 0">
+                <div class="col-6" *ngIf="paciente?.direccion && paciente.direccion[0]?.valor">
                     <i class="mdi mdi-map-marker"></i>
                     <span class="text-primary">Dirección</span>
                 </div>
-                <div class="col-6" *ngIf="paciente?.contacto && paciente.contacto[0]?.valor && paciente.contacto.length > 0">
+                <div class="col-6" *ngIf="paciente?.contacto && paciente.contacto[0]?.valor">
                     <i class="mdi mdi-cellphone-android"></i>
                     <span class="text-primary">Teléfono</span>
                 </div>
             </div>
             <div class="row">
-                <div class="col-6" *ngIf="paciente?.direccion && paciente.direccion[0]?.valor !== '' && paciente.direccion.length > 0">
+                <div class="col-6" *ngIf="paciente?.direccion && paciente.direccion[0]?.valor">
                     {{paciente.direccion[0].valor}}
                 </div>
-                <div class="col-6" *ngIf="paciente?.id && paciente.contacto && paciente.contacto.length > 0">
+                <div class="col-6" *ngIf="paciente?.contacto && paciente.contacto[0]?.valor">
                     {{paciente.contacto[0].valor}}
                 </div>
             </div>
-            <div class="row" *ngIf="paciente?.financiador && paciente.financiador[0]?.nombre">
-                <div class="col-6">
+            <div class="row" *ngIf="paciente?.financiador">
+                <div class="col-6" *ngIf="paciente.financiador[0]?.nombre">
                     <i class="mdi mdi-account-card-details"></i>
                     <span class="text-primary">Obra Social</span>
                 </div>
-                <div class="col-6">
+                <div class="col-6" *ngIf="paciente?.financiador[0]?.numeroAfiliado">
                     <i class="mdi mdi-card-text-outline"></i>
                     <span class="text-primary">Número de Afiliado</span>
                 </div>
             </div>
-            <div class="row" *ngIf="paciente?.financiador && paciente.financiador[0]?.nombre">
+            <div class="row" *ngIf="paciente?.financiador[0]?.nombre">
                 <div class="col-6">
                     {{paciente.financiador[0].financiador}}
                 </div>
-                <div class="col-6">
+                <div class="col-6" *ngIf="paciente?.financiador[0]?.numeroAfiliado">
                     {{paciente.financiador[0].numeroAfiliado}}
                 </div>
             </div>
