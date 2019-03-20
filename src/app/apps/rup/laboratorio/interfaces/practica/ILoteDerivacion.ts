@@ -1,6 +1,7 @@
+import { IItemLoteDerivacion } from './IItemLoteDerivacion';
 export interface ILoteDerivacion {
     id?: string;
-    numeroLote?: string;
+    numero?: string;
     fecha?: Date;
     laboratorioOrigen: {
         nombre: string,
@@ -13,17 +14,7 @@ export interface ILoteDerivacion {
     estados: [{
         tipo: String
     }];
-    registrosPracticas: [{
-        idPrestacion: String,
-        numeroProtocolo: String,
-        paciente: {
-            id: string,
-            documento: String,
-            apellido: String,
-            nombre: String
-        };
-        registro: any
-    }?];
+    itemsLoteDerivacion: IItemLoteDerivacion[];
     usuarioResponsablePreparacion?: String;
     usuarioEntrega?: String;
 }
