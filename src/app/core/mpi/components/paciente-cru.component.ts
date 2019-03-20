@@ -220,8 +220,6 @@ export class PacienteCruComponent implements OnInit {
                     this.pacienteModel.estado = 'validado';
                     this.paciente = Object.assign({}, this.pacienteModel);
                     this.actualizarDatosPaciente();
-                } else {
-                    this.plex.info('warning', 'Paciente inexistente', 'Error');
                 }
             }
         } else {
