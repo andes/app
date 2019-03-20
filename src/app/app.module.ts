@@ -208,8 +208,7 @@ import { ArancelamientoFormComponent } from './components/turnos/punto-inicio/ar
 import { AutocitarTurnoAgendasComponent } from './components/turnos/autocitar/autocitar.component';
 import { DinamicaFormComponent } from './components/turnos/autocitar/dinamica.component';
 import { MapaEspacioFisicoVistaComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico-vista.component';
-import { MapaImplementacionAndesComponent } from '../app/apps/mapa/components/mapaimplementacionandes.component';
-
+import { MapaImplementacionAndesComponent } from './apps/mapa/components/mapaimplementacionandes.component';
 import { BuscadorCie10Component } from './components/turnos/gestor-agendas/operaciones-agenda/buscador-cie10.component';
 
 
