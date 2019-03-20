@@ -175,7 +175,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                             route: '/rup',
                             name: 'RUP'
                         }, {
-                            name: this.prestacion && this.prestacion.solicitud.tipoPrestacion.term ? this.prestacion.solicitud.tipoPrestacion.term : ''
+                            name: this.prestacion && this.prestacion.solicitud.tipoPrestacion.term ? this.servicioSnomed.capitalize(this.prestacion.solicitud.tipoPrestacion) : ''
                         }]);
 
                         // this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
