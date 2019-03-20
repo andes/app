@@ -9,11 +9,11 @@
                         <!-- DATOS BASICOS -->
                         <div class="row">
                             <div class="col-4">
-                                <plex-int label="Número de Documento" [(ngModel)]="pacienteModel.documento" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
-                                    [readonly]=" validado || noPoseeDNI " [max]="9999999999" name="documento"
-                                    [required]="!noPoseeDNI">
+                                <plex-int label="Número de DNI ARGENTINO" [(ngModel)]="pacienteModel.documento"
+                                    (change)="disableGuardar = false; enableIgnorarGuardar = false;" [readonly]=" validado || noPoseeDNI "
+                                    [min]="99999" [max]="9999999999" name="documento" [required]="!noPoseeDNI">
                                 </plex-int>
-                                <plex-bool [(ngModel)]="noPoseeDNI" label="No posee documento" name="noPoseDNI"
+                                <plex-bool [(ngModel)]="noPoseeDNI" label="No posee DNI ARGENTINO" name="noPoseDNI"
                                     (change)="limpiarDocumento()"></plex-bool>
                             </div>
                             <div class="col-4">
