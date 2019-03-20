@@ -432,8 +432,9 @@ export class BuscadorHUDSComponent implements OnInit {
         if (this.fechaInicio || this.fechaFin) {
             this.fechaInicio = this.fechaInicio ? this.fechaInicio : new Date();
             this.fechaFin = this.fechaFin ? this.fechaFin : new Date();
-            this.resultadoRegistros.prestaciones = this.resultadoRegistros.prestaciones.filter(p => p.fecha >= moment(this.fechaInicio).startOf('day').toDate() &&
-                p.fecha <= moment(this.fechaFin).endOf('day').toDate());
+            this.resultadoRegistros.prestaciones = this.resultadoRegistros.prestaciones.filter(p =>
+                new Date(p.fecha).getTime() >= moment(this.fechaInicio).startOf('day').toDate().getTime() && new Date(p.fecha).getTime() <= moment(this.fechaFin).endOf('day').toDate().getTime()
+            );
         }
     }
 }
