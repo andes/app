@@ -4,7 +4,7 @@
         <plex-accordion *ngFor="let perfil of perfilesOrganizacion; let i = index" class="hover">
             <plex-panel *ngIf="perfil.perfil.activo">
                 <div plex-accordion-title>
-                    {{perfil.perfil.nombre}}
+                    {{perfil.perfil.nombre}} {{perfil.perfil.organizacion ? "(Local)" : "(Global)" }}
                     <plex-bool *ngIf="permiteAsignarPerfiles" [(ngModel)]="perfil.checked" class="float-right" (change)="tildarPerfil($event, i)"
                         type="slide"></plex-bool>
                     <!-- d-flex justify-content-end -->
