@@ -24,7 +24,7 @@ $rotate: -90deg;
         margin-bottom: 2px;
         .rup-header {
             display: grid;
-            grid-template-columns: 55px 1fr minmax(135px, 160px);
+            grid-template-columns: 55px minmax(190px, 1fr) minmax(135px, 160px);
             grid-template-rows: minmax(55px, 1fr);
             .icon-rup {
                 border-right: 2px solid #ccc;
