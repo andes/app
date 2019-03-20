@@ -79,10 +79,16 @@ export class PasesListadoInternacionComponent implements OnInit {
             this.elegirDesocupar = true;
             this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
                 this.organizacion = organizacion;
-                this.listaUnidadesOrganizativas = this.organizacion.unidadesOrganizativas;
-                if (this.listaUnidadesOrganizativas && this.listaUnidadesOrganizativas.length > 0) {
-                    this.opcionesDesocupar.push({ id: 'pase', label: 'Cambiar de unidad organizativa' });
-                }
+                const fechaMovimiento = this.internacionService.combinarFechas(this.fecha, this.hora);
+                this.prestacionesService.getPasesInternacion(this.prestacion.id).subscribe(lista => {
+                    let listaFiltrada = lista.filter(c => c.estados.fecha < fechaMovimiento);
+                    this.camasService.getCama(listaFiltrada[listaFiltrada.length - 1]._id).subscribe(cama => {
+                        this.listaUnidadesOrganizativas = this.organizacion.unidadesOrganizativas ? this.organizacion.unidadesOrganizativas.filter(o => o.conceptId !== cama.ultimoEstado.unidadOrganizativa.conceptId) : [];
+                        if (this.listaUnidadesOrganizativas && this.listaUnidadesOrganizativas.length > 0) {
+                            this.opcionesDesocupar.push({ id: 'pase', label: 'Cambiar de unidad organizativa' });
+                        }
+                    });
+                });
                 // vamos a cargar los movimientos de la internación para luego hacer los filtros correspondientes
                 // segun la cama ocupada en la fecha seleccionada
                 this.prestacionesService.getPasesInternacion(this.prestacion.id).subscribe(lista => {
@@ -94,6 +100,8 @@ export class PasesListadoInternacionComponent implements OnInit {
         }
 
     }
+
+
 
     filtrosDesocupar() {
         const fechaActual = new Date();
@@ -160,7 +168,7 @@ export class PasesListadoInternacionComponent implements OnInit {
                     let nuevoEstado = this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible';
                     const fechaMovimiento = this.internacionService.combinarFechas(this.fecha, this.hora);
                     // Primero desocupamos la cama donde esta el paciente actualmente
-                    this.camasService.cambioEstadoMovimiento(this.cama.id, this.cama.estados, nuevoEstado, fechaMovimiento, null, null, this.PaseAunidadOrganizativa).subscribe(camaActualizada => {
+                    this.camasService.cambioEstadoMovimiento(this.cama._id, this.cama.estados, nuevoEstado, fechaMovimiento, null, null, this.PaseAunidadOrganizativa).subscribe(camaActualizada => {
                         if (this.camaSeleccionPase) {
                             const filtroEstado = this.camaSeleccionPase.estados.filter(c => c.fecha < fechaMovimiento);
                             const ultimoEstado = filtroEstado[filtroEstado.length - 1];
