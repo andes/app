@@ -13,6 +13,8 @@
                                     [readonly]=" validado || noPoseeDNI " [max]="9999999999" name="documento"
                                     [required]="!noPoseeDNI">
                                 </plex-int>
+                                <plex-bool [(ngModel)]="noPoseeDNI" label="No posee documento" name="noPoseDNI"
+                                    (change)="limpiarDocumento()"></plex-bool>
                             </div>
                             <div class="col-4">
                                 <plex-text label="Apellido" [(ngModel)]="pacienteModel.apellido" name="apellido"
