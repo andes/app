@@ -17,6 +17,7 @@ export function generateRegistroEjecucion(usuario, organizacion, practica) {
         valor: {
             idPractica: practica._id,
             nivel: practica.nivel,
+            codigoPractica: practica.codigo,
             resultado: {
                 valor: null,
                 sinMuestra: false,

@@ -400,6 +400,7 @@ import { ChartHistorialResultadoComponent } from './apps/rup/laboratorio/compone
 import { LaboratorioDerivacionesComponent } from './apps/rup/laboratorio/components/derivaciones/gestor-derivaciones.component';
 import { RecepcionarDerivacionesComponent } from './apps/rup/laboratorio/components/derivaciones/recepcionar-derivacion/recepcionar-derivacion.component';
 import { GestorLotesComponent } from './apps/rup/laboratorio/components/derivaciones/gestor-lotes/gestor-lotes.component';
+import { ListaLotesComponent } from './apps/rup/laboratorio/components/derivaciones/gestor-lotes/lista-lotes/lista-lotes.component';
 import { PrepararLoteComponent } from './apps/rup/laboratorio/components/derivaciones/preparar-lote/preparar-lote.component';
 import { ListaProtocolosLotesComponent } from './apps/rup/laboratorio/components/derivaciones/preparar-lote/lista-protocolos-lotes/lista-protocolos-lotes.component';
 import { ReporteResultadosIndexComponent } from './apps/rup/laboratorio/components/reportes/resultados/index.component';
@@ -716,6 +717,7 @@ registerLocaleData(localeEs, 'es');
         GestorLotesComponent,
         PrepararLoteComponent,
         ListaProtocolosLotesComponent,
+        ListaLotesComponent,
         ReporteResultadosIndexComponent,
         ReporteResultadosFiltrosComponent,
         ReportesResultadoListaProtocolosComponent,

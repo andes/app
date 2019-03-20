@@ -1,0 +1,27 @@
+<table *ngIf='lotes' class="table able-striped table-sm">
+    <thead>
+        <th></th>
+        <th>Nro. de Lote</th>
+        <th>Fecha</th>
+        <th>Laboratorio de Destino</th>
+        <th>Apellidos y Nombres</th>
+        <th>Detalles</th>
+    </thead>
+    <tbody>
+        <tr class="hover" *ngFor="let lote of lotes">
+            <td>
+                <!-- <plex-bool type="checkbox" [(ngModel)]='valoresCheckboxes[registro._id].value' (change)="onCheckboxChange($event, lote, registro)" name="validarTodos"></plex-bool> -->
+            </td>
+            <td>{{ lote.id }}</td>
+            <td>{{ lote.fecha | fecha }}</td>
+            <td>{{ lote.laboratorioDestino.nombre }}</td>
+            <td></td>
+            <td>
+                <plex-button type="info" title="Aceptar Valores Críticos" icon="mdi send-circle-outline" (click)="enviarLote(lote)">
+                </plex-button>
+            </td>
+            <!-- <td>{{lote.paciente.documento}}</td> -->
+            <!-- <td>{{lote.paciente.apellido}} {{lote.paciente.nombre}}</td> -->
+        </tr>
+    </tbody>
+</table>
