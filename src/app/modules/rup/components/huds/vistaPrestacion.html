@@ -7,7 +7,7 @@
                 {{ prestacion.ejecucion.fecha | date: 'EEE dd/MM/yyyy HH:MM' }}
             </div>
             <div class="col-6"
-                *ngIf="(getTimestamp(prestacion.ejecucion.fecha) - getTimestamp(prestacion.solicitud.fecha)) > 1000">
+                *ngIf="(getTimestamp(prestacion?.ejecucion.fecha) - getTimestamp(prestacion?.solicitud.fecha)) > 1000">
                 <b> Solicitada el: </b>
                 {{ prestacion.solicitud.fecha | date: 'EEE dd/MM/yyyy HH:MM' }}
             </div>
@@ -31,7 +31,7 @@
                         <div class="rup-header">
                             <div class="icon-rup">
                                 <i
-                                    class="icon icon-rup-semantic-{{ servicioPrestacion.getIcon(elemento.concepto) }}"></i>
+                                    class="icon icon-rup-semantic-{{prestacionesService.getIcon(elemento.concepto)}}"></i>
                             </div>
                             <div class="title">
                                 <ng-container *ngIf="elemento?.nombre">
