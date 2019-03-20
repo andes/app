@@ -7,7 +7,7 @@
                 {{ prestacion.ejecucion.fecha | date: 'EEE dd/MM/yyyy HH:MM' }}
             </div>
             <div class="col-6"
-                *ngIf="(getTimestamp(prestacion.ejecucion.fecha) - getTimestamp(prestacion.solicitud.fecha)) > 1000">
+                *ngIf="(getTimestamp(prestacion?.ejecucion.fecha) - getTimestamp(prestacion?.solicitud.fecha)) > 1000">
                 <b> Solicitada el: </b>
                 {{ prestacion.solicitud.fecha | date: 'EEE dd/MM/yyyy HH:MM' }}
             </div>
@@ -30,7 +30,8 @@
                         class="rup-card {{ elemento.esSolicitud ? 'solicitud' : prestacionesService.getCssClass(elemento.concepto) }}">
                         <div class="rup-header">
                             <div class="icon-rup">
-                                <i class="icon icon-rup-semantic-{{prestacionesService.getIcon(elemento.concepto)}}"></i>
+                                <i
+                                    class="icon icon-rup-semantic-{{prestacionesService.getIcon(elemento.concepto)}}"></i>
                             </div>
                             <div class="title">
                                 <ng-container *ngIf="elemento?.nombre">
@@ -40,7 +41,7 @@
                             <div class="actions">
                                 <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0"
                                     class="badge badge-info">
-                                    <b> Relacionado con: </b> 
+                                    <b> Relacionado con: </b>
                                     {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
                                 </small>
                                 <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">
@@ -59,8 +60,8 @@
                                     <div class="col-12">
                                         <rup [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)"
                                             [params]="elementosRUPService.selectPorRefsetId(elemento.concepto)"
-                                            [prestacion]="prestacion" [registro]="elemento"
-                                            [paciente]="paciente" [soloValores]="true" [vistaHUDS]="false">
+                                            [prestacion]="prestacion" [registro]="elemento" [paciente]="paciente"
+                                            [soloValores]="true" [vistaHUDS]="false">
                                         </rup>
                                     </div>
                                 </div>
