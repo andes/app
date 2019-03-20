@@ -328,11 +328,11 @@ export class SelectorUsuarioEfectorComponent {
      * @memberof SelectorUsuarioEfectorComponent
      */
     pausar() {
-        let textoConfirm = (!this.organizacionActualAuthUs.permisosPausados) ? 'pausar' : 'reanudar';
+        let textoConfirm = (this.organizacionActualAuthUs.activo) ? 'pausar' : 'reanudar';
         this.plex.confirm(`¿Está seguro que desea ${textoConfirm} a este usuario?`).then((resultado: boolean) => {
             if (resultado) {
                 this.permisosService.actualizarEstadoPermisos(this.userModel.usuario, this.organizacionPermisos.id).subscribe(res => {
-                    this.organizacionActualAuthUs.permisosPausados = res.permisosPausados;
+                    this.organizacionActualAuthUs.activo = res.activo;
                 });
             }
         });

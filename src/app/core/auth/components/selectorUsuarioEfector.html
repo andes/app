@@ -3,18 +3,21 @@
         <div class="mt-3">
             <div class='row'>
                 <div class='col-11'>
-                    <plex-text [(ngModel)]="textoLibre" (change)="loadUsuarios()" prefix="<i class='mdi mdi-account-search'></i>"
-                        placeholder="Buscar por DNI, nombre o apellido">
+                    <plex-text [(ngModel)]="textoLibre" (change)="loadUsuarios()"
+                        prefix="<i class='mdi mdi-account-search'></i>" placeholder="Buscar por DNI, nombre o apellido">
                     </plex-text>
                 </div>
                 <div class='col-1 d-flex justify-content-end'>
-                    <plex-button *ngIf='!mostrarFiltrosAvanzados' icon="mdi mdi-menu-down" type="primary" (click)='mostrarFiltrosAvanzados = true'></plex-button>
-                    <plex-button *ngIf='mostrarFiltrosAvanzados' icon="mdi mdi-menu-up" type="primary" (click)='mostrarFiltrosAvanzados = false'></plex-button>
+                    <plex-button *ngIf='!mostrarFiltrosAvanzados' icon="mdi mdi-menu-down" type="primary"
+                        (click)='mostrarFiltrosAvanzados = true'></plex-button>
+                    <plex-button *ngIf='mostrarFiltrosAvanzados' icon="mdi mdi-menu-up" type="primary"
+                        (click)='mostrarFiltrosAvanzados = false'></plex-button>
                 </div>
             </div>
             <ng-container *ngIf='mostrarFiltrosAvanzados'>
                 <plex-select [(ngModel)]="organizacionBusqueda" name="organizacionDestino" (change)="loadUsuarios()"
-                    label="Organización" placeholder="Seleccione la organización" labelField="nombre" (getData)="loadOrganizacion($event)">
+                    label="Organización" placeholder="Seleccione la organización" labelField="nombre"
+                    (getData)="loadOrganizacion($event)">
                 </plex-select>
             </ng-container>
 
@@ -30,7 +33,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="hover" *ngFor="let user of users  | textFilter:textoLibre ; let i=index" (click)="seleccionarUsuario(user)">
+                    <tr class="hover" *ngFor="let user of users  | textFilter:textoLibre ; let i=index"
+                        (click)="seleccionarUsuario(user)">
                         <td>{{user.usuario}}</td>
                         <td *ngIf="user.apellido; else sinDatos">
                             {{user.apellido}}
@@ -53,20 +57,22 @@
             </div>
             <div class="col d-flex justify-content-end">
                 <ng-container *ngIf="showAgregarEfector">
-                    <plex-button type="success" icon='mdi mdi-plus' (click)="agregarEfector = true" title='Agregar Efector'></plex-button>
+                    <plex-button type="success" icon='mdi mdi-plus' (click)="agregarEfector = true"
+                        title='Agregar Efector'></plex-button>
                 </ng-container>
                 <ng-container *ngIf="showAgregarEfector && organizacionPermisos">
-                    <plex-button *ngIf='organizacionActualAuthUs && !organizacionActualAuthUs.permisosPausados' type="danger"
+                    <plex-button *ngIf='organizacionActualAuthUs && organizacionActualAuthUs.activo' type="danger"
                         icon='mdi mdi-pause' (click)='pausar()' title='Pausar'></plex-button>
-                    <plex-button *ngIf=' organizacionActualAuthUs && organizacionActualAuthUs.permisosPausados' type="success"
+                    <plex-button *ngIf=' organizacionActualAuthUs && !organizacionActualAuthUs.activo' type="success"
                         icon='mdi mdi-play' (click)='pausar()' title='Reanudar'></plex-button>
                 </ng-container>
                 <ng-container *ngIf="showAgregarEfector && organizacionActualAuthUs && organizacionPermisos">
-                    <plex-button type="info" icon='mdi mdi-content-copy' (click)="copiarPermisos = true" title='Copiar Permisos'></plex-button>
+                    <plex-button type="info" icon='mdi mdi-content-copy' (click)="copiarPermisos = true"
+                        title='Copiar Permisos'></plex-button>
                 </ng-container>
                 <ng-container *ngIf="showAgregarEfector && organizacionPermisos">
-                    <plex-button type="danger" icon='mdi mdi-delete' (click)="deleteEfector()" *ngIf="organizacionesUsuario?.length"
-                        title='Quitar Efector'></plex-button>
+                    <plex-button type="danger" icon='mdi mdi-delete' (click)="deleteEfector()"
+                        *ngIf="organizacionesUsuario?.length" title='Quitar Efector'></plex-button>
                 </ng-container>
             </div>
         </div>
@@ -112,7 +118,8 @@
             </div>
             <div class="col-12">
                 <plex-select [(ngModel)]="newOrg" name="nuevaOrganizacion" [data]="newOrganizaciones" [required]="true"
-                    labelField="nombre + ', ' + direccion.ubicacion.localidad.nombre" placeholder="Seleccione efector"></plex-select>
+                    labelField="nombre + ', ' + direccion.ubicacion.localidad.nombre" placeholder="Seleccione efector">
+                </plex-select>
             </div>
         </div>
         <div class="row my-3" *ngIf="copiarPermisos">
@@ -124,9 +131,9 @@
                 <plex-button type="primary" label="Agregar" (click)="copiarAEfectores()"></plex-button>
             </div>
             <div class="col-12">
-                <plex-select [(ngModel)]="organizacionesNuevas" [multiple]="true" name="organizacionDestino" label="Organizaciones nuevas"
-                    placeholder="Seleccione la organización" labelField="nombre" (getData)="loadOrganizacion($event)"
-                    [required]="true"></plex-select>
+                <plex-select [(ngModel)]="organizacionesNuevas" [multiple]="true" name="organizacionDestino"
+                    label="Organizaciones nuevas" placeholder="Seleccione la organización" labelField="nombre"
+                    (getData)="loadOrganizacion($event)" [required]="true"></plex-select>
             </div>
         </div>
     </plex-tab>
