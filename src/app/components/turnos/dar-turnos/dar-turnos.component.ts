@@ -336,7 +336,7 @@ export class DarTurnosComponent implements OnInit {
             this.mostrarCalendario = true;
             // Agendas a partir de hoy aplicando filtros seleccionados y permisos
             params = {
-                desde: new Date(), hasta: fechaHasta,
+                rango: true, desde: new Date(), hasta: fechaHasta,
                 idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : ''),
                 organizacion: this.auth.organizacion._id,
                 nominalizada: true
