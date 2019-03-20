@@ -85,13 +85,13 @@
 
                         <div class="datos pl-2"
                             (click)="emitTabs(registro, (registro.tipo ? registro.tipo: 'concepto'))">
-                            <b><span [ngClass]="{'bg-warning': prestacionSeleccionada?.length > 0}">
+                            <b><span [ngClass]="{'bg-hilite': prestacionSeleccionada?.length > 0}">
                                     {{ registro.concepto.term }}</span></b>
                             <div class="profesional">
                                 {{ registro?.evoluciones ? registro.evoluciones[0].profesional : registro.profesional }}
                             </div>
                             <div class="efector">
-                                <span [ngClass]="{'bg-warning': organizacionSeleccionada?.length > 0}">
+                                <span [ngClass]="{'bg-hilite': organizacionSeleccionada?.length > 0}">
                                     {{ registro.organizacion.nombre }}
                                 </span>
                             </div>
