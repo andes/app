@@ -12,7 +12,7 @@
             <th *ngIf='modo.nombre !=="recepcionSinTurno" && modo.nombre !=="control" && modo.nombre !=="recepcion"'
                 class="float-center">UM</th>
             <th *ngIf='modo.nombre !=="recepcionSinTurno" && modo.nombre !=="control" && modo.nombre !=="recepcion"'
-                class="float-center">VR</th>
+                class="float-center">VR | Método</th>
             <th class="float-center" *ngIf='modo.nombre !=="control" && modo.nombre !=="recepcion"'>Estado</th>
             <th *ngIf='modo.nombre === "recepcion" || modo.nombre === "control"'>Acciones</th>
             <th class="float-center" *ngIf='modo.nombre === "validacion"'>
@@ -142,7 +142,8 @@
                         <td>
                             <ng-container *ngIf="practicaCarga.valor.practica.resultado.formato && practicaCarga.valor.practica.resultado.formato.tipo === 'Numérico'">
                                 {{practicaCarga.valor.practica.presentaciones[0].valoresReferencia[0].valorMinimo}} -
-                                {{practicaCarga.valor.practica.presentaciones[0].valoresReferencia[0].valorMaximo}}
+                                {{practicaCarga.valor.practica.presentaciones[0].valoresReferencia[0].valorMaximo}} |
+                                {{practicaCarga.valor.practica.presentaciones[0].metodo }}
                             </ng-container>
                         </td>
 
