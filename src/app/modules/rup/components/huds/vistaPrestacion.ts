@@ -2,10 +2,8 @@ import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
-import { Plex } from '@andes/plex';
-import { Auth } from '@andes/auth';
-import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { IPaciente } from '../../../../interfaces/IPaciente';
+import { PacienteService } from '../../../../services/paciente.service';
 
 @Component({
     selector: 'vista-prestacion',
@@ -19,12 +17,30 @@ export class VistaPrestacionComponent implements OnInit {
     @Input() prestacion: IPrestacion;
     @Input() evolucionActual: any;
     @Input() indice = 0;
-
-    constructor(
-        public servicioPrestacion: PrestacionesService,
-        private servicioPaciente: PacienteService,
-        public elementosRUPService: ElementosRUPService) {
+    private _idPrestacion;
+    @Input()
+    set idPrestacion(value: any) {
+        this.prestacion = null;
+        this.paciente = null;
+        this._idPrestacion = value;
+        this.elementosRUPService.ready.subscribe((resultado) => {
+            if (resultado) {
+                this.prestacionesService.getById(this.idPrestacion).subscribe(prestacion => {
+                    this.prestacion = prestacion;
+                    this.pacienteService.getById(this.prestacion.paciente.id).subscribe(paciente => {
+                        this.paciente = paciente;
+                    });
+                });
+            }
+        });
     }
+    get idPrestacion(): any {
+        return this._idPrestacion;
+    }
+
+    constructor(public prestacionesService: PrestacionesService, public pacienteService: PacienteService, public elementosRUPService: ElementosRUPService) {
+    }
+
 
     ngOnInit() {
 
