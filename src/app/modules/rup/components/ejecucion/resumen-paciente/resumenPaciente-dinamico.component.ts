@@ -1,8 +1,10 @@
-import { Component, Input, OnInit, HostBinding } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../../interfaces/IPaciente';
 import { ISnomedConcept } from '../../../interfaces/snomed-concept.interface';
 import { ElementosRUPService } from '../../../services/elementosRUP.service';
+import { IPrestacion } from '../../../interfaces/prestacion.interface';
+import { PrestacionesService } from '../../../services/prestaciones.service';
 
 @Component({
     selector: 'rup-resumenPaciente-dinamico',
@@ -12,8 +14,10 @@ import { ElementosRUPService } from '../../../services/elementosRUP.service';
 export class ResumenPacienteDinamicoComponent implements OnInit {
     @Input() paciente: IPaciente;
 
+    public registros: any[] = [];
     public graficos: any[] = [];
-    public conceptos: ISnomedConcept[] = [
+    public elementos: any[] = [];
+    public conceptosGrafico: ISnomedConcept[] = [
         {
             conceptId: '307818003',
             fsn: 'seguimiento del peso (régimen/tratamiento)',
@@ -31,17 +35,44 @@ export class ResumenPacienteDinamicoComponent implements OnInit {
             semanticTag: 'régimen/tratamiento',
             conceptId: '135840009',
             term: 'monitoreo de la tensión arterial'
+        },
+        {
+
+            conceptId: '70443007',
+            fsn: 'medición de depuración renal (procedimiento)',
+            semanticTag: 'procedimiento',
+            term: 'medición de depuración renal'
+        }
+    ];
+
+    conceptos: ISnomedConcept[] = [
+        {
+            conceptId: '441829007',
+            term: 'evaluación del riesgo de enfermedad cardiovascular',
+            fsn: 'evaluación del riesgo de enfermedad cardiovascular (procedimiento)',
+            semanticTag: 'procedimiento'
         }
     ];
 
     constructor(
         public elementosRUPService: ElementosRUPService,
-        public auth: Auth
+        public auth: Auth,
+        public prestacionesService: PrestacionesService,
     ) { }
 
     ngOnInit() {
+        for (let conceptoGrafico of this.conceptosGrafico) {
+            this.graficos.push(this.elementosRUPService.buscarElemento(conceptoGrafico, false));
+        }
+        // Loopeamos los conceptos que no son graficos y recupermaos su ultimo registro
         for (let concepto of this.conceptos) {
-            this.graficos.push(this.elementosRUPService.buscarElemento(concepto, false));
+            this.elementos = [...this.elementos, this.elementosRUPService.buscarElemento(concepto, false)];
+            this.prestacionesService.getRegistrosHuds(this.paciente.id, '>>' + concepto.conceptId).subscribe(prestaciones => {
+                if (prestaciones.length) {
+                    this.registros = [...this.registros, prestaciones[prestaciones.length - 1]];
+                }
+            });
+
         }
     }
 }
