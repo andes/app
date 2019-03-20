@@ -110,7 +110,7 @@
                             <i>Sugerido por {{ item.sugeridoPor }}</i>
                         </span>
                     </ng-container>
-                    <small *ngIf="item.frecuencia" class="small">
+                    <small *ngIf="item.frecuencia" class="small d-flex align-items-end">
                         ({{ item.frecuencia | pluralizar:['vez', 'veces'] }})
                     </small>
                 </div>
