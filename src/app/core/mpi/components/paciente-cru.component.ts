@@ -467,27 +467,6 @@ export class PacienteCruComponent implements OnInit {
         }
     }
 
-    // autocompletar(textSearch) {
-    //     console.log(textSearch);
-    //     // let localidad = this.pacienteModel.direccion[0].ubicacion.localidad.nombre;
-    //     // let provincia = this.pacienteModel.direccion[0].ubicacion.provincia.nombre;
-    //     this.apiGoogleService.autocompletar(textSearch.value).subscribe(resp => {
-    //         this.sugerencias = [];
-    //         console.log(resp);
-    //         if (resp.length) {
-    //             this.sugerencias = resp;
-    //             // let i = 0;
-    //             // resp.forEach(elto => {
-    //             //     this.sugerencias.push({ id: i, nombre: elto });
-    //             //     i++;
-    //             // });
-    //             // this.pacienteModel.direccion[0].valor = this.placeAutocomplete;
-    //             console.log(this.sugerencias);
-    //         }
-    //     });
-    // }
-
-
     // ---------------------- CONTACTOS ---------------------------
 
     addContacto(key, valor) {
