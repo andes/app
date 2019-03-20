@@ -93,61 +93,77 @@
                         </ng-template>
                     </fieldset>
 
+                    <!-- DATOS DE DOMICILIO -->
                     <fieldset>
-                        <legend>Datos de domicilio</legend>
+                        <legend>Datos del domicilio</legend>
 
                         <div class="row">
-                            <div class="col-6">
-                                <plex-bool *ngIf="provinciaActual" [(ngModel)]="viveProvActual"
-                                    label="¿Vive en la Provincia de {{provinciaActual.nombre}}?" name="viveProvActual"
-                                    (change)="changeProvActual($event)"></plex-bool>
-                            </div>
-                            <div class="col-6" *ngIf="viveProvActual">
-                                <plex-bool *ngIf="localidadActual" [(ngModel)]="viveLocActual"
-                                    label="¿Vive en la Localidad {{localidadActual.nombre}}?" name="viveLocActual"
-                                    (change)="changeLocalidadActual($event)"></plex-bool>
-                            </div>
-                        </div>
-                        <div *ngIf="viveProvActual">
-                            <div class="row" *ngIf="viveLocActual">
-                                <div class="col-6">
-                                    <plex-text label="Dirección" [(ngModel)]="bebeModel.direccion[0].valor"
-                                        name="direccion" placeholder="Ej: Avenida las Flores 1200">
-                                    </plex-text>
+                            <div class="col-4">
+                                <div class="row">
+                                    <div class="col">
+                                        <plex-bool *ngIf="provinciaActual" [(ngModel)]="viveProvActual"
+                                            label="¿Vive en la Provincia de {{provinciaActual.nombre}}?"
+                                            name="viveProvActual" (change)="changeProvActual($event)"></plex-bool>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col" *ngIf="viveProvActual">
+                                        <plex-bool *ngIf="localidadActual" [(ngModel)]="viveLocActual"
+                                            label="¿Vive en la Localidad {{localidadActual.nombre}}?"
+                                            name="viveLocActual" (change)="changeLocalidadActual($event)"></plex-bool>
+                                    </div>
                                 </div>
 
+                                <div class="row" *ngIf="!viveProvActual">
+                                    <div class="col">
+                                        <plex-select label="Provincia"
+                                            [(ngModel)]="bebeModel.direccion[0].ubicacion.provincia" name="provincia"
+                                            [data]="provincias" labelField="nombre"
+                                            (change)="loadLocalidades(bebeModel.direccion[0].ubicacion.provincia)">
+                                        </plex-select>
+                                    </div>
+                                </div>
+                                <div class="row" *ngIf="!viveProvActual || (viveProvActual && !viveLocActual)">
+                                    <div class="col">
+                                        <plex-select label="Localidad"
+                                            [(ngModel)]="bebeModel.direccion[0].ubicacion.localidad" name="localidad"
+                                            [data]="localidades" labelField="nombre"
+                                            (change)="loadBarrios(bebeModel.direccion[0].ubicacion.localidad)">
+                                        </plex-select>
+                                    </div>
+                                </div>
+                                <div class="row" *ngIf="viveLocActual">
+                                    <div class="col">
+                                        <plex-select label="Barrio"
+                                            [(ngModel)]="bebeModel.direccion[0].ubicacion.barrio" name="barrio"
+                                            [data]="barrios" labelField="nombre">
+                                        </plex-select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <plex-text label="Dirección" [(ngModel)]="bebeModel.direccion[0].valor"
+                                            name="direccion" placeholder="Ej: Avenida las Flores 1200">
+                                        </plex-text>
+                                        <!--table>
+                                            <tbody>
+                                                <tr *ngFor="let unaSugerencia of sugerencias">
+                                                    <td> <span class="d-block">{{unaSugerencia}}</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table-->
+                                    </div>
+                                </div>
                             </div>
-                            <div class="row" *ngIf="!viveLocActual">
-                                <div class="col">
-                                    <plex-text label="Dirección" [(ngModel)]="bebeModel.direccion[0].valor"
-                                        name="direccion" placeholder="Ej: Avenida las Flores 1200">
-                                    </plex-text>
-                                </div>
-                                <div class="col">
-                                    <plex-select label="Localidad"
-                                        [(ngModel)]="bebeModel.direccion[0].ubicacion.localidad" name="localidad"
-                                        [data]="localidades" labelField="nombre">
-                                    </plex-select>
-                                </div>
 
-                            </div>
-                        </div>
-                        <div class="row" *ngIf="!viveProvActual">
-                            <div class="col">
-                                <plex-text label="Dirección" [(ngModel)]="bebeModel.direccion[0].valor" name="direccion"
-                                    placeholder="Ej: Avenida las Flores 1200">
-                                </plex-text>
-                            </div>
-                            <div class="col">
-                                <plex-select label="Provincia" [(ngModel)]="bebeModel.direccion[0].ubicacion.provincia"
-                                    name="provincia" [data]="provincias" labelField="nombre"
-                                    (change)="loadLocalidades(bebeModel.direccion[0].ubicacion.provincia)">
-                                </plex-select>
-                            </div>
-                            <div class="col">
-                                <plex-select label="Localidad" [(ngModel)]="bebeModel.direccion[0].ubicacion.localidad"
-                                    name="localidad" [data]="localidades" labelField="nombre">
-                                </plex-select>
+                            <!-- MAPA DE GOOGLE -->
+                            <div class="col-8">
+                                <google-map [latitud]="geoReferenciaAux[0]" [longitud]="geoReferenciaAux[1]"
+                                    [infoMarker]="infoMarcador" (changeCoordenadas)="changeCoordenadas($event)">
+                                </google-map>
+
+                                <plex-button class="float-right" label="Actualizar" position="right" type="success"
+                                    (click)="actualizarMapa()"></plex-button>
                             </div>
                         </div>
                     </fieldset>

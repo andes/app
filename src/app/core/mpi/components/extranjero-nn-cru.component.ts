@@ -416,9 +416,6 @@ export class ExtranjeroNNCruComponent implements OnInit {
             return elem;
         });
         pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
-        if (this.pacienteModel.direccion[0].ubicacion.barrio) {
-            pacienteGuardar.direccion[0].ubicacion.barrio = ((typeof this.pacienteModel.direccion[0].ubicacion.barrio === 'string')) ? this.pacienteModel.direccion[0].ubicacion.barrio : (this.pacienteModel.direccion[0].ubicacion.barrio.nombre);
-        }
         if (this.viveProvActual) {
             pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaActual;
         }
