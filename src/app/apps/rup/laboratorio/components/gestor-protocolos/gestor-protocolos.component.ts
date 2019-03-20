@@ -1,5 +1,5 @@
 import { Constantes } from './../../controllers/constants';
-import { Component, OnInit, Input, ViewChild, EventEmitter, Output, ViewEncapsulation, HostBinding } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, EventEmitter, Output, ViewEncapsulation, HostBinding, AfterViewChecked } from '@angular/core';
 import { ProtocoloDetalleComponent } from '../protocolos/protocolo-detalle.component';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -7,6 +7,7 @@ import { PacienteService } from '../../../../../services/paciente.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LaboratorioContextoCacheService } from '../../services/protocoloCache.service';
 import { ProtocoloService } from '../../services/protocolo.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 
 @Component({
@@ -16,14 +17,12 @@ import { ProtocoloService } from '../../services/protocolo.service';
     encapsulation: ViewEncapsulation.None,
 })
 
-export class GestorProtocolosComponent implements OnInit {
+export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
     @HostBinding('class.plex-layout') layout = true;
 
-    @Output() volverAPuntoInicioEmmiter: EventEmitter<any> = new EventEmitter<any>();
     public seleccionPaciente: Boolean = false;
     public showListarProtocolos: Boolean = true;
     public showProtocoloDetalle: Boolean = false;
-    public showCargarSolicitud: Boolean = false;
     public showBotonGuardar: Boolean = false;
     public editarListaPracticas: Boolean = false;
     public showBotonAceptarCambiosAuditoria: Boolean = false;
@@ -84,8 +83,12 @@ export class GestorProtocolosComponent implements OnInit {
         public plex: Plex,
         public protocoloService: ProtocoloService,
         public auth: Auth,
-        public laboratorioContextoCacheService: LaboratorioContextoCacheService,
+        public laboratorioContextoCacheService: LaboratorioContextoCacheService, private cdRef: ChangeDetectorRef
     ) { }
+
+    ngAfterViewChecked() {
+        this.cdRef.detectChanges();
+    }
 
     ngOnInit() {
         this.contextoCache = this.laboratorioContextoCacheService.getContextoCache();
@@ -206,7 +209,6 @@ export class GestorProtocolosComponent implements OnInit {
             this.showListarProtocolos = false;
             this.showProtocoloDetalle = true;
             this.seleccionPaciente = false;
-            this.showCargarSolicitud = true;
             this.showBotonGuardar = true;
         }
     }
@@ -219,16 +221,14 @@ export class GestorProtocolosComponent implements OnInit {
     volver() {
         this.indiceSeleccionado = null;
         if (this.laboratorioContextoCacheService.isModoRecepcionSinTurno()) {
-            // location.reload();
-            // this.volverAPuntoInicioEmmiter.emit(true);
-            this.router.navigate(['/laboratorio/recepcion/']);
+            this.laboratorioContextoCacheService.cambiarModo(2);
+            this.router.navigate(['/laboratorio/recepcion/']); // Navega al punto de inicio laboratorio
         } else if (this.contextoCache.edicionDatosCabecera) {
             this.aceptarCambiosHeader();
         } else {
             this.refreshSelection(this.busqueda);
             this.showListarProtocolos = true;
             this.showProtocoloDetalle = false;
-            this.showCargarSolicitud = false;
             this.contextoCache.ocultarPanelLateral = false;
             this.seleccionPaciente = false;
         }
@@ -331,42 +331,10 @@ export class GestorProtocolosComponent implements OnInit {
             busqueda: this.busqueda,
             profesional: this.auth.profesional._id
         };
-
-        //     let filtros = JSON.parse(localStorage.getItem('filtros'));
-        //     console.log(filtros);
-        //     if (!filtros) {
-        //         filtros = [filtrosPorDefecto];
-        //     } else {
-        //         let existe = filtros.findIndex(x => x.profesional === filtrosPorDefecto.profesional);
-        //         console.log(existe);
-        //         if (existe === -1) {
-        //             filtros.push(filtrosPorDefecto);
-        //         }
-        //     }
-
         localStorage.setItem('filtros', JSON.stringify(filtrosPorDefecto));
         this.plex.toast('success', 'Se recordará su selección de filtro en sus próximas sesiones.', 'Información', 3000);
     }
 
-    // getlocalStorage() {
-    //     let ls = JSON.parse(localStorage.getItem('filtros'));
-
-    //     console.log('ls profesional', ls.profesional);
-
-    //     console.log('ls profesional', this.auth.profesional._id);
-    //     if (ls.profesional === this.auth.profesional._id) {
-    //         this.busqueda = ls.busqueda;
-    //         // this.origen.id = ls.busqueda.origen;
-    //         // this.area.id = ls.busqueda.;
-    //         // this.prioridad.id = ls.busqueda.prioridad;
-    //         console.log('local storage', this.busqueda);
-    //         // this.busqueda.solicitudDesde = new Date(ls.busqueda.solicitudDesde);
-    //     }
-
-    //     if (this.contextoCache.modo === 'Recepcion') {
-    //         this.turnosLaboratorio();
-    //     }
-    // }
 }
 
 

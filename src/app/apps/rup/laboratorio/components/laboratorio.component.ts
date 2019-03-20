@@ -19,6 +19,9 @@ export class LaboratorioComponent implements OnInit {
     ngOnInit() {
         this.contextoCache = this.laboratorioContextoCacheService.getContextoCache();
         this.mostrarPuntoInicio = this.laboratorioContextoCacheService.isModoRecepcionSinTurno();
+        if (!this.mostrarPuntoInicio) {
+            this.laboratorioContextoCacheService.resetContexto();
+        }
     }
 
     seleccionarProtocolo($event) {
@@ -40,7 +43,4 @@ export class LaboratorioComponent implements OnInit {
         this.mostrarPuntoInicio = false;
     }
 
-    volverAPuntoInicio($event) {
-        this.mostrarPuntoInicio = true;
-    }
 }

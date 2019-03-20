@@ -34,7 +34,7 @@ export class PracticasHojatrabajoComponent implements OnInit {
     getPracticaPorCodigo() {
         console.log();
         if (this.codigo) {
-            this.servicioPractica.getMatchCodigo(this.codigo).subscribe((resultado: any) => {
+            this.servicioPractica.getMatchCodigo(this.codigo, false, true).subscribe((resultado: any) => {
                 if (resultado) {
                     this.seleccionarPractica(resultado);
                 }

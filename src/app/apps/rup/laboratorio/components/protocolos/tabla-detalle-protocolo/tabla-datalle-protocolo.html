@@ -12,7 +12,7 @@
             <th *ngIf='modo.nombre !=="recepcionSinTurno" && modo.nombre !=="control" && modo.nombre !=="recepcion"'
                 class="float-center">UM</th>
             <th *ngIf='modo.nombre !=="recepcionSinTurno" && modo.nombre !=="control" && modo.nombre !=="recepcion"'
-                class="float-center">VR</th>
+                class="float-center">VR | Método</th>
             <th class="float-center" *ngIf='modo.nombre !=="control" && modo.nombre !=="recepcion"'>Estado</th>
             <th *ngIf='modo.nombre === "recepcion" || modo.nombre === "control"'>Acciones</th>
             <th class="float-center" *ngIf='modo.nombre === "validacion"'>
@@ -75,9 +75,12 @@
                     <td>
                         <ng-container *ngFor="let m of practicaCarga.margen">&nbsp;&nbsp;&nbsp;</ng-container>
                         <!-- MERS CODE: estilos inline provisorios, pendiente decisión de UI/UX -->
-                        <span *ngIf="!(practicaCarga.valor.practica.categoria === 'simple')" style='color: #5BC0F4; font-weight: bold; font-size: 18px;'>{{practicaCarga.valor.practica.nombre}}</span>
-                        <ng-container *ngIf="practicaCarga.valor.practica.categoria === 'simple'">
-                            {{practicaCarga.valor.practica.nombre}}</ng-container>
+                        <span *ngIf="!(practicaCarga.valor.practica.categoria === 'simple')" class="ml-{{2*practicaCarga.valor.nivel}}" style='color: #5BC0F4; font-weight: bold; font-size: 18px;'>{{practicaCarga.valor.practica.nombre}}</span>
+                        <ng-container *ngIf="practicaCarga.valor.practica.categoria === 'simple'" class="">
+                            <span class="ml-{{2*practicaCarga.valor.nivel}}" >
+                                {{practicaCarga.valor.practica.nombre}}
+                            </span>
+                        </ng-container>
                     </td>
                     <ng-container *ngIf="!(practicaCarga.valor.practica.categoria === 'simple') ">
                         <td></td>
@@ -139,7 +142,8 @@
                         <td>
                             <ng-container *ngIf="practicaCarga.valor.practica.resultado.formato && practicaCarga.valor.practica.resultado.formato.tipo === 'Numérico'">
                                 {{practicaCarga.valor.practica.presentaciones[0].valoresReferencia[0].valorMinimo}} -
-                                {{practicaCarga.valor.practica.presentaciones[0].valoresReferencia[0].valorMaximo}}
+                                {{practicaCarga.valor.practica.presentaciones[0].valoresReferencia[0].valorMaximo}} |
+                                {{practicaCarga.valor.practica.presentaciones[0].metodo }}
                             </ng-container>
                         </td>
 

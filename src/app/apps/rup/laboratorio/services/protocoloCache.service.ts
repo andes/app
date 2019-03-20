@@ -17,6 +17,20 @@ export class LaboratorioContextoCacheService {
         this.contextoCache.next(prestacion);
     }
 
+    resetContexto() {
+        this.contextoCache.next(
+            {
+                cargarPorPracticas: false,
+                modo: {
+                    id: 3,
+                    nombre: 'validacion',
+                    titulo: 'Validación de Resultados'
+                },
+                modoCargaLaboratorio: null,
+            }
+        );
+    }
+
     /**
      *
      *
@@ -34,7 +48,7 @@ export class LaboratorioContextoCacheService {
      * @memberof LaboratorioContextoCacheService
      */
     cambiarModo(modoId) {
-        modoId ++;
+        modoId++;
         if (modoId !== Constantes.modos.carga.id) {
             this.getContextoCache().modoCargaLaboratorio = null;
         }
