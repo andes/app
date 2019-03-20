@@ -116,6 +116,7 @@ export class IniciarInternacionComponent implements OnInit {
     // public paciente: IPaciente;
     public buscandoPaciente = false;
     public cama = null;
+    public check = false;
     public organizacion: any;
     public origenExterno = false;
     public carpetaPaciente = null;
@@ -134,7 +135,7 @@ export class IniciarInternacionComponent implements OnInit {
         motivo: null,
         organizacionOrigen: null,
         profesional: null,
-        PaseAunidadOrganizativa: null,
+        PaseAunidadOrganizativa: null
 
     };
 
@@ -155,7 +156,6 @@ export class IniciarInternacionComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-
         if (this.prestacion) {
             this.btnIniciarGuardar = 'GUARDAR';
             let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
@@ -289,6 +289,8 @@ export class IniciarInternacionComponent implements OnInit {
         this.router.navigate(['rup/' + action + '/', id]);
     }
     getOcupaciones(event) {
+
+        let ocupacionesHabituales = [];
         if (event && event.query) {
             let query = {
                 nombre: event.query
@@ -296,10 +298,13 @@ export class IniciarInternacionComponent implements OnInit {
             };
             this.ocupacionService.getParams(query).subscribe((rta) => {
                 rta.map(dato => { dato.nom = '(' + dato.codigo + ') ' + dato.nombre; });
-                event.callback(rta);
+
+                ocupacionesHabituales = rta;
+                event.callback(ocupacionesHabituales);
             });
 
         } else {
+
             let ocupacionHabitual = [];
             if (this.informeIngreso.ocupacionHabitual) {
                 ocupacionHabitual = [this.informeIngreso.ocupacionHabitual];
@@ -378,6 +383,7 @@ export class IniciarInternacionComponent implements OnInit {
      * Guarda la prestación
      */
     guardar(valid) {
+        debugger;
         if (valid.formValid) {
             if (!this.paciente) {
                 this.plex.info('warning', 'Debe seleccionar un paciente');
@@ -399,12 +405,11 @@ export class IniciarInternacionComponent implements OnInit {
             if (!this.controlarConflictosInternacion(this.informeIngreso.fechaIngreso)) {
                 return;
             }
-
             // mapeamos los datos en los combos
             this.informeIngreso.situacionLaboral = ((typeof this.informeIngreso.situacionLaboral === 'string')) ? this.informeIngreso.situacionLaboral : (Object(this.informeIngreso.situacionLaboral).nombre);
             this.informeIngreso.nivelInstruccion = ((typeof this.informeIngreso.nivelInstruccion === 'string')) ? this.informeIngreso.nivelInstruccion : (Object(this.informeIngreso.nivelInstruccion).nombre);
             this.informeIngreso.asociado = ((typeof this.informeIngreso.asociado === 'string')) ? this.informeIngreso.asociado : (Object(this.informeIngreso.asociado).nombre);
-            this.informeIngreso.ocupacionHabitual = ((typeof this.informeIngreso.ocupacionHabitual === 'string')) ? this.informeIngreso.ocupacionHabitual : (Object(this.informeIngreso.ocupacionHabitual).nombre);
+            this.informeIngreso.ocupacionHabitual = this.informeIngreso.ocupacionHabitual;
             this.informeIngreso.origen = ((typeof this.informeIngreso.origen === 'string')) ? this.informeIngreso.origen : (Object(this.informeIngreso.origen).nombre);
             this.informeIngreso.PaseAunidadOrganizativa = this.informeIngreso.PaseAunidadOrganizativa;
 
@@ -548,7 +553,14 @@ export class IniciarInternacionComponent implements OnInit {
             event.callback(organizacionSalida);
         }
     }
+    onchange(event) {
+        if (event.value) {
+            this.informeIngreso.organizacionOrigen = null;
+        } else {
+            this.check = false;
+        }
 
+    }
     selectCamasDisponibles(unidadOrganizativa, fecha, hora) {
         // this.cama = null;
         this.listadoCamas = null;
