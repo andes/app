@@ -10,7 +10,6 @@
                 </rup-resumenPaciente-dinamico>
             </plex-tab>
             <ng-container *ngFor="let registro of registros">
-
                 <plex-tab [allowClose]="true" [label]="registro.data.concepto.term" [class]="registro.data.class"
                     [color]="registro.data.class" *ngIf="registro.tipo === 'concepto'">
 
@@ -19,7 +18,7 @@
                     </vista-registro>
 
                     <vista-procedimiento
-                        *ngIf="registro.data.class === 'procedimiento' || registro.data.class === 'elementoderegistro' || registro.data.class === 'producto'"
+                        *ngIf="registro.data.class === 'plan' || registro.data.class === 'procedimiento' || registro.data.class === 'elementoderegistro' || registro.data.class === 'producto'"
                         [registro]="registro.data" [paciente]="paciente">
                     </vista-procedimiento>
                 </plex-tab>
