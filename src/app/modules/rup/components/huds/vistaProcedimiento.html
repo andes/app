@@ -7,8 +7,9 @@
                         {{ registro.concepto.term[0].toUpperCase() + registro.concepto.term.slice(1) }}
                     </h4>
                     <div>
-                        <span class="badge badge-{{ registro.concepto.semanticTag }}">
-                            {{ registro.concepto.semanticTag }}</span>
+                        <span
+                            class="badge badge-{{ !registro.esSolicitud ? registro.concepto.semanticTag : 'solicitud' }}">
+                            {{ !registro.esSolicitud ? registro.concepto.semanticTag : 'Solicitud' }}</span>
                     </div>
                 </div>
                 <div class="divisor">
