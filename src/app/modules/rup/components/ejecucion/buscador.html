@@ -91,7 +91,7 @@
 </div>
 
 <!-- RESULTADOS PRINCIPALES -->
-<div *ngIf="filtroActual && results && results[busquedaActual][filtroActual]  && results[busquedaActual][filtroActual].length > 0"
+<div *ngIf="filtroActual && results && results[busquedaActual][filtroActual] && results[busquedaActual][filtroActual].length > 0"
     class="buscador-resultados">
     <cdk-virtual-scroll-viewport [itemSize]="55">
         <div *cdkVirtualFor="let item of results[busquedaActual][filtroActual]" class="rup-card mini"
