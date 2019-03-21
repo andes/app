@@ -552,6 +552,7 @@ registerLocaleData(localeEs, 'es');
         ConsultaDiagnosticoComponent,
         CantidadConsultaXPrestacionComponent,
         EncabezadoReportesComponent,
+        ResumenDiarioMensualComponent, PlanillaC1Component, EncabezadoReportesSJComponent,
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         MapaEspacioFisicoVistaComponent,
