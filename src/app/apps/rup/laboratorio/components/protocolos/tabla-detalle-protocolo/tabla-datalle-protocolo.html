@@ -23,7 +23,7 @@
             <th *ngIf='modo.nombre === "carga" || modo.nombre === "validacion"'>Observs.</th>
         </thead>
         <tbody>
-            <ng-container *ngIf='modo.nombre ==="recepcionSinTurno" || modo.nombre ==="recepcion" || modo.nombre === "control"'>
+            <ng-container *ngIf='modo.nombre ==="recepcionSinTurno" || modo.nombre ==="recepcion" || modo.nombre === "control" || modo.nombre === "listado"'>
                 <tr class="hover" *ngFor="let practicaVista of practicasVista">
                     <td>{{practicaVista.valor.practica.codigo}}</td>
                     <td>{{practicaVista.nombre}}</td>
@@ -52,7 +52,7 @@
                         <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practicaVista.valor.idPractica)"></plex-button>
                     </td>
                 </tr>
-                <tr class="hover" *ngIf="editarListaPracticas">
+                <tr class="hover" *ngIf="editarListaPracticas && modo.nombre !== 'listado'">
                     <td>
                         <plex-text [(ngModel)]="practicaSeleccionada" name="codigoPractica" (keydown.enter)="getPracticaPorCodigo()"
                             (blur)="getPracticaPorCodigo()" placeholder="Escriba el código"></plex-text>

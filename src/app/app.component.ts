@@ -81,6 +81,8 @@ export class AppComponent {
             accessList.push({ label: 'SIL: Recepción de Laboratorios', icon: 'flask-outline', route: '/laboratorio/recepcion' });
             accessList.push({ label: 'SIL: Gestor de Protocolos', icon: 'flask-outline', route: '/laboratorio/protocolos' });
             accessList.push({ label: 'SIL: Hojas de trabajo', icon: 'flask-outline', route: '/laboratorio/hojatrabajo' });
+            accessList.push({ label: 'SIL: Derivaciones', icon: 'flask-outline', route: '/laboratorio/derivaciones' });
+            accessList.push({ label: 'SIL: Impresión de Resultados', icon: 'flask-outline', route: '/laboratorio/reportes/resultados' });
         }
 
         // faltan permisos

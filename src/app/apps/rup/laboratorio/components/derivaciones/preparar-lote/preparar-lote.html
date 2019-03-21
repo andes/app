@@ -3,14 +3,14 @@
         <div class="page-title">
             Preparar Lote
         </div>
-        <plex-button position="right" type="success" label="Crear Lote" class="mr-3" (click)="guardarLoteDerivacion()"></plex-button>
+        <plex-button *ngIf='lote.itemsLoteDerivacion.length > 0' position="right" type="success" label="Crear Lote" class="mr-3" (click)="guardarLoteDerivacion()"></plex-button>
     </div>
 </header>
 <div class="filtros-container lote-derivacion ml-1">
     <span>
-        <plex-select [(ngModel)]="organizacionDerivacion" (change)="buscar($event, 'organizacionDerivacion')" name="efectorDerivar" label="Efector (A derivar)"
-            (getData)="loadOrganizaciones($event)"></plex-select>
-    </span>        
+        <plex-select [(ngModel)]="organizacionDerivacion" (change)="buscar($event, 'organizacionDerivacion')" name="efectorDerivar"
+            label="Efector (A derivar)" (getData)="loadOrganizaciones($event)"></plex-select>
+    </span>
     <span>
         <plex-datetime type="date" [(ngModel)]="desde" (change)="buscar($event,'fechaDesde')" name="solicitudDesde"
             label="Fecha desde" [required]="true" skipBy="day">

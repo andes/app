@@ -5,7 +5,8 @@
         <th>Fecha</th>
         <th>Laboratorio de Destino</th>
         <th>Apellidos y Nombres</th>
-        <th>Detalles</th>
+        <th>Estado</th>
+        <th>Acción</th>
     </thead>
     <tbody>
         <tr class="hover" *ngFor="let lote of lotes">
@@ -15,11 +16,19 @@
             <td>{{ lote.id }}</td>
             <td>{{ lote.fecha | fecha }}</td>
             <td>{{ lote.laboratorioDestino.nombre }}</td>
-            <td></td>
-            <td>
-                <plex-button type="info" title="Aceptar Valores Críticos" icon="mdi send-circle-outline" (click)="enviarLote(lote)">
-                </plex-button>
-            </td>
+            <ng-container *ngIf="lote.estados[lote.estados.length - 1].tipo === 'preparado'">}
+                <td> <plex-badge type="warning">{{lote.estados[lote.estados.length - 1 ].tipo}}</plex-badge></td>
+                <td>
+                    <plex-button type="info" title="Enviar lote" label="Enviar lote" (click)="enviarLote(lote)" type="primary btn-sm" >
+                    </plex-button>
+                </td>
+            </ng-container>
+            <ng-container *ngIf="lote.estados[lote.estados.length - 1].tipo !== 'preparado'">
+                <td> <plex-badge type="info">{{lote.estados[lote.estados.length - 1].tipo}}</plex-badge></td>
+                <td>
+                </td>
+            </ng-container>
+            
             <!-- <td>{{lote.paciente.documento}}</td> -->
             <!-- <td>{{lote.paciente.apellido}} {{lote.paciente.nombre}}</td> -->
         </tr>

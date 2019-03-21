@@ -183,6 +183,8 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
         this.busqueda = filtros;
         this.busqueda.estado = this.laboratorioContextoCacheService.isModoValidacion() ? ['pendiente', 'ejecucion'] : [];
 
+        this.busqueda.estadoFiltrar = this.laboratorioContextoCacheService.isModoListado() ? null : ['validada'];
+
         this.protocoloService.get(this.busqueda).subscribe(protocolos => {
             this.protocolos = protocolos;
         }, err => {
