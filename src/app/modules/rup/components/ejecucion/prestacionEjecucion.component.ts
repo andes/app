@@ -147,6 +147,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         this.huds.registrosHUDS.subscribe((datos) => {
             if (this.registrosHUDS.length < datos.length) {
                 this.activeIndex = datos.length + 2;
+            } else if (this.activeIndex > datos.length) {
+                this.activeIndex = this.activeIndex - 1;
             }
             this.registrosHUDS = [...datos];
         });

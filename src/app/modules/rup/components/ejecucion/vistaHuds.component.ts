@@ -23,7 +23,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
 
     @Output() cambiarPaciente = new EventEmitter<boolean>();
     paciente: IPaciente = null;
-    public activeIndex: Number = 0;
+    public activeIndex = 0;
 
     public mostrarCambiaPaciente = false;
     public registros = [];
@@ -62,6 +62,8 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         this.huds.registrosHUDS.subscribe((datos) => {
             if (this.registros.length < datos.length) {
                 this.activeIndex = datos.length + 1;
+            } else if (this.activeIndex > datos.length) {
+                this.activeIndex = this.activeIndex - 1;
             }
             this.registros = [...datos];
         });
