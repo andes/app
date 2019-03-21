@@ -111,3 +111,10 @@
         width: 32.5%;
     }
 }
+
+.registros-resultados {
+    height: calc(100% - 220px);
+    cdk-virtual-scroll-viewport {
+        height: 100%;
+    }
+}
