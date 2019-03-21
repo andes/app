@@ -38,7 +38,8 @@
             </div>
             <ng-container *ngFor="let registro of prestacion?.ejecucion?.registros">
                 <span class="mb-1">
-                    <span class="badge badge-{{ registro.concepto.semanticTag | replace:['/', ' '] }}">
+                    <span
+                        class="badge badge-{{ (!registro.esSolicitud ? registro.concepto.semanticTag : 'solicitud') | replace:['/', ' '] }}">
                         {{ registro.concepto.term }}
                     </span>
                 </span><br>
