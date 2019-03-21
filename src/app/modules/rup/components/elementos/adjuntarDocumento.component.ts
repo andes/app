@@ -180,9 +180,5 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         this.waiting = false;
         this.adjuntosService.delete(this.adjunto._id).subscribe(() => { });
     }
-
-    public validate(): boolean {
-        return super.validate() && this.registro.valor.documentos.length;
-    }
 }
 // ElementosRUPRegister.register('AdjuntarDocumentoComponent', AdjuntarDocumentoComponent);
