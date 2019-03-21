@@ -1,165 +1,53 @@
-<form class="plex-layout" #form="ngForm">
-    <!-- Sección principal -->
-    <section class="plex-layout prestacionEjecucion" *ngIf="paciente">
-        <div class="row">
-            <!-- Panel Principal -->
-            <div class="col-8">
-                <plex-box>
-                    <header>
-                        <div class="page-title">
-                            HUDS
-                        </div>
-                    </header>
-                    <plex-tabs (close)="onCloseTab($event)">
-                        <ng-container *ngIf="registrosHuds">
-                            <ng-container *ngFor="let registro of registrosHuds; let i = index">
-                                <plex-tab [allowClose]="true" [label]="registro.data.concepto.term" [class]="registro.data.class"
-                                    [color]="registro.data.class" *ngIf="registro.tipo === 'hallazgo' || registro.tipo === 'medicamento'">
-                                    <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)"
-                                        [params]="elementosRUPService.selectPorRefsetId(registro.data.concepto)"
-                                        [prestacion]="prestacion" [paciente]="paciente" [registro]="registro.data"
-                                        [soloValores]="true">
-                                    </rup>
-                                    <ng-container *ngIf="registro.data.concepto.semanticTag !== 'trastorno' && registro.data.concepto.semanticTag !== 'hallazgo'">
-                                        <div class="row">
-                                            <div class="col">
-                                                <span [innerHTML]="servicioPrestacion.mostrarInformeRelacionado(paciente,registro.data, registro.data.concepto)"></span>
-                                            </div>
-                                        </div>
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col">
-                                                <ng-container *ngFor="let relacion of registro.data.relacionadoCon; let r=index">
-                                                    Relacionado con:
-                                                    <small class="badge badge-info">
-                                                        {{ relacion?.cara ? 'diente ' + relacion?.concepto?.term + '
-                                                        (cara ' + relacion?.cara + ')' : relacion.concepto?.term }}
-                                                    </small>
-                                                </ng-container>
-                                            </div>
-                                        </div>
-                                    </ng-container>
-                                </plex-tab>
+<plex-layout [main]="8" *ngIf="paciente">
+    <plex-layout-main>
+        <plex-tabs (close)="onCloseTab($event)" [activeIndex]="activeIndex" *ngIf="elementosRUPService.ready | async">
+            <plex-tab label="Resumen del Paciente">
+                <rup-resumenPaciente-estatico [paciente]="paciente" esTab="true">
+                </rup-resumenPaciente-estatico>
+                <rup-resumenPaciente-dinamico-nino *ngIf="paciente?.edad <= 6" [paciente]="paciente" esTab="true">
+                </rup-resumenPaciente-dinamico-nino>
+                <rup-resumenPaciente-dinamico *ngIf="paciente?.edad > 6" [paciente]="paciente" esTab="true">
+                </rup-resumenPaciente-dinamico>
+            </plex-tab>
+            <ng-container *ngFor="let registro of registros">
 
-                                <plex-tab [allowClose]="true" [label]="registro.data.solicitud.tipoPrestacion.term"
-                                    [class]="registro.data.class" color="solicitud" *ngIf="registro.tipo === 'prestacion'">
-                                    <h4 class="text-capitalize">{{ registro.data.solicitud.tipoPrestacion.term }}</h4>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <b> Fecha: </b> 
-                                            {{ registro.data.ejecucion.fecha | date: 'EEE dd/MM/yyyy HH:MM' }}
-                                        </div>
-                                        <div class="col-6" *ngIf="(registro.data.ejecucion.fecha - registro.data.solicitud.fecha) > 1000 ">
-                                            <b> Solicitada el: </b> 
-                                            {{ registro.data.solicitud.fecha | date: 'EEE dd/MM/yyyy HH:MM' }}
-                                        </div>
-                                        <div class="col-12">
-                                            <b> Solicitada por el profesional: </b>
-                                            {{ registro.data.solicitud.profesional | profesional }}
-                                        </div>
-                                        <div class="col-12">
-                                            <b> Desde la Organización: </b>
-                                            {{ registro.data.solicitud.organizacion.nombre }}
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <hr>
-                                            <h4>Registros de la consulta:</h4>
-                                            <ng-container *ngFor="let elemento of registro.data.ejecucion.registros; let i = index">
+                <plex-tab [allowClose]="true" [label]="registro.data.concepto.term" [class]="registro.data.class"
+                    [color]="registro.data.class" *ngIf="registro.tipo === 'concepto'">
 
-                                                <div class="rup-card {{ elemento.esSolicitud ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">
-                                                    <div class="rup-header">
-                                                        <div class="icon-rup">
-                                                            <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(elemento.concepto)}}"></i>
-                                                        </div>
-                                                        <div class="title">
-                                                            <ng-container *ngIf="elemento?.nombre">
-                                                                {{elemento.nombre[0].toUpperCase() +
-                                                                elemento.nombre.slice(1)}}
-                                                            </ng-container>
-                                                        </div>
-                                                        <div class="actions">
-                                                            <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0"
-                                                                class="badge badge-info">
-                                                                <b>Relacionado con:</b> {{
-                                                                elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
-                                                                + elemento.relacionadoCon[0].concepto.term.slice(1)}}
-                                                            </small>
-                                                            <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">
-                                                                Procedimiento / diagnóstico principal
-                                                            </small>
-                                                        </div>
-                                                    </div>
-                                                    <div class="rup-body">
-                                                        <div class="legend">
-                                                            <span>
-                                                                {{ (elemento.esSolicitud) ? 'solicitud' :
-                                                                elemento.concepto.semanticTag}}
-                                                            </span>
-                                                        </div>
-                                                        <div class="content">
-                                                            <div class="row">
+                    <vista-registro *ngIf="registro.data.class === 'hallazgo' || registro.data.class === 'trastorno'"
+                        [registro]="registro.data" [paciente]="paciente">
+                    </vista-registro>
 
-                                                                <div class="col-12">
-                                                                    <rup [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)"
-                                                                        [params]="elementosRUPService.selectPorRefsetId(elemento.concepto)"
-                                                                        [prestacion]="registro.data" [registro]="elemento"
-                                                                        [paciente]="paciente" [soloValores]="true"></rup>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </ng-container>
-                                        </div>
-                                    </div>
+                    <vista-procedimiento
+                        *ngIf="registro.data.class === 'procedimiento' || registro.data.class === 'elementoderegistro' || registro.data.class === 'producto'"
+                        [registro]="registro.data" [paciente]="paciente">
+                    </vista-procedimiento>
+                </plex-tab>
 
-                                </plex-tab>
+                <plex-tab [allowClose]="true" [label]="registro.data.solicitud.tipoPrestacion.term"
+                    [class]="registro.data.class" color="solicitud" *ngIf="registro.tipo === 'rup'">
+                    <vista-prestacion [prestacion]="registro.data" [paciente]="paciente">
+                    </vista-prestacion>
+                </plex-tab>
 
-                                <plex-tab [allowClose]="true" [label]="registro.data.prestacion.snomed.term" [class]="registro.data.class"
-                                    *ngIf="registro.tipo === 'laboratorio'">
-                                    <lab [laboratorio]="registro"></lab>
-                                </plex-tab>
+                <plex-tab *ngIf="registro.tipo === 'cda'" [allowClose]="true"
+                    [label]="registro.data.prestacion.snomed.term" [class]="registro.data.class">
+                    <vista-cda [registro]="registro"></vista-cda>
+                </plex-tab>
 
-                                <plex-tab [allowClose]="true" [label]="registro.data.prestacion.snomed.term" [class]="registro.data.class"
-                                    *ngIf="registro.tipo === 'cda'">
-                                    <vista-cda [registro]="registro"></vista-cda>
-                                </plex-tab>
-                                <plex-tab [allowClose]="true" [label]="'internacion'" [class]="registro.data.class"
-                                *ngIf="registro.tipo === 'internacion'">
+                <plex-tab [allowClose]="true" [label]="'internacion'" [class]="registro.data.class"
+                    *ngIf="registro.tipo === 'internacion'">
+                    <internacion-resumen [paciente]="registro.data.paciente" [mostrarBtnRomper]='false'
+                        [prestacion]="registro.data" [soloValores]="true"></internacion-resumen>
+                </plex-tab>
 
-                                <internacion-resumen [paciente]="registro.data.paciente" [mostrarBtnRomper]='false'
-                                [prestacion]="registro.data" [soloValores]="true" ></internacion-resumen>
-                                <!-- <vista-cda [registro]="registro"></vista-cda> -->
-                            </plex-tab>
-                            </ng-container>
-                        </ng-container>
-                    </plex-tabs>
-                </plex-box>
-            </div>
-            <!-- HUDS -->
-            <div class="col-4" *ngIf="paciente">
-                <plex-box>
-                    <!-- HUDS [hudsBusqueda.component.ts] -->
-                    <rup-hudsBusqueda [registrosHuds]="registrosHuds" (evtHuds)="agregarListadoHuds($event)" [paciente]="paciente"
-                        [prestacionActual]="" [emitirConceptos]="false"></rup-hudsBusqueda>
-                </plex-box>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-
-        <div class="row">
-            <div class="col">
-                <plex-button label="{{btnVolver}}" (click)="volver(rutaVolver)" type="info"></plex-button>
-                <!-- <plex-button label="Guardar {{prestacion?.solicitud?.tipoPrestacion?.term}}" (click)="guardarPrestacion()" type="success" -->
-                <!-- class="float-right"></plex-button> -->
-            </div>
-        </div>
-
-    </footer>
-</form>
+            </ng-container>
+        </plex-tabs>
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <rup-hudsBusqueda #huds [paciente]="paciente" [emitirConceptos]="false"></rup-hudsBusqueda>
+    </plex-layout-sidebar>
+    <plex-layout-footer>
+        <plex-button position="left" label="VOLVER" (click)="volver()" type="info"></plex-button>
+    </plex-layout-footer>
+</plex-layout>
