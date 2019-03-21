@@ -18,7 +18,7 @@
             <div class="row"
                 *ngIf="hallazgoHudsCompleto && hallazgoHudsCompleto.evoluciones && registro.concepto.semanticTag === 'trastorno'">
                 <div class="col">
-                    <strong>Inicio del Hallazgo: {{hallazgoHudsCompleto?.evoluciones[0].fechaInicio | fecha}} </strong>
+                    <strong>Inicio del Hallazgo: {{hallazgoHudsCompleto?.evoluciones[0].fechaCarga | fecha}} </strong>
                 </div>
             </div>
             <div class="row" *ngIf="registro.concepto.semanticTag === 'trastorno'">
