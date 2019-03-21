@@ -1,3 +1,15 @@
 .vertical-center {
     vertical-align: -35px;
 }
+
+.list-group-item {
+    cursor: pointer;
+    &:hover {
+        background-color: grey;
+    }
+}
+
+
+fieldset {
+    margin-top: 10px;
+}

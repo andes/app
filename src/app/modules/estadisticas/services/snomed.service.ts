@@ -45,4 +45,8 @@ export class SnomedService {
     getQuery(params: any): Observable<any[]> {
         return this.server.get(this.snomedURLexpression, { params: params, showError: true });
     }
+
+    getConcepts(sctids): Observable<any[]> {
+        return this.server.get(this.snomedURL + '/concepts', { params: { sctids }, showError: true });
+    }
 }
