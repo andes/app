@@ -1,5 +1,5 @@
 import { PrestacionesService } from '../../services/prestaciones.service';
-import { Component, OnInit, Output, Input, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, ViewEncapsulation, Renderer2 } from '@angular/core';
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -143,6 +143,7 @@ export class BuscadorHUDSComponent implements OnInit {
         public servicioTipoPrestacion: TipoPrestacionService,
         public plex: Plex,
         public auth: Auth,
+        public renderer: Renderer2,
         public huds: HUDSService
     ) {
     }
