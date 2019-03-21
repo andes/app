@@ -114,14 +114,11 @@ export class BuscadorComponent implements OnInit, OnChanges {
     };
 
     filtros: any = [
-        { titulo: 'PRESTACIONES', key: 'prestaciones', icon: 'plan' },
         { titulo: 'TODOS', key: 'todos', icon: 'todos' },
         { titulo: 'HALLAZGOS', key: 'hallazgos', icon: 'hallazgo' },
         { titulo: 'TRASTORNOS', key: 'trastornos', icon: 'trastorno' },
         { titulo: 'PROC', key: 'procedimientos', icon: 'procedimiento' },
         { titulo: 'PRODUCTOS', key: 'productos', icon: 'producto' },
-        { titulo: 'LABOS', key: 'laboratorios', icon: 'laboratorio' },
-        { titulo: 'VACUNAS', key: 'vacunas', icon: 'vacuna' }
     ];
 
     secciones: any;
