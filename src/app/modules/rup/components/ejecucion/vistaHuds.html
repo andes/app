@@ -19,7 +19,8 @@
                     </vista-registro>
 
                     <vista-procedimiento
-                        *ngIf="registro.data.class === 'procedimiento' || registro.data.class === 'elementoderegistro' || registro.data.class === 'producto'"
+                        *ngIf="registro.data.class === 'plan' || 
+                        registro.data.class === 'procedimiento' || registro.data.class === 'elementoderegistro' || registro.data.class === 'producto'"
                         [registro]="registro.data" [paciente]="paciente">
                     </vista-procedimiento>
                 </plex-tab>
