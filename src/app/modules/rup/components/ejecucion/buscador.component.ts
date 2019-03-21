@@ -117,8 +117,9 @@ export class BuscadorComponent implements OnInit, OnChanges {
         { titulo: 'TODOS', key: 'todos', icon: 'todos' },
         { titulo: 'HALLAZGOS', key: 'hallazgos', icon: 'hallazgo' },
         { titulo: 'TRASTORNOS', key: 'trastornos', icon: 'trastorno' },
-        { titulo: 'PROC', key: 'procedimientos', icon: 'procedimiento' },
-        { titulo: 'PRODUCTOS', key: 'productos', icon: 'producto' },
+        { titulo: 'PROCEDIMIENTOS', key: 'procedimientos', icon: 'procedimiento' },
+        { titulo: 'SOLICITUDES', key: 'planes', icon: 'plan' },
+        { titulo: 'INSUMOS', key: 'productos', icon: 'producto' },
     ];
 
     secciones: any;
