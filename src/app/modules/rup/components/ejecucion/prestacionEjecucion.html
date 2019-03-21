@@ -79,14 +79,14 @@
                                                                     <small class="badge badge-info">
                                                                         {{ relacion | relacionRUP }}
                                                                     </small>
-                                                                    <a href="javascript:void(0);"
-                                                                        (click)="desvincular(registro, registro.relacionadoCon[r])"
-                                                                        class="desvincular"
+                                                                    <button
                                                                         *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
+                                                                        class="btn btn-sm btn-success btn-icon-rup"
                                                                         title="Desvincular"
-                                                                        class="btn btn-sm btn-primary">
+                                                                        (click)="desvincular(registro, registro.relacionadoCon[r])">
                                                                         <i class="mdi mdi-link-variant-off"></i>
-                                                                    </a>
+                                                                    </button>
+
                                                                 </ng-container>
                                                             </ng-container>
                                                         </div>
