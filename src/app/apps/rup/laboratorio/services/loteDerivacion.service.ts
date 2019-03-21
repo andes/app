@@ -5,17 +5,17 @@ import { Server } from '@andes/shared';
 
 @Injectable()
 export class LoteDerivacionService {
-    private url = '/modules/rup/laboratorio/lotesDerivaciones'; // URL API
+    private url = '/modules/rup/laboratorio/lotesDerivaciones/'; // URL API
     constructor(private server: Server) { }
 
-    // get(organizacion, area?) {
-    //     let params: any = {organizacion: organizacion};
-    //     if (area) {
-    //         params.area = area;
-    //     }
+    get(params, area?) {
+        // let params: any = { laboratorioOrigen: laboratorioOrigen };
+        // if (area) {
+        //     params.area = area;
+        // }
 
-    //     return this.server.get(this.url, { params: params, showError: true });
-    // }
+        return this.server.get(this.url, { params: params, showError: true });
+    }
 
     post(loteDerivacion: ILoteDerivacion): Observable<ILoteDerivacion> {
         return this.server.post(this.url, loteDerivacion);
@@ -25,8 +25,8 @@ export class LoteDerivacionService {
         return this.server.put(this.url, loteDerivacion);
     }
 
-    patch(loteDerivacion: ILoteDerivacion): Observable<ILoteDerivacion> {
-        return this.server.patch(this.url, loteDerivacion);
+    patch(loteId, params: any): Observable<ILoteDerivacion> {
+        return this.server.patch(this.url + loteId, params);
     }
 
 }

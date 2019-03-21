@@ -53,8 +53,8 @@ export class PrepararLoteComponent implements OnInit {
                 nombre: this.auth.organizacion.nombre,
                 id: this.auth.organizacion.id
             },
-            estados: [ {tipo: Constantes.estadosLotes.preparado} ],
-            registrosPracticas: []
+            estados: [{ tipo: Constantes.estadosLotes.preparado }],
+            itemsLoteDerivacion: []
         };
     }
 
@@ -74,7 +74,7 @@ export class PrepararLoteComponent implements OnInit {
             };
         }
         if (this.organizacionDerivacion) {
-            this.protocoloService.get(this.getParams()).subscribe( res => this.protocolos = res );
+            this.protocoloService.get(this.getParams()).subscribe(res => this.protocolos = res);
         }
     }
 
@@ -88,8 +88,8 @@ export class PrepararLoteComponent implements OnInit {
         let params: any = {
             organizacionDerivacion: this.organizacionDerivacion._id,
             organizacionDestino: this.auth.organizacion._id,
-            desde : this.desde,
-            hasta : this.hasta
+            desde: this.desde,
+            hasta: this.hasta
         };
 
         if (this.area) {
@@ -154,8 +154,8 @@ export class PrepararLoteComponent implements OnInit {
      * @memberof PrepararLoteComponent
      */
     async guardarLoteDerivacion() {
-        let a = await this.loteDerivacionService.post(this.lote).subscribe( () => {
-            this.protocoloService.get(this.getParams()).subscribe( res => this.protocolos = res );
+        let a = await this.loteDerivacionService.post(this.lote).subscribe(() => {
+            this.protocoloService.get(this.getParams()).subscribe(res => this.protocolos = res);
         });
     }
 }

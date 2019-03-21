@@ -3,5 +3,6 @@ export interface IPracticaSearch {
     cadenaInput?: string;
     codigo?: string;
     buscarSimples?: boolean;
+    buscarNoNomencladas?: boolean;
     // descripcion?: string;
 }
