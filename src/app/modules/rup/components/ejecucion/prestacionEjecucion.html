@@ -82,7 +82,7 @@
                                                                     </small>
                                                                     <button
                                                                         *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
-                                                                        class="btn btn-sm btn-success btn-icon-rup"
+                                                                        class="btn btn-sm btn-primary btn-icon-rup"
                                                                         title="Desvincular"
                                                                         (click)="desvincular(registro, registro.relacionadoCon[r])">
                                                                         <i class="mdi mdi-link-variant-off"></i>
@@ -185,23 +185,20 @@
                                                 <div class="confirmarDesvincular">
                                                     ¿Confirmar desvinculación con
                                                     <b class="text-capitalize">
-                                                        {{ mostrarVinculacion(registro)?.concepto.term }}
+                                                        {{ registro?.relacionadoCon[0].concepto.term }}
+                                                        <!-- {{ mostrarVinculacion(registro)?.concepto.term }} -->
                                                         <span *ngIf="mostrarVinculacion(registro)?.cara">
                                                             / {{ mostrarVinculacion(registro)?.cara }}
                                                         </span>
                                                     </b>
                                                     ?
                                                     <div class="buttons">
-                                                        <a href="javascript:void(0);"
-                                                            (click)="cancelarDesvincular(registro.id)"
-                                                            class="btn btn-default">
-                                                            Cancelar
-                                                        </a>
-                                                        <a href="javascript:void(0);"
-                                                            (click)="confirmarDesvinculacion(registro.id || registro.concepto.conceptId, i)"
-                                                            class="btn btn-success">
-                                                            Desvincular
-                                                        </a>
+                                                        <plex-button type="danger" label="Cancelar"
+                                                            (click)="confirmarDesvinculacion(registro.id || registro.concepto.conceptId, i)">
+                                                        </plex-button>
+                                                        <plex-button type="success" label="Desvincular"
+                                                            (click)="confirmarDesvinculacion(registro.id || registro.concepto.conceptId, i)">
+                                                        </plex-button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -351,8 +348,8 @@
                 <div *ngIf="confirmarEliminar && scopeEliminar == 'footer'">
                     ¿Seguro que quiere quitar {{conceptoAEliminar.term}} de la consulta?
                     <div>
-                        <button class="btn btn-danger p-1" (click)="confirmarEliminar = false;">Cancelar</button> |
-                        <button class="btn btn-success p-1" (click)="eliminarRegistro()">Quitar</button>
+                        <button class="btn btn-danger p-1" (click)="confirmarEliminar = false;">No, cancelar</button> |
+                        <button class="btn btn-success p-1" (click)="eliminarRegistro()">Si, quitar</button>
                     </div>
                 </div>
             </div>
