@@ -662,3 +662,11 @@ observaciones {
     }
 }
 
+.nav-item-plan {
+    background-color: white;
+    color: $solicitud; 
+    a.active {
+        background-color: $solicitud !important;
+        color: white !important; 
+    }
+}
