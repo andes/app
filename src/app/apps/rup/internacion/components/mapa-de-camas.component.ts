@@ -101,6 +101,7 @@ export class MapaDeCamasComponent implements OnInit {
     public historial: any[] = [];
     public inicioBusqueda = false;
     public createTemporal = false;
+    public modoFlat = false;
     constructor(
         public servicioPrestacion: PrestacionesService,
         private auth: Auth,
@@ -115,6 +116,9 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     ngOnInit() {
+        if (!this.auth.check('internacion:mapaDeCamas')) {
+            this.router.navigate(['./inicio' ]);
+        }
 
         this.refresh();
         this.elementoRupService.ready.subscribe(() => {
