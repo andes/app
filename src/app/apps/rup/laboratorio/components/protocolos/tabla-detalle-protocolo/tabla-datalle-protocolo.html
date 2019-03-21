@@ -145,6 +145,9 @@
                                 {{practicaCarga.valor.practica.presentaciones[0].valoresReferencia[0].valorMaximo}} |
                                 {{practicaCarga.valor.practica.presentaciones[0].metodo }}
                             </ng-container>
+                            <ng-container *ngIf="practicaCarga.valor.practica.resultado.formato && practicaCarga.valor.practica.resultado.formato.tipo != 'Numérico'">
+                                Método: {{practicaCarga.valor.practica.presentaciones[0].metodo }}
+                            </ng-container>
                         </td>
 
                         <ng-container>

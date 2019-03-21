@@ -51,7 +51,8 @@ export class PracticasHojatrabajoComponent implements OnInit {
     getPracticasPorNombre($event) {
         if ($event.query) {
             this.servicioPractica.getMatch({
-                cadenaInput: $event.query
+                cadenaInput: $event.query,
+                buscarNoNomencladas: true
             }).subscribe((resultado: any) => {
                 $event.callback(resultado);
             });
