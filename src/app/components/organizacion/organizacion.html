@@ -9,6 +9,11 @@
                                 placeholder="Ingresar nombre..." (change)="loadDatos()">
                             </plex-text>
                         </div>
+                        <div class="col mt-4">
+                            <plex-bool [(ngModel)]="activo" type="slide" label="Habilitado" name="activo"
+                                (change)="loadDatos()">
+                            </plex-bool>
+                        </div>
                         <div class="col d-flex justify-content-end mt-4">
                             <plex-button type="primary" label="Validar Todos SISA" *ngIf="checkAuth('edit')">
                             </plex-button>
