@@ -6,8 +6,6 @@ import { LogService } from './../../../services/log.service';
 import { IPacienteMatch } from '../interfaces/IPacienteMatch.inteface';
 import { Plex } from '@andes/plex';
 import { PacienteBuscarResultado } from '../interfaces/PacienteBuscarResultado.inteface';
-import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
-
 
 interface PacienteEscaneado {
     documento: string;

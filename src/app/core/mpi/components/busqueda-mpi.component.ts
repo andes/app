@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IPaciente } from '../interfaces/IPaciente';
 import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
@@ -15,7 +15,7 @@ export class BusquedaMpiComponent implements OnInit {
     loading = false;
     resultadoBusqueda: IPaciente[] = [];
     searchClear = true;    // True si el campo de búsqueda se encuentra vacío
-    busquedasRecientes: IPaciente[] = [];
+    historialSeleccionados: IPaciente[] = [];
     escaneado: boolean;
 
     constructor(
@@ -32,7 +32,7 @@ export class BusquedaMpiComponent implements OnInit {
             // Si no está autorizado redirect al home
             this.router.navigate(['./inicio']);
         }
-        this.busquedasRecientes = this.historialBusquedaService.get();
+        this.historialSeleccionados = this.historialBusquedaService.get();
     }
 
     private updateTitle(nombre: string) {
@@ -47,11 +47,11 @@ export class BusquedaMpiComponent implements OnInit {
 
     // -------------- SOBRE BUSCADOR ----------------
 
-    searchStart() {
+    onSearchStart() {
         this.loading = true;
     }
 
-    searchEnd(pacientes: any[], escaneado: boolean) {
+    onSearchEnd(pacientes: any[], escaneado: boolean, busqueda: string) {
         this.searchClear = false;
         this.escaneado = escaneado;
         this.loading = false;

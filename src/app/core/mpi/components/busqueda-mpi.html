@@ -3,7 +3,7 @@
         <fieldset>
             <div class="row">
                 <div class="col">
-                    <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event.pacientes,$event.escaneado)"
+                    <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado, $event.busqueda)"
                         (searchClear)="onSearchClear()"></paciente-buscar>
                 </div>
             </div>
@@ -28,7 +28,7 @@
             <legend>Búsquedas recientes</legend>
             <div class="row">
                 <div class="col">
-                    <paciente-listado type="sm" [pacientes]="busquedasRecientes" [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
+                    <paciente-listado type="sm" [pacientes]="historialSeleccionados" [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
                 </div>
             </div>
         </fieldset>

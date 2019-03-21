@@ -17,6 +17,7 @@ import { OrganizacionService } from '../../../services/organizacion.service';
 import { Auth } from '@andes/auth';
 import { BarrioService } from '../../../services/barrio.service';
 import { GeoreferenciaService } from '../services/georeferencia.service';
+import * as enumerados from './../../../utils/enumerados';
 
 @Component({
     selector: 'apps/mpi/bebe',
@@ -130,6 +131,8 @@ export class BebeCruComponent implements OnInit {
 
 
     ngOnInit() {
+        this.opcionesSexo = enumerados.getObjSexos();
+
         // Se cargan los parentescos para las relaciones
         this.parentescoService.get().subscribe(resultado => {
             this.parentescoModel = resultado;
@@ -331,7 +334,7 @@ export class BebeCruComponent implements OnInit {
                 this.plex.info('warning', 'Error guardando el paciente');
             }
         );
-        /* 
+        /*
         if (!event.formValid) {
             this.plex.info('warning', 'Debe completar los datos obligatorios');
             return;

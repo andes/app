@@ -116,7 +116,7 @@ export class PacienteCruComponent implements OnInit {
         reportarError: false,
         notaError: ''
     };
-    public disableValidar = false;
+    public disableValidar = true;
     public escaneado = false;
     public paciente: IPaciente;
     public nombrePattern: string;
@@ -332,20 +332,6 @@ export class PacienteCruComponent implements OnInit {
 
     // ------------------ DATOS BASICOS -------------------------
 
-    verificarDNISexo(listaSimilares) {
-        let i = 0;
-        let cond = false;
-        let sexoPac = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-        while (i < listaSimilares.length && !cond) {
-            if ((listaSimilares[i].paciente.documento === this.pacienteModel.documento) && (listaSimilares[i].paciente.sexo === sexoPac)) {
-                this.enableIgnorarGuardar = false;
-                cond = true;
-            }
-            i++;
-        }
-        return cond;
-    }
-
     limpiarDocumento() {
         if (this.noPoseeDNI) {
             this.pacienteModel.documento = '';
@@ -354,9 +340,7 @@ export class PacienteCruComponent implements OnInit {
     }
 
     completarGenero() {
-        if (!this.pacienteModel.genero) {
-            this.pacienteModel.genero = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-        }
+        this.pacienteModel.genero = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
     }
 
 
@@ -695,6 +679,11 @@ export class PacienteCruComponent implements OnInit {
 
 
     // ------------------- PARA VALIDACION ---------------------
+
+    checkDisableValidar() {
+        let sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
+        this.disableValidar = !(parseInt(this.pacienteModel.documento, 0) >= 99999 && sexo !== undefined && sexo !== 'otro');
+    }
 
     validarPaciente(event) {
         if (!this.pacienteModel.documento && this.pacienteModel.sexo) {
