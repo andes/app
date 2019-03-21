@@ -98,6 +98,8 @@ import { VincularPacientesComponent } from './components/auditoria/vincular-paci
 
 // Campañas salud
 import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campaniaSalud.component';
+// Buscador de turnos y prestaciones
+import { TurnosPrestacionesComponent } from './components/buscadorTurnosPrestaciones/turnos-prestaciones.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -171,6 +173,9 @@ const appRoutes: Routes = [
 
   // Solicitudes
   { path: 'solicitudes', component: SolicitudesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+
+  // Buscador de turnos y prestaciones
+  { path: 'buscador', component: TurnosPrestacionesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // TOP
   { path: 'top/reglas', component: ReglasComponent, canActivate: [RoutingNavBar, RoutingGuard] },
