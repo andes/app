@@ -3,6 +3,13 @@
         <div class="row">
             <div class="col">
                 <plex-box type="success">
+                    <div class="row" *ngIf="seleccion?.id">
+                        <div class="col ml-2">
+                            <plex-bool [(ngModel)]="organizacionModel.activo" type="slide" label="Habilitado"
+                                name="activo">
+                            </plex-bool>
+                        </div>
+                    </div>
                     <!-- DATOS BASICOS -->
                     <div class="row">
                         <div class="col-4">
@@ -43,38 +50,35 @@
                         <legend>Datos de domicilio</legend>
                         <div>
                             <div class="row">
-                                <div class="col-8">
+                                <div class="col-6">
                                     <plex-text label="Detalle de Domicilio" name="valorDomicilio"
                                         [(ngModel)]="organizacionModel.direccion.valor"
                                         placeholder="Ej: Belgrano 1547 - Piso 2 - Departamento 3...."></plex-text>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-4">
                                     <plex-select name="localidad" [data]="localidadesNeuquen"
                                         [(ngModel)]="organizacionModel.direccion.ubicacion.localidad" label="Localidad">
                                     </plex-select>
-                                </div>
-                                <div class="col-4">
                                     <plex-text label="Código Postal" name="codigoPostal"
                                         [(ngModel)]="organizacionModel.direccion.codigoPostal"
                                         placeholder="Ingrese CP..."></plex-text>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-8">
+                                <div class="col-6" *ngIf="organizacionModel?.direccion?.geoReferencia?.length">
                                     <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [disableDefaultUI]="false"
                                         [zoomControl]="false">
-                                        <agm-marker *ngFor="let m of markers; let i = index" [latitude]="m.lat"
-                                            [longitude]="m.lng" [markerDraggable]="m.draggable"
-                                            [iconUrl]="m.iconColorMarker">
+                                        <agm-marker [latitude]="organizacionModel.direccion.geoReferencia[0]"
+                                            [longitude]="organizacionModel.direccion.geoReferencia[1]"
+                                            [markerDraggable]="!validadoSISA" (dragEnd)="movioMarker($event)">
                                             <agm-info-window>
-                                                <strong [innerHTML]="m.infofiltro"></strong>
+                                                <strong class="auto"><b>{{organizacionModel.nombre}} </b><br>
+                                                    {{organizacionModel.direccion.valor}} </strong>
+                                                <!-- <strong [innerHTML]=""></strong> -->
                                             </agm-info-window>
                                         </agm-marker>
                                     </agm-map>
                                 </div>
                             </div>
+
+                            <!-- <div class="row" *ngIf="organizacionModel?.direccion?.geoReferencia?.length">
+                            </div> -->
                         </div>
                     </fieldset>
 
@@ -142,14 +146,12 @@
                                             <plex-bool [(ngModel)]="noPoseeEdificio" label="No cargar ningún edificio"
                                                 name="noPoseeEdificio" (change)="limpiarEdificio()"></plex-bool>
                                         </div>
-                                        <div class="col text-right mt-2 mr-2" *ngIf="!noPoseeEdificio">
+                                        <div class="col-4 text-right mt-2 mr-2" *ngIf="!noPoseeEdificio">
                                             <plex-button title="Agregar edificio" titlePosition="left"
                                                 type="primary btn-sm" icon="home-plus" name="agregarEdificio"
                                                 (click)="addEdificio()"></plex-button>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-4 mt-2" *ngIf="!noPoseeEdificio">
                                 </div>
                             </div>
                         </div>
@@ -287,9 +289,10 @@
             <div class="col-6 text-left">
                 <plex-button label="Cancelar" type="danger" (click)="onCancel()">
                 </plex-button>
-                <plex-button type="primary" label="Validar SISA"></plex-button>
             </div>
             <div class="col-6 text-right">
+                <plex-button type="primary" label="Sincronizar con fuentes auténticas" (click)="sincronizarSisa()">
+                </plex-button>
                 <plex-button label="Guardar" type="success" [validateForm]="formulario" (click)="onSave($event)">
                 </plex-button>
             </div>

@@ -1,9 +1,7 @@
-
-import { debounceTime } from 'rxjs/operators';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { OrganizacionService } from './../../services/organizacion.service';
 import { Component, OnInit, HostBinding } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -72,6 +70,7 @@ export class OrganizacionComponent implements OnInit {
     }
 
     onReturn(objOrganizacion: IOrganizacion): void {
+        this.updateTitle('Organizaciones');
         this.showcreate = false;
         this.seleccion = null;
         this.loadDatos();

@@ -22,7 +22,7 @@ import { CamasService } from '../../apps/rup/internacion/services/camas.service'
 @Component({
     selector: 'organizacion-create-update',
     templateUrl: 'organizacion-create-update.html',
-    styles: [`agm-map { height: 300px; }`]
+    styles: [`agm-map { height: 232px; }`]
 })
 export class OrganizacionCreateUpdateComponent implements OnInit {
 
@@ -38,7 +38,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     servicio;
     private paisArgentina = null;
     private provinciaNeuquen = null;
-    private barrioNulleado = null;
     // con esta query de snomed trae todos los servicios.
     private expression = '<<284548004';
 
@@ -121,27 +120,21 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
 
     // Datos para el mapa
     // initial center position for the map
-    public lat = -38.95735;
-    public lng = -68.045533333333;
+    public lat: number;
+    public lng: number;
 
     public zoom = 12;
-    // zoomControl = true; // control de zoom (+/-)
-    // scrollwheel = false; // zoom con mouse
-    // _infoMarker = '';
-    // urliconmarker = { url: '' };
 
-    public markers: {
+    public marker: {
         coordenadas?: {
             longitud: number;
             latitud: number;
         };
         lng: number;
         lat: number;
-        draggable: boolean;
         infofiltro?: string;
-    }[] = [];
-
-
+    };
+    // fin datos para el mapa
     constructor(
         private organizacionService: OrganizacionService,
         private paisService: PaisService,
@@ -168,12 +161,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                 if (this.organizacionModel && this.organizacionModel.direccion && this.organizacionModel.direccion.geoReferencia && this.organizacionModel.direccion.geoReferencia.length === 2) {
                     this.lat = this.organizacionModel.direccion.geoReferencia[0];
                     this.lng = this.organizacionModel.direccion.geoReferencia[1];
-                    this.markers.push({
-                        lat: this.organizacionModel.direccion.geoReferencia[0],
-                        lng: this.organizacionModel.direccion.geoReferencia[1],
-                        draggable: false,
-                        infofiltro: '<center><b>' + this.organizacionModel.nombre + '</b><br>' + this.organizacionModel.direccion.valor + '</center>'
-                    });
                 }
             });
         }
@@ -236,7 +223,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
                     this.data.emit(result);
                 } else {
-                    this.plex.info('warning', 'ERROR: Ocurrio un problema al actualizar los datos');
+                    this.plex.info('warning', 'ERROR: Ocurrió un problema al actualizar los datos');
                 }
             });
         }
@@ -379,6 +366,46 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     }
     private updateTitle(nombre: string) {
         this.plex.updateTitle('Tablas maestras / ' + nombre);
+    }
+
+    /**
+     * Busca la organización en el servidor SISA y carga los datos disponibles en el formulario
+     * @memberof OrganizacionCreateUpdateComponent
+     */
+    public sincronizarSisa() {
+        this.organizacionService.getOrgSisa(this.organizacionModel.codigo.sisa).subscribe(res => {
+            if (res.resultado === 'OK') {
+                if (res.nombre) {
+                    this.organizacionModel.nombre = res.nombre;
+                }
+                if (res.domicilio) {
+                    if (res.domicilio.direccion) {
+                        this.organizacionModel.direccion.valor = res.domicilio.direccion;
+                    }
+                    if (res.domicilio.codigoPostal) {
+                        this.organizacionModel.direccion.codigoPostal = res.domicilio.codigoPostal;
+                    }
+                }
+                if (res.coordenadasDeMapa) {
+                    if (res.coordenadasDeMapa.latitud) {
+                        this.organizacionModel.direccion.geoReferencia[0] = res.coordenadasDeMapa.latitud;
+                    }
+                    if (res.coordenadasDeMapa.longitud) {
+                        this.organizacionModel.direccion.geoReferencia[1] = res.coordenadasDeMapa.longitud;
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Setea las coordenadas de la organización a la ubicación donde se soltó el marcador en el mapa
+     * @param {*} event
+     * @memberof OrganizacionCreateUpdateComponent
+     */
+    public movioMarker(event) {
+        this.organizacionModel.direccion.geoReferencia[0] = event.coords.lat;
+        this.organizacionModel.direccion.geoReferencia[1] = event.coords.lng;
     }
 }
 

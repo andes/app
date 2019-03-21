@@ -149,4 +149,14 @@ export class OrganizacionService {
         return organizacion.activo ? 'Habilitado' : 'No disponible';
     }
 
+    /**
+     * Consulta en SISA los datos de la organización con código SISA igual al pasado por parámetro
+     * @param {string} cod es el código SISA
+     * @returns {Observable<any>}
+     * @memberof OrganizacionService
+     */
+    getOrgSisa(cod: string): Observable<any> {
+        return this.server.get(this.organizacionUrl + '/sisa/' + cod);
+    }
+
 }
