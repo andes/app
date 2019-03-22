@@ -299,8 +299,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      */
     private formatearDecimales(valorRegistro) {
         if (valorRegistro.practica.resultado.formato.decimales) {
-            return valorRegistro.resultado.valor = Number.parseFloat(valorRegistro.resultado.valor).toFixed(valorRegistro.practica.resultado.formato.decimales);
-            // valor = Number.parseFloat(valorRegistro.resultado.valor).toFixed(valorRegistro.practica.resultado.formato.decimales);
+            return valorRegistro.resultado.valor = valorRegistro.resultado.valor.toFixed(valorRegistro.practica.resultado.formato.decimales);
         }
     }
 
