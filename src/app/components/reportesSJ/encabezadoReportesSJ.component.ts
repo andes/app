@@ -11,7 +11,7 @@ import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
 
 @Component({
     selector: 'encabezadoReportesSJ',
-    templateUrl: 'encabezadoReportesSj.html',
+    templateUrl: 'encabezadoReportesSJ.html',
 
 })
 export class EncabezadoReportesSJComponent implements OnInit {
