@@ -263,12 +263,14 @@ export class BebeCruComponent implements OnInit {
     changeLocalidadActual(event) {
         if (event.value) {
             this.bebeModel.direccion[0].ubicacion.localidad = this.localidadActual;
+            this.loadBarrios(this.localidadActual);
         } else {
             this.bebeModel.direccion[0].ubicacion.localidad = null;
             this.bebeModel.direccion[0].ubicacion.barrio = null;
-
+            this.barrios = [];
         }
     }
+
 
     loadLocalidades(provincia) {
         if (provincia && provincia.id) {
