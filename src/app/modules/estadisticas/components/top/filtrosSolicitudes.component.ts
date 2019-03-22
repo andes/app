@@ -3,10 +3,7 @@ import { Component, AfterViewInit, HostBinding, EventEmitter, Output, Input, Sim
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 import { ProfesionalService } from '../../../../services/profesional.service';
-
-// <div class="col-2">
-//     <plex-select label="Tipo de filtro" [data]="opciones" [(ngModel)]="seleccion.tipoDeFiltro" name="tipoDeFiltro"></plex-select>
-// </div>
+import { OrganizacionService } from '../../../../services/organizacion.service';
 
 @Component({
     selector: 'solicitudes-filtros',
@@ -27,18 +24,35 @@ import { ProfesionalService } from '../../../../services/profesional.service';
         </div>
     </div>
     <div class="row">
-        <div class="col-3">
-            <plex-select [multiple]="true" [(ngModel)]="seleccion.prestacionDestino" (getData)="loadPrestaciones($event)" name="prestacionDestino"
-                label="Prestación" ngModelOptions="{standalone: true}">
+        <div class="col-4">
+            <plex-select [multiple]="true" [(ngModel)]="seleccion.organizaciones" name="organizaciones" (getData)="loadOrganizacion($event)"
+                label="Organización" placeholder="Seleccione la organización" labelField="nombre">
             </plex-select>
         </div>
-        <div class="col-3">
-            <plex-select [multiple]="true" [(ngModel)]="seleccion.profesional" name="profesional" (getData)="loadProfesionales($event)"
-                label="Profesional" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
-            </plex-select>
-        </div>
-        <div class="col-3">
+        <div class="col-4">
             <plex-select [multiple]="true" [data]="estados" [(ngModel)]="seleccion.estados" placeholder="Seleccione..." label="Estado">
+            </plex-select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <plex-select [multiple]="true" [(ngModel)]="seleccion.solicitudesOrigen" (getData)="loadPrestaciones($event)" name="prestacionOrigen"
+                label="Prestación Origen" ngModelOptions="{standalone: true}">
+            </plex-select>
+        </div>
+        <div class="col-3">
+            <plex-select [multiple]="true" [(ngModel)]="seleccion.solicitudesDestino" (getData)="loadPrestaciones($event)" name="prestacionDestino"
+                label="Prestación Destino" ngModelOptions="{standalone: true}">
+            </plex-select>
+        </div>
+        <div class="col-3">
+            <plex-select [multiple]="true" [(ngModel)]="seleccion.profesionalesOrigen" name="profesionalOrigen" (getData)="loadProfesionales($event)"
+                label="Profesional Origen" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
+            </plex-select>
+        </div>
+        <div class="col-3">
+            <plex-select [multiple]="true" [(ngModel)]="seleccion.profesionalesDestino" name="profesionalDestino" (getData)="loadProfesionales($event)"
+                label="Profesional Destino" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
             </plex-select>
         </div>
     </div>
@@ -49,10 +63,9 @@ export class FiltrosSolicitudesComponent implements AfterViewInit, OnChanges {
 
     // Filtros
     public desde: Date = moment(new Date()).startOf('month').toDate();
+    public esTablaGrafico = false;
     public hasta: Date = new Date();
     public hoy = new Date();
-    public opciones = [{ id: 'agendas', nombre: 'Agendas' }, { id: 'turnos', nombre: 'Turnos' }];
-    public esTablaGrafico = false;
 
     public estados = [
         { id: 'auditoria', nombre: 'AUDITORIA' },
@@ -66,17 +79,20 @@ export class FiltrosSolicitudesComponent implements AfterViewInit, OnChanges {
     @Output() onDisplayChange = new EventEmitter();
 
     public seleccion: any = {
-        tipoDeFiltro: { id: 'turnos', nombre: 'Turnos' },
-        profesional: undefined,
-        prestacionDestino: undefined,
+        organizaciones: undefined,
+        profesionalesOrigen: undefined,
+        profesionalesDestino: undefined,
+        solicitudesOrigen: undefined,
+        solicitudesDestino: undefined,
         estados: undefined
     };
 
     constructor(
         private plex: Plex,
         public servicioProfesional: ProfesionalService,
-        public servicioPrestacion: TipoPrestacionService) {
-    }
+        public servicioPrestacion: TipoPrestacionService,
+        public servicioOrganizacion: OrganizacionService
+    ) {}
 
     ngAfterViewInit() {
         this.onChange();
@@ -85,6 +101,17 @@ export class FiltrosSolicitudesComponent implements AfterViewInit, OnChanges {
     changeTablaGrafico() {
         this.esTablaGrafico = !this.esTablaGrafico;
         this.onDisplayChange.emit(this.esTablaGrafico);
+    }
+
+    loadOrganizacion(event) {
+        if (event.query) {
+            let query = {
+                nombre: event.query
+            };
+            this.servicioOrganizacion.get(query).subscribe(event.callback);
+        } else {
+            event.callback([]);
+        }
     }
 
     loadProfesionales(event) {
@@ -112,15 +139,23 @@ export class FiltrosSolicitudesComponent implements AfterViewInit, OnChanges {
         let filtrosParams = {
             solicitudDesde: this.desde,
             solicitudHasta: this.hasta,
-            prestacionDestino: this.seleccion.prestacionDestino ? this.seleccion.prestacionDestino.map(pr => {
-                return {id: pr.conceptId, nombre: pr.term };
-            }) : undefined,
             estados: this.seleccion.estados ? this.seleccion.estados.map(tipoEstado => { return tipoEstado.id; }) : undefined,
-            // profesional: this.seleccion.profesional ? this.seleccion.profesional.map(prof => {
-            //     return {id: prof.id, nombre: prof.nombre + ' ' + prof.apellido };
-            // }) : undefined,
-            // tipoDeFiltro: this.seleccion.tipoDeFiltro ? this.seleccion.tipoDeFiltro.id : undefined,
-            };
+            organizaciones: this.seleccion.organizaciones ? this.seleccion.organizaciones.map(org => {
+                return { id: org.id };
+            }) : undefined,
+            solicitudesOrigen: this.seleccion.solicitudesOrigen ? this.seleccion.solicitudesOrigen.map(pr => {
+                return { id: pr.conceptId, nombre: pr.term };
+            }) : undefined,
+            solicitudesDestino: this.seleccion.solicitudesDestino ? this.seleccion.solicitudesDestino.map(pr => {
+                return { id: pr.conceptId, nombre: pr.term };
+            }) : undefined,
+            profesionalesOrigen: this.seleccion.profesionalesOrigen ? this.seleccion.profesionalesOrigen.map(prof => {
+                return { id: prof.id, nombre: prof.nombre + ' ' + prof.apellido };
+            }) : undefined,
+            profesionalesDestino: this.seleccion.profesionalesDestino ? this.seleccion.profesionalesDestino.map(prof => {
+                return { id: prof.id, nombre: prof.nombre + ' ' + prof.apellido };
+            }) : undefined,
+        };
         this.filter.emit(filtrosParams);
     }
 
