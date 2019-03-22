@@ -141,12 +141,13 @@ export class OrganizacionService {
     }
     /**
      * Devuelve el nombre del estado de la organizacion pasada por parámetro
-     * @param {IOrganizacion} organizacion
+     * @param {(boolean | IOrganizacion)} organizacion
      * @returns {string}
      * @memberof OrganizacionService
      */
-    getEstado(organizacion: IOrganizacion): string {
-        return organizacion.activo ? 'Habilitado' : 'No disponible';
+    getEstado(organizacion: boolean | IOrganizacion): string {
+        const estado = (typeof organizacion === 'boolean') ? organizacion : organizacion.activo;
+        return estado ? 'Habilitado' : 'No disponible';
     }
 
     /**

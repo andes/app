@@ -113,9 +113,9 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
 
     public listadoUO = [];
 
-    public noPoseeContacto = !this.seleccion ? true : (!this.seleccion.contacto ? true : false); // Indica si está tildado o no el checkbox de si tiene contacto la organizacion
+    public noPoseeContacto = this.seleccion && this.seleccion.contacto ? true : false; // Indica si está tildado o no el checkbox de si tiene contacto la organizacion
     private contactosCache = []; // se guardan los contactos ingresados en cache para poder recuperarlos en caso de equivocacion al tildar checkbox "no posee contacto"
-    public noPoseeEdificio = !this.seleccion ? true : (!this.seleccion.edificio ? true : false); // Indica si está tildado o no el checkbox de si quiere cargar edificios o no
+    public noPoseeEdificio = this.seleccion && this.seleccion.edificio ? true : false; // Indica si está tildado o no el checkbox de si quiere cargar edificios o no
     private edificiosCache = []; // se guardan los edficios ingresados en cache para poder recuperarlos en caso de equivocacion al tildar checkbox "no posee edificio"
 
     // Datos para el mapa
@@ -126,10 +126,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     public zoom = 12;
 
     public marker: {
-        coordenadas?: {
-            longitud: number;
-            latitud: number;
-        };
         lng: number;
         lat: number;
         infofiltro?: string;
@@ -149,20 +145,30 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.updateTitle('Editar organización');
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.tipoEstablecimientoService.get().subscribe(resultado => {
             this.tiposEstablecimiento = resultado;
         });
 
         if (this.seleccion && this.seleccion.id) {
+            this.updateTitle('Editar organización');
             this.organizacionService.getById(this.seleccion.id).subscribe(resultado => {
                 Object.assign(this.organizacionModel, resultado);
                 if (this.organizacionModel && this.organizacionModel.direccion && this.organizacionModel.direccion.geoReferencia && this.organizacionModel.direccion.geoReferencia.length === 2) {
                     this.lat = this.organizacionModel.direccion.geoReferencia[0];
                     this.lng = this.organizacionModel.direccion.geoReferencia[1];
                 }
+                if (this.organizacionModel && (!this.organizacionModel.contacto || this.organizacionModel.contacto.length < 1)) {
+                    this.addContacto();
+                }
+                if (this.organizacionModel && (!this.organizacionModel.edificio || this.organizacionModel.edificio.length < 1)) {
+                    this.addEdificio();
+                }
             });
+        } else {
+            this.updateTitle('Nueva organización');
+            this.addContacto();
+            this.addEdificio();
         }
 
         // Set País Argentina
@@ -241,12 +247,20 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
             activo: true,
             ultimaActualizacion: new Date()
         });
-        this.organizacionModel.contacto.push(nuevoContacto);
+        if (this.noPoseeContacto) {
+            this.organizacionModel.contacto = [nuevoContacto];
+            this.noPoseeContacto = false;
+        } else {
+            this.organizacionModel.contacto.push(nuevoContacto);
+        }
     }
 
     removeContacto(i) {
         if (i >= 0) {
             this.organizacionModel.contacto.splice(i, 1);
+        }
+        if (!this.organizacionModel.contacto.length) {
+            this.noPoseeContacto = true;
         }
     }
 
@@ -288,16 +302,20 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                 activo: true
             },
         });
-        if (this.organizacionModel.edificio) {
-            this.organizacionModel.edificio.push(nuevoEdificio);
-        } else {
+        if (this.noPoseeEdificio) {
             this.organizacionModel.edificio = [nuevoEdificio];
+            this.noPoseeEdificio = false;
+        } else {
+            this.organizacionModel.edificio.push(nuevoEdificio);
         }
     }
 
     removeEdificio(i) {
         if (i >= 0) {
             this.organizacionModel.edificio.splice(i, 1);
+        }
+        if (!this.organizacionModel.edificio.length) {
+            this.noPoseeEdificio = true;
         }
     }
 
@@ -345,9 +363,11 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     limpiarContacto() {
         if (this.noPoseeContacto) {
             this.contactosCache = this.organizacionModel.contacto;
-            this.organizacionModel.contacto = [this.contacto];
+            // this.organizacionModel.contacto = [this.contacto];
         } else if (this.contactosCache && this.contactosCache.length) {
             this.organizacionModel.contacto = this.contactosCache;
+        } else {
+            this.addContacto();
         }
     }
     /**
@@ -357,7 +377,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     limpiarEdificio() {
         if (this.noPoseeEdificio) {
             this.edificiosCache = this.organizacionModel.edificio;
-            this.organizacionModel.edificio = [this.edificio];
+            // this.organizacionModel.edificio = [this.edificio];
         } else if (this.edificiosCache && this.edificiosCache.length) {
             this.organizacionModel.edificio = this.edificiosCache;
         } else {
@@ -394,6 +414,8 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                         this.organizacionModel.direccion.geoReferencia[1] = res.coordenadasDeMapa.longitud;
                     }
                 }
+            } else {
+                this.plex.info('warning', 'El código SISA no existe.', 'No sincronizó');
             }
         });
     }

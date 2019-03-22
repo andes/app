@@ -10,13 +10,12 @@
                             </plex-text>
                         </div>
                         <div class="col mt-4">
-                            <plex-bool [(ngModel)]="activo" type="slide" label="Habilitado" name="activo"
+                            <plex-bool [(ngModel)]="activo"
+                                label="Mostrar solo {{organizacionService.getEstado(false)}}" name="activo"
                                 (change)="loadDatos()">
                             </plex-bool>
                         </div>
                         <div class="col d-flex justify-content-end mt-4">
-                            <plex-button type="primary" label="Validar Todos SISA" *ngIf="checkAuth('edit')">
-                            </plex-button>
                             <plex-button type="success" label="Nueva Organización" (click)="showcreate = !showcreate"
                                 *ngIf="checkAuth('create')"></plex-button>
                         </div>
