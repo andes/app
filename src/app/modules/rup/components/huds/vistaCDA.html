@@ -35,14 +35,14 @@
 
                 <div class="borde-datos ml-3 pl-2 pt-1">
                     <div class="mp-2 mb-2" *ngIf="codificacionCDA">
-                        <b>Registros de la consulta: </b><br>
-                        <!-- <span [innerHTML]="registro.evoluciones[indice].evolucion"></span> -->
                         <ng-container *ngIf="codificacionCDA?.code">
                             <b>Codificación: </b><br>
                             {{ codificacionCDA.code.$.code }} - {{ codificacionCDA.code.$.displayName }}<br>
                         </ng-container>
+                        <b>Registros de la consulta: </b><br>
+                        <!-- <span [innerHTML]="registro.evoluciones[indice].evolucion"></span> -->
                         <ng-container *ngIf="registro.tipo === 'cda' && codificacionCDA?.text">
-                            {{ codificacionCDA.text | html }}<br>
+                            <span [innerHtml]="codificacionCDA.text"></span>
                         </ng-container>
                         <ng-container *ngIf="!codificacionCDA.text">
                             Sin registros.
