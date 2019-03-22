@@ -51,6 +51,8 @@ export class ListaProtocolosLotesComponent implements OnInit {
                 this.lote.itemsLoteDerivacion = this.lote.itemsLoteDerivacion.filter( i =>  i.numeroProtocolo !== numeroProtocolo );
             }
         }
+
+        this.lote.itemsLoteDerivacion = this.lote.itemsLoteDerivacion.filter( (i: any) =>  i.registros.length > 0 );
     }
 
     /**

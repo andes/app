@@ -213,6 +213,16 @@ export class LaboratorioContextoCacheService {
         return this.getContextoCache().modo === Constantes.modos.validacion;
     }
 
+    /**
+     *
+     *
+     * @returns
+     * @memberof LaboratorioContextoCacheService
+     */
+    isModoListado() {
+        return this.getContextoCache().modo === Constantes.modos.listado;
+    }
+
     getModo() {
         return this.getContextoCache().modo;
     }

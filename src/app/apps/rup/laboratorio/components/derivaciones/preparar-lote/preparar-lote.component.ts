@@ -66,7 +66,6 @@ export class PrepararLoteComponent implements OnInit {
      * @memberof PrepararLoteComponent
      */
     buscar($event, tipo?) {
-        console.log('tipo', tipo, $event);
         if (tipo && tipo === 'organizacionDerivacion') {
             this.lote.laboratorioDestino = {
                 nombre: $event.value.nombre,
@@ -86,6 +85,7 @@ export class PrepararLoteComponent implements OnInit {
      */
     private getParams() {
         let params: any = {
+            pendientesDerivacion: true,
             organizacionDerivacion: this.organizacionDerivacion._id,
             organizacionDestino: this.auth.organizacion._id,
             desde: this.desde,
