@@ -232,6 +232,8 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                     this.plex.info('warning', 'ERROR: Ocurrió un problema al actualizar los datos');
                 }
             });
+        } else {
+            this.plex.toast('danger', 'Ingrese todos los campos requeridos.');
         }
     }
 

@@ -7,7 +7,8 @@
                     <div class="row">
                         <div class="col-4">
                             <plex-text type="text" label="Nombre" name="nombre" [required]="true"
-                                [(ngModel)]="organizacionModel.nombre" placeholder="Ingrese nombre..."></plex-text>
+                                [(ngModel)]="organizacionModel.nombre" placeholder="Ingrese nombre..."
+                                [autoFocus]="!seleccion?.id"></plex-text>
                         </div>
                         <div class="col-4">
                             <plex-select name="tipoEstablecimiento" [data]="tiposEstablecimiento"
