@@ -409,11 +409,14 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                     }
                 }
                 if (res.coordenadasDeMapa) {
+                    if (this.organizacionModel.direccion.geoReferencia === null) {
+                        this.organizacionModel.direccion.geoReferencia = new Array<number>(2);
+                    }
                     if (res.coordenadasDeMapa.latitud) {
-                        this.organizacionModel.direccion.geoReferencia[0] = res.coordenadasDeMapa.latitud;
+                        this.organizacionModel.direccion.geoReferencia[0] = Number(res.coordenadasDeMapa.latitud);
                     }
                     if (res.coordenadasDeMapa.longitud) {
-                        this.organizacionModel.direccion.geoReferencia[1] = res.coordenadasDeMapa.longitud;
+                        this.organizacionModel.direccion.geoReferencia[1] = Number(res.coordenadasDeMapa.longitud);
                     }
                 }
             } else {
