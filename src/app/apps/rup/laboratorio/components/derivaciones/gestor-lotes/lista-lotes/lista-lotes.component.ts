@@ -13,6 +13,11 @@ export class ListaLotesComponent implements OnInit {
     ngOnInit() {
     }
     valoresCheckboxes = [];
+    estadoEnviado = {
+        tipo: 'enviado',
+        fecha: new Date(),
+        usuario: this.auth.usuario
+    };
 
     lotes;
     @Input('lotes')
@@ -35,7 +40,11 @@ export class ListaLotesComponent implements OnInit {
      * @memberof ListaLotesComponent
      */
     enviarLote(lote) {
-        this.loteDerivacionService.patch(lote._id, this.getParamsEnvio(lote)).subscribe ( res => {});
+        this.loteDerivacionService.patch(lote._id, this.getParamsEnvio(lote)).subscribe ( res => {
+            console.log('res');
+            lote.estados.push(this.estadoEnviado);
+        });
+
     }
 
     /**
@@ -50,11 +59,7 @@ export class ListaLotesComponent implements OnInit {
         return {
             organizacionId: this.auth.organizacion.id,
             lote: lote,
-            estado: {
-                tipo: 'enviado',
-                fecha: new Date(),
-                usuario: this.auth.usuario
-            }
+            estado: this.estadoEnviado
         };
     }
 }

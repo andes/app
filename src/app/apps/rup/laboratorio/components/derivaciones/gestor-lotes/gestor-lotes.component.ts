@@ -3,8 +3,6 @@ import { LoteDerivacionService } from './../../../services/loteDerivacion.servic
 import { ILoteDerivacion } from './../../../interfaces/practica/ILoteDerivacion';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from './../../../../../../services/organizacion.service';
-import { AreaLaboratorioService } from './../../../services/areaLaboratorio.service';
-import { ProtocoloService } from '../../../services/protocolo.service';
 import { OnInit, Component } from '@angular/core';
 
 
@@ -28,8 +26,6 @@ export class GestorLotesComponent implements OnInit {
 
     constructor(
         private auth: Auth,
-        private protocoloService: ProtocoloService,
-        private areaLaboratorioService: AreaLaboratorioService,
         private organizacionService: OrganizacionService,
         private loteDerivacionService: LoteDerivacionService
     ) { }

@@ -16,7 +16,8 @@
             <td>{{ lote.id }}</td>
             <td>{{ lote.fecha | fecha }}</td>
             <td>{{ lote.laboratorioDestino.nombre }}</td>
-            <ng-container *ngIf="lote.estados[lote.estados.length - 1].tipo === 'preparado'">}
+            <ng-container *ngIf="lote.estados[lote.estados.length - 1].tipo === 'preparado'">
+                <td></td>
                 <td> <plex-badge type="warning">{{lote.estados[lote.estados.length - 1 ].tipo}}</plex-badge></td>
                 <td>
                     <plex-button type="info" title="Enviar lote" label="Enviar lote" (click)="enviarLote(lote)" type="primary btn-sm" >
@@ -24,6 +25,7 @@
                 </td>
             </ng-container>
             <ng-container *ngIf="lote.estados[lote.estados.length - 1].tipo !== 'preparado'">
+                <td></td>
                 <td> <plex-badge type="info">{{lote.estados[lote.estados.length - 1].tipo}}</plex-badge></td>
                 <td>
                 </td>
