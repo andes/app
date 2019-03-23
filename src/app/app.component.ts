@@ -77,12 +77,18 @@ export class AppComponent {
         }
 
         // if (this.auth.getPermissions('rup:?').length > 0) {
-        if (true) {
+        if (this.auth.getPermissions('laboratorio:recibir:?').length) {
             accessList.push({ label: 'SIL: Recepción de Laboratorios', icon: 'flask-outline', route: '/laboratorio/recepcion' });
-            accessList.push({ label: 'SIL: Gestor de Protocolos', icon: 'flask-outline', route: '/laboratorio/protocolos' });
+        }
+        if (this.auth.getPermissions('laboratorio:imprimir:?').length) {
             accessList.push({ label: 'SIL: Hojas de trabajo', icon: 'flask-outline', route: '/laboratorio/hojatrabajo' });
             accessList.push({ label: 'SIL: Derivaciones', icon: 'flask-outline', route: '/laboratorio/derivaciones' });
             accessList.push({ label: 'SIL: Impresión de Resultados', icon: 'flask-outline', route: '/laboratorio/reportes/resultados' });
+        }
+        if (this.auth.getPermissions('laboratorio:validar:?').length ||
+            this.auth.getPermissions('laboratorio:auditar:?').length ||
+            this.auth.getPermissions('laboratorio:cargar:?').length) {
+            accessList.push({ label: 'SIL: Gestor de Protocolos', icon: 'flask-outline', route: '/laboratorio/protocolos' });
         }
 
         // faltan permisos

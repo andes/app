@@ -1,11 +1,15 @@
 <plex-layout main="{{showProtocoloDetalle ? ( contextoCache.ocultarPanelLateral ? 0 : 3 ) : 12}}">
-    <plex-layout-main *ngIf='contextoCache && !contextoCache.ocultarPanelLateral && contextoCache.modo.nombre !== "recepcionSinTurno" '>
+    <plex-layout-main
+        *ngIf='contextoCache && !contextoCache.ocultarPanelLateral && contextoCache.modo.nombre !== "recepcionSinTurno" '>
 
-        <filtros-busqueda-protocolo *ngIf="!showProtocoloDetalle" [modo]='contextoCache.modo' (buscarProtocolosEmmiter)="refreshSelection($event)"></filtros-busqueda-protocolo>
+        <filtros-busqueda-protocolo *ngIf="!showProtocoloDetalle" [modo]='contextoCache.modo'
+            (buscarProtocolosEmmiter)="refreshSelection($event)"></filtros-busqueda-protocolo>
 
         <!-- LISTA DE PROTOCOLOS -->
-        <lista-protocolos [protocolos]='protocolos' [modo]='contextoCache.modo' [indiceSeleccionado]='indiceSeleccionado' (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)'
-            [showProtocoloDetalle]='showProtocoloDetalle' (edicionDatosCabeceraEmitter)='editarDatosCabecera()'></lista-protocolos>
+        <lista-protocolos [protocolos]='protocolos' [modo]='contextoCache.modo'
+            [indiceSeleccionado]='indiceSeleccionado' (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)'
+            [showProtocoloDetalle]='showProtocoloDetalle' (edicionDatosCabeceraEmitter)='editarDatosCabecera()'>
+        </lista-protocolos>
 
         <!--VISUALIZACIÓN DE PROTOCOLOS CONTROL -->
         <div *ngIf="!protocolos?.length" class="alert alert-default">
@@ -44,13 +48,18 @@
                 </div>
 
                 <ng-container *ngIf="contextoCache.botonesAccion !== 'historicoResultados'">
-                    <ng-container *ngIf='contextoCache.modo.nombre === "carga" || contextoCache.modo.nombre === "validacion"' class="col-2">
-                        <plex-button position="right" type="warning" label="Auditar" class="mr-3" (click)="volverAControl()"></plex-button>
+                    <ng-container
+                        *ngIf='contextoCache.modo.nombre === "carga" || contextoCache.modo.nombre === "validacion"'
+                        class="col-2">
+                        <plex-button position="right" type="warning" label="Auditar" class="mr-3"
+                            (click)="volverAControl()"></plex-button>
                     </ng-container>
 
                     <div class="col d-flex flex-row-reverse" *ngIf="showProtocoloDetalle">
-                        <plex-button *ngIf="showBotonAceptarCambiosHeader" position="right" type="success" label="Aceptar" (click)="aceptarCambiosHeader()"></plex-button>
-                        <plex-button *ngIf="showBotonAceptarCambiosAuditoria" position="right" type="success" label="Aceptar" (click)="aceptarCambiosAuditoria()"></plex-button>
+                        <plex-button *ngIf="showBotonAceptarCambiosHeader" position="right" type="success"
+                            label="Aceptar" (click)="aceptarCambiosHeader()"></plex-button>
+                        <plex-button *ngIf="showBotonAceptarCambiosAuditoria" position="right" type="success"
+                            label="Aceptar" (click)="aceptarCambiosAuditoria()"></plex-button>
                         <plex-button position="left" type="warning" (click)="volver()" label="Volver"></plex-button>
                     </div>
 
@@ -65,15 +74,16 @@
                         <ng-container *ngIf='contextoCache.modo.nombre === "validacion" '>
                             <plex-button position="right" class="float-right mr-1" type="success" label="Validar todos"
                                 (click)="guardarSolicitud()"></plex-button>
-                            <plex-button position="right" class="float-right mr-1" type="success" label="Validar pendientes"
-                                (click)="guardarSolicitud()"></plex-button> ​
+                            <plex-button position="right" class="float-right mr-1" type="success"
+                                label="Validar pendientes" (click)="guardarSolicitud()"></plex-button> ​
                         </ng-container>
                     </ng-container>
                 </ng-container>
 
                 <ng-container *ngIf="contextoCache.botonesAccion === 'historicoResultados'">
                     <div class="col d-flex flex-row-reverse" *ngIf="showProtocoloDetalle">
-                        <plex-button position="left" type="warning" (click)="salirDeHistoricoResultados()" label="Volver"></plex-button>
+                        <plex-button position="left" type="warning" (click)="salirDeHistoricoResultados()"
+                            label="Volver"></plex-button>
                     </div>
                 </ng-container>
 
@@ -82,7 +92,8 @@
         <!-- DETALLE DE PROTOCOLO -->
         <protocolo-detalle *ngIf="showProtocoloDetalle" [protocolo]="protocolo" [indexProtocolo]="indexProtocolo"
             [protocolos]="protocolos" [seleccionPaciente]="seleccionPaciente" (volverAListaControEmit)="volver()"
-            [editarListaPracticas]="editarListaPracticas" [busqueda]='busqueda' (edicionDatosCabeceraEmitter)="editarDatosCabecera()"></protocolo-detalle>
+            [editarListaPracticas]="editarListaPracticas" [busqueda]='busqueda'
+            (edicionDatosCabeceraEmitter)="editarDatosCabecera()"></protocolo-detalle>
 
     </plex-layout-sidebar>
 </plex-layout>
