@@ -10,11 +10,11 @@ import { AgendaService } from '../../services/turnos/agenda.service';
 import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
 
 @Component({
-    selector: 'encabezadoReportesSJ',
-    templateUrl: 'encabezadoReportesSJ.html',
+    selector: 'encabezadoReportesDiarios',
+    templateUrl: 'encabezadoReportesDiarios.html',
 
 })
-export class EncabezadoReportesSJComponent implements OnInit {
+export class EncabezadoReportesDiariosComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
     // Variables comunes a varios reportes
@@ -22,11 +22,11 @@ export class EncabezadoReportesSJComponent implements OnInit {
     public showBotonImprimir = false;
     public opcionesOrganizacion: any = [];
     public opcionesReportes: any = [];
-    public opcionesUnidadOperativa: any = [];
+    public opcionesPrestacion: any = [];
     public parametros = {};
     public organizacion;
     public tipoReportes;
-    public unidadOperativa;
+    public prestacion;
 
     public reporte: any = [];
 
@@ -158,7 +158,7 @@ export class EncabezadoReportesSJComponent implements OnInit {
         this.servicioPrestacion.get({
             turneable: 1
         }).subscribe((data) => {
-            this.opcionesUnidadOperativa = data;
+            this.opcionesPrestacion = data;
         });
     }
 
@@ -204,13 +204,13 @@ export class EncabezadoReportesSJComponent implements OnInit {
                 }
             } break;
 
-            case 'unidadOperativa': {
+            case 'prestacion': {
                 if (value.value !== null) {
-                    this.parametros['unidadOperativa'] = this.unidadOperativa.id;
-                    this.parametros['unidadOperativaNombre'] = this.unidadOperativa.nombre;
+                    this.parametros['prestacion'] = this.prestacion.id;
+                    this.parametros['prestacionNombre'] = this.prestacion.nombre;
                 } else {
-                    this.parametros['unidadOperativa'] = '';
-                    this.parametros['unidadOperativaNombre'] = '';
+                    this.parametros['prestacion'] = '';
+                    this.parametros['prestacionNombre'] = '';
                 }
             } break;
 
@@ -226,9 +226,6 @@ export class EncabezadoReportesSJComponent implements OnInit {
                 break;
         }// End Switch
 
-        console.log('refreshSelection: ' + tipo);
-        let str = JSON.stringify(this.parametros, null, 4);
-        console.log(str);
     }
 
 
@@ -250,15 +247,6 @@ export class EncabezadoReportesSJComponent implements OnInit {
 
     public generar() {
 
-        // this.parametros = { organizacion: '5bc890ad8f07a8512f5774f1', tipoReportes: 'ResumenDiarioMensual', mes: 1, anio: '2019', unidadOperativa: '5bc70c218187889611d62a8b' };
-        // this.parametros = {
-        //     'organizacion': '5bc890ad8f07a8512f5774f1',
-        //     'organizacionNombre': 'HOSPITAL DR. ALFREDO RIZO ESPARZA',
-        //     'tipoReportes': 'PlanillaC1',
-        //     'fecha': '2019-02-12T03:00:00.000Z',
-        //     'unidadOperativa': '5ad63b359fd75bb58ddafbad',
-        //     'unidadOperativaNombre': 'Consulta de enfermería'
-        // };
 
         if (this.parametros['organizacion'] && this.parametros['tipoReportes'] && this.parametros['mes'] && this.parametros['anio'] && this.parametros['tipoReportes'] === 'ResumenDiarioMensual') {
 
@@ -272,11 +260,9 @@ export class EncabezadoReportesSJComponent implements OnInit {
 
         if (this.parametros['organizacion'] && this.parametros['tipoReportes'] && this.parametros['fecha'] && this.parametros['tipoReportes'] === 'PlanillaC1') {
 
-            // this.reporte = this.dummyData();
-            // this.showPlanillaC1 = true;
+
 
             this.agendaService.findPlanillaC1(this.parametros).subscribe((reporte) => {
-                // debugger
                 this.reporte = reporte;
                 this.showPlanillaC1 = true;
                 this.showBotonImprimir = true;
@@ -288,7 +274,6 @@ export class EncabezadoReportesSJComponent implements OnInit {
 
 
     public imprimir(cmpName) {
-        // debugger
         const printContent = document.getElementById(cmpName);
         const WindowPrt = window.open('', '', 'left=0,top=0,width=900,height=900,toolbar=0,scrollbars=0,status=0');
 

@@ -333,9 +333,9 @@ import { TurnosPrestacionesService } from './components/buscadorTurnosPrestacion
 
 
 // REPORTES SJ
-import { EncabezadoReportesSJComponent } from './components/reportesSJ/encabezadoReportesSJ.component';
-import { ResumenDiarioMensualComponent } from './components/reportesSJ/resumenDiarioMensual.component';
-import { PlanillaC1Component } from './components/reportesSJ/planillaC1.component';
+import { EncabezadoReportesDiariosComponent } from './components/reportesDiarios/encabezadoReportesDiarios.component';
+import { ResumenDiarioMensualComponent } from './components/reportesDiarios/resumenDiarioMensual.component';
+import { PlanillaC1Component } from './components/reportesDiarios/planillaC1.component';
 
 // Locales
 import { AppComponent } from './app.component';
@@ -552,7 +552,7 @@ registerLocaleData(localeEs, 'es');
         ConsultaDiagnosticoComponent,
         CantidadConsultaXPrestacionComponent,
         EncabezadoReportesComponent,
-        ResumenDiarioMensualComponent, PlanillaC1Component, EncabezadoReportesSJComponent,
+        ResumenDiarioMensualComponent, PlanillaC1Component, EncabezadoReportesDiariosComponent,
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         MapaEspacioFisicoVistaComponent,

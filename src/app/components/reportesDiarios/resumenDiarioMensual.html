@@ -1,27 +1,7 @@
-<style>
-    th,td{
-        text-align: center;
-        width: 25px;
-    }
-
-     /* .plex-layout{
-        display: block;
-    } */
-
-    .table th, .table td {
-        padding: 0.2rem;
-    }
-
-
-</style>
-
-<!-- {{ parametros | json }}
-{{ reporte | json }} -->
 <div class="row">
     <div class="col">
         <plex-box type="primary">
 
-            <!-- <table *ngIf="reporte.length>0" style="table-layout:fixed" class="table table-scroll"> -->
             <table *ngIf="reporte.dias.length>0" class="table table-striped table-bordered">
 
                 <thead style="background-color: darkgray;">
@@ -35,12 +15,12 @@
                     </tr>
 
                     <tr>
-                        <th colspan=15><b>UNIDAD OPERATIVA:</b> {{parametros['unidadOperativaNombre']}}</th>
+                        <th colspan=15><b>PRESTACION:</b> {{parametros['prestacionNombre']}}</th>
                         <th colspan=8><b>FECHA:</b> {{ fecha | date:'dd-MM-yyyy'  }}</th>
                     </tr>
 
                     <tr>
-                        <th rowspan=4 style="vertical-align : middle">Dia</th>
+                        <th rowspan=4 style="vertical-align : middle">Día</th>
                         <th colspan=19>Edad y sexo</th>
                     </tr>
                     <tr>
@@ -50,11 +30,11 @@
                         <th colspan=2>15 a 19</th>
                         <th colspan=2>20 a 39</th>
                         <th colspan=2>40 a 69</th>
-                        <th colspan=2> 70 y mas</th>
+                        <th colspan=2> 70 y más</th>
                         <th colspan=3> Total edades</th>
                     </tr>
                     <tr>
-                        <th colspan=2>Dias</th>
+                        <th colspan=2>Diás</th>
                         <th colspan=2>Meses</th>
 
                         <th rowspan=2>M</th>
@@ -213,5 +193,3 @@
         </plex-box>
     </div>
 </div>
-<!--
-                                    {{ reporte | json }} -->

@@ -1,28 +1,7 @@
-<style>
-    th,
-    td {
-        text-align: center;
-        width: 25px;
-    }
 
-    /* .plex-layout{
-        display: block;
-    } */
-
-    .table th,
-    .table td {
-        padding: 0.2rem;
-    }
-</style>
-
-<!-- {{ parametros | json }} -->
-<!-- {{ reporte | json }} -->
 <div class="row">
     <div class="col">
         <plex-box type="primary">
-
-            <!-- <h1>Planilla C1</h1> -->
-            <!-- <table *ngIf="reporte.length>0" style="table-layout:fixed" class="table table-scroll"> -->
             <table *ngIf="reporte.length>0" class="table table-striped table-bordered" style="font-size: 15px">
 
                 <thead style="background-color: darkgray;">
@@ -37,9 +16,8 @@
                     </tr>
 
                     <tr>
-                        <th colspan=11 style="text-align:left; padding-left: 40px"><b>UNIDAD OPERATIVA:</b>
-                            {{parametros['unidadOperativaNombre']}}</th>
-                        <!-- <th colspan=8><b>FECHA:</b> {{ parametros['fecha'] | date:'dd-MM-yyyy'  }}</th> -->
+                        <th colspan=11 style="text-align:left; padding-left: 40px"><b>PRESTACION:</b>
+                            {{parametros['prestacionNombre']}}</th>
                     </tr>
 
                     <tr>
@@ -100,4 +78,3 @@
         </plex-box>
     </div>
 </div>
-<!--{{ reporte | json }} -->

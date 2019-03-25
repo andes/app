@@ -68,9 +68,9 @@ import { EncabezadoReportesComponent } from './components/reportes/encabezadoRep
 import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
 
 // REPORTES SJ
-import { EncabezadoReportesSJComponent } from './components/reportesSJ/encabezadoReportesSJ.component';
-import { ResumenDiarioMensualComponent } from './components/reportesSJ/resumenDiarioMensual.component';
-import { PlanillaC1Component } from './components/reportesSJ/planillaC1.component';
+import { EncabezadoReportesDiariosComponent } from './components/reportesDiarios/encabezadoReportesDiarios.component';
+import { ResumenDiarioMensualComponent } from './components/reportesDiarios/resumenDiarioMensual.component';
+import { PlanillaC1Component } from './components/reportesDiarios/planillaC1.component';
 
 // CONFIGURACION PRESTACION
 import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
@@ -176,9 +176,8 @@ const appRoutes: Routes = [
   { path: 'encabezadoReportes', component: EncabezadoReportesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'cantidadConsultaXPrestacion', component: CantidadConsultaXPrestacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
-  // ReportesSJ
-  { path: 'reportesSJ', component: EncabezadoReportesSJComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'resumenDiarioMensual', component: ResumenDiarioMensualComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  // ReportesDiarios
+  { path: 'reportesDiarios', component: EncabezadoReportesDiariosComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // Solicitudes
   { path: 'solicitudes', component: SolicitudesComponent, canActivate: [RoutingNavBar, RoutingGuard] },

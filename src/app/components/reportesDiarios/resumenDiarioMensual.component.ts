@@ -1,22 +1,21 @@
 import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
 import { Component, Input, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
-import * as moment from 'moment';
-import { dateValidator } from '@andes/plex/src/lib/core/validator.functions';
-import { combineAll } from 'rxjs/operators';
+
 
 
 
 @Component({
-    selector: 'planillaC1',
-    templateUrl: 'planillaC1.html',
+    selector: 'resumenDiarioMensual',
+    templateUrl: 'resumenDiarioMensual.html',
+    styleUrls: [
+        'resumenDiarioMensual.scss'
+    ]
 })
 
-
-export class PlanillaC1Component implements OnInit {
+export class ResumenDiarioMensualComponent implements OnInit {
 
     fecha = new Date();
 
