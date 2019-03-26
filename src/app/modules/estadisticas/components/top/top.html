@@ -15,24 +15,28 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col" *ngIf="dataEntrada.estados">
+                            <graph-table type="pie" titulo="Estado" [data]="dataEntrada.estados" [table]="esTabla"></graph-table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
                             <graph-table type="bar" titulo="Tipo de Solicitud Origen" [data]="dataEntrada.solicitudesOrigen" [table]="esTabla"></graph-table>
                         </div>
-                        <div class="col-6">
+                    </div>
+                    <div class="row">
+                        <div class="col">
                             <graph-table type="bar" titulo="Tipo de Solicitud Destino" [data]="dataEntrada.solicitudesDestino" [table]="esTabla"></graph-table>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6" *ngIf="dataEntrada.profesionalesOrigen">
+                        <div class="col" *ngIf="dataEntrada.profesionalesOrigen">
                             <graph-table type="bar" titulo="Profesional Origen" [data]="dataEntrada.profesionalesOrigen" [table]="esTabla"></graph-table>
-                        </div>
-                        <div class="col-6" *ngIf="dataEntrada.profesionalesDestino">
-                            <graph-table type="bar" titulo="Profesional Destino" [data]="dataEntrada.profesionalesDestino" [table]="esTabla"></graph-table>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col" *ngIf="dataEntrada.estados">
-                            <graph-table type="pie" titulo="Estado" [data]="dataEntrada.estados" [table]="esTabla"></graph-table>
+                        <div class="col" *ngIf="dataEntrada.profesionalesDestino">
+                            <graph-table type="bar" titulo="Profesional Destino" [data]="dataEntrada.profesionalesDestino" [table]="esTabla"></graph-table>
                         </div>
                     </div>
                 </fieldset>
@@ -47,24 +51,28 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col" *ngIf="dataSalida.estados">
+                            <graph-table type="pie" titulo="Estado" [data]="dataSalida.estados" [table]="esTabla"></graph-table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
                             <graph-table type="bar" titulo="Tipo de Solicitud Origen" [data]="dataSalida.solicitudesOrigen" [table]="esTabla"></graph-table>
                         </div>
-                        <div class="col-6">
+                    </div>
+                    <div class="row">
+                        <div class="col">
                             <graph-table type="bar" titulo="Tipo de Solicitud Destino" [data]="dataSalida.solicitudesDestino" [table]="esTabla"></graph-table>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6" *ngIf="dataSalida.profesionalesOrigen">
+                        <div class="col" *ngIf="dataSalida.profesionalesOrigen">
                             <graph-table type="bar" titulo="Profesional Origen" [data]="dataSalida.profesionalesOrigen" [table]="esTabla"></graph-table>
-                        </div>
-                        <div class="col-6" *ngIf="dataSalida.profesionalesDestino">
-                            <graph-table type="bar" titulo="Profesional Destino" [data]="dataSalida.profesionalesDestino" [table]="esTabla"></graph-table>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col" *ngIf="dataSalida.estados">
-                            <graph-table type="pie" titulo="Estado" [data]="dataSalida.estados" [table]="esTabla"></graph-table>
+                        <div class="col" *ngIf="dataSalida.profesionalesDestino">
+                            <graph-table type="bar" titulo="Profesional Destino" [data]="dataSalida.profesionalesDestino" [table]="esTabla"></graph-table>
                         </div>
                     </div>
                 </fieldset>

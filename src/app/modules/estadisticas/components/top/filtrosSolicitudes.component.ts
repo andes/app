@@ -19,8 +19,8 @@ import { OrganizacionService } from '../../../../services/organizacion.service';
             <plex-button type="success mb-1" label="Filtrar" (click)="onChange()" ></plex-button>
         </div>
         <div class="col-2 d-flex align-items-end" (click)="changeTablaGrafico()">
-            <plex-button *ngIf="esTablaGrafico" icon="mdi mdi-chart-pie"></plex-button>
-            <plex-button *ngIf="!esTablaGrafico" icon="mdi mdi-table-large"></plex-button>
+            <plex-button title="Visualizar de gráficos" *ngIf="esTablaGrafico" icon="mdi mdi-chart-pie"></plex-button>
+            <plex-button title="Visualizar tablas" *ngIf="!esTablaGrafico" icon="mdi mdi-table-large"></plex-button>
         </div>
     </div>
     <div class="row">
