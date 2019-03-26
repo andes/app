@@ -10,6 +10,7 @@ import { LogService } from '../../../../services/log.service';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'rup-vistaHuds',
@@ -43,7 +44,8 @@ export class VistaHudsComponent implements OnInit {
         private servicioPaciente: PacienteService,
         private logService: LogService,
         private servicioPrestacion: PrestacionesService,
-        private conceptObserverService: ConceptObserverService) { }
+        private conceptObserverService: ConceptObserverService,
+        private location: Location) { }
 
     /**
     *Inicializamos con el id del paciente
@@ -136,8 +138,10 @@ export class VistaHudsComponent implements OnInit {
     * @param ruta
     */
     volver(ruta = null) {
-        ruta = ruta ? ruta : 'rup';
-        this.router.navigate([ruta]);
+        // ruta = ruta ? ruta : 'rup';
+        // this.router.navigate([ruta]);
+        this.location.back();
+
     }
 
     evtCambiaPaciente() {

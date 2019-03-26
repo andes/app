@@ -25,6 +25,7 @@ export class CamaComponent implements OnInit {
     @Output() verInternacionEmit: EventEmitter<any> = new EventEmitter<any>();
     @Output() data: EventEmitter<any> = new EventEmitter<any>();
 
+    @Input() modoFlat = false;
     public organizacion: any;
     public paseAunidadOrganizativa: any;
     // opciones dropdown cama internada

@@ -10,6 +10,9 @@ export class OcupacionService {
     /**
      * Metodo get. Trae todos  los objetos ocupacion.
      */
+    getParams(params): Observable<any[]> {
+        return this.server.get(this.ocupacionUrl, { params: params, showError: true });
+    }
     get(): Observable<any[]> {
         return this.server.get(this.ocupacionUrl);
     }
