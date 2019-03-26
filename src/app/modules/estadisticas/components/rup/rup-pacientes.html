@@ -111,7 +111,7 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center hover" (click)="showChild(padre)"> 
                         {{ padre.term }} 
                         <span class="badge badge-primary badge-pill" title="Cantidad de hijos registrados">
-                            {{ getChilds(padre).length }}
+                            {{ getChilds(padre) | sum:'count' }}
                         </span>
                     </li>
                 </ul>
