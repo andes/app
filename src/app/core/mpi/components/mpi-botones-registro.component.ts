@@ -8,7 +8,7 @@ import { Component, Input } from '@angular/core';
 export class BotonesRegistroComponent {
     private toggler = false;
     @Input() disabled: boolean;
-    itemsRegistros = [
+    routes = [
         { label: 'BEBÉ', route: '/apps/mpi/bebe' },
         { label: 'EXTRANJERO', route: '/apps/mpi/sinDni' },
         { label: 'ARGENTINO CON DNI', route: '/apps/mpi/paciente' },
