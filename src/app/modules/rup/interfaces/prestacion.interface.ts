@@ -77,4 +77,11 @@ export class IPrestacion {
     public completarRegistros() {
         throw Error('No implementado');
     }
+
+    public timestampEjecucion() {
+        return this.ejecucion.fecha.getTime();
+    }
+    public timestampSolicitud() {
+        return this.solicitud.fecha.getTime();
+    }
 }
