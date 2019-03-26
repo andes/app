@@ -24,7 +24,7 @@ export class OrganizacionComponent implements OnInit {
     loader = false;
     finScroll = false;
     tengoDatos = true;
-
+    private idOrganizaciones = [];
     constructor(private formBuilder: FormBuilder,
         public organizacionService: OrganizacionService,
         private auth: Auth,
@@ -32,8 +32,17 @@ export class OrganizacionComponent implements OnInit {
         private plex: Plex) { }
 
     ngOnInit() {
-        this.updateTitle('Organizaciones');
-        this.loadDatos();
+        if (this.auth.getPermissions('tm:organizacion:?').length < 1) {
+            this.router.navigate(['inicio']);
+        } else {
+            this.updateTitle('Organizaciones');
+            this.auth.organizaciones().subscribe(data => {
+                if (data) {
+                    data.forEach(dat => { this.idOrganizaciones.push(dat.id); });
+                }
+                this.loadDatos();
+            });
+        }
     }
 
     private updateTitle(nombre: string) {
@@ -49,7 +58,8 @@ export class OrganizacionComponent implements OnInit {
             activo: this.activo,
             nombre: this.nombre,
             skip: this.skip,
-            limit: limit
+            limit: limit,
+            ids: this.idOrganizaciones
         };
         this.organizacionService.get(parametros)
             .subscribe(

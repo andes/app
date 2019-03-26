@@ -417,8 +417,17 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                     }
                     if (res.coordenadasDeMapa.longitud) {
                         this.organizacionModel.direccion.geoReferencia[1] = Number(res.coordenadasDeMapa.longitud);
-                    }
-                }
+                    } // TODO: actualizar el centro del mapa porque puede quedar perdido
+                }// TODO: poner la localidad traida desde SISA
+                // if (res.localidad) {
+                //     const aux: string[] = res.localidad.split(' - '); // res.localidad tiene formato "58112040 - Zapala (Zapala - Neuquén)"
+                //     const nombreLocalidad = aux[1].substr(0, (aux[1].indexOf('(') - 1));
+
+                //     this.localidadService.get({ nombre: nombreLocalidad }).subscribe(loc => {
+                //         this.organizacionModel.direccion.ubicacion.localidad.id = loc[0].id;
+                //         this.organizacionModel.direccion.ubicacion.localidad.nombre = loc[0].nombre;
+                //     });
+                // }
             } else {
                 this.plex.info('warning', 'El código SISA no existe.', 'No sincronizó');
             }

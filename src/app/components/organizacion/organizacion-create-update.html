@@ -4,46 +4,51 @@
             <div class="col">
                 <plex-box type="success">
                     <!-- DATOS BASICOS -->
-                    <div class="row">
-                        <div class="col-4">
-                            <plex-text type="text" label="Nombre" name="nombre" [required]="true"
-                                [(ngModel)]="organizacionModel.nombre" placeholder="Ingrese nombre..."
-                                [autoFocus]="!seleccion?.id"></plex-text>
+                    <fieldset>
+                        <legend>Datos principales</legend>
+
+                        <div class="row">
+                            <div class="col-4">
+                                <plex-text type="text" label="Nombre" name="nombre" [required]="true"
+                                    [(ngModel)]="organizacionModel.nombre" placeholder="Ingrese nombre..."
+                                    [autoFocus]="!seleccion?.id"></plex-text>
+                            </div>
+                            <div class="col-4">
+                                <plex-select name="tipoEstablecimiento" [data]="tiposEstablecimiento"
+                                    [(ngModel)]="organizacionModel.tipoEstablecimiento" label="Tipo de Establecimiento">
+                                </plex-select>
+                            </div>
+                            <div class="col-4">
+                                <plex-int label="Complejidad" name="complejidad"
+                                    [(ngModel)]="organizacionModel.nivelComplejidad"
+                                    placeholder="Ingrese nivel de complejidad..."></plex-int>
+                            </div>
                         </div>
-                        <div class="col-4">
-                            <plex-select name="tipoEstablecimiento" [data]="tiposEstablecimiento"
-                                [(ngModel)]="organizacionModel.tipoEstablecimiento" label="Tipo de Establecimiento">
-                            </plex-select>
+                        <div class="row">
+                            <div class="col-4">
+                                <plex-text label="Código SISA" type="text" name="sisa"
+                                    [(ngModel)]="organizacionModel.codigo.sisa" placeholder="Ingrese código SISA"
+                                    [required]="true"></plex-text>
+                            </div>
+                            <div class="col-4">
+                                <plex-text label="Código CUIE" name="cuie" [(ngModel)]="organizacionModel.codigo.cuie"
+                                    placeholder="Ingrese código CUIE"></plex-text>
+                            </div>
+                            <div class="col-4">
+                                <plex-text label="Código Remediar" name="remediar"
+                                    [(ngModel)]="organizacionModel.codigo.remediar"
+                                    placeholder="Ingrese código Remediar">
+                                </plex-text>
+                            </div>
                         </div>
-                        <div class="col-4">
-                            <plex-int label="Complejidad" name="complejidad"
-                                [(ngModel)]="organizacionModel.nivelComplejidad"
-                                placeholder="Ingrese nivel de complejidad..."></plex-int>
+                        <div class="row" *ngIf="seleccion?.id">
+                            <div class="col ml-2">
+                                <plex-bool [(ngModel)]="organizacionModel.activo" type="slide" label="Habilitado"
+                                    name="activo">
+                                </plex-bool>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4">
-                            <plex-text label="Código SISA" type="text" name="sisa"
-                                [(ngModel)]="organizacionModel.codigo.sisa" placeholder="Ingrese código SISA"
-                                [required]="true"></plex-text>
-                        </div>
-                        <div class="col-4">
-                            <plex-text label="Código CUIE" name="cuie" [(ngModel)]="organizacionModel.codigo.cuie"
-                                placeholder="Ingrese código CUIE"></plex-text>
-                        </div>
-                        <div class="col-4">
-                            <plex-text label="Código Remediar" name="remediar"
-                                [(ngModel)]="organizacionModel.codigo.remediar" placeholder="Ingrese código Remediar">
-                            </plex-text>
-                        </div>
-                    </div>
-                    <div class="row" *ngIf="seleccion?.id">
-                        <div class="col ml-2">
-                            <plex-bool [(ngModel)]="organizacionModel.activo" type="slide" label="Habilitado"
-                                name="activo">
-                            </plex-bool>
-                        </div>
-                    </div>
+                    </fieldset>
                     <!-- DATOS BASICOS -->
                     <div class="row">&nbsp;</div>
                     <!-- DATOS DE DOMICILIO -->
