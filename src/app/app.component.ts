@@ -83,6 +83,10 @@ export class AppComponent {
             accessList.push({ label: 'Internación - Mapa de cama', icon: 'mdi mdi-minus', route: '/internacion/camas' });
         }
 
+        if (this.auth.getPermissions('tm:organizacion:?').length > 0) {
+            accessList.push({ label: 'Organizaciones', icon: 'cogs', route: '/tm/organizacion' });
+        }
+
         // faltan permisos
         if (this.auth.getPermissions('formularioTerapeutico:?').length > 0) {
             accessList.push({ label: 'Formulario Terapeutico', icon: 'mdi mdi-needle', route: '/formularioTerapeutico' });
