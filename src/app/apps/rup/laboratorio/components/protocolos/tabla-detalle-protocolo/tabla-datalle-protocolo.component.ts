@@ -8,7 +8,7 @@ import { Input, Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { getRespuestasGestionValoresCriticos } from '../../../../../../utils/enumerados';
 import { generateRegistroEjecucion } from '../../../controllers/protocolos/tabla-detalle-protocolo/tabla-datalle-protocolo.controller';
 import { Plex } from '@andes/plex';
-import * as mathjs from 'mathjs'
+import * as mathjs from 'mathjs';
 
 @Component({
     selector: 'tabla-datalle-protocolo',
@@ -469,20 +469,22 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     calcularFormulas() {
         for (let practica of this.practicasEjecucion) {
             if (!(practica.valor.practica.categoria === 'simple')) {
-                for (let i = 0; i < this.practicasEjecucion.length; i++) {
-                    if (practica.valor.codigoPractica !== this.practicasEjecucion[i].valor.codigoPractica) {
-                        let foundIndex = practica.valor.practica.resultado.configuracionFormula.formula.indexOf(this.practicasEjecucion[i].valor.codigoPractica);
-                        if (foundIndex > -1 && this.practicasEjecucion[i].valor.resultado.valor) {
-                            practica.valor.practica.resultado.configuracionFormula.formula = (practica.valor.practica.resultado.configuracionFormula.formula as string).replace(this.practicasEjecucion[i].valor.codigoPractica, this.practicasEjecucion[i].valor.resultado.valor);
+                try {
+                    for (let i = 0; i < this.practicasEjecucion.length; i++) {
+                        if (practica.valor.codigoPractica !== this.practicasEjecucion[i].valor.codigoPractica && practica.valor.practica.resultado.configuracionFormula.formula)  {
+                            let foundIndex = practica.valor.practica.resultado.configuracionFormula.formula.indexOf(this.practicasEjecucion[i].valor.codigoPractica);
+                            if (foundIndex > -1 && this.practicasEjecucion[i].valor.resultado.valor) {
+                                practica.valor.practica.resultado.configuracionFormula.formula = (practica.valor.practica.resultado.configuracionFormula.formula as string).replace(this.practicasEjecucion[i].valor.codigoPractica, this.practicasEjecucion[i].valor.resultado.valor);
+                            }
                         }
                     }
-                }
-                practica.valor.practica.resultado.configuracionFormula.formula = practica.valor.practica.resultado.configuracionFormula.formula.split(']').join('');
-                practica.valor.practica.resultado.configuracionFormula.formula = practica.valor.practica.resultado.configuracionFormula.formula.split('[').join('');
-                try {
+                    practica.valor.practica.resultado.configuracionFormula.formula = practica.valor.practica.resultado.configuracionFormula.formula.split(']').join('');
+                    practica.valor.practica.resultado.configuracionFormula.formula = practica.valor.practica.resultado.configuracionFormula.formula.split('[').join('');
+
                     practica.valor.practica.resultado.valor = mathjs.eval(practica.valor.practica.resultado.configuracionFormula.formula);
                 } catch (error) {
-                    practica.valor.practica.resultado.valor = 'Imposible calcular fórmula'
+                    console.log(error);
+                    practica.valor.practica.resultado.valor = 'Imposible calcular fórmula';
                 }
             }
 
