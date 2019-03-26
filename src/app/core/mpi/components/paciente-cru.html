@@ -166,15 +166,15 @@
                             <div class="col-4">
                                 <div class="row">
                                     <div class="col">
-                                        <plex-bool *ngIf="provinciaActual" [(ngModel)]="viveProvActual"
-                                            label="¿Vive en la Provincia de {{provinciaActual.nombre}}?"
+                                        <plex-bool *ngIf="provinciaEfector" [(ngModel)]="viveProvActual"
+                                            label="¿Vive en la Provincia de {{provinciaEfector.nombre}}?"
                                             name="viveProvActual" (change)="changeProvActual($event)"></plex-bool>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col" *ngIf="viveProvActual">
-                                        <plex-bool *ngIf="localidadActual" [(ngModel)]="viveLocActual"
-                                            label="¿Vive en la Localidad {{localidadActual.nombre}}?"
+                                        <plex-bool *ngIf="localidadEfector" [(ngModel)]="viveLocActual"
+                                            label="¿Vive en la Localidad {{localidadEfector.nombre}}?"
                                             name="viveLocActual" (change)="changeLocalidadActual($event)"></plex-bool>
                                     </div>
                                 </div>
