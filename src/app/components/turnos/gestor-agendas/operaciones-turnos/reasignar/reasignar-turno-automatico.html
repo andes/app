@@ -87,7 +87,7 @@
                                                     Tipo Prestación: {{ agendaReasignar.turno.tipoPrestacion.nombre }}
                                                 </p>
                                                 <p class="mb-1" *ngIf="agenda.profesionales?.length > 0">
-                                                    Profesionales: {{ agenda.profesionales | enumerar:['apellido', 'nombre'] }}
+                                                    Equipo de Salud: {{ agenda.profesionales | enumerar:['apellido', 'nombre'] }}
                                                 </p>
                                             </a>
                                         </td>
@@ -112,7 +112,7 @@
                                         <div>Prestación:
                                             <b>{{agendaReasignar?.turno?.tipoPrestacion?.nombre}}</b>
                                         </div>
-                                        <div *ngIf="agendaReasignar.agendas[0].profesional">Profesional:
+                                        <div *ngIf="agendaReasignar.agendas[0].profesional">Equipo de Salud:
                                             <b>{{profesional | profesional}}</b>
                                         </div>
                                     </div>
