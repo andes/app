@@ -21,7 +21,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
-
+    public disableNuevoPaciente = true;
     public puedeCrearSolicitud = false;
     public puedeAutocitar = false;
     public puedeDarTurno = false;
@@ -81,6 +81,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     // -------------- SOBRE BUSCADOR ----------------
 
     onSearchStart() {
+        this.disableNuevoPaciente = false;
         this.esEscaneado = false;
         this.paciente = null;
         this.loading = true;
@@ -100,27 +101,13 @@ export class PuntoInicioTurnosComponent implements OnInit {
     }
 
     onSearchClear() {
+        this.disableNuevoPaciente = true;
         this.searchClear = true;
         this.resultadoBusqueda = [];
         this.paciente = null;
     }
 
-    // ------------- SOBRE LISTA RESULTADO --------------
-
-    nuevoRegistro(tipo) {
-        switch (tipo) {
-            case 'bebe':
-                this.router.navigate(['apps/mpi/bebe']);
-                break;
-            case 'sinDni':
-                this.router.navigate(['apps/mpi/sinDni']);
-                break;
-            case 'identificado':
-                this.router.navigate(['apps/mpi/paciente']);
-                break;
-        }
-    }
-
+  
     // -----------------------------------------------
 
 

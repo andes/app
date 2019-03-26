@@ -16,6 +16,7 @@ import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCach
 })
 
 export class AgregarSobreturnoComponent implements OnInit {
+    public disableNuevoPaciente = true;
     public nota: any;
     public lenNota = 140;
     changeCarpeta: boolean;
@@ -115,6 +116,7 @@ export class AgregarSobreturnoComponent implements OnInit {
     // -------------- SOBRE BUSCADOR ----------------
 
     onSearchStart() {
+        this.disableNuevoPaciente = false;
         this.esEscaneado = false;
         this.paciente = null;
         this.loading = true;
@@ -141,24 +143,12 @@ export class AgregarSobreturnoComponent implements OnInit {
     }
 
     onSearchClear() {
+        this.disableNuevoPaciente = true;
         this.searchClear = true;
         this.resultadoBusqueda = [];
         this.paciente = null;
     }
 
-    nuevoRegistro(tipo) {
-        switch (tipo) {
-            case 'bebe':
-                this.router.navigate(['apps/mpi/bebe']);
-                break;
-            case 'sinDni':
-                this.router.navigate(['apps/mpi/sinDni']);
-                break;
-            case 'identificado':
-                this.router.navigate(['apps/mpi/paciente']);
-                break;
-        }
-    }
 
     // Operaciones con carpetaPaciente
 

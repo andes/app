@@ -11,7 +11,7 @@ import { HistorialBusquedaService } from '../services/historialBusqueda.service'
     templateUrl: 'busqueda-mpi.html'
 })
 export class BusquedaMpiComponent implements OnInit {
-
+    public disableNuevoPaciente = true;
     loading = false;
     resultadoBusqueda: IPaciente[] = [];
     searchClear = true;    // True si el campo de búsqueda se encuentra vacío
@@ -48,6 +48,7 @@ export class BusquedaMpiComponent implements OnInit {
     // -------------- SOBRE BUSCADOR ----------------
 
     onSearchStart() {
+        this.disableNuevoPaciente = false;
         this.loading = true;
     }
 
@@ -65,6 +66,7 @@ export class BusquedaMpiComponent implements OnInit {
     }
 
     onSearchClear() {
+        this.disableNuevoPaciente = true;
         this.searchClear = true;
         this.resultadoBusqueda = [];
     }
@@ -77,20 +79,6 @@ export class BusquedaMpiComponent implements OnInit {
             this.pacienteCache.setPaciente(paciente);
             this.pacienteCache.setScanState(this.escaneado);
             this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru
-        }
-    }
-
-    nuevoRegistro(tipo) {
-        switch (tipo) {
-            case 'bebe':
-                this.router.navigate(['apps/mpi/bebe']);
-                break;
-            case 'sinDni':
-                this.router.navigate(['apps/mpi/sinDni']);
-                break;
-            case 'identificado':
-                this.router.navigate(['apps/mpi/paciente']);
-                break;
         }
     }
 

@@ -1,23 +1,23 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'mpi-botones-registro',
     templateUrl: 'mpi-botones-registro.html',
     styleUrls: ['mpi-botones-registro.scss']
 })
-
 export class BotonesRegistroComponent {
-    @Output() seleccion = new EventEmitter<String>();
+    private toggler = false;
+    @Input() disabled: boolean;
+    itemsRegistros = [
+        { label: 'BEBÉ', route: '/apps/mpi/bebe' },
+        { label: 'EXTRANJERO', route: '/apps/mpi/sinDni' },
+        { label: 'ARGENTINO CON DNI', route: '/apps/mpi/paciente' },
+        { label: 'ARGENTINO SIN DNI', route: '/apps/mpi/paciente' },
+    ];
 
-    onBebeSelected() {
-        return this.seleccion.emit('bebe');
-    }
-
-    onSinDniSelected() {
-        return this.seleccion.emit('sinDni');
-    }
-
-    onIdentificadoSelected() {
-        return this.seleccion.emit('identificado');
+    toggleMenu() {
+        this.toggler = !this.toggler;
+        return this.toggler;
     }
 }
+

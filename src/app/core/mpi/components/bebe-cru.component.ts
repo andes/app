@@ -322,7 +322,7 @@ export class BebeCruComponent implements OnInit {
                     documento: bebe.documento,
                     foto: bebe.foto ? bebe.foto : null
                 };
-                if (dto.referencia) {
+                if (dto.referencia && bebe.relaciones.length) {
                     this.pacienteService.patch(bebe.relaciones[0].referencia, {
                         'op': 'updateRelacion',
                         'dto': dto

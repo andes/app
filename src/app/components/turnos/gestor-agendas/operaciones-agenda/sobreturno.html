@@ -43,8 +43,8 @@
                         </div>
                     </span>
                     <span *ngIf="!showSobreturno">
-                        <div class="row">
-                            <div class="col col-sm-12" *ngIf="pacientesSearch">
+                        <div class="row" *ngIf="pacientesSearch">
+                            <div class="col-9 pr-0">
                                 <div class="panel panel-default">
                                     <div class="clear"></div>
                                     <paciente-buscar (searchStart)="onSearchStart()"
@@ -53,9 +53,11 @@
                                     </paciente-buscar>
                                 </div>
                             </div>
+                            <div class="col-3">
+                                <!-- BOTONES DE REGISTRO MPI -->
+                                <mpi-botones-registro [disabled]="disableNuevoPaciente"></mpi-botones-registro>
+                            </div>
                         </div>
-                        <!-- BOTONES DE REGISTRO MPI -->
-                        <mpi-botones-registro (seleccion)="nuevoRegistro($event)"></mpi-botones-registro>
 
                         <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
                     </span>
