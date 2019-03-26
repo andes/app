@@ -1,3 +1,4 @@
+import { Auth } from '@andes/auth';
 import { SnomedService } from './../../services/term/snomed.service';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
@@ -131,6 +132,9 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         infofiltro?: string;
     };
     // fin datos para el mapa
+
+    public puedeEditarCompleto = false;
+    public puedeEditarBasico = false;
     constructor(
         private organizacionService: OrganizacionService,
         private paisService: PaisService,
@@ -141,10 +145,19 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         public snomed: SnomedService,
 
         public CamaService: CamasService,
-        private router: Router,
+        private auth: Auth,
+        private router: Router
     ) { }
 
     ngOnInit() {
+        this.puedeEditarBasico = this.auth.check('tm:organizacion:editBasico');
+        this.puedeEditarCompleto = this.auth.check('tm:organizacion:editCompleto');
+
+        if ((this.seleccion && this.seleccion.id && !(this.puedeEditarBasico || this.puedeEditarCompleto)) ||
+            (!this.seleccion && !this.auth.check('tm:organizacion:create'))) {
+            this.router.navigate(['inicio']);
+        }
+
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.tipoEstablecimientoService.get().subscribe(resultado => {
             this.tiposEstablecimiento = resultado;
@@ -397,7 +410,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     public sincronizarSisa() {
         this.organizacionService.getOrgSisa(this.organizacionModel.codigo.sisa).subscribe(res => {
             if (res.resultado === 'OK') {
-                if (res.nombre) {
+                if (res.nombre && this.puedeEditarCompleto) {
                     this.organizacionModel.nombre = res.nombre;
                 }
                 if (res.domicilio) {

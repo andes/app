@@ -111,6 +111,10 @@ export class OrganizacionComponent implements OnInit {
         this.showcreate = true;
         this.seleccion = objOrganizacion;
     }
+    nuevaOrganizacion() {
+        this.seleccion = null;
+        this.showcreate = true;
+    }
 
     nextPage() {
         if (this.tengoDatos) {
