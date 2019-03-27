@@ -674,8 +674,6 @@ export class PacienteCruComponent implements OnInit {
     }
 
 
-    // ------------------- PARA VALIDACION ---------------------
-
     checkDisableValidar() {
         let sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
         this.disableValidar = !(parseInt(this.pacienteModel.documento, 0) >= 99999 && sexo !== undefined && sexo !== 'otro');
