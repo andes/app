@@ -49,7 +49,7 @@
             <plex-loader *ngIf="relaciones.loading" type="linear"></plex-loader>
             <div *ngIf="!relaciones.loading">
                 <span *ngIf="relaciones.error" class="text-warning">No disponibles en este momento</span>
-                <span *ngIf="relaciones.data && !relaciones.data.length">No hay ninguna relación registrada</span>
+                <span *ngIf="!relaciones.data || !relaciones.data.length">No hay ninguna relación registrada</span>
                 <table *ngIf="relaciones.data && relaciones.data.length" class="table table-sm" [ngClass]="{'table-hover': permitirseleccionarRelacion}">
                     <tbody>
                         <tr [ngClass]="{'hover': permitirseleccionarRelacion}" *ngFor="let relacion of relaciones.data"

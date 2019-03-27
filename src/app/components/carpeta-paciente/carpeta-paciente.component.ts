@@ -2,8 +2,8 @@ import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { ITurno } from './../../interfaces/turnos/ITurno';
-import { PacienteService } from './../../services/paciente.service';
-import { IPaciente } from '../../interfaces/IPaciente';
+import { PacienteService } from '../../core/mpi/services/paciente.service';
+import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 
 @Component({
     selector: 'carpeta-paciente',

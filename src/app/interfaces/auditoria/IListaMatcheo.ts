@@ -1,4 +1,4 @@
-import { IPaciente } from '../IPaciente';
+import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 
 export interface IListaMatcheo {
     paciente: IPaciente;

@@ -53,7 +53,7 @@ export class AppComponent {
         accessList.push({ label: 'CITAS: Espacios Fisicos', icon: 'cogs', route: 'tm/mapa_espacio_fisico' });
 
         if (this.auth.getPermissions('mpi:?').length > 0) {
-            accessList.push({ label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: 'apps/mpi' });
+            accessList.push({ label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: '/apps/mpi/busqueda' });
         }
         if (this.auth.getPermissions('auditoriaPacientes:?').length > 0) {
             accessList.push({ label: 'Auditoría MPI', icon: 'account-search', route: 'apps/mpi/auditoria' });

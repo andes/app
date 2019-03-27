@@ -6,7 +6,6 @@
             <div class="col-8">
                 <plex-box>
                     <plex-tabs [hidden]="showDatosSolicitud" [activeIndex]="activeIndex" (close)="onCloseTab($event)">
-
                         <plex-tab label="Registros de esta consulta">
                             <div class="row"
                                 *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length">
@@ -296,10 +295,11 @@
                                 <vista-prestacion [prestacion]="registro.data" [paciente]="paciente"></vista-prestacion>
                             </plex-tab>
 
-                            <plex-tab *ngIf="registro.tipo === 'cda'" [allowClose]="true" [label]="registro.data.prestacion.snomed.term" [class]="registro.data.class">
+                            <plex-tab *ngIf="registro.tipo === 'cda'" [allowClose]="true"
+                                [label]="registro.data.prestacion.snomed.term" [class]="registro.data.class">
                                 <vista-cda [registro]="registro"></vista-cda>
                             </plex-tab>
-                        </ng-container> 
+                        </ng-container>
                     </plex-tabs>
                 </plex-box>
             </div>
@@ -319,9 +319,8 @@
                             </rup-buscador>
                         </plex-tab>
                         <plex-tab label="Historia de Salud" (click)="panelIndex = 1">
-                            <rup-hudsBusqueda [paciente]="prestacion?.paciente"
-                                [_dragScope]="'registros-rup'" (evtData)="ejecutarConceptoHuds($event)"
-                                (_onDragStart)="arrastrandoConcepto(true)"
+                            <rup-hudsBusqueda [paciente]="prestacion?.paciente" [_dragScope]="'registros-rup'"
+                                (evtData)="ejecutarConceptoHuds($event)" (_onDragStart)="arrastrandoConcepto(true)"
                                 (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
                         </plex-tab>
                     </plex-tabs>
@@ -373,6 +372,3 @@
 
     </footer>
 </form>
-<!-- Búsqueda de pacientes -->
-<pacientesSearch [bloquearCreate]="true" (selected)="cambiarElPaciente($event)" *ngIf="showCambioPaciente"
-    [modoCompleto]="false" [mostrarCancelar]="true" (cancel)="showCambioPaciente = false"></pacientesSearch>

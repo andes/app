@@ -3,7 +3,7 @@ import { Plex } from '@andes/plex';
 import { Component, AfterViewInit, HostBinding, Input } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { AppComponent } from './../../../../app.component';
-import { IPaciente } from './../../../../interfaces/IPaciente';
+import { IPaciente } from './../../../../core/mpi/interfaces/IPaciente';
 import { PrestacionesService } from './../../../../modules/rup/services/prestaciones.service';
 
 @Component({ selector: 'radio-chart', templateUrl: 'chart.html' })

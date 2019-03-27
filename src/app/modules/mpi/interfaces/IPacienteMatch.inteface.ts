@@ -1,5 +1,5 @@
 
-import { IPaciente } from './../../../interfaces/IPaciente';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 export interface IPacienteMatch {
     id: String;

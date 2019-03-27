@@ -4,7 +4,7 @@ import { Component, OnInit, Output, EventEmitter, HostBinding, ViewEncapsulation
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { PacienteService } from './../../../../services/paciente.service';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { DocumentosService } from './../../../../services/documentos.service';

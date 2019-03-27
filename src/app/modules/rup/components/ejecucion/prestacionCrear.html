@@ -1,6 +1,6 @@
-<plex-layout *ngIf="!buscandoPaciente && !showAutocitar" main="12">
+<plex-layout *ngIf="!showAutocitar" main="12">
     <plex-layout-main> 
-        <div class="row">
+        <div *ngIf="!buscandoPaciente" class="row">
             <div class="col-6">
                 <fieldset>
                     <legend>Datos principales</legend>
@@ -15,10 +15,37 @@
                 <fieldset>
                     <legend>Datos del paciente</legend>
                     <paciente-detalle *ngIf="paciente" [paciente]="paciente"></paciente-detalle>
-                    <plex-button label="SELECCIONAR PACIENTE" type="primary" (click)="buscandoPaciente = true"></plex-button>
+                    <plex-button label="SELECCIONAR PACIENTE" type="primary" (click)="showBuscarPaciente()"></plex-button>
                 </fieldset>
             </div>
         </div>
+          <div *ngIf="buscandoPaciente" class="row">
+              <div class="col">
+                  <plex-box>
+                      <!-- ----------- Búsqueda de pacientes -------------- -->
+                      <div class="row">
+                          <div class="col-12">
+                              <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
+                                  (searchClear)="onSearchClear()">
+                              </paciente-buscar>
+                          </div>
+                      </div>
+                      <plex-loader *ngIf="loading"></plex-loader>
+                      <div class=" row" *ngIf="!showHuds">
+                          <div class="col-12">
+                              <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length"
+                                  [pacientes]="resultadoBusqueda" [autoselect]="false" (selected)="onSelect($event)">
+                              </paciente-listado>
+
+                              <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
+                                  ¡No se encontró ningún paciente!
+                              </div>
+                          </div>
+                      </div>
+                      <!-- ------------------------------------------------ -->
+                  </plex-box>
+              </div>
+          </div>
     </plex-layout-main>
     <plex-layout-footer> 
             <plex-button position="left" type="danger" label="CANCELAR" (click)="cancelar()">
@@ -28,10 +55,6 @@
     </plex-layout-footer>
 </plex-layout>
 
-<!-- Búsqueda de pacientes -->
-<pacientesSearch *ngIf="buscandoPaciente" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="true"
-    [modoCompleto]="true" [bloquearCreate]="true"></pacientesSearch>
-
 <!-- Lista de Agendas para dar turnos autocitados -->
-<autocitar-turno *ngIf="showAutocitar && paciente" (cancelarEmitter)="cancelarAutocitar()" [paciente]="paciente" [agendasAutocitar]="agendasAutocitar"
-    [prestacionAutocitar]="prestacionAutocitar"></autocitar-turno>
+<autocitar-turno *ngIf="showAutocitar && paciente" (cancelarEmitter)="cancelarAutocitar()" [paciente]="paciente"
+    [agendasAutocitar]="agendasAutocitar" [prestacionAutocitar]="prestacionAutocitar"></autocitar-turno>

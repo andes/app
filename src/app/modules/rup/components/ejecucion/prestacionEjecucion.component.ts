@@ -5,13 +5,13 @@ import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { IElementoRUP } from './../../interfaces/elementoRUP.interface';
-import { PacienteService } from './../../../../services/paciente.service';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
-import { IPaciente } from './../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { ObraSocialService } from './../../../../services/obraSocial.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
 import { RUPComponent } from '../core/rup.component';
@@ -1071,36 +1071,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     cancelarCambioPaciente() {
         this.showCambioPaciente = false;
-    }
-    cambiarElPaciente($event) {
-        this.plex.confirm('¿Esta seguro que desea cambiar al paciente actual con el paciente ' + $event.nombre + ' ' + $event.apellido + '?').then(resultado => {
-            if (resultado) {
-                let params: any = {
-                    op: 'paciente',
-                    paciente: {
-                        id: $event.id,
-                        nombre: $event.nombre,
-                        apellido: $event.apellido,
-                        documento: $event.documento,
-                        telefono: $event.telefono,
-                        sexo: $event.sexo,
-                        fechaNacimiento: $event.fechaNacimiento
-                    }
-                };
-
-                this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
-                    this.plex.toast('success', 'El paciente se actualizo correctamente', 'Paciente actualizado');
-                    this.servicioPrestacion.getById(this.prestacion.id).subscribe(prestacion => {
-                        this.prestacion = prestacion;
-                        // Completamos los datos del nuevo paciente seleccionado
-                        this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
-                            this.paciente = paciente;
-                        });
-                        this.showCambioPaciente = false;
-                    });
-                });
-            }
-        });
     }
 
     mostrarDatosSolicitud(bool) {

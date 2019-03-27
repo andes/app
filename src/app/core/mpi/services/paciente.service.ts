@@ -1,11 +1,10 @@
 import { Observable } from 'rxjs/Observable';
-import { PacienteSearch } from './pacienteSearch.interface';
-import { IPaciente } from './../interfaces/IPaciente';
+import { PacienteSearch } from '../../../interfaces/pacienteSearch.interface';
+import { IPaciente } from '../interfaces/IPaciente';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { environment } from '../../environments/environment';
-import { ICarpetaPaciente } from './../interfaces/ICarpetaPaciente';
-import { IPacienteMatch } from '../modules/mpi/interfaces/IPacienteMatch.inteface';
+import { ICarpetaPaciente } from '../../../interfaces/ICarpetaPaciente';
+import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 
 @Injectable()
 export class PacienteService {
@@ -47,6 +46,8 @@ export class PacienteService {
         });
     }
 
+
+
     get(params: PacienteSearch): Observable<IPaciente[]> {
         return this.server.get(this.pacienteUrl, { params: params, showError: true });
     }
@@ -85,7 +86,16 @@ export class PacienteService {
     post(paciente: IPaciente): Observable<IPaciente> {
         return this.server.post(this.pacienteUrl, paciente);
     }
-
+    /**
+     * Consulta fuentes auténticas para obtener datos del paciente validados.
+     *
+     * @param {*} paciente
+     * @returns {Observable<any>}
+     * @memberof PacienteService
+     */
+    validar(paciente: any): Observable<any> {
+        return this.server.post(this.pacienteUrl + '/validar', paciente);
+    }
     /**
      * Metodo put. Actualiza un objeto paciente.
      * @param {IPaciente} paciente Recibe IPaciente
@@ -133,7 +143,6 @@ export class PacienteService {
             return this.server.put(`${this.pacienteUrl}/${paciente.id}`, paciente);
         } else {
             return this.server.post(this.pacienteUrl, paciente);
-
         }
     }
     getSiguienteCarpeta(): Observable<any> {
@@ -142,4 +151,5 @@ export class PacienteService {
     incrementarNroCarpeta(): Observable<any> {
         return this.server.post(`${this.carpetaUrl}/incrementarCuenta`, {});
     }
+
 }

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Auth } from '@andes/auth';
-import { IPaciente } from '../../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { ISnomedConcept } from '../../../interfaces/snomed-concept.interface';
 import { ElementosRUPService } from '../../../services/elementosRUP.service';
 import { IPrestacion } from '../../../interfaces/prestacion.interface';

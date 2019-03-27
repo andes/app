@@ -4,14 +4,10 @@ import { Auth } from '@andes/auth';
 import { FacturacionAutomaticaService } from './../../../services/facturacionAutomatica.service';
 import * as moment from 'moment';
 
-// Interfaces
-import { IPaciente } from './../../../interfaces/IPaciente';
-
 // Servicios
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { IAgenda } from '../../../interfaces/turnos/IAgenda';
-import { ITurno } from '../../../interfaces/turnos/ITurno';
 @Component({
     selector: 'turnos-paciente',
     templateUrl: 'turnos-paciente.html',

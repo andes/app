@@ -1,9 +1,9 @@
-import { OnInit, Input, Component, EventEmitter, Output } from '@angular/core';
-import { PacienteService } from '../../services/paciente.service';
+import { OnInit, Component, EventEmitter, Output } from '@angular/core';
+import { PacienteService } from '../../core/mpi/services/paciente.service';
 import { Plex } from '@andes/plex';
 import { PacienteBuscarResultado } from '../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IPaciente } from '../../interfaces/IPaciente';
+import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 
 @Component({
     selector: 'vincular-pacientes',

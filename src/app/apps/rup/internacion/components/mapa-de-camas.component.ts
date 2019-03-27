@@ -6,15 +6,14 @@ import { Plex } from '@andes/plex';
 import { InternacionService } from '../services/internacion.service';
 import { IOrganizacion } from '../../../../interfaces/IOrganizacion';
 import { IPacienteMatch } from '../../../../modules/mpi/interfaces/IPacienteMatch.inteface';
-import { IPaciente } from '../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { CamasService } from '../services/camas.service';
 import { PacienteBuscarResultado } from '../../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 import { ElementosRUPService } from '../../../../modules/rup/services/elementosRUP.service';
 import * as enumerados from './../../../../utils/enumerados';
-
-import { PacienteService } from '../../../../services/paciente.service';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 // ../../../../services/internacion.service
 @Component({
     selector: 'app-mapa-de-camas',

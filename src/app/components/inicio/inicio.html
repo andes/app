@@ -4,7 +4,7 @@
             <div class="logo"></div>
             <div *ngIf="!denied" class="andes-inicio row">
                 <div *ngIf="mpi" class="col-xs-12 col-sm-6 col-md-4">
-                    <div class="boton color-celeste" routerLink="/apps/mpi">
+                    <div class="boton color-celeste" routerLink="/apps/mpi/busqueda">
                         <i class="icono mdi mdi-account-multiple-outline"></i>
                         <div class="titulo">MPI</div>
                         <div class="subtitulo">Indice Maestro
@@ -74,7 +74,6 @@
                     </div>
                 </div>
             </div>
-
 
             <div *ngIf="denied" class="row">
                 <div class="col">

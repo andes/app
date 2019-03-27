@@ -1,5 +1,5 @@
 import { ITipoPrestacion } from './../ITipoPrestacion';
-import { IPaciente } from './../IPaciente';
+import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 export interface IAuditoriaPrestacionPaciente {
     id: String;
     organizacion: {

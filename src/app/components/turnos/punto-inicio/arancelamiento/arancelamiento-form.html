@@ -66,10 +66,10 @@
                     </span>
                 </div>
                 <div class="col-3">
-                    <label>Fecha y hora</label> 
+                    <label>Fecha y hora</label>
                     <span class="dato">
-                        {{ turnoSeleccionado.horaInicio | date: 'EEE' | uppercase }} 
-                        {{ turnoSeleccionado.horaInicio | fecha}}, 
+                        {{ turnoSeleccionado.horaInicio | date: 'EEE' | uppercase }}
+                        {{ turnoSeleccionado.horaInicio | fecha}},
                         {{ turnoSeleccionado.horaInicio | date: 'HH:mm'}}
                     </span>
                 </div>
@@ -77,7 +77,7 @@
             <hr>
             <div class="row">
                 <div class="col-8">
-                    <label>Motivo de Consulta / Diagnóstico </label> 
+                    <label>Motivo de Consulta / Diagnóstico </label>
                     <span class="dato">
                         {{turnoSeleccionado.motivoConsulta}}
                     </span>
@@ -90,7 +90,7 @@
                     <label>Firma del paciente </label>
                 </div>
                 <div *ngIf="muestraFirma" class="col firma-profesional">
-                    <img [src]="sanitizer.bypassSecurityTrustUrl(fotoFirma)">                        
+                    <img [src]="sanitizer.bypassSecurityTrustUrl(fotoFirma)">
                     <label>{{nombreFirma}}</label>
                     <p>
                         {{ aclaracion1Firma }}<br>
@@ -104,13 +104,16 @@
                     <img class="logo-pdp" src="assets/img/logo-pdp.png" alt="">
                     <article class="contenedor-data-pdp">
                         <h6>
-                            Este contenido ha sido validado digitalmente siguiendo los estándares de calidad y seguridad requeridos. La Subsecretaría de Salud es responsable Inscripto en el Registro Nacional de Protección de Datos Personales bajo
+                            Este contenido ha sido validado digitalmente siguiendo los estándares de calidad y seguridad
+                            requeridos. La Subsecretaría de Salud es responsable Inscripto en el Registro Nacional de
+                            Protección de Datos Personales bajo
                             el N° de Registro 100000182, según lo requiere la Ley N° 25.326(art. 3° y 21 inciso 1)
                         </h6>
                     </article>
                     <article class="contenedor-ley">
                         <h6>
-                            Ley Provincial 3012 - Ley de Recupero Financiero Provincia del Neuquen - Reglamentada por decreto Provincial N 2165/18
+                            Ley Provincial 3012 - Ley de Recupero Financiero Provincia del Neuquen - Reglamentada por
+                            decreto Provincial N 2165/18
                         </h6>
                     </article>
                 </div>
