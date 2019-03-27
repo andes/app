@@ -44,7 +44,6 @@ export class ExtranjeroNNCruComponent implements OnInit {
     provinciaActual = null;
     localidadActual = null;
     organizacionActual = null;
-    validado = false;
     noPoseeContacto = false;
     contactosBackUp = [];
     disableGuardar = false;
