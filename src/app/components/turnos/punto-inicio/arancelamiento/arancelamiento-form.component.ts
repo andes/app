@@ -64,7 +64,7 @@ export class ArancelamientoFormComponent implements OnInit {
         });
 
         this.servicioFA.get({ conceptId: this.turnoSeleccionado.tipoPrestacion.conceptId }).subscribe(resultadoFA => {
-            if (resultadoFA && resultadoFA.length > 0  && resultadoFA[0].recuperoFinanciero) {
+            if (resultadoFA && resultadoFA.length > 0 && resultadoFA[0].recuperoFinanciero) {
                 this.codigoNomenclador = resultadoFA[0].recuperoFinanciero.codigo;
             } else {
                 this.codigoNomenclador = '';

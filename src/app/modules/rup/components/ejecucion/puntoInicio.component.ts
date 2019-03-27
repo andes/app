@@ -323,7 +323,7 @@ export class PuntoInicioComponent implements OnInit {
     * Navega para ver seleccionar un paciente y ver la huds
     */
     verHuds() {
-        this.router.navigate(['/rup/buscaHuds']);
+        this.router.navigate(['/rup/huds']);
     }
 
     iniciarPrestacion(paciente, snomedConcept, turno) {
