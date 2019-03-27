@@ -19,8 +19,8 @@ export interface IPaciente {
     tipoIdentificacion: String;
     numeroIdentificacion: String;
     fechaNacimiento: Date; // Fecha Nacimiento
-    edad: Number;
-    edadReal: { valor: Number, unidad: string };
+    edad: number;
+    edadReal: { valor: number, unidad: string };
     fechaFallecimiento: Date;
     direccion: IDireccion[];
     estadoCivil: EstadoCivil;

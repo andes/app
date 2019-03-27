@@ -43,10 +43,12 @@
                     </div>
                     <div *ngIf="mostrarHeaderCompleto" class="row">
                         <div class="col-12">
-                            <label>Profesionales</label>
-                            <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
+                            <label>Equipo de Salud</label>
+                            <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Equipo de Salud no
+                                asignado</span>
                             <ng-container *ngIf="agenda.profesionales">
-                                <div *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}}</div>
+                                <div *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}}
+                                </div>
                             </ng-container>
                         </div>
                     </div>
@@ -54,7 +56,8 @@
                         <div class="col-12">
                             <label>Espacio físico</label>
                             <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
-                            <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
+                            <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no
+                                asignado</span>
                         </div>
                     </div>
                     <div *ngIf="mostrarHeaderCompleto && agenda.dinamica" class="row">
@@ -92,7 +95,8 @@
                         <plex-button *ngIf="botones.darAsistencia" type="success" icon="mdi mdi-account-check" (click)="eventosTurno('darAsistencia')"
                             title="Registrar asistencia"></plex-button>
                         <plex-button *ngIf="botones.reasignarTurno" type="default" icon="mdi mdi-account-switch"
-                            (click)="reasignarTurno(turno.paciente, turno.id, agenda.id)" title="Reasignar turno"></plex-button>
+                            (click)="reasignarTurno(turno.paciente, turno.id, agenda.id)" title="Reasignar turno">
+                        </plex-button>
                         <plex-button *ngIf="botones.turnoDoble" type="default" icon="mdi mdi-numeric-2-box-multiple-outline"
                             (click)="asignarTurnoDoble('darTurnoDoble')" title="Turno doble"></plex-button>
                         <plex-button *ngIf="botones.quitarTurnoDoble" type="default" icon="mdi mdi-numeric-1-box-outline"
@@ -128,7 +132,12 @@
                     <tr>
                         <td>{{delDia ? (arrayDelDia[k]
                             < 0 ? 0: arrayDelDia[k]) : (bloque.restantesDelDia < 0 ? 0:bloque.restantesDelDia)}}</td>
-                                <td>{{delDia ? 0 : bloque.restantesProgramados}}</td>
+                                <td>{{delDia ? 0 : bloque.restantesProgramados}}
+                                <span *ngIf="!delDia && bloque.restantesMobile>0 && bloque.restantesProgramados>0 && bloque.restantesProgramados>=bloque.restantesMobile">&nbsp;({{bloque.restantesMobile}}
+                                    app)</span>
+                                <span *ngIf="!delDia && bloque.restantesMobile>0 && bloque.restantesProgramados>0 && bloque.restantesProgramados<bloque.restantesMobile">&nbsp;({{bloque.restantesProgramados}}
+                                    app)</span>
+                        </td>
                         <td>{{delDia ? 0 : bloque.restantesGestion}}</td>
                         <td>{{delDia ? 0 : bloque.restantesProfesional}}</td>
                     </tr>

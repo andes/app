@@ -39,9 +39,10 @@
 
                     <!-- Fecha Solicitud -->
                     <div class="row">
-                        <div class="col-6" *ngIf=" !showSeleccionarPaciente">
+                        <div class="col-6" *ngIf=" !showSeleccionarPaciente" [plexWizard]="0">
                             <plex-datetime type="date" [(ngModel)]="modelo.solicitud.fecha" name="fechaSolicitud"
-                                label="Fecha de solicitud" [required]="true"></plex-datetime>
+                                label="Fecha en que el profesional solicitó la prestación" [required]="true">
+                            </plex-datetime>
                         </div>
                     </div>
 

@@ -46,7 +46,7 @@ export class InicioComponent implements AfterViewInit {
                 this.denied = false;
             }
 
-            if (this.auth.getPermissions('internacion:?').length > 0) {
+            if (this.auth.check('internacion:mapaDeCamas')) {
                 this.internacion = 'internacion';
                 this.denied = false;
             }

@@ -297,7 +297,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     }
     deleteUO($event) {
         if ($event.conceptId) {
-            this.CamaService.UOxCama($event.conceptId).subscribe(camas => {
+            this.CamaService.UOxCama(this.seleccion.id, $event.conceptId).subscribe(camas => {
                 if (camas.length <= 0) {
                     this.plex.confirm('¿Desea eliminar?', 'Eliminar unidad organizativa').then((confirmar) => {
                         let index = this.organizacionModel.unidadesOrganizativas.findIndex((item) => item === $event);

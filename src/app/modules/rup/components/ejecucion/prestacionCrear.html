@@ -1,52 +1,32 @@
-<form *ngIf="!buscandoPaciente && !showAutocitar" class="plex-layout" #form="ngForm">
-    <section>
-        <plex-box>
-            <header>
-                <div class="page-title">Registrar una prestación</div>
-            </header>
-            <div class="row">
-                <div class="col-6">
-                    <fieldset>
-                        <legend>Datos principales</legend>
-                        <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha"
-                            label="Fecha y hora de la prestación">
-                        </plex-datetime>
-                        <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion"
-                            label="Seleccione el tipo de prestación" labelField="term" [data]="tiposPrestacion"
-                            [required]="true" (change)="seleccionarTipoPrestacion()">
-                        </plex-select>
-                    </fieldset>
-                </div>
-                <div *ngIf="mostrarPaciente" class="col-6">
-                    <fieldset>
-                        <legend>Datos del paciente</legend>
-                        <paciente-detalle *ngIf="paciente" [paciente]="paciente"></paciente-detalle>
-                        <plex-button label="SELECCIONAR PACIENTE" type="primary" (click)="buscandoPaciente = true">
-                        </plex-button>
-                    </fieldset>
-                </div>
+<plex-layout *ngIf="!buscandoPaciente && !showAutocitar" main="12">
+    <plex-layout-main> 
+        <div class="row">
+            <div class="col-6">
+                <fieldset>
+                    <legend>Datos principales</legend>
+                    <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha y hora de la prestación">
+                    </plex-datetime>
+                    <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion" label="Seleccione el tipo de prestación" labelField="term"
+                        [data]="tiposPrestacion" [required]="true" (change)="seleccionarTipoPrestacion()">
+                    </plex-select>
+                </fieldset>
             </div>
-        </plex-box>
-    </section>
-
-    <!--Footer-->
-    <footer *ngIf="!buscandoPaciente">
-        <div class="float-left">
-            <plex-button type="danger" label="CANCELAR" (click)="cancelar()">
-            </plex-button>
+            <div *ngIf="mostrarPaciente" class="col-6">
+                <fieldset>
+                    <legend>Datos del paciente</legend>
+                    <paciente-detalle *ngIf="paciente" [paciente]="paciente"></paciente-detalle>
+                    <plex-button label="SELECCIONAR PACIENTE" type="primary" (click)="buscandoPaciente = true"></plex-button>
+                </fieldset>
+            </div>
         </div>
-        <div *ngIf="opcion === 'fueraAgenda'" class="float-right">
-            <plex-button *ngIf="form.valid" label="INICIAR PRESTACIÓN" validateForm="true" type="success"
-                (click)="iniciarPrestacion()">
+    </plex-layout-main>
+    <plex-layout-footer> 
+            <plex-button position="left" type="danger" label="CANCELAR" (click)="cancelar()">
             </plex-button>
-        </div>
-        <div *ngIf="opcion === 'autocitar'" class="float-right">
-            <plex-button *ngIf="form.valid" label="DAR TURNO AUTOCITADO" validateForm="true" type="success"
-                (click)="darTurnoAutocitado()">
+            <plex-button position="right" [label]="btnLabel" type="success" (click)="btnClick()">
             </plex-button>
-        </div>
-    </footer>
-</form>
+    </plex-layout-footer>
+</plex-layout>
 
 <!-- ----------- Búsqueda de pacientes -------------- -->
 <section *ngIf="buscandoPaciente">

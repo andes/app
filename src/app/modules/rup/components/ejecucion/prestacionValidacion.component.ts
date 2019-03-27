@@ -28,7 +28,7 @@ import { HeaderPacienteComponent } from '../../../../components/paciente/headerP
 })
 export class PrestacionValidacionComponent implements OnInit {
 
-    elementoRUP: IElementoRUP;
+    elementoRUP: any;
     @HostBinding('class.plex-layout') layout = true;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 

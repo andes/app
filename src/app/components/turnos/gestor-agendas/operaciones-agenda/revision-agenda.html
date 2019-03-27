@@ -324,7 +324,7 @@
                                     *ngIf="turnoSeleccionado && diagnosticos[indiceReparo]?.codificacionProfesional && showReparo">
                                     <div class="row">
                                         <div class="col">
-                                            <h3>Codificación del profesional</h3>
+                                            <h3>Codificación del Profesional</h3>
                                             <h5>
                                                 <label> Codificación Snomed: </label>
                                                 {{diagnosticos[indiceReparo].codificacionProfesional.snomed.term}}
@@ -399,8 +399,9 @@
                             </div>
                             <div *ngIf="mostrarHeaderCompleto" class="row">
                                 <div class="col-12">
-                                    <label>Profesionales</label>
-                                    <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no
+                                    <label>Equipo de Salud</label>
+                                    <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Equipo de Salud
+                                        no
                                         asignado</span>
                                     <ng-container *ngIf="agenda.profesionales">
                                         <div *ngFor="let profesional of agenda.profesionales">{{profesional |

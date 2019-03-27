@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, HostBinding, ViewChildren, QueryList, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, Input, HostBinding, ViewChildren, QueryList, OnInit, AfterViewInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { OrganizacionService } from '../../../services/organizacion.service';
@@ -18,6 +18,7 @@ import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service'
 export class NuevaSolicitudComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @ViewChildren('upload') childsComponents: QueryList<any>;
+    private wizardActivo = false; // Se usa para evitar que los botones aparezcan deshabilitados
 
     showSeleccionarPaciente = true;
     permisos = this.auth.getPermissions('solicitudes:tipoPrestacion:?');
@@ -156,6 +157,29 @@ export class NuevaSolicitudComponent implements OnInit {
             this.plex.info('warning', 'Paciente no encontrado', '¡Error!');
         }
 
+        setTimeout(() => {
+            this.wizardActivo = true;
+            let promise = this.plex.wizard({
+                id: 'top:fechaSolicitud',
+                updatedOn: moment('2019-03-08').toDate(),
+                steps: [
+                    {
+                        title: 'Fecha de solicitud',
+                        content: 'Recuerde registrar en este campo la fecha en que el profesional solicita la prestación y no la fecha en que se registra en el sistema'
+                    },
+                ],
+                forceShow: false,
+                fullScreen: false,
+                showNumbers: false
+            });
+
+            // Devuelve una promise sólo si se mostró el wizard
+            if (promise) {
+                promise.then(() => this.wizardActivo = false);
+            } else {
+                this.wizardActivo = false;
+            }
+        }, 1000);
     }
     // ----------------------------------
 

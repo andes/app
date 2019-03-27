@@ -11,8 +11,7 @@
                 </div>
 
                 <div class="col-md-4">
-                    <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)"
-                        label="Profesionales" labelField="nombre + ' ' + apellido">
+                    <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" label="Equipo de Salud" labelField="nombre + ' ' + apellido">
                     </plex-select>
                 </div>
 
@@ -90,11 +89,11 @@
                     </div>
                 </div>
                 <br>
-                <div *ngIf="pacientesScan && mensaje">
+                <!-- <div *ngIf="pacientesScan && mensaje">
                     <div class="alert alert-warning" role="alert">
                         {{mensaje}}
                     </div>
-                </div>
+                </div> -->
             </plex-box>
 
         </div>

@@ -204,8 +204,9 @@ export class CamasService {
 
     }
 
-    UOxCama(conceptIdUO): Observable<any> {
+    UOxCama(idOrganizacion, conceptIdUO): Observable<any> {
         let params = {
+            idOrganizacion: idOrganizacion,
             unidadesOrganizativas: conceptIdUO
         };
         return this.server.get(this.camasUrl, { params: params, showError: true });

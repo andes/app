@@ -33,6 +33,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     public showActivarApp = false;
     public showIngresarSolicitud = false;
     public paciente: IPaciente;
+    public obraSocialPaciente: any;
     public autorizado = false;
     solicitudPrestacion: any = null; // Es la solicitud que se pasa como input a darTurnos
     operacionTurnos = '';
@@ -115,6 +116,10 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.turnoArancelamiento = turno;
         this.showDashboard = false;
         this.showArancelamiento = true;
+    }
+
+    obraSocialEmit(obraSocial: any) {
+        this.obraSocialPaciente = obraSocial;
     }
 
     volverAPuntoInicio() {
