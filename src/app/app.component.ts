@@ -65,7 +65,7 @@ export class AppComponent {
 
         let dato = this.auth.getPermissions('huds:?').length;
         if (this.auth.getPermissions('huds:?').length > 0) {
-            accessList.push({ label: 'HUDS: Visualizar por paciente', icon: 'file-tree', route: '/rup/buscaHuds' });
+            accessList.push({ label: 'HUDS: Visualizar por paciente', icon: 'file-tree', route: '/rup/huds' });
         }
 
         if (this.auth.getPermissions('reportes:?').length > 0) {
@@ -80,7 +80,7 @@ export class AppComponent {
         }
 
         if (this.auth.getPermissions('internacion:?').length > 0) {
-            accessList.push({ label: 'Internación - Mapa de cama', icon: 'mdi mdi-minus', route: '/internacion/camas' });
+            accessList.push({ label: 'Mapa de camas', icon: 'mdi mdi-bed-empty', route: '/internacion/camas' });
         }
 
         // faltan permisos

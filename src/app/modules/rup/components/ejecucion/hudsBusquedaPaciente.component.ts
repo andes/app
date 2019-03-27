@@ -1,4 +1,4 @@
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -15,19 +15,28 @@ export class HudsBusquedaPacienteComponent implements OnInit {
 
     public paciente: IPaciente;
 
-    public showHuds = false;
 
-    public esProfesional = false;
+    routeParams: any;
 
-    constructor(public plex: Plex, public auth: Auth, private router: Router) { }
+    constructor(
+        public plex: Plex,
+        public auth: Auth,
+        private router: Router
+    ) { }
 
     ngOnInit() {
-        if (!this.auth.profesional && this.auth.getPermissions('huds:?').length <= 0) {
-            this.redirect('inicio');
-        }
+        this.plex.updateTitle([{
+            route: '/',
+            name: 'ANDES'
+        }, {
+            route: '/rup',
+            name: 'RUP'
+        }, {
+            name: 'BUSCAR PACIENTE'
+        }]);
 
-        if (this.auth.profesional) {
-            this.esProfesional = true;
+        if (!this.auth.profesional && this.auth.getPermissions('huds:?').length <= 0) {
+            this.router.navigate(['inicio']);
         }
     }
 
@@ -36,17 +45,12 @@ export class HudsBusquedaPacienteComponent implements OnInit {
         return false;
     }
 
-    onPacienteSelected(event) {
-        this.paciente = event;
-        this.showHuds = true;
+    onPacienteSelected(paciente) {
+        this.router.navigate(['/rup/huds/paciente/' + paciente.id]);
     }
 
     onPacienteCancel() {
         this.router.navigate(['rup']);
-    }
-
-    evtCambiaPaciente() {
-        this.showHuds = false;
     }
 
 }

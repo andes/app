@@ -104,12 +104,6 @@ export class IniciarInternacionComponent implements OnInit {
     public tiposPrestacion: any = [];
     // Tipos de prestacion seleccionada para la internación
     // TODO:: PREGUNTAR SI VAN A EXISTIR VARIOS CONCEPTOS DE INTERNACIÓN
-    public tipoPrestacionSeleccionada = {
-        fsn: 'admisión hospitalaria (procedimiento)',
-        semanticTag: 'procedimiento',
-        conceptId: '32485007',
-        term: 'internación'
-    };
 
     // armamos el registro para los datos del formulario de ingreso hospitalario
     public snomedIngreso: any = this.servicioInternacion.conceptosInternacion.ingreso;
@@ -502,11 +496,9 @@ export class IniciarInternacionComponent implements OnInit {
                     this.informeIngreso.obraSocial = this.obraSocial;
                 }
                 nuevoRegistro.valor = { informeIngreso: this.informeIngreso };
-                // el concepto snomed del tipo de prestacion para la internacion
-                let conceptoSnomed = this.tipoPrestacionSeleccionada;
 
                 // creamos la prestacion de internacion y agregamos el registro de ingreso
-                let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, this.tipoPrestacionSeleccionada, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso, null, this.informeIngreso.profesional);
+                let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, PrestacionesService.InternacionPrestacion, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso, null, this.informeIngreso.profesional);
                 nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
 
