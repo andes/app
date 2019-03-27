@@ -108,7 +108,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.paciente = null;
     }
 
-  
+
     // -----------------------------------------------
 
 

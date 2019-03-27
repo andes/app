@@ -1,7 +1,6 @@
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
-import { IPaciente } from './../../../../interfaces/IPaciente';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
@@ -11,6 +10,7 @@ import { Plex } from '@andes/plex';
 import { IAgenda } from '../../../../interfaces/turnos/IAgenda';
 import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 import { ObraSocialCacheService } from '../../../../services/obraSocialCache.service';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 @Component({
     templateUrl: 'prestacionCrear.html'
 })
@@ -38,6 +38,8 @@ export class PrestacionCrearComponent implements OnInit {
     public buscandoPaciente = false;
     // segun el tipo de prestación elegida se selecciona paciente o no
     public mostrarPaciente = false;
+    public loading = false;
+    public resultadoBusqueda = [];
     /**
      * Indica si muestra el calendario para dar turno autocitado
      */
@@ -105,7 +107,9 @@ export class PrestacionCrearComponent implements OnInit {
         this.mostrarPaciente = this.tipoPrestacionSeleccionada && !this.tipoPrestacionSeleccionada.noNominalizada;
     }
 
-
+    showBuscarPaciente() {
+        this.buscandoPaciente = true;
+    }
 
 
     /**

@@ -1072,7 +1072,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     cancelarCambioPaciente() {
         this.showCambioPaciente = false;
     }
-   
+
     mostrarDatosSolicitud(bool) {
         this.showDatosSolicitud = bool;
     }
