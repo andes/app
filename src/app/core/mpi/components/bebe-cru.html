@@ -69,9 +69,9 @@
                             </div>
                             <div class="row">
                                 <div class="col-4">
-                                    <plex-radio [(ngModel)]="relacion.sexo" label="Sexo" [data]="opcionesSexo" name="sexoRelacion"
+                                    <plex-select [(ngModel)]="relacion.sexo" label="Sexo" [data]="opcionesSexo" name="sexoRelacion"
                                         type="horizontal" [readonly]="true">
-                                    </plex-radio>
+                                    </plex-select>
                                 </div>
                                 <div class="col-4">
                                     <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="true"
