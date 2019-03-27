@@ -17,31 +17,32 @@
                                 <plex-bool *ngIf="!validado" [(ngModel)]="noPoseeDNI" label="No posee DNI ARGENTINO"
                                     name="noPoseDNI" (change)="limpiarDocumento()"></plex-bool>
                             </div>
-                            <div class="col-4">
-                                <plex-text label="Apellido" [(ngModel)]="pacienteModel.apellido" name="apellido"
-                                    required="true" [readonly]="validado">
-                                </plex-text>
-                            </div>
-                            <div class="col-4">
-                                <plex-text label="Nombre" [(ngModel)]="pacienteModel.nombre" name="nombre"
-                                    required="true" [readonly]="validado">
-                                </plex-text>
-                            </div>
+                             <div class="col-4">
+                                 <plex-select [(ngModel)]="pacienteModel.sexo" label="Sexo" [data]="sexos" name="sexo"
+                                     required="true" placeholder="Seleccione.." [readonly]="validado"
+                                     (change)="completarGenero(); disableGuardar = false; enableIgnorarGuardar = false; checkDisableValidar()">
+                                 </plex-select>
+                             </div>
+                               <div class="col-4">
+                                   <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date"
+                                       [readonly]="validado"
+                                       (change)="disableGuardar = false; enableIgnorarGuardar = false;"
+                                       [(ngModel)]="pacienteModel.fechaNacimiento" name="fechaNacimiento"
+                                       [required]="!noPoseeDNI">
+                                   </plex-datetime>
+                               </div>
                         </div>
                         <div class="row">
-                            <div class="col-4">
-                                <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="validado"
-                                    (change)="disableGuardar = false; enableIgnorarGuardar = false;"
-                                    [(ngModel)]="pacienteModel.fechaNacimiento" name="fechaNacimiento"
-                                    [required]="!noPoseeDNI">
-                                </plex-datetime>
-                            </div>
-                            <div class="col-4">
-                                <plex-select [(ngModel)]="pacienteModel.sexo" label="Sexo" [data]="sexos" name="sexo"
-                                    required="true" placeholder="Seleccione.." [readonly]="validado"
-                                    (change)="completarGenero(); disableGuardar = false; enableIgnorarGuardar = false; checkDisableValidar()">
-                                </plex-select>
-                            </div>
+                             <div class="col-4">
+                                 <plex-text label="Apellido" [(ngModel)]="pacienteModel.apellido" name="apellido"
+                                     required="true" [readonly]="validado">
+                                 </plex-text>
+                             </div>
+                             <div class="col-4">
+                                 <plex-text label="Nombre" [(ngModel)]="pacienteModel.nombre" name="nombre"
+                                     required="true" [readonly]="validado">
+                                 </plex-text>
+                             </div>
                             <div class="col-4">
                                 <plex-select [(ngModel)]="pacienteModel.estadoCivil" name="estadoCivil"
                                     [data]="estadosCiviles" label="Estado Civil">
