@@ -136,7 +136,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
 
 
     ngOnInit() {
-        this.updateTitle('Registro de un paciente sin DNI');
+        this.updateTitle('Registro de un paciente EXTRANJERO');
 
         // Se cargan los parentescos para las relaciones
         this.parentescoService.get().subscribe(resultado => {
@@ -208,9 +208,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
     // ------------------ DATOS BASICOS -------------------------
 
     completarGenero() {
-        if (!this.pacienteModel.genero) {
             this.pacienteModel.genero = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-        }
     }
 
     // ---------------------- DOMICILIO -----------------------

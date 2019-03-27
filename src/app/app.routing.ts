@@ -118,7 +118,7 @@ const appRoutes: Routes = [
   // MPI
   { path: 'apps/mpi/busqueda', component: BusquedaMpiComponent, canActivate: [RoutingGuard] },
   { path: 'apps/mpi/bebe', component: BebeCruComponent, canActivate: [RoutingGuard] },
-  { path: 'apps/mpi/sinDni', component: ExtranjeroNNCruComponent, canActivate: [RoutingGuard] },
+  { path: 'apps/mpi/extranjero', component: ExtranjeroNNCruComponent, canActivate: [RoutingGuard] },
   { path: 'apps/mpi/paciente', component: PacienteCruComponent, canActivate: [RoutingGuard] },
   { path: 'apps/mpi/auditoria/vincular-pacientes', component: VincularPacientesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'apps/mpi/auditoria', component: AuditoriaComponent, canActivate: [RoutingNavBar, RoutingGuard] },

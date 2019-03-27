@@ -10,7 +10,7 @@ export class BotonesRegistroComponent {
     @Input() disabled: boolean;
     routes = [
         { label: 'BEBÉ', route: '/apps/mpi/bebe' },
-        { label: 'EXTRANJERO', route: '/apps/mpi/sinDni' },
+        { label: 'EXTRANJERO', route: '/apps/mpi/extranjero' },
         { label: 'ARGENTINO CON DNI', route: '/apps/mpi/paciente' },
         { label: 'ARGENTINO SIN DNI', route: '/apps/mpi/paciente' },
     ];
