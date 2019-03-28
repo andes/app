@@ -1,13 +1,12 @@
 import { ITipoPrestacion } from './../ITipoPrestacion';
-import { IObraSocial } from './../IObraSocial';
 import { IFinanciador } from '../IFinanciador';
 
-// TODO: Recordar actualizar Schema!
 export interface ITurno {
     id: string;
     horaInicio: Date;
     estado: string;
     asistencia: string;
+    horaAsistencia: Date;
     paciente: {
         id: string,
         nombre: string,
