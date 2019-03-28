@@ -1,7 +1,7 @@
 export interface IFinanciador {
     codigoPuco: Number;
     nombre: String;
-    financiador: String;
+    financiador: string;
     numeroAfiliado?: String;
     prepaga?: Boolean;
     idObraSocial?: Number;

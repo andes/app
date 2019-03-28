@@ -31,6 +31,7 @@ export class TurnosPacienteComponent implements OnInit {
     turnosPaciente: any;
     turnosSeleccionados: any[] = [];
     showPuntoInicio = true;
+    @Input() showTab: Number = 0;
     @Input('operacion')
     set operacion(value: string) {
         this._operacion = value;

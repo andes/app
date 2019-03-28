@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-6" *ngIf="_paciente?.documento !== ''">
+                <div class="col-6" *ngIf="_paciente?.documento">
                     {{_paciente.documento | number}}
                 </div>
                 <div class="col-6" *ngIf="_paciente && _paciente.fechaNacimiento !== null">
@@ -33,20 +33,17 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-6"
-                    *ngIf="_paciente?.direccion && _paciente.direccion[0]?.valor && _paciente.direccion.length > 0">
+                <div class="col-6" *ngIf="_paciente?.direccion && _paciente.direccion[0]?.valor && _paciente.direccion.length > 0">
                     <i class="mdi mdi-map-marker"></i>
                     <span class="text-primary">Dirección</span>
                 </div>
-                <div class="col-6"
-                    *ngIf="_paciente?.contacto && _paciente.contacto[0]?.valor && _paciente.contacto.length > 0">
+                <div class="col-6" *ngIf="_paciente?.contacto && _paciente.contacto[0]?.valor && _paciente.contacto.length > 0">
                     <i class="mdi mdi-cellphone-android"></i>
                     <span class="text-primary">Teléfono</span>
                 </div>
             </div>
             <div class="row">
-                <div class="col-6"
-                    *ngIf="_paciente?.direccion && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
+                <div class="col-6" *ngIf="_paciente?.direccion && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
                     {{_paciente.direccion[0].valor}}
                 </div>
                 <div class="col-6" *ngIf="_paciente?.id && _paciente.contacto && _paciente.contacto.length > 0">
@@ -109,13 +106,11 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <plex-datetime type="date" [(ngModel)]="fechaDesde" [required]="true" name="fechaDesde"
-                        label="Desde">
+                    <plex-datetime type="date" [(ngModel)]="fechaDesde" [required]="true" name="fechaDesde" label="Desde">
                     </plex-datetime>
                 </div>
                 <div class="col-6">
-                    <plex-datetime type="date" [(ngModel)]="fechaHasta" [required]="true" name="fechaHasta"
-                        label="Hasta">
+                    <plex-datetime type="date" [(ngModel)]="fechaHasta" [required]="true" name="fechaHasta" label="Hasta">
                     </plex-datetime>
                 </div>
             </div>
@@ -157,8 +152,8 @@
 
     </plex-tab>
     <plex-tab icon="clock" label="Turnos">
-        <turnos-paciente [turnos]="turnosPaciente" [operacion]="'operacionTurnos'"
-            (turnosPacienteChanged)="getPaciente()" (showArancelamientoForm)="arancelamiento($event)"></turnos-paciente>
+        <turnos-paciente [turnos]="turnosPaciente" [operacion]="'operacionTurnos'" (turnosPacienteChanged)="getPaciente()"
+            (showArancelamientoForm)="arancelamiento($event)"></turnos-paciente>
     </plex-tab>
     <plex-tab icon="history" label="Historial">
         <fieldset>
@@ -166,17 +161,16 @@
                 <li *ngFor="let turno of ultimosTurnos let i=index" class="list-group-item" [appHover]="'active'">
                     <div class="list-group-item-text">
                         <div>
-                            <span *ngIf="turno.estado === 'asignado' || turno.estado === 'turnoDoble'"
-                                class="badge badge-success">
+                            <span *ngIf="turno.estado === 'asignado' || turno.estado === 'turnoDoble'" class="badge badge-success">
                                 ASIGNADO</span>
-                            <span *ngIf="turno.estado === 'liberado' || turno.estado === 'suspendido' "
-                                class="badge badge-danger">
+                            <span *ngIf="turno.estado === 'liberado' || turno.estado === 'suspendido' " class="badge badge-danger">
                                 {{turno.estado | uppercase}}</span>
 
                             | {{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}}
                         </div>
 
-                        <div *ngIf="turno.estado === 'liberado'">Por {{turno.updatedBy.nombreCompleto}} el {{turno.updatedAt
+                        <div *ngIf="turno.estado === 'liberado'">Por {{turno.updatedBy.nombreCompleto}} el
+                            {{turno.updatedAt
                             | fecha}} a las {{turno.updatedAt | date: 'HH:mm'}}</div>
 
                         <div *ngIf="turno.tipoPrestacion?.term">{{turno.tipoPrestacion.term}}</div>
