@@ -135,7 +135,8 @@ const appRoutes: Routes = [
   { path: 'citas/agenda', component: PlanificarAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'citas/turnos', component: DarTurnosComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'citas/listaEspera', component: ListaEsperaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'citas/puntoInicio', component: PuntoInicioTurnosComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'citas/punto-inicio', component: PuntoInicioTurnosComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'citas/punto-inicio/:idPaciente', component: PuntoInicioTurnosComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // RUP
   { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
