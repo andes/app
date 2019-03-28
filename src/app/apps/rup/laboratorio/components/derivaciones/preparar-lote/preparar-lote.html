@@ -9,7 +9,7 @@
 <div class="filtros-container lote-derivacion ml-1">
     <span>
         <plex-select [(ngModel)]="organizacionDerivacion" (change)="buscar($event, 'organizacionDerivacion')" name="efectorDerivar"
-            label="Efector (A derivar)" (getData)="loadOrganizaciones($event)"></plex-select>
+            label="Efector (A derivar)" (getData)="loadOrganizaciones($event)" [required]="true"></plex-select>
     </span>
     <span>
         <plex-datetime type="date" [(ngModel)]="desde" (change)="buscar($event,'fechaDesde')" name="solicitudDesde"
