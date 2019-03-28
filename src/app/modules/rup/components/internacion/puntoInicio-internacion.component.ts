@@ -9,8 +9,7 @@ import { Auth } from '@andes/auth';
 @Component({
     selector: 'app-punto-inicio-internacion',
     templateUrl: './puntoInicio-internacion.html',
-    styleUrls: ['./puntoInicio-internacion.scss'],
-    encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
+    styleUrls: ['./puntoInicio-internacion.scss']
 })
 export class PuntoInicioInternacionComponent implements OnInit {
 
