@@ -34,6 +34,7 @@ export class PanelAgendaComponent implements OnInit {
     @Output() showVistaTurnosEmit = new EventEmitter<Boolean>();
 
     showEditarAgendaPanel: Boolean = true;
+    public showMapa = false;
 
     public agenda: any = {};
 
