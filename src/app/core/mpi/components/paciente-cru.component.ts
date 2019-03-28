@@ -714,8 +714,8 @@ export class PacienteCruComponent implements OnInit {
                 this.pacienteModel.fechaNacimiento = resultado.paciente.fechaNacimiento;
                 this.pacienteModel.foto = resultado.paciente.foto;
                 //  Se completan datos FALTANTES
-                if (!this.pacienteModel.direccion[0].valor && resultado.paciente.direccion) {
-                    this.pacienteModel.direccion[0].valor = resultado.paciente.direccion;
+                if (!this.pacienteModel.direccion[0].valor && resultado.paciente.direccion && resultado.paciente.direccion[0].valor) {
+                    this.pacienteModel.direccion[0].valor = resultado.paciente.direccion[0].valor;
                 }
                 if (!this.pacienteModel.direccion[0].codigoPostal && resultado.paciente.cpostal) {
                     this.pacienteModel.direccion[0].codigoPostal = resultado.paciente.cpostal;
