@@ -159,7 +159,7 @@ export class PrestacionValidacionComponent implements OnInit {
         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
         this.servicioPrestacion.getById(id).subscribe(prestacion => {
             this.prestacion = prestacion;
-            this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.prestacion.paciente });
+
             this.registrosOriginales = prestacion.ejecucion.registros;
             this.plex.updateTitle([{
                 route: '/',
@@ -204,7 +204,7 @@ export class PrestacionValidacionComponent implements OnInit {
                 // Carga la información completa del paciente
                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                     this.paciente = paciente;
-
+                    this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
 
                     this.prestacion.ejecucion.registros.forEach(registro => {
 

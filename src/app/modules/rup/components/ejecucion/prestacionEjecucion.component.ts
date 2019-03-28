@@ -185,11 +185,12 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
                             this.router.navigate(['/rup/validacion/', this.prestacion.id]);
                         } else {
-                            this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.prestacion.paciente });
+
                             // Carga la información completa del paciente
                             if (!prestacion.solicitud.tipoPrestacion.noNominalizada) {
                                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                                     this.paciente = paciente;
+                                    this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                                     this.obraSocialService.get({ dni: this.paciente.documento }).subscribe(os => {
                                         this.obraSocialPaciente = os;
                                     });
