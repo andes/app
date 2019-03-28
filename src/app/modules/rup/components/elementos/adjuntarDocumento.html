@@ -28,7 +28,7 @@
                                 <th>Documento</th>
                                 <th>Tipo de Documento</th>
                                 <th>Fecha</th>
-                                <th></th>
+                                <th>&nbsp;</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -57,14 +57,14 @@
                                             class="mdi mdi-chevron-double-right next parpadeo"></i>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="w-50">
                                     <plex-select *ngIf="!soloValores && descendientesInformeClinico.length"
                                         [(ngModel)]="doc.descripcion" name="select{{i}}" idField="term"
                                         labelField="term" [data]="descendientesInformeClinico">
                                     </plex-select>
                                     <span *ngIf="soloValores && doc.descripcion">{{doc.descripcion.term}}</span>
                                 </td>
-                                <td>
+                                <td class="w-25">
                                     <plex-datetime *ngIf="!soloValores" type="date" [(ngModel)]="doc.fecha"
                                         name="fecha{{i}}" [max]="hoy">
                                     </plex-datetime>
