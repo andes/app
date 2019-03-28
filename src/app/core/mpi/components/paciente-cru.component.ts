@@ -19,6 +19,7 @@ import { GeoreferenciaService } from '../services/georeferencia.service';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'paciente-cru',
@@ -146,6 +147,7 @@ export class PacienteCruComponent implements OnInit {
         private parentescoService: ParentescoService,
         public appMobile: AppMobileService,
         private pacienteCache: PacienteCacheService,
+        private _router: Router,
         public plex: Plex) {
         this.nombrePattern = pacienteService.nombreRegEx.source;
     }
@@ -559,7 +561,7 @@ export class PacienteCruComponent implements OnInit {
                         this.saveRelaciones(resultadoSave);
                     }
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
-                    this.location.back();
+                    this._router.navigate(['citas/punto-inicio/' + resultadoSave.id]);
                 }
             },
             error => {

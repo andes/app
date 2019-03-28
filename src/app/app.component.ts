@@ -47,7 +47,7 @@ export class AppComponent {
             accessList.push({ label: 'CITAS: Gestor de Agendas y Turnos', icon: 'calendar', route: '/citas/gestor_agendas' });
         }
         if (this.auth.getPermissions('turnos:puntoInicio:?').length > 0) {
-            accessList.push({ label: 'CITAS: Punto de Inicio', icon: 'calendar', route: '/citas/puntoInicio' });
+            accessList.push({ label: 'CITAS: Punto de Inicio', icon: 'calendar', route: '/citas/punto-inicio' });
         }
 
         accessList.push({ label: 'CITAS: Espacios Fisicos', icon: 'cogs', route: 'tm/mapa_espacio_fisico' });
