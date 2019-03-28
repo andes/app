@@ -50,7 +50,9 @@ import { TextFilterPipe } from './pipes/textFilter.pipe';
 import { FilterPermisos } from './pipes/filterPermisos.pipe';
 import { EnumerarPipe } from './pipes/enumerar.pipe';
 import { PluralizarPipe } from './pipes/pluralizar.pipe';
+import { ReplacePipe } from './pipes/replace.pipe';
 import { IconoCamaPipe } from './pipes/iconoCama.pipe';
+import { RelacionRUPPipe } from './pipes/relacionRUP.pipe';
 import { Html2TextPipe } from './pipes/html2text.pipe';
 
 // Servicios
@@ -224,13 +226,12 @@ import { AdjuntosService } from './modules/rup/services/adjuntos.service';
 import { ConceptObserverService } from './modules/rup/services/conceptObserver.service';
 import { PrestacionCrearComponent } from './modules/rup/components/ejecucion/prestacionCrear.component';
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
-import { ResumenComponent } from './modules/rup/components/ejecucion/resumen.component';
 import { PrestacionValidacionComponent } from './modules/rup/components//ejecucion/prestacionValidacion.component';
 import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
 import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
-import { VistaPrestacionComponent } from './modules/rup/components/ejecucion/vistaPrestacion.component';
-import { VistaCDAComponent } from './modules/rup/components/ejecucion/vistaCDA.component';
+import { VistaPrestacionComponent } from './modules/rup/components/huds/vistaPrestacion';
+import { VistaCDAComponent } from './modules/rup/components/huds/vistaCDA.component';
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
 import { ResumenPacienteDinamicoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
@@ -238,8 +239,6 @@ import { ResumenPacienteDinamicoNinoComponent } from './modules/rup/components/e
 
 
 // Legacy para RUP
-import { LaboratoriosComponent } from './modules/rup/components/laboratorios/laboratorios.component';
-// import { RUPRegistry } from './modules/rup/components/core/rup-.registry';
 // TODO: ver con JGabriel!!!
 import { SelectPorRefsetComponent } from './modules/rup/components/elementos/SelectPorRefset.component';
 import { TensionSistolicaComponent } from './modules/rup/components/elementos/tensionSistolica.component';
@@ -467,9 +466,12 @@ let RUPComponentsArray = [
     CalculoDeBostonComponent,
     SeleccionBinariaComponent,
     ValorNumericoComponent,
-    ProcedimientoDeEnfermeriaComponent,
     MoleculaBaseComponent,
     HeaderPacienteComponent,
+    VistaRegistroComponent,
+    VistaProcedimientoComponent,
+    VistaPrestacionComponent,
+    VistaContextoPrestacionComponent,
     ProcedimientoDeEnfermeriaComponent,
     CamaBloquearComponent,
     CamaDesbloquearComponent,
@@ -483,8 +485,13 @@ let RUPComponentsArray = [
 import { ChartComponent } from './modules/rup/components/elementos/chart.component';
 import { UploadFileComponent } from './shared/components/upload-file.component';
 import { CodificacionService } from './modules/rup/services/codificacion.service';
+import { VistaRegistroComponent } from './modules/rup/components/huds/vistaRegistro';
+import { VistaProcedimientoComponent } from './modules/rup/components/huds/vistaProcedimiento';
+import { VistaContextoPrestacionComponent } from './modules/rup/components/huds/vistaContextoPrestacion';
 import { PasesListadoInternacionComponent } from './apps/rup/internacion/components/pasesListadoInternacion.component';
 
+import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
+import { HUDSService } from './modules/rup/services/huds.service';
 
 
 
@@ -518,9 +525,9 @@ registerLocaleData(localeEs, 'es');
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         PacienteCreateUpdateComponent, PacienteDetalleComponent, PacienteSearchComponent, DashboardComponent,
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, HoraPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
-        FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe,
+        FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe, ReplacePipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, DinamicaFormComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
-        Html2TextPipe,
+        Html2TextPipe, RelacionRUPPipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
@@ -549,7 +556,6 @@ registerLocaleData(localeEs, 'es');
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         MapaEspacioFisicoVistaComponent,
-        ResumenComponent,
         PrestacionCrearComponent,
         PrestacionEjecucionComponent,
         PrestacionValidacionComponent,
@@ -574,11 +580,14 @@ registerLocaleData(localeEs, 'es');
         ListadoInternacionComponent,
         PasesListadoInternacionComponent,
         PuntoInicioInternacionComponent,
-        LaboratoriosComponent,
         ChartComponent,
         OrganizacionSectoresComponent,
         ResumenInternacionComponent,
         ListaEsperaInternacionComponent,
+        VistaRegistroComponent,
+        VistaProcedimientoComponent,
+        VistaPrestacionComponent,
+        VistaContextoPrestacionComponent,
 
         // Solicitudes
         SolicitudesComponent,
@@ -706,6 +715,8 @@ registerLocaleData(localeEs, 'es');
         CampaniaSaludService,
         SeleccionBinariaComponent,
         PacienteCreateUpdateComponent,
+        SnomedBuscarService,
+        HUDSService,
         TurnosPrestacionesService
     ]
 })

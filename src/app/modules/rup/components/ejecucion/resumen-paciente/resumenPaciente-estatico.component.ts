@@ -1,5 +1,5 @@
 import { PrestacionesService } from '../../../services/prestaciones.service';
-import { Component, Input, OnInit, HostBinding } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IPrestacion } from '../../../interfaces/prestacion.interface';
 import { IPaciente } from '../../../../../interfaces/IPaciente';
@@ -12,9 +12,10 @@ import { ISnomedConcept } from '../../../interfaces/snomed-concept.interface';
     templateUrl: 'resumenPaciente-estatico.html'
 })
 
-export class ResumenPacienteEstaticoComponent implements OnInit {
+export class ResumenPacienteEstaticoComponent {
     @Input() prestacion: IPrestacion;
     @Input() paciente: IPaciente;
+    @Input() esTab = false;
 
     public prestacionSolicitud;
 
@@ -30,7 +31,7 @@ export class ResumenPacienteEstaticoComponent implements OnInit {
 
     }
 
-    async ngOnInit() {
-        this.prestacionSolicitud = this.prestacion.solicitud;
-    }
+    // async ngOnInit() {
+    //     this.prestacionSolicitud = this.prestacion.solicitud;
+    // }
 }
