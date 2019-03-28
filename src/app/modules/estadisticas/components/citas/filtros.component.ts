@@ -17,15 +17,17 @@ import { ProfesionalService } from '../../../../services/profesional.service';
         <div class="col-2">
             <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta"></plex-datetime>
         </div>
-        <div class="col-4 d-flex align-items-end">
+        <div class="col-2 d-flex align-items-end">
             <plex-button type="success mb-1" label="Filtrar" (click)="onChange()" ></plex-button>
         </div>
-        <div class="col-2 d-flex align-items-end" (click)="changeTablaGrafico()">
-            <plex-button *ngIf="esTablaGrafico" icon="mdi mdi-chart-pie"></plex-button>
-            <plex-button *ngIf="!esTablaGrafico" icon="mdi mdi-table-large"></plex-button>
+        <div class="col-1 offset-2 d-flex align-items-end">
+            <plex-button class="m-1" *ngIf="esTablaGrafico" icon="mdi mdi-chart-pie" (click)="changeTablaGrafico()"></plex-button>
+            <plex-button class="m-1" *ngIf="!esTablaGrafico" icon="mdi mdi-table-large" (click)="changeTablaGrafico()"></plex-button>
+            <plex-button class="m-1" type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
+                (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
         </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="mostrarMasOpciones">
         <div class="col-3">
             <plex-select [multiple]="true" [(ngModel)]="seleccion.prestacion" (getData)="loadPrestaciones($event)" name="prestaciones"
                 label="Prestación" ngModelOptions="{standalone: true}">
@@ -60,6 +62,7 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
     public hoy = new Date();
     public opciones = [{ id: 'agendas', nombre: 'Agendas' }, { id: 'turnos', nombre: 'Turnos' }];
     public esTablaGrafico = false;
+    public mostrarMasOpciones = false;
     public estadosAgendas = [
         { id: 'planificacion', nombre: 'Planificacion' },
         { id: 'disponible', nombre: 'Disponible' },
