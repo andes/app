@@ -105,6 +105,14 @@ export class PacienteService {
     }
 
     /**
+     * Metodo setActivo. Actualiza estado (Activo/inactivo) de un paciente.
+     * @param {IPaciente} paciente Recibe IPaciente
+     */
+    setActivo(paciente: IPaciente): Observable<IPaciente> {
+        return this.server.put(`${this.pacienteUrl}/auditoria/setActivo`, paciente);
+    }
+
+    /**
      * Metodo patch. Modifica solo algunos campos del paciente. (por ejemplo telefono)
      * @param {any} cambios Recibe any
      */
@@ -126,7 +134,7 @@ export class PacienteService {
      */
     disable(paciente: IPaciente): Observable<IPaciente> {
         paciente.activo = false;
-        return this.put(paciente);
+        return this.setActivo(paciente);
     }
 
     /**
@@ -135,7 +143,7 @@ export class PacienteService {
      */
     enable(paciente: IPaciente): Observable<IPaciente> {
         paciente.activo = true;
-        return this.put(paciente);
+        return this.setActivo(paciente);
     }
 
     save(paciente: IPaciente): Observable<IPaciente> {
