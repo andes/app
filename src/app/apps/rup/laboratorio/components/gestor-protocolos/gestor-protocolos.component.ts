@@ -297,8 +297,7 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
      * @memberof GestorProtocolosComponent
      */
     aceptarCambiosHeader() {
-
-        if (this.protocoloDetalleComponent.validarSolicitud()) {
+        if (this.protocoloDetalleComponent.validarRecepcionPaciente()) {
             this.showBotonAceptarCambiosHeader = false;
             this.showBotonGuardar = true;
             this.protocoloDetalleComponent.aceptarEdicionCabecera();

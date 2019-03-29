@@ -598,13 +598,15 @@ export class ProtocoloDetalleComponent
         }
     }
 
-    validarSolicitud() {
-        console.log('this.modelo.solicitud.registros:', this.modelo.solicitud);
+    validarRecepcionPaciente() {
         return this.modelo.solicitud.registros[0].valor.solicitudPrestacion.servicio
             && this.modelo.solicitud.registros[0].valor.solicitudPrestacion.prioridad
             && this.modelo.solicitud.ambitoOrigen;
     }
 
+    validarSolicitud() {
+        return true;
+    }
 
     /**
      *
