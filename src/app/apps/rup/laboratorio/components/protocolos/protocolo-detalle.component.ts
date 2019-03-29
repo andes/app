@@ -582,14 +582,27 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     guardarSolicitud() {
-        if (this.laboratorioContextoCacheService.isModoRecepcion()) {
+        if (this.validarSolicitud()) {
             this.iniciarProtocolo();
-        } else {
-            if (this.laboratorioContextoCacheService.isModoRecepcionSinTurno()) {
-                this.laboratorioContextoCacheService.cambiarModo(2);
+            if (this.laboratorioContextoCacheService.isModoRecepcion()) {
+
+
+            } else {
+                if (this.laboratorioContextoCacheService.isModoRecepcionSinTurno()) {
+                    this.laboratorioContextoCacheService.cambiarModo(2);
+                }
+                this.guardarProtocolo(true);
             }
-            this.guardarProtocolo(true);
+        } else {
+            this.plex.info('warning', 'Completar datos requeridos');
         }
+    }
+
+    validarSolicitud() {
+        console.log('this.modelo.solicitud.registros:', this.modelo.solicitud);
+        return this.modelo.solicitud.registros[0].valor.solicitudPrestacion.servicio
+            && this.modelo.solicitud.registros[0].valor.solicitudPrestacion.prioridad
+            && this.modelo.solicitud.ambitoOrigen;
     }
 
 

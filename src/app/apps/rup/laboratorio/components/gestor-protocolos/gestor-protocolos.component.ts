@@ -297,9 +297,14 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
      * @memberof GestorProtocolosComponent
      */
     aceptarCambiosHeader() {
-        this.showBotonAceptarCambiosHeader = false;
-        this.showBotonGuardar = true;
-        this.protocoloDetalleComponent.aceptarEdicionCabecera();
+
+        if (this.protocoloDetalleComponent.validarSolicitud()) {
+            this.showBotonAceptarCambiosHeader = false;
+            this.showBotonGuardar = true;
+            this.protocoloDetalleComponent.aceptarEdicionCabecera();
+        } else {
+            this.plex.info('warning', 'Completar datos requeridos');
+        }
     }
 
     /**
