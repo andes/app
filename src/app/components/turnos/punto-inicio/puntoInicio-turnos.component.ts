@@ -143,7 +143,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         }
     }
 
-    private getPacienteById(idPaciente:string) {
+    private getPacienteById(idPaciente: string) {
         this.servicePaciente.getById(idPaciente).subscribe(pacienteMPI => {
             this.paciente = pacienteMPI;
             this.showMostrarEstadisticasAgendas = false;
