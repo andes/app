@@ -25,7 +25,7 @@
                     <graph-table type="bar" titulo="Profesionales" [data]="profesionales" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>                
                 </div>
             </div>
-            <div class="row">
+            <div class="row" *ngIf="tipoDeFiltro === 'Turnos'">
                 <div class="col">
                     <tabla-2d [data]="dataGeolocalizacion"></tabla-2d>
                 </div>

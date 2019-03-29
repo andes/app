@@ -6,7 +6,7 @@ import { Server } from '@andes/shared';
 @Injectable()
 export class EstAgendasService {
 
-    private baseURL = '/modules/turnos/estadistica';  // URL to web api
+    private baseURL = '/modules/turnos';  // URL to web api
 
     constructor(private server: Server, public auth: Auth) { }
 
@@ -16,11 +16,15 @@ export class EstAgendasService {
      */
 
     get (params) {
-        return this.server.get(this.baseURL, { params });
+        return this.server.get(this.baseURL + '/estadistica', { params });
     }
 
     post (params) {
-        return this.server.post(this.baseURL, params);
+        return this.server.post(this.baseURL + '/estadistica', params);
+    }
+
+    postFiltroPorCiudad (params) {
+        return this.server.post(this.baseURL + '/filtroPorCiudad', params);
     }
 
 }
