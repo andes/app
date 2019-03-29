@@ -101,7 +101,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         const practicasSolicitud = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas;
         this.practicasVista = this.practicasEjecucion
             .filter(pe => practicasSolicitud.some(ps => ps._id === pe.valor.idPractica))
-            .filter(p => ((this.busqueda.areas.length === 0) || this.busqueda.areas.some(id => id === p.area._id)));
+            .filter(p => this.busqueda.areas.length === 0 || this.busqueda.areas.some(id => id === p.valor.practica.area.id));
     }
 
     /**
@@ -471,7 +471,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
             if (!(practica.valor.practica.categoria === 'simple')) {
                 try {
                     for (let i = 0; i < this.practicasEjecucion.length; i++) {
-                        if (practica.valor.codigoPractica !== this.practicasEjecucion[i].valor.codigoPractica && practica.valor.practica.resultado.configuracionFormula.formula)  {
+                        if (practica.valor.codigoPractica !== this.practicasEjecucion[i].valor.codigoPractica && practica.valor.practica.resultado.configuracionFormula.formula) {
                             let foundIndex = practica.valor.practica.resultado.configuracionFormula.formula.indexOf(this.practicasEjecucion[i].valor.codigoPractica);
                             if (foundIndex > -1 && this.practicasEjecucion[i].valor.resultado.valor) {
                                 practica.valor.practica.resultado.configuracionFormula.formula = (practica.valor.practica.resultado.configuracionFormula.formula as string).replace(this.practicasEjecucion[i].valor.codigoPractica, this.practicasEjecucion[i].valor.resultado.valor);
