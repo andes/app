@@ -10,6 +10,7 @@ import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { AppMobileService } from '../../../services/appMobile.service';
 import { PacienteCacheService } from '../../../core/mpi/services/pacienteCache.service';
+import { PreviousUrlService } from '../../../services/previous-url.service';
 @Component({
     selector: 'puntoInicio-turnos',
     templateUrl: 'puntoInicio-turnos.html',
@@ -61,7 +62,9 @@ export class PuntoInicioTurnosComponent implements OnInit {
         public appMobile: AppMobileService,
         private router: Router,
         private _activatedRoute: ActivatedRoute,
-        private plex: Plex) {
+        private plex: Plex,
+        private previousUrlService:PreviousUrlService
+    ) {
     }
 
     ngOnInit() {
@@ -137,6 +140,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     onPacienteSelected(paciente: IPaciente): void {
         this.paciente = paciente;
         if (!paciente.id || (paciente.estado === 'temporal' && paciente.scan)) {
+            this.previousUrlService.setUrl('citas/punto-inicio');
             this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru
         } else {
             this.getPacienteById(paciente.id);
