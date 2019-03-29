@@ -41,7 +41,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     solicitudPrestacion: any = null; // Es la solicitud que se pasa como input a darTurnos
     operacionTurnos = '';
     showDarTurnos = false;
-    showDashboard = true;
+    showSearchPatient = true;
     showMostrarTurnosPaciente = false;
     showCreateUpdate = false;
     seleccion = null;
@@ -69,7 +69,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
     showArancelamientoForm(turno) {
         this.turnoArancelamiento = turno;
-        this.showDashboard = false;
+        this.showSearchPatient = false;
         this.showArancelamiento = true;
 
     }
@@ -80,11 +80,10 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
     volverAPuntoInicio() {
         this.showArancelamiento = false;
-        this.showDashboard = true;
+        this.showSearchPatient = true;
     }
     onPacienteSelected(paciente: IPaciente): void {
         this.paciente = paciente;
-
         if (paciente.id) {
             if (paciente.estado === 'temporal' && paciente.scan) {
                 this.seleccion = paciente;
@@ -95,7 +94,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.selected.emit(this.seleccion);
                 this.showCreateUpdate = true;
                 this.showDarTurnos = false;
-                this.showDashboard = false;
+                this.showSearchPatient = false;
             } else {
                 this.servicePaciente.getById(paciente.id).subscribe(
                     pacienteMPI => {
@@ -127,14 +126,14 @@ export class PuntoInicioTurnosComponent implements OnInit {
             this.selected.emit(this.seleccion);
             this.showCreateUpdate = true;
             this.showDarTurnos = false;
-            this.showDashboard = false;
+            this.showSearchPatient = false;
         }
     }
 
     afterCreateUpdate(paciente) {
         this.showCreateUpdate = false;
         this.showActivarApp = false;
-        this.showDashboard = true;
+        this.showSearchPatient = false;
         this.showDarTurnos = false;
         if (paciente) {
             this.servicePaciente.getById(paciente.id).subscribe(
@@ -162,6 +161,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showMostrarEstadisticasPacientes = false;
         this.showMostrarTurnosPaciente = false;
         this.showIngresarSolicitud = false;
+        this.showSearchPatient = true;
     }
 
     verificarOperacion({ operacion, paciente }) {
@@ -169,11 +169,10 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.esOperacion = true;
         this.showActivarApp = false;
         this.paciente = paciente;
-
+        this.showSearchPatient = false;
         switch (operacion) {
             case 'darTurno':
                 this.solicitudPrestacion = null;
-                this.showDashboard = false;
                 this.showMostrarTurnosPaciente = false;
                 this.showIngresarSolicitud = false;
                 this.showDarTurnos = true;
@@ -184,14 +183,14 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.showMostrarEstadisticasPacientes = false;
                 break;
             case 'operacionesTurno':
-                this.showMostrarEstadisticasAgendas = false;
+                // this.showMostrarEstadisticasAgendas = false;
                 this.showMostrarEstadisticasPacientes = false;
                 this.showIngresarSolicitud = false;
                 this.operacionTurnos = 'operacionesTurno';
                 this.showMostrarTurnosPaciente = true;
                 break;
             case 'activarApp':
-                this.showMostrarEstadisticasAgendas = false;
+                // this.showMostrarEstadisticasAgendas = false;
                 this.showMostrarEstadisticasPacientes = false;
                 this.showMostrarTurnosPaciente = false;
                 this.showIngresarSolicitud = false;
@@ -202,12 +201,12 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
     actualizarPaciente(actualizar) {
         this.showCreateUpdate = actualizar;
-        this.showDashboard = !actualizar;
+        this.showSearchPatient = !actualizar;
     }
 
     afterDarTurno(pac) {
         this.showDarTurnos = false;
-        this.showDashboard = true;
+        this.showSearchPatient = false;
         this.showTab = 1;
         if (this.paciente && this.paciente.id) {
             // this.onPacienteSelected(this.paciente);
@@ -224,7 +223,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     }
 
     cancelarSolicitudVentanilla() {
-        this.showDashboard = true;
+        this.showSearchPatient = true;
         this.showMostrarEstadisticasAgendas = false;
         this.showMostrarEstadisticasPacientes = true;
         this.showIngresarSolicitud = false;
@@ -244,7 +243,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     darTurnoSolicitud(event) {
         this.solicitudPrestacion = event;
         this.showDarTurnos = true;
-        this.showDashboard = false;
+        this.showSearchPatient = false;
     }
 
     redirect(pagina: string) {

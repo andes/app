@@ -1,7 +1,7 @@
 <form class="plex-layout" #form="ngForm">
     <section *ngIf="!showDarTurnos">
-        <div class="row" *ngIf="showDashboard">
-            <div class="col-7">
+        <div class="row">
+            <div class="col">
                 <plex-box>
                     <header>
                         <!--Busqueda de Pacientes-->
@@ -17,12 +17,9 @@
                     </paciente-search-turnos>
                 </plex-box>
             </div>
-            <!--Panel de Estadisticas y Operaciones-->
-            <div class="col-5">
+            <!--Panel de Operaciones-->
+            <div *ngIf="!showSearchPatient" class="col-5">
                 <plex-box>
-                    <div *ngIf="showMostrarEstadisticasAgendas" type="info">
-                        <estadisticas-agendas></estadisticas-agendas>
-                    </div>
                     <div *ngIf="showMostrarEstadisticasPacientes" type="info">
                         <estadisticas-pacientes [paciente]="paciente"
                             (showArancelamientoForm)="showArancelamientoForm($event)"
