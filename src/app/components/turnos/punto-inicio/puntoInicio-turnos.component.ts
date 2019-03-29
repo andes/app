@@ -63,7 +63,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         private router: Router,
         private _activatedRoute: ActivatedRoute,
         private plex: Plex,
-        private previousUrlService:PreviousUrlService
+        private previousUrlService: PreviousUrlService
     ) {
     }
 
@@ -147,7 +147,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         }
     }
 
-    private getPacienteById(idPaciente:string) {
+    private getPacienteById(idPaciente: string) {
         this.servicePaciente.getById(idPaciente).subscribe(pacienteMPI => {
             this.paciente = pacienteMPI;
             this.showMostrarEstadisticasAgendas = false;
