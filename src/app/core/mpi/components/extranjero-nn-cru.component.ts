@@ -207,7 +207,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
     // ------------------ DATOS BASICOS -------------------------
 
     completarGenero() {
-            this.pacienteModel.genero = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
+        this.pacienteModel.genero = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
     }
 
     // ---------------------- DOMICILIO -----------------------
@@ -473,7 +473,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
                             documento: unPacienteSave.documento ? unPacienteSave.documento : '',
                             foto: unPacienteSave.foto ? unPacienteSave.foto : null
                         };
-                        if (rel.referencia) {
+                        if (dto.referencia) {
                             this.pacienteService.patch(rel.referencia, {
                                 'op': 'updateRelacion',
                                 'dto': dto

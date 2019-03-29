@@ -620,7 +620,7 @@ export class PacienteCruComponent implements OnInit {
                         documento: unPacienteSave.documento,
                         foto: unPacienteSave.foto ? unPacienteSave.foto : null
                     };
-                    if (rel.referencia) {
+                    if (dto.referencia) {
                         this.pacienteService.patch(rel.referencia, {
                             'op': 'updateRelacion',
                             'dto': dto
