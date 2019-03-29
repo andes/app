@@ -102,7 +102,6 @@ export class ReporteResultadosFiltrosComponent
             } else if (tipo === 'paciente') {
                 this.busqueda.idPaciente = this.paciente ? this.paciente.id : null;
             } else if (tipo === 'estado') {
-                console.log('this.estado', this.estado);
                 this.busqueda.estado = this.estado && this.estado.id !== 'todos' ? [this.estado] : null;
             }
         }

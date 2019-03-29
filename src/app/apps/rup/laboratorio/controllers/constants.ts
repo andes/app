@@ -23,25 +23,25 @@ export const Constantes = {
             nombre: 'recepcion',
             titulo: 'Recepcionar Paciente',
         },
-        control: {
+        listado: {
             id: 1,
+            nombre: 'listado',
+            titulo: 'Listado'
+        },
+        control: {
+            id: 2,
             nombre: 'control',
             titulo: 'Auditoría de Protocolos'
         },
         carga: {
-            id: 2,
+            id: 3,
             nombre: 'carga',
             titulo: 'Carga de Resultados'
         },
         validacion: {
-            id: 3,
+            id: 4,
             nombre: 'validacion',
             titulo: 'Validación de Resultados',
-        },
-        listado: {
-            id: 4,
-            nombre: 'listado',
-            titulo: 'Listado'
         },
         recepcionSinTurno: {
             id: 5,

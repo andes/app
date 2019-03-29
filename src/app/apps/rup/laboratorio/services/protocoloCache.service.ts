@@ -22,9 +22,9 @@ export class LaboratorioContextoCacheService {
             {
                 cargarPorPracticas: false,
                 modo: {
-                    id: 3,
-                    nombre: 'validacion',
-                    titulo: 'Validación de Resultados'
+                    id: 0,
+                    nombre: 'listado',
+                    titulo: 'Listado'
                 },
                 modoCargaLaboratorio: null,
             }
