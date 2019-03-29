@@ -216,8 +216,20 @@ header {
     }
 }
 
-
 .protocolo-auditoria {
     display: grid;
     grid-template-columns: 15px 1fr 15px;
+}
+
+plex-button.alertaValores {
+    position: relative;
+    right: 13px;
+}
+
+plex-button.alertaValores button {
+    cursor: pointer;
+}
+
+tabla-datalle-protocolo p {
+    margin: 0px;
 }

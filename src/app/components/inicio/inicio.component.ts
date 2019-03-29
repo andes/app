@@ -16,6 +16,7 @@ export class InicioComponent implements AfterViewInit {
     public internacionEpicrisis = '';
     public solicitudes = '';
     public prestamosHC = '';
+    public laboratorio = '';
     public denied = false;
     public accessList: any = [];
 
@@ -63,6 +64,11 @@ export class InicioComponent implements AfterViewInit {
 
             if (this.auth.getPermissions('prestamos:?').length > 0) {
                 this.prestamosHC = 'prestamosHC';
+                this.denied = false;
+            }
+
+            if (this.auth.getPermissions('laboratorio:?').length > 0) {
+                this.laboratorio = 'laboratorio';
                 this.denied = false;
             }
         });

@@ -42,7 +42,6 @@ import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/pun
 import { MapaEspacioFisicoVistaComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico-vista.component';
 
 // ... MPI
-import { DashboardComponent } from './components/paciente/dashboard.component';
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 
 // ... Obras sociales
