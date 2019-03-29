@@ -28,8 +28,8 @@
                 <div class="col-6" *ngIf="_paciente?.documento">
                     {{_paciente.documento | number}}
                 </div>
-                <div class="col-6" *ngIf="_paciente && _paciente.fechaNacimiento !== null">
-                    {{_paciente.fechaNacimiento | date:'dd-MM-yyyy'}} ({{_paciente | edad}})
+                <div class="col-6" *ngIf="_paciente && _paciente?.fechaNacimiento !== null">
+                    {{_paciente?.fechaNacimiento | date:'dd-MM-yyyy'}} ({{_paciente | edad}})
                 </div>
             </div>
             <div class="row">
@@ -46,8 +46,8 @@
                 <div class="col-6" *ngIf="_paciente?.direccion && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
                     {{_paciente.direccion[0].valor}}
                 </div>
-                <div class="col-6" *ngIf="_paciente?.id && _paciente.contacto && _paciente.contacto.length > 0">
-                    {{_paciente.contacto[0].valor}}
+                <div class="col-6" *ngIf="_paciente?.id && _paciente?.contacto && _paciente?.contacto.length > 0">
+                    {{_paciente?.contacto[0].valor}}
                 </div>
             </div>
             <div class="row" *ngIf="obraSocial">
@@ -72,7 +72,7 @@
                     {{obraSocial.numeroAfiliado}}
                 </div>
             </div>
-            <!-- <div class="row" *ngIf="_paciente?.financiador && _paciente.financiador[0]?.nombre">
+            <!-- <div class="row" *ngIf="_paciente?.financiador && _paciente?.financiador[0]?.nombre">
                 <div class="col-6">
                     <i class="mdi mdi-account-card-details"></i>
                     <span class="text-primary">Obra Social</span>
@@ -82,12 +82,12 @@
                     <span class="text-primary">Número de Afiliado</span>
                 </div>
             </div>
-            <div class="row" *ngIf="_paciente?.financiador && _paciente.financiador[0]?.nombre">
+            <div class="row" *ngIf="_paciente?.financiador && _paciente?.financiador[0]?.nombre">
                 <div class="col-6">
-                    {{_paciente.financiador[0].financiador}}
+                    {{_paciente?.financiador[0].financiador}}
                 </div>
                 <div class="col-6">
-                    {{_paciente.financiador[0].numeroAfiliado}}
+                    {{_paciente?.financiador[0].numeroAfiliado}}
                 </div>
             </div> -->
             <br>

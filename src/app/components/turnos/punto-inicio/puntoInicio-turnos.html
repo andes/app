@@ -15,9 +15,9 @@
 
         <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
-        <div class="row">
+        <div class="row pt-2">
             <!-- LISTA DE RESULTADOS DE LA BÚSQUEDA -->
-            <div class="col" *ngIf="!paciente">
+            <div class="col pr-2" *ngIf="!paciente">
                 <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
                     [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
                 <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length && !searchClear" class="alert alert-danger">
@@ -26,7 +26,7 @@
             </div>
 
             <!-- VISTA DE PACIENTE SELECCIONADO DE LA LISTA DE RESULTADOS -->
-            <div class="col" *ngIf="paciente">
+            <div class="col pr-2" *ngIf="paciente">
                 <table class="table table-striped">
                     <tbody>
                         <tr class="hover">

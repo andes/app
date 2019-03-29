@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 
@@ -10,6 +10,7 @@ import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { AppMobileService } from '../../../services/appMobile.service';
 import { PacienteCacheService } from '../../../core/mpi/services/pacienteCache.service';
+import { PreviousUrlService } from '../../../services/previous-url.service';
 @Component({
     selector: 'puntoInicio-turnos',
     templateUrl: 'puntoInicio-turnos.html',
@@ -60,10 +61,19 @@ export class PuntoInicioTurnosComponent implements OnInit {
         public auth: Auth,
         public appMobile: AppMobileService,
         private router: Router,
-        private plex: Plex) {
+        private _activatedRoute: ActivatedRoute,
+        private plex: Plex,
+        private previousUrlService: PreviousUrlService
+    ) {
     }
 
     ngOnInit() {
+        this._activatedRoute.params.subscribe(parameters => {
+            if (parameters && parameters['idPaciente']) {
+                this.getPacienteById(parameters['idPaciente']);
+                window.history.replaceState({}, '', `/citas/punto-inicio`);
+            }
+        });
         this.autorizado = this.auth.getPermissions('turnos:puntoInicio:?').length > 0;
         this.puedeDarTurno = this.auth.getPermissions('turnos:puntoInicio:darTurnos:?').length > 0;
         this.puedeCrearSolicitud = this.auth.getPermissions('turnos:puntoInicio:solicitud:?').length > 0;
@@ -130,55 +140,26 @@ export class PuntoInicioTurnosComponent implements OnInit {
     onPacienteSelected(paciente: IPaciente): void {
         this.paciente = paciente;
         if (!paciente.id || (paciente.estado === 'temporal' && paciente.scan)) {
+            this.previousUrlService.setUrl('citas/punto-inicio');
             this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru
         } else {
-            this.servicePaciente.getById(paciente.id).subscribe(
-                pacienteMPI => {
-                    this.paciente = pacienteMPI;
-                    // Si el paciente previamente persistido no posee string de scan, y tenemos scan, actualizamos el pac.
-                    if (!this.paciente.scan && paciente.scan) {
-                        this.servicePaciente.patch(paciente.id, { op: 'updateScan', scan: paciente.scan }).subscribe();
-                    }
-                    this.showMostrarEstadisticasAgendas = false;
-                    if (this.esOperacion) {
-                        this.esOperacion = false;
-                    } else {
-                        this.showMostrarEstadisticasPacientes = true;
-                        this.showMostrarTurnosPaciente = false;
-                        this.showActivarApp = false;
-                        this.showIngresarSolicitud = false;
-                    }
-                }
-            );
+            this.getPacienteById(paciente.id);
         }
     }
 
-    afterCreateUpdate(paciente) {
-        this.showCreateUpdate = false;
-        this.showActivarApp = false;
-        this.showDashboard = true;
-        this.showDarTurnos = false;
-        if (paciente) {
-            this.servicePaciente.getById(paciente.id).subscribe(
-                pacienteMPI => {
-                    this.paciente = pacienteMPI;
-                    this.selected.emit(this.paciente);
-                    this.resultadoCreate = [pacienteMPI];
-                    this.showMostrarEstadisticasAgendas = false;
-                    this.showMostrarEstadisticasPacientes = true;
-                    if (this.esOperacion) {
-                        this.showMostrarEstadisticasPacientes = false;
-                        this.esOperacion = false;
-                    } else {
-                        this.showMostrarTurnosPaciente = false;
-                        this.showActivarApp = false;
-                    }
-                }
-            );
-        } else {
-            this.showDarTurnos = false;
-        }
-        this.updateTitle('Punto de inicio');
+    private getPacienteById(idPaciente: string) {
+        this.servicePaciente.getById(idPaciente).subscribe(pacienteMPI => {
+            this.paciente = pacienteMPI;
+            this.showMostrarEstadisticasAgendas = false;
+            if (this.esOperacion) {
+                this.esOperacion = false;
+            } else {
+                this.showMostrarEstadisticasPacientes = true;
+                this.showMostrarTurnosPaciente = false;
+                this.showActivarApp = false;
+                this.showIngresarSolicitud = false;
+            }
+        });
     }
 
     handleBlanqueo(event) {
