@@ -583,10 +583,8 @@ export class ProtocoloDetalleComponent
      */
     guardarSolicitud() {
         if (this.validarSolicitud()) {
-            this.iniciarProtocolo();
             if (this.laboratorioContextoCacheService.isModoRecepcion()) {
-
-
+                this.iniciarProtocolo();
             } else {
                 if (this.laboratorioContextoCacheService.isModoRecepcionSinTurno()) {
                     this.laboratorioContextoCacheService.cambiarModo(2);
@@ -594,7 +592,7 @@ export class ProtocoloDetalleComponent
                 this.guardarProtocolo(true);
             }
         } else {
-            this.plex.info('warning', 'Completar datos requeridos');
+            this.plex.info('warning', 'Debe cargar al menos una práctica');
         }
     }
 
@@ -605,7 +603,7 @@ export class ProtocoloDetalleComponent
     }
 
     validarSolicitud() {
-        return true;
+        return this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas[0];
     }
 
     /**
