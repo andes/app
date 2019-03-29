@@ -1,20 +1,20 @@
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
 import { Plex } from '@andes/plex';
 import * as moment from 'moment';
 
 // Interfaces
 import { IProfesional } from './../../../interfaces/IProfesional';
-import { IPaciente } from './../../../interfaces/IPaciente';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 // Services
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
 import { ProfesionalService } from './../../../services/profesional.service';
-import { PacienteService } from './../../../services/paciente.service';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 
 @Component({
     selector: 'listaEspera-create-update',
@@ -33,17 +33,17 @@ export class ListaEsperaCreateUpdateComponent implements OnInit {
     createForm: FormGroup;
     // Este paciente hay que reemplazarlo por el que viene de la búsqueda
     paciente: IPaciente;
-        /*= { id: '57f66f2076e97c2d18f1808b',
-        documento: '20567899',
-        apellido: 'García',
-        nombre: 'Pablo',
-        contacto: [{
-            tipo: 'Teléfono Fijo',
-            valor: '2995573273',
-            ranking: 1,
-            activo: true
-        }]
-    };*/
+    /*= { id: '57f66f2076e97c2d18f1808b',
+    documento: '20567899',
+    apellido: 'García',
+    nombre: 'Pablo',
+    contacto: [{
+        tipo: 'Teléfono Fijo',
+        valor: '2995573273',
+        ranking: 1,
+        activo: true
+    }]
+};*/
     pacientesSearch = false;
     checkout = false;
 

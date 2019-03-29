@@ -9,10 +9,10 @@ import { EstadosAsistencia } from './../../enums';
 import { EstadosAgenda } from './../../enums';
 
 // Interfaces
-import { IPaciente } from './../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 
 // Servicios
-import { PacienteService } from './../../../../services/paciente.service';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { TurnoService } from './../../../../services/turnos/turno.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { Cie10Service } from '../../../../services/term/cie10.service';
@@ -63,12 +63,15 @@ export class RevisionAgendaComponent implements OnInit {
     pacientesSearch = false;
     diagnosticos = [];
     public showRegistrosTurno = false;
-    public esEscaneado = false;
     public estadosAsistencia = enumToArray(EstadosAsistencia);
     public estadosAgendaArray = enumToArray(EstadosAgenda);
     public mostrarHeaderCompleto = false;
     public esAgendaOdonto = false;
     idOrganizacion = this.auth.organizacion.id;
+    // ---- Variables asociadas a componentes paciente buscar y paciente listado
+    resultadoBusqueda = null;
+    pacienteSelected = null;
+    loading = false;
 
     constructor(public plex: Plex,
         public router: Router,
@@ -131,26 +134,6 @@ export class RevisionAgendaComponent implements OnInit {
             this.turnoSeleccionado.estado = estado;
         }
     }
-    /**
-     * Output de la búsqueda de paciente
-     *
-     * @param {IPaciente} paciente
-     * @memberof RevisionAgendaComponent
-     */
-    onReturn(paciente: IPaciente): void {
-        if (paciente.id) {
-            this.servicePaciente.getById(paciente.id).subscribe(
-                pacienteMongo => {
-                    this.paciente = pacienteMongo;
-                    this.showRegistrosTurno = true;
-                    this.pacientesSearch = false;
-                    window.setTimeout(() => this.pacientesSearch = false, 100);
-                });
-        } else {
-            this.plex.info('warning', 'Paciente no encontrado', '¡Error!');
-        }
-    }
-
 
     seleccionarTurno(turno, bloque) {
         this.existeCodificacionProfesional = false;
@@ -394,4 +377,47 @@ export class RevisionAgendaComponent implements OnInit {
         this.refresh();
         this.cerrarAsistencia();
     }
+
+    // -------------- SOBRE BUSCADOR PACIENTES ----------------
+
+    searchStart() {
+        this.paciente = null;
+        this.loading = true;
+    }
+
+    searchEnd(resultado) {
+        this.loading = false;
+        if (resultado.err) {
+            this.plex.info('danger', resultado.err);
+            return;
+        }
+        this.resultadoBusqueda = resultado.pacientes;
+    }
+
+    onSearchClear() {
+        this.resultadoBusqueda = [];
+        this.paciente = null;
+    }
+
+    // ----------------------------------
+
+    // Componente paciente-listado
+
+    onSelect(paciente: IPaciente): void {
+        this.resultadoBusqueda = [];
+        // Es un paciente existente en ANDES??
+        if (paciente && paciente.id) {
+            this.servicePaciente.getById(paciente.id).subscribe(
+                pacienteMongo => {
+                    this.paciente = pacienteMongo;
+                    this.showRegistrosTurno = true;
+                    this.pacientesSearch = false;
+                });
+        } else {
+            this.plex.info('warning', 'Paciente no encontrado', '¡Error!');
+        }
+
+    }
+    // ----------------------------------
+
 }

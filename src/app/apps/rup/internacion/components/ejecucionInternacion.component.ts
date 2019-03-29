@@ -3,13 +3,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { IPaciente } from '../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { CamasService } from '../services/camas.service';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 import { FinanciadorService } from '../../../../services/financiador.service';
 import { OcupacionService } from '../../../../services/ocupacion/ocupacion.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
-import { PacienteService } from '../../../../services/paciente.service';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { ElementosRUPService } from '../../../../modules/rup/services/elementosRUP.service';
 import { InternacionService } from '../services/internacion.service';
 import { IPrestacionRegistro } from '../../../../modules/rup/interfaces/prestacion.registro.interface';
@@ -47,15 +47,6 @@ export class EjecucionInternacionComponent implements OnInit {
     public fecha: Date = new Date();
     // Tipos de prestacion que el usuario tiene permiso
     public tiposPrestacion: any = [];
-    // Tipos de prestacion seleccionada para la internación
-    // TODO:: PREGUNTAR SI VAN A EXISTIR VARIOS CONCEPTOS DE INTERNACIÓN
-    public tipoPrestacionSeleccionada = {
-        fsn: 'admisión hospitalaria (procedimiento)',
-        semanticTag: 'procedimiento',
-        conceptId: '32485007',
-        term: 'internación'
-    };
-
     // prestacion actual en ejecucion
     public prestacion: any;
     // Paciente sleccionado
@@ -225,8 +216,8 @@ export class EjecucionInternacionComponent implements OnInit {
                     this.prestacion = prestacion;
                     this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
                 }, () => {
-                        this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
-                    });
+                    this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
+                });
             }
         });
 
@@ -255,8 +246,8 @@ export class EjecucionInternacionComponent implements OnInit {
 
                         // this.router.navigate(['rup/ejecucion', this.prestacion.id]);
                     }, () => {
-                            this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
-                        });
+                        this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
+                    });
                 });
             }
         });

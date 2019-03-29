@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { InternacionService } from '../services/internacion.service';
 import { CamasService } from '../services/camas.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
-import { PacienteService } from '../../../../services/paciente.service';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 
 @Component({
     selector: 'cama',
@@ -25,6 +25,7 @@ export class CamaComponent implements OnInit {
     @Output() verInternacionEmit: EventEmitter<any> = new EventEmitter<any>();
     @Output() data: EventEmitter<any> = new EventEmitter<any>();
 
+    @Input() modoFlat = false;
     public organizacion: any;
     public paseAunidadOrganizativa: any;
     // opciones dropdown cama internada

@@ -35,7 +35,7 @@
                     </div>
                     <div *ngIf="modelo.horaInicio && modelo.horaFin" class="row">
                         <div class="col-12">
-                            <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales"
+                            <plex-select [(ngModel)]="modelo.profesionales" label="Equipo de Salud" name="modelo.profesionales"
                                 (getData)="loadProfesionales($event)" [multiple]="true" labelField="apellido + ' ' + nombre"
                                 (change)="validarTodo()" [closeAfterSelect]="true">
                             </plex-select>
@@ -59,7 +59,8 @@
                             <div class="row">
                                 <div class="col text-left">
                                     <plex-bool [(ngModel)]="espacioFisicoPropios" name="espacioFisicoPropios" type="slide"
-                                        label="{{textoEspacio}}" (change)="filtrarEspacioFisico()"></plex-bool>
+                                        label="{{textoEspacio}}" (change)="filtrarEspacioFisico()">
+                                    </plex-bool>
                                 </div>
                             </div>
                             <div class="row" *ngIf="espacioFisicoPropios">
@@ -247,8 +248,19 @@
                                 </fieldset>
                             </div>
                         </div>
-                        <!--Comento momentaneamente la opción de paciente simultáneo-->
                         <div class="row pt-3">
+                            <div class="col-4">
+                                <plex-bool *ngIf="elementoActivo.accesoDirectoProgramado > 0" [(ngModel)]="elementoActivo.turnosMobile"
+                                    label="Cupo para aplicación Mobile" name="turnosMobile"></plex-bool>
+                            </div>
+                            <div class="col-4" *ngIf="elementoActivo.turnosMobile && elementoActivo.accesoDirectoProgramado > 0">
+                                <plex-int [(ngModel)]="elementoActivo.cupoMobile" [max]="elementoActivo.accesoDirectoProgramado"
+                                    name="cupoMobile" suffix="Turnos" title="Este no es un cupo extra, es parte del cupo de programados"
+                                    titlePosition="top">
+                                </plex-int>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div *ngIf="!elementoActivo.citarPorBloque" class="col-4">
                                 <plex-bool [(ngModel)]="elementoActivo.pacienteSimultaneos" label="Pacientes simultáneos"
                                     name="pacienteSimultaneos"></plex-bool>
@@ -269,6 +281,7 @@
                                 </plex-int>
                             </div>
                         </div>
+
                         <br>
                     </ng-container>
                 </plex-box>

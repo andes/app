@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-6" *ngIf="_paciente?.documento !== ''">
+                <div class="col-6" *ngIf="_paciente?.documento">
                     {{_paciente.documento | number}}
                 </div>
                 <div class="col-6" *ngIf="_paciente && _paciente.fechaNacimiento !== null">
@@ -50,7 +50,29 @@
                     {{_paciente.contacto[0].valor}}
                 </div>
             </div>
-            <div class="row" *ngIf="_paciente?.financiador && _paciente.financiador[0]?.nombre">
+            <div class="row" *ngIf="obraSocial">
+                <div class="col-6" *ngIf="obraSocial.financiador === 'SUMAR'">
+                    <i class="mdi mdi-account-card-details"></i>
+                    <span class="text-primary">Financiador</span>
+                </div>
+                <div class="col-6" *ngIf="obraSocial.financiador !== 'SUMAR'">
+                    <i class="mdi mdi-account-card-details"></i>
+                    <span class="text-primary">Obra Social</span>
+                </div>
+                <div class="col-6" *ngIf="obraSocial.numeroAfiliado">
+                    <i class="mdi mdi-card-text-outline"></i>
+                    <span class="text-primary">Número de Afiliado</span>
+                </div>
+            </div>
+            <div class="row" *ngIf="obraSocial && obraSocial.financiador">
+                <div class="col-6">
+                    {{obraSocial.financiador}}
+                </div>
+                <div class="col-6" *ngIf="obraSocial.numeroAfiliado">
+                    {{obraSocial.numeroAfiliado}}
+                </div>
+            </div>
+            <!-- <div class="row" *ngIf="_paciente?.financiador && _paciente.financiador[0]?.nombre">
                 <div class="col-6">
                     <i class="mdi mdi-account-card-details"></i>
                     <span class="text-primary">Obra Social</span>
@@ -67,7 +89,7 @@
                 <div class="col-6">
                     {{_paciente.financiador[0].numeroAfiliado}}
                 </div>
-            </div>
+            </div> -->
             <br>
             <div class="row">
                 <div class="col">
@@ -147,7 +169,8 @@
                             | {{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}}
                         </div>
 
-                        <div *ngIf="turno.estado === 'liberado'">Por {{turno.updatedBy.nombreCompleto}} el {{turno.updatedAt
+                        <div *ngIf="turno.estado === 'liberado'">Por {{turno.updatedBy.nombreCompleto}} el
+                            {{turno.updatedAt
                             | fecha}} a las {{turno.updatedAt | date: 'HH:mm'}}</div>
 
                         <div *ngIf="turno.tipoPrestacion?.term">{{turno.tipoPrestacion.term}}</div>

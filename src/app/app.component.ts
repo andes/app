@@ -53,7 +53,7 @@ export class AppComponent {
         accessList.push({ label: 'CITAS: Espacios Fisicos', icon: 'cogs', route: 'tm/mapa_espacio_fisico' });
 
         if (this.auth.getPermissions('mpi:?').length > 0) {
-            accessList.push({ label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: 'apps/mpi' });
+            accessList.push({ label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: '/apps/mpi/busqueda' });
         }
         if (this.auth.getPermissions('auditoriaPacientes:?').length > 0) {
             accessList.push({ label: 'Auditoría MPI', icon: 'account-search', route: 'apps/mpi/auditoria' });
@@ -65,7 +65,7 @@ export class AppComponent {
 
         let dato = this.auth.getPermissions('huds:?').length;
         if (this.auth.getPermissions('huds:?').length > 0) {
-            accessList.push({ label: 'HUDS: Visualizar por paciente', icon: 'file-tree', route: '/rup/buscaHuds' });
+            accessList.push({ label: 'HUDS: Visualizar por paciente', icon: 'file-tree', route: '/rup/huds' });
         }
 
         if (this.auth.getPermissions('reportes:?').length > 0) {
@@ -75,14 +75,21 @@ export class AppComponent {
         if (this.auth.getPermissions('solicitudes:?').length > 0) {
             accessList.push({ label: 'Solicitudes', icon: 'mdi mdi-open-in-app', route: '/solicitudes' });
         }
+        if (this.auth.getPermissions('turnosPrestaciones:buscar').length > 0) {
+            accessList.push({ label: 'Buscador de turnos y prestaciones', icon: 'table-search', route: '/buscador' });
+        }
+
+        if (this.auth.getPermissions('internacion:?').length > 0) {
+            accessList.push({ label: 'Mapa de camas', icon: 'mdi mdi-bed-empty', route: '/internacion/camas' });
+        }
 
         // faltan permisos
         if (this.auth.getPermissions('formularioTerapeutico:?').length > 0) {
             accessList.push({ label: 'Formulario Terapeutico', icon: 'mdi mdi-needle', route: '/formularioTerapeutico' });
         }
+
         this.menuList.push({ label: 'Página principal', icon: 'home', route: '/inicio' });
         this.menuList.push({ label: 'Padrones', icon: 'magnify', route: '/puco' });
-
         accessList.forEach((permiso) => {
             this.menuList.push(permiso);
         });

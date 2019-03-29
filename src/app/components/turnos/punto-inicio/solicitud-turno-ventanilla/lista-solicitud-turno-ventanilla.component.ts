@@ -5,7 +5,7 @@ import { Plex } from '@andes/plex';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 
 // Interfaces
-import { IPaciente } from './../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 
 @Component({
     selector: 'lista-solicitud-turno-ventanilla',

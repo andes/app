@@ -254,8 +254,8 @@ export class CamaCreateUpdateComponent implements OnInit {
 
     verificaDatos() {
         if (this.estado.unidadOrganizativa) {
-            this.CamaService.getCamas({ unidadesOrganizativas: this.estado.unidadOrganizativa.conceptId }).subscribe(x => {
-                const regex_nombre = new RegExp('.*' +  this.cama.nombre + '.*', 'ig');
+            this.CamaService.getCamas({ idOrganizacion: this.organizacion.id, unidadesOrganizativas: this.estado.unidadOrganizativa.conceptId }).subscribe(x => {
+                const regex_nombre = new RegExp('.*' + this.cama.nombre + '.*', 'ig');
                 let res = x.filter(cama => { return regex_nombre.test((cama.nombre as string)); });
                 if (res.length > 0) {
                     this.plex.info('info', 'Ya existe una cama con este nombre');

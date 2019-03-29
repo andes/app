@@ -19,7 +19,7 @@ export class InicioComponent implements AfterViewInit {
     public denied = false;
     public accessList: any = [];
 
-    constructor(public auth: Auth, public appComponent: AppComponent) { }
+    constructor(public auth: Auth, public appComponent: AppComponent, private plex: Plex) { }
 
     ngAfterViewInit() {
         window.setTimeout(() => {
@@ -46,7 +46,7 @@ export class InicioComponent implements AfterViewInit {
                 this.denied = false;
             }
 
-            if (this.auth.getPermissions('internacion:?').length > 0) {
+            if (this.auth.check('internacion:mapaDeCamas')) {
                 this.internacion = 'internacion';
                 this.denied = false;
             }

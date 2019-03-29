@@ -70,6 +70,11 @@ export enum EstadosEspacios {
     'baja permanente'
 }
 
+export enum TipoIdentificacion {
+    'pasaporte',
+    'dni extranjero'
+}
+
 export enum Censo {
     'Censable',
     'No Censable'
@@ -112,6 +117,23 @@ export function getObjSexos() {
     return salida;
 }
 
+export function getTipoIdentificacion() {
+    let arrTipoId = Object.keys(TipoIdentificacion);
+    arrTipoId = arrTipoId.slice(arrTipoId.length / 2);
+    return arrTipoId;
+}
+
+export function getObjTipoIdentificacion() {
+    let arrTipoId = Object.keys(TipoIdentificacion);
+    arrTipoId = arrTipoId.slice(arrTipoId.length / 2);
+    let salida = arrTipoId.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
 export function getObjCenso() {
     let arrCenso = Object.keys(Censo);
     arrCenso = arrCenso.slice(arrCenso.length / 2);

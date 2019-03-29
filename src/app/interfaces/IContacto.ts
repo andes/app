@@ -1,7 +1,7 @@
 export interface IContacto {
-    tipo: String;
-    valor: String;
-    ranking: Number;
-    activo: Boolean;
+    tipo: any;
+    valor: string;
+    ranking: number;
+    activo: boolean;
     ultimaActualizacion: Date;
 }

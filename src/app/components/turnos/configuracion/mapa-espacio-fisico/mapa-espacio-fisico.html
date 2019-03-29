@@ -9,7 +9,8 @@
 
         <tr class="hover" *ngFor="let espacio of matrix" class="">
             <td>
-                <small title="{{espacio._value.servicio?.nombre + ' - ' + espacio._value.sector?.nombre + ' - ' + espacio._value.edificio?.descripcion}}"
+                <small
+                    title="{{espacio._value.servicio?.nombre + ' - ' + espacio._value.sector?.nombre + ' - ' + espacio._value.edificio?.descripcion}}"
                     titlePosition="right">
                     <strong>{{espacio._value.nombre}}</strong>
                 </small>
@@ -19,13 +20,16 @@
             </td>
 
             <td *ngFor="let agenda of espacio._items" (mouseenter)="showInfo(agenda?.id)" (mouseleave)="showInfo(false)"
-                [colSpan]="agenda?.colspan" class="text-white" [ngClass]="{'ocupado-planificacion': agenda.id && agenda._value && agenda._value.estado ==='planificacion', 'ocupado': agenda.id && agenda._value && agenda._value.estado !=='planificacion'}"
+                [colSpan]="agenda?.colspan" class="text-white" [ngClass]="{'ocupado-planificacion': agenda.id && agenda._value && agenda._value.estado ==='planificacion', 
+                'disponible': agenda.id && agenda._value && agenda._value.estado !=='planificacion' && agenda._value.estado !=='pausada',
+                'ocupado': agenda.id && agenda._value && agenda._value.estado =='pausada'}"
                 (click)="seleccionarEspacio(espacio, agenda.disponible)">
                 <ng-container *ngIf="agenda && idInfoAgenda === agenda.id">
                     <div class="info-agenda">
                         <div class="texto-agenda">
                             <b>{{agenda.horaInicio | date: 'HH:mm' }} a {{agenda.horaFin | date: 'HH:mm'}} hs</b>
                             <br> {{agenda.prestaciones | enumerar:['term']}}
+                            &nbsp;<span>({{agenda._value.estado}})</span>
                             <br>
                             <small *ngIf="agenda.profesionales?.length > 0">
                                 <b>Prof:</b> {{agenda.profesionales | enumerar:['apellido', 'nombre']}}</small>

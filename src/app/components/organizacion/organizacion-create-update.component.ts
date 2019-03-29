@@ -17,7 +17,7 @@ import { IBarrio } from './../../interfaces/IBarrio';
 import { ILocalidad } from './../../interfaces/ILocalidad';
 import { IUbicacion } from './../../interfaces/IUbicacion';
 import { IEdificio } from './../../interfaces/IEdificio';
-import { IDireccion } from './../../interfaces/IDireccion';
+import { IDireccion } from '../../core/mpi/interfaces/IDireccion';
 import { IContacto } from './../../interfaces/IContacto';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { ITipoEstablecimiento } from './../../interfaces/ITipoEstablecimiento';
@@ -297,7 +297,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     }
     deleteUO($event) {
         if ($event.conceptId) {
-            this.CamaService.UOxCama($event.conceptId).subscribe(camas => {
+            this.CamaService.UOxCama(this.seleccion.id, $event.conceptId).subscribe(camas => {
                 if (camas.length <= 0) {
                     this.plex.confirm('¿Desea eliminar?', 'Eliminar unidad organizativa').then((confirmar) => {
                         let index = this.organizacionModel.unidadesOrganizativas.findIndex((item) => item === $event);

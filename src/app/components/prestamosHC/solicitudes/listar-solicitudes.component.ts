@@ -1,7 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { PrestarHcComponent } from './prestar-hc.component';
-import { SolicitudManualComponent } from './solicitud-manual-hc.component';
+import { Component, OnInit, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
 import { enumToArray } from '../../../utils/enums';
 import { EstadosCarpetas } from './../enums';
 import { Auth } from '@andes/auth';
@@ -10,7 +7,7 @@ import * as moment from 'moment';
 
 // Servicios
 import { PrestamosService } from './../../../services/prestamosHC/prestamos-hc.service';
-import { PacienteService } from '../../../services/paciente.service';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { EspacioFisicoService } from '../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from '../../../services/profesional.service';
@@ -20,8 +17,7 @@ import { CDAService } from './../../../modules/rup/services/CDA.service';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
 
 // Interfaces
-import { IPaciente } from './../../../interfaces/IPaciente';
-import { debug } from 'util';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { environment } from '../../../../environments/environment';
 
 @Component({

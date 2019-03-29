@@ -1,5 +1,5 @@
 import { IContacto } from './IContacto';
-import { IDireccion } from './IDireccion';
+import { IDireccion } from '../core/mpi/interfaces/IDireccion';
 
 export interface IEdificio {
     id: String;

@@ -8,7 +8,7 @@ import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, O
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { IElementoRUP } from './../../interfaces/elementoRUP.interface';
-import { IPaciente } from './../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
 import { AdjuntosService } from '../../services/adjuntos.service';
@@ -19,8 +19,8 @@ import { FinanciadorService } from '../../../../services/financiador.service';
 import { ProcedimientosQuirurgicosService } from '../../../../services/procedimientosQuirurgicos.service';
 import { Cie10Service } from '../../../../services/term/cie10.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
-import { ActivatedRoute } from '@angular/router';
 import { ElementosRUPRegister } from '../elementos';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'rup',
@@ -43,6 +43,7 @@ export class RUPComponent implements OnInit, AfterViewInit {
     @Input() registro: IPrestacionRegistro;
     @Input() paciente: IPaciente;
     @Input() soloValores: boolean;
+    @Input() vistaHUDS = false;
     @Input() params: any;
     @Input() opcionales: any;
     public mensaje: any = {};
@@ -70,6 +71,7 @@ export class RUPComponent implements OnInit, AfterViewInit {
         componentReference.instance['registro'] = this.registro;
         componentReference.instance['elementoRUP'] = this.elementoRUP;
         componentReference.instance['soloValores'] = this.soloValores;
+        componentReference.instance['vistaHUDS'] = this.vistaHUDS;
         componentReference.instance['paciente'] = this.paciente;
         componentReference.instance['params'] = this.params;
         componentReference.instance['opcionales'] = this.opcionales;

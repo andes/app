@@ -2,7 +2,7 @@ import { Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
 // import { Observable } from 'rxjs/Observable';
 import { ICama } from '../interfaces/ICama';
-import { IPaciente } from '../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { Observable } from 'rxjs';
 
 @Injectable()
@@ -204,8 +204,9 @@ export class CamasService {
 
     }
 
-    UOxCama(conceptIdUO): Observable<any> {
+    UOxCama(idOrganizacion, conceptIdUO): Observable<any> {
         let params = {
+            idOrganizacion: idOrganizacion,
             unidadesOrganizativas: conceptIdUO
         };
         return this.server.get(this.camasUrl, { params: params, showError: true });

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, HostBinding } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { IPaciente } from '../../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { ResumenPacienteDinamicoService } from '../../../services/resumenPaciente-dinamico.service';
 import { VacunasService } from '../../../../../services/vacunas.service';
 import { PrestacionesService } from '../../../services/prestaciones.service';

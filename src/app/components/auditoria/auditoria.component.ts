@@ -1,13 +1,13 @@
 import { Plex } from '@andes/plex';
 import { Component, OnInit, Output } from '@angular/core';
-import { PacienteService } from './../../services/paciente.service';
+import { PacienteService } from '../../core/mpi/services/paciente.service';
 import { AgendaService } from './../../services/turnos/agenda.service';
 import { SisaService } from '../../services/fuentesAutenticas/servicioSisa.service';
 import { RenaperService } from '../../services/fuentesAutenticas/servicioRenaper.service';
 import { PacienteBuscarResultado } from '../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
-import { IPaciente } from '../../interfaces/IPaciente';
+import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 
 @Component({
   selector: 'auditoria',
@@ -191,8 +191,8 @@ export class AuditoriaComponent implements OnInit {
         this.enableValidar = false;
         this.enableVinculados = true;
       });
-    }
-  }
+    }}
+
 
   verDuplicados() {
     this.showAuditoria = false;
@@ -305,6 +305,7 @@ export class AuditoriaComponent implements OnInit {
       this.pacienteSelected.nombre = this.datosFA.matcheos.datosPaciente.nombre;
       this.pacienteSelected.apellido = this.datosFA.matcheos.datosPaciente.apellido;
     }
+
     if (fa === 'sisa') {
       this.pacienteSelected.nombre = this.datosFA.matcheos.datosPaciente.nombre;
       this.pacienteSelected.apellido = this.datosFA.matcheos.datosPaciente.apellido;

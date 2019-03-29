@@ -1,9 +1,11 @@
 import { IElementoRUP } from './elementoRUP.interface';
 import { ISnomedConcept } from './snomed-concept.interface';
 import { ObjectID } from 'bson';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 export class IPrestacionRegistro {
     id: string;
+    idPrestacion: string;
     // Indica el nombre del registro, calculado por el elementoRUP.
     // Ejemplo: 'Prescripción de novalgina'
     nombre: string;
@@ -25,7 +27,14 @@ export class IPrestacionRegistro {
 
     solicitud: any;
 
+    evoluciones: any;
+    transformado: any;
+    esPrimeraVez: boolean;
+
     createdAt: Date;
+
+    // Virtuales 🤷
+    paciente: IPaciente;
 
     constructor(elementoRUP: IElementoRUP, snomedConcept: ISnomedConcept) {
         this.id = (new ObjectID()).toString();

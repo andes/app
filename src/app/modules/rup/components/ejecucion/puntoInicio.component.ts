@@ -11,9 +11,8 @@ import { EstadosAgenda } from './../../../../components/turnos/enums';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { PacienteService } from './../../../../services/paciente.service';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
-import { IPaciente } from '../../../../interfaces/IPaciente';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
 import { SubscriptionLike as ISubscription } from 'rxjs';
@@ -323,7 +322,7 @@ export class PuntoInicioComponent implements OnInit {
     * Navega para ver seleccionar un paciente y ver la huds
     */
     verHuds() {
-        this.router.navigate(['/rup/buscaHuds']);
+        this.router.navigate(['/rup/huds']);
     }
 
     iniciarPrestacion(paciente, snomedConcept, turno) {
