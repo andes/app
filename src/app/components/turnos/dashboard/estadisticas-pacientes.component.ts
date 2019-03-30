@@ -62,13 +62,6 @@ export class EstadisticasPacientesComponent implements OnInit {
         private obraSocialService: ObraSocialService) { }
 
     ngOnInit() {
-        // Se cargan los datos calculados
-        let hoy = {
-            fechaDesde: moment().startOf('month').toDate(),
-            fechaHasta: moment().endOf('day').toDate()
-        };
-        this.fechaDesde = moment().startOf('month').toDate();
-        this.fechaHasta = moment().endOf('day').toDate();
         this.carpetaEfector = {
             organizacion: {
                 id: this.auth.organizacion.id,
