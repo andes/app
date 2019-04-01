@@ -596,6 +596,12 @@ export class ProtocoloDetalleComponent
         }
     }
 
+    /**
+     *
+     *
+     * @returns
+     * @memberof ProtocoloDetalleComponent
+     */
     validarRecepcionPaciente() {
         return this.modelo.solicitud.registros[0].valor.solicitudPrestacion.servicio
             && this.modelo.solicitud.registros[0].valor.solicitudPrestacion.prioridad

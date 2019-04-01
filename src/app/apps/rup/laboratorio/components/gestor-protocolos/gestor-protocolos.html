@@ -24,7 +24,7 @@
                     </ng-container>
                 </div>
                 <nav>
-                    <plex-tabs [activeIndex]="accionIndex" (change)="onTabChange($event)" *ngIf="!showProtocoloDetalle">
+                    <plex-tabs [activeIndex]="contextoCache.modo.id" (change)="onTabChange($event)" *ngIf="!showProtocoloDetalle">
                         <!-- <plex-tab label="Recepción"></plex-tab> -->
                         <plex-tab label="Listado"></plex-tab>
                         <plex-tab label="Auditoría"></plex-tab>

@@ -26,7 +26,9 @@ export class LaboratorioContextoCacheService {
                     nombre: 'listado',
                     titulo: 'Listado'
                 },
-                modoCargaLaboratorio: null,
+                modoCargaLaboratorio: 'Lista de protocolos',
+                solicitudDesde: new Date(),
+                solicitudHasta: new Date(),
             }
         );
     }
@@ -48,10 +50,10 @@ export class LaboratorioContextoCacheService {
      * @memberof LaboratorioContextoCacheService
      */
     cambiarModo(modoId) {
-        modoId++;
         if (modoId !== Constantes.modos.carga.id) {
-            this.getContextoCache().modoCargaLaboratorio = null;
+            this.getContextoCache().modoCargaLaboratorio = 'Lista de protocolos';
         }
+
 
         if (modoId === Constantes.modos.recepcion.id) {
             this.getContextoCache().modo = Constantes.modos.recepcion;
@@ -93,6 +95,15 @@ export class LaboratorioContextoCacheService {
      */
     modoControl() {
         this.getContextoCache().modo = Constantes.modos.control;
+    }
+
+    /**
+     *
+     *
+     * @memberof LaboratorioContextoCacheService
+     */
+    modoListado() {
+        this.getContextoCache().modo = Constantes.modos.listado;
     }
 
     /**

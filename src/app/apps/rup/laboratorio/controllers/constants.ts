@@ -19,32 +19,32 @@ export const Constantes = {
     estadoValidada: { tipo: 'validada' },
     modos: {
         recepcion: {
-            id: 0,
+            id: -1,
             nombre: 'recepcion',
             titulo: 'Recepcionar Paciente',
         },
         listado: {
-            id: 1,
+            id: 0,
             nombre: 'listado',
             titulo: 'Listado'
         },
         control: {
-            id: 2,
+            id: 1,
             nombre: 'control',
             titulo: 'Auditoría de Protocolos'
         },
         carga: {
-            id: 3,
+            id: 2,
             nombre: 'carga',
             titulo: 'Carga de Resultados'
         },
         validacion: {
-            id: 4,
+            id: 3,
             nombre: 'validacion',
             titulo: 'Validación de Resultados',
         },
         recepcionSinTurno: {
-            id: 5,
+            id: 4,
             nombre: 'recepcionSinTurno',
             titulo: 'Recepcionar Paciente Sin Turno'
         }

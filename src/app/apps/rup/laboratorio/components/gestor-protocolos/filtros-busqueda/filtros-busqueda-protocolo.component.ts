@@ -44,8 +44,6 @@ export class FiltrosBusquedaProtocoloComponent
     public servicios = [];
     public cacheContexto;
     public busqueda = {
-        solicitudDesde: new Date(),
-        solicitudHasta: new Date(),
         idPaciente: null,
         origen: null,
         numProtocoloDesde: null,

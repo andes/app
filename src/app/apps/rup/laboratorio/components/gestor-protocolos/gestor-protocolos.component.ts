@@ -101,11 +101,6 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
         if (!this.permisoAuditoria && !this.permisoCarga && !this.permisoValidacion) {
             this.router.navigate(['./inicio']);
         }
-        if (!this.contextoCache.modo) {
-            this.contextoCache.modo = Constantes.modos.carga;
-        }
-
-        this.accionIndex = this.contextoCache.modo ? this.contextoCache.modo.id : 3;
 
         if (!this.protocolo) {
             this.resetearProtocolo({});

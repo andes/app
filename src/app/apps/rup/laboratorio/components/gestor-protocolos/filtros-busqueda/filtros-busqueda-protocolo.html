@@ -21,12 +21,12 @@
 
 <div class="filtros-container {{ modo.nombre }}">
     <span>
-        <plex-datetime type="date" [(ngModel)]="busqueda.solicitudDesde" (change)="buscarProtocolos($event,'fechaDesde')"
+        <plex-datetime type="date" [(ngModel)]="cacheContexto.solicitudDesde" (change)="buscarProtocolos($event,'fechaDesde')"
             name="solicitudDesde" label="Fecha desde" [required]="true" skipBy="day">
         </plex-datetime>
     </span>
     <span>
-        <plex-datetime type="date" [(ngModel)]="busqueda.solicitudHasta" (change)="buscarProtocolos($event,'fechaHasta')"
+        <plex-datetime type="date" [(ngModel)]="cacheContexto.solicitudHasta" (change)="buscarProtocolos($event,'fechaHasta')"
             name="solicitudHasta" label="Fecha hasta" [required]="true" skipBy="day">
         </plex-datetime>
     </span>
