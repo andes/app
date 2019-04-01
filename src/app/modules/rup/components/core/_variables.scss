@@ -2,7 +2,7 @@ $adi-font-path: '~@andes/icons/fonts/';
 @import '~@andes/icons/scss/andes-icons';
 @import '~@andes/plex/src/lib/css/variables';
 
-@import './functions';
+// @import './functions';
 
 // Variables
 $problema: #f1930d; // deprecated
@@ -24,6 +24,8 @@ $registro: #8bc43f; // elemento de registro
 // la interpolacion del string a una variable directamente
 
 $hilite: #fffb8f;
+
+$rotate: -90deg;
 
 $rup_colors: (
     problema: $problema, 
