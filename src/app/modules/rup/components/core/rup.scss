@@ -8,8 +8,6 @@
 // TODO: Crear paquete NPM con las fonts
 @import '../../assets/font.css';
 
-$rotate: -90deg;
-
 .rup-card {
     &:not(.mini) {
         border: 2px solid #ccc;
@@ -20,78 +18,7 @@ $rotate: -90deg;
     margin-bottom: 10px;
     transition: 200ms all;
     -webkit-transition: 200ms all;
-    &.mini {
-        margin-bottom: 2px;
-        .rup-header {
-            display: grid;
-            grid-template-columns: 55px minmax(190px, 1fr) minmax(135px, 160px);
-            grid-template-rows: minmax(55px, 1fr);
-            .icon-rup {
-                border-right: 2px solid #ccc;
-            }
-            .actions {
-                border-top: 2px solid #ccc;
-                border-bottom: 2px solid #ccc;
-                border-right: 2px solid #ccc;
-            }
-            .datos {
-                display: grid;
-                b {
-                    text-transform: capitalize;
-                    line-height: 1.15rem;
-                    padding-top: 1px; // fixito
-                }
-                .profesional {
-                    //
-                }
-                .efector {
-                    font-style: oblique;
-                    font-size: 0.75rem;
-                }
-            }
-        }
-        .rup-border {
-            width: 100%;
-            border-top: 2px solid #ccc;
-            border-bottom: 2px solid #ccc;
-            border-right: 2px solid #ccc;
-        }
-        @each $tag,
-        $color in $rup_colors {
-            .rup-border-#{$tag} {
-                &:hover {
-                    background: #eee;
-                    border-right: 2px solid $color;
-                    border-bottom: 2px solid $color;
-                    border-top: 2px solid $color;
-                }
-            }
-            &.#{$tag} {
-                &:hover,
-                &.active {
-                    box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
-                    .rup-header {
-                        .icon-rup {
-                            background: $color;
-                            i {
-                                color: white;
-                            }
-                        }
-                    }
-                }
-                .rup-header {
-                    .icon-rup {
-                        border: 2px solid $color;
-                        background: white;
-                        i {
-                            color: $color;
-                            font-size: 2rem;
-                        }
-                    }
-                }
-            }
-        }
-    }
+    
     @each $tag,
     $color in $rup_colors {
         &.#{$tag}:not(.mini) {
@@ -147,7 +74,7 @@ $rotate: -90deg;
             background: white;
             font-size: 1rem;
             font-weight: 600;
-            padding: 10px 20px;
+            padding: 10px;
             display: inline-grid;
             .vinculadoCon {
                 display: inline-flex;
@@ -190,7 +117,7 @@ $rotate: -90deg;
         }
         .content {
             margin: 0;
-            padding: 10px 20px;
+            padding: 5px;
             flex: 1;
             border-top: 1px solid #666;
         }
@@ -420,30 +347,7 @@ $color in $rup_colors {
 }
 
 
-// ejemplo resultado: .semantic-badge hallazgo > .icon-rup {}
-@each $tag, $color in $rup_colors {
-    .semantic-badge-#{$tag} {
-        i {
-            border-bottom: 1px solid $color;
-            color: white;
-            background: $color !important;
-            mix-blend-mode: hard-light;
-            // padding-top: 3px;
-            // padding-bottom: 2px;
-            padding: 3px 3px 2px;
-        }
-        i:hover {
-            border: 2px solid $color;
-            box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
-        }
-    }
-    .semantic-text-#{$tag} {
-        color: $color;
-    }
-    .semantic-border-#{$tag} {
-        border-color: $color;
-    }
-}
+
 
 .input-group-addon {
     input {
