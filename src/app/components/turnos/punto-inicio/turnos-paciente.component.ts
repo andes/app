@@ -78,8 +78,8 @@ export class TurnosPacienteComponent implements OnInit {
     showArancelamiento(turno) {
         this.turnoArancelamiento = turno;
         this.showMotivoConsulta = true;
-        // this.servicioFA.post(turno).subscribe(prestacion => {
-        // });
+        this.servicioFA.post(turno).subscribe(prestacion => {
+        });
     }
 
     printArancelamiento(turno) {
