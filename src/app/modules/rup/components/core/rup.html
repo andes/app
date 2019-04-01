@@ -2,7 +2,7 @@
 
 <!-- Moléculas -->
 <ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
-    <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
+    <div class="row no-gutters" [ngClass]="{'d-flex justify-content-start': soloValores}">
         <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
             <div *ngIf="item.elementoRUP"
                 class="col-{{ item.style.columns }} mr-{{ item.style?.offset ? item.style.offset : '0' }}">
