@@ -66,52 +66,14 @@
     </ng-container>
 
 </div>
-<!-- Vista: TODOS -->
+
 <div *ngIf="filtroActual && resultadoRegistros && resultadoRegistros[filtroActual]?.length > 0"
     class="hover registros-resultados list-unstyled">
-    <!-- <cdk-virtual-scroll-viewport [itemSize]="55"> -->
-    <div *ngFor="let registro of resultadoRegistros[filtroActual]"
-        class="rup-card mini {{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}" [ngClass]="{
-                    'active': huds.isOpen(registro, (registro.tipo ? registro.tipo : 'concepto')), 
-                    'solicitud' : registro.esSolicitud
-                }">
-        <div
-            class="rup-header rup-border rup-border-{{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}">
-            <div class="icon-rup drag-handle d-flex align-items-center justify-content-center"
-                (click)="emitTabs(registro, (registro.tipo ? registro.tipo: 'concepto'))">
-                <i
-                    class="adi adi-rup-semantic-{{ servicioPrestacion.getCssClass(registro.concepto, registro.esSolicitud) }}"></i>
-            </div>
+    <ng-container *ngFor="let registro of resultadoRegistros[filtroActual]">
+        <rup-mini-card [registro]="registro" [filtroActual]="filtroActual" [emitirConceptos]="emitirConceptos"
+            (registroVolador)="devolverHallazgo($event.registro, 'hallazgo')"
+            (accionSecundaria)="emitTabs($event.registro, 'hallazgo')">
+        </rup-mini-card>
+    </ng-container>
 
-            <div class="datos pl-2" (click)="emitTabs(registro, (registro.tipo ? registro.tipo: 'concepto'))">
-                <b><span [ngClass]="{'bg-hilite': prestacionSeleccionada?.length > 0}">
-                        {{ registro.concepto.term }}</span></b>
-                <div class="profesional">
-                    {{ registro?.evoluciones ? registro.evoluciones[0].profesional : registro.profesional }}
-                </div>
-                <div class="efector">
-                    <span [ngClass]="{'bg-hilite': organizacionSeleccionada?.length > 0}">
-                        {{ registro.organizacion.nombre }}
-                    </span>
-                </div>
-            </div>
-            <div class="d-flex justify-content-end align-items-start p-2"
-                [ngClass]="{'flex-wrap': filtroActual === 'trastornos'}">
-                <small class="badge badge-info">
-                    {{ (registro?.evoluciones ? registro.evoluciones[0].fechaCarga : registro.fecha) | fecha }}
-                </small>
-                <small
-                    *ngIf="registro?.evoluciones?.length && registro.evoluciones[registro.evoluciones.length - 1].estado"
-                    class="badge badge-success">
-                    {{ registro.evoluciones[registro.evoluciones.length - 1].estado }}
-                </small>
-                <button *ngIf="emitirConceptos && filtroActual === 'trastornos'"
-                    class="btn btn-sm btn-success btn-icon-rup" title="Agregar a la consulta" titlePosition="left"
-                    (click)="devolverHallazgo(registro, 'hallazgo')">
-                    <i class="mdi mdi-plus"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-    <!-- </cdk-virtual-scroll-viewport> -->
 </div>
