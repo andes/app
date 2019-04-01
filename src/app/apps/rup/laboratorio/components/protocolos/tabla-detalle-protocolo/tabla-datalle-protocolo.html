@@ -94,12 +94,12 @@
                             </span>
                         </ng-container>
                     </td>
-                    <ng-container *ngIf="!(practicaCarga.valor.practica.categoria === 'simple') ">
+                    <ng-container *ngIf="practicaCarga.valor.practica.categoria !== 'simple'">
                         <td>
                             <span *ngIf="modo.nombre === 'validacion'" style='color: #5BC0F4; font-weight: bold; font-size:
-                                18px;'>Resultado Fórmula: {{practicaCarga.valor.practica.resultado.valor}}
+                                18px;'>Fx: {{practicaCarga.valor.practica.resultado.valor}}
                             </span>
-                            <!-- Resultado Fórmula: {{practicaCarga.valor.practica.resultado.valor}} -->
+                            <!-- Fx: {{practicaCarga.valor.practica.resultado.valor}} -->
                             <!-- {{calcularFormula(practicaCarga.valor.practica.resultado?.configuracionFormula.formula)}} -->
                         </td>
                         <td></td>
@@ -143,16 +143,12 @@
                                 </plex-button>
                             </ng-container>
                         </td>
-                        <td *ngIf='modo.nombre ==="validacion"'>
+                        <td *ngIf='modo.nombre ==="validacion"' style="white-space: nowrap;">
                             <span style='color:green'>
                                 <ng-container *ngIf="getResultadoAnterior(practicaCarga)">
                                     <span (click)="verHistorialResultados(practicaCarga)">
-                                        {{ getResultadoAnterior(practicaCarga).valor }}
-                                        &nbsp;
-                                        <br>
-                                        {{ practicaCarga.valor.practica.unidadMedida.nombre }}
-                                        <br>
-                                        {{ getResultadoAnterior(practicaCarga).estado.fecha | date:
+                                        {{getResultadoAnterior(practicaCarga).valor}} {{ practicaCarga.valor.practica.unidadMedida.nombre }}
+                                        &nbsp;&nbsp;    {{ getResultadoAnterior(practicaCarga).estado.fecha | date:
                                         'dd/MM/yyyy' }}
                                     </span>
                                 </ng-container>
@@ -161,22 +157,20 @@
                                 </ng-container>
                             </span>
                         </td>
-                        <td>
+                        <td style="white-space: nowrap;">
                             {{practicaCarga.valor.practica.unidadMedida.nombre}}
                         </td>
                         <td>
-                            <ng-container
-                                *ngIf="practicaCarga.valor.practica.resultado.formato && practicaCarga.valor.practica.resultado.formato.tipo === 'Numérico'">
-                                {{practicaCarga.valor.practica.presentaciones[0].valoresReferencia[0].valorMinimo}} -
-                                {{practicaCarga.valor.practica.presentaciones[0].valoresReferencia[0].valorMaximo}}
-                                <ng-container
-                                    *ngIf="practicaCarga.valor.practica.resultado.formato && practicaCarga.valor.practica.resultado.formato.tipo === 'Numérico'">
-                                    | {{practicaCarga.valor.practica.presentaciones[0].metodo }}
+                            <ng-container *ngIf="practicaCarga.valor.practica.resultado.formato">
+                                <ng-container *ngIf="practicaCarga.valor.practica.resultado.formato.tipo === 'Numérico'">
+                                    {{practicaCarga.valor.practica.presentaciones[0].valoresReferencia[0].valorMinimo}} -
+                                    {{practicaCarga.valor.practica.presentaciones[0].valoresReferencia[0].valorMaximo}}
+                                    <!-- | {{practicaCarga.valor.practica.presentaciones[0].metodo }} -->
                                 </ng-container>
-                            </ng-container>
-                            <ng-container
-                                *ngIf="practicaCarga.valor.practica.resultado.formato && practicaCarga.valor.practica.resultado.formato.tipo != 'Numérico'">
-                                Método: {{practicaCarga.valor.practica.presentaciones[0].metodo }}
+                                    <!-- | {{practicaCarga.valor.practica.presentaciones[0].metodo }} -->
+                                <!-- <ng-container *ngIf="practicaCarga.valor.practica.resultado.formato.tipo != 'Numérico'"> -->
+                                    {{practicaCarga.valor.practica.presentaciones[0].metodo }}
+                                <!-- </ng-container> -->
                             </ng-container>
                         </td>
 
@@ -188,10 +182,8 @@
                                         title="{{practicaCarga.valor.estados[practicaCarga.valor.estados.length-1]?.usuario.nombre}} {{practicaCarga.valor.estados[practicaCarga.valor.estados.length-1]?.usuario.apellido}}
                                                 <br />{{practicaCarga.valor.estados[practicaCarga.valor.estados.length-1]?.fecha | date: 'dd/MM/yyyy' }} ">
                                     </span>
-
                                     <!-- : 
                                     {{}}
-                                    
                                      -->
                                 </ng-container>
                             </td>
@@ -208,7 +200,6 @@
                             </td>
                         </ng-container>
                     </ng-container>
-
                 </tr>
             </ng-container>
         </tbody>
@@ -264,7 +255,7 @@
                     </ng-container>
                 </td>
                 <td>
-                    <!-- <td>
+                <!-- <td>
                     {{practicaCarga.valor.practica.unidadMedida.nombre}}
                 </td> -->
                 <td>

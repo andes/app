@@ -484,7 +484,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
                     practica.valor.practica.resultado.valor = mathjs.eval(practica.valor.practica.resultado.configuracionFormula.formula);
                 } catch (error) {
                     console.log(error);
-                    practica.valor.practica.resultado.valor = 'Imposible calcular fórmula';
+                    practica.valor.practica.resultado.valor = 'Imposible calcular';
                 }
             }
 

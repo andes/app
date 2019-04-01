@@ -154,15 +154,18 @@ header {
         padding: .15rem .25rem;
     }
     &.carga,
-    &.validacion {
-        grid-template-columns: repeat(7, minmax(100px, 1fr));
-        &> div {
-            width: auto;
-            align-self: flex-end;
-            padding: .15rem .25rem;
-        }
-    }
+    // &.validacion {
+    //     grid-template-columns: repeat(7, minmax(100px, 1fr));
+    //     &> div {
+    //         width: auto;
+    //         align-self: flex-end;
+    //         padding: .15rem .25rem;
+    //     }
+    // }
     &.lote-derivacion {
+        grid-template-columns: repeat(3, minmax(100px, 1fr));
+    }
+    &.modo-carga {
         grid-template-columns: repeat(3, minmax(100px, 1fr));
     }
 }
