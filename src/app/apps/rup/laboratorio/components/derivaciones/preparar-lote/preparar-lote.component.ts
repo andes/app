@@ -39,6 +39,7 @@ export class PrepararLoteComponent implements OnInit {
     ngOnInit() {
         this.cargarAreasLaboratorio();
         this.iniciarLote();
+        this.buscar(null, null);
     }
 
     /**
@@ -67,14 +68,17 @@ export class PrepararLoteComponent implements OnInit {
      */
     buscar($event, tipo?) {
         if (tipo && tipo === 'organizacionDerivacion') {
-            this.lote.laboratorioDestino = {
-                nombre: $event.value.nombre,
-                id: $event.value.id
-            };
+            if ($event.value && $event.value.id) {
+                this.lote.laboratorioDestino = {
+                    nombre: $event.value.nombre,
+                    id: $event.value.id
+                };
+            } else {
+                this.lote.laboratorioDestino = null;
+            }
         }
-        if (this.organizacionDerivacion) {
-            this.protocoloService.get(this.getParams()).subscribe(res => this.protocolos = res);
-        }
+        this.lote.itemsLoteDerivacion = [];
+        this.protocoloService.get(this.getParams()).subscribe(res => this.protocolos = res);
     }
 
     /**
@@ -86,14 +90,15 @@ export class PrepararLoteComponent implements OnInit {
     private getParams() {
         let params: any = {
             pendientesDerivacion: true,
-            organizacionDerivacion: this.organizacionDerivacion._id,
             organizacionDestino: this.auth.organizacion._id,
-            desde: this.desde,
-            hasta: this.hasta
+            solicitudDesde: this.desde,
+            solicitudHasta: this.hasta
         };
-
+        if (this.organizacionDerivacion) {
+            params.organizacionDerivacion = this.organizacionDerivacion._id;
+        }
         if (this.area) {
-            params.area = this.area;
+            params.areas = this.area.id;
         }
         if (this.practicas) {
             params.practicas = this.practicas;
@@ -101,12 +106,10 @@ export class PrepararLoteComponent implements OnInit {
         if (this.estado) {
             params.estado = this.estado;
         }
-
         return params;
     }
 
     /**
-     *
      *
      * @memberof PrepararLoteComponent
      */
@@ -136,16 +139,6 @@ export class PrepararLoteComponent implements OnInit {
         } else {
             event.callback([]);
         }
-    }
-
-    /**
-     *
-     *
-     * @param {*} event
-     * @memberof PrepararLoteComponent
-     */
-    onChangeSelectArea(event) {
-        event.callback([]);
     }
 
     /**
