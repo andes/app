@@ -54,6 +54,7 @@ export class IniciarInternacionComponent implements OnInit {
     btnIniciarGuardar;
     showEditarCarpetaPaciente = false;
 
+    public listaPasesCama = [];
     public primerPase;
     public listaUnidadesOrganizativas = [];
     public listadoCamas = [];
@@ -154,6 +155,11 @@ export class IniciarInternacionComponent implements OnInit {
     ngOnInit() {
         if (this.prestacion) {
             this.btnIniciarGuardar = 'GUARDAR';
+            if (this.prestacion.id) {
+                this.servicioPrestacion.getPasesInternacion(this.prestacion.id).subscribe(lista => {
+                    this.listaPasesCama = lista;
+                });
+            }
             let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
             if (existeRegistro) {
                 this.paciente = this.prestacion.paciente;
@@ -356,25 +362,18 @@ export class IniciarInternacionComponent implements OnInit {
         this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
     }
 
-    controlarConflictosInternacion(fechaIngreso: Date): boolean {
-        const fechaActual = new Date();
+    controlarConflictosInternacion(fechaIngreso: Date, fechaActual: Date): boolean {
         // Controlamos que no me carguen una internación a futuro
         if (fechaIngreso > fechaActual) {
             this.plex.info('warning', 'La fecha de ingreso no puede ser superior a la fecha actual');
             return false;
         }
-        if (this.prestacion && this.prestacion.id) {
-            this.servicioPrestacion.getPasesInternacion(this.prestacion.id).subscribe(lista => {
-                if (lista.length > 1) {
-                    this.primerPase = lista[1];
-                    if (fechaIngreso > this.primerPase.estados.fecha) {
-                        this.plex.info('warning', 'La fecha de ingreso no puede ser superior a la fecha del primer movimiento');
-                        return false;
-                    }
-                }
-
-
-            });
+        if (this.listaPasesCama && this.listaPasesCama.length > 1) {
+            this.primerPase = this.listaPasesCama[1];
+            if (fechaIngreso > this.primerPase.estados.fecha) {
+                this.plex.info('warning', 'La fecha de ingreso no puede ser superior a la fecha del primer movimiento');
+                return false;
+            }
         }
         // Controlamos conflictos de fechas en el historial de la cama
         // buscamos que en la fechaHora de ingreso, con un margen de una hora, la cama este disponible
@@ -392,7 +391,6 @@ export class IniciarInternacionComponent implements OnInit {
      * Guarda la prestación
      */
     guardar(valid) {
-        debugger;
         if (valid.formValid) {
             if (!this.paciente) {
                 this.plex.info('warning', 'Debe seleccionar un paciente');
@@ -408,9 +406,10 @@ export class IniciarInternacionComponent implements OnInit {
                 return;
             }
 
+            let fechaActual = new Date();
 
             let fechaIngreso = this.servicioInternacion.combinarFechas(this.fecha, this.hora);
-            if (!this.controlarConflictosInternacion(fechaIngreso)) {
+            if (!this.controlarConflictosInternacion(fechaIngreso, fechaActual)) {
                 return;
             }
             // mapeamos los datos en los combos
@@ -477,12 +476,12 @@ export class IniciarInternacionComponent implements OnInit {
                     this.plex.info('danger', err);
                 });
                 if (this.cama && this.cama.ultimoEstado.idInternacion) {
-                    let cambios = {
+                    let cambiosEst = {
                         'op': 'estadoCama',
                         'idEstado': this.primerPase ? this.primerPase._id : this.cama.ultimoEstado._id,
                         'fecha': this.informeIngreso.fechaIngreso
                     };
-                    this.camasService.patch(this.cama.id, cambios).subscribe(camaActualizada => {
+                    this.camasService.patch(this.cama.id, cambiosEst).subscribe(() => {
                         this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
                         this.data.emit(false);
                     }, (err1) => {
