@@ -9,7 +9,7 @@ import { ProfesionalService } from '../../../../services/profesional.service';
     template: `
     <div class="row">
         <div class="col-2">
-            <plex-select label="Tipo de filtro" [data]="opciones" [(ngModel)]="seleccion.tipoDeFiltro" name="tipoDeFiltro"></plex-select>
+            <plex-select label="Tipo de filtro" [data]="opciones" [(ngModel)]="seleccion.tipoDeFiltro" name="tipoDeFiltro" [required]="true"></plex-select>
         </div>
         <div class="col-2">
             <plex-datetime label="Desde" [max]="hoy" type="date" [(ngModel)]="desde" name="desde"></plex-datetime>
@@ -18,12 +18,12 @@ import { ProfesionalService } from '../../../../services/profesional.service';
             <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta"></plex-datetime>
         </div>
         <div class="col-2 d-flex align-items-end">
-            <plex-button type="success mb-1" label="Filtrar" (click)="onChange()" ></plex-button>
+            <plex-button type="success mb-1" label="Filtrar" (click)="onChange()" [disabled]="(seleccion.tipoDeFiltro && desde && hasta) ? false : true"></plex-button>
         </div>
         <div class="col-1 offset-2 d-flex align-items-end">
-            <plex-button class="m-1" *ngIf="esTablaGrafico" icon="mdi mdi-chart-pie" (click)="changeTablaGrafico()"></plex-button>
-            <plex-button class="m-1" *ngIf="!esTablaGrafico" icon="mdi mdi-table-large" (click)="changeTablaGrafico()"></plex-button>
-            <plex-button class="m-1" type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
+            <plex-button [title]="esTablaGrafico ? 'Mostrar gráficos' : 'Mostrar tablas'" [icon]="esTablaGrafico ? 'mdi mdi-chart-pie' : 'mdi mdi-table-large'"
+                class="m-1" (click)="changeTablaGrafico()"></plex-button>
+            <plex-button class="m-1" [title]="mostrarMasOpciones ? 'Ocultar filtros' : 'Ver más filtros'" type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
                 (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
         </div>
     </div>
@@ -38,15 +38,15 @@ import { ProfesionalService } from '../../../../services/profesional.service';
                 label="Profesional" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
             </plex-select>
         </div>
-        <div class="col-3" *ngIf="seleccion.tipoDeFiltro.id === 'turnos'">
+        <div class="col-3" *ngIf="seleccion.tipoDeFiltro && seleccion.tipoDeFiltro.id === 'turnos'">
             <plex-select [multiple]="true" [data]="estadoTurnos" [(ngModel)]="seleccion.estado_turno" placeholder="Seleccione..." label="Estado">
             </plex-select>
         </div>
-        <div class="col-3" *ngIf="seleccion.tipoDeFiltro.id === 'turnos'">
+        <div class="col-3" *ngIf="seleccion.tipoDeFiltro && seleccion.tipoDeFiltro.id === 'turnos'">
             <plex-select [multiple]="true" [data]="tipoTurnos" [(ngModel)]="seleccion.tipoTurno" placeholder="Seleccione..." label="Tipo Turno">
             </plex-select>
         </div>
-        <div class="col-3" *ngIf="seleccion.tipoDeFiltro.id === 'agendas'">
+        <div class="col-3" *ngIf="seleccion.tipoDeFiltro && seleccion.tipoDeFiltro.id === 'agendas'">
             <plex-select [multiple]="true" [data]="estadosAgendas" [(ngModel)]="seleccion.estado_agenda" placeholder="Seleccione..." label="Estado">
             </plex-select>
         </div>

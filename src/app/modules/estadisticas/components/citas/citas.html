@@ -10,10 +10,10 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col" *ngIf="estadoTurno && tipoDeFiltro === 'Turnos'">
+                <div class="col-6" *ngIf="estadoTurno && tipoDeFiltro === 'Turnos'">
                     <graph-table type="pie" titulo="Estado" [data]="estadoTurno" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>
                 </div>
-                <div class="col" *ngIf="tipoTurno && tipoDeFiltro === 'Turnos'">
+                <div class="col-6" *ngIf="tipoTurno && tipoDeFiltro === 'Turnos'">
                     <graph-table type="pie" titulo="Tipo" [data]="tipoTurno" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>
                 </div>
                 <div class="col" *ngIf="estadoAgenda && tipoDeFiltro === 'Agendas'">
