@@ -492,6 +492,7 @@ import { PasesListadoInternacionComponent } from './apps/rup/internacion/compone
 
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
 import { HUDSService } from './modules/rup/services/huds.service';
+import { RupMiniCardComponent } from './modules/rup/components/template/rup-mini-card/rup-mini-card.component';
 
 
 
@@ -634,6 +635,8 @@ registerLocaleData(localeEs, 'es');
 
         // Buscador de turnos y prestaciones
         TurnosPrestacionesComponent,
+
+        RupMiniCardComponent,
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
