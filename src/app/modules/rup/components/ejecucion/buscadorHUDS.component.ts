@@ -4,7 +4,6 @@ import * as moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
-
 import { HUDSService } from '../../services/huds.service';
 
 @Component({
@@ -26,7 +25,6 @@ export class BuscadorHUDSComponent implements OnInit {
 
     hallazgosCronicosAux: any[];
     hallazgosNoActivosAux: any;
-
 
     filtros: any = [
         { titulo: 'PRESTACIONES', key: 'prestaciones', icon: 'plan' },
@@ -133,8 +131,6 @@ export class BuscadorHUDSComponent implements OnInit {
         laboratorios: ['laboratorios'],
         vacunas: ['vacunas'],
     };
-
-
 
     public txtABuscar;
 
@@ -438,4 +434,5 @@ export class BuscadorHUDSComponent implements OnInit {
             );
         }
     }
+
 }
