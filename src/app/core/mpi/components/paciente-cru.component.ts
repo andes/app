@@ -662,7 +662,13 @@ export class PacienteCruComponent implements OnInit {
         this.showMobile = false;
         this.pacienteCache.clearPaciente();
         this.pacienteCache.clearScanState();
-        this.location.back();
+        let previousUrl = this.previousUrlService.getUrl();
+        if (previousUrl && previousUrl.includes('citas/punto-inicio')) {
+            this.previousUrlService.setUrl('');
+            this._router.navigate(['citas/punto-inicio/']);
+        } else {
+            this._router.navigate(['apps/mpi/busqueda']);
+        }
     }
 
     // ---------------- NOTIFICACIONES --------------------
