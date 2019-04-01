@@ -67,7 +67,7 @@
                         <button *ngIf="hayRegistros(['elemento de registro'])"
                             class="btn btn-sm btn-adjunto text-uppercase mr-1"
                             (click)="ordenarPorTipo(['elemento de registro'])"
-                            [ngClass]="{'active': ordenSeleccionado === reemplazar(['elemento de registro'], ',')}">Adjuntos</button>
+                            [ngClass]="{'active': ordenSeleccionado === reemplazar(['elemento de registro'], ',')}">Informes</button>
                         <button *ngIf="tipoOrden" class="btn btn-sm btn-default text-uppercase mr-1 bg-info text-white"
                             (click)="limpiarOrden()">
                             <i class="mdi mdi-close"></i>
@@ -132,7 +132,7 @@
 
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['elemento de registro'])">
                         <div class="text-capitalize mt-4 titulo-adjuntos">
-                            <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Adjuntos</h5>
+                            <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Informes</h5>
                         </div>
                     </ng-container>
 
@@ -229,7 +229,7 @@
                                     </div>
                                 </ng-container>
                                 <div class="row">
-                                    <div class="col-12"
+                                    <div class="col-12 ml-3"
                                         *ngIf="paciente || prestacion.solicitud.tipoPrestacion?.noNominalizada">
                                         <rup [paciente]="paciente"
                                             [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)"
@@ -239,7 +239,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12 ml-3">
                                         <ng-container
                                             *ngIf="(elemento.concepto.semanticTag !== 'elemento de registro')">
                                             <ng-container
@@ -285,7 +285,7 @@
                         <ul class="list-group">
                             <li [ngClass]="{
                                 'ml-0': !rama.esDiagnosticoPrincipal
-                            }" class="list-group-item pl-0 pt-0 pb-0 mb-0 ml-{{ registrosDeep[rama.id] }}">
+                            }" class="list-group-item border-0 pl-0 pt-0 pb-0 mb-0 ml-{{ registrosDeep[rama.id] }}">
                                 <div>
                                     <span
                                         class="type {{ rama.esSolicitud ? 'solicitud' : rama.concepto.semanticTag }} pr-2 mr-1"></span>
