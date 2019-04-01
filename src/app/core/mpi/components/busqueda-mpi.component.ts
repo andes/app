@@ -57,6 +57,7 @@ export class BusquedaMpiComponent implements OnInit {
         this.escaneado = escaneado;
         this.loading = false;
         if (escaneado) {
+            this.historialBusquedaService.add(pacientes[0]);
             this.pacienteCache.setPaciente(pacientes[0]);
             this.pacienteCache.setScanState(this.escaneado);
             this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru

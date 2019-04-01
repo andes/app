@@ -123,6 +123,7 @@ export class PacienteCruComponent implements OnInit {
     public paciente: IPaciente;
     public nombrePattern: string;
     public showDeshacer = false;
+    public patronDocumento = /^[1-9]{1}[0-9]{7}$/;
     // PARA LA APP MOBILE
     public showMobile = false;
     public checkPass = false;
@@ -494,7 +495,8 @@ export class PacienteCruComponent implements OnInit {
                 if (formato.test(mail)) {
                     form.form.controls['valor-' + indice].setErrors(null);
                 } else {
-                    form.form.controls['valor-' + indice].setErrors({ 'invalid': true });
+                    form.form.controls['valor-' + indice].setErrors({ invalid: true, pattern: { requiredPattern: formato } });
+
                 }
             }
         }, 500);
