@@ -13,7 +13,7 @@
             <th *ngIf='modo.nombre ==="validacion" || modo.nombre ==="control"' class="float-center">R. Anterior</th>
             <th *ngIf='modo.nombre !=="recepcionSinTurno" && modo.nombre !=="control" && modo.nombre !=="recepcion" && modo.nombre !=="listado"'
                 class="float-center">UM</th>
-            <th *ngIf='modo.nombre !=="recepcionSinTurno" && modo.nombre !=="control" && modo.nombre !=="recepcion" && modo.nombre !=="listado"'
+            <th *ngIf='modo.nombre !=="recepcionSinTurno" && modo.nombre !=="recepcion"'
                 class="float-center">VR | Método</th>
             <th class="float-center"
                 *ngIf='modo.nombre !=="control" && modo.nombre !=="recepcion" && modo.nombre !=="listado"'>Estado</th>
@@ -54,6 +54,15 @@
                             <p>sin datos</p>
                         </ng-container> -->
                         </span>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="practicaVista.valor.practica.resultado.formato">
+                                <ng-container *ngIf="practicaVista.valor.practica.resultado.formato.tipo === 'Numérico'">
+                                    {{practicaVista.valor.practica.presentaciones[0].valoresReferencia[0].valorMinimo}} -
+                                    {{practicaVista.valor.practica.presentaciones[0].valoresReferencia[0].valorMaximo}}
+                                </ng-container>
+                                {{practicaVista.valor.practica.presentaciones[0].metodo }}
+                        </ng-container>
                     </td>
                     <td *ngIf='modo.nombre !=="listado"'>
                         <plex-button label="" type="danger btn-sm" icon="delete"
@@ -165,12 +174,8 @@
                                 <ng-container *ngIf="practicaCarga.valor.practica.resultado.formato.tipo === 'Numérico'">
                                     {{practicaCarga.valor.practica.presentaciones[0].valoresReferencia[0].valorMinimo}} -
                                     {{practicaCarga.valor.practica.presentaciones[0].valoresReferencia[0].valorMaximo}}
-                                    <!-- | {{practicaCarga.valor.practica.presentaciones[0].metodo }} -->
                                 </ng-container>
-                                    <!-- | {{practicaCarga.valor.practica.presentaciones[0].metodo }} -->
-                                <!-- <ng-container *ngIf="practicaCarga.valor.practica.resultado.formato.tipo != 'Numérico'"> -->
                                     {{practicaCarga.valor.practica.presentaciones[0].metodo }}
-                                <!-- </ng-container> -->
                             </ng-container>
                         </td>
 
@@ -215,7 +220,7 @@
             <th>Paciente</th>
 
             <th class="float-center">R. Anterior</th>
-            <th class="float-center">V. Referencia</th>
+            <th class="float-center">V. Referencia | Método</th>
 
             <th class="float-center">Estado</th>
             <th class="float-center">Observaciones</th>
@@ -260,7 +265,8 @@
                 </td> -->
                 <td>
                     {{practicaCarga.valor.practica.presentaciones[0].valoresReferencia[0].valorMinimo}} -
-                    {{practicaCarga.valor.practica.presentaciones[0].valoresReferencia[0].valorMaximo}}
+                    {{practicaCarga.valor.practica.presentaciones[0].valoresReferencia[0].valorMaximo}} |
+                    {{practicaCarga.valor.practica.presentaciones[0].metodo }}
                 </td>
                 <td class="small text-success">
                     <ng-container *ngIf="practicaCarga.valor.estados.length > 0">
