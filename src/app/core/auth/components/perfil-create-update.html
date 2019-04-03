@@ -1,0 +1,33 @@
+<form #perfilForm="ngForm" *ngIf="(perfil.id && puedeModificar) || !perfil.id">
+    <div class="row my-3">
+        <div class="col">
+            <div class="page-title float-left">{{!perfil.id ? 'Crear agrupación' : 'Editar agrupación'}}</div>
+        </div>
+        <div class="col d-flex justify-content-end">
+            <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
+            <plex-button type="success" label="Guardar" [validateForm]="perfilForm" (click)="guardar($event)">
+            </plex-button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <plex-text label="Nombre" [(ngModel)]="perfilEdit.nombre" name="nombre" [required]="true"></plex-text>
+        </div>
+        <!-- Agregar ngIf para mostrarlo solo cuando tenga permisos para crear un perfil global -->
+        <div class="col d-flex align-items-end" *ngIf="puedeModificarAlcance">
+            <plex-bool label="Global" [(ngModel)]="esGlobal" type="slide" name="esGlobal"
+                (click)="esGlobal = !esGlobal"></plex-bool>
+        </div>
+        <div class="col d-flex align-items-end">
+            <plex-bool label="¿Está activo?" type="slide" name="activo" [(ngModel)]="perfilEdit.activo"></plex-bool>
+        </div>
+    </div>
+    <div class="row">&nbsp;</div>
+    <div *ngFor="let permiso of permisos$ | async ">
+        <arbolPermisos [item]="permiso" [userPermissions]="perfilEdit.permisos"
+            [prestacionesTurneables]="prestacionesTurneables"></arbolPermisos>
+    </div>
+</form>
+<span *ngIf="(perfil.id && !puedeModificar)">
+    <i class="mdi mdi-emoticon-sad"></i>No dispone los permisos para visualizar la agrupación de permisos
+</span>

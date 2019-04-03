@@ -1,0 +1,140 @@
+<plex-tabs [activeIndex]="pestaniaActiva" (change)="cambio($event)">
+    <plex-tab label="Selección Usuario" color="procedimiento">
+        <div class="mt-3">
+            <div class='row'>
+                <div class='col-11'>
+                    <plex-text [(ngModel)]="textoLibre" (change)="loadUsuarios()"
+                        prefix="<i class='mdi mdi-account-search'></i>" placeholder="Buscar por DNI, nombre o apellido">
+                    </plex-text>
+                </div>
+                <div class='col-1 d-flex justify-content-end'>
+                    <plex-button *ngIf='!mostrarFiltrosAvanzados' icon="mdi mdi-menu-down" type="primary"
+                        (click)='mostrarFiltrosAvanzados = true'></plex-button>
+                    <plex-button *ngIf='mostrarFiltrosAvanzados' icon="mdi mdi-menu-up" type="primary"
+                        (click)='mostrarFiltrosAvanzados = false'></plex-button>
+                </div>
+            </div>
+            <ng-container *ngIf='mostrarFiltrosAvanzados'>
+                <plex-select [(ngModel)]="organizacionBusqueda" name="organizacionDestino" (change)="loadUsuarios()"
+                    label="Organización" placeholder="Seleccione la organización" labelField="nombre"
+                    (getData)="loadOrganizacion($event)">
+                </plex-select>
+            </ng-container>
+
+            <div *ngIf="users && !users.length" class="alert alert-danger">
+                <i class="mdi mdi-account-alert"></i> El usuario no se ha encontrado
+            </div>
+            <table *ngIf="users && users.length" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Apellido</th>
+                        <th>Nombre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="hover" *ngFor="let user of users  | textFilter:textoLibre ; let i=index"
+                        (click)="seleccionarUsuario(user)">
+                        <td>{{user.usuario}}</td>
+                        <td *ngIf="user.apellido; else sinDatos">
+                            {{user.apellido}}
+                        </td>
+                        <td *ngIf="user.nombre; else sinDatos">
+                            {{user.nombre}}
+                        </td>
+                        <ng-template #sinDatos>
+                            <td> SIN DATOS</td>
+                        </ng-template>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </plex-tab>
+    <plex-tab *ngIf="usuarioSeleccionado" label="Selección Organización">
+        <div class="row my-3">
+            <div class="col">
+                <div class="page-title float-left">Datos del Usuario</div>
+            </div>
+            <div class="col d-flex justify-content-end">
+                <ng-container *ngIf="showAgregarEfector">
+                    <plex-button type="success" icon='mdi mdi-plus' (click)="agregarEfector = true"
+                        title='Agregar Efector'></plex-button>
+                </ng-container>
+                <ng-container *ngIf="showAgregarEfector && organizacionPermisos">
+                    <plex-button *ngIf='organizacionActualAuthUs && organizacionActualAuthUs.activo' type="danger"
+                        icon='mdi mdi-pause' (click)='pausar()' title='Pausar'></plex-button>
+                    <plex-button *ngIf=' organizacionActualAuthUs && !organizacionActualAuthUs.activo' type="success"
+                        icon='mdi mdi-play' (click)='pausar()' title='Reanudar'></plex-button>
+                </ng-container>
+                <ng-container *ngIf="showAgregarEfector && organizacionActualAuthUs && organizacionPermisos">
+                    <plex-button type="info" icon='mdi mdi-content-copy' (click)="copiarPermisos = true"
+                        title='Copiar Permisos'></plex-button>
+                </ng-container>
+                <ng-container *ngIf="showAgregarEfector && organizacionPermisos">
+                    <plex-button type="danger" icon='mdi mdi-delete' (click)="deleteEfector()"
+                        *ngIf="organizacionesUsuario?.length" title='Quitar Efector'></plex-button>
+                </ng-container>
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <div class="col">
+                <label class="block">Nombre</label>
+                <span>{{usuarioSeleccionado.nombre}}</span>
+            </div>
+            <div class="col">
+                <label class="block">Apellido</label>
+                <span>{{usuarioSeleccionado.apellido}}</span>
+            </div>
+            <div class="col d-flex align-items-end" *ngIf="profesionalAsociadoUsuario">
+                <label class="block"></label>
+                <span class="badge-success"> Profesional </span>
+            </div>
+        </div>
+
+
+        <div *ngIf="!agregarEfector" class="row">
+            <div class="col">
+                <plex-select [(ngModel)]="organizacionPermisos" name="organizacion" [data]="organizacionesUsuario"
+                    (change)="onOrgChange()" labelField="nombre + ', ' + direccion.ubicacion.localidad.nombre"
+                    [readonly]="copiarPermisos">
+                </plex-select>
+            </div>
+        </div>
+        <div class="row">&nbsp;</div>
+        <div *ngIf="organizacionesUsuario.length <= 0" class="alert alert-default">
+            <i class="mdi mdi-emoticon-sad"></i> Agregue un efector para modificar sus permisos
+        </div>
+        <div *ngIf="organizacionesUsuario.length > 0 && !organizacionPermisos" class="alert alert-default">
+            <i class="mdi mdi-emoticon-sad"></i> Seleccione una organización
+        </div>
+        <div class="row my-3" *ngIf="agregarEfector">
+            <div class="col mb-3">
+                <div class="page-title d-flex justify-content-start">Nuevo Efector</div>
+            </div>
+            <div class="col mb-3 d-flex justify-content-end">
+                <plex-button type="danger" label="Cancelar" (click)="cancelarAgregarEfector()"></plex-button>
+                <plex-button type="primary" label="Agregar" (click)="agregarOrg()"></plex-button>
+            </div>
+            <div class="col-12">
+                <plex-select [(ngModel)]="newOrg" name="nuevaOrganizacion" [data]="newOrganizaciones" [required]="true"
+                    labelField="nombre + ', ' + direccion.ubicacion.localidad.nombre" placeholder="Seleccione efector">
+                </plex-select>
+            </div>
+        </div>
+        <div class="row my-3" *ngIf="copiarPermisos">
+            <div class="col mb-3">
+                <div class="page-title d-flex justify-content-start">Copiar Permisos</div>
+            </div>
+            <div class="col mb-3 d-flex justify-content-end">
+                <plex-button type="danger" label="Cancelar" (click)="cancelarCopiarPermisos()"></plex-button>
+                <plex-button type="primary" label="Agregar" (click)="copiarAEfectores()"></plex-button>
+            </div>
+            <div class="col-12">
+                <plex-select [(ngModel)]="organizacionesNuevas" [multiple]="true" name="organizacionDestino"
+                    label="Organizaciones nuevas" placeholder="Seleccione la organización" labelField="nombre"
+                    (getData)="loadOrganizacion($event)" [required]="true"></plex-select>
+            </div>
+        </div>
+    </plex-tab>
+</plex-tabs>

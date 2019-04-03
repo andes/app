@@ -1,0 +1,57 @@
+<plex-layout [main]="6">
+    <plex-layout-main>
+        <div class="row my-3">
+            <div class="col">
+                <div class="page-title float-left">Agrupación de permisos</div>
+            </div>
+            <div class="col d-flex justify-content-end">
+                <plex-button label="Volver" (click)="volver()" type="info"></plex-button>
+                <plex-button *ngIf="puedeCrearGlobal || puedeCrearLocal" label="Nueva agrupación"
+                    (click)="nuevoPerfil()" type="success"></plex-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="w-50">Nombre</th>
+                            <th>Alcance</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover" *ngFor="let perfil of perfiles" (click)="perfilSeleccionado = perfil"
+                            [ngClass]="{'bg-inverse text-white': perfilSeleccionado?.id === perfil.id}">
+                            <td>{{perfil.nombre}}</td>
+                            <td>
+                                <plex-badge *ngIf="!perfil.organizacion" type="info">
+                                    GLOBAL </plex-badge>
+                                <plex-badge *ngIf="perfil.organizacion" type="info">
+                                    LOCAL </plex-badge>
+                            </td>
+                            <td>
+                                <plex-badge *ngIf="perfil.activo" type="success">
+                                    ACTIVO </plex-badge>
+                                <plex-badge *ngIf="!perfil.activo" type="danger">
+                                    DESACTIVADO </plex-badge>
+                            </td>
+                            <td>
+                                <plex-button
+                                    *ngIf="(perfil.organizacion && puedeBorrarLocal) || (!perfil.organizacion && puedeBorrarGlobal)"
+                                    icon="delete" type="danger" (click)="deletePerfil(perfil)" title="Borrar">
+                                </plex-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <perfilForm *ngIf="perfilSeleccionado && prestacionesTurneables" (perfilGuardado)="perfilGuardado()"
+            [perfil]="perfilSeleccionado" [prestacionesTurneables]="prestacionesTurneables"
+            [perfilesGlobLocOrg]="perfiles"></perfilForm>
+    </plex-layout-sidebar>
+</plex-layout>

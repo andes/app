@@ -56,6 +56,10 @@ import { RelacionRUPPipe } from './pipes/relacionRUP.pipe';
 import { Html2TextPipe } from './pipes/html2text.pipe';
 
 // Servicios
+
+// Auth
+import { PerfilUsuarioService } from './core/auth/services/perfilUsuarioService';
+
 // ... Tablas Maestras
 import { OrganizacionService } from './services/organizacion.service';
 import { OcupacionService } from './services/ocupacion/ocupacion.service';
@@ -321,10 +325,12 @@ import { VincularPacientesComponent } from './components/auditoria/vincular-paci
 // import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
 
 // USUARIO
-import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
-import { UsuarioCreateComponent } from './components/usuario/usuarioCreate.component';
-import { UsuarioUpdateComponent } from './components/usuario/usuarioUpdate.component';
-import { ArbolPermisosComponent } from './components/usuario/arbolPermisos.component';
+import { ArbolPermisosComponent } from './core/auth/components/arbolPermisos.component';
+import { GestorUsuarioComponent } from './core/auth/components/gestorUsuario.component';
+import { SelectorUsuarioEfectorComponent } from './core/auth/components/selectorUsuarioEfector.component';
+import { PerfilFormComponent } from './core/auth/components/perfil-create-update.component';
+import { GestorPerfilesComponent } from './core/auth/components/gestorPerfiles.component';
+import { PermisosVisualizacionComponent } from './core/auth/components/permisosVisualizacion.component';
 
 // REPORTES
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
@@ -560,6 +566,7 @@ registerLocaleData(localeEs, 'es');
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
         PermisosComponent, ArbolPermisosComponent,
+        GestorUsuarioComponent, SelectorUsuarioEfectorComponent, PerfilFormComponent, GestorPerfilesComponent, PermisosVisualizacionComponent,
         // AuditoriaPorBloqueComponent,
         PuntoInicioComponent,
         VincularPacientesComponent,
@@ -568,7 +575,6 @@ registerLocaleData(localeEs, 'es');
         HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
         TurnosPacienteComponent,
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
-        BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
         ReporteC2Component,
         ConsultaDiagnosticoComponent,
         CantidadConsultaXPrestacionComponent,
@@ -752,7 +758,8 @@ registerLocaleData(localeEs, 'es');
         HUDSService,
         TurnosPrestacionesService,
         PlantillasService,
-        InternacionCacheService
+        InternacionCacheService,
+        PerfilUsuarioService
     ]
 })
 

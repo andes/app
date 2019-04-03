@@ -64,7 +64,8 @@ import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 
 // USUARIO
-import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
+import { GestorUsuarioComponent } from './core/auth/components/gestorUsuario.component';
+import { GestorPerfilesComponent } from './core/auth/components/gestorPerfiles.component';
 
 // REPORTES
 import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
@@ -184,7 +185,8 @@ const appRoutes: Routes = [
   { path: 'prestamosHC', component: PrestamosHcComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // Gestion de usuarios
-  { path: 'gestionUsuarios', component: BusquedaUsuarioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'gestionUsuarios', component: GestorUsuarioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'gestionAgrupaciones', component: GestorPerfilesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // formulario terapeutico
   { path: 'formularioTerapeutico', component: FormTerapeuticoComponent, canActivate: [RoutingNavBar, RoutingGuard] },

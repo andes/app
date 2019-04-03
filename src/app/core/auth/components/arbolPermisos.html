@@ -1,0 +1,34 @@
+<plex-accordion *ngIf="item.child" class="hover">
+    <plex-panel (toggle)="expand($event)" #panel>
+        <div plex-accordion-title title="{{item.comment ? item.comment : item.title}}">
+            {{item.title}}
+            <span *ngIf="allModule">(todos)</span>
+            <plex-bool *ngIf="!item.avoidAll" class="float-right" (change)="expand($event)" [(ngModel)]="allModule"
+                type="slide" (change)="tildarPermiso($event)"> </plex-bool>
+        </div>
+        <div *ngFor="let child of item.child; let indiceChild = index">
+            <arbolPermisos [item]="child" [parentPermission]="makePermission()" [userPermissions]="userPermissions"
+                (seleccionPermiso)="tildarPermiso($event)" [prestacionesTurneables]="prestacionesTurneables">
+            </arbolPermisos>
+        </div>
+    </plex-panel>
+</plex-accordion>
+<div *ngIf="item.type">
+
+    <plex-bool [(ngModel)]="state" *ngIf="item.type === 'boolean'" label="{{item.title}}" type="slide"
+        (change)="tildarPermiso($event)" title="{{item.comment ? item.comment : item.title}}">
+    </plex-bool>
+
+    <div *ngIf="item.type !== 'boolean'">
+        <!-- El seleccionar todos para prestaciones se quita segun requerimientos -->
+        <h5>
+            {{item.title}}
+            <plex-bool *ngIf="!item.avoidAll" [(ngModel)]="all" label="Seleccionar todos" type="slide"
+                (change)="tildarPermiso($event)">
+            </plex-bool>
+        </h5>
+        <plex-select [multiple]="true" [readonly]="all" [(ngModel)]="seleccionados"
+            (getData)="loadData(item.type, $event)" placeholder="Seleccione los elementos con permisos"
+            (change)="selectChange($event)" name="plexSelect" idField="id"></plex-select>
+    </div>
+</div>

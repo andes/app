@@ -1,0 +1,25 @@
+<div class="row">
+    <!-- class = w-100 d-flex align-items-center justify-content-between -->
+    <div class="col" *ngIf="perfilesOrganizacion?.length">
+        <plex-accordion *ngFor="let perfil of perfilesOrganizacion; let i = index" class="hover">
+            <plex-panel *ngIf="perfil.perfil.activo">
+                <div plex-accordion-title>
+                    {{perfil.perfil.nombre}} {{perfil.perfil.organizacion ? "(Local)" : "(Global)" }}
+                    <plex-bool *ngIf="permiteAsignarPerfiles" [(ngModel)]="perfil.checked" class="float-right"
+                        (change)="tildarPerfil($event, i)" type="slide"></plex-bool>
+                    <!-- d-flex justify-content-end -->
+                    <plex-badge *ngIf="!permiteAsignarPerfiles && perfil.checked ; else noTienePerfilAsignado"
+                        class="float-right" type="success">
+                        <i class="mdi mdi-check mdi-18px"></i>
+                    </plex-badge>
+                    <ng-template #noTienePerfilAsignado>
+                        <plex-badge *ngIf="!permiteAsignarPerfiles" class="float-right" type="danger">
+                            <i class="mdi mdi-close mdi-18px"></i>
+                        </plex-badge>
+                    </ng-template>
+                </div>
+                <span [innerHTML]="perfil.permisos"></span>
+            </plex-panel>
+        </plex-accordion>
+    </div>
+</div>
