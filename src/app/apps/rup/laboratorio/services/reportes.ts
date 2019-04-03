@@ -1,3 +1,5 @@
+import { Router } from '@angular/router';
+import { Auth } from '@andes/auth';
 
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
@@ -9,8 +11,17 @@ import { environment } from '../../../../../environments/environment';
 export class ReportesLaboratorioService {
     private reportesUrl = environment.API + '/modules/rup/laboratorio/reportes/';
 
-    constructor(private http: Http) { }
+    constructor(
+        private http: Http,
+        private auth: Auth,
+        private router: Router
+    ) { }
 
+    ngOnInit() {
+        if (!this.auth.getPermissions('laboratorio:informes:?').length) {
+            this.router.navigate(['./inicio']);
+        }
+    }
     /**
      * @param {PracticaSearch} params
      * @returns {Observable<IPracticaMatch[]>}

@@ -58,7 +58,9 @@ export class FiltrosBusquedaProtocoloComponent
         estadoFiltrar: 'validada',
         practicas: null,
         area: null,
-        organizacionDestino: this.auth.organizacion._id
+        organizacionDestino: this.auth.organizacion._id,
+        solicitudDesde: new Date(),
+        solicitudHasta: new Date()
     };
 
     mostrarMasOpciones = false;
@@ -124,6 +126,10 @@ export class FiltrosBusquedaProtocoloComponent
                 this.busqueda.servicio = this.servicios.map((e: any) => { return e.id; });
             } else if (tipo === 'paciente') {
                 this.busqueda.idPaciente = this.paciente ? this.paciente.id : null;
+            } else if (tipo === 'fechaDesde') {
+                this.busqueda.solicitudDesde = this.cacheContexto.solicitudDesde;
+            } else if (tipo === 'fechaHasta') {
+                this.busqueda.solicitudHasta = this.cacheContexto.solicitudHasta;
             }
         }
         this.buscarProtocolosEmmiter.emit(this.busqueda);
