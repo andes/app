@@ -21,6 +21,7 @@ import { OrganizacionService } from '../../../services/organizacion.service';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { Router } from '@angular/router';
 import { PreviousUrlService } from '../../../services/previous-url.service';
+import { HistorialBusquedaService } from '../services/historialBusqueda.service';
 
 @Component({
     selector: 'paciente-cru',
@@ -137,6 +138,7 @@ export class PacienteCruComponent implements OnInit {
     infoMarcador: String = '';
 
     constructor(
+        private historialBusquedaService: HistorialBusquedaService,
         private previousUrlService: PreviousUrlService,
         private organizacionService: OrganizacionService,
         private auth: Auth,
@@ -564,6 +566,10 @@ export class PacienteCruComponent implements OnInit {
                     if (this.changeRelaciones) {
                         this.saveRelaciones(resultadoSave);
                     }
+                    if (this.escaneado) {
+                        // Si el paciente fue escaneado se agrega al historial de búsqueda
+                        this.historialBusquedaService.add(resultadoSave);
+                    }
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
                     // TODO: Esto es un poco hacky -- soluciona el problema de tener la url anterior
                     // hasta la actualización a Angular 7.2, donde se incorpora la posibilidad de pasar un estado en el navigate
@@ -659,6 +665,11 @@ export class PacienteCruComponent implements OnInit {
     }
 
     cancel() {
+        if (this.escaneado && this.paciente.id) {
+            /* El paciente escaneado se agrega al historial de búsqueda sólo si ya existía.
+            De lo contrario se estaría agregando un paciente que no se terminó de registrar. */
+            this.historialBusquedaService.add(this.paciente);
+        }
         this.showMobile = false;
         this.pacienteCache.clearPaciente();
         this.pacienteCache.clearScanState();
