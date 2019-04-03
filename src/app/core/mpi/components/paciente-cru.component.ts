@@ -132,8 +132,9 @@ export class PacienteCruComponent implements OnInit {
     public activarApp = false;
 
     // Google map
+    geoRefOrganizacion = []; // Coordenadas efector
     geoReferenciaAux = []; // Coordenadas para la vista del mapa.
-    infoMarcador: String = '';
+    infoMarcador: String = null;
 
     constructor(
         private previousUrlService: PreviousUrlService,
@@ -162,6 +163,7 @@ export class PacienteCruComponent implements OnInit {
                 this.organizacionActual = org;
                 this.provinciaEfector = org.direccion.ubicacion.provincia;
                 this.localidadEfector = org.direccion.ubicacion.localidad;
+                this.geoRefOrganizacion = org.direccion.geoReferencia;
                 this.loadPaciente();
             }
         });
@@ -225,12 +227,16 @@ export class PacienteCruComponent implements OnInit {
             }
         } else {
             // ubicacion inicial mapa de google cuando no se cargó ningun paciente
-            this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
-                if (point) {
-                    this.geoReferenciaAux = [point.lat, point.lng];
-                    this.infoMarcador = this.auth.organizacion.nombre;
-                }
-            });
+            if (this.geoRefOrganizacion) {
+                this.geoReferenciaAux = this.geoRefOrganizacion;
+            } else {
+                this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
+                    if (point) {
+                        this.geoReferenciaAux = [point.lat, point.lng];
+                        this.infoMarcador = this.auth.organizacion.nombre;
+                    }
+                });
+            }
         }
     }
 
@@ -417,15 +423,18 @@ export class PacienteCruComponent implements OnInit {
         // ubicacion inicial mapa de google
         if (this.pacienteModel.direccion[0].geoReferencia) {
             this.geoReferenciaAux = this.pacienteModel.direccion[0].geoReferencia;
-            this.infoMarcador = '';
+            this.infoMarcador = null;
         } else {
-            // ubicacion inicial mapa de google cuando el paciente no tiene georeferencia cargada
-            this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
-                if (point) {
-                    this.geoReferenciaAux = [point.lat, point.lng];
-                    this.infoMarcador = this.auth.organizacion.nombre;
-                }
-            });
+            if (this.geoRefOrganizacion) {
+                this.geoReferenciaAux = this.geoRefOrganizacion;
+            } else {
+                this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
+                    if (point) {
+                        this.geoReferenciaAux = [point.lat, point.lng];
+                        this.infoMarcador = this.auth.organizacion.nombre;
+                    }
+                });
+            }
         }
     }
 

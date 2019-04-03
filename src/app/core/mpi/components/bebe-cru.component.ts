@@ -106,7 +106,7 @@ export class BebeCruComponent implements OnInit {
     enableIgnorarGuardar = false;
     organizacionActual = null;
     geoReferenciaAux = []; // Se utiliza para chequear cambios.
-    infoMarcador: String = '';
+    infoMarcador: String = null;
 
     constructor(
         private georeferenciaService: GeoreferenciaService,
@@ -154,16 +154,17 @@ export class BebeCruComponent implements OnInit {
                 this.organizacionActual = org;
                 this.provinciaActual = org.direccion.ubicacion.provincia;
                 this.localidadActual = org.direccion.ubicacion.localidad;
+                this.geoReferenciaAux = org.direccion.geoReferencia;
             }
         });
         // ubicacion inicial mapa de google en seccion domicilio
         // Por defecto el mapa se posiciona referenciando al centro de salud actual
-        this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
-            if (point) {
-                this.geoReferenciaAux = [point.lat, point.lng];
-                this.infoMarcador = this.auth.organizacion.nombre;
-            }
-        });
+        // this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
+        //     if (point) {
+        //         this.geoReferenciaAux = [point.lat, point.lng];
+        //         this.infoMarcador = this.auth.organizacion.nombre;
+        //     }
+        // });
     }
 
     searchStart() {
