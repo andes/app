@@ -5,8 +5,7 @@ import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
 import { ISubscription } from 'rxjs/Subscription';
 import { ProfesionalService } from '../../services/profesional.service';
 import { ObraSocialService } from '../../services/obraSocial.service';
-
-
+import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
 
 @Component({
     selector: 'turnos-prestaciones',
@@ -33,7 +32,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     constructor(
         private auth: Auth,
         private turnosPrestacionesService: TurnosPrestacionesService, public servicioPrestacion: TipoPrestacionService, public serviceProfesional: ProfesionalService,
-        private servicioOS: ObraSocialService
+        private servicioOS: ObraSocialService, private facturacionAutomaticaService: FacturacionAutomaticaService
     ) { }
     ngOnInit() {
         this.arrayEstados = [{ id: 'Sin registro de asistencia', nombre: 'Sin registro de asistencia' }, { id: 'Ausente', nombre: 'Ausente' }, { id: 'Presente con registro del profesional', nombre: 'Presente con registro del profesional' }, { id: 'Presente sin registro del profesional', nombre: 'Presente sin registro del profesional' }];
@@ -229,6 +228,14 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             item.seleccionada = false;
         });
         datos.seleccionada = true;
+    }
+
+    recupero() {
+        debugger;
+        this.prestacion.origen = 'buscador';
+        this.prestacion.idOrganizacion = this.auth.organizacion._id;
+        this.facturacionAutomaticaService.post(this.prestacion).subscribe(prestacion => {
+        });
     }
 
     onClose() {
