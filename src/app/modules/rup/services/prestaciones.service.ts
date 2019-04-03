@@ -12,6 +12,7 @@ import { SnomedService } from '../../../services/term/snomed.service';
 
 
 
+
 @Injectable()
 export class PrestacionesService {
 
@@ -73,6 +74,17 @@ export class PrestacionesService {
         this.datosRefSet.next(null);
     }
 
+    /**Conceptos que al momento de llamar a la funcion generaPrestacion
+     * va a recuperar el valor de la prestacion anterior en caso de existir
+     */
+    public prestacionObserve = [
+        {
+            fsn: 'indicación para procedimiento (entidad observable)',
+            semanticTag: 'entidad observable',
+            conceptId: '432678004',
+            term: 'indicación para procedimiento'
+        }
+    ];
 
     public refsetsIds = {
         cronico: '1641000013105',
@@ -676,6 +688,34 @@ export class PrestacionesService {
     patch(idPrestacion: string, cambios: any): Observable<IPrestacion> {
         return this.server.patch(this.prestacionesUrl + '/' + idPrestacion, cambios);
     }
+
+    /**
+     * Se fija su la pretacion que vamos a crear se machea con alguna del array prestacionObserve
+     * entonces recupera los ultimos registros en caso de que exista una prestacion anterior.
+     * En caso de no existir ninguna crea una prestacion nueva.
+     * @param paciente
+     * @param concepto
+     */
+    newPrestacion(paciente: any, concepto: any): Observable<any> {
+        const existePrestacionObserve = this.prestacionObserve.find(c => c.conceptId === concepto.conceptId);
+        if (existePrestacionObserve) {
+            return this.getPrestacionesXtipo(paciente.id, concepto.conceptId).map(prestaciones => {
+                let nuevaPrestacion = this.inicializarPrestacion(paciente, concepto, 'ejecucion');
+                if (prestaciones.length) {
+                    let ultimaPrestacion = prestaciones[0];
+                    // aca deberiamos poner el id del registro anterior para tener la evolucion??
+                    nuevaPrestacion.ejecucion.registros = ultimaPrestacion.ejecucion.registros;
+                }
+                return nuevaPrestacion;
+            });
+        } else {
+            return new Observable((observer) => {
+                observer.next(this.inicializarPrestacion(paciente, concepto, 'ejecucion'));
+                observer.complete();
+            });
+        }
+    }
+
 
     /**
      * Inicializar una prestación con algunos datos obligatorios
