@@ -113,7 +113,7 @@ export class FiltrosBusquedaProtocoloComponent
             if (tipo === 'area') {
                 this.busqueda.areas = this.busqueda.area ? [this.busqueda.area.id] : null;
             } else if (tipo === 'hojaTrabajo') {
-                this.busqueda.practicas = this.hojaTrabajo ? this.hojaTrabajo.practicas.map(p => { return p.id; }) : [];
+                this.busqueda.practicas = this.hojaTrabajo ? this.hojaTrabajo.practicas.map(p => { return p.practica.id; }) : [];
             } else if (tipo === 'practicas') {
                 this.busqueda.practicas = this.busqueda.practicas.map(e => { return e.id; });
             } else if (tipo === 'origen') {
