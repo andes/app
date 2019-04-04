@@ -14,12 +14,13 @@
                 <plex-tab [allowClose]="true" [label]="registro.data.concepto.term" [class]="registro.data.class"
                     [color]="registro.data.class" *ngIf="registro.tipo === 'concepto'">
 
-                    <vista-registro *ngIf="registro.data.class === 'hallazgo' || registro.data.class === 'trastorno'"
+                    <vista-registro *ngIf="registro.data.class === 'situación' || 
+                     registro.data.class === 'hallazgo' || registro.data.class === 'trastorno'"
                         [registro]="registro.data" [paciente]="paciente">
                     </vista-registro>
 
                     <vista-procedimiento
-                        *ngIf="registro.data.class === 'plan' || 
+                        *ngIf="registro.data.class === 'plan' || registro.data.class === 'regimen' ||
                         registro.data.class === 'procedimiento' || registro.data.class === 'elementoderegistro' || registro.data.class === 'producto'"
                         [registro]="registro.data" [paciente]="paciente">
                     </vista-procedimiento>
