@@ -59,39 +59,29 @@
                                             </div>
 
                                             <div class="title text-capitalize">
-                                                <!-- <div class="title"> -->
                                                 {{ registro.nombre }}
-
                                                 <!-- vinculacion / desvinculacion -->
-                                                <div class=""
-                                                    *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && registro.relacionadoCon[0] && !confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))">
-
+                                                <div *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && 
+                                                    registro.relacionadoCon[0] && !confirmarDesvincular[registro.id] && 
+                                                    (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))">
                                                     <ng-container
                                                         *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length > 0">
-
                                                         <div class="float-left" *ngIf="registro?.relacionadoCon">
-                                                            <b class="clearfix"
-                                                                *ngIf="registro?.relacionadoCon">Relacionado
-                                                                con: </b>
-                                                            <ng-container>
-                                                                <ng-container
-                                                                    *ngFor="let relacion of registro.relacionadoCon; let r=index">
-                                                                    <small class="badge badge-info">
-                                                                        {{ relacion | relacionRUP }}
-                                                                    </small>
-                                                                    <button
-                                                                        *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
-                                                                        class="btn btn-sm btn-primary btn-icon-rup"
-                                                                        title="Desvincular"
-                                                                        (click)="desvincular(registro, registro.relacionadoCon[r])">
-                                                                        <i class="mdi mdi-link-variant-off"></i>
-                                                                    </button>
-
-                                                                </ng-container>
+                                                            <b class="clearfix">Relacionado con: </b>
+                                                            <ng-container
+                                                                *ngFor="let relacion of registro.relacionadoCon; let r=index">
+                                                                <small class="badge badge-info">
+                                                                    {{ relacion | relacionRUP }}
+                                                                </small>
+                                                                <button
+                                                                    *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
+                                                                    class="btn btn-sm btn-primary btn-icon-rup"
+                                                                    title="Desvincular"
+                                                                    (click)="desvincular(registro, registro.relacionadoCon[r])">
+                                                                    <i class="mdi mdi-link-variant-off"></i>
+                                                                </button>
                                                             </ng-container>
                                                         </div>
-
-
                                                     </ng-container>
                                                 </div>
                                             </div>
@@ -205,7 +195,7 @@
                                                     ?
                                                     <div class="buttons">
                                                         <plex-button type="danger" label="Cancelar"
-                                                            (click)="confirmarDesvinculacion(registro.id || registro.concepto.conceptId, i)">
+                                                            (click)="cancelarDesvincular(registro.id || registro.concepto.conceptId)">
                                                         </plex-button>
                                                         <plex-button type="success" label="Desvincular"
                                                             (click)="confirmarDesvinculacion(registro.id || registro.concepto.conceptId, i)">
