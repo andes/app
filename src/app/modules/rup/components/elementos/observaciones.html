@@ -1,6 +1,6 @@
 <form #form="ngForm">
     <ng-container *ngIf="!soloValores">
-        <plex-text [label]="params?.title ? params.title : 'Observaciones'" [html]="params?.hideHtml ? !params?.hideHtml : true" [(ngModel)]="registro.valor" id="observaciones" name="observaciones"
+        <plex-text [label]="params?.title ? params.title : 'Observaciones'" [html]="params?.hideHtml ? !params?.hideHtml : true" [(ngModel)]="registro.valor.evolucion ? registro.valor.evolucion : registro.valor" id="observaciones" name="observaciones"
             [placeholder]="params?.placeholder ? params?.placeholder : 'Ingrese una evolución'"
             (change)="emitChange()" [required]="params?.required ? params?.required : false" [multiline]="params?.multiline ? params?.multiline : false"></plex-text>
     </ng-container>
