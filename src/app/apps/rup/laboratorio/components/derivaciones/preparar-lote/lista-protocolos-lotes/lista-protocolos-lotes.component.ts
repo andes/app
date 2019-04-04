@@ -17,8 +17,8 @@ export class ListaProtocolosLotesComponent implements OnInit {
     @Input('protocolos')
     set prtcls(value) {
         this.valoresCheckboxes = [];
-        value.forEach( (p: any) => {
-            p.ejecucion.registros.forEach( r => this.valoresCheckboxes[r._id] = false );
+        value.forEach((p: any) => {
+            p.ejecucion.registros.forEach(r => this.valoresCheckboxes[r._id] = false);
         });
         this.protocolos = value;
     }
@@ -35,24 +35,20 @@ export class ListaProtocolosLotesComponent implements OnInit {
      */
     onCheckboxChange(event, protocolo, registro) {
         let numeroProtocolo = protocolo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo.numeroCompleto;
-        let itemLoteDerivacion = this.lote.itemsLoteDerivacion.find( i => i.numeroProtocolo === numeroProtocolo);
+        let itemLoteDerivacion = this.lote.itemsLoteDerivacion.find(i => i.numeroProtocolo === numeroProtocolo);
 
         if (event.value) {
             if (!itemLoteDerivacion) {
                 itemLoteDerivacion = this.generarItemLoteDerivacion(protocolo);
             }
 
-            if (!itemLoteDerivacion.registros.find( r => r === registro)) {
+            if (!itemLoteDerivacion.registros.find(r => r === registro)) {
                 itemLoteDerivacion.registros.push(registro);
             }
         } else {
-            itemLoteDerivacion.registros = itemLoteDerivacion.registros.filter( r =>  r.id !== registro.id );
-            if (itemLoteDerivacion.registros.length === 0) {
-                this.lote.itemsLoteDerivacion = this.lote.itemsLoteDerivacion.filter( i =>  i.numeroProtocolo !== numeroProtocolo );
-            }
+            itemLoteDerivacion.registros = itemLoteDerivacion.registros.filter(r => r !== registro);
         }
-
-        this.lote.itemsLoteDerivacion = this.lote.itemsLoteDerivacion.filter( (i: any) =>  i.registros.length > 0 );
+        this.lote.itemsLoteDerivacion = this.lote.itemsLoteDerivacion.filter((i: any) => i.registros.length > 0);
     }
 
     /**

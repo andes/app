@@ -10,7 +10,7 @@
     <tbody>
         <ng-container *ngFor="let protocolo of protocolos">
             <tr class="hover" *ngFor="let registro of protocolo.ejecucion.registros">
-                <td>
+                <td *ngIf='this.lote.laboratorioDestino' >
                     <plex-bool type="checkbox" [(ngModel)]='valoresCheckboxes[registro._id].value' (change)="onCheckboxChange($event, protocolo, registro)"
                         name="validarTodos"></plex-bool>
                 </td>
