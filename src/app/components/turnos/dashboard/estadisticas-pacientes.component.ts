@@ -26,9 +26,6 @@ export class EstadisticasPacientesComponent implements OnInit {
     @Input() showTab: Number = 0;
     @Input('paciente')
     set paciente(value: any) {
-        this.turnosOtorgados = 0;
-        this.inasistencias = 0;
-        this.anulaciones = 0;
         this.pacienteSeleccionado = value;
         this._paciente = value;
 
@@ -61,13 +58,6 @@ export class EstadisticasPacientesComponent implements OnInit {
         private obraSocialService: ObraSocialService) { }
 
     ngOnInit() {
-        // Se cargan los datos calculados
-        let hoy = {
-            fechaDesde: moment().startOf('month').toDate(),
-            fechaHasta: moment().endOf('day').toDate()
-        };
-        this.fechaDesde = moment().startOf('month').toDate();
-        this.fechaHasta = moment().endOf('day').toDate();
         this.carpetaEfector = {
             organizacion: {
                 id: this.auth.organizacion.id,
@@ -106,7 +96,9 @@ export class EstadisticasPacientesComponent implements OnInit {
                             if (turno.asistencia && turno.asistencia === 'noAsistio') {
                                 cantInasistencias++;
                             }
+
                         });
+
                         this.turnosOtorgados = turnos.length;
                         this.inasistencias = cantInasistencias;
                         this.sortTurnos(turnos);

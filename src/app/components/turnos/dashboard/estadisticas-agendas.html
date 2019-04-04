@@ -1,8 +1,8 @@
 <!--Header de estadisticas-->
 <fieldset>
-    <legend>Estadísticas | Ventanillas</legend>
+    <legend>INFORMACIÓN ÚTIL</legend>
 
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-4">
             <i class="mdi mdi-calendar-clock mdi-36px"></i>
             <span class="h3">{{cantTurnosAsignados}}</span>
@@ -21,38 +21,22 @@
     </div>
     <br>
     <legend>Estadísticas | Valores Totales</legend>
-    <br>
+    <br> -->
     <div class="row">
-        <div class="col-2 vertical-center text-center">
+        <div class="col-3 vertical-center text-center">
             <h3 class="mdi mdi-account-check mdi-36px"></h3>
         </div>
-        <div class="col-7 vertical-center">
-            <h5>Turnos / Pacientes Validados</h5>
-        </div>
-        <div class="col-2 badge badge-success">
-            <span class="h3">{{turnosPacientesValidados}}</span>
+        <div class="col-8 vertical-center">
+            <h5><b>Paciente con dni</b> scanee el documento para validar sus datos </h5>
         </div>
     </div>
+    <hr>
     <div class="row">
-        <div class="col-2 vertical-center text-center">
+        <div class="col-3 vertical-center text-center">
             <h3 class="mdi mdi-account-outline mdi-36px"></h3>
         </div>
-        <div class="col-7 vertical-center">
-            <h5>Turnos /Pacientes Temporales</h5>
-        </div>
-        <div class="col-2 badge badge-warning">
-            <span class="h3">{{turnosPacientesTemporales}}</span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-2 vertical-center text-center">
-            <h3 class="mdi mdi-calendar-multiple-check mdi-36px"></h3>
-        </div>
-        <div class="col-7 vertical-center">
-            <h5>Turnos auditados</h5>
-        </div>
-        <div class="col-2 badge badge-success">
-            <span class="h3">{{turnosAuditados}}</span>
+        <div class="col-8 vertical-center">
+            <h5><b>Paciente sin dni</b> Puede ingresar sus datos a través del botón "Nuevo Paciente Temporal"</h5>
         </div>
     </div>
 </fieldset>
