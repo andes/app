@@ -1,4 +1,4 @@
-import { Component, Output, Input, EventEmitter, OnInit, ViewChildren, QueryList } from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit, ViewChildren, QueryList, ViewChild, ElementRef } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { environment } from '../../../../../environments/environment';
 import { RupElement } from '../elementos';
@@ -10,7 +10,9 @@ import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
 })
 @RupElement('AdjuntarDocumentoComponent')
 export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
-    @ViewChildren('upload') childsComponents: QueryList<any>;
+    @ViewChildren('uploaded') childsComponents: QueryList<any>;
+    @ViewChild('upload') pcUpload: ElementRef;
+    @ViewChild('dropMe') dropMe: QueryList<any>;
     imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
     extensions = [
         // Documentos
@@ -35,7 +37,15 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     public descendientesInformeClinico: ISnomedConcept[] = [];
     public hoy = moment(new Date()).endOf('day').toDate();
 
+
+    items = [];
+
     ngOnInit() {
+
+        this.items = [
+            { label: 'Subir desde PC', handler: (() => { this.pcUpload.nativeElement.click(); return false; }) },
+            { label: 'Subir desde App móvil', handler: (() => { this.fromMobile(); }) }
+        ];
 
         this.extensions = this.extensions.concat(this.imagenes);
 
@@ -101,8 +111,20 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         return this.imagenes.find(x => x === extension.toLowerCase());
     }
 
-    imageRemoved($event) {
-        let index = this.registro.valor.documentos.indexOf($event);
+
+    confirmarEliminarImagen($event) {
+        this.plex.confirm('¿Eliminar imagen?', 'Confirmación', 'Eliminar', 'Cancelar').then(confirmed => {
+            if (confirmed) {
+                this.eliminarImagen($event);
+                return true;
+            } else {
+                return false;
+            }
+        });
+    }
+
+    eliminarImagen(ev) {
+        let index = this.registro.valor.documentos.indexOf(ev);
         this.registro.valor.documentos.splice(index, 1);
     }
 
