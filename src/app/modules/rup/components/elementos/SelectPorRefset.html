@@ -1,6 +1,6 @@
 <form #form="ngForm">
     <ng-container *ngIf="conceptos.length > 0 && params && params.tipoSelect === 'select'">
-        <plex-select *ngIf="!soloValores" [required]="params.required" [multiple]="params.multiple" [(ngModel)]="registro.valor"
+        <plex-select *ngIf="!soloValores" [required]="params.required" [multiple]="params.multiple" [(ngModel)]="registro.valor.evolucion ? registro.valor.evolucion : registro.valor"
             name="conceptos" (getData)="loadConceptos($event)" (change)="emitChange()" label="{{ params.titulo }}">
         </plex-select>
     </ng-container>
