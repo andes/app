@@ -26,6 +26,9 @@
         <ng-container *ngIf="!showProtocoloDetalle">
             <span *ngIf='modo.nombre !== "puntoInicio" && protocolo?.paciente?.sexo ==="femenino"'><i class="mdi mdi-gender-female"></i></span>
             <span *ngIf='modo.nombre !== "puntoInicio" && protocolo?.paciente?.sexo ==="masculino"'><i class="mdi mdi-gender-male"></i></span>
+            <span *ngIf='modo.nombre !== "puntoInicio" && protocolo?.paciente?.sexo !=="femenino" && protocolo?.paciente?.sexo !=="masculino"'>
+                    <i class="mdi mdi-circle-outline"></i>
+            </span>
             <span *ngIf='modo.nombre !== "puntoInicio" && modo.nombre !== "recepcion"'>
                 {{ protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto }}
             </span>
@@ -63,9 +66,6 @@
                         <ng-container *ngIf='modo.nombre === "listado"'>Ver Protocolo
                         </ng-container>
                     </plex-button>
-                    <!-- <plex-button class="ml-1" type="success" size="sm" (click)="seleccionarProtocolo(protocolo, i)">
-                        <i class="mdi mdi-file-document"></i>
-                    </plex-button> -->
                 </span>
             </ng-container>
         </ng-container>
@@ -73,6 +73,9 @@
         <ng-container *ngIf="showProtocoloDetalle">
             <span *ngIf='modo.nombre !== "puntoInicio" && protocolo?.paciente?.sexo ==="femenino"'><i class="mdi mdi-gender-female"></i></span>
             <span *ngIf='modo.nombre !== "puntoInicio" && protocolo?.paciente?.sexo ==="masculino"'><i class="mdi mdi-gender-male"></i></span>
+            <span *ngIf='modo.nombre !== "puntoInicio" && protocolo?.paciente?.sexo !=="femenino" && protocolo?.paciente?.sexo !=="masculino"'>
+                    <i class="mdi mdi-circle-outline"></i>
+            </span>
             <span *ngIf='modo.nombre !== "puntoInicio" && modo.nombre !== "recepcion"'>
                 {{ protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto }}
             </span>
@@ -83,9 +86,3 @@
 
 
 </ng-container>
-<!--VISUALIZACIÓN DE PROTOCOLOS CONTROL -->
-<!-- <div class="row" *ngIf="!protocolos?.length">
-    <div class="col">
-        <i class="mdi mdi-emoticon-sad"></i> No hay protocolos que coincidan con los filtros de búsqueda
-    </div>
-</div> -->

@@ -49,6 +49,7 @@ export class ProtocoloDetalleComponent
     solicitudProtocolo: any;
     mostrarMasHeader: Boolean = false;
     showGestorAlarmas: Boolean = false;
+    terminarPracticasChecked: Boolean = false;
     historialResultados;
     validaciones = [];
 
@@ -320,11 +321,7 @@ export class ProtocoloDetalleComponent
         }
 
         this.modelo.solicitud.tipoPrestacion = Constantes.conceptoPruebaLaboratorio;
-        // let organizacionSolicitud = this.auth.organizacion.id;
-        // this.servicioProtocolo.getNumeroProtocolo(organizacionSolicitud).subscribe(numeroProtocolo => {
-        //     this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo = numeroProtocolo;
         this.guardarProtocolo(true);
-        // });
     }
 
     /**
@@ -550,6 +547,20 @@ export class ProtocoloDetalleComponent
     private actualizarEstadosValidacionPracticas() {
         let practicasValidar = this.validaciones.filter(e => e.validado && !e.esValorCritico);
         practicasValidar.forEach(e => e.registroPractica.valor.estados.push(this.generarEstado('validada')));
+        if (this.terminarPracticasChecked) {
+            this.terminarPracticas();
+        }
+    }
+
+    /**
+     *
+     *
+     * @private.
+     * @memberof ProtocoloDetalleComponent
+     */
+    private terminarPracticas() {
+        let practicasTerminar = this.protocolo.ejecucion.registros.filter( r => ! r.valor.estados.some( e => e.tipo === 'validada') );
+        practicasTerminar.valor.estados.push(this.generarEstado('terminada'));
     }
 
     /**

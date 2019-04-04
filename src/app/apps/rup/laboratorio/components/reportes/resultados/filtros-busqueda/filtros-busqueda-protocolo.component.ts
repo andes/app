@@ -41,7 +41,6 @@ export class ReporteResultadosFiltrosComponent
         prioridad: null,
         areas: [],
         laboratorioInterno: null,
-        tipoPrestacionSolicititud: '15220000',
         organizacion: null,
         practicas: null,
         area: null,

@@ -43,6 +43,7 @@ export class FiltrosBusquedaProtocoloComponent
     public areas = [];
     public servicios = [];
     public cacheContexto;
+    public estado;
     public busqueda = {
         idPaciente: null,
         origen: null,
@@ -52,7 +53,6 @@ export class FiltrosBusquedaProtocoloComponent
         prioridad: null,
         areas: [],
         laboratorioInterno: null,
-        tipoPrestacionSolicititud: '15220000',
         organizacion: null,
         estado: [],
         estadoFiltrar: 'validada',
@@ -130,6 +130,8 @@ export class FiltrosBusquedaProtocoloComponent
                 this.busqueda.solicitudDesde = this.cacheContexto.solicitudDesde;
             } else if (tipo === 'fechaHasta') {
                 this.busqueda.solicitudHasta = this.cacheContexto.solicitudHasta;
+            } else if (tipo === 'estado') {
+                this.busqueda.estado = this.estado && this.estado.id !== 'todos' ? [this.estado.id] : null;
             }
         }
         this.buscarProtocolosEmmiter.emit(this.busqueda);
