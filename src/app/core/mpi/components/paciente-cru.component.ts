@@ -325,6 +325,7 @@ export class PacienteCruComponent implements OnInit {
         this.pacienteModel = Object.assign({}, this.paciente);
         this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
         this.inicializarMapaDefault();
+        this.checkDisableValidar();
 
         // Se piden los datos para app mobile en la 1er carga del paciente
         if (!this.paciente.id) {
@@ -531,62 +532,69 @@ export class PacienteCruComponent implements OnInit {
             this.plex.info('warning', 'Debe completar los datos obligatorios');
             return;
         }
-        this.pacienteCache.setScanState(false);
-        this.disableGuardar = true;
-        let pacienteGuardar: any = Object.assign({}, this.pacienteModel);
-        pacienteGuardar.ignoreCheck = ignoreCheck;
-        pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-        pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : null;
-        pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : pacienteGuardar.sexo;
-        pacienteGuardar.contacto.map(elem => {
-            elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
-            return elem;
-        });
-        pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
-        if (this.viveProvActual) {
-            pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaEfector;
-        }
-        if (this.viveLocActual) {
-            pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadEfector;
-        }
-
-        this.pacienteService.save(pacienteGuardar).subscribe(
-            (resultadoSave: any) => {
-                // Existen sugerencias de pacientes similares?
-                if (resultadoSave.resultadoMatching && resultadoSave.resultadoMatching.length > 0) {
-                    this.pacientesSimilares = this.escaneado ? resultadoSave.resultadoMatching.filter(elem => elem.paciente.estado === 'validado') : resultadoSave.resultadoMatching;
-                    // Si el matcheo es alto o el dni-sexo está repetido no podemos ignorar las sugerencias
-                    this.enableIgnorarGuardar = !resultadoSave.macheoAlto && !resultadoSave.dniRepetido;
-                    if (!this.enableIgnorarGuardar) {
-                        this.plex.info('danger', 'El paciente ya existe, verifique las sugerencias');
-                    } else {
-                        this.plex.info('warning', 'Existen pacientes similares, verifique las sugerencias');
-                    }
-                } else {
-                    if (this.changeRelaciones) {
-                        this.saveRelaciones(resultadoSave);
-                    }
-                    if (this.escaneado) {
-                        // Si el paciente fue escaneado se agrega al historial de búsqueda
-                        this.historialBusquedaService.add(resultadoSave);
-                    }
-                    this.plex.info('success', 'Los datos se actualizaron correctamente');
-                    // TODO: Esto es un poco hacky -- soluciona el problema de tener la url anterior
-                    // hasta la actualización a Angular 7.2, donde se incorpora la posibilidad de pasar un estado en el navigate
-                    let previousUrl = this.previousUrlService.getUrl();
-                    if (previousUrl && previousUrl.includes('citas/punto-inicio')) {
-                        this.previousUrlService.setUrl('');
-                        this._router.navigate(['citas/punto-inicio/' + resultadoSave.id]);
-                    } else {
-                        this._router.navigate(['apps/mpi/busqueda']);
-                    }
-                }
-            },
-            error => {
-                this.plex.info('warning', 'Error guardando el paciente');
+        // Buscamos relaciones declaradas sin especificar tipo de relación
+        let faltaParentezco = this.pacienteModel.relaciones.find(unaRelacion => unaRelacion.relacion === null);
+        // Existen relaciones sin especificar el tipo?
+        if (faltaParentezco) {
+            this.plex.info('warning', 'Existen relaciones sin parentezco. Completelas antes de guardar', 'Atención');
+        } else {
+            this.pacienteCache.setScanState(false);
+            this.disableGuardar = true;
+            let pacienteGuardar: any = Object.assign({}, this.pacienteModel);
+            pacienteGuardar.ignoreCheck = ignoreCheck;
+            pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
+            pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : null;
+            pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : pacienteGuardar.sexo;
+            pacienteGuardar.contacto.map(elem => {
+                elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
+                return elem;
+            });
+            pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
+            if (this.viveProvActual) {
+                pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaEfector;
             }
-        );
-        this.pacienteCache.clearPaciente();
+            if (this.viveLocActual) {
+                pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadEfector;
+            }
+
+            this.pacienteService.save(pacienteGuardar).subscribe(
+                (resultadoSave: any) => {
+                    // Existen sugerencias de pacientes similares?
+                    if (resultadoSave.resultadoMatching && resultadoSave.resultadoMatching.length > 0) {
+                        this.pacientesSimilares = this.escaneado ? resultadoSave.resultadoMatching.filter(elem => elem.paciente.estado === 'validado') : resultadoSave.resultadoMatching;
+                        // Si el matcheo es alto o el dni-sexo está repetido no podemos ignorar las sugerencias
+                        this.enableIgnorarGuardar = !resultadoSave.macheoAlto && !resultadoSave.dniRepetido;
+                        if (!this.enableIgnorarGuardar) {
+                            this.plex.info('danger', 'El paciente ya existe, verifique las sugerencias');
+                        } else {
+                            this.plex.info('warning', 'Existen pacientes similares, verifique las sugerencias');
+                        }
+                    } else {
+                        if (this.changeRelaciones) {
+                            this.saveRelaciones(resultadoSave);
+                        }
+                        if (this.escaneado) {
+                            // Si el paciente fue escaneado se agrega al historial de búsqueda
+                            this.historialBusquedaService.add(resultadoSave);
+                        }
+                        this.plex.info('success', 'Los datos se actualizaron correctamente');
+                        // TODO: Esto es un poco hacky -- soluciona el problema de tener la url anterior
+                        // hasta la actualización a Angular 7.2, donde se incorpora la posibilidad de pasar un estado en el navigate
+                        let previousUrl = this.previousUrlService.getUrl();
+                        if (previousUrl && previousUrl.includes('citas/punto-inicio')) {
+                            this.previousUrlService.setUrl('');
+                            this._router.navigate(['citas/punto-inicio/' + resultadoSave.id]);
+                        } else {
+                            this._router.navigate(['apps/mpi/busqueda']);
+                        }
+                    }
+                },
+                error => {
+                    this.plex.info('warning', 'Error guardando el paciente');
+                }
+            );
+            this.pacienteCache.clearPaciente();
+        }
     }
 
     // Borra/agrega relaciones al paciente segun corresponda.
@@ -706,8 +714,10 @@ export class PacienteCruComponent implements OnInit {
 
 
     checkDisableValidar() {
-        let sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-        this.disableValidar = !(parseInt(this.pacienteModel.documento, 0) >= 99999 && sexo !== undefined && sexo !== 'otro');
+        if (!this.validado || !this.pacienteModel.foto) {
+            let sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
+            this.disableValidar = !(parseInt(this.pacienteModel.documento, 0) >= 99999 && sexo !== undefined && sexo !== 'otro');
+        }
     }
 
     validarPaciente(event) {

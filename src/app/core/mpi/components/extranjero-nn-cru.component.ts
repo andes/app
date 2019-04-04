@@ -402,35 +402,42 @@ export class ExtranjeroNNCruComponent implements OnInit {
             this.plex.info('warning', 'Debe completar los datos obligatorios');
             return;
         }
-        this.disableGuardar = true;
-        let pacienteGuardar: any = Object.assign({}, this.pacienteModel);
-        pacienteGuardar.tipoIdentificacion = ((typeof this.pacienteModel.tipoIdentificacion === 'string')) ? this.pacienteModel.tipoIdentificacion : (Object(this.pacienteModel.tipoIdentificacion).id);
-        pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-        pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : null;
-        pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : pacienteGuardar.sexo;
-        pacienteGuardar.contacto.map(elem => {
-            elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
-            return elem;
-        });
-        pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
-        if (this.viveProvActual) {
-            pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaActual;
-        }
-        if (this.viveLocActual) {
-            pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadActual;
-        }
-        this.pacienteService.save(pacienteGuardar).subscribe(
-            resultadoSave => {
-                if (this.changeRelaciones) {
-                    this.saveRelaciones(resultadoSave);
-                }
-                this.plex.info('success', 'Los datos se actualizaron correctamente');
-                this.location.back();
-            },
-            error => {
-                this.plex.info('warning', 'Error guardando el paciente');
+        // Buscamos relaciones declaradas sin especificar tipo de relación
+        let faltaParentezco = this.pacienteModel.relaciones.find(unaRelacion => unaRelacion.relacion === null);
+        // Existen relaciones sin especificar el tipo?
+        if (faltaParentezco) {
+            this.plex.info('warning', 'Existen relaciones sin parentezco. Completelas antes de guardar', 'Atención');
+        } else {
+            this.disableGuardar = true;
+            let pacienteGuardar: any = Object.assign({}, this.pacienteModel);
+            pacienteGuardar.tipoIdentificacion = ((typeof this.pacienteModel.tipoIdentificacion === 'string')) ? this.pacienteModel.tipoIdentificacion : (Object(this.pacienteModel.tipoIdentificacion).id);
+            pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
+            pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : null;
+            pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : pacienteGuardar.sexo;
+            pacienteGuardar.contacto.map(elem => {
+                elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
+                return elem;
+            });
+            pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
+            if (this.viveProvActual) {
+                pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaActual;
             }
-        );
+            if (this.viveLocActual) {
+                pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadActual;
+            }
+            this.pacienteService.save(pacienteGuardar).subscribe(
+                resultadoSave => {
+                    if (this.changeRelaciones) {
+                        this.saveRelaciones(resultadoSave);
+                    }
+                    this.plex.info('success', 'Los datos se actualizaron correctamente');
+                    this.location.back();
+                },
+                error => {
+                    this.plex.info('warning', 'Error guardando el paciente');
+                }
+            );
+        }
     }
 
     // Borra/agrega relaciones al paciente segun corresponda.
