@@ -8,8 +8,8 @@
     </div>
 </ng-container>
 <ng-container *ngIf="!soloValores">
-    <plex-text [(ngModel)]="registro.valor" id="informes" name="informes" [html]="true" rows="3" [readonly]="false"
-        placeholder="Ingrese un informe" (change)="emitChange()">
+    <plex-text [(ngModel)]="registro.valor" id="informes" name="informes" [html]="true" [height]="100"
+        [readonly]="false" placeholder="Ingrese un informe" (change)="emitChange()">
     </plex-text>
 </ng-container>
 
