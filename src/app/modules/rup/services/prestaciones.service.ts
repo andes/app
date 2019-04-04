@@ -703,7 +703,7 @@ export class PrestacionesService {
                 let nuevaPrestacion = this.inicializarPrestacion(paciente, concepto, 'ejecucion');
                 if (prestaciones.length) {
                     let ultimaPrestacion = prestaciones[0];
-                    // aca deberiamos poner el id del registro anterior para tener la evolucion??
+                    this.hayValorAEvolucionar(ultimaPrestacion.ejecucion.registros);
                     nuevaPrestacion.ejecucion.registros = ultimaPrestacion.ejecucion.registros;
                 }
                 return nuevaPrestacion;
@@ -716,6 +716,27 @@ export class PrestacionesService {
         }
     }
 
+    /**
+     * Si encontramos un registro con valor. Lo generamos como una evolucion.
+     * @param registros
+     */
+    hayValorAEvolucionar(registros: any[]) {
+        if (registros) {
+            for (let i = 0; i < registros.length; i++) {
+                if (registros[i].valor) {
+                    let registorNuevo = new IPrestacionRegistro(null, registros[i].concepto);
+                    registorNuevo.valor = {
+                        idRegistroOrigen: registros[i].id,
+                        estado: registros[i].valor.estado ? registros[i].valor.estado : 'activo',
+                        evolucion: registros[i].valor.evolucion ? registros[i].valor.evolucion : registros[i].valor
+                    };
+                    registros[i] = registorNuevo;
+                } else {
+                    this.hayValorAEvolucionar(registros[i].registros);
+                }
+            }
+        }
+    }
 
     /**
      * Inicializar una prestación con algunos datos obligatorios
