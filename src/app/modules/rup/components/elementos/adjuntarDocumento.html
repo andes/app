@@ -1,21 +1,42 @@
-<form #form="ngForm">
-    <div class="container-fluid col-12">
-        <div class="row mb-3">
-            <div class="col-12">
-                <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
-                <strong *ngIf="!soloValores">Cargar documentos</strong>
-                <span *ngIf="!waiting && !soloValores">
-                    <plex-button type="primary" class="btn-sm" label="Desde mi PC" (click)="upload.click()">
-                    </plex-button>
-                    <plex-button *ngIf="!waiting" class="btn-sm" type="primary" label="Desde mi App móvil"
-                        (click)="fromMobile()"></plex-button>
-                    <span *ngIf="errorExt">
-                        <span class="badge-danger"> Archivo inválido </span>
-                    </span>
+<div *ngIf="registro?.valor?.documentos?.length && fileToken" class="hr-inline-group">
+    <section>
+        <div class="adjunto" *ngFor="let doc of registro.valor.documentos; let i = index">
+            <div class="img-container hover align-items-end">
+                <img class="miniatura" (click)="activaLightbox(i)" [src]="createUrl(doc)" alt="{{ doc.ext }}"
+                    *ngIf="esImagen(doc.ext)" />
+                <plex-button *ngIf="!soloValores" icon="delete" size="sm" type="danger w-100"
+                    (click)="confirmarEliminarImagen(doc)" title="Eliminar documento">
+                </plex-button>
+            </div>
+            <div (click)="lightbox = false" *ngIf="i === indice && lightbox"
+                [ngClass]="{'lightbox': i === indice && lightbox }">
+                <i (click)=imagenPrevia(i) class="mdi mdi-chevron-double-left hover previous parpadeo"></i>
+                <div class="img-container" [ngClass]="{'h-100 align-items-center': lightbox === true}">
+                    <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
+                </div>
+                <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto m-1 p-2">
+                    {{ doc.ext }}
+                </a>
+                <i (click)=imagenSiguiente(i) class="mdi mdi-chevron-double-right hover next parpadeo"></i>
+            </div>
+            <div class="blend-overlay" *ngIf="soloValores">
+                <div class="info-container" *ngIf="soloValores">
+                    <span class="fecha badge badge-info" *ngIf="doc?.fecha">{{ doc.fecha | fecha }}</span>
+                    <span class="fecha badge badge-info" *ngIf="!doc?.fecha">Sin fecha</span>
+                    <span class="term text-capitalize" *ngIf="doc?.descripcion?.term">{{ doc.descripcion.term }}</span>
+                    <span class="term text-capitalize" *ngIf="!doc?.descripcion?.term">Sin descripción</span>
+                </div>
+            </div>
+            <div class="form-container" *ngIf="!soloValores">
+                <span class="fecha" *ngIf="!soloValores">
+                    <plex-datetime type="date" [(ngModel)]="doc.fecha" name="fecha{{i}}" [max]="hoy">
+                    </plex-datetime>
                 </span>
-                <span *ngIf="waiting">
-                    <plex-loader class="app-waiting" type="ball-pulse-sync"></plex-loader>
-                    <plex-button type="danger" class="btn-sm" label="Cancelar" (click)="cancelar()"></plex-button>
+                <span class="term">
+                    <plex-select *ngIf="!soloValores && descendientesInformeClinico.length"
+                        [(ngModel)]="doc.descripcion" name="select{{i}}" idField="term" labelField="term"
+                        [data]="descendientesInformeClinico" [required]="true">
+                    </plex-select>
                 </span>
             </div>
         </div>
@@ -79,6 +100,16 @@
                     </table>
                 </div>
             </div>
+            <!-- <plex-dropdown *ngIf="!soloValores" type="primary" class="agregar dropdown-inline font-size-150" [right]="false"
+                icon="plus" [items]="items" [fitContainer]="true" [fitContainerIcon]="'+'" [fitContainerSize]="150">
+            </plex-dropdown>
+            <span *ngIf="waiting">
+                <plex-loader class="app-waiting" type="ball-pulse-sync"></plex-loader>
+                <plex-button type="danger" class="btn-sm" label="Cancelar" (click)="cancelar()"></plex-button>
+            </span>
+            <div class="w-100 d-flex align-items-center subir-documento" *ngIf="!waiting && !soloValores && errorExt">
+                <span class="badge-danger"> Archivo inválido </span> -->
         </div>
-    </div>
-</form>
+    </section>
+</div>
+<input type="file" (change)="changeListener($event)" style="display:none;" #upload #uploaded>
