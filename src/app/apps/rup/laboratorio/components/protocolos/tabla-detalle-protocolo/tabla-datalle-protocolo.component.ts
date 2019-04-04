@@ -452,11 +452,25 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         this.verHistorialResultadosEmitter.emit({ paciente: this.modelo.paciente, practica: element.valor.practica });
     }
 
+    /**
+     *
+     *
+     * @param {*} practicaCarga
+     * @returns
+     * @memberof TablaDatalleProtocoloComponent
+     */
     getResultadoAnterior(practicaCarga) {
         return practicaCarga.valor.resultadoAnterior && practicaCarga.valor.resultadoAnterior[0] ?
             practicaCarga.valor.resultadoAnterior[0] : null;
     }
 
+    /**
+     *
+     *
+     * @param {*} $event
+     * @param {*} opciones
+     * @memberof TablaDatalleProtocoloComponent
+     */
     getOpcionesSeleccionSimple($event, opciones) {
         $event.callback(opciones.map(e => {
             return {
@@ -466,6 +480,11 @@ export class TablaDatalleProtocoloComponent implements OnInit {
         }));
     }
 
+    /**
+     *
+     *
+     * @memberof TablaDatalleProtocoloComponent
+     */
     calcularFormulas() {
         for (let practica of this.practicasEjecucion) {
             if (!(practica.valor.practica.categoria === 'simple')) {
