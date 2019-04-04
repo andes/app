@@ -21,7 +21,7 @@ export class SeleccionBinariaComponent extends RUPComponent implements OnInit {
         if (!this.registro.valor) {
             this.registro.valor = null;
         } else {
-            this.valor = this.registro.valor.id;
+            this.valor = this.registro.valor.evolucion ? this.registro.valor.evolucion.id : this.registro.valor.id;
         }
     }
 
