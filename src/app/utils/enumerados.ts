@@ -107,6 +107,11 @@ export enum EstadosLabo {
     // ,'todos'
 }
 
+export enum EstadosLaboValidacion {
+    'pendientes / ejecución' = 'ejecucion',
+    'terminados / finalizados' = 'validada',
+}
+
 export enum EstadoHojaTrabajo {
     'impresion',
     'analisis'
@@ -275,12 +280,24 @@ export function getPrioridadesFiltroLab() {
     });
     return salida;
 }
+
 export function getEstadosFiltroLab() {
     let arrLab = Object.keys(EstadosLabo);
     arrLab = arrLab.slice(arrLab.length / 2);
     let salida = arrLab.map(elem => {
         return {
             'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
+
+export function getEstadosFiltroValidacionLab() {
+    let arrLab = Object.keys(EstadosLaboValidacion);
+    let salida = arrLab.map(elem => {
+        return {
+            'id': EstadosLaboValidacion[elem],
             'nombre': titleCase(elem)
         };
     });
