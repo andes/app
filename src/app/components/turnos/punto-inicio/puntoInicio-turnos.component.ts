@@ -106,6 +106,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
             this.pacienteCache.setPaciente(pacientes[0]);
             this.pacienteCache.setScanState(escaneado);
             this.onPacienteSelected(pacientes[0]);
+            this.searchClear = true;
         } else {
             this.resultadoBusqueda = pacientes;
         }

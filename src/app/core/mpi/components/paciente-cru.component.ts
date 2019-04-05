@@ -566,9 +566,13 @@ export class PacienteCruComponent implements OnInit {
                     // TODO: Esto es un poco hacky -- soluciona el problema de tener la url anterior
                     // hasta la actualización a Angular 7.2, donde se incorpora la posibilidad de pasar un estado en el navigate
                     let previousUrl = this.previousUrlService.getUrl();
-                    if (previousUrl && previousUrl.includes('citas/punto-inicio')) {
+                    if (previousUrl) {
                         this.previousUrlService.setUrl('');
-                        this._router.navigate(['citas/punto-inicio/' + resultadoSave.id]);
+                        if (previousUrl.includes('citas/punto-inicio')) {
+                            this._router.navigate(['citas/punto-inicio/' + resultadoSave.id]);
+                        } else {
+                            this._router.navigate([previousUrl]);
+                        }
                     } else {
                         this._router.navigate(['apps/mpi/busqueda']);
                     }

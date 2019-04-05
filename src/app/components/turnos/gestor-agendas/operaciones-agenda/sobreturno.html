@@ -58,8 +58,17 @@
                                 <mpi-botones-registro [disabled]="disableNuevoPaciente"></mpi-botones-registro>
                             </div>
                         </div>
+                        <plex-loader *ngIf="loading"></plex-loader>
+                        <div class="row">
+                            <div class="col-12">
+                                <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
+                                    [autoselect]="false" (selected)="onSelect($event)"></paciente-listado>
 
-                        <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+                                <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
+                                    ¡No se encontró ningún paciente!
+                                </div>
+                            </div>
+                        </div>
                     </span>
                 </plex-box>
             </div>
