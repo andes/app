@@ -335,7 +335,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
     }
 
     verificarCorreoValido(indice, form) {
-        let formato = new RegExp(/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/);
+        let formato = /^[a-zA-Z0-9_.+-]+\@[a-zA-Z0-9-]+(\.[a-z]{2,4})+$/;
         let mail = String(this.pacienteModel.contacto[indice].valor);
         form.form.controls['valor-' + indice].setErrors(null);  // con cada caracter nuevo 'limpia' el error y reevalúa
         window.setTimeout(() => {
@@ -402,8 +402,11 @@ export class ExtranjeroNNCruComponent implements OnInit {
             this.plex.info('warning', 'Debe completar los datos obligatorios');
             return;
         }
-        // Buscamos relaciones declaradas sin especificar tipo de relación
-        let faltaParentezco = this.pacienteModel.relaciones.find(unaRelacion => unaRelacion.relacion === null);
+        let faltaParentezco = null;
+        if (this.pacienteModel.relaciones && this.pacienteModel.relaciones.length) {
+            // Buscamos relaciones declaradas sin especificar tipo de relación
+            faltaParentezco = this.pacienteModel.relaciones.find(unaRelacion => unaRelacion.relacion === null);
+        }
         // Existen relaciones sin especificar el tipo?
         if (faltaParentezco) {
             this.plex.info('warning', 'Existen relaciones sin parentezco. Completelas antes de guardar', 'Atención');

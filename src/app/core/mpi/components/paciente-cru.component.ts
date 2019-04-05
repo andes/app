@@ -46,8 +46,8 @@ export class PacienteCruComponent implements OnInit {
     localidades: any[] = [];
 
     paisArgentina = null;
-    provinciaEfector = null;
-    localidadEfector = null;
+    provinciaActual = null;
+    localidadActual = null;
     organizacionActual = null;
     validado = false;
     noPoseeDNI = false;
@@ -124,7 +124,7 @@ export class PacienteCruComponent implements OnInit {
     public paciente: IPaciente;
     public nombrePattern: string;
     public showDeshacer = false;
-    public patronDocumento = /^[1-9]{1}[0-9]{7}$/;
+    public patronDocumento = /^[1-9]{1}[0-9]{6,7}$/;
     // PARA LA APP MOBILE
     public showMobile = false;
     public checkPass = false;
@@ -163,8 +163,8 @@ export class PacienteCruComponent implements OnInit {
         this.organizacionService.getById(this.auth.organizacion.id).subscribe((org: IOrganizacion) => {
             if (org) {
                 this.organizacionActual = org;
-                this.provinciaEfector = org.direccion.ubicacion.provincia;
-                this.localidadEfector = org.direccion.ubicacion.localidad;
+                this.provinciaActual = org.direccion.ubicacion.provincia;
+                this.localidadActual = org.direccion.ubicacion.localidad;
                 this.loadPaciente();
             }
         });
@@ -301,14 +301,14 @@ export class PacienteCruComponent implements OnInit {
             } else {
                 if (this.paciente.direccion[0].ubicacion) {
                     if (this.paciente.direccion[0].ubicacion.provincia) {
-                        if (this.provinciaEfector) {
-                            (this.paciente.direccion[0].ubicacion.provincia.nombre === this.provinciaEfector.nombre) ? this.viveProvActual = true : this.viveProvActual = false;
+                        if (this.provinciaActual) {
+                            (this.paciente.direccion[0].ubicacion.provincia.nombre === this.provinciaActual.nombre) ? this.viveProvActual = true : this.viveProvActual = false;
                         }
                         this.loadLocalidades(this.paciente.direccion[0].ubicacion.provincia);
                     }
                     if (this.paciente.direccion[0].ubicacion.localidad) {
-                        if (this.localidadEfector) {
-                            (this.paciente.direccion[0].ubicacion.localidad.nombre === this.localidadEfector.nombre) ? this.viveLocActual = true : (this.viveLocActual = false, this.barrios = null);
+                        if (this.localidadActual) {
+                            (this.paciente.direccion[0].ubicacion.localidad.nombre === this.localidadActual.nombre) ? this.viveLocActual = true : (this.viveLocActual = false, this.barrios = null);
                         }
                         this.loadBarrios(this.paciente.direccion[0].ubicacion.localidad);
                     }
@@ -361,7 +361,7 @@ export class PacienteCruComponent implements OnInit {
 
     loadLocalidades(provincia) {
         if (provincia && provincia.id) {
-            if (provincia.id === this.provinciaEfector.id) {
+            if (provincia.id === this.provinciaActual.id) {
                 this.viveProvActual = true;
             }
             this.localidadService.getXProvincia(provincia.id).subscribe(result => {
@@ -372,7 +372,7 @@ export class PacienteCruComponent implements OnInit {
 
     loadBarrios(localidad) {
         if (localidad && localidad.id) {
-            if (localidad.id === this.localidadEfector.id) {
+            if (localidad.id === this.localidadActual.id) {
                 this.viveLocActual = true;
             }
             this.barriosService.getXLocalidad(localidad.id).subscribe(result => {
@@ -382,14 +382,14 @@ export class PacienteCruComponent implements OnInit {
     }
 
     /**
-     * Change del plex-bool viveProvActual
-     * carga las localidades correspondientes a la provincia del efector
+     * Cambia el estado del plex-bool viveProvActual
+     * carga las localidades correspondientes a la provincia del actual
      * @param {any} event
      */
     changeProvActual(event) {
         if (event.value) {
-            this.pacienteModel.direccion[0].ubicacion.provincia = this.provinciaEfector;
-            this.loadLocalidades(this.provinciaEfector);
+            this.pacienteModel.direccion[0].ubicacion.provincia = this.provinciaActual;
+            this.loadLocalidades(this.provinciaActual);
         } else {
             this.viveLocActual = false;
             this.localidades = [];
@@ -400,16 +400,16 @@ export class PacienteCruComponent implements OnInit {
     }
 
     /**
-     * Change del plex-bool viveNQN
-     * carga los barrios de la provincia del efector
+     * Cambia el estado del plex-bool viveLocActual
+     * carga los barrios de la provincia del actual
      * @param {any} event
      *
      * @memberOf PacienteCreateUpdateComponent
      */
     changeLocalidadActual(event) {
         if (event.value) {
-            this.pacienteModel.direccion[0].ubicacion.localidad = this.localidadEfector;
-            this.loadBarrios(this.localidadEfector);
+            this.pacienteModel.direccion[0].ubicacion.localidad = this.localidadActual;
+            this.loadBarrios(this.localidadActual);
         } else {
             this.pacienteModel.direccion[0].ubicacion.localidad = null;
             this.pacienteModel.direccion[0].ubicacion.barrio = null;
@@ -490,7 +490,7 @@ export class PacienteCruComponent implements OnInit {
     }
 
     verificarCorreoValido(indice, form) {
-        let formato = new RegExp(/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/);
+        let formato = /^[a-zA-Z0-9_.+-]+\@[a-zA-Z0-9-]+(\.[a-z]{2,4})+$/;
         let mail = String(this.pacienteModel.contacto[indice].valor);
         form.form.controls['valor-' + indice].setErrors(null);  // con cada caracter nuevo 'limpia' el error y reevalúa
         window.setTimeout(() => {
@@ -532,8 +532,11 @@ export class PacienteCruComponent implements OnInit {
             this.plex.info('warning', 'Debe completar los datos obligatorios');
             return;
         }
-        // Buscamos relaciones declaradas sin especificar tipo de relación
-        let faltaParentezco = this.pacienteModel.relaciones.find(unaRelacion => unaRelacion.relacion === null);
+        let faltaParentezco = null;
+        if (this.pacienteModel.relaciones && this.pacienteModel.relaciones.length) {
+            // Buscamos relaciones declaradas sin especificar tipo de relación
+            faltaParentezco = this.pacienteModel.relaciones.find(unaRelacion => unaRelacion.relacion === null);
+        }
         // Existen relaciones sin especificar el tipo?
         if (faltaParentezco) {
             this.plex.info('warning', 'Existen relaciones sin parentezco. Completelas antes de guardar', 'Atención');
@@ -551,10 +554,10 @@ export class PacienteCruComponent implements OnInit {
             });
             pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
             if (this.viveProvActual) {
-                pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaEfector;
+                pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaActual;
             }
             if (this.viveLocActual) {
-                pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadEfector;
+                pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadActual;
             }
 
             this.pacienteService.save(pacienteGuardar).subscribe(
