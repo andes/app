@@ -5,8 +5,6 @@ import { Component, Input, EventEmitter, Output, OnInit, HostBinding, PipeTransf
 import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
-import { ITurno } from './../../../../interfaces/turnos/ITurno';
 import { IPaciente } from './../../../../interfaces/IPaciente';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
@@ -56,7 +54,7 @@ export class AgregarSobreturnoComponent implements OnInit {
     showSobreturno = true;
     pacientesSearch = false;
     horaTurno = null;
-    telefono: String = '';
+    telefono = '';
     cambioTelefono = false;
 
     public seleccion = null;
