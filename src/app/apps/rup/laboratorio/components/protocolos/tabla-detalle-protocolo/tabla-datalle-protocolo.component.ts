@@ -287,7 +287,10 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      * @param {*} tipo
      * @memberof TablaDatalleProtocolo
      */
-    onValorResultadoChange(event, op) {
+    onValorResultadoChange(event, op, i) {
+        if (op.valor.resultado.valor === '' || op.valor.resultado.valor === null) {
+            this.validaciones[i].validado = false;
+        }
         this.formatearDecimales(op.valor);
         this.actualzarEstadoDeCargas(op, event.value);
     }

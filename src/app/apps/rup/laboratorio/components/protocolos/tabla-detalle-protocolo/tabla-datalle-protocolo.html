@@ -125,7 +125,7 @@
                         <td class="text-left align-middle estado" style='width: 200px'>
                             <ng-container *ngIf='!practicaCarga.valor.resultado.sinMuestra && practicaCarga.valor.practica.resultado.formato'>
                                 <plex-float *ngIf="practicaCarga.valor.practica.resultado.formato.tipo === 'Numérico'"
-                                    (focusout)="onValorResultadoChange($event, practicaCarga)" [(ngModel)]="practicaCarga.valor.resultado.valor"></plex-float>
+                                    (focusout)="onValorResultadoChange($event, practicaCarga, i)" [(ngModel)]="practicaCarga.valor.resultado.valor"></plex-float>
                                 <plex-text *ngIf="practicaCarga.valor.practica.resultado.formato.tipo === 'Texto'"
                                     [(ngModel)]="practicaCarga.valor.resultado.valor"></plex-text>
                                 <plex-select
@@ -187,15 +187,12 @@
                                         title="{{practicaCarga.valor.estados[practicaCarga.valor.estados.length-1]?.usuario.nombre}} {{practicaCarga.valor.estados[practicaCarga.valor.estados.length-1]?.usuario.apellido}}
                                                 <br />{{practicaCarga.valor.estados[practicaCarga.valor.estados.length-1]?.fecha | date: 'dd/MM/yyyy' }} ">
                                     </span>
-                                    <!-- : 
-                                    {{}}
-                                     -->
                                 </ng-container>
                             </td>
                             <ng-container *ngIf='modo.nombre ==="validacion"'>
                                 <td style='text-align: center'>
                                     <plex-bool type="checkbox" [(ngModel)]="validaciones[i].validado" name="validado"
-                                        (change)="clickValidar($event)" name="clickValidar"></plex-bool>
+                                        (change)="clickValidar($event)" name="clickValidar" [readonly]='practicaCarga.valor.resultado.valor === null || practicaCarga.valor.resultado.valor === "" ' ></plex-bool>
                                 </td>
                             </ng-container>
                             <td>
@@ -243,7 +240,7 @@
                     <ng-container *ngIf='practicaCarga.valor && !practicaCarga.valor.resultado.sinMuestra'>
                         <plex-float
                             *ngIf="practicaCarga.valor.practica.resultado.formato && practicaCarga.valor.practica.resultado.formato.tipo === 'Numérico'"
-                            (focusout)="onValorResultadoChange($event, practicaCarga)"
+                            (focusout)="onValorResultadoChange($event, practicaCarga, i)"
                             [(ngModel)]="practicaCarga.valor.resultado.valor"></plex-float>
                         <b *ngIf="practicaCarga.valor.resultado.sinMuestra">Sin muestra</b>
                     </ng-container>

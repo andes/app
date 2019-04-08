@@ -49,7 +49,6 @@ export class ProtocoloDetalleComponent
     solicitudProtocolo: any;
     mostrarMasHeader: Boolean = false;
     showGestorAlarmas: Boolean = false;
-    terminarPracticasChecked: Boolean = false;
     historialResultados;
     validaciones = [];
 
@@ -60,6 +59,7 @@ export class ProtocoloDetalleComponent
     @Output() volverAListaControEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
     @Output() edicionDatosCabeceraEmitter = new EventEmitter<any>();
 
+    @Input() terminarPracticasChecked;
     @Input() seleccionPaciente: Boolean;
     @Input() protocolos: any;
     @Input() indexProtocolo: any;
@@ -414,7 +414,10 @@ export class ProtocoloDetalleComponent
 
         this.servicioPrestacion.patch(this.modelo._id, this.getParams()).subscribe(async () => {
             if (next) {
-                this.protocolos.splice(this.indexProtocolo, 1);
+                if (this.laboratorioContextoCacheService.isModoValidacion() && this.isProtocoloTerminado()) {
+                    this.protocolos.splice(this.indexProtocolo, 1);
+                }
+
                 if (this.laboratorioContextoCacheService.isModoRecepcion() || this.protocolos.length === 0) {
                     this.contextoCache.mostrarCuerpoProtocolo = true;
                     this.volverAListaControEmit.emit();
@@ -479,7 +482,9 @@ export class ProtocoloDetalleComponent
      */
     private cargarProximoProtocolo() {
         this.showGestorAlarmas = false;
-        this.protocolos.splice(this.indexProtocolo, 1);
+        if (this.laboratorioContextoCacheService.isModoValidacion() && this.isProtocoloTerminado()) {
+            this.protocolos.splice(this.indexProtocolo, 1);
+        }
         if (this.laboratorioContextoCacheService.isModoRecepcion() || this.protocolos.length === 0) {
             this.contextoCache.mostrarCuerpoProtocolo = true;
             this.volverAListaControEmit.emit();
@@ -559,8 +564,8 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     private terminarPracticas() {
-        let practicasTerminar = this.protocolo.ejecucion.registros.filter( r => ! r.valor.estados.some( e => e.tipo === 'validada') );
-        practicasTerminar.valor.estados.push(this.generarEstado('terminada'));
+        let practicasTerminar = this.modelo.ejecucion.registros.filter( r => ! r.valor.estados.some( e => e.tipo === 'validada') );
+        practicasTerminar.forEach( p => p.valor.estados.push(this.generarEstado('terminada')) );
     }
 
     /**
@@ -664,7 +669,25 @@ export class ProtocoloDetalleComponent
         });
     }
 
+    /**
+     *
+     *
+     * @returns
+     * @memberof ProtocoloDetalleComponent
+     */
     mostrarEncabezadoProtocolo() {
         return !this.seleccionPaciente && !this.contextoCache.cargarPorPracticas;
+    }
+
+    /**
+     *
+     *
+     * @returns
+     * @memberof ProtocoloDetalleComponent
+     */
+    isProtocoloTerminado() {
+        return this.modelo.ejecucion.registros.every(
+            r => r.estados[r.valor.estados.length - 1].tipo === 'validada' || r.estados[r.valor.estados.length - 1].tipo === 'terminada'
+        );
     }
 }

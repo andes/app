@@ -36,6 +36,7 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
 
     public protocolos: any[];
     public protocolo: any;
+    public terminarPracticasChecked: Boolean = false;
     routeParams: any;
 
     @Input('protocolo')

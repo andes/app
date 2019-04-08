@@ -65,6 +65,13 @@
                     </div>
 
                     <ng-container *ngIf='showBotonGuardar'>
+
+                        <ng-container *ngIf='contextoCache.modo.nombre === "validacion" '>
+                            <plex-bool [(ngModel)]='terminarPracticasChecked'  type='checkbox' ></plex-bool>
+
+                            Terminar Protocolo
+                        </ng-container>
+
                         <ng-container *ngIf='contextoCache.modo.nombre !== "validacion" '>
                             <plex-button position="right" class="float-right mr-1" type="success" label="Guardar"
                                 (click)="guardarSolicitud()"></plex-button>
@@ -93,7 +100,7 @@
         <!-- DETALLE DE PROTOCOLO -->
         <protocolo-detalle *ngIf="showProtocoloDetalle" [protocolo]="protocolo" [indexProtocolo]="indexProtocolo"
             [protocolos]="protocolos" [seleccionPaciente]="seleccionPaciente" (volverAListaControEmit)="volver()"
-            [editarListaPracticas]="editarListaPracticas" [busqueda]='busqueda'
+            [editarListaPracticas]="editarListaPracticas" [busqueda]='busqueda' [terminarPracticasChecked]='terminarPracticasChecked'
             (edicionDatosCabeceraEmitter)="editarDatosCabecera()"></protocolo-detalle>
 
     </plex-layout-sidebar>
