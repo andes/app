@@ -54,8 +54,9 @@ export class FiltrosBusquedaProtocoloComponent
         areas: [],
         laboratorioInterno: null,
         organizacion: null,
-        estado: [],
-        estadoFiltrar: 'validada',
+        estado: null,
+        estados: [],
+        estadoFiltrar: null,
         practicas: null,
         area: null,
         organizacionDestino: this.auth.organizacion._id,
@@ -81,7 +82,7 @@ export class FiltrosBusquedaProtocoloComponent
         this.cacheContexto = this.laboratorioContextoCacheService.getContextoCache();
         this.prioridadesFiltroEnum = enumerados.getPrioridadesFiltroLab();
         this.estadosFiltroEnum = enumerados.getEstadosFiltroLab();
-        this.estadosValFiltroEnum = enumerados.getEstadosFiltroLab().slice(1, 4);
+        this.estadosValFiltroEnum = enumerados.getEstadosFiltroValidacionLab();
         this.origenEnum = enumerados.getOrigenLab();
         this.cargaLaboratorioEnum = enumerados.getCargaLaboratorio();
         this.modoCargaLaboratorioEnum = enumerados.getModoCargaLaboratorio();
@@ -131,7 +132,9 @@ export class FiltrosBusquedaProtocoloComponent
             } else if (tipo === 'fechaHasta') {
                 this.busqueda.solicitudHasta = this.cacheContexto.solicitudHasta;
             } else if (tipo === 'estado') {
-                this.busqueda.estado = this.estado && this.estado.id !== 'todos' ? [this.estado.id] : null;
+                this.busqueda.estados = this.busqueda.estado ? [this.busqueda.estado.id] : null;
+            } else if (tipo === 'estadoValidacion') {
+                this.busqueda.estados = this.busqueda.estado ? [this.busqueda.estado.id] : null;
             }
         }
         this.buscarProtocolosEmmiter.emit(this.busqueda);

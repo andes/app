@@ -1,4 +1,4 @@
-<div class="ml-1" *ngIf='modo.nombre === "carga" || modo.nombre === "validacion"'>
+<div class="ml-1 filtros-container modo-carga" *ngIf='modo.nombre === "carga" || modo.nombre === "validacion"'>
     <span>
         <plex-radio [data]="modoCargaLaboratorioEnum" label="Modo de carga" (change)="cambiarModoCarga($event)"
             [(ngModel)]="cacheContexto.modoCargaLaboratorio" type="horizontal"></plex-radio>
@@ -30,6 +30,10 @@
             name="solicitudHasta" label="Fecha hasta" [required]="true" skipBy="day">
         </plex-datetime>
     </span>
+    <span *ngIf='modo.nombre === "validacion"'>
+            <plex-select [(ngModel)]="busqueda.estado" (change)="buscarProtocolos($event,'estadoValidacion')" name="estadosValidacion" label="Estado"
+                [data]='estadosValFiltroEnum'></plex-select>
+    </span>
     <span *ngIf='modo.nombre !== "recepcion" && !showSelectArea'>
         <plex-select [(ngModel)]="busqueda.area" (change)="buscarProtocolos($event,'area')" name="area" label="Área"
             [data]='areas'></plex-select>
@@ -42,11 +46,11 @@
         <plex-select [(ngModel)]="busqueda.origen" (change)="buscarProtocolos($event,'origen')" name="origen" label="Origen"
             [data]="origenEnum"></plex-select>
     </span>
-    <div>
+    <span>
         <label for="">Filtros avanzados</label>
         <plex-button type="info" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones">
         </plex-button>
-    </div>
+    </span>
 </div>
 <!-- FIN FILTROS BASICOS  -->
 
