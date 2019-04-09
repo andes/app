@@ -28,7 +28,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public arrayEstados;
     prestacion: any;
     router: any;
-    public prestaciones;
+    public prestaciones: any;
     constructor(
         private auth: Auth,
         private turnosPrestacionesService: TurnosPrestacionesService, public servicioPrestacion: TipoPrestacionService, public serviceProfesional: ProfesionalService,
@@ -231,9 +231,6 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     }
 
     recupero() {
-        debugger;
-        this.prestacion.origen = 'buscador';
-        this.prestacion.idOrganizacion = this.auth.organizacion._id;
         this.facturacionAutomaticaService.post(this.prestacion).subscribe(prestacion => {
         });
     }
