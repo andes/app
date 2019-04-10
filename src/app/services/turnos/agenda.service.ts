@@ -23,19 +23,13 @@ export class AgendaService {
     findDiagnosticos(params: any): Observable<any> {
         return this.server.get(this.agendaUrl + '/diagnosticos', { params: params, showError: true });
     }
+
     findConsultaDiagnosticos(params: any): Observable<any> {
         return this.server.get(this.agendaUrl + '/consultaDiagnostico', { params: params, showError: true });
     }
+
     findCantidadConsultaXPrestacion(params: any): Observable<any> {
         return this.server.get(this.agendaUrl + '/cantidadConsultaXPrestacion', { params: params, showError: true });
-    }
-
-    findResumenDiarioMensual(params: any): Observable<any> {
-        return this.server.get(this.agendaUrl + '/reporteResumenDiarioMensuals', { params: params, showError: true });
-    }
-
-    findPlanillaC1(params: any): Observable<any> {
-        return this.server.get(this.agendaUrl + '/reportePlanillaC1', { params: params, showError: true });
     }
 
     get(params: any): Observable<IAgenda[]> {
