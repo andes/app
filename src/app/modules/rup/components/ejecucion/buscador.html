@@ -95,11 +95,12 @@
     <cdk-virtual-scroll-viewport [itemSize]="55">
         <div *cdkVirtualFor="let registro of results[busquedaActual][filtroActual]"
             [ngClass]="servicioPrestacion.getCssClass(registro, filtroActual === 'plan')">
-
-
-            <rup-mini-card [registro]="registro" [filtroActual]="filtroActual" [emitirConceptos]="true" [snomed]="true"
-                (registroVolador)="seleccionarConcepto($event.registro)">
-            </rup-mini-card>
+            <div draggable [dragScope]="'registros-rup'" [dragData]="registro" (onDragStart)="dragStart($event)"
+                (onDragEnd)="dragEnd($event)">
+                <rup-mini-card [registro]="registro" [filtroActual]="filtroActual" [emitirConceptos]="true"
+                    [snomed]="true" (registroVolador)="seleccionarConcepto($event.registro)">
+                </rup-mini-card>
+            </div>
         </div>
     </cdk-virtual-scroll-viewport>
 </div>
