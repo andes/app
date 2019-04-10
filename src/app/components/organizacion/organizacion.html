@@ -10,7 +10,7 @@
                             </plex-text>
                         </div>
                         <div class="col mt-4">
-                            <plex-bool [(ngModel)]="activo"
+                            <plex-bool [(ngModel)]="soloNoActivo"
                                 label="Mostrar solo {{organizacionService.getEstado(false)}}" name="activo"
                                 (change)="loadDatos()">
                             </plex-bool>
