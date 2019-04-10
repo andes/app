@@ -1,16 +1,13 @@
-import { PacienteService } from './../../../services/paciente.service';
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import * as moment from 'moment';
-import * as calculos from './../../../utils/calculosDashboard';
 import { IPaciente } from './../../../interfaces/IPaciente';
 
 // Servicios
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { LogPacienteService } from '../../../services/logPaciente.service';
 import { ObraSocialService } from '../../../services/obraSocial.service';
-import { IObraSocial } from '../../../interfaces/IObraSocial';
 import { IFinanciador } from '../../../interfaces/IFinanciador';
 
 @Component({
@@ -21,9 +18,21 @@ import { IFinanciador } from '../../../interfaces/IFinanciador';
 export class EstadisticasPacientesComponent implements OnInit {
 
     nroCarpeta: any;
-    public _paciente: IPaciente;
+    _paciente: IPaciente;
     turnosPaciente: any;
     ultimosTurnos: any;
+    pacienteSeleccionado: IPaciente;
+    fechaDesde: any;
+    fechaHasta: any;
+    turnosOtorgados = 0;
+    inasistencias = 0;
+    anulaciones = 0;
+    idOrganizacion = this.auth.organizacion.id;
+    carpetaEfector: any;
+    obraSocial: IFinanciador;
+    currentTab = 0;
+    historialCargado = false;
+
     @Input() showTab: Number = 0;
     @Input('paciente')
     set paciente(value: any) {
@@ -38,24 +47,12 @@ export class EstadisticasPacientesComponent implements OnInit {
     @Output() showArancelamientoForm = new EventEmitter<any>();
     @Output() obraSocialEmit = new EventEmitter<any>();
 
-
-    pacienteSeleccionado: IPaciente;
-    public fechaDesde: any;
-    public fechaHasta: any;
-    turnosOtorgados = 0;
-    inasistencias = 0;
-    anulaciones = 0;
-    idOrganizacion = this.auth.organizacion.id;
-    carpetaEfector: any;
-    obraSocial: IFinanciador;
-
     // Inicialización
     constructor(
         public serviceTurno: TurnoService,
         public plex: Plex,
         public auth: Auth,
         public serviceLogPaciente: LogPacienteService,
-        public servicePaciente: PacienteService,
         private obraSocialService: ObraSocialService) { }
 
     ngOnInit() {
