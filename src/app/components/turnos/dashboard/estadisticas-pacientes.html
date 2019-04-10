@@ -1,4 +1,4 @@
-<plex-tabs size="full" [activeIndex]="showTab">
+<plex-tabs (change)="changeTab($event)" size="full" [activeIndex]="showTab">
     <plex-tab icon="information" label="Datos">
         <!--Header de estadisticas-->
         <fieldset>
@@ -123,7 +123,7 @@
     </plex-tab>
     <plex-tab icon="clock" label="Turnos">
         <turnos-paciente [turnos]="turnosPaciente" [operacion]="'operacionTurnos'"
-            (turnosPacienteChanged)="getPaciente()" (showArancelamientoForm)="arancelamiento($event)"></turnos-paciente>
+            (turnosPacienteChanged)="updateHistorial()" (showArancelamientoForm)="arancelamiento($event)"></turnos-paciente>
     </plex-tab>
     <plex-tab icon="history" label="Historial">
         <fieldset>
@@ -157,6 +157,6 @@
         </fieldset>
     </plex-tab>
     <plex-tab icon="folder-account" label="Carpetas">
-        <carpeta-paciente [pacienteSeleccionado]='pacienteSeleccionado'> </carpeta-paciente>
+        <carpeta-paciente *ngIf="currentTab === 3" [pacienteSeleccionado]='pacienteSeleccionado'> </carpeta-paciente>
     </plex-tab>
 </plex-tabs>

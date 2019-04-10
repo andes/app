@@ -63,7 +63,6 @@ export class EstadisticasPacientesComponent implements OnInit {
             },
             nroCarpeta: ''
         };
-        this.getPaciente();
         this.loadObraSocial();
     }
 
@@ -81,46 +80,6 @@ export class EstadisticasPacientesComponent implements OnInit {
         this.showArancelamientoForm.emit(turno);
     }
 
-    getPaciente() {
-        this.servicePaciente.getById(this.pacienteSeleccionado.id).subscribe(
-            pacienteMPI => {
-                this._paciente = pacienteMPI;
-                if (this._paciente && this._paciente.id) {
-                    let datosTurno = { pacienteId: this._paciente.id };
-                    let cantInasistencias = 0;
-                    // Se muestra la cantidad de turnos otorgados e inasistencias
-                    this.serviceTurno.getHistorial(datosTurno).subscribe(turnos => {
-                        turnos.forEach(turno => {
-                            if (turno.asistencia && turno.asistencia === 'noAsistio') {
-                                cantInasistencias++;
-                            }
-
-                        });
-
-                        this.turnosOtorgados = turnos.length;
-                        this.inasistencias = cantInasistencias;
-                        this.sortTurnos(turnos);
-                        this.turnosPaciente = turnos.filter(t => {
-                            return (moment(t.horaInicio).isSameOrAfter(new Date(), 'day') && t.estado !== 'liberado');
-                        });
-
-                        this.ultimosTurnos = turnos.filter(t => {
-                            return moment(t.horaInicio).isSameOrBefore(new Date(), 'day');
-                        });
-
-                    });
-
-                    // Se muestra la cantidad de turnos anulados
-                    let datosLog = { idPaciente: this._paciente.id, operacion: 'turnos:liberar' };
-                    this.serviceLogPaciente.get(datosLog).subscribe(logs => {
-                        if (logs && logs.length) {
-                            this.anulaciones = logs.length;
-                        }
-                    });
-                }
-            });
-    }
-
     private sortTurnos(turnos) {
         turnos = turnos.sort((a, b) => {
             let inia = a.horaInicio ? new Date(a.horaInicio) : null;
@@ -129,6 +88,47 @@ export class EstadisticasPacientesComponent implements OnInit {
                 return ((inia && inib) ? (inib.getTime() - inia.getTime()) : 0);
             }
 
+        });
+    }
+
+    changeTab(event) {
+        this.currentTab = event;
+        if ((event === 2 || event === 1) && this._paciente && this._paciente.id && !this.historialCargado) {
+            this.updateHistorial();
+            this.historialCargado = true;
+        }
+    }
+
+    updateHistorial() {
+        let cantInasistencias = 0;
+        // Se muestra la cantidad de turnos otorgados e inasistencias
+        this.serviceTurno.getHistorial({ pacienteId: this._paciente.id }).subscribe(turnos => {
+            turnos.forEach(turno => {
+                if (turno.asistencia && turno.asistencia === 'noAsistio') {
+                    cantInasistencias++;
+                }
+
+            });
+
+            this.turnosOtorgados = turnos.length;
+            this.inasistencias = cantInasistencias;
+            this.sortTurnos(turnos);
+            this.turnosPaciente = turnos.filter(t => {
+                return (moment(t.horaInicio).isSameOrAfter(new Date(), 'day') && t.estado !== 'liberado');
+            });
+
+            this.ultimosTurnos = turnos.filter(t => {
+                return moment(t.horaInicio).isSameOrBefore(new Date(), 'day');
+            });
+
+        });
+
+        // Se muestra la cantidad de turnos anulados
+        let datosLog = { idPaciente: this._paciente.id, operacion: 'turnos:liberar' };
+        this.serviceLogPaciente.get(datosLog).subscribe(logs => {
+            if (logs && logs.length) {
+                this.anulaciones = logs.length;
+            }
         });
     }
 }
