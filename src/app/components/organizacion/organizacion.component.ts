@@ -20,7 +20,7 @@ export class OrganizacionComponent implements OnInit {
     seleccion: IOrganizacion;
     skip = 0;
     nombre = '';
-    activo = true;
+    soloNoActivo = false;
     loader = false;
     finScroll = false;
     tengoDatos = true;
@@ -55,7 +55,7 @@ export class OrganizacionComponent implements OnInit {
 
     loadDatos(concatenar: boolean = false) {
         let parametros = {
-            activo: this.activo,
+            activo: !this.soloNoActivo,
             nombre: this.nombre,
             skip: this.skip,
             limit: limit,
@@ -85,16 +85,6 @@ export class OrganizacionComponent implements OnInit {
         this.seleccion = null;
         this.loadDatos();
     }
-
-    // onDisable(objOrganizacion: IOrganizacion) { // no se esta usando en ningun lado 14/03/2019
-    //     this.organizacionService.disable(objOrganizacion)
-    //         .subscribe(dato => this.loadDatos()); // Bind to view
-    // }
-
-    // onEnable(objOrganizacion: IOrganizacion) { // no se esta usando en ningun lado 14/03/2019
-    //     this.organizacionService.enable(objOrganizacion)
-    //         .subscribe(dato => this.loadDatos()); // Bind to view
-    // }
 
     activate(objOrganizacion: IOrganizacion) {
         if (objOrganizacion.activo) {
