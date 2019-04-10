@@ -197,11 +197,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
             this.provinciaNeuquen = Prov[0];
             this.loadLocalidades(this.provinciaNeuquen);
         });
-
-
-
-
-
     }
 
     loadListadoUO(event) {
@@ -211,9 +206,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
             });
             event.callback(result);
         });
-
     }
-
 
     onSave(valid) {
         if (valid.formValid) {
@@ -333,7 +326,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
             this.noPoseeEdificio = true;
         }
     }
-
     loadLocalidades(provincia) {
         if (provincia && provincia.id) {
             this.localidadService.get({
@@ -350,7 +342,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
 
 
     addU0() {
-        if ((this.organizacionModel.unidadesOrganizativas.indexOf(this.servicio) === -1)) {
+        if (this.servicio && this.organizacionModel.unidadesOrganizativas.indexOf(this.servicio) === -1) { // TODO: agregar validacion de que haya cargado un servicio
             this.organizacionModel.unidadesOrganizativas.push(this.servicio);
         }
     }
@@ -422,7 +414,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                     }
                 }
                 if (res.coordenadasDeMapa) {
-                    if (this.organizacionModel.direccion.geoReferencia === null) {
+                    if (!this.organizacionModel.direccion.geoReferencia) {
                         this.organizacionModel.direccion.geoReferencia = new Array<number>(2);
                     }
                     if (res.coordenadasDeMapa.latitud) {
