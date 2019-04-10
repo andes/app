@@ -912,8 +912,8 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         this.showBloque = true;
     }
     /**
-     * Verifica si es una agenda no nominalizada, en cuyo caso chequea
-     * que la agenda tenga una sola prestación
+     * Verifica si es una agenda no nominalizada, en cuyo caso chequea que la agenda
+     * tenga una sola prestación
      * @returns boolean TRUE/FALSE chequeos no nominalizada Ok
      * @memberof PlanificarAgendaComponent
      */
