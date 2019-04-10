@@ -55,9 +55,7 @@ export class EncabezadoReportesComponent implements OnInit {
         private auth: Auth,
         private servicioOrganizacion: OrganizacionService,
 
-    ) {
-
-    }
+    ) { }
 
     public ngOnInit() {
         if (!this.auth.check('reportes')) {
@@ -124,9 +122,6 @@ export class EncabezadoReportesComponent implements OnInit {
             }
         }
     }
-
-
-
 
     public imprimir() {
         if (this.parametros['horaInicio'] && this.parametros['horaFin'] && this.parametros['organizacion'] && this.tipoReportes.nombre === 'Diagnósticos') {
