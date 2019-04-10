@@ -1,17 +1,12 @@
 import { Component, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
-import { Plex } from '@andes/plex';
-import { Observable } from 'rxjs/Observable';
-import * as moment from 'moment';
 
 // Interfaces
-import { IAgenda } from '../../../interfaces/turnos/IAgenda';
 import { IPaciente } from './../../../interfaces/IPaciente';
 
 // Servicios
 import { PacienteService } from '../../../services/paciente.service';
-// import { AgendaService } from '../../../services/turnos/agenda.service';
 import { AppMobileService } from '../../../services/appMobile.service';
 
 @Component({
@@ -58,8 +53,8 @@ export class PuntoInicioTurnosComponent implements OnInit {
         public servicePaciente: PacienteService,
         public auth: Auth,
         public appMobile: AppMobileService,
-        private router: Router,
-        private plex: Plex) { }
+        private router: Router
+        ) { }
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:puntoInicio:?').length > 0;
