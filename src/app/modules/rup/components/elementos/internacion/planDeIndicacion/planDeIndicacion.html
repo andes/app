@@ -1,12 +1,24 @@
-<div class="row">
-    <ng-container *ngFor="let registro of registro.registros; let i = index">
-        <div *ngIf="elementoRUP.requeridos[0].elementoRUP" class="col-{{ elementoRUP.requeridos[0].style.columns }} mr-{{ elementoRUP.requeridos[0].style?.offset ? elementoRUP.requeridos[0].style.offset : '0' }}">
-            <rup [elementoRUP]=" elementoRUP.requeridos[0].elementoRUP" [paciente]="paciente" [params]="elementoRUP.requeridos[0].params" [prestacion]="prestacion"
-                [registro]="registro" [soloValores]="soloValores" (change)="emitChange($event)"
-                (ejecutarConcepto)="emitEjecutarConcepto(prestacion)">
-            </rup>
+<ng-container *ngFor="let registro of registro.registros; let i = index">
+    <div class="row">
+        <div class="col-10">
+            <div class="row">
+                <div *ngIf="elementoRUP.requeridos[0].elementoRUP" class="col-{{ elementoRUP.requeridos[0].style.columns }} mr-{{ elementoRUP.requeridos[0].style?.offset ? elementoRUP.requeridos[0].style.offset : '0' }}">
+                    <rup [elementoRUP]=" elementoRUP.requeridos[0].elementoRUP" [paciente]="paciente" [params]="elementoRUP.requeridos[0].params" [prestacion]="prestacion"
+                        [registro]="registro" [soloValores]="soloValores" (change)="emitChange($event)"
+                        (ejecutarConcepto)="emitEjecutarConcepto(prestacion)">
+                    </rup>
+                </div>
+            </div>
         </div>
-    </ng-container>
+        <div class="col-1">
+            <plex-button (click)="agregarRegistro()" type="success btn-icon-rup p-0" size="lg" icon="mdi mdi-play"></plex-button>
+            <plex-button (click)="agregarRegistro()" type="danger btn-icon-rup p-0" size="lg" icon="mdi mdi-stop"></plex-button>
+            <plex-button (click)="agregarRegistro()" type="primary btn-icon-rup p-0" size="lg" icon="mdi mdi-replay"></plex-button>
+            <plex-button (click)="agregarRegistro()" type="warning btn-icon-rup p-0" size="lg" icon="mdi mdi-pause"></plex-button>
+        </div>
+    </div>
+</ng-container>
+<div class="row">
     <div class="col">
         <plex-button *ngIf="!soloValores" type="primary float-right" [label]="params?.btnLabel ? params?.btnLabel : 'Agregar'" (click)="agregarRegistro()"></plex-button>
     </div>
