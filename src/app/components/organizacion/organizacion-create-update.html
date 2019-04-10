@@ -247,7 +247,7 @@
                     </fieldset>
                     <fieldset>
                         <legend>Unidades Organizativas
-                            <plex-button icon="plus" type="success btn-sm" title="Agregar unidades organizativas"
+                            <plex-button icon="plus" type="primary btn-sm" title="Agregar unidades organizativas"
                                 (click)="addU0()" class="float-right">
                             </plex-button>
                         </legend>
@@ -265,11 +265,11 @@
                             <div class="col">
                                 <div class="list-group">
                                     <div *ngFor="let unidadOrganizativa of organizacionModel.unidadesOrganizativas; let i = index"
-                                        class="list-group-item justify-content-between hover">
+                                        class="list-group-item justify-content-between">
                                         <div>
                                             <span *ngIf="unidadOrganizativa?.term">{{unidadOrganizativa.term}}</span>
                                         </div>
-                                        <plex-button icon="delete" type="primary" (click)="deleteUO(unidadOrganizativa)"
+                                        <plex-button icon="delete" type="danger" (click)="deleteUO(unidadOrganizativa)"
                                             *ngIf="puedeEditarCompleto">
                                         </plex-button>
                                     </div>
