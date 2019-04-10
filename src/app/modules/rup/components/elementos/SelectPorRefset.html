@@ -1,7 +1,7 @@
 <form #form="ngForm">
     <ng-container *ngIf="!soloValores && params && params.tipoSelect === 'select'">
         <plex-select *ngIf="!params.preload" [required]="params.required" [multiple]="params.multiple" [(ngModel)]="registro.valor"
-            name="conceptos" (getData)="loadData($event)" (change)="emitChange()" [label]="params.titulo">
+            name="conceptos" (getData)="getQuery($event)" (change)="emitChange()" [label]="params.titulo">
         </plex-select>
 
         <plex-select *ngIf="params.preload"[required]="params.required" [multiple]="params.multiple" [(ngModel)]="registro.valor"

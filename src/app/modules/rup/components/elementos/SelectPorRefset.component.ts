@@ -1,8 +1,8 @@
 import { IPrestacionGetParams } from './../../interfaces/prestacionGetParams.interface';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { RupElement } from '.';
-
+import { Unsubscribe } from '@andes/shared';
 @Component({
     selector: 'rup-SelectPorRefset',
     templateUrl: 'SelectPorRefset.html'
@@ -52,14 +52,17 @@ export class SelectPorRefsetComponent extends RUPComponent implements OnInit {
         }
     }
 
-    loadData($event) {
-        if ($event.query.length > 0) {
-            this.snomedService.getQuery({ expression: this.params.query, field: 'term', words: $event.query }).subscribe(resultado => {
+    @Unsubscribe()
+    getQuery($event) {
+        if ($event.query.length > 3) {
+            return this.snomedService.getQuery({ expression: this.params.query, field: 'term', words: $event.query }).subscribe(resultado => {
                 let conceptosSelect = resultado.map(elem => {
                     return { id: elem.conceptId, nombre: elem.term, concepto: elem };
                 });
                 $event.callback(conceptosSelect);
             });
+        } else {
+            $event.callback([]);
         }
     }
 }
