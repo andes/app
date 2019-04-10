@@ -47,10 +47,17 @@
             <!--EVOLUCION DEL PROBLEMA-->
             <div class="row">
                 <div class="col-12">
-                    <span *ngIf="hallazgoOrigen" class="badge badge-info">
+                    <<<<<<< HEAD <span *ngIf="hallazgoOrigen" class="badge badge-info">
                         Originado con la transformación de:
                         <strong>{{ hallazgoOrigen.nombre }}</strong>
-                    </span>
+                        </span>
+                        =======
+                        <plex-text
+                            placeholder="{{ registro.concepto.semanticTag !== 'trastorno' ? 'Observaciones' : 'Ingrese una evolución' }}"
+                            [(ngModel)]="registro.valor.evolucion" name="evolucion" [height]="100" [html]="true"
+                            [readonly]="false" (change)="emitChange()">
+                        </plex-text>
+                        >>>>>>> Se quita label por redundante
                 </div>
             </div>
             <div class="row">&nbsp;</div>
