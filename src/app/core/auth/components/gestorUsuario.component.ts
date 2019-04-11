@@ -130,8 +130,8 @@ export class GestorUsuarioComponent implements OnInit {
      */
     guardar(event) {
         if (this.permisosUsuarioOrg.length > 0) {
-            let prestaciones = obtenerPrestacionesDePermisos(this.permisosUsuarioOrg, this.prestacionesTurneables);
-            let respuesta = obtenerArreglosMismoNivel(this.permisosUsuarioOrg, 0, '', [], this.arbolPermisosCompleto, null, prestaciones);
+            // let prestaciones = obtenerPrestacionesDePermisos(this.permisosUsuarioOrg, this.prestacionesTurneables);
+            // let respuesta = obtenerArreglosMismoNivel(this.permisosUsuarioOrg, 0, '', [], this.arbolPermisosCompleto, null, prestaciones);
             this.savePermisos();
             this.usuarioService.save(this.usuarioSeleccionado).subscribe();
             this.cambio(0);
