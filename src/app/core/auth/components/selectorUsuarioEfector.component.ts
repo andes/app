@@ -1,20 +1,23 @@
 import { IProfesional } from './../../../interfaces/IProfesional';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { Component, EventEmitter, QueryList, ViewChildren, Output } from '@angular/core';
+import { Component, EventEmitter, QueryList, ViewChildren, Output, OnInit } from "@angular/core";
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { UsuarioService } from '../../../services/usuarios/usuario.service';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { PermisosService } from '../../../services/permisos.service';
 import { ProfesionalService } from './../../../services/profesional.service';
+import { TextFilterPipe } from '../../../pipes/textFilter.pipe';
+
 
 import { ArbolPermisosComponent } from './arbolPermisos.component';
 
 @Component({
     selector: 'selectorUsuarioEfector',
-    templateUrl: 'selectorUsuarioEfector.html'
+    templateUrl: 'selectorUsuarioEfector.html',
+    providers: [TextFilterPipe]
 })
-export class SelectorUsuarioEfectorComponent {
+export class SelectorUsuarioEfectorComponent implements OnInit {
     /**
      * Notifica al componente que contiene a este el usuario seleccionado
      * @memberof SelectorUsuarioEfectorComponent
@@ -123,10 +126,14 @@ export class SelectorUsuarioEfectorComponent {
      */
     public newOrg: any;
 
-    constructor(private plex: Plex, private auth: Auth, private usuarioService: UsuarioService, private organizacionService: OrganizacionService, private permisosService: PermisosService, private profesionalService: ProfesionalService) {
+    constructor(private plex: Plex, private auth: Auth, private usuarioService: UsuarioService, private organizacionService: OrganizacionService, private permisosService: PermisosService, private profesionalService: ProfesionalService,
+        private textFilterPipe: TextFilterPipe) {
 
     }
 
+    public ngOnInit() {
+        this.loadUsuarios();
+    }
     public seSeleccionoUsuario() {
         this.permisos$ = this.permisosService.get();
         this.permisosService.organizaciones({ admin: true }).subscribe(data => {
@@ -191,10 +198,9 @@ export class SelectorUsuarioEfectorComponent {
             datos => {
                 if (this.organizacionBusqueda && this.organizacionBusqueda._id) {
                     let g = datos.filter((item1: any) => { return item1.organizaciones.findIndex(item => item._id === this.organizacionBusqueda._id) > 0; });
-                    this.users = g;
+                    this.users = this.textFilterPipe.transform(g, this.textoLibre);
                 } else {
-                    this.users = datos;
-
+                    this.users = this.textFilterPipe.transform(datos, this.textoLibre);
                 }
             }
         );
@@ -227,10 +233,43 @@ export class SelectorUsuarioEfectorComponent {
      * @param {*} user Usuario para seleccionar
      */
     public seleccionarUsuario(user: any) {
-        this.usuarioSeleccionado = user;
-        this.textoLibre = null;
-        this.cambio(2);
-        this.seSeleccionoUsuario();
+        if (user) {
+            this.usuarioSeleccionado = user;
+            this.textoLibre = null;
+            this.cambio(2);
+            this.seSeleccionoUsuario();
+        } else {
+            let dniIngresado = this.textoLibre.match(/\d/g); // obtengo los numeros escritos del filtro (puede ingresar nombre y numero de documento)
+            if (!dniIngresado) {
+                this.plex.info('danger', 'Debe ingresar DNI del usuario');
+            } else {
+                this.usuarioService.getByDni(Number(dniIngresado.join(''))).subscribe(newUser => {
+                    if (newUser.length < 1) {
+                        this.usuarioService.getUser(dniIngresado.join('')).subscribe(res => {
+                            this.userModel.nombre = res.givenName;
+                            this.userModel.apellido = res.sn;
+                            this.userModel.usuario = res.uid;
+                            this.userModel.organizaciones = [];
+                            this.usuarioSeleccionado = this.userModel;
+                            this.textoLibre = null;
+                            this.cambio(2);
+                            this.seSeleccionoUsuario();
+                        }, err => {
+                            this.plex.toast('warning', err, 'Error');
+                        });
+                    } else {
+                        this.userModel.id = newUser[0].id;
+                        this.userModel.nombre = newUser[0].nombre;
+                        this.userModel.apellido = newUser[0].apellido;
+                        this.userModel.usuario = newUser[0].usuario;
+                        this.userModel.organizaciones = newUser[0].organizaciones;
+                        this.plex.toast('info', 'Usuario existente', 'Información');
+                    }
+                });
+                this.usuarioSeleccionado = {};
+
+            }
+        }
     }
 
     /**

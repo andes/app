@@ -2,16 +2,18 @@
     <plex-tab label="Selección Usuario" color="procedimiento">
         <div class="mt-3">
             <div class='row'>
-                <div class='col-11'>
+                <div class='col-9'>
                     <plex-text [(ngModel)]="textoLibre" (change)="loadUsuarios()"
                         prefix="<i class='mdi mdi-account-search'></i>" placeholder="Buscar por DNI, nombre o apellido">
                     </plex-text>
                 </div>
-                <div class='col-1 d-flex justify-content-end'>
-                    <plex-button *ngIf='!mostrarFiltrosAvanzados' icon="mdi mdi-menu-down" type="primary"
-                        (click)='mostrarFiltrosAvanzados = true'></plex-button>
-                    <plex-button *ngIf='mostrarFiltrosAvanzados' icon="mdi mdi-menu-up" type="primary"
-                        (click)='mostrarFiltrosAvanzados = false'></plex-button>
+                <div class='col-3 d-flex justify-content-end'>
+                    <plex-button *ngIf='!mostrarFiltrosAvanzados' icon="mdi mdi-menu-down" type="default"
+                        (click)='mostrarFiltrosAvanzados = true' title="Mostrar filtros avanzados"></plex-button>
+                    <plex-button *ngIf='mostrarFiltrosAvanzados' icon="mdi mdi-menu-up" type="default"
+                        (click)='mostrarFiltrosAvanzados = false' title="Ocultar filtros avanzados"></plex-button>
+                    <plex-button label="Nuevo usuario" type="primary" (click)="seleccionarUsuario(null)"
+                        [disabled]="users?.length"></plex-button>
                 </div>
             </div>
             <ng-container *ngIf='mostrarFiltrosAvanzados'>
@@ -21,10 +23,10 @@
                 </plex-select>
             </ng-container>
 
-            <div *ngIf="users && !users.length" class="alert alert-danger">
+            <div *ngIf="!users || !users.length" class="alert alert-danger">
                 <i class="mdi mdi-account-alert"></i> El usuario no se ha encontrado
             </div>
-            <table *ngIf="users && users.length" class="table table-striped">
+            <table *ngIf="users && users.length > 0" class="table table-striped">
                 <thead>
                     <tr>
                         <th>Usuario</th>
@@ -33,8 +35,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="hover" *ngFor="let user of users  | textFilter:textoLibre ; let i=index"
-                        (click)="seleccionarUsuario(user)">
+                    <tr class="hover" *ngFor="let user of users; let i=index" (click)="seleccionarUsuario(user)">
                         <td>{{user.usuario}}</td>
                         <td *ngIf="user.apellido; else sinDatos">
                             {{user.apellido}}
