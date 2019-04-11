@@ -29,7 +29,6 @@ export class EstadisticasPacientesComponent implements OnInit {
     anulaciones = 0;
     idOrganizacion = this.auth.organizacion.id;
     carpetaEfector: any;
-    obraSocial: IFinanciador;
     currentTab = 0;
     historialCargado = false;
 
@@ -45,7 +44,6 @@ export class EstadisticasPacientesComponent implements OnInit {
     }
 
     @Output() showArancelamientoForm = new EventEmitter<any>();
-    @Output() obraSocialEmit = new EventEmitter<any>();
 
     // Inicialización
     constructor(
@@ -53,7 +51,7 @@ export class EstadisticasPacientesComponent implements OnInit {
         public plex: Plex,
         public auth: Auth,
         public serviceLogPaciente: LogPacienteService,
-        private obraSocialService: ObraSocialService) { }
+    ) { }
 
     ngOnInit() {
         this.carpetaEfector = {
@@ -63,17 +61,6 @@ export class EstadisticasPacientesComponent implements OnInit {
             },
             nroCarpeta: ''
         };
-        this.loadObraSocial();
-    }
-
-    loadObraSocial() {
-        // TODO: si es en colegio médico hay que buscar en el paciente
-        this.obraSocialService.getPaciente({ dni: this._paciente.documento, sexo: this._paciente.sexo }).subscribe(resultado => {
-            if (resultado.length) {
-                this.obraSocial = resultado[0];
-                this.obraSocialEmit.emit(this.obraSocial);
-            }
-        });
     }
 
     arancelamiento(turno) {
@@ -93,7 +80,7 @@ export class EstadisticasPacientesComponent implements OnInit {
 
     changeTab(event) {
         this.currentTab = event;
-        if ((event === 2 || event === 1) && this._paciente && this._paciente.id && !this.historialCargado) {
+        if ((event === 3 || event === 2 || event === 1) && this._paciente && this._paciente.id && !this.historialCargado) {
             this.updateHistorial();
             this.historialCargado = true;
         }
