@@ -53,7 +53,7 @@
                     {{_paciente.contacto[0].valor}}
                 </div>
             </div>
-            <div class="row" *ngIf="_paciente.financiador.length">
+            <div class="row" *ngIf="_paciente.financiador?.length">
                 <div class="col-6" *ngIf="_paciente.financiador[0].financiador === 'SUMAR'">
                     <i class="mdi mdi-account-card-details"></i>
                     <span class="text-primary">Financiador</span>
@@ -67,7 +67,7 @@
                     <span class="text-primary">Número de Afiliado</span>
                 </div>
             </div>
-            <div class="row" *ngIf="_paciente.financiador.length && _paciente.financiador[0].financiador">
+            <div class="row" *ngIf="_paciente.financiador?.length && _paciente.financiador[0].financiador">
                 <div class="col-6">
                     {{_paciente.financiador[0].financiador}}
                 </div>
