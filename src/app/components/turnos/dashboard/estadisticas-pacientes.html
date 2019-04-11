@@ -1,5 +1,5 @@
 <plex-tabs (change)="changeTab($event)" size="full" [activeIndex]="showTab">
-    <plex-tab icon="information" label="Datos">
+    <plex-tab icon="information">
         <!--Header de estadisticas-->
         <fieldset>
             <!--Datos básicos del Paciente-->
@@ -53,79 +53,81 @@
                     {{_paciente.contacto[0].valor}}
                 </div>
             </div>
-            <div class="row" *ngIf="obraSocial">
-                <div class="col-6" *ngIf="obraSocial.financiador === 'SUMAR'">
+            <div class="row" *ngIf="_paciente.financiador.length">
+                <div class="col-6" *ngIf="_paciente.financiador[0].financiador === 'SUMAR'">
                     <i class="mdi mdi-account-card-details"></i>
                     <span class="text-primary">Financiador</span>
                 </div>
-                <div class="col-6" *ngIf="obraSocial.financiador !== 'SUMAR'">
+                <div class="col-6" *ngIf="_paciente.financiador[0].financiador !== 'SUMAR'">
                     <i class="mdi mdi-account-card-details"></i>
                     <span class="text-primary">Obra Social</span>
                 </div>
-                <div class="col-6" *ngIf="obraSocial.numeroAfiliado">
+                <div class="col-6" *ngIf="_paciente.financiador[0].numeroAfiliado">
                     <i class="mdi mdi-card-text-outline"></i>
                     <span class="text-primary">Número de Afiliado</span>
                 </div>
             </div>
-            <div class="row" *ngIf="obraSocial && obraSocial.financiador">
+            <div class="row" *ngIf="_paciente.financiador.length && _paciente.financiador[0].financiador">
                 <div class="col-6">
-                    {{obraSocial.financiador}}
+                    {{_paciente.financiador[0].financiador}}
                 </div>
-                <div class="col-6" *ngIf="obraSocial.numeroAfiliado">
-                    {{obraSocial.numeroAfiliado}}
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col">
-                    <h5>Paciente |
-                        <span class="text-primary">Estadísticas</span>
-                    </h5>
-                </div>
-            </div>
-            <hr>
-   
-            <div class="row">
-                <div class="col-2 vertical-center text-center">
-                    <i class="mdi mdi-account-check mdi-36px"></i>
-                </div>
-                <div class="col-7 vertical-center">
-                    <h5>Cantidad de turnos</h5>
-                </div>
-                <div class="col-2 badge badge-success">
-                    <span class="h3">{{turnosOtorgados}}</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-2 vertical-center text-center">
-                    <i class="mdi mdi-account-minus mdi-36px"></i>
-                </div>
-                <div class="col-7 vertical-center">
-                    <h5>Inasistencias</h5>
-                </div>
-                <div class="col-2 badge badge-danger">
-                    <span class="h3">{{inasistencias}}</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-2 vertical-center text-center">
-                    <i class="mdi mdi-calendar-remove mdi-36px"></i>
-                </div>
-                <div class="col-7 vertical-center">
-                    <h5>Anulaciones</h5>
-                </div>
-                <div class="col-2 badge badge-warning">
-                    <span class="h3">{{anulaciones}}</span>
+                <div class="col-6" *ngIf="_paciente.financiador[0].numeroAfiliado">
+                    {{_paciente.financiador[0].numeroAfiliado}}
                 </div>
             </div>
         </fieldset>
 
     </plex-tab>
-    <plex-tab icon="clock" label="Turnos">
-        <turnos-paciente [turnos]="turnosPaciente" [operacion]="'operacionTurnos'"
-            (turnosPacienteChanged)="updateHistorial()" (showArancelamientoForm)="arancelamiento($event)"></turnos-paciente>
+    <plex-tab icon="account-card-details">
+        <div class="row">
+            <div class="col">
+                <h5>Paciente |
+                    <span class="text-primary">Estadísticas</span>
+                </h5>
+            </div>
+        </div>
+        <hr>
+
+        <div class="row">
+            <div class="col-2 vertical-center text-center">
+                <i class="mdi mdi-account-check mdi-36px"></i>
+            </div>
+            <div class="col-7 vertical-center">
+                <h5>Cantidad de turnos</h5>
+            </div>
+            <div class="col-2 badge badge-success">
+                <span class="h3">{{turnosOtorgados}}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2 vertical-center text-center">
+                <i class="mdi mdi-account-minus mdi-36px"></i>
+            </div>
+            <div class="col-7 vertical-center">
+                <h5>Inasistencias</h5>
+            </div>
+            <div class="col-2 badge badge-danger">
+                <span class="h3">{{inasistencias}}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2 vertical-center text-center">
+                <i class="mdi mdi-calendar-remove mdi-36px"></i>
+            </div>
+            <div class="col-7 vertical-center">
+                <h5>Anulaciones</h5>
+            </div>
+            <div class="col-2 badge badge-warning">
+                <span class="h3">{{anulaciones}}</span>
+            </div>
+        </div>
     </plex-tab>
-    <plex-tab icon="history" label="Historial">
+    <plex-tab icon="clock">
+        <turnos-paciente [turnos]="turnosPaciente" [operacion]="'operacionTurnos'"
+            (turnosPacienteChanged)="updateHistorial()" (showArancelamientoForm)="arancelamiento($event)">
+        </turnos-paciente>
+    </plex-tab>
+    <plex-tab icon="history">
         <fieldset>
             <ul class="list-group">
                 <li *ngFor="let turno of ultimosTurnos let i=index" class="list-group-item" [appHover]="'active'">
@@ -156,7 +158,7 @@
             </ul>
         </fieldset>
     </plex-tab>
-    <plex-tab icon="folder-account" label="Carpetas">
-        <carpeta-paciente *ngIf="currentTab === 3" [pacienteSeleccionado]='pacienteSeleccionado'> </carpeta-paciente>
+    <plex-tab icon="folder-account">
+        <carpeta-paciente *ngIf="currentTab === 4" [pacienteSeleccionado]='pacienteSeleccionado'> </carpeta-paciente>
     </plex-tab>
 </plex-tabs>
