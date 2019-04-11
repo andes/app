@@ -188,7 +188,12 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 event.callback(listaEspaciosFisicos);
             });
         } else {
-            event.callback(this.modelo.espacioFisico || []);
+            if (this.modelo.espacioFisico) {
+                event.callback([this.modelo.espacioFisico]);
+
+            } else {
+                event.callback([]);
+            }
         }
     }
 
