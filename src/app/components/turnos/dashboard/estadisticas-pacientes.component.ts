@@ -50,7 +50,7 @@ export class EstadisticasPacientesComponent implements OnInit {
     anulaciones = 0;
     idOrganizacion = this.auth.organizacion.id;
     carpetaEfector: any;
-    obraSocial: IFinanciador;
+    obraSocial: IFinanciador[];
 
     // Inicialización
     constructor(
@@ -84,7 +84,7 @@ export class EstadisticasPacientesComponent implements OnInit {
         // TODO: si es en colegio médico hay que buscar en el paciente
         this.obraSocialService.getPaciente({ dni: this._paciente.documento, sexo: this._paciente.sexo }).subscribe(resultado => {
             if (resultado.length) {
-                this.obraSocial = resultado[0];
+                this.obraSocial = resultado;
                 this.obraSocialEmit.emit(this.obraSocial);
             }
         });

@@ -30,11 +30,14 @@ export class TurnosPacienteComponent implements OnInit {
     showLiberarTurno: boolean;
     todaysdate: Date;
     _turnos: any;
+    _obraSocial: any;
     _operacion: string;
     tituloOperacion = 'Operaciones de Turnos';
     turnosPaciente: any;
     turnosSeleccionados: any[] = [];
     showPuntoInicio = true;
+    public obraSocialPaciente: any[];
+
     @Input('operacion')
     set operacion(value: string) {
         this._operacion = value;
@@ -43,11 +46,34 @@ export class TurnosPacienteComponent implements OnInit {
         return this._operacion;
     }
 
+    @Input('obraSocial')
+    set obraSocial(value: any) {
+        this._obraSocial = value;
+
+        if (value) {
+
+            this.obraSocialPaciente = value.map((os: any) => {
+                // let listaOs = [];
+                let osPaciente = {
+                    'id': os.codigoPuco,
+                    'label': os.nombre
+                };
+                // listaOs.push(osPaciente);
+                return osPaciente;
+            });
+            this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
+        }
+    }
+    get obraSOcial(): any {
+        return this._obraSocial;
+    }
+
     @Input('turnos')
     set turnos(value: any) {
         if (value) {
             this._turnos = value;
             this.turnosPaciente = value;
+            // this.turnosPaciente.obraSocial = '';
         }
     }
     get turnos(): any {
@@ -55,6 +81,10 @@ export class TurnosPacienteComponent implements OnInit {
     }
     @Output() turnosPacienteChanged = new EventEmitter<any>();
     @Output() showArancelamientoForm = new EventEmitter<any>();
+
+    public modelo: any = {
+        obraSocial: ''
+    };
 
     // Inicialización
     constructor(public servicioFA: FacturacionAutomaticaService,
@@ -76,8 +106,13 @@ export class TurnosPacienteComponent implements OnInit {
         this.showLiberarTurno = false;
     }
     showArancelamiento(turno) {
-        this.turnoArancelamiento = turno;
-        this.showMotivoConsulta = true;
+        debugger;
+        if (this.modelo.obraSocial === 'prepaga') {
+
+        } else {
+            this.turnoArancelamiento = turno;
+            this.showMotivoConsulta = true;
+        }
         // this.servicioFA.post(turno).subscribe(prestacion => {
         // });
     }
@@ -141,5 +176,4 @@ export class TurnosPacienteComponent implements OnInit {
     isToday(turno) {
         return (moment(turno.horaInicio)).isSame(new Date(), 'day');
     }
-
 }

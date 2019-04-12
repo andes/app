@@ -157,7 +157,7 @@
 
     </plex-tab>
     <plex-tab icon="clock" label="Turnos">
-        <turnos-paciente [turnos]="turnosPaciente" [operacion]="'operacionTurnos'"
+        <turnos-paciente [turnos]="turnosPaciente" [operacion]="'operacionTurnos'" [obraSocial]="obraSocial"
             (turnosPacienteChanged)="getPaciente()" (showArancelamientoForm)="arancelamiento($event)"></turnos-paciente>
     </plex-tab>
     <plex-tab icon="history" label="Historial">
