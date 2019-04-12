@@ -5,6 +5,7 @@ import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 
+import { HUDSService } from '../../services/huds.service';
 @Component({
     selector: 'rup-hudsBusqueda',
     templateUrl: 'hudsBusqueda.html',
@@ -14,29 +15,21 @@ import { TipoPrestacionService } from '../../../../services/tipoPrestacion.servi
 })
 export class HudsBusquedaComponent implements OnInit {
     laboratoriosFS: any;
-    laboratorios: any;
+    laboratorios: any = [];
     vacunas: any = [];
-    colapsadoOtros = true;
-    colapsadoActivos = true;
-    colapsadoCronicos = true;
-    colapsado = true;
     ordenDesc = true;
-    elementosRegistro: any[];
 
-    procedimientos: any;
-    // Copia de los procedimientos para el buscador.
+    procedimientos: any = [];
     procedimientosCopia: any[];
 
-    problemasActivosAux: any;
     hallazgosCronicosAux: any[];
     hallazgosNoActivosAux: any;
-    filtroActual: any = 'todos';
+    filtroActual: any = 'planes';
     public loading = false;
 
     public cdas = [];
 
     @Input() paciente: any;
-    @Input() prestacionActual: any;
 
     @Input() _draggable: Boolean = false;
     @Input() _dragScope: String;
@@ -52,40 +45,34 @@ export class HudsBusquedaComponent implements OnInit {
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
 
     /**
-     * Listado de todos los registros de la HUDS seleccionados
-     */
-    @Input() registrosHuds: any = [];
-
-    /**
      * Devuelve un elemento seleccionado que puede ser
      * una prestacion o un ?????
      */
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
 
-    /*
-     * Devuelve el array de registros seleccionados para visualizar
-     * de la HUDS
-     */
-    @Output() evtHuds: EventEmitter<any> = new EventEmitter<any>();
-
-    /**
-     * Vista actual
-     */
-    public vista = 'hallazgos';
     /**
      * Listado de prestaciones validadas
      */
-    public prestaciones: any = [];
+    public tiposPrestacion = [];
+    public prestacionSeleccionada = [];
+    private _prestaciones: any = [];
+    private prestacionesCopia: any = [];
+    get prestaciones() {
+        return this._prestaciones;
+    }
+    set prestaciones(value) {
+        this._prestaciones = value.sort((a, b) => b.fecha - a.fecha);
+    }
     /**
      * Copia de las prestaciones para aplicar los filtros
      */
-    public prestacionesCopia: any = [];
     /**
      * Listado de todos los hallazgos
      */
     public hallazgos: any = [];
-
+    public trastornos: any = [];
+    public todos: any = [];
     /**
      * Listado de todos los trastornos
      */
@@ -97,11 +84,6 @@ export class HudsBusquedaComponent implements OnInit {
     public productos: any = [];
     // copia de los productos para el buscador
     public productosCopia: any = [];
-
-    /**
-     * Listado de todos los hallazgos
-     */
-    public problemasActivos: any = [];
 
     /**
          * Listado de todos los hallazgos no activos
@@ -120,22 +102,20 @@ export class HudsBusquedaComponent implements OnInit {
         producto: ['producto', 'objeto físico', 'medicamento clínico'],
         elementoderegistro: ['elemento de registro'],
         laboratorios: ['laboratorios'],
+        vacunas: ['vacunas'],
     };
 
-    /**
-     * Prestaciones permitidas para el usuario
-     */
-    public tiposPrestacion;
-    /**
-     * Prestacion seleccionada para aplicar el filtro
-     */
-    public prestacionSeleccionada;
+
 
     public txtABuscar;
 
-    constructor(private servicioPrestacion: PrestacionesService,
+    constructor(
+        public servicioPrestacion: PrestacionesService,
         public servicioTipoPrestacion: TipoPrestacionService,
-        public plex: Plex, public auth: Auth) {
+        public plex: Plex,
+        public auth: Auth,
+        public huds: HUDSService
+    ) {
     }
 
     /**
@@ -146,9 +126,13 @@ export class HudsBusquedaComponent implements OnInit {
     ngOnInit() {
         if (this.paciente) {
             this.listarPrestaciones();
-            // this.listarProblemasCronicos();
-            this.listarHallazgos();
+            this.listarConceptos();
         }
+        // Cuando se inicia una prestación debemos volver a consultar si hay CDA nuevos al ratito.
+        // [TODO] Ser notificado via websockets
+        setTimeout(() => {
+            this.buscarCDAPacientes();
+        }, 1000 * 30);
 
     }
 
@@ -210,389 +194,82 @@ export class HudsBusquedaComponent implements OnInit {
         this.evtData.emit(resultado);
     }
 
-    devolverRegistrosHuds(registro, tipo) {
-        let index;
+    emitTabs(registro, tipo) {
         switch (tipo) {
-            case 'hallazgo':
-            case 'trastorno':
-            case 'producto':
+            case 'concepto':
                 registro.class = this.servicioPrestacion.getCssClass(registro.concepto, null);
                 if (registro.esSolicitud) {
                     registro.class = 'plan';
                 }
-                index = this.registrosHuds.findIndex(r => {
-                    if (r.data.concepto && (r.data.concepto.semanticTag === 'hallazgo' || r.data.concepto.semanticTag === 'trastorno' || r.data.concepto.semanticTag === 'producto' || r.data.concepto.semanticTag === 'procedimiento' || r.data.concepto.semanticTag === 'entidad observable') && r.data.concepto.id === registro.concepto.id) {
-                        if (r.data.createdAt === registro.createdAt && r.data.updatedAt === registro.updatedAt) {
-                            return 1;
-                        } else {
-                            return 0;
-                        }
-                    }
-                });
                 break;
-            case 'prestacion':
-                // Se populan las relaciones usando el _id
-                if (registro.tipo === 'rup') {
-                    registro = registro.data;
-                    if (registro.ejecucion.registros) {
-                        registro.ejecucion.registros.forEach(reg => {
-                            if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {
-                                if (typeof reg.relacionadoCon[0] === 'string') {
-                                    reg.relacionadoCon = reg.relacionadoCon.map((idRegistroRel) => {
-                                        return registro.ejecucion.registros.find(r => r.id === idRegistroRel || r.concepto.conceptId === idRegistroRel);
-                                    });
-                                }
+            case 'rup':
+                if (registro.prestacion.conceptId === PrestacionesService.InternacionPrestacion.conceptId) {
+                    tipo = 'internacion';
+                }
+                registro = registro.data;
+                if (registro.ejecucion.registros) {
+                    registro.ejecucion.registros.forEach(reg => {
+                        if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {
+                            if (typeof reg.relacionadoCon[0] === 'string') {
+                                reg.relacionadoCon = reg.relacionadoCon.map((idRegistroRel) => {
+                                    return registro.ejecucion.registros.find(r => r.id === idRegistroRel || r.concepto.conceptId === idRegistroRel);
+                                });
                             }
-                        });
-                    }
-
-                    index = this.registrosHuds.findIndex(r => {
-                        return (r.data.id === registro.id);
-                    });
-
-                } else {
-                    tipo = 'cda';
-                    registro = registro.data;
-                    index = this.registrosHuds.findIndex(r => {
-                        return (r.data.id === registro.id);
+                        }
                     });
                 }
+                break;
+            case 'cda':
+                registro = registro.data;
                 registro.class = 'plan';
                 break;
-            case 'procedimiento':
-                registro.class = registro.concepto.semanticTag;
-                index = this.registrosHuds.findIndex(r => {
-                    if ((r.data.concepto.semanticTag === 'hallazgo' || r.data.concepto.semanticTag === 'producto' || r.data.concepto.semanticTag === 'procedimiento') && r.data.concepto.id === registro.concepto.id) {
-                        if (r.data.createdAt === registro.createdAt && r.data.updatedAt === registro.updatedAt) {
-                            return 1;
-                        } else {
-                            return 0;
-                        }
-                    }
-                });
-                break;
-            case 'laboratorio':
-                registro.class = 'laboratorio';
-                index = this.registrosHuds.findIndex(r => {
-                    if (r.tipo === 'cda' && r.data.prestacion.snomed.semanticTag === 'elemento de registro') {
-                        if (r.data.fecha === registro.fecha) {
-                            return 1;
-                        } else {
-                            return 0;
-                        }
-                    }
-                });
-                break;
         }
 
-        let elemento = {
-            tipo: tipo,
-            data: registro
-        };
-
-
-        // si no existe lo agregamos
-        if (index === -1) {
-            this.registrosHuds.push(elemento);
-        } else {
-            // si existe lo quitamos
-            this.registrosHuds.splice(index, 1);
-        }
-
-        this.evtHuds.emit(elemento);
-
+        this.huds.toogle(registro, tipo);
     }
-
-    /**
-     * Determina si un hallazgo ya fué cargado en los tabs de la HUDS
-     * Para agregarle una clase activa en el listado de hallazgos.
-     *
-     * @param {any} registro Registro a verificar si esta cargado o no en la HUDS
-     * @param {any} tipo hallzago | prestacion
-     * @returns boolean
-     * @memberof HudsBusquedaComponent
-     */
-    estaEnTabs(registro, tipo) {
-        if (!this.registrosHuds.length) {
-            return false;
-        }
-
-        for (let i = 0; i < this.registrosHuds.length; i++) {
-            const _registro = this.registrosHuds[i].data;
-
-            // console.log('registro, _registro', registro, _registro);
-
-            if (_registro && _registro.concepto && registro.concepto) {
-                if (_registro.concepto.conceptId === registro.concepto.conceptId && _registro.createdAt === registro.createdAt) {
-                    return true;
-                }
-            } else if (_registro && _registro.createdAt && _registro.createdAt === registro.createdAt) {
-                return true;
-            }
-        }
-    }
-
-    /**
-     *
-     * @param tipoOrden 'fecha' | 'alfa'
-     */
-    ordenarRegistros(tipoOrden = 'fecha', tipo = null) {
-
-        // Ordenar PROCEDIMIENTOS
-        // (fecha === estados[prestacion.estados.length - 1].createdAt)
-        // (alfa === solicitud.tipoPrestacion.term)
-        if (this.filtroActual === 'procedimiento') {
-            this.procedimientos.sort((a, b) => {
-                if (tipoOrden === 'fecha') {
-                    if (this.ordenDesc) {
-                        return b.createdAt - a.createdAt;
-                    } else {
-                        return a.createdAt - b.createdAt;
-                    }
-                } else if (tipoOrden === 'alfa') {
-                    if (this.ordenDesc) {
-                        return b.concepto.term.localeCompare(a.concepto.term);
-                    } else {
-                        return a.concepto.term.localeCompare(b.concepto.term);
-                    }
-                }
-            });
-        }
-
-        // Ordenar PLANES
-        // (fecha === estados[prestacion.estados.length - 1].createdAt)
-        // (alfa === solicitud.tipoPrestacion.term)
-        if (this.filtroActual === 'planes') {
-            this.prestaciones.sort((a, b) => {
-                if (tipoOrden === 'fecha') {
-                    if (this.ordenDesc) {
-                        return b.estados[b.estados.length - 1].createdAt - a.estados[a.estados.length - 1].createdAt;
-                    } else {
-                        return a.estados[a.estados.length - 1].createdAt - b.estados[b.estados.length - 1].createdAt;
-                    }
-                } else if (tipoOrden === 'alfa') {
-                    if (this.ordenDesc) {
-                        return b.solicitud.tipoPrestacion.term.localeCompare(a.solicitud.tipoPrestacion.term);
-                    } else {
-                        return a.solicitud.tipoPrestacion.term.localeCompare(b.solicitud.tipoPrestacion.term);
-                    }
-                }
-            });
-        }
-
-        // Ordenar PRODUCTOS
-        // (fecha === evoluciones.$.fechaCarga)
-        // (alfa === concepto.term)
-        if (this.filtroActual === 'producto' || tipo) {
-
-            let array = !tipo ? this.filtroActual : tipo;
-
-            switch (array) {
-                case 'producto':
-                    this.productos.sort((a, b) => {
-                        if (tipoOrden === 'fecha') {
-                            if (this.ordenDesc) {
-                                return b.evoluciones[0].fechaCarga - a.evoluciones[0].fechaCarga;
-                            } else {
-                                return a.evoluciones[0].fechaCarga - b.evoluciones[0].fechaCarga;
-                            }
-                        } else if (tipoOrden === 'alfa') {
-                            if (this.ordenDesc) {
-                                return b.concepto.term.localeCompare(a.concepto.term);
-                            } else {
-                                return a.concepto.term.localeCompare(b.concepto.term);
-                            }
-                        }
-                    });
-                    break;
-                case 'crónicos':
-                    this.hallazgosCronicos.sort((a, b) => {
-                        if (tipoOrden === 'fecha') {
-                            if (this.ordenDesc) {
-                                return b.evoluciones[0].fechaCarga - a.evoluciones[0].fechaCarga;
-                            } else {
-                                return a.evoluciones[0].fechaCarga - b.evoluciones[0].fechaCarga;
-                            }
-                        } else if (tipoOrden === 'alfa') {
-                            if (this.ordenDesc) {
-                                return b.concepto.term.localeCompare(a.concepto.term);
-                            } else {
-                                return a.concepto.term.localeCompare(b.concepto.term);
-                            }
-                        }
-                    });
-                    break;
-                case 'activos':
-                    this.problemasActivos.sort((a, b) => {
-                        if (tipoOrden === 'fecha') {
-                            if (this.ordenDesc) {
-                                return b.evoluciones[0].fechaCarga - a.evoluciones[0].fechaCarga;
-                            } else {
-                                return a.evoluciones[0].fechaCarga - b.evoluciones[0].fechaCarga;
-                            }
-                        } else if (tipoOrden === 'alfa') {
-                            if (this.ordenDesc) {
-                                return b.concepto.term.localeCompare(a.concepto.term);
-                            } else {
-                                return a.concepto.term.localeCompare(b.concepto.term);
-                            }
-                        }
-                    });
-                    break;
-                case 'otros':
-                    this.hallazgosNoActivos.sort((a, b) => {
-                        if (tipoOrden === 'fecha') {
-                            if (this.ordenDesc) {
-                                return b.evoluciones[0].fechaCarga - a.evoluciones[0].fechaCarga;
-                            } else {
-                                return a.evoluciones[0].fechaCarga - b.evoluciones[0].fechaCarga;
-                            }
-                        } else if (tipoOrden === 'alfa') {
-                            if (this.ordenDesc) {
-                                return b.concepto.term.localeCompare(a.concepto.term);
-                            } else {
-                                return a.concepto.term.localeCompare(b.concepto.term);
-                            }
-                        }
-                    });
-                    break;
-            }
-
-        }
-
-        // Ordenar ELEMENTOS DE REGISTRO
-        // (fecha === updatedAt)
-        // (alfa === concepto.term)
-        if (this.filtroActual === 'otros') {
-            this.elementosRegistro.sort((a, b) => {
-                if (tipoOrden === 'fecha') {
-                    if (this.ordenDesc) {
-                        return b.updatedAt - a.updatedAt;
-                    } else {
-                        return a.updatedAt - b.updatedAt;
-                    }
-                } else if (tipoOrden === 'alfa') {
-                    if (this.ordenDesc) {
-                        return b.concepto.term.localeCompare(a.concepto.term);
-                    } else {
-                        return a.concepto.term.localeCompare(b.concepto.term);
-                    }
-                }
-            });
-        }
-
-        // Ordenar LABORATORIOS
-        // (fecha === createddAt)
-        // (alfa === concepto.term)
-        if (this.filtroActual === 'laboratorios') {
-            this.laboratorios.sort((a, b) => {
-                if (tipoOrden === 'fecha') {
-                    if (this.ordenDesc) {
-                        return b.createdAt - a.createdAt;
-                    } else {
-                        return a.createdAt - b.createdAt;
-                    }
-                } else if (tipoOrden === 'alfa') {
-                    if (this.ordenDesc) {
-                        return b.concepto.term.localeCompare(a.concepto.term);
-                    } else {
-                        return a.concepto.term.localeCompare(b.concepto.term);
-                    }
-                }
-            });
-        }
-
-
-        this.ordenDesc = !this.ordenDesc;
-    }
-
-
-    colapsarRegistros(tipo = null) {
-        if (!tipo) {
-            this.colapsado = !this.colapsado;
-        } else {
-            switch (tipo) {
-                case 'crónicos':
-                    this.colapsadoCronicos = !this.colapsadoCronicos;
-                    break;
-                case 'activos':
-                    this.colapsadoActivos = !this.colapsadoActivos;
-                    break;
-                case 'otros':
-                    this.colapsadoOtros = !this.colapsadoOtros;
-                    break;
-            }
-        }
-    }
-
 
     listarPrestaciones() {
         this.servicioPrestacion.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
-            this.prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
-            this.prestaciones = this.prestaciones.map(p => {
+            this.prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada').map(p => {
+                const lastState = p.estados[p.estados.length - 1];
                 return {
                     data: p,
                     tipo: 'rup',
                     prestacion: p.solicitud.tipoPrestacion,
-                    profesional: p.estados[p.estados.length - 1].createdBy.nombreCompleto,
-                    fecha: p.estados[p.estados.length - 1].createdAt,
-                    estado: p.estados[p.estados.length - 1].tipo
+                    profesional: lastState.createdBy.nombreCompleto,
+                    fecha: lastState.createdAt,
+                    estado: lastState.tipo
                 };
             });
-            this.tiposPrestacion = this.prestaciones.map(p => p.prestacion);
             this.prestacionesCopia = this.prestaciones;
+            this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
             this.buscarCDAPacientes();
         });
     }
 
     // Trae los hallazgos
-    listarHallazgos() {
-        this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
-            this.hallazgos = hallazgos;
-            this.listarProblemasCronicos();
-            this.listarHallazgosNoActivos();
-            this.listarProblemasActivos();
-            this.listarProcedimientos();
-            this.listarMedicamentos();
-            this.listarElementosDeRegistro();
+    listarConceptos() {
+        this.servicioPrestacion.getConceptosByPaciente(this.paciente.id, true).subscribe(registros => {
+            this.todos = registros;
 
-        });
-    }
-
-    // Trae los problemas activos NO activos
-    listarHallazgosNoActivos() {
-        this.hallazgosNoActivos = this.hallazgos.filter(h => h.evoluciones[0].estado !== 'activo');
-        this.hallazgosNoActivos = this.hallazgosNoActivosAux = this.hallazgosNoActivos.map(element => {
-            if (element.evoluciones[0].idRegistroGenerado) {
-                element['transformado'] = this.hallazgos.find(h => h.evoluciones[0].idRegistro === element.evoluciones[0].idRegistroGenerado);
-            } return element;
-        });
-    }
-
-    // Trae los problemas crónicos (por SNOMED refsetId)
-    listarProblemasCronicos() {
-        this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
-            // Buscamos si es crónico
-            this.hallazgosCronicos = this.hallazgosCronicosAux = hallazgos.filter((hallazgo) => {
-                if (hallazgo.concepto && hallazgo.concepto.refsetIds) {
-                    return hallazgo.concepto.refsetIds.find(cronico => {
-                        return cronico === this.servicioPrestacion.refsetsIds.cronico;
-                    });
-                }
+            this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id).subscribe((hallazgos) => {
+                this.hallazgos = hallazgos;
             });
 
-        });
-    }
+            this.servicioPrestacion.getByPacienteTrastorno(this.paciente.id).subscribe((trastornos) => {
+                this.trastornos = trastornos;
 
-    // Trae los problemas activos NO crónicos
-    listarProblemasActivos() {
-        this.problemasActivos = this.problemasActivosAux = this.hallazgos.filter((hallazgo) => {
-            if (hallazgo.evoluciones[0].estado === 'activo') {
-                return (hallazgo.concepto && hallazgo.concepto.refsetIds && hallazgo.concepto.refsetIds.find(cronico => {
-                    return cronico === this.servicioPrestacion.refsetsIds.cronico;
-                })) ? false : hallazgo;
-            }
+            });
 
+            this.servicioPrestacion.getByPacienteMedicamento(this.paciente.id).subscribe((medicamentos) => {
+                this.productos = medicamentos;
+                this.productosCopia = medicamentos;
+            });
+
+            this.servicioPrestacion.getByPacienteProcedimiento(this.paciente.id).subscribe((procedimientos) => {
+                this.procedimientos = procedimientos;
+                this.procedimientosCopia = procedimientos;
+            });
         });
     }
 
@@ -612,99 +289,59 @@ export class HudsBusquedaComponent implements OnInit {
         });
     }
 
-    // Trae los medicamentos registrados para el paciente
-    listarElementosDeRegistro() {
-        // filtramos los odontogramas
-
-        this.servicioPrestacion.getByPacienteElementosRegistro(this.paciente.id, true).subscribe(elementosRegistro => {
-
-            this.elementosRegistro = elementosRegistro.filter(e => e.concepto.conceptId !== this.servicioPrestacion.elementosRegistros.odontograma);
-        });
-    }
 
     // Trae los cdas registrados para el paciente
     buscarCDAPacientes() {
         this.servicioPrestacion.getCDAByPaciente(this.paciente.id).subscribe(registros => {
-            this.cdas = registros;
-            this.listarLaboratorios();
-            // filtramos los laboratorios que se listan por separado
-            let otrasPrestaciones = [... this.cdas.filter(cda => cda.prestacion.snomed.conceptId !== '4241000179101')];
-
-            let filtro = otrasPrestaciones.map(op => {
-                op.id = op.cda_id;
+            this.cdas = registros.map(cda => {
+                cda.id = cda.cda_id;
                 return {
-                    data: op,
+                    data: cda,
                     tipo: 'cda',
-                    prestacion: op.prestacion.snomed,
-                    profesional: op.profesional ? op.profesional : '',
-                    fecha: op.fecha,
+                    prestacion: cda.prestacion.snomed,
+                    profesional: cda.profesional ? `${cda.profesional.apellido} ${cda.profesional.nombre}` : '',
+                    fecha: cda.fecha,
                     estado: 'validada'
                 };
             });
-            // filtramos las vacunas que se listan por separado
-            this.vacunas = [...filtro.filter(cda => cda.prestacion.conceptId === '33879002')];
-            filtro = [...filtro.filter(cda => cda.prestacion.conceptId !== '33879002')];
-            this.prestaciones = [...this.prestaciones, ...filtro];
+            // filtramos las vacunas y laboratorios por ahora para que se listan por separado
+            this.vacunas = this.cdas.filter(cda => cda.prestacion.conceptId === TipoPrestacionService.Vacunas_CDA_ID);
+            this.laboratorios = this.cdas.filter(cda => cda.prestacion.conceptId === TipoPrestacionService.Laboratorio_CDA_ID);
 
-            // vamos a ordenar la prestaciones por fecha
-            this.prestaciones = this.prestaciones.sort(
-                function (a, b) {
-                    a = a.fecha;
-                    b = b.fecha;
-                    return b - a;
-                });
+            // DEjamos el resto de los CDAS y los unimos a las prestaciones
+            const filtro = this.cdas.filter(cda => {
+                return cda.prestacion.conceptId !== TipoPrestacionService.Vacunas_CDA_ID && cda.prestacion.conceptId !== TipoPrestacionService.Laboratorio_CDA_ID;
+            });
+            // Filtramos por CDA para poder recargar los estudiosc
+            this.prestaciones = [...this.prestaciones.filter(e => e.tipo !== 'cda'), ...filtro];
+            this.prestacionesCopia = this.prestaciones;
+            this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
         });
     }
 
-    // Trae los medicamentos registrados para el paciente
-    listarLaboratorios() {
-        this.laboratorios = [... this.cdas.filter(cda => cda.prestacion.snomed.conceptId === '4241000179101')];
-
-    }
-
-    // Trae los medicamentos registrados para el paciente
-    listarVacunas() {
-        this.vacunas = [... this.cdas.filter(cda => cda.prestacion.snomed.conceptId === '33879002')];
-    }
-
-    buscarTranformacion(transformado) {
-        let listaCompleta = [... this.hallazgosNoActivos, ... this.problemasActivos];
-        let hallazgoEncontrado = listaCompleta.find(h => h.evoluciones[0].idRegistro === transformado.evoluciones[0].idRegistroGenerado);
-        if (hallazgoEncontrado) {
-            return hallazgoEncontrado.concepto.term;
-        } else {
-            return '';
+    getCantidadResultados(type: any) {
+        switch (type) {
+            case 'todos':
+                return this.todos.length;
+            case 'hallazgo':
+                return this.hallazgos.length;
+            case 'trastorno':
+                return this.trastornos.length;
+            case 'procedimiento':
+                return this.procedimientos.length;
+            case 'planes':
+                return this.prestaciones.length;
+            case 'producto':
+                return this.productos.length;
+            case 'laboratorios':
+                return this.laboratorios.length;
+            case 'vacunas':
+                return this.vacunas.length;
         }
-    }
-
-
-
-    getCantidadResultados(a: any) {
-        // TODO: Implementar :joy:
     }
 
     filtroBuscador(key: any) {
-        this.colapsado = true;
         this.filtroActual = key;
-        this.problemasActivos = this.problemasActivosAux;
-        this.hallazgosNoActivos = this.hallazgosNoActivosAux;
-        this.hallazgosCronicos = this.hallazgosCronicosAux;
-        if (this.filtroActual === 'hallazgo' || this.filtroActual === 'trastorno') {
-            this.problemasActivos = this.problemasActivos.filter(h => {
-                return this.conceptos[this.filtroActual].includes(h.concepto.semanticTag);
-            });
-            this.hallazgosNoActivos = this.hallazgosNoActivos.filter(h => {
-                return this.conceptos[this.filtroActual].includes(h.concepto.semanticTag);
-            });
-            this.hallazgosCronicos = this.hallazgosCronicos.filter(h => {
-                return this.conceptos[this.filtroActual].includes(h.concepto.semanticTag);
-            });
-        } else {
-            if (this.filtroActual === 'laboratorios') {
-                this.listarLaboratorios();
-            }
-
-        }
     }
 
     getSemanticTagFiltros() {
@@ -730,8 +367,9 @@ export class HudsBusquedaComponent implements OnInit {
     }
 
     filtrar() {
-        if (this.prestacionSeleccionada) {
-            this.prestaciones = this.prestacionesCopia.filter(p => p.prestacion.conceptId === this.prestacionSeleccionada.conceptId);
+        if (this.prestacionSeleccionada.length > 0) {
+            const prestacionesTemp = this.prestacionSeleccionada.map(e => e.conceptId);
+            this.prestaciones = this.prestacionesCopia.filter(p => prestacionesTemp.find(e => e === p.prestacion.conceptId));
         } else {
             this.prestaciones = this.prestacionesCopia;
         }

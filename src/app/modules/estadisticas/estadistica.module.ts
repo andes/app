@@ -22,6 +22,7 @@ import { EstRupService } from './services/rup-estadisticas.service';
 import { RupPacientesComponent } from './components/rup/rup-pacientes.component';
 import { SnomedService } from './services/snomed.service';
 import { Tabla2DComponent } from './components/tabla-2d/tabla-2d.component';
+import { SumPipe } from './pipes/sum.pipe';
 
 @NgModule({
     imports: [
@@ -35,6 +36,7 @@ import { Tabla2DComponent } from './components/tabla-2d/tabla-2d.component';
         EstadisticasRouting
     ],
     declarations: [
+        SumPipe,
         HomeComponent,
         FiltrosComponent,
         CitasComponent,

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Observable } from 'rxjs/Observable';
 import { IObraSocial } from '../interfaces/IObraSocial';
+import { IFinanciador } from '../interfaces/IFinanciador';
 
 @Injectable()
 export class ObraSocialService {
@@ -18,6 +19,10 @@ export class ObraSocialService {
 
     get(opciones: any, showError = true): Observable<IObraSocial[]> {
         return this.server.get(this.url + '/puco/', { params: opciones, showError: showError });
+    }
+
+    getPaciente(opciones: any, showError = true): Observable<IFinanciador[]> {
+        return this.server.get(this.url + '/paciente/', { params: opciones, showError: showError });
     }
 
     getPadrones(opciones: any): Observable<any[]> {

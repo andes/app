@@ -26,8 +26,9 @@ import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
 import { SmsService } from './../../../services/turnos/sms.service';
 import { TurnoService } from './../../../services/turnos/turno.service';
-import { IObraSocial } from '../../../interfaces/IObraSocial';
 import { HeaderPacienteComponent } from '../../paciente/headerPaciente.component';
+import { IFinanciador } from '../../../interfaces/IFinanciador';
+import { ObraSocialCacheService } from '../../../services/obraSocialCache.service';
 
 @Component({
     selector: 'dar-turnos',
@@ -92,7 +93,7 @@ export class DarTurnosComponent implements OnInit {
     turnoDoble = false;
     desplegarOS = false; // Indica si es se requiere seleccionar OS y numero de Afiliado
     numeroAfiliado;
-    telefono: String = '';
+    telefono = '';
     countBloques: any[];
     countTurnos: any = {};
     resultado: any;
@@ -100,7 +101,7 @@ export class DarTurnosComponent implements OnInit {
     esEscaneado = false;
     ultimosTurnos: any[];
     indice = -1;
-    semana: String[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    semana: string[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     permisos = [];
     autorizado = false;
     pacientesSearch = true;
@@ -108,8 +109,8 @@ export class DarTurnosComponent implements OnInit {
     cambioTelefono = false;
     showCreateUpdate = false;
     tipoTurno: string;
-    tiposTurnosSelect: String;
-    tiposTurnosLabel: String;
+    tiposTurnosSelect: string;
+    tiposTurnosLabel: string;
     filtradas: any = [];
     hoy: Date;
     bloque: IBloque;
@@ -123,7 +124,7 @@ export class DarTurnosComponent implements OnInit {
     reqfiltros = false;
     permitirTurnoDoble = false;
     carpetaEfector: any;
-    obraSocialPaciente: IObraSocial;
+    obraSocialPaciente: IFinanciador;
     motivoConsulta: string;
 
     // Muestra sólo las agendas a las que se puede asignar el turno (oculta las "con/sin alternativa")
@@ -155,7 +156,8 @@ export class DarTurnosComponent implements OnInit {
         public smsService: SmsService,
         public plex: Plex,
         public auth: Auth,
-        private router: Router) { }
+        private router: Router,
+        private osService: ObraSocialCacheService) { }
 
     ngOnInit() {
         this.hoy = new Date();
@@ -194,17 +196,10 @@ export class DarTurnosComponent implements OnInit {
                 this.verificarTelefono(pacienteMPI);
                 this.obtenerCarpetaPaciente();
                 if (this.paciente.documento) {
-                    if (this.paciente.financiador && this.paciente.financiador[0]) {
-                        this.obraSocialPaciente = this.paciente.financiador[0] as any;
-                        this.numeroAfiliado = (this.paciente.financiador[0] as any).numeroAfiliado;
-                    } else {
-                        this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
-                            if (resultado && resultado.length > 0) {
-                                this.obraSocialPaciente = resultado[0];
-                                this.obraSocialPaciente.id = (resultado[0] as any).idFinanciador;
-                            }
-                        });
-                    }
+                    this.osService.getFinanciadorPacienteCache().subscribe((financiador) => {
+                        this.obraSocialPaciente = financiador;
+                        this.desplegarOS = this.desplegarObraSocial();
+                    });
                 }
             });
     }
@@ -270,7 +265,7 @@ export class DarTurnosComponent implements OnInit {
 
     loadObrasSociales(event) {
         if (event.query) {
-            let query = { nombre: event.query };
+            let query = { nombre: event.query, prepaga: true };
             this.servicioOS.getListado(query).subscribe(
                 resultado => {
                     resultado = resultado.map(os => {
@@ -281,7 +276,7 @@ export class DarTurnosComponent implements OnInit {
                 }
             );
         } else {
-            this.servicioOS.getListado({}).subscribe(
+            this.servicioOS.getListado({ prepaga: true }).subscribe(
                 resultado => {
                     event.callback(resultado);
                 }
@@ -441,7 +436,7 @@ export class DarTurnosComponent implements OnInit {
 
                 this.alternativas = [];
                 // Tipo de Prestación, para poder filtrar las agendas
-                let tipoPrestacion: String = this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : '';
+                let tipoPrestacion: string = this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : '';
                 // Se filtran los bloques segun el filtro tipoPrestacion
                 this.bloques = this.agenda.bloques.filter(
                     function (value) {
@@ -619,7 +614,7 @@ export class DarTurnosComponent implements OnInit {
         this.seleccionarAgenda(this.alternativas[indice]);
     }
 
-    verAgenda(direccion: String) {
+    verAgenda(direccion: string) {
         if (this.agendas) {
             // Asegurar que no nos salimos del rango de agendas (agendas.length)
             let enRango = direccion === 'der' ? ((this.indice + 1) < this.agendas.length) : ((this.indice - 1) >= 0);
@@ -674,9 +669,13 @@ export class DarTurnosComponent implements OnInit {
         if (indiceCarpeta === -1) {
             // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
             this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
-                if (carpeta.nroCarpeta) {
-                    this.carpetaEfector.nroCarpeta = carpeta.nroCarpeta;
-                    this.changeCarpeta = true;
+                // Si la carpeta en carpetaPaciente tiene una longitud mayor a 0, se filtra por organización para obtener nroCarpeta.
+                if (carpeta.length > 0) {
+                    let carpetaE = carpeta[0].carpetaEfectores.find((carpetaEf: any) => carpetaEf.organizacion._id === this.auth.organizacion.id);
+                    if (carpetaE.nroCarpeta) {
+                        this.carpetaEfector.nroCarpeta = carpetaE.nroCarpeta;
+                        this.changeCarpeta = true;
+                    }
                 }
             });
         }
@@ -1069,10 +1068,8 @@ export class DarTurnosComponent implements OnInit {
                         this.servicePaciente.patch(paciente.id, { op: 'updateScan', scan: paciente.scan }).subscribe();
                     }
                     if (this.paciente.documento) {
-                        this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
-                            if (resultado) {
-                                this.obraSocialPaciente = resultado[0];
-                            }
+                        this.osService.getFinanciadorPacienteCache().subscribe((financiador) => {
+                            this.obraSocialPaciente = financiador;
                         });
                     }
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
@@ -1186,6 +1183,9 @@ export class DarTurnosComponent implements OnInit {
     * por el momento esto solo es posible desde el efector: Centro médico integral (colegio médico)
     */
     desplegarObraSocial() {
-        return this.auth.organizacion._id === '5a5e3f7e0bd5677324737244';
+        let puco = this.obraSocialPaciente && this.obraSocialPaciente.codigoPuco ? true : false;
+        return (this.auth.organizacion._id === '5a5e3f7e0bd5677324737244' && !puco);
     }
+
+
 }

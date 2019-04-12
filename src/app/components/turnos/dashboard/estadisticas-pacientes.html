@@ -33,24 +33,49 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-6" *ngIf="_paciente?.direccion && _paciente.direccion[0]?.valor && _paciente.direccion.length > 0">
+                <div class="col-6"
+                    *ngIf="_paciente?.direccion && _paciente.direccion[0]?.valor && _paciente.direccion.length > 0">
                     <i class="mdi mdi-map-marker"></i>
                     <span class="text-primary">Dirección</span>
                 </div>
-                <div class="col-6" *ngIf="_paciente?.contacto && _paciente.contacto[0]?.valor && _paciente.contacto.length > 0">
+                <div class="col-6"
+                    *ngIf="_paciente?.contacto && _paciente.contacto[0]?.valor && _paciente.contacto.length > 0">
                     <i class="mdi mdi-cellphone-android"></i>
                     <span class="text-primary">Teléfono</span>
                 </div>
             </div>
             <div class="row">
-                <div class="col-6" *ngIf="_paciente?.direccion && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
+                <div class="col-6"
+                    *ngIf="_paciente?.direccion && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
                     {{_paciente.direccion[0].valor}}
                 </div>
                 <div class="col-6" *ngIf="_paciente?.id && _paciente.contacto && _paciente.contacto.length > 0">
                     {{_paciente.contacto[0].valor}}
                 </div>
             </div>
-            <div class="row" *ngIf="_paciente?.financiador && _paciente.financiador[0]?.nombre">
+            <div class="row" *ngIf="obraSocial">
+                <div class="col-6" *ngIf="obraSocial.financiador === 'SUMAR'">
+                    <i class="mdi mdi-account-card-details"></i>
+                    <span class="text-primary">Financiador</span>
+                </div>
+                <div class="col-6" *ngIf="obraSocial.financiador !== 'SUMAR'">
+                    <i class="mdi mdi-account-card-details"></i>
+                    <span class="text-primary">Obra Social</span>
+                </div>
+                <div class="col-6" *ngIf="obraSocial.numeroAfiliado">
+                    <i class="mdi mdi-card-text-outline"></i>
+                    <span class="text-primary">Número de Afiliado</span>
+                </div>
+            </div>
+            <div class="row" *ngIf="obraSocial && obraSocial.financiador">
+                <div class="col-6">
+                    {{obraSocial.financiador}}
+                </div>
+                <div class="col-6" *ngIf="obraSocial.numeroAfiliado">
+                    {{obraSocial.numeroAfiliado}}
+                </div>
+            </div>
+            <!-- <div class="row" *ngIf="_paciente?.financiador && _paciente.financiador[0]?.nombre">
                 <div class="col-6">
                     <i class="mdi mdi-account-card-details"></i>
                     <span class="text-primary">Obra Social</span>
@@ -67,7 +92,7 @@
                 <div class="col-6">
                     {{_paciente.financiador[0].numeroAfiliado}}
                 </div>
-            </div>
+            </div> -->
             <br>
             <div class="row">
                 <div class="col">
@@ -77,22 +102,24 @@
                 </div>
             </div>
             <hr>
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col">
                     <span>Filtrar por Fechas</span>
                 </div>
             </div>
             <div class="row">
                 <div class="col-6">
-                    <plex-datetime type="date" [(ngModel)]="fechaDesde" [required]="true" name="fechaDesde" label="Desde">
+                    <plex-datetime type="date" [(ngModel)]="fechaDesde" [required]="true" name="fechaDesde"
+                        label="Desde">
                     </plex-datetime>
                 </div>
                 <div class="col-6">
-                    <plex-datetime type="date" [(ngModel)]="fechaHasta" [required]="true" name="fechaHasta" label="Hasta">
+                    <plex-datetime type="date" [(ngModel)]="fechaHasta" [required]="true" name="fechaHasta"
+                        label="Hasta">
                     </plex-datetime>
                 </div>
             </div>
-            <br>
+            <br> -->
             <div class="row">
                 <div class="col-2 vertical-center text-center">
                     <i class="mdi mdi-account-check mdi-36px"></i>
@@ -130,8 +157,8 @@
 
     </plex-tab>
     <plex-tab icon="clock" label="Turnos">
-        <turnos-paciente [turnos]="turnosPaciente" [operacion]="'operacionTurnos'" (turnosPacienteChanged)="getPaciente()"
-            (showArancelamientoForm)="arancelamiento($event)"></turnos-paciente>
+        <turnos-paciente [turnos]="turnosPaciente" [operacion]="'operacionTurnos'"
+            (turnosPacienteChanged)="getPaciente()" (showArancelamientoForm)="arancelamiento($event)"></turnos-paciente>
     </plex-tab>
     <plex-tab icon="history" label="Historial">
         <fieldset>
@@ -139,9 +166,11 @@
                 <li *ngFor="let turno of ultimosTurnos let i=index" class="list-group-item" [appHover]="'active'">
                     <div class="list-group-item-text">
                         <div>
-                            <span *ngIf="turno.estado === 'asignado' || turno.estado === 'turnoDoble'" class="badge badge-success">
+                            <span *ngIf="turno.estado === 'asignado' || turno.estado === 'turnoDoble'"
+                                class="badge badge-success">
                                 ASIGNADO</span>
-                            <span *ngIf="turno.estado === 'liberado' || turno.estado === 'suspendido' " class="badge badge-danger">
+                            <span *ngIf="turno.estado === 'liberado' || turno.estado === 'suspendido' "
+                                class="badge badge-danger">
                                 {{turno.estado | uppercase}}</span>
 
                             | {{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}}
