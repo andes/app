@@ -72,7 +72,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
     }
     onPacienteSelected(paciente: IPaciente): void {
         this.paciente = paciente;
-
         if (paciente.id) {
             if (paciente.estado === 'temporal' && paciente.scan) {
                 this.seleccion = paciente;
@@ -93,12 +92,13 @@ export class PuntoInicioTurnosComponent implements OnInit {
                         this.showMostrarEstadisticasAgendas = false;
                         if (this.esOperacion) {
                             this.esOperacion = false;
-                        } else {
-                            this.showMostrarEstadisticasPacientes = true;
-                            this.showMostrarTurnosPaciente = false;
-                            this.showActivarApp = false;
-                            this.showIngresarSolicitud = false;
                         }
+                        this.showTab = 0;
+                        this.showMostrarEstadisticasPacientes = true;
+                        this.showMostrarTurnosPaciente = false;
+                        this.showActivarApp = false;
+                        this.showIngresarSolicitud = false;
+
                     });
             }
         } else {
@@ -199,7 +199,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
             }
             this.resultadoCreate = [this.paciente];
         }
-        this.showMostrarEstadisticasAgendas = false;
         this.showMostrarEstadisticasPacientes = true;
         this.showIngresarSolicitud = false;
         this.showMostrarTurnosPaciente = false;
