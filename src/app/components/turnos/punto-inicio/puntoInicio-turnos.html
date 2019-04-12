@@ -25,7 +25,8 @@
                     </div>
                     <div *ngIf="showMostrarEstadisticasPacientes" type="info">
                         <estadisticas-pacientes [paciente]="paciente"
-                            (showArancelamientoForm)="showArancelamientoForm($event)"></estadisticas-pacientes>
+                            (showArancelamientoForm)="showArancelamientoForm($event)" [showTab]="showTab">
+                        </estadisticas-pacientes>
                     </div>
                     <div *ngIf="showIngresarSolicitud" type="info">
                         <lista-solicitud-turno-ventanilla [paciente]="paciente"

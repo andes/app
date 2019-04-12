@@ -191,7 +191,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     afterDarTurno(pac) {
         this.showDarTurnos = false;
         this.showDashboard = true;
-        this.showTab = 1;
+        this.showTab = 2;
         if (this.paciente && this.paciente.id) {
             // this.onPacienteSelected(this.paciente);
             if (pac && pac.carpetaEfectores && pac.carpetaEfectores.length > 0) {

@@ -12,7 +12,8 @@ import { IFinanciador } from '../../../interfaces/IFinanciador';
 
 @Component({
     selector: 'estadisticas-pacientes',
-    templateUrl: 'estadisticas-pacientes.html'
+    templateUrl: 'estadisticas-pacientes.html',
+    styleUrls: ['estadisticas-paciente.scss']
 })
 
 export class EstadisticasPacientesComponent implements OnInit {
