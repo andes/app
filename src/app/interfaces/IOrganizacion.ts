@@ -11,7 +11,7 @@ export interface ISectores {
     tipoSector: ISnomedConcept;
     unidadConcept?: ISnomedConcept;
     nombre: String;
-    hijos?:  ISectores [];
+    hijos?: ISectores[];
 }
 
 export interface IOrganizacion {
@@ -41,4 +41,5 @@ export interface IOrganizacion {
     servicios: [ISnomedConcept];
     mapaSectores: ISectores[];
     unidadesOrganizativas: [ISnomedConcept];
+    ofertaPrestacional?: [{ idSisa: number, nombre: string }]; // "prestaciones" traidas de sisa. Se muestran en la app mobile
 }
