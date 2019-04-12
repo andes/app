@@ -103,10 +103,10 @@
             </div>
         </div>
         <div class="row">&nbsp;</div>
-        <div *ngIf="organizacionesUsuario.length <= 0" class="alert alert-default">
+        <div *ngIf="organizacionesUsuario?.length <= 0" class="alert alert-default">
             <i class="mdi mdi-emoticon-sad"></i> Agregue un efector para modificar sus permisos
         </div>
-        <div *ngIf="organizacionesUsuario.length > 0 && !organizacionPermisos" class="alert alert-default">
+        <div *ngIf="organizacionesUsuario?.length > 0 && !organizacionPermisos" class="alert alert-default">
             <i class="mdi mdi-emoticon-sad"></i> Seleccione una organización
         </div>
         <div class="row my-3" *ngIf="agregarEfector">

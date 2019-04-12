@@ -1,7 +1,7 @@
 import { IProfesional } from './../../../interfaces/IProfesional';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { Component, EventEmitter, QueryList, ViewChildren, Output, OnInit } from "@angular/core";
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { UsuarioService } from '../../../services/usuarios/usuario.service';
 import { OrganizacionService } from '../../../services/organizacion.service';
@@ -9,8 +9,6 @@ import { PermisosService } from '../../../services/permisos.service';
 import { ProfesionalService } from './../../../services/profesional.service';
 import { TextFilterPipe } from '../../../pipes/textFilter.pipe';
 
-
-import { ArbolPermisosComponent } from './arbolPermisos.component';
 
 @Component({
     selector: 'selectorUsuarioEfector',
@@ -152,7 +150,6 @@ export class SelectorUsuarioEfectorComponent implements OnInit {
                                 this.organizacionPermisos = this.organizacionesUsuario[0];
                                 this.onOrgChange();
                             }
-                            // this.organizacionSelect = null;
                             this.loadUser();
                             this.getOrgActualAuthUs();
                         });
@@ -233,12 +230,14 @@ export class SelectorUsuarioEfectorComponent implements OnInit {
      * @param {*} user Usuario para seleccionar
      */
     public seleccionarUsuario(user: any) {
+        this.organizacionPermisos = null;
+        this.organizacionesUsuario = [];
         if (user) {
             this.usuarioSeleccionado = user;
             this.textoLibre = null;
             this.cambio(2);
             this.seSeleccionoUsuario();
-        } else {
+        } else { // selecciono nuevo usuario
             let dniIngresado = this.textoLibre.match(/\d/g); // obtengo los numeros escritos del filtro (puede ingresar nombre y numero de documento)
             if (!dniIngresado) {
                 this.plex.info('danger', 'Debe ingresar DNI del usuario');
@@ -257,17 +256,9 @@ export class SelectorUsuarioEfectorComponent implements OnInit {
                         }, err => {
                             this.plex.toast('warning', err, 'Error');
                         });
-                    } else {
-                        this.userModel.id = newUser[0].id;
-                        this.userModel.nombre = newUser[0].nombre;
-                        this.userModel.apellido = newUser[0].apellido;
-                        this.userModel.usuario = newUser[0].usuario;
-                        this.userModel.organizaciones = newUser[0].organizaciones;
-                        this.plex.toast('info', 'Usuario existente', 'Información');
                     }
                 });
                 this.usuarioSeleccionado = {};
-
             }
         }
     }
@@ -393,7 +384,7 @@ export class SelectorUsuarioEfectorComponent implements OnInit {
     * @memberof UsuarioUpdateComponent
     */
     getOrganizaciones() {
-        this.organizacionPermisos = (this.organizacionesUsuario.length > 0) ? this.organizacionesUsuario[0] : null;
+        this.organizacionPermisos = (this.organizacionesUsuario && this.organizacionesUsuario.length > 0) ? this.organizacionesUsuario[0] : null;
         this.organizacionSelectPrev = (this.organizacionesUsuario.length > 0) ? this.organizacionesUsuario[0] : null;
 
         // Si el usuario puede agregar efectores, se listan todos los disponibles (que no tenga todavía)
@@ -406,7 +397,7 @@ export class SelectorUsuarioEfectorComponent implements OnInit {
 
             // obtenemos las organizaciones del usuario
 
-            if (this.organizacionesUsuario.length > 0) {
+            if (this.organizacionesUsuario && this.organizacionesUsuario.length > 0) {
                 // si el user seleccionado tiene organizaciones, hacemos un "join" con las del administrador
                 // y el resultado se asigna al combo de posibles nuevas organizaciones
                 this.newOrganizaciones = this.organizacionesAuth.filter(elem => this.userModel.organizaciones.findIndex(item => elem._id === item._id) < 0);
