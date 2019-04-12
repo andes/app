@@ -70,10 +70,13 @@
 <div *ngIf="filtroActual && resultadoRegistros && resultadoRegistros[filtroActual]?.length > 0"
     class="hover registros-resultados list-unstyled">
     <ng-container *ngFor="let registro of resultadoRegistros[filtroActual]">
-        <rup-mini-card [registro]="registro" [filtroActual]="filtroActual" [emitirConceptos]="emitirConceptos"
-            (registroVolador)="devolverHallazgo($event.registro, 'hallazgo')"
-            (accionSecundaria)="emitTabs($event.registro, 'hallazgo')">
-        </rup-mini-card>
+        <div draggable [dragScope]="'registros-rup'" [dragData]="registro" (onDragStart)="dragStart($event)"
+            (onDragEnd)="dragEnd($event)">
+            <rup-mini-card [registro]="registro" [filtroActual]="filtroActual" [emitirConceptos]="emitirConceptos"
+                (registroVolador)="devolverHallazgo($event.registro, 'hallazgo')"
+                (accionSecundaria)="emitTabs($event.registro, 'hallazgo')">
+            </rup-mini-card>
+        </div>
     </ng-container>
 
 </div>
