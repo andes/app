@@ -44,9 +44,14 @@
                             </div>
                         </div>
                         <div class="row" *ngIf="seleccion?.id">
-                            <div class="col ml-2">
+                            <div class="col-2 ml-2">
                                 <plex-bool [(ngModel)]="organizacionModel.activo" type="slide" label="Habilitado"
                                     name="activo" [readonly]="!puedeEditarCompleto">
+                                </plex-bool>
+                            </div>
+                            <div class="col-2 text-left">
+                                <plex-bool [(ngModel)]="organizacionModel.showMap" type="slide" label="Mostrar en mapa"
+                                    name="showMap" [readonly]="!puedeEditarCompleto">
                                 </plex-bool>
                             </div>
                         </div>

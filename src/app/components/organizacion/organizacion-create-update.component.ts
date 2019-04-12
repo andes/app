@@ -110,7 +110,8 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         fechaAlta: new Date(),
         fechaBaja: new Date(),
         unidadesOrganizativas: [],
-        ofertaPrestacional: { idSisa: Number, nombre: String }
+        ofertaPrestacional: { idSisa: Number, nombre: String },
+        showMap: false
     };
 
     public listadoUO = [];
