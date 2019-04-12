@@ -1,3 +1,4 @@
+
 /*
 @jgabriel | 04-03-2017
 
@@ -126,7 +127,7 @@ import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesP
 import { CDAService } from './modules/rup/services/CDA.service';
 import { ResumenPacienteDinamicoService } from './modules/rup/services/resumenPaciente-dinamico.service';
 import { VacunasService } from './services/vacunas.service';
-
+import { IPSService } from './modules/ips/services/ips.service';
 
 
 
@@ -708,6 +709,7 @@ registerLocaleData(localeEs, 'es');
         CodificacionService,
         ResumenPacienteDinamicoService,
         VacunasService,
+        IPSService,
         RiesgoCardiovascularService,
         FormulaBaseService,
         SeleccionBinariaComponent,

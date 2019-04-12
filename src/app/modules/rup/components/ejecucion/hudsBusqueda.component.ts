@@ -4,7 +4,7 @@ import * as moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
-
+import { IPSService } from '../../../../modules/ips/services/ips.service';
 import { HUDSService } from '../../services/huds.service';
 @Component({
     selector: 'rup-hudsBusqueda',
@@ -93,7 +93,8 @@ export class HudsBusquedaComponent implements OnInit {
     public fechaInicio;
     public fechaFin;
     public showFiltros = false;
-
+    public dominios;
+    public document;
     public conceptos = {
         hallazgo: ['hallazgo', 'situación', 'evento'],
         trastorno: ['trastorno'],
@@ -112,6 +113,8 @@ export class HudsBusquedaComponent implements OnInit {
     constructor(
         public servicioPrestacion: PrestacionesService,
         public servicioTipoPrestacion: TipoPrestacionService,
+        public servicioIPS: IPSService,
+
         public plex: Plex,
         public auth: Auth,
         public huds: HUDSService
@@ -379,5 +382,13 @@ export class HudsBusquedaComponent implements OnInit {
             this.prestaciones = this.prestaciones.filter(p => p.fecha >= moment(this.fechaInicio).startOf('day').toDate() &&
                 p.fecha <= moment(this.fechaFin).endOf('day').toDate());
         }
+    }
+    IPS() {
+        this.servicioIPS.getDominios(this.paciente.id).subscribe(resultado => {
+            this.dominios = resultado;
+        });
+        // this.servicioIPS.getDocumentos(this.paciente.id).subscribe(resultado => {
+        //     this.document = resultado;
+        // });
     }
 }
