@@ -180,7 +180,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
     async eliminarPractica(practicaId) {
         let practicasSolicitud = this.solicitudProtocolo.solicitudPrestacion.practicas;
         this.practicasVista.splice(this.practicasVista.findIndex(x => x.valor.idPractica === practicaId), 1);
-        let practicaIndex = practicasSolicitud.findIndex(x => x.id === practicaId);
+        this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado = practicasSolicitud.findIndex(x => x.id === practicaId);
 
         this.servicioPractica.findByIdsCompletas(practicaId).subscribe((practicasEliminiar) => {
             this.modelo.ejecucion.registros = this.practicasEjecucion.filter(pe =>
@@ -188,7 +188,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
             );
         });
 
-        practicasSolicitud.splice(practicaIndex, 1);
+        practicasSolicitud.splice(this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado, 1);
     }
 
     /**
@@ -198,7 +198,7 @@ export class TablaDatalleProtocoloComponent implements OnInit {
      * @memberof TablaDatalleProtocolo
      */
     validarTodas($event) {
-        this.validaciones.forEach(e => e.validado = $event.value);
+        this.validaciones.forEach(e => { if (e.registroPractica.valor.resultado.valor) { e.validado = $event.value; } } );
     }
 
     /**

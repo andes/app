@@ -22,7 +22,7 @@
         </ng-container>
     </div>
 
-    <div class="table-grid {{ modo.nombre }}" [ngClass]="{'lista-lateral hover': showProtocoloDetalle, 'bg-invert white': i === indiceSeleccionado}" (click)='seleccionarProtocoloListaLateral(protocolo, i)' *ngFor="let protocolo of protocolos; let i=index">
+    <div class="table-grid {{ modo.nombre }}" [ngClass]="{'lista-lateral hover': showProtocoloDetalle, 'bg-invert white': i === laboratorioContextoCacheService.getContextoCache().indiceSeleccionado}" (click)='seleccionarProtocoloListaLateral(protocolo, i)' *ngFor="let protocolo of protocolos; let i=index">
         <ng-container *ngIf="!showProtocoloDetalle">
             <span *ngIf='modo.nombre !== "puntoInicio" && protocolo?.paciente?.sexo ==="femenino"'><i class="mdi mdi-gender-female"></i></span>
             <span *ngIf='modo.nombre !== "puntoInicio" && protocolo?.paciente?.sexo ==="masculino"'><i class="mdi mdi-gender-male"></i></span>

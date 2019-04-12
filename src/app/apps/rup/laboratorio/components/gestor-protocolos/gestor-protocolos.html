@@ -7,7 +7,7 @@
 
         <!-- LISTA DE PROTOCOLOS -->
         <lista-protocolos [protocolos]='protocolos' [modo]='contextoCache.modo'
-            [indiceSeleccionado]='indiceSeleccionado' (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)'
+            (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)'
             [showProtocoloDetalle]='showProtocoloDetalle' (edicionDatosCabeceraEmitter)='editarDatosCabecera()'>
         </lista-protocolos>
 
@@ -98,8 +98,7 @@
             </div>
         </header>
         <!-- DETALLE DE PROTOCOLO -->
-        <protocolo-detalle *ngIf="showProtocoloDetalle" [protocolo]="protocolo" [indexProtocolo]="indexProtocolo"
-            [protocolos]="protocolos" [seleccionPaciente]="seleccionPaciente" (volverAListaControEmit)="volver()"
+        <protocolo-detalle *ngIf="showProtocoloDetalle" [protocolo]="protocolo" [protocolos]="protocolos" [seleccionPaciente]="seleccionPaciente" (volverAListaControEmit)="volver()"
             [editarListaPracticas]="editarListaPracticas" [busqueda]='busqueda' [terminarPracticasChecked]='terminarPracticasChecked'
             (edicionDatosCabeceraEmitter)="editarDatosCabecera()"></protocolo-detalle>
 

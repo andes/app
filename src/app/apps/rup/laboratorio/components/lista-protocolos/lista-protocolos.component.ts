@@ -1,3 +1,4 @@
+import { LaboratorioContextoCacheService } from './../../services/protocoloCache.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
@@ -10,11 +11,11 @@ export class ListaProtocolosComponent implements OnInit {
   @Input() protocolos;
   @Input() modo;
   @Input() showProtocoloDetalle;
-  @Input() indiceSeleccionado;
+
 
   @Output() seleccionarProtocoloEmitter: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor() { }
+  constructor(public laboratorioContextoCacheService: LaboratorioContextoCacheService) { }
 
   /**
    *
@@ -24,7 +25,6 @@ export class ListaProtocolosComponent implements OnInit {
    * @memberof ListaProtocolosComponent
    */
   seleccionarProtocolo(protocolo, index) {
-    this.indiceSeleccionado = index;
     this.seleccionarProtocoloEmitter.emit({ protocolo: protocolo, index: index });
   }
 

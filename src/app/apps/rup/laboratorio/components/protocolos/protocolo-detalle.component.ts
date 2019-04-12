@@ -28,14 +28,8 @@ export class ProtocoloDetalleComponent
 
     permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
     fecha: any;
-    fechaTomaMuestra = new Date();
-    prestacionOrigen: any;
-    organizacionOrigen: null;
-    profesionalOrigen: null;
     organizacion: any;
     modelo: any;
-    nombrePractica;
-    codigoPractica;
     public showBotonesGuardar: Boolean = false;
     public mostrarMasOpciones: Boolean = false;
     public pacientes;
@@ -62,7 +56,6 @@ export class ProtocoloDetalleComponent
     @Input() terminarPracticasChecked;
     @Input() seleccionPaciente: Boolean;
     @Input() protocolos: any;
-    @Input() indexProtocolo: any;
     @Input() busqueda: any;
     @Input() editarListaPracticas;
 
@@ -125,7 +118,6 @@ export class ProtocoloDetalleComponent
     ngOnInit() {
         this.setProtocoloSelected(this.modelo);
         this.loadOrganizacion();
-        this.fechaTomaMuestra = this.solicitudProtocolo.solicitudPrestacion.fechaTomaMuestra;
     }
 
     /**
@@ -245,8 +237,8 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     siguiente() {
-        if ((this.indexProtocolo + 1) < this.protocolos.length) {
-            this.indexProtocolo++;
+        if ((this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado + 1) < this.protocolos.length) {
+            this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado++;
             this.cargarDetalle();
         }
     }
@@ -257,14 +249,14 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     anterior() {
-        if (this.indexProtocolo > 0) {
-            this.indexProtocolo--;
+        if (this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado > 0) {
+            this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado--;
             this.cargarDetalle();
         }
     }
 
     cargarDetalle() {
-        this.modelo = this.protocolos[this.indexProtocolo];
+        this.modelo = this.protocolos[this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado];
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
         this.practicasEjecucion = this.modelo.ejecucion.registros;
     }
@@ -316,7 +308,7 @@ export class ProtocoloDetalleComponent
         if (this.laboratorioContextoCacheService.isModoControl() || this.laboratorioContextoCacheService.isModoRecepcion()) {
             this.solicitudProtocolo.solicitudPrestacion.organizacionDestino = this.auth.organizacion;
             // Verificar utilidad de este bloque
-            this.solicitudProtocolo.solicitudPrestacion.fechaTomaMuestra = this.fechaTomaMuestra;
+            this.solicitudProtocolo.solicitudPrestacion.fechaTomaMuestra = new Date();
             // await this.cargarPracticasAEjecucion();
         }
 
@@ -415,17 +407,19 @@ export class ProtocoloDetalleComponent
         this.servicioPrestacion.patch(this.modelo._id, this.getParams()).subscribe(async () => {
             if (next) {
                 if (this.laboratorioContextoCacheService.isModoValidacion() && this.isProtocoloTerminado()) {
-                    this.protocolos.splice(this.indexProtocolo, 1);
+                    this.protocolos.splice(this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado, 1);
+                } else {
+                    this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado++;
                 }
 
                 if (this.laboratorioContextoCacheService.isModoRecepcion() || this.protocolos.length === 0) {
                     this.contextoCache.mostrarCuerpoProtocolo = true;
                     this.volverAListaControEmit.emit();
                 } else {
-                    if (!this.protocolos[this.indexProtocolo]) {
-                        this.indexProtocolo = this.protocolos.length - 1;
+                    if (!this.protocolos[this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado]) {
+                        this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado = this.protocolos.length - 1;
                     }
-                    this.cargarProtocolo(this.protocolos[this.indexProtocolo]);
+                    this.cargarProtocolo(this.protocolos[this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado]);
                 }
                 this.plex.toast('success', this.modelo.ejecucion.registros[0].nombre, 'Solicitud guardada', 4000);
             } else if (this.contextoCache.modoAVolver) {
@@ -483,16 +477,18 @@ export class ProtocoloDetalleComponent
     private cargarProximoProtocolo() {
         this.showGestorAlarmas = false;
         if (this.laboratorioContextoCacheService.isModoValidacion() && this.isProtocoloTerminado()) {
-            this.protocolos.splice(this.indexProtocolo, 1);
+            this.protocolos.splice(this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado, 1);
+        } else {
+            this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado++;
         }
         if (this.laboratorioContextoCacheService.isModoRecepcion() || this.protocolos.length === 0) {
             this.contextoCache.mostrarCuerpoProtocolo = true;
             this.volverAListaControEmit.emit();
         } else {
-            if (!this.protocolos[this.indexProtocolo]) {
-                this.indexProtocolo = this.protocolos.length - 1;
+            if (!this.protocolos[this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado]) {
+                this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado = this.protocolos.length - 1;
             }
-            this.cargarProtocolo(this.protocolos[this.indexProtocolo]);
+            this.cargarProtocolo(this.protocolos[this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado]);
         }
         this.plex.toast('success', this.modelo.ejecucion.registros[0].nombre, 'Solicitud guardada', 4000);
     }
@@ -687,7 +683,7 @@ export class ProtocoloDetalleComponent
      */
     isProtocoloTerminado() {
         return this.modelo.ejecucion.registros.every(
-            r => r.estados[r.valor.estados.length - 1].tipo === 'validada' || r.estados[r.valor.estados.length - 1].tipo === 'terminada'
+            r => r.valor.estados[r.valor.estados.length - 1].tipo === 'validada' || r.valor.estados[r.valor.estados.length - 1].tipo === 'terminada'
         );
     }
 }

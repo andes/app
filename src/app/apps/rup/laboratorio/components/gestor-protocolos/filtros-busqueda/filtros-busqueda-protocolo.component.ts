@@ -36,7 +36,6 @@ export class FiltrosBusquedaProtocoloComponent
     public cargaLaboratorioEnum;
     public modoCargaLaboratorioEnum;
     public laboratorioInternoEnum;
-    public indexProtocolo;
     public turnosRecepcion;
     public hojasTrabajo = [];
     public practicasFiltro;

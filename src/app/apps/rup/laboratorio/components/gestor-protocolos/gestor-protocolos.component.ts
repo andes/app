@@ -27,7 +27,6 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
     public editarListaPracticas: Boolean = false;
     public showBotonAceptarCambiosAuditoria: Boolean = false;
     public showBotonAceptarCambiosHeader: Boolean = false;
-    public indiceSeleccionado;
 
     public titulo;
     public contextoCache;
@@ -64,13 +63,12 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
             this.seleccionarProtocolo({ protocolo: this.protocolo, index: 0 });
             this.editarListaPracticas = true;
             this.showProtocoloDetalle = true;
-            this.indexProtocolo = 0;
+            this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado = 0;
             this.seleccionPaciente = false;
             this.laboratorioContextoCacheService.setPaciente();
         }
     }
 
-    public indexProtocolo;
     public busqueda;
     public accionIndex;
     public permisoCarga;
@@ -212,7 +210,7 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
             this.laboratorioContextoCacheService.seleccionarProtocolo();
             this.editarListaPracticas = (!this.laboratorioContextoCacheService.isModoRecepcion());
             this.protocolo = value.protocolo;
-            this.indexProtocolo = value.index;
+            this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado = value.index;
             this.showListarProtocolos = false;
             this.showProtocoloDetalle = true;
             this.seleccionPaciente = false;
@@ -226,7 +224,7 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
      * @memberof PuntoInicioLaboratorioComponent
      */
     volver() {
-        this.indiceSeleccionado = null;
+        this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado = null;
         if (this.laboratorioContextoCacheService.isModoRecepcionSinTurno()) {
             this.laboratorioContextoCacheService.cambiarModo(2);
             this.router.navigate(['/laboratorio/recepcion/']); // Navega al punto de inicio laboratorio
@@ -263,7 +261,7 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
             this.seleccionarProtocolo({});
             this.showListarProtocolos = false;
             this.showProtocoloDetalle = true;
-            this.indexProtocolo = 0;
+            this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado = 0;
             this.seleccionPaciente = true;
             // this.showBotonAceptar = true;
 

@@ -29,6 +29,7 @@ export class LaboratorioContextoCacheService {
                 modoCargaLaboratorio: 'Lista de protocolos',
                 solicitudDesde: new Date(),
                 solicitudHasta: new Date(),
+                indiceSeleccionado: 0,
             }
         );
     }
