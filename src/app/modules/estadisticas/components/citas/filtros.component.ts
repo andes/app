@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { Component, AfterViewInit, HostBinding, EventEmitter, Output, Input, SimpleChanges, SimpleChange, OnChanges } from '@angular/core';
+import { Component, AfterViewInit, HostBinding, EventEmitter, Output, SimpleChanges, SimpleChange, OnChanges } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 import { ProfesionalService } from '../../../../services/profesional.service';
@@ -43,7 +43,7 @@ import { ProfesionalService } from '../../../../services/profesional.service';
             </plex-select>
         </div>
         <div class="col-3" *ngIf="seleccion.tipoDeFiltro && seleccion.tipoDeFiltro.id === 'turnos'">
-            <plex-select [multiple]="true" [data]="tipoTurnos" [(ngModel)]="seleccion.tipoTurno" placeholder="Seleccione..." label="Tipo Turno">
+            <plex-select [multiple]="true" [data]="tipoTurnos" [(ngModel)]="seleccion.tipoTurno" placeholder="Seleccione..." label="Tipo de turno">
             </plex-select>
         </div>
         <div class="col-3" *ngIf="seleccion.tipoDeFiltro && seleccion.tipoDeFiltro.id === 'agendas'">
@@ -64,13 +64,13 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
     public esTablaGrafico = false;
     public mostrarMasOpciones = false;
     public estadosAgendas = [
-        { id: 'planificacion', nombre: 'Planificacion' },
+        { id: 'planificacion', nombre: 'Planificación' },
         { id: 'disponible', nombre: 'Disponible' },
         { id: 'publicada', nombre: 'Publicada' },
         { id: 'suspendida', nombre: 'Suspendida' },
         { id: 'pausada', nombre: 'Pausada' },
         { id: 'pendienteAsistencia', nombre: 'Pendiente Asistencia' },
-        { id: 'pendienteAuditoria', nombre: 'Pendiente Auditoria' },
+        { id: 'pendienteAuditoria', nombre: 'Pendiente Auditoría' },
         { id: 'auditada', nombre: 'Auditada' },
         { id: 'borrada', nombre: 'Borrada' }
     ];
@@ -83,9 +83,9 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
     ];
 
     public tipoTurnos = [
-        { id: 'delDia', nombre: 'Del Dia' },
+        { id: 'delDia', nombre: 'Del Día' },
         { id: 'programado', nombre: 'Programado' },
-        { id: 'gestion', nombre: 'Gestion' },
+        { id: 'gestion', nombre: 'Con llave' },
         { id: 'profesional', nombre: 'Profesional' },
         { id: 'sobreturno', nombre: 'Sobreturno' }
     ];
@@ -144,10 +144,10 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
             fechaHasta: this.hasta,
             tipoDeFiltro: this.seleccion.tipoDeFiltro ? this.seleccion.tipoDeFiltro.id : undefined,
             prestacion: this.seleccion.prestacion ? this.seleccion.prestacion.map(pr => {
-                return {id: pr.conceptId, nombre: pr.term };
+                return { id: pr.conceptId, nombre: pr.term };
             }) : undefined,
             profesional: this.seleccion.profesional ? this.seleccion.profesional.map(prof => {
-                return {id: prof.id, nombre: prof.nombre + ' ' + prof.apellido };
+                return { id: prof.id, nombre: prof.nombre + ' ' + prof.apellido };
             }) : undefined,
             estado_turno: this.seleccion.estado_turno && this.seleccion.tipoDeFiltro.id === 'turnos' ? this.seleccion.estado_turno.map(et => et.id) : undefined,
             tipoTurno: this.seleccion.tipoTurno && this.seleccion.tipoDeFiltro.id === 'turnos' ? this.seleccion.tipoTurno.map(tt => tt.id) : undefined,
