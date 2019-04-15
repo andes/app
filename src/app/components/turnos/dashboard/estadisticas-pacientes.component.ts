@@ -7,8 +7,6 @@ import { IPaciente } from './../../../interfaces/IPaciente';
 // Servicios
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { LogPacienteService } from '../../../services/logPaciente.service';
-import { ObraSocialService } from '../../../services/obraSocial.service';
-import { IFinanciador } from '../../../interfaces/IFinanciador';
 
 @Component({
     selector: 'estadisticas-pacientes',
@@ -81,7 +79,7 @@ export class EstadisticasPacientesComponent implements OnInit {
 
     changeTab(event) {
         this.currentTab = event;
-        if ((event === 3 || event === 2 || event === 1) && this._paciente && this._paciente.id && !this.historialCargado) {
+        if ((event === 2 || event === 1) && this._paciente && this._paciente.id && !this.historialCargado) {
             this.updateHistorial();
             this.historialCargado = true;
         }
