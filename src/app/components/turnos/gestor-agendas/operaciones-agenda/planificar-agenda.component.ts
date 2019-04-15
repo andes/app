@@ -47,6 +47,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     public fecha: Date;
     public autorizado = false;
     public today = new Date();
+    public mobileEnabled: null;
     showClonar = false;
     showAgenda = true;
     espacioFisicoPropios = true;
@@ -64,6 +65,8 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
         this.today.setHours(0, 0, 0, 0);
+        // recuperamos datos de la organizacion
+        this.loadOrganizationData();
         if (this.editaAgenda) {
             this.cargarAgenda(this._editarAgenda);
             this.bloqueActivo = 0;
@@ -140,11 +143,15 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
 
     }
 
-    loadEdificios(event) {
-        this.organizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
-            event.callback(respuesta.edificio);
+    loadOrganizationData() {
+        this.organizacionService.getById(this.auth.organizacion._id).subscribe(org => {
+            let organization: any = org;
+            if (organization && organization.turnosMobile) {
+                this.mobileEnabled = organization.turnosMobile;
+            }
         });
     }
+
     loadSectores(event) {
         this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(respuesta => {
             let sectores = respuesta.map((ef) => {
@@ -188,7 +195,12 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 event.callback(listaEspaciosFisicos);
             });
         } else {
-            event.callback(this.modelo.espacioFisico || []);
+            if (this.modelo.espacioFisico) {
+                event.callback([this.modelo.espacioFisico]);
+
+            } else {
+                event.callback([]);
+            }
         }
     }
 
