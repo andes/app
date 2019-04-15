@@ -50,7 +50,7 @@ export class EstadisticasPacientesComponent implements OnInit {
     anulaciones = 0;
     idOrganizacion = this.auth.organizacion.id;
     carpetaEfector: any;
-    obraSocial: IFinanciador[];
+    obraSocial: IFinanciador[] = [];
 
     // Inicialización
     constructor(

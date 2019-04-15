@@ -66,13 +66,13 @@
                     <i class="mdi mdi-card-text-outline"></i>
                     <span class="text-primary">Número de Afiliado</span>
                 </div>
-            </div>
-            <div class="row" *ngIf="obraSocial && obraSocial.financiador">
+            </div>            
+            <div class="row" *ngIf="obraSocial[0] && obraSocial[0].financiador">
                 <div class="col-6">
-                    {{obraSocial.financiador}}
+                    {{obraSocial[0].financiador}}
                 </div>
-                <div class="col-6" *ngIf="obraSocial.numeroAfiliado">
-                    {{obraSocial.numeroAfiliado}}
+                <div class="col-6" *ngIf="obraSocial[0].numeroAfiliado">
+                    {{obraSocial[0].numeroAfiliado}}
                 </div>
             </div>
             <!-- <div class="row" *ngIf="_paciente?.financiador && _paciente.financiador[0]?.nombre">
