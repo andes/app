@@ -82,7 +82,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.showDarTurnos = false;
                 this.showDashboard = false;
             } else {
-                this.servicePaciente.getPaciente(paciente.id).subscribe(
+                this.servicePaciente.getById(paciente.id).subscribe(
                     pacienteMPI => {
                         this.paciente = pacienteMPI;
                         // Si el paciente previamente persistido no posee string de scan, y tenemos scan, actualizamos el pac.
@@ -121,7 +121,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showDashboard = true;
         this.showDarTurnos = false;
         if (paciente) {
-            this.servicePaciente.getPaciente(paciente.id).subscribe(
+            this.servicePaciente.getById(paciente.id).subscribe(
                 pacienteMPI => {
                     this.paciente = pacienteMPI;
                     this.resultadoCreate = [pacienteMPI];

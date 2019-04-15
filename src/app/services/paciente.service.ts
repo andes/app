@@ -29,16 +29,6 @@ export class PacienteService {
     getById(id: String): Observable<IPaciente> {
         return this.server.get(`${this.pacienteUrl}/${id}`, null);
     }
-    /**
-     * Obtiene un paciente por su Id, con su obra social / financiador
-     *
-     * @param {String} id
-     * @returns {Observable<IPaciente>}
-     * @memberof PacienteService
-     */
-    getPaciente(id: String): Observable<IPaciente> {
-        return this.server.get(`${this.pacienteUrl}/${id}/obraSocial`, null);
-    }
 
     /**
      * TEMPORAL. Resuelve el bug de la API de pacientes, unificando la interface que devuelven los diferentes tipos
