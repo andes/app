@@ -103,6 +103,12 @@ $andes-naranja-claro: #f4a03b;
     &.color-verde:hover {
         background: darken($andes-verde, 10%);
     }
+    &.andes-naranja-claro {
+        background: $andes-naranja-claro;
+    }
+    &.andes-naranja-claro:hover {
+        background: darken($andes-naranja-claro, 10%);
+    }
 }
 
 .andes-inicio > div {

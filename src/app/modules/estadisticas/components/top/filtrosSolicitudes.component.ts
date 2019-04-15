@@ -4,6 +4,7 @@ import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 import { ProfesionalService } from '../../../../services/profesional.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'solicitudes-filtros',
@@ -16,7 +17,7 @@ import { OrganizacionService } from '../../../../services/organizacion.service';
             <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta"></plex-datetime>
         </div>
         <div class="col-4 d-flex align-items-end">
-            <plex-button type="success mb-1" label="Filtrar" (click)="onChange()" ></plex-button>
+            <plex-button type="success mb-1" label="Buscar" (click)="onChange()" ></plex-button>
         </div>
         <div class="col-2 d-flex align-items-end" (click)="changeTablaGrafico()">
             <plex-button title="Visualizar de gráficos" *ngIf="esTablaGrafico" icon="mdi mdi-chart-pie"></plex-button>
@@ -58,7 +59,7 @@ import { OrganizacionService } from '../../../../services/organizacion.service';
     </div>
     `
 })
-export class FiltrosSolicitudesComponent implements AfterViewInit, OnChanges {
+export class FiltrosSolicitudesComponent implements OnChanges {
     @HostBinding('class.plex-layout') layout = true;
 
     // Filtros
@@ -89,14 +90,11 @@ export class FiltrosSolicitudesComponent implements AfterViewInit, OnChanges {
 
     constructor(
         private plex: Plex,
+        public auth: Auth,
         public servicioProfesional: ProfesionalService,
         public servicioPrestacion: TipoPrestacionService,
         public servicioOrganizacion: OrganizacionService
     ) {}
-
-    ngAfterViewInit() {
-        this.onChange();
-    }
 
     changeTablaGrafico() {
         this.esTablaGrafico = !this.esTablaGrafico;
@@ -130,7 +128,7 @@ export class FiltrosSolicitudesComponent implements AfterViewInit, OnChanges {
     }
 
     loadPrestaciones(event) {
-        this.servicioPrestacion.get({}).subscribe(result => {
+        this.servicioPrestacion.get({id: this.auth.getPermissions('dashboard:tipoPrestacion:?')}).subscribe(result => {
             event.callback(result);
         });
     }
