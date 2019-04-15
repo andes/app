@@ -57,10 +57,19 @@ export class TurnosPacienteComponent implements OnInit {
 
         if (value) {
             this.obraSocialPaciente = value.map((os: any) => {
-                let osPaciente = {
-                    'id': os.nombre,
-                    'label': os.nombre
-                };
+                let osPaciente;
+
+                if (os.nombre) {
+                    osPaciente = {
+                        'id': os.nombre,
+                        'label': os.nombre
+                    };
+                } else {
+                    osPaciente = {
+                        'id': os.financiador,
+                        'label': os.financiador
+                    };
+                }
                 return osPaciente;
             });
             this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
@@ -183,7 +192,6 @@ export class TurnosPacienteComponent implements OnInit {
     }
 
     seleccionarObraSocial(event) {
-        debugger;
         if (event.value === 'prepaga') {
             this.obraSocialService.getPrepagas().subscribe(prepagas => {
                 this.showListaPrepagas = true;

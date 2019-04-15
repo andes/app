@@ -51,9 +51,9 @@
 
                         <div class="row">
                             <div class="col-12">
-                                <ng-container>
-                                    <plex-radio [(ngModel)]="modelo.obraSocial" name="os" 
-                                        (change)="seleccionarObraSocial($event)" label="Selecciona una Obra Social"
+                                <ng-container *ngIf="modelo.obraSocial !== 'SUMAR'">
+                                    <plex-radio [(ngModel)]="modelo.obraSocial" name="os"
+                                        (change)="seleccionarObraSocial($event)" label="Seleccione una Obra Social"
                                         [data]="obraSocialPaciente">
                                     </plex-radio>
                                     <plex-select *ngIf="showListaPrepagas" [(ngModel)]="modelo.prepaga" name="prepagas"
@@ -61,6 +61,10 @@
                                         labelField="nombre">
                                     </plex-select>
                                 </ng-container>
+                            </div>
+                            <div class="col" *ngIf="modelo.obraSocial === 'SUMAR'">
+                                <strong>Programa</strong>
+                                {{modelo.obraSocial}}
                             </div>
                         </div>
 
@@ -83,7 +87,7 @@
                                 <plex-button type="warning" label="Quitar Asistencia"
                                     (click)="eventosTurno(turno,'sacarAsistencia')"></plex-button>
                             </div>
-                            <div class="col-4">
+                            <div class="col-4" *ngIf="modelo.obraSocial !== 'SUMAR'">
                                 <plex-button type="info" label="Recupero" (click)="showArancelamiento(turno)">
                                 </plex-button>
                             </div>

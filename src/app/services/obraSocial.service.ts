@@ -37,4 +37,8 @@ export class ObraSocialService {
         return this.server.get(this.url + '/prepagas/');
     }
 
+    getSumar(opciones: any): Observable<any[]> {
+        return this.server.get(this.url + '/sumar/');
+    }
+
 }
