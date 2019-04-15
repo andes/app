@@ -15,7 +15,7 @@ export class ValorNumericoComponent extends RUPComponent implements OnInit {
         if (!this.soloValores) {
             // Observa cuando cambia la propiedad 'valor' en otro elemento RUP
             this.conceptObserverService.observe(this.registro).subscribe((data) => {
-                if (this.registro.valor !== data.valor) {
+                if (this.registro.valor && this.registro.valor !== data.valor) {
                     this.registro.valor = data.valor;
                     this.emitChange(false);
                 }
@@ -30,7 +30,7 @@ export class ValorNumericoComponent extends RUPComponent implements OnInit {
                     deadline = new Date(Date.now() - deadline * 24 * 60 * 60 * 1000);
                 }
                 this.prestacionesService.getRegistrosHuds(this.paciente.id, query, deadline).subscribe(prestaciones => {
-                    // Ver si tomamos el ultimo valor..
+                    // Ver si tomamos el último valor..
                     if (prestaciones.length) {
                         this.registro.valor = prestaciones[prestaciones.length - 1].registro.valor;
                     }
