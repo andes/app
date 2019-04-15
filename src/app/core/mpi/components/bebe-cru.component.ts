@@ -154,7 +154,15 @@ export class BebeCruComponent implements OnInit {
                 this.organizacionActual = org;
                 this.provinciaActual = org.direccion.ubicacion.provincia;
                 this.localidadActual = org.direccion.ubicacion.localidad;
-                this.geoReferenciaAux = org.direccion.geoReferencia;
+                if (org.direccion.geoReferencia) {
+                    this.geoReferenciaAux = org.direccion.geoReferencia;
+                } else {
+                    this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
+                        if (point) {
+                            this.geoReferenciaAux = [point.lat, point.lng];
+                        }
+                    });
+                }
             }
         });
         // ubicacion inicial mapa de google en seccion domicilio
