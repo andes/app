@@ -10,6 +10,8 @@ import { IPaciente } from './../../../interfaces/IPaciente';
 // Servicios
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
+import { ObraSocialService } from '../../../services/obraSocial.service';
+
 import { IAgenda } from '../../../interfaces/turnos/IAgenda';
 import { ITurno } from '../../../interfaces/turnos/ITurno';
 @Component({
@@ -29,6 +31,7 @@ export class TurnosPacienteComponent implements OnInit {
     agenda: IAgenda;
     showLiberarTurno: boolean;
     todaysdate: Date;
+    obraSocialSeleccionada: String;
     _turnos: any;
     _obraSocial: any;
     _operacion: string;
@@ -36,7 +39,9 @@ export class TurnosPacienteComponent implements OnInit {
     turnosPaciente: any;
     turnosSeleccionados: any[] = [];
     showPuntoInicio = true;
+    showListaPrepagas: Boolean = false;
     public obraSocialPaciente: any[];
+    public prepagas: any[] = [];
 
     @Input('operacion')
     set operacion(value: string) {
@@ -51,17 +56,16 @@ export class TurnosPacienteComponent implements OnInit {
         this._obraSocial = value;
 
         if (value) {
-
             this.obraSocialPaciente = value.map((os: any) => {
-                // let listaOs = [];
                 let osPaciente = {
-                    'id': os.codigoPuco,
+                    'id': os.nombre,
                     'label': os.nombre
                 };
-                // listaOs.push(osPaciente);
                 return osPaciente;
             });
             this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
+
+            this.modelo.obraSocial = this.obraSocialPaciente[0].label;
         }
     }
     get obraSOcial(): any {
@@ -73,7 +77,6 @@ export class TurnosPacienteComponent implements OnInit {
         if (value) {
             this._turnos = value;
             this.turnosPaciente = value;
-            // this.turnosPaciente.obraSocial = '';
         }
     }
     get turnos(): any {
@@ -87,7 +90,7 @@ export class TurnosPacienteComponent implements OnInit {
     };
 
     // Inicialización
-    constructor(public servicioFA: FacturacionAutomaticaService,
+    constructor(public servicioFA: FacturacionAutomaticaService, public obraSocialService: ObraSocialService,
         public serviceTurno: TurnoService, public serviceAgenda: AgendaService, public plex: Plex, public auth: Auth) { }
 
     ngOnInit() {
@@ -106,13 +109,15 @@ export class TurnosPacienteComponent implements OnInit {
         this.showLiberarTurno = false;
     }
     showArancelamiento(turno) {
-        debugger;
         if (this.modelo.obraSocial === 'prepaga') {
-
+            this.obraSocialSeleccionada = this.modelo.prepaga.nombre;
         } else {
-            this.turnoArancelamiento = turno;
-            this.showMotivoConsulta = true;
+            this.obraSocialSeleccionada = this.modelo.obraSocial;
         }
+
+        this.turnoArancelamiento = turno;
+        this.showMotivoConsulta = true;
+
         // this.servicioFA.post(turno).subscribe(prestacion => {
         // });
     }
@@ -176,4 +181,17 @@ export class TurnosPacienteComponent implements OnInit {
     isToday(turno) {
         return (moment(turno.horaInicio)).isSame(new Date(), 'day');
     }
+
+    seleccionarObraSocial(event) {
+        debugger;
+        if (event.value === 'prepaga') {
+            this.obraSocialService.getPrepagas().subscribe(prepagas => {
+                this.showListaPrepagas = true;
+                this.prepagas = prepagas;
+            });
+        } else {
+            this.showListaPrepagas = false;
+        }
+    }
 }
+

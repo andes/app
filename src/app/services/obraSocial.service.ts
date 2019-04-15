@@ -33,4 +33,8 @@ export class ObraSocialService {
         return this.server.get(this.url + '/', { params: opciones });
     }
 
+    getPrepagas(): Observable<any[]> {
+        return this.server.get(this.url + '/prepagas/');
+    }
+
 }

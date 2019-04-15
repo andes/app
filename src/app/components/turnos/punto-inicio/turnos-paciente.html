@@ -52,12 +52,14 @@
                         <div class="row">
                             <div class="col-12">
                                 <ng-container>
-                                    <plex-radio [(ngModel)]="modelo.obraSocial" name="os"
-                                        label="Selecciona una Obra Social" [data]="obraSocialPaciente">
+                                    <plex-radio [(ngModel)]="modelo.obraSocial" name="os" 
+                                        (change)="seleccionarObraSocial($event)" label="Selecciona una Obra Social"
+                                        [data]="obraSocialPaciente">
                                     </plex-radio>
-                                    <!-- <plex-radio [(ngModel)]="modelo.prepaga" name="osPrepaga"
-                                        label="Selecciona una Prepaga" (change)="showPrepagas()">
-                                    </plex-radio> -->
+                                    <plex-select *ngIf="showListaPrepagas" [(ngModel)]="modelo.prepaga" name="prepagas"
+                                        [data]="prepagas" label="Seleccione una Prepaga" idField="nombre"
+                                        labelField="nombre">
+                                    </plex-select>
                                 </ng-container>
                             </div>
                         </div>
@@ -96,7 +98,8 @@
         <div class="row">
             <div class="col" *ngIf="turnoArancelamiento?.paciente?.obraSocial?.financiador">
                 <label>Obra Social </label>
-                <div>{{turnoArancelamiento.paciente.obraSocial.financiador}}</div>
+                <!-- <div>{{turnoArancelamiento.paciente.obraSocial.financiador}}</div> -->
+                <div>{{obraSocialSeleccionada}}</div>
             </div>
         </div>
         <div class="row" *ngIf="turnoArancelamiento?.paciente?.obraSocial?.numeroAfiliado">
