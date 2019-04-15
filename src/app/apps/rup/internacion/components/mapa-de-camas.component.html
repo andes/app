@@ -5,6 +5,16 @@
             <div class="col">
                 <plex-box>
                     <header>
+                        <div class='row text-right'>
+                            <div class='col '>
+                                <plex-button icon="mdi mdi-crop-square" type="{{modoFlat === false ? 'primary' : 'info'}} btn-sm"
+                                    (click)='modoFlat = false'></plex-button>
+                                <plex-button icon="mdi mdi-view-list" type="{{modoFlat === true ? 'primary' : 'info'}} btn-sm"
+                                    (click)='modoFlat = true'></plex-button>
+
+                            </div>
+
+                        </div>
                         <div class="row" *ngIf="camas">
                             <div class="col-2">
                                 <plex-text (keyup)="filtrar()" [(ngModel)]="filtros.nombre" label="Paciente">
@@ -103,7 +113,7 @@
                                 <div plex-accordion-title>
                                     {{lis.nombre}}
                                 </div>
-                                <div id="mapaCamas" class="row" *ngIf="!loader && lis.hijos">
+                                <div id="mapaCamas" class="row" *ngIf="!loader && lis.hijos && !modoFlat">
                                     <div [ngClass]="{'col-xl-3 col-lg-3 col-md-4 col-sm-6 col-xs-6': showMenu, 'col-md-2': !showMenu, 'selected': cama === camaSeleccionada}"
                                         *ngFor="let cama of lis.hijos; let i = index">
                                         <cama [prestacion]="prestacion" [cama]="cama" [showEstados]="estadosMode"
@@ -113,15 +123,35 @@
                                     </div>
 
                                 </div>
+
+                                <div *ngIf="!loader && lis.hijos && modoFlat">
+
+                                    <div [ngClass]="{'selected': cama === camaSeleccionada}" *ngFor="let cama of lis.hijos; let i = index">
+                                        <cama [prestacion]="prestacion" [modoFlat]="true" [cama]="cama" [showEstados]="estadosMode"
+                                            [readOnly]="historicoMode" [params]="{fecha: fecha, idOrganizacion: auth.organizacion.id}"
+                                            (evtCama)="updateCama($event)" (buscarPaciente)="ingresarPaciente()"
+                                            (camaSelected)="onCamaSelected($event)" (verInternacionEmit)="verInternacion($event)"></cama>
+                                    </div>
+                                </div>
                             </plex-panel>
                         </plex-accordion>
                     </div>
-                    <div id="mapaCamas" class="row" *ngIf="!loader && camas && !mostrarArbol">
+                    <div id="mapaCamas" class="row" *ngIf="!loader && camas && !mostrarArbol && !modoFlat">
                         <div [ngClass]="{'col-xl-3 col-lg-3 col-md-4 col-sm-6 col-xs-6': showMenu, 'col-md-2': !showMenu, 'selected': cama === camaSeleccionada}"
                             *ngFor="let cama of camas; let i = index">
                             <cama [prestacion]="prestacion" [cama]="cama" [showEstados]="estadosMode" [readOnly]="historicoMode"
                                 [params]="{fecha: fecha, idOrganizacion: auth.organizacion.id}" (evtCama)="updateCama($event)"
                                 (buscarPaciente)="ingresarPaciente()" (camaSelected)="onCamaSelected($event)"
+                                (verInternacionEmit)="verInternacion($event)"></cama>
+                        </div>
+
+                    </div>
+
+                    <div *ngIf="!loader && camas && !mostrarArbol && modoFlat">
+                        <div [ngClass]="{'selected': cama === camaSeleccionada}" *ngFor="let cama of camas; let i = index">
+                            <cama [prestacion]="prestacion" [modoFlat]="true" [cama]="cama" [showEstados]="estadosMode"
+                                [readOnly]="historicoMode" [params]="{fecha: fecha, idOrganizacion: auth.organizacion.id}"
+                                (evtCama)="updateCama($event)" (buscarPaciente)="ingresarPaciente()" (camaSelected)="onCamaSelected($event)"
                                 (verInternacionEmit)="verInternacion($event)"></cama>
                         </div>
                     </div>
@@ -499,6 +529,6 @@
 </ng-container>
 <ng-container *ngIf="createTemporal">
 
-    <paciente-create-update [seleccion]="null" (internacionPacienteTemp)='afterPacienteTemp($event)' ></paciente-create-update>
+    <paciente-create-update [seleccion]="null" (internacionPacienteTemp)='afterPacienteTemp($event)'></paciente-create-update>
 
 </ng-container>
