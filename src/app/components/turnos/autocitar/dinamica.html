@@ -31,14 +31,19 @@
                         <label>Sexo: </label>
                         <span>{{pacienteActivo.genero}}</span>
                     </div>
-                    <ng-container *ngIf="obraSocialPaciente">
-                        <label *ngIf="obraSocialPaciente.financiador && obraSocialPaciente.financiador !=='SUMAR'">Obra
-                            Social </label>
-                        <label
-                            *ngIf="obraSocialPaciente.financiador && obraSocialPaciente.financiador === 'SUMAR'">Financiador
-                        </label>
-                        <div>{{obraSocialPaciente.financiador}}</div>
-                    </ng-container>
+                </div>
+                <div class="row" *ngIf="pacienteActivo">
+                    <div class="col-md-12">
+                        <ng-container *ngIf="obraSocialPaciente">
+                            <label
+                                *ngIf="obraSocialPaciente.financiador && obraSocialPaciente.financiador !=='SUMAR'">Obra
+                                Social </label>
+                            <label
+                                *ngIf="obraSocialPaciente.financiador && obraSocialPaciente.financiador === 'SUMAR'">Financiador
+                            </label>
+                            <div>{{obraSocialPaciente.financiador}}</div>
+                        </ng-container>
+                    </div>
                 </div>
                 <div class="row" *ngIf="prestaciones.length > 1">
                     <div class="col-md">
