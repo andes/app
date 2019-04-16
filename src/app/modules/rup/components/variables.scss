@@ -20,33 +20,35 @@ $calificador: #660520;
 $laboratorio: #a0a0a0;
 $registro: #8bc43f; // elemento de registro
 $vacuna: #11910D;
-// definimos esta lista para poder acceder mediante la funcion map-get() ya que en sass no se puede hacer 
+$dominios:  rgb(204, 33, 127);
+// definimos esta lista para poder acceder mediante la funcion map-get() ya que en sass no se puede hacer
 // la interpolacion del string a una variable directamente
 
 $rup_colors: (
-    problema: $problema, 
-    calificador: $calificador, 
-    laboratorio: $laboratorio, 
-    trastorno: $trastorno, 
-    situación: $problema, 
-    hallazgo: $hallazgo, 
-    procedimiento: $procedimiento, 
-    regimen: $procedimiento, 
-    entidad: $procedimiento, 
-    solicitud: $solicitud, 
-    plan: $solicitud, 
-    producto: $producto, 
-    adjunto: $adjunto, 
-    vacuna: $vacuna, 
-    elemento: $registro, 
-    elementoderegistro: $registro, 
+    problema: $problema,
+    calificador: $calificador,
+    laboratorio: $laboratorio,
+    trastorno: $trastorno,
+    situación: $problema,
+    hallazgo: $hallazgo,
+    procedimiento: $procedimiento,
+    regimen: $procedimiento,
+    entidad: $procedimiento,
+    solicitud: $solicitud,
+    plan: $solicitud,
+    producto: $producto,
+    adjunto: $adjunto,
+    vacuna: $vacuna,
+    dominios: $dominios,
+    elemento: $registro,
+    elementoderegistro: $registro,
     'estructura.corporal': $registro,
-    invert: $invert, 
+    invert: $invert,
     todos: $todos,
     otro: $otro
 );
 
-//TODO: hay que unificar los badges de distintas pantallas: tamaño, colores, bordes, espacios...    
+//TODO: hay que unificar los badges de distintas pantallas: tamaño, colores, bordes, espacios...
 .badge-validada,
 .badge-success,
 .badge-danger,

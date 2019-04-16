@@ -17,6 +17,7 @@ export class HudsBusquedaComponent implements OnInit {
     laboratoriosFS: any;
     laboratorios: any = [];
     vacunas: any = [];
+    dominios: any = [];
     ordenDesc = true;
 
     procedimientos: any = [];
@@ -93,8 +94,8 @@ export class HudsBusquedaComponent implements OnInit {
     public fechaInicio;
     public fechaFin;
     public showFiltros = false;
-    public dominios;
     public document;
+    public tokenFederador;
     public conceptos = {
         hallazgo: ['hallazgo', 'situación', 'evento'],
         trastorno: ['trastorno'],
@@ -104,6 +105,7 @@ export class HudsBusquedaComponent implements OnInit {
         elementoderegistro: ['elemento de registro'],
         laboratorios: ['laboratorios'],
         vacunas: ['vacunas'],
+        dominios: ['dominios']
     };
 
 
@@ -135,6 +137,7 @@ export class HudsBusquedaComponent implements OnInit {
         // [TODO] Ser notificado via websockets
         setTimeout(() => {
             this.buscarCDAPacientes();
+            this.IPS();
         }, 1000 * 30);
 
     }
@@ -223,6 +226,10 @@ export class HudsBusquedaComponent implements OnInit {
                 }
                 break;
             case 'cda':
+                registro = registro.data;
+                registro.class = 'plan';
+                break;
+            case 'dom':
                 registro = registro.data;
                 registro.class = 'plan';
                 break;
@@ -340,6 +347,8 @@ export class HudsBusquedaComponent implements OnInit {
                 return this.laboratorios.length;
             case 'vacunas':
                 return this.vacunas.length;
+            case 'dominios':
+                return this.dominios.length;
         }
     }
 
@@ -384,8 +393,18 @@ export class HudsBusquedaComponent implements OnInit {
         }
     }
     IPS() {
-        this.servicioIPS.getDominios(this.paciente.id).subscribe(resultado => {
-            this.dominios = resultado;
+        // let params = {
+        //     name: this.auth.profesional.nombreCompleto,
+        //     role: 'Profesional',
+        //     ident: this.auth.profesional.id,
+        //     sub: '202910,'
+
+        // };
+        // this.servicioIPS.getTokenProfesional(params).subscribe(token => {
+        //     this.tokenFederador = token;
+        // });
+        this.servicioIPS.getDominios(this.paciente.id).subscribe(dom => {
+            this.dominios = dom;
         });
         // this.servicioIPS.getDocumentos(this.paciente.id).subscribe(resultado => {
         //     this.document = resultado;

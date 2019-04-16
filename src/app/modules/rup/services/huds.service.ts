@@ -38,9 +38,9 @@ export class HUDSService {
     /**
      * Agrega o quita un elemento a las tabs
      * @param registro Elemento seleccionado en hudsBusqueda.
-     * @param tipo 'cda' 'rup' 'concepto'.
+     * @param tipo 'cda' 'rup' 'concepto' 'dom'.
      */
-    public toogle (registro: Registro, tipo: string) {
+    public toogle(registro: Registro, tipo: string) {
         const index = this.index(registro, tipo);
         if (index === -1) {
             const elemento: ElementoHUDS = {
@@ -74,6 +74,11 @@ export class HUDSService {
                         break;
                     case 'rup':
                     case 'cda':
+                        if (registro.id === _registro.id) {
+                            return i;
+                        }
+                        break;
+                    case 'dom':
                         if (registro.id === _registro.id) {
                             return i;
                         }

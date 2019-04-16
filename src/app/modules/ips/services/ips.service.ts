@@ -14,4 +14,8 @@ export class IPSService {
     getDocumentos(idPaciente: String): Observable<any> {
         return this.server.get(this.ipsURL + '/document/' + idPaciente, null);
     }
+    getTokenProfesional(params: any): Observable<any> {
+        console.log(params);
+        return this.server.get(this.ipsURL + '/token', { params: params, showError: true });
+    }
 }
