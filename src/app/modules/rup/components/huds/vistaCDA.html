@@ -35,14 +35,14 @@
 
                 <div class="borde-datos ml-3 pl-2 pt-1">
                     <div class="mp-2 mb-2" *ngIf="codificacionCDA">
-                        <b>Registros de la consulta: </b><br>
-                        <!-- <span [innerHTML]="registro.evoluciones[indice].evolucion"></span> -->
                         <ng-container *ngIf="codificacionCDA?.code">
                             <b>Codificación: </b><br>
                             {{ codificacionCDA.code.$.code }} - {{ codificacionCDA.code.$.displayName }}<br>
                         </ng-container>
+                        <b>Registros de la consulta: </b><br>
+                        <!-- <span [innerHTML]="registro.evoluciones[indice].evolucion"></span> -->
                         <ng-container *ngIf="registro.tipo === 'cda' && codificacionCDA?.text">
-                            {{ codificacionCDA.text | html }}<br>
+                            <span [innerHtml]="codificacionCDA.text"></span>
                         </ng-container>
                         <ng-container *ngIf="!codificacionCDA.text">
                             Sin registros.
@@ -52,17 +52,20 @@
                         <ng-container *ngIf="registro?.data?.adjuntos?.length">
                             <b>Documentos adjuntos:</b>
                             <div class="d-flex justify-content-between adjuntos">
-                                <div class="d-flex align-items-center text-info"
-                                    *ngFor="let archivo of registro.data.adjuntos; let i=index">
-                                    {{ registro.data.prestacion.snomed.term[0].toUpperCase() +
-                                    registro.data.prestacion.snomed.term.slice(1) }}
-                                </div>
-                                <div class="d-flex align-items-end mb-1">
-                                    <span class="badge badge-info mr-1 d-flex align-items-center">PDF</span>
-                                    <plex-button type="info" size="sm" icon="download mdi-18px"
-                                        (click)="descargar(archivo)">
-                                    </plex-button>
-                                </div>
+                                <ng-container *ngFor="let archivo of registro.data.adjuntos; let i=index">
+                                    <div class="d-flex align-items-center text-info">
+                                        {{ 
+                                            registro.data.prestacion.snomed.term[0].toUpperCase() +
+                                            registro.data.prestacion.snomed.term.slice(1) 
+                                        }}
+                                    </div>
+                                    <div class="d-flex align-items-end mb-1">
+                                        <span class="badge badge-info mr-1 d-flex align-items-center">PDF</span>
+                                        <plex-button type="info" size="sm" icon="download mdi-18px"
+                                            (click)="descargar(archivo)">
+                                        </plex-button>
+                                    </div>
+                                </ng-container>
                             </div>
                         </ng-container>
                         <ng-container *ngIf="!registro?.data?.adjuntos?.length">

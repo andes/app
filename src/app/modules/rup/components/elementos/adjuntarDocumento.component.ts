@@ -49,7 +49,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
             this.fileToken = data.token;
         });
 
-        this.snomedService.getQuery({ expression: '<<371524004' }).subscribe(result => {
+        this.snomedService.getQuery({ expression: '^4681000013102' }).subscribe(result => {
             this.descendientesInformeClinico = result;
         });
     }
@@ -179,10 +179,6 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         clearTimeout(this.timeout);
         this.waiting = false;
         this.adjuntosService.delete(this.adjunto._id).subscribe(() => { });
-    }
-
-    public validate(): boolean {
-        return super.validate() && this.registro.valor.documentos.length;
     }
 }
 // ElementosRUPRegister.register('AdjuntarDocumentoComponent', AdjuntarDocumentoComponent);

@@ -60,15 +60,15 @@
                                 <td>
                                     <plex-select *ngIf="!soloValores && descendientesInformeClinico.length"
                                         [(ngModel)]="doc.descripcion" name="select{{i}}" idField="term"
-                                        labelField="term" [data]="descendientesInformeClinico" [required]="true">
+                                        labelField="term" [data]="descendientesInformeClinico">
                                     </plex-select>
-                                    <span *ngIf="soloValores">{{doc.descripcion.term}}</span>
+                                    <span *ngIf="soloValores && doc.descripcion">{{doc.descripcion.term}}</span>
                                 </td>
                                 <td>
                                     <plex-datetime *ngIf="!soloValores" type="date" [(ngModel)]="doc.fecha"
                                         name="fecha{{i}}" [max]="hoy">
                                     </plex-datetime>
-                                    <span *ngIf="soloValores">{{doc.fecha | fecha}}</span>
+                                    <span *ngIf="soloValores && doc.fecha">{{doc.fecha | fecha}}</span>
                                 </td>
                                 <td>
                                     <plex-button *ngIf="!soloValores" icon="delete" type="danger"

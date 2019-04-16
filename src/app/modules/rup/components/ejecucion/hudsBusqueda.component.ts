@@ -299,7 +299,7 @@ export class HudsBusquedaComponent implements OnInit {
                     data: cda,
                     tipo: 'cda',
                     prestacion: cda.prestacion.snomed,
-                    profesional: cda.profesional ? cda.profesional : '',
+                    profesional: cda.profesional ? `${cda.profesional.apellido} ${cda.profesional.nombre}` : '',
                     fecha: cda.fecha,
                     estado: 'validada'
                 };
