@@ -12,6 +12,13 @@ export class Tabla2DComponent implements OnInit, OnChanges {
 
     public columnas: any[];
     public datos: any[];
+    public tipoTurno = {
+        delDia: 'Del día',
+        programado: 'Programdao',
+        gestion: 'Con llave',
+        profesional: 'Profesional',
+        sobreturno: 'Sobreturno'
+    };
 
     ngOnInit() {
 
@@ -19,9 +26,8 @@ export class Tabla2DComponent implements OnInit, OnChanges {
 
     ngOnChanges() {
         if (this.data) {
-            this.datos = [];
+            this.datos = this.data;
             this.columnas = [];
-            this.datos = JSON.parse(JSON.stringify(this.data));
             this.columnas = Object.keys(this.datos).map(key => {
                 return Object.keys(this.datos[key]);
             });
