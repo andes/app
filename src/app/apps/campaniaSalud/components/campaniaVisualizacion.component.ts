@@ -32,6 +32,7 @@ export class CampaniaVisualizacionComponent implements OnInit {
     /**
      * Notifica al componente padre que se seleccionó la opción de modificar la campaña seleccionada
      *
+     *
      * @memberof CampaniaVisualizacionComponent
      */
     modificar() {
