@@ -27,8 +27,7 @@
             </div>
             <div class="row" *ngIf="tipoDeFiltro === 'Turnos'">
                 <div class="col">
-                    <h3>Turnos por Localidad</h3>
-                    <tabla-2d [data]="dataGeolocalizacion"></tabla-2d>
+                    <tabla-2d [data]="dataGeolocalizacion" titulo="Turnos por Localidad"></tabla-2d>
                 </div>
             </div>
         </plex-box>

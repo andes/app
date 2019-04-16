@@ -7,6 +7,7 @@ import { Component, OnInit, Input, OnChanges } from '@angular/core';
 export class Tabla2DComponent implements OnInit, OnChanges {
 
     @Input() data: any;
+    @Input() titulo: any;
 
     constructor() { }
 
