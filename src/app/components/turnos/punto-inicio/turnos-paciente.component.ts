@@ -131,19 +131,27 @@ export class TurnosPacienteComponent implements OnInit {
         // });
     }
 
-    printArancelamiento(turno) {
+    async printArancelamiento(turno) {
+        let data = {};
         if (this.cambioMotivo) {
-            let data = {
-                motivoConsulta: turno.motivoConsulta
-            };
-            let bloqueId = (turno.bloque_id) ? turno.bloque_id : -1;
-            this.serviceTurno.patch(turno.agenda_id, bloqueId, turno.id, data).subscribe(resultado => {
-
-            });
+            data['motivoConsulta'] = turno.motivoConsulta;
         }
+
+        let obraSocialUpdate = this._obraSocial.find(os => os.nombre === this.obraSocialSeleccionada);
+        turno.paciente.obraSocial = (obraSocialUpdate) ? obraSocialUpdate : {
+            codigoPuco: null,
+            nombre: this.obraSocialSeleccionada,
+            financiador: this.obraSocialSeleccionada
+        };
+
+        data['actualizaObraSocial'] = turno.paciente.obraSocial;
+        let bloqueId = (turno.bloque_id) ? turno.bloque_id : -1;
+
+        this.serviceTurno.patch(turno.agenda_id, bloqueId, turno.id, data).subscribe(resultado => {
+
+        });
         this.showArancelamientoForm.emit(turno);
     }
-
 
     eventosTurno(turno, operacion) {
         let mensaje = '';
