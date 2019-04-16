@@ -34,6 +34,10 @@ export class CampaniaFormComponent implements OnInit {
         this.imagenSvg = value.imagen;
         this.imagenSegura = this.sanitizer.bypassSecurityTrustHtml(this.imagenSvg);
     }
+    /**
+     * Emite un booleano. True si canceló la creación y false si canceló la edición
+     * @memberof CampaniaFormComponent
+     */
     @Output() cancelar = new EventEmitter<boolean>();
     @Output() guardar = new EventEmitter<ICampaniaSalud>();
 
@@ -98,12 +102,11 @@ export class CampaniaFormComponent implements OnInit {
      * @memberof CampaniaFormComponent
      */
     onCancel() {
-        this.cancelar.emit();
+        this.cancelar.emit(this.campaniaEdit.id ? true : false);
     }
 
     /**
      * Notifica al componente padre que se seleccionó la opción de guardar las modicicaciones del formulario.
-     *
      * @param {*} $event
      * @memberof CampaniaFormComponent
      */

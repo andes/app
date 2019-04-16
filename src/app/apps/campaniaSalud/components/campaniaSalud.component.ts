@@ -154,7 +154,10 @@ export class CampaniaSaludComponent implements OnInit {
      *
      * @memberof CampaniaSaludComponent
      */
-    cancelarEdicionCampania() {
+    cancelarEdicionCampania(cancelaCreacion: boolean) {
         this.mostrarVisualizacionCampania = true;
+        if (!cancelaCreacion) {
+            this.seleccionada = null;
+        }
     }
 }
