@@ -22,11 +22,11 @@
         </div>
     </fieldset>
     <fieldset>
-        <legend>Carga de imagen</legend>
+        <legend>Carga de logo</legend>
         <div class="row">
             <div class="col-4 mt-3">
                 <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
-                <plex-button type="primary" class="btn-sm" label="Cargar imagen" (click)="upload.click()"></plex-button>
+                <plex-button type="primary" class="btn-sm" label="Cargar logo" (click)="upload.click()"></plex-button>
                 <plex-text style="display:none;" [(ngModel)]="imagenSegura" [required]="true" name="imagenSegura"></plex-text>
             </div>
             <div class="col-8 mt-3">

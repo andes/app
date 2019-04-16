@@ -10,8 +10,8 @@
                     <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="aplicarFiltrosBusqueda()" name="fechaHasta" label="Vigencia hasta" [required]="true" [min]="fechaDesde">
                     </plex-datetime>
                 </div>
-                <div class="col d-flex align-items-end justify-content-end">
-                    <plex-button icon="mdi mdi-plus" title="Crear" type="success" (click)="crearCampania()"></plex-button>
+                <div class="col d-flex align-items-end justify-content-end" *ngIf="puedeCrear">
+                    <plex-button label="Crear" type="success" (click)="crearCampania()"></plex-button>
                 </div>
             </div>
         </header>
