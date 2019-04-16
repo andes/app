@@ -29,7 +29,7 @@
                     <div [ngClass]="{'text-black-50': indice === registro.evoluciones.length - 1, 'hover': indice < registro.evoluciones.length - 1}"
                         class="menu-left mr-2 semantic-text-{{ registro.concepto.semanticTag }}"
                         (click)="cambiarEvolucion('+')"></div>
-                    {{ (registro.evoluciones[indice]?.fechaInicio ? registro.evoluciones[indice].fechaInicio : registro.evoluciones[indice].fechaCarga) | fecha }}
+                    {{ (registro?.evoluciones[indice]?.fechaCarga ? registro?.evoluciones[indice]?.fechaCarga : (registro.evoluciones[indice].fechaInicio ? registro.evoluciones[indice].fechaInicio : registro.evoluciones[indice].fechaCarga)) | fecha }}
 
                     <div [ngClass]="{'text-black-50': indice === 0, 'hover': indice > 0}"
                         class="menu-right ml-2 semantic-text-{{ registro.concepto.semanticTag }}"
@@ -45,7 +45,8 @@
                         <span [innerHTML]="registro.evoluciones[indice].evolucion"></span><br>
                     </ng-container>
                     <span
-                        [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente, registro, registro.concepto)"></span>
+                        [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente, registro, registro.concepto)">
+                    </span>
                 </div>
                 <div class="columna-completa align">
                     <b>Estado:</b>
@@ -59,7 +60,7 @@
                             </ng-container>
                         </span>
                         <small *ngIf="registro?.evoluciones?.length">
-                            ({{ (registro.evoluciones[indice]?.fechaInicio ? registro.evoluciones[indice].fechaInicio : registro.evoluciones[indice].fechaCarga) | fromNow }})
+                            ({{ (registro?.evoluciones[indice]?.fechaCarga ? registro?.evoluciones[indice]?.fechaCarga : (registro.evoluciones[indice].fechaInicio ? registro.evoluciones[indice].fechaInicio : registro.evoluciones[indice].fechaCarga)) | fromNow }})
                         </small>
                         <small *ngIf="registro?.valor?.fechaInicio">
                             ({{ registro.valor.fechaInicio | fromNow }})
