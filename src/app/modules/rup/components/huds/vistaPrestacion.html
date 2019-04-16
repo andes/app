@@ -39,8 +39,8 @@
                                 </ng-container>
                             </div>
                             <div class="actions">
-                                <small>Relacionado con: </small><br>
                                 <ng-container *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length > 0">
+                                    <small>Relacionado con: </small><br>
                                     <small *ngFor="let relacion of registro?.relacionadoCon; let r=index"
                                         class="badge badge-info">
                                         {{ relacion | relacionRUP }}
