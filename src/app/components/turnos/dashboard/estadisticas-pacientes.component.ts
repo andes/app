@@ -29,7 +29,6 @@ export class EstadisticasPacientesComponent implements OnInit {
     idOrganizacion = this.auth.organizacion.id;
     carpetaEfector: any;
     currentTab = 0;
-    historialCargado = false;
 
     @Input() showTab: Number = 0;
     @Input('paciente')
@@ -79,9 +78,8 @@ export class EstadisticasPacientesComponent implements OnInit {
 
     changeTab(event) {
         this.currentTab = event;
-        if ((event === 2 || event === 1) && this._paciente && this._paciente.id && !this.historialCargado) {
+        if ((event === 2 || event === 1) && this._paciente && this._paciente.id) {
             this.updateHistorial();
-            this.historialCargado = true;
         }
     }
 
