@@ -34,6 +34,7 @@ export class PanelAgendaComponent implements OnInit {
     @Output() showVistaTurnosEmit = new EventEmitter<Boolean>();
 
     showEditarAgendaPanel: Boolean = true;
+    public showMapa = false;
 
     public agenda: any = {};
 
@@ -58,7 +59,6 @@ export class PanelAgendaComponent implements OnInit {
             let query = {
                 nombre: (this.editaAgendaPanel.espacioFisico ? this.editaAgendaPanel.espacioFisico.nombre : ''),
                 limit: 10
-                // organizacion: this.auth.organizacion._id
             };
             this.servicioEspacioFisico.get(query).subscribe(resultado => {
                 this.espaciosList = resultado;
@@ -92,7 +92,6 @@ export class PanelAgendaComponent implements OnInit {
 
                 this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
                     this.agenda = resultado;
-                    // this.showEditarAgenda = false;
                     this.plex.toast('success', 'Información', 'La agenda se guardó correctamente ');
                     this.actualizarEstadoEmit.emit(true);
                 });
@@ -115,11 +114,6 @@ export class PanelAgendaComponent implements OnInit {
                 nombreCompleto: event.query
             };
             this.servicioProfesional.get(query).subscribe(resultado => {
-                // if (this.agenda.profesionales) {
-                //     listaProfesionales = (resultado) ? [...resultado] : [...this.agenda.profesionales];
-                // } else {
-                //     listaProfesionales = [...resultado];
-                // }
                 event.callback(resultado);
             });
         } else {
@@ -129,13 +123,9 @@ export class PanelAgendaComponent implements OnInit {
 
 
     loadEdificios(event) {
-        // this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
-        //     event.callback(respuesta.edificio);
-        // });
         if (event.query) {
             let query = {
                 edificio: event.query,
-                // organizacion: this.auth.organizacion._id
             };
             this.servicioEspacioFisico.get(query).subscribe(listaEdificios => {
                 event.callback(listaEdificios);
@@ -154,7 +144,7 @@ export class PanelAgendaComponent implements OnInit {
 
             this.servicioEspacioFisico.get(query).subscribe(resultado => {
                 if (this.agenda.espacioFisico && this.agenda.espacioFisico.id) {
-                    listaEspaciosFisicos = this.agenda.espacioFisico ? this.agenda.espacioFisico.concat(resultado) : resultado;
+                    listaEspaciosFisicos = this.agenda.espacioFisico ? [this.agenda.espacioFisico].concat(resultado) : resultado;
                 } else {
                     listaEspaciosFisicos = resultado;
                 }
@@ -163,7 +153,12 @@ export class PanelAgendaComponent implements OnInit {
             });
 
         } else {
-            event.callback(this.agenda.espacioFisico || []);
+            if (this.agenda.espacio) {
+                event.callback([this.agenda.espacioFisico]);
+
+            } else {
+                event.callback([]);
+            }
         }
     }
 
@@ -229,7 +224,6 @@ export class PanelAgendaComponent implements OnInit {
                         hasta: this.agenda.horaFin,
                         estados: ['planificacion', 'disponible', 'publicada', 'pausada']
                     };
-                    // this.serviceAgenda.get({ 'organizacion': this.auth.organizacion.id, 'idProfesional': profesional.id, 'rango': true, 'desde': this.agenda.horaInicio, 'hasta': this.agenda.horaFin }).subscribe(agendas => {
                     this.serviceAgenda.get(params).subscribe(agendas => {
                         // Hay problemas de solapamiento?
                         let agendasConSolapamiento = agendas.filter(agenda => {
@@ -246,7 +240,14 @@ export class PanelAgendaComponent implements OnInit {
         } else if (tipo === 'espacioFisico') {
             // Loop Espacios Físicos
             if (this.agenda.espacioFisico) {
-                this.serviceAgenda.get({ 'espacioFisico': this.agenda.espacioFisico._id, 'rango': true, 'desde': this.agenda.horaInicio, 'hasta': this.agenda.horaFin }).subscribe(agendas => {
+                let params = {
+                    espacioFisico: this.agenda.espacioFisico._id,
+                    rango: true,
+                    desde: this.agenda.horaInicio,
+                    hasta: this.agenda.horaFin,
+                    estados: ['planificacion', 'disponible', 'publicada', 'pausada']
+                };
+                this.serviceAgenda.get(params).subscribe(agendas => {
                     // Hay problemas de solapamiento?
                     let agendasConSolapamiento = agendas.filter(agenda => {
                         return agenda.id !== this.agenda.id || !this.agenda.id; // Ignorar agenda actual
@@ -261,3 +262,4 @@ export class PanelAgendaComponent implements OnInit {
         }
     }
 }
+
