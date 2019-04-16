@@ -24,7 +24,7 @@
                         <estadisticas-agendas></estadisticas-agendas>
                     </div>
                     <div *ngIf="showMostrarEstadisticasPacientes" type="info">
-                        <estadisticas-pacientes [paciente]="paciente"
+                        <estadisticas-pacientes [paciente]="paciente" [showTab]="showTab"
                             (showArancelamientoForm)="showArancelamientoForm($event)"
                             (obraSocialEmit)="obraSocialEmit($event)"></estadisticas-pacientes>
                     </div>
