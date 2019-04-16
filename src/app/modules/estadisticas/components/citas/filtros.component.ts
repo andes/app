@@ -140,7 +140,6 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
 
     loadPrestaciones(event) {
         let queryPrestacion = {};
-        console.log('permiso ',  this.auth.getPermissions('dashboard:citas:tipoPrestacion:?'))
         if (this.auth.getPermissions('dashboard:citas:tipoPrestacion:?').length > 0) {
             queryPrestacion = { id: this.auth.getPermissions('dashboard:citas:tipoPrestacion:?') };
         }
