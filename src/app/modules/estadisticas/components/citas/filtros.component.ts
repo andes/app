@@ -112,10 +112,7 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
 
     ngAfterViewInit() {
         if (!this.verProfesionales) {
-            let query = {
-                documento: this.auth.usuario.documento
-            };
-            this.servicioProfesional.get(query).subscribe(resultado => {
+            this.servicioProfesional.get({id: this.auth.profesional.id}).subscribe(resultado => {
                 this.seleccion.profesional = resultado;
             });
         }
@@ -142,7 +139,12 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
     }
 
     loadPrestaciones(event) {
-        this.servicioPrestacion.get({id: this.auth.getPermissions('dashboard:tipoPrestacion:?')}).subscribe(result => {
+        let queryPrestacion = {};
+        console.log('permiso ',  this.auth.getPermissions('dashboard:citas:tipoPrestacion:?'))
+        if (this.auth.getPermissions('dashboard:citas:tipoPrestacion:?').length > 0) {
+            queryPrestacion = { id: this.auth.getPermissions('dashboard:citas:tipoPrestacion:?') };
+        }
+        this.servicioPrestacion.get(queryPrestacion).subscribe(result => {
             event.callback(result);
         });
     }

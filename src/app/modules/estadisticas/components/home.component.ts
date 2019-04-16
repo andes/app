@@ -22,8 +22,8 @@ export class HomeComponent implements OnInit {
             { name: 'Dashboard' }
         ]);
         this.autorizado = this.auth.getPermissions('dashboard:?').length > 0;
-        this.dashboardCitas = this.auth.check('dashboard:citas:verDashboard');
-        this.dashboardTop = this.auth.check('dashboard:top:verDashboard');
+        this.dashboardCitas = this.auth.check('dashboard:citas:ver');
+        this.dashboardTop = this.auth.check('dashboard:top:ver');
 
         // Si no esta autorizado se redirige a la pagina de inicio
         if (!this.autorizado) {

@@ -128,7 +128,7 @@ export class FiltrosSolicitudesComponent implements OnChanges {
     }
 
     loadPrestaciones(event) {
-        this.servicioPrestacion.get({id: this.auth.getPermissions('dashboard:tipoPrestacion:?')}).subscribe(result => {
+        this.servicioPrestacion.get({}).subscribe(result => {
             event.callback(result);
         });
     }

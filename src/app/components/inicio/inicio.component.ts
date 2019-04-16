@@ -65,7 +65,7 @@ export class InicioComponent implements AfterViewInit {
                 this.denied = false;
             }
 
-            if (this.auth.check('dashboard:citas:verDashboard') || this.auth.check('dashboard:top:verDashboard')) {
+            if (this.auth.check('dashboard:citas:ver') || this.auth.check('dashboard:top:ver')) {
                 this.dashboard = true;
                 this.denied = false;
             }
