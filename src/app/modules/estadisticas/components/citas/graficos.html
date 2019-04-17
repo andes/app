@@ -1,5 +1,5 @@
 <div class="row" *ngIf="data && data.length">
-    <div class="col" *ngIf="dataGraph && dataGraph.length && labelsGraph && labelsGraph.length && !table">
+    <div class="col-10 offset-1" *ngIf="dataGraph && dataGraph.length && labelsGraph && labelsGraph.length && !table">
         <h3>{{tipoDeFiltro}} por {{titulo}}</h3>
         <div *ngIf="type === 'bar'">
             <canvas baseChart [colors]="barColors" [datasets]="dataGraph" [options]="barOptions" [labels]="labelsGraph" chartType="bar"></canvas>

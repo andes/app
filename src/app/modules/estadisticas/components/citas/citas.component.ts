@@ -53,11 +53,15 @@ export class CitasComponent implements OnInit {
             ...$event
         };
         this.estService.post(this.params).subscribe((data) => {
-            this.dataGeolocalizacion = data.localidades;
             this.data = data;
             this.tipoDeFiltro = $event.tipoDeFiltro === 'turnos' ? 'Turnos' : 'Agendas';
             this.cargarLosFiltros();
         });
+        if ($event.tipoDeFiltro === 'turnos') {
+            this.estService.postFiltroPorCiudad(this.params).subscribe((data) => {
+                this.dataGeolocalizacion = data;
+            });
+        }
     }
 
 
