@@ -175,14 +175,14 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     seleccionarAsistencia(asistencia) {
-        if (this.turnoSeleccionado) {
+        if (this.turnoSeleccionado && this.turnoSeleccionado.asistencia) {
             this.turnoSeleccionado.asistencia = asistencia.id;
         }
         this.onSave();
     }
 
     asistenciaSeleccionada(asistencia) {
-        return (this.turnoSeleccionado.asistencia === asistencia.id);
+        return (this.turnoSeleccionado.asistencia && this.turnoSeleccionado.asistencia === asistencia.id);
     }
 
     estaSeleccionado(turno: any) {

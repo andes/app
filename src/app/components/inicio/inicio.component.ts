@@ -17,6 +17,7 @@ export class InicioComponent implements AfterViewInit {
     public solicitudes = '';
     public prestamosHC = '';
     public laboratorio = '';
+    public dashboard = false;
     public denied = false;
     public accessList: any = [];
 
@@ -56,8 +57,6 @@ export class InicioComponent implements AfterViewInit {
                 this.denied = false;
             }
 
-
-
             if (this.auth.getPermissions('solicitudes:?').length > 0) {
                 this.solicitudes = 'solicitudes';
             }
@@ -69,6 +68,10 @@ export class InicioComponent implements AfterViewInit {
 
             if (this.auth.getPermissions('laboratorio:?').length > 0) {
                 this.laboratorio = 'laboratorio';
+            }
+
+            if (this.auth.check('dashboard:citas:ver') || this.auth.check('dashboard:top:ver')) {
+                this.dashboard = true;
                 this.denied = false;
             }
         });
