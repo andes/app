@@ -13,18 +13,20 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <plex-datetime type="date" [(ngModel)]="campaniaEdit.fechaPublicacion" name="fechaPublicacion" label="Fecha de Publicación"
-                    [required]="true" [max]="campaniaEdit.vigencia.hasta" [min]="campaniaEdit.vigencia.desde">
+                <plex-datetime type="date" [(ngModel)]="campaniaEdit.fechaPublicacion" name="fechaPublicacion" label="Fecha de publicación" [required]="true" [max]="campaniaEdit.vigencia.hasta" [min]="campaniaEdit.vigencia.desde">
                 </plex-datetime>
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+                <plex-bool label="¿Está activo?" [(ngModel)]="campaniaEdit.activo" name="activo" type="slide"></plex-bool>
             </div>
         </div>
     </fieldset>
     <fieldset>
-        <legend>Carga de Imagen</legend>
+        <legend>Carga de logo</legend>
         <div class="row">
             <div class="col-4 mt-3">
                 <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
-                <plex-button type="primary" class="btn-sm" label="Cargar imagen" (click)="upload.click()"></plex-button>
+                <plex-button type="primary" class="btn-sm" label="Cargar logo" (click)="upload.click()"></plex-button>
                 <plex-text style="display:none;" [(ngModel)]="imagenSegura" [required]="true" name="imagenSegura"></plex-text>
             </div>
             <div class="col-8 mt-3">
@@ -36,7 +38,7 @@
         </div>
     </fieldset>
     <fieldset>
-        <legend>Perfil Demográfico Destino</legend>
+        <legend>Perfil demográfico destino</legend>
         <div class="row">
             <div class="col-md-4">
                 <plex-select label="Sexo" [(ngModel)]="campaniaEdit.target.sexo" name="sexo" [data]="sexos"></plex-select>
@@ -53,13 +55,11 @@
         <legend>Vigencia</legend>
         <div class="row">
             <div class="col-md">
-                <plex-datetime type="date" [(ngModel)]="campaniaEdit.vigencia.desde" name="fechaDesde" label="Desde"
-                    [required]="true" [max]="campaniaEdit.fechaPublicacion">
+                <plex-datetime type="date" [(ngModel)]="campaniaEdit.vigencia.desde" name="fechaDesde" label="Desde" [required]="true" [max]="campaniaEdit.fechaPublicacion">
                 </plex-datetime>
             </div>
             <div class="col-md">
-                <plex-datetime type="date" [(ngModel)]="campaniaEdit.vigencia.hasta" name="fechaHasta" label="Hasta"
-                    [required]="true" [min]="campaniaEdit.fechaPublicacion">
+                <plex-datetime type="date" [(ngModel)]="campaniaEdit.vigencia.hasta" name="fechaHasta" label="Hasta" [required]="true" [min]="campaniaEdit.fechaPublicacion">
                 </plex-datetime>
             </div>
         </div>
@@ -68,17 +68,10 @@
         <legend>Datos del Acceso</legend>
         <div class="row">
             <div class="col-md-6">
-                <plex-text label="Texto Acción" [(ngModel)]="campaniaEdit.textoAccion" name="textoAccion"></plex-text>
+                <plex-text label="Texto acción" [(ngModel)]="campaniaEdit.textoAccion" name="textoAccion"></plex-text>
             </div>
             <div class="col-md-6">
                 <plex-text label="Link" [(ngModel)]="campaniaEdit.link" name="link" [required]="true"></plex-text>
-            </div>
-        </div>
-    </fieldset>
-    <fieldset>
-        <div class="row">
-            <div class="col-md text-right">
-                <plex-bool label="¿Está activo?" [(ngModel)]="campaniaEdit.activo" name="activo" type="slide"></plex-bool>
             </div>
         </div>
     </fieldset>
