@@ -7,7 +7,7 @@
 
         <!-- LISTA DE PROTOCOLOS -->
         <lista-protocolos [protocolos]='protocolos' [modo]='contextoCache.modo'
-            (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)'
+            (seleccionarProtocoloEmitter)='seleccionarProtocolo($event.protocolo, $event.index)'
             [showProtocoloDetalle]='showProtocoloDetalle' (edicionDatosCabeceraEmitter)='editarDatosCabecera()'>
         </lista-protocolos>
 

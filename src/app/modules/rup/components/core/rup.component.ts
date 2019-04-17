@@ -1,3 +1,4 @@
+import { PracticaService } from './../../../../apps/rup/laboratorio/services/practica.service';
 import { Auth } from '@andes/auth';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
@@ -62,7 +63,8 @@ export class RUPComponent implements OnInit, AfterViewInit {
     private loadComponent() {
 
         // Cargamos el componente
-        const component = ElementosRUPRegister.get(this.elementoRUP.componente).component;
+        const componente = ElementosRUPRegister.get(this.elementoRUP.componente);
+        const component = componente.component;
         const componentFactory = this.componentFactoryResolver.resolveComponentFactory(component as any);
         const componentReference = this.viewContainerRef.createComponent(componentFactory);
 
@@ -112,7 +114,8 @@ export class RUPComponent implements OnInit, AfterViewInit {
         public servicioOrganizacion: OrganizacionService,
         public plex: Plex,
         public route: ActivatedRoute,
-        public agendaService: AgendaService
+        public agendaService: AgendaService,
+        public practicaService: PracticaService
     ) { }
 
     ngOnInit() {

@@ -18,11 +18,6 @@ export const Constantes = {
     },
     estadoValidada: { tipo: 'validada' },
     modos: {
-        recepcion: {
-            id: -1,
-            nombre: 'recepcion',
-            titulo: 'Recepcionar Paciente',
-        },
         listado: {
             id: 0,
             nombre: 'listado',
@@ -47,7 +42,13 @@ export const Constantes = {
             id: 4,
             nombre: 'recepcionSinTurno',
             titulo: 'Recepcionar Paciente Sin Turno'
-        }
+        },
+        recepcion: {
+            id: 5,
+            nombre: 'recepcion',
+            titulo: 'Recepcionar Paciente',
+        },
+
     },
     estadosLotes: {
         preparado: 'preparado',

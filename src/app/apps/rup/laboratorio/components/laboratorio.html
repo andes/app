@@ -1,2 +1,2 @@
 <gestor-protocolos *ngIf="!mostrarPuntoInicio" [protocolo]='protocolo' [paciente]='paciente' [turno]='turno'></gestor-protocolos>
-<punto-inicio-laboratorio *ngIf="mostrarPuntoInicio" (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)'></punto-inicio-laboratorio>
+<punto-inicio-laboratorio *ngIf="mostrarPuntoInicio" (seleccionarProtocoloEmitter)='seleccionarProtocolo($event.protocolo, $event.index)'></punto-inicio-laboratorio>

@@ -2,13 +2,16 @@ import { IPracticaMatch } from './../../../../apps/rup/laboratorio/interfaces/pr
 import { IPracticaBuscarResultado } from '../../../../apps/rup/laboratorio/interfaces/practica/IPracticaBuscarResultado.inteface';
 import { IPractica } from './../../../../interfaces/laboratorio/IPractica';
 import { RUPComponent } from './../core/rup.component';
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import * as enumerados from './../../../../utils/enumerados';
+import { RupElement } from '.';
+import { getOrigenLab } from './../../../../utils/enumerados';
 
 @Component({
     selector: 'rup-pruebaLaboratorio',
     templateUrl: 'pruebaLaboratorio.html'
 })
+@RupElement('PruebaLaboratorioComponent')
 export class PruebaLaboratorioComponent extends RUPComponent implements OnInit {
     // Tipos de Prestaciones a las que el usuario tiene permiso
     public tiposPrestacion: any = [];
@@ -30,7 +33,6 @@ export class PruebaLaboratorioComponent extends RUPComponent implements OnInit {
 
             this.registro.valor.solicitudPrestacion['prestacionSolicitada'] = this.tiposPrestacion.find(tp => tp.conceptId === this.prestacion.solicitud.tipoPrestacion.conceptId);
         }
-
     }
 
     busquedaInicial() {
@@ -82,11 +84,22 @@ export class PruebaLaboratorioComponent extends RUPComponent implements OnInit {
             let query = {
                 cadenaInput: event.query
             };
-            // this.servicioPractica.getMatch(query).subscribe(resultado => {
-            //     event.callback(resultado);
-            // });
+            this.practicaService.getMatch(query).subscribe(resultado => {
+                event.callback(resultado);
+            });
         }
     }
+
+        /**
+     * Busca ambito de origen
+     *
+     * @param {any} $event
+     * @memberof ProtocoloDetalleComponent
+     */
+    loadAmbitoOrigenOptions($event) {
+        $event.callback(getOrigenLab());
+    }
+
 }
 
 

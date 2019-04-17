@@ -41,7 +41,7 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
     @Input('protocolo')
     set setProtocolo(value: any) {
         if (value) {
-            this.seleccionarProtocolo({ protocolo: value, index: 0 });
+            this.seleccionarProtocolo(value, 0);
         }
     }
 
@@ -56,18 +56,18 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
     // @Input() modo: 'puntoInicio' | 'listado' | 'recepcion' | 'control' | 'carga' | 'validacion';
     modoAVolver: 'puntoInicio' | 'listado' | 'recepcion' | 'control' | 'carga' | 'validacion';
 
-    @Input('paciente')
-    set paciente(value) {
-        if (value) {
-            this.resetearProtocolo(value);
-            this.seleccionarProtocolo({ protocolo: this.protocolo, index: 0 });
-            this.editarListaPracticas = true;
-            this.showProtocoloDetalle = true;
-            this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado = 0;
-            this.seleccionPaciente = false;
-            this.laboratorioContextoCacheService.setPaciente();
-        }
-    }
+
+    @Input() paciente;
+    //     if (value) {
+    //         this.resetearProtocolo(value);
+    //         this.seleccionarProtocolo({ protocolo: this.protocolo, index: 0 });
+    //         this.editarListaPracticas = true;
+    //         this.showProtocoloDetalle = true;
+    //         this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado = 0;
+    //         this.seleccionPaciente = false;
+    //         this.laboratorioContextoCacheService.setPaciente();
+    //     }
+    // }
 
     public busqueda;
     public accionIndex;
@@ -107,20 +107,24 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
 
         this.routeParams = this.activatedRoute.params.subscribe(params => {
             if (params['id']) {
-                let id = params['id'];
-                this.servicePaciente.getById(id).subscribe(pacienteMPI => {
+                let turnoId = params['id'];
 
-                    if (this.contextoCache.turno) {
-                        this.resetearProtocolo(null, this.contextoCache.turno);
+                // this.servicePaciente.getById(id).subscribe(pacienteMPI => {
+                this.protocoloService.get({ turnos: [turnoId] }).subscribe(_protocolos => {
+                    // if (this.contextoCache.turno) {
+                        // this.resetearProtocolo(null, this.contextoCache.turno);
+                        this.seleccionarProtocolo(_protocolos[0], 0);
                         this.showProtocoloDetalle = true;
                         this.showListarProtocolos = false;
-                    }
-
-                    this.paciente = pacienteMPI;
-                    this.mostrarFomularioPacienteSinTurno();
-                    this.seleccionPaciente = false;
-                    this.seleccionarProtocolo(this.protocolo);
-                    this.laboratorioContextoCacheService.ventanillaSinTurno();
+                        this.contextoCache.mostrarCuerpoProtocolo = true;
+                        this.contextoCache.edicionDatosCabecera = false;
+                        this.contextoCache.ocultarPanelLateral = true;
+                    // } else {
+                    //     this.mostrarFomularioPacienteSinTurno();
+                    //     this.seleccionPaciente = false;
+                    //     this.seleccionarProtocolo(this.protocolo);
+                    //     this.laboratorioContextoCacheService.ventanillaSinTurno();
+                    // }
                 });
             }
         });
@@ -204,13 +208,13 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
      * @param {any} index
      * @memberof PuntoInicioLaboratorioComponent
      */
-    seleccionarProtocolo(value) {
+    seleccionarProtocolo(_protocolo, index) {
         // Si se presionó el boton suspender, no se muestran otros protocolos hasta que se confirme o cancele la acción.
-        if (value.protocolo) {
+        if (_protocolo) {
             this.laboratorioContextoCacheService.seleccionarProtocolo();
             this.editarListaPracticas = (!this.laboratorioContextoCacheService.isModoRecepcion());
-            this.protocolo = value.protocolo;
-            this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado = value.index;
+            this.protocolo = _protocolo;
+            this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado = index;
             this.showListarProtocolos = false;
             this.showProtocoloDetalle = true;
             this.seleccionPaciente = false;
@@ -255,20 +259,20 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
      *
      * @memberof PuntoInicioLaboratorioComponent
      */
-    mostrarFomularioPacienteSinTurno() {
-        if (this.paciente) {
-            this.resetearProtocolo(this.paciente);
-            this.seleccionarProtocolo({});
-            this.showListarProtocolos = false;
-            this.showProtocoloDetalle = true;
-            this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado = 0;
-            this.seleccionPaciente = true;
-            // this.showBotonAceptar = true;
+    // mostrarFomularioPacienteSinTurno() {
+    //     if (this.paciente) {
+    //         this.resetearProtocolo(this.paciente);
+    //         // this.seleccionarProtocolo({});
+    //         this.showListarProtocolos = false;
+    //         this.showProtocoloDetalle = true;
+    //         this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado = 0;
+    //         this.seleccionPaciente = true;
+    //         // this.showBotonAceptar = true;
 
-            this.contextoCache.mostrarCuerpoProtocolo = true;
-            this.contextoCache.edicionDatosCabecera = true;
-        }
-    }
+    //         this.contextoCache.mostrarCuerpoProtocolo = true;
+    //         this.contextoCache.edicionDatosCabecera = true;
+    //     }
+    // }
 
     /**
      *

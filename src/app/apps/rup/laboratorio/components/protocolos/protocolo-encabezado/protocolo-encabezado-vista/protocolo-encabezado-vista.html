@@ -50,7 +50,7 @@
                         </div>
                         <div class="col-3">
                             <strong>Solicitante: </strong>
-                            <p>{{ modelo.solicitud.profesional.nombre }} {{ modelo.solicitud.profesional.apellido }}</p>
+                            <p>{{ modelo.solicitud.profesionalOrigen.nombre }} {{ modelo.solicitud.profesionalOrigen.apellido }}</p>
                         </div>
                         <div class="col-7">
                             <strong>Efector solicitante: </strong>
@@ -58,7 +58,7 @@
                         </div>
                         <div class="col-12">
                             <strong>Diagnóstico: </strong>
-                            <p>{{ modelo.solicitud.registros[0]?.valor?.solicitudPrestacion.diagnostico }}</p>
+                            <p>{{ modelo.solicitud.registros[0]?.valor?.solicitudPrestacion.motivo }}</p>
                         </div>
                     </div>
                 </article>

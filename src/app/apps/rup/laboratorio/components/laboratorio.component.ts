@@ -19,8 +19,13 @@ export class LaboratorioComponent implements OnInit {
     ngOnInit() {
         this.contextoCache = this.laboratorioContextoCacheService.getContextoCache();
         this.mostrarPuntoInicio = this.laboratorioContextoCacheService.isModoRecepcionSinTurno();
+        let turno = this.contextoCache.turno;
         if (!this.mostrarPuntoInicio) {
             this.laboratorioContextoCacheService.resetContexto();
+            this.contextoCache = this.laboratorioContextoCacheService.getContextoCache();
+        }
+        if (turno) {
+            this.contextoCache.turno = turno;
         }
     }
 

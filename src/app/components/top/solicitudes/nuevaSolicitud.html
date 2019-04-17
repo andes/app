@@ -155,6 +155,14 @@
                     <!-- Adjuntar Archivo -->
 
                     <br>
+                    <rup *ngIf="registro && modelo.solicitud.tipoPrestacion" [elementoRUP]="elementosRUPService.buscarElemento(modelo.solicitud.tipoPrestacion, true)"
+                        [prestacion]="modelo" [paciente]="paciente"
+                        [registro]="registro" [soloValores]="false"
+                        (change)="elementosRUPService.selectPorRefsetId(modelo.solicitud.tipoPrestacion)"
+                        (ejecutarConcepto)="ejecutarConcep6to($event, registro)"
+                        [params]="elementosRUPService.selectPorRefsetId(modelo.solicitud.tipoPrestacion, true)">
+                    </rup>
+                    <br>
                     <div class="container-fluid" *ngIf="!showSeleccionarPaciente">
 
                         <div class="row mb-3">

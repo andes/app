@@ -55,7 +55,6 @@ export class LaboratorioContextoCacheService {
             this.getContextoCache().modoCargaLaboratorio = 'Lista de protocolos';
         }
 
-
         if (modoId === Constantes.modos.recepcion.id) {
             this.getContextoCache().modo = Constantes.modos.recepcion;
         } else if (modoId === Constantes.modos.recepcionSinTurno.id) {
@@ -70,7 +69,6 @@ export class LaboratorioContextoCacheService {
             this.getContextoCache().modo = Constantes.modos.listado;
         }
     }
-
 
     /**
      *

@@ -1,3 +1,5 @@
+import { Constantes } from './../../../apps/rup/laboratorio/controllers/constants';
+import { IPrestacionRegistro } from './../../../modules/rup/interfaces/prestacion.registro.interface';
 import { Component, Output, EventEmitter, Input, HostBinding, ViewChildren, QueryList, OnInit, AfterViewInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
@@ -39,6 +41,8 @@ export class NuevaSolicitudComponent implements OnInit {
     lightbox = false;
     indice;
     documentos = [];
+    tipoPrestacionOrigen;
+    registro;
 
 
     imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
@@ -208,6 +212,12 @@ export class NuevaSolicitudComponent implements OnInit {
 
     onSelectPrestacionOrigen() {
         if (this.tipoSolicitud === 'entrada' && this.modelo.solicitud && this.modelo.solicitud.tipoPrestacion) {
+
+            // En el caso que una solicitud de un determinado tipo de prestación incluya elementos RUP, es preciso instanciar el registro antes del submit,
+            // para setear los atributos de ese tipo de prestación directamente desde el componente insertado
+            if (this.modelo.solicitud.tipoPrestacion.conceptId === Constantes.conceptoPruebaLaboratorio.conceptId) {
+                this.registro = new IPrestacionRegistro(null, this.modelo.solicitud.tipoPrestacion);
+            }
             this.servicioReglas.get({ organizacionDestino: this.auth.organizacion.id, prestacionDestino: this.modelo.solicitud.tipoPrestacion.conceptId })
                 .subscribe(
                     res => {
@@ -259,18 +269,22 @@ export class NuevaSolicitudComponent implements OnInit {
             } else {
                 this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
             }
-            this.modelo.solicitud.registros.push({
-                nombre: this.modelo.solicitud.tipoPrestacion.term,
-                concepto: this.modelo.solicitud.tipoPrestacion,
-                valor: {
-                    solicitudPrestacion: {
-                        motivo: this.motivo,
-                        autocitado: this.autocitado
-                    },
-                    documentos: this.documentos
-                },
-                tipo: 'solicitud'
-            });
+            if (!this.registro) {
+                this.registro = {
+                    valor: {
+                        solicitudPrestacion: {
+                            autocitado: this.autocitado
+                        }
+                    }
+                };
+            }
+
+            this.registro.valor.solicitudPrestacion.motivo = this.motivo;
+            this.registro.nombre = this.modelo.solicitud.tipoPrestacion.term;
+            this.registro.concepto = this.modelo.solicitud.tipoPrestacion;
+            this.registro.valor.documentos = this.documentos;
+            this.registro.tipo = 'solicitud';
+            this.modelo.solicitud.registros.push(this.registro);
             this.modelo.paciente = {
                 id: this.paciente.id,
                 nombre: this.paciente.nombre,

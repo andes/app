@@ -109,7 +109,7 @@ export class PracticasHojatrabajoComponent implements OnInit {
     * @param {IPractica} practica
     * @memberof ProtocoloDetalleComponent
     */
-    async seleccionarPractica(practica: IPractica) {
+    seleccionarPractica(practica: IPractica) {
         this.practica = practica;
         this.codigo = practica.codigo;
         this.nombrePractica = practica.nombre;

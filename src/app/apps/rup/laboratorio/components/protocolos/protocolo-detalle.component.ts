@@ -322,7 +322,7 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     async guardarProtocolo(next) {
-        if (!this.modelo._id) {
+        if (!this.modelo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo) {
             this.guardarNuevoProtocolo();
         } else {
             if (this.laboratorioContextoCacheService.isModoControl()) {
@@ -381,19 +381,40 @@ export class ProtocoloDetalleComponent
     private guardarNuevoProtocolo() {
         this.contextoCache.turno = null;
         this.modelo.estados = [{ tipo: 'ejecucion' }];
-        this.servicioProtocolo.post(this.modelo).subscribe(respuesta => {
-            this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
-            this.activatedRoute.params.subscribe(params => {
-                if (params['id']) {
-                    this.router.navigate(['/laboratorio/recepcion/']);
-                } else {
-                    this.contextoCache.mostrarCuerpoProtocolo = true;
-                    this.volverAListaControEmit.emit();
-                }
+
+        if (!this.modelo._id) {
+            this.servicioProtocolo.post(this.modelo).subscribe(respuesta => {
+                this.afterSubmitNuevaSolicitud();
             });
-        });
+        } else {
+            this.servicioProtocolo.patch( {
+                idProtocolo: this.modelo._id,
+                registros: this.modelo.ejecucion.registros,
+                asignarNumero: true,
+                organizacion: this.auth.organizacion
+            }).subscribe(respuesta => {
+                this.afterSubmitNuevaSolicitud();
+            });
+        }
     }
 
+    /**
+     *
+     *
+     * @private
+     * @memberof ProtocoloDetalleComponent
+     */
+    private afterSubmitNuevaSolicitud() {
+        this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
+        this.activatedRoute.params.subscribe(params => {
+            if (params['id']) {
+                this.router.navigate(['/laboratorio/recepcion/']);
+            } else {
+                this.contextoCache.mostrarCuerpoProtocolo = true;
+                this.volverAListaControEmit.emit();
+            }
+        });
+    }
     /**
      *
      *

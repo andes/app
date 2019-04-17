@@ -29,7 +29,7 @@
             <th *ngIf='modo.nombre === "carga" || modo.nombre === "validacion"'>Observs.</th>
         </thead>
         <tbody>
-            <ng-container
+            <ng-container 
                 *ngIf='modo.nombre ==="recepcionSinTurno" || modo.nombre ==="recepcion" || modo.nombre === "control" || modo.nombre === "listado"'>
                 <tr *ngFor="let practicaVista of practicasVista">
                     <td>{{practicaVista.valor.practica.codigo}}</td>
@@ -76,7 +76,7 @@
             <ng-container *ngIf="modo.nombre === 'carga' || modo.nombre === 'validacion'">
                 <tr *ngFor="let practicaCarga of practicasEjecucion; let i = index;">
                     <td *ngIf='modo.nombre ==="validacion"' style='text-align: center'>
-                        <plex-bool type="checkbox" [(ngModel)]="validaciones[i].validado" name="validado"
+                        <plex-bool type="checkbox" [(ngModel)]="validaciones[i].validado" name="validado" 
                             (change)="clickValidar($event)" name="clickValidar"
                             [readonly]='practicaCarga.valor.resultado.valor === null || practicaCarga.valor.resultado.valor === "" '>
                         </plex-bool>

@@ -1,7 +1,14 @@
-<ng-container *ngIf="!soloValores && registro.valor">
+<ng-container>
+    <plex-datetime type="date" [(ngModel)]="registro.valor.solicitudPrestacion.fechaTomaMuestra" name="fechaTomaMuestra" label="Fecha de toma de muestra"
+        [required]="true" >
+    </plex-datetime>
     <!-- Prioridad -->
     <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.prioridad" name="Prioridad" (getData)="loadPrioridad($event)"
         label="Prioridad" placeholder="Seleccione la prioridad" labelField="nombre" [required]="true">
+    </plex-select>
+    <!-- Origen -->
+    <plex-select [(ngModel)]="registro.ambitoOrigen" name="ambitoOrigen" (getData)="loadAmbitoOrigenOptions($event)"
+        label="Ámbito Origen" placeholder="Seleccione la prioridad" labelField="nombre" [required]="true">
     </plex-select>
     <!-- Organización Destino -->
     <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.organizacionDestino" name="organizacionDestino" (getData)="loadOrganizacion($event)"
@@ -13,12 +20,12 @@
     </plex-select>
     <!-- Prácticas  -->
     <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.practicas" (getData)="loadPracticas($event)" required="true"
-        placeholder="Practicas" label="Practicas a Solicitar" labelField="descripcion" idField="descripcion" [multiple]="true">
+        placeholder="Practicas" label="Prácticas a Solicitar" labelField="descripcion" idField="descripcion" [multiple]="true">
     </plex-select>
     <!-- Observaciones -->
     <plex-text label="Observaciones" multiline="true" autoFocus="1" required="true" [(ngModel)]="registro.valor.solicitudPrestacion.observaciones"></plex-text>
 </ng-container>
-<div class="row" *ngIf="soloValores">
+<div class="row">
     <div class="col-12 readonly">
         <div *ngIf="registro.valor?.solicitudPrestacion?.prioridad">
             <span>Prioridad de la solicitud</span>

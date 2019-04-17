@@ -51,14 +51,24 @@ export class TablaDatalleProtocoloComponent implements OnInit {
 
     @Input('practicasEjecucion')
     set pjs(practicasEjecucion) {
-        if (!this.laboratorioContextoCacheService.getContextoCache().cargarPorPracticas) {
-            this.practicasEjecucion = practicasEjecucion;
-            if (this.laboratorioContextoCacheService.isModoValidacion()) {
-                this.precargarValidaciones();
-                this.calcularFormulas();
+        let foo = async  () => {
+            let promises = [];
+            if (practicasEjecucion.length === 0) {
+                this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas.forEach( practica => {
+                    promises.push(this.agregarRegistrosEjecucion(practica));
+                });
+                await Promise.all(promises);
+                this.modelo.ejecucion.registros = this.practicasEjecucion;
+            } else if (!this.laboratorioContextoCacheService.getContextoCache().cargarPorPracticas) {
+                this.practicasEjecucion = practicasEjecucion;
+                if (this.laboratorioContextoCacheService.isModoValidacion()) {
+                    this.precargarValidaciones();
+                    this.calcularFormulas();
+                }
+                this.cargarPracticasVista();
             }
-            this.cargarPracticasVista();
-        }
+        };
+        foo();
     }
 
     @Input() editarListaPracticas;
@@ -265,19 +275,30 @@ export class TablaDatalleProtocoloComponent implements OnInit {
             let existe = this.solicitudProtocolo.solicitudPrestacion.practicas.findIndex(x => x.concepto.conceptId === practica.concepto.conceptId);
             if (existe === -1) {
                 this.solicitudProtocolo.solicitudPrestacion.practicas.push(practica);
-                let practicaEjecucion = generateRegistroEjecucion(this.auth.usuario, this.auth.organizacion, practica);
-                this.practicasVista.push(practicaEjecucion);
-
-                this.servicioPractica.findByIdsCompletas(practica._id).subscribe((resultados) => {
-                    resultados.forEach(res => {
-                        this.practicasEjecucion.push(generateRegistroEjecucion(this.auth.usuario, this.auth.organizacion, res));
-                    });
-                });
+                await this.agregarRegistrosEjecucion(practica);
             } else {
                 this.plex.info('danger', 'Práctica ya ingresada');
             }
         }
         this.practicaSeleccionada = null;
+    }
+
+    /**
+     *
+     *
+     * @memberof TablaDatalleProtocoloComponent
+     */
+    private async agregarRegistrosEjecucion(practica) {
+        return new Promise((resolve) => {
+            let practicaEjecucion = generateRegistroEjecucion(this.auth.usuario, this.auth.organizacion, practica);
+            this.practicasVista.push(practicaEjecucion);
+            this.servicioPractica.findByIdsCompletas(practica._id).subscribe((resultados) => {
+                resultados.forEach(res => {
+                    this.practicasEjecucion.push(generateRegistroEjecucion(this.auth.usuario, this.auth.organizacion, res));
+                    resolve();
+                });
+            });
+        });
     }
 
     /**

@@ -8,12 +8,12 @@
         <plex-select [(ngModel)]="modelo.solicitud.organizacion" label="Organización" placeholder="Seleccione organización"
             (getData)="loadOrganizaciones($event)" labelField='nombre'>
         </plex-select>
-        <plex-select [(ngModel)]="modelo.solicitud.profesional" (getData)="loadProfesionales($event)" name="profesional"
+        <plex-select [(ngModel)]="modelo.solicitud.profesionalOrigen" (getData)="loadProfesionales($event)" name="profesional"
             label="Profesional" placeholder="Buscar un profesional" labelField="apellido + ' ' + nombre">
         </plex-select>
         <plex-select [(ngModel)]="origen" name="ambitoOrigen" (getData)="loadOrigen($event)" (change)='setAmbitoOrigen($event)'
             label="Origen" placeholder="Seleccione el origen" [required]="true">
-        </plex-select>
+        </plex-select> 
         <plex-select [(ngModel)]="solicitudProtocolo.solicitudPrestacion.servicio" label="Servicio" placeholder="Seleccione el servicio"
             (getData)="loadServicios($event)" labelField='term'>
         </plex-select>
