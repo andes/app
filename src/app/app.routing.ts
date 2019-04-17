@@ -69,8 +69,6 @@ import { CantidadConsultaXPrestacionComponent } from './components/reportes/cant
 
 // REPORTES SJ
 import { EncabezadoReportesDiariosComponent } from './components/reportesDiarios/encabezadoReportesDiarios.component';
-import { ResumenDiarioMensualComponent } from './components/reportesDiarios/resumenDiarioMensual.component';
-import { PlanillaC1Component } from './components/reportesDiarios/planillaC1.component';
 
 // CONFIGURACION PRESTACION
 import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';

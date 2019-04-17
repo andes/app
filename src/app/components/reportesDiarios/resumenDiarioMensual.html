@@ -2,7 +2,7 @@
     <div class="col">
         <plex-box type="primary">
 
-            <table *ngIf="reporte.dias.length>0" class="table table-striped table-bordered">
+            <table *ngIf="reporte?.dias?.length" class="table table-striped table-bordered">
 
                 <thead style="background-color: darkgray;">
                     <tr>
@@ -34,7 +34,7 @@
                         <th colspan=3> Total edades</th>
                     </tr>
                     <tr>
-                        <th colspan=2>Diás</th>
+                        <th colspan=2>Días</th>
                         <th colspan=2>Meses</th>
 
                         <th rowspan=2>M</th>

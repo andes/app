@@ -21,11 +21,11 @@ export class PlanillaC1Component implements OnInit {
     private _reporte;
     @Input('reporte') // recibe un array
 
-    set reporte(value: any) {
+    set reporte(value: any[]) {
         this._reporte = value;
     }
 
-    get reporte(): any {
+    get reporte(): any[] {
         return this._reporte;
     }
 
