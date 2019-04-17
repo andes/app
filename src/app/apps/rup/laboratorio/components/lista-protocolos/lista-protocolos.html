@@ -35,7 +35,7 @@
             <span>{{ protocolo.solicitud.fecha | fecha }}</span>
 
             <ng-container>
-                <span>{{protocolo.ejecucion.fecha | fecha}}</span>
+            <span *ngIf='protocolo.ejecucion.fecha'>{{protocolo.ejecucion.fecha | fecha}}</span>
                 <span *ngIf='modo.nombre !== "puntoInicio"'>{{protocolo.paciente.documento}}</span>
                 <span *ngIf='modo.nombre !== "puntoInicio"'>{{protocolo.paciente.apellido}}
                     {{protocolo.paciente.nombre}}</span>

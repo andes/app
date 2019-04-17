@@ -1,3 +1,4 @@
+import { ElementosRUPService } from './../../../modules/rup/services/elementosRUP.service';
 import { Constantes } from './../../../apps/rup/laboratorio/controllers/constants';
 import { IPrestacionRegistro } from './../../../modules/rup/interfaces/prestacion.registro.interface';
 import { Component, Output, EventEmitter, Input, HostBinding, ViewChildren, QueryList, OnInit, AfterViewInit } from '@angular/core';
@@ -112,6 +113,7 @@ export class NuevaSolicitudComponent implements OnInit {
         private servicioReglas: ReglaService,
         public sanitazer: DomSanitizer,
         public adjuntosService: AdjuntosService,
+        public elementosRUPService: ElementosRUPService
 
     ) { }
 
