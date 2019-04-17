@@ -17,7 +17,6 @@ export class HudsBusquedaComponent implements OnInit {
     laboratoriosFS: any;
     laboratorios: any = [];
     vacunas: any = [];
-    dominios: any = [];
     ordenDesc = true;
 
     procedimientos: any = [];
@@ -90,11 +89,14 @@ export class HudsBusquedaComponent implements OnInit {
          * Listado de todos los hallazgos no activos
          */
     public hallazgosNoActivos: any = [];
+    /*Listado de los dominios
+    */
+    public dominios: any = [];
+    public documentos: any = [];
 
     public fechaInicio;
     public fechaFin;
     public showFiltros = false;
-    public document;
     public tokenFederador;
     public conceptos = {
         hallazgo: ['hallazgo', 'situación', 'evento'],
@@ -132,12 +134,12 @@ export class HudsBusquedaComponent implements OnInit {
         if (this.paciente) {
             this.listarPrestaciones();
             this.listarConceptos();
+            this.listarDominios();
         }
         // Cuando se inicia una prestación debemos volver a consultar si hay CDA nuevos al ratito.
         // [TODO] Ser notificado via websockets
         setTimeout(() => {
             this.buscarCDAPacientes();
-            this.IPS();
         }, 1000 * 30);
 
     }
@@ -229,9 +231,9 @@ export class HudsBusquedaComponent implements OnInit {
                 registro = registro.data;
                 registro.class = 'plan';
                 break;
-            case 'dom':
+            case 'ips':
                 registro = registro.data;
-                registro.class = 'plan';
+                registro.class = 'dominio';
                 break;
         }
 
@@ -392,7 +394,7 @@ export class HudsBusquedaComponent implements OnInit {
                 p.fecha <= moment(this.fechaFin).endOf('day').toDate());
         }
     }
-    IPS() {
+    listarDominios() {
         // let params = {
         //     name: this.auth.profesional.nombreCompleto,
         //     role: 'Profesional',
@@ -403,11 +405,20 @@ export class HudsBusquedaComponent implements OnInit {
         // this.servicioIPS.getTokenProfesional(params).subscribe(token => {
         //     this.tokenFederador = token;
         // });
-        this.servicioIPS.getDominios(this.paciente.id).subscribe(dom => {
-            this.dominios = dom;
+        this.servicioIPS.getDominios(this.paciente.id).subscribe(dominios => {
+            this.dominios = dominios.map(
+                dominio => {
+                    dominio.id = dominio.id;
+                    return {
+                        data: dominio,
+                        tipo: 'ips'
+                        // ,
+                        // nombre: dominio.name,
+                        // system: dominio.identifier ? dominio.identifier.system : ''
+                    };
+                });
+
+
         });
-        // this.servicioIPS.getDocumentos(this.paciente.id).subscribe(resultado => {
-        //     this.document = resultado;
-        // });
     }
 }

@@ -74,7 +74,7 @@
                         <small *ngIf="getCantidadResultados('dominios')" class="badge badge-dominios ml-1 float-right" [ngClass]="{'active': filtroActual === 'dominios'}">
                             {{ getCantidadResultados('dominios') }}</small>
 
-                        <button (click)="filtroBuscador('dominios')" [ngClass]="{'active': filtroActual === 'dominios'}" class="btn btn-block p-0 btn-dominios">
+                        <button (click)="filtroBuscador('dominios')" [ngClass]="{'active': filtroActual === 'dominios'}" class="btn btn-block p-0 btn-dominio">
                             <i class="icon mdi mdi-google-circles-extended"></i>
                             SALUD-AR
                         </button>
@@ -526,22 +526,21 @@
 
 
 
-        <!-- Vista: Dominios -->
+        <!-- Vista: DOMINIOS -->
         <ng-container *ngIf="filtroActual === 'dominios'">
             <div *ngIf="dominios && dominios.length > 0" class="conceptos hover list-unstyled">
 
                 <ul class="conceptos list-unstyled">
-                    <ng-container *ngFor="let unDominio of dominios; let idDominio = index">
+                    <ng-container *ngFor="let unDominio of dominios">
                         <li>
-                            <div class="rup-card mini dominio" [ngClass]="{'active': huds.isOpen(unDominio, 'dom')}">
+                            <div class="rup-card mini dominio" [ngClass]="{'active':huds.isOpen(unDominio.data, unDominio.tipo)}">
                                 <div class="rup-header">
                                     <div class="rup-border rup-border-dominio">
-
                                         <div class="row p-0 m-0 border-secondary border-left-0">
                                             <div class="col-10 p-0 m-0">
                                                 <div class="row m-0 p-0">
                                                     <ng-container *ngIf="emitirConceptos">
-                                                        <div class="icon-rup" draggable [dragScope]="_dragScope" [dragClass]="_dragOverClass" [dragData]="{'tipo': 'dominio','data': unDominio, 'huds': true}" (onDragStart)="dragStart($event)" (onDragEnd)="dragEnd($event)">
+                                                        <div class="icon-rup" draggable [dragScope]="_dragScope" [dragClass]="_dragOverClass" [dragData]="{'tipo': 'producto','data': registro, 'huds': true}" (onDragStart)="dragStart($event)" (onDragEnd)="dragEnd($event)">
                                                             <i class="icon mdi mdi-google-circles-extended"></i>
                                                         </div>
                                                     </ng-container>
@@ -550,25 +549,21 @@
                                                             <i class="icon mdi mdi-google-circles-extended"></i>
                                                         </div>
                                                     </ng-container>
-                                                    <div class="col p-0 pl-2 float-left" (click)="emitTabs(unDominio, 'dom')">
-                                                        {{ unDominio?.name}}
 
+                                                    <div class="col p-0 pl-2 float-left" (click)="emitTabs(unDominio, unDominio.tipo)">
+                                                        {{ unDominio.data.name }}
                                                     </div>
                                                 </div>
                                             </div>
-
-
                                         </div>
-
                                     </div>
                                 </div>
-
                             </div>
                         </li>
                     </ng-container>
                 </ul>
             </div>
-            <div *ngIf="dominios && dominios.length === 0">No hay dominios registradas</div>
+            <div *ngIf="dominios && dominios.length === 0">No hay dominios registrados</div>
         </ng-container>
     </div>
 </div>

@@ -233,6 +233,7 @@ import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoIn
 import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
 import { VistaPrestacionComponent } from './modules/rup/components/huds/vistaPrestacion';
 import { VistaCDAComponent } from './modules/rup/components/huds/vistaCDA.component';
+import { VistaIPSComponent } from './modules/rup/components/huds/vistaIPS.component';
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
 import { ResumenPacienteDinamicoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
@@ -568,6 +569,7 @@ registerLocaleData(localeEs, 'es');
         BuscadorComponent,
         VistaHudsComponent,
         VistaCDAComponent,
+        VistaIPSComponent,
         HudsBusquedaPacienteComponent,
         PacienteBuscarComponent,
         PacienteListadoComponent,
