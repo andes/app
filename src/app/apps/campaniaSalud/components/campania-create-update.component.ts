@@ -199,7 +199,7 @@ export class CampaniaFormComponent implements OnInit {
     confirmarSvg(archivo: string): boolean {
         let regExXml = /<\?xml (.|\n)*\?>/;
         let regExSvg = /svg (.|\n)*\/svg/; // verificar los <>
-        let regExTamanio = /width(.|\n)*35[^0-9]*px(.|\n)*height(.|\n)*35[^0-9]*px/;
+        let regExTamanio = /width.?"35(px)?"(.|\n)*height.?"35(px)?"/;
 
         let cumpleTamanio: boolean = regExTamanio.test(archivo);
         if (!cumpleTamanio) {
