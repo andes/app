@@ -10,11 +10,12 @@
                 </div>
             </div>
         </div>
-        <div class="col-1">
-            <plex-button (click)="agregarRegistro()" type="success btn-icon-rup p-0" size="lg" icon="mdi mdi-play"></plex-button>
-            <plex-button (click)="agregarRegistro()" type="danger btn-icon-rup p-0" size="lg" icon="mdi mdi-stop"></plex-button>
-            <plex-button (click)="agregarRegistro()" type="primary btn-icon-rup p-0" size="lg" icon="mdi mdi-replay"></plex-button>
-            <plex-button (click)="agregarRegistro()" type="warning btn-icon-rup p-0" size="lg" icon="mdi mdi-pause"></plex-button>
+        <div class="col-2 mt-4">
+            <ng-container *ngIf="registro.registros[0].valor?.evolucion">
+                <plex-button *ngIf="registro.registros[0].valor?.estado !== 'activo'" (click)="cambiaEstado('activo', registro)" type="success btn-icon-rup p-0" size="lg" icon="mdi mdi-play"></plex-button>
+                <plex-button *ngIf="registro.registros[0].valor?.estado !== 'detenido'" (click)="cambiaEstado('detenido', registro)" type="danger btn-icon-rup p-0" size="lg" icon="mdi mdi-stop"></plex-button>
+                <plex-button *ngIf="registro.registros[0].valor?.estado !== 'pausado'" (click)="cambiaEstado('pausado', registro)" type="warning btn-icon-rup p-0" size="lg" icon="mdi mdi-pause"></plex-button>
+            </ng-container>
         </div>
     </div>
 </ng-container>
