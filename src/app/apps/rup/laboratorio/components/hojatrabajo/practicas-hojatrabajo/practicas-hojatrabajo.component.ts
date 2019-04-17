@@ -113,6 +113,7 @@ export class PracticasHojatrabajoComponent implements OnInit {
         this.practica = practica;
         this.codigo = practica.codigo;
         this.nombrePractica = practica.nombre;
+        this.nombreImpresion = practica.nombre;
     }
 
     /**
