@@ -82,7 +82,15 @@ export class GestorHojatrabajoComponent implements OnInit {
     }
 
     eliminarHoja() {
-        console.log('eliminar hoja', new Date);
+        this.plex.confirm(`Eliminar la hoja de trabajo ${this.hojaTrabajo.nombre}`, '¿Desea eliminar?').then(confirmacion => {
+            if (confirmacion) {
+                this.hojaTrabajo.baja = true;
+                this.servicioHojaTrabajo.patch(this.hojaTrabajo).subscribe(resultado => {
+                    this.plex.info('info', 'La hoja de trabajo fue eliminada');
+                    this.listaHojatrabajoComponent.cargarListado();
+                });
+            }
+        });
     }
 
     volverLista() {
