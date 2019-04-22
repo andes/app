@@ -4,7 +4,8 @@
             <header>
                 <turnos-filtros (filter)="filter($event)" (onDisplayChange)="displayChange($event)"></turnos-filtros>
             </header>
-            <div class="row">
+        <div *ngIf="!mensajeInicial">
+            <div class="row" >
                 <div class="col">
                     <graph-table type="bar" titulo="Prestación" [data]="prestaciones" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>
                 </div>
@@ -30,6 +31,25 @@
                     <tabla-2d [data]="dataGeolocalizacion" titulo="Turnos por Localidad"></tabla-2d>
                 </div>
             </div>
-        </plex-box>
+            <div class="row">
+                <div class="col">
+                    <graph-table type="bar" titulo="Profesionales" [data]="profesionales" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>                
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <tabla-2d [data]="dataGeolocalizacion"></tabla-2d>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="mensajeInicial">
+            <div class="col">
+                <div class="alert alert-info text-center" role="alert">
+                    Elija las opciones de filtrados y luego click en el botón "Buscar"
+                </div>
+            </div>
+        </div>
+    </plex-box>
+       
     </plex-layout-main>
 </plex-layout>

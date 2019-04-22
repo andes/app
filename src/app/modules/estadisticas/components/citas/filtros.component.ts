@@ -3,6 +3,7 @@ import { Component, AfterViewInit, HostBinding, EventEmitter, Output, SimpleChan
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 import { ProfesionalService } from '../../../../services/profesional.service';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'turnos-filtros',
@@ -33,7 +34,7 @@ import { ProfesionalService } from '../../../../services/profesional.service';
                 label="Prestación" ngModelOptions="{standalone: true}">
             </plex-select>
         </div>
-        <div class="col-3">
+        <div class="col-3" *ngIf="verProfesionales">
             <plex-select [multiple]="true" [(ngModel)]="seleccion.profesional" name="profesional" (getData)="loadProfesionales($event)"
                 label="Profesional" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
             </plex-select>
@@ -90,6 +91,9 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
         { id: 'sobreturno', nombre: 'Sobreturno' }
     ];
 
+    // Permisos
+    public verProfesionales = this.auth.check('dashboard:citas:verProfesionales');
+
     @Output() filter = new EventEmitter();
     @Output() onDisplayChange = new EventEmitter();
 
@@ -104,12 +108,17 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
 
     constructor(
         private plex: Plex,
+        public auth: Auth,
         public servicioProfesional: ProfesionalService,
         public servicioPrestacion: TipoPrestacionService) {
     }
 
     ngAfterViewInit() {
-        this.onChange();
+        if (!this.verProfesionales) {
+            this.servicioProfesional.get({id: this.auth.profesional.id}).subscribe(resultado => {
+                this.seleccion.profesional = resultado;
+            });
+        }
     }
 
     changeTablaGrafico() {
@@ -133,7 +142,11 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
     }
 
     loadPrestaciones(event) {
-        this.servicioPrestacion.get({}).subscribe(result => {
+        let queryPrestacion = {};
+        if (this.auth.getPermissions('dashboard:citas:tipoPrestacion:?').length > 0) {
+            queryPrestacion = { id: this.auth.getPermissions('dashboard:citas:tipoPrestacion:?') };
+        }
+        this.servicioPrestacion.get(queryPrestacion).subscribe(result => {
             event.callback(result);
         });
     }

@@ -24,6 +24,7 @@ export class CitasComponent implements OnInit {
     // Datos
     public data: any;
 
+    public mensajeInicial = true;
     public profesionales;
     public prestaciones;
     public estadoTurno;
@@ -53,6 +54,7 @@ export class CitasComponent implements OnInit {
             ...$event
         };
         this.estService.post(this.params).subscribe((data) => {
+            this.mensajeInicial = false;
             this.data = data;
             this.tipoDeFiltro = $event.tipoDeFiltro === 'turnos' ? 'Turnos' : 'Agendas';
             this.cargarLosFiltros();
