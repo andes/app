@@ -48,11 +48,13 @@
     "core-js": "^2.5.7",
     "enhanced-resolve": "^4.1.0",
     "file-saver": "^2.0.0-rc.4",
+    "mathjs": "^5.9.0",
     "ng-drag-drop": "^5.0.0",
     "ng2-charts": "^1.6.0",
     "ng2-slugify": "^0.1.0",
     "rxjs": "^6.3.3",
     "rxjs-compat": "^6.3.3",
+    "util": "^0.11.1",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
