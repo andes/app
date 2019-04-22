@@ -106,25 +106,21 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
         }
 
         this.routeParams = this.activatedRoute.params.subscribe(params => {
-            if (params['id']) {
-                let turnoId = params['id'];
-
-                // this.servicePaciente.getById(id).subscribe(pacienteMPI => {
-                this.protocoloService.get({ turnos: [turnoId] }).subscribe(_protocolos => {
-                    // if (this.contextoCache.turno) {
-                        // this.resetearProtocolo(null, this.contextoCache.turno);
-                        this.seleccionarProtocolo(_protocolos[0], 0);
-                        this.showProtocoloDetalle = true;
-                        this.showListarProtocolos = false;
-                        this.contextoCache.mostrarCuerpoProtocolo = true;
-                        this.contextoCache.edicionDatosCabecera = false;
-                        this.contextoCache.ocultarPanelLateral = true;
-                    // } else {
-                    //     this.mostrarFomularioPacienteSinTurno();
-                    //     this.seleccionPaciente = false;
-                    //     this.seleccionarProtocolo(this.protocolo);
-                    //     this.laboratorioContextoCacheService.ventanillaSinTurno();
-                    // }
+            if (params['idTurno']) {
+                this.protocoloService.get({ turnos: [ params['idTurno'] ] }).subscribe(_protocolos => {
+                    this.seleccionarProtocolo(_protocolos[0], 0);
+                    this.showProtocoloDetalle = true;
+                    this.showListarProtocolos = false;
+                    this.contextoCache.mostrarCuerpoProtocolo = true;
+                    this.contextoCache.edicionDatosCabecera = false;
+                    this.contextoCache.ocultarPanelLateral = true;
+                });
+            } else if (params['idPaciente']) {
+                this.servicePaciente.getById(params['idPaciente']).subscribe(pacienteMPI => {
+                    this.mostrarFomularioPacienteSinTurno();
+                    this.seleccionPaciente = false;
+                    this.seleccionarProtocolo(this.protocolo, 0);
+                    this.laboratorioContextoCacheService.ventanillaSinTurno();
                 });
             }
         });
@@ -146,7 +142,7 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
      *
      * @memberof PuntoInicioLaboratorioComponent
      */
-    resetearProtocolo(paciente?, turno?) {
+    resetearProtocolo(paciente ?  , turno ?  ) {
         this.protocolo = {
             paciente: turno ? turno.paciente : paciente,
             solicitud: {
@@ -189,7 +185,8 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
         this.areas = filtros.areas ? filtros.areas : [];
         this.busqueda = filtros;
 
-        this.busqueda.estadoFiltrar = this.laboratorioContextoCacheService.isModoListado() || this.laboratorioContextoCacheService.isModoValidacion() ? null : ['validada'];
+        // this.busqueda.estadoFiltrar = this.laboratorioContextoCacheService.isModoListado() || this.laboratorioContextoCacheService.isModoValidacion() ? null : ['validada'];
+        this.busqueda.estadoFiltrar = this.laboratorioContextoCacheService.isModoListado() ? null : ['validada'];
         this.busqueda.estado = filtros.estados ? filtros.estados : [];
 
         this.protocoloService.get(this.busqueda).subscribe(protocolos => {
@@ -259,20 +256,20 @@ export class GestorProtocolosComponent implements OnInit, AfterViewChecked {
      *
      * @memberof PuntoInicioLaboratorioComponent
      */
-    // mostrarFomularioPacienteSinTurno() {
-    //     if (this.paciente) {
-    //         this.resetearProtocolo(this.paciente);
-    //         // this.seleccionarProtocolo({});
-    //         this.showListarProtocolos = false;
-    //         this.showProtocoloDetalle = true;
-    //         this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado = 0;
-    //         this.seleccionPaciente = true;
-    //         // this.showBotonAceptar = true;
+    mostrarFomularioPacienteSinTurno() {
+        if (this.paciente) {
+            this.resetearProtocolo(this.paciente);
+            // this.seleccionarProtocolo({});
+            this.showListarProtocolos = false;
+            this.showProtocoloDetalle = true;
+            this.laboratorioContextoCacheService.getContextoCache().indiceSeleccionado = 0;
+            this.seleccionPaciente = true;
+            // this.showBotonAceptar = true;
 
-    //         this.contextoCache.mostrarCuerpoProtocolo = true;
-    //         this.contextoCache.edicionDatosCabecera = true;
-    //     }
-    // }
+            this.contextoCache.mostrarCuerpoProtocolo = true;
+            this.contextoCache.edicionDatosCabecera = true;
+        }
+    }
 
     /**
      *

@@ -73,7 +73,7 @@
                 <fieldset>
                     <legend>Lista de solicitudes</legend>
                     <!-- <estadisticas-agendas></estadisticas-agendas> -->
-                    <plex-button *ngIf="seleccion?.id" label="Recepción sin turno" type="warning" (click)="recepcion($event)"
+                    <plex-button *ngIf="seleccion?.id" label="Recepción sin turno" type="warning" (click)="recepcionarSinTurno($event)"
                         class="d-flex flex-row-reverse"></plex-button>
 
                     <punto-inicio-listado-solicitudes *ngIf="seleccion?.id && showListaSolicitudes" [paciente]="paciente"

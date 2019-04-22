@@ -592,7 +592,7 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     private validarPrestacion() {
-        return !this.modelo.estados.some(o => o.tipo === 'validada') && this.modelo.ejecucion.registros.every(r => r.valor.estados.some(e => e.tipo === 'validada'));
+        return !this.modelo.estados.some(o => o.tipo === 'validada') && this.modelo.ejecucion.registros.every(r => r.valor.estados.some(e => e.tipo === 'validada' || e.tipo === 'terminada'));
     }
 
     /**

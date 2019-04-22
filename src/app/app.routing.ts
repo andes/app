@@ -180,10 +180,10 @@ const appRoutes: Routes = [
   // Laboratorio
   // { path: 'laboratorio', redirectTo: 'laboratorio/recepcion' },
   { path: 'laboratorio/recepcion', component: PuntoInicioLaboratorioComponent, canActivate: [RoutingGuard] },
-  { path: 'laboratorio/recepcion/:id', component: PuntoInicioLaboratorioComponent, canActivate: [RoutingGuard] },
+  { path: 'laboratorio/recepcion/paciente/:idPaciente', component: LaboratorioComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/protocolos', component: LaboratorioComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/protocolos/turnos', component: LaboratorioComponent, canActivate: [RoutingGuard] },
-  { path: 'laboratorio/protocolos/turnos/:id', component: LaboratorioComponent, canActivate: [RoutingGuard] },
+  { path: 'laboratorio/protocolos/turnos/:idTurno', component: LaboratorioComponent, canActivate: [RoutingGuard] },
   // { path: 'laboratorio/protocolos/turno', component: LaboratorioComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/hojatrabajo', component: GestorHojatrabajoComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/derivaciones', component: LaboratorioDerivacionesComponent, canActivate: [RoutingGuard] },

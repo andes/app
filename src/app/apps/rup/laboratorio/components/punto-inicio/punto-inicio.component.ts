@@ -82,10 +82,9 @@ export class PuntoInicioLaboratorioComponent implements OnInit, OnDestroy {
         }
     }
 
-    recepcion() {
+    recepcionarSinTurno() {
         this.laboratorioContextoCacheService.modoRecepcion();
-        // this.router.navigate(['/laboratorio/protocolos/turnos/paciente' + this.seleccion.id]); // Navega a laboratorioComponent
-        this.router.navigate(['/laboratorio/protocolos']); // Navega a laboratorioComponen'
+        this.router.navigate(['/laboratorio/recepcion/paciente/' + this.seleccion.id]); // Navega a laboratorioComponent
     }
 
     /**
