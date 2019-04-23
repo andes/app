@@ -18,7 +18,6 @@ export class IPSService {
         return this.server.get(this.ipsURL + '/binary/' + url, null);
     }
     getTokenProfesional(params: any): Observable<any> {
-        console.log(params);
         return this.server.get(this.ipsURL + '/token', { params: params, showError: true });
     }
 }

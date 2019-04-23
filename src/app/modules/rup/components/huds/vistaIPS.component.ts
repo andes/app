@@ -27,7 +27,6 @@ export class VistaIPSComponent implements OnInit {
                 });
         });
         this.listarBinarios();
-        console.log('blaaaaaaaaaaaaaaaaaa', this.binary);
     }
 
     listarBinarios() {
