@@ -21,11 +21,6 @@
                     <graph-table type="pie" titulo="Estado" [data]="estadoAgenda" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
-                    <graph-table type="bar" titulo="Profesional" [data]="profesionales" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>
-                </div>
-            </div>
             <div class="row" *ngIf="tipoDeFiltro === 'Turnos'">
                 <div class="col">
                     <tabla-2d [data]="dataGeolocalizacion" titulo="Turnos por Localidad"></tabla-2d>
