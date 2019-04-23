@@ -12,7 +12,7 @@
                     <tr>
                         <th colspan=8 style="text-align:left; padding-left: 40px"><b>ORGANIZACION:</b>
                             {{parametros['organizacionNombre']}} </th>
-                        <th colspan=3><b>FECHA:</b> {{ parametros['fecha'] | date:'dd-MM-yyyy'  }}</th>
+                        <th colspan=3><b>FECHA:</b> {{ parametros['fecha'] | fecha  }}</th>
                     </tr>
 
                     <tr>
@@ -29,7 +29,7 @@
                         <th>Fecha Nac</th>
                         <th>Sexo</th>
                         <th>O.S.</th>
-                        <th>Diagnostico</th>
+                        <th>Diagnóstico</th>
                         <th>Profesional</th>
                         <th>Primera vez</th>
                     </tr>
@@ -53,7 +53,7 @@
                             {{ linea.pacienteEdad}}
                         </td>
                         <td>
-                            {{ linea.pacienteFechaNacimiento | date:'dd-MM-yyyy'}}
+                            {{ linea.pacienteFechaNacimiento | fecha }}
                         </td>
                         <td>
                             {{ linea.pacienteSexo}}
@@ -68,7 +68,7 @@
                             {{ linea.profesionalApellido +', '+ linea.profesionalNombre }}
                         </td>
                         <td>
-                                {{ linea.prestacionEsPrimeraVez==true?"Si":"No"}}
+                                {{ linea.prestacionEsPrimeraVez === true ? "Si" : "No" }}
                             </td>
 
                     </tr>
