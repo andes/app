@@ -18,4 +18,12 @@ export class EstRupService {
         return this.server.get(this.baseURL, { params });
     }
 
+    /**
+     * Obtiene estadistica demografica de un conjunto de prestaciones
+     * @param ids Array de ids de prestaciones
+     */
+    demografia (ids) {
+        return this.server.get(this.baseURL + '/demografia', { params: { ids } });
+    }
+
 }

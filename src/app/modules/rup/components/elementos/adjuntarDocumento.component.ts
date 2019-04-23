@@ -49,7 +49,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
             this.fileToken = data.token;
         });
 
-        this.snomedService.getQuery({ expression: '<<371524004' }).subscribe(result => {
+        this.snomedService.getQuery({ expression: '^4681000013102' }).subscribe(result => {
             this.descendientesInformeClinico = result;
         });
     }

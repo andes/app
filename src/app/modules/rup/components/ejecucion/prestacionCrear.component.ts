@@ -2,9 +2,7 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
-import { Observable } from 'rxjs';
-import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import * as moment from 'moment';
@@ -27,7 +25,7 @@ export class PrestacionCrearComponent implements OnInit {
     solicitudTurno: any;
     agendasAutocitacion: IAgenda[];
     opcion: any;
-    @HostBinding('class.plex-layout') layout = true;
+    // @HostBinding('class.plex-layout') layout = true;
 
     // Fecha seleccionada
     public fecha: Date = new Date();
@@ -44,6 +42,22 @@ export class PrestacionCrearComponent implements OnInit {
      * Indica si muestra el calendario para dar turno autocitado
      */
     public showDarTurnos = false;
+
+    get btnLabel () {
+        if (this.opcion === 'fueraAgenda') {
+            return 'INICIAR PRESTACIÓN';
+        } else {
+            return 'DAR TURNO AUTOCITADO';
+        }
+    }
+
+    btnClick () {
+        if (this.opcion === 'fueraAgenda') {
+            this.iniciarPrestacion();
+        } else {
+            this.darTurnoAutocitado();
+        }
+    }
 
     constructor(private router: Router,
         private route: ActivatedRoute,
@@ -64,6 +78,15 @@ export class PrestacionCrearComponent implements OnInit {
             this.opcion = params['opcion'];
         });
 
+        this.plex.updateTitle([{
+            route: '/',
+            name: 'ANDES'
+        }, {
+            route: '/rup',
+            name: 'RUP'
+        }, {
+            name: this.opcion === 'fueraAgenda' ? 'Fuera de Agenda' : 'Autocitado'
+        }]);
     }
 
     onPacienteSelected(paciente: IPaciente) {
@@ -86,9 +109,7 @@ export class PrestacionCrearComponent implements OnInit {
     }
 
     seleccionarTipoPrestacion() {
-
         this.mostrarPaciente = this.tipoPrestacionSeleccionada && !this.tipoPrestacionSeleccionada.noNominalizada;
-
     }
 
 
