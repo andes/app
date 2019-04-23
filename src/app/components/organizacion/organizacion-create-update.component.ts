@@ -23,7 +23,7 @@ import { CamasService } from '../../apps/rup/internacion/services/camas.service'
 @Component({
     selector: 'organizacion-create-update',
     templateUrl: 'organizacion-create-update.html',
-    styles: [`agm-map { height: 232px; }`]
+    styleUrls: ['organizacion.scss']
 })
 export class OrganizacionCreateUpdateComponent implements OnInit {
 
@@ -339,7 +339,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     }
 
     routeCama() {
-        this.router.navigate(['/tm/organizacion/' + this.seleccion.id + '/cama']);
+        this.router.navigate([`/tm/organizacion/"${this.seleccion.id}"/cama`]);
     }
 
 
