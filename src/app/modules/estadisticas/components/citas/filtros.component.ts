@@ -93,7 +93,7 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
 
     // Permisos
     public verProfesionales = this.auth.check('dashboard:citas:verProfesionales');
-
+    private idPermisoPrestaciones = this.auth.getPermissions('dashboard:citas:tipoPrestacion:?');
     @Output() filter = new EventEmitter();
     @Output() onDisplayChange = new EventEmitter();
 
@@ -115,7 +115,7 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
 
     ngAfterViewInit() {
         if (!this.verProfesionales) {
-            this.servicioProfesional.get({id: this.auth.profesional.id}).subscribe(resultado => {
+            this.servicioProfesional.get({ id: this.auth.profesional.id }).subscribe(resultado => {
                 this.seleccion.profesional = resultado;
             });
         }
@@ -143,12 +143,16 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
 
     loadPrestaciones(event) {
         let queryPrestacion = {};
-        if (this.auth.getPermissions('dashboard:citas:tipoPrestacion:?').length > 0) {
-            queryPrestacion = { id: this.auth.getPermissions('dashboard:citas:tipoPrestacion:?') };
+        if (event.query) {
+            if (this.idPermisoPrestaciones.length > 0 && this.idPermisoPrestaciones[0] !== '*') {
+                queryPrestacion = { id: this.idPermisoPrestaciones };
+            }
+            this.servicioPrestacion.get(queryPrestacion).subscribe(result => {
+                event.callback(result);
+            });
+        } else {
+            event.callback([]);
         }
-        this.servicioPrestacion.get(queryPrestacion).subscribe(result => {
-            event.callback(result);
-        });
     }
 
     onChange() {

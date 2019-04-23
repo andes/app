@@ -15,7 +15,7 @@ export class Tabla2DComponent implements OnInit, OnChanges {
     public datos: any[];
     public tipoTurno = {
         delDia: 'Del día',
-        programado: 'Programdao',
+        programado: 'Programado',
         gestion: 'Con llave',
         profesional: 'Profesional',
         sobreturno: 'Sobreturno'
