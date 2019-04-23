@@ -1,0 +1,82 @@
+<plex-layout>
+    <plex-layout-main>
+        <div>
+            <!-- Filtros -->
+            <solicitudes-filtros (filter)="filter($event)" (onDisplayChange)="displayChange($event)"></solicitudes-filtros>
+        </div>
+        <plex-tabs (change)="cambio($event)" [activeIndex]="panelIndex">
+            
+            <!-- Seccion de gráficos y tablas de SOLICITUDES DE ENTRADA  -->
+            <plex-tab label="Solicitudes de Entrada" icon="arrow-down-box" (click)="panelIndex = 0">
+                <fieldset>
+                    <div class="row">
+                        <div class="col" *ngIf="dataEntrada.organizaciones">
+                            <graph-table type="pie" titulo="Organización" [data]="dataEntrada.organizaciones" [table]="esTabla"></graph-table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" *ngIf="dataEntrada.estados">
+                            <graph-table type="pie" titulo="Estado" [data]="dataEntrada.estados" [table]="esTabla"></graph-table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <graph-table type="bar" titulo="Tipo de Solicitud Origen" [data]="dataEntrada.solicitudesOrigen" [table]="esTabla"></graph-table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <graph-table type="bar" titulo="Tipo de Solicitud Destino" [data]="dataEntrada.solicitudesDestino" [table]="esTabla"></graph-table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" *ngIf="dataEntrada.profesionalesOrigen">
+                            <graph-table type="bar" titulo="Profesional Origen" [data]="dataEntrada.profesionalesOrigen" [table]="esTabla"></graph-table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" *ngIf="dataEntrada.profesionalesDestino">
+                            <graph-table type="bar" titulo="Profesional Destino" [data]="dataEntrada.profesionalesDestino" [table]="esTabla"></graph-table>
+                        </div>
+                    </div>
+                </fieldset>
+            </plex-tab>
+            
+            <!-- Seccion de gráficos y tablas de SOLICITUDES DE SALIDA  -->
+            <plex-tab label="Solicitudes de Salida" icon="arrow-up-box" (click)="panelIndex = 1">
+                <fieldset>
+                    <div class="row">
+                        <div class="col" *ngIf="dataSalida.organizaciones">
+                            <graph-table type="bar" titulo="Organización" [data]="dataSalida.organizaciones" [table]="esTabla"></graph-table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" *ngIf="dataSalida.estados">
+                            <graph-table type="pie" titulo="Estado" [data]="dataSalida.estados" [table]="esTabla"></graph-table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <graph-table type="bar" titulo="Tipo de Solicitud Origen" [data]="dataSalida.solicitudesOrigen" [table]="esTabla"></graph-table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <graph-table type="bar" titulo="Tipo de Solicitud Destino" [data]="dataSalida.solicitudesDestino" [table]="esTabla"></graph-table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" *ngIf="dataSalida.profesionalesOrigen">
+                            <graph-table type="bar" titulo="Profesional Origen" [data]="dataSalida.profesionalesOrigen" [table]="esTabla"></graph-table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" *ngIf="dataSalida.profesionalesDestino">
+                            <graph-table type="bar" titulo="Profesional Destino" [data]="dataSalida.profesionalesDestino" [table]="esTabla"></graph-table>
+                        </div>
+                    </div>
+                </fieldset>
+            </plex-tab>
+        </plex-tabs>
+    </plex-layout-main>
+</plex-layout>

@@ -514,14 +514,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         }
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
 
-        if (elementoRUP && elementoRUP.params) {
-            if (elementoRUP.params.reglasCargar) {
-                if (elementoRUP.params.reglasCargar.evolucionable) {
-                    // console.log(this.servicioPrestacion.getByPacienteKey(this.paciente.id, elementoRUP.conceptos.map(x => x.conceptId)));
-                }
-            }
-        }
-
         // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
         this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };

@@ -1,6 +1,7 @@
-<div class="row" *ngIf="data && data.length">
-    <div class="col" *ngIf="dataGraph && dataGraph.length && labelsGraph && labelsGraph.length && !table">
-        <h3>{{tipoDeFiltro}} por {{titulo}}</h3>
+<div class="row m-2" *ngIf="data && data.length">
+    <div class="col-12" *ngIf="dataGraph && dataGraph.length && labelsGraph && labelsGraph.length && !table">
+        <h3 *ngIf="tipoDeFiltro">{{tipoDeFiltro}} por {{titulo}}</h3>
+        <h3 *ngIf="!tipoDeFiltro">{{titulo}}</h3>
         <div *ngIf="type === 'bar'">
             <canvas baseChart [colors]="barColors" [datasets]="dataGraph" [options]="barOptions" [labels]="labelsGraph" chartType="bar"></canvas>
         </div>
@@ -9,8 +10,8 @@
         </div>
     </div>
     
-    <div class="col" *ngIf="table"> 
-        <table class="table table-striped table-responsive" *ngIf="dataTable.length > 0">
+    <div class="col-12" *ngIf="table"> 
+        <table class="table table-striped table-responsive table-bordered" *ngIf="dataTable.length > 0">
             <thead>
                 <tr>
                     <td class="col-5">
@@ -23,7 +24,7 @@
             </thead>
             <tbody>
                 <tr class="hover" *ngFor="let item of dataTable; let i=index">
-                    <td>{{ item.nombre ? item.nombre : item._id }}</td>
+                    <td>{{ item.nombre }}</td>
                     <td>{{ item.count }}</td>
                 </tr>
                 <tr>

@@ -16,7 +16,7 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
 
     private shiro = shiroTrie.new();
     private state = false;
-    private all = false;
+    public all = false;
     private seleccionados = [];
     private allModule = false;
 

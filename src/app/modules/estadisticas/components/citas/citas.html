@@ -8,7 +8,7 @@
                 <graph-table type="bar" titulo="Prestaciones" [data]="prestaciones" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="!mensajeInicial">
             <div class="col" *ngIf="estadoTurno && tipoDeFiltro === 'Turnos'">
                 <graph-table type="pie" titulo="Estado" [data]="estadoTurno" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>
             </div>
@@ -19,14 +19,21 @@
                 <graph-table type="pie" titulo="Estado" [data]="estadoAgenda" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="!mensajeInicial">
             <div class="col">
                 <graph-table type="bar" titulo="Profesionales" [data]="profesionales" [table]="esTabla" [tipoDeFiltro]="tipoDeFiltro"></graph-table>                
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="!mensajeInicial">
             <div class="col">
                 <tabla-2d [data]="dataGeolocalizacion"></tabla-2d>
+            </div>
+        </div>
+        <div class="row" *ngIf="mensajeInicial">
+            <div class="col">
+                <div class="alert alert-info text-center" role="alert">
+                    Elija las opciones de filtrados y luego click en el botón "Buscar"
+                </div>
             </div>
         </div>
        
