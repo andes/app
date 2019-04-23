@@ -55,6 +55,12 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
     }
 
     public ngOnInit() {
+        this.plex.updateTitle([{
+            route: '/',
+            name: 'ANDES'
+        }, {
+            name: 'Reportes diarios'
+        }]);
 
         this.organizacion = null;
         this.tipoReportes = null;
