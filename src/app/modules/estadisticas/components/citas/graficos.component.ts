@@ -83,7 +83,7 @@ export class GraficosComponent implements OnInit {
     }
 
     cargarResultados(data) {
-        if (data) {
+        if (data && data.length > 0 && data[0].count > 0) {
             this.dataGraph = this.type === 'bar' ? [
                 {data: data.map(item => item.count), label: this.tipoDeFiltro}
             ] : data.map(item => item.count);
