@@ -5,11 +5,10 @@ import { Component, Input, EventEmitter, Output, OnInit, HostBinding, PipeTransf
 import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
-import { ITurno } from './../../../../interfaces/turnos/ITurno';
 import { IPaciente } from './../../../../interfaces/IPaciente';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
+import { ObraSocialCacheService } from '../../../../services/obraSocialCache.service';
 
 @Component({
     selector: 'sobreturno',
@@ -56,7 +55,7 @@ export class AgregarSobreturnoComponent implements OnInit {
     showSobreturno = true;
     pacientesSearch = false;
     horaTurno = null;
-    telefono: String = '';
+    telefono = '';
     cambioTelefono = false;
 
     public seleccion = null;
@@ -72,7 +71,8 @@ export class AgregarSobreturnoComponent implements OnInit {
         public servicioTipoPrestacion: TipoPrestacionService,
         private router: Router,
         public auth: Auth,
-        public servicePaciente: PacienteService) { }
+        public servicePaciente: PacienteService,
+        private obraSocialCacheService: ObraSocialCacheService) { }
 
     ngOnInit() {
         this.inicio = new Date(this.hoy.setHours(this.agenda.horaInicio.getHours(), this.agenda.horaInicio.getMinutes(), 0, 0));
@@ -193,73 +193,76 @@ export class AgregarSobreturnoComponent implements OnInit {
                 this.paciente.carpetaEfectores.push(this.carpetaEfector);
             }
 
-            let pacienteSave = {
-                id: this.paciente.id,
-                documento: this.paciente.documento,
-                apellido: this.paciente.apellido,
-                nombre: this.paciente.nombre,
-                fechaNacimiento: this.paciente.fechaNacimiento,
-                sexo: this.paciente.sexo,
-                telefono: this.telefono,
-                carpetaEfectores: this.paciente.carpetaEfectores
-            };
-            // Si cambió el teléfono lo actualizo en el MPI
-            if (this.cambioTelefono) {
-                let nuevoCel = {
-                    'tipo': 'celular',
-                    'valor': this.telefono,
-                    'ranking': 1,
-                    'activo': true,
-                    'ultimaActualizacion': new Date()
+            this.obraSocialCacheService.getFinanciadorPacienteCache().subscribe((financiador) => {
+                let pacienteSave = {
+                    id: this.paciente.id,
+                    documento: this.paciente.documento,
+                    apellido: this.paciente.apellido,
+                    nombre: this.paciente.nombre,
+                    fechaNacimiento: this.paciente.fechaNacimiento,
+                    sexo: this.paciente.sexo,
+                    telefono: this.telefono,
+                    carpetaEfectores: this.paciente.carpetaEfectores,
+                    obraSocial: financiador
                 };
-                let mpi: Observable<any>;
-                let flagTelefono = false;
-                // Si tiene un celular en ranking 1 y activo cargado, se reemplaza el nro
-                // sino, se genera un nuevo contacto
-                if (this.paciente.contacto.length > 0) {
-                    this.paciente.contacto.forEach((contacto, index) => {
-                        if (contacto.tipo === 'celular') {
-                            contacto.valor = this.telefono;
-                            flagTelefono = true;
+                // Si cambió el teléfono lo actualizo en el MPI
+                if (this.cambioTelefono) {
+                    let nuevoCel = {
+                        'tipo': 'celular',
+                        'valor': this.telefono,
+                        'ranking': 1,
+                        'activo': true,
+                        'ultimaActualizacion': new Date()
+                    };
+                    let mpi: Observable<any>;
+                    let flagTelefono = false;
+                    // Si tiene un celular en ranking 1 y activo cargado, se reemplaza el nro
+                    // sino, se genera un nuevo contacto
+                    if (this.paciente.contacto.length > 0) {
+                        this.paciente.contacto.forEach((contacto, index) => {
+                            if (contacto.tipo === 'celular') {
+                                contacto.valor = this.telefono;
+                                flagTelefono = true;
+                            }
+                        });
+                        if (!flagTelefono) {
+                            this.paciente.contacto.push(nuevoCel);
+                        }
+                    } else {
+                        this.paciente.contacto = [nuevoCel];
+                    }
+                    let cambios = {
+                        'op': 'updateContactos',
+                        'contacto': this.paciente.contacto
+                    };
+                    mpi = this.servicePaciente.patch(pacienteSave.id, cambios);
+                    mpi.subscribe(resultado => {
+
+                        if (resultado) {
+                            this.plex.info('success', 'Se actualizó el numero de telefono');
                         }
                     });
-                    if (!flagTelefono) {
-                        this.paciente.contacto.push(nuevoCel);
-                    }
-                } else {
-                    this.paciente.contacto = [nuevoCel];
                 }
-                let cambios = {
-                    'op': 'updateContactos',
-                    'contacto': this.paciente.contacto
+
+                let patch = {
+                    'op': 'agregarSobreturno',
+                    'sobreturno': {
+                        horaInicio: this.combinarFechas(this.agenda.horaInicio, this.horaTurno),
+                        estado: 'asignado',
+                        tipoPrestacion: this.tipoPrestacion,
+                        paciente: pacienteSave,
+                        nota: this.nota
+                    }
                 };
-                mpi = this.servicePaciente.patch(pacienteSave.id, cambios);
-                mpi.subscribe(resultado => {
 
-                    if (resultado) {
-                        this.plex.info('success', 'Se actualizó el numero de telefono');
+                this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
+                    this.plex.toast('success', 'Información', 'El sobreturno se guardó correctamente');
+                    if (this.changeCarpeta) {
+                        this.actualizarCarpetaPaciente();
                     }
+                    this.volverAlGestor.emit(this.agenda);
+                    this.volverRevision.emit(true);
                 });
-            }
-
-            let patch = {
-                'op': 'agregarSobreturno',
-                'sobreturno': {
-                    horaInicio: this.combinarFechas(this.agenda.horaInicio, this.horaTurno),
-                    estado: 'asignado',
-                    tipoPrestacion: this.tipoPrestacion,
-                    paciente: pacienteSave,
-                    nota: this.nota
-                }
-            };
-
-            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
-                this.plex.toast('success', 'Información', 'El sobreturno se guardó correctamente');
-                if (this.changeCarpeta) {
-                    this.actualizarCarpetaPaciente();
-                }
-                this.volverAlGestor.emit(this.agenda);
-                this.volverRevision.emit(true);
             });
         } else {
             this.plex.info('warning', 'Debe completar los datos requeridos');

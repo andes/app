@@ -22,27 +22,15 @@ export class SnomedService {
         return this.server.get(this.snomedURL, { params: params, showError: true });
     }
 
-    getProblemas(params: any): Observable<any[]> {
-        return this.server.get(this.snomedURLProblema, { params: params, showError: true });
-    }
-
-    getProcedimientos(params: any): Observable<any[]> {
-        return this.server.get(this.snomedURLProcedimiento, { params: params, showError: true });
-    }
-
-    getEquipamientos(params: any): Observable<any[]> {
-        return this.server.get(this.snomedURLEquipamiento, { params: params, showError: true });
-    }
-
-    getProductos(params: any): Observable<any[]> {
-        return this.server.get(this.snomedURL + '/producto', { params: params, showError: true });
-    }
-
     getCie10(params: any): Observable<any> {
         return this.server.get(this.snomedURL + '/map', { params: params, showError: true });
     }
 
     getQuery(params: any): Observable<any[]> {
         return this.server.get(this.snomedURLexpression, { params: params, showError: true });
+    }
+
+    getConcepts(sctids): Observable<any[]> {
+        return this.server.get(this.snomedURL + '/concepts', { params: { sctids }, showError: true });
     }
 }
