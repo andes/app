@@ -1,11 +1,10 @@
-
-import {debounceTime} from 'rxjs/operators';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { OrganizacionService } from './../../services/organizacion.service';
 import { Component, OnInit, HostBinding } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
 
 const limit = 25;
 
@@ -18,46 +17,49 @@ export class OrganizacionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
     showcreate = false;
     datos: IOrganizacion[] = [];
-    searchForm: FormGroup;
     seleccion: IOrganizacion;
-    value: any;
     skip = 0;
     nombre = '';
-    activo: boolean = null;
+    soloNoActivo = false;
     loader = false;
     finScroll = false;
     tengoDatos = true;
-    checked = true;
-
+    private idOrganizaciones = [];
     constructor(private formBuilder: FormBuilder,
-        private organizacionService: OrganizacionService,
+        public organizacionService: OrganizacionService,
         private auth: Auth,
-        private router: Router) { }
+        private router: Router,
+        private plex: Plex) { }
 
     ngOnInit() {
-        this.searchForm = this.formBuilder.group({
-            nombre: [''],
-            activo: true
-        });
-
-        this.searchForm.valueChanges.pipe(debounceTime(200)).subscribe((value) => {
-            this.value = value;
-            this.skip = 0;
-            this.loadDatos(false);
-        });
-        this.loadDatos();
+        if (this.auth.getPermissions('tm:organizacion:?').length < 1) {
+            this.router.navigate(['inicio']);
+        } else {
+            this.updateTitle('Organizaciones');
+            this.auth.organizaciones().subscribe(data => {
+                if (data) {
+                    data.forEach(dat => { this.idOrganizaciones.push(dat.id); });
+                }
+                this.loadDatos();
+            });
+        }
     }
 
-    checkAuth (permiso, id) {
-        return this.auth.check('tm:organizacion:' + permiso + (id ? ':' + id : '') );
+    private updateTitle(nombre: string) {
+        this.plex.updateTitle('Tablas maestras / ' + nombre);
+    }
+
+    checkAuth(permiso, id) {
+        return this.auth.check('tm:organizacion:' + permiso + (id ? ':' + id : ''));
     }
 
     loadDatos(concatenar: boolean = false) {
         let parametros = {
-            activo: this.value && this.value.activo,
-            nombre: this.value && this.value.nombre,
+            activo: !this.soloNoActivo,
+            nombre: this.nombre,
             skip: this.skip,
-            limit: limit
+            limit: limit,
+            ids: this.idOrganizaciones
         };
         this.organizacionService.get(parametros)
             .subscribe(
@@ -78,19 +80,10 @@ export class OrganizacionComponent implements OnInit {
     }
 
     onReturn(objOrganizacion: IOrganizacion): void {
+        this.updateTitle('Organizaciones');
         this.showcreate = false;
         this.seleccion = null;
         this.loadDatos();
-    }
-
-    onDisable(objOrganizacion: IOrganizacion) {
-        this.organizacionService.disable(objOrganizacion)
-            .subscribe(dato => this.loadDatos()); // Bind to view
-    }
-
-    onEnable(objOrganizacion: IOrganizacion) {
-        this.organizacionService.enable(objOrganizacion)
-            .subscribe(dato => this.loadDatos()); // Bind to view
     }
 
     activate(objOrganizacion: IOrganizacion) {
@@ -108,6 +101,10 @@ export class OrganizacionComponent implements OnInit {
         this.showcreate = true;
         this.seleccion = objOrganizacion;
     }
+    nuevaOrganizacion() {
+        this.seleccion = null;
+        this.showcreate = true;
+    }
 
     nextPage() {
         if (this.tengoDatos) {
@@ -118,5 +115,10 @@ export class OrganizacionComponent implements OnInit {
     }
     routeSectores(id) {
         this.router.navigate(['/tm/organizacion/' + id + '/sectores']);
+    }
+
+    aplicarFiltroBusqueda() {
+        this.skip = 0;
+        this.loadDatos(false);
     }
 }

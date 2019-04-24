@@ -566,6 +566,7 @@ registerLocaleData(localeEs, 'es');
         HudsBusquedaComponent,
         BuscadorComponent,
         VistaHudsComponent,
+        VistaPrestacionComponent,
         VistaCDAComponent,
         HudsBusquedaPacienteComponent,
         PacienteBuscarComponent,
