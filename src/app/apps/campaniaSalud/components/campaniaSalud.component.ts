@@ -2,7 +2,9 @@ import { CampaniaSaludService } from '../services/campaniaSalud.service';
 import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { ICampaniaSalud } from '../interfaces/ICampaniaSalud';
-
+import { Router } from '@angular/router';
+import { Auth } from '@andes/auth';
+import * as moment from 'moment';
 @Component({
     selector: 'campaniaSalud',
     templateUrl: 'campaniaSalud.html'
@@ -48,7 +50,14 @@ export class CampaniaSaludComponent implements OnInit {
      */
     fechaHasta: Date;
 
-    constructor(public campaniaSaludService: CampaniaSaludService) { }
+    /**
+     * Indica si el usuario tiene el permiso para crear. Habilita el botón Crear
+     * @type {boolean}
+     * @memberof CampaniaSaludComponent
+     */
+    puedeCrear: boolean;
+
+    constructor(public campaniaSaludService: CampaniaSaludService, private auth: Auth, private router: Router) { }
 
     /**
      * Inicializa la pantalla de campañas. Carga los valores por defecto de los filtros y realiza la búsqueda
@@ -56,6 +65,10 @@ export class CampaniaSaludComponent implements OnInit {
      * @memberof CampaniaSaludComponent
      */
     ngOnInit() {
+        if (!this.auth.getPermissions('campania:?').length) {
+            this.router.navigate(['inicio']);
+        }
+        this.puedeCrear = this.auth.check('campania:crear');
         this.campanias = [];
         this.fechaDesde = moment().startOf('month').toDate();
         this.fechaHasta = moment().endOf('month').toDate();
@@ -154,7 +167,10 @@ export class CampaniaSaludComponent implements OnInit {
      *
      * @memberof CampaniaSaludComponent
      */
-    cancelarEdicionCampania() {
+    cancelarEdicionCampania(cancelaCreacion: boolean) {
         this.mostrarVisualizacionCampania = true;
+        if (!cancelaCreacion) {
+            this.seleccionada = null;
+        }
     }
 }

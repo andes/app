@@ -39,11 +39,11 @@
                     <legend>Vigencia</legend>
                     <div class="row">
                         <div class="col-md">
-                            <label>Fecha Desde</label>
+                            <label>Fecha desde</label>
                             <span>{{campania.vigencia?.desde | fecha}}</span>
                         </div>
                         <div class="col-md">
-                            <label>Fecha Hasta</label>
+                            <label>Fecha hasta</label>
                             <span>{{campania.vigencia.hasta | fecha}}</span>
                         </div>
                     </div>
@@ -63,10 +63,10 @@
         </div>
     </fieldset>
     <fieldset>
-        <legend>Datos del Acceso</legend>
+        <legend>Datos del acceso</legend>
         <div class="row">
             <div class="col-md-4">
-                <label>Texto Acción</label>
+                <label>Texto acción</label>
                 <span>{{campania.textoAccion | uppercase}}</span>
             </div>
             <div class="col-md-8">
@@ -77,7 +77,7 @@
     </fieldset>
     <fieldset>
         <div class="row">
-            <div class="col text-right">
+            <div class="col text-right" *ngIf="puedeEditar">
                 <plex-button label="Modificar" type="success" (click)="modificar()"></plex-button>
             </div>
         </div>
