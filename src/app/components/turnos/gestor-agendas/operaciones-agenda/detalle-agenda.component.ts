@@ -3,7 +3,8 @@ import { Component, Input, Output, EventEmitter, OnInit, HostBinding } from '@an
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import * as moment from 'moment';
+import * as enumerado from './../../enums';
+import { enumToArray } from '../../../../utils/enums';
 
 import { TurnoService } from './../../../../services/turnos/turno.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
@@ -16,6 +17,8 @@ import { AgendaService } from '../../../../services/turnos/agenda.service';
 
 export class DetalleAgendaComponent implements OnInit {
 
+    public estadosAgenda = enumerado.EstadosAgenda;
+    public estadosAgendaArray = enumToArray(enumerado.EstadosAgenda);
     private _agenda: any;
     // Parámetros
     @Input('agenda')

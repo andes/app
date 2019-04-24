@@ -7,8 +7,10 @@
                 <!-- Todos los col deben sumar 12 o usar 'col' para un ancho automático -->
                 <div class="row">
                     <div class="col-md">
-                        <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="searchClear()"></paciente-buscar>
-                        <paciente-listado *ngIf="pacientes && pacientes.length" [type]="'sm'" [pacientes]="pacientes" [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
+                        <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
+                            (searchClear)="searchClear()"></paciente-buscar>
+                        <paciente-listado *ngIf="pacientes && pacientes.length" [type]="'sm'" [pacientes]="pacientes"
+                            [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
                         <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
                             ¡No se encontró ningún paciente!
                         </div>
@@ -30,10 +32,23 @@
                         <span>{{pacienteActivo.genero}}</span>
                     </div>
                 </div>
+                <div class="row" *ngIf="pacienteActivo">
+                    <div class="col-md-12">
+                        <ng-container *ngIf="obraSocialPaciente">
+                            <label
+                                *ngIf="obraSocialPaciente.financiador && obraSocialPaciente.financiador !=='SUMAR'">Obra
+                                Social </label>
+                            <label
+                                *ngIf="obraSocialPaciente.financiador && obraSocialPaciente.financiador === 'SUMAR'">Financiador
+                            </label>
+                            <div>{{obraSocialPaciente.financiador}}</div>
+                        </ng-container>
+                    </div>
+                </div>
                 <div class="row" *ngIf="prestaciones.length > 1">
                     <div class="col-md">
-                        <plex-select label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion" [data]="prestaciones" name="turnoTipoPrestacion"
-                            [required]="true"></plex-select>
+                        <plex-select label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion" [data]="prestaciones"
+                            name="turnoTipoPrestacion" [required]="true"></plex-select>
                     </div>
                 </div>
             </fieldset>
@@ -43,7 +58,8 @@
                     <plex-button label="Cancelar" type="danger" (click)="cancelar($event)"></plex-button>
                 </div>
                 <div class="col-md text-right">
-                    <plex-button label="Guardar" type="success" [validateForm]="formulario" (click)="guardar($event)"></plex-button>
+                    <plex-button label="Guardar" type="success" [validateForm]="formulario" (click)="guardar($event)">
+                    </plex-button>
                 </div>
             </div>
         </form>

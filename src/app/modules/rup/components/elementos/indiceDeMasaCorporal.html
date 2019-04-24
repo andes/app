@@ -5,16 +5,18 @@
 
             <ng-container *ngIf="registro?.registros?.length">
                 <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
-                    <div [ngClass]="{'d-none': !cumpleReglasParams(item.elementoRUP), 'col': cumpleReglasParams(item.elementoRUP)}">
-                        <rup [elementoRUP]="item.elementoRUP" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]"
-                            [soloValores]="soloValores" (change)="calculoIMC()">
+                    <div
+                        [ngClass]="{'d-none': !cumpleReglasParams(item.elementoRUP), 'col': cumpleReglasParams(item.elementoRUP)}">
+                        <rup [elementoRUP]="item.elementoRUP" [params]="item.params" [prestacion]="prestacion"
+                            [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="calculoIMC()">
                         </rup>
                     </div>
                 </ng-container>
             </ng-container>
 
             <div class="col">
-                <plex-float label="{{ termCapitalizado }}" [(ngModel)]="valorImc" required="true" name="imc" [disabled]="true">
+                <plex-float label="{{ termCapitalizado }}" [(ngModel)]="valorImc" required="true" name="imc"
+                    [disabled]="true">
                 </plex-float>
             </div>
         </div>
@@ -30,9 +32,10 @@
     <ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
         <div class="row">
             <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
-                <div [ngClass]="{'d-none': !cumpleReglasParams(item.elementoRUP), 'col': cumpleReglasParams(item.elementoRUP)}" class="col-{{ item.style.columns }} mr-{{ item.style?.offset ? item.style : '0' }}">
-                    <rup [elementoRUP]="item.elementoRUP" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]"
-                        [soloValores]="true" [paciente]="paciente">
+                <div [ngClass]="{'d-none': !cumpleReglasParams(item.elementoRUP), 'col': cumpleReglasParams(item.elementoRUP)}"
+                    class="col-{{ item.style.columns }} mr-{{ item.style?.offset ? item.style : '0' }}">
+                    <rup [elementoRUP]="item.elementoRUP" [params]="item.params" [prestacion]="prestacion"
+                        [registro]="registro.registros[i]" [soloValores]="true" [paciente]="paciente">
                     </rup>
                 </div>
             </ng-container>

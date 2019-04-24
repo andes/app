@@ -1,12 +1,9 @@
 import { Component, EventEmitter, Output, Input, OnInit, OnChanges } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 
 import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
-import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
-import { OrganizacionService } from './../../../../services/organizacion.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 
 import * as moment from 'moment';
@@ -152,7 +149,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
             let start_time = moment(agenda.horaInicio);
             let end_time = moment(agenda.horaFin);
             if (start_time >= this._start && end_time <= this._end) {
-                if (agenda.espacioFisico && (agenda.estado === 'disponible' || agenda.estado === 'publicada')) {
+                if (agenda.espacioFisico && (agenda.estado === 'disponible' || agenda.estado === 'publicada' || agenda.estado === 'planificacion' || agenda.estado === 'pausada')) {
                     let _id = agenda.espacioFisico.id;
                     let temp = matrix.find(item => item.id === _id);
                     if (temp) {
@@ -281,7 +278,6 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
                 }
             }
         }
-
     }
 
     makeItem(agenda, espacioID) {

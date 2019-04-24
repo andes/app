@@ -1,18 +1,18 @@
 :host {
-    // position: fixed;
-    // left: 100px;
-    // top: 0px;    
+    &>div {
+        display: flex;
+        background: #0070BA;
+    }
     z-index: 3000;
-    background: #0070BA;
-    // padding-right: 5px;
     cursor: help; // Texto
     .texto {
         color: white;
         white-space: nowrap;
+        padding-right: 5px;
     } // Foto header
     .foto {
         height: 50px;
-        padding: 5px;
+        padding-right: 5px;
     } // Popover con detalles de paciente
     .popover {
         display: none;
@@ -25,9 +25,4 @@
     &:hover .popover {
         display: block;
     }
-}
-
-div.clearfix {
-    background: #0070BA;
-    height: 50px;
 }
