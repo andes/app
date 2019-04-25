@@ -4,6 +4,7 @@ import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 import { ProfesionalService } from '../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
+import * as loadCombos from '../../utils/comboLabelFiltro.component';
 
 @Component({
     selector: 'turnos-filtros',
@@ -44,7 +45,7 @@ import { Auth } from '@andes/auth';
             </plex-select>
         </div>
         <div class="col-3" *ngIf="seleccion.tipoDeFiltro && seleccion.tipoDeFiltro.id === 'turnos'">
-            <plex-select [multiple]="true" [data]="tipoTurnos" [(ngModel)]="seleccion.tipoTurno" placeholder="Seleccione..." label="Tipo de turno">
+            <plex-select [multiple]="true" [data]="tipoTurno" [(ngModel)]="seleccion.tipoTurno" placeholder="Seleccione..." label="Tipo de turno">
             </plex-select>
         </div>
         <div class="col-3" *ngIf="seleccion.tipoDeFiltro && seleccion.tipoDeFiltro.id === 'agendas'">
@@ -64,32 +65,9 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
     public opciones = [{ id: 'agendas', nombre: 'Agendas' }, { id: 'turnos', nombre: 'Turnos' }];
     public esTablaGrafico = false;
     public mostrarMasOpciones = false;
-    public estadosAgendas = [
-        { id: 'planificacion', nombre: 'Planificación' },
-        { id: 'disponible', nombre: 'Disponible' },
-        { id: 'publicada', nombre: 'Publicada' },
-        { id: 'suspendida', nombre: 'Suspendida' },
-        { id: 'pausada', nombre: 'Pausada' },
-        { id: 'pendienteAsistencia', nombre: 'Pendiente Asistencia' },
-        { id: 'pendienteAuditoria', nombre: 'Pendiente Auditoría' },
-        { id: 'auditada', nombre: 'Auditada' },
-        { id: 'borrada', nombre: 'Borrada' }
-    ];
-
-    public estadoTurnos = [
-        { id: 'disponible', nombre: 'Disponible' },
-        { id: 'asignado', nombre: 'Asignado' },
-        { id: 'reasignado', nombre: 'Reasignado' },
-        { id: 'suspendido', nombre: 'Suspendido' }
-    ];
-
-    public tipoTurnos = [
-        { id: 'delDia', nombre: 'Del Día' },
-        { id: 'programado', nombre: 'Programado' },
-        { id: 'gestion', nombre: 'Con llave' },
-        { id: 'profesional', nombre: 'Profesional' },
-        { id: 'sobreturno', nombre: 'Sobreturno' }
-    ];
+    public tipoTurno = [];
+    public estadoTurnos = [];
+    public estadosAgendas = [];
 
     // Permisos
     public verProfesionales = this.auth.check('dashboard:citas:verProfesionales');
@@ -119,6 +97,9 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
                 this.seleccion.profesional = resultado;
             });
         }
+        this.tipoTurno = loadCombos.getTipoTurnos();
+        this.estadoTurnos = loadCombos.getEstadosTurnos();
+        this.estadosAgendas = loadCombos.getEstadosAgendas();
     }
 
     changeTablaGrafico() {
