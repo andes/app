@@ -13,7 +13,6 @@ import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ObraSocialService } from '../../../services/obraSocial.service';
 
 import { IAgenda } from '../../../interfaces/turnos/IAgenda';
-import { ITurno } from '../../../interfaces/turnos/ITurno';
 @Component({
     selector: 'turnos-paciente',
     templateUrl: 'turnos-paciente.html',
@@ -40,45 +39,23 @@ export class TurnosPacienteComponent implements OnInit {
     turnosSeleccionados: any[] = [];
     showPuntoInicio = true;
     showListaPrepagas: Boolean = false;
-    public obraSocialPaciente: any[];
+    public obraSocialPaciente: any[] = [];
     public prepagas: any[] = [];
-
+    public _paciente: IPaciente;
     @Input('operacion')
     set operacion(value: string) {
         this._operacion = value;
     }
+
     get operacion(): string {
         return this._operacion;
     }
-
-    @Input('obraSocial')
-    set obraSocial(value: any) {
-        this._obraSocial = value;
-
-        if (value) {
-            this.obraSocialPaciente = value.map((os: any) => {
-                let osPaciente;
-
-                if (os.nombre) {
-                    osPaciente = {
-                        'id': os.nombre,
-                        'label': os.nombre
-                    };
-                } else {
-                    osPaciente = {
-                        'id': os.financiador,
-                        'label': os.financiador
-                    };
-                }
-                return osPaciente;
-            });
-            this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
-
-            this.modelo.obraSocial = this.obraSocialPaciente[0].label;
-        }
+    @Input('paciente')
+    set paciente(value: any) {
+        this._paciente = value;
     }
-    get obraSOcial(): any {
-        return this._obraSocial;
+    get paciente(): any {
+        return this._paciente;
     }
 
     @Input('turnos')
@@ -107,6 +84,40 @@ export class TurnosPacienteComponent implements OnInit {
         this.puedeLiberarTurno = this.auth.getPermissions('turnos:turnos:liberarTurno').length > 0;
         this.todaysdate = new Date();
         this.todaysdate.setHours(0, 0, 0, 0);
+        this.loadObraSocial();
+    }
+
+    loadObraSocial() {
+        // TODO: si es en colegio médico hay que buscar en el paciente
+        this.obraSocialService.getObrasSociales({ dni: this._paciente.documento, sexo: this._paciente.sexo }).subscribe(resultado => {
+            if (resultado.length) {
+                this._obraSocial = resultado;
+                this.obraSocialPaciente = resultado.map((os: any) => {
+                    let osPaciente;
+
+                    if (os.nombre) {
+                        osPaciente = {
+                            'id': os.nombre,
+                            'label': os.nombre
+                        };
+                    } else {
+                        osPaciente = {
+                            'id': os.financiador,
+                            'label': os.financiador
+                        };
+                    }
+                    return osPaciente;
+                });
+                this.modelo.obraSocial = this.obraSocialPaciente[0].label;
+            } else {
+                this._obraSocial = [];
+            }
+            this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
+
+
+        });
+
+
     }
 
     cambiarMotivo() {
@@ -120,15 +131,13 @@ export class TurnosPacienteComponent implements OnInit {
     showArancelamiento(turno) {
         if (this.modelo.obraSocial === 'prepaga') {
             this.obraSocialSeleccionada = this.modelo.prepaga.nombre;
+
         } else {
             this.obraSocialSeleccionada = this.modelo.obraSocial;
         }
 
         this.turnoArancelamiento = turno;
         this.showMotivoConsulta = true;
-
-        this.servicioFA.post(turno).subscribe(prestacion => {
-        });
     }
 
     async printArancelamiento(turno) {
@@ -151,6 +160,9 @@ export class TurnosPacienteComponent implements OnInit {
 
         });
         this.showArancelamientoForm.emit(turno);
+        this.servicioFA.post(turno).subscribe(prestacion => {
+        });
+
     }
 
     eventosTurno(turno, operacion) {
