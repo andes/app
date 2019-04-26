@@ -10,15 +10,12 @@
         <div>
             <div *ngFor="let turno of turnosPaciente; let indiceTurno = index">
                 <div *ngIf="turno.tipoPrestacion?.term">
-                    <div *ngIf="turno" class="p-2" [ngClass]="{'bg-null': indiceTurno % 2 === 0}">
+                    <div *ngIf="turno" [ngClass]="{'bg-null': indiceTurno % 2 === 0}">
                         <!-- Panel -->
-                        <div *ngIf="turno.asistencia == 'asistio' && turno.estado !== 'suspendido'"
-                            class="float-right badge-dashboard badge badge-success">{{turno.asistencia}}</div>
-                        <div *ngIf="turno.asistencia == 'noAsistio' && turno.estado !== 'suspendido'"
-                            class="float-right badge-dashboard badge badge-danger">{{
+                        <div *ngIf="turno.asistencia == 'asistio' && turno.estado !== 'suspendido'" class="float-right badge-dashboard badge badge-success">{{turno.asistencia}}</div>
+                        <div *ngIf="turno.asistencia == 'noAsistio' && turno.estado !== 'suspendido'" class="float-right badge-dashboard badge badge-danger">{{
                             turno.asistencia }}</div>
-                        <div *ngIf="turno.estado == 'suspendido'"
-                            class="float-right badge-dashboard badge badge-danger">Suspendido</div>
+                        <div *ngIf="turno.estado == 'suspendido'" class="float-right badge-dashboard badge badge-danger">Suspendido</div>
                         <h5>{{ turno.tipoPrestacion.term }}</h5>
                         <div class="row" *ngIf="turno.organizacion">
                             <div class="col">
@@ -35,7 +32,7 @@
                             </div>
                         </div>
 
-                        <div class="row" *ngIf="turno && turno.profesionales">
+                        <div class="row" *ngIf="turno && turno.profesionales.length > 0">
                             <div class="col">
                                 <strong>Equipo de Salud:</strong>
                                 {{ turno.profesionales | enumerar:['apellido','nombre']}}
@@ -51,14 +48,10 @@
 
                         <div class="row">
                             <div class="col-12">
-                                <ng-container *ngIf="modelo.obraSocial !== 'SUMAR'">
-                                    <plex-radio [(ngModel)]="modelo.obraSocial" name="os"
-                                        (change)="seleccionarObraSocial($event)" label="Seleccione una Obra Social"
-                                        [data]="obraSocialPaciente">
+                                <ng-container *ngIf="modelo.obraSocial !== 'SUMAR' && turno && turno.profesionales.length > 0">
+                                    <plex-radio [(ngModel)]="modelo.obraSocial" name="os" (change)="seleccionarObraSocial($event)" label="Seleccione una Obra Social" [data]="obraSocialPaciente">
                                     </plex-radio>
-                                    <plex-select *ngIf="showListaPrepagas" [(ngModel)]="modelo.prepaga" name="prepagas"
-                                        [data]="prepagas" label="Seleccione una Prepaga" idField="nombre"
-                                        labelField="nombre">
+                                    <plex-select *ngIf="showListaPrepagas" [(ngModel)]="modelo.prepaga" name="prepagas" [data]="prepagas" label="Seleccione una Prepaga" idField="nombre" labelField="nombre">
                                     </plex-select>
                                 </ng-container>
                             </div>
@@ -69,25 +62,19 @@
                         </div>
 
                         <br>
-                        <div class="row"
-                            *ngIf=" turno.horaInicio >= todaysdate && turno.estado !== 'suspendido' && turno.organizacion._id === auth.organizacion.id">
-                            <div class="col-4"
-                                *ngIf="puedeLiberarTurno && turno.asistencia !== 'asistio' && turno.bloque_id">
+                        <div class="row" *ngIf=" turno.horaInicio >= todaysdate && turno.estado !== 'suspendido' && turno.organizacion._id === auth.organizacion.id">
+                            <div class="col-4" *ngIf="puedeLiberarTurno && turno.asistencia !== 'asistio' && turno.bloque_id">
                                 <!-- no funcionan bien los title="" -->
                                 <plex-button type="danger" label="Liberar Turno" (click)="liberarTurno(turno)">
                                 </plex-button>
                             </div>
-                            <div class="col-4"
-                                *ngIf="puedeRegistrarAsistencia && turno.asistencia !== 'asistio'&& isToday(turno)">
-                                <plex-button type="success" label="Dar Asistencia"
-                                    (click)="eventosTurno(turno, 'darAsistencia')"></plex-button>
+                            <div class="col-4" *ngIf="puedeRegistrarAsistencia && turno.asistencia !== 'asistio'&& isToday(turno)">
+                                <plex-button type="success" label="Dar Asistencia" (click)="eventosTurno(turno, 'darAsistencia')"></plex-button>
                             </div>
-                            <div class="col-4"
-                                *ngIf="puedeRegistrarAsistencia && turno.asistencia === 'asistio' && isToday(turno) && turno.diagnostico.codificaciones.length == 0">
-                                <plex-button type="warning" label="Quitar Asistencia"
-                                    (click)="eventosTurno(turno,'sacarAsistencia')"></plex-button>
+                            <div class="col-4" *ngIf="puedeRegistrarAsistencia && turno.asistencia === 'asistio' && isToday(turno) && turno.diagnostico.codificaciones.length == 0">
+                                <plex-button type="warning" label="Quitar Asistencia" (click)="eventosTurno(turno,'sacarAsistencia')"></plex-button>
                             </div>
-                            <div class="col-4" *ngIf="modelo.obraSocial !== 'SUMAR'">
+                            <div class="col-4" *ngIf="modelo.obraSocial !== 'SUMAR' && turno && turno.profesionales.length > 0">
                                 <plex-button type="info" label="Recupero" (click)="showArancelamiento(turno)">
                                 </plex-button>
                             </div>
@@ -100,7 +87,7 @@
     </div>
     <div *ngIf="showMotivoConsulta">
         <div class="row">
-            <div class="col" *ngIf="turnoArancelamiento?.paciente?.obraSocial?.financiador">
+            <div class="col" *ngIf="turnoArancelamiento?.paciente?.obraSocial?.financiador || obraSocialSeleccionada">
                 <label>Obra Social </label>
                 <!-- <div>{{turnoArancelamiento.paciente.obraSocial.financiador}}</div> -->
                 <div>{{obraSocialSeleccionada}}</div>
@@ -114,8 +101,7 @@
         </div>
         <div class="row">
             <div class="col">
-                <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" multiline="true"
-                    (change)="cambiarMotivo()" [(ngModel)]="turnoArancelamiento.motivoConsulta"></plex-text>
+                <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" multiline="true" (change)="cambiarMotivo()" [(ngModel)]="turnoArancelamiento.motivoConsulta"></plex-text>
             </div>
         </div>
         <br>
@@ -130,8 +116,7 @@
         </div>
     </div>
     <div *ngIf="showLiberarTurno ">
-        <liberar-turno [agenda]="agenda " [turnosSeleccionados]="turnosSeleccionados "
-            (saveLiberarTurno)="afterLiberarTurno($event) " (cancelaLiberarTurno)="afterLiberarTurno($event) ">
+        <liberar-turno [agenda]="agenda " [turnosSeleccionados]="turnosSeleccionados " (saveLiberarTurno)="afterLiberarTurno($event) " (cancelaLiberarTurno)="afterLiberarTurno($event) ">
         </liberar-turno>
     </div>
 </plex-box>

@@ -41,4 +41,9 @@ export class ObraSocialService {
         return this.server.get(this.url + '/sumar/');
     }
 
+    getObrasSociales(opciones: any, showError = true): Observable<IFinanciador[]> {
+        return this.server.get(this.url + '/os/', { params: opciones, showError: showError });
+    }
+
+
 }
