@@ -141,7 +141,7 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
 
     getParams() {
         // organizacion
-        if (this.organizacion !== null && typeof (this.organizacion) !== 'undefined') {
+        if (this.organizacion) {
             this.parametros['organizacion'] = this.organizacion.id;
             this.parametros['organizacionNombre'] = this.organizacion.nombre;
         } else {
@@ -150,14 +150,14 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
         }
 
         // tipoReportes
-        if (this.tipoReportes !== null && typeof (this.tipoReportes) !== 'undefined') {
+        if (this.tipoReportes) {
             this.parametros['tipoReportes'] = this.tipoReportes.nombre;
         } else {
             this.parametros['tipoReportes'] = '';
         }
 
         // mes
-        if (this.mes !== null && typeof (this.mes) !== 'undefined') {
+        if (this.mes) {
             this.parametros['mes'] = this.mes.id;
             this.parametros['mesNombre'] = this.mes.nombre;
         } else {
@@ -166,14 +166,14 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
         }
 
         // anio
-        if (this.anio !== null && typeof (this.anio) !== 'undefined') {
+        if (this.anio) {
             this.parametros['anio'] = this.anio.nombre;
         } else {
             this.parametros['anio'] = '';
         }
 
         // prestacion
-        if (this.prestacion !== null && typeof (this.prestacion) !== 'undefined') {
+        if (this.prestacion) {
             this.parametros['prestacion'] = this.prestacion.id;
             this.parametros['prestacionNombre'] = this.prestacion.nombre;
         } else {
@@ -182,7 +182,7 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
         }
 
         // fecha
-        if (this.fecha !== null && typeof (this.fecha) !== 'undefined') {
+        if (this.fecha) {
             this.parametros['fecha'] = this.fecha;
         } else {
             this.parametros['fecha'] = '';
