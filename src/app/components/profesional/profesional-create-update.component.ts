@@ -179,11 +179,11 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                             datos.forEach(profCandidato => {
                                 this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
                                 const prof = {
-                                    sexo: sexo: (profCandidato.sexo && (typeof this.profesional.sexo === 'string')) ? profCandidato.sexo.toString().toLowerCase() : (Object(this.profesional.sexo).id),
+                                    sexo: (profCandidato.sexo && (typeof this.profesional.sexo === 'string')) ? profCandidato.sexo.toString().toLowerCase() : (Object(this.profesional.sexo).id),
                                     nombre: profCandidato.nombre,
                                     apellido: profCandidato.apellido,
                                     fechaNacimiento: profCandidato.fechaNacimiento,
-                                    documento: profCandidato.documento;
+                                    documento: profCandidato.documento
                                 };
                                 let porcentajeMatching = this.match.matchPersonas(this.profesional, prof, this.weights, 'Levenshtein');
                                 let profesionalMatch = {
@@ -225,7 +225,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                                 });
                         }
 
-                    })
+                    });
         }
     }
 
