@@ -54,17 +54,18 @@ export class GraficosComponent implements OnInit {
 
     public chartColors: Array<any> = [{
         backgroundColor: [
-            '#f1930d',
-            '#ff4a1a',
-            '#f4a03b',
             '#92278e',
-            '#0070cc',
+            '#00A8E0',
+            '#ff4a1a',
+            '#660520',
+            '#e3007e',
             '#00bcb4',
+            '#0070cc',
             '#b9c512',
             '#111',
             '#b9c512',
             '#002738',
-            '#660520',
+            '#f4a03b',
             '#a0a0a0',
             '#8bc43f'
         ]
