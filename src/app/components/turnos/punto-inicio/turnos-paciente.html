@@ -32,7 +32,7 @@
                             </div>
                         </div>
 
-                        <div class="row" *ngIf="turno && turno.profesionales">
+                        <div class="row" *ngIf="turno && turno.profesionales.length > 0">
                             <div class="col">
                                 <strong>Equipo de Salud:</strong>
                                 {{ turno.profesionales | enumerar:['apellido','nombre']}}
@@ -48,7 +48,7 @@
 
                         <div class="row">
                             <div class="col-12">
-                                <ng-container *ngIf="modelo.obraSocial !== 'SUMAR'">
+                                <ng-container *ngIf="modelo.obraSocial !== 'SUMAR' && turno && turno.profesionales.length > 0">
                                     <plex-radio [(ngModel)]="modelo.obraSocial" name="os" (change)="seleccionarObraSocial($event)" label="Seleccione una Obra Social" [data]="obraSocialPaciente">
                                     </plex-radio>
                                     <plex-select *ngIf="showListaPrepagas" [(ngModel)]="modelo.prepaga" name="prepagas" [data]="prepagas" label="Seleccione una Prepaga" idField="nombre" labelField="nombre">
@@ -74,7 +74,7 @@
                             <div class="col-4" *ngIf="puedeRegistrarAsistencia && turno.asistencia === 'asistio' && isToday(turno) && turno.diagnostico.codificaciones.length == 0">
                                 <plex-button type="warning" label="Quitar Asistencia" (click)="eventosTurno(turno,'sacarAsistencia')"></plex-button>
                             </div>
-                            <div class="col-4" *ngIf="modelo.obraSocial !== 'SUMAR'">
+                            <div class="col-4" *ngIf="modelo.obraSocial !== 'SUMAR' && turno && turno.profesionales.length > 0">
                                 <plex-button type="info" label="Recupero" (click)="showArancelamiento(turno)">
                                 </plex-button>
                             </div>
