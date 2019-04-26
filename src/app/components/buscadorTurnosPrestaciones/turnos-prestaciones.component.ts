@@ -26,6 +26,8 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public showPrestacion;
     public loading;
     public arrayEstados;
+
+    public arrayEstadosFacturacion;
     prestacion: any;
     router: any;
     public prestaciones: any;
@@ -36,6 +38,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     ) { }
     ngOnInit() {
         this.arrayEstados = [{ id: 'Sin registro de asistencia', nombre: 'Sin registro de asistencia' }, { id: 'Ausente', nombre: 'Ausente' }, { id: 'Presente con registro del profesional', nombre: 'Presente con registro del profesional' }, { id: 'Presente sin registro del profesional', nombre: 'Presente sin registro del profesional' }];
+        this.arrayEstadosFacturacion = [{ id: 'Sin comprobante', nombre: 'Sin comprobante' }, { id: 'Comprobante sin prestacion', nombre: 'Comprobante sin prestacion' }, { id: 'Comprobante con prestacion', nombre: 'Comprobante con prestacion' }];
         this.mostrarMasOpciones = false;
         this.sumar = false;
         this.sinOS = false;
@@ -47,7 +50,8 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             idPrestacion: '',
             idProfesional: '',
             financiadores: '',
-            estado: ''
+            estado: '',
+            estadoFacturacion: ''
         };
         // Por defecto mostramos agendas y prestaciones de hoy
         this.hoy = true;
@@ -89,9 +93,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             idPrestacion: '',
             idProfesional: '',
             financiadores: '',
-            estado: ''
+            estado: '',
+            estadoFacturacion: '',
         };
-
         this.turnosPrestacionesService.get(params).subscribe((data) => {
             this.busquedas = this.ordenarPorFecha(data);
             this.loading = false;
@@ -163,6 +167,13 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
                     this.parametros['financiador'] = 'No posee';
                 } else {
                     this.parametros['financiador'] = '';
+                }
+            }
+            if (tipo === 'estadoFacturacion') {
+                if (value.value) {
+                    this.parametros['estadoFacturacion'] = value.value.id;
+                } else {
+                    this.parametros['estadoFacturacion'] = '';
                 }
             }
             if (tipo === 'filter') {
