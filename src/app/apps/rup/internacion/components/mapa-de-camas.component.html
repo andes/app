@@ -2,7 +2,7 @@
     <section class="plex-layout">
         <div class="row">
             <!-- Contenedor principal -->
-            <div class="col">
+            <div class="col h-100">
                 <plex-box>
                     <header>
                         <div class='row text-right'>
@@ -159,7 +159,7 @@
             </div>
 
             <!-- Sidebar -->
-            <plex-box id="panel-lateral" class="col-4">
+            <plex-box id="panel-lateral" class="col-4 h-100">
                 <plex-loader *ngIf="showLoaderSidebar" type="ball-pulse-sync"></plex-loader>
                 <!-- Ingresar un paciente -->
                 <ng-container *ngIf="accion ==='internarPaciente'">

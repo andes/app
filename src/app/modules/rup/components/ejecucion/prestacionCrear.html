@@ -1,7 +1,7 @@
 <plex-layout *ngIf="!buscandoPaciente && !showAutocitar" main="12">
     <plex-layout-main> 
         <div class="row">
-            <div class="col-6">
+            <div class="col-6 h-100">
                 <fieldset>
                     <legend>Datos principales</legend>
                     <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha y hora de la prestación">
@@ -11,7 +11,7 @@
                     </plex-select>
                 </fieldset>
             </div>
-            <div *ngIf="mostrarPaciente" class="col-6">
+            <div *ngIf="mostrarPaciente" class="col-6 h-100">
                 <fieldset>
                     <legend>Datos del paciente</legend>
                     <paciente-detalle *ngIf="paciente" [paciente]="paciente"></paciente-detalle>

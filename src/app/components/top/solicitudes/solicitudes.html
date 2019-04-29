@@ -2,7 +2,7 @@
     <section>
         <div *ngIf="!showEditarReglas" class="row">
             <!--Panel de Agendas-->
-            <div class="col">
+            <div class="col h-100">
                 <plex-box>
                     <header>
                         <div class="clearfix">
@@ -205,15 +205,15 @@
                 </plex-box>
             </div>
             <!-- SIDEBAR -->
-            <div *ngIf="showSidebar && !showAuditar" class="col-3">
+            <div *ngIf="showSidebar && !showAuditar" class="col-3 h-100">
                 <detalle-solicitud [tipoSolicitud]="tipoSolicitud" [prestacionSeleccionada]="prestacionSeleccionada"
                     [turnoSeleccionado]="turnoSeleccionado"></detalle-solicitud>
             </div>
-            <div *ngIf="showAuditar && !showSidebar" class="col-3">
+            <div *ngIf="showAuditar && !showSidebar" class="col-3 h-100">
                 <auditar-solicitud [tipoSolicitud]="tipoSolicitud" [prestacionSeleccionada]="prestacionSeleccionada"
                     (returnAuditoria)="returnAuditoria($event)"></auditar-solicitud>
             </div>
-            <div *ngIf="showAnular && !showSidebar" class="col-3">
+            <div *ngIf="showAnular && !showSidebar" class="col-3 h-100">
                 <anular-solicitud [tipoSolicitud]="tipoSolicitud" [prestacionSeleccionada]="prestacionSeleccionada"
                     (returnAnular)="returnAnular($event)"></anular-solicitud>
             </div>
