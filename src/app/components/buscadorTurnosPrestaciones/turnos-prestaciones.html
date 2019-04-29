@@ -9,57 +9,51 @@
             <!--Filtros-->
             <div class="row">
                 <div class='col-3'>
-                    <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection($event,'fechaDesde')"
-                        name="fechaDesde" label="Desde" class="fechas" [max]="fechaHasta">
+                    <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection($event,'fechaDesde')" name="fechaDesde" label="Desde" class="fechas" [max]="fechaHasta">
                     </plex-datetime>
                     <!-- <plex-button type="info" icon="chevron-right"></plex-button> -->
                 </div>
                 <div class='col-3'>
-                    <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection($event,'fechaHasta')"
-                        name="fechaHasta" label="Hasta" class="fechas" [min]="fechaDesde">
+                    <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection($event,'fechaHasta')" name="fechaHasta" label="Hasta" class="fechas" [min]="fechaDesde">
                     </plex-datetime>
                 </div>
                 <div class='col-3'>
-                    <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event,'prestaciones')"
-                        (getData)="loadPrestaciones($event)" name="prestaciones" label="Prestación"
-                        ngModelOptions="{standalone: true}">
+                    <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event,'prestaciones')" (getData)="loadPrestaciones($event)" name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
                     </plex-select>
                 </div>
-                <div class='col-2'>
-                    <plex-button type="success" icon="calendar-search" label="Buscar"
-                        (click)="refreshSelection($event, 'filter')"></plex-button>
+                <div *ngIf="!showPrestacion" class='col-2'>
+                    <label>
+                        <!--Spacer-->&nbsp;</label>
+                    <plex-button type="success" icon="calendar-search" label="Buscar" (click)="refreshSelection($event, 'filter')"></plex-button>
                 </div>
-                <div class='col-1 text-right'>
-                    <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
-                        (click)="mostrarMasOpciones = !mostrarMasOpciones" name="mostrar"></plex-button>
+                <div *ngIf="!showPrestacion" class='col-1 text-right'>
+                    <label>
+                        <!--Spacer-->&nbsp;</label>
+                    <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones" name="mostrar"></plex-button>
                 </div>
             </div>
-            <div class="row" *ngIf="mostrarMasOpciones">
+            <div class="row" *ngIf="mostrarMasOpciones && !showPrestacion">
                 <div class="col-4">
-                    <plex-select [(ngModel)]="profesionales" (change)="refreshSelection($event, 'profesionales')"
-                        (getData)="loadEquipoSalud($event)" name="profesionales" label="Equipo de salud"
-                        placeholder="Buscar por equipo de salud" labelField="apellido+' '+nombre"
-                        ngModelOptions="{standalone: true}">
+                    <plex-select [(ngModel)]="profesionales" (change)="refreshSelection($event, 'profesionales')" (getData)="loadEquipoSalud($event)" name="profesionales" label="Equipo de salud" placeholder="Buscar por equipo de salud" labelField="apellido+' '+nombre" ngModelOptions="{standalone: true}">
                     </plex-select>
                 </div>
                 <div class="col-3">
-                    <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')" name="estado"
-                        [data]="arrayEstados" label="Estado" placeholder="Buscar por estado"
-                        ngModelOptions="{standalone: true}">
+                    <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')" name="estado" [data]="arrayEstados" label="Estado" placeholder="Buscar por estado" ngModelOptions="{standalone: true}">
                     </plex-select>
                 </div>
                 <div *ngIf="!sumar && !sinOS" class="col-3">
-                    <plex-select [(ngModel)]="financiadores" (change)="refreshSelection($event,'financiador')"
-                        name="financiador" (getData)="loadFinanciadores($event)" label="Financiador"
-                        placeholder="Buscar por financiador">
+                    <plex-select [(ngModel)]="financiadores" (change)="refreshSelection($event,'financiador')" name="financiador" (getData)="loadFinanciadores($event)" label="Financiador" placeholder="Buscar por financiador">
+                    </plex-select>
+
+                </div>
+                <div *ngIf="sumar" class="col-3">
+                    <plex-select [(ngModel)]="estadoFacturacion" (change)="refreshSelection($event,'estadoFacturacion')" name="estadoFacturacion" [data]="arrayEstadosFacturacion" label="Comprobante" placeholder="Buscar por estado comprobante" ngModelOptions="{standalone: true}">
                     </plex-select>
 
                 </div>
                 <div class="col-2">
-                    <plex-bool *ngIf="!sinOS" [(ngModel)]="sumar" type="slide"
-                        (change)="refreshSelection($event, 'sumar')" label="Sumar" name="sumar"></plex-bool>
-                    <plex-bool *ngIf="!sumar" [(ngModel)]="sinOS" type="slide"
-                        (change)="refreshSelection($event, 'sinOS')" label="Sin obra social" name="sinOS"></plex-bool>
+                    <plex-bool *ngIf="!sinOS" [(ngModel)]="sumar" type="slide" (change)="refreshSelection($event, 'sumar')" label="Sumar" name="sumar"></plex-bool>
+                    <plex-bool *ngIf="!sumar" [(ngModel)]="sinOS" type="slide" (change)="refreshSelection($event, 'sinOS')" label="Sin obra social" name="sinOS"></plex-bool>
                 </div>
             </div>
         </header>
@@ -69,17 +63,17 @@
             <thead>
                 <th>Fecha</th>
                 <th>Paciente</th>
-                <th>Financiador</th>
+                <th width="20%" *ngIf="!sumar">Financiador</th>
                 <th>Tipo de Prestación</th>
                 <th>Equipo de Salud</th>
                 <th>Estado</th>
+                <th *ngIf="sumar">Comprobante</th>
             </thead>
             <tbody>
-                <tr *ngFor="let busqueda of busquedas; let i=index" class="hover" (click)="mostrarPrestacion(busqueda)"
-                    [ngClass]="{'bg-inverse text-white': busqueda.seleccionada}">
+                <tr *ngFor="let busqueda of busquedas; let i=index" class="hover" (click)="mostrarPrestacion(busqueda)" [ngClass]="{'bg-inverse text-white': busqueda.seleccionada}">
                     <td>{{busqueda.fecha | date: "dd/MM/yyyy HH:mm " }}</td>
                     <td>{{busqueda.paciente | paciente}}</td>
-                    <td>{{busqueda.financiador ? busqueda.financiador.financiador : 'No posee'}}</td>
+                    <td *ngIf="!sumar">{{busqueda.financiador ? busqueda.financiador.financiador : 'No posee'}}</td>
                     <td>{{busqueda.prestacion?.term}}</td>
                     <div class="nombres-profesionales">
                         <span *ngIf="busqueda.profesionales?.length == 0" class="text-danger">Profesional
@@ -90,6 +84,7 @@
                         </ng-container>
                     </div>
                     <td>{{busqueda.estado}}</td>
+                    <td *ngIf="sumar">{{busqueda.estadoFacturacion?.estado}}</td>
                 </tr>
             </tbody>
         </table>
@@ -199,8 +194,14 @@
         </div>
 
         <br>
-        <plex-button label="Recupero" type="success" (click)="recupero()"></plex-button>
-        <plex-button label="Cerrar" type="info" (click)="onClose()"></plex-button>
-
+        <div class="row">
+            <!-- Botonera-->
+            <div class="col-md text-left">
+                <plex-button label="Cerrar" type="danger" (click)="onClose()"></plex-button>
+            </div>
+            <div class="col-md text-right">
+                <plex-button *ngIf="prestacion.financiador?.financiador === 'SUMAR'" label="Comprobante" type="success" (click)="recupero()"></plex-button>
+            </div>
+        </div>
     </plex-layout-sidebar>
 </plex-layout>
