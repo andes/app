@@ -171,7 +171,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         if ($event.formValid) {
             let match100 = false;
             this.profesional['profesionalMatriculado'] = false;
-            this.profesional.sexo = this.profesional.sexo.toLowerCase();
+            this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
             this.profesionalService.get({ documento: this.profesional.documento })
                 .subscribe(
                     datos => {
