@@ -235,7 +235,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         el microservicio de Facturación Automática */
         this.prestacion.organizacion = this.auth.organizacion;
         this.prestacion.tipoPrestacion = this.prestacion.prestacion;
-        // this.prestacion['solicitud.turno'] = this.prestacion.turno._id;
+        this.prestacion.origen = 'buscador';
         this.facturacionAutomaticaService.post(this.prestacion).subscribe(prestacion => {
         });
     }
