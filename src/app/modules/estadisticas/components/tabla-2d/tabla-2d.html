@@ -1,14 +1,19 @@
-<table class="table table-striped table-responsive" *ngIf="columnas && columnas.length && data">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th *ngFor="let title of columnas[0]" scope="col">{{title}}</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let ciudad of data | keyvalue">
-            <th scope="row">{{ciudad.key}}</th>
-            <td *ngFor="let title of columnas[0], let i = index">{{ciudad.value[columnas[0][i]]}}</td>
-        </tr>
-      </tbody>
-</table>
+<div class="row m-2" *ngIf="columnas && columnas.length && data">
+    <div class="col">
+        <h3>{{ titulo }}</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th *ngFor="let title of columnas[0]" scope="col">{{ tipoTurno[title] }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let ciudad of data | keyvalue">
+                    <th scope="row">{{ciudad.key}}</th>
+                    <td *ngFor="let title of columnas[0], let i = index">{{ciudad.value[columnas[0][i]]}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
