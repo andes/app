@@ -242,7 +242,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     }
 
     recupero() {
-        /* Se modifica el objeto prestación para que haga match con el objeto que procesa 
+        /* Se modifica el objeto prestación para que haga match con el objeto que procesa
         el microservicio de Facturación Automática */
         this.prestacion.organizacion = this.auth.organizacion;
         this.prestacion.tipoPrestacion = this.prestacion.prestacion;

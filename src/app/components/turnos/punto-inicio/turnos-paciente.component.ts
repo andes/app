@@ -129,8 +129,8 @@ export class TurnosPacienteComponent implements OnInit {
         this.showLiberarTurno = false;
     }
     showArancelamiento(turno) {
-        if (this.modelo.obraSocial === 'prepaga') {
-            this.obraSocialSeleccionada = this.modelo.prepaga.nombre;
+        if (turno.obraSocial === 'prepaga') {
+            this.obraSocialSeleccionada = turno.prepaga.nombre;
 
         } else {
             this.obraSocialSeleccionada = this.modelo.obraSocial;
@@ -211,15 +211,16 @@ export class TurnosPacienteComponent implements OnInit {
         return (moment(turno.horaInicio)).isSame(new Date(), 'day');
     }
 
-    seleccionarObraSocial(event) {
+    seleccionarObraSocial(event, elem) {
         if (event.value === 'prepaga') {
             this.obraSocialService.getPrepagas().subscribe(prepagas => {
-                this.showListaPrepagas = true;
+                elem.showListaPrepagas = true;
                 this.prepagas = prepagas;
             });
         } else {
-            this.showListaPrepagas = false;
+            elem.showListaPrepagas = false;
         }
+        elem.obraSocial = event && event.value;
     }
 }
 
