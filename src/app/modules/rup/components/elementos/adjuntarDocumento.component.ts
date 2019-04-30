@@ -140,7 +140,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     }
 
     fromMobile() {
-        let paciente = this.paciente.id;
+        let paciente = this.paciente ? this.paciente.id : null;
         let prestacion = this.prestacion.id;
         let registro = this.registro.id;
         this.loading = true;
