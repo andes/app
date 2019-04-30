@@ -2,9 +2,6 @@
     <plex-layout-main>
         <header>
             <!--Botones / Acciones-->
-            <div class="clearfix">
-                <div class="page-title float-left">Buscador de turnos y prestaciones</div>
-            </div>
 
             <!--Filtros-->
             <div class="row">
@@ -24,7 +21,7 @@
                 <div *ngIf="!showPrestacion" class='col-2'>
                     <label>
                         <!--Spacer-->&nbsp;</label>
-                    <plex-button type="success" icon="calendar-search" label="Buscar" (click)="refreshSelection($event, 'filter')"></plex-button>
+                    <plex-button type="success" label="Buscar" (click)="refreshSelection($event, 'filter')"></plex-button>
                 </div>
                 <div *ngIf="!showPrestacion" class='col-1 text-right'>
                     <label>
@@ -33,7 +30,7 @@
                 </div>
             </div>
             <div class="row" *ngIf="mostrarMasOpciones && !showPrestacion">
-                <div class="col-4">
+                <div class="col-3">
                     <plex-select [(ngModel)]="profesionales" (change)="refreshSelection($event, 'profesionales')" (getData)="loadEquipoSalud($event)" name="profesionales" label="Equipo de salud" placeholder="Buscar por equipo de salud" labelField="apellido+' '+nombre" ngModelOptions="{standalone: true}">
                     </plex-select>
                 </div>

@@ -7,6 +7,7 @@ import { ProfesionalService } from '../../services/profesional.service';
 import { ObraSocialService } from '../../services/obraSocial.service';
 import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
 
+import { Plex } from '@andes/plex';
 @Component({
     selector: 'turnos-prestaciones',
     templateUrl: 'turnos-prestaciones.html',
@@ -32,7 +33,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     router: any;
     public prestaciones: any;
     constructor(
-        private auth: Auth,
+        private auth: Auth, private plex: Plex,
         private turnosPrestacionesService: TurnosPrestacionesService, public servicioPrestacion: TipoPrestacionService, public serviceProfesional: ProfesionalService,
         private servicioOS: ObraSocialService, private facturacionAutomaticaService: FacturacionAutomaticaService
     ) { }
@@ -69,6 +70,13 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             fechaHasta: this.fechaHasta,
             organizacion: this.auth.organizacion._id
         };
+        this.plex.updateTitle([{
+            route: '/',
+            name: 'ANDES'
+        }, {
+            route: '/buscador',
+            name: 'BUSCADOR DE TURNOS Y PRESTACIONES'
+        }]);
     }
     /* limpiamos la request que se haya ejecutado */
     ngOnDestroy() {
