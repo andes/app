@@ -64,7 +64,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div *ngIf="modelo.obraSocial !== 'SUMAR' && turno && turno.profesionales.length > 0 && turno.estado !== 'suspendido'">
-                                        <plex-radio [(ngModel)]="turno.obraSocial" name="os" (change)="seleccionarObraSocial($event, turno)" label="Seleccione una Obra Social" [data]="obraSocialPaciente">
+                                        <plex-radio [(ngModel)]="modelo.obraSocial" name="os" (change)="seleccionarObraSocial($event, turno)" label="Seleccione una Obra Social" [data]="obraSocialPaciente">
                                         </plex-radio>
                                         <plex-select *ngIf="turno.showListaPrepagas" [(ngModel)]="turno.prepaga" name="prepagas" [data]="prepagas" label="Seleccione una Prepaga" idField="nombre" labelField="nombre">
                                         </plex-select>
