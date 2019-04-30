@@ -1,0 +1,80 @@
+
+<div class="row">
+    <div class="col">
+        <plex-box type="primary">
+            <table *ngIf="reporte.length>0" class="table table-striped table-bordered" style="font-size: 15px">
+
+                <thead style="background-color: darkgray;">
+                    <tr>
+                        <th colspan=11>PLANILLA C1</th>
+                    </tr>
+
+                    <tr>
+                        <th colspan=8 style="text-align:left; padding-left: 40px"><b>ORGANIZACION:</b>
+                            {{parametros['organizacionNombre']}} </th>
+                        <th colspan=3><b>FECHA:</b> {{ parametros['fecha'] | fecha  }}</th>
+                    </tr>
+
+                    <tr>
+                        <th colspan=11 style="text-align:left; padding-left: 40px"><b>PRESTACION:</b>
+                            {{parametros['prestacionNombre']}}</th>
+                    </tr>
+
+                    <tr>
+                        <th>Nº</th>
+                        <th>Hora</th>
+                        <th>Paciente</th>
+                        <th>DNI</th>
+                        <th>Edad</th>
+                        <th>Fecha Nac</th>
+                        <th>Sexo</th>
+                        <th>O.S.</th>
+                        <th>Diagnóstico</th>
+                        <th>Profesional</th>
+                        <th>Primera vez</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let linea of reporte; let i=index" class="hover" [ngStyle]="{'font-weight': normal}">
+                        <td>
+                            {{ i+1 }}
+                        </td>
+                        <td>
+                            {{ linea.prestacionHora | date:'shortTime' }}
+                        </td>
+                        <td>
+                            {{ linea.pacienteApellido +', '+ linea.pacienteNombre }}
+                        </td>
+                        <td>
+                            {{ linea.pacienteDNI}}
+                        </td>
+                        <td>
+                            {{ linea.pacienteEdad}}
+                        </td>
+                        <td>
+                            {{ linea.pacienteFechaNacimiento | fecha }}
+                        </td>
+                        <td>
+                            {{ linea.pacienteSexo}}
+                        </td>
+                        <td style="text-align:left">
+                            {{ linea.pacienteObraSocial}}
+                        </td>
+                        <td style="text-align:left">
+                            {{ linea.prestacionConceptoPrincipal}}
+                        </td>
+                        <td>
+                            {{ linea.profesionalApellido +', '+ linea.profesionalNombre }}
+                        </td>
+                        <td>
+                                {{ linea.prestacionEsPrimeraVez === true ? "Si" : "No" }}
+                            </td>
+
+                    </tr>
+
+                </tbody>
+            </table>
+        </plex-box>
+    </div>
+</div>
