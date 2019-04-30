@@ -72,11 +72,11 @@ export class EncabezadoReportesComponent implements OnInit {
         };
         this.opciones = [{
             id: 1,
-            nombre: 'ReporteC2'
+            nombre: 'Reporte C2'
         },
         {
             id: 2,
-            nombre: 'Diagnosticos'
+            nombre: 'Diagnósticos'
         },
         {
             id: 3,
@@ -126,7 +126,7 @@ export class EncabezadoReportesComponent implements OnInit {
 
 
     public imprimir() {
-        if (this.parametros['horaInicio'] && this.parametros['horaFin'] && this.parametros['organizacion'] && this.tipoReportes.nombre === 'Diagnosticos') {
+        if (this.parametros['horaInicio'] && this.parametros['horaFin'] && this.parametros['organizacion'] && this.tipoReportes.nombre === 'Diagnósticos') {
             this.showConsultaDiagnostico = true;
             this.showReporteC2 = false;
             this.showCantidadConsultaXPrestacion = false;
@@ -134,7 +134,7 @@ export class EncabezadoReportesComponent implements OnInit {
                 this.diagnosticos = diagnosticos;
             });
         }
-        if (this.parametros['horaInicio'] && this.parametros['horaFin'] && this.tipoReportes.nombre === 'ReporteC2') {
+        if (this.parametros['horaInicio'] && this.parametros['horaFin'] && this.tipoReportes.nombre === 'Reporte C2') {
             this.showReporteC2 = true;
             this.showConsultaDiagnostico = false;
             this.showCantidadConsultaXPrestacion = false;
