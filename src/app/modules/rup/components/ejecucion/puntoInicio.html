@@ -1,6 +1,6 @@
 <section>
     <div class="row">
-        <div class="col-7">
+        <div class="col-7 h-100">
             <plex-box>
                 <!-- Box header -->
                 <header>
@@ -117,7 +117,7 @@
                 </table>
             </plex-box>
         </div>
-        <div class="col">
+        <div class="col h-100">
             <dinamica *ngIf="buscandoPaciente" [agenda]="agendaSeleccionada" (cancel)="cancelarDinamica()" (save)="guardarDatosTurno($event)"></dinamica>
 
             <plex-box *ngIf="!buscandoPaciente">

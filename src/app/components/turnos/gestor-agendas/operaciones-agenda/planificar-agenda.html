@@ -2,7 +2,7 @@
     <section>
         <div class="row">
             <!-- Header de la agenda-->
-            <div class="col-5">
+            <div class="col-5 h-100">
                 <plex-box>
                     <header>
                         <div class="page-title" *ngIf="!editaAgenda">Crear una nueva agenda</div>
@@ -119,7 +119,7 @@
                 </plex-box>
             </div>
             <!--Edición del bloque activo-->
-            <div class="col-7" *ngIf="elementoActivo && bloqueActivo >= 0">
+            <div class="col-7 h-100" *ngIf="elementoActivo && bloqueActivo >= 0">
                 <plex-box *ngIf="!showMapaEspacioFisico && !dinamica">
                     <header>
                         <div class="page-title">Bloque</div>

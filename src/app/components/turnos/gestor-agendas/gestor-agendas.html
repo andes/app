@@ -2,7 +2,7 @@
     <section *ngIf="showGestorAgendas">
         <div class="row">
             <!--Panel de Agendas-->
-            <div class="col">
+            <div class="col h-100">
                 <plex-box>
                     <header>
                         <!--Botones / Acciones-->
@@ -140,7 +140,7 @@
             </div>
 
             <!-- Panel derecho -->
-            <div *ngIf="agendasSeleccionadas?.length > 0" [ngClass]="{'col-8': showEditarAgendaPanel && agendasSeleccionadas?.length === 1, 'col-4': !showEditarAgendaPanel}">
+            <div *ngIf="agendasSeleccionadas?.length > 0" class="h-100" [ngClass]="{'col-8': showEditarAgendaPanel && agendasSeleccionadas?.length === 1, 'col-4': !showEditarAgendaPanel}">
                 <plex-box>
                     <div *ngIf="showTurnos && agendasSeleccionadas?.length == 1 && !showSuspenderTurnos" type="info">
                         <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"
