@@ -27,7 +27,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public showPrestacion;
     public loading;
     public arrayEstados;
-
+    public sumarB = false;
     public arrayEstadosFacturacion;
     prestacion: any;
     router: any;
@@ -41,6 +41,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         this.arrayEstados = [{ id: 'Sin registro de asistencia', nombre: 'Sin registro de asistencia' }, { id: 'Ausente', nombre: 'Ausente' }, { id: 'Presente con registro del profesional', nombre: 'Presente con registro del profesional' }, { id: 'Presente sin registro del profesional', nombre: 'Presente sin registro del profesional' }];
         this.arrayEstadosFacturacion = [{ id: 'Sin comprobante', nombre: 'Sin comprobante' }, { id: 'Comprobante sin prestacion', nombre: 'Comprobante sin prestacion' }, { id: 'Comprobante con prestacion', nombre: 'Comprobante con prestacion' }];
         this.mostrarMasOpciones = false;
+        this.sumarB = false;
         this.sumar = false;
         this.sinOS = false;
         this.loading = true;
@@ -111,6 +112,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
 
     }
     buscar(parametros) {
+        if (parametros.financiador === 'SUMAR') {
+            this.sumarB = true;
+        }
         this.showPrestacion = false;
         this.loading = true;
         this.turnosPrestacionesService.get(parametros).subscribe((data) => {

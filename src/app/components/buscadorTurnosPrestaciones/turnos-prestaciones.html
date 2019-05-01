@@ -38,12 +38,12 @@
                     <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')" name="estado" [data]="arrayEstados" label="Estado" placeholder="Buscar por estado" ngModelOptions="{standalone: true}">
                     </plex-select>
                 </div>
-                <div *ngIf="!sumar && !sinOS" class="col-3">
+                <div *ngIf="!sumarB && !sinOS" class="col-3">
                     <plex-select [(ngModel)]="financiadores" (change)="refreshSelection($event,'financiador')" name="financiador" (getData)="loadFinanciadores($event)" label="Financiador" placeholder="Buscar por financiador">
                     </plex-select>
 
                 </div>
-                <div *ngIf="sumar" class="col-3">
+                <div *ngIf="sumarB" class="col-3">
                     <plex-select [(ngModel)]="estadoFacturacion" (change)="refreshSelection($event,'estadoFacturacion')" name="estadoFacturacion" [data]="arrayEstadosFacturacion" label="Comprobante" placeholder="Buscar por estado comprobante" ngModelOptions="{standalone: true}">
                     </plex-select>
 
@@ -60,17 +60,16 @@
             <thead>
                 <th>Fecha</th>
                 <th>Paciente</th>
-                <th width="20%" *ngIf="!sumar">Financiador</th>
                 <th>Tipo de Prestación</th>
                 <th>Equipo de Salud</th>
                 <th>Estado</th>
-                <th *ngIf="sumar">Comprobante</th>
+                <th width="20%" *ngIf="!sumarB">Financiador</th>
+                <th *ngIf="sumarB">Comprobante</th>
             </thead>
             <tbody>
                 <tr *ngFor="let busqueda of busquedas; let i=index" class="hover" (click)="mostrarPrestacion(busqueda)" [ngClass]="{'bg-inverse text-white': busqueda.seleccionada}">
                     <td>{{busqueda.fecha | date: "dd/MM/yyyy HH:mm " }}</td>
                     <td>{{busqueda.paciente | paciente}}</td>
-                    <td *ngIf="!sumar">{{busqueda.financiador ? busqueda.financiador.financiador : 'No posee'}}</td>
                     <td>{{busqueda.prestacion?.term}}</td>
                     <div class="nombres-profesionales">
                         <span *ngIf="busqueda.profesionales?.length == 0" class="text-danger">Profesional
@@ -81,7 +80,8 @@
                         </ng-container>
                     </div>
                     <td>{{busqueda.estado}}</td>
-                    <td *ngIf="sumar">{{busqueda.estadoFacturacion?.estado}}</td>
+                    <td *ngIf="!sumarB">{{busqueda.financiador ? busqueda.financiador.financiador : 'No posee'}}</td>
+                    <td *ngIf="sumarB">{{busqueda.estadoFacturacion? busqueda.estadoFacturacion?.estado: 'Sin Comprobante'}}</td>
                 </tr>
             </tbody>
         </table>
