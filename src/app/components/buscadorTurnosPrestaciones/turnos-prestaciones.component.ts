@@ -112,9 +112,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
 
     }
     buscar(parametros) {
-        if (parametros.financiador === 'SUMAR') {
-            this.sumarB = true;
-        }
+
+        this.sumarB = (parametros.financiador === 'SUMAR' && this.sumar) ? true : false;
+
         this.showPrestacion = false;
         this.loading = true;
         this.turnosPrestacionesService.get(parametros).subscribe((data) => {
