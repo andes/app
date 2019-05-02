@@ -1,0 +1,195 @@
+<div class="row">
+    <div class="col">
+        <plex-box type="primary">
+
+            <table *ngIf="reporte?.dias?.length" class="table table-striped table-bordered">
+
+                <thead style="background-color: darkgray;">
+                    <tr>
+                        <th colspan=25>RESUMEN DIARIO MENSUAL DE CONSULTA MEDICAS</th>
+                    </tr>
+
+                    <tr>
+                        <th colspan=15><b>ORGANIZACION:</b> {{parametros['organizacionNombre']}}  </th>
+                        <th colspan=8><b>PERIODO:</b> {{parametros['mesNombre'] + ' de ' + parametros['anio']}}</th>
+                    </tr>
+
+                    <tr>
+                        <th colspan=15><b>PRESTACION:</b> {{parametros['prestacionNombre']}}</th>
+                        <th colspan=8><b>FECHA:</b> {{ fecha | date:'dd-MM-yyyy'  }}</th>
+                    </tr>
+
+                    <tr>
+                        <th rowspan=4 style="vertical-align : middle">Día</th>
+                        <th colspan=19>Edad y sexo</th>
+                    </tr>
+                    <tr>
+                        <th colspan=4>Menos de 1 año</th>
+                        <th colspan=2>1 a 4</th>
+                        <th colspan=2>5 a 14</th>
+                        <th colspan=2>15 a 19</th>
+                        <th colspan=2>20 a 39</th>
+                        <th colspan=2>40 a 69</th>
+                        <th colspan=2> 70 y más</th>
+                        <th colspan=3> Total edades</th>
+                    </tr>
+                    <tr>
+                        <th colspan=2>Días</th>
+                        <th colspan=2>Meses</th>
+
+                        <th rowspan=2>M</th>
+                        <th rowspan=2>F</th>
+
+                        <th rowspan=2>M</th>
+                        <th rowspan=2>F</th>
+
+                        <th rowspan=2>M</th>
+                        <th rowspan=2>F</th>
+
+                        <th rowspan=2>M</th>
+                        <th rowspan=2>F</th>
+
+                        <th rowspan=2>M</th>
+                        <th rowspan=2>F</th>
+
+                        <th rowspan=2>M</th>
+                        <th rowspan=2>F</th>
+
+                        <th rowspan=2>M</th>
+                        <th rowspan=2>F</th>
+                        <th rowspan=2>Total</th>
+                    </tr>
+                    <tr>
+                        <th>M</th>
+                        <th>F</th>
+
+                        <th>M</th>
+                        <th>F</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let linea of reporte.dias; let i=index" class="hover" [ngStyle]="{'font-weight': bold}">
+                        <td>
+                            <b>{{ linea.dia.getDate()}}</b>
+                        </td>
+
+                        <td [ngStyle]="{'font-weight':linea['30'].m === 0 ? 'normal' : 'bold'}">
+                            {{linea['30'].m}}
+                        </td>
+                        <td [ngStyle]="{'font-weight':linea['30'].f === 0 ? 'normal' : 'bold'}">
+                            {{linea['30'].f}}
+                        </td>
+
+                        <td [ngStyle]="{'font-weight':linea['0_1'].m === 0 ? 'normal' : 'bold'}">
+                            {{linea['0_1'].m}}
+                        </td>
+                        <td [ngStyle]="{'font-weight':linea['0_1'].f === 0 ? 'normal' : 'bold'}">
+                            {{linea['0_1'].f}}
+                        </td>
+
+                        <td [ngStyle]="{'font-weight':linea['1_4'].m === 0 ? 'normal' : 'bold'}">
+                            {{linea['1_4'].m}}
+                        </td>
+                        <td [ngStyle]="{'font-weight':linea['1_4'].f === 0 ? 'normal' : 'bold'}">
+                            {{linea['1_4'].f}}
+                        </td>
+
+                        <td [ngStyle]="{'font-weight':linea['5_14'].m === 0 ? 'normal' : 'bold'}">
+                            {{linea['5_14'].m}}
+                        </td>
+                        <td [ngStyle]="{'font-weight':linea['5_14'].f === 0 ? 'normal' : 'bold'}">
+                            {{linea['5_14'].f}}
+                        </td>
+
+                        <td [ngStyle]="{'font-weight':linea['15_19'].m === 0 ? 'normal' : 'bold'}">
+                            {{linea['15_19'].m}}
+                        </td>
+                        <td [ngStyle]="{'font-weight':linea['15_19'].f === 0 ? 'normal' : 'bold'}">
+                            {{linea['15_19'].f}}
+                        </td>
+
+                        <td [ngStyle]="{'font-weight':linea['20_39'].m === 0 ? 'normal' : 'bold'}">
+                            {{linea['20_39'].m}}
+                        </td>
+                        <td [ngStyle]="{'font-weight':linea['20_39'].f === 0 ? 'normal' : 'bold'}">
+                            {{linea['20_39'].f}}
+                        </td>
+
+                        <td [ngStyle]="{'font-weight':linea['40_69'].m === 0 ? 'normal' : 'bold'}">
+                            {{linea['40_69'].m}}
+                        </td>
+                        <td [ngStyle]="{'font-weight':linea['40_69'].f === 0 ? 'normal' : 'bold'}">
+                            {{linea['40_69'].f}}
+                        </td>
+
+                        <td [ngStyle]="{'font-weight':linea['70'].m === 0 ? 'normal' : 'bold'}">
+                            {{linea['70'].m}}
+                        </td>
+                        <td [ngStyle]="{'font-weight':linea['70'].f === 0 ? 'normal' : 'bold'}">
+                            {{linea['70'].f}}
+                        </td>
+
+                        <td [ngStyle]="{'font-weight':linea.total.m === 0 ? 'normal' : 'bold'}">
+                            {{linea.total.m}}
+                        </td>
+                        <td [ngStyle]="{'font-weight':linea.total.f === 0 ? 'normal' : 'bold'}">
+                            {{linea.total.f}}
+                        </td>
+                        <td [ngStyle]="{'font-weight':linea.total.total === 0 ? 'normal' : 'bold'}">
+                            {{linea.total.total}}
+                        </td>
+
+
+                    </tr>
+                </tbody>
+
+                <tfoot style="background-color: darkgray;">
+                    <tr>
+                        <td rowspan=2 style="vertical-align : middle"><b>Total</b></td>
+
+                        <td><b>{{reporte.totalMes['30'].m}}</b></td>
+                        <td><b>{{reporte.totalMes['30'].f}}</b></td>
+
+                        <td><b>{{reporte.totalMes['0_1'].m}}</b></td>
+                        <td><b>{{reporte.totalMes['0_1'].f}}</b></td>
+
+                        <td><b>{{reporte.totalMes['1_4'].m}}</b></td>
+                        <td><b>{{reporte.totalMes['1_4'].f}}</b></td>
+
+                        <td><b>{{reporte.totalMes['5_14'].m}}</b></td>
+                        <td><b>{{reporte.totalMes['5_14'].f}}</b></td>
+
+                        <td><b>{{reporte.totalMes['15_19'].m}}</b></td>
+                        <td><b>{{reporte.totalMes['15_19'].f}}</b></td>
+
+                        <td><b>{{reporte.totalMes['20_39'].m}}</b></td>
+                        <td><b>{{reporte.totalMes['20_39'].f}}</b></td>
+
+                        <td><b>{{reporte.totalMes['40_69'].m}}</b></td>
+                        <td><b>{{reporte.totalMes['40_69'].f}}</b></td>
+
+                        <td><b>{{reporte.totalMes['70'].m}}</b></td>
+                        <td><b>{{reporte.totalMes['70'].f}}</b></td>
+
+                        <td rowspan=2 style="vertical-align : middle"><b>{{reporte.totalMes.totales.m}}</b></td>
+                        <td rowspan=2 style="vertical-align : middle"><b>{{reporte.totalMes.totales.f}}</b></td>
+                        <td rowspan=2 style="vertical-align : middle"><b>{{reporte.totalMes.totales.m +
+                                reporte.totalMes.totales.f}}</b></td>
+                    </tr>
+                    <tr>
+                        <td colspan=2><b>{{reporte.totalMes['30'].total}}</b></td>
+                        <td colspan=2><b>{{reporte.totalMes['0_1'].total}}</b></td>
+                        <td colspan=2><b>{{reporte.totalMes['1_4'].total}}</b></td>
+                        <td colspan=2><b>{{reporte.totalMes['5_14'].total}}</b></td>
+                        <td colspan=2><b>{{reporte.totalMes['15_19'].total}}</b></td>
+                        <td colspan=2><b>{{reporte.totalMes['20_39'].total}}</b></td>
+                        <td colspan=2><b>{{reporte.totalMes['40_69'].total}}</b></td>
+                        <td colspan=2><b>{{reporte.totalMes['70'].total}}</b></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </plex-box>
+    </div>
+</div>

@@ -1,7 +1,7 @@
 <form class="plex-layout" #form="ngForm">
     <section>
         <div class="row">
-            <div class="col-9">
+            <div class="col-9 h-100">
                 <plex-box>
                     <header>
                         <div class="page-title">Registro de Pacientes</div>
@@ -351,7 +351,7 @@
             </div>
 
             <!-- Detalle -->
-            <div class="col-3">
+            <div class="col-3 h-100">
                 <plex-box>
                     <div *ngIf='!showMobile'>
                         <paciente-detalle [paciente]="pacienteModel" (renaperNotification)="renaperNotification($event)"
