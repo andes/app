@@ -63,7 +63,7 @@ export class TurnosPacienteComponent implements OnInit {
         if (value) {
             this._turnos = value;
             this.turnosPaciente = value;
-            this.turnosPaciente.obraSocial = (this._paciente.financiador.length > 0) ? this._paciente.financiador[0].nombre : null;
+            this.turnosPaciente.obraSocial = ((this._paciente.financiador) && (this._paciente.financiador.length > 0)) ? this._paciente.financiador[0].nombre : null;
         }
     }
     get turnos(): any {
@@ -86,8 +86,10 @@ export class TurnosPacienteComponent implements OnInit {
         this.todaysdate = new Date();
         this.todaysdate.setHours(0, 0, 0, 0);
         this.loadObraSocial();
+        this.obraSocialService.getPrepagas().subscribe(prepagas => {
+            this.prepagas = prepagas;
+        });
     }
-
     loadObraSocial() {
         // TODO: si es en colegio médico hay que buscar en el paciente
         this.obraSocialService.getObrasSociales({ dni: this._paciente.documento, sexo: this._paciente.sexo }).subscribe(resultado => {
@@ -130,7 +132,7 @@ export class TurnosPacienteComponent implements OnInit {
         this.showLiberarTurno = false;
     }
     showArancelamiento(turno) {
-        if (turno.obraSocial === 'prepaga') {
+        if (turno.obraSocial === 'prepaga' || turno.prepaga) {
             this.obraSocialSeleccionada = turno.prepaga.nombre;
         } else {
             this.obraSocialSeleccionada = (turno.obraSocial) ? turno.obraSocial : turno.paciente.obraSocial.nombre;
