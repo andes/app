@@ -133,7 +133,7 @@ export class TurnosPacienteComponent implements OnInit {
             this.obraSocialSeleccionada = turno.prepaga.nombre;
 
         } else {
-            this.obraSocialSeleccionada = this.modelo.obraSocial;
+            this.obraSocialSeleccionada = turno.obraSocial;
         }
 
         this.turnoArancelamiento = turno;

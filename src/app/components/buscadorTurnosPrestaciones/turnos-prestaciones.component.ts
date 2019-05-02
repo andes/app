@@ -7,6 +7,7 @@ import { ProfesionalService } from '../../services/profesional.service';
 import { ObraSocialService } from '../../services/obraSocial.service';
 import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
 
+import { Plex } from '@andes/plex';
 @Component({
     selector: 'turnos-prestaciones',
     templateUrl: 'turnos-prestaciones.html',
@@ -26,13 +27,13 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public showPrestacion;
     public loading;
     public arrayEstados;
-
+    public sumarB = false;
     public arrayEstadosFacturacion;
     prestacion: any;
     router: any;
     public prestaciones: any;
     constructor(
-        private auth: Auth,
+        private auth: Auth, private plex: Plex,
         private turnosPrestacionesService: TurnosPrestacionesService, public servicioPrestacion: TipoPrestacionService, public serviceProfesional: ProfesionalService,
         private servicioOS: ObraSocialService, private facturacionAutomaticaService: FacturacionAutomaticaService
     ) { }
@@ -40,6 +41,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         this.arrayEstados = [{ id: 'Sin registro de asistencia', nombre: 'Sin registro de asistencia' }, { id: 'Ausente', nombre: 'Ausente' }, { id: 'Presente con registro del profesional', nombre: 'Presente con registro del profesional' }, { id: 'Presente sin registro del profesional', nombre: 'Presente sin registro del profesional' }];
         this.arrayEstadosFacturacion = [{ id: 'Sin comprobante', nombre: 'Sin comprobante' }, { id: 'Comprobante sin prestacion', nombre: 'Comprobante sin prestacion' }, { id: 'Comprobante con prestacion', nombre: 'Comprobante con prestacion' }];
         this.mostrarMasOpciones = false;
+        this.sumarB = false;
         this.sumar = false;
         this.sinOS = false;
         this.loading = true;
@@ -69,6 +71,13 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             fechaHasta: this.fechaHasta,
             organizacion: this.auth.organizacion._id
         };
+        this.plex.updateTitle([{
+            route: '/',
+            name: 'ANDES'
+        }, {
+            route: '/buscador',
+            name: 'BUSCADOR DE TURNOS Y PRESTACIONES'
+        }]);
     }
     /* limpiamos la request que se haya ejecutado */
     ngOnDestroy() {
@@ -103,6 +112,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
 
     }
     buscar(parametros) {
+        if (parametros.financiador === 'SUMAR') {
+            this.sumarB = true;
+        }
         this.showPrestacion = false;
         this.loading = true;
         this.turnosPrestacionesService.get(parametros).subscribe((data) => {
