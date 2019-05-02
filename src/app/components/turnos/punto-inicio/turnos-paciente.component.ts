@@ -63,6 +63,7 @@ export class TurnosPacienteComponent implements OnInit {
         if (value) {
             this._turnos = value;
             this.turnosPaciente = value;
+            this.turnosPaciente.obraSocial = this._paciente.financiador[0].nombre;
         }
     }
     get turnos(): any {
@@ -131,9 +132,8 @@ export class TurnosPacienteComponent implements OnInit {
     showArancelamiento(turno) {
         if (turno.obraSocial === 'prepaga') {
             this.obraSocialSeleccionada = turno.prepaga.nombre;
-
         } else {
-            this.obraSocialSeleccionada = turno.obraSocial;
+            this.obraSocialSeleccionada = (turno.obraSocial) ? turno.obraSocial : turno.paciente.obraSocial.nombre;
         }
 
         this.turnoArancelamiento = turno;
