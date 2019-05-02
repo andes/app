@@ -63,7 +63,7 @@ export class TurnosPacienteComponent implements OnInit {
         if (value) {
             this._turnos = value;
             this.turnosPaciente = value;
-            this.turnosPaciente.obraSocial = this._paciente.financiador[0].nombre;
+            this.turnosPaciente.obraSocial = (this._paciente.financiador.length > 0) ? this._paciente.financiador[0].nombre : null;
         }
     }
     get turnos(): any {
