@@ -197,7 +197,7 @@
                 <plex-button label="Cerrar" type="danger" (click)="onClose()"></plex-button>
             </div>
             <div class="col-md text-right">
-                <plex-button *ngIf="prestacion.financiador?.financiador === 'SUMAR'" label="Comprobante" type="success" (click)="recupero()"></plex-button>
+                <plex-button *ngIf="prestacion.financiador?.financiador === 'SUMAR' && (prestacion.estado==='Presente con registro del profesional') && ((!prestacion.estadoFacturacion) || prestacion.estadoFacturacion?.estado!=='Comprobante con prestacion')" label="Comprobante" type="success" (click)="recupero()"></plex-button>
             </div>
         </div>
     </plex-layout-sidebar>
