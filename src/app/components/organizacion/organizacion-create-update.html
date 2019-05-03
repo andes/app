@@ -22,7 +22,7 @@
                         </div>
                         <div class="row">
                             <div class="col-4">
-                                <plex-text label="Código SISA" type="text" name="sisa" [(ngModel)]="organizacionModel.codigo.sisa" placeholder="Ingrese código SISA" [required]="true" [readonly]="!puedeEditarCompleto"></plex-text>
+                                <plex-text label="Código SISA" type="text" name="sisa" [(ngModel)]="organizacionModel.codigo.sisa" placeholder="Ingrese código SISA" [required]="true" [readonly]="!puedeEditarCompleto" (focusout)="validarUnicoCodigoSisa()"></plex-text>
                             </div>
                             <div class="col-4">
                                 <plex-text label="Código CUIE" name="cuie" [(ngModel)]="organizacionModel.codigo.cuie" placeholder="Ingrese código CUIE" [readonly]="!puedeEditarCompleto"></plex-text>
@@ -225,7 +225,7 @@
                 </plex-button>
             </div>
             <div class="col-6 text-right">
-                <plex-button label="Guardar" type="success" [validateForm]="formulario" (click)="onSave($event)">
+                <plex-button label="Guardar" type="success" [validateForm]="formulario" (click)="onSave($event)" [disabled]="botonGuardarDisabled">
                 </plex-button>
             </div>
         </div>
