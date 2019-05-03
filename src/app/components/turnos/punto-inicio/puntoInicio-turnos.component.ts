@@ -34,7 +34,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
     public showActivarApp = false;
     public showIngresarSolicitud = false;
     public paciente: IPaciente;
-    public obraSocialPaciente: any;
     public autorizado = false;
     solicitudPrestacion: any = null; // Es la solicitud que se pasa como input a darTurnos
     operacionTurnos = '';
@@ -129,10 +128,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showArancelamiento = true;
     }
 
-    obraSocialEmit(obraSocial: any) {
-        this.obraSocialPaciente = obraSocial;
-    }
-
     volverAPuntoInicio() {
         this.showArancelamiento = false;
         this.showDashboard = true;
@@ -220,9 +215,9 @@ export class PuntoInicioTurnosComponent implements OnInit {
             if (pac && pac.carpetaEfectores && pac.carpetaEfectores.length > 0) {
                 this.paciente.carpetaEfectores = pac.carpetaEfectores;
             }
-            this.selected.emit(this.paciente);
             this.resultadoCreate = [this.paciente];
         }
+        this.esOperacion = false;
         this.showMostrarEstadisticasAgendas = false;
         this.showMostrarEstadisticasPacientes = true;
         this.showIngresarSolicitud = false;

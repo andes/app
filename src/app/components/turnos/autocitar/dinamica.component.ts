@@ -1,3 +1,4 @@
+import { IFinanciador } from '../../../interfaces/IFinanciador';
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
@@ -7,6 +8,7 @@ import { PacienteBuscarResultado } from '../../../modules/mpi/interfaces/Pacient
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { Router } from '@angular/router';
+import { ObraSocialService } from '../../../services/obraSocial.service';
 
 @Component({
     selector: 'dinamica',
@@ -18,6 +20,7 @@ export class DinamicaFormComponent implements OnInit {
     public turnoTipoPrestacion: any;
     public datosTurno: any = {};
     public prestaciones = [];
+    public obraSocialPaciente: IFinanciador;
 
     // Eventos
     @Input() agenda: IAgenda;
@@ -27,7 +30,8 @@ export class DinamicaFormComponent implements OnInit {
     constructor(private plex: Plex,
         private router: Router,
         public serviceTurno: TurnoService,
-        public servicioPrestacion: PrestacionesService) {
+        public servicioPrestacion: PrestacionesService,
+        private obraSocialService: ObraSocialService) {
     }
 
     ngOnInit() {
@@ -55,17 +59,25 @@ export class DinamicaFormComponent implements OnInit {
         this.pacienteActivo = paciente;
         this.pacientes = null;
         if (paciente.id) {
-            let pacienteSave = {
-                id: paciente.id,
-                documento: paciente.documento,
-                apellido: paciente.apellido,
-                nombre: paciente.nombre,
-                alias: paciente.alias,
-                fechaNacimiento: paciente.fechaNacimiento,
-                sexo: paciente.sexo
-            };
-            this.datosTurno.paciente = pacienteSave;
-            // this.darTurno(pacienteSave);
+            this.obraSocialPaciente = null;
+            this.obraSocialService.getPaciente({ dni: paciente.documento, sexo: paciente.sexo }).subscribe((resultado: IFinanciador[]) => {
+                if (resultado.length > 0) {
+                    this.obraSocialPaciente = resultado[0];
+                }
+
+                let pacienteSave = {
+                    id: paciente.id,
+                    documento: paciente.documento,
+                    apellido: paciente.apellido,
+                    nombre: paciente.nombre,
+                    alias: paciente.alias,
+                    fechaNacimiento: paciente.fechaNacimiento,
+                    sexo: paciente.sexo,
+                    obraSocial: this.obraSocialPaciente
+                };
+                this.datosTurno.paciente = pacienteSave;
+            });
+
         } else {
             this.plex.info('warning', 'El paciente debe ser registrado en MPI');
         }

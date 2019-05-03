@@ -10,7 +10,6 @@ export class RiesgoCardiovascularService extends FormulaBaseService {
         const tabaquismo = registros[2].valor;
         const diabetes = registros[3].valor;
         const sexo = (paciente.genero === 'masculino') ? 1 : 0;
-
         const value = this.obtenerRiesgo(paciente.edad, colesterol, sistolica, tabaquismo, sexo, diabetes);
         let message = '';
         switch (value) {
@@ -836,9 +835,9 @@ export class RiesgoCardiovascularService extends FormulaBaseService {
 
     generarClaveBusqueda(edad, colesterol, tension, tabaquismo, sexo, diabetes) {
         let clave = '';
-        clave += (diabetes === true) ? '1' : '0';
+        clave += (diabetes && diabetes.id === 'Si') ? '1' : '0';
         clave += (sexo === true) ? '1' : '0';
-        clave += (tabaquismo === true) ? '1' : '0';
+        clave += (tabaquismo && tabaquismo.id === 'Si') ? '1' : '0';
         {
             if (edad < 50) {
                 clave += '1';

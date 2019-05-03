@@ -1,17 +1,17 @@
 <div class="row" *ngIf="!pacientesSearch">
     <div class="col-md-7">
         <plex-box type="info" title="Búsqueda de Pacientes">
-            <plex-button icon="account-plus" (click)="buscarPaciente()" title="Buscar Paciente" label="Buscar Paciente"
-                type="info"></plex-button>
+            <plex-button (click)="buscarPaciente()" title="Buscar Paciente" label="Buscar Paciente" type="info">
+            </plex-button>
             <div class="row">
                 <div class="col-md-4">
-                    <plex-select [(ngModel)]="opciones.prestacion" (getData)="loadPrestaciones($event)"
-                        label="Prestaciones">
+                    <plex-select [(ngModel)]="opciones.prestacion" (getData)="loadPrestaciones($event)" label="Prestaciones">
                     </plex-select>
                 </div>
 
                 <div class="col-md-4">
-                    <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" label="Equipo de Salud" labelField="nombre + ' ' + apellido">
+                    <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" label="Equipo de Salud"
+                        labelField="nombre + ' ' + apellido">
                     </plex-select>
                 </div>
 
@@ -23,8 +23,7 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <plex-text [(ngModel)]="opciones.observaciones" label="Observaciones"
-                        placeholder="Ingrese observaciones..."></plex-text>
+                    <plex-text [(ngModel)]="opciones.observaciones" label="Observaciones" placeholder="Ingrese observaciones..."></plex-text>
                 </div>
                 <div class="col-md-4">
                     <plex-phone [(ngModel)]="opciones.telefono" label="Teléfono" placeholder="Ingrese un teléfono...">
@@ -34,9 +33,9 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <plex-button icon="content-save" label="Guardar" type="primary" (click)="onSave()" title="Guardar">
+                    <plex-button label="Guardar" type="primary" (click)="onSave()" title="Guardar">
                     </plex-button>
-                    <plex-button icon="close-circle-outline" label="Cancelar" (click)="onCancel()" title="Cancelar">
+                    <plex-button label="Cancelar" (click)="onCancel()" title="Cancelar">
                     </plex-button>
                     <div class="row">&nbsp;</div>
                 </div>

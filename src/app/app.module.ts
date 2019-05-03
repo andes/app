@@ -335,6 +335,12 @@ import { EncabezadoReportesComponent } from './components/reportes/encabezadoRep
 import { TurnosPrestacionesComponent } from './components/buscadorTurnosPrestaciones/turnos-prestaciones.component';
 import { TurnosPrestacionesService } from './components/buscadorTurnosPrestaciones/services/turnos-prestaciones.service';
 
+
+// REPORTES SJ
+import { EncabezadoReportesDiariosComponent } from './components/reportesDiarios/encabezadoReportesDiarios.component';
+import { ResumenDiarioMensualComponent } from './components/reportesDiarios/resumenDiarioMensual.component';
+import { PlanillaC1Component } from './components/reportesDiarios/planillaC1.component';
+
 // Locales
 import { AppComponent } from './app.component';
 import { routing, appRoutingProviders } from './app.routing';
@@ -561,6 +567,7 @@ registerLocaleData(localeEs, 'es');
         ConsultaDiagnosticoComponent,
         CantidadConsultaXPrestacionComponent,
         EncabezadoReportesComponent,
+        ResumenDiarioMensualComponent, PlanillaC1Component, EncabezadoReportesDiariosComponent,
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         MapaEspacioFisicoVistaComponent,
@@ -573,6 +580,7 @@ registerLocaleData(localeEs, 'es');
         HudsBusquedaComponent,
         BuscadorComponent,
         VistaHudsComponent,
+        VistaPrestacionComponent,
         VistaCDAComponent,
         HudsBusquedaPacienteComponent,
         PacienteBuscarComponent,

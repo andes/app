@@ -1,3 +1,4 @@
+import { Auth } from '@andes/auth';
 import { SnomedService } from './../../services/term/snomed.service';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding } from '@angular/core';
@@ -36,7 +37,8 @@ export class OrganizacionSectoresComponent implements OnInit {
         public snomed: SnomedService,
         private router: Router,
         public CamaService: CamasService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private auth: Auth
     ) { }
 
     public unidadID: String = '2441000013103';
@@ -48,6 +50,9 @@ export class OrganizacionSectoresComponent implements OnInit {
         this.loadSectores();
         this.route.params.subscribe(params => {
             this.idOrganizacion = params['id'];
+            if (!this.auth.check('tm:organizacion:sectores')) {
+                this.router.navigate(['inicio']);
+            }
             this.organizacionService.getById(this.idOrganizacion).subscribe(org => {
                 this.organizacion = org;
             });
