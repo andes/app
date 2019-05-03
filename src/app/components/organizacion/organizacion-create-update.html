@@ -221,7 +221,7 @@
             <div class="col-6 text-left">
                 <plex-button label="Cancelar" type="danger" (click)="onCancel()">
                 </plex-button>
-                <plex-button type="primary" label="Sincronizar con fuentes auténticas" (click)="sincronizarSisa()">
+                <plex-button type="primary" label="Sincronizar con fuentes auténticas" (click)="sincronizarSisa()" [disabled]="!organizacionModel.codigo.sisa">
                 </plex-button>
             </div>
             <div class="col-6 text-right">
