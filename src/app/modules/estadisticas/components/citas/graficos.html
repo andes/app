@@ -1,12 +1,22 @@
 <div class="row m-2" *ngIf="data && data.length">
-    <div class="col-12" *ngIf="dataGraph && dataGraph.length && labelsGraph && labelsGraph.length && !table">
-        <h3 *ngIf="tipoDeFiltro">{{tipoDeFiltro}} por {{titulo}}</h3>
-        <h3 *ngIf="!tipoDeFiltro">{{titulo}}</h3>
+    <div class="col-12 d-flex justify-content-between">
+        <div class="d-flex align-items-center">
+            <span class="h3" *ngIf="filtros.tipoDeFiltro"><span class="text-capitalize">{{filtros.tipoDeFiltro}}</span> por {{titulo}}</span>
+            <span class="h3" *ngIf="!filtros.tipoDeFiltro">{{titulo}}</span>
+        </div>
+        <div class="d-flex align-items-end mb-1">
+            <span class="badge badge-info mr-1 p-2 d-flex align-items-center">CSV</span>
+            <plex-button type="info" size="sm" icon="download mdi-18px"
+                (click)="descargar(this.data)">
+            </plex-button>
+        </div>
+    </div>
+    <div class="{{type === 'bar' ? 'col-10 offset-1' : 'col-12'}}" *ngIf="dataGraph && dataGraph.length && labelsGraph && labelsGraph.length && !table">
         <div *ngIf="type === 'bar'">
             <canvas baseChart [colors]="barColors" [datasets]="dataGraph" [options]="barOptions" [labels]="labelsGraph" chartType="bar"></canvas>
         </div>
         <div *ngIf="type === 'pie'">
-            <canvas baseChart [colors]="chartColors" [data]="dataGraph" [labels]="labelsGraph" chartType="pie"></canvas>
+            <canvas baseChart [colors]="chartColors" [data]="dataGraph" [labels]="labelsGraph" chartType="doughnut"></canvas>
         </div>
     </div>
     

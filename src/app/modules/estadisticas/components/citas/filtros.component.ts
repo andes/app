@@ -20,7 +20,7 @@ import * as loadCombos from '../../utils/comboLabelFiltro.component';
             <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta"></plex-datetime>
         </div>
         <div class="col-2 d-flex align-items-end">
-            <plex-button type="success mb-1" label="Filtrar" (click)="onChange()" [disabled]="(seleccion.tipoDeFiltro && desde && hasta) ? false : true"></plex-button>
+            <plex-button type="success mb-1" label="Buscar" (click)="onChange()" [disabled]="(seleccion.tipoDeFiltro && desde && hasta) ? false : true"></plex-button>
         </div>
         <div class="col-1 offset-2 d-flex align-items-end">
             <plex-button [title]="esTablaGrafico ? 'Mostrar gráficos' : 'Mostrar tablas'" [icon]="esTablaGrafico ? 'mdi mdi-chart-pie' : 'mdi mdi-table-large'"

@@ -1,4 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Slug } from 'ng2-slugify';
+import { saveAs } from 'file-saver';
+import { EstAgendasService } from '../../services/agenda.service';
 
 
 @Component({
@@ -26,7 +29,8 @@ export class GraficosComponent implements OnInit {
     }
 
     @Input() table;
-    @Input() tipoDeFiltro;
+    @Input() filtros;
+    @Input() dashboard;
 
     public dataTable = [];
     public dataGraph = [];
@@ -59,19 +63,41 @@ export class GraficosComponent implements OnInit {
             '#ff4a1a',
             '#660520',
             '#e3007e',
-            '#00bcb4',
-            '#0070cc',
+            '#f4a03b',
+            '#002738',
             '#b9c512',
+            '#00bcb4',
             '#111',
             '#b9c512',
             '#002738',
-            '#f4a03b',
             '#a0a0a0',
             '#8bc43f'
         ]
     }];
 
+    constructor(public estService: EstAgendasService) { }
+
+
     ngOnInit() {
+    }
+
+    private slug = new Slug('default');
+
+    descargar(value) {
+        if (this.filtros.tipoDeFiltro === 'turnos') {
+            // Se agregan datos de filtrados en el primer elemendo del array para visualizar en csv
+            Object.keys(this.filtros).map(filtro => value[0][filtro] = this.filtros[filtro] ? this.filtros[filtro] : '');
+            this.estService.descargarCSV(value).subscribe((data: any) => {
+                this.descargarArchivo(data, { type: 'text/csv' });
+            });
+        }
+    }
+
+    private descargarArchivo(data: any, headers: any): void {
+        let blob = new Blob([data], headers);
+        // Definir nombre del csv y como mostrar los filtros utilizados
+        let nombreArchivo = this.slug.slugify(this.dashboard + '-' + this.titulo + '-' + moment().format('DD-MM-YYYY')) + '.csv';
+        saveAs(blob, nombreArchivo);
     }
 
     limpiarData() {
@@ -85,7 +111,7 @@ export class GraficosComponent implements OnInit {
     cargarResultados(data) {
         if (data && data.length > 0 && data[0].count > 0) {
             this.dataGraph = this.type === 'bar' ? [
-                {data: data.map(item => item.count), label: this.tipoDeFiltro}
+                { data: data.map(item => item.count), label: this.filtros.tipoDeFiltro }
             ] : data.map(item => item.count);
             this.labelsGraph = data.map(item => item.nombre ? item.nombre : item._id);
             this.dataTable = data;

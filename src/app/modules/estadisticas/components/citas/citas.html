@@ -7,32 +7,32 @@
             <div class="row">
                 <div class="col">
                     <graph-table type="bar" titulo="Prestación" [data]="prestaciones" [table]="esTabla"
-                        [tipoDeFiltro]="tipoDeFiltro"></graph-table>
+                        [filtros]="this.params" dashboard="Dashboard Citas"></graph-table>
                 </div>
             </div>
             <div class="row">
                 <div class="col-6" *ngIf="estadoTurno && tipoDeFiltro === 'Turnos'">
                     <graph-table type="pie" titulo="Estado" [data]="estadoTurno" [table]="esTabla"
-                        [tipoDeFiltro]="tipoDeFiltro"></graph-table>
+                        [filtros]="this.params" dashboard="Dashboard Citas"></graph-table>
                 </div>
                 <div class="col-6" *ngIf="tipoTurno && tipoDeFiltro === 'Turnos'">
                     <graph-table type="pie" titulo="Tipo" [data]="tipoTurno" [table]="esTabla"
-                        [tipoDeFiltro]="tipoDeFiltro"></graph-table>
+                        [filtros]="this.params" dashboard="Dashboard Citas"></graph-table>
                 </div>
                 <div class="col" *ngIf="estadoAgenda && tipoDeFiltro === 'Agendas'">
                     <graph-table type="pie" titulo="Estado" [data]="estadoAgenda" [table]="esTabla"
-                        [tipoDeFiltro]="tipoDeFiltro"></graph-table>
+                        [filtros]="this.params" dashboard="Dashboard Citas"></graph-table>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
                     <graph-table type="bar" titulo="Profesionales" [data]="profesionales" [table]="esTabla"
-                        [tipoDeFiltro]="tipoDeFiltro"></graph-table>
+                        [filtros]="this.params" dashboard="Dashboard Citas"></graph-table>
                 </div>
             </div>
             <div class="row" *ngIf="tipoDeFiltro === 'Turnos'">
                 <div class="col">
-                    <tabla-2d [data]="dataGeolocalizacion" titulo="Turnos por Localidad"></tabla-2d>
+                    <tabla-2d [filtros]="this.params" [data]="dataGeolocalizacion" titulo="Turnos por Localidad"></tabla-2d>
                 </div>
             </div>
         </div>
