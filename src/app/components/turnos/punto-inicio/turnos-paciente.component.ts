@@ -163,7 +163,7 @@ export class TurnosPacienteComponent implements OnInit {
         });
         this.showArancelamientoForm.emit(turno);
         turno.origen = 'rf_turnos';
-        this.servicioFA.post(turno);
+        this.servicioFA.post(turno).subscribe({ error: e => console.error(e) });
     }
 
     eventosTurno(turno, operacion) {
