@@ -267,5 +267,4 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         this.showPrestacion = false;
         this.prestacion = null;
     }
-
 }
