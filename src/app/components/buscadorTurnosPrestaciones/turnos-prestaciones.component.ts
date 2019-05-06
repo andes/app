@@ -259,8 +259,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         this.prestacion.organizacion = this.auth.organizacion;
         this.prestacion.tipoPrestacion = this.prestacion.prestacion;
         this.prestacion.origen = 'buscador';
-        this.facturacionAutomaticaService.post(this.prestacion).subscribe(prestacion => {
-        });
+        this.facturacionAutomaticaService.post(this.prestacion);
     }
 
     onClose() {
