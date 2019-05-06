@@ -95,7 +95,7 @@ export class GraficosComponent implements OnInit {
 
     private descargarArchivo(data: any, headers: any): void {
         let blob = new Blob([data], headers);
-        // Definir nombre del csv y como mostrar los filtros utilizados
+        // TODO Definir nombre del csv y como mostrar los filtros utilizados
         let nombreArchivo = this.slug.slugify(this.dashboard + '-' + this.titulo + '-' + moment().format('DD-MM-YYYY')) + '.csv';
         saveAs(blob, nombreArchivo);
     }
