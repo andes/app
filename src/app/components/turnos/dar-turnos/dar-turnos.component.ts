@@ -126,6 +126,7 @@ export class DarTurnosComponent implements OnInit {
     carpetaEfector: any;
     obraSocialPaciente: IFinanciador;
     motivoConsulta: string;
+    showTab = 0;
 
     // Muestra sólo las agendas a las que se puede asignar el turno (oculta las "con/sin alternativa")
     mostrarNoDisponibles = false;
@@ -892,6 +893,7 @@ export class DarTurnosComponent implements OnInit {
                 motivoConsulta: this.motivoConsulta
             };
             this.serviceTurno.save(datosTurno, { showError: false }).subscribe(resultado => {
+                this.showTab = 1;
                 this.afterSaveTurno(pacienteSave);
             }, (err) => {
                 this.hideDarTurno = false;
