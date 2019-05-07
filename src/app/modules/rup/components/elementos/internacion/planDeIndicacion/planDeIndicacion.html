@@ -3,24 +3,37 @@
         <div class="col-10">
             <div class="row">
                 <div *ngIf="elementoRUP.requeridos[0].elementoRUP" class="col-{{ elementoRUP.requeridos[0].style.columns }} mr-{{ elementoRUP.requeridos[0].style?.offset ? elementoRUP.requeridos[0].style.offset : '0' }}">
-                    <rup [elementoRUP]=" elementoRUP.requeridos[0].elementoRUP" [paciente]="paciente" [params]="elementoRUP.requeridos[0].params" [prestacion]="prestacion"
-                        [registro]="registro" [soloValores]="soloValores" (change)="emitChange($event)"
+                    <rup [elementoRUP]=" elementoRUP.requeridos[0].elementoRUP"  [paciente]="paciente" [params]="elementoRUP.requeridos[0].params"
+                        [prestacion]="prestacion" [registro]="registro" [soloValores]="soloValores" (change)="emitChange($event)"
                         (ejecutarConcepto)="emitEjecutarConcepto(prestacion)">
                     </rup>
                 </div>
             </div>
         </div>
-        <div class="col-2 mt-4">
-            <ng-container *ngIf="registro.registros[0].valor?.evolucion">
-                <plex-button *ngIf="registro.registros[0].valor?.estado !== 'activo'" (click)="cambiaEstado('activo', registro)" type="success btn-icon-rup p-0" size="lg" icon="mdi mdi-play"></plex-button>
-                <plex-button *ngIf="registro.registros[0].valor?.estado !== 'detenido'" (click)="cambiaEstado('detenido', registro)" type="danger btn-icon-rup p-0" size="lg" icon="mdi mdi-stop"></plex-button>
-                <plex-button *ngIf="registro.registros[0].valor?.estado !== 'pausado'" (click)="cambiaEstado('pausado', registro)" type="warning btn-icon-rup p-0" size="lg" icon="mdi mdi-pause"></plex-button>
+        <div class="col-2" [ngClass]="{'mt-botonera':!soloValores}">
+            <ng-container *ngIf="registro.valor?.idRegistroOrigen && !soloValores">
+                <plex-button *ngIf="registro.valor?.estado !== 'activo'" (click)="cambiaEstado('activo', i)" type="success btn-icon-rup p-0"
+                    size="lg" icon="mdi mdi-play"></plex-button>
+                <plex-button *ngIf="registro.valor?.estado !== 'detenido'" (click)="cambiaEstado('detenido', i)" type="danger btn-icon-rup p-0"
+                    size="lg" icon="mdi mdi-stop"></plex-button>
+                <plex-button *ngIf="registro.valor?.estado !== 'pausado'" (click)="cambiaEstado('pausado', i)" type="warning btn-icon-rup p-0"
+                    size="lg" icon="mdi mdi-pause"></plex-button>
+                <plex-button type="primary btn-icon-rup p-0" size="lg" icon="mdi mdi-pencil" (click)='modificar()'></plex-button>
+            </ng-container>
+            <ng-container *ngIf="!registro.valor?.idRegistroOrigen && !soloValores">
+                <plex-button type="danger btn-icon-rup p-0" (click)="quitarIndicacion(i)" size="lg" icon="mdi mdi-close"></plex-button>
+            </ng-container>
+            <ng-container *ngIf="registro.valor?.estado && soloValores">
+                <span *ngIf="registro.valor?.estado === 'activo'" class="badge badge-success">activo</span>
+                <span *ngIf="registro.valor?.estado === 'detenido'" class="badge badge-danger">detenido</span>
+                <span *ngIf="registro.valor?.estado === 'pausado'" class="badge badge-warning">pausado</span>
             </ng-container>
         </div>
     </div>
 </ng-container>
 <div class="row">
     <div class="col">
-        <plex-button *ngIf="!soloValores" type="primary float-right" [label]="params?.btnLabel ? params?.btnLabel : 'Agregar'" (click)="agregarRegistro()"></plex-button>
+        <plex-button *ngIf="!soloValores" type="primary float-right mt-3" [label]="params?.btnLabel ? params?.btnLabel : 'Agregar'"
+            (click)="agregarRegistro()"></plex-button>
     </div>
 </div>

@@ -701,9 +701,12 @@ export class PrestacionesService {
         if (existePrestacionObserve) {
             return this.getPrestacionesXtipo(paciente.id, concepto.conceptId).map(prestaciones => {
                 let nuevaPrestacion = this.inicializarPrestacion(paciente, concepto, 'ejecucion');
+                console.log(nuevaPrestacion);
                 if (prestaciones.length) {
+                    console.log(prestaciones.length);
                     let ultimaPrestacion = prestaciones[0];
-                    this.hayValorAEvolucionar(ultimaPrestacion.ejecucion.registros);
+                    console.log('console.log', ultimaPrestacion);
+                     this.hayValorAEvolucionar(ultimaPrestacion.ejecucion.registros);
                     nuevaPrestacion.ejecucion.registros = ultimaPrestacion.ejecucion.registros;
                 }
                 return nuevaPrestacion;
@@ -722,15 +725,19 @@ export class PrestacionesService {
      */
     hayValorAEvolucionar(registros: any[]) {
         if (registros) {
+            console.log('entre aca wn', registros);
+
             for (let i = 0; i < registros.length; i++) {
+                console.log('AAAAAAA', registros[i].valor);
                 if (registros[i].valor) {
-                    let registorNuevo = new IPrestacionRegistro(null, registros[i].concepto);
-                    registorNuevo.valor = {
+                    // let registorNuevo = new IPrestacionRegistro(null, registros[i].concepto);
+                    registros[i].valor = {
                         idRegistroOrigen: registros[i].id,
                         estado: registros[i].valor.estado ? registros[i].valor.estado : 'activo',
-                        evolucion: registros[i].valor.evolucion ? registros[i].valor.evolucion : registros[i].valor
+                        // evolucion: registros[i].valor.evolucion ? registros[i].valor.evolucion : registros[i].valor
                     };
-                    registros[i] = registorNuevo;
+                    console.log( registros[i]);
+                    // registros[i] = registorNuevo;
                 } else {
                     this.hayValorAEvolucionar(registros[i].registros);
                 }
