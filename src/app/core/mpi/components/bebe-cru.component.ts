@@ -238,7 +238,7 @@ export class BebeCruComponent implements OnInit {
     }
     /**
     * Change del plex-bool viveProvActual
-    * carga las localidades correspondientes a la provincia del efector
+    * carga las localidades correspondientes a la provincia del efectkr actual
     * @param {any} event
     *
     * @memberOf PacienteCreateUpdateComponent
@@ -264,7 +264,7 @@ export class BebeCruComponent implements OnInit {
     }
     /**
      * Change del plex-bool viveLocalidadActual
-     * carga los barrios de la provincia del efector
+     * carga los barrios de la provincia del efector actual
      * @param {any} event
      *
      * @memberOf PacienteCreateUpdateComponent
@@ -283,8 +283,22 @@ export class BebeCruComponent implements OnInit {
 
     loadLocalidades(provincia) {
         if (provincia && provincia.id) {
+            if (provincia.id === this.provinciaActual.id) {
+                this.viveProvActual = true;
+            }
             this.localidadService.getXProvincia(provincia.id).subscribe(result => {
                 this.localidades = result;
+            });
+        }
+    }
+
+    loadBarrios(localidad) {
+        if (localidad && localidad.id) {
+            if (localidad.id === this.localidadActual.id) {
+                this.viveLocActual = true;
+            }
+            this.barriosService.getXLocalidad(localidad.id).subscribe(result => {
+                this.barrios = result;
             });
         }
     }
@@ -317,27 +331,28 @@ export class BebeCruComponent implements OnInit {
         }
         this.pacienteService.save(bebeGuardar).subscribe(
             bebe => {
-                // Cargamos al bebe como hijo/a de su progrnitor/a
-                let relacionOpuesta = this.parentescoModel.find((elem) => {
-                    if (elem.nombre === this.relacion.relacion.opuesto) {
-                        return elem;
+                if (bebe.relaciones) {
+                    // Cargamos al bebe como hijo/a de su progrnitor/a
+                    let relacionOpuesta = this.parentescoModel.find((elem) => {
+                        if (elem.nombre === this.relacion.relacion.opuesto) {
+                            return elem;
+                        }
+                    });
+                    let dto = {
+                        relacion: relacionOpuesta,
+                        referencia: bebe.id,
+                        nombre: bebe.nombre,
+                        apellido: bebe.apellido,
+                        documento: bebe.documento,
+                        foto: bebe.foto ? bebe.foto : null
+                    };
+                    if (dto.referencia && bebe.relaciones.length) {
+                        this.pacienteService.patch(bebe.relaciones[0].referencia, {
+                            'op': 'updateRelacion',
+                            'dto': dto
+                        }).subscribe();
                     }
-                });
-                let dto = {
-                    relacion: relacionOpuesta,
-                    referencia: bebe.id,
-                    nombre: bebe.nombre,
-                    apellido: bebe.apellido,
-                    documento: bebe.documento,
-                    foto: bebe.foto ? bebe.foto : null
-                };
-                if (dto.referencia && bebe.relaciones.length) {
-                    this.pacienteService.patch(bebe.relaciones[0].referencia, {
-                        'op': 'updateRelacion',
-                        'dto': dto
-                    }).subscribe();
                 }
-
                 this.plex.info('success', 'Los datos se actualizaron correctamente');
                 this.location.back();
             },
@@ -399,17 +414,6 @@ export class BebeCruComponent implements OnInit {
 
     notasNotification(notasNew) {
         this.bebeModel.notas = notasNew;
-    }
-
-    loadBarrios(localidad) {
-        if (localidad && localidad.id) {
-            if (localidad.id === this.localidadActual.id) {
-                this.viveLocActual = true;
-            }
-            this.barriosService.getXLocalidad(localidad.id).subscribe(result => {
-                this.barrios = result;
-            });
-        }
     }
 
     changeCoordenadas(coordenadas) {
