@@ -88,6 +88,11 @@ export class DarTurnosComponent implements OnInit {
     public agenda: IAgenda;
     public agendas: IAgenda[];
     public estadosAgenda = EstadosAgenda;
+    public estadoFacturacion: any = {
+        tipo: '',
+        estado: 'Sin comprobante',
+        numeroComprobante: ''
+    };
 
     estadoT: EstadosDarTurnos;
     turnoDoble = false;
@@ -855,7 +860,8 @@ export class DarTurnosComponent implements OnInit {
                 motivoConsulta: this.motivoConsulta,
                 tipoPrestacion: this.turnoTipoPrestacion,
                 paciente: pacienteSave,
-                idAgenda: this.agenda.id
+                idAgenda: this.agenda.id,
+                estadoFacturacion: this.estadoFacturacion
             };
             this.serviceTurno.saveDinamica(datosTurno).subscribe(
                 resultado => {
@@ -890,7 +896,8 @@ export class DarTurnosComponent implements OnInit {
                 tipoPrestacion: this.turnoTipoPrestacion,
                 tipoTurno: this.tiposTurnosSelect,
                 nota: this.nota,
-                motivoConsulta: this.motivoConsulta
+                motivoConsulta: this.motivoConsulta,
+                estadoFacturacion: this.estadoFacturacion
             };
             this.serviceTurno.save(datosTurno, { showError: false }).subscribe(resultado => {
                 this.showTab = 1;
