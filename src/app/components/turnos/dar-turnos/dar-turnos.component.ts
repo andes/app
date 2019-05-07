@@ -92,7 +92,7 @@ export class DarTurnosComponent implements OnInit {
         tipo: '',
         estado: 'Sin comprobante',
         numeroComprobante: ''
-    }
+    };
 
     estadoT: EstadosDarTurnos;
     turnoDoble = false;
