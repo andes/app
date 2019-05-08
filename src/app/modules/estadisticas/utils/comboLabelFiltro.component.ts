@@ -26,6 +26,9 @@ const tipoTurnos = [
     { id: 'appMobile', nombre: 'App Mobile' }
 ];
 
+const labels = estadosAgendas.concat(estadosTurnos).concat(tipoTurnos);
+
+
 export function getEstadosAgendas() {
     return estadosAgendas;
 }
@@ -36,5 +39,20 @@ export function getEstadosTurnos() {
 
 export function getTipoTurnos() {
     return tipoTurnos;
+}
+
+export function getRefactorNombre(data) {
+    if (data && data.length > 0 && data[0].count > 0) {
+        let nuevoArrayLabels = {};
+
+        Object.keys(labels).map(tt => {
+            nuevoArrayLabels[labels[tt].id] = labels[tt].nombre;
+        });
+
+        Object.keys(data).map(t =>
+            data[t].nombre = nuevoArrayLabels[data[t]._id]
+        );
+    }
+    return data;
 }
 
