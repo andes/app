@@ -199,7 +199,7 @@ export class BebeCruComponent implements OnInit {
                         this.plex.toast('warning', 'Paciente no guardado', 'Error');
                         this.plex.hideLoader();
                     });
-        } else {
+            } else {
                 this.onPacienteSelected(pacienteScaneado);
             }
         } else {
@@ -231,25 +231,8 @@ export class BebeCruComponent implements OnInit {
                 this.relacion.relacion = rel;
                 this.bebeModel.relaciones = [this.relacion];
 
-                /* Si no se cargó ninguna dirección, tomamos el dato de la madre */
-                if (!this.bebeModel.direccion[0].valor) {
-                    this.bebeModel.direccion[0].valor = paciente.direccion[0].valor;
-                }
-                if (!this.bebeModel.direccion[0].ubicacion.provincia && paciente.direccion && paciente.direccion[0].ubicacion && paciente.direccion[0].ubicacion.provincia) {
-                    this.bebeModel.direccion[0].ubicacion.provincia = paciente.direccion[0].ubicacion.provincia;
-                    this.viveProvActual = (paciente.direccion[0].ubicacion.provincia.id === this.provinciaActual.id);
-                }
-                if (!this.bebeModel.direccion[0].ubicacion.localidad && paciente.direccion && paciente.direccion[0].ubicacion.localidad) {
-                    this.bebeModel.direccion[0].ubicacion.localidad = paciente.direccion[0].ubicacion.localidad;
-                    this.viveLocActual = (paciente.direccion[0].ubicacion.localidad.id === this.localidadActual.id);
-
-                    if (paciente.direccion[0].geoReferencia) {
-                        this.bebeModel.direccion[0].geoReferencia = paciente.direccion[0].geoReferencia;
-                    }
-                }
-                if (!this.bebeModel.direccion[0].ubicacion.barrio && paciente.direccion && paciente.direccion[0].ubicacion.barrio) {
-                    this.bebeModel.direccion[0].ubicacion.barrio = paciente.direccion[0].ubicacion.barrio;
-                }
+                /* Si no se cargó ninguna dirección, tomamos el dato de la madre/padre/tutor */
+                this.copiarDireccion(paciente);
                 this.pacientes = null;
                 this.showBuscador = false;
             });
@@ -257,6 +240,27 @@ export class BebeCruComponent implements OnInit {
             this.plex.info('warning', 'Imposible obtener el paciente seleccionado', 'Error');
         }
     }
+    private copiarDireccion(paciente: IPaciente) {
+        if (!paciente.direccion || !paciente.direccion.length) { return; }
+        if (!this.bebeModel.direccion[0].valor) {
+            this.bebeModel.direccion[0].valor = paciente.direccion[0].valor;
+        }
+        if (!this.bebeModel.direccion[0].ubicacion.provincia && paciente.direccion[0].ubicacion && paciente.direccion[0].ubicacion.provincia) {
+            this.bebeModel.direccion[0].ubicacion.provincia = paciente.direccion[0].ubicacion.provincia;
+            this.viveProvActual = (paciente.direccion[0].ubicacion.provincia.id === this.provinciaActual.id);
+        }
+        if (!this.bebeModel.direccion[0].ubicacion.localidad && paciente.direccion[0].ubicacion.localidad) {
+            this.bebeModel.direccion[0].ubicacion.localidad = paciente.direccion[0].ubicacion.localidad;
+            this.viveLocActual = (paciente.direccion[0].ubicacion.localidad.id === this.localidadActual.id);
+            if (paciente.direccion[0].geoReferencia) {
+                this.bebeModel.direccion[0].geoReferencia = paciente.direccion[0].geoReferencia;
+            }
+        }
+        if (!this.bebeModel.direccion[0].ubicacion.barrio && paciente.direccion[0].ubicacion.barrio) {
+            this.bebeModel.direccion[0].ubicacion.barrio = paciente.direccion[0].ubicacion.barrio;
+        }
+    }
+
     /**
     * Change del plex-bool viveProvActual
     * carga las localidades correspondientes a la provincia del efector
