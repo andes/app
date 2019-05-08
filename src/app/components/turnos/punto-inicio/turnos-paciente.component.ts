@@ -132,6 +132,10 @@ export class TurnosPacienteComponent implements OnInit {
         this.showLiberarTurno = false;
     }
     showArancelamiento(turno) {
+        if (turno.obraSocial === 'prepaga' && !turno.prepaga) {
+            this.plex.toast('error', 'Seleccione una Prepaga', '¡Atención!');
+            return;
+        }
         if (turno.obraSocial === 'prepaga' || turno.prepaga) {
             this.obraSocialSeleccionada = turno.prepaga.nombre;
         } else {
