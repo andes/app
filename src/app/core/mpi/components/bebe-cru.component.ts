@@ -182,9 +182,30 @@ export class BebeCruComponent implements OnInit {
     searchEnd(resultado: PacienteBuscarResultado) {
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
+            return;
+        }
+        if (resultado.pacientes.length === 1 && resultado.escaneado) {
+            let pacienteScaneado = resultado.pacientes[0];
+            if (!pacienteScaneado.id) {
+                pacienteScaneado.estado = 'validado'; // este paciente fue scaneado
+                pacienteScaneado.genero = pacienteScaneado.sexo;
+                this.plex.showLoader();
+                this.pacienteService.save(pacienteScaneado, true).subscribe(
+                    pacGuardado => {
+                        this.onPacienteSelected(pacGuardado);
+                        this.plex.hideLoader();
+                    },
+                    () => {
+                        this.plex.toast('warning', 'Paciente no guardado', 'Error');
+                        this.plex.hideLoader();
+                    });
+        } else {
+                this.onPacienteSelected(pacienteScaneado);
+            }
         } else {
             this.pacientes = resultado.pacientes;
         }
+
     }
 
     searchClear() {
