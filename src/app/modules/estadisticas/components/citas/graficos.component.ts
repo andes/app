@@ -84,7 +84,7 @@ export class GraficosComponent implements OnInit {
     private slug = new Slug('default');
 
     descargar(value) {
-        if (this.filtros.tipoDeFiltro === 'turnos') {
+        if (this.filtros && this.filtros.tipoDeFiltro === 'turnos') {
             // Se agregan datos de filtrados en el primer elemendo del array para visualizar en csv
             Object.keys(this.filtros).map(filtro => value[0][filtro] = this.filtros[filtro] ? this.filtros[filtro] : '');
             this.estService.descargarCSV(value).subscribe((data: any) => {
@@ -109,7 +109,7 @@ export class GraficosComponent implements OnInit {
     }
 
     cargarResultados(data) {
-        if (data && data.length > 0 && data[0].count > 0) {
+        if (data && data.length > 0 && data[0].count > 0 && this.filtros) {
             this.dataGraph = this.type === 'bar' ? [
                 { data: data.map(item => item.count), label: this.filtros.tipoDeFiltro }
             ] : data.map(item => item.count);

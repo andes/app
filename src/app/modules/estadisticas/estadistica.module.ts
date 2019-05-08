@@ -13,7 +13,6 @@ import { FiltrosSolicitudesComponent } from './components/top/filtrosSolicitudes
 
 // Module
 import { PlexModule } from '@andes/plex';
-import { AuthModule } from '@andes/auth';
 import { ChartsModule } from 'ng2-charts';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
@@ -31,7 +30,6 @@ import { SumPipe } from './pipes/sum.pipe';
     imports: [
         CommonModule,
         PlexModule,
-        AuthModule,
         ChartsModule,
         FormsModule,
         HttpClientModule,
