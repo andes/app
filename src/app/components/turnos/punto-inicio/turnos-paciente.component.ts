@@ -133,7 +133,7 @@ export class TurnosPacienteComponent implements OnInit {
     }
     showArancelamiento(turno) {
         if (turno.obraSocial === 'prepaga' && !turno.prepaga) {
-            this.plex.toast('error', 'Seleccione una Prepaga', '¡Atención!');
+            this.plex.toast('danger', 'Seleccione una Prepaga', '¡Atención!');
             return;
         }
         if (turno.obraSocial === 'prepaga' || turno.prepaga) {
