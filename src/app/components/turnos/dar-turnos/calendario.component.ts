@@ -1,5 +1,5 @@
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
-import { Component, EventEmitter, Output, Input } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CalendarioDia } from './calendario-dia.class';
 import * as moment from 'moment';
 
@@ -8,7 +8,7 @@ import * as moment from 'moment';
     templateUrl: 'calendario.html',
     styleUrls: ['calendario.scss']
 })
-export class CalendarioComponent {
+export class CalendarioComponent implements OnInit {
     mostrarFinesDeSemana: any;
     private _agenda: any;
     private _agendas: Array<any>;
@@ -72,6 +72,15 @@ export class CalendarioComponent {
         return this.agendas.find(i => {
             return moment(fecha).isSame(i.horaInicio, 'day');
         });
+    }
+
+    ngOnInit() {
+        moment.updateLocale('es', {
+            week: {
+                dow: 1,
+                doy: 1
+            },
+        })
     }
 
     /** Devuelve las agendas correspondientes a un día determinado */
