@@ -19,7 +19,7 @@
                     <graph-table type="pie" titulo="Tipo" [data]="tipoTurno" [table]="esTabla"
                         [filtros]="this.params" dashboard="Dashboard Citas"></graph-table>
                 </div>
-                <div class="col" *ngIf="estadoAgenda && tipoDeFiltro === 'Agendas'">
+                <div class="col-6" *ngIf="estadoAgenda && tipoDeFiltro === 'Agendas'">
                     <graph-table type="pie" titulo="Estado" [data]="estadoAgenda" [table]="esTabla"
                         [filtros]="this.params" dashboard="Dashboard Citas"></graph-table>
                 </div>
