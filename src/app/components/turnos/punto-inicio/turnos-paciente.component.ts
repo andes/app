@@ -131,6 +131,7 @@ export class TurnosPacienteComponent implements OnInit {
         this.showMotivoConsulta = false;
         this.showLiberarTurno = false;
     }
+
     showArancelamiento(turno) {
         if (turno.obraSocial === 'prepaga' && !turno.prepaga) {
             this.plex.toast('danger', 'Seleccione una Prepaga', '¡Atención!');
@@ -139,9 +140,12 @@ export class TurnosPacienteComponent implements OnInit {
         if (turno.obraSocial === 'prepaga' || turno.prepaga) {
             this.obraSocialSeleccionada = turno.prepaga.nombre;
         } else {
-            this.obraSocialSeleccionada = (turno.obraSocial) ? turno.obraSocial : turno.paciente.obraSocial.nombre;
+            this.obraSocialSeleccionada = (turno.obraSocial) ? turno.obraSocial : (turno.paciente.obraSocial) ? turno.paciente.obraSocial.nombre : null;
         }
-
+        if (!this.obraSocialSeleccionada) {
+            this.plex.toast('danger', 'Seleccione una obra social o prepaga', '¡Atención!');
+            return;
+        }
         this.turnoArancelamiento = turno;
         this.showMotivoConsulta = true;
     }
