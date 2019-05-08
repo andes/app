@@ -1,4 +1,4 @@
-<table *ngIf="calendario" style="height: 70vh">
+<table *ngIf="calendario">
     <tr *ngFor="let week of calendario">
         <td *ngFor="let day of week" (click)="seleccionar(day)" [ngClass]="{
                 'hidden-xl-down'  : (opcionesCalendario && day.weekend),
@@ -11,10 +11,12 @@
             <div *ngIf="day.cantidadAgendas > 0">
                 <div class="dia">{{ day.fecha | date: 'd' }}</div>
                 <div class="nombre">{{ day.fecha | date: 'EEE' | uppercase }}</div>
-                <small title="{{ 'Agendas: ' + day.cantidadAgendas + ' / Turnos disponibles: ' + day.turnosDisponibles }}">
+                <small
+                    title="{{ 'Agendas: ' + day.cantidadAgendas + ' / Turnos disponibles: ' + day.turnosDisponibles }}">
                     A:{{day.cantidadAgendas}}
                     <i *ngIf="day.turnosDisponibles > 0" class="mdi mdi-check-circle text-success"></i>
-                    <i *ngIf="day.turnosDisponibles == 0 && _mostrarNoDisponibles" class="mdi mdi-close-circle text-danger"></i>
+                    <i *ngIf="day.turnosDisponibles == 0 && _mostrarNoDisponibles"
+                        class="mdi mdi-close-circle text-danger"></i>
                     T:{{ day.turnosDisponibles }}
                 </small>
             </div>
