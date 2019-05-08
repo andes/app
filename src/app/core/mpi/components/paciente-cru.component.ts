@@ -538,24 +538,22 @@ export class PacienteCruComponent implements OnInit {
         }
         this.pacienteCache.setScanState(false);
         this.disableGuardar = true;
-        let pacienteGuardar: any = Object.assign({}, this.pacienteModel);
-        pacienteGuardar.ignoreCheck = ignoreCheck;
-        pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-        pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : null;
-        pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : pacienteGuardar.sexo;
-        pacienteGuardar.contacto.map(elem => {
+        let paciente: any = Object.assign({}, this.pacienteModel);
+        paciente.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
+        paciente.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : null;
+        paciente.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : paciente.sexo;
+        paciente.contacto.map(elem => {
             elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
             return elem;
         });
-        pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
+        paciente.direccion[0].ubicacion.pais = this.paisArgentina;
         if (this.viveProvActual) {
-            pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaEfector;
+            paciente.direccion[0].ubicacion.provincia = this.provinciaEfector;
         }
         if (this.viveLocActual) {
-            pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadEfector;
+            paciente.direccion[0].ubicacion.localidad = this.localidadEfector;
         }
-
-        this.pacienteService.save(pacienteGuardar).subscribe(
+        this.pacienteService.save(paciente, ignoreCheck).subscribe(
             (resultadoSave: any) => {
                 // Existen sugerencias de pacientes similares?
                 if (resultadoSave.resultadoMatching && resultadoSave.resultadoMatching.length > 0) {
