@@ -165,14 +165,6 @@ export class BebeCruComponent implements OnInit {
                 }
             }
         });
-        // ubicacion inicial mapa de google en seccion domicilio
-        // Por defecto el mapa se posiciona referenciando al centro de salud actual
-        // this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
-        //     if (point) {
-        //         this.geoReferenciaAux = [point.lat, point.lng];
-        //         this.infoMarcador = this.auth.organizacion.nombre;
-        //     }
-        // });
     }
 
     searchStart() {
@@ -356,7 +348,7 @@ export class BebeCruComponent implements OnInit {
                     documento: bebe.documento,
                     foto: bebe.foto ? bebe.foto : null
                 };
-                if (dto.referencia && bebe.relaciones.length) {
+                if (dto.referencia && bebe.relaciones && bebe.relaciones.length) {
                     this.pacienteService.patch(bebe.relaciones[0].referencia, {
                         'op': 'updateRelacion',
                         'dto': dto
@@ -370,46 +362,6 @@ export class BebeCruComponent implements OnInit {
                 this.plex.info('warning', 'Error guardando el paciente');
             }
         );
-        /*
-        if (!event.formValid) {
-            this.plex.info('warning', 'Debe completar los datos obligatorios');
-            return;
-        }
-        // Si aún no elegió una relación (showBuscardor=true) no debe dejar guardar
-        if (this.showBuscador && event.formValid) {
-            this.plex.info('warning', 'Agregue la relación de madre o padre', 'Información Faltante');
-        } else {
-            this.bebeModel.genero = this.bebeModel.sexo;
-            this.pacienteService.save(this.bebeModel).subscribe(
-                bebe => {
-                    // Cargamos al bebe como hijo/a de su progrnitor/a
-                    let relacionOpuesta = this.parentescoModel.find((elem) => {
-                        if (elem.nombre === this.relacion.relacion.opuesto) {
-                            return elem;
-                        }
-                    });
-                    let dto = {
-                        relacion: relacionOpuesta,
-                        referencia: bebe.id,
-                        nombre: bebe.nombre,
-                        apellido: bebe.apellido,
-                        documento: bebe.documento,
-                        foto: bebe.foto ? bebe.foto : null
-                    };
-                    if (dto.referencia) {
-                        this.pacienteService.patch(bebe.relaciones[0].referencia, {
-                            'op': 'updateRelacion',
-                            'dto': dto
-                        }).subscribe();
-                    }
-
-                    this.plex.info('success', 'Los datos se actualizaron correctamente');
-                    this.location.back();
-                },
-                () => {
-                    this.plex.info('warning', 'Paciente no guardado', 'Error de conexión');
-                });
-        } */
     }
 
 
