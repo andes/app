@@ -20,7 +20,7 @@ export class PrestamosHcComponent implements OnInit {
     ngOnInit() {
         this.autorizado = this.auth.check('prestamos:?');
         if (!this.autorizado) {
-            this.redirect('incio');
+            this.redirect('inicio');
         }
     }
 
