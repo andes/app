@@ -76,7 +76,7 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
         this.agendaSeleccionada = this.agendasAutocitar[indiceAgenda];
 
         this.obraSocialPaciente = null;
-        this.obraSocialService.getPaciente({ dni: this.paciente.documento, sexo: this.paciente.sexo }).subscribe((resultado: IFinanciador[]) => {
+        this.obraSocialService.getObrasSociales({ dni: this.paciente.documento, sexo: this.paciente.sexo }).subscribe((resultado: IFinanciador[]) => {
             if (resultado.length > 0) {
                 this.obraSocialPaciente = resultado[0];
             }

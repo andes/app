@@ -1,13 +1,13 @@
-import { Component, OnInit, Output, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TurnosPrestacionesService } from './services/turnos-prestaciones.service';
 import { Auth } from '@andes/auth';
 import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
 import { ISubscription } from 'rxjs/Subscription';
 import { ProfesionalService } from '../../services/profesional.service';
 import { ObraSocialService } from '../../services/obraSocial.service';
+import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
 
-
-
+import { Plex } from '@andes/plex';
 @Component({
     selector: 'turnos-prestaciones',
     templateUrl: 'turnos-prestaciones.html',
@@ -27,17 +27,21 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public showPrestacion;
     public loading;
     public arrayEstados;
+    public sumarB = false;
+    public arrayEstadosFacturacion;
     prestacion: any;
     router: any;
-    public prestaciones;
+    public prestaciones: any;
     constructor(
-        private auth: Auth,
+        private auth: Auth, private plex: Plex,
         private turnosPrestacionesService: TurnosPrestacionesService, public servicioPrestacion: TipoPrestacionService, public serviceProfesional: ProfesionalService,
-        private servicioOS: ObraSocialService
+        private servicioOS: ObraSocialService, private facturacionAutomaticaService: FacturacionAutomaticaService
     ) { }
     ngOnInit() {
         this.arrayEstados = [{ id: 'Sin registro de asistencia', nombre: 'Sin registro de asistencia' }, { id: 'Ausente', nombre: 'Ausente' }, { id: 'Presente con registro del profesional', nombre: 'Presente con registro del profesional' }, { id: 'Presente sin registro del profesional', nombre: 'Presente sin registro del profesional' }];
+        this.arrayEstadosFacturacion = [{ id: 'Sin comprobante', nombre: 'Sin comprobante' }, { id: 'Comprobante sin prestacion', nombre: 'Comprobante sin prestacion' }, { id: 'Comprobante con prestacion', nombre: 'Comprobante con prestacion' }];
         this.mostrarMasOpciones = false;
+        this.sumarB = false;
         this.sumar = false;
         this.sinOS = false;
         this.loading = true;
@@ -48,7 +52,8 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             idPrestacion: '',
             idProfesional: '',
             financiadores: '',
-            estado: ''
+            estado: '',
+            estadoFacturacion: ''
         };
         // Por defecto mostramos agendas y prestaciones de hoy
         this.hoy = true;
@@ -66,6 +71,13 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             fechaHasta: this.fechaHasta,
             organizacion: this.auth.organizacion._id
         };
+        this.plex.updateTitle([{
+            route: '/',
+            name: 'ANDES'
+        }, {
+            route: '/buscador',
+            name: 'BUSCADOR DE TURNOS Y PRESTACIONES'
+        }]);
     }
     /* limpiamos la request que se haya ejecutado */
     ngOnDestroy() {
@@ -90,9 +102,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             idPrestacion: '',
             idProfesional: '',
             financiadores: '',
-            estado: ''
+            estado: '',
+            estadoFacturacion: '',
         };
-
         this.turnosPrestacionesService.get(params).subscribe((data) => {
             this.busquedas = this.ordenarPorFecha(data);
             this.loading = false;
@@ -100,6 +112,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
 
     }
     buscar(parametros) {
+
+        this.sumarB = (parametros.financiador === 'SUMAR' && this.sumar) ? true : false;
+
         this.showPrestacion = false;
         this.loading = true;
         this.turnosPrestacionesService.get(parametros).subscribe((data) => {
@@ -164,6 +179,13 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
                     this.parametros['financiador'] = 'No posee';
                 } else {
                     this.parametros['financiador'] = '';
+                }
+            }
+            if (tipo === 'estadoFacturacion') {
+                if (value.value) {
+                    this.parametros['estadoFacturacion'] = value.value.id;
+                } else {
+                    this.parametros['estadoFacturacion'] = '';
                 }
             }
             if (tipo === 'filter') {
@@ -231,9 +253,21 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         datos.seleccionada = true;
     }
 
+    recupero() {
+        /* Se modifica el objeto prestación para que haga match con el objeto que procesa
+        el microservicio de Facturación Automática */
+        this.prestacion.organizacion = this.auth.organizacion;
+        this.prestacion.tipoPrestacion = this.prestacion.prestacion;
+        this.prestacion.origen = 'buscador';
+        this.facturacionAutomaticaService.post(this.prestacion).subscribe(respuesta => {
+            if (respuesta.message) {
+                this.plex.info('info', respuesta.message);
+            }
+        });
+    }
+
     onClose() {
         this.showPrestacion = false;
         this.prestacion = null;
     }
-
 }
