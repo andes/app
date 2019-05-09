@@ -182,14 +182,17 @@ export class BebeCruComponent implements OnInit {
                 pacienteScaneado.estado = 'validado'; // este paciente fue scaneado
                 pacienteScaneado.genero = pacienteScaneado.sexo;
                 this.plex.showLoader();
+                this.disableGuardar = true;
                 this.pacienteService.save(pacienteScaneado, true).subscribe(
                     pacGuardado => {
                         this.onPacienteSelected(pacGuardado);
                         this.plex.hideLoader();
+                        this.disableGuardar = false;
                     },
                     () => {
                         this.plex.toast('warning', 'Paciente no guardado', 'Error');
                         this.plex.hideLoader();
+                        this.disableGuardar = false;
                     });
             } else {
                 this.onPacienteSelected(pacienteScaneado);
