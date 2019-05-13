@@ -211,7 +211,7 @@ export class ClonarAgendaComponent implements OnInit {
     verificarConflictos(dia: any) {
         this.agendasFiltradas = this.agendasFiltradas.filter((agenda) => {
             if (moment(dia.fecha).isSame(moment(agenda.horaInicio), 'day')) {
-                if (agenda.profesionales.length > 0) {
+                if (agenda.profesionales && agenda.profesionales.length > 0) {
                     if (agenda.profesionales.map(elem => { return elem.id; }).some
                         (v => { return this.agenda.profesionales.map(elem => { return elem.id; }).includes(v); })) {
                         agenda.conflictoProfesional = 1;
