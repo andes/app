@@ -14,19 +14,19 @@ export class RiesgoCardiovascularService extends FormulaBaseService {
         let message = '';
         switch (value) {
             case 1:
-                message = 'Riesgo bajo';
+                message = 'Riesgo bajo (<10%)';
                 break;
             case 2:
-                message = 'Riesgo moderado';
+                message = 'Riesgo moderado (10% a <20%)';
                 break;
             case 3:
-                message = 'Riesgo alto';
+                message = 'Riesgo alto (20% a <30%)';
                 break;
             case 4:
-                message = 'Riesgo muy alto';
+                message = 'Riesgo muy alto (30% a <40%)';
                 break;
             case 5:
-                message = 'Riesgo crítico';
+                message = 'Riesgo crítico (>40%)';
                 break;
         }
         return {
