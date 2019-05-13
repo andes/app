@@ -10,22 +10,35 @@ import { RupElement } from '../..';
 @RupElement('EstadoComponent')
 export class EstadoComponent extends RUPComponent implements OnInit {
     public existeReg = false;
-    ngOnInit() {
-        if (this.registro && this.registro.valor && this.registro.valor.existeRegistro) {
-            if (!this.registro.valor.estado) {
-                this.registro.valor = { estado: 'activo', existeRegistro: this.registro.valor.existeRegistro };
+    public esRequerido: boolean;
 
-            }
-        }
+    ngOnInit() {
+        if (this.params) {
+            this.esRequerido = this.params.required;
+        } else { this.esRequerido = false; }
 
     }
 
-    // public validate() {
-    //     return false;
-    // }
+    public validate() {
+        // La primera vez
+        if (this.registro && this.registro.valor) {
+            if (!this.registro.valor.existeRegistro) {
+                return true;
+            }
+            if (this.registro.valor.estado) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
+
 
     cambiaEstado(estado) {
-        this.registro.valor.estado = estado;
+        this.registro.valor = { estado: estado, existeRegistro: this.registro.valor.existeRegistro };
     }
 
 

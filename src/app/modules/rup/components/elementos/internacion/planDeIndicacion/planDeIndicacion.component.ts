@@ -45,7 +45,7 @@ export class PlanIndicacionComponent extends RUPComponent implements OnInit {
     }
 
 
-    modificar(index) {
-    }
+    // modificar(index) {
+    // }
 
 }
