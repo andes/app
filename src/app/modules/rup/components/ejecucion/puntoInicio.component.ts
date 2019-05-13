@@ -54,6 +54,8 @@ export class PuntoInicioComponent implements OnInit {
     // ultima request que se almacena con el subscribe
     private lastRequest: ISubscription;
 
+    public puedeVerHudsPaciente: boolean;
+
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
         public servicioAgenda: AgendaService,
@@ -68,6 +70,7 @@ export class PuntoInicioComponent implements OnInit {
         if (this.auth.getPermissions('rup:?').length <= 0) {
             this.redirect('inicio');
         }
+        this.puedeVerHudsPaciente = this.auth.check('huds:visualizacionHuds');
         if (!this.auth.profesional) {
             this.redirect('inicio');
         } else {
