@@ -111,7 +111,7 @@
                         <!-- Tiene turnos disponibles -->
                         <ng-container *ngIf="estadoT === 'seleccionada'">
                             <!--Lista de turnos, bloque por bloque-->
-                            <div *ngFor="let bloque of bloques; let indiceBloque = index">
+                            <div *ngFor="let bloque of agenda.bloques; let indiceBloque = index">
                                 <div *ngIf="tieneTurnos(bloque)">
                                     <div *ngIf="bloque.descripcion">
                                         <span>Bloque: {{bloque.descripcion}}</span>
