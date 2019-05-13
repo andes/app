@@ -213,9 +213,15 @@ export class ClonarAgendaComponent implements OnInit {
             if (moment(dia.fecha).isSame(moment(agenda.horaInicio), 'day')) {
                 if (agenda.profesionales && agenda.profesionales.length > 0) {
                     if (agenda.profesionales.map(elem => { return elem.id; }).some
-                        (v => { return this.agenda.profesionales.map(elem => { return elem.id; }).includes(v); })) {
+                        (v => {
+                            if (this.agenda.profesionales) {
+                                return this.agenda.profesionales.map(elem => { return elem.id; }).includes(v);
+                            }
+                            return false;
+                        })) {
                         agenda.conflictoProfesional = 1;
                         dia.estado = 'conflicto';
+
                     }
                 }
                 if (agenda.espacioFisico && this.agenda.espacioFisico) {
