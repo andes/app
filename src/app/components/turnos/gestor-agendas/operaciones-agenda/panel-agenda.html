@@ -3,16 +3,17 @@
 
     <div class="row">
         <div class="col-6">
-            <!-- Profesionales -->
-            <plex-select [(ngModel)]="agenda.profesionales" name="profesionales" (getData)="loadProfesionales($event)" label="Profesionales"
-                placeholder="Seleccione los profesionales" closeAfterSelect="true" labelField="apellido + ' ' + nombre" (change)="validarSolapamientos('profesionales')"
-                [multiple]="true">
+            <!-- Equipo de Salud -->
+            <plex-select [(ngModel)]="agenda.profesionales" name="profesionales" (getData)="loadProfesionales($event)"
+                label="Equipo de Salud" placeholder="Seleccione el equipo de salud" closeAfterSelect="true"
+                labelField="apellido + ' ' + nombre" (change)="validarSolapamientos('profesionales')" [multiple]="true">
             </plex-select>
         </div>
         <div class="col-6">
             <!-- Espacio Físico -->
-            <plex-select [(ngModel)]="agenda.espacioFisico" name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico"
-                placeholder="Seleccione un espacio" labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio ? edificio.descripcion : '' + ')'"
+            <plex-select [(ngModel)]="agenda.espacioFisico" name="espacioFisico" (getData)="loadEspacios($event)"
+                label="Espacio Físico" placeholder="Seleccione un espacio"
+                labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio ? edificio.descripcion : '' + ')'"
                 (change)="validarSolapamientos('espacioFisico')">
             </plex-select>
         </div>
@@ -25,7 +26,8 @@
         </div>
     </div>
 
-    <filtros-mapa-espacio-fisico (onChange)="espaciosChange($event)"></filtros-mapa-espacio-fisico>
-    <mapa-espacio-fisico [agendaSeleccionada]="agenda" [espacioTable]="espaciosList" (onEspacioClick)="selectEspacio($event)"></mapa-espacio-fisico>
+    <filtros-mapa-espacio-fisico *ngIf="showMapa" (onChange)="espaciosChange($event)"></filtros-mapa-espacio-fisico>
+    <mapa-espacio-fisico *ngIf="showMapa" [agendaSeleccionada]="agenda" [espacioTable]="espaciosList"
+        (onEspacioClick)="selectEspacio($event)"></mapa-espacio-fisico>
 
 </fieldset>

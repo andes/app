@@ -2,7 +2,7 @@ import { Component, Output, Input, EventEmitter, OnInit, ViewChildren, QueryList
 import { RUPComponent } from './../core/rup.component';
 import { environment } from '../../../../../environments/environment';
 import { RupElement } from '../elementos';
-
+import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
 @Component({
     selector: 'rup-adjuntar-documento',
     templateUrl: 'adjuntarDocumento.html',
@@ -21,17 +21,19 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         'dat'
     ];
 
-
     adjunto: any;
     loading = false;
     waiting = false;
     timeout = null;
     errorExt = false;
 
-    fotos: any[] = [];
+    // fotos: { file?: any, ext: string, id?: any, descripcion?: ISnomedConcept, fecha?: Date }[] = [];
     lightbox = false;
     indice;
     fileToken: String = null;
+
+    public descendientesInformeClinico: ISnomedConcept[] = [];
+    public hoy = moment(new Date()).endOf('day').toDate();
 
     ngOnInit() {
 
@@ -42,16 +44,14 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         }
         if (!this.registro.valor.documentos) {
             this.registro.valor.documentos = [];
-            this.fotos = [];
-        } else {
-            this.registro.valor.documentos.forEach((item: any) => {
-                this.fotos.push(item);
-            });
         }
         this.adjuntosService.generateToken().subscribe((data: any) => {
             this.fileToken = data.token;
         });
 
+        this.snomedService.getQuery({ expression: '^4681000013102' }).subscribe(result => {
+            this.descendientesInformeClinico = result;
+        });
     }
 
     changeListener($event): void {
@@ -77,13 +77,9 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
                 registro: this.registro.id
             };
             this.adjuntosService.upload(myReader.result, metadata).subscribe((data) => {
-                this.fotos.push({
-                    ext,
-                    id: data._id
-                });
                 this.registro.valor.documentos.push({
                     ext,
-                    id: data._id
+                    id: data._id,
                 });
             });
 
@@ -105,22 +101,13 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         return this.imagenes.find(x => x === extension.toLowerCase());
     }
 
-    imageUploaded($event) {
-        let foto = {
-            ext: this.fileExtension($event.file.name),
-            file: $event.src,
-        };
-        this.fotos.push(foto);
-    }
-
     imageRemoved($event) {
-        let index = this.fotos.indexOf($event);
-        this.fotos.splice(index, 1);
+        let index = this.registro.valor.documentos.indexOf($event);
         this.registro.valor.documentos.splice(index, 1);
     }
 
     activaLightbox(index) {
-        if (this.fotos[index].ext !== 'pdf') {
+        if (this.registro.valor.documentos[index].ext !== 'pdf') {
             this.lightbox = true;
             this.indice = index;
         }
@@ -135,7 +122,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
 
     imagenSiguiente(i) {
         let imagenSiguiente = i + 1;
-        if (imagenSiguiente <= this.fotos.length - 1) {
+        if (imagenSiguiente <= this.registro.valor.documentos.length - 1) {
             this.indice = imagenSiguiente;
         }
     }
@@ -153,7 +140,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     }
 
     fromMobile() {
-        let paciente = this.paciente.id;
+        let paciente = this.paciente ? this.paciente.id : null;
         let prestacion = this.prestacion.id;
         let registro = this.registro.id;
         this.loading = true;
@@ -176,7 +163,6 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
                 this.adjunto = data[0];
                 let docs = this.adjunto.valor.documentos;
                 docs.forEach((item) => {
-                    this.fotos.push(item);
                     this.registro.valor.documentos.push(item);
                 });
                 this.adjuntosService.delete(this.adjunto._id).subscribe(() => { });
@@ -194,6 +180,5 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         this.waiting = false;
         this.adjuntosService.delete(this.adjunto._id).subscribe(() => { });
     }
-
 }
 // ElementosRUPRegister.register('AdjuntarDocumentoComponent', AdjuntarDocumentoComponent);

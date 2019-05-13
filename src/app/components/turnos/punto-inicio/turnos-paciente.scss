@@ -2,6 +2,11 @@
     position: relative !important;
 }
 
-.bg-null {
-    background-color: #dddddd;
+.mat-radio-label {
+    align-items: flex-start !important;
+    white-space: normal !important;
+}
+
+.blue-border {
+    border-color: #5bc0de;
 }

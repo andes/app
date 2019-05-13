@@ -82,25 +82,47 @@
                                 </plex-select>
                             </div>
                         </div>
+
                         <div class="row" *ngIf="origenExterno">
                             <div class="col-md">
+                                <plex-bool [(ngModel)]="check" type="slide" label="Otro" name="activo"></plex-bool>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="origenExterno">
+                            <div class="col-md" *ngIf="!check">
                                 <plex-select [(ngModel)]="informeIngreso.organizacionOrigen" name="organizacion"
                                     (getData)="loadOrganizacion($event)" label="Organización origen" placeholder="Seleccione la organización"
                                     labelField="nombre" [required]="true">
                                 </plex-select>
                             </div>
+                            <div class="col-md" *ngIf="check">
+                                <plex-text label="Otro" name="otraOrganizacion" [(ngModel)]="informeIngreso.organizacionOrigen"
+                                    [required]="true">
+                                </plex-text>
+                            </div>
                         </div>
+
                         <div class="row">
                             <div class="col-md">
                                 <plex-select *ngIf="!soloValores" label="Profesional responsable" [(ngModel)]="informeIngreso.profesional"
-                                    name="profesional" (getData)="loadProfesionales($event)"  [required]="!auth.profesional"  labelField="apellido+' '+nombre">
+                                    name="profesional" (getData)="loadProfesionales($event)" [required]="!auth.profesional"
+                                    labelField="apellido+' '+nombre">
                                 </plex-select>
+
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md">
                                 <plex-text *ngIf="!soloValores" label="Motivo de Internación" name="motivo" [(ngModel)]="informeIngreso.motivo">
                                 </plex-text>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md">
+                                <plex-select name="especialidad" [required]="true" [data]="especialidades" idField="term"
+                                    labelField="term" [(ngModel)]="informeIngreso.especialidades" [multiple]="true"
+                                    label="Especialidad/es">
+                                </plex-select>
                             </div>
                         </div>
                         <div class="row" *ngIf="workflowC && !camaSelected">
@@ -140,9 +162,10 @@
                             </div>
                             <div class="col-6 ">
                                 <plex-select *ngIf="!soloValores" label="Ocupación habitual " [(ngModel)]="informeIngreso.ocupacionHabitual"
-                                    name="ocupacionHabitual" [data]="ocupaciones" placeholder="Seleccione... " idField="nombre"
-                                    labelField="nombre">
+                                    name="ocupacionHabitual" (getData)="getOcupaciones($event)" placeholder="Seleccione... "
+                                    labelField="nom">
                                 </plex-select>
+
                             </div>
                         </div>
                         <div class="row">
@@ -188,7 +211,6 @@
             </div>
         </div>
         <div>
-
         </div>
         <div class="row">
             <div class="col-md" *ngIf="informeIngreso.nroCarpeta">
@@ -230,6 +252,16 @@
             <div *ngIf="informeIngreso.motivo" class="col">
                 <label>Motivo internación</label>
                 <p>{{informeIngreso.motivo}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div *ngIf="informeIngreso.especialidades" class="col">
+                <label>Especialidad/es</label>
+                <p>
+                    <span *ngFor="let especialidad of informeIngreso.especialidades">
+                        {{especialidad.term}} /
+                    </span>
+                </p>
             </div>
         </div>
         <!-- Datos estadisticos  -->

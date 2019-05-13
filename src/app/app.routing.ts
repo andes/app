@@ -49,7 +49,6 @@ import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { PucoComponent } from './components/puco/puco.component';
 
 // ... RUP
-import { ResumenComponent } from './modules/rup/components/ejecucion/resumen.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
 import { PrestacionEjecucionComponent } from './modules/rup/components/ejecucion/prestacionEjecucion.component';
 import { PrestacionValidacionComponent } from './modules/rup/components/ejecucion/prestacionValidacion.component';
@@ -66,6 +65,9 @@ import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.c
 import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
 import { EncabezadoReportesComponent } from './components/reportes/encabezadoReportes.component';
 import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
+
+// REPORTES SJ
+import { EncabezadoReportesDiariosComponent } from './components/reportesDiarios/encabezadoReportesDiarios.component';
 
 // CONFIGURACION PRESTACION
 import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
@@ -98,6 +100,8 @@ import { VincularPacientesComponent } from './components/auditoria/vincular-paci
 
 // Campañas salud
 import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campaniaSalud.component';
+// Buscador de turnos y prestaciones
+import { TurnosPrestacionesComponent } from './components/buscadorTurnosPrestaciones/turnos-prestaciones.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -136,13 +140,13 @@ const appRoutes: Routes = [
   { path: 'rup/internacion/crear', component: IniciarInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/internacion/crear/:id', component: IniciarInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/internacion/ocuparCama/:idCama/:idInternacion', component: OcuparCamaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/resumen/:id', component: ResumenComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/validacion/:id', component: PrestacionValidacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/auditoriaRUP', component: AuditoriaPrestacionPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/llavesTipoPrestacion', component: LlavesTipoPrestacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/vista/:id', component: VistaHudsComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/buscaHuds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'rup/huds/paciente/:id', component: VistaHudsComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'rup/huds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/internacion/censo', component: CensoDiarioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/internacion/censo/mensual', component: CensoMensualComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/internacion/listado', component: ListadoInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
@@ -169,8 +173,14 @@ const appRoutes: Routes = [
   { path: 'encabezadoReportes', component: EncabezadoReportesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'cantidadConsultaXPrestacion', component: CantidadConsultaXPrestacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
+  // ReportesDiarios
+  { path: 'reportesDiarios', component: EncabezadoReportesDiariosComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+
   // Solicitudes
   { path: 'solicitudes', component: SolicitudesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+
+  // Buscador de turnos y prestaciones
+  { path: 'buscador', component: TurnosPrestacionesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // TOP
   { path: 'top/reglas', component: ReglasComponent, canActivate: [RoutingNavBar, RoutingGuard] },

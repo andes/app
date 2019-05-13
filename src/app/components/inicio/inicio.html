@@ -55,15 +55,15 @@
                     </div>
                 </div>
 
-                <!-- <div *ngIf="internacion" class="col-xs-12 col-sm-6 col-md-4">
-                    <div class="boton color-verde" routerLink="/internacion/camas">
+                <div *ngIf="internacion" class="col-xs-12 col-sm-6 col-md-4">
+                    <div class="boton color-salmon" routerLink="/internacion/camas">
                         <i class="icono mdi mdi-hotel"></i>
                         <div class="titulo">Internación</div>
                         <div class="subtitulo">Mapa de camas</div>
                         <div class="detalle">Vea el estado del mapa de camas
                             <br />de los distintos servicios de la organización</div>
                     </div>
-                </div> -->
+                </div>
 
                 <div *ngIf="internacionEpicrisis" class="col-xs-12 col-sm-6 col-md-4">
                     <div class="boton color-verde" routerLink="/internacion/inicio">
@@ -71,6 +71,15 @@
                         <div class="titulo">Internación</div>
                         <div class="subtitulo">Punto de inicio</div>
                         <div class="detalle">Registrar epicrisis de una internación<br>&nbsp;</div>
+                    </div>
+                </div>
+                
+                <div *ngIf="dashboard" class="col-xs-12 col-sm-6 col-md-4">
+                    <div class="boton andes-naranja-claro" routerLink="/dashboard">
+                        <i class="icono mdi mdi-hotel"></i>
+                        <div class="titulo">Dashboard</div>
+                        <div class="subtitulo">Panel de Estadísticas</div>
+                        <div class="detalle"><br>&nbsp;</div>
                     </div>
                 </div>
             </div>

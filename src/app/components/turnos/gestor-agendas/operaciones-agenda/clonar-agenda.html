@@ -1,7 +1,7 @@
 <form class="plex-layout" #form="ngForm">
     <section>
         <div class="row">
-            <div class="col-8">
+            <div class="col-8 h-100">
                 <plex-box>
                     <header>
                         <plex-button type="link" icon="chevron-left" (click)="cambiarMes('-')"></plex-button>
@@ -24,7 +24,7 @@
                     </table>
                 </plex-box>
             </div>
-            <div class="col-4">
+            <div class="col-4 h-100">
                 <plex-box>
                     <div class="row">
                         <div class="col-12">
@@ -48,7 +48,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <b>Profesional: </b>
+                            <b>Equipo de Salud: </b>
                             <span *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}} -
                             </span>
                             <br />
@@ -84,7 +84,7 @@
                                         Conflicto con Espacio Físico
                                     </li>
                                     <li *ngIf="agendaF.conflictoProfesional">
-                                        Conflicto con Profesionales
+                                        Conflicto con Equipo de Salud
                                     </li>
                                 </plex-panel>
                             </ng-template>

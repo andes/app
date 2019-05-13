@@ -17,8 +17,8 @@ export interface IPaciente {
     sexo: string;
     genero: string;
     fechaNacimiento: Date; // Fecha Nacimiento
-    edad: Number;
-    edadReal: { valor: Number, unidad: string };
+    edad: number;
+    edadReal: { valor: number, unidad: string };
     fechaFallecimiento: Date;
     direccion: IDireccion[];
     estadoCivil: EstadoCivil;

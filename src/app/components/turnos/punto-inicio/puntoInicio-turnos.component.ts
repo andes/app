@@ -1,17 +1,12 @@
-import { Component, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
-import { Plex } from '@andes/plex';
-import { Observable } from 'rxjs/Observable';
-import * as moment from 'moment';
 
 // Interfaces
-import { IAgenda } from '../../../interfaces/turnos/IAgenda';
 import { IPaciente } from './../../../interfaces/IPaciente';
 
 // Servicios
 import { PacienteService } from '../../../services/paciente.service';
-// import { AgendaService } from '../../../services/turnos/agenda.service';
 import { AppMobileService } from '../../../services/appMobile.service';
 
 @Component({
@@ -22,8 +17,6 @@ import { AppMobileService } from '../../../services/appMobile.service';
 export class PuntoInicioTurnosComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true;
-    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
-    @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
     public puedeCrearSolicitud = false;
     public puedeAutocitar = false;
@@ -57,8 +50,8 @@ export class PuntoInicioTurnosComponent implements OnInit {
         public servicePaciente: PacienteService,
         public auth: Auth,
         public appMobile: AppMobileService,
-        private router: Router,
-        private plex: Plex) { }
+        private router: Router
+    ) { }
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:puntoInicio:?').length > 0;
@@ -79,15 +72,12 @@ export class PuntoInicioTurnosComponent implements OnInit {
     }
     onPacienteSelected(paciente: IPaciente): void {
         this.paciente = paciente;
-
         if (paciente.id) {
             if (paciente.estado === 'temporal' && paciente.scan) {
                 this.seleccion = paciente;
                 if (paciente.scan) {
                     this.esEscaneado = true;
                 }
-                this.escaneado.emit(this.esEscaneado);
-                this.selected.emit(this.seleccion);
                 this.showCreateUpdate = true;
                 this.showDarTurnos = false;
                 this.showDashboard = false;
@@ -103,6 +93,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
                         if (this.esOperacion) {
                             this.esOperacion = false;
                         } else {
+                            this.showTab = 0;
                             this.showMostrarEstadisticasPacientes = true;
                             this.showMostrarTurnosPaciente = false;
                             this.showActivarApp = false;
@@ -118,8 +109,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
             if (paciente.scan) {
                 this.esEscaneado = true;
             }
-            this.escaneado.emit(this.esEscaneado);
-            this.selected.emit(this.seleccion);
             this.showCreateUpdate = true;
             this.showDarTurnos = false;
             this.showDashboard = false;
@@ -135,7 +124,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
             this.servicePaciente.getById(paciente.id).subscribe(
                 pacienteMPI => {
                     this.paciente = pacienteMPI;
-                    this.selected.emit(this.paciente);
                     this.resultadoCreate = [pacienteMPI];
                     this.showMostrarEstadisticasAgendas = false;
                     this.showMostrarEstadisticasPacientes = true;
@@ -209,9 +197,9 @@ export class PuntoInicioTurnosComponent implements OnInit {
             if (pac && pac.carpetaEfectores && pac.carpetaEfectores.length > 0) {
                 this.paciente.carpetaEfectores = pac.carpetaEfectores;
             }
-            this.selected.emit(this.paciente);
             this.resultadoCreate = [this.paciente];
         }
+        this.esOperacion = false;
         this.showMostrarEstadisticasAgendas = false;
         this.showMostrarEstadisticasPacientes = true;
         this.showIngresarSolicitud = false;

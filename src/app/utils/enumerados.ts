@@ -81,7 +81,7 @@ export enum estadosInternacion {
 }
 
 /**
- * estados de los registros los usamos para el plan de indicaciones en 
+ * estados de los registros los usamos para el plan de indicaciones en
  * internacion.
  */
 export enum estadosRegistros {
@@ -90,6 +90,20 @@ export enum estadosRegistros {
     'detenido'
 }
 
+export enum Meses {
+    'enero',
+    'febrero',
+    'marzo',
+    'abril',
+    'mayo',
+    'junio',
+    'julio',
+    'agosto',
+    'septiembre',
+    'octubre',
+    'noviembre',
+    'diciembre',
+}
 
 export function titleCase(str) {
     return str.toLowerCase().split(' ').map(function (word) {
@@ -261,6 +275,18 @@ export function getObjEstadoInternacion() {
     let salida = array.map(elem => {
         return {
             'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
+
+export function getObjMeses() {
+    let arrMeses = Object.keys(Meses);
+    arrMeses = arrMeses.slice(arrMeses.length / 2);
+    let salida = arrMeses.map((elem, index) => {
+        return {
+            'id': index + 1,
             'nombre': titleCase(elem)
         };
     });

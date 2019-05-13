@@ -24,7 +24,6 @@ import { TipoPrestacionComponent } from '../../../tipoPrestacion/tipoPrestacion.
 export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     hideGuardar: boolean;
     subscriptionID: any;
-    espaciosList: any[];
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     private _editarAgenda: any;
@@ -47,12 +46,12 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     public fecha: Date;
     public autorizado = false;
     public today = new Date();
+    public mobileEnabled: null;
     showClonar = false;
     showAgenda = true;
     espacioFisicoPropios = true;
     textoEspacio = 'Espacios físicos de la organización';
     showBloque = true;
-    showMapaEspacioFisico = false;
     cupoMaximo: Number;
     setCupo = false;
     // ultima request de profesionales que se almacena con el subscribe
@@ -64,6 +63,8 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
         this.today.setHours(0, 0, 0, 0);
+        // recuperamos datos de la organizacion
+        this.loadOrganizationData();
         if (this.editaAgenda) {
             this.cargarAgenda(this._editarAgenda);
             this.bloqueActivo = 0;
@@ -140,11 +141,15 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
 
     }
 
-    loadEdificios(event) {
-        this.organizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
-            event.callback(respuesta.edificio);
+    loadOrganizationData() {
+        this.organizacionService.getById(this.auth.organizacion._id).subscribe(org => {
+            let organization: any = org;
+            if (organization && organization.turnosMobile) {
+                this.mobileEnabled = organization.turnosMobile;
+            }
         });
     }
+
     loadSectores(event) {
         this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(respuesta => {
             let sectores = respuesta.map((ef) => {
@@ -162,7 +167,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         this.modelo.espacioFisico = null;
         if (!this.espacioFisicoPropios) {
             this.textoEspacio = 'Otros Espacios Físicos';
-            this.showMapaEspacioFisico = false;
             this.showBloque = true;
         } else {
             this.textoEspacio = 'Espacios físicos de la organización';
@@ -188,7 +192,12 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 event.callback(listaEspaciosFisicos);
             });
         } else {
-            event.callback(this.modelo.espacioFisico || []);
+            if (this.modelo.espacioFisico) {
+                event.callback([this.modelo.espacioFisico]);
+
+            } else {
+                event.callback([]);
+            }
         }
     }
 
@@ -414,16 +423,12 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 }
                 this.validarTodo();
             }
-            // console.log('elementoActivo ', this.elementoActivo);
             if (texto === 'fin' && !this.modelo.intercalar) {
                 this.modelo.bloques.sort(this.compararBloques);
             }
             this.modelo.bloques.forEach((bloque, index) => {
                 bloque.indice = index;
             });
-            // console.log('elementoActivo ', this.elementoActivo);
-            // this.bloqueActivo = this.elementoActivo.indice;
-            // this.activarBloque(this.elementoActivo.indice);
         }
 
     }
@@ -719,53 +724,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         }
     }
 
-    mapaEspacioFisico() {
-        this.showMapaEspacioFisico = true;
-        this.showBloque = false;
-    }
-
-    espaciosChange(agenda) {
-        // TODO: ver límite
-        let query: any = {
-            limit: 20,
-            activo: true
-        };
-
-        if (agenda.espacioFisico) {
-            let nombre = agenda.espacioFisico;
-            let efector = this.auth.organizacion; // Para que realice el filtro por organización donde estoy logueado
-            query.nombre = nombre;
-            query.organizacion = efector.id;
-        }
-
-        if (agenda.equipamiento && agenda.equipamiento.length > 0) {
-            let equipamiento = agenda.equipamiento.map((item) => item.term);
-            query.equipamiento = equipamiento;
-        }
-
-        if (!agenda.espacioFisico && !agenda.equipamiento) {
-            this.espaciosList = [];
-            return;
-        }
-
-        if (this.subscriptionID) {
-            this.subscriptionID.unsubscribe();
-        }
-        this.subscriptionID = this.servicioEspacioFisico.get(query).subscribe(resultado => {
-            this.espaciosList = resultado;
-        });
-    }
-
-    selectEspacio($data) {
-        this.modelo.espacioFisico = $data;
-        this.validarTodo();
-        if (this.modelo.id === '0') {
-            delete this.modelo.id;
-        }
-        this.showMapaEspacioFisico = false;
-        this.showBloque = true;
-    }
-
     onSave($event, clonar: Boolean) {
         this.hideGuardar = true;
         if (this.dinamica) {
@@ -811,18 +769,20 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                 bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
                 bloque.turnos = [];
+                bloque.turnosMobile = bloque.accesoDirectoProgramado > 0 ? bloque.turnosMobile : false;
                 if (!this.dinamica) {
                     if (bloque.pacienteSimultaneos) {
                         bloque.restantesDelDia = bloque.accesoDirectoDelDia * bloque.cantidadSimultaneos;
                         bloque.restantesProgramados = bloque.accesoDirectoProgramado * bloque.cantidadSimultaneos;
                         bloque.restantesGestion = bloque.reservadoGestion * bloque.cantidadSimultaneos;
                         bloque.restantesProfesional = bloque.reservadoProfesional * bloque.cantidadSimultaneos;
-
+                        bloque.restantesMobile = bloque.accesoDirectoProgramado > 0 ? bloque.cupoMobile * bloque.cantidadSimultaneos : 0;
                     } else {
                         bloque.restantesDelDia = bloque.accesoDirectoDelDia;
                         bloque.restantesProgramados = bloque.accesoDirectoProgramado;
                         bloque.restantesGestion = bloque.reservadoGestion;
                         bloque.restantesProfesional = bloque.reservadoProfesional;
+                        bloque.restantesMobile = bloque.accesoDirectoProgramado > 0 ? bloque.cupoMobile : 0;
                     }
 
                     if (this.noNominalizada) {
@@ -909,13 +869,9 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         this.cargarAgenda(agenda);
     }
 
-    cerrarMapaPlanificar() {
-        this.showMapaEspacioFisico = false;
-        this.showBloque = true;
-    }
     /**
-     * Verifica si es una agenda no nominalizada, en cuyo caso chequea
-     * que la agenda tenga una sola prestación
+     * Verifica si es una agenda no nominalizada, en cuyo caso chequea que la agenda
+     * tenga una sola prestación
      * @returns boolean TRUE/FALSE chequeos no nominalizada Ok
      * @memberof PlanificarAgendaComponent
      */
