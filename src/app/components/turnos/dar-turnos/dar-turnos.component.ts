@@ -1152,7 +1152,7 @@ export class DarTurnosComponent implements OnInit {
 
         if (this._pacienteSeleccionado) {
             // this.router.navigate(['./' + 'puntoInicioTurnos']);
-            this.afterDarTurno.emit(true);
+            this.afterDarTurno.emit(this.paciente);
         } else {
             this.buscarPaciente();
         }
@@ -1160,7 +1160,7 @@ export class DarTurnosComponent implements OnInit {
         this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion en panel de confirma turno
         this.opciones.tipoPrestacion = undefined; // blanquea el filtro de tipo de prestacion en el calendario
         this.opciones.profesional = undefined; // blanquea el filtro de profesionales en el calendario
-        this.afterDarTurno.emit(true);
+        this.afterDarTurno.emit(this.paciente);
         this.plex.clearNavbar();
     }
 

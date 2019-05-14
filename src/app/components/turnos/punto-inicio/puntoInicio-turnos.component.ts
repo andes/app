@@ -211,7 +211,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showDashboard = true;
         this.showTab = 1;
         if (this.paciente && this.paciente.id) {
-            this.onPacienteSelected(this.paciente);
+            this.paciente = pac;
             if (pac && pac.carpetaEfectores && pac.carpetaEfectores.length > 0) {
                 this.paciente.carpetaEfectores = pac.carpetaEfectores;
             }
