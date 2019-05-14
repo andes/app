@@ -302,6 +302,7 @@ import { MoleculaBaseComponent } from './modules/rup/components/elementos/molecu
 import { SeccionesAccordionComponent } from './modules/rup/components/elementos/seccionesAccordion/seccionesAccordion.component';
 import { PlanIndicacionComponent } from './modules/rup/components/elementos/internacion/planDeIndicacion/planDeIndicacion.component';
 import { EstadoComponent } from './modules/rup/components/elementos/internacion/planDeIndicacion/estado.component';
+import { DescripcionComponent } from './modules/rup/components/elementos/descripcion.component';
 
 import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria.component';
 
@@ -491,7 +492,8 @@ let RUPComponentsArray = [
     SeccionesAccordionComponent,
     PlanIndicacionComponent,
     EstadoComponent,
-    EgresoInternacionComponent
+    EgresoInternacionComponent,
+    DescripcionComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */

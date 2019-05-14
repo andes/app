@@ -1,7 +1,8 @@
-<plex-layout main="8">
+<plex-layout main="7">
     <plex-layout-main>
         <header>
-            <h3>Punto de inicio</h3>
+            <h3 >Punto de inicio</h3>
+         
         </header>
         <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"></paciente-buscar>
         <!-- Tabla / listado de pacientes -->
@@ -31,7 +32,15 @@
     <!-- Sidebar -->
     <plex-layout-sidebar>
         <header>
-            <h5 class="text-info">Detalle del Paciente</h5>
+            <div class='row'>
+                <div class='col-10'><h5 class="text-info float-left">Detalle del Paciente</h5></div>
+                <div class='col-2'><plex-dropdown *ngIf="pacienteSeleccionado" class='float-right' type="primary" class="dropdown-inline" [right]="true" icon="dots-horizontal"
+                    (onOpen)="cargaItems(pacienteSeleccionado)" [items]="itemsDropDown"></plex-dropdown></div>
+
+            </div>
+            
+            
+
         </header>
         <ng-container *ngIf="pacienteSeleccionado">
             <div class="info-sidebar">
@@ -42,7 +51,7 @@
                         <p><strong>Nro de Documento</strong></p>
                         <p>{{ pacienteSeleccionado.documento | number }}</p>
                     </div>
-                    <div class="col-8">
+                    <div class="col-8 text-center">
                         <span class="badge ml-1" [ngClass]="{'badge-success': pacienteSeleccionado.estado === 'validado', 'badge-warning': pacienteSeleccionado.estado !== 'validado'}">
                             {{ pacienteSeleccionado.estado | uppercase }} </span>
                         <br>
@@ -53,12 +62,13 @@
                 <hr class="blanco lg">
                 <ng-container *ngIf="!showLoader">
                     <div class="row">
-                        <div class="col-4">
-                            <h5 class="text-info">Lista de epicrisis</h5>
-                        </div>
+                        <!-- <div class="col-4">
+                            <h5 class="text-info">Lista</h5>
+                        </div> -->
                         <div class="col-8 text-right inline">
-                            <plex-button size="sm" type="success" (click)="nuevaEpicrisis(pacienteSeleccionado)">CREAR EPICRISIS</plex-button>
-                            <plex-button size="sm" type="info" (click)="ruteo(pacienteSeleccionado.id, 'huds')">VER HUDS</plex-button>
+                         
+                            <!-- <plex-button size="sm" type="success" (click)="nuevaEpicrisis(pacienteSeleccionado)">CREAR EPICRISIS</plex-button>
+                            <plex-button size="sm" type="info" (click)="ruteo(pacienteSeleccionado.id, 'huds')">VER HUDS</plex-button> -->
                         </div>
                     </div>
                 </ng-container>
@@ -68,6 +78,9 @@
                     <table class="table table-striped">
                         <thead>
                             <tr class="text-uppercase">
+                                <td>
+                                    <strong>Origen</strong>
+                                </td>
                                 <td>
                                     <strong>Fecha</strong>
                                 </td>
@@ -80,17 +93,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngIf="!epicrisisPaciente.length">
+                            <tr *ngIf="!ListadoPrestacionesPorPaciente.length">
                                 <td colspan="3">
-                                    <div *ngIf="!epicrisisPaciente.length && !showLoader" class="row badge-internacion warning">
+                                    <div *ngIf="!ListadoPrestacionesPorPaciente.length && !showLoader" class="row badge-internacion warning">
                                         <div class="col-12 text-center">
                                             No hay epicrisis del paciente
                                         </div>
                                     </div>
                                 </td>
                             </tr>
-                            <ng-container *ngIf="epicrisisPaciente.length">
-                                <tr class="hover" *ngFor="let epicrisis of epicrisisPaciente">
+                            <ng-container *ngIf="ListadoPrestacionesPorPaciente.length">
+                                <tr class="hover" *ngFor="let epicrisis of ListadoPrestacionesPorPaciente">
+                                    <td class="text-info">
+                                        {{epicrisis.origen }}
+                                    </td>
                                     <td class="text-info">
                                         {{epicrisis.solicitud.fecha | fecha}}
                                     </td>
@@ -113,7 +129,7 @@
         </ng-container>
     </plex-layout-sidebar>
     <!-- footer -->
-    <plex-layout-footer>
+    <!-- <plex-layout-footer>
         <plex-button label="Mapa de camas" type="info" position="right" routerLink="/internacion/camas"></plex-button>
-    </plex-layout-footer>
+    </plex-layout-footer> -->
 </plex-layout>

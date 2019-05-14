@@ -185,4 +185,12 @@ export class ElementosRUPService {
     }
 
 
+    getConceptoPrescripcion() {
+        let conceptoPreincripcion =  this.cache['432678004'] ? this.cache['432678004'].conceptos[0] : null;
+
+
+        return conceptoPreincripcion;
+    }
+
+
 }
