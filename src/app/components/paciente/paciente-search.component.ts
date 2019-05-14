@@ -64,16 +64,10 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        // controlamos si tiene acceso a MPI
         if (!this.auth.check('huds:visualizacionHuds')) {
             this.router.navigate(['./inicio']);
         }
 
-        // controla el input y bloquea dashboard si no tiene permisos
-        // Lo quitamos junto con el html del dashboard
-        // if (this.modoCompleto) {
-        //     this.modoCompleto = this.auth.check('mpi:paciente:dashboard');
-        // }
         this.autoFocus = this.autoFocus + 1;
     }
 

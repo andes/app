@@ -67,7 +67,7 @@ export class PuntoInicioComponent implements OnInit {
 
     ngOnInit() {
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
-        if (this.auth.getPermissions('rup:?').length <= 0) {
+        if (!this.auth.check('rup')) {
             this.redirect('inicio');
         }
         this.puedeVerHudsPaciente = this.auth.check('huds:visualizacionHuds');
