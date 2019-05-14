@@ -40,7 +40,8 @@
                             </div>
                             <div class="col-4">
                                 <plex-text label="Número de identificación"
-                                    [(ngModel)]="pacienteModel.numeroIdentificacion" name="numeroIdentificacion">
+                                    [(ngModel)]="pacienteModel.numeroIdentificacion" name="numeroIdentificacion"
+                                    pattern="[0-9]+">
                                 </plex-text>
                             </div>
                         </div>
@@ -157,7 +158,7 @@
                                         </plex-select>
                                     </div>
                                 </div>
-                                <div class="row" *ngIf="viveLocActual">
+                                <div class="row" *ngIf="barrios?.length">
                                     <div class="col">
                                         <plex-select label="Barrio"
                                             [(ngModel)]="pacienteModel.direccion[0].ubicacion.barrio" name="barrio"
