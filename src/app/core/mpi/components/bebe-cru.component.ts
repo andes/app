@@ -165,14 +165,6 @@ export class BebeCruComponent implements OnInit {
                 }
             }
         });
-        // ubicacion inicial mapa de google en seccion domicilio
-        // Por defecto el mapa se posiciona referenciando al centro de salud actual
-        // this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
-        //     if (point) {
-        //         this.geoReferenciaAux = [point.lat, point.lng];
-        //         this.infoMarcador = this.auth.organizacion.nombre;
-        //     }
-        // });
     }
 
     searchStart() {
@@ -182,9 +174,33 @@ export class BebeCruComponent implements OnInit {
     searchEnd(resultado: PacienteBuscarResultado) {
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
+            return;
+        }
+        if (resultado.pacientes.length === 1 && resultado.escaneado) {
+            let pacienteScaneado = resultado.pacientes[0];
+            if (!pacienteScaneado.id) {
+                pacienteScaneado.estado = 'validado'; // este paciente fue scaneado
+                pacienteScaneado.genero = pacienteScaneado.sexo;
+                this.plex.showLoader();
+                this.disableGuardar = true;
+                this.pacienteService.save(pacienteScaneado, true).subscribe(
+                    pacGuardado => {
+                        this.onPacienteSelected(pacGuardado);
+                        this.plex.hideLoader();
+                        this.disableGuardar = false;
+                    },
+                    () => {
+                        this.plex.toast('warning', 'Paciente no guardado', 'Error');
+                        this.plex.hideLoader();
+                        this.disableGuardar = false;
+                    });
+            } else {
+                this.onPacienteSelected(pacienteScaneado);
+            }
         } else {
             this.pacientes = resultado.pacientes;
         }
+
     }
 
     searchClear() {
@@ -210,25 +226,8 @@ export class BebeCruComponent implements OnInit {
                 this.relacion.relacion = rel;
                 this.bebeModel.relaciones = [this.relacion];
 
-                /* Si no se cargó ninguna dirección, tomamos el dato de la madre */
-                if (!this.bebeModel.direccion[0].valor) {
-                    this.bebeModel.direccion[0].valor = paciente.direccion[0].valor;
-                }
-                if (!this.bebeModel.direccion[0].ubicacion.provincia && paciente.direccion && paciente.direccion[0].ubicacion && paciente.direccion[0].ubicacion.provincia) {
-                    this.bebeModel.direccion[0].ubicacion.provincia = paciente.direccion[0].ubicacion.provincia;
-                    this.viveProvActual = (paciente.direccion[0].ubicacion.provincia.id === this.provinciaActual.id);
-                }
-                if (!this.bebeModel.direccion[0].ubicacion.localidad && paciente.direccion && paciente.direccion[0].ubicacion.localidad) {
-                    this.bebeModel.direccion[0].ubicacion.localidad = paciente.direccion[0].ubicacion.localidad;
-                    this.viveLocActual = (paciente.direccion[0].ubicacion.localidad.id === this.localidadActual.id);
-
-                    if (paciente.direccion[0].geoReferencia) {
-                        this.bebeModel.direccion[0].geoReferencia = paciente.direccion[0].geoReferencia;
-                    }
-                }
-                if (!this.bebeModel.direccion[0].ubicacion.barrio && paciente.direccion && paciente.direccion[0].ubicacion.barrio) {
-                    this.bebeModel.direccion[0].ubicacion.barrio = paciente.direccion[0].ubicacion.barrio;
-                }
+                /* Si no se cargó ninguna dirección, tomamos el dato de la madre/padre/tutor */
+                this.copiarDireccion(paciente);
                 this.pacientes = null;
                 this.showBuscador = false;
             });
@@ -236,6 +235,27 @@ export class BebeCruComponent implements OnInit {
             this.plex.info('warning', 'Imposible obtener el paciente seleccionado', 'Error');
         }
     }
+    private copiarDireccion(paciente: IPaciente) {
+        if (!paciente.direccion || !paciente.direccion.length) { return; }
+        if (!this.bebeModel.direccion[0].valor) {
+            this.bebeModel.direccion[0].valor = paciente.direccion[0].valor;
+        }
+        if (!this.bebeModel.direccion[0].ubicacion.provincia && paciente.direccion[0].ubicacion && paciente.direccion[0].ubicacion.provincia) {
+            this.bebeModel.direccion[0].ubicacion.provincia = paciente.direccion[0].ubicacion.provincia;
+            this.viveProvActual = (paciente.direccion[0].ubicacion.provincia.id === this.provinciaActual.id);
+        }
+        if (!this.bebeModel.direccion[0].ubicacion.localidad && paciente.direccion[0].ubicacion.localidad) {
+            this.bebeModel.direccion[0].ubicacion.localidad = paciente.direccion[0].ubicacion.localidad;
+            this.viveLocActual = (paciente.direccion[0].ubicacion.localidad.id === this.localidadActual.id);
+            if (paciente.direccion[0].geoReferencia) {
+                this.bebeModel.direccion[0].geoReferencia = paciente.direccion[0].geoReferencia;
+            }
+        }
+        if (!this.bebeModel.direccion[0].ubicacion.barrio && paciente.direccion[0].ubicacion.barrio) {
+            this.bebeModel.direccion[0].ubicacion.barrio = paciente.direccion[0].ubicacion.barrio;
+        }
+    }
+
     /**
     * Change del plex-bool viveProvActual
     * carga las localidades correspondientes a la provincia del efector
@@ -331,7 +351,7 @@ export class BebeCruComponent implements OnInit {
                     documento: bebe.documento,
                     foto: bebe.foto ? bebe.foto : null
                 };
-                if (dto.referencia && bebe.relaciones.length) {
+                if (dto.referencia && bebe.relaciones && bebe.relaciones.length) {
                     this.pacienteService.patch(bebe.relaciones[0].referencia, {
                         'op': 'updateRelacion',
                         'dto': dto

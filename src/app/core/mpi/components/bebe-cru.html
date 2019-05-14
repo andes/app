@@ -39,7 +39,7 @@
                         <span *ngIf="showBuscador; else showRelacion">
                             <div class="row">
                                 <div class="col-md">
-                                    <paciente-buscar label="Buscar Mamá" (searchStart)="searchStart()"
+                                    <paciente-buscar label="Buscar" (searchStart)="searchStart()"
                                         (searchEnd)="searchEnd($event)" (searchClear)="searchClear()"></paciente-buscar>
                                     <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
                                         [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
