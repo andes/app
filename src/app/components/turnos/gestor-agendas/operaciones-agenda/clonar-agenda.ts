@@ -209,7 +209,7 @@ export class ClonarAgendaComponent implements OnInit {
      * @memberof ClonarAgendaComponent
      */
     verificarConflictos(dia: any) {
-        if (!(this.agenda.profesionales && this.agenda.profesionales.length) &&
+        if (!(this.agenda.profesionales && this.agenda.profesionales.length > 0) &&
             !this.agenda.espacioFisico) { // Solo se verifica conflictos si la agenda a clonar tiene profesional y/o espacio fisico
             this.agendasFiltradas = [];
         } else {
@@ -217,7 +217,7 @@ export class ClonarAgendaComponent implements OnInit {
                 if (moment(dia.fecha).isSame(moment(agenda.horaInicio), 'day')) {
 
                     if (agenda.profesionales && agenda.profesionales.length &&
-                        this.agenda.profesionales && this.agenda.profesionales.length) {
+                        this.agenda.profesionales && this.agenda.profesionales.length > 0) {
                         if (agenda.profesionales.map(elem => { return elem.id; }).some
                             (v => { return this.agenda.profesionales.map(elem => { return elem.id; }).includes(v); })) {
                             agenda.conflictoProfesional = 1;
