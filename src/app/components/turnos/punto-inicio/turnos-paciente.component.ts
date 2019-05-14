@@ -7,7 +7,10 @@ import * as moment from 'moment';
 // Servicios
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
+import { ObraSocialService } from '../../../services/obraSocial.service';
+
 import { IAgenda } from '../../../interfaces/turnos/IAgenda';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 @Component({
     selector: 'turnos-paciente',
     templateUrl: 'turnos-paciente.html',
@@ -25,19 +28,33 @@ export class TurnosPacienteComponent implements OnInit {
     agenda: IAgenda;
     showLiberarTurno: boolean;
     todaysdate: Date;
+    obraSocialSeleccionada: String;
     _turnos: any;
+    _obraSocial: any;
     _operacion: string;
     tituloOperacion = 'Operaciones de Turnos';
     turnosPaciente: any;
     turnosSeleccionados: any[] = [];
     showPuntoInicio = true;
+    showListaPrepagas: Boolean = false;
+    public obraSocialPaciente: any[] = [];
+    public prepagas: any[] = [];
+    public _paciente: IPaciente;
     @Input() showTab: Number = 0;
     @Input('operacion')
     set operacion(value: string) {
         this._operacion = value;
     }
+
     get operacion(): string {
         return this._operacion;
+    }
+    @Input('paciente')
+    set paciente(value: any) {
+        this._paciente = value;
+    }
+    get paciente(): any {
+        return this._paciente;
     }
 
     @Input('turnos')
@@ -45,6 +62,7 @@ export class TurnosPacienteComponent implements OnInit {
         if (value) {
             this._turnos = value;
             this.turnosPaciente = value;
+            this.turnosPaciente.obraSocial = ((this._paciente.financiador) && (this._paciente.financiador.length > 0)) ? this._paciente.financiador[0].nombre : null;
         }
     }
     get turnos(): any {
@@ -53,8 +71,12 @@ export class TurnosPacienteComponent implements OnInit {
     @Output() turnosPacienteChanged = new EventEmitter<any>();
     @Output() showArancelamientoForm = new EventEmitter<any>();
 
+    public modelo: any = {
+        obraSocial: ''
+    };
+
     // Inicialización
-    constructor(public servicioFA: FacturacionAutomaticaService,
+    constructor(public servicioFA: FacturacionAutomaticaService, public obraSocialService: ObraSocialService,
         public serviceTurno: TurnoService, public serviceAgenda: AgendaService, public plex: Plex, public auth: Auth) { }
 
     ngOnInit() {
@@ -62,6 +84,42 @@ export class TurnosPacienteComponent implements OnInit {
         this.puedeLiberarTurno = this.auth.getPermissions('turnos:turnos:liberarTurno').length > 0;
         this.todaysdate = new Date();
         this.todaysdate.setHours(0, 0, 0, 0);
+        this.loadObraSocial();
+        this.obraSocialService.getPrepagas().subscribe(prepagas => {
+            this.prepagas = prepagas;
+        });
+    }
+    loadObraSocial() {
+        // TODO: si es en colegio médico hay que buscar en el paciente
+        this.obraSocialService.getObrasSociales({ dni: this._paciente.documento, sexo: this._paciente.sexo }).subscribe(resultado => {
+            if (resultado.length) {
+                this._obraSocial = resultado;
+                this.obraSocialPaciente = resultado.map((os: any) => {
+                    let osPaciente;
+
+                    if (os.nombre) {
+                        osPaciente = {
+                            'id': os.nombre,
+                            'label': os.nombre
+                        };
+                    } else {
+                        osPaciente = {
+                            'id': os.financiador,
+                            'label': os.financiador
+                        };
+                    }
+                    return osPaciente;
+                });
+                this.modelo.obraSocial = this.obraSocialPaciente[0].label;
+            } else {
+                this._obraSocial = [];
+            }
+            this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
+
+
+        });
+
+
     }
 
     cambiarMotivo() {
@@ -72,26 +130,48 @@ export class TurnosPacienteComponent implements OnInit {
         this.showMotivoConsulta = false;
         this.showLiberarTurno = false;
     }
+
     showArancelamiento(turno) {
+        if (turno.obraSocial === 'prepaga' && !turno.prepaga) {
+            this.plex.toast('danger', 'Seleccione una Prepaga', '¡Atención!');
+            return;
+        }
+        if (turno.obraSocial === 'prepaga' || turno.prepaga) {
+            this.obraSocialSeleccionada = turno.prepaga.nombre;
+        } else {
+            this.obraSocialSeleccionada = (turno.obraSocial) ? turno.obraSocial : (turno.paciente.obraSocial) ? turno.paciente.obraSocial.nombre : null;
+        }
+        if (!this.obraSocialSeleccionada) {
+            this.plex.toast('danger', 'Seleccione una obra social o prepaga', '¡Atención!');
+            return;
+        }
         this.turnoArancelamiento = turno;
         this.showMotivoConsulta = true;
-        // this.servicioFA.post(turno).subscribe(prestacion => {
-        // });
     }
 
-    printArancelamiento(turno) {
+    async printArancelamiento(turno) {
+        let data = {};
         if (this.cambioMotivo) {
-            let data = {
-                motivoConsulta: turno.motivoConsulta
-            };
-            let bloqueId = (turno.bloque_id) ? turno.bloque_id : -1;
-            this.serviceTurno.patch(turno.agenda_id, bloqueId, turno.id, data).subscribe(resultado => {
-
-            });
+            data['motivoConsulta'] = turno.motivoConsulta;
         }
-        this.showArancelamientoForm.emit(turno);
-    }
 
+        let obraSocialUpdate = this._obraSocial.find(os => os.nombre === this.obraSocialSeleccionada);
+        turno.paciente.obraSocial = (obraSocialUpdate) ? obraSocialUpdate : {
+            codigoPuco: null,
+            nombre: this.obraSocialSeleccionada,
+            financiador: this.obraSocialSeleccionada
+        };
+
+        data['actualizaObraSocial'] = turno.paciente.obraSocial;
+        let bloqueId = (turno.bloque_id) ? turno.bloque_id : -1;
+
+        this.serviceTurno.patch(turno.agenda_id, bloqueId, turno.id, data).subscribe(resultado => {
+
+        });
+        this.showArancelamientoForm.emit(turno);
+        turno.origen = 'rf_turnos';
+        this.servicioFA.post(turno).subscribe({ error: e => console.error(e) });
+    }
 
     eventosTurno(turno, operacion) {
         let mensaje = '';
@@ -139,4 +219,16 @@ export class TurnosPacienteComponent implements OnInit {
         return (moment(turno.horaInicio)).isSame(new Date(), 'day');
     }
 
+    seleccionarObraSocial(event, elem) {
+        if (event.value === 'prepaga') {
+            this.obraSocialService.getPrepagas().subscribe(prepagas => {
+                elem.showListaPrepagas = true;
+                this.prepagas = prepagas;
+            });
+        } else {
+            elem.showListaPrepagas = false;
+        }
+        elem.obraSocial = event && event.value;
+    }
 }
+

@@ -60,7 +60,7 @@ export class DinamicaFormComponent implements OnInit {
         this.pacientes = null;
         if (paciente.id) {
             this.obraSocialPaciente = null;
-            this.obraSocialService.getPaciente({ dni: paciente.documento, sexo: paciente.sexo }).subscribe((resultado: IFinanciador[]) => {
+            this.obraSocialService.getObrasSociales({ dni: paciente.documento, sexo: paciente.sexo }).subscribe((resultado: IFinanciador[]) => {
                 if (resultado.length > 0) {
                     this.obraSocialPaciente = resultado[0];
                 }
