@@ -64,7 +64,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        if (!this.auth.check('huds:visualizacionHuds')) {
+        if (!this.auth.getPermissions('mpi:?').length) {
             this.router.navigate(['./inicio']);
         }
 
