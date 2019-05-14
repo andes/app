@@ -229,6 +229,11 @@ export class DarTurnosComponent implements OnInit {
         });
     }
 
+    // Funcion que devuelve el indice correspondiente a un bloque dentro del array "this.agenda.bloques".
+    findIndex(bloque: IBloque): Number {
+        return this.agenda.bloques.findIndex(b => b.id === bloque.id);
+    }
+
     habilitarTurnoDoble() {
         // Si el siguiente turno está disponible, se habilita la opción de turno doble
         let cantidadTurnos;
