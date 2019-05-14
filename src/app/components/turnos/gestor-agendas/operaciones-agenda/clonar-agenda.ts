@@ -209,8 +209,10 @@ export class ClonarAgendaComponent implements OnInit {
      * @memberof ClonarAgendaComponent
      */
     verificarConflictos(dia: any) {
-        if ((this.agenda.profesionales && this.agenda.profesionales.length) ||
-            (this.agenda.espacioFisico)) { // Solo se verifica conflictos si la agenda a clonar tiene profesional y/o espacio fisico
+        if (!(this.agenda.profesionales && this.agenda.profesionales.length) &&
+            !this.agenda.espacioFisico) { // Solo se verifica conflictos si la agenda a clonar tiene profesional y/o espacio fisico
+            this.agendasFiltradas = [];
+        } else {
             this.agendasFiltradas = this.agendasFiltradas.filter((agenda) => {
                 if (moment(dia.fecha).isSame(moment(agenda.horaInicio), 'day')) {
 
