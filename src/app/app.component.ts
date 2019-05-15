@@ -46,7 +46,7 @@ export class AppComponent {
         if (this.auth.getPermissions('turnos:planificarAgenda:?').length > 0) {
             accessList.push({ label: 'CITAS: Gestor de Agendas y Turnos', icon: 'calendar', route: '/citas/gestor_agendas' });
         }
-        if (this.auth.getPermissions('turnos:puntoInicio:?').length > 0) {
+        if (this.auth.getPermissions('turnos:puntoInicio:?').length && this.auth.getPermissions('mpi:?').length) {
             accessList.push({ label: 'CITAS: Punto de Inicio', icon: 'calendar', route: '/citas/puntoInicio' });
         }
 
@@ -64,7 +64,7 @@ export class AppComponent {
         }
 
         let dato = this.auth.getPermissions('huds:?').length;
-        if (this.auth.getPermissions('huds:?').length > 0) {
+        if (this.auth.getPermissions('huds:?').length || this.auth.getPermissions('rup:?').length) {
             accessList.push({ label: 'HUDS: Visualizar por paciente', icon: 'file-tree', route: '/rup/huds' });
         }
 
