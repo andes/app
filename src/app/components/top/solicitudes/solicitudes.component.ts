@@ -82,8 +82,7 @@ export class SolicitudesComponent implements OnInit {
 
         this.permisosReglas = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:reglas:?')[0] === '*' : false;
         this.prestacionesPermisos = this.auth.getPermissions('solicitudes:tipoPrestacion:?');
-        // this.permisoAnular = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:anular:?')[0] === '*' : false;
-        this.permisoAnular = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:anular:?')[0] === '*' : false;
+        this.permisoAnular = this.auth.check('solicitudes:anular');
         this.showCargarSolicitud = false;
         this.cargarSolicitudes();
     }
