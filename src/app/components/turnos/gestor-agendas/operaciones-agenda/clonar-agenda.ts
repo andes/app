@@ -161,7 +161,7 @@ export class ClonarAgendaComponent implements OnInit {
                     let actualFin = moment(actual.horaFin).format('HH:mm');
                     band = actual.estado !== 'suspendida';
                     band = band && moment(dia.fecha).isSame(moment(actual.horaInicio), 'day');
-                    band = band && ((originalIni <= actualIni && actualIni < originalFin) || (originalIni < actualFin && actualFin <= originalFin));
+                    band = band && !(originalIni >= actualFin || originalFin <= actualIni);
                     return band;
                 }
             );
@@ -209,27 +209,36 @@ export class ClonarAgendaComponent implements OnInit {
      * @memberof ClonarAgendaComponent
      */
     verificarConflictos(dia: any) {
-        this.agendasFiltradas = this.agendasFiltradas.filter((agenda) => {
-            if (moment(dia.fecha).isSame(moment(agenda.horaInicio), 'day')) {
-                if (agenda.profesionales.length > 0) {
-                    if (agenda.profesionales.map(elem => { return elem.id; }).some
-                        (v => { return this.agenda.profesionales.map(elem => { return elem.id; }).includes(v); })) {
-                        agenda.conflictoProfesional = 1;
-                        dia.estado = 'conflicto';
+        if (!(this.agenda.profesionales && this.agenda.profesionales.length > 0) &&
+            !this.agenda.espacioFisico) { // Solo se verifica conflictos si la agenda a clonar tiene profesional y/o espacio fisico
+            this.agendasFiltradas = [];
+        } else {
+            this.agendasFiltradas = this.agendasFiltradas.filter((agenda) => {
+                if (moment(dia.fecha).isSame(moment(agenda.horaInicio), 'day')) {
+
+                    if (agenda.profesionales && agenda.profesionales.length &&
+                        this.agenda.profesionales && this.agenda.profesionales.length > 0) {
+                        if (agenda.profesionales.map(elem => { return elem.id; }).some
+                            (v => { return this.agenda.profesionales.map(elem => { return elem.id; }).includes(v); })) {
+                            agenda.conflictoProfesional = 1;
+                            dia.estado = 'conflicto';
+
+                        }
                     }
-                }
-                if (agenda.espacioFisico && this.agenda.espacioFisico) {
-                    if (agenda.espacioFisico.id === this.agenda.espacioFisico.id) {
-                        agenda.conflictoEF = 1;
-                        dia.estado = 'conflicto';
+
+                    if (agenda.espacioFisico && this.agenda.espacioFisico) {
+                        if (agenda.espacioFisico.id === this.agenda.espacioFisico.id) {
+                            agenda.conflictoEF = 1;
+                            dia.estado = 'conflicto';
+                        }
                     }
+                    let band = (agenda.conflictoEF === 1 || agenda.conflictoProfesional === 1) ? true : false;
+                    return band;
+                } else {
+                    return true; // para no descartar las agendas ya existentes en la colección;
                 }
-                let band = (agenda.conflictoEF === 1 || agenda.conflictoProfesional === 1) ? true : false;
-                return band;
-            } else {
-                return true; // para no descartar las agendas ya existentes en la colección;
-            }
-        });
+            });
+        }
 
     }
 

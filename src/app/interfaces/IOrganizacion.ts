@@ -11,7 +11,7 @@ export interface ISectores {
     tipoSector: ISnomedConcept;
     unidadConcept?: ISnomedConcept;
     nombre: String;
-    hijos?:  ISectores [];
+    hijos?: ISectores[];
 }
 
 export interface IOrganizacion {
@@ -41,4 +41,16 @@ export interface IOrganizacion {
     servicios: [ISnomedConcept];
     mapaSectores: ISectores[];
     unidadesOrganizativas: [ISnomedConcept];
+    /**
+     * "prestaciones" traidas de sisa. Se muestran en la app mobile
+     * @type {[{ idSisa: number, nombre: string }]}
+     * @memberof IOrganizacion
+     */
+    ofertaPrestacional?: [{ idSisa: number, nombre: string }];
+    /**
+     * Indica si debe mostrarse en los mapas. Por defecto se muestra en los hospitales, centro de salud, punto sanitario
+     * @type {boolean}
+     * @memberof IOrganizacion
+     */
+    showMap?: boolean;
 }
