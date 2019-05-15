@@ -568,7 +568,7 @@ export class PacienteCruComponent implements OnInit {
                 pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadActual;
             }
 
-            this.pacienteService.save(pacienteGuardar).subscribe(
+            this.pacienteService.save(pacienteGuardar, ignoreCheck).subscribe(
                 (resultadoSave: any) => {
                     // Existen sugerencias de pacientes similares?
                     if (resultadoSave.resultadoMatching && resultadoSave.resultadoMatching.length > 0) {
