@@ -52,8 +52,10 @@
                 <span *ngIf="!relaciones.data || !relaciones.data.length">No hay ninguna relación registrada</span>
                 <table *ngIf="relaciones.data && relaciones.data.length" class="table table-sm" [ngClass]="{'table-hover': permitirseleccionarRelacion}">
                     <tbody>
+                        <!-- COMENTADO HASTA TERMINAR FUNCIONALIDAD
                         <tr [ngClass]="{'hover': permitirseleccionarRelacion}" *ngFor="let relacion of relaciones.data"
-                            (click)="permitirseleccionarRelacion && seleccionarRelacionado(relacion)">
+                            (click)="permitirseleccionarRelacion && seleccionarRelacionado(relacion)"> -->
+                        <tr *ngFor="let relacion of relaciones.data">
                             <td>
                                 <span class="mr-1">{{relacion.apellido}}, {{relacion.nombre}} <em>({{relacion.relacion.nombre}})</em></span>
                                 <span *ngIf="relacion?.documento" class="d-block"><em>{{relacion.documento}}</em></span>

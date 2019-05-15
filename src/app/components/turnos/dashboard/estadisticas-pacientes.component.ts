@@ -1,12 +1,10 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
-import { Plex } from '@andes/plex';
-import { Auth } from '@andes/auth';
 import * as moment from 'moment';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
-
-// Servicios
 import { TurnoService } from '../../../services/turnos/turno.service';
+import { Auth } from '@andes/auth';
 import { LogPacienteService } from '../../../services/logPaciente.service';
+
 
 @Component({
     selector: 'estadisticas-pacientes',
@@ -37,7 +35,7 @@ export class EstadisticasPacientesComponent implements OnInit {
         this._paciente = value;
 
     }
-    get agenda(): any {
+    get paciente(): any {
         return this._paciente;
     }
 
@@ -46,7 +44,6 @@ export class EstadisticasPacientesComponent implements OnInit {
     // Inicialización
     constructor(
         public serviceTurno: TurnoService,
-        public plex: Plex,
         public auth: Auth,
         public serviceLogPaciente: LogPacienteService,
     ) { }
@@ -63,6 +60,40 @@ export class EstadisticasPacientesComponent implements OnInit {
 
     arancelamiento(turno) {
         this.showArancelamientoForm.emit(turno);
+    }
+
+    getPaciente() {
+        if (this._paciente && this._paciente.id) {
+            let datosTurno = { pacienteId: this._paciente.id };
+            let cantInasistencias = 0;
+            // Se muestra la cantidad de turnos otorgados e inasistencias
+            this.serviceTurno.getHistorial(datosTurno).subscribe(turnos => {
+                turnos.forEach(turno => {
+                    if (turno.asistencia && turno.asistencia === 'noAsistio') {
+                        cantInasistencias++;
+                    }
+                });
+                this.turnosOtorgados = turnos.length;
+                this.inasistencias = cantInasistencias;
+                this.sortTurnos(turnos);
+                this.turnosPaciente = turnos.filter(t => {
+                    return (moment(t.horaInicio).isSameOrAfter(new Date(), 'day') && t.estado !== 'liberado');
+                });
+
+                this.ultimosTurnos = turnos.filter(t => {
+                    return moment(t.horaInicio).isSameOrBefore(new Date(), 'day');
+                });
+
+            });
+
+            // Se muestra la cantidad de turnos anulados
+            let datosLog = { idPaciente: this._paciente.id, operacion: 'turnos:liberar' };
+            this.serviceLogPaciente.get(datosLog).subscribe(logs => {
+                if (logs && logs.length) {
+                    this.anulaciones = logs.length;
+                }
+            });
+        }
     }
 
     private sortTurnos(turnos) {

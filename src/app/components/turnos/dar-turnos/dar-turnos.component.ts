@@ -88,6 +88,11 @@ export class DarTurnosComponent implements OnInit {
     public agenda: IAgenda;
     public agendas: IAgenda[];
     public estadosAgenda = EstadosAgenda;
+    public estadoFacturacion: any = {
+        tipo: '',
+        estado: 'Sin comprobante',
+        numeroComprobante: ''
+    };
 
     estadoT: EstadosDarTurnos;
     turnoDoble = false;
@@ -126,6 +131,7 @@ export class DarTurnosComponent implements OnInit {
     carpetaEfector: any;
     obraSocialPaciente: IFinanciador;
     motivoConsulta: string;
+    showTab = 0;
 
     // Muestra sólo las agendas a las que se puede asignar el turno (oculta las "con/sin alternativa")
     mostrarNoDisponibles = false;
@@ -854,7 +860,8 @@ export class DarTurnosComponent implements OnInit {
                 motivoConsulta: this.motivoConsulta,
                 tipoPrestacion: this.turnoTipoPrestacion,
                 paciente: pacienteSave,
-                idAgenda: this.agenda.id
+                idAgenda: this.agenda.id,
+                estadoFacturacion: this.estadoFacturacion
             };
             this.serviceTurno.saveDinamica(datosTurno).subscribe(
                 resultado => {
@@ -889,9 +896,11 @@ export class DarTurnosComponent implements OnInit {
                 tipoPrestacion: this.turnoTipoPrestacion,
                 tipoTurno: this.tiposTurnosSelect,
                 nota: this.nota,
-                motivoConsulta: this.motivoConsulta
+                motivoConsulta: this.motivoConsulta,
+                estadoFacturacion: this.estadoFacturacion
             };
             this.serviceTurno.save(datosTurno, { showError: false }).subscribe(resultado => {
+                this.showTab = 1;
                 this.afterSaveTurno(pacienteSave);
             }, (err) => {
                 this.hideDarTurno = false;
@@ -1143,7 +1152,7 @@ export class DarTurnosComponent implements OnInit {
 
         if (this._pacienteSeleccionado) {
             // this.router.navigate(['./' + 'puntoInicioTurnos']);
-            this.afterDarTurno.emit(true);
+            this.afterDarTurno.emit(this.paciente);
         } else {
             this.buscarPaciente();
         }
@@ -1151,7 +1160,7 @@ export class DarTurnosComponent implements OnInit {
         this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion en panel de confirma turno
         this.opciones.tipoPrestacion = undefined; // blanquea el filtro de tipo de prestacion en el calendario
         this.opciones.profesional = undefined; // blanquea el filtro de profesionales en el calendario
-        this.afterDarTurno.emit(true);
+        this.afterDarTurno.emit(this.paciente);
         this.plex.clearNavbar();
     }
 

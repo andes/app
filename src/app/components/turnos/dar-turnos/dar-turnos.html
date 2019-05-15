@@ -2,7 +2,7 @@
     <section class="dar-turnos-section">
         <div class="row calendario-expandido" *ngIf="autorizado && showDarTurnos">
             <!--Panel principal-->
-            <div class="col-8">
+            <div class="col-8 h-100">
                 <plex-box>
                     <!--Filtros-->
                     <header>
@@ -21,7 +21,6 @@
                             <div class="col-4">
                                 <plex-select *ngIf="!_solicitudPrestacion?.solicitud" [(ngModel)]="opciones.profesional"
                                     (getData)="loadProfesionales($event)" placeholder="Equipo de Salud"
-
                                     labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
                                 </plex-select>
                                 <plex-select *ngIf="_solicitudPrestacion?.solicitud?.profesional && autocitado"
@@ -60,7 +59,7 @@
                 </plex-box>
             </div>
             <!--Lateral-->
-            <div class="col-4">
+            <div class="col-4 h-100">
                 <plex-box>
 
                     <!--Ninguna agenda seleccionada-->

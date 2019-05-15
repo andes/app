@@ -33,4 +33,17 @@ export class ObraSocialService {
         return this.server.get(this.url + '/', { params: opciones });
     }
 
+    getPrepagas(): Observable<any[]> {
+        return this.server.get(this.url + '/prepagas/');
+    }
+
+    getSumar(opciones: any): Observable<any[]> {
+        return this.server.get(this.url + '/sumar/');
+    }
+
+    getObrasSociales(opciones: any, showError = true): Observable<IFinanciador[]> {
+        return this.server.get(this.url + '/os/', { params: opciones, showError: showError });
+    }
+
+
 }

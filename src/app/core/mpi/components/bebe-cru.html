@@ -8,11 +8,13 @@
                         <!-- DATOS BASICOS -->
                         <div class="row">
                             <div class="col-4">
-                                <plex-text label="Apellido" [(ngModel)]="bebeModel.apellido" name="apellido" [required]="true">
+                                <plex-text label="Apellido" [(ngModel)]="bebeModel.apellido" name="apellido"
+                                    [required]="true">
                                 </plex-text>
                             </div>
                             <div class="col-4">
-                                <plex-text label="Nombre" [(ngModel)]="bebeModel.nombre" name="nombre" [required]="true">
+                                <plex-text label="Nombre" [(ngModel)]="bebeModel.nombre" name="nombre"
+                                    [required]="true">
                                 </plex-text>
                             </div>
                             <div class="col-4">
@@ -23,22 +25,22 @@
                         </div>
                         <div class="row">
                             <div class="col-4">
-                                <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="bebeModel.estado === 'validado'"
-                                    (change)="disableGuardar = false; enableIgnorarGuardar = false;" [(ngModel)]="bebeModel.fechaNacimiento"
-                                    name="fechaNacimiento" [required]="true">
+                                <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date"
+                                    [readonly]="bebeModel.estado === 'validado'"
+                                    (change)="disableGuardar = false; enableIgnorarGuardar = false;"
+                                    [(ngModel)]="bebeModel.fechaNacimiento" name="fechaNacimiento" [required]="true">
                                 </plex-datetime>
                             </div>
                         </div>
                     </fieldset>
 
                     <fieldset>
-                        <legend>Datos de Madre o Padre</legend>
-
+                        <legend>Datos de Progenitor/a o tutor/a</legend>
                         <span *ngIf="showBuscador; else showRelacion">
                             <div class="row">
                                 <div class="col-md">
-                                    <paciente-buscar label="Buscar Mamá" (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                        (searchClear)="searchClear()"></paciente-buscar>
+                                    <paciente-buscar label="Buscar" (searchStart)="searchStart()"
+                                        (searchEnd)="searchEnd($event)" (searchClear)="searchClear()"></paciente-buscar>
                                     <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
                                         [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
                                     <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
@@ -52,8 +54,8 @@
 
                             <div class="row">
                                 <div class="col-4">
-                                    <plex-text label="Documento" [(ngModel)]="relacion.documento" name="documentoRelacion"
-                                        [readonly]="true">
+                                    <plex-text label="Documento" [(ngModel)]="relacion.documento"
+                                        name="documentoRelacion" [readonly]="true">
                                     </plex-text>
                                 </div>
                                 <div class="col-4">
@@ -69,15 +71,20 @@
                             </div>
                             <div class="row">
                                 <div class="col-4">
-                                    <plex-select [(ngModel)]="relacion.sexo" label="Sexo" [data]="opcionesSexo" name="sexoRelacion"
-                                        type="horizontal" [readonly]="true">
+                                    <plex-select [(ngModel)]="relacion.sexo" label="Sexo" [data]="opcionesSexo"
+                                        name="sexoRelacion" type="horizontal" [readonly]="true">
                                     </plex-select>
                                 </div>
                                 <div class="col-4">
                                     <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="true"
-                                        (change)="disableGuardar = false; enableIgnorarGuardar = false;" [(ngModel)]="relacion.fechaNacimiento"
-                                        name="fechaNacimientoRelacion">
+                                        (change)="disableGuardar = false; enableIgnorarGuardar = false;"
+                                        [(ngModel)]="relacion.fechaNacimiento" name="fechaNacimientoRelacion">
                                     </plex-datetime>
+                                </div>
+                                <div class="col-4">
+                                    <plex-select [(ngModel)]="relacion.relacion" name="tipoRelacion" label="Relación"
+                                        [data]="parentescoModel" [required]="true" placeholder="Seleccione...">
+                                    </plex-select>
                                 </div>
                             </div>
                             <div class="row mt-4">
@@ -96,42 +103,49 @@
                             <div class="col-4">
                                 <div class="row">
                                     <div class="col">
-                                        <plex-bool *ngIf="provinciaActual" [(ngModel)]="viveProvActual" label="¿Vive en la Provincia de {{provinciaActual.nombre}}?"
+                                        <plex-bool *ngIf="provinciaActual" [(ngModel)]="viveProvActual"
+                                            label="¿Vive en la Provincia de {{provinciaActual.nombre}}?"
                                             name="viveProvActual" (change)="changeProvActual($event)"></plex-bool>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col" *ngIf="viveProvActual">
-                                        <plex-bool *ngIf="localidadActual" [(ngModel)]="viveLocActual" label="¿Vive en la Localidad {{localidadActual.nombre}}?"
+                                        <plex-bool *ngIf="localidadActual" [(ngModel)]="viveLocActual"
+                                            label="¿Vive en la Localidad {{localidadActual.nombre}}?"
                                             name="viveLocActual" (change)="changeLocalidadActual($event)"></plex-bool>
                                     </div>
                                 </div>
 
                                 <div class="row" *ngIf="!viveProvActual">
                                     <div class="col">
-                                        <plex-select label="Provincia" [(ngModel)]="bebeModel.direccion[0].ubicacion.provincia"
-                                            name="provincia" [data]="provincias" labelField="nombre" (change)="loadLocalidades(bebeModel.direccion[0].ubicacion.provincia)">
+                                        <plex-select label="Provincia"
+                                            [(ngModel)]="bebeModel.direccion[0].ubicacion.provincia" name="provincia"
+                                            [data]="provincias" labelField="nombre"
+                                            (change)="loadLocalidades(bebeModel.direccion[0].ubicacion.provincia)">
                                         </plex-select>
                                     </div>
                                 </div>
                                 <div class="row" *ngIf="!viveProvActual || (viveProvActual && !viveLocActual)">
                                     <div class="col">
-                                        <plex-select label="Localidad" [(ngModel)]="bebeModel.direccion[0].ubicacion.localidad"
-                                            name="localidad" [data]="localidades" labelField="nombre" (change)="loadBarrios(bebeModel.direccion[0].ubicacion.localidad)">
+                                        <plex-select label="Localidad"
+                                            [(ngModel)]="bebeModel.direccion[0].ubicacion.localidad" name="localidad"
+                                            [data]="localidades" labelField="nombre"
+                                            (change)="loadBarrios(bebeModel.direccion[0].ubicacion.localidad)">
                                         </plex-select>
                                     </div>
                                 </div>
-                                <div class="row" *ngIf="viveLocActual">
+                                <div class="row" *ngIf="barrios?.length">
                                     <div class="col">
-                                        <plex-select label="Barrio" [(ngModel)]="bebeModel.direccion[0].ubicacion.barrio"
-                                            name="barrio" [data]="barrios" labelField="nombre">
+                                        <plex-select label="Barrio"
+                                            [(ngModel)]="bebeModel.direccion[0].ubicacion.barrio" name="barrio"
+                                            [data]="barrios" labelField="nombre">
                                         </plex-select>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col">
-                                        <plex-text label="Dirección" [(ngModel)]="bebeModel.direccion[0].valor" name="direccion"
-                                            placeholder="Ej: Avenida las Flores 1200">
+                                        <plex-text label="Dirección" [(ngModel)]="bebeModel.direccion[0].valor"
+                                            name="direccion" placeholder="Ej: Avenida las Flores 1200">
                                         </plex-text>
                                         <!--table>
                                             <tbody>

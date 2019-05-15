@@ -8,7 +8,7 @@
                 <div class="row">
                     <div class="col-8">
                         <h5>
-                            <span class="text-primary">{{_paciente | paciente}}</span>
+                            <span class="text-primary">{{paciente | paciente}}</span>
                         </h5>
                     </div>
                     <div class="col-4">
@@ -29,29 +29,29 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-6" *ngIf="_paciente?.documento">
-                    {{_paciente.documento | number}}
+                <div class="col-6">
+                    {{paciente.documento | number}}
                 </div>
-                <div class="col-6" *ngIf="_paciente && _paciente?.fechaNacimiento !== null">
-                    {{_paciente?.fechaNacimiento | date:'dd-MM-yyyy'}} ({{_paciente | edad}})
+                <div class="col-6" *ngIf="paciente && paciente.fechaNacimiento">
+                    {{paciente.fechaNacimiento | date:'dd-MM-yyyy'}} ({{paciente | edad}})
                 </div>
             </div>
             <div class="row">
-                <div class="col-6" *ngIf="_paciente?.direccion && _paciente.direccion[0]?.valor && _paciente.direccion.length > 0">
+                <div class="col-6" *ngIf="paciente?.direccion && paciente.direccion[0]?.valor">
                     <i class="mdi mdi-map-marker"></i>
                     <span class="text-primary">Dirección</span>
                 </div>
-                <div class="col-6" *ngIf="_paciente?.contacto && _paciente.contacto[0]?.valor && _paciente.contacto.length > 0">
+                <div class="col-6" *ngIf="paciente?.contacto && paciente.contacto[0]?.valor">
                     <i class="mdi mdi-cellphone-android"></i>
                     <span class="text-primary">Teléfono</span>
                 </div>
             </div>
             <div class="row">
-                <div class="col-6" *ngIf="_paciente?.direccion && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
-                    {{_paciente.direccion[0].valor}}
+                <div class="col-6" *ngIf="paciente?.direccion && paciente.direccion[0]?.valor">
+                    {{paciente.direccion[0].valor}}
                 </div>
-                <div class="col-6" *ngIf="_paciente?.id && _paciente?.contacto && _paciente?.contacto.length > 0">
-                    {{_paciente?.contacto[0].valor}}
+                <div class="col-6" *ngIf="paciente?.contacto && paciente.contacto[0]?.valor">
+                    {{paciente.contacto[0].valor}}
                 </div>
             </div>
             <div class="row" *ngIf="_paciente.financiador?.length">
@@ -63,25 +63,27 @@
                     <i class="mdi mdi-account-card-details"></i>
                     <span class="text-primary">Obra Social</span>
                 </div>
-                <div class="col-6" *ngIf="_paciente.financiador[0].numeroAfiliado">
+                <div class="col-6" *ngIf="paciente.financiador[0].numeroAfiliado">
                     <i class="mdi mdi-card-text-outline"></i>
                     <span class="text-primary">Número de Afiliado</span>
                 </div>
             </div>
-            <div class="row" *ngIf="_paciente.financiador?.length && _paciente.financiador[0].financiador">
-                <div class="col-6">
-                    {{_paciente?.financiador[0].financiador}}
+            <div class="row" *ngIf="paciente?.financiador?.length">
+                <div class="col-6" *ngIf="paciente.financiador[0].nombre">
+                    {{paciente.financiador[0].financiador}}
                 </div>
-                <div class="col-6" *ngIf="_paciente.financiador[0].numeroAfiliado">
-                    {{_paciente.financiador[0].numeroAfiliado}}
+                <div class="col-6" *ngIf="paciente.financiador[0].numeroAfiliado">
+                    {{paciente.financiador[0].numeroAfiliado}}
                 </div>
             </div>
+            <br>
+            <update-contacto-direccion [paciente]="paciente"></update-contacto-direccion>
         </fieldset>
 
     </plex-tab>
     <plex-tab icon="clock" label="Turnos">
-        <turnos-paciente [turnos]="turnosPaciente" [operacion]="'operacionTurnos'" (turnosPacienteChanged)="updateHistorial()"
-            (showArancelamientoForm)="arancelamiento($event)">
+        <turnos-paciente [turnos]="turnosPaciente" [operacion]="'operacionTurnos'"  [paciente]='pacienteSeleccionado'
+            (turnosPacienteChanged)="updateHistorial()" (showArancelamientoForm)="arancelamiento($event)">
         </turnos-paciente>
     </plex-tab>
     <plex-tab icon="history" label="Historial">
