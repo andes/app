@@ -64,7 +64,7 @@ export class AppComponent {
         }
 
         let dato = this.auth.getPermissions('huds:?').length;
-        if (this.auth.getPermissions('huds:?').length > 0) {
+        if (this.auth.getPermissions('huds:?').length || this.auth.getPermissions('rup:?').length) {
             accessList.push({ label: 'HUDS: Visualizar por paciente', icon: 'file-tree', route: '/rup/huds' });
         }
 
