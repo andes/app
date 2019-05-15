@@ -11,8 +11,11 @@ import { RupElement } from '../..';
 export class EstadoComponent extends RUPComponent implements OnInit {
     public existeReg = false;
     public esRequerido: boolean;
+    public marcado: boolean;
+
 
     ngOnInit() {
+        this.marcado = true;
         if (this.params) {
             this.esRequerido = this.params.required;
         } else { this.esRequerido = false; }
@@ -28,6 +31,7 @@ export class EstadoComponent extends RUPComponent implements OnInit {
             if (this.registro.valor.estado) {
                 return true;
             } else {
+                this.marcado = false;
                 return false;
             }
         } else {
