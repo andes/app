@@ -40,7 +40,6 @@ export class TurnosPacienteComponent implements OnInit {
     public obraSocialPaciente: any[] = [];
     public prepagas: any[] = [];
     public _paciente: IPaciente;
-    @Input() showTab: Number = 0;
     @Input('operacion')
     set operacion(value: string) {
         this._operacion = value;
