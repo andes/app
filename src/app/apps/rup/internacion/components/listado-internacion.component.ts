@@ -53,7 +53,7 @@ export class ListadoInternacionComponent implements OnInit {
             name: 'ANDES'
         }, {
             route: '/internacion/camas',
-            name: 'Listado de internacion'
+            name: 'Listado de internación'
         }]);
 
         let unMesAtras = new Date();
