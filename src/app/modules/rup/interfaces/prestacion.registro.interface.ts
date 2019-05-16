@@ -32,7 +32,7 @@ export class IPrestacionRegistro {
     esPrimeraVez: boolean;
 
     createdAt: Date;
-
+    modificar: boolean;
     // Virtuales 🤷
     paciente: IPaciente;
 

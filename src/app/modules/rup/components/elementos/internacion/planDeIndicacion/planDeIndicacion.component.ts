@@ -30,8 +30,18 @@ export class PlanIndicacionComponent extends RUPComponent implements OnInit {
                 }
             }
         });
+        this.disable();
     }
 
+    disable() {
+        this.registro.registros.forEach(reg => {
+            for (let i = 0; i < reg.registros.length - 1; i++) {
+                if (reg.registros[i].valor) {
+                    reg.registros[i].modificar = true;
+                }
+            }
+        });
+    }
     agregarRegistro() {
         this.registroNuevo = new IPrestacionRegistro(this.rupElemento, this.conceptoSnomed);
         this.registroNuevo.valor = { estado: 'activo' };
@@ -45,7 +55,11 @@ export class PlanIndicacionComponent extends RUPComponent implements OnInit {
     }
 
 
-    // modificar(index) {
-    // }
+    modificar(index) {
+        for (let i = 0; i < this.registro.registros[index].registros.length - 1; i++) {
+            this.registro.registros[index].registros[i].modificar = false;
+        }
+
+    }
 
 }

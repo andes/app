@@ -18,6 +18,10 @@ export class DescripcionComponent extends RUPComponent implements OnInit {
         if (!this.params) {
             this.params = {};
         }
+        if (this.registro.valor && this.prestacion.solicitud.tipoPrestacion.conceptId === '432678004') {
+            // Si es una prestacion de indicacion para procedimiento --> disabled
+            this.registro.modificar = true;
+        }
         this.params.required = this.params && this.params.required ? this.params.required : false;
         this.registro.valido = true;
         // Observa cuando cambia la propiedad 'Sistolica' en otro elemento RUP

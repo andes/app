@@ -3,7 +3,7 @@
         <div class="col-10">
             <div class="row">
                 <div *ngIf="rupElemento" class="col-{{ elementoRUP.requeridos[0].style.columns }} mr-{{ elementoRUP.requeridos[0].style?.offset ? elementoRUP.requeridos[0].style.offset : '0' }}">
-                    <rup disabled [elementoRUP]="rupElemento" [paciente]="paciente" [params]="elementoRUP.requeridos[0].params" [prestacion]="prestacion" [registro]="registro" [soloValores]="soloValores" (change)="emitChange($event)" (ejecutarConcepto)="emitEjecutarConcepto(prestacion)">
+                    <rup [elementoRUP]="rupElemento" [paciente]="paciente" [params]="elementoRUP.requeridos[0].params" [prestacion]="prestacion" [registro]="registro" [soloValores]="soloValores" (change)="emitChange($event)" (ejecutarConcepto)="emitEjecutarConcepto(prestacion)">
                     </rup>
                 </div>
             </div>
@@ -14,9 +14,9 @@
                 <div *ngIf="!registro.valor?.idRegistroOrigen && !soloValores">
                     <plex-button type="danger btn-icon-rup p-0" (click)="quitarIndicacion(i)" size="lg" icon="mdi mdi-close"></plex-button>
                 </div>
-                <!-- <div *ngIf="registro.valor?.idRegistroOrigen && !soloValores">
+                <div *ngIf="registro.valor?.idRegistroOrigen && !soloValores">
                     <plex-button type="primary btn-icon-rup p-0" size="lg" icon="mdi mdi-pencil" (click)='modificar(i)'></plex-button>
-                </div> -->
+                </div>
             </div>
         </div>
     </div>

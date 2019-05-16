@@ -20,7 +20,10 @@ export class SelectPorRefsetComponent extends RUPComponent implements OnInit {
         if (!this.registro.valor) {
             this.registro.valor = [];
         }
-
+        if (this.registro.valor.length > 0 && this.prestacion.solicitud.tipoPrestacion.conceptId === '432678004') {
+            // Si es una prestacion de indicacion para procedimiento --> disabled
+            this.registro.modificar = true;
+        }
         if (this.params) {
 
             // Conceptos de Refset
