@@ -29,6 +29,7 @@ export class EstadoComponent extends RUPComponent implements OnInit {
                 return true;
             }
             if (this.registro.valor.estado) {
+                this.marcado = true;
                 return true;
             } else {
                 this.marcado = false;
