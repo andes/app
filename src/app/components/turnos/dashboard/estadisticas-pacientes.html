@@ -1,7 +1,7 @@
 <plex-tabs (change)="changeTab($event)" size="full" [activeIndex]="showTab">
     <plex-tab icon="information" label="Datos">
         <!--Header de estadisticas-->
-        <fieldset>
+        <fieldset *ngIf="paciente && _paciente">
             <!--Datos básicos del Paciente-->
             <br>
             <header>
@@ -54,25 +54,25 @@
                     {{paciente.contacto[0].valor}}
                 </div>
             </div>
-            <div class="row" *ngIf="_paciente.financiador?.length">
-                <div class="col-6" *ngIf="_paciente.financiador[0].financiador === 'SUMAR'">
+            <div class="row" *ngIf="_paciente?.financiador?.length">
+                <div class="col-6" *ngIf="_paciente?.financiador[0].financiador === 'SUMAR'">
                     <i class="mdi mdi-account-card-details"></i>
                     <span class="text-primary">Financiador</span>
                 </div>
-                <div class="col-6" *ngIf="_paciente.financiador[0].financiador !== 'SUMAR'">
+                <div class="col-6" *ngIf="_paciente?.financiador[0].financiador !== 'SUMAR'">
                     <i class="mdi mdi-account-card-details"></i>
                     <span class="text-primary">Obra Social</span>
                 </div>
-                <div class="col-6" *ngIf="paciente.financiador[0].numeroAfiliado">
+                <div class="col-6" *ngIf="paciente?.financiador[0].numeroAfiliado">
                     <i class="mdi mdi-card-text-outline"></i>
                     <span class="text-primary">Número de Afiliado</span>
                 </div>
             </div>
             <div class="row" *ngIf="paciente?.financiador?.length">
-                <div class="col-6" *ngIf="paciente.financiador[0].nombre">
+                <div class="col-6" *ngIf="paciente?.financiador[0].nombre">
                     {{paciente.financiador[0].financiador}}
                 </div>
-                <div class="col-6" *ngIf="paciente.financiador[0].numeroAfiliado">
+                <div class="col-6" *ngIf="paciente?.financiador[0].numeroAfiliado">
                     {{paciente.financiador[0].numeroAfiliado}}
                 </div>
             </div>
