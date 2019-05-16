@@ -18,7 +18,7 @@ import { IPaciente } from '../interfaces/IPaciente';
     styleUrls: ['relaciones-pacientes.scss']
 })
 export class RelacionesPacientesComponent implements OnInit {
-    @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
+    @HostBinding('class.plex-layout') layout = true; //  Permite el uso de flex-box en el componente
     @Input()
     set paciente(valor: IPaciente) {
         this._paciente = valor;

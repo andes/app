@@ -26,9 +26,8 @@
                         <div class="row">
                             <div class="col-4">
                                 <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date"
-                                    [readonly]="bebeModel.estado === 'validado'"
-                                    (change)="disableGuardar = false; enableIgnorarGuardar = false;"
-                                    [(ngModel)]="bebeModel.fechaNacimiento" name="fechaNacimiento" [required]="true">
+                                    [readonly]="bebeModel.estado === 'validado'" [(ngModel)]="bebeModel.fechaNacimiento"
+                                    name="fechaNacimiento" [required]="true">
                                 </plex-datetime>
                             </div>
                         </div>
@@ -77,7 +76,6 @@
                                 </div>
                                 <div class="col-4">
                                     <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="true"
-                                        (change)="disableGuardar = false; enableIgnorarGuardar = false;"
                                         [(ngModel)]="relacion.fechaNacimiento" name="fechaNacimientoRelacion">
                                     </plex-datetime>
                                 </div>
@@ -183,7 +181,8 @@
     </plex-layout-sidebar>
     <plex-layout-footer>
         <plex-button label="Cancelar" type="danger" position="left" (click)="cancel()"></plex-button>
-        <plex-button label="Guardar" type="success" position="right" [validateForm]="formulario" (click)="save($event)">
+        <plex-button [disabled]="disableGuardar" label="Guardar" type="success" position="right"
+            [validateForm]="formulario" (click)="save($event)">
         </plex-button>
     </plex-layout-footer>
 </plex-layout>
