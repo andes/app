@@ -60,6 +60,9 @@ export class EncabezadoReportesComponent implements OnInit {
     }
 
     public ngOnInit() {
+        if (!this.auth.check('reportes')) {
+            this.router.navigate(['./inicio']);
+        }
         this.parametros = {
             horaInicio: ' ',
             horaFin: ' ',
