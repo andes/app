@@ -56,9 +56,9 @@
                         <tr [ngClass]="{'hover': permitirseleccionarRelacion}" *ngFor="let relacion of relaciones.data"
                             (click)="permitirseleccionarRelacion && seleccionarRelacionado(relacion)"> -->
                         <tr *ngFor="let relacion of relaciones.data">
-                            <td>
-                                <span class="mr-1">{{relacion.apellido}}, {{relacion.nombre}} <em>({{relacion.relacion.nombre}})</em></span>
-                                <span *ngIf="relacion?.documento" class="d-block"><em>{{relacion.documento}}</em></span>
+                            <td *ngIf="relacion?.apellido && relacion?.documento && relacion?.nombre && relacion?.relacion?.nombre">
+                                <span  class="mr-1">{{relacion.apellido}},{{relacion.nombre}} <em>({{relacion.relacion.nombre}})</em></span>
+                                <span  class="d-block"><em>{{relacion.documento}}</em></span>
                             </td>
                         </tr>
                     </tbody>
