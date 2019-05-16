@@ -10,9 +10,8 @@
                         <div class="row">
                             <div class="col-4">
                                 <plex-int label="Número de DNI ARGENTINO" [(ngModel)]="pacienteModel.documento"
-                                    (change)="disableGuardar = false; enableIgnorarGuardar = false; checkDisableValidar()"
-                                    [readonly]=" validado || noPoseeDNI " [pattern]="patronDocumento" name="documento"
-                                    [required]="!noPoseeDNI">
+                                    (change)="checkDisableValidar()" [readonly]=" validado || noPoseeDNI "
+                                    [pattern]="patronDocumento" name="documento" [required]="!noPoseeDNI">
                                 </plex-int>
                                 <plex-bool *ngIf="!validado" [(ngModel)]="noPoseeDNI" label="No posee DNI ARGENTINO"
                                     name="noPoseDNI" (change)="limpiarDocumento()"></plex-bool>
@@ -20,12 +19,11 @@
                             <div class="col-4">
                                 <plex-select [(ngModel)]="pacienteModel.sexo" label="Sexo" [data]="sexos" name="sexo"
                                     required="true" placeholder="Seleccione.." [readonly]="validado"
-                                    (change)="completarGenero(); disableGuardar = false; enableIgnorarGuardar = false; checkDisableValidar()">
+                                    (change)="completarGenero();checkDisableValidar()">
                                 </plex-select>
                             </div>
                             <div class="col-4">
                                 <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="validado"
-                                    (change)="disableGuardar = false; enableIgnorarGuardar = false;"
                                     [(ngModel)]="pacienteModel.fechaNacimiento" name="fechaNacimiento"
                                     [required]="!noPoseeDNI">
                                 </plex-datetime>
@@ -306,8 +304,8 @@
         </plex-button>
         <plex-button *ngIf="showDeshacer" class="pr-1" label="Deshacer Validación" type="warning" position="right"
             (click)="deshacerValidacion()"></plex-button>
-        <plex-button *ngIf="!disableGuardar" label="Guardar" type="success" position="right" [validateForm]="formulario"
-            (click)="save($event,false)"></plex-button>
+        <plex-button [disabled]="disableGuardar" label="Guardar" type="success" position="right"
+            [validateForm]="formulario" (click)="save($event,false)"></plex-button>
         <plex-button *ngIf="enableIgnorarGuardar" label="Ignorar y Guardar" type="warning" position="right"
             [validateForm]="formulario" (click)="save($event,true)"></plex-button>
 

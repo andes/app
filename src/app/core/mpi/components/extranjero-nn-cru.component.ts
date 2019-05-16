@@ -47,7 +47,6 @@ export class ExtranjeroNNCruComponent implements OnInit {
     noPoseeContacto = false;
     contactosBackUp = [];
     disableGuardar = false;
-    enableIgnorarGuardar = false;
     sugerenciaAceptada = false;
     entidadValidadora = '';
     viveLocActual = false;
