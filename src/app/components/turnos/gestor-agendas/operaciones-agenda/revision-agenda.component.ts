@@ -1,6 +1,6 @@
-import { Component, Input, Output, EventEmitter, OnInit, HostBinding } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, HostBinding, ViewEncapsulation } from '@angular/core';
 // import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import * as moment from 'moment';
@@ -20,28 +20,16 @@ import { Cie10Service } from '../../../../services/term/cie10.service';
 @Component({
     selector: 'revision-agenda',
     templateUrl: 'revision-agenda.html',
-    styleUrls: ['revision-agenda.scss']
+    styleUrls: ['revision-agenda.scss'],
+    encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 
 export class RevisionAgendaComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true;
     private _agenda: any;
-    // Parámetros
-    @Input('agenda')
-    set agenda(value: any) {
-        this._agenda = value;
-        this.horaInicio = moment(this._agenda.horaInicio).format('dddd').toUpperCase();
-        this.estadoPendienteAuditoria = this.estadosAgendaArray.find(e => {
-            return e.nombre === 'Pendiente Auditoria';
-        });
-        this.estadoCodificado = this.estadosAgendaArray.find(e => {
-            return e.nombre === 'Auditada';
-        });
-    }
-    get agenda(): any {
-        return this._agenda;
-    }
+    public agenda: any;
+
     @Input() modoCompleto = true;
 
     @Output() volverAlGestor = new EventEmitter<boolean>();
@@ -53,8 +41,6 @@ export class RevisionAgendaComponent implements OnInit {
     indiceReparo: any;
     public showReparo = false;
     existeCodificacionProfesional: Boolean;
-    showRevisionAgenda: Boolean = true;
-    showAgregarSobreturno: Boolean = false;
     horaInicio: any;
     turnoSeleccionado: any = null;
     bloqueSeleccionado: any = null;
@@ -79,12 +65,22 @@ export class RevisionAgendaComponent implements OnInit {
         private serviceCie10: Cie10Service,
         public serviceTurno: TurnoService,
         public serviceAgenda: AgendaService,
-        public servicePaciente: PacienteService) {
+        public servicePaciente: PacienteService,
+        private route: ActivatedRoute) {
     }
 
     ngOnInit() {
-        this.getCantidadTurnosAsignados();
-        this.esAgendaOdonto = this._agenda.tipoPrestaciones[0].term.includes('odonto');
+        this.route.params.subscribe(params => {
+            if (params && params['idAgenda']) {
+                this.serviceAgenda.getById(params['idAgenda']).subscribe(agenda => {
+                    this._agenda = agenda;
+                    this.agenda = agenda;
+                    this.getCantidadTurnosAsignados();
+                    this.esAgendaOdonto = this._agenda.tipoPrestaciones[0].term.includes('odonto');
+                });
+            }
+        });
+        localStorage.removeItem('revision');
     }
 
     private getCantidadTurnosAsignados() {
@@ -326,9 +322,8 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     agregarSobreturno() {
-        this.showAgregarSobreturno = true;
-        this.showRevisionAgenda = false;
-        this.modoCompleto = false;
+        localStorage.setItem('revision', 'true');
+        this.router.navigate(['citas/sobreturnos', this.agenda._id]);
     }
 
     refresh() {
@@ -343,7 +338,7 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     volver() {
-        this.volverAlGestor.emit(true);
+        this.router.navigate(['citas/gestor_agendas']);
     }
 
     mostrarReparo(index) {
@@ -371,8 +366,6 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     volverRevision() {
-        this.showAgregarSobreturno = false;
-        this.showRevisionAgenda = true;
         this.modoCompleto = true;
         this.refresh();
         this.cerrarAsistencia();

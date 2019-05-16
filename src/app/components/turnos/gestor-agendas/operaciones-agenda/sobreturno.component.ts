@@ -1,14 +1,15 @@
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { Observable } from 'rxjs/Observable';
 import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
-import { Component, Input, EventEmitter, Output, OnInit, HostBinding } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, EventEmitter, Output, OnInit, HostBinding } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
+import { ObraSocialCacheService } from '../../../../services/obraSocialCache.service';
 
 @Component({
     selector: 'sobreturno',
@@ -21,30 +22,15 @@ export class AgregarSobreturnoComponent implements OnInit {
     public lenNota = 140;
     changeCarpeta: boolean;
     carpetaEfector: any;
-    private _agenda: any;
-    private _revision: any;
+    public _revision: any = localStorage.getItem('revision') ? true : false;
+    public _agenda;
+    public agenda;
 
     loading = false;
     resultadoBusqueda: IPaciente[] = [];
     searchClear = true;    // True si el campo de búsqueda se encuentra vacío
 
     @HostBinding('class.plex-layout') layout = true;
-
-    @Input('agenda')
-    set agenda(value: any) {
-        this._agenda = value;
-    }
-    get agenda(): any {
-        return this._agenda;
-    }
-
-    @Input('revision')
-    set revision(value: any) {
-        this._revision = value;
-    }
-    get revision(): any {
-        return this._revision;
-    }
 
     @Output() volverAlGestor = new EventEmitter<boolean>();
     @Output() volverRevision = new EventEmitter<boolean>();
@@ -55,7 +41,6 @@ export class AgregarSobreturnoComponent implements OnInit {
     paciente: IPaciente;
     tipoPrestacion: ITipoPrestacion;
     resultado: any;
-    showAgregarSobreturno = true;
     showCreateUpdate = false;
     showSobreturno = true;
     pacientesSearch = false;
@@ -78,11 +63,24 @@ export class AgregarSobreturnoComponent implements OnInit {
         public servicioTipoPrestacion: TipoPrestacionService,
         private router: Router,
         public auth: Auth,
-        public servicePaciente: PacienteService) { }
+        public servicePaciente: PacienteService,
+        private obraSocialCacheService: ObraSocialCacheService,
+        private route: ActivatedRoute) { }
 
     ngOnInit() {
-        this.inicio = new Date(this.hoy.setHours(this.agenda.horaInicio.getHours(), this.agenda.horaInicio.getMinutes(), 0, 0));
-        this.fin = new Date(this.hoy.setHours(this.agenda.horaFin.getHours(), this.agenda.horaFin.getMinutes(), 0, 0));
+        this.route.params.subscribe(params => {
+            if (params && params['idAgenda']) {
+                this.serviceAgenda.getById(params['idAgenda']).subscribe(agenda => {
+                    this._agenda = agenda;
+                    this.agenda = agenda;
+                    this.inicio = new Date(this.hoy.setHours(this.agenda.horaInicio.getHours(), this.agenda.horaInicio.getMinutes(), 0, 0));
+                    this.fin = new Date(this.hoy.setHours(this.agenda.horaFin.getHours(), this.agenda.horaFin.getMinutes(), 0, 0));
+                    if (this.agenda.tipoPrestaciones.length === 1) {
+                        this.tipoPrestacion = this.agenda.tipoPrestaciones[0];
+                    }
+                });
+            }
+        });
 
         this.carpetaEfector = {
             organizacion: {
@@ -93,9 +91,6 @@ export class AgregarSobreturnoComponent implements OnInit {
         };
         this.showSobreturno = false;
         this.pacientesSearch = true;
-        if (this.agenda.tipoPrestaciones.length === 1) {
-            this.tipoPrestacion = this.agenda.tipoPrestaciones[0];
-        }
     }
 
 
@@ -189,9 +184,6 @@ export class AgregarSobreturnoComponent implements OnInit {
         this.changeCarpeta = true;
     }
 
-    //////
-
-
     verificarTelefono(paciente: IPaciente) {
         // se busca entre los contactos si tiene un celular
         this.telefono = '';
@@ -282,8 +274,7 @@ export class AgregarSobreturnoComponent implements OnInit {
                 if (this.changeCarpeta) {
                     this.actualizarCarpetaPaciente();
                 }
-                this.volverAlGestor.emit(this.agenda);
-                this.volverRevision.emit(true);
+                this.volver();
             });
         } else {
             this.plex.info('warning', 'Debe completar los datos requeridos');
@@ -313,12 +304,11 @@ export class AgregarSobreturnoComponent implements OnInit {
         }
     }
 
-
-    cancelar() {
-        if (!this._revision) {
-            this.volverAlGestor.emit(true);
+    volver() {
+        if (this._revision) {
+            this.router.navigate(['citas/revision_agenda', this.agenda.id]);
         } else {
-            this.volverRevision.emit(true);
+            this.router.navigate(['citas/gestor_agendas']);
         }
     }
 }

@@ -39,6 +39,8 @@ import { PanelEspacioComponent } from './components/turnos/configuracion/espacio
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
 import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/puntoInicio-turnos.component';
 import { MapaEspacioFisicoVistaComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico-vista.component';
+import { RevisionAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/revision-agenda.component';
+import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/operaciones-agenda/sobreturno.component';
 
 // ... MPI
 import { DashboardComponent } from './components/paciente/dashboard.component';
@@ -144,6 +146,10 @@ const appRoutes: Routes = [
   { path: 'citas/punto-inicio', component: PuntoInicioTurnosComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'citas/punto-inicio/:idPaciente', component: PuntoInicioTurnosComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
+  { path: 'citas/revision_agenda', component: RevisionAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'citas/revision_agenda/:idAgenda', component: RevisionAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'citas/sobreturnos', component: AgregarSobreturnoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'citas/sobreturnos/:idAgenda', component: AgregarSobreturnoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   // RUP
   { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/crear/:opcion', component: PrestacionCrearComponent, canActivate: [RoutingNavBar, RoutingGuard] },

@@ -33,6 +33,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
     agendasSeleccionadas: IAgenda[] = [];
     turnosSeleccionados: ITurno[] = [];
+    private queryParams: any = localStorage.getItem('filtrosGestorAgendas') ? JSON.parse(localStorage.getItem('filtrosGestorAgendas')) : undefined;
 
     public showGestorAgendas = true;
     public showTurnos = false;
@@ -45,8 +46,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public showEditarAgendaPanel = false;
     public showInsertarAgenda = false;
     public showAgregarNotaAgenda = false;
-    public showAgregarSobreturno = false;
-    public showRevisionAgenda = false;
     public showRevisionFueraAgenda = false;
     public showListadoTurnos = false;
     public showCarpetas = false;
@@ -118,6 +117,9 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         // Verifica permisos para dar turnos
         this.btnDarTurnos = this.auth.getPermissions('turnos:darTurnos:prestacion:?').length > 0;
 
+        // Verifica permisos para crear agenda
+        this.btnCrearAgendas = this.auth.getPermissions('turnos:crearAgendas:?').length > 0;
+
         this.parametros = {
             fechaDesde: '',
             fechaHasta: '',
@@ -131,22 +133,36 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             this.parametros['tipoPrestaciones'] = this.prestacionesPermisos;
         }
 
-        // Por defecto cargar/mostrar agendas de hoy
-        this.hoy = true;
-        this.loadAgendas();
-
         this.fechaDesde = new Date();
         this.fechaHasta = new Date();
-        this.fechaDesde = moment(this.fechaDesde).startOf('day');
-        this.fechaHasta = moment(this.fechaHasta).endOf('day');
+        // Si hay queryParams se setea 'parametros' para volver al gestor con los mismos filtros
+        if (this.queryParams) {
+            this.parametros = this.queryParams;
+            this.fechaDesde = moment(this.parametros.fechaDesde).startOf('day');
+            this.fechaHasta = moment(this.parametros.fechaHasta).endOf('day');
+            this.getAgendas(this.queryParams);
 
-        // Iniciamos la búsqueda
-        this.parametros = {
-            fechaDesde: this.fechaDesde,
-            fechaHasta: this.fechaHasta,
-            organizacion: this.auth.organizacion._id
-        };
+            // Si hay idAgenda en localStorage llamo a verAgenda()
+            if (localStorage.getItem('idAgenda')) {
+                this.verAgenda({id: localStorage.getItem('idAgenda')}, false, null);
+            }
 
+            localStorage.removeItem('filtrosGestorAgendas');
+            localStorage.removeItem('idAgenda');
+        } else {
+            this.loadAgendas();
+            // Por defecto cargar/mostrar agendas de hoy
+            this.hoy = true;
+            this.fechaDesde = moment(this.fechaDesde).startOf('day');
+            this.fechaHasta = moment(this.fechaHasta).endOf('day');
+
+            // Iniciamos la búsqueda
+            this.parametros = {
+                fechaDesde: this.fechaDesde,
+                fechaHasta: this.fechaHasta,
+                organizacion: this.auth.organizacion._id
+            };
+        }
     }
 
 
@@ -267,7 +283,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showEditarAgenda = false;
         this.showEditarAgendaPanel = false;
         this.showTurnos = false;
-        this.showRevisionAgenda = false;
         this.showRevisionFueraAgenda = false;
         this.showReasignarTurno = false;
         this.showReasignarTurnoAutomatico = false;
@@ -275,9 +290,10 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showAgregarNotaAgenda = true;
     }
 
-    agregarSobreturno() {
-        this.showGestorAgendas = false;
-        this.showAgregarSobreturno = true;
+    agregarSobreturno(agenda) {
+        localStorage.setItem('filtrosGestorAgendas', JSON.stringify(this.parametros));
+        localStorage.setItem('idAgenda', agenda._id);
+        this.router.navigate(['citas/sobreturnos', agenda._id]);
     }
 
     cancelaAgregarNotaAgenda() {
@@ -313,9 +329,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showEditarAgenda = false;
         this.showInsertarAgenda = false;
         this.showAgregarNotaAgenda = false;
-        this.showAgregarSobreturno = false;
         this.showClonar = false;
-        this.showRevisionAgenda = false;
         this.showRevisionFueraAgenda = false;
         this.showReasignarTurno = false;
         this.showReasignarTurnoAutomatico = false;
@@ -358,7 +372,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             this.showTurnos = false;
         }
         this.showAgregarNotaAgenda = false;
-        this.showRevisionAgenda = false;
         this.showRevisionFueraAgenda = false;
         this.showReasignarTurno = false;
         this.showListadoTurnos = false;
@@ -366,8 +379,9 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     }
 
     revisionAgenda(agenda) {
-        this.showGestorAgendas = false;
-        this.showRevisionAgenda = true;
+        localStorage.setItem('filtrosGestorAgendas', JSON.stringify(this.parametros));
+        localStorage.setItem('idAgenda', agenda._id);
+        this.router.navigate(['citas/revision_agenda', agenda._id]);
     }
 
     loadPrestaciones(event) {
@@ -473,8 +487,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                         // Reseteo el panel de la derecha
                         this.showEditarAgendaPanel = false;
                         this.showAgregarNotaAgenda = false;
-                        this.showAgregarSobreturno = false;
-                        this.showRevisionAgenda = false;
                         this.showTurnos = false;
                         this.showReasignarTurno = false;
                         this.showReasignarTurnoAutomatico = false;
@@ -542,7 +554,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             this.showReasignarTurno = false;
             this.showReasignarTurnoAgendas = false;
             this.showReasignarTurnoAutomatico = false;
-            this.showRevisionAgenda = false;
             this.showSuspenderAgenda = true;
         } else {
             this.showTurnos = false;
@@ -552,7 +563,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             this.showReasignarTurno = false;
             this.showReasignarTurnoAgendas = false;
             this.showReasignarTurnoAutomatico = false;
-            this.showRevisionAgenda = false;
         }
 
         if (this.parametros) {
@@ -610,7 +620,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showEditarAgenda = false;
         this.showEditarAgendaPanel = false;
         this.showTurnos = false;
-        this.showRevisionAgenda = false;
         this.showReasignarTurno = false;
         this.showReasignarTurnoAutomatico = true;
         this.showListadoTurnos = false;

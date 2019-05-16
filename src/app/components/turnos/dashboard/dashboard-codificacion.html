@@ -26,7 +26,8 @@
             }} a {{ agenda.horaFin | date: 'HH:mm' }} hs
             Equipo de Salud: {{ agenda.profesionales | enumerar:['apellido', 'nombre'] }} ">
                                     <div class="row">
-                                        <revision-agenda [agenda]="agenda" [modoCompleto]="false" class="col-12"></revision-agenda>
+                                        <!-- este modulo queda obsoleto, rehacer el acceso al modulo como en <gestor-agendas> -->
+                                        <!-- <revision-agenda [agenda]="agenda" [modoCompleto]="false" class="col-12"></revision-agenda> -->
                                     </div>
                                 </plex-panel>
                             </plex-accordion>
