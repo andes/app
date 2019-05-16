@@ -31,6 +31,7 @@ export class PlanIndicacionComponent extends RUPComponent implements OnInit {
             }
         });
         this.disable();
+
     }
 
     disable() {
@@ -51,7 +52,11 @@ export class PlanIndicacionComponent extends RUPComponent implements OnInit {
 
 
     quitarIndicacion(index) {
-        this.registro.registros.splice(index, 1);
+        if (this.registro.registros.length > 1) {
+            this.registro.registros.splice(index, 1);
+        } else {
+            this.plex.info('danger', 'Es necesario la carga de un registro ');
+        }
     }
 
 
