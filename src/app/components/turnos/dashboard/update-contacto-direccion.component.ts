@@ -70,13 +70,13 @@ export class UpdateContactoDireccionComponent implements OnInit {
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.tipoComunicacion.splice(this.tipoComunicacion.length - 1, 1);  // eliminamos 'Email'
 
-        if (this.paciente.contacto.length) {
+        if (this.paciente && this.paciente.contacto && this.paciente.contacto.length) {
             this.arrayContactos = this.paciente.contacto;
         } else {
             this.arrayContactos = [this.contacto];
         }
 
-        if (this.paciente.direccion[0].valor) {
+        if (this.paciente && this.paciente.direccion && this.paciente.direccion[0].valor) {
             this.direccion = this.paciente.direccion[0];
         }
 
