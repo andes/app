@@ -87,13 +87,11 @@ export class PuntoInicioInternacionComponent implements OnInit {
                     return e;
                 });
             this.servicioPrestacion.getPrestacionesXtipo(paciente.id, this.conceptoPrescripcion.conceptId).subscribe(preinscripcion => {
-                console.log(preinscripcion);
                 let a = preinscripcion
                     .map(e => {
                         e.origen = 'Prescripción';
                         this.ListadoPrestacionesPorPaciente.push(e);
                     });
-                console.log(a);
             });
             this.showLoader = false;
         });
@@ -113,7 +111,6 @@ export class PuntoInicioInternacionComponent implements OnInit {
     }
 
     nuevaPrescripcion(paciente) {
-        console.log(this.conceptoPrescripcion);
         let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(paciente, this.conceptoPrescripcion, 'ejecucion', 'internacion');
         // nuevaPrestacion.solicitud.prestacionOrigen = nuevaInternacion.id;
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
