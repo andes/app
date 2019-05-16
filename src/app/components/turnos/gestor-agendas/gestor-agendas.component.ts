@@ -70,6 +70,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public btnCrearAgendas = false;
     public permisos: any;
     public prestacionesPermisos = [];
+    public puedeCrearAgenda: Boolean;
 
     // ultima request de profesionales que se almacena con el subscribe
     private lastRequestProf: ISubscription;
@@ -106,6 +107,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.permisos = this.auth.getPermissions('turnos:agenda:?').length > 0;
         this.autorizado = this.auth.getPermissions('turnos:agenda:?').length > 0;
         this.prestacionesPermisos = this.auth.getPermissions('turnos:planificarAgenda:prestacion:?');
+        this.puedeCrearAgenda = this.auth.check('turnos:crearAgendas');
 
         // Verificamos permisos globales para turnos, si no posee realiza redirect al home
         if (!this.autorizado) {
@@ -114,9 +116,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
         // Verifica permisos para dar turnos
         this.btnDarTurnos = this.auth.getPermissions('turnos:darTurnos:prestacion:?').length > 0;
-
-        // Verifica permisos para crear agenda
-        this.btnCrearAgendas = this.auth.getPermissions('turnos:crearAgendas:?').length > 0;
 
         this.parametros = {
             fechaDesde: '',

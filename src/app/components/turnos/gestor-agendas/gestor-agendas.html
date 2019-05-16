@@ -176,7 +176,7 @@
     <!--Footer-->
     <footer *ngIf="showGestorAgendas">
         <div class="float-left">
-            <plex-button class="pr-1" type="primary" label="Crear una nueva agenda" (click)="insertarAgenda()"></plex-button>
+            <plex-button *ngIf="puedeCrearAgenda" class="pr-1" type="primary" label="Crear una nueva agenda" (click)="insertarAgenda()"></plex-button>
             <plex-button type="primary" label="Auditar fuera de agenda" (click)="auditarFueraAgenda()"></plex-button>
         </div>
         <div class="float-right" *ngIf="showEditarAgendaPanel && agendasSeleccionadas?.length === 1">
