@@ -16,10 +16,10 @@ _____________________________________________
 
 -->
 ### Requerimiento
-* URL de la User Story, referencia al issue (#1111) o breve descripcion del requerimiento
+ <!-- URL de la User Story, referencia al issue (#1111) o breve descripción del requerimiento -->
 
 ### Funcionalidad desarrollada 
-<!-- Describir que se desarrollo -->
+<!-- Describir lo desarrollado, nos sirve para ponerlo después en los cambios de cada versión -->
 1. 
 2. 
 3. 
@@ -27,19 +27,24 @@ _____________________________________________
 
 ### UserStory llegó a completarse
 <!-- Marca con una X la casilla correcta-->
-- [ ] Si
-- [ ] No
-- [ ] No corresponde
+- [] Si
+- [] No
+- [] No corresponde
 
 ### Requiere actualizaciones en la base de datos
 <!-- Marca con una X la casilla correcta-->
-- [ ] Si
-- [ ] No
+- [] Si
+- [] No
 
 ### Requiere actualizaciones en la API
-<!-- Marca con una X la casilla correcta-->
-- [ ] Si
-- [ ] No
+<!-- Marca con una X la casilla correcta y agregar link a PR-->
+- [] Si
+- [] No
+
+### Requiere actualizaciones en andes-test-integracion
+<!-- Marca con una X la casilla correcta y agregar link a PR-->
+- [] Si
+- [] No
 
 
 <!-- Agregar captura de pantalla, si fuera relevante  -->
