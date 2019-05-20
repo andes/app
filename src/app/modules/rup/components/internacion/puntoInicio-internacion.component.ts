@@ -137,6 +137,16 @@ export class PuntoInicioInternacionComponent implements OnInit {
                 break;
         }
     }
+    newPrestacionConVerificacion(paciente, concepto) {
+        console.log(paciente);
+        this.servicioPrestacion.newPrestacion(paciente, concepto).subscribe(nuevaPrestacion => {
+            this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+                this.router.navigate(['/rup/ejecucion', prestacion.id]);
+            }, (err) => {
+                this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err);
+            });
+        });
+    }
 
     cargaItems(pacienteSeleccionado) {
 
@@ -148,7 +158,7 @@ export class PuntoInicioInternacionComponent implements OnInit {
         }, {
             label: 'Crear prescripción',
             handler: () => {
-                this.nuevaPrescripcion(pacienteSeleccionado);
+                this.newPrestacionConVerificacion(pacienteSeleccionado, this.conceptoPrescripcion);
             }
         },
         {
