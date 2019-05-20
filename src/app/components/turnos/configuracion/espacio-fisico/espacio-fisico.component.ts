@@ -20,7 +20,7 @@ export class EspacioFisicoComponent implements OnInit {
     public tengoDatos = true;
     public loader = false;
 
-    constructor(public espacioFisicoService: EspacioFisicoService, private router: Router, public auth: Auth, public plex: Plex) {
+    constructor(private espacioFisicoService: EspacioFisicoService, private router: Router, public auth: Auth, public plex: Plex) {
 
     }
 

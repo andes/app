@@ -42,14 +42,4 @@ export class EspacioFisicoService {
     delete(espacioFisico: IEspacioFisico): Observable<IEspacioFisico> {
         return this.server.delete(this.espacioFisicoUrl + '/' + espacioFisico.id);
     }
-
-    /**
-     * Devuelve el nombre del estado del espacio físico
-     * @param {IEspacioFisico} espacioFisico
-     * @returns {string}
-     * @memberof EspacioFisicoService
-     */
-    getEstado(espacioFisico: IEspacioFisico): string {
-        return espacioFisico.activo ? 'Activo' : 'Inactivo';
-    }
 }
