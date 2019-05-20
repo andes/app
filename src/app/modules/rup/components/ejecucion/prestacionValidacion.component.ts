@@ -672,17 +672,31 @@ export class PrestacionValidacionComponent implements OnInit {
             let informe = {
                 idPrestacion: this.prestacion.id
             };
+            if (this.prestacion.solicitud.tipoPrestacion.conceptId === '432678004') {
+                // SI LA PRESTACION ES INDICACION PARA PROCEDIMIENTO
+                this.servicioDocumentos.descargarPI(informe).subscribe(data => {
+                    if (data) {
+                        // Generar descarga como PDF
+                        this.descargarArchivo(data, { type: 'application/pdf' });
+                        this.descargando = false;
+                    } else {
+                        // Fallback a impresión normal desde el navegador
+                        window.print();
+                    }
+                });
+            } else {
+                this.servicioDocumentos.descargarV2(informe).subscribe(data => {
+                    if (data) {
+                        // Generar descarga como PDF
+                        this.descargarArchivo(data, { type: 'application/pdf' });
+                        this.descargando = false;
+                    } else {
+                        // Fallback a impresión normal desde el navegador
+                        window.print();
+                    }
+                });
+            }
 
-            this.servicioDocumentos.descargarV2(informe).subscribe(data => {
-                if (data) {
-                    // Generar descarga como PDF
-                    this.descargarArchivo(data, { type: 'application/pdf' });
-                    this.descargando = false;
-                } else {
-                    // Fallback a impresión normal desde el navegador
-                    window.print();
-                }
-            });
         });
     }
 

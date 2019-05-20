@@ -1,24 +1,25 @@
-import { IPrestacion } from './../../interfaces/prestacion.interface';
-import { Component, OnInit, ViewEncapsulation, EventEmitter, Output } from '@angular/core';
-import { RUPComponent } from './../core/rup.component';
-import { RupElement } from '.';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { RUPComponent } from '../../core/rup.component';
+import { RupElement } from '..';
+
 
 @Component({
-    selector: 'rup-InformeEpicrisisComponent',
-    templateUrl: 'informeEpicrisis.html',
-    styleUrls: ['informeEpicrisis.scss'],
+    selector: 'rup-seccionesAccordion',
+    templateUrl: 'seccionesAccordion.html',
+    // utilizamos ViewEncapsulation.none para uniformar el estilo de los accordion en este componente!!!
+    encapsulation: ViewEncapsulation.None,
+    styleUrls: ['seccionesAccordion.scss'],
 })
-@RupElement('InformeEpicrisisComponent')
-export class InformeEpicrisisComponent extends RUPComponent implements OnInit {
+@RupElement('SeccionesAccordionComponent')
+export class SeccionesAccordionComponent extends RUPComponent implements OnInit {
 
     public accordionActive = 0;
     public unidadesOrganizativas = [];
     public desplegarTodo = false;
     public mensajeAccionAccordion = 'Desplegar';
 
-
     ngOnInit() {
-        if (!this.registro.valor) {
+        if (this.registro && !this.registro.valor) {
             this.registro.valor = {
                 unidadOrganizativa: null
             };

@@ -43,7 +43,7 @@ export class PrestacionCrearComponent implements OnInit {
      */
     public showDarTurnos = false;
 
-    get btnLabel () {
+    get btnLabel() {
         if (this.opcion === 'fueraAgenda') {
             return 'INICIAR PRESTACIÓN';
         } else {
@@ -51,7 +51,7 @@ export class PrestacionCrearComponent implements OnInit {
         }
     }
 
-    btnClick () {
+    btnClick() {
         if (this.opcion === 'fueraAgenda') {
             this.iniciarPrestacion();
         } else {
@@ -152,43 +152,17 @@ export class PrestacionCrearComponent implements OnInit {
                 };
             }
             let conceptoSnomed = this.tipoPrestacionSeleccionada;
-            let nuevaPrestacion;
-            nuevaPrestacion = {
-                paciente: pacientePrestacion,
-                solicitud: {
-                    fecha: this.fecha,
-                    tipoPrestacion: conceptoSnomed,
-                    // profesional logueado
-                    profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
-                    // organizacion desde la que se solicita la prestacion
-                    organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
-                },
-                ejecucion: {
-                    fecha: this.fecha,
-                    registros: [],
-                    // organizacion desde la que se solicita la prestacion
-                    organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
-                },
-                estados: {
-                    fecha: new Date(),
-                    tipo: 'ejecucion'
-                }
-            };
-            if (pacientePrestacion) {
-                nuevaPrestacion.paciente['_id'] = this.paciente.id;
-            }
-            this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
-                localStorage.removeItem('idAgenda');
-                this.router.navigate(['/rup/ejecucion', prestacion.id]);
-            }, (err) => {
-                this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err);
+            this.servicioPrestacion.newPrestacion(pacientePrestacion, conceptoSnomed).subscribe(nuevaPrestacion => {
+                this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+                    localStorage.removeItem('idAgenda');
+                    this.router.navigate(['/rup/ejecucion', prestacion.id]);
+                }, (err) => {
+                    this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err);
+                });
             });
         }
     }
+
 
     darTurnoAutocitado() {
 

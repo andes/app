@@ -9,7 +9,5 @@ import { RupElement } from '.';
 @RupElement('MoleculaBaseComponent')
 export class MoleculaBaseComponent extends RUPComponent implements OnInit {
 
-    ngOnInit() {
-
-    }
+    ngOnInit() { }
 }

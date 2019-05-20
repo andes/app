@@ -299,6 +299,11 @@ import { CalculoDeBostonComponent } from './modules/rup/components/elementos/cal
 import { SeleccionBinariaComponent } from './modules/rup/components/elementos/seleccionBinaria.component';
 import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico.component';
 import { MoleculaBaseComponent } from './modules/rup/components/elementos/moleculaBase.component';
+import { SeccionesAccordionComponent } from './modules/rup/components/elementos/seccionesAccordion/seccionesAccordion.component';
+import { PlanIndicacionComponent } from './modules/rup/components/elementos/internacion/planDeIndicacion/planDeIndicacion.component';
+import { EstadoComponent } from './modules/rup/components/elementos/internacion/planDeIndicacion/estado.component';
+import { DescripcionComponent } from './modules/rup/components/elementos/descripcion.component';
+
 import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
@@ -484,7 +489,11 @@ let RUPComponentsArray = [
     CamaPrepararComponent,
     OcuparCamaComponent,
     EjecucionInternacionComponent,
-    EgresoInternacionComponent
+    SeccionesAccordionComponent,
+    PlanIndicacionComponent,
+    EstadoComponent,
+    EgresoInternacionComponent,
+    DescripcionComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -498,6 +507,8 @@ import { PasesListadoInternacionComponent } from './apps/rup/internacion/compone
 
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
 import { HUDSService } from './modules/rup/services/huds.service';
+
+
 
 
 

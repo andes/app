@@ -16,11 +16,14 @@ export class PuntoInicioInternacionComponent implements OnInit {
 
     public listado: any;
     public pacienteSeleccionado;
-    public epicrisisPaciente = [];
+    public ListadoPrestacionesPorPaciente = [];
     public showLoader = false;
     public showInternacionEjecucion = false;
     public internacionEjecucion;
     public conceptosInternacion;
+    public conceptoPrescripcion;
+
+    public itemsDropDown: any;
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -33,6 +36,7 @@ export class PuntoInicioInternacionComponent implements OnInit {
     ngOnInit() {
         this.elementoRupService.ready.subscribe(() => {
             this.conceptosInternacion = this.elementoRupService.getConceptosInternacion();
+            this.conceptoPrescripcion = this.elementoRupService.getConceptoPrescripcion();
         });
     }
 
@@ -73,13 +77,22 @@ export class PuntoInicioInternacionComponent implements OnInit {
             }
         });
         this.servicioPrestacion.getPrestacionesXtipo(paciente.id, this.conceptosInternacion.epicrisis.conceptId).subscribe(epicrisis => {
-            this.epicrisisPaciente = epicrisis
+            this.ListadoPrestacionesPorPaciente = epicrisis
                 .map(e => {
+                    e.origen = 'Epicrisis';
+
                     if (e.ejecucion.registros && e.ejecucion.registros[0] && e.ejecucion.registros[0].registros) {
                         e.ejecucion.registros[0].registros[0].valor = e.ejecucion.registros[0].registros[0].valor.substring(0, 100) + '...';
                     }
                     return e;
                 });
+            this.servicioPrestacion.getPrestacionesXtipo(paciente.id, this.conceptoPrescripcion.conceptId).subscribe(preinscripcion => {
+                let a = preinscripcion
+                    .map(e => {
+                        e.origen = 'Prescripción';
+                        this.ListadoPrestacionesPorPaciente.push(e);
+                    });
+            });
             this.showLoader = false;
         });
     }
@@ -91,6 +104,14 @@ export class PuntoInicioInternacionComponent implements OnInit {
      */
     nuevaEpicrisis(paciente) {
         let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(paciente, this.conceptosInternacion.epicrisis, 'ejecucion', 'internacion');
+        // nuevaPrestacion.solicitud.prestacionOrigen = nuevaInternacion.id;
+        this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+            this.router.navigate(['rup/ejecucion', prestacion.id]);
+        });
+    }
+
+    nuevaPrescripcion(paciente) {
+        let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(paciente, this.conceptoPrescripcion, 'ejecucion', 'internacion');
         // nuevaPrestacion.solicitud.prestacionOrigen = nuevaInternacion.id;
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
             this.router.navigate(['rup/ejecucion', prestacion.id]);
@@ -115,5 +136,27 @@ export class PuntoInicioInternacionComponent implements OnInit {
                 this.router.navigate([]);
                 break;
         }
+    }
+
+    cargaItems(pacienteSeleccionado) {
+
+        this.itemsDropDown = [{
+            label: 'Crear epicrisis',
+            handler: () => {
+                this.nuevaEpicrisis(pacienteSeleccionado);
+            }
+        }, {
+            label: 'Crear prescripción',
+            handler: () => {
+                this.nuevaPrescripcion(pacienteSeleccionado);
+            }
+        },
+        {
+            label: 'Ver huds',
+            handler: () => {
+                this.ruteo(pacienteSeleccionado.id, 'huds');
+            }
+        },
+        ];
     }
 }

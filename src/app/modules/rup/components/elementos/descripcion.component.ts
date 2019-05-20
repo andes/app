@@ -1,14 +1,14 @@
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
-import { RUPComponent } from './../core/rup.component';
+import { RUPComponent } from '../core/rup.component';
 import { Subscription } from 'rxjs/Subscription';
 import { RupElement } from '.';
 
 @Component({
-    selector: 'rup-observaciones',
-    templateUrl: 'observaciones.html'
+    selector: 'rup-descripcion',
+    templateUrl: 'descripcion.html'
 })
-@RupElement('ObservacionesComponent')
-export class ObservacionesComponent extends RUPComponent implements OnInit {
+@RupElement('DescripcionComponent')
+export class DescripcionComponent extends RUPComponent implements OnInit {
     public referentSet = [];
     // suscriptionSeccion: any;
     seleccionado: any;
@@ -17,6 +17,10 @@ export class ObservacionesComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         if (!this.params) {
             this.params = {};
+        }
+        if (this.registro.valor && this.prestacion.solicitud.tipoPrestacion.conceptId === '432678004') {
+            // Si es una prestacion de indicacion para procedimiento --> disabled
+            this.registro.modificar = true;
         }
         this.params.required = this.params && this.params.required ? this.params.required : false;
         this.registro.valido = true;

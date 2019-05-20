@@ -44,6 +44,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
             });
         }
         this.params.required = this.params.required ? this.params.required : false;
+        this.params.allDroppable = this.params.allDroppable ? this.params.allDroppable : false;
         // buscamos si existe por parametro alguna restriccion en los conceptos.
         if (this.params.refsetId) {
             this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {

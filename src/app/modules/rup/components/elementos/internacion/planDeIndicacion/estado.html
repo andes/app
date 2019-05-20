@@ -1,0 +1,13 @@
+<div class="col-md" [ngClass]="{'mt-botonera':!soloValores}">
+    <ng-container *ngIf="registro && registro.valor?.existeRegistro && !soloValores">
+        <span *ngIf="!marcado" class="badge badge-danger">Cargar Estado</span>
+        <plex-button (click)="cambiaEstado('activo')" type="success btn-icon-rup p-0" size="lg" icon="mdi mdi-play"></plex-button>
+        <plex-button (click)="cambiaEstado('detenido')" type="danger btn-icon-rup p-0" size="lg" icon="mdi mdi-stop"></plex-button>
+        <plex-button (click)="cambiaEstado('pausado')" type="warning btn-icon-rup p-0" size="lg" icon="mdi mdi-pause"></plex-button>
+    </ng-container>
+    <ng-container *ngIf="registro && registro.valor?.estado  && registro.valor?.existeRegistro && soloValores">
+        <span *ngIf="registro.valor?.estado === 'activo'" class="badge badge-success">activo</span>
+        <span *ngIf="registro.valor?.estado === 'detenido'" class="badge badge-danger">detenido</span>
+        <span *ngIf="registro.valor?.estado === 'pausado'" class="badge badge-warning">pausado</span>
+    </ng-container>
+</div>

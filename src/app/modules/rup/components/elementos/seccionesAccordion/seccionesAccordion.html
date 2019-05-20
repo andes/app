@@ -1,0 +1,77 @@
+<ng-container *ngIf="!soloValores && elementoRUP.requeridos && elementoRUP.requeridos.length">
+    <div class="row">
+        <div class="col-12">
+            <plex-button label="{{ mensajeAccionAccordion }} Todos" type="primary btn-sm float-right" (click)="desplegarAccordions()"></plex-button>
+        </div>
+    </div>
+    <plex-accordion>
+        <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
+            <ng-container *ngIf="item.params && item.params.accordion; else ShowSinAccordion">
+                <plex-panel icon="arrow-down-drop-circle-outline" [active]="accordionActive === i || desplegarTodo"
+                    (toggle)="accordionSeleccionado(i, item.concepto)" class="hover">
+                    <div plex-accordion-title class="d-flex justify-content-between">
+                        <span class="contenedor-icono" [ngClass]="{ 'sinIcono' :  !item.params.icon }">
+                            <i class="icon {{ item.params.icon }}"></i>
+                        </span>
+                        <span class="text-capitalize titulo align-self-center mr-auto ml-2 text-bold">
+                            <ng-container *ngIf="item.params?.title; else showTerm">
+                                {{ item.params.title }}
+                            </ng-container>
+                            <ng-template #showTerm>
+                                {{ item.concepto.term }}
+                            </ng-template>
+                        </span>
+                        <span *ngIf="!rupInstance.isValid" class="badge badge-danger mr-4 align-self-center">
+                            Hay registros incompletos
+                        </span>
+                        <span *ngIf="!registro.registros[i].length && i > 0 && rupInstance.isValid" class="badge badge-warning mr-4 align-self-center">
+                            No hay conceptos registrados
+                        </span>
+                        <span *ngIf="registro.registros[i].length && rupInstance.isValid" class="badge badge-info mr-4 align-self-center">
+                            {{ registro.registros[i].length }} Conceptos registrados
+                        </span>
+                        <plex-button [icon]=" accordionActive === i || desplegarTodo ? 'chevron-left' : 'chevron-down' "
+                            type="primary btn-sm btn-collapse">
+                        </plex-button>
+                    </div>
+                    <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
+                        [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()" #rupInstance>
+                    </rup>
+                </plex-panel>
+            </ng-container>
+            <ng-template #ShowSinAccordion>
+                <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
+                    [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()" #rupInstance>
+                </rup>
+            </ng-template>
+        </ng-container>
+    </plex-accordion>
+</ng-container>
+
+<ng-container *ngIf="soloValores">
+    <div class="grid-container">
+        <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
+            <div class="grid-item-{{i+1}}">
+                <div class="rup-card rup-clear {{ (item.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(item.concepto) }}">
+                    <div class="titulo d-flex align-items-start">
+                        <i class="icon {{ item.params.icon }} mr-2"></i>
+                        <span class="text-capitalize titulo align-self-center mr-auto ml-2 text-bold">
+                            <ng-container *ngIf="item.params?.title; else showTerm">
+                                {{ item.params.title }}
+                            </ng-container>
+                            <ng-template #showTerm>
+                                {{ item.concepto.term }}
+                            </ng-template>
+                        </span>
+                    </div>
+                    <div class="contenedor-conceptos ml-3 pl-3">
+                        <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
+                            [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()" #rupInstance>
+                        </rup>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</ng-container>

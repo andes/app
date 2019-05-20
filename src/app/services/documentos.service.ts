@@ -49,6 +49,19 @@ export class DocumentosService {
         return res.blob();
     }
 
+    descargarPI(data): Observable<any> {
+
+        let headers = new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('jwt') ? 'JWT ' + window.sessionStorage.getItem('jwt') : null
+        });
+        let options = new RequestOptions({ headers: headers, responseType: ResponseContentType.Blob, method: RequestMethod.Post });
+
+        return this.http.post(this.pdfURL + '/planIndicacion/pdf', data, options)
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
+
     descargarConstanciaPuco(params): Observable<any> {
         let headers = new Headers({
             'Content-Type': 'application/json',

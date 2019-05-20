@@ -80,6 +80,16 @@ export enum estadosInternacion {
     'validada'
 }
 
+/**
+ * estados de los registros los usamos para el plan de indicaciones en
+ * internacion.
+ */
+export enum estadosRegistros {
+    'activo',
+    'pausado',
+    'detenido'
+}
+
 export enum Meses {
     'enero',
     'febrero',
