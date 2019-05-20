@@ -309,7 +309,7 @@
                                             (mouseenter)="showTooltip(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular'), false, p)"
                                             (mouseleave)="hideTooltip()"
                                             (click)="seleccionarDiente(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular'))"
-                                            [ngClass]="{'seleccionada': estaSeleccionada(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular'))}"
+                                            [ngClass]="{'seleccionada': estaSeleccionada(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'palatina'))}"
                                             d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z"
                                             class="diente palatina {{ 'diente-' + relpalatina.concepto.semanticTag }} diente-offset-{{p}}"
                                             title="(esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular')" />
@@ -328,7 +328,7 @@
                                         *ngFor="let reloclusal of getRegistrosRel(diente, 'oclusal'); let o=index">
                                         <path (mouseenter)="showTooltip(diente, 'oclusal', false, o)"
                                             (mouseleave)="hideTooltip()" (click)="seleccionarDiente(diente, 'oclusal')"
-                                            [ngClass]="{'seleccionada': estaSeleccionada(diente, 'oclusal')}"
+                                            [ngClass]="{ 'registrada': caraValor(diente, 'oclusal') !==- 1}"
                                             d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z "
                                             class="diente oclusal {{ 'diente-' + reloclusal.concepto.semanticTag }} diente-offset-{{o}} "
                                             title="oclusal" />
