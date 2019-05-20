@@ -42,7 +42,12 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         'cuadranteInferiorDerecho',
         'cuadranteInferiorIzquierdo',
     ];
-    public cuadrantesTemporales = ['cuadranteSuperiorDerechoTemporal', 'cuadranteSuperiorIzquierdoTemporal', 'cuadranteInferiorDerechoTemporal', 'cuadranteInferiorIzquierdoTemporal'];
+    public cuadrantesTemporales = [
+        'cuadranteSuperiorDerechoTemporal',
+        'cuadranteSuperiorIzquierdoTemporal',
+        'cuadranteInferiorDerechoTemporal',
+        'cuadranteInferiorIzquierdoTemporal'
+    ];
 
     showPopOver = false;
     popOverText: any = '';
@@ -410,12 +415,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             return this.prestacion.ejecucion.registros[1].relacionadoCon.map(x => x = { diente: x.concepto.conceptId, cara: x.cara });
         } else {
             return [];
-        }
-    }
-
-    fixRelaciones() {
-        if (this.registro.valor && this.registro.valor.piezas) {
-            this.registro.valor.piezas = this.registro.valor.piezas.filter(x => this.relacionesOdontograma().find(y => y === x.concepto.conceptId));
         }
     }
 
