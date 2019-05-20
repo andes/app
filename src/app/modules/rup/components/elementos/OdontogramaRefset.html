@@ -328,7 +328,7 @@
                                         *ngFor="let reloclusal of getRegistrosRel(diente, 'oclusal'); let o=index">
                                         <path (mouseenter)="showTooltip(diente, 'oclusal', false, o)"
                                             (mouseleave)="hideTooltip()" (click)="seleccionarDiente(diente, 'oclusal')"
-                                            [ngClass]="{ 'registrada': caraValor(diente, 'oclusal') !==- 1}"
+                                            [ngClass]="{'seleccionada': estaSeleccionada(diente, 'oclusal')}"
                                             d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z "
                                             class="diente oclusal {{ 'diente-' + reloclusal.concepto.semanticTag }} diente-offset-{{o}} "
                                             title="oclusal" />
