@@ -18,6 +18,7 @@ import { Auth } from '@andes/auth';
 import { BarrioService } from '../../../services/barrio.service';
 import { GeoreferenciaService } from '../services/georeferencia.service';
 import * as enumerados from './../../../utils/enumerados';
+import { IContacto } from '../../../interfaces/IContacto';
 
 @Component({
     selector: 'apps/mpi/bebe',
@@ -54,7 +55,13 @@ export class BebeCruComponent implements OnInit {
         sexo: '',
         foto: ''
     };
-
+    contacto: IContacto = {
+        tipo: 'celular',
+        valor: '',
+        ranking: 0,
+        activo: true,
+        ultimaActualizacion: new Date()
+    };
     public bebeModel: IPaciente = {
         id: null,
         documento: '',
@@ -65,7 +72,7 @@ export class BebeCruComponent implements OnInit {
         apellido: '',
         nombreCompleto: '',
         alias: '',
-        contacto: [],
+        contacto: [this.contacto],
         sexo: undefined,
         genero: undefined,
         fechaNacimiento: null, // Fecha Nacimiento
@@ -107,6 +114,12 @@ export class BebeCruComponent implements OnInit {
     organizacionActual = null;
     geoReferenciaAux = []; // Se utiliza para chequear cambios.
     infoMarcador: String = null;
+    noPoseeContacto = false;
+    contactosCache = [];
+    tipoComunicacion: any[];
+    contactoImportado = false;
+    direccionImportada = false;
+
 
     constructor(
         private georeferenciaService: GeoreferenciaService,
@@ -132,6 +145,7 @@ export class BebeCruComponent implements OnInit {
 
     ngOnInit() {
         this.opcionesSexo = enumerados.getObjSexos();
+        this.tipoComunicacion = enumerados.getObjTipoComunicacion();
 
         // Se cargan los parentescos para las relaciones
         this.parentescoService.get().subscribe(resultado => {
@@ -228,6 +242,8 @@ export class BebeCruComponent implements OnInit {
 
                 /* Si no se cargó ninguna dirección, tomamos el dato de la madre/padre/tutor */
                 this.copiarDireccion(paciente);
+                /* Si no se cargó un contacto, tomamos el dato de la madre/padre/tutor */
+                this.copiarContacto(paciente);
                 this.pacientes = null;
                 this.showBuscador = false;
             });
@@ -235,14 +251,25 @@ export class BebeCruComponent implements OnInit {
             this.plex.info('warning', 'Imposible obtener el paciente seleccionado', 'Error');
         }
     }
+    private copiarContacto(paciente: IPaciente) {
+        if (!paciente.contacto || !paciente.contacto.length) { return; }
+        if (!this.bebeModel.contacto[0].valor) {
+            this.bebeModel.contacto[0].valor = paciente.contacto[0].valor;
+            this.bebeModel.contacto[0].tipo = paciente.contacto[0].tipo;
+            this.contactoImportado = true;
+        }
+    }
+
     private copiarDireccion(paciente: IPaciente) {
         if (!paciente.direccion || !paciente.direccion.length) { return; }
         if (!this.bebeModel.direccion[0].valor) {
             this.bebeModel.direccion[0].valor = paciente.direccion[0].valor;
+            this.direccionImportada = true;
         }
         if (!this.bebeModel.direccion[0].ubicacion.provincia && paciente.direccion[0].ubicacion && paciente.direccion[0].ubicacion.provincia) {
             this.bebeModel.direccion[0].ubicacion.provincia = paciente.direccion[0].ubicacion.provincia;
             this.viveProvActual = (paciente.direccion[0].ubicacion.provincia.id === this.provinciaActual.id);
+            this.direccionImportada = true;
         }
         if (!this.bebeModel.direccion[0].ubicacion.localidad && paciente.direccion[0].ubicacion.localidad) {
             this.bebeModel.direccion[0].ubicacion.localidad = paciente.direccion[0].ubicacion.localidad;
@@ -250,9 +277,11 @@ export class BebeCruComponent implements OnInit {
             if (paciente.direccion[0].geoReferencia) {
                 this.bebeModel.direccion[0].geoReferencia = paciente.direccion[0].geoReferencia;
             }
+            this.direccionImportada = true;
         }
         if (!this.bebeModel.direccion[0].ubicacion.barrio && paciente.direccion[0].ubicacion.barrio) {
             this.bebeModel.direccion[0].ubicacion.barrio = paciente.direccion[0].ubicacion.barrio;
+            this.direccionImportada = true;
         }
     }
 
@@ -370,9 +399,18 @@ export class BebeCruComponent implements OnInit {
 
     cambiarRelacion() {
         this.showBuscador = true;
-        this.bebeModel.direccion[0].valor = '';
-        this.bebeModel.direccion[0].ubicacion.localidad = null;
-        this.bebeModel.direccion[0].ubicacion.provincia = null;
+        // si los datos direccion/contacto fueron obtenidos de la relación, se resetean.
+        if (this.direccionImportada) {
+            this.bebeModel.direccion[0].valor = '';
+            this.bebeModel.direccion[0].ubicacion.localidad = null;
+            this.bebeModel.direccion[0].ubicacion.provincia = null;
+            this.direccionImportada = false;
+        }
+        if (this.contactoImportado) {
+            this.bebeModel.contacto[0].valor = '';
+            this.bebeModel.contacto[0].tipo = 'celular';
+            this.contactoImportado = false;
+        }
         this.viveLocActual = false;
         this.viveProvActual = false;
     }
@@ -416,4 +454,55 @@ export class BebeCruComponent implements OnInit {
             this.plex.toast('info', 'Debe completar datos del domicilio.');
         }
     }
+
+    addContacto(key, valor) {
+        let indexUltimo = this.bebeModel.contacto.length - 1;
+
+        if (this.bebeModel.contacto[indexUltimo].valor) {
+            let nuevoContacto = Object.assign({}, {
+                tipo: key,
+                valor: valor,
+                ranking: 0,
+                activo: true,
+                ultimaActualizacion: new Date()
+            });
+
+            this.bebeModel.contacto.push(nuevoContacto);
+        } else {
+            this.plex.toast('info', 'Debe completar los contactos anteriores.');
+        }
+    }
+
+    removeContacto(i) {
+        if (i >= 0) {
+            this.bebeModel.contacto.splice(i, 1);
+        }
+    }
+
+    // Guarda los contactos cuando se tilda "no posee contactos", para recuperarlos en caso de destildar el box.
+    limpiarContacto() {
+        if (this.noPoseeContacto) {
+            this.contactosCache = this.bebeModel.contacto;
+            this.bebeModel.contacto = [this.contacto];
+        } else {
+            this.bebeModel.contacto = this.contactosCache;
+        }
+    }
+
+    verificarCorreoValido(indice, form) {
+        let formato = /^[a-zA-Z0-9_.+-]+\@[a-zA-Z0-9-]+(\.[a-z]{2,4})+$/;
+        let mail = String(this.bebeModel.contacto[indice].valor);
+        form.form.controls['valor-' + indice].setErrors(null);  // con cada caracter nuevo 'limpia' el error y reevalúa
+        window.setTimeout(() => {
+            if (mail) {
+                if (formato.test(mail)) {
+                    form.form.controls['valor-' + indice].setErrors(null);
+                } else {
+                    form.form.controls['valor-' + indice].setErrors({ invalid: true, pattern: { requiredPattern: formato } });
+
+                }
+            }
+        }, 500);
+    }
+
 }
