@@ -88,6 +88,11 @@ export class DarTurnosComponent implements OnInit {
     public agenda: IAgenda;
     public agendas: IAgenda[];
     public estadosAgenda = EstadosAgenda;
+    public estadoFacturacion: any = {
+        tipo: '',
+        estado: 'Sin comprobante',
+        numeroComprobante: ''
+    };
 
     estadoT: EstadosDarTurnos;
     turnoDoble = false;
@@ -126,6 +131,7 @@ export class DarTurnosComponent implements OnInit {
     carpetaEfector: any;
     obraSocialPaciente: IFinanciador;
     motivoConsulta: string;
+    showTab = 0;
 
     // Muestra sólo las agendas a las que se puede asignar el turno (oculta las "con/sin alternativa")
     mostrarNoDisponibles = false;
@@ -140,7 +146,8 @@ export class DarTurnosComponent implements OnInit {
     private bloques: IBloque[];
     private indiceTurno: number;
     private indiceBloque: number;
-    private busquedas: any[] = localStorage.getItem('busquedas') ? JSON.parse(localStorage.getItem('busquedas')) : [];
+    private cacheBusquedas: any[] = localStorage.getItem('busquedas') ? JSON.parse(localStorage.getItem('busquedas')) : [];
+    private busquedas = this.cacheBusquedas;
     private eventoProfesional: any = null;
     private mostrarCalendario = false;
 
@@ -179,10 +186,13 @@ export class DarTurnosComponent implements OnInit {
             this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this._pacienteSeleccionado });
         }
 
-        // Filtra las búsquedas en localStorage para que muestre sólo las del usuario logueado
+        // Filtra las búsquedas en localStorage para que muestre sólo las del usuario y organización donde se encuentra logueado
         if (this.busquedas.length > 0) {
             this.busquedas = this.busquedas.filter(busqueda => {
-                return busqueda.usuario && busqueda.usuario.documento === this.auth.usuario.documento;
+                return busqueda.organizacion;
+            });
+            this.busquedas = this.busquedas.filter(busqueda => {
+                return busqueda.usuario && busqueda.usuario.documento === this.auth.usuario.documento && busqueda.organizacion.id === this.auth.organizacion.id;
             });
         }
         this.desplegarOS = this.desplegarObraSocial();
@@ -288,20 +298,28 @@ export class DarTurnosComponent implements OnInit {
         let search = {
             'tipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion : null,
             'profesional': this.opciones.profesional ? this.opciones.profesional : null,
-            'usuario': this.auth.usuario
+            'usuario': this.auth.usuario,
+            'organizacion': this.auth.organizacion
         };
-        if (this.busquedas.length === 10) {
+
+        if (this.busquedas.length >= 10) {
             this.busquedas.pop();
         }
 
+        if (this.cacheBusquedas.length >= 100) {
+            this.cacheBusquedas.pop(); // Limitamos a una cache global a las últimas 100 búsquedas globales en todos los efectores
+        }
+
         if (search.tipoPrestacion || search.profesional) {
-            let index = this.busquedas.findIndex(
+            let index = this.cacheBusquedas.findIndex(
                 item => (item.profesional && search.profesional ? item.profesional._id === search.profesional._id : search.profesional === null) &&
-                    (item.tipoPrestacion && search.tipoPrestacion ? item.tipoPrestacion._id === search.tipoPrestacion._id : search.tipoPrestacion === null)
+                    (item.tipoPrestacion && search.tipoPrestacion ? item.tipoPrestacion._id === search.tipoPrestacion._id : search.tipoPrestacion === null) &&
+                    (item.organizacion && search.organizacion ? item.organizacion.id === search.organizacion.id : search.organizacion === null)
             );
             if (index < 0) {
+                this.cacheBusquedas.unshift(search);
                 this.busquedas.unshift(search);
-                localStorage.setItem('busquedas', JSON.stringify(this.busquedas));
+                localStorage.setItem('busquedas', JSON.stringify(this.cacheBusquedas));
             }
         }
         this.actualizar('');
@@ -842,7 +860,8 @@ export class DarTurnosComponent implements OnInit {
                 motivoConsulta: this.motivoConsulta,
                 tipoPrestacion: this.turnoTipoPrestacion,
                 paciente: pacienteSave,
-                idAgenda: this.agenda.id
+                idAgenda: this.agenda.id,
+                estadoFacturacion: this.estadoFacturacion
             };
             this.serviceTurno.saveDinamica(datosTurno).subscribe(
                 resultado => {
@@ -877,9 +896,11 @@ export class DarTurnosComponent implements OnInit {
                 tipoPrestacion: this.turnoTipoPrestacion,
                 tipoTurno: this.tiposTurnosSelect,
                 nota: this.nota,
-                motivoConsulta: this.motivoConsulta
+                motivoConsulta: this.motivoConsulta,
+                estadoFacturacion: this.estadoFacturacion
             };
             this.serviceTurno.save(datosTurno, { showError: false }).subscribe(resultado => {
+                this.showTab = 1;
                 this.afterSaveTurno(pacienteSave);
             }, (err) => {
                 this.hideDarTurno = false;

@@ -195,67 +195,6 @@ export class PrestacionesService {
     }
 
     /**
-     * PARA REVISAR
-     * @param obj
-     * @param key
-     */
-    findValues(obj, key) { // funcion para buscar una key y recupera un array con sus valores.
-        return this.findValuesHelper(obj, key, []);
-    }
-
-    findValuesHelper(obj, key, list) {
-        let i;
-        let children;
-        if (!obj) {
-            return list;
-        }
-        if (obj instanceof Array) {
-            for (i in obj) {
-                if (obj[i]) {
-                    list = list.concat(this.findValuesHelper(obj[i], key, []));
-                }
-            }
-            return list;
-        }
-        if (obj[key]) {
-            list.push(obj[key]);
-        }
-
-        if ((typeof obj === 'object') && (obj !== null)) {
-            children = Object.keys(obj);
-            if (children.length > 0) {
-                for (i = 0; i < children.length; i++) {
-                    list = list.concat(this.findValuesHelper(obj[children[i]], key, []));
-                }
-            }
-        }
-        return list;
-    }
-
-
-    /**
-     * Método getByPacienteKey
-     * @param {String} idPaciente
-     */
-    getByPacienteKey(idPaciente: any, key: any): Observable<any[]> {
-        return this.getByPaciente(idPaciente).map(prestaciones => {
-            let registros: IPrestacionRegistro[] = [];
-
-            prestaciones.forEach(prestacion => {
-                if (prestacion.ejecucion) {
-                    registros = [...registros, ...prestacion.ejecucion.registros];
-
-                }
-            });
-            let registroEncontrado = this.findValues(registros, key);
-            if (registroEncontrado && registroEncontrado.length > 0) {
-                return registroEncontrado[0];
-            }
-            return null;
-        });
-    }
-
-    /**
      * Método getByPacienteKey
      * @param {String} idPaciente
      */
@@ -285,6 +224,23 @@ export class PrestacionesService {
                     prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
                 }
                 prestaciones.forEach((prestacion: any) => {
+                    // Fix momentaneo hasta reestructurar las busquedas en las HUDS.
+                    // Epicrisis y Colonoscopia tienen secciones.
+                    if (['73761001', '2341000013106'].indexOf(prestacion.solicitud.tipoPrestacion.conceptId) >= 0) {
+                        let regs = [];
+                        prestacion.ejecucion.registros[0].registros.forEach(r => {
+                            // Excluimos Pautas de Alarmas. Porque son hallazgos de alarmas y no presentes.
+                            if (r.concepto.conceptId !== '900000000000003001') {
+                                regs = [...regs, ...r.registros];
+                            }
+                        });
+                        regs.forEach(r => {
+                            r.createdAt = prestacion.ejecucion.registros[0].createdAt;
+                            r.createdBy = prestacion.ejecucion.registros[0].createdBy;
+                        });
+                        prestacion.ejecucion.registros = regs;
+                    }
+
                     if (prestacion.ejecucion) {
                         const conceptos = prestacion.ejecucion.registros
                             // .filter(registro => semanticTags.includes(registro.concepto.semanticTag))

@@ -66,7 +66,6 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
 
     // Evalua las instancias en las que se pueden capturar los valores
     calculoIMC() {
-
         // calcula el imc y/o devuelve alertas al usuario.
         let imc = null;
 
@@ -78,29 +77,15 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
             if (this.registroPeso && this.registroPeso.valor) {
                 this.peso = this.registroPeso.valor;
             } else {
-                this.prestacionesService.getByPacienteKey(this.prestacion.paciente.id, this.pesoConceptId).subscribe(resultado => {
-                    if (resultado) {
-                        this.peso = resultado[0].valor;
-                    }
-                });
+                this.peso = null;
             }
-
             // this.registroTalla = this.buscarConceptoDeep(this.prestacion.ejecucion.registros, this.tallaConceptId);
             this.registroTalla = this.registro.registros.find(r => r.concepto.conceptId === this.tallaConceptId);
-
-            // const elementoRUP = this.elementosRUPService.buscarElemento(this.registro.concepto, false);
-            // this.registroTalla = this.registro.registros.find(r => {
-            //     return (this.existeConcepto(elementoRUP, r.concepto.conceptId) ? r : null);
-            // });
 
             if (this.registroTalla && this.registroTalla.valor) {
                 this.talla = this.registroTalla.valor;
             } else {
-                this.prestacionesService.getByPacienteKey(this.prestacion.paciente.id, this.tallaConceptId).subscribe(resultado => {
-                    if (resultado) {
-                        this.talla = resultado[0].valor;
-                    }
-                });
+                this.talla = null;
             }
 
         } else {
@@ -108,33 +93,14 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
             // let this.registroPeso = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.pesoConceptId);
             this.registroPeso = this.buscarConceptoDeep(this.prestacion.ejecucion.registros, this.pesoConceptId);
 
-
             if (this.registroPeso && this.registroPeso.valor) {
                 this.peso = this.registroPeso.valor;
-            } else {
-                this.prestacionesService.getByPacienteKey(this.prestacion.paciente.id, this.pesoConceptId).subscribe(resultado => {
-                    if (resultado) {
-                        this.peso = resultado[0].valor;
-                    }
-                });
             }
 
             this.registroTalla = this.buscarConceptoDeep(this.prestacion.ejecucion.registros, this.tallaConceptId);
 
-            // const elementoRUP = this.elementosRUPService.buscarElemento(this.registro.concepto, false);
-            // this.registroTalla = this.registro.registros.find(r => {
-            //     return (this.existeConcepto(elementoRUP, r.concepto.conceptId) ? r : null);
-            // });
-
-
             if (this.registroTalla && this.registroTalla.valor) {
                 this.talla = this.registroTalla.valor;
-            } else {
-                this.prestacionesService.getByPacienteKey(this.prestacion.paciente.id, this.tallaConceptId).subscribe(resultado => {
-                    if (resultado) {
-                        this.talla = resultado[0].valor;
-                    }
-                });
             }
         }
         if (this.conceptosRequeridos.length === 2) {
@@ -151,6 +117,7 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
             this.valorImc = this.registro['valor'];
             this.emitChange(false);
         } else {
+            this.valorImc = null;
             this.registro.valor = null;
             // Buscamos si las prestaciones en ejecucion tienen datos como para calcular el imc
             switch (true) {

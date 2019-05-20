@@ -2,15 +2,16 @@
     <plex-layout-main>
         <header>
             <div class="row">
-                <div class="col-md-6">
-                    <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="aplicarFiltrosBusqueda()" name="fechaDesde"
-                        label="Vigencia desde" [required]="true" [max]="fechaHasta">
+                <div class="col-md-4">
+                    <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="aplicarFiltrosBusqueda()" name="fechaDesde" label="Vigencia desde" [required]="true" [max]="fechaHasta">
                     </plex-datetime>
                 </div>
-                <div class="col-md-6">
-                    <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="aplicarFiltrosBusqueda()" name="fechaHasta"
-                        label="Vigencia hasta" [required]="true" [min]="fechaDesde">
+                <div class="col-md-4">
+                    <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="aplicarFiltrosBusqueda()" name="fechaHasta" label="Vigencia hasta" [required]="true" [min]="fechaDesde">
                     </plex-datetime>
+                </div>
+                <div class="col d-flex align-items-end justify-content-end" *ngIf="puedeCrear">
+                    <plex-button label="Crear" type="success" (click)="crearCampania()"></plex-button>
                 </div>
             </div>
         </header>
@@ -46,16 +47,13 @@
                 </table>
             </div>
         </div>
-        <div class="text-right">
-            <plex-button label="Crear" type="success" position="right" (click)="crearCampania()"></plex-button>
-        </div>
     </plex-layout-main>
     <plex-layout-sidebar>
         <ng-container *ngIf="seleccionada && mostrarVisualizacionCampania">
             <campaniaSaludVisualizacion [campania]="seleccionada" (modificarOutput)='editarCampania()'></campaniaSaludVisualizacion>
         </ng-container>
         <ng-container *ngIf="seleccionada &&  !mostrarVisualizacionCampania">
-            <campaniaForm [campania]="seleccionada" (guardar)='guardarCampania($event)' (cancelar)='cancelarEdicionCampania()'></campaniaForm>
+            <campaniaForm [campania]="seleccionada" (guardar)='guardarCampania($event)' (cancelar)='cancelarEdicionCampania($event)'></campaniaForm>
         </ng-container>
     </plex-layout-sidebar>
 </plex-layout>

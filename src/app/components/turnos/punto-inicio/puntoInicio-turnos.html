@@ -25,17 +25,13 @@
                     </div>
                     <div *ngIf="showMostrarEstadisticasPacientes" type="info">
                         <estadisticas-pacientes [paciente]="paciente"
-                            (showArancelamientoForm)="showArancelamientoForm($event)"
-                            (obraSocialEmit)="obraSocialEmit($event)"></estadisticas-pacientes>
+                            (showArancelamientoForm)="showArancelamientoForm($event)" [showTab]="showTab">
+                        </estadisticas-pacientes>
                     </div>
                     <div *ngIf="showIngresarSolicitud" type="info">
-                        <!-- <lista-solicitud-turno-ventanilla [paciente]="paciente" (solicitudPrestacionEmit)="solicitudPrestacionDarTurno($event)" #listaSolicitudTurnoVentanilla>
-                    </lista-solicitud-turno-ventanilla> -->
                         <lista-solicitud-turno-ventanilla [paciente]="paciente"
                             (solicitudPrestacionEmit)="darTurnoSolicitud($event)">
                         </lista-solicitud-turno-ventanilla>
-
-                        <!-- <solicitud-turno-ventanilla [paciente]="paciente" (cancelarSolicitudVentanilla)="cancelarSolicitudVentanilla($event)" (mostrarDarTurnoSolicitud)="darTurnoSolicitud($event)"></solicitud-turno-ventanilla> -->
                     </div>
                     <div *ngIf="showActivarApp" type="info">
                         <activar-app [paciente]="paciente"></activar-app>

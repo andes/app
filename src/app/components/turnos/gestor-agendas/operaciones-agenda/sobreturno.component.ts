@@ -8,6 +8,7 @@ import { Auth } from '@andes/auth';
 import { IPaciente } from './../../../../interfaces/IPaciente';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
+import { ObraSocialCacheService } from '../../../../services/obraSocialCache.service';
 
 @Component({
     selector: 'sobreturno',
@@ -70,7 +71,8 @@ export class AgregarSobreturnoComponent implements OnInit {
         public servicioTipoPrestacion: TipoPrestacionService,
         private router: Router,
         public auth: Auth,
-        public servicePaciente: PacienteService) { }
+        public servicePaciente: PacienteService,
+        private obraSocialCacheService: ObraSocialCacheService) { }
 
     ngOnInit() {
         this.inicio = new Date(this.hoy.setHours(this.agenda.horaInicio.getHours(), this.agenda.horaInicio.getMinutes(), 0, 0));
@@ -190,7 +192,6 @@ export class AgregarSobreturnoComponent implements OnInit {
             } else {
                 this.paciente.carpetaEfectores.push(this.carpetaEfector);
             }
-
             let pacienteSave = {
                 id: this.paciente.id,
                 documento: this.paciente.documento,

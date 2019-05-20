@@ -1,0 +1,96 @@
+<plex-layout>
+    <plex-layout-main>
+        <header>
+            <div class="row">
+                <div class="col-4">
+                    <plex-select [(ngModel)]="organizacion" name="organizacion"
+                        [data]="opcionesOrganizacion" label="Organización"
+                        placeholder="Seleccione la organización" (change)="refreshSelection()"
+                        labelField="nombre" [required]="true">
+                    </plex-select>
+                </div>
+                <br />
+
+                <!-- Select Reporte -->
+                <div class="col-4">
+                    <plex-select [(ngModel)]="tipoReportes" name="tipoReportes"
+                        [data]="opcionesReportes" label-field="Tipo de reportes"
+                        label="Seleccione reporte" placeholder="Seleccione reporte"
+                        [required]="true"
+                        (change)="onChangeTipoReportes($event); refreshSelection()"
+                        [readonly]="organizacion === null">
+                    </plex-select>
+                </div>
+            </div>
+
+            <!-- Parametros ResumenDiarioMensual -->
+            <div class="row" *ngIf="
+                    organizacion !== null &&
+                    tipoReportes !== null &&
+                    tipoReportes.nombre ===
+                        'Resumen diario mensual'
+                ">
+                <div class="col-2">
+                    <!-- Select Mes -->
+                    <plex-select [(ngModel)]="mes" name="mes" [data]="opcionesMes" label="Mes"
+                        (change)="refreshSelection()" placeholder="Mes" [required]="true">
+                    </plex-select>
+                </div>
+
+                <div class="col-2">
+                    <!-- Select Año -->
+                    <plex-select [(ngModel)]="anio" name="año" [data]="opcionesAnio" label="Año"
+                        (change)="refreshSelection()" placeholder="Año" [required]="true">
+                    </plex-select>
+                </div>
+
+                <div class="col-4">
+                    <!-- Select Prestacion -->
+                    <plex-select [(ngModel)]="prestacion" name="prestacion"
+                        [data]="opcionesPrestacion" label="Prestación"
+                        placeholder="Seleccione la prestación" labelField="nombre"
+                        (change)="refreshSelection()" [required]="true" [readonly]="
+                            organizacion === null ||
+                            mes === null ||
+                            anio === null
+                        ">
+                    </plex-select>
+                </div>
+            </div>
+
+            <!-- Parametros PlanillaC1 -->
+            <div class="row" *ngIf="
+                    organizacion !== null &&
+                    tipoReportes !== null &&
+                    tipoReportes.nombre === 'Planilla C1'
+                ">
+                <div class="col-2">
+                    <plex-datetime type="date" [(ngModel)]="fecha" (change)="refreshSelection()"
+                        name="fecha" label="Fecha" class="fechas" [required]="true">
+                    </plex-datetime>
+                </div>
+
+                <div class="col-4">
+                    <!-- Select Prestación -->
+                    <plex-select [(ngModel)]="prestacion" name="prestacion"
+                        [data]="opcionesPrestacion" label="Prestación"
+                        placeholder="Seleccione la Prestación" labelField="nombre"
+                        (change)="refreshSelection()" [required]="true"
+                        [readonly]="organizacion === null">
+                    </plex-select>
+                </div>
+            </div> 
+        </header>
+
+        <resumenDiarioMensual *ngIf="showResumenDiarioMensual" [reporte]="reporte"
+            [parametros]="parametros" id="Resumen diario mensual"></resumenDiarioMensual>
+        <planillaC1 *ngIf="showPlanillaC1" [reporte]="reporte" [parametros]="parametros"
+            id="Planilla C1"></planillaC1> 
+    </plex-layout-main>
+
+    <plex-layout-footer>
+        <plex-button position="right" type="success" label="Generar Reporte" (click)="generar()"></plex-button>
+        <plex-button *ngIf="showBotonImprimir" position="right" type="default" label="Imprimir Reporte"
+            (click)="imprimir(parametros['tipoReportes'])"></plex-button>
+    </plex-layout-footer>
+</plex-layout>
