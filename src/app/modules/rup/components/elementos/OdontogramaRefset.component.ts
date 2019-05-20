@@ -382,32 +382,38 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
         let index = this.cara(diente, cara);
 
+        // No está seleccionado?
         if (index === -1) {
+
+            // El seeleccionado es este
             const dienteSel = JSON.parse(JSON.stringify({ diente: diente, cara: cara }));
 
-            if (!this.seleccionMultiple) {
-                this.piezasSeleccionadas = [dienteSel];
-            } else {
+            // Selección múltiple activada?
+            if (this.seleccionMultiple) {
+                // Agregamos al array de seleecionados
                 this.piezasSeleccionadas = [...this.piezasSeleccionadas, dienteSel];
+            } else {
+                // Actualizamos el array de seleecionados a esta sola pieza/cara
+                this.piezasSeleccionadas = [dienteSel];
             }
 
             dienteSel.diente.cara = cara;
+
+            // No es pieza completa (ver seleccionarPieza())
             dienteSel.piezaCompleta = false;
 
             this.prestacion.ejecucion.registros[0].valor = {
                 odontograma: this.odontograma
             };
 
-            this.prestacionesService.setRefSetData(this.piezasSeleccionadas.map(x => x.diente), this.params.refsetId);
-
         } else {
 
             this.piezasSeleccionadas.splice(index, 1);
             this.piezasSeleccionadas = [...this.piezasSeleccionadas];
-            this.prestacionesService.setRefSetData(this.piezasSeleccionadas.map(x => x.diente), this.params.refsetId);
 
         }
 
+        this.prestacionesService.setRefSetData(this.piezasSeleccionadas.map(x => x.diente), this.params.refsetId);
     }
 
     relacionesOdontograma() {
@@ -432,7 +438,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 this.piezasSeleccionadas = [...this.piezasSeleccionadas, dienteSel];
             }
 
-            let piezas = (this.registro.valor && this.registro.valor.piezas) ? this.registro.valor.piezas : [];
+            // let piezas = (this.registro.valor && this.registro.valor.piezas) ? this.registro.valor.piezas : [];
 
 
             this.prestacion.ejecucion.registros[0].valor = {
@@ -459,7 +465,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         }
     }
 
-    limpiarSeleccion(e) {
+    limpiarSeleccion() {
         this.piezasSeleccionadas = [];
         this.registro.valor.piezas = [];
         this.prestacionesService.clearRefSetData();
@@ -487,7 +493,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         }
     }
 
-    toggleOcultarTemporales(e) {
+    toggleOcultarTemporales() {
         this.ocultarTemporales = !this.ocultarTemporales;
     }
 
