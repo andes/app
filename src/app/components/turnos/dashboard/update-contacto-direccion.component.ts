@@ -14,6 +14,7 @@ import { BarrioService } from '../../../services/barrio.service';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { IDireccion } from '../../../core/mpi/interfaces/IDireccion';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
+import { ILocalidad } from '../../../interfaces/ILocalidad';
 
 @Component({
     selector: 'update-contacto-direccion',
@@ -26,7 +27,7 @@ export class UpdateContactoDireccionComponent implements OnInit {
 
     arrayContactos: IContacto[] = [];
     provincias: IProvincia[] = [];
-    localidadesNeuquen: any[] = [];
+    localidades: ILocalidad[] = [];
     paisArgentina = null;
     provinciaNeuquen = null;
     localidadNeuquen = null;
@@ -70,14 +71,17 @@ export class UpdateContactoDireccionComponent implements OnInit {
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.tipoComunicacion.splice(this.tipoComunicacion.length - 1, 1);  // eliminamos 'Email'
 
-        if (this.paciente.contacto.length) {
+        if (this.paciente && this.paciente.contacto && this.paciente.contacto.length) {
             this.arrayContactos = this.paciente.contacto;
         } else {
             this.arrayContactos = [this.contacto];
         }
 
-        if (this.paciente.direccion[0].valor) {
+        if (this.paciente && this.paciente.direccion && this.paciente.direccion.length && this.paciente.direccion[0].valor) {
             this.direccion = this.paciente.direccion[0];
+            if (this.direccion.ubicacion && this.direccion.ubicacion.provincia) {
+                this.changeProvincia(this.direccion.ubicacion.provincia);
+            }
         }
 
         // Set País Argentina
@@ -91,6 +95,7 @@ export class UpdateContactoDireccionComponent implements OnInit {
         this.provinciaService.get({}).subscribe(rta => {
             this.provincias = rta;
         });
+
 
         this.provinciaService.get({
             nombre: 'Neuquén'
@@ -151,10 +156,11 @@ export class UpdateContactoDireccionComponent implements OnInit {
         }
     }
 
-    loadLocalidades(provincia) {
+    changeProvincia(provincia) {
         if (provincia && provincia.id) {
+            this.direccion.ubicacion.localidad = null;
             this.localidadService.getXProvincia(provincia.id).subscribe(result => {
-                this.localidadesNeuquen = result;
+                this.localidades = result;
             });
         }
     }

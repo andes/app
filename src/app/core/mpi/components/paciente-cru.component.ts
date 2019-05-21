@@ -744,41 +744,48 @@ export class PacienteCruComponent implements OnInit {
         }
         this.disableValidar = true;
         this.loading = true;
-        this.pacienteService.validar(this.pacienteModel).subscribe(resultado => {
-            this.loading = false;
-            if (resultado.existente) {
-                // PACIENTE EXISTENTE EN ANDES
-                if (resultado.paciente.estado === 'validado') {
+        this.pacienteService.validar(this.pacienteModel).subscribe(
+            resultado => {
+                this.loading = false;
+                if (resultado.existente) {
+                    // PACIENTE EXISTENTE EN ANDES
+                    if (resultado.paciente.estado === 'validado') {
+                        this.validado = true;
+                    }
+                    this.plex.info('info', 'El paciente que está cargando ya existe en el sistema', 'Atención');
+                    this.pacienteModel = resultado.paciente;
+                } else if (resultado.validado) {
+                    // VALIDACION MEDIANTE FUENTES AUTENTICAS EXITOSA
+                    this.setBackup();
                     this.validado = true;
+                    this.showDeshacer = true;
+                    this.pacienteModel.nombre = resultado.paciente.nombre;
+                    this.pacienteModel.apellido = resultado.paciente.apellido;
+                    this.pacienteModel.estado = resultado.paciente.estado;
+                    this.pacienteModel.fechaNacimiento = resultado.paciente.fechaNacimiento;
+                    this.pacienteModel.foto = resultado.paciente.foto;
+                    //  Se completan datos FALTANTES
+                    if (!this.pacienteModel.direccion[0].valor && resultado.paciente.direccion && resultado.paciente.direccion[0].valor) {
+                        this.pacienteModel.direccion[0].valor = resultado.paciente.direccion[0].valor;
+                    }
+                    if (!this.pacienteModel.direccion[0].codigoPostal && resultado.paciente.cpostal) {
+                        this.pacienteModel.direccion[0].codigoPostal = resultado.paciente.cpostal;
+                    }
+                    if (!this.pacienteModel.cuil && resultado.paciente.cuil) {
+                        this.pacienteModel.cuil = resultado.paciente.cuil;
+                    }
+                    this.plex.toast('success', '¡Paciente Validado!');
+                } else {
+                    this.plex.toast('danger', 'Validación Fallida');
+                    this.disableValidar = false;
                 }
-                this.plex.info('info', 'El paciente que está cargando ya existe en el sistema', 'Atención');
-                this.pacienteModel = resultado.paciente;
-            } else if (resultado.validado) {
-                // VALIDACION MEDIANTE FUENTES AUTENTICAS EXITOSA
-                this.setBackup();
-                this.validado = true;
-                this.showDeshacer = true;
-                this.pacienteModel.nombre = resultado.paciente.nombre;
-                this.pacienteModel.apellido = resultado.paciente.apellido;
-                this.pacienteModel.estado = resultado.paciente.estado;
-                this.pacienteModel.fechaNacimiento = resultado.paciente.fechaNacimiento;
-                this.pacienteModel.foto = resultado.paciente.foto;
-                //  Se completan datos FALTANTES
-                if (!this.pacienteModel.direccion[0].valor && resultado.paciente.direccion && resultado.paciente.direccion[0].valor) {
-                    this.pacienteModel.direccion[0].valor = resultado.paciente.direccion[0].valor;
-                }
-                if (!this.pacienteModel.direccion[0].codigoPostal && resultado.paciente.cpostal) {
-                    this.pacienteModel.direccion[0].codigoPostal = resultado.paciente.cpostal;
-                }
-                if (!this.pacienteModel.cuil && resultado.paciente.cuil) {
-                    this.pacienteModel.cuil = resultado.paciente.cuil;
-                }
-                this.plex.toast('success', '¡Paciente Validado!');
-            } else {
+            },
+            () => {
+                this.loading = false;
                 this.plex.toast('danger', 'Validación Fallida');
                 this.disableValidar = false;
             }
-        });
+        );
     }
 
     private setBackup() {

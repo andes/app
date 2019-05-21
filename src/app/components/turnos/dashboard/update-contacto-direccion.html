@@ -6,17 +6,20 @@
         <div>
             <div class="row" *ngFor="let _unContacto of arrayContactos; let i = index">
                 <div class="col-5">
-                    <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}" [required]="i <= 0"
-                        label="Tipo" (change)="changeTipoContacto(i, _unContacto.tipo)">
+                    <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}"
+                        [required]="i <= 0" label="Tipo" (change)="changeTipoContacto(i, _unContacto.tipo)">
                     </plex-select>
                 </div>
                 <div class="col-5">
                     <span *ngIf="_unContacto.tipo">
                         <plex-phone *ngIf="_unContacto.tipo === 'fijo' || _unContacto.tipo.id === 'fijo'" label="Número"
-                            [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000" name="valor-{{i}}" (keyup)="disableGuardar = false">
+                            [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000" name="valor-{{i}}"
+                            (keyup)="disableGuardar = false">
                         </plex-phone>
-                        <plex-phone label="Número" *ngIf="_unContacto.tipo === 'celular' || _unContacto.tipo.id === 'celular'"
-                            [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000" name="valor-{{i}}" (keyup)="disableGuardar = false">
+                        <plex-phone label="Número"
+                            *ngIf="_unContacto.tipo === 'celular' || _unContacto.tipo.id === 'celular'"
+                            [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000" name="valor-{{i}}"
+                            (keyup)="disableGuardar = false">
                         </plex-phone>
                     </span>
                 </div>
@@ -36,20 +39,22 @@
         <!-- DATOS DOMICILIO -->
         <div class="row">
             <div class="col-12">
-                <plex-text label="Dirección" [(ngModel)]="direccion.valor" name="divValor" placeholder="Ej: Avenida las Flores 1200"
-                    (keyup)="disableGuardar = false">
+                <plex-text label="Dirección" [(ngModel)]="direccion.valor" name="divValor"
+                    placeholder="Ej: Avenida Las Flores 1200" (keyup)="disableGuardar = false">
                 </plex-text>
             </div>
         </div>
         <div class="row">
             <div class="col-6">
-                <plex-select label="Provincia" [(ngModel)]="direccion.ubicacion.provincia" name="provincia" [data]="provincias"
-                    labelField="nombre" (change)="disableGuardar = false; loadLocalidades(direccion.ubicacion.provincia)">
+                <plex-select label="Provincia" [(ngModel)]="direccion.ubicacion.provincia" name="provincia"
+                    [data]="provincias" labelField="nombre"
+                    (change)="disableGuardar = false; changeProvincia(direccion.ubicacion.provincia)">
                 </plex-select>
             </div>
             <div class="col">
-                <plex-select label="Localidad" [(ngModel)]="direccion.ubicacion.localidad" name="localidad" [data]="localidadesNeuquen"
-                    labelField="nombre" (change)="disableGuardar = false; loadBarrios(direccion.ubicacion.localidad)">
+                <plex-select *ngIf="localidades.length" label="Localidad" [(ngModel)]="direccion.ubicacion.localidad"
+                    name="localidad" [data]="localidades" labelField="nombre"
+                    (change)="disableGuardar = false; loadBarrios(direccion.ubicacion.localidad)">
                 </plex-select>
             </div>
         </div>

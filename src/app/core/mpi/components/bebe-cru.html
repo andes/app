@@ -93,6 +93,62 @@
                         </ng-template>
                     </fieldset>
 
+                    <!-- DATOS DE CONTACTO -->
+                    <fieldset>
+                        <legend>Datos de contacto</legend>
+
+                        <div *ngIf="bebeModel.contacto">
+                            <div class="row">
+                                <div class="col-8">
+                                    <plex-bool [(ngModel)]="noPoseeContacto" label="No posee ningún tipo de contacto"
+                                        name="noPoseeContacto" (change)="limpiarContacto()">
+                                    </plex-bool>
+                                </div>
+                                <div class="col-4" *ngIf="!noPoseeContacto">
+                                    <plex-button title="Agregar contacto" titlePosition="left" type="primary btn-sm"
+                                        icon="phone-plus" name="agregarContacto" (click)="addContacto('celular', '')">
+                                    </plex-button>
+                                </div>
+                            </div>
+                            <div class="row" *ngFor="let _unContacto of bebeModel.contacto; let i = index">
+                                <ng-container *ngIf="!noPoseeContacto">
+                                    <div class="col-4">
+                                        <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion"
+                                            name="tipo-{{i}}" [required]="i <= 0" label="Tipo"
+                                            (change)="_unContacto.valor = ''">
+                                        </plex-select>
+                                    </div>
+                                    <div class="col-4">
+                                        <span *ngIf="_unContacto.tipo">
+                                            <plex-phone
+                                                *ngIf="_unContacto.tipo === 'fijo' || _unContacto.tipo.id === 'fijo'"
+                                                label="Número" [(ngModel)]="_unContacto.valor"
+                                                placeholder="Ej: 2990000000" name="valor-{{i}}"
+                                                [required]="!noPoseeContacto && (i <= 0)">
+                                            </plex-phone>
+                                            <plex-phone label="Número"
+                                                *ngIf="_unContacto.tipo === 'celular' || _unContacto.tipo.id === 'celular'"
+                                                [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000"
+                                                [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}">
+                                            </plex-phone>
+                                            <plex-text label="Dirección"
+                                                *ngIf="_unContacto.tipo === 'email' || _unContacto.tipo.id === 'email'"
+                                                [(ngModel)]="_unContacto.valor" placeholder="Ej: ejemplo@email.com"
+                                                [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}"
+                                                (change)="verificarCorreoValido(i, formulario)">
+                                            </plex-text>
+                                        </span>
+                                    </div>
+                                    <div class="col-2" *ngIf="i > 0">
+                                        <br>
+                                        <br>
+                                        <plex-button label="" type="danger btn-sm" icon="close"
+                                            (click)="removeContacto(i)"></plex-button>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </fieldset>
                     <!-- DATOS DE DOMICILIO -->
                     <fieldset>
                         <legend>Datos del domicilio</legend>
