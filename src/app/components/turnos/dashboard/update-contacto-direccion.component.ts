@@ -77,7 +77,7 @@ export class UpdateContactoDireccionComponent implements OnInit {
             this.arrayContactos = [this.contacto];
         }
 
-        if (this.paciente && this.paciente.direccion && this.paciente.direccion[0].valor) {
+        if (this.paciente && this.paciente.direccion && this.paciente.direccion.length && this.paciente.direccion[0].valor) {
             this.direccion = this.paciente.direccion[0];
             if (this.direccion.ubicacion.provincia) {
                 this.changeProvincia(this.direccion.ubicacion.provincia);
