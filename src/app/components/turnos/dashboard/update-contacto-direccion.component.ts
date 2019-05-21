@@ -79,7 +79,7 @@ export class UpdateContactoDireccionComponent implements OnInit {
 
         if (this.paciente && this.paciente.direccion && this.paciente.direccion.length && this.paciente.direccion[0].valor) {
             this.direccion = this.paciente.direccion[0];
-            if (this.direccion.ubicacion.provincia) {
+            if (this.direccion.ubicacion && this.direccion.ubicacion.provincia) {
                 this.changeProvincia(this.direccion.ubicacion.provincia);
             }
         }
