@@ -31,8 +31,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.guardarAgendaPanel = theElementRef;
     }
 
-    @ViewChild('botonesAgenda') botonesAgendaComponent: BotonesAgendaComponent;
-
     agendasSeleccionadas: IAgenda[] = [];
     turnosSeleccionados: ITurno[] = [];
 
