@@ -134,7 +134,6 @@ export class UpdateContactoDireccionComponent implements OnInit {
     }
 
     changeTipoContacto(indice, keyTipo) {
-        // this.arrayContactos[indice].valor = '';
         this.arrayContactos[indice].tipo = keyTipo.id;
         this.disableGuardar = false;
     }
