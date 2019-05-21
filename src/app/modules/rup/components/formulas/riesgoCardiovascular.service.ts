@@ -10,9 +10,17 @@ export class RiesgoCardiovascularService extends FormulaBaseService {
         const tabaquismo = registros[2].valor;
         const diabetes = registros[3].valor;
         const sexo = (paciente.genero === 'masculino') ? 1 : 0;
-        const value = this.obtenerRiesgo(paciente.edad, colesterol, sistolica, tabaquismo, sexo, diabetes);
+        let value;
+        if (colesterol && sistolica && tabaquismo && diabetes && sexo) {
+            value = this.obtenerRiesgo(paciente.edad, colesterol, sistolica, tabaquismo, sexo, diabetes);
+        } else {
+            value = -1;
+        }
         let message = '';
         switch (value) {
+            case -1:
+                message = 'Completar todos los datos para visualizar el porcentaje de riesgo';
+                break;
             case 1:
                 message = 'Riesgo bajo (<10%)';
                 break;
