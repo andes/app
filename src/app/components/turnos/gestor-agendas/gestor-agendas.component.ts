@@ -70,9 +70,13 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public btnCrearAgendas = false;
     public permisos: any;
     public prestacionesPermisos = [];
+    public puedeCrearAgenda: Boolean;
 
     // ultima request de profesionales que se almacena con el subscribe
-    private lastRequest: ISubscription;
+    private lastRequestProf: ISubscription;
+
+    // ultima request de filtro fecha que se almacena con el subscribe
+    private lastRequestFecha: ISubscription;
 
     // Contador de turnos suspendidos por agenda, para mostrar notificaciones
     turnosSuspendidos: any[] = [];
@@ -91,8 +95,11 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
     /* limpiamos la request que se haya ejecutado */
     ngOnDestroy() {
-        if (this.lastRequest) {
-            this.lastRequest.unsubscribe();
+        if (this.lastRequestProf) {
+            this.lastRequestProf.unsubscribe();
+        }
+        if (this.lastRequestFecha) {
+            this.lastRequestFecha.unsubscribe();
         }
     }
 
@@ -100,6 +107,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.permisos = this.auth.getPermissions('turnos:agenda:?').length > 0;
         this.autorizado = this.auth.getPermissions('turnos:agenda:?').length > 0;
         this.prestacionesPermisos = this.auth.getPermissions('turnos:planificarAgenda:prestacion:?');
+        this.puedeCrearAgenda = this.auth.check('turnos:crearAgendas');
 
         // Verificamos permisos globales para turnos, si no posee realiza redirect al home
         if (!this.autorizado) {
@@ -108,9 +116,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
         // Verifica permisos para dar turnos
         this.btnDarTurnos = this.auth.getPermissions('turnos:darTurnos:prestacion:?').length > 0;
-
-        // Verifica permisos para crear agenda
-        this.btnCrearAgendas = this.auth.getPermissions('turnos:crearAgendas:?').length > 0;
 
         this.parametros = {
             fechaDesde: '',
@@ -154,6 +159,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             if (fechaDesde.isValid()) {
                 this.parametros['fechaDesde'] = fechaDesde.isValid() ? fechaDesde.toDate() : moment().format();
                 this.parametros['organizacion'] = this.auth.organizacion._id;
+                this.fechaHasta = moment(this.fechaHasta).startOf('day');
             }
         }
         if (tipo === 'fechaHasta') {
@@ -161,6 +167,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             if (fechaHasta.isValid()) {
                 this.parametros['fechaHasta'] = fechaHasta.isValid() ? fechaHasta.toDate() : moment().format();
                 this.parametros['organizacion'] = this.auth.organizacion._id;
+                this.fechaDesde = moment(this.fechaDesde).startOf('day');
             }
         }
         if (tipo === 'prestaciones') {
@@ -198,7 +205,10 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     }
 
     getAgendas(params: any) {
-        this.serviceAgenda.get(params).subscribe(agendas => {
+        if (this.lastRequestFecha) {
+            this.lastRequestFecha.unsubscribe();
+        }
+        this.lastRequestFecha = this.serviceAgenda.get(params).subscribe(agendas => {
             this.turnosSuspendidos = [];
             agendas.forEach(agenda => {
                 let count = 0;
@@ -285,6 +295,9 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     }
 
     clonar() {
+        if (this.lastRequestFecha) {
+            this.lastRequestFecha.unsubscribe();
+        }
         this.showGestorAgendas = false;
         this.showClonar = true;
     }
@@ -371,17 +384,17 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     loadProfesionales(event) {
         if (event.query && event.query !== '' && event.query.length > 2) {
             // cancelamos ultimo request
-            if (this.lastRequest) {
-                this.lastRequest.unsubscribe();
+            if (this.lastRequestProf) {
+                this.lastRequestProf.unsubscribe();
             }
             let query = {
                 nombreCompleto: event.query
             };
-            this.lastRequest = this.serviceProfesional.get(query).subscribe(event.callback);
+            this.lastRequestProf = this.serviceProfesional.get(query).subscribe(event.callback);
         } else {
             // cancelamos ultimo request
-            if (this.lastRequest) {
-                this.lastRequest.unsubscribe();
+            if (this.lastRequestProf) {
+                this.lastRequestProf.unsubscribe();
             }
             event.callback([]);
         }
