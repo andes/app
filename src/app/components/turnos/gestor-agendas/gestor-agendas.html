@@ -14,7 +14,7 @@
                                 (editarAgendaEmit)="editarAgenda($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)"
                                 (listarTurnosEmit)="listarTurnos($event)" (listarCarpetasEmit)="listarCarpetas($event)"
                                 (revisionAgendaEmit)="revisionAgenda($event)" (reasignarTurnosEmit)="reasignarTurnos($event)"
-                                [turnosSuspendidos]="turnosSuspendidos">
+                                [turnosSuspendidos]="turnosSuspendidos" #botonesAgenda>
                             </botones-agenda>
                         </div>
 
@@ -144,7 +144,8 @@
                 <plex-box>
                     <div *ngIf="showTurnos && agendasSeleccionadas?.length == 1 && !showSuspenderTurnos" type="info">
                         <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"
-                            (recargarAgendas)="loadAgendas($event)"></turnos>
+                            (recargarAgendas)="loadAgendas($event)"
+                            (actualizarBotonesAgendasEmiter)="onSeleccionAgendaNoMultiple($event)"></turnos>
                     </div>
                     <div *ngIf="showEditarAgendaPanel && agendasSeleccionadas?.length === 1" type="info">
                         <panel-agenda [editaAgendaPanel]="agendasSeleccionadas[0]" (showVistaTurnosEmit)="showVistaTurnos($event)"
