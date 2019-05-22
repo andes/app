@@ -205,7 +205,6 @@ import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/pun
 import { EstadisticasAgendasComponent } from './components/turnos/dashboard/estadisticas-agendas.component';
 import { EstadisticasPacientesComponent } from './components/turnos/dashboard/estadisticas-pacientes.component';
 import { TurnosPacienteComponent } from './components/turnos/punto-inicio/turnos-paciente.component';
-import { DashboardCodificacionComponent } from './components/turnos/dashboard/dashboard-codificacion.component';
 import { ActivarAppComponent } from './components/turnos/punto-inicio/activar-app.component';
 import { SolicitudTurnoVentanillaComponent } from './components/turnos/punto-inicio/solicitud-turno-ventanilla/solicitud-turno-ventanilla.component';
 import { ListaSolicitudTurnoVentanillaComponent } from './components/turnos/punto-inicio/solicitud-turno-ventanilla/lista-solicitud-turno-ventanilla.component';
@@ -565,7 +564,7 @@ registerLocaleData(localeEs, 'es');
         LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
         AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
         HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
-        TurnosPacienteComponent, DashboardCodificacionComponent,
+        TurnosPacienteComponent,
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
         BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
         ReporteC2Component,
