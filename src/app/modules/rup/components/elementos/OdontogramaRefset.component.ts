@@ -22,7 +22,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     ultimoOdontogramaIndex: number;
     tooltip: any;
     ultimoOdontograma: IPrestacionRegistro;
-    showUltimoOdontograma = true;
+    showUltimoOdontograma = false;
     odontogramasHUDS: IPrestacion[];
     odontogramasHUDSAux: IPrestacion[];
     public piezasSeleccionadas: any[] = [];
