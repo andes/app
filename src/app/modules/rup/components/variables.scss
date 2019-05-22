@@ -23,28 +23,26 @@ $vacuna: #11910D;
 // definimos esta lista para poder acceder mediante la funcion map-get() ya que en sass no se puede hacer 
 // la interpolacion del string a una variable directamente
 
-$rup_colors: (
-    problema: $problema, 
-    calificador: $calificador, 
-    laboratorio: $laboratorio, 
-    trastorno: $trastorno, 
-    situación: $problema, 
-    hallazgo: $hallazgo, 
-    procedimiento: $procedimiento, 
-    regimen: $procedimiento, 
-    entidad: $procedimiento, 
-    solicitud: $solicitud, 
-    plan: $solicitud, 
-    producto: $producto, 
-    adjunto: $adjunto, 
-    vacuna: $vacuna, 
-    elemento: $registro, 
-    elementoderegistro: $registro, 
-    'estructura.corporal': $registro,
-    invert: $invert, 
-    todos: $todos,
-    otro: $otro
-);
+$rup_colors: (problema: $problema,
+calificador: $calificador,
+laboratorio: $laboratorio,
+trastorno: $trastorno,
+situación: $problema,
+hallazgo: $hallazgo,
+procedimiento: $procedimiento,
+regimen: $procedimiento,
+entidad: $procedimiento,
+solicitud: $solicitud,
+plan: $solicitud,
+producto: $producto,
+adjunto: $adjunto,
+vacuna: $vacuna,
+elemento: $registro,
+elementoderegistro: $registro,
+'estructura.corporal': $registro,
+invert: $invert,
+todos: $todos,
+otro: $otro);
 
 //TODO: hay que unificar los badges de distintas pantallas: tamaño, colores, bordes, espacios...    
 .badge-validada,
@@ -53,4 +51,13 @@ $rup_colors: (
 .badge-info {
     font-weight: normal !important;
     border: 1px solid !important;
+}
+
+.btn-icon-relacion {
+    padding: .15rem;
+}
+
+// Hacer que los badges sean del mismo ancho, más legibles cuando son muchos
+.badge-170 {
+    min-width: 170px;
 }
