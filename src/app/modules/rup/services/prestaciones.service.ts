@@ -500,7 +500,7 @@ export class PrestacionesService {
     }
 
     /**
-     * Se fija su la pretacion que vamos a crear se machea con alguna del array prestacionObserve
+     * Se fija si la prestacion que vamos a crear se machea con alguna del array prestacionObserve
      * entonces recupera los ultimos registros en caso de que exista una prestacion anterior.
      * En caso de no existir ninguna crea una prestacion nueva.
      * @param paciente
@@ -510,7 +510,7 @@ export class PrestacionesService {
         const existePrestacionObserve = this.prestacionObserve.find(c => c.conceptId === concepto.conceptId);
         if (existePrestacionObserve) {
             return this.getPrestacionesXtipo(paciente.id, concepto.conceptId).map(prestaciones => {
-                let nuevaPrestacion = this.inicializarPrestacion(paciente, concepto, 'ejecucion');
+                let nuevaPrestacion = this.inicializarPrestacion(paciente, concepto, 'ejecucion', 'internacion');
                 if (prestaciones.length) {
                     let ultimaPrestacion = prestaciones[0];
                     this.hayValorAEvolucionar(ultimaPrestacion.ejecucion.registros);

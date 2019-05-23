@@ -84,9 +84,9 @@
                                 <td>
                                     <strong>Fecha</strong>
                                 </td>
-                                <td>
+                                <!-- <td>
                                     <strong>Abstracto</strong>
-                                </td>
+                                </td> -->
                                 <td class="text-right">
                                     <strong>Acciones</strong>
                                 </td>
@@ -103,22 +103,22 @@
                                 </td>
                             </tr>
                             <ng-container *ngIf="ListadoPrestacionesPorPaciente.length">
-                                <tr class="hover" *ngFor="let epicrisis of ListadoPrestacionesPorPaciente">
+                                <tr class="hover" *ngFor="let prestacion of ListadoPrestacionesPorPaciente">
                                     <td class="text-info">
-                                        {{epicrisis.origen }}
+                                        {{prestacion.origen }}
                                     </td>
                                     <td class="text-info">
-                                        {{epicrisis.solicitud.fecha | fecha}}
+                                        {{prestacion.solicitud.fecha | fecha}}
                                     </td>
-                                    <td>
-                                        <ng-container *ngIf="epicrisis.ejecucion.registros[0]?.registros">
+                                    <!-- <td>
+                                        <ng-container *ngIf="prestacion.ejecucion.registros[0]?.registros">
                                             <span>
-                                                {{ epicrisis.ejecucion.registros[0].registros[0].valor | html }}
+                                                {{ prestacion.ejecucion.registros[0].registros[0].valor | html }}
                                             </span>
                                         </ng-container>
-                                    </td>
+                                    </td> -->
                                     <td class="text-right">
-                                        <plex-button icon="mdi mdi-eye" title="Ver epicrisis" type="info" (click)="ruteo(epicrisis.id, 'epicrisis')"></plex-button>
+                                        <plex-button icon="mdi mdi-eye" title="Ver {{prestacion.origen}}" type="info" (click)="ruteo(prestacion.id, 'epicrisis')"></plex-button>
                                     </td>
                                 </tr>
                             </ng-container>

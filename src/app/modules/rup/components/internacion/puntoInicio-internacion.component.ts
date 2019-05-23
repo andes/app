@@ -81,9 +81,9 @@ export class PuntoInicioInternacionComponent implements OnInit {
                 .map(e => {
                     e.origen = 'Epicrisis';
 
-                    if (e.ejecucion.registros && e.ejecucion.registros[0] && e.ejecucion.registros[0].registros) {
-                        e.ejecucion.registros[0].registros[0].valor = e.ejecucion.registros[0].registros[0].valor.substring(0, 100) + '...';
-                    }
+                    // if (e.ejecucion.registros && e.ejecucion.registros[0] && e.ejecucion.registros[0].registros && e.ejecucion.registros[0].registros[0].valor) {
+                    //     e.ejecucion.registros[0].registros[0].valor = e.ejecucion.registros[0].registros[0].valor.substring(0, 100) + '...';
+                    // }
                     return e;
                 });
             this.servicioPrestacion.getPrestacionesXtipo(paciente.id, this.conceptoPrescripcion.conceptId).subscribe(preinscripcion => {
