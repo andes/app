@@ -107,6 +107,7 @@ export class PrestacionValidacionComponent implements OnInit {
     public btnVolver;
     public rutaVolver;
     descargando = false;
+    verMasRelaciones = [];
 
     constructor(public servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -770,6 +771,10 @@ export class PrestacionValidacionComponent implements OnInit {
         let last = this.prestacion.estados.length - 1;
         return this.prestacion.estados[last].tipo !== 'validada' && elemento.valor && elemento.valor.estado !== 'transformado' && this.prestacion.solicitud.ambitoOrigen !== 'internacion';
 
+    }
+
+    toggleVerMasRelaciones(item) {
+        this.verMasRelaciones[item] = !this.verMasRelaciones[item];
     }
 
 }
