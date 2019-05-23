@@ -1,18 +1,22 @@
-<form #form="ngForm">
-    <ng-container *ngIf="!soloValores && referentSet.length > 0 && registro.valor.estado !== 'transformado'">
+<form #form="ngForm" *ngIf="paciente">
+
+    <ng-container
+        *ngIf="!soloValores && referenceSet.length > 0 && registro.valor.estado !== 'transformado' && !vistaHUDS">
         <div class="row">
             <div class="col-12">
-                <small *ngIf="hallazgoOrigen" class="badge badge-info">
+                <span *ngIf="hallazgoOrigen" class="badge badge-info">
                     Originado con la transformación de:
                     <strong>{{ hallazgoOrigen.nombre }}</strong>
-                </small>
+                </span>
             </div>
         </div>
         <div class="row">&nbsp;</div>
     </ng-container>
+
     <div *ngIf="!soloValores && registro.valor.estado !== 'transformado'">
         <div *ngIf="elementoRUP && registro">
-            <div class="row" *ngIf="hallazgoHudsCompleto && hallazgoHudsCompleto.evoluciones && registro.concepto.semanticTag === 'trastorno'">
+            <div class="row"
+                *ngIf="hallazgoHudsCompleto && hallazgoHudsCompleto.evoluciones && registro.concepto.semanticTag === 'trastorno'">
                 <div class="col">
                     <strong>Inicio del Hallazgo: {{hallazgoHudsCompleto?.evoluciones[0].fechaInicio | fecha}} </strong>
                 </div>
@@ -21,7 +25,8 @@
                 <!--ESTADO DEL PROBLEMA-->
                 <div class="col-4">
                     <label class="box-title-secundario">Estado actual</label>
-                    <plex-select [(ngModel)]="registro.valor.estado" name="estadoActual" [data]="estados" [required]="true" (change)="formatearEstado()">
+                    <plex-select [(ngModel)]="registro.valor.estado" name="estadoActual" [data]="estados"
+                        [required]="true" (change)="formatearEstado()">
                     </plex-select>
                 </div>
 
@@ -31,9 +36,10 @@
                 <div class="col" *ngIf="!hallazgoHudsCompleto">
                     <label class="box-title-secundario">Fecha estimada</label>
                     <div class="row">
-                        <plex-int class="col-6 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad" prefix="Hace" (change)="calcularFecha()"></plex-int>
-                        <plex-select class="col-6 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo" [data]="unidadTiempo"
-                            (change)="calcularFecha()"></plex-select>
+                        <plex-int class="col-6 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad"
+                            prefix="Hace" (change)="calcularFecha()"></plex-int>
+                        <plex-select class="col-6 d-inline" [(ngModel)]="inicioEstimadoTiempo"
+                            name="inicioEstimadoTiempo" [data]="unidadTiempo" (change)="calcularFecha()"></plex-select>
                     </div>
                 </div>
             </div>
@@ -41,66 +47,20 @@
             <!--EVOLUCION DEL PROBLEMA-->
             <div class="row">
                 <div class="col-12">
-                    <plex-text label="Evolución" [(ngModel)]="registro.valor.evolucion" name="evolucion" [height]="100" [html]="true" [readonly]="false"
-                        (change)="emitChange()">
+                    <plex-text
+                        label="{{ registro.concepto.semanticTag !== 'trastorno' ? 'Observaciones' : 'Evolución' }}"
+                        placeholder="{{ registro.concepto.semanticTag !== 'trastorno' ? 'Observaciones' : 'Ingrese una evolución' }}"
+                        [(ngModel)]="registro.valor.evolucion" name="evolucion" [height]="100" [html]="true"
+                        [readonly]="false" (change)="emitChange()">
                     </plex-text>
                 </div>
             </div>
 
         </div>
 
-        <!--Listado de evoluciones-->
-        <ng-container *ngIf="evoluciones && evoluciones.length > 0">
-            <div class="row">
-                <div class="col-12">
-                    <label class="box-title-secundario" for="comment">Evoluciones Anteriores:</label>
-                </div>
-            </div>
-
-
-            <div class="row anteriores mr-0 pr-0 ml-0">
-                <div class="col-5 text-left border border-right-0 border-secondary pl-0">
-                    <plex-button *ngIf="indice > 0" type="info" icon="chevron-left" class="mdi-18px" (click)="cambiarEvolucion('-') "></plex-button>
-                    <plex-button *ngIf="indice === 0" type="default" icon="chevron-left" class="mdi-18px"></plex-button>
-                </div>
-                <div class="col-2 text-center border border-left-0 border-right-0 border-secondary pt-2">
-                    {{ unaEvolucion.fechaCarga | fecha }}
-                </div>
-                <div class="col-5 text-right border border-left-0 border-secondary pr-0">
-                    <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="info" icon="chevron-right" class="mdi-18px"
-                        (click)="cambiarEvolucion('+') "></plex-button>
-                    <plex-button *ngIf="evoluciones.length <= 1 || indice === (evoluciones.length-1)" type="default" icon="chevron-right" class="mdi-18px"></plex-button>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-8">
-                    <br>
-                    <strong>Evolución:</strong>
-                    <span [innerHTML]="unaEvolucion.evolucion"></span>
-                </div>
-                <div class="col-4 text-right">
-                    <br>
-                    <strong>Profesional:</strong> {{unaEvolucion.profesional }}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col" *ngIf="unaEvolucion.informeRequerido">
-                    <hr>
-                    <label>Informe Del Encuentro:</label>
-                    <ng-container *ngIf="unaEvolucion.informeRequerido?.valor;then showMensaje else showContenidoValor"></ng-container>
-                    <ng-template #showContenidoValor>
-                        No tiene registrado el informe
-                    </ng-template>
-                    <ng-template #showMensaje>
-                        <span [innerHTML]="unaEvolucion.informeRequerido.valor"></span>
-                    </ng-template>
-                </div>
-            </div>
-        </ng-container>
     </div>
 
-    <!-- Hallazgos -->
+    <!-- SÓLO VALORES -->
     <ng-container *ngIf="registro && (soloValores || registro.valor.estado === 'transformado')">
         <div class="row">
             <div class="col-12">
@@ -140,7 +100,8 @@
             </div>
             <div class="col-4 readonly" *ngIf="registro.concepto.semanticTag === 'trastorno'">
                 <span>Inicio aproximado </span>
-                <ng-container *ngIf="!hallazgoHudsCompleto">{{ registro.valor.fechaInicio ? (registro.valor.fechaInicio | fromNow) : 'sin fecha aproximada' }}
+                <ng-container *ngIf="!hallazgoHudsCompleto">
+                    {{ registro.valor.fechaInicio ? (registro.valor.fechaInicio | fromNow) : 'sin fecha aproximada' }}
                 </ng-container>
                 <ng-container *ngIf="hallazgoHudsCompleto">
                     {{ hallazgoHudsCompleto.evoluciones[0].fechaInicio | fromNow }}
@@ -181,7 +142,8 @@
                         </div>
                         <div class="row ml-1">
                             <div class="col">
-                                <span [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente,evolucion,registro.concepto)"></span>
+                                <span
+                                    [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente,evolucion,registro.concepto)"></span>
                             </div>
                         </div>
                         <div class="row ml-1">
@@ -206,4 +168,10 @@
             </div>
         </div>
     </ng-container>
+
+    <!-- Hallazgos -->
+    <vista-registro [registro]="registro" [prestacion]="prestacion" [paciente]="paciente"
+        [evolucionActual]="evolucionActual" [indice]="indice"></vista-registro>
+
+
 </form>

@@ -19,8 +19,8 @@ import { FinanciadorService } from '../../../../services/financiador.service';
 import { ProcedimientosQuirurgicosService } from '../../../../services/procedimientosQuirurgicos.service';
 import { Cie10Service } from '../../../../services/term/cie10.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
-import { ActivatedRoute } from '@angular/router';
 import { ElementosRUPRegister } from '../elementos';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'rup',
@@ -43,6 +43,7 @@ export class RUPComponent implements OnInit, AfterViewInit {
     @Input() registro: IPrestacionRegistro;
     @Input() paciente: IPaciente;
     @Input() soloValores: boolean;
+    @Input() vistaHUDS = false;
     @Input() params: any;
     @Input() opcionales: any;
     public mensaje: any = {};
@@ -59,7 +60,7 @@ export class RUPComponent implements OnInit, AfterViewInit {
      * @memberof RUPComponent
      */
     private loadComponent() {
-        if (!this.registro.privacy) {
+        if (this.registro && !this.registro.privacy) {
             setTimeout(() => {
                 if (this.params && this.params.privacy) {
                     this.registro.privacy = { scope: this.params.privacy };
@@ -79,6 +80,7 @@ export class RUPComponent implements OnInit, AfterViewInit {
         componentReference.instance['registro'] = this.registro;
         componentReference.instance['elementoRUP'] = this.elementoRUP;
         componentReference.instance['soloValores'] = this.soloValores;
+        componentReference.instance['vistaHUDS'] = this.vistaHUDS;
         componentReference.instance['paciente'] = this.paciente;
         componentReference.instance['params'] = this.params;
         componentReference.instance['opcionales'] = this.opcionales;

@@ -1,3 +1,5 @@
+import { Router } from '@angular/router';
+import { Auth } from '@andes/auth';
 import { AdjuntosService } from './../../../modules/rup/services/adjuntos.service';
 import { CampaniaSaludService } from './../services/campaniaSalud.service';
 import { ICampaniaSalud } from './../interfaces/ICampaniaSalud';
@@ -34,6 +36,10 @@ export class CampaniaFormComponent implements OnInit {
         this.imagenSvg = value.imagen;
         this.imagenSegura = this.sanitizer.bypassSecurityTrustHtml(this.imagenSvg);
     }
+    /**
+     * Emite un booleano. True si canceló la creación y false si canceló la edición
+     * @memberof CampaniaFormComponent
+     */
     @Output() cancelar = new EventEmitter<boolean>();
     @Output() guardar = new EventEmitter<ICampaniaSalud>();
 
@@ -86,9 +92,13 @@ export class CampaniaFormComponent implements OnInit {
 
     /*FIN CARGA DE IMAGENES*/
 
-    constructor(private plex: Plex, private campaniaSaludService: CampaniaSaludService, public adjuntosService: AdjuntosService, public sanitizer: DomSanitizer) { }
+    constructor(private plex: Plex, private campaniaSaludService: CampaniaSaludService, public adjuntosService: AdjuntosService, public sanitizer: DomSanitizer,
+        private auth: Auth, private router: Router) { }
 
     ngOnInit(): void {
+        if (!this.auth.check('campania:crear')) {
+            this.router.navigate(['inicio']);
+        }
         this.sexos = enumerados.getObjSexos();
     }
 
@@ -98,20 +108,21 @@ export class CampaniaFormComponent implements OnInit {
      * @memberof CampaniaFormComponent
      */
     onCancel() {
-        this.cancelar.emit();
+        this.cancelar.emit(this.campaniaEdit.id ? true : false);
     }
 
     /**
      * Notifica al componente padre que se seleccionó la opción de guardar las modicicaciones del formulario.
-     *
      * @param {*} $event
      * @memberof CampaniaFormComponent
      */
     save($event) {
-        if ($event.formValid) {
+        if (!this.imagenSvg) {
+            this.plex.info('danger', 'Debe cargar un logo.');
+        } else if ($event.formValid) {
             if ((this.campaniaEdit.target.grupoEtario.desde && this.campaniaEdit.target.grupoEtario.hasta)
                 && this.campaniaEdit.target.grupoEtario.desde > this.campaniaEdit.target.grupoEtario.hasta) {
-                this.plex.info('danger', 'Edad Desde debe ser menor que la Edad Hasta.');
+                this.plex.info('danger', 'Edad desde debe ser menor que la edad hasta.');
             } else {
                 if (this.campaniaEdit.target && this.campaniaEdit.target.sexo) { // como sexo es un enumerado, debo hacer esto para obtener el id (string) que se va a guardar en base de datos
                     this.campaniaEdit.target.sexo = (this.campaniaEdit.target.sexo as any).id || this.campaniaEdit.target.sexo;
@@ -188,7 +199,7 @@ export class CampaniaFormComponent implements OnInit {
     confirmarSvg(archivo: string): boolean {
         let regExXml = /<\?xml (.|\n)*\?>/;
         let regExSvg = /svg (.|\n)*\/svg/; // verificar los <>
-        let regExTamanio = /width(.|\n)*35[^0-9]*px(.|\n)*height(.|\n)*35[^0-9]*px/;
+        let regExTamanio = /width.?"35(px)?"(.|\n)*height.?"35(px)?"/;
 
         let cumpleTamanio: boolean = regExTamanio.test(archivo);
         if (!cumpleTamanio) {

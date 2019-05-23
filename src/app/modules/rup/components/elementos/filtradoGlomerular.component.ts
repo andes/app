@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-filtradoGlomerular',
     templateUrl: 'filtradoGlomerular.html'
 })
-@RupElement()
+@RupElement('FiltradoGlomerularComponent')
 export class FiltradoGlomerularComponent extends RUPComponent implements OnInit {
     ngOnInit() {
 

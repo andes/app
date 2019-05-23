@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-frecuencia-cardiaca',
     templateUrl: 'frecuenciaCardiaca.html'
 })
-@RupElement()
+@RupElement('FrecuenciaCardiacaComponent')
 export class FrecuenciaCardiacaComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         let paciente = this.paciente;

@@ -6,8 +6,9 @@ import { SisaService } from './../../services/fuentesAutenticas/servicioSisa.ser
 import { Plex } from '@andes/plex';
 import { PacienteCreateUpdateComponent } from './paciente-create-update.component';
 import { ObraSocialService } from '../../services/obraSocial.service';
-import { IObraSocial } from '../../interfaces/IObraSocial';
 import { Auth } from '@andes/auth';
+import { IFinanciador } from '../../interfaces/IFinanciador';
+import { ObraSocialCacheService } from '../../services/obraSocialCache.service';
 
 @Component({
     selector: 'paciente-detalle',
@@ -23,6 +24,7 @@ export class PacienteDetalleComponent implements OnInit {
      */
     @Input() mostrarRenaper: Boolean;
     @Input() orientacion: 'vertical' | 'horizontal' = 'vertical';
+    @Input() esTab = false;
     @Input('paciente')
     set paciente(value: IPaciente) {
         this._paciente = value;
@@ -38,7 +40,7 @@ export class PacienteDetalleComponent implements OnInit {
     deshabilitarValidar = false;
     inconsistenciaDatos = false;
     backUpDatos = [];
-    obraSocial: IObraSocial;    // Si existen mas de dos se muestra solo la de la primera posicion del array
+    obraSocial: IFinanciador;    // Si existen mas de dos se muestra solo la de la primera posicion del array
     nombrePattern;
     permisosRenaper = 'fa:get:renaper';
     autorizadoRenaper = false;  // check si posee permisos
@@ -49,8 +51,10 @@ export class PacienteDetalleComponent implements OnInit {
         public auth: Auth,
         private sisaService: SisaService,
         private pacienteService: PacienteService,
-        private obraSocialService: ObraSocialService) {
+        private obraSocialService: ObraSocialService,
+        private obraSocialCacheService: ObraSocialCacheService) {
         this.nombrePattern = pacienteService.nombreRegEx;
+
     }
 
     ngOnInit() {
@@ -73,9 +77,12 @@ export class PacienteDetalleComponent implements OnInit {
     }
 
     loadObraSocial() {
-        this.obraSocialService.get({ dni: this._paciente.documento }).subscribe(resultado => {
-            if (resultado.length) {
+        this.obraSocialService.getObrasSociales({ dni: this._paciente.documento, sexo: this._paciente.sexo }).subscribe(resultado => {
+            if (resultado.length > 0) {
                 this.obraSocial = resultado[0];
+                this.obraSocialCacheService.setFinanciadorPacienteCache(this.obraSocial);
+            } else {
+                this.obraSocialCacheService.setFinanciadorPacienteCache(null);
             }
         });
     }

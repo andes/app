@@ -12,7 +12,7 @@ import { RupElement } from '.';
         'OdontogramaRefset.scss'
     ]
 })
-@RupElement()
+@RupElement('OdontogramaRefsetComponent')
 export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     ultimoOdontogramaCompleto: any[];

@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-pasesCama',
     templateUrl: 'pasesCama.html'
 })
-@RupElement()
+@RupElement('PasesCamaComponent')
 export class PasesCamaComponent extends RUPComponent implements OnInit {
 
     public pases: any[] = [];

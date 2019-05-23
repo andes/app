@@ -70,6 +70,31 @@ export enum EstadosEspacios {
     'baja permanente'
 }
 
+export enum Censo {
+    'Censable',
+    'No Censable'
+}
+
+export enum estadosInternacion {
+    'ejecucion',
+    'validada'
+}
+
+export enum Meses {
+    'enero',
+    'febrero',
+    'marzo',
+    'abril',
+    'mayo',
+    'junio',
+    'julio',
+    'agosto',
+    'septiembre',
+    'octubre',
+    'noviembre',
+    'diciembre',
+}
+
 export function titleCase(str) {
     return str.toLowerCase().split(' ').map(function (word) {
         return (word.charAt(0).toUpperCase() + word.slice(1));
@@ -93,6 +118,18 @@ export function getObjSexos() {
     let arrSexo = Object.keys(Sexo);
     arrSexo = arrSexo.slice(arrSexo.length / 2);
     let salida = arrSexo.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
+
+export function getObjCenso() {
+    let arrCenso = Object.keys(Censo);
+    arrCenso = arrCenso.slice(arrCenso.length / 2);
+    let salida = arrCenso.map(elem => {
         return {
             'id': elem,
             'nombre': titleCase(elem)
@@ -221,3 +258,28 @@ export function getObjRelacionTutor() {
     });
     return salida;
 }
+
+export function getObjEstadoInternacion() {
+    let array = Object.keys(estadosInternacion);
+    array = array.slice(array.length / 2);
+    let salida = array.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
+
+export function getObjMeses() {
+    let arrMeses = Object.keys(Meses);
+    arrMeses = arrMeses.slice(arrMeses.length / 2);
+    let salida = arrMeses.map((elem, index) => {
+        return {
+            'id': index + 1,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
+

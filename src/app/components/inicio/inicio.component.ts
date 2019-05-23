@@ -16,6 +16,7 @@ export class InicioComponent implements AfterViewInit {
     public internacionEpicrisis = '';
     public solicitudes = '';
     public prestamosHC = '';
+    public dashboard = false;
     public denied = false;
     public accessList: any = [];
 
@@ -46,24 +47,26 @@ export class InicioComponent implements AfterViewInit {
                 this.denied = false;
             }
 
-            if (this.auth.getPermissions('internacion:?').length > 0) {
+            if (this.auth.check('internacion:mapaDeCamas')) {
                 this.internacion = 'internacion';
                 this.denied = false;
             }
-
-            if (this.auth.getPermissions('internacion:inicio').length > 0) {
+            if (this.auth.check('internacion:inicio')) {
                 this.internacionEpicrisis = 'internacionEpicrisis';
                 this.denied = false;
             }
-
-
 
             if (this.auth.getPermissions('solicitudes:?').length > 0) {
                 this.solicitudes = 'solicitudes';
             }
 
-            if (this.auth.getPermissions('prestamos:?').length > 0) {
+            if (this.auth.check('prestamos:?')) {
                 this.prestamosHC = 'prestamosHC';
+                this.denied = false;
+            }
+
+            if (this.auth.check('dashboard:citas:ver') || this.auth.check('dashboard:top:ver')) {
+                this.dashboard = true;
                 this.denied = false;
             }
         });

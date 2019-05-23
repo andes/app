@@ -10,7 +10,7 @@ import { RupElement } from '.';
     selector: 'rup-grafico-lineal',
     templateUrl: 'graficoLineal.html'
 })
-@RupElement()
+@RupElement('GraficoLinealComponent')
 export class GraficoLinealComponent extends RUPComponent implements OnInit {
     // variables para guardar los datosLineales de las prestaciones
     public datosLineales: any[] = [];

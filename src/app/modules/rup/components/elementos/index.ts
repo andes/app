@@ -21,8 +21,8 @@ const list = () => {
 
 export const ElementosRUPRegister = { get, register, list };
 
-export function RupElement() {
+export function RupElement(name) {
     return function decorator(target) {
-        ElementosRUPRegister.register(target.name, target);
+        ElementosRUPRegister.register(name, target);
     };
 }

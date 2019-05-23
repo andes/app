@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-consulta-nino-sano-e3y6a',
     templateUrl: 'consultaDeNinoSanoE3Y6A.html'
 })
-@RupElement()
+@RupElement('ConsultaDeNinoSanoE3Y6AComponent')
 export class ConsultaDeNinoSanoE3Y6AComponent extends RUPComponent implements OnInit {
     ninoSanoHUDS: any;
     ultimaConsulta: any;
@@ -17,8 +17,12 @@ export class ConsultaDeNinoSanoE3Y6AComponent extends RUPComponent implements On
     ngOnInit() {
 
         this.route.url.subscribe(urlParts => {
-            if (urlParts[1].path === 'validacion') {
-                this.validacion = true;
+            if (urlParts.length > 1) {
+                if (urlParts[1].path === 'validacion') {
+                    this.validacion = true;
+                }
+            } else {
+                this.validacion = false;
             }
         });
 

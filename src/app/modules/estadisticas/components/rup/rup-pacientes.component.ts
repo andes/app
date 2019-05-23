@@ -1,13 +1,30 @@
 import * as moment from 'moment';
-import { Component, AfterViewInit, HostBinding } from '@angular/core';
+import { Component, AfterViewInit, HostBinding, OnInit } from '@angular/core';
 import { EstRupService } from '../../services/rup-estadisticas.service';
 import { SnomedService } from '../../services/snomed.service';
+import { Plex } from '@andes/plex';
+import { ISnomedConcept } from '../../../rup/interfaces/snomed-concept.interface';
 
+
+function hasAncestor(conceptos, _padre, item) {
+    const statedAncestors = conceptos[item.concepto.conceptId].statedAncestors;
+    return !!statedAncestors.find(i => i === _padre.conceptId);
+}
+
+interface IRegistros {
+    concepto: ISnomedConcept;
+    prestaciones: any[];
+    ids: string[];
+    relaciones: any[];
+    relacionesName: string[];
+    count: number;
+
+}
 @Component({
     templateUrl: 'rup-pacientes.html',
     styleUrls: ['rup-pacientes.scss']
 })
-export class RupPacientesComponent implements AfterViewInit {
+export class RupPacientesComponent implements AfterViewInit, OnInit {
     @HostBinding('class.plex-layout') layout = true;
 
     showData = false;
@@ -25,10 +42,23 @@ export class RupPacientesComponent implements AfterViewInit {
 
     };
 
-    public registros = [];
+    public registros: IRegistros[] = [];
     public tablas: any = [];
+    public conceptos: { [key: string]: ISnomedConcept }  = {};
 
-    constructor(public estService: EstRupService, public snomed: SnomedService) { }
+    constructor(
+        public estService: EstRupService,
+        public snomed: SnomedService,
+        private plex: Plex
+    ) { }
+
+    ngOnInit() {
+        this.plex.updateTitle([
+            { route: '/', name: 'ANDES' },
+            { name: 'Dashboard', route: '/dashboard' },
+            { name: 'RUP' }
+        ]);
+    }
 
     ngAfterViewInit() {
         this.snomed.getQuery({ expression: '<1651000013107' }).subscribe((result) => {
@@ -41,6 +71,12 @@ export class RupPacientesComponent implements AfterViewInit {
             result.forEach((item) => { item.check = true; });
             this.prestacionesHijas = result;
         });
+    }
+
+    volver () {
+        this.showData = false;
+        this.selectedConcept = this.selectIndex = this.selectedChilds = this.selectedFather = null;
+        this.tableDemografia = this.tableLocalidades = null;
     }
 
     onChange() {
@@ -56,6 +92,10 @@ export class RupPacientesComponent implements AfterViewInit {
                 }
                 this.crearTotales(this.prestacionesHijas, resultados.pacientes);
                 this.registros = resultados.registros;
+                this.prepararRegistros();
+                resultados.metadata.forEach((concepto) => {
+                    this.conceptos[concepto.conceptId] = concepto;
+                });
             });
         }
 
@@ -119,17 +159,112 @@ export class RupPacientesComponent implements AfterViewInit {
         this.tablas.push(table);
     }
 
-    buscarRelaciones(row) {
-        let names = [];
-        row.relaciones.forEach((item) => {
-            this.registros.forEach((reg) => {
-                let i = reg.ids.indexOf(item);
-                if (i >= 0) {
-                    names.push(reg.concepto.term);
-                }
+    prepararRegistros() {
+        // Filtramos el informa del encuentro
+        this.registros.forEach(row => {
+            const names = [];
+            row.relaciones.filter(e => e.concepto.conceptId !== '371531000').forEach((item) => {
+                this.registros.forEach((reg) => {
+                    const i = reg.ids.indexOf(item.id);
+                    if (i >= 0) {
+                        names.push(reg.concepto.term);
+                    }
+                });
             });
+            row.relacionesName = names;
         });
-        return names;
     }
 
+    /**
+     * Estructuras adicionales para la funcionalidad de agrupacion
+     */
+    showFather = {};
+    selectedConcept = null;
+    selectIndex = null;
+    selectedChilds = null;
+    selectedFather = null;
+
+    show(row, index) {
+        if (!this.selectedConcept || this.selectedConcept.concepto.conceptId !== row.concepto.conceptId) {
+            this.selectedConcept = row;
+            this.selectIndex = index;
+            this.showFather[row.concepto.conceptId] = !(!!this.showFather[row.concepto.conceptId]);
+            this.selectedChilds = this.selectedFather = null;
+            this.demografia();
+        } else {
+            this.selectedConcept = this.selectIndex = this.selectedChilds = this.selectedFather = null;
+            this.tableDemografia = this.tableLocalidades = null;
+        }
+    }
+
+    groupBy(row, padre) {
+        this.snomed.getConcepts([padre.conceptId]).subscribe((concepts) => {
+            this.conceptos[concepts[0].conceptId] = concepts[0];
+
+            const hijos = this.getChilds(padre);
+
+            const elemento: any = {
+                concepto: padre,
+                count: hijos.reduce((a, b) => a + b.count, 0),
+                ids: hijos.reduce((a, b) => [ ...a, ...b.ids ], []),
+                prestaciones: hijos.reduce((a, b) => [ ...a, ...b.prestaciones ], []),
+                relaciones: hijos.reduce((a, b) => [ ...a, ...b.relaciones ], []),
+                hijos,
+                hijosName: hijos.reduce( ((a, item) => a + item.concepto.term + ',' ) , '')
+            };
+
+            let names = [];
+            elemento.relaciones.filter(e => e.concepto.conceptId !== '371531000').forEach((item) => {
+                this.registros.forEach((reg) => {
+                    const i = reg.ids.indexOf(item.id);
+                    if (i >= 0) {
+                        names.push(reg.concepto.term);
+                    }
+                });
+            });
+            elemento.relacionesName = names;
+
+            this.registros[this.selectIndex] = elemento;
+
+            this.registros = this.registros.filter(item => !hasAncestor(this.conceptos, padre, item));
+
+            this.selectedConcept = this.selectIndex = this.selectedChilds = this.selectedFather = null;
+            this.tableDemografia = this.tableLocalidades = null;
+
+        });
+    }
+
+    showChild (padre) {
+        if (!this.selectedFather || padre.conceptId !== this.selectedFather.conceptId) {
+            this.selectedChilds = this.getChilds(padre);
+            this.selectedFather = padre;
+        } else {
+            this.selectedChilds = null;
+            this.selectedFather = null;
+        }
+    }
+
+    /**
+     * Dado un concepto devuelve todos los hijos de ese concepto
+     * @param concept
+     */
+    getChilds (concept) {
+        return this.registros.filter(item => hasAncestor(this.conceptos, concept, item));
+    }
+
+
+    public tableDemografia = null;
+    public tableLocalidades = null;
+    demografia() {
+        this.estService.demografia(this.selectedConcept.prestaciones.map(i => i .prestacion_id)).subscribe(datos => {
+            const { demografia, localidades } = datos;
+            const tabla = [[0, 0, 0, 0, 0, 0, 0, 0 , 0, 0], [0, 0, 0, 0, 0, 0, 0, 0 , 0, 0]];
+
+            demografia.forEach(dato => {
+                tabla[dato.sexo === 'femenino' ? 0 : 1][dato.decada] += dato.count;
+            });
+            this.tableDemografia = tabla;
+            this.tableLocalidades = localidades;
+        });
+    }
 }

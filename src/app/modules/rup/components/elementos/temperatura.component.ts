@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-temperatura',
     templateUrl: 'temperatura.html'
 })
-@RupElement()
+@RupElement('TemperaturaComponent')
 export class TemperaturaComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         // Observa cuando cambia la propiedad 'temperatura' en otro elemento RUP

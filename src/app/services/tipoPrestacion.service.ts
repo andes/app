@@ -6,6 +6,8 @@ import { ITipoPrestacion } from './../interfaces/ITipoPrestacion';
 
 @Injectable()
 export class TipoPrestacionService {
+    public static Laboratorio_CDA_ID = '4241000179101';
+    public static Vacunas_CDA_ID = '33879002';
 
     private tipoPrestacionUrl = '/core/tm/tiposPrestaciones';  // URL to web api
 

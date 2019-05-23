@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-registrarMedicamentoDefault',
     templateUrl: 'registrarMedicamentoDefault.html'
 })
-@RupElement()
+@RupElement('RegistrarMedicamentoDefaultComponent')
 export class RegistrarMedicamentoDefaultComponent extends RUPComponent implements OnInit {
 
     public unidades = [{ id: 'envases', nombre: 'Envases' }, { id: 'unidades', nombre: 'Unidades' }];

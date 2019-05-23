@@ -79,7 +79,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         name: 0.10,
         gender: 0.3,
         birthDate: 0.05
-      };
+    };
     validado = false;
     noPoseeContacto = false;
     constructor(private formBuilder: FormBuilder,
@@ -171,7 +171,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         if ($event.formValid) {
             let match100 = false;
             this.profesional['profesionalMatriculado'] = false;
-            this.profesional.sexo = this.profesional.sexo.toLowerCase();
+            this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
             this.profesionalService.get({ documento: this.profesional.documento })
                 .subscribe(
                     datos => {
@@ -179,7 +179,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                             datos.forEach(profCandidato => {
                                 this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
                                 const prof = {
-                                    sexo: profCandidato.sexo.toString().toLowerCase(),
+                                    sexo: (profCandidato.sexo && (typeof this.profesional.sexo === 'string')) ? profCandidato.sexo.toString().toLowerCase() : (Object(this.profesional.sexo).id),
                                     nombre: profCandidato.nombre,
                                     apellido: profCandidato.apellido,
                                     fechaNacimiento: profCandidato.fechaNacimiento,

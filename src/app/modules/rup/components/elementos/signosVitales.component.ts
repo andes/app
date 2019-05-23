@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-signos-vitales',
     templateUrl: '../core/rup.html'
 })
-@RupElement()
+@RupElement('SignosVitalesComponent')
 export class SignosVitalesComponent extends RUPComponent implements OnInit {
     ngOnInit() {
 

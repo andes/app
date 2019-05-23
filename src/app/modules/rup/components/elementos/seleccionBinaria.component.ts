@@ -6,7 +6,7 @@ import { RupElement } from '.';
     selector: 'rup-seleccion-binaria',
     templateUrl: 'seleccionBinaria.html'
 })
-@RupElement()
+@RupElement('SeleccionBinariaComponent')
 export class SeleccionBinariaComponent extends RUPComponent implements OnInit {
 
     public options;

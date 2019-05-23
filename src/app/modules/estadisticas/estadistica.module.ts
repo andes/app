@@ -3,10 +3,13 @@ import { FormsModule } from '@angular/forms';
 
 // Providers
 import { EstAgendasService } from './services/agenda.service';
+import { SolicitudesTopService } from './services/top.service';
 
 // Components
 import { HomeComponent } from './components/home.component';
 import { FiltrosComponent } from './components/citas/filtros.component';
+import { GraficosComponent } from './components/citas/graficos.component';
+import { FiltrosSolicitudesComponent } from './components/top/filtrosSolicitudes.component';
 
 // Module
 import { PlexModule } from '@andes/plex';
@@ -20,6 +23,9 @@ import { CommonModule } from '@angular/common';
 import { EstRupService } from './services/rup-estadisticas.service';
 import { RupPacientesComponent } from './components/rup/rup-pacientes.component';
 import { SnomedService } from './services/snomed.service';
+import { Tabla2DComponent } from './components/tabla-2d/tabla-2d.component';
+import { TopComponent } from './components/top/top.component';
+import { SumPipe } from './pipes/sum.pipe';
 
 @NgModule({
     imports: [
@@ -33,22 +39,30 @@ import { SnomedService } from './services/snomed.service';
         EstadisticasRouting
     ],
     declarations: [
+        SumPipe,
         HomeComponent,
         FiltrosComponent,
+        FiltrosSolicitudesComponent,
         CitasComponent,
-        RupPacientesComponent
+        RupPacientesComponent,
+        GraficosComponent,
+        Tabla2DComponent,
+        TopComponent
     ],
     entryComponents: [
         HomeComponent,
         FiltrosComponent,
+        FiltrosSolicitudesComponent,
         CitasComponent,
-        RupPacientesComponent
+        RupPacientesComponent,
+        GraficosComponent
     ],
     exports: [],
     providers: [
         EstAgendasService,
         EstRupService,
-        SnomedService
+        SnomedService,
+        SolicitudesTopService
     ]
 })
 export class EstadisticaModule {
