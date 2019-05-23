@@ -12,7 +12,7 @@
             </plex-datetime>
         </div>
         <div class="col-3">
-            <plex-datetime type="date" [(ngModel)]="registro.valor.fechaHasta" name="fechaEpicrisis" label="Desocupa la cama" title="fecha en la que desocupo la cama"
+            <plex-datetime type="date" [(ngModel)]="registro.valor.fechaHasta" name="fechaEpicrisis" label="Egreso" title="fecha en la que desocupo la cama"
                 [required]="true">
             </plex-datetime>
         </div>
@@ -80,7 +80,7 @@
         <div class="grid-item-0">
             <div class="titulo d-flex align-items-center">
                 <i class="mdi mdi-calendar mr-2 mb-1"></i>
-                <strong>Fecha que se desocupa la cama:</strong>
+                <strong>Fecha de egreso:</strong>
             </div>
             <div class="contenido text-capitalize">
                 {{ registro.valor.fechaHasta | date }}
