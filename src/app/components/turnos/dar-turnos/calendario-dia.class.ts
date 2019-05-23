@@ -16,7 +16,7 @@ export class CalendarioDia {
     public delDiaDisponibles = 0;
     public profesionalDisponibles = 0;
 
-    constructor(public fecha: Date, public agenda: any, solicitudPrestacion: any, filtroPrestacion: any) {
+    constructor(public fecha: Date, public agenda: any, solicitudPrestacion: any, filtroPrestacion?: any) {
         this.hoy = new Date();
         this.turnosDisponibles = 0;
         if (!agenda) {
