@@ -885,7 +885,8 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             b.restantesProfesional =
             b.restantesMobile =
             b.mobile =
-            b.duracionTurno = 0 );
+            b.duracionTurno =
+            b.turnos.length = 0);
     }
 
     cancelar() {
