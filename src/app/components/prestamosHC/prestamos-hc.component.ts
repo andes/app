@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
-import { ListarSolicitudesComponent } from './solicitudes/listar-solicitudes.component';
-import { PrestarHcComponent } from './solicitudes/prestar-hc.component';
+import { Auth } from '@andes/auth';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-prestamos-hc',
@@ -16,10 +15,20 @@ export class PrestamosHcComponent implements OnInit {
     listaCarpetas: any;
     public carpetas;
     public imprimirSolicitudes: any = false;
-    constructor() { }
+    public autorizado = false;
+
+    constructor(public auth: Auth, private router: Router) { }
 
     ngOnInit() {
+        this.autorizado = this.auth.check('prestamos:?');
+        if (!this.autorizado) {
+            this.redirect('inicio');
+        }
+    }
 
+    redirect(pagina: string) {
+        this.router.navigate(['./' + pagina]);
+        return false;
     }
 
     imprimirCarpetas(carpetas) {
