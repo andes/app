@@ -16,19 +16,24 @@ export class CalendarioDia {
     public delDiaDisponibles = 0;
     public profesionalDisponibles = 0;
 
-    constructor(public fecha: Date, public agenda: any, solicitudPrestacion: any) {
+    constructor(public fecha: Date, public agenda: any, solicitudPrestacion: any, filtroPrestacion: any) {
         this.hoy = new Date();
         this.turnosDisponibles = 0;
         if (!agenda) {
             this.estado = 'vacio';
         } else {
-            let disponible: boolean = (this.agenda.turnosDisponibles > 0);
+            let hayTurnosDisponibles: boolean = (this.agenda.turnosDisponibles > 0);
             this.estadoAgenda = this.agenda.estado;
-            if (disponible) {
+            if (hayTurnosDisponibles) {
                 let countBloques = [];
+                let bloquesPrestacion = agenda.bloques; // filtra los bloques de interés según prestacion
 
+                if (filtroPrestacion) {
+                    bloquesPrestacion = agenda.bloques.filter(b => b.tipoPrestaciones.find(tipo => tipo.id === filtroPrestacion.id));
+                }
                 // Si la agenda es de hoy, los turnos programados deberán sumarse  al contador "delDia"
                 if (this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate()) {
+                    // Por cada bloque asignamos contadores dinamicos con la cantidad inicial de c/tipo de turno (Para sidebar)
                     this.agenda.bloques.forEach((bloque, indexBloque) => {
                         countBloques.push({
                             delDia: bloque.restantesDelDia + bloque.restantesProgramados,
@@ -38,15 +43,20 @@ export class CalendarioDia {
                         });
                         this.delDiaDisponibles += countBloques[indexBloque].delDia;
                     });
-                    // Si es hoy, no hay turnos del día y hay turnos de gestión, el estado de la Agenda es "no disponible"
-                    this.turnosDisponibles = this.turnosDisponibles + this.delDiaDisponibles;
+
+                    // Seteamos el contador de turnos disponibles para el calendario
+                    bloquesPrestacion.forEach(unBloque => {
+                        this.turnosDisponibles += unBloque.restantesProgramados + unBloque.restantesDelDia;
+                    });
                     this.estado = (this.delDiaDisponibles > 0 && this.gestionDisponibles === 0) ? 'disponible' : 'ocupado';
-                    // En caso contrario, se calculan los contadores por separado
+
                 } else {
+                    // En caso contrario, se calculan los contadores por separado
                     let autocitado = solicitudPrestacion && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true;
+
                     this.agenda.bloques.forEach((bloque, indexBloque) => {
+                        // Por cada bloque asignamos contadores dinamicos con la cantidad inicial de c/tipo de turno (Para sidebar)
                         countBloques.push({
-                            // Asignamos a contadores dinamicos la cantidad inicial de c/u
                             delDia: bloque.restantesDelDia,
                             programado: bloque.restantesProgramados,
                             gestion: bloque.restantesGestion,
@@ -57,17 +67,19 @@ export class CalendarioDia {
                         this.programadosDisponibles += bloque.restantesProgramados;
                         this.gestionDisponibles += bloque.restantesGestion;
                         this.profesionalDisponibles += bloque.restantesProfesional;
+
+                        // Para enmarcar los días correspondientes en el calendario
                         if (this.agenda.estado === 'disponible' || this.agenda.estado === 'publicada') {
                             if (solicitudPrestacion) {
                                 if (this.gestionDisponibles > 0 && !autocitado) {
                                     this.estado = 'disponible';
-                                    disponible = true;
+                                    hayTurnosDisponibles = true;
                                 } else if (this.profesionalDisponibles > 0 && autocitado) {
                                     this.estado = 'disponible';
-                                    disponible = true;
+                                    hayTurnosDisponibles = true;
                                 } else {
                                     this.estado = 'vacio';
-                                    disponible = false;
+                                    hayTurnosDisponibles = false;
                                     this.turnosDisponibles = 0;
                                 }
                             } else {
@@ -78,23 +90,27 @@ export class CalendarioDia {
                                 }
                             }
                         }
+                    }); // forEach
 
-                    });
-
-                    if (disponible) {
-                        if (solicitudPrestacion) {
-                            if (autocitado) {
-                                this.turnosDisponibles += this.profesionalDisponibles;
+                    // Seteamos el contador de turnos disponibles para el calendario
+                    if (hayTurnosDisponibles) {
+                        this.turnosDisponibles = 0;
+                        bloquesPrestacion.forEach(unBloque => {
+                            if (solicitudPrestacion) {
+                                if (autocitado) {
+                                    this.turnosDisponibles = unBloque.restantesProfesional;
+                                } else {
+                                    this.turnosDisponibles = unBloque.restantesGestion;
+                                }
                             } else {
-                                this.turnosDisponibles += this.gestionDisponibles;
+                                this.turnosDisponibles += unBloque.restantesProgramados;
                             }
-                        } else {
-                            this.turnosDisponibles += this.programadosDisponibles;
-                        }
+                        });
                     }
                 }
 
             } else {
+                // Para enmarcar los días correspondientes en el calendario
                 if (this.agenda.dinamica) {
                     this.estado = 'disponible';
                     this.dinamica = true;
@@ -104,6 +120,5 @@ export class CalendarioDia {
                 }
             }
         }
-
     }
 }
