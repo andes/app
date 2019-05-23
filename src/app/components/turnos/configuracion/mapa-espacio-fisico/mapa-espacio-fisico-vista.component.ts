@@ -94,7 +94,7 @@ export class MapaEspacioFisicoVistaComponent implements OnInit {
                 this.listadoAgendas = listadoAgendas;
                 this.espacioFisicoService.get({
                     organizacion: this.organizacion.id,
-                    edificio: this.filtros.edificio,
+                    edificio: this.filtros.edificio ? this.filtros.edificio.descripcion : null,
                     nombre: this.filtros.nombre,
                     activo: true
                 }).subscribe(listaEspaciosFisicos => {

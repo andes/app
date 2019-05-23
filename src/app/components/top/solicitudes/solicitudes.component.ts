@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding } from '@angular/core';
@@ -69,13 +70,19 @@ export class SolicitudesComponent implements OnInit {
         private servicioPrestacion: PrestacionesService,
         public servicioTipoPrestacion: TipoPrestacionService,
         public servicioTurnos: TurnoService,
-        public servicioOrganizacion: OrganizacionService
+        public servicioOrganizacion: OrganizacionService,
+        public router: Router
     ) { }
 
     ngOnInit() {
+
+        if (!this.auth.getPermissions('solicitudes:?').length) {
+            this.router.navigate(['inicio']);
+        }
+
         this.permisosReglas = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:reglas:?')[0] === '*' : false;
         this.prestacionesPermisos = this.auth.getPermissions('solicitudes:tipoPrestacion:?');
-        this.permisoAnular = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:anular:?')[0] === '*' : false;
+        this.permisoAnular = this.auth.check('solicitudes:anular');
         this.showCargarSolicitud = false;
         this.cargarSolicitudes();
     }

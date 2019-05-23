@@ -17,8 +17,12 @@ export class ConsultaDeNinoSanoM2AComponent extends RUPComponent implements OnIn
     ngOnInit() {
 
         this.route.url.subscribe(urlParts => {
-            if (urlParts[1].path === 'validacion') {
-                this.validacion = true;
+            if (urlParts.length > 1) {
+                if (urlParts[1].path === 'validacion') {
+                    this.validacion = true;
+                }
+            } else {
+                this.validacion = false;
             }
         });
 

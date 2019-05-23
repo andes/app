@@ -1,0 +1,248 @@
+import { Plex } from '@andes/plex';
+import { Router } from '@angular/router';
+import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
+import { Server } from '@andes/shared';
+import { Auth } from '@andes/auth';
+import { OrganizacionService } from '../../services/organizacion.service';
+import { AgendaService } from '../../services/turnos/agenda.service';
+import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
+import { getObjMeses } from '../../../app/utils/enumerados';
+
+@Component({
+    selector: 'encabezadoReportesDiarios',
+    templateUrl: 'encabezadoReportesDiarios.html',
+
+})
+export class EncabezadoReportesDiariosComponent implements OnInit {
+    @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
+
+    // Variables comunes a varios reportes
+    public showBotonImprimir = false;
+    public opcionesOrganizacion: any = [];
+    public opcionesReportes: { id: number, nombre: string }[] = [];
+    public opcionesPrestacion: any = [];
+    public parametros = {};
+    public organizacion;
+    public tipoReportes;
+    public prestacion;
+
+    public reporte: any = [];
+
+    // Variables "ResumenDiarioMensual"
+    public showResumenDiarioMensual = false;
+    public opcionesMes: { id: number, nombre: string }[] = [];
+    public opcionesAnio: { id: number, nombre: string }[] = [];
+    public anio;
+    public mes;
+
+    // Variables "PlanillaC1"
+    public showPlanillaC1 = false;
+    public fecha: any;
+
+    // Eventos
+    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
+
+    constructor(
+        private plex: Plex,
+        private router: Router,
+        private server: Server,
+        private agendaService: AgendaService,
+        private auth: Auth,
+        private servicioOrganizacion: OrganizacionService,
+        private servicioPrestacion: TipoPrestacionService
+    ) {
+
+    }
+
+    public ngOnInit() {
+        this.plex.updateTitle([{
+            route: '/',
+            name: 'ANDES'
+        }, {
+            name: 'Reportes diarios'
+        }]);
+
+        this.organizacion = null;
+        this.tipoReportes = null;
+        this.mes = null;
+        this.anio = null;
+        this.opcionesReportes = this.getObjTiposReportes();
+        this.loadPrestaciones();
+        this.loadOrganizacion();
+        this.opcionesMes = getObjMeses();
+        this.opcionesAnio = this.getObjAnios();
+    }
+
+    getObjTiposReportes() {
+        let tiposReportes = [
+            {
+                id: 1,
+                nombre: 'Resumen diario mensual'
+            },
+            {
+                id: 2,
+                nombre: 'Planilla C1'
+            }];
+        return tiposReportes;
+    }
+
+    getObjAnios() {
+        let anios = [
+            {
+                id: 1,
+                nombre: moment().subtract(2, 'years').format('YYYY')
+            },
+            {
+                id: 2,
+                nombre: moment().subtract(1, 'years').format('YYYY')
+            },
+            {
+                id: 3,
+                nombre: moment().format('YYYY')
+            }
+        ];
+        return anios;
+    }
+
+    loadOrganizacion() {
+        let query = {
+            activo: 1
+        };
+
+        this.servicioOrganizacion.get(query).subscribe(data => {
+            this.opcionesOrganizacion = data;
+        });
+    }
+
+    loadPrestaciones() {
+        this.servicioPrestacion.get({
+            turneable: 1
+        }).subscribe((data) => {
+            this.opcionesPrestacion = data;
+        });
+    }
+
+    refreshSelection() {
+        this.showPlanillaC1 = false;
+        this.showResumenDiarioMensual = false;
+        this.showBotonImprimir = false;
+    }
+
+
+    onChangeTipoReportes(event) {
+        this.parametros = {};
+        this.parametros['organizacion'] = this.organizacion.id;
+        this.parametros['organizacionNombre'] = this.organizacion.nombre;
+        if (this.tipoReportes !== null) {
+            this.parametros['tipoReportes'] = this.tipoReportes.nombre;
+        }
+    }
+
+
+    getParams() {
+        // organizacion
+        if (this.organizacion) {
+            this.parametros['organizacion'] = this.organizacion.id;
+            this.parametros['organizacionNombre'] = this.organizacion.nombre;
+        } else {
+            this.parametros['organizacion'] = '';
+            this.parametros['organizacionNombre'] = '';
+        }
+
+        // tipoReportes
+        if (this.tipoReportes) {
+            this.parametros['tipoReportes'] = this.tipoReportes.nombre;
+        } else {
+            this.parametros['tipoReportes'] = '';
+        }
+
+        // mes
+        if (this.mes) {
+            this.parametros['mes'] = this.mes.id;
+            this.parametros['mesNombre'] = this.mes.nombre;
+        } else {
+            this.parametros['mes'] = '';
+            this.parametros['mesNombre'] = '';
+        }
+
+        // anio
+        if (this.anio) {
+            this.parametros['anio'] = this.anio.nombre;
+        } else {
+            this.parametros['anio'] = '';
+        }
+
+        // prestacion
+        if (this.prestacion) {
+            this.parametros['prestacion'] = this.prestacion.id;
+            this.parametros['prestacionNombre'] = this.prestacion.nombre;
+        } else {
+            this.parametros['prestacion'] = '';
+            this.parametros['prestacionNombre'] = '';
+        }
+
+        // fecha
+        if (this.fecha) {
+            this.parametros['fecha'] = this.fecha;
+        } else {
+            this.parametros['fecha'] = '';
+        }
+    }
+
+    public generar() {
+
+        this.getParams();
+
+        if (this.parametros['prestacion'] && this.parametros['organizacion'] && this.parametros['tipoReportes'] && this.parametros['mes'] && this.parametros['anio'] && this.parametros['tipoReportes'] === 'Resumen diario mensual') {
+
+            this.agendaService.findResumenDiarioMensual(this.parametros).subscribe((reporte) => {
+
+                this.reporte = reporte;
+                this.showPlanillaC1 = false;
+                this.showResumenDiarioMensual = true;
+                this.showBotonImprimir = true;
+            });
+        }
+
+        if (this.parametros['prestacion'] && this.parametros['organizacion'] && this.parametros['tipoReportes'] && this.parametros['fecha'] && this.parametros['tipoReportes'] === 'Planilla C1') {
+
+            this.agendaService.findPlanillaC1(this.parametros).subscribe((reporte) => {
+                this.reporte = reporte;
+                this.showResumenDiarioMensual = false;
+                this.showPlanillaC1 = true;
+                this.showBotonImprimir = true;
+            });
+        }
+    }
+
+    public imprimir(cmpName) {
+        const printContent = document.getElementById(cmpName);
+        const WindowPrt = window.open('', '', 'left=0,top=0,width=900,height=900,toolbar=0,scrollbars=0,status=0');
+
+        WindowPrt.document.write('<html><head><title>Reporte ' + cmpName + '</title>');
+        WindowPrt.document.write('</head><body >');
+
+        switch (cmpName) {
+            case 'Resumen diario mensual':
+                WindowPrt.document.write('<style>th,td{text-align: center; padding: 0.2rem; width: 25px;} thead,tfoot{background-color: gray;} table, th, td {border: 1px solid black; } table {width: 100%;border-collapse: collapse;} th {height: 25px;}</style>');
+                break;
+
+            case 'Planilla C1':
+                WindowPrt.document.write('<style>@media print{@page {size: landscape}} th,td{text-align: center; padding: 0.2rem; width: 25px;} thead,tfoot{background-color: gray;} table, th, td {border: 1px solid black; } table {width: 100%;border-collapse: collapse; font-size: 12px;} th {height: 25px;}</style>');
+                break;
+
+            default:
+                break;
+        }
+
+        WindowPrt.document.write(printContent.innerHTML);
+        WindowPrt.document.write('</body></html>');
+
+        WindowPrt.document.close();
+        WindowPrt.focus();
+        WindowPrt.print();
+        WindowPrt.close();
+    }
+
+}
+

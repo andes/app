@@ -2,7 +2,7 @@
     <section>
         <!-- Panel principal -->
         <div class="row">
-            <div class="col">
+            <div class="col h-100">
                 <plex-box>
                     <header>
                         <div class="page-title">Agregar Sobreturno</div>
@@ -16,24 +16,28 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <plex-phone *ngIf="paciente" label="Verifique el número telefónico:" [(ngModel)]="telefono" (change)="cambioTelefono=true"
-                                    name="telefono"></plex-phone>
-                                <plex-text *ngIf="carpetaEfector" (change)="cambiarCarpeta()" label="Nro Carpeta" name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
+                                <plex-phone *ngIf="paciente" label="Verifique el número telefónico:"
+                                    [(ngModel)]="telefono" (change)="cambioTelefono=true" name="telefono"></plex-phone>
+                                <plex-text *ngIf="carpetaEfector" (change)="cambiarCarpeta()" label="Nro Carpeta"
+                                    name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
                             </div>
                             <div class="col">
-                                <plex-text label="Observaciones" name="nota" multiline="true" [(ngModel)]="nota" (change)="verificarNota()"></plex-text>
+                                <plex-text label="Observaciones" name="nota" multiline="true" [(ngModel)]="nota"
+                                    (change)="verificarNota()"></plex-text>
                             </div>
                         </div>
                         <div class="row" *ngIf="agenda.tipoPrestaciones.length > 1">
                             <div class="col">
-                                <plex-select [(ngModel)]="tipoPrestacion" name="tipoPrestacion" label="Tipo de prestación" [data]="agenda.tipoPrestaciones"
+                                <plex-select [(ngModel)]="tipoPrestacion" name="tipoPrestacion"
+                                    label="Tipo de prestación" [data]="agenda.tipoPrestaciones"
                                     placeholder="Seleccione el tipo de prestación" [required]="true">
                                 </plex-select>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-3">
-                                <plex-datetime type="time" [(ngModel)]="horaTurno" [min]="inicio" [max]="fin" [required]="true" name="horaTurno" label="Hora Turno">
+                                <plex-datetime type="time" [(ngModel)]="horaTurno" [min]="inicio" [max]="fin"
+                                    [required]="true" name="horaTurno" label="Hora Turno">
                                 </plex-datetime>
                             </div>
                         </div>
@@ -43,14 +47,16 @@
                             <div class="col col-sm-12" *ngIf="pacientesSearch">
                                 <div class="panel panel-default">
                                     <div class="clear"></div>
-                                    <pacientesSearch (selected)="afterSearch($event)" [hideFooter]="true" [modoCompleto]="false" [bloquearCreate]="false">
+                                    <pacientesSearch (selected)="afterSearch($event)" [hideFooter]="true"
+                                        [modoCompleto]="false" [bloquearCreate]="false">
                                     </pacientesSearch>
                                 </div>
                             </div>
                             <div class="col col-sm-12" *ngIf="showCreateUpdate">
                                 <div class="panel panel-default">
                                     <div class="clear"></div>
-                                    <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
+                                    <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado"
+                                        (data)='afterCreateUpdate($event)'></paciente-create-update>
                                 </div>
                             </div>
                         </div>
@@ -69,7 +75,8 @@
                         <h4>
                             <span class="mdi mdi-calendar-today"> Hora Agenda </span>
                         </h4>
-                        <span>{{ agenda.horaInicio | date: 'EEE d MMM' }} | Inicio: {{ agenda.horaInicio | date: 'HH:mm' }} - Fin:
+                        <span>{{ agenda.horaInicio | date: 'EEE d MMM' }} | Inicio:
+                            {{ agenda.horaInicio | date: 'HH:mm' }} - Fin:
                             {{ agenda.horaFin | date: 'HH:mm' }}
                         </span>
                         <br>
@@ -95,9 +102,10 @@
     <footer>
         <div class="row">
             <div class="col text-right">
-                <plex-button type="danger" icon="close-circle-outline" label="Cancelar" (click)="cancelar()">
+                <plex-button type="danger" label="Cancelar" (click)="cancelar()">
                 </plex-button>
-                <plex-button *ngIf="paciente" icon="mdi-content-save" validateForm="true" label="Guardar" type="success" (click)="guardar($event)">
+                <plex-button *ngIf="paciente" validateForm="true" label="Guardar" type="success"
+                    (click)="guardar($event)">
                 </plex-button>
             </div>
         </div>
