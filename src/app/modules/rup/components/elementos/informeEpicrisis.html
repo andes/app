@@ -22,7 +22,7 @@
         </div>
     </div>
     <plex-accordion>
-        <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
+        <ng-container *ngFor="let item of requeridos; let i = index">
             <plex-panel [ngClass]="{'alerta-campo' : !rupInstance.isValid}" icon="arrow-down-drop-circle-outline"
                 [active]="accordionActive === i || desplegarTodo" (toggle)="accordionSeleccionado(i, item.concepto)"
                 class="hover">
@@ -88,7 +88,7 @@
         </div>
     </div>
     <div class="grid-container">
-        <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
+        <ng-container *ngFor="let item of requeridos; let i = index">
             <div class="grid-item-{{i+1}}">
                 <div class="rup-card rup-clear {{ (item.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(item.concepto) }}">
                     <div class="titulo d-flex align-items-start">
