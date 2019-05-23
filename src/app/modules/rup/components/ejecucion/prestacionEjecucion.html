@@ -67,16 +67,27 @@
                                                     <ng-container
                                                                   *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length > 0">
 
-                                                        <b *ngIf="registro?.relacionadoCon">Relacionado
-                                                            con: </b>
+                                                        <b *ngIf="registro?.relacionadoCon">Relacionado con: </b>
                                                         <div class="d-flex flex-wrap" *ngIf="registro?.relacionadoCon">
-                                                            <ng-container>
-                                                                <ng-container
-                                                                              *ngFor="let relacion of registro.relacionadoCon; let r=index">
+
+                                                            <ng-container
+                                                                          *ngFor="let relacion of registro.relacionadoCon; let ir=index">
+                                                                <ng-container *ngIf="ir < 5">
                                                                     <small class="badge badge-info badge-170">
                                                                         {{ relacion | relacionRUP }}
                                                                     </small>
-                                                                    <button (click)="desvincular(registro, registro.relacionadoCon[r])"
+                                                                    <button (click)="desvincular(registro, registro.relacionadoCon[ir])"
+                                                                            class="desvincular btn btn-sm btn-primary btn-icon-relacion mr-2"
+                                                                            *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
+                                                                            title="Relación">
+                                                                        <i class="mdi mdi-link-variant-off"></i>
+                                                                    </button>
+                                                                </ng-container>
+                                                                <ng-container *ngIf="verMasRelaciones[i] && ir >= 5">
+                                                                    <small class="badge badge-info badge-170">
+                                                                        {{ relacion | relacionRUP }}
+                                                                    </small>
+                                                                    <button (click)="desvincular(registro, registro.relacionadoCon[ir])"
                                                                             class="desvincular btn btn-sm btn-primary btn-icon-relacion mr-2"
                                                                             *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
                                                                             title="Relación">
@@ -85,7 +96,7 @@
                                                                 </ng-container>
                                                             </ng-container>
                                                             <ng-container *ngIf="registro.relacionadoCon.length > 5">
-                                                                <plex-button type="primary btn-icon-relacion" size="sm"
+                                                                <plex-button type="primary" size="sm"
                                                                              label="{{ !verMasRelaciones[i] ? ('+' + (registro.relacionadoCon.length - 5) + ' ...') : '' }}"
                                                                              icon="{{ !verMasRelaciones[i] ? '' : 'close' }}"
                                                                              (click)="toggleVerMasRelaciones(i)">
