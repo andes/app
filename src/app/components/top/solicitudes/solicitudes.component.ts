@@ -247,7 +247,8 @@ export class SolicitudesComponent implements OnInit {
         if (this.fechaDesde && this.fechaHasta) {
             let params = {
                 solicitudDesde: this.fechaDesde,
-                solicitudHasta: this.fechaHasta
+                solicitudHasta: this.fechaHasta,
+                ordenFechaDesc: true
             };
             if (this.estado) {
                 if (this.estado.id !== 'turnoDado') {
