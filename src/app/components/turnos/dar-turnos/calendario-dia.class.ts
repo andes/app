@@ -22,15 +22,15 @@ export class CalendarioDia {
         if (!agenda) {
             this.estado = 'vacio';
         } else {
-            let hayTurnosDisponibles: boolean = (this.agenda.turnosDisponibles > 0);
+            let bloquesPrestacion = agenda.bloques; // filtra los bloques de interés según prestacion
+            if (filtroPrestacion) {
+                bloquesPrestacion = agenda.bloques.filter(b => b.tipoPrestaciones.find(tipo => tipo.id === filtroPrestacion.id));
+            }
+            let hayTurnosDisponibles: boolean = (bloquesPrestacion.find(b => b.turnos.find(t => t.estado === 'disponible')));
             this.estadoAgenda = this.agenda.estado;
             if (hayTurnosDisponibles) {
                 let countBloques = [];
-                let bloquesPrestacion = agenda.bloques; // filtra los bloques de interés según prestacion
 
-                if (filtroPrestacion) {
-                    bloquesPrestacion = agenda.bloques.filter(b => b.tipoPrestaciones.find(tipo => tipo.id === filtroPrestacion.id));
-                }
                 // Si la agenda es de hoy, los turnos programados deberán sumarse  al contador "delDia"
                 if (this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate()) {
                     // Por cada bloque asignamos contadores dinamicos con la cantidad inicial de c/tipo de turno (Para sidebar)
