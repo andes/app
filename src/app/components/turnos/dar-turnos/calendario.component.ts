@@ -162,7 +162,7 @@ export class CalendarioComponent {
 
     public seleccionar(dia: CalendarioDia) {
         // Sólo permite seleccionar días con agenda
-        if (dia.agenda) {
+        if (dia.agenda && dia.turnosDisponibles > 0) {
             if (this.diaSeleccionado) {
                 this.diaSeleccionado.seleccionado = false;
             }

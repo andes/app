@@ -6,7 +6,7 @@
                 'outline-danger'   : (day.estado === 'ocupado' && !day.seleccionado && _mostrarNoDisponibles),
                 'outline-success'  : (day.estado === 'disponible') && !day.seleccionado,
                 'outline-primary'  : day.seleccionado,
-                'hover'            : day.estado !== 'vacio'
+                'hover'            : (day.estado !== 'vacio' && day.turnosDisponibles > 0)
             }">
             <div *ngIf="day.cantidadAgendas > 0">
                 <div class="dia">{{ day.fecha | date: 'd' }}</div>
