@@ -36,6 +36,7 @@ export class UpdateContactoDireccionComponent implements OnInit {
     arrayContactos: IContacto[] = [];
     provincias: IProvincia[] = [];
     localidades: ILocalidad[] = [];
+    localidadRequerida = true;
     paisArgentina = null;
     provinciaNeuquen = null;
     localidadNeuquen = null;
@@ -167,10 +168,14 @@ export class UpdateContactoDireccionComponent implements OnInit {
     }
 
     changeProvincia(provincia) {
+        this.localidadRequerida = false;
         if (provincia && provincia.id) {
             this.direccion.ubicacion.localidad = null;
             this.localidadService.getXProvincia(provincia.id).subscribe(result => {
                 this.localidades = result;
+                if (this.localidades && this.localidades.length) {
+                    this.localidadRequerida = true;
+                }
             });
         }
     }
