@@ -48,6 +48,7 @@ export class PacienteCruComponent implements OnInit {
     paisArgentina = null;
     provinciaActual = null;
     localidadActual = null;
+    localidadRequerida = true;
     organizacionActual = null;
     validado = false;
     noPoseeDNI = false;
@@ -365,12 +366,17 @@ export class PacienteCruComponent implements OnInit {
     }
 
     loadLocalidades(provincia) {
+        this.localidadRequerida = false;
         if (provincia && provincia.id) {
             if (provincia.id === this.provinciaActual.id) {
                 this.viveProvActual = true;
             }
             this.localidadService.getXProvincia(provincia.id).subscribe(result => {
                 this.localidades = result;
+                if (this.localidades && this.localidades.length) {
+                    this.localidadRequerida = true;
+                }
+
             });
         }
     }
