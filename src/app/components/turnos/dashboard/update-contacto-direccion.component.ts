@@ -23,8 +23,16 @@ import { ILocalidad } from '../../../interfaces/ILocalidad';
 
 export class UpdateContactoDireccionComponent implements OnInit {
 
-    @Input() paciente: IPaciente;
+    @Input()
+    get pac(): IPaciente {
+        return this.paciente;
+    }
+    set pac(value: IPaciente) {
+        this.paciente = value;
+        this.loadPaciente();
+    }
 
+    paciente: IPaciente;
     arrayContactos: IContacto[] = [];
     provincias: IProvincia[] = [];
     localidades: ILocalidad[] = [];
@@ -71,18 +79,7 @@ export class UpdateContactoDireccionComponent implements OnInit {
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.tipoComunicacion.splice(this.tipoComunicacion.length - 1, 1);  // eliminamos 'Email'
 
-        if (this.paciente && this.paciente.contacto && this.paciente.contacto.length) {
-            this.arrayContactos = this.paciente.contacto;
-        } else {
-            this.arrayContactos = [this.contacto];
-        }
-
-        if (this.paciente && this.paciente.direccion && this.paciente.direccion.length && this.paciente.direccion[0].valor) {
-            this.direccion = this.paciente.direccion[0];
-            if (this.direccion.ubicacion && this.direccion.ubicacion.provincia) {
-                this.changeProvincia(this.direccion.ubicacion.provincia);
-            }
-        }
+        this.loadPaciente();
 
         // Set País Argentina
         this.paisService.get({
@@ -104,6 +101,20 @@ export class UpdateContactoDireccionComponent implements OnInit {
         });
     }
 
+    private loadPaciente() {
+        if (this.paciente && this.paciente.contacto && this.paciente.contacto.length) {
+            this.arrayContactos = this.paciente.contacto;
+        } else {
+            this.arrayContactos = [this.contacto];
+        }
+        if (this.paciente && this.paciente.direccion && this.paciente.direccion[0].valor) {
+            this.direccion = this.paciente.direccion[0];
+            if (this.direccion.ubicacion.provincia) {
+                this.changeProvincia(this.direccion.ubicacion.provincia);
+            }
+        }
+    }
+
     addContacto(key, valor) {
         let indexUltimo = this.arrayContactos.length - 1;
 
@@ -123,7 +134,6 @@ export class UpdateContactoDireccionComponent implements OnInit {
     }
 
     changeTipoContacto(indice, keyTipo) {
-        // this.arrayContactos[indice].valor = '';
         this.arrayContactos[indice].tipo = keyTipo.id;
         this.disableGuardar = false;
     }
