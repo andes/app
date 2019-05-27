@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, EventEmitter, Output, Input, OnInit, OnChanges } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -42,10 +43,16 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
     constructor(
         public plex: Plex,
         public servicioAgenda: AgendaService,
-        public auth: Auth) { }
+        public auth: Auth,
+        private router: Router) { }
 
 
     ngOnInit() {
+
+        if (!this.auth.getPermissions('espaciosFisicos:?').length) {
+            this.router.navigate(['inicio']);
+        }
+
         if (this.agendaSeleccionada) {
             this.refreshScreen();
         } else {

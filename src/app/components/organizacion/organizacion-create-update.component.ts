@@ -111,7 +111,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         fechaBaja: new Date(),
         unidadesOrganizativas: [],
         ofertaPrestacional: { idSisa: Number, nombre: String },
-        showMap: false
+        showMapa: false
     };
 
     public listadoUO = [];
@@ -137,6 +137,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
 
     public puedeEditarCompleto = false;
     public puedeEditarBasico = false;
+    public botonGuardarDisabled = false;
     constructor(
         private organizacionService: OrganizacionService,
         private paisService: PaisService,
@@ -165,26 +166,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
             this.tiposEstablecimiento = resultado;
         });
 
-        if (this.seleccion && this.seleccion.id) {
-            this.updateTitle('Editar organización');
-            this.organizacionService.getById(this.seleccion.id).subscribe(resultado => {
-                Object.assign(this.organizacionModel, resultado);
-                if (this.organizacionModel && this.organizacionModel.direccion && this.organizacionModel.direccion.geoReferencia && this.organizacionModel.direccion.geoReferencia.length === 2) {
-                    this.lat = this.organizacionModel.direccion.geoReferencia[0];
-                    this.lng = this.organizacionModel.direccion.geoReferencia[1];
-                }
-                if (this.organizacionModel && (!this.organizacionModel.contacto || this.organizacionModel.contacto.length < 1)) {
-                    this.addContacto();
-                }
-                if (this.organizacionModel && (!this.organizacionModel.edificio || this.organizacionModel.edificio.length < 1)) {
-                    this.addEdificio();
-                }
-            });
-        } else {
-            this.updateTitle('Nueva organización');
-            this.addContacto();
-            this.addEdificio();
-        }
+        this.cargarOrganizacionModel(this.seleccion);
 
         // Set País Argentina
         this.paisService.get({
@@ -200,7 +182,26 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
             this.loadLocalidades(this.provinciaNeuquen);
         });
     }
-
+    private cargarOrganizacionModel(org: IOrganizacion) {
+        if (org && org.id) {
+            this.updateTitle('Editar organización');
+            Object.assign(this.organizacionModel, org);
+            if (this.organizacionModel && this.organizacionModel.direccion && this.organizacionModel.direccion.geoReferencia && this.organizacionModel.direccion.geoReferencia.length === 2) {
+                this.lat = this.organizacionModel.direccion.geoReferencia[0];
+                this.lng = this.organizacionModel.direccion.geoReferencia[1];
+            }
+            if (this.organizacionModel && (!this.organizacionModel.contacto || this.organizacionModel.contacto.length < 1)) {
+                this.addContacto();
+            }
+            if (this.organizacionModel && (!this.organizacionModel.edificio || this.organizacionModel.edificio.length < 1)) {
+                this.addEdificio();
+            }
+        } else {
+            this.updateTitle('Nueva organización');
+            this.addContacto();
+            this.addEdificio();
+        }
+    }
     loadListadoUO(event) {
         this.snomed.getQuery({ expression: this.expression }).subscribe((result) => {
             this.organizacionModel.unidadesOrganizativas.forEach((uo) => {
@@ -372,7 +373,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     limpiarContacto() {
         if (this.noPoseeContacto) {
             this.contactosCache = this.organizacionModel.contacto;
-            // this.organizacionModel.contacto = [this.contacto];
         } else if (this.contactosCache && this.contactosCache.length) {
             this.organizacionModel.contacto = this.contactosCache;
         } else {
@@ -386,7 +386,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     limpiarEdificio() {
         if (this.noPoseeEdificio) {
             this.edificiosCache = this.organizacionModel.edificio;
-            // this.organizacionModel.edificio = [this.edificio];
         } else if (this.edificiosCache && this.edificiosCache.length) {
             this.organizacionModel.edificio = this.edificiosCache;
         } else {
@@ -443,6 +442,37 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     public movioMarker(event) {
         this.organizacionModel.direccion.geoReferencia[0] = event.coords.lat;
         this.organizacionModel.direccion.geoReferencia[1] = event.coords.lng;
+    }
+
+    validarUnicoCodigoSisa() {
+        if (this.organizacionModel.codigo.sisa) {
+            this.organizacionService.get({ sisa: this.organizacionModel.codigo.sisa }).subscribe(organizaciones => { // Se llama dos veces cuando estoy suscripto. Al hardcodear el mensaje puedo
+                this.botonGuardarDisabled = false;
+                if (organizaciones && organizaciones.length && // si trajo resultados
+                    (!this.organizacionModel.id || this.organizacionModel.id !== organizaciones[0].id)) { // y estoy creando o editando una organizacion diferente a la que trajo
+
+                    this.auth.organizaciones().subscribe((organizacionesUser: any) => {
+                        const tienePermisosParaOrgEncontrada = organizacionesUser.some((orgUser: any) => { return orgUser.id === organizaciones[0].id; });
+                        if (tienePermisosParaOrgEncontrada) {
+                            this.plex.confirm(`¿Desea editar la organización ${organizaciones[0].nombre}?`, 'Existe otra organización con mismo código SISA').then((resultado: any) => {
+                                if (resultado) {
+                                    this.cargarOrganizacionModel(organizaciones[0]);
+                                } else {
+                                    this.continuarConOrganizacionRepetida();
+                                }
+                            });
+                        } else {
+                            this.plex.info('warning', `La organización ${organizaciones[0].nombre} tiene el mismo código SISA.`); // TODO: cuando plex lo permita, cambiar el cartel de Texto requerido por 'Otra organización tiene el mismo código'
+                            this.continuarConOrganizacionRepetida();
+                        }
+                    });
+                }
+            });
+        }
+    }
+    private continuarConOrganizacionRepetida(): any {
+        this.botonGuardarDisabled = true;
+        this.organizacionModel.codigo.sisa = null;
     }
 }
 

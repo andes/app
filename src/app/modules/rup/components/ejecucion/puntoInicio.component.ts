@@ -54,6 +54,7 @@ export class PuntoInicioComponent implements OnInit {
     // ultima request que se almacena con el subscribe
     private lastRequest: ISubscription;
 
+
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
         public servicioAgenda: AgendaService,
@@ -65,7 +66,7 @@ export class PuntoInicioComponent implements OnInit {
 
     ngOnInit() {
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
-        if (this.auth.getPermissions('rup:?').length <= 0) {
+        if (!this.auth.getPermissions('rup:?').length) {
             this.redirect('inicio');
         }
         if (!this.auth.profesional) {
