@@ -108,10 +108,17 @@ export class UpdateContactoDireccionComponent implements OnInit {
         } else {
             this.arrayContactos = [this.contacto];
         }
-        if (this.paciente && this.paciente.direccion && this.paciente.direccion[0].valor) {
-            this.direccion = this.paciente.direccion[0];
-            if (this.direccion.ubicacion.provincia) {
+        if (this.paciente && this.paciente.direccion && this.paciente.direccion.length) {
+            let direccionOriginal = this.paciente.direccion[0];
+            if (direccionOriginal.valor) {
+                this.direccion.valor = direccionOriginal.valor;
+            }
+            if (direccionOriginal.ubicacion.provincia) {
+                this.direccion.ubicacion.provincia = direccionOriginal.ubicacion.provincia;
                 this.changeProvincia(this.direccion.ubicacion.provincia);
+            }
+            if (direccionOriginal.ubicacion.localidad) {
+                this.direccion.ubicacion.localidad = direccionOriginal.ubicacion.localidad;
             }
         }
     }
