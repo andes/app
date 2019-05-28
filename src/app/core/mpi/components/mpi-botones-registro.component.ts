@@ -11,8 +11,8 @@ export class BotonesRegistroComponent {
     routes = [
         { label: 'BEBÉ', route: '/apps/mpi/bebe' },
         { label: 'EXTRANJERO', route: '/apps/mpi/extranjero' },
-        { label: 'CON DNI ARGENTINO', route: '/apps/mpi/paciente' },
-        { label: 'SIN DNI ARGENTINO', route: '/apps/mpi/paciente' },
+        { label: 'CON DNI ARGENTINO', route: '/apps/mpi/paciente/con-dni' },
+        { label: 'SIN DNI ARGENTINO', route: '/apps/mpi/paciente/sin-dni' },
     ];
 
     toggleMenu() {
