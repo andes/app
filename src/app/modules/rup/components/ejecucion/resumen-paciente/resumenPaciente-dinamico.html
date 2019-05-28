@@ -12,11 +12,14 @@
 <ng-container *ngIf="elementos.length">
     <div class="row mt-3" *ngFor="let item of elementos, let i = index">
         <div class="col-12">
-            <h4 class="text-capitalize">
-                {{ item.conceptos | enumerar:['term'] }}
-            </h4>
+            <span class="d-flex justify-content-between">
+                <p class="h4 text-capitalize">{{ item.conceptos | enumerar:['term'] }}</p>
+                <plex-badge type="info" *ngIf="registros[i] && registros[i].registro.updatedAt">
+                    {{ registros[i].registro.updatedAt | fecha }}
+                </plex-badge>
+            </span>
             <ng-container *ngIf="registros[i]; else mensaje">
-                <rup [elementoRUP]="item" [prestacion]="prestacion" [paciente]="paciente" [registro]="registros[i].registro" [soloValores]="true"></rup>
+                <rup [elementoRUP]="item" [paciente]="paciente" [registro]="registros[i].registro" [soloValores]="true"></rup>
             </ng-container>
             <ng-template #mensaje>
                 No se ha registrado ningún valor de {{item.conceptos | enumerar:['term']}}

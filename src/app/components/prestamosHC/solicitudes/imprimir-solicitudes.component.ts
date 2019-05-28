@@ -42,7 +42,7 @@ export class ImprimirSolicitudesComponent implements OnInit {
     }
 
     cancelar() {
-        this.volverAlListadoEmit.emit(true);
+        this.volverAlListadoEmit.emit();
     }
 
 }

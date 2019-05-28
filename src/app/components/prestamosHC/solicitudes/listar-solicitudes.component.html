@@ -1,4 +1,4 @@
-<form *ngIf="!verImprimirSolicitudes" class="plex-layout ng-untouched ng-pristine ng-valid" novalidate="">
+<form class="plex-layout ng-untouched ng-pristine ng-valid" novalidate="">
     <section>
         <div class="row">
             <div [ngClass]="cssLayout">
@@ -209,4 +209,4 @@
     <pacientesSearch *ngIf="pacientesSearch" (selected)="afterSearch($event)" [mostrarCancelar]="true" (cancel)="cancelarPacienteSearch()"
         [bloquearCreate]="true"></pacientesSearch>
 </form>
-<imprimir-solicitudes [solicutudes]="carpetas" *ngIf="verImprimirSolicitudes" (volverAlListadoEmit)="volverAListado($event)"></imprimir-solicitudes>
+

@@ -13,6 +13,8 @@ export class PrestamosHcComponent implements OnInit {
     recargaPrestamos: any = false;
     recargaSolicitudes: any = false;
     listaCarpetas: any;
+    public carpetas;
+    public imprimirSolicitudes: any = false;
     public autorizado = false;
 
     constructor(public auth: Auth, private router: Router) { }
@@ -27,5 +29,14 @@ export class PrestamosHcComponent implements OnInit {
     redirect(pagina: string) {
         this.router.navigate(['./' + pagina]);
         return false;
+    }
+
+    imprimirCarpetas(carpetas) {
+        this.carpetas = carpetas;
+        this.imprimirSolicitudes = true;
+    }
+
+    cancelarImprimir() {
+        this.imprimirSolicitudes = false;
     }
 }
