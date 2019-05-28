@@ -17,7 +17,8 @@ export class CalendarioComponent {
     private _estado: String;
     private diaSeleccionado: CalendarioDia;
     public calendario: any = [];
-    public _filtroPrestacion: any = null;
+    public _filtroPrestacion: any;
+    public _filtroProfesional: any;
     private _opcionesCalendario;
 
     @Input('opcionesCalendario')
@@ -76,6 +77,14 @@ export class CalendarioComponent {
         return this._filtroPrestacion;
     }
 
+    @Input('filtroProfesional')
+    set filtroProfesional(value: any) {
+        this._filtroProfesional = value;
+    }
+    get filtroProfesional() {
+        return this._filtroProfesional;
+    }
+
     @Output() agendaChanged = new EventEmitter();
 
     /** Devuelve la primera agenda que encuentra de un día determinado */
@@ -132,7 +141,7 @@ export class CalendarioComponent {
                     if (agendasPorFecha.length === 1) {
                         ag = this.agendaPorFecha(inicio);
                     }
-                    let dia = new CalendarioDia(inicio.toDate(), ag, this._solicitudPrestacion, this.filtroPrestacion);
+                    let dia = new CalendarioDia(inicio.toDate(), ag, this._solicitudPrestacion, this.filtroPrestacion, this.filtroProfesional);
                     // if (dia.estado === 'vacio' && this._solicitudPrestacion) {
                     if (dia.estado === 'vacio') {
                         dia.cantidadAgendas = 0;

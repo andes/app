@@ -93,6 +93,8 @@ export class DarTurnosComponent implements OnInit {
         estado: 'Sin comprobante',
         numeroComprobante: ''
     };
+    public prestacionSeleccionada: any = null;  // filtro por prestacion en calendario
+    public profesionalSeleccionado: any = null; // filtro por profesional en calendario
 
     estadoT: EstadosDarTurnos;
     turnoDoble = false;
@@ -300,6 +302,8 @@ export class DarTurnosComponent implements OnInit {
     }
 
     filtrar() {
+        this.prestacionSeleccionada = this.opciones.tipoPrestacion;
+        this.profesionalSeleccionado = this.opciones.profesional;
         let search = {
             'tipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion : null,
             'profesional': this.opciones.profesional ? this.opciones.profesional : null,
@@ -618,12 +622,8 @@ export class DarTurnosComponent implements OnInit {
 
     seleccionarBusqueda(indice: number) {
         this.opciones.tipoPrestacion = this.busquedas[indice].tipoPrestacion;
-        let actualizarProfesional = (this.opciones.profesional === this.busquedas[indice].profesional);
         this.opciones.profesional = this.busquedas[indice].profesional;
-        if (!actualizarProfesional && this.eventoProfesional && this.busquedas[indice].profesional) {
-            this.eventoProfesional.callback([this.busquedas[indice].profesional]);
-        }
-        this.actualizar('');
+        this.filtrar();
     }
 
     seleccionarUltimoTurno(turno) {

@@ -16,15 +16,19 @@ export class CalendarioDia {
     public delDiaDisponibles = 0;
     public profesionalDisponibles = 0;
 
-    constructor(public fecha: Date, public agenda: any, solicitudPrestacion: any, filtroPrestacion?: any) {
+    constructor(public fecha: Date, public agenda: any, solicitudPrestacion: any, filtroPrestacion?: any, filtroProfesional?: any) {
         this.hoy = new Date();
         this.turnosDisponibles = 0;
         if (!agenda) {
             this.estado = 'vacio';
         } else {
-            let bloquesPrestacion = agenda.bloques; // filtra los bloques de interés según prestacion
+            let bloquesPrestacion = agenda.bloques; // para filtrado de agendas/bloques segun prestacion y/o profesional
+            if (filtroProfesional && !agenda.profesionales.find(prof => prof.id === filtroProfesional.id)) {
+                // si se está filtrando por un profesional que no está en la agenda ...
+                bloquesPrestacion = [];
+            }
             if (filtroPrestacion) {
-                bloquesPrestacion = agenda.bloques.filter(b => b.tipoPrestaciones.find(tipo => tipo.id === filtroPrestacion.id));
+                bloquesPrestacion = bloquesPrestacion.filter(b => b.tipoPrestaciones.find(tipo => tipo.id === filtroPrestacion.id));
             }
             let hayTurnosDisponibles: boolean = (bloquesPrestacion.find(b => b.turnos.find(t => t.estado === 'disponible')));
             this.estadoAgenda = this.agenda.estado;
