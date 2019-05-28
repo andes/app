@@ -117,7 +117,7 @@ export class UpdateContactoDireccionComponent implements OnInit {
                 this.direccion.ubicacion.provincia = direccionOriginal.ubicacion.provincia;
                 this.changeProvincia(this.direccion.ubicacion.provincia);
             }
-            if (direccionOriginal.ubicacion.localidad) {
+            if (direccionOriginal.ubicacion && direccionOriginal.ubicacion.localidad) {
                 this.direccion.ubicacion.localidad = direccionOriginal.ubicacion.localidad;
             }
         }
