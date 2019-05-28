@@ -52,5 +52,5 @@ export interface IOrganizacion {
      * @type {boolean}
      * @memberof IOrganizacion
      */
-    showMap?: boolean;
+    showMapa?: boolean;
 }
