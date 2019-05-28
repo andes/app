@@ -60,7 +60,7 @@ export class InicioComponent implements AfterViewInit {
                 this.solicitudes = 'solicitudes';
             }
 
-            if (this.auth.getPermissions('prestamos:?').length > 0) {
+            if (this.auth.check('prestamos:?')) {
                 this.prestamosHC = 'prestamosHC';
                 this.denied = false;
             }
