@@ -19,7 +19,7 @@ import { GeoreferenciaService } from '../services/georeferencia.service';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { PreviousUrlService } from '../../../services/previous-url.service';
 import { HistorialBusquedaService } from '../services/historialBusqueda.service';
 
@@ -48,6 +48,7 @@ export class PacienteCruComponent implements OnInit {
     paisArgentina = null;
     provinciaActual = null;
     localidadActual = null;
+    localidadRequerida = true;
     organizacionActual = null;
     validado = false;
     noPoseeDNI = false;
@@ -138,13 +139,14 @@ export class PacienteCruComponent implements OnInit {
     geoReferenciaAux = []; // Coordenadas para la vista del mapa.
     infoMarcador: String = null;
 
+    opcion: any;
+
     constructor(
         private historialBusquedaService: HistorialBusquedaService,
         private previousUrlService: PreviousUrlService,
         private organizacionService: OrganizacionService,
         private auth: Auth,
         private georeferenciaService: GeoreferenciaService,
-        private location: Location,
         private paisService: PaisService,
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
@@ -154,12 +156,20 @@ export class PacienteCruComponent implements OnInit {
         public appMobile: AppMobileService,
         private pacienteCache: PacienteCacheService,
         private _router: Router,
-        public plex: Plex) {
+        public plex: Plex,
+        private route: ActivatedRoute) {
         this.nombrePattern = pacienteService.nombreRegEx.source;
     }
 
     ngOnInit() {
         this.updateTitle('Registrar un paciente');
+        this.route.params.subscribe(params => {
+            this.opcion = params['opcion'];
+        });
+        if (this.opcion === 'sin-dni') {
+            this.noPoseeDNI = true;
+            this.pacienteModel.documento = '';
+        }
         this.relacionesBorradas = [];
         this.organizacionService.getById(this.auth.organizacion.id).subscribe((org: IOrganizacion) => {
             if (org) {
@@ -167,6 +177,15 @@ export class PacienteCruComponent implements OnInit {
                 this.provinciaActual = org.direccion.ubicacion.provincia;
                 this.localidadActual = org.direccion.ubicacion.localidad;
                 this.loadPaciente();
+                if (org.direccion.geoReferencia) {
+                    this.geoReferenciaAux = org.direccion.geoReferencia;
+                } else {
+                    this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
+                        if (point) {
+                            this.geoReferenciaAux = [point.lat, point.lng];
+                        }
+                    });
+                }
             }
         });
         // Cargamos todas las provincias
@@ -365,12 +384,17 @@ export class PacienteCruComponent implements OnInit {
     }
 
     loadLocalidades(provincia) {
+        this.localidadRequerida = false;
         if (provincia && provincia.id) {
             if (provincia.id === this.provinciaActual.id) {
                 this.viveProvActual = true;
             }
             this.localidadService.getXProvincia(provincia.id).subscribe(result => {
                 this.localidades = result;
+                if (this.localidades && this.localidades.length) {
+                    this.localidadRequerida = true;
+                }
+
             });
         }
     }

@@ -36,6 +36,7 @@ export class UpdateContactoDireccionComponent implements OnInit {
     arrayContactos: IContacto[] = [];
     provincias: IProvincia[] = [];
     localidades: ILocalidad[] = [];
+    localidadRequerida = true;
     paisArgentina = null;
     provinciaNeuquen = null;
     localidadNeuquen = null;
@@ -107,10 +108,17 @@ export class UpdateContactoDireccionComponent implements OnInit {
         } else {
             this.arrayContactos = [this.contacto];
         }
-        if (this.paciente && this.paciente.direccion && this.paciente.direccion[0].valor) {
-            this.direccion = this.paciente.direccion[0];
-            if (this.direccion.ubicacion.provincia) {
+        if (this.paciente && this.paciente.direccion && this.paciente.direccion.length) {
+            let direccionOriginal = this.paciente.direccion[0];
+            if (direccionOriginal.valor) {
+                this.direccion.valor = direccionOriginal.valor;
+            }
+            if (direccionOriginal.ubicacion && direccionOriginal.ubicacion.provincia) {
+                this.direccion.ubicacion.provincia = direccionOriginal.ubicacion.provincia;
                 this.changeProvincia(this.direccion.ubicacion.provincia);
+            }
+            if (direccionOriginal.ubicacion && direccionOriginal.ubicacion.localidad) {
+                this.direccion.ubicacion.localidad = direccionOriginal.ubicacion.localidad;
             }
         }
     }
@@ -167,10 +175,14 @@ export class UpdateContactoDireccionComponent implements OnInit {
     }
 
     changeProvincia(provincia) {
+        this.localidadRequerida = false;
         if (provincia && provincia.id) {
             this.direccion.ubicacion.localidad = null;
             this.localidadService.getXProvincia(provincia.id).subscribe(result => {
                 this.localidades = result;
+                if (this.localidades && this.localidades.length) {
+                    this.localidadRequerida = true;
+                }
             });
         }
     }
