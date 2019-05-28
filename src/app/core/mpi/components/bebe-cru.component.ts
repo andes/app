@@ -102,6 +102,7 @@ export class BebeCruComponent implements OnInit {
     paisArgentina = null;
     provinciaActual = null;
     localidadActual = null;
+    localidadRequerida = true;
     viveProvActual = false;
     viveLocActual = false;
     barrios: any[] = [];
@@ -279,6 +280,9 @@ export class BebeCruComponent implements OnInit {
             }
             this.direccionImportada = true;
         }
+        if (!this.bebeModel.direccion[0].ubicacion.provincia && !this.bebeModel.direccion[0].ubicacion.localidad) {
+            this.localidadRequerida = true;
+        }
         if (!this.bebeModel.direccion[0].ubicacion.barrio && paciente.direccion[0].ubicacion.barrio) {
             this.bebeModel.direccion[0].ubicacion.barrio = paciente.direccion[0].ubicacion.barrio;
             this.direccionImportada = true;
@@ -331,9 +335,14 @@ export class BebeCruComponent implements OnInit {
 
 
     loadLocalidades(provincia) {
+        this.localidadRequerida = false;
         if (provincia && provincia.id) {
             this.localidadService.getXProvincia(provincia.id).subscribe(result => {
                 this.localidades = result;
+                if (this.localidades && this.localidades.length) {
+                    this.localidadRequerida = true;
+                }
+
             });
         }
     }
