@@ -56,7 +56,6 @@ export class ListarSolicitudesComponent implements OnInit {
     public verPrestar: Boolean = false;
     public verDevolver: Boolean = false;
     public verSolicitudManual: Boolean = false;
-    public verImprimirSolicitudes: Boolean = false;
     public verNuevaCarpeta: Boolean = false;
     public mostrarMasOpciones = false;
     public sortDescending = false;
@@ -78,7 +77,7 @@ export class ListarSolicitudesComponent implements OnInit {
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
 
     private _pacienteSeleccionado: any;
-    private paciente: IPaciente;
+    public paciente: IPaciente;
     obraSocialPaciente: IObraSocial;
     pacientesSearch = false;
     seleccion = null;
@@ -296,7 +295,6 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     showImprimirCarpetas() {
-        this.verImprimirSolicitudes = true;
         this.imprimirSolicitudesEmit.emit(this.carpetas);
     }
 
@@ -304,10 +302,6 @@ export class ListarSolicitudesComponent implements OnInit {
         this.verSolicitudManual = false;
         this.pacientesSearch = true;
         this.verPrestar = false;
-    }
-
-    volverAListado() {
-        this.verImprimirSolicitudes = false;
     }
 
     loadEstados(event) {
