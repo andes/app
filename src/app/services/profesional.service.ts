@@ -17,19 +17,19 @@ export class ProfesionalService {
      */
     get(params: any): Observable<IProfesional[]> {
         params['fields'] = 'id documento nombre apellido';
-        return this.server.get(this.profesionalUrl, {params: params, showError: true});
+        return this.server.get(this.profesionalUrl, { params: params, showError: true });
     }
 
     getProfesional(params: any): Observable<IProfesional[]> {
-        return this.server.get(this.profesionalUrl, {params: params, showError: true});
+        return this.server.get(this.profesionalUrl, { params: params, showError: true });
     }
 
     /**
      * Metodo post. Inserta un nuevo profesional
      * @param {IProfesional} profesional
      */
-    post(organizacion: IProfesional): Observable<IProfesional> {
-        return this.server.post(this.profesionalUrl, organizacion); // ...using post request
+    post(profesional: IProfesional): Observable<IProfesional> {
+        return this.server.post(this.profesionalUrl, profesional); // ...using post request
     }
 
     getFoto(params: any): Observable<any> {
