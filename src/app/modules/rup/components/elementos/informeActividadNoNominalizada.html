@@ -3,7 +3,7 @@
 - Hora de fin
 - Tipo de actividad: reference set relacionado con el tipo de prestación (ver #308)
 - Temática: listado estático. En el caso de seleccionar 'Otra' mostrar el siguiente campo ...
-- Otra temática (ver campo anterior)
+- Otra temática  (ver campo anterior)
 - Profesionales intervinientes
 - Un campo de observación que se llama 'Resumen de la actividad' (obligatorio) 
 -->
@@ -63,7 +63,7 @@
                         <tr *ngFor="let paciente of registro.valor.informe.pacientes; let i=index;">
                             <td>{{paciente | paciente}}</td>
                             <td>
-                                <plex-button icon="delete" class="btn btn-sm" type="info" (click)="deletePaciente(i)">
+                                <plex-button icon="delete" class="btn btn-sm" type="danger" (click)="deletePaciente(i)">
                                 </plex-button>
                             </td>
                         </tr>
