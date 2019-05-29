@@ -174,16 +174,19 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     loadEspaciosFisicos(event) {
-        let query = {};
-        let listaEspaciosFisicos = [];
         if (event.query) {
-            query['nombre'] = event.query;
+            let query = {
+                activo: true,
+                nombre: event.query
+            };
             if (!this.espacioFisicoPropios) {
                 query['sinOrganizacion'] = true;
             } else {
                 query['organizacion'] = this.auth.organizacion.id;
             }
             this.servicioEspacioFisico.get(query).subscribe(resultado => {
+                let listaEspaciosFisicos = [];
+
                 if (this.modelo.espacioFisico && this.modelo.espacioFisico.id) {
                     listaEspaciosFisicos = this.modelo.espacioFisico ? this.modelo.espacioFisico.concat(resultado) : resultado;
                 } else {
@@ -192,12 +195,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 event.callback(listaEspaciosFisicos);
             });
         } else {
-            if (this.modelo.espacioFisico) {
-                event.callback([this.modelo.espacioFisico]);
-
-            } else {
-                event.callback([]);
-            }
+            event.callback(this.modelo.espacioFisico ? [this.modelo.espacioFisico] : event.callback([]));
         }
     }
 
