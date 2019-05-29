@@ -23,14 +23,14 @@ export class CalendarioDia {
             this.estado = 'vacio';
         } else {
             let bloquesPrestacion = agenda.bloques; // para filtrado de agendas/bloques segun prestacion y/o profesional
-            if (filtroProfesional && !agenda.profesionales.find(prof => prof.id === filtroProfesional.id)) {
+            if (filtroProfesional && !agenda.profesionales.some(prof => prof.id === filtroProfesional.id)) {
                 // si se está filtrando por un profesional que no está en la agenda ...
                 bloquesPrestacion = [];
             }
             if (filtroPrestacion) {
                 bloquesPrestacion = bloquesPrestacion.filter(b => b.tipoPrestaciones.find(tipo => tipo.id === filtroPrestacion.id));
             }
-            let hayTurnosDisponibles: boolean = (bloquesPrestacion.find(b => b.turnos.find(t => t.estado === 'disponible')));
+            let hayTurnosDisponibles = (bloquesPrestacion.some(b => b.turnos.some(t => t.estado === 'disponible')));
             this.estadoAgenda = this.agenda.estado;
             if (hayTurnosDisponibles) {
                 let countBloques = [];
