@@ -82,21 +82,12 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
             // se carga la edad
             filaTabla.push({ titulo: 'Edad', valor: prestacion.motivo.term });
             // recorremos las columnas de la tabla modelo para armar la nueva tabla con la informacion en el mismo orden
-            let valorConcepto;
             let unValor;
             prestacion.conceptos.forEach(unConcepto => {
                 unValor = null;
                 if (unConcepto.contenido) {  // Si en la consulta el concepto fue completado, el campo valor tendrá contenido
-                    valorConcepto = unConcepto.contenido.valor;
-
-                    if (Array.isArray(valorConcepto)) { // Si valor es un concepto compuesto (Lactancia por ejemplo)
-                        if (valorConcepto.length > 0) {
-                            unValor = valorConcepto[valorConcepto.length - 1].concepto.term;
-                        }
-
-                    } else {
-                        unValor = unConcepto.contenido.valor;   // Si valor es un número
-                    }
+                    let v = unConcepto.contenido.valor;
+                    unValor = v.length > 0 ? v.filter(e => e.checkbox || e.checked).map(e => e.concepto.term).join(', ') : v;
                 }
                 if (unValor === null) {
                     unValor = 'S/D';

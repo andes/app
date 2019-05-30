@@ -174,16 +174,19 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     loadEspaciosFisicos(event) {
-        let query = {};
-        let listaEspaciosFisicos = [];
         if (event.query) {
-            query['nombre'] = event.query;
+            let query = {
+                activo: true,
+                nombre: event.query
+            };
             if (!this.espacioFisicoPropios) {
                 query['sinOrganizacion'] = true;
             } else {
                 query['organizacion'] = this.auth.organizacion.id;
             }
             this.servicioEspacioFisico.get(query).subscribe(resultado => {
+                let listaEspaciosFisicos = [];
+
                 if (this.modelo.espacioFisico && this.modelo.espacioFisico.id) {
                     listaEspaciosFisicos = this.modelo.espacioFisico ? this.modelo.espacioFisico.concat(resultado) : resultado;
                 } else {
@@ -192,12 +195,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 event.callback(listaEspaciosFisicos);
             });
         } else {
-            if (this.modelo.espacioFisico) {
-                event.callback([this.modelo.espacioFisico]);
-
-            } else {
-                event.callback([]);
-            }
+            event.callback(this.modelo.espacioFisico ? [this.modelo.espacioFisico] : event.callback([]));
         }
     }
 
@@ -830,6 +828,12 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                     });
                 }
             });
+
+             // Si la agenda no es nominalizada, se limpia la posible información residual relacionada a turnos
+            if (!this.modelo.nominalizada) {
+                this.cleanDatosTurnos();
+            }
+
             espOperation = this.serviceAgenda.save(this.modelo);
             espOperation.subscribe(resultado => {
                 this.plex.toast('success', 'La agenda se guardó correctamente');
@@ -857,6 +861,30 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             }
             this.hideGuardar = false;
         }
+    }
+
+    /**
+     * Vuelve a cero todos los datos relacionados a cantidades de turnos de la agenda.
+     * Aplica para agendas no nominalizadas, que pudieran tener datos residuales relacionados a turnos.
+     *
+     * @private
+     * @memberof PlanificarAgendaComponent
+     */
+    private cleanDatosTurnos() {
+        this.modelo.bloques.forEach(b =>
+            b.accesoDirectoProgramado =
+            b.accesoDirectoDelDia =
+            b.cantidadTurnos =
+            b.reservadoProfesional =
+            b.reservadoGestion =
+            b.restantesDelDia =
+            b.restantesProgramados =
+            b.restantesGestion =
+            b.restantesProfesional =
+            b.restantesMobile =
+            b.mobile =
+            b.duracionTurno =
+            b.turnos.length = 0);
     }
 
     cancelar() {
