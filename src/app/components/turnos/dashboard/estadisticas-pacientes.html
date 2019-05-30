@@ -50,8 +50,8 @@
                 <div class="col-6" *ngIf="paciente?.direccion && paciente.direccion[0]?.valor">
                     {{paciente.direccion[0].valor}}
                 </div>
-                <div class="col-6" *ngIf="paciente?.contacto && paciente.contacto[0]?.valor">
-                    {{paciente.contacto[0].valor}}
+                <div class="col-6" *ngIf="contactos && contactos.length">
+                    {{contactos[0].valor}}
                 </div>
             </div>
             <div class="row" *ngIf="_paciente?.financiador?.length">
