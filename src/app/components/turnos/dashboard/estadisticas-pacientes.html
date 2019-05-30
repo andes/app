@@ -33,7 +33,7 @@
                     {{paciente.documento | number}}
                 </div>
                 <div class="col-6" *ngIf="paciente && paciente.fechaNacimiento">
-                    {{paciente.fechaNacimiento | date:'dd-MM-yyyy'}} ({{paciente | edad}})
+                    {{paciente.fechaNacimiento | date:'dd-MM-yyyy':'UTC'}} ({{paciente | edad}})
                 </div>
             </div>
             <div class="row">
