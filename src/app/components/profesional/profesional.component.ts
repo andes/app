@@ -62,7 +62,7 @@ export class ProfesionalComponent implements OnInit {
             'skip': this.skip,
             'limit': this.limit
         };
-        this.profesionalService.get(parametros).subscribe(datos => {
+        this.profesionalService.getProfesional(parametros).subscribe(datos => {
             this.datos = datos;
         });
     }
