@@ -165,6 +165,12 @@ export class PacienteCruComponent implements OnInit {
         this.updateTitle('Registrar un paciente');
         this.route.params.subscribe(params => {
             this.opcion = params['opcion'];
+            if (!this.opcion) {
+                // obtiene el paciente cacheado
+                this.paciente = this.pacienteCache.getPacienteValor();
+                // consulta a la cache si el paciente fue escaneado o no
+                this.escaneado = this.pacienteCache.getScanState();
+            }
         });
         if (this.opcion === 'sin-dni') {
             this.noPoseeDNI = true;
@@ -208,10 +214,7 @@ export class PacienteCruComponent implements OnInit {
         this.estadosCiviles = enumerados.getObjEstadoCivil();
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.estados = enumerados.getEstados();
-        // obtiene el paciente cacheado
-        this.paciente = this.pacienteCache.getPacienteValor();
-        // consulta a la cache si el paciente fue escaneado o no
-        this.escaneado = this.pacienteCache.getScanState();
+
     }
 
     private loadPaciente() {
