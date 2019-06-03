@@ -871,7 +871,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             b.restantesDelDia =
             b.restantesProgramados =
             b.restantesGestion =
-            b.restaesProfesional =
+            b.restantesProfesional =
             b.restantesMobile =
             b.mobile =
             b.duracionTurno = 0;
