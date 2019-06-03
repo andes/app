@@ -85,6 +85,7 @@ export class SuspenderAgendaComponent implements OnInit {
             // Si son múltiples, esperar a que todas se actualicen
             if (resultado.mensaje) {
                 this.plex.info('warning', resultado.mensaje);
+                this.cancelar();
             } else {
                 this.agenda.estado = resultado.estado;
                 this.plex.toast('success', 'Información', 'La agenda cambió el estado a Suspendida');
