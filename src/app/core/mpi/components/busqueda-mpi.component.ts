@@ -27,6 +27,7 @@ export class BusquedaMpiComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.plex.clearNavbar();
         this.updateTitle('Buscar pacientes');
         if (!(this.auth.getPermissions('mpi:?').length > 0)) {
             // Si no está autorizado redirect al home
