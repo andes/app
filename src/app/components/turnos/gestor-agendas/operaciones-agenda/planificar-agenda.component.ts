@@ -783,15 +783,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                         bloque.restantesMobile = bloque.accesoDirectoProgramado > 0 ? bloque.cupoMobile : 0;
                     }
 
-                    if (this.noNominalizada) {
-                        let turno = {
-                            estado: 'disponible',
-                            horaInicio: bloque.horaInicio,
-                            tipoPrestacion: bloque.tipoPrestaciones[0],
-                            tipoTurno: undefined
-                        };
-                        bloque.turnos.push(turno);
-                    }
                     for (let i = 0; i < bloque.cantidadTurnos; i++) {
                         let turno = {
                             estado: 'disponible',
@@ -871,7 +862,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
      * @memberof PlanificarAgendaComponent
      */
     private cleanDatosTurnos() {
-        this.modelo.bloques.forEach(b =>
+        this.modelo.bloques.forEach(b => {
             b.accesoDirectoProgramado =
             b.accesoDirectoDelDia =
             b.cantidadTurnos =
@@ -883,8 +874,15 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             b.restantesProfesional =
             b.restantesMobile =
             b.mobile =
-            b.duracionTurno =
-            b.turnos.length = 0);
+            b.duracionTurno = 0;
+
+            b.turnos = [{
+                estado: 'disponible',
+                horaInicio: b.horaInicio,
+                tipoPrestacion: b.tipoPrestaciones[0],
+                tipoTurno: undefined
+            }];
+        });
     }
 
     cancelar() {
