@@ -33,7 +33,7 @@
                     {{paciente.documento | number}}
                 </div>
                 <div class="col-6" *ngIf="paciente && paciente.fechaNacimiento">
-                    {{paciente.fechaNacimiento | date:'dd-MM-yyyy'}} ({{paciente | edad}})
+                    {{paciente.fechaNacimiento | fecha:'utc'}} ({{paciente | edad}})
                 </div>
             </div>
             <div class="row">
@@ -50,8 +50,8 @@
                 <div class="col-6" *ngIf="paciente?.direccion && paciente.direccion[0]?.valor">
                     {{paciente.direccion[0].valor}}
                 </div>
-                <div class="col-6" *ngIf="paciente?.contacto && paciente.contacto[0]?.valor">
-                    {{paciente.contacto[0].valor}}
+                <div class="col-6" *ngIf="contactos && contactos.length">
+                    {{contactos[0].valor}}
                 </div>
             </div>
             <div class="row" *ngIf="_paciente?.financiador?.length">

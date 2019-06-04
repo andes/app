@@ -27,12 +27,13 @@ export class EstadisticasPacientesComponent implements OnInit {
     idOrganizacion = this.auth.organizacion.id;
     carpetaEfector: any;
     currentTab = 0;
-
+    contactos;
     @Input() showTab: Number = 0;
     @Input('paciente')
     set paciente(value: any) {
         this.pacienteSeleccionado = value;
         this._paciente = value;
+        this.getPaciente();
 
     }
     get paciente(): any {
@@ -85,7 +86,9 @@ export class EstadisticasPacientesComponent implements OnInit {
                 });
 
             });
-
+            if (this._paciente.contacto && this._paciente.contacto.length) {
+                this.contactos = this._paciente.contacto.filter(contact => contact.tipo === 'celular' || contact.tipo === 'fijo');
+            }
             // Se muestra la cantidad de turnos anulados
             let datosLog = { idPaciente: this._paciente.id, operacion: 'turnos:liberar' };
             this.serviceLogPaciente.get(datosLog).subscribe(logs => {

@@ -77,6 +77,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.puedeDarTurno = this.auth.getPermissions('turnos:puntoInicio:darTurnos:?').length > 0;
         this.puedeCrearSolicitud = this.auth.getPermissions('turnos:puntoInicio:solicitud:?').length > 0;
         this.updateTitle('Punto de inicio');
+        this.previousUrlService.setUrl('citas/punto-inicio');
     }
 
     private updateTitle(nombre: string) {

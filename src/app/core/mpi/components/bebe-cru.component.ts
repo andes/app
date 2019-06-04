@@ -19,6 +19,8 @@ import { BarrioService } from '../../../services/barrio.service';
 import { GeoreferenciaService } from '../services/georeferencia.service';
 import * as enumerados from './../../../utils/enumerados';
 import { IContacto } from '../../../interfaces/IContacto';
+import { Router } from '@angular/router';
+import { PreviousUrlService } from '../../../services/previous-url.service';
 
 @Component({
     selector: 'apps/mpi/bebe',
@@ -134,6 +136,8 @@ export class BebeCruComponent implements OnInit {
         private parentescoService: ParentescoService,
         private pacienteService: PacienteService,
         private paisService: PaisService,
+        private previousUrlService: PreviousUrlService,
+        private _router: Router
     ) {
         this.plex.updateTitle([{
             route: '/apps/mpi',
@@ -397,7 +401,15 @@ export class BebeCruComponent implements OnInit {
                 }
 
                 this.plex.info('success', 'Los datos se actualizaron correctamente');
-                this.location.back();
+                // TODO: Esto es un poco hacky -- soluciona el problema de tener la url anterior
+                // hasta la actualización a Angular 7.2, donde se incorpora la posibilidad de pasar un estado en el navigate
+                let previousUrl = this.previousUrlService.getUrl();
+                if (previousUrl && previousUrl.includes('citas/punto-inicio')) {
+                    this.previousUrlService.setUrl('');
+                    this._router.navigate(['citas/punto-inicio/' + bebe.id]);
+                } else {
+                    this._router.navigate(['apps/mpi/busqueda']);
+                }
             },
             error => {
                 this.plex.info('warning', 'Error guardando el paciente');

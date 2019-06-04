@@ -165,6 +165,12 @@ export class PacienteCruComponent implements OnInit {
         this.updateTitle('Registrar un paciente');
         this.route.params.subscribe(params => {
             this.opcion = params['opcion'];
+            if (!this.opcion) {
+                // obtiene el paciente cacheado
+                this.paciente = this.pacienteCache.getPacienteValor();
+                // consulta a la cache si el paciente fue escaneado o no
+                this.escaneado = this.pacienteCache.getScanState();
+            }
         });
         if (this.opcion === 'sin-dni') {
             this.noPoseeDNI = true;
@@ -208,17 +214,16 @@ export class PacienteCruComponent implements OnInit {
         this.estadosCiviles = enumerados.getObjEstadoCivil();
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.estados = enumerados.getEstados();
-        // obtiene el paciente cacheado
-        this.paciente = this.pacienteCache.getPacienteValor();
-        // consulta a la cache si el paciente fue escaneado o no
-        this.escaneado = this.pacienteCache.getScanState();
+
     }
 
     private loadPaciente() {
         if (this.paciente) {
+
             if (this.paciente.id) {
                 // Busco el paciente en mongodb
                 this.pacienteService.getById(this.paciente.id).subscribe(resultado => {
+
                     if (resultado) {
                         if (!resultado.scan) {
                             resultado.scan = this.paciente.scan;
@@ -347,6 +352,9 @@ export class PacienteCruComponent implements OnInit {
         }
 
         this.pacienteModel = Object.assign({}, this.paciente);
+        if (this.pacienteModel.fechaNacimiento) {
+            this.pacienteModel.fechaNacimiento = moment(this.pacienteModel.fechaNacimiento).add(3, 'h').toDate(); // mers alert
+        }
         this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
         this.inicializarMapaDefault();
         this.checkDisableValidar();
@@ -786,7 +794,7 @@ export class PacienteCruComponent implements OnInit {
                     this.pacienteModel.nombre = resultado.paciente.nombre;
                     this.pacienteModel.apellido = resultado.paciente.apellido;
                     this.pacienteModel.estado = resultado.paciente.estado;
-                    this.pacienteModel.fechaNacimiento = resultado.paciente.fechaNacimiento;
+                    this.pacienteModel.fechaNacimiento = moment(resultado.paciente.fechaNacimiento).add(4, 'h').toDate(); // mas mers alert
                     this.pacienteModel.foto = resultado.paciente.foto;
                     //  Se completan datos FALTANTES
                     if (!this.pacienteModel.direccion[0].valor && resultado.paciente.direccion && resultado.paciente.direccion[0].valor) {
