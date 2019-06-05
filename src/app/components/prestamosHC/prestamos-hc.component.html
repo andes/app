@@ -1,6 +1,7 @@
-<plex-tabs>
+<plex-tabs *ngIf="!imprimirSolicitudes">
     <plex-tab label="Solicitudes de Carpetas">
-        <app-listar-solicitudes (recargarPrestamosEmit)="prestamos.getCarpetas({}, null)" #solicitudes></app-listar-solicitudes>
+        <app-listar-solicitudes (recargarPrestamosEmit)="prestamos.getCarpetas({}, null)"
+        (imprimirSolicitudesEmit)="imprimirCarpetas($event)"  #solicitudes></app-listar-solicitudes>
     </plex-tab>
     <plex-tab label="Prestamos de Carpetas">
         <app-listar-prestamos (recargarSolicitudesEmit)="solicitudes.getCarpetas({}, null)" #prestamos></app-listar-prestamos>
@@ -9,3 +10,4 @@
         <app-historial-carpetas></app-historial-carpetas>
     </plex-tab>
 </plex-tabs>
+<imprimir-solicitudes [solicutudes]="carpetas" *ngIf="imprimirSolicitudes" (volverAlListadoEmit)="cancelarImprimir()"></imprimir-solicitudes>
