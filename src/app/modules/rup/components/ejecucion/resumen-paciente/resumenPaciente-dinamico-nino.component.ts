@@ -86,10 +86,10 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
             prestacion.conceptos.forEach(unConcepto => {
                 unValor = null;
                 if (unConcepto.contenido) {  // Si en la consulta el concepto fue completado, el campo valor tendrá contenido
-                    let v = unConcepto.contenido.valor;
-                    unValor = v.length > 0 ? v.filter(e => e.checkbox || e.checked).map(e => e.concepto.term).join(', ') : v;
+                    let conceptoValor = unConcepto.contenido.valor;
+                    unValor = conceptoValor.length > 0 ? conceptoValor.filter(e => e.checkbox || e.checked).map(e => e.concepto.term).join(', ') : conceptoValor;
                 }
-                if (unValor === null) {
+                if (!unValor) {
                     unValor = 'S/D';
                 }
                 filaTabla.push({ titulo: unConcepto.titulo, valor: unValor });
