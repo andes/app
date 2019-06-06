@@ -102,8 +102,12 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
     }
 
     seleccionarPaciente(paciente: IPaciente) {
-        this.pacienteActivo = paciente;
-        this.registro.valor.informe.pacientes.push(paciente);
+        if (!this.registro.valor.informe.pacientes.some((p) => p.id === paciente.id)) {
+            this.pacienteActivo = paciente;
+            this.registro.valor.informe.pacientes.push(paciente);
+        } else {
+            this.plex.info('warning', 'El paciente ya había sido seleccionado.', 'Información');
+        }
         this.pacientes = null;
     }
 
