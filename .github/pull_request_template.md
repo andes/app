@@ -27,24 +27,24 @@ _____________________________________________
 
 ### UserStory llegó a completarse
 <!-- Marca con una X la casilla correcta-->
-- [] Si
-- [] No
-- [] No corresponde
+- [ ] Si
+- [ ] No
+- [ ] No corresponde
 
 ### Requiere actualizaciones en la base de datos
 <!-- Marca con una X la casilla correcta-->
-- [] Si
-- [] No
+- [ ] Si
+- [ ] No
 
 ### Requiere actualizaciones en la API
 <!-- Marca con una X la casilla correcta y agregar link a PR-->
-- [] Si
-- [] No
+- [ ] Si
+- [ ] No
 
 ### Requiere actualizaciones en andes-test-integracion
 <!-- Marca con una X la casilla correcta y agregar link a PR-->
-- [] Si
-- [] No
+- [ ] Si
+- [ ] No
 
 
 <!-- Agregar captura de pantalla, si fuera relevante  -->
