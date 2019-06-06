@@ -834,7 +834,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             }
 
             espOperation = this.serviceAgenda.save(this.modelo);
-            espOperation.subscribe(resultado => {
+            espOperation.subscribe((resultado: any) => {
                 this.plex.toast('success', 'La agenda se guardó correctamente');
                 this.modelo.id = resultado.id;
                 if (clonar) {
@@ -847,7 +847,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 }
                 this.hideGuardar = false;
             },
-                (err) => { this.hideGuardar = false; });
+                (err) => {
+                    this.hideGuardar = false;
+                    this.plex.info('warning', err, 'Aviso');
+                });
         } else {
             if (!this.verificarNoNominalizada()) {
                 this.plex.info('warning', 'Solo puede haber una prestación en las agendas no nominalizadas');
