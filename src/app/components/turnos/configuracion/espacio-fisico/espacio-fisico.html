@@ -3,23 +3,19 @@
         <header>
             <div class="row">
                 <div class="col-md-3">
-                    <plex-text [(ngModel)]="filtros.nombre" label="Nombre" (change)="loadEspaciosFisicos(false)"
-                        placeholder="Filtrar por nombre">
+                    <plex-text [(ngModel)]="filtros.nombre" label="Nombre" (change)="loadEspaciosFisicos(false)" placeholder="Filtrar por nombre">
                     </plex-text>
                 </div>
                 <div class="col-md-3">
-                    <plex-text [(ngModel)]="filtros.edificio" label="Edificio" (change)="loadEspaciosFisicos(false)"
-                        placeholder="Filtrar por edificio">
+                    <plex-text [(ngModel)]="filtros.edificio" label="Edificio" (change)="loadEspaciosFisicos(false)" placeholder="Filtrar por edificio">
                     </plex-text>
                 </div>
                 <div class="col-md-3">
-                    <plex-text [(ngModel)]="filtros.servicio" label="Servicio" (change)="loadEspaciosFisicos(false)"
-                        placeholder="Filtrar por servicio">
+                    <plex-text [(ngModel)]="filtros.servicio" label="Servicio" (change)="loadEspaciosFisicos(false)" placeholder="Filtrar por servicio">
                     </plex-text>
                 </div>
                 <div class="col-md-3">
-                    <plex-text [(ngModel)]="filtros.sector" label="Sector" (change)="loadEspaciosFisicos(false)"
-                        placeholder="Filtrar por sector">
+                    <plex-text [(ngModel)]="filtros.sector" label="Sector" (change)="loadEspaciosFisicos(false)" placeholder="Filtrar por sector">
                     </plex-text>
                 </div>
             </div>
@@ -49,7 +45,8 @@
                             <td>{{espacioFisico.servicio?.nombre}}</td>
                             <td>{{espacioFisico.sector?.nombre}}</td>
                             <td>
-                                <span class="badge-success" *ngIf="espacioFisico.activo">Activo</span>
+                                <plex-badge *ngIf="espacioFisico.activo" type="success">Activo</plex-badge>
+                                <plex-badge *ngIf="!espacioFisico.activo" type="danger">Inactivo</plex-badge>
                             </td>
                             <td>
                                 <plex-button type="success" (click)="editarEspacioFisico(espacioFisico)" icon="pencil"></plex-button>
@@ -70,5 +67,4 @@
         </plex-button>
     </plex-layout-footer>
 </plex-layout>
-<edit-espacio-fisico *ngIf="showEditar" [espacioFisicoHijo]="selectedEspacioFisico" (data)='onReturn($event)'
-    (onReturn)="onCancel()"></edit-espacio-fisico>
+<edit-espacio-fisico *ngIf="showEditar" [espacioFisicoHijo]="selectedEspacioFisico" (data)='onReturn($event)' (onReturn)="onCancel()"></edit-espacio-fisico>
