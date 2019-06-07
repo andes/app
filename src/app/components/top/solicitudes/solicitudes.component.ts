@@ -6,6 +6,7 @@ import { PrestacionesService } from '../../../modules/rup/services/prestaciones.
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { OrganizacionService } from '../../../services/organizacion.service';
+import { Unsubscribe } from '@andes/shared';
 
 @Component({
     selector: 'solicitudes',
@@ -243,11 +244,13 @@ export class SolicitudesComponent implements OnInit {
         this.showEditarReglas = true;
     }
 
+    @Unsubscribe()
     cargarSolicitudes() {
         if (this.fechaDesde && this.fechaHasta) {
             let params = {
                 solicitudDesde: this.fechaDesde,
-                solicitudHasta: this.fechaHasta
+                solicitudHasta: this.fechaHasta,
+                ordenFechaDesc: true
             };
             if (this.estado) {
                 if (this.estado.id !== 'turnoDado') {
@@ -277,7 +280,7 @@ export class SolicitudesComponent implements OnInit {
                 }
             }
 
-            this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
+            return this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
                 this.prestaciones = resultado;
                 this.prestacionesSalida = resultado.filter((prest: any) => { return (prest.solicitud.organizacionOrigen) ? (this.auth.organizacion.id === prest.solicitud.organizacionOrigen.id) : false; });
                 this.prestacionesEntrada = resultado.filter((prest: any) => { return (prest.solicitud.organizacion) ? this.auth.organizacion.id === prest.solicitud.organizacion.id : false; });
