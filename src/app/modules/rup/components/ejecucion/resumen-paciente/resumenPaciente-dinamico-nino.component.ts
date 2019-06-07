@@ -87,7 +87,7 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
                 unValor = null;
                 if (unConcepto.contenido) {  // Si en la consulta el concepto fue completado, el campo valor tendrá contenido
                     let conceptoValor = unConcepto.contenido.valor;
-                    unValor = conceptoValor.length > 0 ? conceptoValor.filter(e => e.checkbox || e.checked).map(e => e.concepto.term).join(', ') : conceptoValor;
+                    unValor = Array.isArray(conceptoValor) && conceptoValor.length > 0 ? conceptoValor.filter(e => e.checkbox || e.checked).map(e => e.concepto.term).join(', ') : conceptoValor;
                 }
                 if (!unValor) {
                     unValor = 'S/D';
