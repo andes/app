@@ -80,7 +80,7 @@ export class CalendarioComponent implements OnInit {
                 dow: 1,
                 doy: 1
             },
-        })
+        });
     }
 
     /** Devuelve las agendas correspondientes a un día determinado */
