@@ -365,7 +365,7 @@
                         <br>
                         <div class="row" *ngIf="!hideDarTurno && estadoT === 'confirmacion'">
                             <div class="col text-left">
-                                <plex-button class="text-left" label="Cambiar horario" type="default" (click)="seleccionarAgenda(this.agenda)"></plex-button>
+                                <plex-button class="text-left" label="Cambiar horario" type="info" (click)="seleccionarAgenda(agendasDelDia)"></plex-button>
                             </div>
                             <div class="col text-right">
                                 <plex-button class="text-right" label="Confirmar" type="success" (click)="darTurno()">
