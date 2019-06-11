@@ -44,7 +44,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
     seleccion = null;
     esEscaneado = false;
     textoPacienteSearch = '';
-    resultadoCreate;
     turnoArancelamiento: any;
     showArancelamiento = false;
     showTab = 0;
@@ -211,12 +210,10 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showDarTurnos = false;
         this.showDashboard = true;
         this.showTab = 1;
-        if (this.paciente && this.paciente.id) {
-            this.paciente = pac;
-            if (pac && pac.carpetaEfectores && pac.carpetaEfectores.length > 0) {
+        if (this.paciente && pac) {
+            if (pac.carpetaEfectores && pac.carpetaEfectores.length > 0) {
                 this.paciente.carpetaEfectores = pac.carpetaEfectores;
             }
-            this.resultadoCreate = [this.paciente];
         }
         this.esOperacion = false;
         this.showMostrarEstadisticasAgendas = false;
