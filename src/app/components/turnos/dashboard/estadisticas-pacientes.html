@@ -37,21 +37,29 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-6" *ngIf="paciente?.direccion && paciente.direccion[0]?.valor">
+                <div class="col-6" >
+                    <span *ngIf="paciente?.direccion && paciente.direccion[0]?.valor">
                     <i class="mdi mdi-map-marker"></i>
                     <span class="text-primary">Dirección</span>
+                    </span>
                 </div>
-                <div class="col-6" *ngIf="paciente?.contacto && paciente.contacto[0]?.valor">
+                <div class="col-6" >
+                    <span *ngIf="paciente?.contacto && paciente.contacto[0]?.valor">
                     <i class="mdi mdi-cellphone-android"></i>
                     <span class="text-primary">Teléfono</span>
+                    </span>
                 </div>
             </div>
             <div class="row">
-                <div class="col-6" *ngIf="paciente?.direccion && paciente.direccion[0]?.valor">
+                <div class="col-6" >
+                    <span *ngIf="paciente?.direccion && paciente.direccion[0]?.valor">
                     {{paciente.direccion[0].valor}}
+                    </span>
                 </div>
-                <div class="col-6" *ngIf="contactos && contactos.length">
+                <div class="col-6" >
+                    <span *ngIf="paciente?.contacto && paciente.contacto[0]?.valor">
                     {{contactos[0].valor}}
+                    </span>
                 </div>
             </div>
             <div class="row" *ngIf="_paciente?.financiador?.length">
