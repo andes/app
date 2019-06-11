@@ -1,5 +1,5 @@
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
-import { Component, EventEmitter, Output, Input } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CalendarioDia } from './calendario-dia.class';
 import * as moment from 'moment';
 import { DataLayerManager } from '@agm/core';
@@ -10,7 +10,7 @@ import { IPrestacion } from '../../../modules/rup/interfaces/prestacion.interfac
     templateUrl: 'calendario.html',
     styleUrls: ['calendario.scss']
 })
-export class CalendarioComponent {
+export class CalendarioComponent implements OnInit {
     mostrarFinesDeSemana: any;
     private _agenda: any;
     private _agendas: Array<any>;
@@ -29,7 +29,7 @@ export class CalendarioComponent {
         return this._opcionesCalendario;
     }
 
-    private _mostrarNoDisponibles;
+    public _mostrarNoDisponibles;
     @Input('mostrarNoDisponibles')
     set mostrarNoDisponibles(value: any) {
         this._mostrarNoDisponibles = value;
@@ -92,6 +92,15 @@ export class CalendarioComponent {
         // TODO: optimizar esta búsqueda
         return this.agendas.find(i => {
             return moment(fecha).isSame(i.horaInicio, 'day');
+        });
+    }
+
+    ngOnInit() {
+        moment.updateLocale('es', {
+            week: {
+                dow: 1,
+                doy: 1
+            },
         });
     }
 
