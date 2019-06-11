@@ -179,7 +179,7 @@
 
                                 <div class="row" *ngIf="!viveProvActual">
                                     <div class="col">
-                                        <plex-select label="Provincia"
+                                        <plex-select label="Provincia" [required]="true"
                                                      [(ngModel)]="bebeModel.direccion[0].ubicacion.provincia"
                                                      name="provincia" [data]="provincias" labelField="nombre"
                                                      (change)="loadLocalidades(bebeModel.direccion[0].ubicacion.provincia)">
