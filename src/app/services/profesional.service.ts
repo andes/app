@@ -12,18 +12,24 @@ export class ProfesionalService {
     constructor(private server: Server) { }
 
     /**
-     * Metodo get. Trae el objeto organizacion.
-     * @param {any} params Opciones de busqueda
+     * Metodo get. Devuelve profesionales
+     * @param {any} params Opciones de búsqueda
      */
     get(params: any): Observable<IProfesional[]> {
-        return this.server.get(this.profesionalUrl, {params: params, showError: true});
+        params['fields'] = 'id documento nombre apellido';
+        return this.server.get(this.profesionalUrl, { params: params, showError: true });
     }
+
+    getProfesional(params: any): Observable<IProfesional[]> {
+        return this.server.get(this.profesionalUrl, { params: params, showError: true });
+    }
+
     /**
-     * Metodo post. Inserta un objeto organizacion nuevo.
-     * @param {IOrganizacion} organizacion Recibe IOrganizacion
+     * Metodo post. Inserta un nuevo profesional
+     * @param {IProfesional} profesional
      */
-    post(organizacion: IProfesional): Observable<IProfesional> {
-        return this.server.post(this.profesionalUrl, organizacion); // ...using post request
+    post(profesional: IProfesional): Observable<IProfesional> {
+        return this.server.post(this.profesionalUrl, profesional); // ...using post request
     }
 
     getFoto(params: any): Observable<any> {

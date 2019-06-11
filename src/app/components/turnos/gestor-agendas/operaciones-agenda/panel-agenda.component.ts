@@ -141,6 +141,7 @@ export class PanelAgendaComponent implements OnInit {
         if (event.query) {
             query['nombre'] = event.query;
             query['organizacion'] = this.auth.organizacion.id;
+            query['activo'] = true;
 
             this.servicioEspacioFisico.get(query).subscribe(resultado => {
                 if (this.agenda.espacioFisico && this.agenda.espacioFisico.id) {
