@@ -415,11 +415,11 @@ export class DarTurnosComponent implements OnInit {
 
                 // Ordena las Agendas por fecha/hora de inicio
                 this.agendas = this.agendas.sort((a, b) => {
-                    let inia = a.horaInicio ? new Date(a.horaInicio.setHours(0, 0, 0, 0)) : null;
-                    let inib = b.horaInicio ? new Date(b.horaInicio.setHours(0, 0, 0, 0)) : null;
-                    {
-                        return (inia ? (inia.getTime() - inib.getTime() || b.turnosDisponibles - a.turnosDisponibles) : b.turnosDisponibles - a.turnosDisponibles);
-                    }
+                    let inia = moment(a.horaInicio);
+                    let inib = moment(b.horaInicio);
+                    return (
+                        ((inia.isSame(inib, 'day') ? null : (inia.isBefore(inib, 'day') ? -1 : 1)) || b.turnosDisponibles - a.turnosDisponibles));
+
                 });
 
             });
