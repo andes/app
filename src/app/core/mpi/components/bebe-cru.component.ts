@@ -19,8 +19,7 @@ import { BarrioService } from '../../../services/barrio.service';
 import { GeoreferenciaService } from '../services/georeferencia.service';
 import * as enumerados from './../../../utils/enumerados';
 import { IContacto } from '../../../interfaces/IContacto';
-import { Router } from '@angular/router';
-import { PreviousUrlService } from '../../../services/previous-url.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'apps/mpi/bebe',
@@ -122,7 +121,7 @@ export class BebeCruComponent implements OnInit {
     tipoComunicacion: any[];
     contactoImportado = false;
     direccionImportada = false;
-
+    origen = '';
 
     constructor(
         private georeferenciaService: GeoreferenciaService,
@@ -136,8 +135,8 @@ export class BebeCruComponent implements OnInit {
         private parentescoService: ParentescoService,
         private pacienteService: PacienteService,
         private paisService: PaisService,
-        private previousUrlService: PreviousUrlService,
-        private _router: Router
+        private _router: Router,
+        private route: ActivatedRoute
     ) {
         this.plex.updateTitle([{
             route: '/apps/mpi',
@@ -151,6 +150,9 @@ export class BebeCruComponent implements OnInit {
     ngOnInit() {
         this.opcionesSexo = enumerados.getObjSexos();
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
+        this.route.params.subscribe(params => {
+            this.origen = params['origen'];
+        });
 
         // Se cargan los parentescos para las relaciones
         this.parentescoService.get().subscribe(resultado => {
@@ -352,7 +354,7 @@ export class BebeCruComponent implements OnInit {
     }
 
     cancel() {
-        this.location.back();
+        this.redirect();
     }
 
     save(event) {
@@ -401,15 +403,7 @@ export class BebeCruComponent implements OnInit {
                 }
 
                 this.plex.info('success', 'Los datos se actualizaron correctamente');
-                // TODO: Esto es un poco hacky -- soluciona el problema de tener la url anterior
-                // hasta la actualización a Angular 7.2, donde se incorpora la posibilidad de pasar un estado en el navigate
-                let previousUrl = this.previousUrlService.getUrl();
-                if (previousUrl && previousUrl.includes('citas/punto-inicio')) {
-                    this.previousUrlService.setUrl('');
-                    this._router.navigate(['citas/punto-inicio/' + bebe.id]);
-                } else {
-                    this._router.navigate(['apps/mpi/busqueda']);
-                }
+                this.redirect(bebe);
             },
             error => {
                 this.plex.info('warning', 'Error guardando el paciente');
@@ -417,6 +411,27 @@ export class BebeCruComponent implements OnInit {
         );
     }
 
+    private redirect(resultadoSave?: any) {
+        switch (this.origen) {
+            case 'puntoInicio':
+                if (resultadoSave) {
+                    this._router.navigate(['citas/punto-inicio/' + resultadoSave.id]);
+                } else {
+                    this._router.navigate(['citas/punto-inicio/']);
+                }
+                break;
+            case 'mpi':
+                this._router.navigate(['apps/mpi/busqueda']);
+                break;
+            case 'sobreturno':
+                this._router.navigate(['citas/gestor_agendas']);
+                break;
+            default:
+                this._router.navigate(['apps/mpi/busqueda']);
+                break;
+        }
+
+    }
 
     cambiarRelacion() {
         this.showBuscador = true;
