@@ -16,7 +16,7 @@ import * as moment from 'moment';
 import * as calculos from './../../../utils/calculosDashboard';
 import {
     IPaciente
-} from './../../../interfaces/IPaciente';
+} from '../../../core/mpi/interfaces/IPaciente';
 
 // Servicios
 import {
@@ -27,7 +27,7 @@ import {
 } from '../../../services/appMobile.service';
 import {
     PacienteService
-} from '../../../services/paciente.service';
+} from '../../../core/mpi/services/paciente.service';
 
 @Component({
     selector: 'activar-app',
@@ -52,7 +52,7 @@ export class ActivarAppComponent implements OnInit, OnChanges {
         public plex: Plex,
         public auth: Auth,
         public appMobile: AppMobileService
-    ) {}
+    ) { }
 
     ngOnInit() {
         // Se cargan los datos calculados

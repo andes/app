@@ -1,13 +1,15 @@
-import { PacienteService } from './../../../../services/paciente.service';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { Observable } from 'rxjs/Observable';
 import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
-import { Component, Input, EventEmitter, Output, OnInit, HostBinding, PipeTransform } from '@angular/core';
+import { Component, Input, EventEmitter, Output, OnInit, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { IPaciente } from './../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
+import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
+import { PreviousUrlService } from '../../../../services/previous-url.service';
 import { ObraSocialCacheService } from '../../../../services/obraSocialCache.service';
 
 @Component({
@@ -16,12 +18,17 @@ import { ObraSocialCacheService } from '../../../../services/obraSocialCache.ser
 })
 
 export class AgregarSobreturnoComponent implements OnInit {
+    public disableNuevoPaciente = true;
     public nota: any;
     public lenNota = 140;
     changeCarpeta: boolean;
     carpetaEfector: any;
     private _agenda: any;
     private _revision: any;
+
+    loading = false;
+    resultadoBusqueda: IPaciente[] = [];
+    searchClear = true;    // True si el campo de búsqueda se encuentra vacío
 
     @HostBinding('class.plex-layout') layout = true;
 
@@ -57,6 +64,7 @@ export class AgregarSobreturnoComponent implements OnInit {
     horaTurno = null;
     telefono = '';
     cambioTelefono = false;
+    pacientes: any;
 
     public seleccion = null;
     public esEscaneado = false;
@@ -66,6 +74,8 @@ export class AgregarSobreturnoComponent implements OnInit {
 
 
     constructor(
+        private previousUrlService: PreviousUrlService,
+        private pacienteCache: PacienteCacheService,
         public plex: Plex,
         public serviceAgenda: AgendaService,
         public servicioTipoPrestacion: TipoPrestacionService,
@@ -108,28 +118,48 @@ export class AgregarSobreturnoComponent implements OnInit {
         }
     }
 
-    afterSearch(paciente: IPaciente): void {
-        if (paciente.id) {
-            this.servicePaciente.getById(paciente.id).subscribe(
-                pacienteMPI => {
-                    this.paciente = pacienteMPI;
-                    this.verificarTelefono(this.paciente);
-                    this.obtenerCarpetaPaciente();
-                    this.showSobreturno = true;
-                    this.pacientesSearch = false;
-                    window.setTimeout(() => this.pacientesSearch = false, 100);
-                });
+    // -------------- SOBRE BUSCADOR ----------------
+
+    onSearchStart() {
+        this.disableNuevoPaciente = false;
+        this.esEscaneado = false;
+        this.paciente = null;
+        this.loading = true;
+    }
+
+    onSearchEnd(pacientes: IPaciente[], escaneado: boolean) {
+        this.searchClear = false;
+        this.loading = false;
+        this.pacienteCache.setScanState(escaneado);
+        if (escaneado && pacientes.length === 1 && pacientes[0].id) {
+            this.onSelect(pacientes[0]);
+        } else if (escaneado && pacientes.length === 1 && (!pacientes[0].id || (pacientes[0].estado === 'temporal' && pacientes[0].scan))) {
+            this.pacienteCache.setPaciente(pacientes[0]);
+            this.pacienteCache.setScanState(escaneado);
+            this.previousUrlService.setUrl('citas/gestor_agendas');
+            this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru
         } else {
-            this.seleccion = paciente;
-            // this.verificarTelefono(this.seleccion);
-            this.esEscaneado = true;
-            this.escaneado.emit(this.esEscaneado);
-            this.selected.emit(this.seleccion);
-            this.pacientesSearch = false;
-            this.showCreateUpdate = true;
+            this.pacientes = pacientes;
         }
     }
 
+    onSearchClear() {
+        this.disableNuevoPaciente = true;
+        this.searchClear = true;
+        this.resultadoBusqueda = [];
+        this.paciente = null;
+    }
+
+    onSelect(paciente: any): void {
+        this.servicePaciente.getById(paciente.id).subscribe(
+            pacienteMPI => {
+                this.paciente = pacienteMPI;
+                this.verificarTelefono(this.paciente);
+                this.obtenerCarpetaPaciente();
+                this.showSobreturno = true;
+                this.pacientesSearch = false;
+            });
+    }
     // Operaciones con carpetaPaciente
 
     // Se busca el número de carpeta de la Historia Clínica en papel del paciente

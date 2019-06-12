@@ -20,7 +20,7 @@
     <div class="row mb-1" *ngIf="paciente.fechaNacimiento">
         <div class="col">
             <label>Fecha de nacimiento</label>
-            <span>{{ paciente.fechaNacimiento | fecha }}</span> | <span>{{ paciente | edad }}</span>
+            <span>{{ paciente.fechaNacimiento | fecha:'utc' }}</span> | <span>{{ paciente | edad }}</span>
         </div>
     </div>
     <div class="row mb-1">
@@ -49,14 +49,16 @@
             <plex-loader *ngIf="relaciones.loading" type="linear"></plex-loader>
             <div *ngIf="!relaciones.loading">
                 <span *ngIf="relaciones.error" class="text-warning">No disponibles en este momento</span>
-                <span *ngIf="relaciones.data && !relaciones.data.length">No hay ninguna relación registrada</span>
+                <span *ngIf="!relaciones.data || !relaciones.data.length">No hay ninguna relación registrada</span>
                 <table *ngIf="relaciones.data && relaciones.data.length" class="table table-sm" [ngClass]="{'table-hover': permitirseleccionarRelacion}">
                     <tbody>
+                        <!-- COMENTADO HASTA TERMINAR FUNCIONALIDAD
                         <tr [ngClass]="{'hover': permitirseleccionarRelacion}" *ngFor="let relacion of relaciones.data"
-                            (click)="permitirseleccionarRelacion && seleccionarRelacionado(relacion)">
-                            <td>
-                                <span class="mr-1">{{relacion.apellido}}, {{relacion.nombre}} <em>({{relacion.relacion.nombre}})</em></span>
-                                <span *ngIf="relacion?.documento" class="d-block"><em>{{relacion.documento}}</em></span>
+                            (click)="permitirseleccionarRelacion && seleccionarRelacionado(relacion)"> -->
+                        <tr *ngFor="let relacion of relaciones.data">
+                            <td *ngIf="relacion?.apellido && relacion?.documento && relacion?.nombre && relacion?.relacion?.nombre">
+                                <span  class="mr-1">{{relacion.apellido}},{{relacion.nombre}} <em>({{relacion.relacion.nombre}})</em></span>
+                                <span  class="d-block"><em>{{relacion.documento}}</em></span>
                             </td>
                         </tr>
                     </tbody>

@@ -1,6 +1,3 @@
-import { estados } from './../../../../utils/enumerados';
-import { IPaciente } from '../../../../interfaces/IPaciente';
-import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
@@ -14,7 +11,7 @@ import { OcupacionService } from '../../../../services/ocupacion/ocupacion.servi
 import { SnomedService } from '../../../../services/term/snomed.service';
 import { ProfesionalService } from '../../../../services/profesional.service';
 import { InternacionService } from '../services/internacion.service';
-import { PacienteService } from '../../../../services/paciente.service';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { IPrestacionRegistro } from '../../../../modules/rup/interfaces/prestacion.registro.interface';
 
 @Component({
