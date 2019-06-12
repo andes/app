@@ -508,7 +508,6 @@ import { PasesListadoInternacionComponent } from './apps/rup/internacion/compone
 
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
 import { HUDSService } from './modules/rup/services/huds.service';
-import { PreviousUrlService } from './services/previous-url.service';
 
 registerLocaleData(localeEs, 'es');
 
@@ -744,7 +743,6 @@ registerLocaleData(localeEs, 'es');
         SnomedBuscarService,
         HUDSService,
         TurnosPrestacionesService,
-        PreviousUrlService
     ]
 })
 
