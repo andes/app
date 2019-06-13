@@ -45,7 +45,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
         return this._paciente;
     }
 
-    @Output() cerrarSolicitudVentanilla = new EventEmitter<boolean>();
+    @Output() cancelarSolicitudVentanilla = new EventEmitter<boolean>();
 
     public permisos = [];
     public autorizado = false;
@@ -187,11 +187,11 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
             this.servicioPrestacion.post(this.modelo).subscribe(
                 respuesta => {
                     this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
-                    this.cerrarSolicitudVentanilla.emit(true);
+                    this.cancelarSolicitudVentanilla.emit(true);
                 },
                 err => {
                     this.plex.toast('danger', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud no generada', 4000);
-                    this.cerrarSolicitudVentanilla.emit(true);
+                    this.cancelarSolicitudVentanilla.emit(true);
                 }
             );
 
@@ -203,7 +203,8 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
 
 
     cancelar() {
-        this.cerrarSolicitudVentanilla.emit(true);
+
+        this.cancelarSolicitudVentanilla.emit(true);
 
     }
 
