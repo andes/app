@@ -120,6 +120,7 @@ export class SuspenderAgendaComponent implements OnInit {
     }
 
     send(turno: any, mensaje) {
+        if (!turno.paciente || !turno.paciente.telefono) { return; }
         let smsParams = {
             telefono: turno.paciente.telefono,
             mensaje: mensaje,
