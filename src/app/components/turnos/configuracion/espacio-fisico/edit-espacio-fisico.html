@@ -3,8 +3,8 @@
         <form #formulario="ngForm">
             <div class="row">
                 <div class="col-6">
-                    <plex-text [(ngModel)]="modelo.nombre" [required]="true" id="nombre" name="nombre" label="Nombre" placeholder="Ingrese el nombre del espacio físico"
-                        required>
+                    <plex-text [(ngModel)]="modelo.nombre" [required]="true" id="nombre" name="nombre" label="Nombre"
+                               placeholder="Ingrese el nombre del espacio físico" required>
                     </plex-text>
                 </div>
                 <div class="col-6">
@@ -15,18 +15,20 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <plex-select [(ngModel)]="modelo.edificio" [required]="true" name="edificio" (getData)="loadEdificios($event)" label="Edificio"
-                        labelField="descripcion">
+                    <plex-select [(ngModel)]="modelo.edificio" placeholder="Seleccione .." [required]="true" name="edificio"
+                                 (getData)="loadEdificios($event)" label="Edificio" labelField="descripcion">
                     </plex-select>
                 </div>
                 <div class="col-6">
-                    <plex-select [(ngModel)]="modelo.servicio" name="servicio" (getData)="loadServicios($event)" label="Servicio" labelField="nombre">
+                    <plex-select [(ngModel)]="modelo.servicio" placeholder="Seleccione .." name="servicio" (getData)="loadServicios($event)"
+                                 label="Servicio" labelField="nombre">
                     </plex-select>
                 </div>
             </div>
             <div class="row">
                 <div class="col-6">
-                    <plex-select [(ngModel)]="modelo.sector" name="sector" (getData)="loadSectores($event)" label="Sector" labelField="nombre">
+                    <plex-select [(ngModel)]="modelo.sector" name="sector" placeholder="Seleccione .." (getData)="loadSectores($event)"
+                                 label="Sector" labelField="nombre">
                     </plex-select>
                 </div>
                 <div class="col-6">
@@ -36,7 +38,8 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <plex-select [(ngModel)]="modelo.estado" label="Estado actual" name="estado" (getData)="loadEstados($event)"></plex-select>
+                    <plex-select [(ngModel)]="modelo.estado" placeholder="Seleccione .." label="Estado actual" name="estado"
+                                 (getData)="loadEstados($event)"></plex-select>
                 </div>
                 <div class="col-6">
                     <br>
@@ -45,23 +48,9 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <label>Agregar Equipamiento</label>
-                    <snomed-buscar [tipoBusqueda]="tipoBusqueda" (onSearch)="agregarEquipamiento($event)"></snomed-buscar>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <strong>Equipamiento actual</strong>
-                    <br>
-                    <span *ngFor="let eq of modelo.equipamiento" class="badge badge-info badge-equipamiento">
-                        {{ eq.term }}
-                        <span class="float-right hover" (click)="eliminarEquipamiento(eq)">
-                            <i class="mdi mdi-close-box-outline"></i>
-                        </span>
-                    </span>
-                    <div class="badge badge-warning" *ngIf="modelo.equipamiento.length === 0">
-                        Sin equipamiento definido
-                    </div>
+                    <plex-select [(ngModel)]="modelo.equipamiento" label="Agregar Equipamiento" name="equipamiento"
+                                 placeholder="Ingrese las iniciales para buscar.." [multiple]="true" labelField="term"
+                                 [closeAfterSelect]="true" (getData)="buscarEquipamiento($event)"></plex-select>
                 </div>
             </div>
         </form>
