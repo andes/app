@@ -7,7 +7,6 @@ import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
 import { IPrestacionGetParams } from '../interfaces/prestacionGetParams.interface';
-import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface';
 import { SnomedService } from '../../../services/term/snomed.service';
 
 
@@ -268,6 +267,7 @@ export class PrestacionesService {
                             let dato = {
                                 idPrestacion: registro.idPrestacion,
                                 idRegistro: registro.id,
+                                fechaEjecucion: prestaciones.find(p => p.id === registro.idPrestacion).ejecucion.fecha,
                                 concepto: registro.concepto,
                                 prestaciones: [registro.idPrestacion],
                                 esSolicitud: registro.esSolicitud,

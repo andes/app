@@ -62,7 +62,7 @@ export class HudsBusquedaComponent implements OnInit {
         return this._prestaciones;
     }
     set prestaciones(value) {
-        this._prestaciones = value.sort((a, b) => b.fecha - a.fecha);
+        this._prestaciones = value.sort((a, b) => (a.data.ejecucion && b.data.ejecucion) ? (b.data.ejecucion.fecha - a.data.ejecucion.fecha) : (b.fecha - a.fecha));
     }
     /**
      * Copia de las prestaciones para aplicar los filtros
