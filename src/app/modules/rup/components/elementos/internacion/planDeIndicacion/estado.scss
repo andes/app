@@ -1,3 +1,13 @@
 .mt-botonera {
-    margin-top: 47% !important;
+    margin-top: 2.5rem;
+    align-items: center;
+}
+
+.btn-estado {
+    margin: 1px;
+    opacity: 0.5 !important;
+}
+
+.btn-estado-activo {
+    opacity: 1 !important;
 }
