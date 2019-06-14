@@ -1249,25 +1249,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     }
 
 
-
-    /**
-     * Devuelve si un concepto es turneable o no.
-     * Se fija en la variable conceptosTurneables inicializada en OnInit
-     *
-     * @param {any} concepto Concepto SNOMED a verificar si esta en el array de conceptosTurneables
-     * @returns  boolean TRUE/FALSE si es turneable o no
-     * @memberof BuscadorComponent
-     */
-    public esTurneable(concepto) {
-        if (!this.conceptosTurneables) {
-            return false;
-        }
-
-        return this.conceptosTurneables.find(x => {
-            return x.conceptId === concepto.conceptId;
-        });
-    }
-
     registrosColapsados() {
         this.prestacion.ejecucion.registros.forEach(registro => {
             let unRegistro = this.itemsRegistros[registro.id].collapse;

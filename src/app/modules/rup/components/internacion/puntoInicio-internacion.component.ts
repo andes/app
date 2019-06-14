@@ -138,7 +138,6 @@ export class PuntoInicioInternacionComponent implements OnInit {
         }
     }
     newPrestacionConVerificacion(paciente, concepto) {
-        console.log(paciente);
         this.servicioPrestacion.newPrestacion(paciente, concepto).subscribe(nuevaPrestacion => {
             this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
                 this.router.navigate(['/rup/ejecucion', prestacion.id]);
