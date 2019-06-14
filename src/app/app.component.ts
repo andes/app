@@ -46,14 +46,14 @@ export class AppComponent {
         if (this.auth.getPermissions('turnos:planificarAgenda:?').length > 0) {
             accessList.push({ label: 'CITAS: Gestor de Agendas y Turnos', icon: 'calendar', route: '/citas/gestor_agendas' });
         }
-        if (this.auth.getPermissions('turnos:puntoInicio:?').length && this.auth.getPermissions('mpi:?').length) {
-            accessList.push({ label: 'CITAS: Punto de Inicio', icon: 'calendar', route: '/citas/puntoInicio' });
+        if (this.auth.getPermissions('turnos:puntoInicio:?').length > 0) {
+            accessList.push({ label: 'CITAS: Punto de Inicio', icon: 'calendar', route: '/citas/punto-inicio' });
         }
 
         accessList.push({ label: 'CITAS: Espacios Físicos', icon: 'cogs', route: 'tm/mapa_espacio_fisico' });
 
         if (this.auth.getPermissions('mpi:?').length > 0) {
-            accessList.push({ label: 'MPI: Índice Maestro de Pacientes', icon: 'account-multiple-outline', route: 'apps/mpi' });
+            accessList.push({ label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: '/apps/mpi/busqueda' });
         }
         if (this.auth.getPermissions('auditoriaPacientes:?').length > 0) {
             accessList.push({ label: 'Auditoría MPI', icon: 'account-search', route: 'apps/mpi/auditoria' });

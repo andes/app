@@ -4,15 +4,13 @@ import { Auth } from '@andes/auth';
 import { FacturacionAutomaticaService } from './../../../services/facturacionAutomatica.service';
 import * as moment from 'moment';
 
-// Interfaces
-import { IPaciente } from './../../../interfaces/IPaciente';
-
 // Servicios
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ObraSocialService } from '../../../services/obraSocial.service';
 
 import { IAgenda } from '../../../interfaces/turnos/IAgenda';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 @Component({
     selector: 'turnos-paciente',
     templateUrl: 'turnos-paciente.html',

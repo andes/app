@@ -1,9 +1,7 @@
-import { SnomedService } from '../../../../services/term/snomed.service';
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { IPacienteMatch } from '../../../mpi/interfaces/IPacienteMatch.inteface';
-import { IPaciente } from '../../../../interfaces/IPaciente';
-import { Plex } from '@andes/plex';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { PacienteBuscarResultado } from '../../../mpi/interfaces/PacienteBuscarResultado.inteface';
 import { RupElement } from '.';
 
@@ -102,8 +100,12 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
     }
 
     seleccionarPaciente(paciente: IPaciente) {
-        this.pacienteActivo = paciente;
-        this.registro.valor.informe.pacientes.push(paciente);
+        if (!this.registro.valor.informe.pacientes.some((p) => p.id === paciente.id)) {
+            this.pacienteActivo = paciente;
+            this.registro.valor.informe.pacientes.push(paciente);
+        } else {
+            this.plex.info('warning', 'El paciente ya había sido seleccionado.', 'Información');
+        }
         this.pacientes = null;
     }
 

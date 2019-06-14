@@ -20,7 +20,7 @@ export class InicioComponent implements AfterViewInit {
     public denied = false;
     public accessList: any = [];
 
-    constructor(public auth: Auth, public appComponent: AppComponent) { }
+    constructor(public auth: Auth, public appComponent: AppComponent, private plex: Plex) { }
 
     ngAfterViewInit() {
         window.setTimeout(() => {

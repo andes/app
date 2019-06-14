@@ -1,11 +1,10 @@
 import { Observable } from 'rxjs/Observable';
-import { PacienteSearch } from './pacienteSearch.interface';
-import { IPaciente } from './../interfaces/IPaciente';
+import { PacienteSearch } from '../../../interfaces/pacienteSearch.interface';
+import { IPaciente } from '../interfaces/IPaciente';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { environment } from '../../environments/environment';
-import { ICarpetaPaciente } from './../interfaces/ICarpetaPaciente';
-import { IPacienteMatch } from '../modules/mpi/interfaces/IPacienteMatch.inteface';
+import { ICarpetaPaciente } from '../../../interfaces/ICarpetaPaciente';
+import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 
 @Injectable()
 export class PacienteService {
@@ -47,15 +46,17 @@ export class PacienteService {
         });
     }
 
+    // Búsqueda tipo SEARCH por elastic según condiciones.
+    getSearch(params: any): Observable<any[]> {
+        return this.server.get(this.pacienteUrl + '/search', { params: params, showError: true });
+    }
+
     get(params: PacienteSearch): Observable<IPaciente[]> {
         return this.server.get(this.pacienteUrl, { params: params, showError: true });
     }
 
     getInactivos(): Observable<IPaciente[]> {
         return this.server.get(`${this.pacienteUrl}/inactivos/`, { showError: true });
-    }
-    getAuditoria(params: any): Observable<IPaciente[]> {
-        return this.server.get(`${this.pacienteUrl}/auditoria/`, { params: params, showError: true });
     }
 
     getAuditoriaVinculados(params: any): Observable<IPaciente[]> {
@@ -85,13 +86,30 @@ export class PacienteService {
     post(paciente: IPaciente): Observable<IPaciente> {
         return this.server.post(this.pacienteUrl, paciente);
     }
-
+    /**
+     * Consulta fuentes auténticas para obtener datos del paciente validados.
+     *
+     * @param {*} paciente
+     * @returns {Observable<any>}
+     * @memberof PacienteService
+     */
+    validar(paciente: any): Observable<any> {
+        return this.server.post(this.pacienteUrl + '/validar', paciente);
+    }
     /**
      * Metodo put. Actualiza un objeto paciente.
      * @param {IPaciente} paciente Recibe IPaciente
      */
     put(paciente: IPaciente): Observable<IPaciente> {
         return this.server.put(`${this.pacienteUrl}/${paciente.id}`, paciente);
+    }
+
+    /**
+     * Metodo setActivo. Actualiza estado (Activo/inactivo) de un paciente.
+     * @param {IPaciente} paciente Recibe IPaciente
+     */
+    setActivo(paciente: IPaciente): Observable<IPaciente> {
+        return this.server.put(`${this.pacienteUrl}/auditoria/setActivo`, paciente);
     }
 
     /**
@@ -116,7 +134,7 @@ export class PacienteService {
      */
     disable(paciente: IPaciente): Observable<IPaciente> {
         paciente.activo = false;
-        return this.put(paciente);
+        return this.setActivo(paciente);
     }
 
     /**
@@ -125,15 +143,14 @@ export class PacienteService {
      */
     enable(paciente: IPaciente): Observable<IPaciente> {
         paciente.activo = true;
-        return this.put(paciente);
+        return this.setActivo(paciente);
     }
 
-    save(paciente: IPaciente): Observable<IPaciente> {
+    save(paciente: IPaciente, ignoreCheck: boolean = false): Observable<IPaciente> {
         if (paciente.id) {
-            return this.server.put(`${this.pacienteUrl}/${paciente.id}`, paciente);
+            return this.server.put(`${this.pacienteUrl}/${paciente.id}`, { paciente, ignoreCheck });
         } else {
-            return this.server.post(this.pacienteUrl, paciente);
-
+            return this.server.post(this.pacienteUrl, { paciente, ignoreCheck });
         }
     }
     getSiguienteCarpeta(): Observable<any> {
@@ -142,4 +159,5 @@ export class PacienteService {
     incrementarNroCarpeta(): Observable<any> {
         return this.server.post(`${this.carpetaUrl}/incrementarCuenta`, {});
     }
+
 }
