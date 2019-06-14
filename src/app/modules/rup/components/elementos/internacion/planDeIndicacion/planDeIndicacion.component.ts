@@ -31,7 +31,9 @@ export class PlanIndicacionComponent extends RUPComponent implements OnInit {
             }
         });
         this.disable();
-
+        if (!this.soloValores) {
+            this.agregarRegistro();
+        }
     }
 
     disable() {
@@ -43,6 +45,7 @@ export class PlanIndicacionComponent extends RUPComponent implements OnInit {
             }
         });
     }
+
     agregarRegistro() {
         this.registroNuevo = new IPrestacionRegistro(this.rupElemento, this.conceptoSnomed);
         this.registroNuevo.valor = { estado: 'activo' };
@@ -67,4 +70,25 @@ export class PlanIndicacionComponent extends RUPComponent implements OnInit {
 
     }
 
+    /**
+     * Agrega un item de Prescripción siempre y cuando no haya uno vacio
+     * @param index valor index de la prescripción que se está modificando
+     */
+    rupOnchange(index) {
+        if (this.registro.registros[index].registros[0].valor !== null) {
+            let registroVacio = false;
+            for (let i = 0; i < this.registro.registros.length; i++) {
+                if (this.registro.registros[i].registros[0].valor === null) {
+                    registroVacio = false;
+                    break;
+                } else {
+                    registroVacio = true;
+                }
+            }
+
+            if (registroVacio) {
+                this.agregarRegistro();
+            }
+        }
+    }
 }
