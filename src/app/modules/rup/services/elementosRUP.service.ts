@@ -6,6 +6,7 @@ import { Server } from '@andes/shared';
 import { IElementoRUP } from './../interfaces/elementoRUP.interface';
 import { IElementosRUPCache } from './../interfaces/elementosRUPCache.interface';
 import { ISnomedConcept } from './../interfaces/snomed-concept.interface';
+import { PrestacionesService } from './prestaciones.service';
 
 const url = '/modules/rup/elementosRUP';
 
@@ -17,8 +18,10 @@ export class ElementosRUPService {
     private cacheParaSolicitud: IElementosRUPCache = {};
     // Precalcula los elementos default
     private defaults: IElementosRUPCache = {};
-    // Precalcula los elementos default para solicitudes
+    // Precalcula los elementos default para solicitudes turneables
     private defaultsParaSolicitud: IElementosRUPCache = {};
+    // Precalcula los elementos default para solicitudes NO turneables
+    private defaultsParaSolicitudNoTurneable: IElementosRUPCache = {};
 
     private cacheBusquedaGuidada: any = {};
     // Indica que el servicio está listo para usarse.
@@ -38,7 +41,7 @@ export class ElementosRUPService {
      */
     public coleccionRetsetId = {};
 
-    constructor(private server: Server) {
+    constructor(private server: Server, public servicioPrestaciones: PrestacionesService) {
         // Precachea la lista completa de elementos RUP
         this.server.get(url).subscribe((data: IElementoRUP[]) => {
             this.cache = {};
@@ -55,7 +58,11 @@ export class ElementosRUPService {
                 if (elementoRUP.defaultFor && elementoRUP.defaultFor.length) {
                     elementoRUP.defaultFor.forEach((semanticTag) => {
                         if (elementoRUP.esSolicitud) {
-                            this.defaultsParaSolicitud[semanticTag] = elementoRUP;
+                            if (elementoRUP.esTurneable) {
+                                this.defaultsParaSolicitud[semanticTag] = elementoRUP;
+                            } else {
+                                this.defaultsParaSolicitudNoTurneable[semanticTag] = elementoRUP;
+                            }
                         } else {
                             this.defaults[semanticTag] = elementoRUP;
                         }
@@ -139,7 +146,11 @@ export class ElementosRUPService {
             if (elemento) {
                 return elemento;
             } else {
-                return this.defaultsParaSolicitud[concepto.semanticTag];
+                if (this.servicioPrestaciones.esTurneable(concepto)) {
+                    return this.defaultsParaSolicitud[concepto.semanticTag];
+                } else {
+                    return this.defaultsParaSolicitudNoTurneable[concepto.semanticTag];
+                }
             }
         } else {
             let elemento = this.cache[concepto.conceptId];
@@ -186,9 +197,7 @@ export class ElementosRUPService {
 
 
     getConceptoPrescripcion() {
-        let conceptoPreincripcion =  this.cache['432678004'] ? this.cache['432678004'].conceptos[0] : null;
-
-
+        let conceptoPreincripcion = this.cache['432678004'] ? this.cache['432678004'].conceptos[0] : null;
         return conceptoPreincripcion;
     }
 

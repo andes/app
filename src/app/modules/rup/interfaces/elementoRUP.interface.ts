@@ -14,7 +14,8 @@ export interface IElementoRUP {
     formulaImplementation?: string;
     // Indica si este elementoRUP aplica a una solicitud
     esSolicitud: Boolean;
-
+    // Indica si este elementoRUP es una solicitud turneable
+    esTurneable: Boolean;
     // Indica si no muestra el motivo de consulta al validar
     motivoConsultaOpcional: Boolean;
 

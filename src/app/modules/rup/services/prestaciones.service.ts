@@ -513,7 +513,11 @@ export class PrestacionesService {
                 let nuevaPrestacion = this.inicializarPrestacion(paciente, concepto, 'ejecucion', 'internacion');
                 if (prestaciones.length) {
                     let ultimaPrestacion = prestaciones[0];
-                    this.hayValorAEvolucionar(ultimaPrestacion.ejecucion.registros);
+                    if (concepto.conceptId === '432678004') {
+                        this.evolucionarPrescripcion(ultimaPrestacion.ejecucion.registros);
+                    } else {
+                        this.hayValorAEvolucionar(ultimaPrestacion.ejecucion.registros);
+                    }
                     nuevaPrestacion.ejecucion.registros = ultimaPrestacion.ejecucion.registros;
                 }
                 return nuevaPrestacion;
@@ -524,6 +528,44 @@ export class PrestacionesService {
                 observer.complete();
             });
         }
+    }
+
+    /**
+     * Se evoluciona una Indicacion para Procedimiento que tiene un tratamiento especial
+     * en la posicion 0 de los registros, que contiene a su vez, los registros especificos de una Prescripcion
+     * Recorre los registros de una prestacion, se copia el id del registro para guardarlo en el atributo 'valor'
+     * de cada registro ejecucion
+     * @param registros
+     */
+    evolucionarPrescripcion(registros: any[]) {
+        if (registros) {
+            for (let i = 0; i < registros.length; i++) {
+                let idRegistroAnterior = registros[i].id;
+                delete registros[i].id;
+                if (i === 0) {
+                    for (let j = 0; j < registros[i].registros.length; j++) {
+                        this.evolucionRegistro(registros[i].registros[j], idRegistroAnterior);
+                    }
+                } else {
+                    this.evolucionRegistro(registros[i], idRegistroAnterior);
+                }
+            }
+        }
+    }
+
+    /**
+     * Se evoluciona un registro especifico guardando idRegistroOrigen y idRegistroAnterior
+     * @param registro
+     * @param idRegistroAnterior
+     */
+    evolucionRegistro(registro: IPrestacionRegistro, idRegistroAnterior: any) {
+        if (!registro.valor) {
+            registro.valor = {};
+        }
+        if (!registro.valor.idRegistroOrigen) {
+            registro.valor.idRegistroOrigen = idRegistroAnterior;
+        }
+        registro.valor.idRegistroAnterior = idRegistroAnterior;
     }
 
     /**
@@ -697,7 +739,6 @@ export class PrestacionesService {
 
                         // Controlemos que se trata de una prestación turneable.
                         // Solo creamos prestaciones pendiente para conceptos turneables
-
                         let existeConcepto = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId && c.term === conceptoSolicitud.term);
                         if (existeConcepto) {
                             // creamos objeto de prestacion
