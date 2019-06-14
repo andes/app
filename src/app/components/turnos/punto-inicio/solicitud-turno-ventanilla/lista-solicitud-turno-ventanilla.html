@@ -30,15 +30,20 @@
                                 {{ prestacion.solicitud.tipoPrestacion.term }}
                             </td>
                             <td>
-                                {{ prestacion.solicitud.profesional | profesional }} - {{ prestacion?.solicitud?.organizacion?.nombre }}
-                                <span class="text-danger" *ngIf="prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado === true">(autocitado)</span>
+                                {{ prestacion.solicitud.profesional | profesional }} -
+                                {{ prestacion?.solicitud?.organizacion?.nombre }}
+                                <span class="text-danger"
+                                      *ngIf="prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado === true">(autocitado)</span>
                             </td>
                             <td class="text-center">
-                                <plex-button *ngIf="!prestacion.solicitud?.turno && (auth.organizacion.id === prestacion?.solicitud?.organizacion?.id)" type="success"
-                                    (click)="solicitudPrestacionDarTurno(prestacion)" title="Dar Turno" icon="calendar-plus"></plex-button>
+                                <plex-button *ngIf="!prestacion.solicitud?.turno && (auth.organizacion.id === prestacion?.solicitud?.organizacion?.id)"
+                                             type="success" (click)="solicitudPrestacionDarTurno(prestacion)"
+                                             title="Dar Turno" icon="calendar-plus"></plex-button>
                                 <span *ngIf="prestacion.solicitud?.turno" class="badge badge-success">Turno Dado</span>
-                                <span *ngIf="!prestacion.solicitud?.turno && (auth.organizacion.id !== prestacion?.solicitud?.organizacion?.id)">
-                                    <span class="badge badge-info">{{prestacion.estados[prestacion.estados.length-1]?.tipo}}</span>
+                                <span
+                                      *ngIf="!prestacion.solicitud?.turno && (auth.organizacion.id !== prestacion?.solicitud?.organizacion?.id)">
+                                    <span
+                                          class="badge badge-info">{{prestacion.estados[prestacion.estados.length-1]?.tipo}}</span>
                                 </span>
                             </td>
                         </tr>
@@ -55,5 +60,6 @@
     </div>
 
 </fieldset>
-<solicitud-turno-ventanilla *ngIf="showCargarSolicitud" [paciente]="paciente" (cerrarSolicitudVentanilla)="cerrarSolicitudVentanilla($event)"
-    (mostrarDarTurnoSolicitud)="darTurnoSolicitud($event)"></solicitud-turno-ventanilla>
+<solicitud-turno-ventanilla *ngIf="showCargarSolicitud" [paciente]="paciente"
+                            (cerrarSolicitudVentanilla)="cerrarSolicitudVentanilla($event)">
+</solicitud-turno-ventanilla>

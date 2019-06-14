@@ -31,7 +31,7 @@
                 <table class="table table-striped">
                     <tbody>
                         <tr class="hover">
-                            <td>
+                            <td (click)="showDatos()">
                                 <span *ngIf="paciente.estado == 'validado'" class="badge badge-success">Validado</span>
                                 <span *ngIf="paciente.estado != 'validado'" class="badge badge-warning"
                                       title="Los pacientes temporales sin validar se inactivan luego de un tiempo">Temporal</span>
@@ -81,25 +81,24 @@
         <div *ngIf="showMostrarEstadisticasAgendas" type="info">
             <estadisticas-agendas></estadisticas-agendas>
         </div>
-        <div *ngIf="showMostrarEstadisticasPacientes" type="info">
+        <div *ngIf="showMostrarEstadisticasPacientes && paciente" type="info">
             <estadisticas-pacientes [paciente]="paciente" [showTab]="showTab"
                                     (showArancelamientoForm)="showArancelamientoForm($event)">
             </estadisticas-pacientes>
         </div>
-        <div *ngIf="showIngresarSolicitud" type="info">
-            <solicitud-turno-ventanilla [paciente]="paciente"
-                                        (cancelarSolicitudVentanilla)="cancelarSolicitudVentanilla($event)"
-                                        (mostrarDarTurnoSolicitud)="darTurnoSolicitud($event)">
-            </solicitud-turno-ventanilla>
+        <div *ngIf="showIngresarSolicitud && paciente" type="info">
+            <lista-solicitud-turno-ventanilla [paciente]="paciente"
+                                              (solicitudPrestacionEmit)="darTurnoSolicitud($event)">
+            </lista-solicitud-turno-ventanilla>
         </div>
-        <div *ngIf="showActivarApp" type="info">
+        <div *ngIf="showActivarApp && paciente" type="info">
             <activar-app [paciente]="paciente"></activar-app>
         </div>
     </plex-layout-sidebar>
 </plex-layout>
 
 <!--Components-->
-<dar-turnos *ngIf="autorizado && showDarTurnos" [pacienteSeleccionado]="paciente"
+<dar-turnos *ngIf="autorizado && showDarTurnos && paciente" [pacienteSeleccionado]="paciente"
             [solicitudPrestacion]="solicitudPrestacion" (afterDarTurno)="afterDarTurno($event)"></dar-turnos>
 
 <arancelamiento-form *ngIf=" showArancelamiento" [turno]="turnoArancelamiento"

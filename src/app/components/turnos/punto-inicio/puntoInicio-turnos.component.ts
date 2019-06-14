@@ -91,6 +91,8 @@ export class PuntoInicioTurnosComponent implements OnInit {
     // -------------- SOBRE BUSCADOR ----------------
 
     onSearchStart() {
+        this.showMostrarEstadisticasAgendas = true;
+        this.esOperacion = false;
         this.disableNuevoPaciente = false;
         this.esEscaneado = false;
         this.paciente = null;
@@ -134,6 +136,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     }
 
     onPacienteSelected(paciente: IPaciente): void {
+        this.showTab = 0;
         this.paciente = paciente;
         if (!paciente.id || (paciente.estado === 'temporal' && paciente.scan)) {
             this.previousUrlService.setUrl('citas/punto-inicio');
@@ -144,26 +147,20 @@ export class PuntoInicioTurnosComponent implements OnInit {
     }
 
     private getPacienteById(idPaciente: string) {
+        this.showMostrarEstadisticasAgendas = false;
         this.servicePaciente.getById(idPaciente).subscribe(pacienteMPI => {
             this.paciente = pacienteMPI;
-            this.showMostrarEstadisticasAgendas = false;
             if (this.esOperacion) {
                 this.esOperacion = false;
             } else {
                 this.showMostrarEstadisticasPacientes = true;
+                this.showIngresarSolicitud = false;
                 this.showMostrarTurnosPaciente = false;
                 this.showActivarApp = false;
-                this.showIngresarSolicitud = false;
             }
         });
     }
 
-    handleBlanqueo(event) {
-        this.showMostrarEstadisticasAgendas = true;
-        this.showMostrarEstadisticasPacientes = false;
-        this.showMostrarTurnosPaciente = false;
-        this.showIngresarSolicitud = false;
-    }
 
     verificarOperacion(operacion, paciente) {
         this.esOperacion = true;
@@ -252,4 +249,10 @@ export class PuntoInicioTurnosComponent implements OnInit {
         return false;
     }
 
+    showDatos() {
+        this.showMostrarEstadisticasPacientes = true;
+        this.showIngresarSolicitud = false;
+        this.showMostrarTurnosPaciente = false;
+        this.showActivarApp = false;
+    }
 }
