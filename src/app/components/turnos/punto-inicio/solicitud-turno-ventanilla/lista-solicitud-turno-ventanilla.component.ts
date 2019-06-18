@@ -89,6 +89,7 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
     }
 
     cerrarSolicitudVentanilla(event) {
+        this.cargarSolicitudes();
         this.showCargarSolicitud = false;
     }
     redirect(pagina: string) {
