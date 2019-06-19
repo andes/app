@@ -1,4 +1,4 @@
-import { IDireccion } from './../IDireccion';
+import { IDireccion } from '../../core/mpi/interfaces/IDireccion';
 import { IContacto } from './../IContacto';
 export interface IEspacioFisico {
     id: string;

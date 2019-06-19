@@ -2,9 +2,9 @@ import { Component, OnInit, OnDestroy, HostBinding, ViewEncapsulation, Input, Ou
 import { Router, ActivatedRoute } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { PacienteService } from './../../../../services/paciente.service';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
-import { IPaciente } from './../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { LogService } from '../../../../services/log.service';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';

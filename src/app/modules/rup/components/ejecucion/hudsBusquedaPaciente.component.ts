@@ -2,7 +2,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { IPaciente } from './../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 
 @Component({
     selector: 'rup-hudsBusquedaPaciente',
@@ -11,11 +11,11 @@ import { IPaciente } from './../../../../interfaces/IPaciente';
 })
 export class HudsBusquedaPacienteComponent implements OnInit {
 
-    @HostBinding('class.plex-layout') layout = true;
-
-    public paciente: IPaciente;
-
-
+    public esProfesional = false;
+    // ---- Variables asociadas a componentes paciente buscar y paciente listado
+    resultadoBusqueda = null;
+    pacienteSelected = null;
+    loading = false;
     routeParams: any;
 
     constructor(
@@ -40,17 +40,34 @@ export class HudsBusquedaPacienteComponent implements OnInit {
         }
     }
 
-    redirect(pagina: string) {
-        this.router.navigate(['./' + pagina]);
-        return false;
-    }
-
-    onPacienteSelected(paciente) {
-        this.router.navigate(['/rup/huds/paciente/' + paciente.id]);
-    }
-
-    onPacienteCancel() {
+    onCancel() {
         this.router.navigate(['rup']);
     }
 
+    searchStart() {
+        this.loading = true;
+    }
+
+    searchEnd(resultado) {
+        this.loading = false;
+        if (resultado.err) {
+            this.plex.info('danger', resultado.err);
+            return;
+        }
+        this.resultadoBusqueda = resultado.pacientes;
+    }
+
+    onSearchClear() {
+        this.resultadoBusqueda = [];
+    }
+
+    onSelect(paciente: IPaciente): void {
+        this.resultadoBusqueda = [];
+        if (paciente && paciente.id) {
+            this.router.navigate(['/rup/huds/paciente/' + paciente.id]);
+        } else {
+            this.plex.info('warning', 'Paciente no encontrado', '¡Error!');
+        }
+    }
 }
+

@@ -1,7 +1,7 @@
-import { IPacienteRelacion } from './../modules/mpi/interfaces/IPacienteRelacion.inteface';
-import { IContacto } from './IContacto';
+import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
+import { IContacto } from '../../../interfaces/IContacto';
 import { IDireccion } from './IDireccion';
-import { EstadoCivil } from './../utils/enumerados';
+import { EstadoCivil } from '../../../utils/enumerados';
 
 export interface IPaciente {
     id: string;
@@ -16,6 +16,8 @@ export interface IPaciente {
     contacto: IContacto[];
     sexo: string;
     genero: string;
+    tipoIdentificacion: String;
+    numeroIdentificacion: String;
     fechaNacimiento: Date; // Fecha Nacimiento
     edad: number;
     edadReal: { valor: number, unidad: string };
@@ -44,7 +46,7 @@ export interface IPaciente {
         valor: string
     }];
     claveBlocking: [string];
-    entidadesValidadoras: [string];
+    entidadesValidadoras?: [string];
     scan: string;
     reportarError: Boolean;
     notaError: string;

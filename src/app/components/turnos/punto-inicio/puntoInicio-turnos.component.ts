@@ -1,23 +1,28 @@
-import { Component, OnInit, HostBinding } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
 
 // Interfaces
-import { IPaciente } from './../../../interfaces/IPaciente';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 // Servicios
-import { PacienteService } from '../../../services/paciente.service';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { AppMobileService } from '../../../services/appMobile.service';
-
+import { PacienteCacheService } from '../../../core/mpi/services/pacienteCache.service';
+import { PreviousUrlService } from '../../../services/previous-url.service';
 @Component({
     selector: 'puntoInicio-turnos',
-    templateUrl: 'puntoInicio-turnos.html'
+    templateUrl: 'puntoInicio-turnos.html',
+    styleUrls: ['puntoInicio-turnos.scss']
 })
 
 export class PuntoInicioTurnosComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true;
-
+    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
+    @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
+    public disableNuevoPaciente = true;
     public puedeCrearSolicitud = false;
     public puedeAutocitar = false;
     public puedeDarTurno = false;
@@ -39,116 +44,125 @@ export class PuntoInicioTurnosComponent implements OnInit {
     seleccion = null;
     esEscaneado = false;
     textoPacienteSearch = '';
-    resultadoCreate;
     turnoArancelamiento: any;
     showArancelamiento = false;
     showTab = 0;
     private esOperacion = false;
 
+    loading = false;
+    resultadoBusqueda: IPaciente[] = [];
+    searchClear = true;    // True si el campo de búsqueda se encuentra vacío
 
     constructor(
+        private pacienteCache: PacienteCacheService,
         public servicePaciente: PacienteService,
         public auth: Auth,
         public appMobile: AppMobileService,
-        private router: Router
-    ) { }
+        private router: Router,
+        private _activatedRoute: ActivatedRoute,
+        private plex: Plex,
+        private previousUrlService: PreviousUrlService
+    ) {
+    }
 
     ngOnInit() {
+        this._activatedRoute.params.subscribe(parameters => {
+            if (parameters && parameters['idPaciente']) {
+                this.getPacienteById(parameters['idPaciente']);
+                window.history.replaceState({}, '', `/citas/punto-inicio`);
+            }
+        });
         this.autorizado = this.auth.getPermissions('turnos:puntoInicio:?').length > 0;
         this.puedeDarTurno = this.auth.getPermissions('turnos:puntoInicio:darTurnos:?').length > 0;
         this.puedeCrearSolicitud = this.auth.getPermissions('turnos:puntoInicio:solicitud:?').length > 0;
+        this.updateTitle('Punto de inicio');
+        this.previousUrlService.setUrl('citas/punto-inicio');
     }
+
+    private updateTitle(nombre: string) {
+        this.plex.updateTitle([{
+            route: 'inicio',
+            name: 'CITAS'
+        }, {
+            name: nombre
+        }]);
+    }
+
+    // -------------- SOBRE BUSCADOR ----------------
+
+    onSearchStart() {
+        this.showMostrarEstadisticasAgendas = true;
+        this.esOperacion = false;
+        this.disableNuevoPaciente = false;
+        this.esEscaneado = false;
+        this.paciente = null;
+        this.loading = true;
+    }
+
+    onSearchEnd(pacientes: IPaciente[], escaneado: boolean) {
+        this.searchClear = false;
+        this.loading = false;
+        this.pacienteCache.setScanState(escaneado);
+        if (escaneado && pacientes.length === 1) {
+            this.pacienteCache.setPaciente(pacientes[0]);
+            this.pacienteCache.setScanState(escaneado);
+            this.onPacienteSelected(pacientes[0]);
+            this.searchClear = true;
+        } else {
+            this.resultadoBusqueda = pacientes;
+        }
+    }
+
+    onSearchClear() {
+        this.disableNuevoPaciente = true;
+        this.searchClear = true;
+        this.resultadoBusqueda = [];
+        this.paciente = null;
+    }
+
+
+    // -----------------------------------------------
+
 
     showArancelamientoForm(turno) {
         this.turnoArancelamiento = turno;
         this.showDashboard = false;
         this.showArancelamiento = true;
-
     }
 
     volverAPuntoInicio() {
         this.showArancelamiento = false;
         this.showDashboard = true;
     }
+
     onPacienteSelected(paciente: IPaciente): void {
+        this.showTab = 0;
         this.paciente = paciente;
-        if (paciente.id) {
-            if (paciente.estado === 'temporal' && paciente.scan) {
-                this.seleccion = paciente;
-                if (paciente.scan) {
-                    this.esEscaneado = true;
-                }
-                this.showCreateUpdate = true;
-                this.showDarTurnos = false;
-                this.showDashboard = false;
+        if (!paciente.id || (paciente.estado === 'temporal' && paciente.scan)) {
+            this.previousUrlService.setUrl('citas/punto-inicio');
+            this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru
+        } else {
+            this.getPacienteById(paciente.id);
+        }
+    }
+
+    private getPacienteById(idPaciente: string) {
+        this.showMostrarEstadisticasAgendas = false;
+        this.servicePaciente.getById(idPaciente).subscribe(pacienteMPI => {
+            this.paciente = pacienteMPI;
+            if (this.esOperacion) {
+                this.esOperacion = false;
             } else {
-                this.servicePaciente.getById(paciente.id).subscribe(
-                    pacienteMPI => {
-                        this.paciente = pacienteMPI;
-                        // Si el paciente previamente persistido no posee string de scan, y tenemos scan, actualizamos el pac.
-                        if (!this.paciente.scan && paciente.scan) {
-                            this.servicePaciente.patch(paciente.id, { op: 'updateScan', scan: paciente.scan }).subscribe();
-                        }
-                        this.showMostrarEstadisticasAgendas = false;
-                        if (this.esOperacion) {
-                            this.esOperacion = false;
-                        } else {
-                            this.showTab = 0;
-                            this.showMostrarEstadisticasPacientes = true;
-                            this.showMostrarTurnosPaciente = false;
-                            this.showActivarApp = false;
-                            this.showIngresarSolicitud = false;
-                        }
-                    });
+                this.showMostrarEstadisticasPacientes = true;
+                this.showIngresarSolicitud = false;
+                this.showMostrarTurnosPaciente = false;
+                this.showActivarApp = false;
             }
-        } else {
-            this.showMostrarEstadisticasAgendas = false;
-            this.showMostrarEstadisticasPacientes = false;
-            this.showIngresarSolicitud = false;
-            this.seleccion = paciente;
-            if (paciente.scan) {
-                this.esEscaneado = true;
-            }
-            this.showCreateUpdate = true;
-            this.showDarTurnos = false;
-            this.showDashboard = false;
-        }
+        });
     }
 
-    afterCreateUpdate(paciente) {
-        this.showCreateUpdate = false;
-        this.showActivarApp = false;
-        this.showDashboard = true;
-        this.showDarTurnos = false;
-        if (paciente) {
-            this.servicePaciente.getById(paciente.id).subscribe(
-                pacienteMPI => {
-                    this.paciente = pacienteMPI;
-                    this.resultadoCreate = [pacienteMPI];
-                    this.showMostrarEstadisticasAgendas = false;
-                    this.showMostrarEstadisticasPacientes = true;
-                    if (this.esOperacion) {
-                        this.showMostrarEstadisticasPacientes = false;
-                        this.esOperacion = false;
-                    } else {
-                        this.showMostrarTurnosPaciente = false;
-                        this.showActivarApp = false;
-                    }
-                });
-        } else {
-            this.showDarTurnos = false;
-        }
-    }
 
-    handleBlanqueo(event) {
-        this.showMostrarEstadisticasAgendas = true;
-        this.showMostrarEstadisticasPacientes = false;
-        this.showMostrarTurnosPaciente = false;
-        this.showIngresarSolicitud = false;
-    }
-
-    verificarOperacion({ operacion, paciente }) {
-
+    verificarOperacion(operacion, paciente) {
         this.esOperacion = true;
         this.showActivarApp = false;
         this.paciente = paciente;
@@ -160,6 +174,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.showMostrarTurnosPaciente = false;
                 this.showIngresarSolicitud = false;
                 this.showDarTurnos = true;
+                this.updateTitle('Dar turno');
                 break;
             case 'ingresarSolicitud':
                 this.showIngresarSolicitud = true;
@@ -192,18 +207,17 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showDarTurnos = false;
         this.showDashboard = true;
         this.showTab = 1;
-        if (this.paciente && this.paciente.id) {
-            // this.onPacienteSelected(this.paciente);
-            if (pac && pac.carpetaEfectores && pac.carpetaEfectores.length > 0) {
+        if (this.paciente && pac) {
+            if (pac.carpetaEfectores && pac.carpetaEfectores.length > 0) {
                 this.paciente.carpetaEfectores = pac.carpetaEfectores;
             }
-            this.resultadoCreate = [this.paciente];
         }
         this.esOperacion = false;
         this.showMostrarEstadisticasAgendas = false;
         this.showMostrarEstadisticasPacientes = true;
         this.showIngresarSolicitud = false;
         this.showMostrarTurnosPaciente = false;
+        this.updateTitle('Punto de inicio');
     }
 
     cancelarSolicitudVentanilla() {
@@ -235,4 +249,10 @@ export class PuntoInicioTurnosComponent implements OnInit {
         return false;
     }
 
+    showDatos() {
+        this.showMostrarEstadisticasPacientes = true;
+        this.showIngresarSolicitud = false;
+        this.showMostrarTurnosPaciente = false;
+        this.showActivarApp = false;
+    }
 }

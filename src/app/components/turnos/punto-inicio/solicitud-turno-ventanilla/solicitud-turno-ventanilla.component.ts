@@ -203,31 +203,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
 
 
     cancelar() {
-
         this.cerrarSolicitudVentanilla.emit(true);
-
-        // this.modelo = {
-        //     paciente: this.paciente,
-        //     profesional: {},
-        //     organizacion: {},
-        //     solicitud: {
-        //         fecha: null,
-        //         paciente: {},
-        //         profesional: {},
-        //         organizacion: {},
-        //         turno: null
-        //     },
-        //     estados: [
-        //         { tipo: 'pendiente' }
-        //     ]
-        // };
-        // this.registros = {
-        //     solicitudPrestacion: {
-        //         profesionales: [],
-        //         motivo: '',
-        //         autocitado: false
-        //     }
-        // };
 
     }
 

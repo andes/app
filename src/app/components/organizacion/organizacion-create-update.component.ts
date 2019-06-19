@@ -14,7 +14,7 @@ import { LocalidadService } from './../../services/localidad.service';
 import { ILocalidad } from './../../interfaces/ILocalidad';
 import { IUbicacion } from './../../interfaces/IUbicacion';
 import { IEdificio } from './../../interfaces/IEdificio';
-import { IDireccion } from './../../interfaces/IDireccion';
+import { IDireccion } from '../../core/mpi/interfaces/IDireccion';
 import { IContacto } from './../../interfaces/IContacto';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { ITipoEstablecimiento } from './../../interfaces/ITipoEstablecimiento';

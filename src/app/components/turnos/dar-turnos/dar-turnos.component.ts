@@ -1,6 +1,6 @@
 import { environment } from './../../../../environments/environment';
 import * as moment from 'moment';
-import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -14,12 +14,12 @@ import { ObraSocialService } from './../../../services/obraSocial.service';
 import { IBloque } from './../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
-import { IPaciente } from './../../../interfaces/IPaciente';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
 import { CalendarioDia } from './calendario-dia.class';
 
 // Servicios
-import { PacienteService } from '../../../services/paciente.service';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
@@ -81,10 +81,10 @@ export class DarTurnosComponent implements OnInit {
     // usamos este output para volver al componente de validacion de rup
     @Output() volverValidacion = new EventEmitter<any>();
 
-    private _pacienteSeleccionado: any;
-    private _solicitudPrestacion: any = null; // TODO: cambiar por IPrestacion cuando esté
-    private paciente: IPaciente;
-    private opciones: any = {};
+    public _pacienteSeleccionado: any;
+    public _solicitudPrestacion: any; // TODO: cambiar por IPrestacion cuando esté
+    public paciente: IPaciente;
+    public opciones: any = {};
     public agenda: IAgenda;
     public agendas: IAgenda[];
     public estadosAgenda = EstadosAgenda;
@@ -152,7 +152,7 @@ export class DarTurnosComponent implements OnInit {
     private cacheBusquedas: any[] = localStorage.getItem('busquedas') ? JSON.parse(localStorage.getItem('busquedas')) : [];
     private busquedas = this.cacheBusquedas;
     private eventoProfesional: any = null;
-    private mostrarCalendario = false;
+    public mostrarCalendario = false;
 
     constructor(
         public serviceProfesional: ProfesionalService,
@@ -1170,7 +1170,7 @@ export class DarTurnosComponent implements OnInit {
 
         if (this._pacienteSeleccionado) {
             // this.router.navigate(['./' + 'puntoInicioTurnos']);
-            this.afterDarTurno.emit(true);
+            this.afterDarTurno.emit(this.paciente);
         } else {
             this.buscarPaciente();
         }
@@ -1178,7 +1178,7 @@ export class DarTurnosComponent implements OnInit {
         this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion en panel de confirma turno
         this.opciones.tipoPrestacion = undefined; // blanquea el filtro de tipo de prestacion en el calendario
         this.opciones.profesional = undefined; // blanquea el filtro de profesionales en el calendario
-        this.afterDarTurno.emit(true);
+        this.afterDarTurno.emit(this.paciente);
         this.plex.clearNavbar();
     }
 

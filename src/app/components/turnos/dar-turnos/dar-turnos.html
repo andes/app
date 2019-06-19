@@ -19,8 +19,8 @@
                             </div>
                             <div class="col-4">
                                 <plex-select *ngIf="!_solicitudPrestacion?.solicitud" [(ngModel)]="opciones.profesional"
-                                             (getData)="loadProfesionales($event)" placeholder="Equipo de Salud"
-                                             labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
+                                    (getData)="loadProfesionales($event)" placeholder="Equipo de Salud"
+                                    labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
                                 </plex-select>
                                 <plex-select *ngIf="_solicitudPrestacion?.solicitud?.profesional && autocitado"
                                              [(ngModel)]="_solicitudPrestacion.solicitud.profesional" (getData)="loadProfesionales($event)"
@@ -385,5 +385,4 @@
             </div>
         </div>
     </footer>
-    <pacientesSearch *ngIf="pacientesSearch" (selected)="afterSearch($event)" [mostrarCancelar]="true" (cancel)="cancelar()"></pacientesSearch>
 </form>

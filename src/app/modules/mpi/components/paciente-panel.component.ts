@@ -1,12 +1,11 @@
 import { Plex } from '@andes/plex';
 import { IPacienteRelacion } from './../interfaces/IPacienteRelacion.inteface';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { IPaciente } from '../../../interfaces/IPaciente';
-import { Observable } from 'rxjs/Observable';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { ObraSocialService } from '../../../services/obraSocial.service';
 import { ProfeService } from '../../../services/profe.service';
 import { Subscription } from 'rxjs/Subscription';
-import { PacienteService } from '../../../services/paciente.service';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 
 @Component({
     selector: 'paciente-panel',
@@ -49,10 +48,12 @@ export class PacientePanelComponent {
     set paciente(value: IPaciente) {
         this._paciente = value;
         if (this._paciente) {
-            // Obtiene relaciones
-            this.pacienteService.getById(this._paciente.id).subscribe((data) => this.relaciones.data = data.relaciones || []);
             // Obtiene cobertura social más reciente
             this.actualizarCoberturaSocial();
+            // Obtiene relaciones
+            if (this._paciente.id) {
+                this.pacienteService.getById(this._paciente.id).subscribe((data) => this.relaciones.data = data.relaciones || []);
+            }
         }
     }
     /**
