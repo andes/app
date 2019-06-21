@@ -25,6 +25,14 @@ export class ProfesionalService {
     }
 
     /**
+     * Metodo get. Trae el objeto organizacion.
+     * @param {any} params Opciones de busqueda
+     */
+    getFirma(params: any): Observable<any> {
+        return this.server.get(this.profesionalUrl + '/firma', { params: params, showError: true });
+    }
+
+    /**
      * Metodo post. Inserta un nuevo profesional
      * @param {IProfesional} profesional
      */
