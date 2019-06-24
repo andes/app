@@ -248,6 +248,7 @@ export class PacienteCruComponent implements OnInit {
                     this.pacienteModel.documento = this.paciente.documento;
                     this.pacienteModel.estado = 'validado';
                     this.paciente = Object.assign({}, this.pacienteModel);
+                    this.patronDocumento = /^[0-9]{6,8}$/;
                     this.actualizarDatosPaciente();
                 }
             }
