@@ -787,7 +787,8 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                         let turno = {
                             estado: 'disponible',
                             horaInicio: this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000)),
-                            tipoTurno: undefined
+                            tipoTurno: undefined,
+                            auditable: !bloque.tipoPrestaciones.some(p => !p.auditable)
                         };
 
                         if (bloque.pacienteSimultaneos) {
@@ -820,7 +821,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 }
             });
 
-             // Si la agenda no es nominalizada, se limpia la posible información residual relacionada a turnos
+            // Si la agenda no es nominalizada, se limpia la posible información residual relacionada a turnos
             if (!this.modelo.nominalizada) {
                 this.cleanDatosTurnos();
             }
@@ -864,17 +865,17 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     private cleanDatosTurnos() {
         this.modelo.bloques.forEach(b => {
             b.accesoDirectoProgramado =
-            b.accesoDirectoDelDia =
-            b.cantidadTurnos =
-            b.reservadoProfesional =
-            b.reservadoGestion =
-            b.restantesDelDia =
-            b.restantesProgramados =
-            b.restantesGestion =
-            b.restantesProfesional =
-            b.restantesMobile =
-            b.mobile =
-            b.duracionTurno = 0;
+                b.accesoDirectoDelDia =
+                b.cantidadTurnos =
+                b.reservadoProfesional =
+                b.reservadoGestion =
+                b.restantesDelDia =
+                b.restantesProgramados =
+                b.restantesGestion =
+                b.restantesProfesional =
+                b.restantesMobile =
+                b.mobile =
+                b.duracionTurno = 0;
 
             b.turnos = [{
                 estado: 'disponible',

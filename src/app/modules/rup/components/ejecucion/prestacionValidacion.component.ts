@@ -327,7 +327,6 @@ export class PrestacionValidacionComponent implements OnInit {
                 });
             }
         });
-
     }
 
     romperValidacion() {
