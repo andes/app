@@ -32,7 +32,6 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public arrayEstadosFacturacion;
 
     public dniPaciente;
-    public pacientes: [IPaciente];
 
     prestacion: any;
     router: any;
