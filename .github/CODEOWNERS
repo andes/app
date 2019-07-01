@@ -1,0 +1,5 @@
+* @andes/testing @andes/code-review
+
+*.html @andes/testing @andes/code-review @andes/ui-ux
+*.css @andes/testing @andes/code-review @andes/ui-ux
+*.scss @andes/testing @andes/code-review @andes/ui-ux
