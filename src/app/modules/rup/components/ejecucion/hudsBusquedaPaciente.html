@@ -1,2 +1,30 @@
-<pacientesSearch (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="true"
-    [modoCompleto]="true" [bloquearCreate]="true"></pacientesSearch>
+<plex-layout main="12">
+    <plex-layout-main>
+        <div class="row">
+            <div class="col-12">
+                <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
+                    (searchClear)="onSearchClear()">
+                </paciente-buscar>
+            </div>
+        </div>
+        <plex-loader *ngIf="loading"></plex-loader>
+        <div class=" row">
+            <div class="col-12">
+                <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
+                    [autoselect]="false" (selected)="onSelect($event)">
+                </paciente-listado>
+
+                <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
+                    ¡No se encontró ningún paciente!
+                </div>
+            </div>
+        </div>
+    </plex-layout-main>
+    <plex-layout-footer>
+        <plex-button position="left" label="Cancelar" type="info" (click)='onCancel()'></plex-button>
+    </plex-layout-footer>
+</plex-layout>
+
+
+<!-- <pacientesSearch (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="true"
+    [modoCompleto]="true" [bloquearCreate]="true"></pacientesSearch> -->

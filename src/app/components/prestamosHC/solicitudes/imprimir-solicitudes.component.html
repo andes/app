@@ -12,16 +12,18 @@
                     <thead>
                         <th colspan="14">
                             <span *ngIf="!solicitud.datosSolicitudManual">
-                                * PROFESIONAL | {{ solicitud.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }} -> {{ solicitud.numero
-                                }} | {{solicitud.paciente.apellido}} {{solicitud.paciente.nombre}}
+                                * PROFESIONAL | {{ solicitud.fecha | fecha }} |
+                                {{ solicitud.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }} |
+                                {{ solicitud.datosPrestamo.turno.tipoPrestacion.term }} -> {{ solicitud.numero}} |
+                                {{solicitud.paciente.apellido}} {{solicitud.paciente.nombre}}
                             </span>
                             <span *ngIf="solicitud.datosSolicitudManual">
                                 <span *ngIf="solicitud.datosSolicitudManual.profesional">
-                                    * PROFESIONAL | {{ solicitud.datosSolicitudManual.profesional.apellido }}, {{ solicitud.datosSolicitudManual.profesional.nombre
+                                    * PROFESIONAL | {{ solicitud.fecha | fecha }} | {{ solicitud.datosSolicitudManual.profesional.apellido }}, {{ solicitud.datosSolicitudManual.profesional.nombre
                                     }} -> {{ solicitud.numero }} | {{solicitud.paciente.apellido}} {{solicitud.paciente.nombre}}
                                 </span>
                                 <span *ngIf="!solicitud.datosSolicitudManual.profesional">
-                                    * ADMINISTRATIVO | {{ solicitud.datosSolicitudManual.responsable.apellido }}, {{ solicitud.datosSolicitudManual.responsable.nombre
+                                    * ADMINISTRATIVO | {{ solicitud.fecha | fecha }} | {{ solicitud.datosSolicitudManual.responsable.apellido }}, {{ solicitud.datosSolicitudManual.responsable.nombre
                                     }} -> {{ solicitud.numero }} | {{solicitud.paciente.apellido}} {{solicitud.paciente.nombre}}
                                 </span>
                             </span>

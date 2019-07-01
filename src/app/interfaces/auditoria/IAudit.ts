@@ -1,5 +1,5 @@
 import { IUbicacion } from '../IUbicacion';
-import { IDireccion } from '../IDireccion';
+import { IDireccion } from '../../core/mpi/interfaces/IDireccion';
 import { Sexo, Genero, EstadoCivil } from './../../utils/enumerados';
 
 

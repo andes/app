@@ -1,4 +1,4 @@
-<form *ngIf="!verImprimirSolicitudes" class="plex-layout ng-untouched ng-pristine ng-valid" novalidate="">
+<form class="plex-layout ng-untouched ng-pristine ng-valid" novalidate="">
     <section>
         <div class="row">
             <div [ngClass]="cssLayout">
@@ -9,12 +9,13 @@
                                 <div class="page-title float-left">Solicitudes de Carpetas</div>
                                 <div class="float-right">
                                     <span>
-                                        <plex-button icon="mdi mdi-printer" title="Imprimir solicitudes" (click)="showImprimirCarpetas()">
+                                        <plex-button icon="mdi mdi-printer" title="Imprimir solicitudes"
+                                                     (click)="showImprimirCarpetas()">
                                         </plex-button>
                                     </span>
                                     <span>
                                         <plex-button type="primary" icon="mdi mdi-plus" title="Agregar solicitud manual"
-                                            (click)="showSolicitudManual()">
+                                                     (click)="showSolicitudManual()">
                                         </plex-button>
                                     </span>
                                 </div>
@@ -22,13 +23,15 @@
 
                             <div class="row">
                                 <div class="col-3">
-                                    <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')"
-                                        name="fechaDesde" label="Desde" class="fechas">
+                                    <plex-datetime type="date" [(ngModel)]="fechaDesde"
+                                                   (change)="getCarpetas($event, 'fechaDesde')" name="fechaDesde"
+                                                   label="Desde" class="fechas">
                                     </plex-datetime>
                                 </div>
                                 <div class="col-3">
-                                    <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="getCarpetas($event, 'fechaHasta')"
-                                        name="fechaHasta" label="Hasta" class="fechas">
+                                    <plex-datetime type="date" [(ngModel)]="fechaHasta"
+                                                   (change)="getCarpetas($event, 'fechaHasta')" name="fechaHasta"
+                                                   label="Hasta" class="fechas">
                                     </plex-datetime>
                                 </div>
                                 <div class="col-6" (click)="toogleSort()" style="margin-top: 45px;">
@@ -41,15 +44,19 @@
 
                             <div class="row">
                                 <div class="col-6">
-                                    <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event, 'prestaciones')"
-                                        (getData)="loadPrestaciones($event)" name="prestaciones" label="Prestación"
-                                        placeholder="Buscar una prestación" ngModelOptions="{standalone: true}">
+                                    <plex-select [(ngModel)]="tipoPrestacion"
+                                                 (change)="getCarpetas($event, 'prestaciones')"
+                                                 (getData)="loadPrestaciones($event)" name="prestaciones"
+                                                 label="Prestación" placeholder="Buscar una prestación"
+                                                 ngModelOptions="{standalone: true}">
                                     </plex-select>
                                 </div>
                                 <div class="col-6">
-                                    <plex-select [(ngModel)]="profesional" name="profesional" (change)="getCarpetas($event, 'profesionales')"
-                                        (getData)="loadProfesionales($event)" label="Profesional" placeholder="Escriba el apellido del Profesional"
-                                        labelField="apellido + ' ' + nombre">
+                                    <plex-select [(ngModel)]="profesional" name="profesional"
+                                                 (change)="getCarpetas($event, 'profesionales')"
+                                                 (getData)="loadProfesionales($event)" label="Profesional"
+                                                 placeholder="Escriba el apellido del Profesional"
+                                                 labelField="apellido + ' ' + nombre">
                                     </plex-select>
                                 </div>
                             </div>
@@ -74,12 +81,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let carpeta of carpetas; let i=index" [ngClass]="{'bg-inverse text-white': estaSeleccionada(carpeta)}">
+                                    <tr *ngFor="let carpeta of carpetas; let i=index"
+                                        [ngClass]="{'bg-inverse text-white': estaSeleccionada(carpeta)}">
                                         <td (click)="switchSeleccionCarpeta(carpeta)">
                                             <i *ngIf="estaSeleccionada(carpeta) && carpeta.estado == 'En archivo' && carpeta.tipo === 'Automatica'"
-                                                class="mdi mdi-checkbox-marked"></i>
+                                               class="mdi mdi-checkbox-marked"></i>
                                             <i *ngIf="!(estaSeleccionada(carpeta)) && carpeta.estado == 'En archivo' && carpeta.tipo === 'Automatica'"
-                                                class="mdi mdi-checkbox-blank-outline"></i>
+                                               class="mdi mdi-checkbox-blank-outline"></i>
                                         </td>
                                         <td>
                                             {{carpeta.fecha | date:'dd-MM-yyyy'}}
@@ -87,7 +95,8 @@
                                         <td>
                                             <b>{{carpeta.numero}}</b>
                                             <br>
-                                            <span class="badge-{{carpeta.tipo === 'Automatica' ? 'success':'info'}} float-left">
+                                            <span
+                                                  class="badge-{{carpeta.tipo === 'Automatica' ? 'success':'info'}} float-left">
                                                 {{carpeta.tipo === 'Automatica' ? 'Automática':'Manual'}}
                                             </span>
                                         </td>
@@ -130,7 +139,8 @@
                                                 <br> Responsable: <b>{{carpeta.ultimoCDA[0].profesional.apellido}}
                                                     {{carpeta.ultimoCDA[0].profesional.nombre}}</b>
                                                 <br>
-                                                <a href="javascript:void(0)" (click)="descargar(carpeta.ultimoCDA[0].adjuntos)">
+                                                <a href="javascript:void(0)"
+                                                   (click)="descargar(carpeta.ultimoCDA[0].adjuntos)">
                                                     Descargar documento adjunto
                                                     <!-- <i class="mdi mdi-36px mdi-file-pdf"></i> -->
                                                 </a>
@@ -138,7 +148,8 @@
                                         </td>
                                         <!-- Boton para subir HUDS digitalizada -->
                                         <td>
-                                            <upload-file label="Adjuntar HUDS" [extensiones]="['pdf']" (onUpload)="onUpload($event, carpeta)"></upload-file>
+                                            <upload-file label="Adjuntar HUDS" [extensiones]="['pdf']"
+                                                         (onUpload)="onUpload($event, carpeta)"></upload-file>
                                             <br><br>
                                             <span *ngIf="errorExt===i">
                                                 <span class="badge-danger">Archivo inválido. Solo se admite PDF</span>
@@ -147,7 +158,7 @@
                                         <!-- Estado -->
                                         <td *ngIf="carpeta.estado == 'En archivo'">
                                             <plex-button type="primary" label="Prestar" (click)="prestar(carpeta)"
-                                                [disabled]="carpetasSeleccionadas.length > 0">
+                                                         [disabled]="carpetasSeleccionadas.length > 0">
                                             </plex-button>
                                         </td>
                                         <td *ngIf="carpeta.estado == 'Prestada'">
@@ -163,13 +174,14 @@
             <div class="col-3" *ngIf="verPrestar">
                 <div type="info">
                     <app-prestar-hc [prestar]="carpetaSeleccionada" (cancelPrestarEmit)="onCancelPrestar($event)"
-                        (carpetaPrestadaEmit)="onCarpeta($event)"></app-prestar-hc>
+                                    (carpetaPrestadaEmit)="onCarpeta($event)"></app-prestar-hc>
                 </div>
             </div>
             <div class="col-3" *ngIf="verSolicitudManual">
                 <div type="info">
-                    <solicitud-manual-hc [pacienteSeleccionado]="paciente" (cancelSolicitudManualEmit)="onCancelSolicitar($event)"
-                        (nuevaCarpetaManualEmit)="onCarpeta($event)"></solicitud-manual-hc>
+                    <solicitud-manual-hc [pacienteSeleccionado]="paciente"
+                                         (cancelSolicitudManualEmit)="onCancelSolicitar($event)"
+                                         (nuevaCarpetaManualEmit)="onCarpeta($event)"></solicitud-manual-hc>
                 </div>
             </div>
             <div class="col-3" *ngIf="verNuevaCarpeta">
@@ -184,7 +196,9 @@
                                 <hr>
                             </legend>
                             <carpeta-paciente [turnoSeleccionado]="null" [pacienteSeleccionado]="paciente"
-                                (guardarCarpetaEmit)="afterComponenteCarpeta($event)" (cancelarCarpetaEmit)="afterComponenteCarpeta($event) "></carpeta-paciente>
+                                              (guardarCarpetaEmit)="afterComponenteCarpeta($event)"
+                                              (cancelarCarpetaEmit)="afterComponenteCarpeta($event) ">
+                            </carpeta-paciente>
                             <br>
                             <footer>
                                 <div class="text-right">
@@ -206,7 +220,7 @@
             fecha.
         </span>
     </footer>
-    <pacientesSearch *ngIf="pacientesSearch" (selected)="afterSearch($event)" [mostrarCancelar]="true" (cancel)="cancelarPacienteSearch()"
-        [bloquearCreate]="true"></pacientesSearch>
+    <!-- Deprecado, no se implementa paciente buscar hasta corregir el funcionamiento del componente. -->
+    <!-- <pacientesSearch *ngIf="pacientesSearch" (selected)="afterSearch($event)" [mostrarCancelar]="true" (cancel)="cancelarPacienteSearch()"
+        [bloquearCreate]="true"></pacientesSearch> -->
 </form>
-<imprimir-solicitudes [solicutudes]="carpetas" *ngIf="verImprimirSolicitudes" (volverAlListadoEmit)="volverAListado($event)"></imprimir-solicitudes>

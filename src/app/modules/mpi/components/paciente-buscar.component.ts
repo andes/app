@@ -1,5 +1,5 @@
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { Component, Output, EventEmitter, OnInit, OnDestroy, Input } from '@angular/core';
-import { PacienteService } from './../../../services/paciente.service';
 import * as moment from 'moment';
 import { DocumentoEscaneado, DocumentoEscaneados } from './../../../components/paciente/documento-escaneado.const';
 import { LogService } from './../../../services/log.service';
@@ -7,13 +7,13 @@ import { IPacienteMatch } from '../interfaces/IPacienteMatch.inteface';
 import { Plex } from '@andes/plex';
 import { PacienteBuscarResultado } from '../interfaces/PacienteBuscarResultado.inteface';
 
-
 interface PacienteEscaneado {
     documento: string;
     apellido: string;
     nombre: string;
     sexo: string;
     fechaNacimiento: Date;
+    scan: string;
 }
 
 @Component({
@@ -79,7 +79,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
 
         let fechaNacimiento = null;
         if (documento.grupoFechaNacimiento > 0) {
-            fechaNacimiento = moment(datos[documento.grupoFechaNacimiento], 'DD/MM/YYYY');
+            fechaNacimiento = moment(datos[documento.grupoFechaNacimiento], 'DD/MM/YYYY').format('YYYY-MM-DD').toString();
         }
 
         return {
@@ -87,7 +87,8 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
             apellido: datos[documento.grupoApellido],
             nombre: datos[documento.grupoNombre],
             sexo: sexo,
-            fechaNacimiento: fechaNacimiento
+            fechaNacimiento: fechaNacimiento,
+            scan: this.textoLibre
         };
     }
 
@@ -150,7 +151,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                     }).subscribe(resultado => {
                         if (resultado.length) {
                             // 1.2. Si encuentra el paciente (un matcheo al 100%) finaliza la búsqueda
-                            return this.searchEnd.emit({ pacientes: resultado, err: null });
+                            return this.searchEnd.emit({ escaneado: true, pacientes: resultado, err: null });
                         } else {
                             // 1.3. Si no encontró el paciente escaneado, busca uno similar
                             this.pacienteService.getMatch({
@@ -165,15 +166,15 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                                 escaneado: true
                             }).subscribe(resultadoSuggest => {
 
-                                // 1.3.1. Si no encontró ninguno, finaliza la búsqueda
+                                // 1.3.1. Si no encontró ninguno, ingresa a registro de pacientes ya que es escaneado
                                 if (!resultadoSuggest.length) {
-                                    return this.searchEnd.emit({ pacientes: [], err: null });
+                                    return this.searchEnd.emit({ pacientes: [pacienteEscaneado], escaneado: true, scan: textoLibre, err: null });
                                 }
                                 // 1.3.2. Busca a uno con el mismo código de barras
                                 let match = resultadoSuggest.find(i => i.paciente.scan && i.paciente.scan === textoLibre);
                                 if (match) {
                                     // TODO: this.logService.post('mpi', 'validadoScan', { pacienteDB: datoDB, pacienteScan: pacienteEscaneado }).subscribe(() => { });
-                                    return this.searchEnd.emit({ pacientes: [match], err: null });
+                                    return this.searchEnd.emit({ escaneado: true, pacientes: [match], err: null });
                                 } else {
                                     // 1.3.3. Busca uno con un porcentaje alto de matcheo
                                     if (resultadoSuggest[0].match >= 0.94) {
@@ -182,7 +183,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                                             this.searchEnd.emit({ pacientes: [resultadoSuggest[0]], err: null });
                                             return;
                                         } else {
-                                            // Si es un paciente temporal, actualizados con los datos del DNI escaneado
+                                            // Si es un paciente temporal, actualizamos con los datos del DNI escaneado
                                             let pacienteActualizado: IPacienteMatch;
                                             Object.assign(pacienteActualizado, resultadoSuggest[0]);
                                             match.paciente.nombre = pacienteEscaneado.nombre;
@@ -192,7 +193,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                                             return this.searchEnd.emit({ pacientes: [pacienteActualizado], err: null });
                                         }
                                     } else {
-                                        return this.searchEnd.emit({ pacientes: [], err: null });
+                                        return this.searchEnd.emit({ pacientes: [pacienteEscaneado], escaneado: true, scan: textoLibre, err: null });
                                     }
                                 }
                             });

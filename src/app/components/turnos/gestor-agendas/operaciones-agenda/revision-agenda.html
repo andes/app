@@ -18,9 +18,9 @@
                         <div *ngIf="paciente?.id"> {{paciente | paciente}}</div>
                     </div>
                     <div class="col" *ngIf="!paciente?.id && !turnoSeleccionado.paciente">
-                        <small>
-                            <span> No existe un paciente asociado</span>
-                        </small>
+                        <h4>
+                            <span> No existe un paciente asociado al turno</span>
+                        </h4>
                     </div>
                     <div class="col" *ngIf="!pacientesSearch">
                         <plex-button type="primary" label="Buscar Paciente" (click)="buscarPaciente()"></plex-button>
@@ -36,19 +36,34 @@
                                 turnoSeleccionado.paciente | edad }}</span>
                             <span *ngIf="turnoSeleccionado?.paciente?.id && turnoSeleccionado?.paciente?.sexo">| Sexo:
                                 {{ turnoSeleccionado.paciente | sexo }}</span>
-                            <span *ngIf="turnoSeleccionado?.paciente?.id && turnoSeleccionado?.paciente?.edad">{{
-                                turno.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</span>
+                            <span *ngIf="turnoSeleccionado?.paciente?.id && turnoSeleccionado?.paciente?.edad">
+                                {{ turnoSeleccionado.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</span>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col" *ngIf="pacientesSearch">
-                        <div class="panel panel-default">
-                            <div class="clear"></div>
-                            <pacientesSearch [modoCompleto]="false" (selected)="onReturn($event)"></pacientesSearch>
+
+                <!-- ----------- Búsqueda de pacientes -------------- -->
+                <div class="row" *ngIf="pacientesSearch">
+                    <div class="col-12">
+                        <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
+                            (searchClear)="onSearchClear()">
+                        </paciente-buscar>
+                    </div>
+                </div>
+                <plex-loader *ngIf="loading && pacientesSearch"></plex-loader>
+                <div class="row" *ngIf="pacientesSearch">
+                    <div class="col-12">
+                        <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length"
+                            [pacientes]="resultadoBusqueda" [autoselect]="false" (selected)="onSelect($event)">
+                        </paciente-listado>
+
+                        <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
+                            ¡No se encontró ningún paciente!
                         </div>
                     </div>
                 </div>
+                <!-- ------------------------------------------------ -->
+
                 <div class="row" *ngIf="!turnoSeleccionado.tipoPrestacion && bloqueSeleccionado && paciente?.id">
                     <div class="col-6">
                         <br>

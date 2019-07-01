@@ -2,7 +2,7 @@ import { ISnomedConcept } from './../modules/rup/interfaces/snomed-concept.inter
 import { ITipoEstablecimiento } from './ITipoEstablecimiento';
 import { IUbicacion } from './IUbicacion';
 import { IContacto } from './IContacto';
-import { IDireccion } from './IDireccion';
+import { IDireccion } from '../core/mpi/interfaces/IDireccion';
 import { tipoComunicacion } from './../utils/enumerados';
 
 // export enum tipoCom {"Teléfono Fijo", "Teléfono Celular", "email"};

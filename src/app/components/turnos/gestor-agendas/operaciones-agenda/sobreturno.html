@@ -16,10 +16,10 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <plex-phone *ngIf="paciente" label="Verifique el número telefónico:"
-                                    [(ngModel)]="telefono" (change)="cambioTelefono=true" name="telefono"></plex-phone>
-                                <plex-text *ngIf="carpetaEfector" (change)="cambiarCarpeta()" label="Nro Carpeta"
-                                    name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
+                                <plex-phone *ngIf="paciente" label="Verifique el número telefónico:" [(ngModel)]="telefono"
+                                    (change)="cambioTelefono=true" name="telefono"></plex-phone>
+                                <plex-text *ngIf="carpetaEfector" (change)="cambiarCarpeta()" label="Nro Carpeta" name="nroCarpeta"
+                                    [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
                             </div>
                             <div class="col">
                                 <plex-text label="Observaciones" name="nota" multiline="true" [(ngModel)]="nota"
@@ -28,9 +28,9 @@
                         </div>
                         <div class="row" *ngIf="agenda.tipoPrestaciones.length > 1">
                             <div class="col">
-                                <plex-select [(ngModel)]="tipoPrestacion" name="tipoPrestacion"
-                                    label="Tipo de prestación" [data]="agenda.tipoPrestaciones"
-                                    placeholder="Seleccione el tipo de prestación" [required]="true">
+                                <plex-select [(ngModel)]="tipoPrestacion" name="tipoPrestacion" label="Tipo de prestación"
+                                    [data]="agenda.tipoPrestaciones" placeholder="Seleccione el tipo de prestación"
+                                    [required]="true">
                                 </plex-select>
                             </div>
                         </div>
@@ -43,20 +43,28 @@
                         </div>
                     </span>
                     <span *ngIf="!showSobreturno">
-                        <div class="row">
-                            <div class="col col-sm-12" *ngIf="pacientesSearch">
+                        <div class="row" *ngIf="pacientesSearch">
+                            <div class="col-9 pr-0">
                                 <div class="panel panel-default">
                                     <div class="clear"></div>
-                                    <pacientesSearch (selected)="afterSearch($event)" [hideFooter]="true"
-                                        [modoCompleto]="false" [bloquearCreate]="false">
-                                    </pacientesSearch>
+                                    <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
+                                        (searchClear)="onSearchClear()">
+                                    </paciente-buscar>
                                 </div>
                             </div>
-                            <div class="col col-sm-12" *ngIf="showCreateUpdate">
-                                <div class="panel panel-default">
-                                    <div class="clear"></div>
-                                    <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado"
-                                        (data)='afterCreateUpdate($event)'></paciente-create-update>
+                            <div class="col-3">
+                                <!-- BOTONES DE REGISTRO MPI -->
+                                <mpi-botones-registro [disabled]="disableNuevoPaciente"></mpi-botones-registro>
+                            </div>
+                        </div>
+                        <plex-loader *ngIf="loading"></plex-loader>
+                        <div class="row">
+                            <div class="col-12">
+                                <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
+                                    [autoselect]="false" (selected)="onSelect($event)"></paciente-listado>
+
+                                <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
+                                    ¡No se encontró ningún paciente!
                                 </div>
                             </div>
                         </div>
@@ -104,7 +112,7 @@
             <div class="col text-right">
                 <plex-button type="danger" label="Cancelar" (click)="cancelar()">
                 </plex-button>
-                <plex-button *ngIf="paciente" validateForm="true" label="Guardar" type="success"
+                <plex-button *ngIf="paciente" icon="mdi-content-save" validateForm="true" label="Guardar" type="success"
                     (click)="guardar($event)">
                 </plex-button>
             </div>

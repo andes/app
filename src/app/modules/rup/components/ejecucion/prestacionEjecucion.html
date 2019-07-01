@@ -6,7 +6,6 @@
             <div class="col-8 h-100">
                 <plex-box>
                     <plex-tabs [hidden]="showDatosSolicitud" [activeIndex]="activeIndex" (close)="onCloseTab($event)">
-
                         <plex-tab label="Registros de esta consulta">
                             <div class="row"
                                  *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length">
@@ -384,7 +383,3 @@
 
     </footer>
 </form>
-<!-- Búsqueda de pacientes -->
-<pacientesSearch [bloquearCreate]="true" (selected)="cambiarElPaciente($event)" *ngIf="showCambioPaciente"
-                 [modoCompleto]="false" [mostrarCancelar]="true" (cancel)="showCambioPaciente = false">
-</pacientesSearch>

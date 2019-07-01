@@ -2,10 +2,10 @@ import { Component, ViewEncapsulation, Input, HostBinding } from '@angular/core'
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
-import { IPaciente } from '../../../../interfaces/IPaciente';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { PacienteService } from '../../../../services/paciente.service';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 
 @Component({
     selector: 'vista-prestacion',

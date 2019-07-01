@@ -2,7 +2,7 @@ import { PrestacionesService } from '../../../services/prestaciones.service';
 import { Component, Input } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IPrestacion } from '../../../interfaces/prestacion.interface';
-import { IPaciente } from '../../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { ElementosRUPService } from '../../../services/elementosRUP.service';
 import { IElementoRUP } from '../../../interfaces/elementoRUP.interface';
 import { ISnomedConcept } from '../../../interfaces/snomed-concept.interface';

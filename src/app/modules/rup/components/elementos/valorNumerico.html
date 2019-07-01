@@ -8,6 +8,12 @@
                     [(ngModel)]="registro.valor" [suffix]="params.unit ? params.unit : ''" [min]="params.min" [max]="params.max" (change)="emitChange($event)"></plex-float>
             </ng-container>
             <ng-template #showSoloValores>
+                <div *ngIf="params?.title; else showTerm">
+                    <label class="text-capitalize">{{ params.title }}</label>
+                </div>
+                <ng-template #showTerm>
+                    <label class="text-capitalize">{{ registro.concepto.term }}</label>
+                </ng-template>
                 {{registro.valor}} {{params.unit}}
             </ng-template>
         </div>
