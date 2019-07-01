@@ -5,30 +5,36 @@
 
             <!--Filtros-->
             <div class="row">
-                <div class='col-3'>
+                <div class='col-2'>
                     <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection($event,'fechaDesde')"
                         name="fechaDesde" label="Desde" class="fechas" [max]="fechaHasta">
                     </plex-datetime>
                     <!-- <plex-button type="info" icon="chevron-right"></plex-button> -->
                 </div>
-                <div class='col-3'>
+                <div class='col-2'>
                     <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection($event,'fechaHasta')"
                         name="fechaHasta" label="Hasta" class="fechas" [min]="fechaDesde">
                     </plex-datetime>
                 </div>
-                <div class='col-3'>
+                <div class='col-2'>
                     <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event,'prestaciones')"
                         (getData)="loadPrestaciones($event)" name="prestaciones" label="Prestación"
                         ngModelOptions="{standalone: true}">
                     </plex-select>
+                </div>
+                <div class="col-2">
+                    <plex-text [(ngModel)]="dniPaciente" (change)="refreshSelection($event,'dniPaciente')"
+                        name="dniPaciente" label="DNI" placeholder="Buscar por DNI de paciente">
+                    </plex-text>
+
                 </div>
                 <div *ngIf="!showPrestacion" class='col-2'>
                     <label>
                         <!--Spacer-->&nbsp;</label>
                     <plex-button type="success" label="Buscar" (click)="refreshSelection($event, 'filter')">
                     </plex-button>
-                </div>
-                <div *ngIf="!showPrestacion" class='col-1 text-right'>
+                </div>  
+                <div *ngIf="!showPrestacion" class='col text-right'>
                     <label>
                         <!--Spacer-->&nbsp;</label>
                     <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
@@ -60,7 +66,7 @@
                     <plex-select [(ngModel)]="estadoFacturacion" (change)="refreshSelection($event,'estadoFacturacion')"
                         name="estadoFacturacion" [data]="arrayEstadosFacturacion" label="Comprobante"
                         placeholder="Buscar por estado comprobante" ngModelOptions="{standalone: true}">
-                    </plex-select>
+                    </plex-select> 
 
                 </div>
                 <div class="col-2">
@@ -76,6 +82,7 @@
         <table *ngIf="busquedas?.length && !loading" class="table table-striped table-sm">
             <thead>
                 <th>Fecha</th>
+                <th>DNI</th>
                 <th>Paciente</th>
                 <th>Tipo de Prestación</th>
                 <th>Equipo de Salud</th>
@@ -87,6 +94,7 @@
                 <tr *ngFor="let busqueda of busquedas; let i=index" class="hover" (click)="mostrarPrestacion(busqueda)"
                     [ngClass]="{'bg-inverse text-white': busqueda.seleccionada}">
                     <td>{{busqueda.fecha | date: "dd/MM/yyyy HH:mm " }}</td>
+                    <td>{{busqueda.paciente.documento}}</td>
                     <td>{{busqueda.paciente | paciente}}</td>
                     <td>{{busqueda.prestacion?.term}}</td>
                     <div class="nombres-profesionales">

@@ -1,3 +1,4 @@
+import { IPaciente } from './../../core/mpi/interfaces/IPaciente';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TurnosPrestacionesService } from './services/turnos-prestaciones.service';
 import { Auth } from '@andes/auth';
@@ -29,6 +30,10 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public arrayEstados;
     public sumarB = false;
     public arrayEstadosFacturacion;
+
+    public dniPaciente;
+    public pacientes: [IPaciente];
+
     prestacion: any;
     router: any;
     public prestaciones: any;
@@ -86,7 +91,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         }
     }
     initialize() {
-        let fecha = moment().format();
+            let fecha = moment().format();
 
         if (this.hoy) {
             this.fechaDesde = fecha;
@@ -122,6 +127,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             this.loading = false;
         });
     }
+
     refreshSelection(value, tipo) {
         let fechaDesde = this.fechaDesde ? moment(this.fechaDesde).startOf('day') : null;
         let fechaHasta = this.fechaHasta ? moment(this.fechaHasta).endOf('day') : null;
@@ -186,6 +192,14 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
                     this.parametros['estadoFacturacion'] = value.value.id;
                 } else {
                     this.parametros['estadoFacturacion'] = '';
+                }
+            }
+            if (tipo === 'dniPaciente') {
+                if (value.value) {
+                    console.log('dniPaciente', value.value);
+                    this.parametros['dniPaciente'] = value.value;
+                } else {
+                    this.parametros['dniPaciente'] = '';
                 }
             }
             if (tipo === 'filter') {
