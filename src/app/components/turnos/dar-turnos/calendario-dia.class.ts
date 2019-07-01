@@ -15,6 +15,7 @@ export class CalendarioDia {
     public gestionDisponibles = 0;
     public delDiaDisponibles = 0;
     public profesionalDisponibles = 0;
+    public dinamicasIndefinidas = 0;
 
     constructor(public fecha: Date, agendas: any[], solicitudPrestacion: any, filtroPrestacion?: any, filtroProfesional?: any) {
         this.agenda = agendas[0];
@@ -124,10 +125,13 @@ export class CalendarioDia {
                         this.estado = 'disponible';
                         this.dinamica = true;
                         this.agendasDisponibles.push(unaAgenda);
-                        if (unaAgenda.cupo && unaAgenda.cupo > 0) {
-                            this.turnosDisponibles += unaAgenda.cupo;
+                        if (unaAgenda.cupo) {
+                            if (unaAgenda.cupo > 0) {
+                                this.turnosDisponibles += unaAgenda.cupo;
+                            } else {
+                                this.dinamicasIndefinidas++;
+                            }
                         }
-
                     } else {
                         this.estado = 'ocupado';
                     }
