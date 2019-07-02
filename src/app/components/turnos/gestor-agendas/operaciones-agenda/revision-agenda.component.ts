@@ -238,10 +238,11 @@ export class RevisionAgendaComponent implements OnInit {
         });
 
         turnoSinCodificar = listaTurnos.find(t => {
+            let codificaciones = t.diagnostico.codificaciones.find(cod => !cod.codificacionAuditoria);
             return (
                 t && t.paciente && t.paciente.id &&
-                ((t.asistencia === 'asistio' && !t.diagnostico.codificaciones[0] || (t.diagnostico.codificaciones[0] && !t.diagnostico.codificaciones[0].codificacionAuditoria
-                    && !t.diagnostico.ilegible && t.asistencia === 'asistio')) || !t.asistencia)
+                ((t.asistencia === 'asistio' && !t.diagnostico.codificaciones[0] || (t.asistencia === 'asistio' && !t.diagnostico.ilegible && t.diagnostico.codificaciones && codificaciones))
+                    || !t.asistencia)
             );
         });
 
@@ -282,6 +283,24 @@ export class RevisionAgendaComponent implements OnInit {
         }
     }
 
+    isRegistradoProfesional(turno) {
+        let codificaciones;
+        let auditorias;
+        if (turno && turno.diagnostico && turno.diagnostico.codificaciones) {
+            codificaciones = turno.diagnostico.codificaciones.find(cod => (!cod.codificacionProfesional || !cod.codificacionProfesional.snomed || !cod.codificacionProfesional.snomed.term));
+            auditorias = turno.diagnostico.codificaciones.find(cod => !cod.codificacionAuditoria);
+        }
+        let esCodificado = turno && turno.paciente && turno.asistencia && (turno.asistencia === 'noAsistio' || turno.asistencia === 'sinDatos' || (!codificaciones && auditorias));
+        return esCodificado;
+    }
+    isAuditado(turno) {
+        let auditorias;
+        if (turno && turno.diagnostico && turno.diagnostico.codificaciones) {
+            auditorias = turno.diagnostico.codificaciones.find(cod => !cod.codificacionAuditoria);
+        }
+        let esAuditado = turno && turno.paciente && turno.asistencia && (turno.asistencia === 'noAsistio' || turno.asistencia === 'sinDatos' || !auditorias);
+        return esAuditado;
+    }
     cancelar() {
         this.turnoSeleccionado = null;
     }
