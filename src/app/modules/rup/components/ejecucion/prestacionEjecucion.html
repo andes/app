@@ -60,7 +60,7 @@
 
                                             <div class="title text-capitalize">
                                                 {{ registro.nombre }}
-                                                <!-- Relaciones -->
+                                                <!-- vinculacion / desvinculacion -->
                                                 <div
                                                      *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && registro.relacionadoCon[0] && !confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))">
 
@@ -115,10 +115,6 @@
                                                           *ngIf="registro?.privacy?.scope !== 'public'">
                                                         Registro Privado
                                                     </span>
-                                                    <!-- Queda comentado hasta que se evaluen ciertas inquitudes. -->
-                                                    <!-- <plex-dropdown type="primary" class="dropdown-inline" [right]="true"
-                                                        icon="file-lock" (onOpen)="onChangePrivacy(registro)" [items]="scopePrivacy"
-                                                        title="Privado"></plex-dropdown> -->
                                                 </ng-container>
 
                                                 <ng-container
