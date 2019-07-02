@@ -1,9 +1,7 @@
-import { Component, Input, Output, EventEmitter, OnInit, HostBinding, ViewEncapsulation } from '@angular/core';
-// import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import * as moment from 'moment';
 import { enumToArray } from '../../../../utils/enums';
 import { EstadosAsistencia } from './../../enums';
 import { EstadosAgenda } from './../../enums';
@@ -15,7 +13,8 @@ import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { TurnoService } from './../../../../services/turnos/turno.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
-import { Cie10Service } from '../../../../services/term/cie10.service';
+import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
+import { ISubscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'revision-agenda',
@@ -24,45 +23,40 @@ import { Cie10Service } from '../../../../services/term/cie10.service';
     encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 
-export class RevisionAgendaComponent implements OnInit {
-
-    @HostBinding('class.plex-layout') layout = true;
+export class RevisionAgendaComponent implements OnInit, OnDestroy {
+    private lastRequest: ISubscription;
     private _agenda: any;
-    public agenda: any;
-
-    @Input() modoCompleto = true;
-
-    @Output() volverAlGestor = new EventEmitter<boolean>();
-
-    public cantidadTurnosAsignados: number;
     private estadoPendienteAuditoria;
     private estadoCodificado;
-
-    indiceReparo: any;
+    public agenda: any;
+    public cantidadTurnosAsignados: number;
+    public indiceReparo: any;
     public showReparo = false;
-    existeCodificacionProfesional: Boolean;
-    horaInicio: any;
-    turnoSeleccionado: any = null;
-    bloqueSeleccionado: any = null;
-    paciente: IPaciente;
-    turnoTipoPrestacion: any = null;
-    pacientesSearch = false;
-    diagnosticos = [];
+    public existeCodificacionProfesional: Boolean;
+    public horaInicio: any;
+    public turnoSeleccionado: any = null;
+    public bloqueSeleccionado: any = null;
+    public paciente: IPaciente;
+    public turnoTipoPrestacion: any = null;
+    public pacientesSearch = false;
+    public diagnosticos = [];
     public showRegistrosTurno = false;
     public estadosAsistencia = enumToArray(EstadosAsistencia);
     public estadosAgendaArray = enumToArray(EstadosAgenda);
     public mostrarHeaderCompleto = false;
     public esAgendaOdonto = false;
-    idOrganizacion = this.auth.organizacion.id;
+    public idOrganizacion = this.auth.organizacion.id;
     // ---- Variables asociadas a componentes paciente buscar y paciente listado
-    resultadoBusqueda = null;
-    pacienteSelected = null;
-    loading = false;
+    public resultadoBusqueda = null;
+    public pacienteSelected = null;
+    public loading = false;
+    public pacienteDetalle;
 
-    constructor(public plex: Plex,
+    constructor(
+        private pacienteCache: PacienteCacheService,
+        public plex: Plex,
         public router: Router,
         public auth: Auth,
-        private serviceCie10: Cie10Service,
         public serviceTurno: TurnoService,
         public serviceAgenda: AgendaService,
         public servicePaciente: PacienteService,
@@ -82,7 +76,12 @@ export class RevisionAgendaComponent implements OnInit {
         });
         localStorage.removeItem('revision');
     }
-
+    /* limpiamos la request que se haya ejecutado */
+    ngOnDestroy() {
+        if (this.lastRequest) {
+            this.lastRequest.unsubscribe();
+        }
+    }
     private getCantidadTurnosAsignados() {
         // verificamos la cant. de turnos asignados que tiene la agenda
         let turnosAsignados = [];
@@ -132,6 +131,10 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     seleccionarTurno(turno, bloque) {
+        if (this.lastRequest) {
+            this.lastRequest.unsubscribe();
+        }
+        this.pacienteDetalle = null;
         this.existeCodificacionProfesional = false;
         this.diagnosticos = [];
         this.paciente = null;
@@ -149,6 +152,14 @@ export class RevisionAgendaComponent implements OnInit {
             this.pacientesSearch = false;
             if (turno.diagnostico.codificaciones && turno.diagnostico.codificaciones.length) {
                 this.diagnosticos = this.diagnosticos.concat(turno.diagnostico.codificaciones);
+            }
+            if (turno.paciente && turno.paciente.id) {
+                this.pacienteDetalle = turno.paciente;
+                this.lastRequest = this.servicePaciente.getById(turno.paciente.id).subscribe(
+                    pacienteMongo => {
+                        this.pacienteDetalle = pacienteMongo;
+                        delete this.pacienteDetalle.cuil;
+                    });
             }
         }
     }
@@ -366,7 +377,6 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     volverRevision() {
-        this.modoCompleto = true;
         this.refresh();
         this.cerrarAsistencia();
     }
@@ -378,13 +388,19 @@ export class RevisionAgendaComponent implements OnInit {
         this.loading = true;
     }
 
-    searchEnd(resultado) {
+
+    searchEnd(pacientes: IPaciente[], escaneado: boolean) {
         this.loading = false;
-        if (resultado.err) {
-            this.plex.info('danger', resultado.err);
-            return;
+        this.pacienteCache.setScanState(escaneado);
+        if (escaneado && pacientes.length === 1 && pacientes[0].id) {
+            this.onSelect(pacientes[0]);
+        } else if (escaneado && pacientes.length === 1 && (!pacientes[0].id || (pacientes[0].estado === 'temporal' && pacientes[0].scan))) {
+            this.pacienteCache.setPaciente(pacientes[0]);
+            this.pacienteCache.setScanState(escaneado);
+            this.router.navigate(['/apps/mpi/paciente/con-dni/sobreturno']);  // abre paciente-cru
+        } else {
+            this.resultadoBusqueda = pacientes;
         }
-        this.resultadoBusqueda = resultado.pacientes;
     }
 
     onSearchClear() {
@@ -398,11 +414,16 @@ export class RevisionAgendaComponent implements OnInit {
 
     onSelect(paciente: IPaciente): void {
         this.resultadoBusqueda = [];
+        if (this.lastRequest) {
+            this.lastRequest.unsubscribe();
+        }
         // Es un paciente existente en ANDES??
         if (paciente && paciente.id) {
-            this.servicePaciente.getById(paciente.id).subscribe(
+            this.lastRequest = this.servicePaciente.getById(paciente.id).subscribe(
                 pacienteMongo => {
                     this.paciente = pacienteMongo;
+                    this.pacienteDetalle = pacienteMongo;
+                    delete this.pacienteDetalle.cuil;
                     this.showRegistrosTurno = true;
                     this.pacientesSearch = false;
                 });

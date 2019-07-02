@@ -8,48 +8,37 @@
                     <div class="page-title">REGISTROS DEL TURNO</div>
                 </div>
             </header>
-            <div class="row" *ngIf="turnoSeleccionado && turnoSeleccionado.estado == 'disponible'">
-                <div class="col" *ngIf="paciente?.id">
-                    <small>
-                        <span *ngIf="paciente.documento !== ''"> DNI {{ paciente.documento | number }}</span>
-                        <span *ngIf="paciente.documento === ''" class="text-danger"> Sin documento (temporal)</span>
-                    </small>
-                    <div *ngIf="paciente?.id"> {{paciente | paciente}}</div>
-                </div>
-                <div class="col" *ngIf="!paciente?.id && !turnoSeleccionado.paciente">
-                    <small>
-                        <span> No existe un paciente asociado</span>
-                    </small>
-                </div>
-                <div class="col" *ngIf="!pacientesSearch">
-                    <plex-button type="primary" label="Buscar Paciente" (click)="buscarPaciente()"></plex-button>
+            <div class="row">
+                <div class="col">
+                    <span *ngIf="pacienteDetalle">
+                        <paciente-detalle [paciente]="pacienteDetalle" orientacion="horizontal"></paciente-detalle>
+                    </span>
                 </div>
             </div>
-            <div class="row">
-                <div class="col" *ngIf="turnoSeleccionado.paciente?.id">
-                    <div *ngIf="turnoSeleccionado.paciente?.id"> {{ turnoSeleccionado.paciente | paciente }}
-                        <span *ngIf="turnoSeleccionado.paciente.documento !== ''"> | DNI {{
-                            turnoSeleccionado.paciente.documento | number}}</span>
-                        <span *ngIf="turnoSeleccionado.paciente.documento === ''"> Sin documento (temporal)</span>
-                        <span *ngIf="turnoSeleccionado.paciente.fechaNacimiento !== null">| Edad: {{
-                            turnoSeleccionado.paciente | edad }}</span>
-                        <span *ngIf="turnoSeleccionado?.paciente?.id && turnoSeleccionado?.paciente?.sexo">| Sexo:
-                            {{ turnoSeleccionado.paciente | sexo }}</span>
-                        <span *ngIf="turnoSeleccionado?.paciente?.id && turnoSeleccionado?.paciente?.edad">{{
-                            turnoSeleccionado.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</span>
-                    </div>
+            <div class="row" *ngIf="turnoSeleccionado && turnoSeleccionado.estado == 'disponible'">
+                <div class="col mt-4" *ngIf="!paciente?.id && !turnoSeleccionado.paciente">
+                    <h3> No existe un paciente asociado al turno</h3>
+                </div>
+                <div class="col mt-4" *ngIf="!pacientesSearch && !paciente?.id">
+                    <plex-button type="primary" label="Buscar Paciente" (click)="buscarPaciente()"></plex-button>
+                </div>
+                <div class="col-2 mt-4" *ngIf="!pacientesSearch && paciente?.id">
+                    <plex-button type="primary" label="Cambiar Paciente" (click)="buscarPaciente()"></plex-button>
                 </div>
             </div>
             <div class="row">
                 <div class="col" *ngIf="pacientesSearch">
                     <div class="panel panel-default">
                         <div class="clear"></div>
-                        <!-- ----------- Búsqueda de pacientes -------------- -->
                         <div class="row" *ngIf="pacientesSearch">
-                            <div class="col-12">
-                                <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                                 (searchClear)="onSearchClear()">
-                                </paciente-buscar>
+                            <div class="col">
+                                <div class="panel panel-default">
+                                    <div class="clear"></div>
+                                    <paciente-buscar (searchStart)="searchStart()"
+                                                     (searchEnd)="searchEnd($event.pacientes,$event.escaneado)"
+                                                     (searchClear)="onSearchClear()">
+                                    </paciente-buscar>
+                                </div>
                             </div>
                         </div>
                         <plex-loader *ngIf="loading && pacientesSearch"></plex-loader>
@@ -59,7 +48,6 @@
                                                   [pacientes]="resultadoBusqueda" [autoselect]="false"
                                                   (selected)="onSelect($event)">
                                 </paciente-listado>
-
                                 <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
                                     ¡No se encontró ningún paciente!
                                 </div>
@@ -80,6 +68,7 @@
                 </div>
             </div>
             <div *ngIf="turnoSeleccionado && (turnoSeleccionado.paciente?.id || paciente?.id) && !pacientesSearch">
+                <hr>
                 <div class="row">
                     <div class="col-4">
                         <!--ASISTENCIA-->
@@ -451,8 +440,7 @@
                                         <span>| Sin documento (temporal)</span>
                                     </small>
                                     <small>
-                                        <span
-                                              *ngIf="turno?.paciente?.id && turno?.paciente?.carpetaEfectores?.length > 0">
+                                        <span *ngIf="turno?.paciente?.carpetaEfectores?.length">
                                             <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">
                                                 <span *ngIf="carpeta.organizacion?._id == idOrganizacion">
                                                     | Nro Carpeta {{carpeta.nroCarpeta}}
@@ -518,8 +506,7 @@
                                               class="text-danger">| DNI: Sin documento (temporal)</span>
                                     </small>
                                     <small>
-                                        <span
-                                              *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.carpetaEfectores?.length > 0">
+                                        <span *ngIf="sobreturno?.paciente?.carpetaEfectores?.length">
                                             <span *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores">
                                                 <span *ngIf="carpeta.organizacion?._id == idOrganizacion">
                                                     | Nro Carpeta {{carpeta.nroCarpeta}}
@@ -556,7 +543,7 @@
         </div>
     </plex-layout-sidebar>
 
-    <plex-layout-footer *ngIf="modoCompleto">
+    <plex-layout-footer>
         <plex-button position="right" type="primary" label="Volver" (click)="volver()"></plex-button>
     </plex-layout-footer>
 </plex-layout>

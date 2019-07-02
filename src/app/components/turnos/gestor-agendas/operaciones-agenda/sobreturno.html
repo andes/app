@@ -41,7 +41,7 @@
             </span>
             <span *ngIf="!showSobreturno">
                 <div class="row" *ngIf="pacientesSearch">
-                    <div class="col-9 pr-0">
+                    <div class="col">
                         <div class="panel panel-default">
                             <div class="clear"></div>
                             <paciente-buscar (searchStart)="onSearchStart()"
@@ -49,11 +49,6 @@
                                              (searchClear)="onSearchClear()">
                             </paciente-buscar>
                         </div>
-                    </div>
-                    <div class="col-3">
-                        <!-- BOTONES DE REGISTRO MPI -->
-                        <mpi-botones-registro [hostComponent]="'sobreturno'" [disabled]="disableNuevoPaciente">
-                        </mpi-botones-registro>
                     </div>
                 </div>
                 <plex-loader *ngIf="loading"></plex-loader>

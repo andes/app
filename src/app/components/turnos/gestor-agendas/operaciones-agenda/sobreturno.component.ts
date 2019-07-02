@@ -1,15 +1,13 @@
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { Observable } from 'rxjs/Observable';
 import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
-import { Component, EventEmitter, Output, OnInit, HostBinding } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
-import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
-import { ObraSocialCacheService } from '../../../../services/obraSocialCache.service';
 
 @Component({
     selector: 'sobreturno',
@@ -17,54 +15,39 @@ import { ObraSocialCacheService } from '../../../../services/obraSocialCache.ser
 })
 
 export class AgregarSobreturnoComponent implements OnInit {
-    public disableNuevoPaciente = true;
     public nota: any;
     public lenNota = 140;
-    changeCarpeta: boolean;
-    carpetaEfector: any;
+    public changeCarpeta: boolean;
+    public carpetaEfector: any;
     public _revision: any = localStorage.getItem('revision') ? true : false;
     public _agenda;
     public agenda;
-
-    loading = false;
-    resultadoBusqueda: IPaciente[] = [];
-    searchClear = true;    // True si el campo de búsqueda se encuentra vacío
-
-    @HostBinding('class.plex-layout') layout = true;
-
-    @Output() volverAlGestor = new EventEmitter<boolean>();
-    @Output() volverRevision = new EventEmitter<boolean>();
-    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
-    @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
-
-
-    paciente: IPaciente;
-    tipoPrestacion: ITipoPrestacion;
-    resultado: any;
-    showCreateUpdate = false;
-    showSobreturno = true;
-    pacientesSearch = false;
-    horaTurno = null;
-    telefono = '';
-    cambioTelefono = false;
-    pacientes: any;
-
+    public loading = false;
+    public resultadoBusqueda: IPaciente[] = [];
+    public paciente: IPaciente;
+    public tipoPrestacion: ITipoPrestacion;
+    public resultado: any;
+    public showCreateUpdate = false;
+    public showSobreturno = true;
+    public pacientesSearch = false;
+    public horaTurno = null;
+    public telefono = '';
+    public cambioTelefono = false;
+    public pacientes: any;
     public seleccion = null;
     public esEscaneado = false;
-    hoy = new Date();
-    inicio: Date;
-    fin: Date;
+    public hoy = new Date();
+    public inicio: Date;
+    public fin: Date;
 
 
     constructor(
         private pacienteCache: PacienteCacheService,
-        public plex: Plex,
-        public serviceAgenda: AgendaService,
-        public servicioTipoPrestacion: TipoPrestacionService,
+        private plex: Plex,
+        private serviceAgenda: AgendaService,
         private router: Router,
-        public auth: Auth,
-        public servicePaciente: PacienteService,
-        private obraSocialCacheService: ObraSocialCacheService,
+        private auth: Auth,
+        private servicePaciente: PacienteService,
         private route: ActivatedRoute) { }
 
     ngOnInit() {
@@ -112,14 +95,12 @@ export class AgregarSobreturnoComponent implements OnInit {
     // -------------- SOBRE BUSCADOR ----------------
 
     onSearchStart() {
-        this.disableNuevoPaciente = false;
         this.esEscaneado = false;
         this.paciente = null;
         this.loading = true;
     }
 
     onSearchEnd(pacientes: IPaciente[], escaneado: boolean) {
-        this.searchClear = false;
         this.loading = false;
         this.pacienteCache.setScanState(escaneado);
         if (escaneado && pacientes.length === 1 && pacientes[0].id) {
@@ -134,8 +115,6 @@ export class AgregarSobreturnoComponent implements OnInit {
     }
 
     onSearchClear() {
-        this.disableNuevoPaciente = true;
-        this.searchClear = true;
         this.resultadoBusqueda = [];
         this.paciente = null;
     }

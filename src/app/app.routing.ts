@@ -148,7 +148,7 @@ const appRoutes: Routes = [
 
   { path: 'citas/revision_agenda', component: RevisionAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'citas/revision_agenda/:idAgenda', component: RevisionAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'citas/sobreturnos', component: AgregarSobreturnoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  // { path: 'citas/sobreturnos', component: AgregarSobreturnoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'citas/sobreturnos/:idAgenda', component: AgregarSobreturnoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   // RUP
   { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
