@@ -29,6 +29,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public arrayEstados;
     public sumarB = false;
     public arrayEstadosFacturacion;
+    public documento;
     prestacion: any;
     router: any;
     public prestaciones: any;
@@ -186,6 +187,13 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
                     this.parametros['estadoFacturacion'] = value.value.id;
                 } else {
                     this.parametros['estadoFacturacion'] = '';
+                }
+            }
+            if (tipo === 'documento') {
+                if (value.value) {
+                    this.parametros['documento'] = value.value;
+                } else {
+                    this.parametros['documento'] = '';
                 }
             }
             if (tipo === 'filter') {
