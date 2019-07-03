@@ -164,12 +164,10 @@ export class PacienteCruComponent implements OnInit {
         this.route.params.subscribe(params => {
             this.opcion = params['opcion'];
             this.origen = params['origen'];
-            if (!this.opcion) {
-                // obtiene el paciente cacheado
-                this.paciente = this.pacienteCache.getPacienteValor();
-                // consulta a la cache si el paciente fue escaneado o no
-                this.escaneado = this.pacienteCache.getScanState();
-            }
+            this.paciente = this.pacienteCache.getPacienteValor();
+            this.escaneado = this.pacienteCache.getScanState();
+            this.pacienteCache.clearPaciente();
+            this.pacienteCache.clearScanState();
         });
 
         if (this.opcion === 'sin-dni') {
@@ -581,7 +579,6 @@ export class PacienteCruComponent implements OnInit {
         if (faltaParentezco) {
             this.plex.info('warning', 'Existen relaciones sin parentezco. Completelas antes de guardar', 'Atención');
         } else {
-            this.pacienteCache.setScanState(false);
             this.disableGuardar = true;
             let pacienteGuardar: any = Object.assign({}, this.pacienteModel);
             pacienteGuardar.ignoreCheck = ignoreCheck;
@@ -629,7 +626,6 @@ export class PacienteCruComponent implements OnInit {
                     this.plex.info('warning', 'Error guardando el paciente');
                 }
             );
-            this.pacienteCache.clearPaciente();
         }
     }
 
@@ -737,8 +733,6 @@ export class PacienteCruComponent implements OnInit {
             this.historialBusquedaService.add(this.paciente);
         }
         this.showMobile = false;
-        this.pacienteCache.clearPaciente();
-        this.pacienteCache.clearScanState();
         this.redirect();
     }
 
