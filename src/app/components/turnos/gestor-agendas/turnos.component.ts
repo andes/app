@@ -57,6 +57,7 @@ export class TurnosComponent implements OnInit {
     @Output() reasignaTurno = new EventEmitter<boolean>();
     @Output() recargarAgendas = new EventEmitter<boolean>();
     @Output() recargarBotones = new EventEmitter<boolean>();
+    @Output() actualizarBotonesAgendasEmiter = new EventEmitter<IAgenda>();
 
     // Propiedades públicas
     showSeleccionarTodos = true;
@@ -325,7 +326,7 @@ export class TurnosComponent implements OnInit {
 
         // Patchea los turnosSeleccionados (1 o más turnos)
         this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
-            this.agenda = resultado;
+            this.actualizarBotonesAgendasEmiter.emit(resultado);
         });
 
         // Reset botones y turnos seleccionados

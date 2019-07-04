@@ -240,6 +240,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 this.noNominalizada = false;
                 this.modelo.nominalizada = true;
             }
+            // Se activan las prestaciones para la agenda
+            this.modelo.bloques[0].tipoPrestaciones.forEach(unaPrestacion => {
+                unaPrestacion.activo = true;
+            });
         }
     }
 
@@ -820,7 +824,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 }
             });
 
-             // Si la agenda no es nominalizada, se limpia la posible información residual relacionada a turnos
+            // Si la agenda no es nominalizada, se limpia la posible información residual relacionada a turnos
             if (!this.modelo.nominalizada) {
                 this.cleanDatosTurnos();
             }
@@ -864,17 +868,17 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     private cleanDatosTurnos() {
         this.modelo.bloques.forEach(b => {
             b.accesoDirectoProgramado =
-            b.accesoDirectoDelDia =
-            b.cantidadTurnos =
-            b.reservadoProfesional =
-            b.reservadoGestion =
-            b.restantesDelDia =
-            b.restantesProgramados =
-            b.restantesGestion =
-            b.restantesProfesional =
-            b.restantesMobile =
-            b.mobile =
-            b.duracionTurno = 0;
+                b.accesoDirectoDelDia =
+                b.cantidadTurnos =
+                b.reservadoProfesional =
+                b.reservadoGestion =
+                b.restantesDelDia =
+                b.restantesProgramados =
+                b.restantesGestion =
+                b.restantesProfesional =
+                b.restantesMobile =
+                b.mobile =
+                b.duracionTurno = 0;
 
             b.turnos = [{
                 estado: 'disponible',

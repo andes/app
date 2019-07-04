@@ -1,3 +1,4 @@
+import { BotonesAgendaComponent } from './operaciones-agenda/botones-agenda.component';
 import { Component, OnInit, OnDestroy, HostBinding, ViewContainerRef, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -454,11 +455,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                     }
 
                     if (!multiple) {
-                        if (ag.estado === 'suspendida') {
-                            this.showSuspendida = true; // Mostramos los pacientes y sus teléfonos de la agenda suspendida
-                        }
-                        this.agendasSeleccionadas = [];
-                        this.agendasSeleccionadas = [...this.agendasSeleccionadas, ag];
+                        this.onSeleccionAgendaNoMultiple(ag);
                     } else {
                         let index = this.estaSeleccionada(agenda);
                         if (index >= 0) {
@@ -491,6 +488,14 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                 });
             }
         }
+    }
+
+    onSeleccionAgendaNoMultiple(ag) {
+        if (ag.estado === 'suspendida') {
+            this.showSuspendida = true; // Mostramos los pacientes y sus teléfonos de la agenda suspendida
+        }
+        this.agendasSeleccionadas = [];
+        this.agendasSeleccionadas = [...this.agendasSeleccionadas, ag];
     }
 
     hayAgendasSuspendidas() {
