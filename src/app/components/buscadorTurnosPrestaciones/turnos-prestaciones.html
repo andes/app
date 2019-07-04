@@ -18,11 +18,13 @@
                 </div>
                 <div class='col-2'>
                     <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event,'prestaciones')"
-                                 (getData)="loadPrestaciones($event)" label="Prestación" ngModelOptions="{standalone: true}">
+                                 (getData)="loadPrestaciones($event)" label="Prestación"
+                                 ngModelOptions="{standalone: true}">
                     </plex-select>
                 </div>
                 <div class="col-2">
-                    <plex-text [(ngModel)]="documento" (change)="refreshSelection($event,'documento')" label="Documento">
+                    <plex-text [(ngModel)]="documento" (change)="refreshSelection($event,'documento')"
+                               label="Documento">
                     </plex-text>
                 </div>
                 <div *ngIf="!showPrestacion" class='col-2'>
@@ -34,15 +36,16 @@
                 <div *ngIf="!showPrestacion" class='col text-right'>
                     <label>
                         <!--Spacer-->&nbsp;</label>
-                    <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"
-                                 name="mostrar"></plex-button>
+                    <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
+                                 (click)="mostrarMasOpciones = !mostrarMasOpciones" name="mostrar"></plex-button>
                 </div>
             </div>
             <div class="row" *ngIf="mostrarMasOpciones && !showPrestacion">
                 <div class="col-3">
                     <plex-select [(ngModel)]="profesionales" (change)="refreshSelection($event, 'profesionales')"
-                                 (getData)="loadEquipoSalud($event)" label="Equipo de salud" placeholder="Buscar por equipo de salud"
-                                 labelField="apellido+' '+nombre" ngModelOptions="{standalone: true}">
+                                 (getData)="loadEquipoSalud($event)" label="Equipo de salud"
+                                 placeholder="Buscar por equipo de salud" labelField="apellido+' '+nombre"
+                                 ngModelOptions="{standalone: true}">
                     </plex-select>
                 </div>
                 <div class="col-3">
@@ -52,7 +55,8 @@
                 </div>
                 <div *ngIf="!sumarB && !sinOS" class="col-3">
                     <plex-select [(ngModel)]="financiadores" (change)="refreshSelection($event,'financiador')"
-                                 (getData)="loadFinanciadores($event)" label="Financiador" placeholder="Buscar por financiador">
+                                 (getData)="loadFinanciadores($event)" label="Financiador"
+                                 placeholder="Buscar por financiador">
                     </plex-select>
 
                 </div>
@@ -64,48 +68,49 @@
 
                 </div>
                 <div class="col-2 d-flex align-items-center">
-                    <plex-bool *ngIf="!sinOS" [(ngModel)]="sumar" type="slide" (change)="refreshSelection($event, 'sumar')"
-                               label="Sumar" name="sumar"></plex-bool>
-                    <plex-bool *ngIf="!sumar" [(ngModel)]="sinOS" type="slide" (change)="refreshSelection($event, 'sinOS')"
-                               label="Sin obra social" name="sinOS"></plex-bool>
+                    <plex-bool *ngIf="!sinOS" [(ngModel)]="sumar" type="slide"
+                               (change)="refreshSelection($event, 'sumar')" label="Sumar" name="sumar"></plex-bool>
+                    <plex-bool *ngIf="!sumar" [(ngModel)]="sinOS" type="slide"
+                               (change)="refreshSelection($event, 'sinOS')" label="Sin obra social" name="sinOS">
+                    </plex-bool>
                 </div>
             </div>
         </header>
         <!-- Resultados -->
         <plex-loader *ngIf="loading"></plex-loader>
-        <table *ngIf="busquedas?.length && !loading" class="table table-striped table-sm">
-            <thead>
-                <th>Fecha</th>
-                <th>Documento</th>
-                <th>Paciente</th>
-                <th>Tipo de Prestación</th>
-                <th>Equipo de Salud</th>
-                <th>Estado</th>
-                <th width="20%" *ngIf="!sumarB">Financiador</th>
-                <th *ngIf="sumarB">Comprobante</th>
-            </thead>
-            <tbody>
-                <tr *ngFor="let busqueda of busquedas; let i=index" class="hover" (click)="mostrarPrestacion(busqueda)"
-                    [ngClass]="{'bg-inverse text-white': busqueda.seleccionada}">
-                    <td>{{busqueda.fecha | date: "dd/MM/yyyy HH:mm " }}</td>
-                    <td>{{busqueda.paciente.documento}}</td>
-                    <td>{{busqueda.paciente | paciente}}</td>
-                    <td>{{busqueda.prestacion?.term}}</td>
-                    <div class="nombres-profesionales">
-                        <span *ngIf="busqueda.profesionales?.length == 0" class="text-danger">Profesional
-                            no asignado</span>
-                        <ng-container *ngIf="busqueda.profesionales">
-                            <div *ngIf="busqueda.profesionales.length > 0">{{ busqueda.profesionales |
-                                enumerar:['apellido','nombre'] }}</div>
-                        </ng-container>
-                    </div>
-                    <td>{{busqueda.estado}}</td>
-                    <td *ngIf="!sumarB">{{busqueda.financiador ? busqueda.financiador.financiador : 'No posee'}}</td>
-                    <td *ngIf="sumarB">
-                        {{busqueda.estadoFacturacion? busqueda.estadoFacturacion?.estado: 'Sin Comprobante'}}</td>
-                </tr>
-            </tbody>
-        </table>
+
+
+        <plex-list *ngIf="busquedas?.length && !loading" [striped]="true" [selectable]="true">
+            <plex-heading layout="completo">
+                <b>Fecha</b>
+                <b>Paciente</b>
+                <b>Tipo de Prestación</b>
+                <b>Equipo de Salud</b>
+                <b>Estado</b>
+                <b *ngIf="!sumarB">Financiador</b>
+                <b *ngIf="sumarB">Comprobante</b>
+            </plex-heading>
+            <plex-item layout="completo" *ngFor="let busqueda of busquedas; let i=index" class="hover"
+                       (click)="mostrarPrestacion(busqueda)" [ngClass]="{'bg-inverse': busqueda.seleccionada}"
+                       [botonera]="false" [badges]="false">
+                <plex-label>{{busqueda.fecha | date: "dd/MM/yyyy HH:mm " }}</plex-label>
+                <plex-label>{{busqueda.paciente | paciente}}</plex-label>
+                <plex-label>{{busqueda.prestacion?.term}}</plex-label>
+                <plex-label class="nombres-profesionales">
+                    <ng-container *ngIf="busqueda.profesionales?.length == 0" class="text-danger">Profesional
+                        no asignado</ng-container>
+                    <ng-container *ngIf="busqueda.profesionales && busqueda.profesionales.length > 0">
+                        {{ busqueda.profesionales | enumerar:['apellido','nombre'] }}
+                    </ng-container>
+                </plex-label>
+                <plex-label>{{busqueda.estado}}</plex-label>
+                <plex-label *ngIf="!sumarB">{{busqueda.financiador ? busqueda.financiador.financiador : 'No posee'}}
+                </plex-label>
+                <plex-label *ngIf="sumarB">
+                    {{busqueda.estadoFacturacion? busqueda.estadoFacturacion?.estado: 'Sin Comprobante'}}</plex-label>
+            </plex-item>
+        </plex-list>
+
     </plex-layout-main>
     <!-- Prestacion -->
     <plex-layout-sidebar *ngIf="showPrestacion">
