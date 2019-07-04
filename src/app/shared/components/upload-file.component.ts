@@ -17,13 +17,14 @@ export interface ICompleted {
 @Component({
     selector: 'upload-file',
     template: `
-        <input style="visibility: hidden;" type="file" (change)="onChange($event)" #upload>
-        <plex-button type="info" [label]="btnLabel" (click)="upload.click()" [disabled]="disabled"></plex-button>
+        <input style="visibility: hidden; height: 0" type="file" (change)="onChange($event)" #upload>
+        <plex-button type="info" size="{{ size }}" [label]="btnLabel" (click)="upload.click()" [disabled]="disabled"></plex-button>
     `,
 })
 
 export class UploadFileComponent {
     @Input() label = 'SUBIR';
+    @Input() size: 'sm' | 'md' | 'lg' = 'md';
     @Input() extensiones: string[] = null;
 
     @Output() onProgress = new EventEmitter<IProgress>();
@@ -40,7 +41,7 @@ export class UploadFileComponent {
 
     }
 
-    public get btnLabel () {
+    public get btnLabel() {
         if (this.disabled) {
             return this.progress + '%';
         } else {
@@ -56,7 +57,7 @@ export class UploadFileComponent {
         }
     }
 
-    public onChange ($event) {
+    public onChange($event) {
         this.disabled = true;
         const selectedFile = $event.target.files;
         this.currentFileUpload = selectedFile.item(0);
