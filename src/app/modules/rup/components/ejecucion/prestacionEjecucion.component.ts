@@ -1301,4 +1301,10 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         this.verMasRelaciones[item] = !this.verMasRelaciones[item];
     }
 
+    programar(registro) {
+        this.servicioPrestacion.programar(this.prestacion, registro.concepto).subscribe((resp) => {
+            console.log(resp);
+        });
+    }
+
 }

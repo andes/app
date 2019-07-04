@@ -777,7 +777,13 @@ export class PrestacionValidacionComponent implements OnInit {
         }
         let last = this.prestacion.estados.length - 1;
         return this.prestacion.estados[last].tipo !== 'validada' && elemento.valor && elemento.valor.estado !== 'transformado' && this.prestacion.solicitud.ambitoOrigen !== 'internacion';
+    }
 
+
+    informar(registro) {
+        this.servicioPrestacion.informar(this.prestacion, registro).subscribe((resp) => {
+            console.log(resp);
+        });
     }
 
     toggleVerMasRelaciones(item) {

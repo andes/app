@@ -916,4 +916,19 @@ export class PrestacionesService {
         return this.server.get(this.prestacionesUrl + '/sincama', { params: params, showError: true });
     }
 
+    programar(prestacion: any, concepto): Observable<any> {
+        return this.server.post(this.prestacionesUrl + '/pacs/programar', {
+            prestacionId: prestacion.id,
+            conceptId: concepto.conceptId,
+            term: concepto.term
+        });
+    }
+
+    informar(prestacion: any, registro): Observable<any> {
+        return this.server.post(this.prestacionesUrl + '/pacs/informar', {
+            prestacionId: prestacion.id,
+            registroId: registro.id
+        });
+    }
+
 }

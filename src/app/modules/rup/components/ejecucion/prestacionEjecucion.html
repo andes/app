@@ -121,6 +121,11 @@
                                                         title="Privado"></plex-dropdown> -->
                                                 </ng-container>
 
+                                                <plex-button type="success" (click)="programar(registro)" size="sm"
+                                                             *ngIf="registro.concepto.semanticTag === 'procedimiento'">
+                                                    programar
+                                                </plex-button>
+
                                                 <ng-container
                                                               *ngIf="prestacion?.ejecucion?.registros !== null && prestacion?.ejecucion?.registros?.length > 1">
                                                     <plex-dropdown type="primary" class="dropdown-inline" [right]="true"
@@ -292,14 +297,14 @@
                             </div>
                         </plex-tab>
 
-                        <plex-tab label="Resumen del Paciente" *ngIf="paciente">
+                        <!-- <plex-tab label="Resumen del Paciente" *ngIf="paciente">
                             <rup-resumenPaciente-estatico [prestacion]="prestacion" [paciente]="paciente">
                             </rup-resumenPaciente-estatico>
                             <rup-resumenPaciente-dinamico-nino *ngIf="paciente.edad <= 6" [paciente]="paciente">
                             </rup-resumenPaciente-dinamico-nino>
                             <rup-resumenPaciente-dinamico *ngIf="paciente.edad > 6" [paciente]="paciente">
                             </rup-resumenPaciente-dinamico>
-                        </plex-tab>
+                        </plex-tab> -->
                         <ng-container *ngFor="let registro of registrosHUDS">
                             <plex-tab [allowClose]="true" [label]="registro.data.concepto.term"
                                       [class]="registro.data.class" [color]="registro.data.class"
