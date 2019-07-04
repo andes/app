@@ -8,7 +8,15 @@ import { HistorialBusquedaService } from '../services/historialBusqueda.service'
 
 @Component({
     selector: 'busqueda-mpi',
-    templateUrl: 'busqueda-mpi.html'
+    templateUrl: 'busqueda-mpi.html',
+    styles: [
+        `
+        .input-btn-100 {
+            display: grid;
+            grid-template-columns: 1fr auto;
+        }
+        `
+    ]
 })
 export class BusquedaMpiComponent implements OnInit {
     public disableNuevoPaciente = true;
