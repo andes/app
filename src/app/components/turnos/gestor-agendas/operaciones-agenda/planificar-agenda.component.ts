@@ -768,6 +768,13 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
                 bloque.turnos = [];
                 bloque.turnosMobile = bloque.accesoDirectoProgramado > 0 ? bloque.turnosMobile : false;
+
+                if (!this.dinamica) {
+                    bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
+                        return el.activo === true;
+                    });
+                }
+
                 if (!this.dinamica) {
                     if (bloque.pacienteSimultaneos) {
                         bloque.restantesDelDia = bloque.accesoDirectoDelDia * bloque.cantidadSimultaneos;
@@ -788,7 +795,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                             estado: 'disponible',
                             horaInicio: this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000)),
                             tipoTurno: undefined,
-                            auditable: !bloque.tipoPrestaciones.some(p => !p.auditable)
+                            auditable: bloque.tipoPrestaciones.some(p => p.auditable)
                         };
 
                         if (bloque.pacienteSimultaneos) {
@@ -813,11 +820,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                             }
                         }
                     }
-                }
-                if (!this.dinamica) {
-                    bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
-                        return el.activo === true;
-                    });
                 }
             });
 
