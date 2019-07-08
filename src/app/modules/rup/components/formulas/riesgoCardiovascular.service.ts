@@ -10,24 +10,31 @@ export class RiesgoCardiovascularService extends FormulaBaseService {
         const tabaquismo = registros[2].valor;
         const diabetes = registros[3].valor;
         const sexo = (paciente.genero === 'masculino') ? 1 : 0;
-
-        const value = this.obtenerRiesgo(paciente.edad, colesterol, sistolica, tabaquismo, sexo, diabetes);
+        let value;
+        if (colesterol && sistolica && tabaquismo && diabetes && sexo) {
+            value = this.obtenerRiesgo(paciente.edad, colesterol, sistolica, tabaquismo, sexo, diabetes);
+        } else {
+            value = -1;
+        }
         let message = '';
         switch (value) {
+            case -1:
+                message = 'Completar todos los datos para visualizar el porcentaje de riesgo';
+                break;
             case 1:
-                message = 'Riesgo bajo';
+                message = 'Riesgo bajo (<10%)';
                 break;
             case 2:
-                message = 'Riesgo moderado';
+                message = 'Riesgo moderado (10% a <20%)';
                 break;
             case 3:
-                message = 'Riesgo alto';
+                message = 'Riesgo alto (20% a <30%)';
                 break;
             case 4:
-                message = 'Riesgo muy alto';
+                message = 'Riesgo muy alto (30% a <40%)';
                 break;
             case 5:
-                message = 'Riesgo crítico';
+                message = 'Riesgo crítico (>40%)';
                 break;
         }
         return {
@@ -836,9 +843,9 @@ export class RiesgoCardiovascularService extends FormulaBaseService {
 
     generarClaveBusqueda(edad, colesterol, tension, tabaquismo, sexo, diabetes) {
         let clave = '';
-        clave += (diabetes === true) ? '1' : '0';
+        clave += (diabetes && diabetes.id === 'Si') ? '1' : '0';
         clave += (sexo === true) ? '1' : '0';
-        clave += (tabaquismo === true) ? '1' : '0';
+        clave += (tabaquismo && tabaquismo.id === 'Si') ? '1' : '0';
         {
             if (edad < 50) {
                 clave += '1';

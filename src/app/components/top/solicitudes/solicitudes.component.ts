@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding } from '@angular/core';
@@ -5,6 +6,7 @@ import { PrestacionesService } from '../../../modules/rup/services/prestaciones.
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { OrganizacionService } from '../../../services/organizacion.service';
+import { Unsubscribe } from '@andes/shared';
 
 @Component({
     selector: 'solicitudes',
@@ -69,13 +71,19 @@ export class SolicitudesComponent implements OnInit {
         private servicioPrestacion: PrestacionesService,
         public servicioTipoPrestacion: TipoPrestacionService,
         public servicioTurnos: TurnoService,
-        public servicioOrganizacion: OrganizacionService
+        public servicioOrganizacion: OrganizacionService,
+        public router: Router
     ) { }
 
     ngOnInit() {
+
+        if (!this.auth.getPermissions('solicitudes:?').length) {
+            this.router.navigate(['inicio']);
+        }
+
         this.permisosReglas = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:reglas:?')[0] === '*' : false;
         this.prestacionesPermisos = this.auth.getPermissions('solicitudes:tipoPrestacion:?');
-        this.permisoAnular = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:anular:?')[0] === '*' : false;
+        this.permisoAnular = this.auth.check('solicitudes:anular');
         this.showCargarSolicitud = false;
         this.cargarSolicitudes();
     }
@@ -236,11 +244,13 @@ export class SolicitudesComponent implements OnInit {
         this.showEditarReglas = true;
     }
 
+    @Unsubscribe()
     cargarSolicitudes() {
         if (this.fechaDesde && this.fechaHasta) {
             let params = {
                 solicitudDesde: this.fechaDesde,
-                solicitudHasta: this.fechaHasta
+                solicitudHasta: this.fechaHasta,
+                ordenFechaDesc: true
             };
             if (this.estado) {
                 if (this.estado.id !== 'turnoDado') {
@@ -270,7 +280,7 @@ export class SolicitudesComponent implements OnInit {
                 }
             }
 
-            this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
+            return this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
                 this.prestaciones = resultado;
                 this.prestacionesSalida = resultado.filter((prest: any) => { return (prest.solicitud.organizacionOrigen) ? (this.auth.organizacion.id === prest.solicitud.organizacionOrigen.id) : false; });
                 this.prestacionesEntrada = resultado.filter((prest: any) => { return (prest.solicitud.organizacion) ? this.auth.organizacion.id === prest.solicitud.organizacion.id : false; });

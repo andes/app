@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
 import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
+import { PrestacionesService } from '../../services/prestaciones.service';
 
 @Component({
     selector: 'vista-contexto-prestacion',
@@ -10,10 +11,24 @@ import { IPrestacion } from '../../interfaces/prestacion.interface';
 
 export class VistaContextoPrestacionComponent implements OnInit {
 
-    @Input() registro: IPrestacionRegistro;
-    @Input() prestacion: IPrestacion;
+    @Input('registro')
+    set registro(value: IPrestacionRegistro) {
+        this._registro = value;
+    }
+    get registro() {
+        return this._registro;
+    }
+    @Input('prestacion')
+    set prestacion(value: IPrestacion) {
+        this._prestacion = value;
+    }
+    get prestacion() {
+        return this._prestacion;
+    }
 
-    constructor() { }
+    _registro: IPrestacionRegistro;
+    _prestacion: IPrestacion;
+    constructor(public _prestacionesService: PrestacionesService) { }
 
     ngOnInit() {
 

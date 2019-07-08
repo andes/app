@@ -1,62 +1,53 @@
-import { PacienteService } from './../../../services/paciente.service';
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
-import { Plex } from '@andes/plex';
-import { Auth } from '@andes/auth';
 import * as moment from 'moment';
-import * as calculos from './../../../utils/calculosDashboard';
-import { IPaciente } from './../../../interfaces/IPaciente';
-
-// Servicios
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { TurnoService } from '../../../services/turnos/turno.service';
+import { Auth } from '@andes/auth';
 import { LogPacienteService } from '../../../services/logPaciente.service';
-import { ObraSocialService } from '../../../services/obraSocial.service';
-import { IObraSocial } from '../../../interfaces/IObraSocial';
-import { IFinanciador } from '../../../interfaces/IFinanciador';
+
 
 @Component({
     selector: 'estadisticas-pacientes',
-    templateUrl: 'estadisticas-pacientes.html'
+    templateUrl: 'estadisticas-pacientes.html',
+    styleUrls: ['estadisticas-paciente.scss']
 })
 
 export class EstadisticasPacientesComponent implements OnInit {
 
     nroCarpeta: any;
-    public _paciente: IPaciente;
+    _paciente: IPaciente;
     turnosPaciente: any;
     ultimosTurnos: any;
-    @Input() showTab: Number = 0;
-    @Input('paciente')
-    set paciente(value: any) {
-        this.pacienteSeleccionado = value;
-        this._paciente = value;
-
-    }
-    get agenda(): any {
-        return this._paciente;
-    }
-
-    @Output() showArancelamientoForm = new EventEmitter<any>();
-    @Output() obraSocialEmit = new EventEmitter<any>();
-
-
     pacienteSeleccionado: IPaciente;
-    public fechaDesde: any;
-    public fechaHasta: any;
+    fechaDesde: any;
+    fechaHasta: any;
     turnosOtorgados = 0;
     inasistencias = 0;
     anulaciones = 0;
     idOrganizacion = this.auth.organizacion.id;
     carpetaEfector: any;
-    obraSocial: IFinanciador;
+    currentTab = 0;
+    contactos;
+    @Input() showTab: Number = 0;
+    @Input('paciente')
+    set paciente(value: any) {
+        this.pacienteSeleccionado = value;
+        this._paciente = value;
+        this.getPaciente();
+
+    }
+    get paciente(): any {
+        return this._paciente;
+    }
+
+    @Output() showArancelamientoForm = new EventEmitter<any>();
 
     // Inicialización
     constructor(
         public serviceTurno: TurnoService,
-        public plex: Plex,
         public auth: Auth,
         public serviceLogPaciente: LogPacienteService,
-        public servicePaciente: PacienteService,
-        private obraSocialService: ObraSocialService) { }
+    ) { }
 
     ngOnInit() {
         this.carpetaEfector = {
@@ -66,18 +57,6 @@ export class EstadisticasPacientesComponent implements OnInit {
             },
             nroCarpeta: ''
         };
-        this.getPaciente();
-        this.loadObraSocial();
-    }
-
-    loadObraSocial() {
-        // TODO: si es en colegio médico hay que buscar en el paciente
-        this.obraSocialService.getPaciente({ dni: this._paciente.documento, sexo: this._paciente.sexo }).subscribe(resultado => {
-            if (resultado.length) {
-                this.obraSocial = resultado[0];
-                this.obraSocialEmit.emit(this.obraSocial);
-            }
-        });
     }
 
     arancelamiento(turno) {
@@ -85,43 +64,39 @@ export class EstadisticasPacientesComponent implements OnInit {
     }
 
     getPaciente() {
-        this.servicePaciente.getById(this.pacienteSeleccionado.id).subscribe(
-            pacienteMPI => {
-                this._paciente = pacienteMPI;
-                if (this._paciente && this._paciente.id) {
-                    let datosTurno = { pacienteId: this._paciente.id };
-                    let cantInasistencias = 0;
-                    // Se muestra la cantidad de turnos otorgados e inasistencias
-                    this.serviceTurno.getHistorial(datosTurno).subscribe(turnos => {
-                        turnos.forEach(turno => {
-                            if (turno.asistencia && turno.asistencia === 'noAsistio') {
-                                cantInasistencias++;
-                            }
+        if (this._paciente && this._paciente.id) {
+            let datosTurno = { pacienteId: this._paciente.id };
+            let cantInasistencias = 0;
+            // Se muestra la cantidad de turnos otorgados e inasistencias
+            this.serviceTurno.getHistorial(datosTurno).subscribe(turnos => {
+                turnos.forEach(turno => {
+                    if (turno.asistencia && turno.asistencia === 'noAsistio') {
+                        cantInasistencias++;
+                    }
+                });
+                this.turnosOtorgados = turnos.length;
+                this.inasistencias = cantInasistencias;
+                this.sortTurnos(turnos);
+                this.turnosPaciente = turnos.filter(t => {
+                    return (moment(t.horaInicio).isSameOrAfter(new Date(), 'day') && t.estado !== 'liberado');
+                });
 
-                        });
+                this.ultimosTurnos = turnos.filter(t => {
+                    return moment(t.horaInicio).isSameOrBefore(new Date(), 'day');
+                });
 
-                        this.turnosOtorgados = turnos.length;
-                        this.inasistencias = cantInasistencias;
-                        this.sortTurnos(turnos);
-                        this.turnosPaciente = turnos.filter(t => {
-                            return (moment(t.horaInicio).isSameOrAfter(new Date(), 'day') && t.estado !== 'liberado');
-                        });
-
-                        this.ultimosTurnos = turnos.filter(t => {
-                            return moment(t.horaInicio).isSameOrBefore(new Date(), 'day');
-                        });
-
-                    });
-
-                    // Se muestra la cantidad de turnos anulados
-                    let datosLog = { idPaciente: this._paciente.id, operacion: 'turnos:liberar' };
-                    this.serviceLogPaciente.get(datosLog).subscribe(logs => {
-                        if (logs && logs.length) {
-                            this.anulaciones = logs.length;
-                        }
-                    });
+            });
+            if (this._paciente.contacto && this._paciente.contacto.length) {
+                this.contactos = this._paciente.contacto.filter(contact => contact.tipo === 'celular' || contact.tipo === 'fijo');
+            }
+            // Se muestra la cantidad de turnos anulados
+            let datosLog = { idPaciente: this._paciente.id, operacion: 'turnos:liberar' };
+            this.serviceLogPaciente.get(datosLog).subscribe(logs => {
+                if (logs && logs.length) {
+                    this.anulaciones = logs.length;
                 }
             });
+        }
     }
 
     private sortTurnos(turnos) {
@@ -132,6 +107,46 @@ export class EstadisticasPacientesComponent implements OnInit {
                 return ((inia && inib) ? (inib.getTime() - inia.getTime()) : 0);
             }
 
+        });
+    }
+
+    changeTab(event) {
+        this.currentTab = event;
+        if ((event === 2 || event === 1) && this._paciente && this._paciente.id) {
+            this.updateHistorial();
+        }
+    }
+
+    updateHistorial() {
+        let cantInasistencias = 0;
+        // Se muestra la cantidad de turnos otorgados e inasistencias
+        this.serviceTurno.getHistorial({ pacienteId: this._paciente.id }).subscribe(turnos => {
+            turnos.forEach(turno => {
+                if (turno.asistencia && turno.asistencia === 'noAsistio') {
+                    cantInasistencias++;
+                }
+
+            });
+
+            this.turnosOtorgados = turnos.length;
+            this.inasistencias = cantInasistencias;
+            this.sortTurnos(turnos);
+            this.turnosPaciente = turnos.filter(t => {
+                return (moment(t.horaInicio).isSameOrAfter(new Date(), 'day') && t.estado !== 'liberado');
+            });
+
+            this.ultimosTurnos = turnos.filter(t => {
+                return moment(t.horaInicio).isSameOrBefore(new Date(), 'day');
+            });
+
+        });
+
+        // Se muestra la cantidad de turnos anulados
+        let datosLog = { idPaciente: this._paciente.id, operacion: 'turnos:liberar' };
+        this.serviceLogPaciente.get(datosLog).subscribe(logs => {
+            if (logs && logs.length) {
+                this.anulaciones = logs.length;
+            }
         });
     }
 }

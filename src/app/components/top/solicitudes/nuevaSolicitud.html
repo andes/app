@@ -1,7 +1,7 @@
 <form class="plex-layout" #form="ngForm">
     <section>
         <div class="row">
-            <div class="col-8">
+            <div class="col-8 h-100">
                 <plex-box>
                     <header>
                         <div class="page-title float-left">
@@ -11,9 +11,29 @@
                     <div class="row">
                         <div *ngIf="showSeleccionarPaciente" class="col-12">
                             <label *ngIf="showSeleccionarPaciente">Paciente</label>
-                            <pacientesSearch [bloquearCreate]="true" [modoCompleto]="false" [hideFooter]="true"
-                                (selected)="seleccionarPaciente($event)">
-                            </pacientesSearch>
+                            <!-- ----------- Búsqueda de pacientes -------------- -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
+                                        (searchClear)="onSearchClear()">
+                                    </paciente-buscar>
+                                </div>
+                            </div>
+                            <plex-loader *ngIf="loading"></plex-loader>
+                            <div class="row">
+                                <div class="col-12">
+                                    <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length"
+                                        [pacientes]="resultadoBusqueda" [autoselect]="false"
+                                        (selected)="seleccionarPaciente($event)">
+                                    </paciente-listado>
+
+                                    <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length"
+                                        class="alert alert-default">
+                                        ¡No se encontró ningún paciente!
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- ------------------------------------------------ -->
                         </div>
                     </div>
 
@@ -211,7 +231,7 @@
                     </div>
                 </plex-box>
             </div>
-            <div class="col">
+            <div class="col h-100">
                 <plex-box>
                     <header>
                         <div class="page-title"> Datos del paciente</div>

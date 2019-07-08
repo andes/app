@@ -1,10 +1,10 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
-import { IPaciente } from './../../interfaces/IPaciente';
-import { PacienteService } from './../../services/paciente.service';
+import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
+import { PacienteService } from '../../core/mpi/services/paciente.service';
 import { RenaperService } from './../../services/fuentesAutenticas/servicioRenaper.service';
 import { SisaService } from './../../services/fuentesAutenticas/servicioSisa.service';
 import { Plex } from '@andes/plex';
-import { PacienteCreateUpdateComponent } from './paciente-create-update.component';
+// import { PacienteCreateUpdateComponent } from './paciente-create-update.component';
 import { ObraSocialService } from '../../services/obraSocial.service';
 import { Auth } from '@andes/auth';
 import { IFinanciador } from '../../interfaces/IFinanciador';
@@ -46,7 +46,7 @@ export class PacienteDetalleComponent implements OnInit {
     autorizadoRenaper = false;  // check si posee permisos
 
     constructor(private renaperService: RenaperService,
-        private parent: PacienteCreateUpdateComponent,
+        // private parent: PacienteCreateUpdateComponent,
         private plex: Plex,
         public auth: Auth,
         private sisaService: SisaService,
@@ -77,7 +77,7 @@ export class PacienteDetalleComponent implements OnInit {
     }
 
     loadObraSocial() {
-        this.obraSocialService.getPaciente({ dni: this._paciente.documento, sexo: this._paciente.sexo }).subscribe(resultado => {
+        this.obraSocialService.getObrasSociales({ dni: this._paciente.documento, sexo: this._paciente.sexo }).subscribe(resultado => {
             if (resultado.length > 0) {
                 this.obraSocial = resultado[0];
                 this.obraSocialCacheService.setFinanciadorPacienteCache(this.obraSocial);
@@ -87,73 +87,47 @@ export class PacienteDetalleComponent implements OnInit {
         });
     }
 
+    // TODO VALIDAR PACIENTE
     renaperVerification(patient) {
-        if (!patient.documento || (patient.sexo.id === 'otro')) {
-            this.plex.info('warning', 'La validación por renaper requiere sexo MASCULINO o FEMENINO.', 'Atención');
-        } else {
-            this.loading = true;
-            let sexoRena = null;
-            let documentoRena = null;
-
-            patient.sexo = ((typeof patient.sexo === 'string')) ? patient.sexo : (Object(patient.sexo).id);
-            sexoRena = patient.sexo === 'masculino' ? 'M' : 'F';
-            documentoRena = patient.documento;
-
-            this.renaperService.get({ documento: documentoRena, sexo: sexoRena }).subscribe(
-                resultado => {
-                    this.deshabilitarValidar = true;
-                    let datos = resultado.datos;
-                    if (resultado.datos.nroError === 0) {
-                        if (patient.estado === 'temporal') {
-                            // Se cargan los datos mínimos para poder consultar matcheo
-                            patient.nombre = datos.nombres;
-                            patient.apellido = datos.apellido;
-                            patient.fechaNacimiento = moment(datos.fechaNacimiento, 'YYYY-MM-DD');
-                            // Se chequea si el paciente actual ya existe como validado.
-                            this.parent.verificaPacienteRepetido().then(validadoExistente => {
-                                if (validadoExistente) {
-                                    patient = this.parent.pacienteModel;
-                                    this.plex.info('info', 'El paciente que está intentando cargar ya se encuentra validado por otra fuente auténtica.');
-                                    this.loading = false;
-                                } else {
-                                    // si nombre y apellido contienen solo caracteres válidos ..
-                                    if (this.nombrePattern.test(datos.nombres) && this.nombrePattern.test(datos.apellido)) {
-                                        patient.nombre = datos.nombres;
-                                        patient.apellido = datos.apellido;
-                                        patient.estado = 'validado';
-                                        this.renaperNotification.emit(true);
-                                        this.loading = false;
-                                    } else {
-                                        this.plex.toast('info', 'Reintentando validación', 'INFORMACION:', 3500);
-                                        this.getSisa(patient, sexoRena);
-                                    }
-                                    this.paciente.direccion[0].valor = datos.calle + ' ' + datos.numero;
-                                    this.paciente.direccion[0].codigoPostal = datos.cpostal;
-                                    this.paciente.cuil = datos.cuil;
-                                    patient.foto = resultado.datos.foto;
-                                }
-                            });
-                        } else {
-                            //  Se completan datos FALTANTES
-                            if (!this.paciente.direccion[0].valor) {
-                                this.paciente.direccion[0].valor = datos.calle + ' ' + datos.numero;
-                            }
-                            if (!this.paciente.direccion[0].codigoPostal) {
-                                this.paciente.direccion[0].codigoPostal = datos.cpostal;
-                            }
-                            if (!this.paciente.cuil) {
-                                this.paciente.cuil = datos.cuil;
-                            }
-                            patient.foto = resultado.datos.foto;
-                            this.loading = false;
-                        }
-                    } else {
-                        this.deshabilitarValidar = false;
-                        this.plex.info('info', 'Por favor, revisar los datos ingresados.', 'No se encontró información');
-                        this.loading = false;
-                    }
-                });
+        if (!patient.documento && patient.sexo) {
+            this.plex.info('warning', 'La validación requiere datos de documento y sexo');
+            return;
         }
+
+        let sexoPaciente = ((typeof patient.sexo === 'string')) ? patient.sexo : (Object(patient.sexo).id);
+        if (sexoPaciente === 'otro') {
+            this.plex.info('warning', 'La validación requiere sexo MASCULINO o FEMENINO.', 'Atención');
+            return;
+        }
+        this.deshabilitarValidar = true;
+        this.loading = true;
+        this.pacienteService.validar(patient).subscribe(resultado => {
+            this.loading = false;
+            if (resultado.existente) {
+                this.plex.info('info', 'El paciente que está cargando ya existe en el sistema', 'Atención');
+                patient = resultado.paciente;
+            } else if (resultado.validado) {
+                patient.nombre = resultado.paciente.nombre;
+                patient.apellido = resultado.paciente.apellido;
+                patient.estado = resultado.paciente.estado;
+                patient.fechaNacimiento = resultado.paciente.fechaNacimiento;
+                patient.foto = resultado.paciente.foto;
+                //  Se completan datos FALTANTES
+                if (!patient.direccion[0].valor && resultado.paciente.direccion) {
+                    patient.direccion[0].valor = resultado.paciente.direccion;
+                }
+                if (!patient.direccion[0].codigoPostal && resultado.paciente.cpostal) {
+                    patient.direccion[0].codigoPostal = resultado.paciente.cpostal;
+                }
+                if (!patient.cuil && resultado.paciente.cuil) {
+                    patient.cuil = resultado.paciente.cuil;
+                }
+                this.plex.toast('success', '¡Paciente Validado!');
+            } else {
+                this.plex.toast('danger', 'Validación Fallida');
+                this.deshabilitarValidar = false;
+            }
+        });
     }
 
     private getSisa(paciente: any, sexoRena) {

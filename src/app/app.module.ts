@@ -64,7 +64,7 @@ import { EspecialidadService } from './services/especialidad.service';
 import { BarrioService } from './services/barrio.service';
 import { LocalidadService } from './services/localidad.service';
 import { PaisService } from './services/pais.service';
-import { PacienteService } from './services/paciente.service';
+import { PacienteService } from './core/mpi/services/paciente.service';
 import { TipoEstablecimientoService } from './services/tipoEstablecimiento.service';
 import { ProvinciaService } from './services/provincia.service';
 import { FinanciadorService } from './services/financiador.service';
@@ -152,15 +152,21 @@ import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion
 import { ProcedimientosQuirurgicosService } from './services/procedimientosQuirurgicos.service';
 import { SectoresItemComponent } from './components/organizacion/sectores-item/sectores-item.component';
 // ... MPI
-import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
-import { PacienteCreateUpdateComponent } from './components/paciente/paciente-create-update.component';
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { PacienteDetalleComponent } from './components/paciente/paciente-detalle';
-import { PacienteDetalleActualizarComponent } from './components/paciente/paciente-detalle-actualizar.component';
+
 import { PacienteBuscarComponent } from './modules/mpi/components/paciente-buscar.component';
 import { PacienteListadoComponent } from './modules/mpi/components/paciente-listado.component';
 import { PacientePanelComponent } from './modules/mpi/components/paciente-panel.component';
+import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cru.component';
+import { RelacionesPacientesComponent } from './core/mpi/components/relaciones-pacientes.component';
+import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
+import { PacienteCruComponent } from './core/mpi/components/paciente-cru.component';
+import { GoogleMapComponent } from './core/mpi/components/google-map.component';
+import { GeoreferenciaService } from './core/mpi/services/georeferencia.service';
+import { BotonesRegistroComponent } from './core/mpi/components/mpi-botones-registro.component';
+
 
 // PUCO/ObraSocial
 import { PucoComponent } from './components/puco/puco.component';
@@ -198,7 +204,6 @@ import { PopoverAuditComponent } from './components/popover-audit/popover-audit.
 import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/puntoInicio-turnos.component';
 import { EstadisticasAgendasComponent } from './components/turnos/dashboard/estadisticas-agendas.component';
 import { EstadisticasPacientesComponent } from './components/turnos/dashboard/estadisticas-pacientes.component';
-import { PacienteSearchTurnosComponent } from './components/turnos/punto-inicio/paciente-search-turnos.component';
 import { TurnosPacienteComponent } from './components/turnos/punto-inicio/turnos-paciente.component';
 import { DashboardCodificacionComponent } from './components/turnos/dashboard/dashboard-codificacion.component';
 import { ActivarAppComponent } from './components/turnos/punto-inicio/activar-app.component';
@@ -213,6 +218,7 @@ import { AutocitarTurnoAgendasComponent } from './components/turnos/autocitar/au
 import { DinamicaFormComponent } from './components/turnos/autocitar/dinamica.component';
 import { MapaEspacioFisicoVistaComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico-vista.component';
 import { BuscadorCie10Component } from './components/turnos/gestor-agendas/operaciones-agenda/buscador-cie10.component';
+import { UpdateContactoDireccionComponent } from './components/turnos/dashboard/update-contacto-direccion.component';
 
 
 // ... RUP
@@ -330,6 +336,12 @@ import { EncabezadoReportesComponent } from './components/reportes/encabezadoRep
 import { TurnosPrestacionesComponent } from './components/buscadorTurnosPrestaciones/turnos-prestaciones.component';
 import { TurnosPrestacionesService } from './components/buscadorTurnosPrestaciones/services/turnos-prestaciones.service';
 
+
+// REPORTES SJ
+import { EncabezadoReportesDiariosComponent } from './components/reportesDiarios/encabezadoReportesDiarios.component';
+import { ResumenDiarioMensualComponent } from './components/reportesDiarios/resumenDiarioMensual.component';
+import { PlanillaC1Component } from './components/reportesDiarios/planillaC1.component';
+
 // Locales
 import { AppComponent } from './app.component';
 import { routing, appRoutingProviders } from './app.routing';
@@ -376,14 +388,6 @@ import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 // Configuracion prestaciones
 import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
 import { ConfiguracionPrestacionCrearComponent } from './components/configuracionPrestacion/configuracion-prestacion-crear.component';
-
-import { registerLocaleData } from '@angular/common';
-import localeEs from '@angular/common/locales/es';
-import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
-import { FormTerapeuticoService } from './services/formTerapeutico/formTerapeutico.service';
-import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem.component';
-import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
-import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
 import { CamasService } from './apps/rup/internacion/services/camas.service';
 import { InternacionService } from './apps/rup/internacion/services/internacion.service';
 import { DesocuparCamaComponent } from './apps/rup/internacion/components/cama-desocupar.component';
@@ -482,6 +486,18 @@ let RUPComponentsArray = [
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
+import { FormTerapeuticoService } from './services/formTerapeutico/formTerapeutico.service';
+import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem.component';
+import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
+import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
+import { BebeCruComponent } from './core/mpi/components/bebe-cru.component';
+import { NotaComponent } from './core/mpi/components/notas-paciente.component';
+import { PacienteCacheService } from './core/mpi/services/pacienteCache.service';
+import { HistorialBusquedaService } from './core/mpi/services/historialBusqueda.service';
+/** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { ChartComponent } from './modules/rup/components/elementos/chart.component';
 import { UploadFileComponent } from './shared/components/upload-file.component';
 import { CodificacionService } from './modules/rup/services/codificacion.service';
@@ -492,8 +508,7 @@ import { PasesListadoInternacionComponent } from './apps/rup/internacion/compone
 
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
 import { HUDSService } from './modules/rup/services/huds.service';
-
-
+import { PreviousUrlService } from './services/previous-url.service';
 
 registerLocaleData(localeEs, 'es');
 
@@ -523,7 +538,7 @@ registerLocaleData(localeEs, 'es');
         ProfesionalCreateUpdateComponent,
         UploadFileComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
-        PacienteCreateUpdateComponent, PacienteDetalleComponent, PacienteSearchComponent, DashboardComponent,
+        PacienteDetalleComponent, DashboardComponent,
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, HoraPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
         FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe, ReplacePipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, DinamicaFormComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
@@ -546,13 +561,14 @@ registerLocaleData(localeEs, 'es');
         LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
         AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
         HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
-        PacienteSearchTurnosComponent, TurnosPacienteComponent, DashboardCodificacionComponent,
+        TurnosPacienteComponent, DashboardCodificacionComponent,
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
         BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
         ReporteC2Component,
         ConsultaDiagnosticoComponent,
         CantidadConsultaXPrestacionComponent,
         EncabezadoReportesComponent,
+        ResumenDiarioMensualComponent, PlanillaC1Component, EncabezadoReportesDiariosComponent,
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         MapaEspacioFisicoVistaComponent,
@@ -562,10 +578,10 @@ registerLocaleData(localeEs, 'es');
         SnomedBuscarComponent,
         DetalleAgendaComponent,
         HeaderPacienteComponent,
-        PacienteDetalleActualizarComponent,
         HudsBusquedaComponent,
         BuscadorComponent,
         VistaHudsComponent,
+        VistaPrestacionComponent,
         VistaCDAComponent,
         HudsBusquedaPacienteComponent,
         PacienteBuscarComponent,
@@ -615,6 +631,15 @@ registerLocaleData(localeEs, 'es');
         PacienteListadoComponent,
         PacientePanelComponent,
         PacientePanelComponent,
+        BebeCruComponent,
+        ExtranjeroNNCruComponent,
+        NotaComponent,
+        RelacionesPacientesComponent,
+        BusquedaMpiComponent,
+        PacienteCruComponent,
+        GoogleMapComponent,
+        BotonesRegistroComponent,
+        UpdateContactoDireccionComponent,
 
         // form Terapeutico
         FormTerapeuticoComponent,
@@ -705,6 +730,9 @@ registerLocaleData(localeEs, 'es');
         SugerenciasService,
         ConfiguracionPrestacionService,
         PrestacionLegacyService,
+        PacienteCacheService,
+        GeoreferenciaService,
+        HistorialBusquedaService,
         CodificacionService,
         ResumenPacienteDinamicoService,
         VacunasService,
@@ -713,10 +741,10 @@ registerLocaleData(localeEs, 'es');
         SeleccionBinariaComponent,
         CampaniaSaludService,
         SeleccionBinariaComponent,
-        PacienteCreateUpdateComponent,
         SnomedBuscarService,
         HUDSService,
-        TurnosPrestacionesService
+        TurnosPrestacionesService,
+        PreviousUrlService
     ]
 })
 

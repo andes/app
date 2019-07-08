@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { InternacionService } from '../services/internacion.service';
 import { CamasService } from '../services/camas.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
-import { PacienteService } from '../../../../services/paciente.service';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 
 @Component({
     selector: 'cama',

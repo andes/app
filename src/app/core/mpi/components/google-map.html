@@ -1,0 +1,12 @@
+<!-- this creates a google map on the page with the given lat/lng from -->
+<!-- the component as the initial center of the map: -->
+<div class="row">
+    <div class="col">
+        <agm-map [(latitude)]="latitud" [(longitude)]="longitud" [(zoom)]="zoom" [zoomControl]="zoomControl"
+            [scrollwheel]="scrollwheel" (mapDblClick)="setMarker($event)">
+            <agm-marker [(latitude)]="latitud" [(longitude)]="longitud" [markerDraggable]="draggable" (dragEnd)='setMarker($event)'>
+                <agm-info-window [isOpen]="infoMarker.length" label="infoMarker" *ngIf="infoMarker">{{infoMarker}}</agm-info-window>
+            </agm-marker>
+        </agm-map>
+    </div>
+</div>

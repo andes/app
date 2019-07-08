@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, HostBinding } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { IPaciente } from '../../../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { ResumenPacienteDinamicoService } from '../../../services/resumenPaciente-dinamico.service';
 import { VacunasService } from '../../../../../services/vacunas.service';
 import { PrestacionesService } from '../../../services/prestaciones.service';
@@ -82,23 +82,14 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
             // se carga la edad
             filaTabla.push({ titulo: 'Edad', valor: prestacion.motivo.term });
             // recorremos las columnas de la tabla modelo para armar la nueva tabla con la informacion en el mismo orden
-            let valorConcepto;
             let unValor;
             prestacion.conceptos.forEach(unConcepto => {
                 unValor = null;
                 if (unConcepto.contenido) {  // Si en la consulta el concepto fue completado, el campo valor tendrá contenido
-                    valorConcepto = unConcepto.contenido.valor;
-
-                    if (Array.isArray(valorConcepto)) { // Si valor es un concepto compuesto (Lactancia por ejemplo)
-                        if (valorConcepto.length > 0) {
-                            unValor = valorConcepto[valorConcepto.length - 1].concepto.term;
-                        }
-
-                    } else {
-                        unValor = unConcepto.contenido.valor;   // Si valor es un número
-                    }
+                    let conceptoValor = unConcepto.contenido.valor;
+                    unValor = Array.isArray(conceptoValor) && conceptoValor.length > 0 ? conceptoValor.filter(e => e.checkbox || e.checked).map(e => e.concepto.term).join(', ') : conceptoValor;
                 }
-                if (unValor === null) {
+                if (!unValor) {
                     unValor = 'S/D';
                 }
                 filaTabla.push({ titulo: unConcepto.titulo, valor: unValor });

@@ -2,7 +2,7 @@ import { Component, Input, EventEmitter, Output, OnInit, HostBinding, ViewEncaps
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
-import { PacienteService } from './../../../../services/paciente.service';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import * as moment from 'moment';
 
 @Component({

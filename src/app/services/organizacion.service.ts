@@ -4,9 +4,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 // Prototipo de Decorador cache. Proximamente se implementa de forma global.
-function Cache({key}) {
+function Cache({ key }) {
     let _cache: any = {};
-    return function ( target: any, propertyKey: string, descriptor: PropertyDescriptor ) {
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const fn = descriptor.value as Function;
         descriptor.value = function (...args) {
             const objectKey = key ? (typeof key === 'string' ? args[0][key] : args[0]) : 'default';
@@ -38,6 +38,10 @@ export class OrganizacionService {
      */
     getById(id: String): Observable<IOrganizacion> {
         return this.server.get(this.organizacionUrl + '/' + id, null);
+    }
+
+    getGeoreferencia(id: String): Observable<any> {
+        return this.server.get(this.organizacionUrl + '/georef/' + id, null);
     }
 
     /**
@@ -139,6 +143,25 @@ export class OrganizacionService {
             }
         }
     }
+    /**
+     * Devuelve el nombre del estado de la organizacion pasada por parámetro
+     * @param {(boolean | IOrganizacion)} organizacion
+     * @returns {string}
+     * @memberof OrganizacionService
+     */
+    getEstado(organizacion: boolean | IOrganizacion): string {
+        const estado = (typeof organizacion === 'boolean') ? organizacion : organizacion.activo;
+        return estado ? 'Habilitado' : 'No disponible';
+    }
 
+    /**
+     * Consulta en SISA los datos de la organización con código SISA igual al pasado por parámetro
+     * @param {string} cod es el código SISA
+     * @returns {Observable<any>}
+     * @memberof OrganizacionService
+     */
+    getOrgSisa(cod: string): Observable<any> {
+        return this.server.get(this.organizacionUrl + '/sisa/' + cod);
+    }
 
 }

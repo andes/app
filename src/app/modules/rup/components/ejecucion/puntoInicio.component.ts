@@ -11,9 +11,8 @@ import { EstadosAgenda } from './../../../../components/turnos/enums';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { PacienteService } from './../../../../services/paciente.service';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
-import { IPaciente } from '../../../../interfaces/IPaciente';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
 import { SubscriptionLike as ISubscription } from 'rxjs';
@@ -54,6 +53,7 @@ export class PuntoInicioComponent implements OnInit {
     // ultima request que se almacena con el subscribe
     private lastRequest: ISubscription;
 
+
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
         public servicioAgenda: AgendaService,
@@ -65,7 +65,7 @@ export class PuntoInicioComponent implements OnInit {
 
     ngOnInit() {
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
-        if (this.auth.getPermissions('rup:?').length <= 0) {
+        if (!this.auth.getPermissions('rup:?').length) {
             this.redirect('inicio');
         }
         if (!this.auth.profesional) {

@@ -20,7 +20,7 @@ export class InicioComponent implements AfterViewInit {
     public denied = false;
     public accessList: any = [];
 
-    constructor(public auth: Auth, public appComponent: AppComponent) { }
+    constructor(public auth: Auth, public appComponent: AppComponent, private plex: Plex) { }
 
     ngAfterViewInit() {
         window.setTimeout(() => {
@@ -60,7 +60,7 @@ export class InicioComponent implements AfterViewInit {
                 this.solicitudes = 'solicitudes';
             }
 
-            if (this.auth.getPermissions('prestamos:?').length > 0) {
+            if (this.auth.check('prestamos:?')) {
                 this.prestamosHC = 'prestamosHC';
                 this.denied = false;
             }

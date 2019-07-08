@@ -1,12 +1,7 @@
 
-import {throwError as observableThrowError} from 'rxjs';
-import { Params } from '@angular/router';
-import { IListaMatcheo } from './../../interfaces/auditoria/IListaMatcheo';
-import { IPaciente } from '../../interfaces/IPaciente';
+import { throwError as observableThrowError } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { Headers, Http, RequestOptions, RequestMethod, Response } from '@angular/http';
-
 import { Observable } from 'rxjs/Rx';
 // Import RxJs required methods
 

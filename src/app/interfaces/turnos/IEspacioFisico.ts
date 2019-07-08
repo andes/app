@@ -1,4 +1,4 @@
-import { IDireccion } from './../IDireccion';
+import { IDireccion } from '../../core/mpi/interfaces/IDireccion';
 import { IContacto } from './../IContacto';
 export interface IEspacioFisico {
     id: string;
@@ -24,10 +24,11 @@ export interface IEspacioFisico {
         nombre: string
     };
     equipamiento: [{
-        conceptId: string;
-        term: string;
-        fsn: string;
-        semanticTag: string;
+        conceptId: String;
+        term: String;
+        fsn: String;
+        semanticTag: String;
+        refsetIds: [String];
     }];
     activo: Boolean;
     estado: string;

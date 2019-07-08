@@ -1,7 +1,6 @@
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
-import { IPaciente } from './../../../../interfaces/IPaciente';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
@@ -11,6 +10,7 @@ import { Plex } from '@andes/plex';
 import { IAgenda } from '../../../../interfaces/turnos/IAgenda';
 import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 import { ObraSocialCacheService } from '../../../../services/obraSocialCache.service';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 @Component({
     templateUrl: 'prestacionCrear.html'
 })
@@ -38,6 +38,8 @@ export class PrestacionCrearComponent implements OnInit {
     public buscandoPaciente = false;
     // segun el tipo de prestación elegida se selecciona paciente o no
     public mostrarPaciente = false;
+    public loading = false;
+    public resultadoBusqueda = [];
     /**
      * Indica si muestra el calendario para dar turno autocitado
      */
@@ -89,14 +91,7 @@ export class PrestacionCrearComponent implements OnInit {
         }]);
     }
 
-    onPacienteSelected(paciente: IPaciente) {
-        if (paciente.id) {
-            this.paciente = paciente;
-            this.buscandoPaciente = false;
-        } else {
-            this.plex.info('warning', 'El paciente debe ser registrado en MPI');
-        }
-    }
+
 
     onPacienteCancel() {
         this.buscandoPaciente = false;
@@ -112,7 +107,9 @@ export class PrestacionCrearComponent implements OnInit {
         this.mostrarPaciente = this.tipoPrestacionSeleccionada && !this.tipoPrestacionSeleccionada.noNominalizada;
     }
 
-
+    showBuscarPaciente() {
+        this.buscandoPaciente = true;
+    }
 
 
     /**
@@ -298,4 +295,44 @@ export class PrestacionCrearComponent implements OnInit {
     irResumen(id) {
         this.router.navigate(['rup/validacion/', id]);
     }
+
+    // -------------- SOBRE BUSCADOR PACIENTES ----------------
+
+    searchStart() {
+        this.paciente = null;
+        this.loading = true;
+    }
+
+    searchEnd(resultado) {
+        this.loading = false;
+        if (resultado.err) {
+            this.plex.info('danger', resultado.err);
+            return;
+        }
+        this.resultadoBusqueda = resultado.pacientes;
+    }
+
+    onSearchClear() {
+        this.resultadoBusqueda = [];
+        this.paciente = null;
+    }
+
+    // ----------------------------------
+
+    // Componente paciente-listado
+
+    onSelect(paciente: IPaciente): void {
+        // Es un paciente existente en ANDES??
+        if (paciente && paciente.id) {
+            this.paciente = paciente;
+            this.buscandoPaciente = false;
+
+        } else {
+            this.plex.info('warning', 'Paciente no encontrado', '¡Error!');
+        }
+        this.resultadoBusqueda = [];
+    }
+    // ----------------------------------
+
+
 }

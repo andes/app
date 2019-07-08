@@ -1,8 +1,8 @@
-import { IPaciente } from '../../../interfaces/IPaciente';
 import { IFinanciador } from '../../../interfaces/IFinanciador';
 import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 import { IProfesional } from '../../../interfaces/IProfesional';
 import { ITurno } from '../../../interfaces/turnos/ITurno';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 export interface ITurnosPrestaciones {
     fecha: Date;

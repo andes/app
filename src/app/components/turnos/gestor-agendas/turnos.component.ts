@@ -3,7 +3,7 @@ import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { PacienteService } from './../../../services/paciente.service';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { SmsService } from './../../../services/turnos/sms.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
@@ -57,6 +57,7 @@ export class TurnosComponent implements OnInit {
     @Output() reasignaTurno = new EventEmitter<boolean>();
     @Output() recargarAgendas = new EventEmitter<boolean>();
     @Output() recargarBotones = new EventEmitter<boolean>();
+    @Output() actualizarBotonesAgendasEmiter = new EventEmitter<IAgenda>();
 
     // Propiedades públicas
     showSeleccionarTodos = true;
@@ -325,7 +326,7 @@ export class TurnosComponent implements OnInit {
 
         // Patchea los turnosSeleccionados (1 o más turnos)
         this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
-            this.agenda = resultado;
+            this.actualizarBotonesAgendasEmiter.emit(resultado);
         });
 
         // Reset botones y turnos seleccionados

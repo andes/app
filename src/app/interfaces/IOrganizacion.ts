@@ -2,7 +2,7 @@ import { ISnomedConcept } from './../modules/rup/interfaces/snomed-concept.inter
 import { ITipoEstablecimiento } from './ITipoEstablecimiento';
 import { IUbicacion } from './IUbicacion';
 import { IContacto } from './IContacto';
-import { IDireccion } from './IDireccion';
+import { IDireccion } from '../core/mpi/interfaces/IDireccion';
 import { tipoComunicacion } from './../utils/enumerados';
 
 // export enum tipoCom {"Teléfono Fijo", "Teléfono Celular", "email"};
@@ -11,7 +11,7 @@ export interface ISectores {
     tipoSector: ISnomedConcept;
     unidadConcept?: ISnomedConcept;
     nombre: String;
-    hijos?:  ISectores [];
+    hijos?: ISectores[];
 }
 
 export interface IOrganizacion {
@@ -41,4 +41,16 @@ export interface IOrganizacion {
     servicios: [ISnomedConcept];
     mapaSectores: ISectores[];
     unidadesOrganizativas: [ISnomedConcept];
+    /**
+     * "prestaciones" traidas de sisa. Se muestran en la app mobile
+     * @type {[{ idSisa: number, nombre: string }]}
+     * @memberof IOrganizacion
+     */
+    ofertaPrestacional?: [{ idSisa: number, nombre: string }];
+    /**
+     * Indica si debe mostrarse en los mapas. Por defecto se muestra en los hospitales, centro de salud, punto sanitario
+     * @type {boolean}
+     * @memberof IOrganizacion
+     */
+    showMapa?: boolean;
 }
