@@ -35,7 +35,7 @@ import { ReglaService } from '../../../../services/top/reglas.service';
 })
 export class RUPComponent implements OnInit, AfterViewInit {
     @ViewChildren(RUPComponent) rupElements: QueryList<RUPComponent>;
-    @ViewChild('form') formulario: any;
+    @ViewChild('form', { static: true }) formulario: any;
     public rupInstance: any;
 
     // Propiedades

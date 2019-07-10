@@ -59,7 +59,7 @@ export class CampaniaFormComponent implements OnInit {
     sexos: any[];
 
     /*CARGA DE IMAGENES*/
-    @ViewChild('upload') uploadComponent: ElementRef;
+    @ViewChild('upload', { static: true }) uploadComponent: ElementRef;
 
     /**
      * Bandera que indica si hay un problema con el formato de la imagen ingresada (que sea SVG y que no sea tamaño 35px*35px)

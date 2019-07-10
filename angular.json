@@ -25,6 +25,11 @@
                 "glob": "favicon.ico",
                 "input": "src",
                 "output": "/"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/app/modules/rup/assets/",
+                "output": "/assets"
               }
             ],
             "styles": [

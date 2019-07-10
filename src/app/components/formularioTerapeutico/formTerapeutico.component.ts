@@ -11,7 +11,7 @@ import { ArbolItemComponent } from './arbolItem.component';
     templateUrl: './formTerapeutico.html'
 })
 export class FormTerapeuticoComponent implements OnInit {
-    @ViewChild('arbol') arbolHijo: ArbolItemComponent;
+    @ViewChild('arbol', { static: false }) arbolHijo: ArbolItemComponent;
     @HostBinding('class.plex-layout') layout = true;
     @Input() indice: any;
     @Input() deep: Number;

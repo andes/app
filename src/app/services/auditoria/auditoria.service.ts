@@ -13,7 +13,7 @@ export class AuditoriaService {
 
     private auditoriaURL = '/core/mpi/auditoria/matching';
 
-    constructor(private server: Server ) { }
+    constructor(private server: Server) { }
 
     get(): Observable<IAudit[]> {
         return this.server.get(this.auditoriaURL);
