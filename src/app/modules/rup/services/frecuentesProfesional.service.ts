@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
 import { Server } from '@andes/shared';
 import { SemanticTag } from '../interfaces/semantic-tag.type';

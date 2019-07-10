@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Server } from '@andes/shared';

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output, Input, OnInit, OnChanges } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';

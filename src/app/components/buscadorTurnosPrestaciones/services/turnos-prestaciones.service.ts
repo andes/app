@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 import { Server } from '@andes/shared';
 import { ITurnosPrestaciones } from '../interfaces/turnos-prestaciones.interface';
 

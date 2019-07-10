@@ -446,7 +446,7 @@ export class PrestacionesService {
         * @param conceptId
         */
     getPrestacionesXtipo(idPaciente: any, conceptId: any): Observable<any[]> {
-        return this.getByPaciente(idPaciente).map(prestaciones => {
+        return this.getByPaciente(idPaciente).pipe(map(prestaciones => {
             let prestacionesXtipo = [];
             prestaciones.forEach(prestacion => {
                 if (prestacion.solicitud.tipoPrestacion.conceptId === conceptId) {
@@ -454,7 +454,7 @@ export class PrestacionesService {
                 }
             });
             return prestacionesXtipo;
-        });
+        }));
     }
 
 

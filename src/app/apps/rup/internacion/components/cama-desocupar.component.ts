@@ -1,11 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Subject } from 'rxjs/Rx';
+import { Subject } from 'rxjs';
 import { CamasService } from '../services/camas.service';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { InternacionService } from '../services/internacion.service';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
+import { debounceTime } from 'rxjs/operators';
 
 
 @Component({
@@ -53,7 +54,7 @@ export class DesocuparCamaComponent implements OnInit {
         private internacionService: InternacionService, public prestacionesService: PrestacionesService, public CamaService: CamasService) {
 
         this.actualizaTipo
-            .debounceTime(1000)
+            .pipe(debounceTime(1000))
             .subscribe(val => {
                 this.operacionDesocuparCama();
             });

@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { PacienteSearch } from '../../../interfaces/pacienteSearch.interface';
 import { IPaciente } from '../interfaces/IPaciente';
 import { Injectable } from '@angular/core';

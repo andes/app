@@ -5,7 +5,7 @@ import { Observable, of, merge, BehaviorSubject } from 'rxjs';
 import { map, switchMap, tap, distinctUntilChanged, take, } from 'rxjs/operators';
 import { PermisosService } from '../services/permisos.service';
 import { UsuariosHttp } from '../services/usuarios.http';
-import { Observe, asObject, mergeObject, notNull, onlyNull, cache } from '@andes/shared';
+import { Observe, asObject, mergeObject, onlyNull, cache } from '@andes/shared';
 import { Auth } from '@andes/auth';
 
 @Component({

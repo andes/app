@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { ICampaniaSalud } from '../interfaces/ICampaniaSalud';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class CampaniaSaludService {

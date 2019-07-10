@@ -1,6 +1,5 @@
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
-import { Subscription } from 'rxjs/Subscription';
 import { RupElement } from '.';
 
 @Component({
@@ -13,7 +12,6 @@ export class ObservacionesComponent extends RUPComponent implements OnInit {
     // suscriptionSeccion: any;
     seleccionado: any;
     suscriptionBuscador: any;
-    suscriptionConcepto: Subscription;
     ngOnInit() {
         if (!this.params) {
             this.params = {};

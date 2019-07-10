@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ILog } from './../interfaces/ILog';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';

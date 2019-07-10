@@ -2,7 +2,7 @@
 import { throwError as observableThrowError } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 // Import RxJs required methods
 
 

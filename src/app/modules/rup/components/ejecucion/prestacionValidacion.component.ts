@@ -11,7 +11,7 @@ import { DocumentosService } from './../../../../services/documentos.service';
 import { Slug } from 'ng2-slugify';
 import { saveAs } from 'file-saver';
 import * as moment from 'moment';
-import 'rxjs/Rx';
+import 'rxjs';
 import { CodificacionService } from '../../services/codificacion.service';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { forkJoin } from 'rxjs';

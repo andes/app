@@ -1,6 +1,6 @@
 
 import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { ObraSocialService } from './../../services/obraSocial.service';
 import { ProfeService } from './../../services/profe.service';
 import { SugerenciasService } from '../../services/sendmailsugerencias.service';
@@ -43,7 +43,7 @@ export class PucoComponent implements OnInit, OnDestroy {
     public searchTerm: String = '';
 
     // ultima request que se almacena con el subscribe
-    private lastRequest: ISubscription;
+    private lastRequest: Subscription;
 
     constructor(
         private obraSocialService: ObraSocialService,

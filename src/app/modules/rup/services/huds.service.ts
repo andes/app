@@ -1,5 +1,5 @@
 import { Injectable, Type } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs';
 
 // Por el momento lo dejo en any.
 // Este alias me permite en el futuro cambiar el tipo en todos lados

@@ -19,9 +19,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { LOCALE_ID } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { HttpModule } from '@angular/http';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { HttpClient } from '@angular/common/http';
 
 // Global
 import { PlexModule } from '@andes/plex';
@@ -525,7 +525,6 @@ registerLocaleData(localeEs, 'es');
         ReactiveFormsModule,
         FormsModule,
         HttpClientModule,
-        HttpModule,
         PlexModule,
         AuthModule,
         ScrollingModule,
@@ -676,6 +675,7 @@ registerLocaleData(localeEs, 'es');
             provide: LOCALE_ID,
             useValue: 'es-AR'
         },
+        HttpClient,
         Plex,
         Server,
         Auth,

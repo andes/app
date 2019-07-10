@@ -3,7 +3,7 @@ import {
     EventEmitter,
     ViewEncapsulation, OnDestroy
 } from '@angular/core';
-import { SubscriptionLike as ISubscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Cie10Service } from '../../../../services/term/cie10.service';
@@ -39,7 +39,7 @@ export class BuscadorCie10Component implements OnInit, OnDestroy {
     private cachePrestacionesTurneables = null;
 
     // ultima request que se almacena con el subscribe
-    private lastRequest: ISubscription;
+    private lastRequest: Subscription;
 
     constructor(
         private auth: Auth,
