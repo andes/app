@@ -67,7 +67,8 @@ export class LiberarTurnoComponent implements OnInit {
         },
             err => {
                 if (err) {
-
+                    this.plex.info('warning', 'Turno en ejecución', 'Error');
+                    this.cancelaLiberarTurno.emit(true);
                 }
             });
     }
