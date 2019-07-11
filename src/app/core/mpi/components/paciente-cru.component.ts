@@ -125,7 +125,7 @@ export class PacienteCruComponent implements OnInit {
     public paciente: IPaciente;
     public nombrePattern: string;
     public showDeshacer = false;
-    public patronDocumento = /^[1-9]{1}[0-9]{6,7}$/;
+    public patronDocumento = /^[1-9]{1}[0-9]{5,7}$/;
     // PARA LA APP MOBILE
     public showMobile = false;
     public checkPass = false;
