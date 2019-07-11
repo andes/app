@@ -82,13 +82,13 @@
 
         <plex-list *ngIf="busquedas?.length && !loading" [striped]="true" [selectable]="true">
             <plex-heading layout="completo">
-                <b>Fecha</b>
-                <b>Paciente</b>
-                <b>Tipo de Prestación</b>
-                <b>Equipo de Salud</b>
-                <b>Estado</b>
-                <b *ngIf="!sumarB">Financiador</b>
-                <b *ngIf="sumarB">Comprobante</b>
+                <b label [ngStyle]="{ 'width': '150px' }">Fecha Turno</b>
+                <b label>Paciente</b>
+                <b label>Tipo de Prestación</b>
+                <b label>Equipo de Salud</b>
+                <b label>Estado</b>
+                <b label *ngIf="!sumarB">Financiador</b>
+                <b label *ngIf="sumarB">Comprobante</b>
             </plex-heading>
             <plex-item layout="completo" *ngFor="let busqueda of busquedas; let i=index" class="hover"
                        (click)="mostrarPrestacion(busqueda)" [ngClass]="{'bg-inverse': busqueda.seleccionada}"

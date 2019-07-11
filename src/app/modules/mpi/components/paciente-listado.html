@@ -8,7 +8,6 @@
         <b label>Apellido y Nombre</b>
         <b label>Nacimiento</b>
         <b label>Sexo</b>
-        <b label></b>
     </plex-heading>
     <plex-item layout="completo" [botonera]="false" *ngFor="let paciente of listado; let i=index"
         (mouseenter)="hoverPaciente(paciente)" (click)="seleccionar(paciente)">
