@@ -22,13 +22,13 @@
                         <div class="row">
                             <div class="{{showEditarAgendaPanel && agendasSeleccionadas?.length === 1 ? 'col-6' : 'col-3'}}">
                                 <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection($event,'fechaDesde')"
-                                    name="fechaDesde" label="Desde" class="fechas" [max]="fechaHasta">
+                                    name="fechaDesde" label="Desde" class="fechas">
                                 </plex-datetime>
                                 <!-- <plex-button type="info" icon="chevron-right"></plex-button> -->
                             </div>
                             <div class="{{showEditarAgendaPanel && agendasSeleccionadas?.length === 1 ? 'col-6' : 'col-3'}}">
                                 <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection($event,'fechaHasta')"
-                                    name="fechaHasta" label="Hasta" class="fechas" [min]="fechaDesde">
+                                    name="fechaHasta" label="Hasta" class="fechas">
                                 </plex-datetime>
                             </div>
                             <div class="{{showEditarAgendaPanel && agendasSeleccionadas?.length === 1 ? 'col-8' : 'col-4'}}">
@@ -144,7 +144,8 @@
                 <plex-box>
                     <div *ngIf="showTurnos && agendasSeleccionadas?.length == 1 && !showSuspenderTurnos" type="info">
                         <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"
-                            (recargarAgendas)="loadAgendas($event)"></turnos>
+                            (recargarAgendas)="loadAgendas($event)"
+                            (actualizarBotonesAgendasEmiter)="onSeleccionAgendaNoMultiple($event)"></turnos>
                     </div>
                     <div *ngIf="showEditarAgendaPanel && agendasSeleccionadas?.length === 1" type="info">
                         <panel-agenda [editaAgendaPanel]="agendasSeleccionadas[0]" (showVistaTurnosEmit)="showVistaTurnos($event)"

@@ -198,7 +198,7 @@ export class BotonesAgendaComponent implements OnInit {
         if (!agenda.dinamica) {
             return agenda.bloques.some((bloque: any) => bloque.turnos.some((turno: any) => turno.asistencia || (turno.diagnostico && turno.diagnostico.codificaciones && turno.diagnostico.codificaciones.length > 0)));
         } else {
-            return false;
+            return agenda.bloques.some((bloque: any) => bloque.turnos.some((turno: any) => turno.asistencia));
         }
     }
 
