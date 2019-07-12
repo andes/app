@@ -3,9 +3,9 @@ import { Component, Output, EventEmitter, OnInit, OnDestroy, Input } from '@angu
 import * as moment from 'moment';
 import { DocumentoEscaneado, DocumentoEscaneados } from './../../../components/paciente/documento-escaneado.const';
 import { LogService } from './../../../services/log.service';
-import { IPacienteMatch } from '../interfaces/IPacienteMatch.inteface';
 import { Plex } from '@andes/plex';
 import { PacienteBuscarResultado } from '../interfaces/PacienteBuscarResultado.inteface';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 interface PacienteEscaneado {
     documento: string;
@@ -180,17 +180,17 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                                     if (resultadoSuggest[0].match >= 0.94) {
                                         // TODO: this.logService.post('mpi', 'macheoAlto', { pacienteDB: datoDB, pacienteScan: pacienteEscaneado }).subscribe(() => { });
                                         if (resultadoSuggest[0].paciente.estado === 'validado') {
-                                            this.searchEnd.emit({ pacientes: [resultadoSuggest[0]], err: null });
+                                            this.searchEnd.emit({ pacientes: [resultadoSuggest[0].paciente], escaneado: true, scan: textoLibre, err: null });
                                             return;
                                         } else {
                                             // Si es un paciente temporal, actualizamos con los datos del DNI escaneado
-                                            let pacienteActualizado: IPacienteMatch;
-                                            Object.assign(pacienteActualizado, resultadoSuggest[0]);
-                                            match.paciente.nombre = pacienteEscaneado.nombre;
-                                            match.paciente.apellido = pacienteEscaneado.apellido;
-                                            match.paciente.documento = pacienteEscaneado.documento;
-                                            match.paciente.fechaNacimiento = pacienteEscaneado.fechaNacimiento;
-                                            return this.searchEnd.emit({ pacientes: [pacienteActualizado], err: null });
+                                            let pacienteActualizado: IPaciente = resultadoSuggest[0].paciente;
+                                            // Object.assign(pacienteActualizado, resultadoSuggest[0]);
+                                            pacienteActualizado.nombre = pacienteEscaneado.nombre;
+                                            pacienteActualizado.apellido = pacienteEscaneado.apellido;
+                                            pacienteActualizado.documento = pacienteEscaneado.documento;
+                                            pacienteActualizado.fechaNacimiento = pacienteEscaneado.fechaNacimiento;
+                                            return this.searchEnd.emit({ escaneado: true, pacientes: [pacienteActualizado], err: null });
                                         }
                                     } else {
                                         return this.searchEnd.emit({ pacientes: [pacienteEscaneado], escaneado: true, scan: textoLibre, err: null });
