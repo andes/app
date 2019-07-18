@@ -36,14 +36,13 @@ import { NgDragDropModule } from 'ng-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { DocumentosService } from './services/documentos.service';
 
+// Módulos
+import { SharedModule } from './shared/shared.module';
+
 // Pipes
-import { EdadPipe } from './pipes/edad.pipe';
 import { ProfesionalPipe } from './pipes/profesional.pipe';
 import { FromNowPipe } from './pipes/fromNow.pipe';
-import { FechaPipe } from './shared/pipes/fecha.pipe';
-import { HoraPipe } from './shared/pipes/hora.pipe';
 import { PacientePipe } from './pipes/paciente.pipe';
-import { SexoPipe } from './pipes/sexo.pipe';
 import { OrganizacionPipe } from './pipes/organizacion.pipe';
 import { SortBloquesPipe } from './pipes/agenda-bloques.pipe';
 import { TextFilterPipe } from './pipes/textFilter.pipe';
@@ -163,7 +162,6 @@ import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cr
 import { RelacionesPacientesComponent } from './core/mpi/components/relaciones-pacientes.component';
 import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
 import { PacienteCruComponent } from './core/mpi/components/paciente-cru.component';
-import { GoogleMapComponent } from './core/mpi/components/google-map.component';
 import { GeoreferenciaService } from './core/mpi/services/georeferencia.service';
 import { BotonesRegistroComponent } from './core/mpi/components/mpi-botones-registro.component';
 
@@ -500,7 +498,6 @@ import { PacienteCacheService } from './core/mpi/services/pacienteCache.service'
 import { HistorialBusquedaService } from './core/mpi/services/historialBusqueda.service';
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { ChartComponent } from './modules/rup/components/elementos/chart.component';
-import { UploadFileComponent } from './shared/components/upload-file.component';
 import { CodificacionService } from './modules/rup/services/codificacion.service';
 import { VistaRegistroComponent } from './modules/rup/components/huds/vistaRegistro';
 import { VistaProcedimientoComponent } from './modules/rup/components/huds/vistaProcedimiento';
@@ -530,6 +527,7 @@ registerLocaleData(localeEs, 'es');
         NgDragDropModule.forRoot(),
         ChartsModule,
         routing,
+        SharedModule,
         AgmCoreModule.forRoot({
             apiKey: environment.MAPS_KEY
         }),
@@ -540,10 +538,9 @@ registerLocaleData(localeEs, 'es');
         CamaCreateUpdateComponent, CamasListadoComponent,
         ProfesionalComponent, ProfesionalCreateUpdateComponent,
         ProfesionalCreateUpdateComponent,
-        UploadFileComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         PacienteDetalleComponent, DashboardComponent,
-        MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, HoraPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
+        MapsComponent, ProfesionalPipe, FromNowPipe, PacientePipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
         FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe, ReplacePipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, DinamicaFormComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         Html2TextPipe, RelacionRUPPipe,
@@ -641,7 +638,6 @@ registerLocaleData(localeEs, 'es');
         RelacionesPacientesComponent,
         BusquedaMpiComponent,
         PacienteCruComponent,
-        GoogleMapComponent,
         BotonesRegistroComponent,
         UpdateContactoDireccionComponent,
 
