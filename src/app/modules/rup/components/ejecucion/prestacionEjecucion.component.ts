@@ -109,6 +109,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     public flagValid = true;
 
+    public scopePrivacy = [];
     public registrosHUDS = [];
 
     constructor(
@@ -215,13 +216,9 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
                             if (this.elementoRUP.requeridos.length > 0) {
                                 for (let elementoRequerido of this.elementoRUP.requeridos) {
-
-                                    this.elementosRUPService.coleccionRetsetId[String(elementoRequerido.concepto.conceptId)] = elementoRequerido.params;
-
                                     let registoExiste = this.prestacion.ejecucion.registros.find(registro => registro.concepto.conceptId === elementoRequerido.concepto.conceptId);
-
                                     if (!registoExiste) {
-
+                                        this.elementosRUPService.coleccionRetsetId[String(elementoRequerido.concepto.conceptId)] = elementoRequerido.params;
                                         this.ejecutarConcepto(elementoRequerido.concepto);
                                     } else if (registoExiste.id && registoExiste.valor) {
                                         // Expandir sólo si no tienen algún valor
@@ -515,6 +512,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             esSolicitud = true;
         }
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
+        this.elementosRUPService.coleccionRetsetId[String(snomedConcept.conceptId)] = elementoRUP.params;
 
         // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
@@ -1261,6 +1259,20 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             }
         });
         return results;
+    }
+
+    onChangePrivacy(registro) {
+        this.scopePrivacy = [];
+        this.scopePrivacy = [{label: registro.privacy.scope === 'public' ? 'Activar privacidad' : 'Desactivar privacidad',
+        handler: () => {
+            this.activarPrivacidad(registro);
+        }
+        }];
+    }
+
+    activarPrivacidad(registro) {
+        let scopeCruzado = {'public': 'private', 'private': 'public'};
+        registro.privacy.scope = scopeCruzado[registro.privacy.scope];
     }
 
 }

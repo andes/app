@@ -3,6 +3,10 @@ import { ISnomedConcept } from './snomed-concept.interface';
 import { ObjectID } from 'bson';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
+export class IRegistroPrivacy {
+    scope: String;
+}
+
 export class IPrestacionRegistro {
     id: string;
     idPrestacion: string;
@@ -24,6 +28,8 @@ export class IPrestacionRegistro {
     esDiagnosticoPrincipal: Boolean;
     // Indica si este registro es valido (no vacio)
     valido: Boolean;
+
+    privacy: IRegistroPrivacy;
 
     solicitud: any;
 

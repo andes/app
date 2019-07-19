@@ -60,6 +60,15 @@ export class RUPComponent implements OnInit, AfterViewInit {
      * @memberof RUPComponent
      */
     private loadComponent() {
+        if (this.registro && !this.registro.privacy) {
+            setTimeout(() => {
+                if (this.params && this.params.privacy) {
+                    this.registro.privacy = { scope: this.params.privacy };
+                } else {
+                    this.registro.privacy = { scope: 'public' };
+                }
+            }, 0);
+        }
 
         // Cargamos el componente
         const component = ElementosRUPRegister.get(this.elementoRUP.componente).component;
