@@ -5,6 +5,8 @@ import { Auth } from '@andes/auth';
 import { FacturacionAutomaticaService } from './../../../../services/facturacionAutomatica.service';
 import { ObraSocialService } from './../../../../services/obraSocial.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
+import { ProfesionalService } from '../../../../services/profesional.service';
+import { forkJoin } from 'rxjs';
 @Component({
     selector: 'arancelamiento-form',
     templateUrl: 'arancelamiento-form.html',
@@ -49,10 +51,17 @@ export class ArancelamientoFormComponent implements OnInit {
         public servicioFA: FacturacionAutomaticaService,
         public plex: Plex,
         public organizacionService: OrganizacionService,
+        public profesionalService: ProfesionalService,
         public sanitizer: DomSanitizer) { }
 
     ngOnInit() {
-        this.organizacionService.configuracion(this.auth.organizacion.id).subscribe((config) => {
+        forkJoin([
+            this.organizacionService.configuracion(this.auth.organizacion.id),
+            this.profesionalService.getFirma({ id: this.turno.profesionales[0]._id }),
+            this.servicioFA.get({ conceptId: this.turnoSeleccionado.tipoPrestacion.conceptId })
+        ]).subscribe((data) => {
+            const [config, firma, resultadoFA] = data;
+
             if (config['arancelamiento.firma']) {
                 this.fotoFirma = config['arancelamiento.firma'];
                 this.nombreFirma = config['arancelamiento.nombre'];
@@ -61,9 +70,15 @@ export class ArancelamientoFormComponent implements OnInit {
                 this.aclaracion3Firma = config['arancelamiento.aclaracion3'];
 
             }
-        });
 
-        this.servicioFA.get({ conceptId: this.turnoSeleccionado.tipoPrestacion.conceptId }).subscribe(resultadoFA => {
+            if (firma) {
+                this.fotoFirma = `data:image/png;base64,${firma}`;
+                this.nombreFirma = `${this.turno.profesionales[0].apellido} ${this.turno.profesionales[0].nombre}`;
+                this.aclaracion1Firma = this.efector.substring(0, this.efector.indexOf('-'));
+                this.aclaracion2Firma = '';
+                this.aclaracion3Firma = '';
+            }
+
             if (resultadoFA && resultadoFA.length > 0 && resultadoFA[0].recuperoFinanciero) {
                 this.codigoNomenclador = resultadoFA[0].recuperoFinanciero.codigo;
             } else {
@@ -96,8 +111,16 @@ export class ArancelamientoFormComponent implements OnInit {
 
                 });
             }
-
         });
+        // this.organizacionService.configuracion(this.auth.organizacion.id).subscribe((config) => {
+        // });
+
+        // this.profesionalService.getFirma({ id: this.turno.profesionales[0]._id }).subscribe((firma) => {
+        // });
+
+        // this.servicioFA.get({ conceptId: this.turnoSeleccionado.tipoPrestacion.conceptId }).subscribe(resultadoFA => {
+
+        // });
 
     }
 
