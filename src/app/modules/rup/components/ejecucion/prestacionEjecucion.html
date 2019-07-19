@@ -190,12 +190,11 @@
                                                     </span>
                                                 </div>
                                                 <!-- RUP Loader -->
-                                                <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)"
+                                                <rup [elementoRUP]="elementosRUPService.elementoRegistro(registro)"
                                                      [prestacion]="prestacion" [paciente]="paciente"
                                                      [registro]="registro" [soloValores]="false"
-                                                     (change)="elementosRUPService.selectPorRefsetId(registro.concepto)"
                                                      (ejecutarConcepto)="ejecutarConcepto($event, registro)"
-                                                     [params]="elementosRUPService.coleccionRetsetId[registro.concepto.conceptId]">
+                                                     [params]="elementosRUPService.getParams(registro)">
                                                 </rup>
                                             </div>
                                         </div>

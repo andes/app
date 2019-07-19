@@ -5,6 +5,7 @@ import { IFinanciador } from '../../../interfaces/IFinanciador';
 
 export class IPrestacion {
     id: string;
+    elementoRUP: string;
     // Datos principales del paciente
     paciente: {
         // requirido, validar en middleware

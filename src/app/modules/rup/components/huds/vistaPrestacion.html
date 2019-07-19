@@ -48,6 +48,11 @@
                                 </div>
                             </div>
                             <div class="actions">
+                                <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0"
+                                       class="badge badge-info">
+                                    <b> Relacionado con: </b>
+                                    {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                                </small>
                                 <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">
                                     Procedimiento / diagnóstico principal
                                 </small>
@@ -62,8 +67,8 @@
                             <div class="content">
                                 <div class="row" *ngIf="paciente">
                                     <div class="col-12">
-                                        <rup [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)"
-                                             [params]="elementosRUPService.selectPorRefsetId(elemento.concepto)"
+                                        <rup [elementoRUP]="elementosRUPService.elementoRegistro(elemento)"
+                                             [params]="elementosRUPService.getParams(elemento)"
                                              [prestacion]="prestacion" [registro]="elemento" [paciente]="paciente"
                                              [soloValores]="true" [vistaHUDS]="false">
                                         </rup>

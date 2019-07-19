@@ -46,9 +46,6 @@ export class ConsultaDeNinoSanoM2AComponent extends RUPComponent implements OnIn
                     // Index de las consultas, para poder navegarse (sin uno ahora)
                     this.ultimaConsultaIndex = this.ninoSanoHUDS.length - 1;
 
-                    // Se busca el elemento RUP para armar el árbol de conceptos, etc
-                    const elementoRUP = this.elementosRUPService.buscarElemento(this.registro.concepto, false);
-
                     // Se arma el árbol de conceptos y valores
                     this.ultimaConsulta = this.ninoSanoHUDS[this.ultimaConsultaIndex].ejecucion.registros.find(x =>
                         x.concepto.conceptId === this.registro.concepto.conceptId);

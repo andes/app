@@ -10,6 +10,7 @@ export class IRegistroPrivacy {
 export class IPrestacionRegistro {
     id: string;
     idPrestacion: string;
+    elementoRUP: string;
     // Indica el nombre del registro, calculado por el elementoRUP.
     // Ejemplo: 'Prescripción de novalgina'
     nombre: string;
@@ -44,6 +45,7 @@ export class IPrestacionRegistro {
 
     constructor(elementoRUP: IElementoRUP, snomedConcept: ISnomedConcept) {
         this.id = (new ObjectID()).toString();
+        this.elementoRUP = elementoRUP.id;
         this.nombre = snomedConcept.term;
         this.concepto = snomedConcept;
         this.destacado = false;

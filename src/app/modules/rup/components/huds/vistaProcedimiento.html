@@ -39,10 +39,9 @@
                     <div class="mp-2 mb-2">
                         <b>Registros de la consulta: </b>
                         <rup class="columna-completa align"
-                             [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)"
-                             [prestacion]="prestacion" [paciente]="paciente" [registro]="registro.registros[0]"
-                             [params]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud).params"
-                             [soloValores]="true">
+                             [elementoRUP]="elementosRUPService.elementoRegistro(registro)" [prestacion]="prestacion"
+                             [paciente]="paciente" [registro]="registro.registros[0]"
+                             [params]="elementosRUPService.elementoRegistro(registro).params" [soloValores]="true">
                         </rup>
                         <span
                               [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente, registro, registro.concepto)"></span>

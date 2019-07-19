@@ -13,6 +13,7 @@ const url = '/modules/rup/elementosRUP';
 export class ElementosRUPService {
     // Mantiene un caché de la base de datos de elementos
     public cache: IElementosRUPCache = {};
+    public cacheById: IElementosRUPCache = {};
     // Mantiene un caché de la base de datos de elementos
     private cacheParaSolicitud: IElementosRUPCache = {};
     // Precalcula los elementos default
@@ -42,9 +43,9 @@ export class ElementosRUPService {
         // Precachea la lista completa de elementos RUP
         this.server.get(url).subscribe((data: IElementoRUP[]) => {
             this.cache = {};
-
+            data.forEach(e => this.cacheById[e.id] = e);
             // Precalcula los defaults
-            data.forEach(elementoRUP => {
+            data.filter(e => !e.inactiveAt).forEach(elementoRUP => {
                 elementoRUP.conceptos.forEach((concepto) => {
                     if (elementoRUP.esSolicitud) {
                         this.cacheParaSolicitud[concepto.conceptId] = elementoRUP;
@@ -118,6 +119,39 @@ export class ElementosRUPService {
         return this.put(elementoRup);
     }
 
+
+    /**
+     * Busca el elementoRUP que implemente el concepto o la instancia que fue utilizada en su momento
+     * segun el ID del elementoRUP.
+     *
+     * @param {IPrestacionRegistro} registro Registro de una prestación
+     * @returns {IElementoRUP} Elemento que implementa el concepto
+     * @memberof ElementosRUPService
+     */
+    elementoRegistro(registro) {
+        if (registro.elementoRUP) {
+            return this.cacheById[registro.elementoRUP];
+        } else {
+            return this.buscarElemento(registro.concepto, registro.esSolicitud);
+        }
+    }
+
+    /**
+     * Devuelve los parametros de un elementoRUP.
+     *
+     * @param {IPrestacionRegistro} registro Registro de una prestación
+     * @returns {IElementoRUP} Elemento que implementa el concepto
+     * @memberof ElementosRUPService
+     */
+
+    getParams(registro) {
+        const elem = this.elementoRegistro(registro);
+        if (elem) {
+            return elem.params;
+        }
+        return {};
+    }
+
     /**
      * Busca el elementoRUP que implemente el concepto
      *
@@ -165,15 +199,6 @@ export class ElementosRUPService {
             return this.server.get(url + '/' + id + '/guiada', { showError: true });
         }
     }
-
-    selectPorRefsetId(concepto, esSolicitud) {
-        let elementoRup = this.buscarElemento(concepto, esSolicitud);
-        if (elementoRup) {
-            return elementoRup.params;
-        }
-        return null;
-    }
-
 
     getConceptosInternacion() {
         let conceptosInternacion = {
