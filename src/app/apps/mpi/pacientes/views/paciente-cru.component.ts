@@ -1,25 +1,29 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import * as moment from 'moment';
+import * as enumerados from '../../../../utils/enumerados';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import * as enumerados from './../../../utils/enumerados';
-import * as moment from 'moment';
-import { IContacto } from './../../../interfaces/IContacto';
-import { IDireccion } from '../../../core/mpi/interfaces/IDireccion';
-import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
-import { IProvincia } from './../../../interfaces/IProvincia';
-import { IOrganizacion } from '../../../interfaces/IOrganizacion';
-import { AppMobileService } from './../../../services/appMobile.service';
-import { LocalidadService } from './../../../services/localidad.service';
-import { ProvinciaService } from './../../../services/provincia.service';
-import { PaisService } from './../../../services/pais.service';
-import { PacienteService } from '../../../core/mpi/services/paciente.service';
-import { BarrioService } from '../../../services/barrio.service';
-import { GeoreferenciaService } from '../services/georeferencia.service';
-import { OrganizacionService } from '../../../services/organizacion.service';
-import { HistorialBusquedaService } from '../../../apps/mpi/pacientes/services/historialBusqueda.service';
-import { ParentescoService } from '../../../apps/mpi/pacientes/services/parentesco.service';
-import { PacienteCacheService } from '../../../apps/mpi/pacientes/services/pacienteCache.service';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { IContacto } from '../../../../interfaces/IContacto';
+import { IDireccion } from '../../../../core/mpi/interfaces/IDireccion';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
+import { IPacienteBuscarResultado } from '../interfaces/IPacienteBuscarResultado';
+import { IProvincia } from '../../../../interfaces/IProvincia';
+import { PacienteCacheService } from '../services/pacienteCache.service';
+import { GeoreferenciaService } from '../../../../core/mpi/services/georeferencia.service';
+import { OrganizacionService } from '../../../../services/organizacion.service';
+import { IOrganizacion } from '../../../../interfaces/IOrganizacion';
+import { IPacienteRelacion } from '../../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
+import { BarrioService } from '../../../../services/barrio.service';
+import { LocalidadService } from '../../../../services/localidad.service';
+import { ProvinciaService } from '../../../../services/provincia.service';
+import { PaisService } from '../../../../services/pais.service';
+import { PacienteHttpService } from '../services/pacienteHttp.service';
+import { ValidacionService } from '../services/validacion.services';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { AppMobileService } from '../../../../services/appMobile.service';
+import { ParentescoService } from '../../../mpi/pacientes/services/parentesco.service';
+import { HistorialBusquedaService } from '../services/historialBusqueda.service';
 
 @Component({
     selector: 'paciente-cru',
@@ -27,7 +31,6 @@ import { PacienteCacheService } from '../../../apps/mpi/pacientes/services/pacie
     styleUrls: ['paciente-cru.scss']
 })
 export class PacienteCruComponent implements OnInit {
-
     foto = '';
     estados = [];
     sexos: any[];
@@ -37,6 +40,7 @@ export class PacienteCruComponent implements OnInit {
     parentescoModel: any[];
     relacionesBorradas: any[];
     backUpDatos = [];
+    tipoIdentificacion: any[];
 
     provincias: IProvincia[] = [];
     pacientesSimilares = [];
@@ -118,12 +122,28 @@ export class PacienteCruComponent implements OnInit {
         reportarError: false,
         notaError: ''
     };
+    public relacion: IPacienteRelacion = {
+        relacion: {
+            id: '',
+            nombre: '',
+            opuesto: ''
+        },
+        referencia: '',
+        nombre: '',
+        apellido: '',
+        documento: '',
+        fechaNacimiento: null,
+        sexo: '',
+        foto: ''
+    };
+    public showBuscador = true;
     public disableValidar = true;
     public escaneado = false;
     public paciente: IPaciente;
     public nombrePattern: string;
     public showDeshacer = false;
-    public patronDocumento = /^[1-9]{1}[0-9]{5,7}$/;
+    public pacientes: IPaciente[];
+    public patronDocumento = /^[1-9]{1}[0-9]{6,7}$/;
     // PARA LA APP MOBILE
     public showMobile = false;
     public checkPass = false;
@@ -133,12 +153,14 @@ export class PacienteCruComponent implements OnInit {
     public activarApp = false;
 
     // Google map
-    geoRefOrganizacion = []; // Coordenadas efector
-    geoReferenciaAux = []; // Coordenadas para la vista del mapa.
+    private geoRefOrganizacion = []; // Coordenadas efector
+    geoReferenciaAux = []; // Se utiliza para chequear cambios.
     infoMarcador: String = null;
 
-    opcion: any;
+    public opcion: any;
     origen = '';
+    contactoImportado = false;
+    direccionImportada = false;
 
     constructor(
         private historialBusquedaService: HistorialBusquedaService,
@@ -150,6 +172,8 @@ export class PacienteCruComponent implements OnInit {
         private localidadService: LocalidadService,
         private barriosService: BarrioService,
         private pacienteService: PacienteService,
+        private pacienteHttpService: PacienteHttpService,
+        private validacionService: ValidacionService,
         private parentescoService: ParentescoService,
         public appMobile: AppMobileService,
         private pacienteCache: PacienteCacheService,
@@ -157,23 +181,35 @@ export class PacienteCruComponent implements OnInit {
         public plex: Plex,
         private route: ActivatedRoute) {
         this.nombrePattern = pacienteService.nombreRegEx.source;
+        this.plex.updateTitle([{
+            route: '/mpi',
+            name: 'MPI'
+        }, {
+            name: 'REGISTRO DE PACIENTE'
+        }]);
     }
 
     ngOnInit() {
-        this.updateTitle('Registrar un paciente');
+        this.sexos = enumerados.getObjSexos();
+        this.generos = enumerados.getObjGeneros();
+        this.estadosCiviles = enumerados.getObjEstadoCivil();
+        this.tipoComunicacion = enumerados.getObjTipoComunicacion();
+        this.tipoIdentificacion = enumerados.getObjTipoIdentificacion();
+        this.estados = enumerados.getEstados();
         this.route.params.subscribe(params => {
             this.opcion = params['opcion'];
-            this.origen = params['origen'];
-            this.paciente = this.pacienteCache.getPacienteValor();
-            this.escaneado = this.pacienteCache.getScanState();
-            this.pacienteCache.clearPaciente();
-            this.pacienteCache.clearScanState();
+            if (!this.opcion) {
+                // obtiene el paciente cacheado
+                this.paciente = this.pacienteCache.getPacienteValor();
+                // consulta a la cache si el paciente fue escaneado o no
+                this.escaneado = this.pacienteCache.getScanState();
+            }
         });
-
         if (this.opcion === 'sin-dni') {
             this.noPoseeDNI = true;
             this.pacienteModel.documento = '';
         }
+
         this.relacionesBorradas = [];
         this.organizacionService.getById(this.auth.organizacion.id).subscribe((org: IOrganizacion) => {
             if (org) {
@@ -192,6 +228,12 @@ export class PacienteCruComponent implements OnInit {
                 }
             }
         });
+        // Set País Argentina
+        this.paisService.get({
+            nombre: 'Argentina'
+        }).subscribe(arg => {
+            this.paisArgentina = arg[0];
+        });
         // Cargamos todas las provincias
         this.provinciaService.get({}).subscribe(rta => {
             this.provincias = rta;
@@ -200,18 +242,7 @@ export class PacienteCruComponent implements OnInit {
         this.parentescoService.get().subscribe(resultado => {
             this.parentescoModel = resultado;
         });
-        // Set País Argentina
-        this.paisService.get({
-            nombre: 'Argentina'
-        }).subscribe(arg => {
-            this.paisArgentina = arg[0];
-        });
         this.showCargar = false;
-        this.sexos = enumerados.getObjSexos();
-        this.generos = enumerados.getObjGeneros();
-        this.estadosCiviles = enumerados.getObjEstadoCivil();
-        this.tipoComunicacion = enumerados.getObjTipoComunicacion();
-        this.estados = enumerados.getEstados();
 
     }
 
@@ -220,7 +251,7 @@ export class PacienteCruComponent implements OnInit {
 
             if (this.paciente.id) {
                 // Busco el paciente en mongodb
-                this.pacienteService.getById(this.paciente.id).subscribe(resultado => {
+                this.pacienteHttpService.findById(this.paciente.id, {}).subscribe(resultado => {
 
                     if (resultado) {
                         if (!resultado.scan) {
@@ -267,7 +298,7 @@ export class PacienteCruComponent implements OnInit {
     private updateTitle(nombre: string) {
         this.plex.updateTitle('MPI / ' + nombre);
         this.plex.updateTitle([{
-            route: 'apps/mpi/busqueda',
+            route: 'mpi/lista',
             name: 'MPI'
         }, {
             name: nombre
@@ -579,6 +610,7 @@ export class PacienteCruComponent implements OnInit {
         if (faltaParentezco) {
             this.plex.info('warning', 'Existen relaciones sin parentezco. Completelas antes de guardar', 'Atención');
         } else {
+            this.pacienteCache.setScanState(false);
             this.disableGuardar = true;
             let pacienteGuardar: any = Object.assign({}, this.pacienteModel);
             pacienteGuardar.ignoreCheck = ignoreCheck;
@@ -597,7 +629,7 @@ export class PacienteCruComponent implements OnInit {
                 pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadActual;
             }
 
-            this.pacienteService.save(pacienteGuardar, ignoreCheck).subscribe(
+            this.pacienteHttpService.save(pacienteGuardar).subscribe(
                 (resultadoSave: any) => {
                     // Existen sugerencias de pacientes similares?
                     if (resultadoSave.resultadoMatching && resultadoSave.resultadoMatching.length > 0) {
@@ -618,7 +650,6 @@ export class PacienteCruComponent implements OnInit {
                             this.historialBusquedaService.add(resultadoSave);
                         }
                         this.plex.info('success', 'Los datos se actualizaron correctamente');
-
                         this.redirect(resultadoSave);
                     }
                 },
@@ -626,6 +657,7 @@ export class PacienteCruComponent implements OnInit {
                     this.plex.info('warning', 'Error guardando el paciente');
                 }
             );
+            this.pacienteCache.clearPaciente();
         }
     }
 
@@ -733,6 +765,8 @@ export class PacienteCruComponent implements OnInit {
             this.historialBusquedaService.add(this.paciente);
         }
         this.showMobile = false;
+        this.pacienteCache.clearPaciente();
+        this.pacienteCache.clearScanState();
         this.redirect();
     }
 
@@ -779,7 +813,7 @@ export class PacienteCruComponent implements OnInit {
         }
         this.disableValidar = true;
         this.loading = true;
-        this.pacienteService.validar(this.pacienteModel).subscribe(
+        this.validacionService.validar(this.pacienteModel).subscribe(
             resultado => {
                 this.loading = false;
                 if (resultado.existente) {
@@ -854,5 +888,113 @@ export class PacienteCruComponent implements OnInit {
         }
         this.disableValidar = false;
     }
+
+    searchStart() {
+        this.pacientes = null;
+    }
+
+    searchEnd(resultado: IPacienteBuscarResultado) {
+        if (resultado.err) {
+            this.plex.info('danger', resultado.err);
+            return;
+        }
+        if (resultado.pacientes.length === 1 && resultado.escaneado) {
+            let pacienteScaneado = resultado.pacientes[0];
+            if (!pacienteScaneado.id) {
+                pacienteScaneado.estado = 'validado'; // este paciente fue scaneado
+                pacienteScaneado.genero = pacienteScaneado.sexo;
+                this.plex.showLoader();
+                this.disableGuardar = true;
+                this.pacienteHttpService.save(pacienteScaneado).subscribe(
+                    pacGuardado => {
+                        this.onPacienteSelected(pacGuardado);
+                        this.plex.hideLoader();
+                        this.disableGuardar = false;
+                    },
+                    () => {
+                        this.plex.toast('warning', 'Paciente no guardado', 'Error');
+                        this.plex.hideLoader();
+                        this.disableGuardar = false;
+                    });
+            } else {
+                this.onPacienteSelected(pacienteScaneado);
+            }
+        } else {
+            this.pacientes = resultado.pacientes;
+        }
+
+    }
+
+    searchClear() {
+        this.pacientes = null;
+    }
+
+    onPacienteSelected(pacienteSelected: IPaciente) {
+        if (pacienteSelected) {
+            this.pacienteHttpService.findById(pacienteSelected.id, {}).subscribe(paciente => {
+                // Relacionamos al bebe con su progenitor/a
+                this.relacion.apellido = paciente.apellido;
+                this.relacion.nombre = paciente.nombre;
+                this.relacion.documento = paciente.documento;
+                this.relacion.fechaNacimiento = paciente.fechaNacimiento;
+                this.relacion.sexo = paciente.sexo;
+                this.relacion.foto = paciente.foto ? paciente.foto : null;
+                this.relacion.referencia = paciente.id;
+                let rel = this.parentescoModel.find((elem) => {
+                    if (elem.nombre === 'progenitor/a') {
+                        return elem;
+                    }
+                });
+                this.relacion.relacion = rel;
+                this.pacienteModel.relaciones = [this.relacion];
+
+                /* Si no se cargó ninguna dirección, tomamos el dato de la madre/padre/tutor */
+                this.copiarDireccion(paciente);
+                /* Si no se cargó un contacto, tomamos el dato de la madre/padre/tutor */
+                this.copiarContacto(paciente);
+                this.pacientes = null;
+                this.showBuscador = false;
+            });
+        } else {
+            this.plex.info('warning', 'Imposible obtener el paciente seleccionado', 'Error');
+        }
+    }
+    private copiarContacto(paciente: IPaciente) {
+        if (!paciente.contacto || !paciente.contacto.length) { return; }
+        if (!this.pacienteModel.contacto[0].valor) {
+            this.pacienteModel.contacto[0].valor = paciente.contacto[0].valor;
+            this.pacienteModel.contacto[0].tipo = paciente.contacto[0].tipo;
+            this.contactoImportado = true;
+        }
+    }
+
+    private copiarDireccion(paciente: IPaciente) {
+        if (!paciente.direccion || !paciente.direccion.length) { return; }
+        if (!this.pacienteModel.direccion[0].valor) {
+            this.pacienteModel.direccion[0].valor = paciente.direccion[0].valor;
+            this.direccionImportada = true;
+        }
+        if (!this.pacienteModel.direccion[0].ubicacion.provincia && paciente.direccion[0].ubicacion && paciente.direccion[0].ubicacion.provincia) {
+            this.pacienteModel.direccion[0].ubicacion.provincia = paciente.direccion[0].ubicacion.provincia;
+            this.viveProvActual = (paciente.direccion[0].ubicacion.provincia.id === this.provinciaActual.id);
+            this.direccionImportada = true;
+        }
+        if (!this.pacienteModel.direccion[0].ubicacion.localidad && paciente.direccion[0].ubicacion.localidad) {
+            this.pacienteModel.direccion[0].ubicacion.localidad = paciente.direccion[0].ubicacion.localidad;
+            this.viveLocActual = (paciente.direccion[0].ubicacion.localidad.id === this.localidadActual.id);
+            if (paciente.direccion[0].geoReferencia) {
+                this.pacienteModel.direccion[0].geoReferencia = paciente.direccion[0].geoReferencia;
+            }
+            this.direccionImportada = true;
+        }
+        if (!this.pacienteModel.direccion[0].ubicacion.provincia && !this.pacienteModel.direccion[0].ubicacion.localidad) {
+            this.localidadRequerida = true;
+        }
+        if (!this.pacienteModel.direccion[0].ubicacion.barrio && paciente.direccion[0].ubicacion.barrio) {
+            this.pacienteModel.direccion[0].ubicacion.barrio = paciente.direccion[0].ubicacion.barrio;
+            this.direccionImportada = true;
+        }
+    }
+
 
 }

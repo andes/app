@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
+import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { IPaciente } from '../interfaces/IPaciente';
-import { HistorialBusquedaService } from '../../../apps/mpi/pacientes/services/historialBusqueda.service';
-import { PacienteCacheService } from '../../../apps/mpi/pacientes/services/pacienteCache.service';
+import { PacienteCacheService } from '../services/pacienteCache.service';
+import { HistorialBusquedaService } from '../services/historialBusqueda.service';
 
 @Component({
-    selector: 'busqueda-mpi',
-    templateUrl: 'busqueda-mpi.html'
+    selector: 'paciente-buscador',
+    templateUrl: 'paciente-buscador.html'
 })
-export class BusquedaMpiComponent implements OnInit {
+export class PacienteBuscadorComponent implements OnInit {
     public disableNuevoPaciente = true;
     loading = false;
     resultadoBusqueda: IPaciente[] = [];
@@ -19,11 +19,11 @@ export class BusquedaMpiComponent implements OnInit {
     escaneado: boolean;
 
     constructor(
-        private historialBusquedaService: HistorialBusquedaService,
-        private pacienteCache: PacienteCacheService,
         private plex: Plex,
+        private auth: Auth,
         private router: Router,
-        private auth: Auth
+        private historialBusquedaService: HistorialBusquedaService,
+        private pacienteCache: PacienteCacheService
     ) { }
 
     ngOnInit() {
@@ -60,7 +60,7 @@ export class BusquedaMpiComponent implements OnInit {
         if (escaneado) {
             this.pacienteCache.setPaciente(pacientes[0]);
             this.pacienteCache.setScanState(this.escaneado);
-            this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru
+            this.router.navigate(['/mpi/paciente']);  // abre paciente-cru
         } else {
             this.resultadoBusqueda = pacientes;
         }
@@ -79,7 +79,7 @@ export class BusquedaMpiComponent implements OnInit {
             this.historialBusquedaService.add(paciente);
             this.pacienteCache.setPaciente(paciente);
             this.pacienteCache.setScanState(this.escaneado);
-            this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru
+            this.router.navigate(['/mpi/paciente']);  // abre paciente-cru
         }
     }
 

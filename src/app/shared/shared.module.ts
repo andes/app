@@ -26,7 +26,7 @@ import { GoogleMapComponent } from './components/google-map.component';
         AuthModule,
         CommonModule,
         AgmCoreModule.forRoot({
-            apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
+            apiKey: ''
         })
     ],
     entryComponents: [

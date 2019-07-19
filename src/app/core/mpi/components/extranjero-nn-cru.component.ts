@@ -8,7 +8,6 @@ import { LocalidadService } from '../../../services/localidad.service';
 import { ProvinciaService } from '../../../services/provincia.service';
 import { IProvincia } from '../../../interfaces/IProvincia';
 import { IDireccion } from '../interfaces/IDireccion';
-import { ParentescoService } from '../../../services/parentesco.service';
 import { IContacto } from '../../../interfaces/IContacto';
 import * as enumerados from '../../../utils/enumerados';
 import { PacienteService } from '../services/paciente.service';
@@ -19,6 +18,7 @@ import { OrganizacionService } from '../../../services/organizacion.service';
 import { Auth } from '@andes/auth';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ParentescoService } from '../../../apps/mpi/pacientes/services/parentesco.service';
 
 @Component({
     selector: 'extranjero-nn-cru',

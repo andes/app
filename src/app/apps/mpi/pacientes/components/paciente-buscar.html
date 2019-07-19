@@ -1,0 +1,16 @@
+<div class="row">
+    <div [ngClass]="create ? 'col-9' : 'col-12'">
+        <div class="panel panel-default">
+            <div class="clear"></div>
+            <plex-text [(ngModel)]="textoLibre" (change)="buscar($event)" name='buscador' [autoFocus]="autoFocus"
+                       prefix="<i class='mdi mdi-barcode-scan'></i>"
+                       placeholder="Escanee un documento digital, o escriba un documento / apellido / nombre">
+            </plex-text>
+        </div>
+    </div>
+    <div class="col-3" *ngIf="create">
+        <plex-dropdown [disabled]="disable" [type]="disabled ? 'default' : 'primary'" class="dropdown-inline"
+                       [right]="true" [items]="routes" label="NUEVO PACIENTE">
+        </plex-dropdown>
+    </div>
+</div>

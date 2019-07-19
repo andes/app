@@ -38,11 +38,12 @@ import { DocumentosService } from './services/documentos.service';
 
 // Módulos
 import { SharedModule } from './shared/shared.module';
+import { MPIModule } from '../app/apps/mpi/mpi.module';
 
 // Pipes
 import { ProfesionalPipe } from './pipes/profesional.pipe';
 import { FromNowPipe } from './pipes/fromNow.pipe';
-import { PacientePipe } from './pipes/paciente.pipe';
+// import { PacientePipe } from './pipes/paciente.pipe';
 import { OrganizacionPipe } from './pipes/organizacion.pipe';
 import { SortBloquesPipe } from './pipes/agenda-bloques.pipe';
 import { TextFilterPipe } from './pipes/textFilter.pipe';
@@ -67,7 +68,7 @@ import { PacienteService } from './core/mpi/services/paciente.service';
 import { TipoEstablecimientoService } from './services/tipoEstablecimiento.service';
 import { ProvinciaService } from './services/provincia.service';
 import { FinanciadorService } from './services/financiador.service';
-import { ParentescoService } from './services/parentesco.service';
+import { ParentescoService } from './apps/mpi/pacientes/services/parentesco.service';
 import { ListaEsperaService } from './services/turnos/listaEspera.service';
 import { LogService } from './services/log.service';
 import { LogPacienteService } from './services/logPaciente.service';
@@ -155,11 +156,10 @@ import { HeaderPacienteComponent } from './components/paciente/headerPaciente.co
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { PacienteDetalleComponent } from './components/paciente/paciente-detalle';
 
-import { PacienteBuscarComponent } from './modules/mpi/components/paciente-buscar.component';
-import { PacienteListadoComponent } from './modules/mpi/components/paciente-listado.component';
+// import { PacienteBuscarComponent } from './modules/mpi/components/paciente-buscar.component';
+// import { PacienteListadoComponent } from './modules/mpi/components/paciente-listado.component';
 import { PacientePanelComponent } from './modules/mpi/components/paciente-panel.component';
 import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cru.component';
-import { RelacionesPacientesComponent } from './core/mpi/components/relaciones-pacientes.component';
 import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
 import { PacienteCruComponent } from './core/mpi/components/paciente-cru.component';
 import { GeoreferenciaService } from './core/mpi/services/georeferencia.service';
@@ -493,9 +493,8 @@ import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem
 import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
 import { BebeCruComponent } from './core/mpi/components/bebe-cru.component';
-import { NotaComponent } from './core/mpi/components/notas-paciente.component';
-import { PacienteCacheService } from './core/mpi/services/pacienteCache.service';
-import { HistorialBusquedaService } from './core/mpi/services/historialBusqueda.service';
+// import { PacienteCacheService } from './core/mpi/services/pacienteCache.service';
+// import { HistorialBusquedaService } from './core/mpi/services/historialBusqueda.service';
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { ChartComponent } from './modules/rup/components/elementos/chart.component';
 import { CodificacionService } from './modules/rup/services/codificacion.service';
@@ -528,6 +527,7 @@ registerLocaleData(localeEs, 'es');
         ChartsModule,
         routing,
         SharedModule,
+        MPIModule.forRoot(),
         AgmCoreModule.forRoot({
             apiKey: environment.MAPS_KEY
         }),
@@ -540,7 +540,7 @@ registerLocaleData(localeEs, 'es');
         ProfesionalCreateUpdateComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         PacienteDetalleComponent, DashboardComponent,
-        MapsComponent, ProfesionalPipe, FromNowPipe, PacientePipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
+        MapsComponent, ProfesionalPipe, FromNowPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
         FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe, ReplacePipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, DinamicaFormComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         Html2TextPipe, RelacionRUPPipe,
@@ -585,8 +585,8 @@ registerLocaleData(localeEs, 'es');
         VistaPrestacionComponent,
         VistaCDAComponent,
         HudsBusquedaPacienteComponent,
-        PacienteBuscarComponent,
-        PacienteListadoComponent,
+        // PacienteBuscarComponent,
+        // PacienteListadoComponent,
         PacientePanelComponent,
 
         // RUP
@@ -628,14 +628,12 @@ registerLocaleData(localeEs, 'es');
         ReglasComponent,
         VisualizacionReglasComponent,
         // MPI
-        PacienteBuscarComponent,
-        PacienteListadoComponent,
+        // PacienteBuscarComponent,
+        // PacienteListadoComponent,
         PacientePanelComponent,
         PacientePanelComponent,
         BebeCruComponent,
         ExtranjeroNNCruComponent,
-        NotaComponent,
-        RelacionesPacientesComponent,
         BusquedaMpiComponent,
         PacienteCruComponent,
         BotonesRegistroComponent,
@@ -730,9 +728,9 @@ registerLocaleData(localeEs, 'es');
         SugerenciasService,
         ConfiguracionPrestacionService,
         PrestacionLegacyService,
-        PacienteCacheService,
+        // PacienteCacheService,
         GeoreferenciaService,
-        HistorialBusquedaService,
+        // HistorialBusquedaService,
         CodificacionService,
         ResumenPacienteDinamicoService,
         VacunasService,

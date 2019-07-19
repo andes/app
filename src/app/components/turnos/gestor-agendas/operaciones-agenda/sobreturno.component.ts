@@ -8,7 +8,7 @@ import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
-import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
+import { PacienteCacheService } from '../../../../apps/mpi/pacientes/services/pacienteCache.service';
 
 @Component({
     selector: 'sobreturno',

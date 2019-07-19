@@ -8,7 +8,6 @@ import { LocalidadService } from '../../../services/localidad.service';
 import { ProvinciaService } from '../../../services/provincia.service';
 import { IProvincia } from '../../../interfaces/IProvincia';
 import { IDireccion } from '../interfaces/IDireccion';
-import { ParentescoService } from '../../../services/parentesco.service';
 import { PacienteService } from '../services/paciente.service';
 import { PaisService } from '../../../services/pais.service';
 import { Location } from '@angular/common';
@@ -20,6 +19,7 @@ import { GeoreferenciaService } from '../services/georeferencia.service';
 import * as enumerados from './../../../utils/enumerados';
 import { IContacto } from '../../../interfaces/IContacto';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ParentescoService } from '../../../apps/mpi/pacientes/services/parentesco.service';
 
 @Component({
     selector: 'apps/mpi/bebe',

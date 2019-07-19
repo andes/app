@@ -1,15 +1,6 @@
-import {
-    Component,
-    OnInit,
-    Input,
-    HostBinding,
-    ViewChild,
-    ElementRef,
-    Output,
-    EventEmitter
-} from '@angular/core';
+import { Component, OnInit, Input, HostBinding, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { ParentescoService } from '../../../services/parentesco.service';
+import { ParentescoService } from '../services/parentesco.service';
 import { IPaciente } from '../interfaces/IPaciente';
 
 @Component({

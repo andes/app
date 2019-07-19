@@ -3,7 +3,9 @@ import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
 import { IPaciente } from '../interfaces/IPaciente';
 
-Injectable();
+Injectable({
+    providedIn: 'root',
+});
 export class PacienteCacheService {
 
     private pacienteCache = new BehaviorSubject<any>(null);
