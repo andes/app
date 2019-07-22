@@ -4,7 +4,6 @@
 // The list of which env maps to which file can be found in `angular-cli.json`.
 
 let _package = require('../../package.json');
-import { apiKeys } from './apiKeyMaps';
 
 export const environment = {
   production: false,
