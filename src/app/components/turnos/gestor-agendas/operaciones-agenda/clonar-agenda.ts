@@ -66,9 +66,9 @@ export class ClonarAgendaComponent implements OnInit {
         }
         this.ultimoDiaMes = moment(this.fecha).endOf('month');
         this.primerDiaMes = moment(this.fecha).startOf('month');
-        this.inicioMesMoment = moment(this.fecha).startOf('month').startOf('week');
-        this.inicioMesDate = this.inicioMesMoment.toDate();
-        this.finMesDate = (moment(this.fecha).endOf('month').endOf('week')).toDate();
+        this.inicioMesMoment = moment(this.fecha).startOf('month').startOf('week'); // primera semana que contiene al 1er dia del mes
+        this.finMesDate = (moment(this.fecha).endOf('month').endOf('week')).toDate(); // ultimo dia de la ultima semana del mes
+
         let params = {
             fechaDesde: this.today,
             fechaHasta: this.finMesDate,
@@ -84,14 +84,14 @@ export class ClonarAgendaComponent implements OnInit {
         let dia: any = {};
         this.calendario = [];
         let cantidadSemanas = Math.ceil(moment(this.fecha).endOf('month').endOf('week').diff(moment(this.fecha).startOf('month').startOf('week'), 'weeks', true));
-
         for (let r = 1; r <= cantidadSemanas; r++) {
             let week = [];
             this.calendario.push(week);
+
             for (let c = 1; c <= 7; c++) {
-                this.inicioMesMoment.add(1, 'day');
                 this.inicioMesDate = this.inicioMesMoment.toDate();
                 let indice = -1;
+
                 if (this.seleccionados) {
                     indice = this.seleccionados.indexOf(this.inicioMesDate.getTime());
                 }
@@ -116,13 +116,15 @@ export class ClonarAgendaComponent implements OnInit {
                         original: false
                     };
                 }
-                dia.weekend = this.inicioMesMoment.isoWeekday() === 6 || this.inicioMesMoment.isoWeekday() === 7 ? true : false;
+
+                dia.weekend = this.inicioMesMoment.isoWeekday() >= 6;
                 let isThisMonth = this.inicioMesMoment.isSameOrBefore(this.ultimoDiaMes) && this.inicioMesMoment.isSameOrAfter(this.primerDiaMes);
                 if (isThisMonth) {
                     week.push(dia);
                 } else {
                     week.push({ estado: 'vacio' });
                 }
+                this.inicioMesMoment.add(1, 'day');
             }
         }
     }
