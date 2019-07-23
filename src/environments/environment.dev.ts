@@ -1,11 +1,12 @@
+
 let _package = require('../../package.json');
 import { apiKeys } from './apiKeyMaps';
 
 export const environment = {
-  production: true,
-  environmentName: 'produccion',
-  API: '/api',
-  APIStatusCheck: true,
+  production: false,
+  environmentName: 'development',
+  API: '//localhost:3002/api',
+  APIStatusCheck: false,
   version: _package.version,
-  MAPS_KEY: apiKeys.produccion
+  MAPS_KEY: apiKeys.develop
 };

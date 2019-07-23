@@ -509,6 +509,9 @@ import { PasesListadoInternacionComponent } from './apps/rup/internacion/compone
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
 import { HUDSService } from './modules/rup/services/huds.service';
 
+/** Configuraciones de entorno */
+import { environment } from '../environments/environment';
+
 registerLocaleData(localeEs, 'es');
 
 // Main module
@@ -526,7 +529,7 @@ registerLocaleData(localeEs, 'es');
         ChartsModule,
         routing,
         AgmCoreModule.forRoot({
-            apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
+            apiKey: environment.MAPS_KEY
         }),
     ],
     declarations: [
