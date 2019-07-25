@@ -999,7 +999,7 @@ export class DarTurnosComponent implements OnInit {
 
     enviarSMS(paciente: any) {
         // Enviar SMS sólo en Producción
-        if (environment.production === true) {
+        if (environment.production === true && paciente.telefono) {
             let dia = moment(this.turno.horaInicio).format('DD/MMM');
             let horario = moment(this.turno.horaInicio).format('HH:mm');
             // Inicial del nombre. más Apellidos (Max 20 caracteres)
@@ -1049,7 +1049,7 @@ export class DarTurnosComponent implements OnInit {
                 },
                 err => {
                     if (err) {
-                        this.plex.toast('danger', 'ERROR: Servicio caído');
+                        this.plex.toast('danger', 'Error de servicio');
 
                     }
                 }

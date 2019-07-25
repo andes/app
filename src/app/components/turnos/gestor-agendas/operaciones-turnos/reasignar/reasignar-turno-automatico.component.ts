@@ -241,6 +241,7 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
     }
 
     enviarSMS(paciente: any, mensaje) {
+        if (!paciente.telefono) { return; }
         let smsParams = {
             telefono: paciente.telefono,
             mensaje: mensaje,

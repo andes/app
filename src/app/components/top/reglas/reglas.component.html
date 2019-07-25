@@ -19,9 +19,10 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <plex-select [(ngModel)]="prestacionDestino" name="tipoPrestacion" (getData)="loadTipoPrestaciones($event)"
-                                label="Prestación Destino" placeholder="Tipos de Prestación Destino" [required]="true"
-                                (change)="cargarReglas()">
+                            <plex-select [(ngModel)]="prestacionDestino" name="tipoPrestacion"
+                                         (getData)="loadTipoPrestaciones($event)" label="Prestación Destino"
+                                         placeholder="Tipos de Prestación Destino" [required]="true"
+                                         (change)="cargarReglas()">
                             </plex-select>
                         </div>
                     </div>
@@ -35,12 +36,13 @@
                     </div>
                     <div class="row">
                         <div class="col-10">
-                            <plex-select [(ngModel)]="organizacion" name="organizacion" (getData)="loadOrganizaciones($event)"
-                                placeholder="OrganizacionOrigen">
+                            <plex-select [(ngModel)]="organizacion" name="organizacion"
+                                         (getData)="loadOrganizaciones($event)" placeholder="OrganizacionOrigen">
                             </plex-select>
                         </div>
                         <div class="col-2">
-                            <plex-button icon="plus" type="success btn-sm" title="Agregar Organizacion" (click)="addOrganizacion()">
+                            <plex-button icon="plus" type="success btn-sm" title="Agregar Organización"
+                                         (click)="addOrganizacion()">
                             </plex-button>
                         </div>
                     </div>
@@ -48,10 +50,12 @@
                     <div class="row">
                         <div class="col">
                             <div class="list-group">
-                                <div *ngFor="let regla of reglas; let i=index" class="list-group-item justify-content-between hover"
-                                    [ngClass]="{active: i==reglaActiva}" (click)="activarRegla(i)">
+                                <div *ngFor="let regla of reglas; let i=index"
+                                     class="list-group-item justify-content-between hover"
+                                     [ngClass]="{active: i==reglaActiva}" (click)="activarRegla(i)">
                                     <div>
-                                        <span *ngIf="regla.origen && regla.origen.organizacion">{{regla.origen.organizacion.nombre}}</span>
+                                        <span
+                                              *ngIf="regla.origen && regla.origen.organizacion">{{regla.origen.organizacion.nombre}}</span>
                                     </div>
                                     <plex-button icon="delete" type="primary" (click)="deleteOrganizacion(i)">
                                     </plex-button>
@@ -86,12 +90,13 @@
                     </div>
                     <div class="row">
                         <div class="col-10">
-                            <plex-select [(ngModel)]="prestacionOrigen" name="prestacionOrigen" (getData)="loadTipoPrestaciones($event)"
-                                placeholder="prestacionOrigen">
+                            <plex-select [(ngModel)]="prestacionOrigen" name="prestacionOrigen"
+                                         (getData)="loadTipoPrestaciones($event)" placeholder="prestacionOrigen">
                             </plex-select>
                         </div>
                         <div class="col-2">
-                            <plex-button icon="plus" type="success btn-sm" title="Agregar Prestación" (click)="addPrestacion()">
+                            <plex-button icon="plus" type="success btn-sm" title="Agregar Prestación"
+                                         (click)="addPrestacion()">
                             </plex-button>
                         </div>
                     </div>
@@ -99,14 +104,15 @@
                     <div class="row">
                         <div class="col">
                             <div class="list-group">
-                                <div *ngFor="let prestacion of regla.origen.prestaciones; let i=index" class="list-group-item justify-content-between hover"
-                                    [ngClass]="{active: i==prestacionActiva}" (click)="activarPrestacion(i)">
+                                <div *ngFor="let prestacion of regla.origen.prestaciones; let i=index"
+                                     class="list-group-item justify-content-between hover"
+                                     [ngClass]="{active: i==prestacionActiva}" (click)="activarPrestacion(i)">
                                     <div class="col">
                                         <span *ngIf="prestacion.prestacion?.term">{{prestacion.prestacion.term}}</span>
                                     </div>
                                     <div class="col">
                                         <plex-bool [(ngModel)]="prestacion.auditable" name="prestacionAuditable{{i}}"
-                                            label="Auditable"></plex-bool>
+                                                   label="Auditable"></plex-bool>
                                     </div>
 
                                     <plex-button icon="delete" type="primary" (click)="deletePrestacion(i)">
