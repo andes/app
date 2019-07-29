@@ -1,0 +1,122 @@
+<plex-layout main="8">
+    <plex-layout-main>
+        <ng-container>
+            <header>
+                <div class="page-title">Plantillas de Procedimientos</div>
+            </header>
+            <hr>
+            <div class="row" *ngIf="!procedimiento">
+                <div class="col">
+                    <div class="jumbotron">
+                        <h1 class="display-6">¡Hola!</h1>
+                        <p class="lead"><b>Para crear o editar plantillas RUP seguí los siguientes pasos:</b></p>
+                        <ol class="list-group">
+                            <li class="list-group-item">Buscá conceptos SNOMED en el campo de texto del panel lateral
+                                (acepta búsquedas
+                                parciales)</li>
+                            <li class="list-group-item">Seleccioná el concepto al cual quieras agregar o modificar
+                                plantillas</li>
+                            <li class="list-group-item">Completá los campos "Título" y "Texto del procedimiento"</li>
+                            <li class="list-group-item">Opcionalmente podés elegir seleccionar a todos los descendientes
+                                del concepto.</li>
+                            <li class="list-group-item">Hacé click en "Guardar todos" o el botón con el signo <i
+                                    class="mdi mdi-check"></i> para guardar una plantilla individual</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="procedimiento?.term">
+                <div class="col-12 d-flex justify-content-between align-items-center">
+                    <h4 class="text-capitalize">{{ procedimiento.term }}</h4>
+                    <div class="d-flex justify-content-end" *ngIf="plantillas$">
+                        <plex-button *ngIf="procedimiento" type="warning" label="Cerrar"
+                            (click)="cerrarProcedimiento()">
+                        </plex-button>
+                        <plex-button *ngIf="procedimiento" type="info" label="Agregar plantilla"
+                            (click)="agregarPlantilla(procedimiento)" class="ml-2">
+                        </plex-button>
+                        <!-- <plex-button type="success" label="Guardar todas" (click)="guardarPlantillas()" class="ml-2">
+                        </plex-button> -->
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="procedimiento?.term">
+                <div class="col-12 d-flex justify-content-end align-items-end">
+                    <div *ngIf="plantillas$">
+                        <plex-bool type="slide" label="Aplicar a los descendientes" [(ngModel)]="incluyeDescendientes">
+                        </plex-bool>
+                        <a class="hover mx-2" title="Ver descendientes" titlePosition="left"
+                            (click)="verDescendientes(procedimiento)"><i class="mdi mdi-help-circle"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <ng-container *ngIf="plantillas$">
+                <div class="row" *ngFor="let plantilla of plantillas$ | async; let i = index">
+                    <div class="col-12">
+                        <div></div>
+                        <div class="rup-card procedimiento">
+                            <div class="rup-header">
+                                <div class="icon-rup drag-handle">
+                                    <i class="icon icon-rup-semantic-procedimiento"></i>
+                                </div>
+                                <div class="title text-capitalize">
+                                    Template de: {{ procedimiento.term }}
+                                    <ng-container *ngIf="incluyeDescendientes">
+                                        <plex-badge type="info">se aplica a descendientes</plex-badge>
+                                    </ng-container>
+                                </div>
+                                <div class="actions">
+                                    <plex-button icon="check" type="success" size="sm"
+                                        (click)="guardarPlantilla(plantilla, procedimiento.conceptId)">
+                                    </plex-button>
+                                    <plex-button icon="delete" type="danger" size="sm"
+                                        (click)="eliminarPlantilla(plantilla, i)">
+                                    </plex-button>
+                                </div>
+                            </div>
+                            <div class="rup-body">
+                                <div class="legend drag-handle">
+                                    <span>template de procedimiento</span>
+                                </div>
+                                <div class="content">
+                                    <plex-text label="Título: {{ plantilla.title }}" [(ngModel)]="plantilla.title"
+                                        name="title" [required]="true">
+                                    </plex-text>
+                                    <plex-text label="Texto de item {{ '[' + plantilla.title + ']' }}"
+                                        [(ngModel)]="plantilla.descripcion" name="contenido" [html]="true"
+                                        [height]="100" [readonly]="false" class="w-100" [required]="true">
+                                    </plex-text>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <header>
+            <div class="page-title">Buscar Procedimiento</div>
+        </header>
+        <plex-text [(ngModel)]="searchTerm" name="searchTerm" [debounce]="600" (change)="buscarProcedimiento()"
+            placeholder="Buscar un procedimiento..." autoFocus="true"></plex-text>
+        <plex-loader *ngIf="loading" type="linear"></plex-loader>
+        <plex-list *ngIf="procedimientos" [striped]="true" [selectable]="true">
+            <plex-heading layout="contenido">
+                <b label>ID</b>
+                <b label>Nombre</b>
+                <b label>Tipo</b>
+            </plex-heading>
+            <ng-container *ngFor="let pr of procedimientos">
+                <plex-item class="hover" [botonera]="false" layout="contenido" (click)="cargarPlantillas(pr)">
+                    <plex-label>{{ pr.conceptId }}</plex-label>
+                    <plex-label textTransform="capitalize">{{ pr.term }}</plex-label>
+                    <div>
+                        <span class="badge badge-procedimiento">{{ pr.semanticTag }}</span>
+                    </div>
+                </plex-item>
+            </ng-container>
+        </plex-list>
+    </plex-layout-sidebar>
+</plex-layout>

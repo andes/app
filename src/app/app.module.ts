@@ -513,6 +513,7 @@ import { HUDSService } from './modules/rup/services/huds.service';
 /** Configuraciones de entorno */
 import { environment } from '../environments/environment';
 import { LugarDeNacimientoComponent } from './modules/rup/components/elementos/lugarDeNacimiento.component';
+import { PlantillasRUPComponent } from './apps/rup/plantillas-rup/plantillas-rup.component';
 
 registerLocaleData(localeEs, 'es');
 
@@ -662,6 +663,8 @@ registerLocaleData(localeEs, 'es');
 
         // Buscador de turnos y prestaciones
         TurnosPrestacionesComponent,
+
+        PlantillasRUPComponent,
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],

@@ -13,14 +13,14 @@
                                     <!-- Acciones sobre los registros -->
                                 </div>
                                 <div class="col-3 float-right text-right panel-acciones">
-                                    <button *ngIf="collapse" title="Collapsar los registros" titlePosition="left"
+                                    <button *ngIf="collapse" title="Colapsar los registros" titlePosition="left"
                                         (click)="colapsarPrestaciones('collapse'); collapse = false;"
                                         class="btn btn-primary">
-                                        <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : !collapse}"></i>
+                                        <i class="mdi mdi-chevron-up" [ngClass]="{'spin' : !collapse}"></i>
                                     </button>
                                     <button *ngIf="!collapse" title="Expandir los registros" titlePosition="left"
                                         (click)="colapsarPrestaciones(); collapse = true;" class="btn btn-primary">
-                                        <i class="mdi mdi-chevron-left" [ngClass]="{'spin' : !collapse}"></i>
+                                        <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : !collapse}"></i>
                                     </button>
                                 </div>
                             </div>
@@ -120,33 +120,38 @@
                                                             <i class="mdi mdi-vector-difference-ab"></i>
                                                         </a-->
 
-                                                <plex-button (click)="cambiaValorCollapse(registro.id)" size="sm"
-                                                    type="primary" icon="chevron-down" class="collapse-card">
-                                                    <i class="mdi mdi-chevron-down"
-                                                        [ngClass]="{'spin-in' : !itemsRegistros[registro.id]?.collapse, 'spin-out' : itemsRegistros[registro.id]?.collapse}"></i>
-                                                </plex-button>
 
                                                 <ng-container
                                                     *ngIf="prestacion?.ejecucion?.registros !== null && prestacion?.ejecucion?.registros?.length > 1">
                                                     <plex-dropdown type="primary" class="dropdown-inline" [right]="true"
                                                         icon="link-variant" (onOpen)="cargaItems(registro, i)"
-                                                        [items]="itemsRegistros[registro.id]?.items">
+                                                        [items]="itemsRegistros[registro.id]?.items"
+                                                        title="Relacionar registro" titlePosition="left">
                                                     </plex-dropdown>
                                                 </ng-container>
 
                                                 <ng-container *ngIf="registro.concepto.semanticTag === 'procedimiento'">
                                                     <ng-container
                                                         *ngIf="(ps.plantillas(registro.concepto.conceptId) | async) as plantillas">
-
                                                         <plex-dropdown type="primary" class="dropdown-inline"
-                                                            [right]="true" label="Plantillas" [items]="plantillas"
+                                                            [right]="true" icon="playlist-plus" [items]="plantillas"
+                                                            title="Seleccionar plantilla" titlePosition="left"
                                                             *ngIf="plantillas.length > 0">
                                                         </plex-dropdown>
                                                     </ng-container>
                                                 </ng-container>
 
+                                                <plex-button (click)="cambiaValorCollapse(registro.id)" size="sm"
+                                                    type="primary"
+                                                    icon="{{ itemsRegistros[registro.id]?.collapse ? 'chevron-down' : 'chevron-up'}}"
+                                                    class="collapse-card"
+                                                    title="{{ itemsRegistros[registro.id]?.collapse ? 'Expandir' : 'Colapsar'}}"
+                                                    titlePosition="left">
+                                                </plex-button>
+
                                                 <plex-button *ngIf="!existe(registro.concepto);" size="sm" type="danger"
-                                                    icon="delete" (click)="confirmarEliminarRegistro(registro, 'card')">
+                                                    icon="delete" (click)="confirmarEliminarRegistro(registro, 'card')"
+                                                    title="Eliminar registro" titlePosition="left">
                                                 </plex-button>
                                             </div>
                                         </div>

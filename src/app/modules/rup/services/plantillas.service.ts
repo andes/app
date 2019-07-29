@@ -12,6 +12,7 @@ export class PlantillasService {
 
     private url = '/modules/rup/plantillas';  // URL to web api
     private cache = {};
+    // savedText: any;
     constructor(private server: Server, public auth: Auth, public cos: ConceptObserverService) { }
 
     get(conceptId): Observable<any> {
@@ -28,20 +29,40 @@ export class PlantillasService {
                 profesional: this.auth.profesional && this.auth.profesional.id
             };
             return this.server.get(this.url, { params }).pipe(map(plantillas => {
-                this.cache[conceptId].next(plantillas.map(p => {
-                    return {
-                        ...p,
-                        label: p.title,
-                        handler: this.handlerDropDown(conceptId, p)
-                    };
-                }));
-                return plantillas;
+                if (plantillas.length > 0) {
+                    plantillas = [...plantillas,
+                    // { title: 'Reestablecer', handler: this.reestablecerTextoOriginal(conceptId) },
+                    { title: 'Limpiar', handler: this.limpiarTextoPlantilla(conceptId), descripcion: '' }];
+                    this.cache[conceptId].next(plantillas.map(p => {
+                        return {
+                            ...p,
+                            label: p.title,
+                            handler: this.handlerDropDown(conceptId, p)
+                        };
+                    }));
+                    return plantillas;
+                } else {
+                    return null;
+                }
             }));
         }
 
     }
 
+    post(data): Observable<any> {
+        return this.server.post(`${this.url}`, { body: data });
+    }
+
+    patch(plantillaId, data): Observable<any> {
+        return this.server.patch(`${this.url}/${plantillaId}`, { body: data });
+    }
+
+    delete(plantillaId): Observable<any> {
+        return this.server.delete(`${this.url}/${plantillaId}`);
+    }
+
     handlerDropDown(conceptId, plantilla) {
+        // this.savedText = plantilla.decripcion;
         return () => {
             this.cos.notify({ conceptId } as any, { valor: plantilla.descripcion } as any);
         };
@@ -54,5 +75,18 @@ export class PlantillasService {
         }
         return this.cache[conceptId];
     }
+
+    limpiarTextoPlantilla(conceptId) {
+        return () => {
+            this.cos.notify({ conceptId } as any, { valor: '' } as any);
+        };
+    }
+
+    // reestablecerTextoOriginal(conceptId) {
+    //     return () => {
+    //         this.cos.notify({ conceptId } as any, { valor: this.savedText } as any);
+    //     };
+
+    // }
 
 }

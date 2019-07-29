@@ -185,6 +185,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                             name: this.prestacion && this.prestacion.solicitud.tipoPrestacion.term ? this.prestacion.solicitud.tipoPrestacion.term : ''
                         }]);
 
+
                         // this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
                         // Si la prestación está validada, navega a la página de validación
                         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
@@ -218,6 +219,9 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                             // Muestra los registros (y los colapsa)
                             this.mostrarDatosEnEjecucion();
 
+                            this.prestacion.ejecucion.registros.map(x => {
+                                this.ps.get(x.concepto.conceptId).subscribe(() => { });
+                            });
 
                             if (this.elementoRUP.requeridos.length > 0) {
                                 for (let elementoRequerido of this.elementoRUP.requeridos) {
@@ -1082,7 +1086,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         if (this.itemsRegistros[indice]) {
             this.itemsRegistros[indice].collapse = !this.itemsRegistros[indice].collapse;
         }
-        this.registrosColapsados();
+        // this.registrosColapsados();
     }
 
     colapsarPrestaciones(option = 'expand') {
