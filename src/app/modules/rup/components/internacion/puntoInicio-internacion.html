@@ -30,7 +30,7 @@
         </table>
     </plex-layout-main>
     <!-- Sidebar -->
-    <plex-layout-sidebar>
+    <plex-layout-sidebar type="invert">
         <header>
             <h5 class="text-info">Detalle del Paciente</h5>
         </header>
@@ -97,9 +97,9 @@
                                         {{epicrisis.solicitud.fecha | fecha}}
                                     </td>
                                     <td>
-                                        <ng-container *ngIf="epicrisis.ejecucion.registros[0]?.registros">
+                                        <ng-container *ngIf="epicrisis.ejecucion.registros.length > 0 && epicrisis.ejecucion.registros[0] && epicrisis.ejecucion.registros[0].registros.length > 0">
                                             <span>
-                                                {{ epicrisis.ejecucion.registros[0].registros[0].valor | html }}
+                                                {{ epicrisis.ejecucion.registros[0].registros[0].valor | html }}...
                                             </span>
                                         </ng-container>
                                     </td>

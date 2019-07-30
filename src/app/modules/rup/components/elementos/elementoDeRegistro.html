@@ -58,6 +58,10 @@
                                     <span class="badge badge-{{ (registro.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(registro.concepto) }}">
                                         {{!registro.esSolicitud ? registro.concepto.semanticTag : 'solicitud'}}
                                     </span>
+                                    <span class="badge badge-info ml-1" *ngIf='registro.esPrimeraVez && prestacion.estados[prestacion.estados.length - 1].tipo === "validada"'>
+                                        Es primera vez
+                                        
+                                    </span>
                                     <a *ngIf="!soloValores" href="javascript:void(0);" title="Quitar de la consulta"
                                         (click)="confirmarEliminarRegistro(registro, 'card')" class="btn btn-sm btn-danger eliminar">
                                         <i class="mdi mdi-delete"></i>

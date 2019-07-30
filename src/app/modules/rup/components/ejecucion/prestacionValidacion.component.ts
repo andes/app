@@ -8,13 +8,13 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { DocumentosService } from './../../../../services/documentos.service';
-import { IElementoRUP } from '../../interfaces/elementoRUP.interface';
 import { Slug } from 'ng2-slugify';
 import { saveAs } from 'file-saver';
 import * as moment from 'moment';
 import 'rxjs/Rx';
 import { CodificacionService } from '../../services/codificacion.service';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
+import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -119,6 +119,10 @@ export class PrestacionValidacionComponent implements OnInit {
     ) {
     }
 
+    get validada() {
+        return this.prestacion && this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada';
+    }
+
     ngOnInit() {
         // consultamos desde que pagina se ingreso para poder volver a la misma
         this.btnVolver = 'Volver';
@@ -154,6 +158,10 @@ export class PrestacionValidacionComponent implements OnInit {
         return false;
     }
 
+    get registros() {
+        return [...this.c2Array, ...this.prestacion.ejecucion.registros];
+    }
+    public c2Array = [];
     inicializar(id) {
 
         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
@@ -205,21 +213,63 @@ export class PrestacionValidacionComponent implements OnInit {
                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                     this.paciente = paciente;
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
+                    let registros = this.prestacion.ejecucion.registros;
 
-                    this.prestacion.ejecucion.registros.forEach(registro => {
+                    function puederSerC2(registro) {
+                        return (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'situacion');
+                    }
 
-                        if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'situacion') {
+                    if (['73761001', '2341000013106'].indexOf(prestacion.solicitud.tipoPrestacion.conceptId) >= 0 && this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada') {
+                        prestacion.ejecucion.registros[0].registros.forEach(r => {
+                            // Excluimos Pautas de Alarmas. Porque son hallazgos de alarmas y no presentes.
+                            if (r.concepto.conceptId !== '900000000000003001') {
+                                if (r.registros.length > 0) {
+                                    this.c2Array = [...this.c2Array, ...r.registros];
+                                }
+                            }
+                        });
+                        this.c2Array = this.c2Array.filter(puederSerC2);
+                        // let arrayOrdenado = c2Array.concat(this.prestacion.ejecucion.registros);
+                        // this.prestacion.ejecucion.registros = arrayOrdenado;
+                        const subscriptions = [];
+                        for (let index = 0; index < this.c2Array.length; index++) {
                             let parametros = {
-                                conceptId: registro.concepto.conceptId,
+                                conceptId: this.c2Array[index].concepto.conceptId,
                                 paciente: this.paciente,
-                                secondaryConcepts: this.prestacion.ejecucion.registros.map(r => r.concepto.conceptId)
+                                secondaryConcepts: this.c2Array.map(x => x.concepto.conceptId)
                             };
-                            this.codigosCie10[registro.id] = {};
-                            this.SNOMED.getCie10(parametros).subscribe(codigo => {
-                                this.codigosCie10[registro.id] = codigo;
-                            });
+                            this.codigosCie10[this.c2Array[index].id] = {};
+                            subscriptions.push(this.SNOMED.getCie10(parametros));
                         }
-                    });
+
+                        forkJoin(subscriptions).subscribe((codigos: any[]) => {
+                            for (let index = 0; index < this.c2Array.length; index++) {
+                                if (!codigos[index].c2) {
+                                    this.c2Array.splice(index, 1);
+                                    index--;
+                                } else {
+                                    this.codigosCie10[this.c2Array[index].id] = codigos[index];
+                                }
+                            }
+                        });
+
+                    } else {
+                        registros.forEach(registro => {
+
+                            if (puederSerC2(registro)) {
+                                let parametros = {
+                                    conceptId: registro.concepto.conceptId,
+                                    paciente: this.paciente,
+                                    secondaryConcepts: this.prestacion.ejecucion.registros.map(r => r.concepto.conceptId)
+                                };
+                                this.codigosCie10[registro.id] = {};
+                                this.SNOMED.getCie10(parametros).subscribe(codigo => {
+                                    this.codigosCie10[registro.id] = codigo;
+                                });
+                            }
+                        });
+                    }
+
 
                 });
             }
@@ -281,6 +331,9 @@ export class PrestacionValidacionComponent implements OnInit {
             if (!validar) {
                 return false;
             } else {
+                // if (['73761001', '2341000013106'].indexOf(this.prestacion.solicitud.tipoPrestacion.conceptId) >= 0) {
+                //     this.prestacion.ejecucion.registros = [this.prestacion.ejecucion.registros[this.prestacion.ejecucion.registros.length - 1]];
+                // }
 
                 // cargar los conceptos mas frecuentes por profesional y tipo de prestación
                 // Se copian los registros de la ejecución actual, para agregarle la frecuencia
@@ -356,6 +409,7 @@ export class PrestacionValidacionComponent implements OnInit {
                     this.route.params.subscribe(params => {
                         // Vamos a cambiar el estado de la prestación a ejecucion
                         this.servicioPrestacion.patch(this.prestacion._id || params['id'], cambioEstado).subscribe(prestacion => {
+
                             this.prestacion = prestacion;
                             // chequeamos si es no nominalizada si
                             if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {

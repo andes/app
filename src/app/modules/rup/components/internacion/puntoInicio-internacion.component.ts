@@ -10,7 +10,6 @@ import { Auth } from '@andes/auth';
     selector: 'app-punto-inicio-internacion',
     templateUrl: './puntoInicio-internacion.html',
     styleUrls: ['./puntoInicio-internacion.scss'],
-    encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 export class PuntoInicioInternacionComponent implements OnInit {
 
@@ -74,9 +73,9 @@ export class PuntoInicioInternacionComponent implements OnInit {
         });
         this.servicioPrestacion.getPrestacionesXtipo(paciente.id, this.conceptosInternacion.epicrisis.conceptId).subscribe(epicrisis => {
             this.epicrisisPaciente = epicrisis
-                .map(e => {
-                    if (e.ejecucion.registros && e.ejecucion.registros[0] && e.ejecucion.registros[0].registros) {
-                        e.ejecucion.registros[0].registros[0].valor = e.ejecucion.registros[0].registros[0].valor.substring(0, 100) + '...';
+            .map(e => {
+                    if (e.ejecucion.registros.length > 0 && e.ejecucion.registros[0] && e.ejecucion.registros[0].registros.length > 0) {
+                        e.ejecucion.registros[0].registros[0].valor = e.ejecucion.registros[0].registros[0].valor.substring(0, 100);
                     }
                     return e;
                 });
