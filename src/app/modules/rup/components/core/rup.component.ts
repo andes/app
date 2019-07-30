@@ -94,6 +94,10 @@ export class RUPComponent implements OnInit, AfterViewInit {
         componentReference.instance['ejecutarConcepto'].subscribe(value => {
             this.emitEjecutarConcepto(value);
         });
+        // Event bubbling
+        componentReference.instance['ejecutarAccion'].subscribe((value, datos) => {
+            this.emitEjecutarAccion(value, datos);
+        });
 
         // Inicia el detector de cambios
         componentReference.changeDetectorRef.detectChanges();
@@ -176,6 +180,13 @@ export class RUPComponent implements OnInit, AfterViewInit {
         this.ejecutarConcepto.emit(concepto);
     }
 
+    public emitEjecutarAccion(evento, datos) {
+        // this.prepareEmit();
+
+        // Notifica al componente padre del cambio
+        this.ejecutarAccion.emit({ evento, datos });
+    }
+
 
     /**
     * Devuelve los mensajes de los atomos, moleculas, formulas, etc.
@@ -184,7 +195,6 @@ export class RUPComponent implements OnInit, AfterViewInit {
     * @memberof RUPComponent
     */
     public getMensajes() { }
-
 
     /**
      *

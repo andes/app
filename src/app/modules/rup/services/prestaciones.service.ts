@@ -922,4 +922,16 @@ export class PrestacionesService {
         return this.server.get(this.prestacionesUrl + '/sincama', { params: params, showError: true });
     }
 
+    getFriendlyName(registro) {
+        let nombre = (registro && registro.concepto && registro.concepto.term) ? registro.concepto.term : '';
+
+        // Odontograma?
+        if (registro && registro.cara) {
+            nombre = `Diente ${nombre} (${registro.cara !== 'pieza completa' ? registro.cara : `cara ${registro.cara}`})`;
+        }
+
+        return nombre;
+
+    }
+
 }

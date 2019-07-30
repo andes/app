@@ -35,8 +35,6 @@ $rup_colors: (problema: $problema,
     solicitud: $solicitud,
     plan: $solicitud,
     producto: $producto,
-    'medicamento.clínico': $producto,
-    'objeto.físico': $producto,
     adjunto: $adjunto,
     vacuna: $vacuna,
     elemento: $registro,
@@ -55,11 +53,27 @@ $rup_colors: (problema: $problema,
     border: 1px solid !important;
 }
 
-.btn-icon-relacion {
-    padding: .15rem;
+// Items
+@mixin selected($color) {
+    border: 1px solid $color;
+    background: transparentize($color, .90);
 }
 
-// Hacer que los badges sean del mismo ancho, más legibles cuando son muchos
-.badge-170 {
-    min-width: 170px;
+@each $tag,
+$color in $rup_colors {
+    .selected.selected-#{$tag} {
+        @include selected($color);
+    }
+}
+
+.join-items {
+    .join-line {
+        width: 2px;
+        height: 100%;
+        background: #0275d8;
+        z-index: 0;
+        position: absolute;
+        left: 45%;
+        top: 20px;
+    }
 }

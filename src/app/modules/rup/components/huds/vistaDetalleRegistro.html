@@ -1,0 +1,120 @@
+<ng-container class="" *ngIf="detalleConcepto && tipo === 'odontograma'">
+    <div justify class="w-100">
+        <div class="w-25 mr-4">
+            <div class="card d-flex align-items-center justify-content-center">
+                <svg class="card-img-top" *ngIf="true" xmlns="http://www.w3.org/2000/svg"
+                     xmlns:xlink="http://www.w3.org/1999/xlink" id="cuadrante-sup-der" width="200px" height="200px"
+                     x="0px" y="0px" baseProfile="basic" version="1.1" viewBox="0 0 50 50" xml:space="preserve">
+                    <!-- DISTAL/MESIAL -->
+                    <path d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966c0,5.845,2.369,11.137,6.2,14.967l9.34-9.34C18.933,31.687,18.042,29.698,18.042,27.5z"
+                          class="diente {{ detalleConcepto.cara }}" data-id="{{ detalleConcepto.cara }}"
+                          [ngClass]="(detalleConcepto.cara === 'distal' && !esCuadranteIzquierdo(detalleConcepto.caraCuadrante)) || (detalleConcepto.cara === 'mesial' && esCuadranteIzquierdo(detalleConcepto.caraCuadrante)) ? 'diente-' + detalleConcepto?.relacion?.concepto?.semanticTag : ''" />
+
+                    <!-- VESTIBULAR/LINGUAL -->
+                    <path d="M26,19.542c2.197,0,4.187,0.891,5.627,2.331l9.34-9.339c-3.831-3.831-9.122-6.2-14.967-6.2c-5.845,0-11.137,2.369-14.967,6.2l9.339,9.339C21.813,20.433,23.802,19.542,26,19.542z"
+                          class="diente {{ detalleConcepto.cara }}"
+                          [ngClass]="(detalleConcepto.cara === 'vestibular' && !esCuadranteInferior(detalleConcepto.caraCuadrante)) || (detalleConcepto.cara === 'lingual' && esCuadranteInferior(detalleConcepto.caraCuadrante)) ? 'diente-' + detalleConcepto?.relacion?.concepto?.semanticTag : ''"
+                          title="" />
+
+                    <!-- MESIAL/DISTAL -->
+                    <path d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
+                          class="diente {{ detalleConcepto.cara }}"
+                          [ngClass]="((detalleConcepto.cara === 'mesial' && !esCuadranteIzquierdo(detalleConcepto.caraCuadrante)) || (detalleConcepto.cara === 'distal' && esCuadranteIzquierdo(detalleConcepto.caraCuadrante))) ? 'diente-' + detalleConcepto?.relacion?.concepto?.semanticTag : ''"
+                          title="" />
+
+                    <!-- PALATINA/VESTIBULAR -->
+                    <path d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z"
+                          class="diente {{ detalleConcepto.cara }}"
+                          [ngClass]="(detalleConcepto.cara === 'palatina' && !esCuadranteInferior(detalleConcepto.caraCuadrante)) || (detalleConcepto.cara === 'vestibular' && esCuadranteInferior(detalleConcepto.caraCuadrante)) ? 'diente-' + detalleConcepto?.relacion?.concepto?.semanticTag : ''"
+                          title="" />
+
+                    <!-- OCLUSAL -->
+                    <path d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z"
+                          class="diente {{ detalleConcepto.cara }}"
+                          [ngClass]="detalleConcepto.cara === 'oclusal' ? 'diente-' + detalleConcepto?.relacion?.concepto?.semanticTag : ''"
+                          title="oclusal" />
+
+                    <!-- PIEZA COMPLETA -->
+                    <g class="pieza" title="pieza completa">
+                        <!-- Círculo MINI -->
+                        <circle class="evolucionada" cx="46.285" cy="7.311" r="5.801"
+                                [ngClass]="detalleConcepto?.cara === 'pieza' ? 'diente-' + detalleConcepto?.relacion?.concepto?.semanticTag : ''">
+                        </circle>
+                    </g>
+                    <!-- Círculo GRANDE -->
+                    <circle *ngIf="true" cx="26" cy="27.5" r="22.246"
+                            [ngClass]="detalleConcepto?.cara === 'pieza' ? 'diente-' + detalleConcepto?.relacion?.concepto?.semanticTag + '-outline' : ''">
+                    </circle>
+                </svg>
+                <div class="card-body d-flex justify-content-center mt-4">
+                    <h5 class="card-title">Diente {{ detalleConcepto.concepto.term }} - ({{ detalleConcepto.cara }})
+                    </h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-75" *ngIf="historial.length > 0">
+
+            <div class="w-100" justify>
+                <div class="col-2 font-weight-bold">Historial</div>
+                <div class="col font-weight-bold">Registro</div>
+                <div class="col-3 font-weight-bold">Profesional</div>
+                <div class="col-2 font-weight-bold">Tipo</div>
+            </div>
+            <ng-container *ngFor="let registro of relaciones; let i=index">
+                <div *ngIf="registro?.concepto" class="w-100 hover pr-3" justify
+                     [ngClass]="(estaSeleccionado(registro, detalleConcepto) ? 'selected selected-' + registro.semanticTag : 'dummy-border')"
+                     (mouseenter)="mostrarRegistro(i)">
+                    <div class="col-2 d-flex align-items-center mr-1">
+                        <span class="badge badge-primary" *ngIf="registro?.updatedAt">
+                            {{ registro?.updatedAt | date:'dd/mm/yyyy HH:mm' }}
+                            <span class="join-items" *ngIf="i < relaciones.length-1">
+                                <span class="join-line"></span>
+                            </span>
+                        </span>
+                        <span class="badge badge-primary" *ngIf="!registro?.updatedAt">
+                            {{ registro?.createdAt | date:'dd/mm/yyyy HH:mm' }}
+                            <span class="join-items">
+                                <span class="join-line"></span>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="col text-capitalize line-height-12 d-flex align-items-center">
+                        <small>
+                            {{ registro.term }}
+                        </small>
+                    </div>
+                    <div class="col-3 text-capitalize">
+                        <small>
+                            {{ registro.profesional | profesional }}
+                        </small>
+                    </div>
+                    <div class="col-2 d-flex align-items-center">
+                        <span class="badge badge-{{ registro?.semanticTag }}">
+                            {{ registro?.semanticTag }}
+                        </span>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+        <!-- <plex-list class="w-75" [striped]="true">
+                    <plex-heading>
+                        <b label>Historial</b>
+                        <b label>Concepto</b>
+                        <b label>Profesional</b>
+                        <b label>Tipo</b>
+                    </plex-heading>
+                    <plex-item *ngFor="let registro of relaciones; let i=index">
+                        <plex-label *ngIf="registro?.updatedAt">{{ registro.updatedAt | fecha }}</plex-label>
+                        <plex-label *ngIf="!registro?.updatedAt">{{ registro.createdAt | fecha }}</plex-label>
+                        <plex-label [tituloBold]="false" [titulo]="detalleConcepto.relacion.concepto.term">
+                        </plex-label>
+                        <plex-label>
+                            {{ registro.profesional | profesional }}
+                        </plex-label>
+                        <span badge class="badge badge-{{ registro.semanticTag }}">
+                            {{ registro.semanticTag }}</span>
+                    </plex-item>
+                </plex-list> -->
+    </div>
+</ng-container>

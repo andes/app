@@ -209,5 +209,15 @@ export class ElementosRUPService {
         return conceptosInternacion;
     }
 
+    desvincularOdontograma(registrosRelacionados, regitroActual, registroId) {
+        if (registrosRelacionados[registroId] && registrosRelacionados[registroId].cara) {
+            const cara = registrosRelacionados[registroId].cara;
+            const term = registrosRelacionados[registroId].concepto.term;
+            return regitroActual.relacionadoCon.filter(rr => rr.cara !== cara || rr.concepto.term !== term);
+        } else {
+            return regitroActual.relacionadoCon;
+        }
+    }
+
 
 }
