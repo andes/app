@@ -134,14 +134,13 @@ export class PlantillasRUPComponent implements OnInit {
             this.sp.post(body).subscribe(result => {
                 if (result.id) {
                     this.cargarPlantillas(this.procedimiento);
-                    this.plex.toast('success', 'Se guardó la plantilla correctamente', 'Plantillas RUP');
+                    this.plex.toast('success', 'La plantilla se guardó correctamente', 'Plantillas RUP');
                 }
             });
         }
     }
 
     generarExpression(conceptId: any, incluyeDescendientes: boolean) {
-        // console.log(incluyeDescendientes ? `<<${conceptId}` : `${conceptId}`);
         return incluyeDescendientes ? `<<${conceptId}` : `${conceptId}`;
     }
 
@@ -150,8 +149,6 @@ export class PlantillasRUPComponent implements OnInit {
     }
 
     verDescendientes(procedimiento) {
-        // debugger;
-        this.mostrarDescendientes = true;
         this.snomedService.getQuery({ expression: `<<${procedimiento.conceptId}`, semanticTag: ['procedimiento'] }).subscribe(result => {
             this.descendientes = result;
             this.plex.info('info', result.map(x => { return `<small class="d-block w-100 text-capitalize text-left ">${x.term}</small>`; }).join(''),
@@ -163,7 +160,6 @@ export class PlantillasRUPComponent implements OnInit {
 
     guardarPlantillas() {
         this.plantillas$.map(pl => {
-            // console.log(pl);
             this.guardarPlantilla(pl, this.procedimiento.conceptId);
         });
     }
@@ -199,11 +195,6 @@ export class PlantillasRUPComponent implements OnInit {
 
         this.addElementToObservableArray(plantilla);
     }
-
-    // actualizarEstado(idPlantilla) {
-    //     const idx = this.botones.findIndex(x => x === idPlantilla);
-    //     this.botones.splice(idx, 1);
-    // }
 
     cerrarProcedimiento() {
         this.procedimiento = null;
