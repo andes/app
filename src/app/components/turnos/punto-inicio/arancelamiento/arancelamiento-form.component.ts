@@ -94,7 +94,7 @@ export class ArancelamientoFormComponent implements OnInit {
                     this.imprimir();
                     this.volverAPuntoInicio.emit();
                 }, 100);
-            } else {
+            } else if (this.turnoSeleccionado.paciente.documento) {
                 this.servicioOS.get({ dni: this.turnoSeleccionado.paciente.documento }).subscribe(resultado => {
                     if (resultado && resultado.length > 0) {
                         this.obraSocial = resultado[0].financiador;

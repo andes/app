@@ -58,29 +58,40 @@ export class DinamicaFormComponent implements OnInit {
     onPacienteSelected(paciente: IPaciente) {
         this.pacienteActivo = paciente;
         this.pacientes = null;
-        if (paciente.id) {
+        if (paciente) {
             this.obraSocialPaciente = null;
-            this.obraSocialService.getObrasSociales({ dni: paciente.documento, sexo: paciente.sexo }).subscribe((resultado: IFinanciador[]) => {
-                if (resultado.length > 0) {
-                    this.obraSocialPaciente = resultado[0];
-                }
-
-                let pacienteSave = {
-                    id: paciente.id,
-                    documento: paciente.documento,
-                    apellido: paciente.apellido,
-                    nombre: paciente.nombre,
-                    alias: paciente.alias,
-                    fechaNacimiento: paciente.fechaNacimiento,
-                    sexo: paciente.sexo,
-                    obraSocial: this.obraSocialPaciente
-                };
-                this.datosTurno.paciente = pacienteSave;
-            });
+            if (paciente.id && paciente.documento) {
+                this.obraSocialService.getObrasSociales(paciente.documento).subscribe(
+                    (resultado: IFinanciador[]) => {
+                        if (resultado.length > 0) {
+                            this.obraSocialPaciente = resultado[0];
+                        }
+                        this.setPacienteTurno(paciente);
+                    },
+                    () => {
+                        this.setPacienteTurno(paciente);
+                    });
+            } else {
+                this.setPacienteTurno(paciente);
+            }
 
         } else {
             this.plex.info('warning', 'El paciente debe ser registrado en MPI');
         }
+    }
+
+    private setPacienteTurno(paciente: IPaciente) {
+        let pacienteSave = {
+            id: paciente.id,
+            documento: paciente.documento,
+            apellido: paciente.apellido,
+            nombre: paciente.nombre,
+            alias: paciente.alias,
+            fechaNacimiento: paciente.fechaNacimiento,
+            sexo: paciente.sexo,
+            obraSocial: this.obraSocialPaciente
+        };
+        this.datosTurno.paciente = pacienteSave;
     }
 
     cancelar($event) {
