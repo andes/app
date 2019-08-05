@@ -630,4 +630,17 @@ export class PuntoInicioComponent implements OnInit {
             turno.paciente && turno.diagnostico.codificaciones.length === 0;
     }
 
+    /**
+     * Verifica que una prestación haya sido validada por el usuario de sesión.
+     *
+     * @param {*} prestacion
+     * @returns
+     * @memberof PuntoInicioComponent
+     */
+    esPrestacionValidadaPorAuthUser(prestacion) {
+        const estado = prestacion.estados[prestacion.estados.length - 1];
+        return estado.tipo === 'validada' && estado.createdBy.documento === this.auth.usuario.documento;
+    }
+
+
 }
