@@ -1,10 +1,11 @@
-import { Observable } from 'rxjs';
+import { Observable, pipe } from 'rxjs';
 import { PacienteSearch } from '../../../interfaces/pacienteSearch.interface';
 import { IPaciente } from '../interfaces/IPaciente';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { ICarpetaPaciente } from '../../../interfaces/ICarpetaPaciente';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class PacienteService {
@@ -37,13 +38,13 @@ export class PacienteService {
      * @memberof PacienteService
      */
     getMatch(params: PacienteSearch): Observable<IPacienteMatch[]> {
-        return this.server.get(this.pacienteUrl, { params: params, showError: true }).map((value) => {
+        return this.server.get(this.pacienteUrl, { params: params, showError: true }).pipe(map((value) => {
             if (params.type === 'simplequery') {
                 return value.map((i) => ({ paciente: i, id: i.id, match: 100 }));
             } else {
                 return value;
             }
-        });
+        }));
     }
 
     // Búsqueda tipo SEARCH por elastic según condiciones.

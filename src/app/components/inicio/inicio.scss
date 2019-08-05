@@ -119,6 +119,30 @@ $andes-naranja-claro: #f4a03b;
     }
 }
 
-.andes-inicio > div {
-    
-}
+.contenedor-marca-h {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+
+    [svgLogo] {
+        height: 7.5rem;
+    }
+
+    div.bloque-texto {
+        [svgAcronimo] {
+            width: 100%;
+        }
+
+        .suffix-provincia {
+            letter-spacing: 0.9rem;
+            font-size: 2.5vw;
+            font-weight: 400;
+            text-align: right;
+            text-transform: uppercase;
+            margin-right: -0.9rem;
+            color: var(--nav-bar-color);
+        }
+
+    }
+} 

@@ -515,6 +515,8 @@ import { GestorUsuariosProvidersModule } from './apps/gestor-usuarios/gestor-usu
 import { environment } from '../environments/environment';
 import { LugarDeNacimientoComponent } from './modules/rup/components/elementos/lugarDeNacimiento.component';
 import { PlantillasRUPComponent } from './apps/rup/plantillas-rup/plantillas-rup.component';
+import { LogoSvgComponent } from './styles/logo.svg';
+import { AcronimoSvgComponent } from './styles/acronimo.svg';
 
 registerLocaleData(localeEs, 'es');
 
@@ -667,6 +669,8 @@ registerLocaleData(localeEs, 'es');
         TurnosPrestacionesComponent,
 
         PlantillasRUPComponent,
+        LogoSvgComponent,
+        AcronimoSvgComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],

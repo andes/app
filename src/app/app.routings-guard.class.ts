@@ -25,7 +25,7 @@ export class RoutingNavBar implements CanActivate {
 
     canActivate() {
         this.plex.clearNavbar();
-        this.plex.updateTitle('ANDES | Apps Neuquinas de Salud');
+        this.plex.updateTitle('ANDES | Apps de Salud');
         return true;
     }
 }

@@ -1,7 +1,13 @@
 <section>
     <plex-box>
         <div class="text-center">
-            <div class="logo"></div>
+            <section class="contenedor-marca-h">
+                <div svgLogo></div>
+                <div class="bloque-texto">
+                    <div svgAcronimo></div>
+                    <h5 class="suffix-provincia">{{ provincia }} </h5>
+                </div>
+            </section>
             <div *ngIf="!denied" class="andes-inicio row">
                 <div *ngIf="mpi" class="col-xs-12 col-sm-6 col-md-4">
                     <div class="boton color-celeste" routerLink="/apps/mpi/busqueda">

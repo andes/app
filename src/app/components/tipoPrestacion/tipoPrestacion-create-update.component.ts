@@ -1,6 +1,5 @@
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-// import { Observable } from 'rxjs';
 import { ITipoPrestacion } from './../../interfaces/ITipoPrestacion';
 import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
 
@@ -49,14 +48,14 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
                 autonoma: false,
                 activo: true,
                 granularidad: String,
-                 ejecucion: [// {
-                //     idTipoPrestacion: String,
-                //     reglas: [{
-                //         nombre: String,
-                //         valor: Number,
-                //         condicion: String
-                //     }]
-                // }
+                ejecucion: [// {
+                    //     idTipoPrestacion: String,
+                    //     reglas: [{
+                    //         nombre: String,
+                    //         valor: Number,
+                    //         condicion: String
+                    //     }]
+                    // }
                 ],
                 turneable: false,
                 componente: {

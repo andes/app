@@ -5,6 +5,7 @@ import { Component } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
+import { PROPERTIES } from './styles/properties';
 
 // import { RxSocket } from 'rx-socket.io-client';
 
@@ -117,10 +118,14 @@ export class AppComponent {
         this.checkPermissions();
 
         // Inicializa la vista
-        this.plex.updateTitle('ANDES | Apps Neuquinas de Salud');
+        this.plex.updateTitle('ANDES | Apps de Salud');
 
         // Inicializa el chequeo de conectividad
         this.initStatusCheck();
+        Object.keys(PROPERTIES).forEach(key => {
+            document.documentElement.style.setProperty(`--${key}`, PROPERTIES[key]);
+        });
+
     }
 
     public showRibbon() {
