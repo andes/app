@@ -90,7 +90,8 @@ export class TurnosPacienteComponent implements OnInit {
     }
     loadObraSocial() {
         // TODO: si es en colegio médico hay que buscar en el paciente
-        this.obraSocialService.getObrasSociales({ dni: this._paciente.documento, sexo: this._paciente.sexo }).subscribe(resultado => {
+        if (!this._paciente || !this._paciente.documento) { return; }
+        this.obraSocialService.getObrasSociales(this._paciente.documento).subscribe(resultado => {
             if (resultado.length) {
                 this._obraSocial = resultado;
                 this.obraSocialPaciente = resultado.map((os: any) => {

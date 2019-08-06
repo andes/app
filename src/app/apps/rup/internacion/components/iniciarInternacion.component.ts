@@ -221,13 +221,15 @@ export class IniciarInternacionComponent implements OnInit {
                         }
                         this.buscandoPaciente = false;
                     });
-                    // Se busca la obra social del paciente y se le asigna
-                    this.obraSocialService.get({ dni: this.paciente.documento }).subscribe((os: any) => {
-                        if (os && os.length > 0) {
-                            this.obraSocial = { nombre: os[0].financiador, codigoFinanciador: os[0].codigoFinanciador };
-                            this.informeIngreso.obraSocial = { nombre: os[0].financiador, codigoPuco: os[0].codigoFinanciador };
-                        }
-                    });
+                    if (this.paciente.documento) {
+                        // Se busca la obra social del paciente y se le asigna
+                        this.obraSocialService.get({ dni: this.paciente.documento }).subscribe((os: any) => {
+                            if (os && os.length > 0) {
+                                this.obraSocial = { nombre: os[0].financiador, codigoFinanciador: os[0].codigoFinanciador };
+                                this.informeIngreso.obraSocial = { nombre: os[0].financiador, codigoPuco: os[0].codigoFinanciador };
+                            }
+                        });
+                    }
                     let indiceCarpeta = -1;
                     if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) {
                         indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);

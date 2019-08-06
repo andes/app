@@ -193,9 +193,11 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                                     this.paciente = paciente;
                                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
-                                    this.obraSocialService.get({ dni: this.paciente.documento }).subscribe(os => {
-                                        this.obraSocialPaciente = os;
-                                    });
+                                    if (this.paciente.documento) {
+                                        this.obraSocialService.get({ dni: this.paciente.documento }).subscribe(os => {
+                                            this.obraSocialPaciente = os;
+                                        });
+                                    }
                                 });
                             }
                             // cambio: this.prestacionSolicitud = prestacion.solicitud;
@@ -1263,15 +1265,16 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     onChangePrivacy(registro) {
         this.scopePrivacy = [];
-        this.scopePrivacy = [{label: registro.privacy.scope === 'public' ? 'Activar privacidad' : 'Desactivar privacidad',
-        handler: () => {
-            this.activarPrivacidad(registro);
-        }
+        this.scopePrivacy = [{
+            label: registro.privacy.scope === 'public' ? 'Activar privacidad' : 'Desactivar privacidad',
+            handler: () => {
+                this.activarPrivacidad(registro);
+            }
         }];
     }
 
     activarPrivacidad(registro) {
-        let scopeCruzado = {'public': 'private', 'private': 'public'};
+        let scopeCruzado = { 'public': 'private', 'private': 'public' };
         registro.privacy.scope = scopeCruzado[registro.privacy.scope];
     }
 
