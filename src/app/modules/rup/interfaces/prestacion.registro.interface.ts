@@ -38,6 +38,10 @@ export class IPrestacionRegistro {
     transformado: any;
     esPrimeraVez: boolean;
 
+    hasSections: Boolean;
+    isSection: Boolean;
+    noIndex: Boolean;
+
     createdAt: Date;
 
     // Virtuales 🤷
@@ -53,6 +57,9 @@ export class IPrestacionRegistro {
         this.valor = null;
         this.relacionadoCon = [];
         this.registros = [];
+        this.hasSections = false;
+        this.isSection = false;
+        this.noIndex = false;
         if (elementoRUP && elementoRUP.requeridos) {
             elementoRUP.requeridos.forEach((item) => {
                 this.registros.push(new IPrestacionRegistro(item.elementoRUP, item.concepto));

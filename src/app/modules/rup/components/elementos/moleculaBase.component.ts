@@ -10,6 +10,8 @@ import { RupElement } from '.';
 export class MoleculaBaseComponent extends RUPComponent implements OnInit {
 
     ngOnInit() {
-
+        if (this.params && this.params.hasSections) {
+            this.registro.hasSections = true;
+        }
     }
 }

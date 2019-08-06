@@ -19,6 +19,7 @@ export class InformeEpicrisisComponent extends RUPComponent implements OnInit {
 
 
     ngOnInit() {
+        this.registro.hasSections = true;
         if (!this.registro.valor) {
             this.registro.valor = {
                 unidadOrganizativa: null
@@ -29,7 +30,7 @@ export class InformeEpicrisisComponent extends RUPComponent implements OnInit {
         });
     }
 
-    get requeridos () {
+    get requeridos() {
         const requeridos = [];
         for (let i = 0; i < this.registro.registros.length; i++) {
             const concepto = this.registro.registros[i].concepto;
