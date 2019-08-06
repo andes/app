@@ -474,6 +474,7 @@ let RUPComponentsArray = [
     VistaRegistroComponent,
     VistaProcedimientoComponent,
     VistaPrestacionComponent,
+    VistaSolicitudTopComponent,
     VistaContextoPrestacionComponent,
     ProcedimientoDeEnfermeriaComponent,
     CamaBloquearComponent,
@@ -503,6 +504,7 @@ import { UploadFileComponent } from './shared/components/upload-file.component';
 import { CodificacionService } from './modules/rup/services/codificacion.service';
 import { VistaRegistroComponent } from './modules/rup/components/huds/vistaRegistro';
 import { VistaProcedimientoComponent } from './modules/rup/components/huds/vistaProcedimiento';
+import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaSolicitudTop';
 import { VistaContextoPrestacionComponent } from './modules/rup/components/huds/vistaContextoPrestacion';
 import { PasesListadoInternacionComponent } from './apps/rup/internacion/components/pasesListadoInternacion.component';
 
@@ -605,6 +607,7 @@ registerLocaleData(localeEs, 'es');
         ListaEsperaInternacionComponent,
         VistaRegistroComponent,
         VistaProcedimientoComponent,
+        VistaSolicitudTopComponent,
         VistaPrestacionComponent,
         VistaContextoPrestacionComponent,
 

@@ -348,11 +348,22 @@ export class PrestacionesService {
     getByPacienteProcedimiento(idPaciente: any, soloValidados?: boolean) {
         return this.getConceptosByPaciente(idPaciente, true).pipe(map((registros) => {
             return registros.filter((reg) => {
-                return PrestacionesService.SemanticTags.procedimiento.find(e => e === reg.concepto.semanticTag);
+                return PrestacionesService.SemanticTags.procedimiento.find(e => e === reg.concepto.semanticTag && !reg.esSolicitud);
             });
         }));
     }
 
+    /**
+     * Método getByPacienteSolicitud lista todas las solicitudes registrados del paciente
+     * @param {String} idPaciente
+     */
+    getByPacienteSolicitud(idPaciente: any, soloValidados?: boolean) {
+        return this.getConceptosByPaciente(idPaciente, true).pipe(map((registros) => {
+            return registros.filter((reg) => {
+                return PrestacionesService.SemanticTags.procedimiento.find(e => e === reg.concepto.semanticTag && reg.esSolicitud);
+            });
+        }));
+    }
 
     /**
      * Método getByPacienteMedicamento lista todos los medicamentos registrados del paciente

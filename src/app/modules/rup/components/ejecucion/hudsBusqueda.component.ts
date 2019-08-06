@@ -73,6 +73,9 @@ export class HudsBusquedaComponent implements OnInit {
     public hallazgos: any = [];
     public trastornos: any = [];
     public todos: any = [];
+    public solicitudes: any = [];
+    public solicitudesTOP: any = [];
+
     /**
      * Listado de todos los trastornos
      */
@@ -223,6 +226,10 @@ export class HudsBusquedaComponent implements OnInit {
                 registro = registro.data;
                 registro.class = 'plan';
                 break;
+            case 'solicitud':
+                registro.tipo = 'solicitud';
+                registro.class = 'plan';
+                break;
         }
 
         this.huds.toogle(registro, tipo);
@@ -270,10 +277,17 @@ export class HudsBusquedaComponent implements OnInit {
                 this.procedimientos = procedimientos;
                 this.procedimientosCopia = procedimientos;
             });
+
+            this.servicioPrestacion.getByPacienteSolicitud(this.paciente.id).subscribe((solicitudes) => {
+                this.solicitudes = solicitudes;
+            });
+            this.servicioPrestacion.getSolicitudes({ idPaciente: this.paciente.id }).subscribe((solicitudesTOP) => {
+                this.solicitudesTOP = solicitudesTOP;
+            });
         });
     }
 
-    // Trae los medicamentos registrados para el paciente
+    // Trae los procedimientos registrados para el paciente
     listarProcedimientos() {
         this.servicioPrestacion.getByPacienteProcedimiento(this.paciente.id, true).subscribe(procedimientos => {
             this.procedimientos = procedimientos;
@@ -337,6 +351,8 @@ export class HudsBusquedaComponent implements OnInit {
                 return this.laboratorios.length;
             case 'vacunas':
                 return this.vacunas.length;
+            case 'solicitudes':
+                return this.solicitudes.length + this.solicitudesTOP.length;
         }
     }
 
