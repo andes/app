@@ -35,6 +35,6 @@ export class ObraSocialService {
     }
 
     getObrasSociales(documento: string, showError = true): Observable<IFinanciador[]> {
-        return this.server.get(`${this.url}/${documento}`, null);
+        return this.server.get(`${this.url}/puco/${documento}`, null);
     }
 }
