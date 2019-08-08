@@ -29,6 +29,8 @@ export class SolicitudManualComponent implements OnInit {
 
     @Output() cancelSolicitudManualEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
     @Output() nuevaCarpetaManualEmit: EventEmitter<any> = new EventEmitter<any>();
+    @Output() crearNuevaCarpetaEmmiter: EventEmitter<any> = new EventEmitter<any>();
+
     pacientesSearch = true;
 
     @Input('pacienteSeleccionado')
@@ -99,22 +101,23 @@ export class SolicitudManualComponent implements OnInit {
     }
 
     searchPaciente(paciente) {
-        if (paciente.id) {
+        if (paciente && paciente.id) {
             this.servicePaciente.getById(paciente.id).subscribe(
                 pacienteMPI => {
                     this.paciente = pacienteMPI;
-                    this.obtenerCarpetaPaciente();
-                    this.solicitud = {};
-                    this.solicitud.organizacion = this.auth.organizacion;
-                    this.solicitud.paciente = this.paciente;
-                    this.solicitud.numero = this.carpetaEfector.nroCarpeta;
-                    this.solicitud.fecha = new Date;
+                    this.obtenerCarpetaPaciente( () => {
+                        this.solicitud = {};
+                        this.solicitud.organizacion = this.auth.organizacion;
+                        this.solicitud.paciente = this.paciente;
+                        this.solicitud.numero = this.carpetaEfector.nroCarpeta;
+                        this.solicitud.fecha = new Date;
+                    });
                 }
             );
         }
     }
 
-    save(event) {
+    save() {
         this.solicitud.datosSolicitudManual = {
             espacioFisico: this.espacioFisico,
             prestacion: this.tipoPrestacion,
@@ -124,7 +127,6 @@ export class SolicitudManualComponent implements OnInit {
         };
         this.prestamosService.solicitudManualCarpeta(this.solicitud).subscribe(solicitud => {
             this.plex.toast('success', 'La solicitud de carpeta se creó correctamente', 'Información', 1000);
-            this.cancelSolicitudManualEmit.emit(true);
             this.nuevaCarpetaManualEmit.emit(true);
         });
     }
@@ -133,15 +135,35 @@ export class SolicitudManualComponent implements OnInit {
         this.cancelSolicitudManualEmit.emit(false);
     }
 
-    // Se busca el número de carpeta de la Historia Clínica en papel del paciente
-    // a partir del documento y del efector
-    obtenerCarpetaPaciente() {
-        let indiceCarpeta = -1;
-        if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) {
-            // Filtro por organizacion
-            indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
-            if (indiceCarpeta > -1) {
-                this.carpetaEfector = this.paciente.carpetaEfectores[indiceCarpeta];
+    /**
+     * Se busca el número de carpeta de la Historia Clínica en papel del paciente encontrado en MPI
+     * a partir del documento y del efector
+     * Si no hay carpeta en el paciente MPI, se busca la carpeta en colección carpetaPaciente, usando el nro. de documento
+     * @memberof PrestamosHcComponent
+     */
+    obtenerCarpetaPaciente(cb: any) {
+        if (this.paciente.carpetaEfectores) {
+            this.carpetaEfector = this.paciente.carpetaEfectores.find(e => (e.organizacion as any)._id === this.auth.organizacion.id);
+            if (!this.carpetaEfector) {
+                this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe( carpetas => {
+                    if (carpetas.length > 0) {
+                        let _carpetaEfector = carpetas[0].carpetaEfectores.find((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
+                        if (_carpetaEfector.nroCarpeta) {
+                            this.carpetaEfector = _carpetaEfector;
+                            cb();
+                        }
+                    } else {
+                        this.plex.confirm('El paciente ' + this.paciente.apellido + ', ' + this.paciente.nombre + '<br> no posee una carpeta en esta Institución. <br> ¿Desea crear una nueva carpeta?').then((confirmar) => {
+                            if (confirmar) {
+                                this.crearNuevaCarpetaEmmiter.emit(true);
+                            } else {
+                                this.cancelSolicitudManualEmit.emit(true);
+                            }
+                        });
+                    }
+                });
+            } else {
+                cb();
             }
         } else {
             this.plex.toast('success', 'Ocurrió un error y no encontramos la historia clínica. Intertar nuevamente', 'Información', 1000);

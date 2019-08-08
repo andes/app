@@ -46,7 +46,6 @@ export class DevolverHcComponent implements OnInit {
         this.prestamo.datosDevolucion = { estado: this.devolverHC.estado.nombre, observaciones: this.devolverHC.observaciones };
         this.prestamosService.devolverCarpeta(this.prestamo).subscribe(carpeta => {
             this.plex.toast('success', 'La Carpeta se devolvió correctamente', 'Información', 1000);
-            this.cancelDevolverEmit.emit(true);
             this.carpetaDevueltaEmit.emit();
         });
     }
