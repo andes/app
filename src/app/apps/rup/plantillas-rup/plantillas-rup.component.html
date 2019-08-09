@@ -103,15 +103,15 @@
             placeholder="Buscar un procedimiento..." autoFocus="true"></plex-text>
         <plex-loader *ngIf="loading" type="linear"></plex-loader>
         <plex-list *ngIf="procedimientos" [striped]="true" [selectable]="true">
-            <plex-heading layout="contenido">
+            <plex-heading>
                 <b label>ID</b>
                 <b label>Nombre</b>
                 <b label>Tipo</b>
             </plex-heading>
             <ng-container *ngFor="let pr of procedimientos">
-                <plex-item class="hover" [botonera]="false" layout="contenido" (click)="cargarPlantillas(pr)">
+                <plex-item class="hover" [botonera]="false" (click)="cargarPlantillas(pr)">
                     <plex-label>{{ pr.conceptId }}</plex-label>
-                    <plex-label textTransform="capitalize">{{ pr.term }}</plex-label>
+                    <plex-label class="text-capitalize">{{ pr.term }}</plex-label>
                     <div>
                         <span class="badge badge-procedimiento">{{ pr.semanticTag }}</span>
                     </div>
