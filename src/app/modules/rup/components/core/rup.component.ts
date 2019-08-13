@@ -121,7 +121,8 @@ export class RUPComponent implements OnInit, AfterViewInit {
         public servicioOrganizacion: OrganizacionService,
         public plex: Plex,
         public route: ActivatedRoute,
-        public agendaService: AgendaService
+        public agendaService: AgendaService,
+        public organizacionservice: OrganizacionService
     ) { }
 
     ngOnInit() {

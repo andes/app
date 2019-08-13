@@ -482,7 +482,8 @@ let RUPComponentsArray = [
     CamaPrepararComponent,
     OcuparCamaComponent,
     EjecucionInternacionComponent,
-    EgresoInternacionComponent
+    EgresoInternacionComponent,
+    LugarDeNacimientoComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -511,6 +512,7 @@ import { HUDSService } from './modules/rup/services/huds.service';
 
 /** Configuraciones de entorno */
 import { environment } from '../environments/environment';
+import { LugarDeNacimientoComponent } from './modules/rup/components/elementos/lugarDeNacimiento.component';
 
 registerLocaleData(localeEs, 'es');
 
