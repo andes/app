@@ -583,7 +583,6 @@ registerLocaleData(localeEs, 'es');
         SnomedBuscarComponent,
         DetalleAgendaComponent,
         HeaderPacienteComponent,
-        PacienteDetalleActualizarComponent,
         BuscadorHUDSComponent,
         BuscadorComponent,
         VistaHudsComponent,
