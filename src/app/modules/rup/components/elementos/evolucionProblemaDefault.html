@@ -47,21 +47,14 @@
             <!--EVOLUCION DEL PROBLEMA-->
             <div class="row">
                 <div class="col-12">
-                    <<<<<<< HEAD <span *ngIf="hallazgoOrigen" class="badge badge-info">
-                        Originado con la transformación de:
-                        <strong>{{ hallazgoOrigen.nombre }}</strong>
-                        </span>
-                        =======
-                        <plex-text
-                            placeholder="{{ registro.concepto.semanticTag !== 'trastorno' ? 'Observaciones' : 'Ingrese una evolución' }}"
-                            [(ngModel)]="registro.valor.evolucion" name="evolucion" [height]="100" [html]="true"
-                            [readonly]="false" (change)="emitChange()">
-                        </plex-text>
-                        >>>>>>> Se quita label por redundante
+                    <plex-text
+                        placeholder="{{ registro.concepto.semanticTag !== 'trastorno' ? 'Observaciones' : 'Ingrese una evolución' }}"
+                        [(ngModel)]="registro.valor.evolucion" name="evolucion" [height]="100" [html]="true"
+                        [readonly]="false" (change)="emitChange()">
+                    </plex-text>
                 </div>
             </div>
             <div class="row">&nbsp;</div>
-            </ng-container>
 
             <div *ngIf="!soloValores && registro.valor.estado !== 'transformado'">
                 <div *ngIf="elementoRUP && registro">
@@ -232,6 +225,7 @@
             <!-- Hallazgos -->
             <vista-registro [registro]="registro" [prestacion]="prestacion" [paciente]="paciente"
                 [evolucionActual]="evolucionActual" [indice]="indice"></vista-registro>
-
+        </div>
+    </div>
 
 </form>
