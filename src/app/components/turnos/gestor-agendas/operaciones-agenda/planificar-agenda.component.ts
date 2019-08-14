@@ -591,6 +591,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 this.modelo.bloques[0].horaFin = finAgenda;
             }
         }
+        // Cuando se borran los profesionales seteamos el atributo como array vacío en lugar de "null"
+        if (this.modelo.profesionales === null) {
+            this.modelo.profesionales = [];
+        }
         let bloques = this.modelo.bloques;
         let totalBloques = 0;
 
