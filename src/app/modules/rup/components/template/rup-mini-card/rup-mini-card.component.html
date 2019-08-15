@@ -26,7 +26,7 @@
     </div>
     <div class="d-flex justify-content-end align-items-start p-2"
       [ngClass]="{'flex-wrap': filtroActual === 'trastornos'}">
-      <small class="badge badge-info">
+      <small class="badge badge-info" *ngIf="registro?.fecha">
         {{ ((registro?.concepto ? registro.concepto : registro )?.evoluciones ? registro.evoluciones[0].fechaCarga : registro.fecha) | fecha }}
       </small>
       <small *ngIf="registro?.evoluciones?.length > 0 && registro?.evoluciones[registro.evoluciones.length - 1]?.estado"
