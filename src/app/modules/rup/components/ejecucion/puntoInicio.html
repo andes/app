@@ -182,8 +182,9 @@
                                         </div>
                                         <div *ngIf="turno && turno.paciente && turno.asistencia && turno.estado !== 'suspendido'">
 
-                                            <span class="badge " [ngClass]="{ 'badge-success': turno.asistencia === 'asistio', 'badge-danger': turno.asistencia === 'noAsistio'} ">
-                                                {{turno.asistencia}}
+                                            <span class="badge "
+                                                  [ngClass]="{ 'badge-success': turno.asistencia === 'asistio', 'badge-danger': turno.asistencia === 'noAsistio'} ">
+                                                {{turno.asistencia}} <ng-container *ngIf="turno.horaAsistencia"> {{ turno.horaAsistencia | hora }} hs </ng-container>
                                             </span>
                                             <br />
 
