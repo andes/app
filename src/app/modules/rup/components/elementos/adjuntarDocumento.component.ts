@@ -17,8 +17,10 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     extensions = [
         // Documentos
         'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt',
-        // Audio/Video
-        'mp3', 'mp4', 'm4a', 'mpeg', 'mpg', 'mov', 'flv', 'avi', 'mkv',
+        // Audio
+        'm4a', 'mp3', 'ogg', 'opus', 'aac', 'aiff',
+        // Video
+        'mp4', 'mpeg', 'mpg', 'mov', 'flv', 'avi', 'mkv', 'ogv',
         // Otros
         'dat'
     ];
