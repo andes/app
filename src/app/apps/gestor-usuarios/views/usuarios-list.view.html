@@ -1,0 +1,127 @@
+<plex-layout [main]="6">
+    <plex-layout-main>
+        <header>
+            <plex-title titulo="Gestor de Usuarios">
+                <plex-button type="info" (click)="toPerfiles()" *ngIf="verPerfiles">
+                    VER PERFILES
+                </plex-button>
+            </plex-title>
+            <div class="row">
+                <div class="col-6">
+                    <plex-text [(ngModel)]="search" placeholder="Buscar por DNI, nombre o apellido">
+                        <plex-icon name="account-search"></plex-icon>
+                    </plex-text>
+                </div>
+                <div class="col-6">
+                    <plex-select [(ngModel)]="organizacion" placeholder="Seleccione una organización"
+                                 [data]="organizaciones">
+                    </plex-select>
+                </div>
+            </div>
+        </header>
+        <ng-container *ngIf="(usuarios$ | async) as usuarios">
+            <table class="table table-striped" *ngIf="usuarios.length > 0">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Apellido</th>
+                        <th>Nombre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="hover" *ngFor="let user of usuarios" (click)="select(user)"
+                        [ngClass]="{'bg-inverse text-white': userSelected?.id === user.id}">
+                        <td>{{user.usuario}}</td>
+                        <td *ngIf="user.apellido; else sinDatos">
+                            {{user.apellido}}
+                        </td>
+                        <td *ngIf="user.nombre; else sinDatos">
+                            {{user.nombre}}
+                        </td>
+                        <ng-template #sinDatos>
+                            <td> SIN DATOS </td>
+                        </ng-template>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="row" *ngIf="usuarios.length === 0">
+                <div class="col">
+                    <div class="alert alert-danger d-flex justify-content-between">
+                        <div>
+                            <plex-icon name="account-alert"></plex-icon>
+                            No se encontró ningún usuario.
+                        </div>
+                        <plex-button type="success" size="sm" (click)="nuevo()" *ngIf="!isNewDisabled">
+                            NUEVO USUARIO
+                        </plex-button>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <ng-container *ngIf="userSelected; else noSelected">
+            <gestor-usarios-usuario-detalle [usuario]="userSelected"></gestor-usarios-usuario-detalle>
+            <ng-container *ngIf="{ 
+                            orgList: orgList$ | async, 
+                            organizacionesParaAgregar: organizacionesParaAgregar$ | async  
+                        } as data">
+                <plex-title titulo="Organizaciones">
+                    <ng-container *ngIf="data.organizacionesParaAgregar?.length > 0 && !readOnly">
+                        <plex-button type="success" size="sm" (click)="toogleAddOrg()" *ngIf="!showNewOrgView">
+                            AGREGAR ORGANIZACION
+                        </plex-button>
+                        <plex-button type="danger" size="sm" (click)="toogleAddOrg()" *ngIf="showNewOrgView">
+                            <plex-icon name="close"></plex-icon>
+                        </plex-button>
+                    </ng-container>
+
+                </plex-title>
+                <div class="list-group mt-2" *ngIf="!showNewOrgView">
+                    <div justify class="list-group-item" *ngFor="let org of data.orgList">
+                        {{ org.nombre }}
+                        <span>
+                            <ng-container *ngIf="org.activo && !readOnly">
+                                <plex-button type="danger" size="sm" title="Desactivar" titlePosition="left"
+                                             (click)="toogleActivo(org)">
+                                    <plex-icon name="pause"></plex-icon>
+                                </plex-button>
+                            </ng-container>
+                            <ng-container *ngIf="!org.activo && !readOnly">
+                                <plex-button type="success" size="sm" title="Activar" titlePosition="left"
+                                             (click)="toogleActivo(org)">
+                                    <plex-icon *ngIf="!org.activo" name="play"></plex-icon>
+                                </plex-button>
+                            </ng-container>
+                            <plex-button type="warning" size="sm" title="Editar" titlePosition="left"
+                                         (click)="edit(org)" *ngIf="!readOnly">
+                                <plex-icon name="pencil"></plex-icon>
+                            </plex-button>
+                        </span>
+                    </div>
+                    <div *ngIf="!data.orgList.length">
+                        No tiene organizaciónes asignadas. Agregue una para continuar.
+                    </div>
+                </div>
+                <div class="row mt-2" *ngIf="showNewOrgView">
+                    <div class="col-10">
+                        <plex-select [(ngModel)]="orgSelected" placeholder="Seleccione una organización"
+                                     [data]="data.organizacionesParaAgregar">
+                        </plex-select>
+                    </div>
+                    <div class="col">
+                        <plex-button type="success" size="sm" (click)="addOrgPermiso()">
+                            AGREGAR
+                        </plex-button>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+        <ng-template #noSelected>
+            <div class="text-center">
+                <img src="assets/img/users.png" alt="">
+                <h5> Seleccione un usuario para ver sus detalles. </h5>
+            </div>
+        </ng-template>
+    </plex-layout-sidebar>
+</plex-layout>

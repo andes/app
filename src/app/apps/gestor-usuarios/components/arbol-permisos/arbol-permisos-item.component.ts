@@ -1,38 +1,41 @@
-import { Plex } from '@andes/plex';
-import { Component, OnInit, HostBinding, Output, EventEmitter, Input, ViewChildren, QueryList, OnChanges, AfterViewInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
-import { PlexAccordionComponent } from '@andes/plex/src/lib/accordion/accordion.component';
+import { Component, Input, ViewChildren, QueryList, OnChanges, AfterViewInit, ViewChild, OnInit, Output, EventEmitter } from '@angular/core';
 import { PlexPanelComponent } from '@andes/plex/src/lib/accordion/panel.component';
-import { OrganizacionService } from '../../services/organizacion.service';
+import { OrganizacionService } from '../../../../services/organizacion.service';
+import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
+// import { IPermiso } from '../interfaces/IPermiso';
 let shiroTrie = require('shiro-trie');
 
+type IPermiso = any;
+
 @Component({
-    selector: 'arbolPermisos',
-    templateUrl: 'arbolPermisos.html'
+    selector: 'arbol-permisos-item',
+    templateUrl: 'arbol-permisos-item.component.html'
 })
 
-export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit {
+export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewInit {
 
     private shiro = shiroTrie.new();
     private state = false;
-    public all = false;
+    private all = false;
     private seleccionados = [];
     private allModule = false;
+    public itemsCount = 0;
+    public loading = true;
 
     @Input() item: any;
 
     @Input() parentPermission: String = '';
     @Input() userPermissions: String[] = [];
 
+    @Output() change = new EventEmitter();
+
     @ViewChild('panel') accordions: PlexPanelComponent;
-    @ViewChildren(ArbolPermisosComponent) childsComponents: QueryList<ArbolPermisosComponent>;
+    @ViewChildren(ArbolPermisosItemComponent) childsComponents: QueryList<ArbolPermisosItemComponent>;
 
     ngAfterViewInit() {
     }
 
     constructor(
-        private plex: Plex,
         private servicioTipoPrestacion: TipoPrestacionService,
         private organizacionService: OrganizacionService
     ) { }
@@ -49,6 +52,19 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
                 }
             }
         }
+        this.change.emit();
+    }
+
+    removeInnerPermissions() {
+        const checker = shiroTrie.new();
+        checker.add(this.makePermission() + ':*');
+        for (let i = 0; i < this.userPermissions.length; i++) {
+            if (checker.check(this.userPermissions[i])) {
+                this.userPermissions.splice(i, 1);
+                i--;
+            }
+        }
+        this.userPermissions = [...this.userPermissions];
     }
 
     public ngOnInit() {
@@ -70,47 +86,60 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
                 if (items.length > 0) {
                     if (items.indexOf('*') >= 0) {
                         this.all = true;
+                        this.loading = false;
                     } else {
                         this.all = false;
+                        this.loading = true;
                         // [TODO] Buscar según el tipo
                         switch (this.item.type) {
                             case 'prestacion':
                                 this.servicioTipoPrestacion.get({ id: items }).subscribe((data) => {
+                                    this.loading = false;
                                     this.seleccionados = [...data];
                                 });
                                 break;
                             case 'organizacion':
                                 this.organizacionService.get({ ids: items }).subscribe((data) => {
+                                    this.loading = false;
                                     this.seleccionados = [...data];
                                 });
                                 break;
                         }
                     }
+                } else {
+                    this.seleccionados = [];
+                    this.loading = false;
                 }
             }
         } else {
             let permisos = this.makePermission();
             let items: String[] = this.shiro.permissions(permisos + ':?');
+            this.itemsCount = items.length;
             this.allModule = items.length > 0 && items.indexOf('*') >= 0;
         }
     }
 
     selectChange() {
-        // console.log(this.seleccionados);
+        this.change.emit();
     }
 
     loadData(type, event) {
         // [TODO] Agregar parametros de busqueda en el JSON de permisos. Ej: { turneable: 1 }
         // [TODO] Filtrar otras tipos de datos
+        let query: any = {};
+        if (!event.query || event.query.length === 0) {
+            return event.callback([...this.seleccionados]);
+        }
         switch (type) {
             case 'prestacion':
-                let query: any = {};
-                if (event.query) {
-                    query.term = event.query;
-                }
-
+                query.term = event.query;
                 this.servicioTipoPrestacion.get(query).subscribe((data) => {
                     data = [...data, ...this.seleccionados || []];
+                    event.callback(data);
+                });
+                break;
+            case 'organizacion':
+                this.organizacionService.get({ nombre: event.query }).subscribe((data) => {
                     event.callback(data);
                 });
                 break;

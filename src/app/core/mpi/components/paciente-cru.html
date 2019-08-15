@@ -7,6 +7,7 @@
                     <fieldset>
                         <legend>Datos básicos</legend>
                         <!-- DATOS BASICOS -->
+
                         <div class="row">
                             <div class="col-4">
                                 <plex-int label="Número de DNI ARGENTINO" [(ngModel)]="pacienteModel.documento"
@@ -211,7 +212,8 @@
                                 <div class="row">
                                     <div class="col">
                                         <plex-text label="Dirección" [(ngModel)]="pacienteModel.direccion[0].valor"
-                                                   name="direccion" placeholder="Ej: Avenida las Flores 1200">
+                                                   (change)="checkDisableGeolocalizar($event)" name=" direccion"
+                                                   placeholder="Ej: Avenida las Flores 1200">
                                         </plex-text>
                                         <!--table>
                                             <tbody>
@@ -222,18 +224,24 @@
                                         </table-->
                                     </div>
                                 </div>
+
+                                <div class="row">
+                                    <div class="col mt-3">
+                                        <plex-button [disabled]="disableGeolocalizar" label="Geolocalizar"
+                                                     type="success" (click)="actualizarMapa()">
+                                        </plex-button>
+                                    </div>
+                                </div>
                             </div>
 
-                            <!-- MAPA DE GOOGLE -->
+                            <!-- MAPA -->
                             <div class="col-8">
-                                <google-map [latitud]="geoReferenciaAux[0]" [longitud]="geoReferenciaAux[1]"
-                                            [infoMarker]="infoMarcador" (changeCoordenadas)="changeCoordenadas($event)">
-                                </google-map>
-
-                                <plex-button class="float-right" label="Actualizar" position="right" type="success"
-                                             (click)="actualizarMapa()"></plex-button>
+                                <georref-map *ngIf="geoReferenciaAux.length" [latLong]="geoReferenciaAux"
+                                             (changeCoordinates)="changeCoordenadas($event)">
+                                </georref-map>
                             </div>
                         </div>
+
                     </fieldset>
                 </plex-tab>
 

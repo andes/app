@@ -74,6 +74,14 @@
                     </div>
                 </div>
 
+                <div *ngIf="usuarios" class="col-xs-12 col-sm-6 col-md-4">
+                    <div class="boton color-verde-oscuro" routerLink="/gestor-usuarios/usuarios">
+                        <i class="icono mdi mdi-account-key"></i>
+                        <div class="titulo">Gestor Usuarios</div>
+                        <div class="subtitulo">Asignacion de permisos</div>
+                        <div class="detalle">Permite asignar permisos a organizaciones y/o módulos<br>&nbsp;</div>
+                    </div>
+                </div>
                 <div *ngIf="dashboard" class="col-xs-12 col-sm-6 col-md-4">
                     <div class="boton andes-naranja-claro" routerLink="/dashboard">
                         <i class="icono mdi mdi-chart-line"></i>
@@ -82,6 +90,8 @@
                         <div class="detalle">Visualice datos estadísticos<br>en gráficos y tablas</div>
                     </div>
                 </div>
+
+
             </div>
 
             <div *ngIf="denied" class="row">

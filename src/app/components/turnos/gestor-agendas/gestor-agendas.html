@@ -11,7 +11,7 @@
                             <botones-agenda *ngIf="agendasSeleccionadas?.length > 0 && agendas?.length"
                                             class="float-right" [agendasSeleccionadas]="agendasSeleccionadas"
                                             (clonarEmit)="clonar()" (agregarNotaAgendaEmit)="agregarNotaAgenda()"
-                                            (agregarSobreturnoEmit)="agregarSobreturno()"
+                                            (agregarSobreturnoEmit)="agregarSobreturno($event)"
                                             (editarAgendaEmit)="editarAgenda($event)"
                                             (actualizarEstadoEmit)="actualizarEstadoEmit($event)"
                                             (listarTurnosEmit)="listarTurnos($event)"
@@ -28,7 +28,7 @@
                                  class="{{showEditarAgendaPanel && agendasSeleccionadas?.length === 1 ? 'col-6' : 'col-3'}}">
                                 <plex-datetime type="date" [(ngModel)]="fechaDesde"
                                                (change)="refreshSelection($event,'fechaDesde')" name="fechaDesde"
-                                               label="Desde" class="fechas">
+                                               label="Desde" class="fechas" [max]="fechaHasta">
                                 </plex-datetime>
                                 <!-- <plex-button type="info" icon="chevron-right"></plex-button> -->
                             </div>
@@ -36,7 +36,7 @@
                                  class="{{showEditarAgendaPanel && agendasSeleccionadas?.length === 1 ? 'col-6' : 'col-3'}}">
                                 <plex-datetime type="date" [(ngModel)]="fechaHasta"
                                                (change)="refreshSelection($event,'fechaHasta')" name="fechaHasta"
-                                               label="Hasta" class="fechas">
+                                               label="Hasta" class="fechas" [min]="fechaDesde">
                                 </plex-datetime>
                             </div>
                             <div
@@ -105,9 +105,8 @@
                                 <td (click)="verAgenda(agenda, false, $event)">
                                     <div class="datos-agenda">{{agenda.horaInicio | date: 'EEE' | uppercase }}
                                         {{agenda.horaInicio | fecha}}
-                                        <i class="mdi mdi-clock" title="Horario inicio/fin"></i>
-                                        {{agenda.horaInicio |
-                                        date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs
+                                        <i class="mdi mdi-clock" title="Horario inicio/fin"></i> {{agenda.horaInicio |
+                                            date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs
                                         -
                                         <i class="mdi mdi-timelapse" title="Duración"></i> {{
                                             duracionAgenda(agenda.horaInicio, agenda.horaFin) }}
@@ -116,14 +115,13 @@
                                         </span>
                                     </div>
                                     <div>
-                                        <small *ngIf="agenda.espacioFisico?.nombre">{{ agenda.espacioFisico.nombre
-                                            +
-                                            (agenda.espacioFisico.servicio && agenda.espacioFisico.servicio.nombre
-                                            ?' - ' + agenda.espacioFisico.servicio.nombre : '') +
-                                            (agenda.espacioFisico.edificio?.descripcion
-                                            ? ' (' + agenda.espacioFisico.edificio.descripcion + ')' : '') }}</small>
-                                        <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio
-                                            físico
+                                        <small
+                                               *ngIf="agenda.espacioFisico?.nombre">{{ agenda.espacioFisico.nombre +
+                                                (agenda.espacioFisico.servicio && agenda.espacioFisico.servicio.nombre
+                                                ?' - ' + agenda.espacioFisico.servicio.nombre : '') +
+                                                (agenda.espacioFisico.edificio?.descripcion
+                                                ? ' (' + agenda.espacioFisico.edificio.descripcion + ')' : '') }}</small>
+                                        <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico
                                             no asignado</span>
                                     </div>
                                 </td>
@@ -170,8 +168,7 @@
                 <plex-box>
                     <div *ngIf="showTurnos && agendasSeleccionadas?.length == 1 && !showSuspenderTurnos" type="info">
                         <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"
-                                (recargarAgendas)="loadAgendas($event)"
-                                (actualizarBotonesAgendasEmiter)="onSeleccionAgendaNoMultiple($event)"></turnos>
+                                (recargarAgendas)="loadAgendas($event)"></turnos>
                     </div>
                     <div *ngIf="showEditarAgendaPanel && agendasSeleccionadas?.length === 1" type="info">
                         <panel-agenda [editaAgendaPanel]="agendasSeleccionadas[0]"

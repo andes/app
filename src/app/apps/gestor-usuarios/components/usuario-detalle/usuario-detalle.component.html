@@ -1,0 +1,20 @@
+<div class="row mt-2">
+    <div class="col">
+        <label class="block">Documento</label>
+        <span>{{ usuario.documento }}</span>
+    </div>
+    <div class="col">
+        <label class="block">Nombre</label>
+        <span>{{ usuario.nombre }}</span>
+    </div>
+    <div class="col">
+        <label class="block">Apellido</label>
+        <span>{{ usuario.apellido }}</span>
+    </div>
+    <ng-container *ngIf="(profesional$ | async) as profesional">
+        <div class="col" *ngIf="profesional">
+            <label class="block"></label>
+            <span class="badge-success"> Profesional </span>
+        </div>
+    </ng-container>
+</div>

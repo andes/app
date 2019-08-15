@@ -57,6 +57,9 @@ import { RelacionRUPPipe } from './pipes/relacionRUP.pipe';
 import { Html2TextPipe } from './pipes/html2text.pipe';
 
 // Servicios
+
+// Auth
+
 // ... Tablas Maestras
 import { OrganizacionService } from './services/organizacion.service';
 import { OcupacionService } from './services/ocupacion/ocupacion.service';
@@ -73,7 +76,6 @@ import { ParentescoService } from './services/parentesco.service';
 import { ListaEsperaService } from './services/turnos/listaEspera.service';
 import { LogService } from './services/log.service';
 import { LogPacienteService } from './services/logPaciente.service';
-import { PermisosService } from './services/permisos.service';
 import { PrestamosService } from './services/prestamosHC/prestamos-hc.service';
 import { RenaperService } from './services/fuentesAutenticas/servicioRenaper.service';
 import { ConfiguracionPrestacionService } from './services/term/configuracionPrestacion.service';
@@ -164,9 +166,9 @@ import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cr
 import { RelacionesPacientesComponent } from './core/mpi/components/relaciones-pacientes.component';
 import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
 import { PacienteCruComponent } from './core/mpi/components/paciente-cru.component';
-import { GoogleMapComponent } from './core/mpi/components/google-map.component';
 import { GeoreferenciaService } from './core/mpi/services/georeferencia.service';
 import { BotonesRegistroComponent } from './core/mpi/components/mpi-botones-registro.component';
+import { GeorrefMapComponent } from './core/mpi/components/georref-map.component';
 
 
 // PUCO/ObraSocial
@@ -321,11 +323,6 @@ import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { VincularPacientesComponent } from './components/auditoria/vincular-pacientes.component';
 // import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
 
-// USUARIO
-import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
-import { UsuarioCreateComponent } from './components/usuario/usuarioCreate.component';
-import { UsuarioUpdateComponent } from './components/usuario/usuarioUpdate.component';
-import { ArbolPermisosComponent } from './components/usuario/arbolPermisos.component';
 
 // REPORTES
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
@@ -510,6 +507,7 @@ import { PasesListadoInternacionComponent } from './apps/rup/internacion/compone
 
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
 import { HUDSService } from './modules/rup/services/huds.service';
+import { GestorUsuariosProvidersModule } from './apps/gestor-usuarios/gestor-usuarios.providers';
 
 /** Configuraciones de entorno */
 import { environment } from '../environments/environment';
@@ -535,7 +533,8 @@ registerLocaleData(localeEs, 'es');
         AgmCoreModule.forRoot({
             apiKey: environment.MAPS_KEY
         }),
-        InfiniteScrollModule
+        InfiniteScrollModule,
+        GestorUsuariosProvidersModule
     ],
     declarations: [
         AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,
@@ -561,7 +560,7 @@ registerLocaleData(localeEs, 'es');
         ArancelamientoFormComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
-        PermisosComponent, ArbolPermisosComponent,
+        PermisosComponent,
         // AuditoriaPorBloqueComponent,
         PuntoInicioComponent,
         VincularPacientesComponent,
@@ -570,7 +569,6 @@ registerLocaleData(localeEs, 'es');
         HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
         TurnosPacienteComponent,
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
-        BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
         ReporteC2Component,
         ConsultaDiagnosticoComponent,
         CantidadConsultaXPrestacionComponent,
@@ -644,9 +642,9 @@ registerLocaleData(localeEs, 'es');
         RelacionesPacientesComponent,
         BusquedaMpiComponent,
         PacienteCruComponent,
-        GoogleMapComponent,
         BotonesRegistroComponent,
         UpdateContactoDireccionComponent,
+        GeorrefMapComponent,
 
         // form Terapeutico
         FormTerapeuticoComponent,
@@ -724,7 +722,6 @@ registerLocaleData(localeEs, 'es');
         RenaperService,
         LogPacienteService,
         UsuarioService,
-        PermisosService,
         FrecuentesProfesionalService,
         DocumentosService,
         CamasService,

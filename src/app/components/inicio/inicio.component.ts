@@ -17,6 +17,7 @@ export class InicioComponent implements AfterViewInit {
     public solicitudes = '';
     public prestamosHC = '';
     public dashboard = false;
+    public usuarios = '';
     public denied = false;
     public accessList: any = [];
 
@@ -67,6 +68,9 @@ export class InicioComponent implements AfterViewInit {
 
             if (this.auth.check('dashboard:citas:ver') || this.auth.check('dashboard:top:ver')) {
                 this.dashboard = true;
+            }
+            if (this.auth.getPermissions('usuarios:?').length > 0) {
+                this.usuarios = 'usuarios';
                 this.denied = false;
             }
         });
