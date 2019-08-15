@@ -25,7 +25,7 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
     selector: 'rup',
     styleUrls: [
-        'rup.scss',
+        '_rup.scss',
         // TODO: Crear package NPM con las fonts
         // '../../assets/font.css'
     ],

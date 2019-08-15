@@ -50,6 +50,9 @@ export class IniciarInternacionComponent implements OnInit {
     nroCarpetaOriginal: string;
     btnIniciarGuardar;
     showEditarCarpetaPaciente = false;
+
+    public listaPasesCama = [];
+    public primerPase;
     public listaUnidadesOrganizativas = [];
     public listadoCamas = [];
     public paseAunidadOrganizativa: any;
@@ -107,6 +110,7 @@ export class IniciarInternacionComponent implements OnInit {
     // public paciente: IPaciente;
     public buscandoPaciente = false;
     public cama = null;
+    public check = false;
     public organizacion: any;
     public origenExterno = false;
     public carpetaPaciente = null;
@@ -125,7 +129,7 @@ export class IniciarInternacionComponent implements OnInit {
         motivo: null,
         organizacionOrigen: null,
         profesional: null,
-        PaseAunidadOrganizativa: null,
+        PaseAunidadOrganizativa: null
 
     };
 
@@ -146,9 +150,13 @@ export class IniciarInternacionComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-
         if (this.prestacion) {
             this.btnIniciarGuardar = 'GUARDAR';
+            if (this.prestacion.id) {
+                this.servicioPrestacion.getPasesInternacion(this.prestacion.id).subscribe(lista => {
+                    this.listaPasesCama = lista;
+                });
+            }
             let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
             if (existeRegistro) {
                 this.paciente = this.prestacion.paciente;
@@ -282,6 +290,8 @@ export class IniciarInternacionComponent implements OnInit {
         this.router.navigate(['rup/' + action + '/', id]);
     }
     getOcupaciones(event) {
+
+        let ocupacionesHabituales = [];
         if (event && event.query) {
             let query = {
                 nombre: event.query
@@ -289,10 +299,13 @@ export class IniciarInternacionComponent implements OnInit {
             };
             this.ocupacionService.getParams(query).subscribe((rta) => {
                 rta.map(dato => { dato.nom = '(' + dato.codigo + ') ' + dato.nombre; });
-                event.callback(rta);
+
+                ocupacionesHabituales = rta;
+                event.callback(ocupacionesHabituales);
             });
 
         } else {
+
             let ocupacionHabitual = [];
             if (this.informeIngreso.ocupacionHabitual) {
                 ocupacionHabitual = [this.informeIngreso.ocupacionHabitual];
@@ -348,12 +361,18 @@ export class IniciarInternacionComponent implements OnInit {
         this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
     }
 
-    controlarConflictosInternacion(fechaIngreso: Date): boolean {
-        const fechaActual = new Date();
+    controlarConflictosInternacion(fechaIngreso: Date, fechaActual: Date): boolean {
         // Controlamos que no me carguen una internación a futuro
         if (fechaIngreso > fechaActual) {
             this.plex.info('warning', 'La fecha de ingreso no puede ser superior a la fecha actual');
             return false;
+        }
+        if (this.listaPasesCama && this.listaPasesCama.length > 1) {
+            this.primerPase = this.listaPasesCama[1];
+            if (fechaIngreso > this.primerPase.estados.fecha) {
+                this.plex.info('warning', 'La fecha de ingreso no puede ser superior a la fecha del primer movimiento');
+                return false;
+            }
         }
         // Controlamos conflictos de fechas en el historial de la cama
         // buscamos que en la fechaHora de ingreso, con un margen de una hora, la cama este disponible
@@ -376,7 +395,6 @@ export class IniciarInternacionComponent implements OnInit {
                 this.plex.info('warning', 'Debe seleccionar un paciente');
                 return;
             }
-            this.informeIngreso.fechaIngreso = this.servicioInternacion.combinarFechas(this.fecha, this.hora);
 
             if (this.cama === null && !this.workflowC && !this.desdeListadoInternacion) {
                 this.plex.info('warning', 'Debe seleccionar una cama');
@@ -387,19 +405,21 @@ export class IniciarInternacionComponent implements OnInit {
                 return;
             }
 
+            let fechaActual = new Date();
 
-
-            if (!this.controlarConflictosInternacion(this.informeIngreso.fechaIngreso)) {
+            let fechaIngreso = this.servicioInternacion.combinarFechas(this.fecha, this.hora);
+            if (!this.controlarConflictosInternacion(fechaIngreso, fechaActual)) {
                 return;
             }
-
             // mapeamos los datos en los combos
             this.informeIngreso.situacionLaboral = ((typeof this.informeIngreso.situacionLaboral === 'string')) ? this.informeIngreso.situacionLaboral : (Object(this.informeIngreso.situacionLaboral).nombre);
             this.informeIngreso.nivelInstruccion = ((typeof this.informeIngreso.nivelInstruccion === 'string')) ? this.informeIngreso.nivelInstruccion : (Object(this.informeIngreso.nivelInstruccion).nombre);
             this.informeIngreso.asociado = ((typeof this.informeIngreso.asociado === 'string')) ? this.informeIngreso.asociado : (Object(this.informeIngreso.asociado).nombre);
-            this.informeIngreso.ocupacionHabitual = ((typeof this.informeIngreso.ocupacionHabitual === 'string')) ? this.informeIngreso.ocupacionHabitual : (Object(this.informeIngreso.ocupacionHabitual).nombre);
+            this.informeIngreso.ocupacionHabitual = this.informeIngreso.ocupacionHabitual;
             this.informeIngreso.origen = ((typeof this.informeIngreso.origen === 'string')) ? this.informeIngreso.origen : (Object(this.informeIngreso.origen).nombre);
             this.informeIngreso.PaseAunidadOrganizativa = this.informeIngreso.PaseAunidadOrganizativa;
+            this.informeIngreso.fechaIngreso = fechaIngreso;
+
 
             // calcualmos la edad al ingreso
             if (this.paciente.fechaNacimiento) {
@@ -454,6 +474,19 @@ export class IniciarInternacionComponent implements OnInit {
                 }, (err) => {
                     this.plex.info('danger', err);
                 });
+                if (this.cama && this.cama.ultimoEstado.idInternacion) {
+                    let cambiosEst = {
+                        'op': 'estadoCama',
+                        'idEstado': this.primerPase ? this.primerPase._id : this.cama.ultimoEstado._id,
+                        'fecha': this.informeIngreso.fechaIngreso
+                    };
+                    this.camasService.patch(this.cama.id, cambiosEst).subscribe(() => {
+                        this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
+                        this.data.emit(false);
+                    }, (err1) => {
+                        this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
+                    });
+                }
             } else {
                 // armamos el elemento data a agregar al array de registros
                 let nuevoRegistro = new IPrestacionRegistro(null, this.snomedIngreso);
@@ -539,7 +572,14 @@ export class IniciarInternacionComponent implements OnInit {
             event.callback(organizacionSalida);
         }
     }
+    onchange(event) {
+        if (event.value) {
+            this.informeIngreso.organizacionOrigen = null;
+        } else {
+            this.check = false;
+        }
 
+    }
     selectCamasDisponibles(unidadOrganizativa, fecha, hora) {
         // this.cama = null;
         this.listadoCamas = null;

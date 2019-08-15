@@ -1,4 +1,5 @@
 @import '../core/rup';
+
 //
 .prestacionActual {
     background-color: #66666652;
@@ -63,6 +64,7 @@
 
 .actions .dropdown {
     display: inline-block;
+
     .btn {
         padding: 0.25rem 0.5rem;
         font-size: 0.875rem;
@@ -73,6 +75,7 @@
 .vinculadoCon {
     font-size: 0.7em;
     color: #999;
+
     span.badge {
         padding: 7px 5px;
         font-size: 0.7rem;
@@ -83,16 +86,19 @@
     .mdi-delete {
         opacity: 1;
     }
+
     .mdi-delete-empty {
         opacity: 0;
         display: none;
     }
+
     &:hover {
         .mdi-delete {
             opacity: 0;
             display: none;
             transition: all 300ms;
         }
+
         .mdi-delete-empty {
             opacity: 1;
             display: inline-block;
@@ -105,16 +111,19 @@
     .mdi-vector-difference-ba {
         opacity: 1;
     }
+
     .mdi-vector-difference-ab {
         opacity: 0;
         display: none;
     }
+
     &:hover {
         .mdi-vector-difference-ba {
             opacity: 0;
             display: none;
             transition: all 300ms;
         }
+
         .mdi-vector-difference-ab {
             opacity: 1;
             display: inline-block;
@@ -125,6 +134,11 @@
 
 .confirmarDesvincular {
     padding: 20px;
+
+    span {
+        font-size: 1.2rem;
+    }
+
     .buttons {
         margin: 10px 0;
     }
@@ -142,6 +156,7 @@
 .titulo-consulta {
     font-weight: 400;
     color: black;
+
     .consulta {
         color: $blue;
     }

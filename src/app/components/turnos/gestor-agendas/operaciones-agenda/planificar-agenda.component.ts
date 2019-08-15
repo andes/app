@@ -591,6 +591,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 this.modelo.bloques[0].horaFin = finAgenda;
             }
         }
+        // Cuando se borran los profesionales seteamos el atributo como array vacío en lugar de "null"
+        if (this.modelo.profesionales === null) {
+            this.modelo.profesionales = [];
+        }
         let bloques = this.modelo.bloques;
         let totalBloques = 0;
 
@@ -791,7 +795,8 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                         let turno = {
                             estado: 'disponible',
                             horaInicio: this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000)),
-                            tipoTurno: undefined
+                            tipoTurno: undefined,
+                            auditable: !bloque.tipoPrestaciones.some(p => !p.auditable)
                         };
 
                         if (bloque.pacienteSimultaneos) {
@@ -830,7 +835,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             }
 
             espOperation = this.serviceAgenda.save(this.modelo);
-            espOperation.subscribe(resultado => {
+            espOperation.subscribe((resultado: any) => {
                 this.plex.toast('success', 'La agenda se guardó correctamente');
                 this.modelo.id = resultado.id;
                 if (clonar) {
@@ -843,7 +848,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 }
                 this.hideGuardar = false;
             },
-                (err) => { this.hideGuardar = false; });
+                (err) => {
+                    this.hideGuardar = false;
+                    this.plex.info('warning', err, 'Aviso');
+                });
         } else {
             if (!this.verificarNoNominalizada()) {
                 this.plex.info('warning', 'Solo puede haber una prestación en las agendas no nominalizadas');

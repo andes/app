@@ -107,6 +107,7 @@ export class PrestacionValidacionComponent implements OnInit {
     public btnVolver;
     public rutaVolver;
     descargando = false;
+    verMasRelaciones = [];
 
     constructor(public servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -354,7 +355,14 @@ export class PrestacionValidacionComponent implements OnInit {
                     });
 
                     this.motivoReadOnly = true;
-                    if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                    if (this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                        // si la prestacion corresponde a una agenda no nominalizada, esta se audita una vez validada la prestacion
+                        let dto = {
+                            estado: 'auditada',
+                            op: 'auditada'
+                        };
+                        this.servicioAgenda.patch(localStorage.idAgenda, dto).subscribe();
+                    } else {
                         // actualizamos las prestaciones de la HUDS
                         this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id, true).subscribe(prestacionesSolicitadas => {
                             if (prestacionesSolicitadas) {
@@ -770,6 +778,10 @@ export class PrestacionValidacionComponent implements OnInit {
         let last = this.prestacion.estados.length - 1;
         return this.prestacion.estados[last].tipo !== 'validada' && elemento.valor && elemento.valor.estado !== 'transformado' && this.prestacion.solicitud.ambitoOrigen !== 'internacion';
 
+    }
+
+    toggleVerMasRelaciones(item) {
+        this.verMasRelaciones[item] = !this.verMasRelaciones[item];
     }
 
 }

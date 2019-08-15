@@ -118,7 +118,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
         private frecuentesProfesionalService: FrecuentesProfesionalService,
         private auth: Auth, private elementoRUP: ElementosRUPService,
         public servicioPrestacion: PrestacionesService,
-        private buscadorServide: SnomedBuscarService,
+        private buscadorService: SnomedBuscarService,
         public renderer: Renderer2,
         private plex: Plex) {
     }
@@ -338,7 +338,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
             if ((busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes' || busquedaActual === 'frecuentesTP') && this.search) {
                 this.buscar();
             } else {
-                this.buscadorServide.search(this.search);
+                this.buscadorService.search(this.search);
             }
         }
         this.autofocus = true;

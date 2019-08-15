@@ -18,3 +18,33 @@ span.badge,
 span.badge-default {
     font-size: 0.6rem;
 }
+.table-lista-agendas {
+    height:100%; 
+}
+.table-lista-agendas tbody tr:last-child{
+    margin-bottom: 2rem;
+}
+tbody {
+  display: block;
+  height: 100%;
+  overflow: scroll;
+}
+thead,
+tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+.small{
+    width: 5%;
+}
+.medium{
+    width: 20%;
+}
+
+::ng-deep {
+    .plex-box > .plex-box-content, plex-box > DIV > .plex-box-content {
+        overflow-y: hidden !important;
+        padding-right: 0 !important;
+    }
+}

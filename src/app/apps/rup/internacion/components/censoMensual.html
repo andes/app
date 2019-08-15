@@ -4,17 +4,18 @@
             <div class="row">
                 <div class="col-md-2">
                     <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fechaDesde" [required]="true"
-                        name="fechaDesde" label="Desde">
+                                   name="fechaDesde" label="Desde">
                     </plex-datetime>
                 </div>
                 <div class="col-md-2">
                     <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fechaHasta" [required]="true"
-                        name="fechaHasta" label="Hasta">
+                                   name="fechaHasta" label="Hasta">
                     </plex-datetime>
                 </div>
                 <div class="col-md-4">
-                    <plex-select (change)="reseteaBusqueda()" name="servicio" [required]="true" [data]="listaUnidadesOrganizativas"
-                        idField="term" labelField="term" [(ngModel)]="unidadOrganizativa" label="Unidad organizativa">
+                    <plex-select (change)="reseteaBusqueda()" name="servicio" [required]="true"
+                                 [data]="listaUnidadesOrganizativas" idField="term" labelField="term"
+                                 [(ngModel)]="unidadOrganizativa" label="Unidad organizativa">
                     </plex-select>
                 </div>
                 <div class="col-md-2">
@@ -23,8 +24,8 @@
                 </div>
                 <div class="col-md-2">
                     <label>&nbsp;</label>
-                    <plex-button type="warning" icon="download mdi-14px" class="ml-1" title="Descargar" titlePosition="top"
-                        (click)="descargarCensoMensual()"></plex-button>
+                    <plex-button type="warning" icon="download mdi-14px" class="ml-1" title="Descargar"
+                                 titlePosition="top" (click)="descargarCensoMensual()"></plex-button>
                 </div>
             </div>
         </header>
@@ -46,6 +47,8 @@
                             <th rowspan="2">Ingresos- Egresos día</th>
                             <th rowspan="2">Pacientes día</th>
                             <th rowspan="2">Camas disponibles 24hs</th>
+                            <th rowspan="2">Días de estada</th>
+
                         </tr>
                         <tr class="clean">
                             <th>Altas</th>
@@ -63,6 +66,7 @@
                             <td>{{ unResumen.censo.ingresoEgresoDia }}</td>
                             <td>{{ unResumen.censo.pacientesDia }}</td>
                             <td>{{ unResumen.censo.disponibles24 }}</td>
+                            <td>{{ unResumen.censo.diasEstada }}</td>
                         </tr>
                         <tr>
                             <td>
@@ -98,6 +102,9 @@
                             <td>
                                 <strong>{{totalResumenCenso.disponibles24}}</strong>
                             </td>
+                            <td>
+                                <strong>{{totalResumenCenso.diasEstada}}</strong>
+                            </td>
                         </tr>
                     </thead>
                 </table>
@@ -126,12 +133,16 @@
                         <td>Giro Cama</td>
                         <td>{{ giro() }}</td>
                     </tr>
+                    <tr>
+                        <td>Promedio días de estada</td>
+                        <td>{{ promedioDiasEstada() }}</td>
+                    </tr>
                 </table>
 
             </div>
         </div>
     </plex-layout-main>
     <plex-layout-footer>
-        <plex-button position="left" label="Volver" type="danger" (click)='mapaDeCamas()'></plex-button>
+        <plex-button position="left" label="Volver" type="primary" (click)='mapaDeCamas()'></plex-button>
     </plex-layout-footer>
 </plex-layout>

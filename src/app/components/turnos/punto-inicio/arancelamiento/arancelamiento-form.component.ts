@@ -58,7 +58,7 @@ export class ArancelamientoFormComponent implements OnInit {
         forkJoin([
             this.organizacionService.configuracion(this.auth.organizacion.id),
             this.profesionalService.getFirma({ id: this.turno.profesionales[0]._id }),
-            this.servicioFA.get({ conceptId: this.turnoSeleccionado.tipoPrestacion.conceptId })
+            this.servicioFA.get({ idPrestacionTurneable: this.turnoSeleccionado.tipoPrestacion.conceptId })
         ]).subscribe((data) => {
             const [config, firma, resultadoFA] = data;
 

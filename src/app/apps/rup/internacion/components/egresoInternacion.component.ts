@@ -76,6 +76,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     @Output() prestacionGuardada: EventEmitter<any> = new EventEmitter<any>();
     @Output() desocuparCama: EventEmitter<any> = new EventEmitter<any>();
 
+    public ultimoPase;
     public fechaDeingreso;
     public fechaEgreso: Date = new Date();
     public horaEgreso: Date = new Date();
@@ -107,6 +108,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     public ExisteCausaExterna = false;
     public mostrarValidacion = false;
 
+    public listaPasesCama = [];
     mySubject = new Subject();
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -130,7 +132,11 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     ngOnInit() {
         // this.iniciaBotonera();
         // Buscamos si la prestacion ya tiene una informe del alta guardado.
-
+        if (this.prestacion && this.prestacion.id) {
+            this.servicioPrestacion.getPasesInternacion(this.prestacion.id).subscribe(lista => {
+                this.listaPasesCama = lista;
+            });
+        }
 
     }
 
@@ -299,13 +305,6 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     controlRegistrosGuardar() {
         let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
         this.registro.valor.InformeEgreso.fechaEgreso = this.internacionService.combinarFechas(this.fechaEgreso, this.horaEgreso);
-        // vamos a controlas que la fecha de egreso sea anterior a la fecha de ingreso
-        let fechaActual = new Date();
-        let ingreso = this.internacionService.verRegistro(this.prestacion, 'ingreso');
-        if (this.registro.valor.InformeEgreso.fechaEgreso > fechaActual || ingreso.informeIngreso.fechaIngreso > this.registro.valor.InformeEgreso.fechaEgreso) {
-            this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a la fecha de ingreso o superior a la fecha actual');
-            return null;
-        }
         if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
             this.registro.esDiagnosticoPrincipal = true;
         }
@@ -331,9 +330,28 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
             let indexRegistro = registros.findIndex(registro => registro.concepto.conceptId === this.internacionService.conceptosInternacion.egreso.conceptId);
             registros[indexRegistro] = this.registro;
         }
+
+
         return registros;
     }
 
+    controlarConflictosInternacion(fechaEgreso: Date): boolean {
+        const fechaActual = new Date();
+        let ingreso = this.internacionService.verRegistro(this.prestacion, 'ingreso');
+        // vamos a controlar que la fecha de egreso sea anterior a la fecha de ingreso
+        if (fechaEgreso > fechaActual || ingreso.informeIngreso.fechaIngreso > fechaEgreso) {
+            this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a la fecha de ingreso o superior a la fecha actual');
+            return null;
+        }
+        if (this.listaPasesCama && this.listaPasesCama.length > 1) {
+            this.ultimoPase = this.listaPasesCama[this.listaPasesCama.length - 1];
+            if (fechaEgreso < this.ultimoPase.estados.fecha) {
+                this.plex.info('warning', 'La fecha de egreso no puede ser inferior a la fecha del ultimo movimiento');
+                return false;
+            }
+        }
+        return true;
+    }
 
     /**
      * Guardamos la prestacion y retornamos
@@ -342,6 +360,10 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     guardarPrestacion(isvalid) {
 
         if (isvalid) {
+            let fechaEgreso = this.internacionService.combinarFechas(this.fechaEgreso, this.horaEgreso);
+            if (!this.controlarConflictosInternacion(fechaEgreso)) {
+                return;
+            }
             let registros = this.controlRegistrosGuardar();
             if (registros) {
                 let params: any = {

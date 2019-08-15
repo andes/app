@@ -1,4 +1,3 @@
-import { estados } from './../../../../utils/enumerados';
 import { Component, OnInit, ViewEncapsulation, HostBinding, ɵConsole } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
@@ -14,7 +13,7 @@ import { PacienteBuscarResultado } from '../../../../modules/mpi/interfaces/Paci
 import { ElementosRUPService } from '../../../../modules/rup/services/elementosRUP.service';
 import * as enumerados from './../../../../utils/enumerados';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
-// ../../../../services/internacion.service
+import { InternacionCacheService } from '../services/internacion-cache.service';
 @Component({
     selector: 'app-mapa-de-camas',
     templateUrl: './mapa-de-camas.component.html',
@@ -103,7 +102,7 @@ export class MapaDeCamasComponent implements OnInit {
     public modoFlat = false;
     constructor(
         public servicioPrestacion: PrestacionesService,
-        private auth: Auth,
+        public auth: Auth,
         private plex: Plex,
         private router: Router,
         private servicioPaciente: PacienteService,
@@ -111,12 +110,14 @@ export class MapaDeCamasComponent implements OnInit {
         public organizacionService: OrganizacionService,
         private internacionService: InternacionService,
         public camasService: CamasService,
-        private elementoRupService: ElementosRUPService) {
+        private elementoRupService: ElementosRUPService,
+        private cacheService: InternacionCacheService) {
     }
 
     ngOnInit() {
         if (!this.auth.check('internacion:mapaDeCamas')) {
-            this.router.navigate(['./inicio' ]);
+            this.cacheService.clearData();
+            this.router.navigate(['./inicio']);
         }
 
         this.refresh();
@@ -135,6 +136,11 @@ export class MapaDeCamasComponent implements OnInit {
         this.isWorkflowCompleto = this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id);
         this.altaBajaCama = this.auth.getPermissions('internacion:cama:create?').length > 0 && this.auth.getPermissions('internacion:cama:baja?').length > 0;
 
+        let cachePrestacion = this.cacheService.getData();
+        if (cachePrestacion && cachePrestacion.origen === 'lista-espera') {
+            // datos de prestacion para nuevo ingreso de paciente desde lista de espera
+            this.onDarCama(cachePrestacion.data);
+        }
     }
     refresh(event = null) {
         // Se setea ruta actual
@@ -150,6 +156,11 @@ export class MapaDeCamasComponent implements OnInit {
             this.countFiltros();
             this.loader = false;
             if (camas) {
+                this.camas.sort(function (a, b) {
+                    let nombre1 = a.sectores[0].nombre;
+                    let nombre2 = b.sectores[0].nombre;
+                    return nombre1 > nombre2 ? 1 : -1;
+                });
                 this.camasService.getEstadoServicio(camas).subscribe(estado => {
                     this.estadoServicio = estado;
                 });
@@ -456,9 +467,8 @@ export class MapaDeCamasComponent implements OnInit {
         if (!dtoAccion.otroPaciente) {
             this.refresh();
         }
-        // this.countFiltros();
-
-
+        // se limpia cache en caso de haber ingresado un paciente desde lista de espera
+        this.cacheService.clearData();
     }
 
     /**
@@ -473,8 +483,9 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     verLE() {
-        this.camasService.showListaEspera = true;
+        this.router.navigate(['rup/internacion/listaEspera']);
     }
+
     public ingresarPaciente() {
         this.camaSeleccionada = null;
         this.pacientes = null;
@@ -751,24 +762,13 @@ export class MapaDeCamasComponent implements OnInit {
         this.historial = [];
     }
 
-    // showEstadosMet() {
-    //     if (moment(this.fecha).format('DD/MM/YYYY') !== moment(this.hoy).format('DD/MM/YYYY')) {
-    //         this.estadosMode = false;
-    //     } else {
-    //         this.estadosMode = true;
-    //     }
-    // }
-
     checkOxigeno(cama) {
         return cama.equipamiento.find(e => e.conceptId === '261746005') ? true : false;
     }
+
     volver() {
         this.router.navigate(['/internacion/inicio']);
-    }
-
-
-    pacienteTemporal() {
-        this.createTemporal = true;
+        this.cacheService.clearData();
     }
 
     afterPacienteTemp(paciente) {

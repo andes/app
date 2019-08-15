@@ -21,6 +21,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 // Global
 import { PlexModule } from '@andes/plex';
@@ -126,7 +127,7 @@ import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesP
 import { CDAService } from './modules/rup/services/CDA.service';
 import { ResumenPacienteDinamicoService } from './modules/rup/services/resumenPaciente-dinamico.service';
 import { VacunasService } from './services/vacunas.service';
-
+import { PlantillasService } from './modules/rup/services/plantillas.service';
 
 
 
@@ -205,7 +206,6 @@ import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/pun
 import { EstadisticasAgendasComponent } from './components/turnos/dashboard/estadisticas-agendas.component';
 import { EstadisticasPacientesComponent } from './components/turnos/dashboard/estadisticas-pacientes.component';
 import { TurnosPacienteComponent } from './components/turnos/punto-inicio/turnos-paciente.component';
-import { DashboardCodificacionComponent } from './components/turnos/dashboard/dashboard-codificacion.component';
 import { ActivarAppComponent } from './components/turnos/punto-inicio/activar-app.component';
 import { SolicitudTurnoVentanillaComponent } from './components/turnos/punto-inicio/solicitud-turno-ventanilla/solicitud-turno-ventanilla.component';
 import { ListaSolicitudTurnoVentanillaComponent } from './components/turnos/punto-inicio/solicitud-turno-ventanilla/lista-solicitud-turno-ventanilla.component';
@@ -390,8 +390,9 @@ import { ConfiguracionPrestacionVisualizarComponent } from './components/configu
 import { ConfiguracionPrestacionCrearComponent } from './components/configuracionPrestacion/configuracion-prestacion-crear.component';
 import { CamasService } from './apps/rup/internacion/services/camas.service';
 import { InternacionService } from './apps/rup/internacion/services/internacion.service';
+import { InternacionCacheService } from './apps/rup/internacion/services/internacion-cache.service';
 import { DesocuparCamaComponent } from './apps/rup/internacion/components/cama-desocupar.component';
-import { ListaEsperaInternacionComponent } from './apps/rup/internacion/components/listaEsperaInternacion.component';
+import { ListaEsperaInternacionComponent } from './apps/rup/internacion/components/lista-espera-internacion.component';
 import { EgresoInternacionComponent } from './apps/rup/internacion/components/egresoInternacion.component';
 import { ResumenInternacionComponent } from './apps/rup/internacion/components/resumenInternacion.component';
 import { CamaBloquearComponent } from './apps/rup/internacion/components/cama-bloquear.component';
@@ -513,6 +514,7 @@ import { HUDSService } from './modules/rup/services/huds.service';
 /** Configuraciones de entorno */
 import { environment } from '../environments/environment';
 import { LugarDeNacimientoComponent } from './modules/rup/components/elementos/lugarDeNacimiento.component';
+import { PlantillasRUPComponent } from './apps/rup/plantillas-rup/plantillas-rup.component';
 
 registerLocaleData(localeEs, 'es');
 
@@ -533,6 +535,7 @@ registerLocaleData(localeEs, 'es');
         AgmCoreModule.forRoot({
             apiKey: environment.MAPS_KEY
         }),
+        InfiniteScrollModule
     ],
     declarations: [
         AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,
@@ -565,7 +568,7 @@ registerLocaleData(localeEs, 'es');
         LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
         AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
         HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
-        TurnosPacienteComponent, DashboardCodificacionComponent,
+        TurnosPacienteComponent,
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
         BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
         ReporteC2Component,
@@ -662,6 +665,8 @@ registerLocaleData(localeEs, 'es');
 
         // Buscador de turnos y prestaciones
         TurnosPrestacionesComponent,
+
+        PlantillasRUPComponent,
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
@@ -748,6 +753,8 @@ registerLocaleData(localeEs, 'es');
         SnomedBuscarService,
         HUDSService,
         TurnosPrestacionesService,
+        PlantillasService,
+        InternacionCacheService
     ]
 })
 
