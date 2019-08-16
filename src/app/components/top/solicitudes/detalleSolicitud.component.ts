@@ -1,8 +1,10 @@
 import { Plex } from '@andes/plex';
-import { Input, Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Input, Component, OnInit } from '@angular/core';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
 import { environment } from '../../../../environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'detalle-solicitud',
@@ -39,6 +41,8 @@ export class DetalleSolicitudComponent implements OnInit {
     }
 
     constructor(
+        public auth: Auth,
+        public router: Router,
         plex: Plex,
         public adjuntosService: AdjuntosService,
         public sanitazer: DomSanitizer,
@@ -82,4 +86,7 @@ export class DetalleSolicitudComponent implements OnInit {
         }
     }
 
+    routeTo(action, id) {
+        this.router.navigate(['rup/' + action + '/', id]);
+    }
 }

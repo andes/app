@@ -11,12 +11,12 @@
                         <div class="row">
                             <div class="col-3">
                                 <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="cargarSolicitudes()" name="fechaDesde"
-                                    label="Desde" class="fechas" [max]="fechaHasta">
+                                               label="Desde" class="fechas" [max]="fechaHasta">
                                 </plex-datetime>
                             </div>
                             <div class="col-3">
                                 <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="cargarSolicitudes()" name="fechaHasta"
-                                    label="Hasta" class="fechas" [min]="fechaDesde">
+                                               label="Hasta" class="fechas" [min]="fechaDesde">
                                 </plex-datetime>
                             </div>
                             <div class="
@@ -26,25 +26,25 @@
                             <div class="{{showEditarAgendaPanel && agendasSeleccionadas?.length === 1 ? 'col-4' : 'col-2'}} text-right">
                                 <label>
                                     <!--Spacer-->&nbsp;</label>
-                                <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
-                                    (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
+                                <plex-button type="info" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
+                                             (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
                             </div>
                         </div>
                         <div class="row" *ngIf="mostrarMasOpciones">
                             <div class="col-3">
                                 <plex-select [(ngModel)]="organizacion" name="organizacion" (getData)="loadOrganizacion($event)"
-                                    label="Organización origen" placeholder="Seleccione la organización" labelField="nombre"
-                                    (change)="cargarSolicitudes()">
+                                             label="Organización origen" placeholder="Seleccione la organización"
+                                             labelField="nombre" (change)="cargarSolicitudes()">
                                 </plex-select>
                             </div>
                             <div class="col-3">
                                 <plex-select [(ngModel)]="prestacionDestino" (change)="cargarSolicitudes()" (getData)="loadPrestaciones($event)"
-                                    name="prestacionDestino" label="Prestación destino" ngModelOptions="{standalone: true}">
+                                             name="prestacionDestino" label="Prestación destino" ngModelOptions="{standalone: true}">
                                 </plex-select>
                             </div>
                             <div class="col-3">
                                 <plex-select [(ngModel)]="estado" (change)="cargarSolicitudes()" [data]="estados" name="estado"
-                                    label="Estado" ngModelOptions="{standalone: true}" (change)="cargarSolicitudes()">
+                                             label="Estado" ngModelOptions="{standalone: true}" (change)="cargarSolicitudes()">
                                 </plex-select>
                             </div>
                         </div>
@@ -83,7 +83,7 @@
                                                     <td (click)="seleccionar(prestacionesEntrada,i)">{{prestacion.solicitud.fecha
                                                         | fecha}}<br>
                                                         <popover-audit placement="right" [data]="prestacion"
-                                                            [showUpdate]="false"></popover-audit>
+                                                                       [showUpdate]="false"></popover-audit>
 
                                                     </td>
                                                     <td (click)="seleccionar(prestacionesEntrada,i)">{{prestacion.paciente
@@ -115,19 +115,19 @@
                                                     <td class="text-center">
                                                         <span *ngIf="darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno && !prestacion.solicitud.turno && prestacion.estados[prestacion.estados.length-1].tipo !== 'anulada'">
                                                             <plex-button icon="calendar-plus" type="success" (click)="darTurno(prestacion)"
-                                                                title="Dar Turno">
+                                                                         title="Dar Turno">
                                                             </plex-button>
                                                         </span>
                                                         <span *ngIf="auditarArrayEntrada[i]">
                                                             <plex-button icon="mdi mdi-lock-alert" type="info" (click)="auditar(prestacionesEntrada,i)"
-                                                                title="Auditar Solicitud">
+                                                                         title="Auditar Solicitud">
                                                             </plex-button>
                                                         </span>
                                                         <span *ngIf="visualizarEntrada[i]">
                                                         </span>
                                                         <span *ngIf="permisoAnular && darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno && prestacion.estados[prestacion.estados.length-1].tipo !== 'anulada'">
                                                             <plex-button type="danger" icon="delete" (click)="anular(prestacionesEntrada,i)"
-                                                                title="Anular">
+                                                                         title="Anular">
                                                             </plex-button>
                                                         </span>
                                                     </td>
@@ -190,7 +190,7 @@
                                                     <td class="text-center">
                                                         <span *ngIf=" prestacion.estados[prestacion.estados.length-1].tipo == 'pendiente' && !visualizarSalida[i]">
                                                             <plex-button type="danger" icon="delete" (click)="cancelar(prestacion)"
-                                                                title="Cancelar">
+                                                                         title="Cancelar">
                                                             </plex-button>
                                                         </span>
                                                     </td>
@@ -207,15 +207,15 @@
             <!-- SIDEBAR -->
             <div *ngIf="showSidebar && !showAuditar" class="col-3 h-100">
                 <detalle-solicitud [tipoSolicitud]="tipoSolicitud" [prestacionSeleccionada]="prestacionSeleccionada"
-                    [turnoSeleccionado]="turnoSeleccionado"></detalle-solicitud>
+                                   [turnoSeleccionado]="turnoSeleccionado"></detalle-solicitud>
             </div>
             <div *ngIf="showAuditar && !showSidebar" class="col-3 h-100">
                 <auditar-solicitud [tipoSolicitud]="tipoSolicitud" [prestacionSeleccionada]="prestacionSeleccionada"
-                    (returnAuditoria)="returnAuditoria($event)"></auditar-solicitud>
+                                   (returnAuditoria)="returnAuditoria($event)"></auditar-solicitud>
             </div>
             <div *ngIf="showAnular && !showSidebar" class="col-3 h-100">
                 <anular-solicitud [tipoSolicitud]="tipoSolicitud" [prestacionSeleccionada]="prestacionSeleccionada"
-                    (returnAnular)="returnAnular($event)"></anular-solicitud>
+                                  (returnAnular)="returnAnular($event)"></anular-solicitud>
             </div>
         </div>
         <!-- Configuración de Reglas -->
@@ -234,7 +234,8 @@
 </form>
 <!-- Calendario para dar turnos -->
 <dar-turnos *ngIf="showDarTurnos && solicitudTurno && !showCargarSolicitud" (volverAlGestor)="volverDarTurno($event)"
-    (afterDarTurno)="volverDarTurno($event)" [pacienteSeleccionado]="pacienteSeleccionado" [solicitudPrestacion]="solicitudTurno"></dar-turnos>
+            (afterDarTurno)="volverDarTurno($event)" [pacienteSeleccionado]="pacienteSeleccionado"
+            [solicitudPrestacion]="solicitudTurno"></dar-turnos>
 
 <nueva-solicitud *ngIf="showCargarSolicitud" [tipoSolicitud]="tipoSolicitud" (newSolicitudEmitter)=afterNewSolicitud($event)>
 </nueva-solicitud>
