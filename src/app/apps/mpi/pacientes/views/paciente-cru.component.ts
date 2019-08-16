@@ -20,10 +20,10 @@ import { ProvinciaService } from '../../../../services/provincia.service';
 import { PaisService } from '../../../../services/pais.service';
 import { PacienteHttpService } from '../services/pacienteHttp.service';
 import { ValidacionService } from '../services/validacion.services';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { AppMobileService } from '../../../../services/appMobile.service';
 import { ParentescoService } from '../../../mpi/pacientes/services/parentesco.service';
 import { HistorialBusquedaService } from '../services/historialBusqueda.service';
+import { RelacionesHttpService } from '../services/relacionesHttp.service';
 
 @Component({
     selector: 'paciente-cru',
@@ -171,8 +171,8 @@ export class PacienteCruComponent implements OnInit {
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
         private barriosService: BarrioService,
-        private pacienteService: PacienteService,
         private pacienteHttpService: PacienteHttpService,
+        private relacionesHttpService: RelacionesHttpService,
         private validacionService: ValidacionService,
         private parentescoService: ParentescoService,
         public appMobile: AppMobileService,
@@ -180,7 +180,7 @@ export class PacienteCruComponent implements OnInit {
         private _router: Router,
         public plex: Plex,
         private route: ActivatedRoute) {
-        this.nombrePattern = pacienteService.nombreRegEx.source;
+        this.nombrePattern = pacienteHttpService.nombreRegEx.source;
         this.plex.updateTitle([{
             route: '/mpi',
             name: 'MPI'
@@ -688,21 +688,21 @@ export class PacienteCruComponent implements OnInit {
         if (unPacienteSave) {
             // Borramos relaciones
             if (this.relacionesBorradas.length > 0) {
+
                 this.relacionesBorradas.forEach(rel => {
                     let relacionOpuesta = this.parentescoModel.find((elem) => {
                         if (elem.nombre === rel.relacion.opuesto) {
                             return elem;
                         }
                     });
+
                     let dto = {
                         relacion: relacionOpuesta,
                         referencia: unPacienteSave.id,
                     };
                     if (rel.referencia) {
-                        this.pacienteService.patch(rel.referencia, {
-                            'op': 'deleteRelacion',
-                            'dto': dto
-                        }).subscribe();
+                        let pacienteRelacion = { id: rel.referencia };
+                        this.relacionesHttpService.delete(pacienteRelacion, dto).subscribe();
                     }
                 });
             }
@@ -723,10 +723,8 @@ export class PacienteCruComponent implements OnInit {
                         foto: unPacienteSave.foto ? unPacienteSave.foto : null
                     };
                     if (dto.referencia) {
-                        this.pacienteService.patch(rel.referencia, {
-                            'op': 'updateRelacion',
-                            'dto': dto
-                        }).subscribe();
+                        let pacienteRelacion = { id: rel.referencia };
+                        this.relacionesHttpService.create(pacienteRelacion, dto).subscribe();
                     }
                 });
             }
@@ -811,37 +809,41 @@ export class PacienteCruComponent implements OnInit {
             this.plex.info('warning', 'La validación requiere sexo MASCULINO o FEMENINO.', 'Atención');
             return;
         }
+
+        this.pacienteModel.documento = typeof this.pacienteModel.documento === 'string' ? this.pacienteModel.documento : (this.pacienteModel.documento as any).toString();
+        this.pacienteModel.sexo = sexoPaciente;
         this.disableValidar = true;
         this.loading = true;
         this.validacionService.validar(this.pacienteModel).subscribe(
             resultado => {
+                console.log(resultado);
                 this.loading = false;
-                if (resultado.existente) {
+                if (resultado.estado === 'validado') {
                     // PACIENTE EXISTENTE EN ANDES
-                    if (resultado.paciente.estado === 'validado') {
-                        this.validado = true;
-                    }
+                    // if (resultado.paciente.estado === 'validado') {
+                    //     this.validado = true;
+                    // }
                     this.plex.info('info', 'El paciente que está cargando ya existe en el sistema', 'Atención');
-                    this.pacienteModel = resultado.paciente;
-                } else if (resultado.validado) {
+                    this.pacienteModel = resultado;
+                } else if (resultado.identificadores.length > 0 && resultado.identificadores[0].valor) {
                     // VALIDACION MEDIANTE FUENTES AUTENTICAS EXITOSA
                     this.setBackup();
                     this.validado = true;
                     this.showDeshacer = true;
-                    this.pacienteModel.nombre = resultado.paciente.nombre;
-                    this.pacienteModel.apellido = resultado.paciente.apellido;
-                    this.pacienteModel.estado = resultado.paciente.estado;
-                    this.pacienteModel.fechaNacimiento = moment(resultado.paciente.fechaNacimiento).add(4, 'h').toDate(); // mas mers alert
-                    this.pacienteModel.foto = resultado.paciente.foto;
+                    this.pacienteModel.nombre = resultado.nombre;
+                    this.pacienteModel.apellido = resultado.apellido;
+                    this.pacienteModel.estado = resultado.estado;
+                    this.pacienteModel.fechaNacimiento = moment(resultado.fechaNacimiento).add(4, 'h').toDate(); // mas mers alert
+                    this.pacienteModel.foto = resultado.foto;
                     //  Se completan datos FALTANTES
-                    if (!this.pacienteModel.direccion[0].valor && resultado.paciente.direccion && resultado.paciente.direccion[0].valor) {
-                        this.pacienteModel.direccion[0].valor = resultado.paciente.direccion[0].valor;
+                    if (!this.pacienteModel.direccion[0].valor && resultado.direccion && resultado.direccion[0].valor) {
+                        this.pacienteModel.direccion[0].valor = resultado.direccion[0].valor;
                     }
-                    if (!this.pacienteModel.direccion[0].codigoPostal && resultado.paciente.cpostal) {
-                        this.pacienteModel.direccion[0].codigoPostal = resultado.paciente.cpostal;
+                    if (!this.pacienteModel.direccion[0].codigoPostal && resultado.cpostal) {
+                        this.pacienteModel.direccion[0].codigoPostal = resultado.cpostal;
                     }
-                    if (!this.pacienteModel.cuil && resultado.paciente.cuil) {
-                        this.pacienteModel.cuil = resultado.paciente.cuil;
+                    if (!this.pacienteModel.cuil && resultado.cuil) {
+                        this.pacienteModel.cuil = resultado.cuil;
                     }
                     this.plex.toast('success', '¡Paciente Validado!');
                 } else {

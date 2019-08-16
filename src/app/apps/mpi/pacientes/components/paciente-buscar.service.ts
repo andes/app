@@ -66,7 +66,7 @@ export class PacienteBuscarService {
 
     public findByScan(pacienteEscaneado: PacienteEscaneado) {
         const textoLibre = pacienteEscaneado.scan;
-        this.pacienteHttp.get({
+        return this.pacienteHttp.get({
             apellido: pacienteEscaneado.apellido,
             nombre: pacienteEscaneado.nombre,
             documento: pacienteEscaneado.documento,

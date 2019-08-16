@@ -7,6 +7,11 @@ import { throwError } from 'rxjs';
 export class PacienteHttpService {
 
     private baseURL = '/core_v2/mpi/pacientes';  // URL to web api
+    /**
+    * RegEx para validar nombres y apellidos.
+    */
+    public nombreRegEx = /^([a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ '])+$/;
+
 
     constructor(private server: Server, public auth: Auth) { }
 

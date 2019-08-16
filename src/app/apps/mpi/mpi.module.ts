@@ -21,6 +21,7 @@ import { ValidacionService } from './pacientes/services/validacion.services';
 import { PacienteHttpService } from './pacientes/services/pacienteHttp.service';
 import { HistorialBusquedaService } from './pacientes/services/historialBusqueda.service';
 import { PacienteCacheService } from './pacientes/services/pacienteCache.service';
+import { RelacionesHttpService } from './pacientes/services/relacionesHttp.service';
 import { SharedModule } from '../../../app/shared/shared.module';
 import { MPIRouting } from './mpi.routing';
 
@@ -58,7 +59,7 @@ export class MPIModule {
     public static forRoot(): ModuleWithProviders {
         return {
             ngModule: MPIModule,
-            providers: [PacienteHttpService, PacienteBuscarService, HistorialBusquedaService, ValidacionService, PacienteCacheService]
+            providers: [PacienteHttpService, PacienteBuscarService, HistorialBusquedaService, ValidacionService, PacienteCacheService, RelacionesHttpService]
         };
     }
 }

@@ -98,7 +98,9 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                 // Si matchea una expresión regular, busca inmediatamente el paciente
                 let pacienteEscaneado = this.pacienteBuscar.comprobarDocumentoEscaneado(textoLibre);
                 if (pacienteEscaneado) {
-                    this.searchEnd.emit(this.pacienteBuscar.findByScan(pacienteEscaneado));
+                    this.pacienteBuscar.findByScan(pacienteEscaneado).subscribe(resultadoPacientes => {
+                        this.searchEnd.emit(resultadoPacientes);
+                    });
                 } else {
                     // 2. Busca por texto libre
                     this.pacienteHttp.search(textoLibre).subscribe(
