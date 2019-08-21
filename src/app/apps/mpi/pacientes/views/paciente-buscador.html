@@ -2,7 +2,7 @@
     <plex-layout-main>
         <fieldset>
 
-            <paciente-buscar [disable]="disableNuevoPaciente" (searchStart)="onSearchStart()"
+            <paciente-buscar (searchStart)="onSearchStart()"
                              (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado, $event.busqueda)"
                              (searchClear)="onSearchClear()"></paciente-buscar>
 

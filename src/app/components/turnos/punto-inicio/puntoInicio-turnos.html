@@ -1,8 +1,8 @@
 <plex-layout main="7" *ngIf="!showCreateUpdate && showDashboard && !showDarTurnos">
     <plex-layout-main>
         <!-- BOTONES DE REGISTRO MPI -->
-        <paciente-buscar [disable]="disableNuevoPaciente" (searchStart)="onSearchStart()"
-                         (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)" (searchClear)="onSearchClear()">
+        <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
+                         (searchClear)="onSearchClear()">
         </paciente-buscar>
 
         <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>

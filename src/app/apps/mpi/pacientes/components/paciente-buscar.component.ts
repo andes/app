@@ -12,9 +12,11 @@ import { PacienteBuscarService } from './paciente-buscar.service';
 })
 export class PacienteBuscarComponent implements OnInit, OnDestroy {
     private timeoutHandle: number;
-    public textoLibre: string = null;
+    public textoLibre = '';
     public autoFocus = 0;
-    public disabled = true;
+    get disabled() {
+        return !this.textoLibre || this.textoLibre.length === 0;
+    }
 
     public routes = [
         { label: 'BEBÉ', route: '/mpi/paciente/bebe' },
@@ -24,7 +26,6 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
     ];
 
     @Input() create = true;
-    @Input() disable = false;
 
 
     // Eventos

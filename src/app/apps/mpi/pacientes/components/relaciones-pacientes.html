@@ -34,7 +34,7 @@
     <br>
     <div class="row">
         <div class="col">
-            <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes)" (searchClear)="onSearchClear()"></paciente-buscar>
+            <paciente-buscar [create]="false" (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes)" (searchClear)="onSearchClear()"></paciente-buscar>
         </div>
     </div>
     <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
