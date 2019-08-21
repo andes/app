@@ -97,7 +97,7 @@
                                                                 </span>
                                                             </ng-container>
                                                             <ng-container *ngIf="registro.relacionadoCon.length > 5">
-                                                                <plex-button type="primary" size="sm"
+                                                                <plex-button type="primary" size="sm mt-1"
                                                                              label="{{ !verMasRelaciones[i] ? ('+' + (registro.relacionadoCon.length - 5) + ' ...') : '' }}"
                                                                              icon="{{ !verMasRelaciones[i] ? '' : 'close' }}"
                                                                              (click)="toggleVerMasRelaciones(i)">
