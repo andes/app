@@ -8,6 +8,7 @@ import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
+import { ObraSocialService } from './../../../../services/obraSocial.service';
 
 @Component({
     selector: 'sobreturno',
@@ -40,6 +41,10 @@ export class AgregarSobreturnoComponent implements OnInit {
     public inicio: Date;
     public fin: Date;
 
+    public modelo: any = {
+        obraSocial: '',
+        prepaga: ''
+    };
 
     constructor(
         private pacienteCache: PacienteCacheService,
@@ -127,8 +132,54 @@ export class AgregarSobreturnoComponent implements OnInit {
                 this.obtenerCarpetaPaciente();
                 this.showSobreturno = true;
                 this.pacientesSearch = false;
+
+                this.loadObraSocial(this.paciente);
             });
+
     }
+
+    loadObraSocial(paciente) {
+        // TODO: si es en colegio médico hay que buscar en el paciente
+        if (!paciente || !paciente.documento) { return; }
+        this.obraSocialService.getObrasSociales(paciente.documento).subscribe(resultado => {
+            if (resultado.length) {
+                // this._obraSocial = resultado;
+                this.obraSocialPaciente = resultado.map((os: any) => {
+                    let osPaciente;
+
+                    if (os.nombre) {
+                        osPaciente = {
+                            'id': os.nombre,
+                            'label': os.nombre
+                        };
+                    } else {
+                        osPaciente = {
+                            'id': os.financiador,
+                            'label': os.financiador
+                        };
+                    }
+                    return osPaciente;
+                });
+                this.modelo.obraSocial = this.obraSocialPaciente[0].label;
+            } else {
+                // this._obraSocial = [];
+            }
+            this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
+        });
+    }
+
+    seleccionarObraSocial(event) {
+        if (event.value === 'prepaga') {
+            this.obraSocialService.getPrepagas().subscribe(prepagas => {
+                this.showListaPrepagas = true;
+                this.prepagas = prepagas;
+            });
+        } else {
+            this.showListaPrepagas = false;
+        }
+        this.modelo.obraSocial = event && event.value;
+    }
+
     // Operaciones con carpetaPaciente
 
     // Se busca el número de carpeta de la Historia Clínica en papel del paciente
@@ -179,7 +230,6 @@ export class AgregarSobreturnoComponent implements OnInit {
     }
 
     guardar($event) {
-
         if ($event.formValid) {
 
             let indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
@@ -196,8 +246,10 @@ export class AgregarSobreturnoComponent implements OnInit {
                 fechaNacimiento: this.paciente.fechaNacimiento,
                 sexo: this.paciente.sexo,
                 telefono: this.telefono,
-                carpetaEfectores: this.paciente.carpetaEfectores
+                carpetaEfectores: this.paciente.carpetaEfectores,
+                obraSocial: this.modelo.obraSocial
             };
+
             // Si cambió el teléfono lo actualizo en el MPI
             if (this.cambioTelefono) {
                 let nuevoCel = {
