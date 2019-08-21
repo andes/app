@@ -7,7 +7,7 @@ import { ObraSocialService } from '../../../../services/obraSocial.service';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 
 @Component({
-    selector: 'paciente-panel',
+    selector: 'mpi-paciente-panel',
     templateUrl: 'paciente-panel.html',
     styleUrls: ['paciente-panel.scss']
 })

@@ -7,10 +7,13 @@
                 <!-- Todos los col deben sumar 12 o usar 'col' para un ancho automático -->
                 <div class="row">
                     <div class="col-md">
-                        <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                            (searchClear)="searchClear()"></paciente-buscar>
-                        <paciente-listado *ngIf="pacientes && pacientes.length" [type]="'sm'" [pacientes]="pacientes"
-                            [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
+                        <mpi-paciente-buscar [create]="false" (searchStart)="searchStart()"
+                                             (searchEnd)="searchEnd($event)" (searchClear)="searchClear()">
+                        </mpi-paciente-buscar>
+                        <mpi-paciente-listado *ngIf="pacientes && pacientes.length" [type]="'sm'"
+                                              [pacientes]="pacientes" [autoselect]="false"
+                                              (selected)="onPacienteSelected($event)">
+                        </mpi-paciente-listado>
                         <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
                             ¡No se encontró ningún paciente!
                         </div>
@@ -36,10 +39,10 @@
                     <div class="col-md-12">
                         <ng-container *ngIf="obraSocialPaciente">
                             <label
-                                *ngIf="obraSocialPaciente.financiador && obraSocialPaciente.financiador !=='SUMAR'">Obra
+                                   *ngIf="obraSocialPaciente.financiador && obraSocialPaciente.financiador !=='SUMAR'">Obra
                                 Social </label>
                             <label
-                                *ngIf="obraSocialPaciente.financiador && obraSocialPaciente.financiador === 'SUMAR'">Financiador
+                                   *ngIf="obraSocialPaciente.financiador && obraSocialPaciente.financiador === 'SUMAR'">Financiador
                             </label>
                             <div>{{obraSocialPaciente.financiador}}</div>
                         </ng-container>
@@ -48,7 +51,7 @@
                 <div class="row" *ngIf="prestaciones.length > 1">
                     <div class="col-md">
                         <plex-select label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion" [data]="prestaciones"
-                            name="turnoTipoPrestacion" [required]="true"></plex-select>
+                                     name="turnoTipoPrestacion" [required]="true"></plex-select>
                     </div>
                 </div>
             </fieldset>

@@ -6,7 +6,7 @@ import { PacienteBuscarService } from './paciente-buscar.service';
 
 
 @Component({
-    selector: 'paciente-buscar',
+    selector: 'mpi-paciente-buscar',
     templateUrl: 'paciente-buscar.html',
     styleUrls: ['paciente-buscar.scss']
 })

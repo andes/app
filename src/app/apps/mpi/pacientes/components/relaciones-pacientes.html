@@ -34,13 +34,13 @@
     <br>
     <div class="row">
         <div class="col">
-            <paciente-buscar [create]="false" (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes)" (searchClear)="onSearchClear()"></paciente-buscar>
+            <mpi-paciente-buscar [create]="false" (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes)" (searchClear)="onSearchClear()"></mpi-paciente-buscar>
         </div>
     </div>
     <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
     <div class="row" #listadoRel>
         <div class="col">
-            <paciente-listado [pacientes]="posiblesRelaciones" (selected)="seleccionarPacienteRelacionado($event)"></paciente-listado>
+            <mpi-paciente-listado [pacientes]="posiblesRelaciones" (selected)="seleccionarPacienteRelacionado($event)"></mpi-paciente-listado>
             <div *ngIf="posiblesRelaciones && !posiblesRelaciones.length && !searchClear" class="alert alert-danger">
                 <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
             </div>

@@ -44,27 +44,20 @@
                         </div>
                     </span>
                     <span *ngIf="!showSobreturno">
-                        <div class="row" *ngIf="pacientesSearch">
-                            <div class="col-9 pr-0">
-                                <div class="panel panel-default">
-                                    <div class="clear"></div>
-                                    <paciente-buscar (searchStart)="onSearchStart()"
-                                                     (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
-                                                     (searchClear)="onSearchClear()">
-                                    </paciente-buscar>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <!-- BOTONES DE REGISTRO MPI -->
-                                <mpi-botones-registro [hostComponent]="'sobreturno'" [disabled]="disableNuevoPaciente">
-                                </mpi-botones-registro>
-                            </div>
+                        <div *ngIf="pacientesSearch">
+
+                            <mpi-paciente-buscar (searchStart)="onSearchStart()"
+                                                 (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
+                                                 (searchClear)="onSearchClear()">
+                            </mpi-paciente-buscar>
+
                         </div>
                         <plex-loader *ngIf="loading"></plex-loader>
                         <div class="row">
                             <div class="col-12">
-                                <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
-                                                  [autoselect]="false" (selected)="onSelect($event)"></paciente-listado>
+                                <mpi-paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
+                                                      [autoselect]="false" (selected)="onSelect($event)">
+                                </mpi-paciente-listado>
 
                                 <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
                                     ¡No se encontró ningún paciente!

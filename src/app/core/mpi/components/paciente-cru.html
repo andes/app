@@ -239,14 +239,14 @@
 
                 <!-- NOTAS -->
                 <plex-tab label="Notas" icon="file-multiple">
-                    <notas-paciente [notas]="pacienteModel.notas" (notasNew)="notasNotification($event)">
-                    </notas-paciente>
+                    <mpi-paciente-notas [notas]="pacienteModel.notas" (notasNew)="notasNotification($event)">
+                    </mpi-paciente-notas>
                 </plex-tab>
 
                 <!-- FAMILIARES -->
                 <plex-tab label="Relaciones" icon="account-multiple">
-                    <relaciones-pacientes [paciente]="pacienteModel" (actualizar)="actualizarRelaciones($event)">
-                    </relaciones-pacientes>
+                    <mpi-paciente-relaciones [paciente]="pacienteModel" (actualizar)="actualizarRelaciones($event)">
+                    </mpi-paciente-relaciones>
                 </plex-tab>
 
             </plex-tabs>
@@ -288,7 +288,7 @@
                     </div>
                 </div>
                 <ng-template #showPanel>
-                    <paciente-panel [paciente]="pacienteModel"></paciente-panel>
+                    <mpi-paciente-panel [paciente]="pacienteModel"></mpi-paciente-panel>
                 </ng-template>
             </span>
         </div>

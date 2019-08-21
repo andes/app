@@ -3,7 +3,8 @@
         <header>
             <h3>Punto de inicio</h3>
         </header>
-        <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"></paciente-buscar>
+        <mpi-paciente-buscar [create]="false" (searchStart)="searchStart()" (searchEnd)="searchEnd($event)">
+        </mpi-paciente-buscar>
         <!-- Tabla / listado de pacientes -->
         <table *ngIf="listado && listado.length" class="table table-striped table-hover">
             <tbody>

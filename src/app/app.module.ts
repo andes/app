@@ -157,7 +157,6 @@ import { PacienteDetalleComponent } from './components/paciente/paciente-detalle
 
 // import { PacienteBuscarComponent } from './modules/mpi/components/paciente-buscar.component';
 // import { PacienteListadoComponent } from './modules/mpi/components/paciente-listado.component';
-import { PacientePanelComponent } from './modules/mpi/components/paciente-panel.component';
 import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cru.component';
 import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
 import { PacienteCruComponent } from './core/mpi/components/paciente-cru.component';
@@ -585,9 +584,6 @@ registerLocaleData(localeEs, 'es');
         VistaPrestacionComponent,
         VistaCDAComponent,
         HudsBusquedaPacienteComponent,
-        // PacienteBuscarComponent,
-        // PacienteListadoComponent,
-        PacientePanelComponent,
 
         // RUP
         ...RUPComponentsArray,
@@ -628,10 +624,6 @@ registerLocaleData(localeEs, 'es');
         ReglasComponent,
         VisualizacionReglasComponent,
         // MPI
-        // PacienteBuscarComponent,
-        // PacienteListadoComponent,
-        PacientePanelComponent,
-        PacientePanelComponent,
         BebeCruComponent,
         ExtranjeroNNCruComponent,
         BusquedaMpiComponent,

@@ -192,15 +192,16 @@
                     <div class="row">
                         <div class="col-8">
                             <!-- Buscador adaptable de MPI -->
-                            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                             (data)="onPacienteCancel()"></paciente-buscar>
+                            <mpi-paciente-buscar [create]="false" (searchStart)="searchStart()"
+                                                 (searchEnd)="searchEnd($event)" (data)="onPacienteCancel()">
+                            </mpi-paciente-buscar>
                         </div>
                         <div class="col-4">
                             <plex-button type="danger" label="Cancelar" (click)="onPacienteCancel()"></plex-button>
                         </div>
                     </div>
-                    <paciente-listado [pacientes]="pacientes" [autoselect]="false"
-                                      (selected)="onPacienteSelected($event)"></paciente-listado>
+                    <mpi-paciente-listado [pacientes]="pacientes" [autoselect]="false"
+                                          (selected)="onPacienteSelected($event)"></mpi-paciente-listado>
                     <br>
                     <!-- <div *ngIf="pacientes && !pacientes.length " class="alert alert-info">
                         <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente

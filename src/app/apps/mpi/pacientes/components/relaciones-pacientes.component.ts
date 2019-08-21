@@ -4,7 +4,7 @@ import { ParentescoService } from '../services/parentesco.service';
 import { IPaciente } from '../interfaces/IPaciente';
 
 @Component({
-    selector: 'relaciones-pacientes',
+    selector: 'mpi-paciente-relaciones',
     templateUrl: 'relaciones-pacientes.html',
     styleUrls: ['relaciones-pacientes.scss']
 })

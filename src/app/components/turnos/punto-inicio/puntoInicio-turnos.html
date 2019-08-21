@@ -1,17 +1,19 @@
 <plex-layout main="7" *ngIf="!showCreateUpdate && showDashboard && !showDarTurnos">
     <plex-layout-main>
         <!-- BOTONES DE REGISTRO MPI -->
-        <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
-                         (searchClear)="onSearchClear()">
-        </paciente-buscar>
+        <mpi-paciente-buscar (searchStart)="onSearchStart()"
+                             (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
+                             (searchClear)="onSearchClear()">
+        </mpi-paciente-buscar>
 
         <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
         <div class="row pt-2">
             <!-- LISTA DE RESULTADOS DE LA BÚSQUEDA -->
             <div class="col pr-2" *ngIf="!paciente">
-                <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
-                                  [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
+                <mpi-paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length"
+                                      [pacientes]="resultadoBusqueda" [autoselect]="false"
+                                      (selected)="onPacienteSelected($event)"></mpi-paciente-listado>
                 <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length && !searchClear" class="alert alert-danger">
                     <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
                 </div>
@@ -49,7 +51,8 @@
                             </td>
                             <td>
                                 <plex-button *ngIf="puedeCrearSolicitud" title="Solicitudes" icon="open-in-app"
-                                             (click)="verificarOperacion('ingresarSolicitud', paciente)"></plex-button>
+                                             (click)="verificarOperacion('ingresarSolicitud', paciente)">
+                                </plex-button>
                             </td>
                             <td>
                                 <plex-button title="Activar App" icon="cellphone-android"

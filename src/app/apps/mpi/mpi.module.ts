@@ -54,7 +54,8 @@ import { MPIRouting } from './mpi.routing';
         NotaComponent,
         PacienteBuscarComponent,
         RelacionesPacientesComponent,
-        PacienteListadoComponent
+        PacienteListadoComponent,
+        PacientePanelComponent
     ]
 })
 export class MPIModule {

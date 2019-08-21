@@ -2,7 +2,7 @@ import { OnInit, Component, Input, EventEmitter, Output } from '@angular/core';
 import { Plex } from '@andes/plex';
 
 @Component({
-    selector: 'notas-paciente',
+    selector: 'mpi-paciente-notas',
     templateUrl: 'notas-paciente.html'
 })
 

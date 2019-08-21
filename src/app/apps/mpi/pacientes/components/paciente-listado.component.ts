@@ -4,7 +4,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Plex } from '@andes/plex';
 
 @Component({
-    selector: 'paciente-listado',
+    selector: 'mpi-paciente-listado',
     templateUrl: 'paciente-listado.html',
     styleUrls: ['paciente-listado.scss']
 })
