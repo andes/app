@@ -1,5 +1,7 @@
 {
-    "extends": ["codelyzer"],
+    "extends": [
+        "codelyzer"
+    ],
     "rules": {
         "callable-types": true,
         "class-name": true,
@@ -30,7 +32,11 @@
         ],
         "no-arg": true,
         "no-bitwise": true,
-        "no-console": [false, "log", "error"],
+        "no-console": [
+            false,
+            "log",
+            "error"
+        ],
         "no-construct": true,
         "no-debugger": true,
         "no-duplicate-variable": true,
@@ -91,7 +97,7 @@
             "check-type"
         ],
         "directive-selector": [
-            true,
+            false,
             "attribute",
             "app",
             "camelCase"

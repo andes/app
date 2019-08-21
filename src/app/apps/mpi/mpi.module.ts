@@ -17,7 +17,6 @@ import { PacientePanelComponent } from './pacientes/components/paciente-panel.co
 import { PacienteListadoComponent } from './pacientes/components/paciente-listado.component';
 import { PacienteCruComponent } from './pacientes/views/paciente-cru.component';
 import { RelacionesPacientesComponent } from './pacientes/components/relaciones-pacientes.component';
-import { PacientePipe } from '../../pipes/paciente.pipe';
 import { PacienteBuscarService } from './pacientes/components/paciente-buscar.service';
 import { ValidacionService } from './pacientes/services/validacion.services';
 import { PacienteHttpService } from './pacientes/services/pacienteHttp.service';
@@ -26,6 +25,7 @@ import { PacienteCacheService } from './pacientes/services/pacienteCache.service
 import { RelacionesHttpService } from './pacientes/services/relacionesHttp.service';
 import { SharedAppModule } from '../../../app/shared/shared.module';
 import { MPIRouting } from './mpi.routing';
+import { FotoDirective } from './pacientes/directives/foto.directive';
 
 
 @NgModule({
@@ -48,11 +48,11 @@ import { MPIRouting } from './mpi.routing';
         NotaComponent,
         PacientePanelComponent,
         PacienteListadoComponent,
-        PacientePipe,
-        RelacionesPacientesComponent
+        RelacionesPacientesComponent,
+        FotoDirective
     ],
     exports: [
-        PacientePipe,
+        FotoDirective,
         NotaComponent,
         PacienteBuscarComponent,
         RelacionesPacientesComponent,
