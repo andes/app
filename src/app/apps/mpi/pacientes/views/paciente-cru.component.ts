@@ -821,7 +821,6 @@ export class PacienteCruComponent implements OnInit {
         this.loading = true;
         this.validacionService.validar(this.pacienteModel).subscribe(
             resultado => {
-                console.log(resultado);
                 this.loading = false;
                 if (resultado.estado === 'validado') {
                     // PACIENTE EXISTENTE EN ANDES
@@ -837,7 +836,7 @@ export class PacienteCruComponent implements OnInit {
                     this.showDeshacer = true;
                     this.pacienteModel.nombre = resultado.nombre;
                     this.pacienteModel.apellido = resultado.apellido;
-                    this.pacienteModel.estado = resultado.estado;
+                    this.pacienteModel.estado = resultado.estado || 'validado';
                     this.pacienteModel.fechaNacimiento = moment(resultado.fechaNacimiento).add(4, 'h').toDate(); // mas mers alert
                     this.pacienteModel.foto = resultado.foto;
                     //  Se completan datos FALTANTES
