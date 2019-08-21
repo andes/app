@@ -400,7 +400,11 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     }
 
     mostrarVinculacion(registro) {
-        return registro.relacionadoCon.find(x => x.concepto.conceptId === this.confirmarDesvincular[registro.id]);
+        if (!this.confirmarDesvincular[registro.id].cara) {
+            return registro.relacionadoCon.find(x => x.concepto.conceptId === this.confirmarDesvincular[registro.id].concepto.conceptId);
+        } else {
+            return registro.relacionadoCon.find(x => x.concepto.conceptId === this.confirmarDesvincular[registro.id].concepto.conceptId && this.confirmarDesvincular[registro.id].cara === x.cara);
+        }
     }
 
     /**
@@ -410,7 +414,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
      * @memberof PrestacionEjecucionComponent
      */
     desvincular(registroActual, registroDesvincular) {
-        this.confirmarDesvincular[registroActual.id] = (registroDesvincular.id ? registroDesvincular.id : registroDesvincular.concepto.conceptId);
+        this.confirmarDesvincular[registroActual.id] = (registroDesvincular.id ? registroDesvincular : registroDesvincular);
     }
 
     /**
@@ -419,19 +423,21 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
      * @param {any} index Indice del elemento de los registros a desvincular
      * @memberof PrestacionEjecucionComponent
      */
-    confirmarDesvinculacion(registroId, index) {
+    confirmarDesvinculacion(registro, index) {
 
-        // quitamos relacion si existe
-        if (this.confirmarDesvincular[registroId]) {
-            let registroActual = this.prestacion.ejecucion.registros.find(r => r.id === registroId || r.concepto && r.concepto.conceptId === registroId);
+        const registroId = registro.id ? registro.id : registro.concepto.conceptId;
+        const registroActual = this.prestacion.ejecucion.registros.find(r => r.id === registroId || r.concepto && r.concepto.conceptId === registroId);
 
-            if (registroActual) {
-                registroActual.relacionadoCon = registroActual.relacionadoCon.filter(rr => rr.id !== this.confirmarDesvincular[registroId] && rr.concepto.conceptId !== this.confirmarDesvincular[registroId]);
-                delete this.confirmarDesvincular[registroId];
-                // this.moverRegistroEnPosicion(index, this.prestacion.ejecucion.registros.length);
+        // Existe relación?
+        if (registroActual) {
+            if (this.confirmarDesvincular[registroId] && !this.confirmarDesvincular[registroId].cara) {
+                registroActual.relacionadoCon = registroActual.relacionadoCon.filter(rr => rr.id !== this.confirmarDesvincular[registroId].id && rr.concepto.conceptId !== this.confirmarDesvincular[registroId].concepto.conceptId);
+            } else {
+                const cara = this.confirmarDesvincular[registroId].cara;
+                registroActual.relacionadoCon = registroActual.relacionadoCon.filter(rr => rr.cara !== cara);
             }
+            delete this.confirmarDesvincular[registroId];
         }
-
     }
 
     cancelarDesvincular(registroId) {
@@ -448,7 +454,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     eliminarRegistro() {
         if (this.confirmarEliminar) {
             let registros = this.prestacion.ejecucion.registros;
-            let _registro = registros[this.indexEliminar];
+            const _registro = registros[this.indexEliminar];
 
             // Quitamos toda la vinculación que puedan tener con el registro
             registros.forEach(registro => {
