@@ -25,19 +25,18 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 // Global
 import { PlexModule } from '@andes/plex';
 import { Plex } from '@andes/plex';
-import { Server } from '@andes/shared';
+import { Server, SharedModule } from '@andes/shared';
 import { AuthModule } from '@andes/auth';
 import { Auth } from '@andes/auth';
 import { RoutingGuard, RoutingNavBar } from './app.routings-guard.class';
 import { AgmCoreModule } from '@agm/core';
-import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
 import { NgDragDropModule } from 'ng-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { DocumentosService } from './services/documentos.service';
 
 // Módulos
-import { SharedModule } from './shared/shared.module';
+import { SharedAppModule } from './shared/shared.module';
 import { MPIModule } from '../app/apps/mpi/mpi.module';
 
 // Pipes
@@ -526,6 +525,7 @@ registerLocaleData(localeEs, 'es');
         NgDragDropModule.forRoot(),
         ChartsModule,
         routing,
+        SharedAppModule,
         SharedModule,
         MPIModule.forRoot(),
         AgmCoreModule.forRoot({
@@ -540,7 +540,7 @@ registerLocaleData(localeEs, 'es');
         ProfesionalCreateUpdateComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         PacienteDetalleComponent, DashboardComponent,
-        MapsComponent, ProfesionalPipe, FromNowPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
+        ProfesionalPipe, FromNowPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
         FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe, ReplacePipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, DinamicaFormComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         Html2TextPipe, RelacionRUPPipe,

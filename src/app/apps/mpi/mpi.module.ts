@@ -7,6 +7,7 @@ import { HttpModule } from '@angular/http';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { SharedModule } from '@andes/shared';
 
 import { PacienteBuscarComponent } from './pacientes/components/paciente-buscar.component';
 import { NotaComponent } from './pacientes/components/notas-paciente.component';
@@ -22,7 +23,7 @@ import { PacienteHttpService } from './pacientes/services/pacienteHttp.service';
 import { HistorialBusquedaService } from './pacientes/services/historialBusqueda.service';
 import { PacienteCacheService } from './pacientes/services/pacienteCache.service';
 import { RelacionesHttpService } from './pacientes/services/relacionesHttp.service';
-import { SharedModule } from '../../../app/shared/shared.module';
+import { SharedAppModule } from '../../../app/shared/shared.module';
 import { MPIRouting } from './mpi.routing';
 
 
@@ -34,6 +35,7 @@ import { MPIRouting } from './mpi.routing';
         FormsModule,
         HttpClientModule,
         HttpModule,
+        SharedAppModule,
         SharedModule,
         MPIRouting
     ],

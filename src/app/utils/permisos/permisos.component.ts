@@ -1,13 +1,8 @@
-import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding, Input, Output, EventEmitter } from '@angular/core';
-import { Server } from '@andes/shared';
-import { Auth } from '@andes/auth';
-// Services
 
 @Component({
     selector: 'permisos',
-    templateUrl: 'permisos.html',
-    // styleUrls: ['permisos.scss']
+    templateUrl: 'permisos.html'
 })
 
 export class PermisosComponent implements OnInit {
@@ -17,12 +12,7 @@ export class PermisosComponent implements OnInit {
     @Input() permisos;
     @Input() botonCancelar;
 
-    // Eventos
     @Output() cancelarEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
-
-    constructor(private plex: Plex, private auth: Auth) {
-
-    }
 
     ngOnInit() {
     }

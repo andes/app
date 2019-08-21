@@ -2,8 +2,6 @@ import {
     Component,
     Input,
     OnInit,
-    EventEmitter,
-    Output,
     OnChanges
 } from '@angular/core';
 import {
@@ -12,8 +10,6 @@ import {
 import {
     Auth
 } from '@andes/auth';
-import * as moment from 'moment';
-import * as calculos from './../../../utils/calculosDashboard';
 import {
     IPaciente
 } from '../../../core/mpi/interfaces/IPaciente';
