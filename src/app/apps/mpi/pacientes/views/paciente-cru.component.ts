@@ -24,6 +24,7 @@ import { AppMobileService } from '../../../../services/appMobile.service';
 import { ParentescoService } from '../../../mpi/pacientes/services/parentesco.service';
 import { HistorialBusquedaService } from '../services/historialBusqueda.service';
 import { RelacionesHttpService } from '../services/relacionesHttp.service';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'paciente-cru',
@@ -166,6 +167,7 @@ export class PacienteCruComponent implements OnInit {
         private historialBusquedaService: HistorialBusquedaService,
         private organizacionService: OrganizacionService,
         private auth: Auth,
+        private location: Location,
         private georeferenciaService: GeoreferenciaService,
         private paisService: PaisService,
         private provinciaService: ProvinciaService,
@@ -198,6 +200,7 @@ export class PacienteCruComponent implements OnInit {
         this.estados = enumerados.getEstados();
         this.route.params.subscribe(params => {
             this.opcion = params['opcion'];
+            this.origen = params['origen'];
             if (!this.opcion) {
                 // obtiene el paciente cacheado
                 this.paciente = this.pacienteCache.getPacienteValor();
@@ -267,6 +270,8 @@ export class PacienteCruComponent implements OnInit {
                         this.paciente = Object.assign({}, resultado);
                     }
                     this.actualizarDatosPaciente();
+                }, () => {
+                    this.location.back();
                 });
             } else {
                 if (this.escaneado) {
@@ -677,7 +682,7 @@ export class PacienteCruComponent implements OnInit {
                 this._router.navigate(['citas/gestor_agendas']);
                 break;
             default:
-                this._router.navigate(['apps/mpi/busqueda']);
+                this.location.back();
                 break;
         }
 
