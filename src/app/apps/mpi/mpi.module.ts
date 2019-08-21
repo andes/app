@@ -8,6 +8,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '@andes/shared';
+import { MobileModule } from '../mobile/mobile.module';
 
 import { PacienteBuscarComponent } from './pacientes/components/paciente-buscar.component';
 import { NotaComponent } from './pacientes/components/notas-paciente.component';
@@ -37,7 +38,8 @@ import { MPIRouting } from './mpi.routing';
         HttpModule,
         SharedAppModule,
         SharedModule,
-        MPIRouting
+        MPIRouting,
+        MobileModule
     ],
     declarations: [
         PacienteCruComponent,

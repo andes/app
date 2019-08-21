@@ -38,6 +38,7 @@ import { DocumentosService } from './services/documentos.service';
 // Módulos
 import { SharedAppModule } from './shared/shared.module';
 import { MPIModule } from '../app/apps/mpi/mpi.module';
+import { MobileModule } from './apps/mobile/mobile.module';
 
 // Pipes
 import { ProfesionalPipe } from './pipes/profesional.pipe';
@@ -80,7 +81,6 @@ import { PrestacionLegacyService } from './services/prestacionLegacy.service';
 // ... Turnos
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
 import { AgendaService } from './services/turnos/agenda.service';
-import { AppMobileService } from './services/appMobile.service';
 import { TurnoService } from './services/turnos/turno.service';
 import { SmsService } from './services/turnos/sms.service';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
@@ -202,7 +202,6 @@ import { EstadisticasAgendasComponent } from './components/turnos/dashboard/esta
 import { EstadisticasPacientesComponent } from './components/turnos/dashboard/estadisticas-pacientes.component';
 import { TurnosPacienteComponent } from './components/turnos/punto-inicio/turnos-paciente.component';
 import { DashboardCodificacionComponent } from './components/turnos/dashboard/dashboard-codificacion.component';
-import { ActivarAppComponent } from './components/turnos/punto-inicio/activar-app.component';
 import { SolicitudTurnoVentanillaComponent } from './components/turnos/punto-inicio/solicitud-turno-ventanilla/solicitud-turno-ventanilla.component';
 import { ListaSolicitudTurnoVentanillaComponent } from './components/turnos/punto-inicio/solicitud-turno-ventanilla/lista-solicitud-turno-ventanilla.component';
 import { ListarTurnosComponent } from './components/turnos/gestor-agendas/operaciones-agenda/listar-turnos.component';
@@ -525,6 +524,7 @@ registerLocaleData(localeEs, 'es');
         SharedAppModule,
         SharedModule,
         MPIModule.forRoot(),
+        MobileModule.forRoot(),
         AgmCoreModule.forRoot({
             apiKey: environment.MAPS_KEY
         }),
@@ -560,7 +560,7 @@ registerLocaleData(localeEs, 'es');
         AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
         HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
         TurnosPacienteComponent, DashboardCodificacionComponent,
-        SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
+        SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent,
         BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
         ReporteC2Component,
         ConsultaDiagnosticoComponent,
@@ -675,7 +675,6 @@ registerLocaleData(localeEs, 'es');
         ConfigPrestacionService,
         PlanificarAgendaComponent,
         AgendaService,
-        AppMobileService,
         TurnoService,
         EspacioFisicoService,
         ListaEsperaService,

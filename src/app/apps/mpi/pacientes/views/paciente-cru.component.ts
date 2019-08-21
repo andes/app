@@ -20,7 +20,7 @@ import { ProvinciaService } from '../../../../services/provincia.service';
 import { PaisService } from '../../../../services/pais.service';
 import { PacienteHttpService } from '../services/pacienteHttp.service';
 import { ValidacionService } from '../services/validacion.services';
-import { AppMobileService } from '../../../../services/appMobile.service';
+import { AppMobileService } from '../../../mobile/services/appMobile.service';
 import { ParentescoService } from '../../../mpi/pacientes/services/parentesco.service';
 import { HistorialBusquedaService } from '../services/historialBusqueda.service';
 import { RelacionesHttpService } from '../services/relacionesHttp.service';

@@ -9,7 +9,7 @@ import { IDireccion } from '../../../core/mpi/interfaces/IDireccion';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { IProvincia } from './../../../interfaces/IProvincia';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
-import { AppMobileService } from './../../../services/appMobile.service';
+import { AppMobileService } from '../../../apps/mobile/services/appMobile.service';
 import { LocalidadService } from './../../../services/localidad.service';
 import { ProvinciaService } from './../../../services/provincia.service';
 import { PaisService } from './../../../services/pais.service';

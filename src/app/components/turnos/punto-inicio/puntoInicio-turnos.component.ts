@@ -8,7 +8,7 @@ import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 // Servicios
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
-import { AppMobileService } from '../../../services/appMobile.service';
+import { AppMobileService } from '../../../apps/mobile/services/appMobile.service';
 import { PacienteCacheService } from '../../../apps/mpi/pacientes/services/pacienteCache.service';
 @Component({
     selector: 'puntoInicio-turnos',

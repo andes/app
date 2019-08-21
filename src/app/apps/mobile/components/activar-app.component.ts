@@ -1,29 +1,12 @@
-import {
-    Component,
-    Input,
-    OnInit,
-    OnChanges
-} from '@angular/core';
-import {
-    Plex
-} from '@andes/plex';
-import {
-    Auth
-} from '@andes/auth';
-import {
-    IPaciente
-} from '../../../core/mpi/interfaces/IPaciente';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
+import { Plex } from '@andes/plex';
+import { Auth } from '@andes/auth';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 // Servicios
-import {
-    TurnoService
-} from '../../../services/turnos/turno.service';
-import {
-    AppMobileService
-} from '../../../services/appMobile.service';
-import {
-    PacienteService
-} from '../../../core/mpi/services/paciente.service';
+import { TurnoService } from '../../../services/turnos/turno.service';
+import { AppMobileService } from '../services/appMobile.service';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 
 @Component({
     selector: 'activar-app',
