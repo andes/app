@@ -491,8 +491,6 @@ import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem
 import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
 import { BebeCruComponent } from './core/mpi/components/bebe-cru.component';
-// import { PacienteCacheService } from './core/mpi/services/pacienteCache.service';
-// import { HistorialBusquedaService } from './core/mpi/services/historialBusqueda.service';
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { ChartComponent } from './modules/rup/components/elementos/chart.component';
 import { CodificacionService } from './modules/rup/services/codificacion.service';
@@ -720,9 +718,7 @@ registerLocaleData(localeEs, 'es');
         SugerenciasService,
         ConfiguracionPrestacionService,
         PrestacionLegacyService,
-        // PacienteCacheService,
         GeoreferenciaService,
-        // HistorialBusquedaService,
         CodificacionService,
         ResumenPacienteDinamicoService,
         VacunasService,

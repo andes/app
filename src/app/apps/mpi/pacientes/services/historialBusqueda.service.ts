@@ -1,22 +1,26 @@
 import { Injectable } from '@angular/core';
 import { IPaciente } from '../interfaces/IPaciente';
+import { BehaviorSubject } from 'rxjs';
 
 Injectable();
 export class HistorialBusquedaService {
 
-    private historial: IPaciente[] = [];
+    private historial: BehaviorSubject<IPaciente[]> = new BehaviorSubject([]);
+    public historial$ = this.historial.asObservable();
+
     private limite = 8;
 
     add(paciente: IPaciente) {
-        this.historial = this.historial.filter(pac => pac.id !== paciente.id);
-        this.historial.unshift(paciente);
+        const hist = this.get().filter(pac => pac.id !== paciente.id);
+        hist.unshift(paciente);
 
-        if (this.historial.length > this.limite) {
-            this.historial.pop();
+        if (hist.length > this.limite) {
+            hist.pop();
         }
+        this.historial.next(hist);
     }
 
     get(): IPaciente[] {
-        return this.historial;
+        return this.historial.getValue();
     }
 }

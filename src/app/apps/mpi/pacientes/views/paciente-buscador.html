@@ -24,8 +24,9 @@
             <legend>Búsquedas recientes</legend>
             <div class="row">
                 <div class="col">
-                    <mpi-paciente-listado type="sm" [pacientes]="historialSeleccionados" [autoselect]="false"
-                                          (selected)="onPacienteSelected($event)"></mpi-paciente-listado>
+                    <mpi-paciente-listado type="sm" [pacientes]="historialSvc.historial$ | async" [autoselect]="false"
+                                          (selected)="onPacienteSelected($event)">
+                    </mpi-paciente-listado>
                 </div>
             </div>
         </fieldset>
