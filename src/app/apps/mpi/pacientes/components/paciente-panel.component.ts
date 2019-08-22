@@ -2,9 +2,7 @@ import { Plex } from '@andes/plex';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IPaciente } from '../interfaces/IPaciente';
 import { IPacienteRelacion } from '../../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
-import { ProfeService } from '../../../../services/profe.service';
-import { ObraSocialService } from '../../../../services/obraSocial.service';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { PacienteHttpService } from '../services/pacienteHttp.service';
 
 @Component({
     selector: 'mpi-paciente-panel',
@@ -45,13 +43,8 @@ export class PacientePanelComponent {
     }
     set paciente(value: IPaciente) {
         this._paciente = value;
-        if (this._paciente) {
-            // Obtiene cobertura social más reciente
-            // this.actualizarCoberturaSocial();
-            // Obtiene relaciones
-            if (this._paciente.id) {
-                this.pacienteService.getById(this._paciente.id).subscribe((data) => this.relaciones.data = data.relaciones || []);
-            }
+        if (this._paciente && this._paciente.id) {
+            this.pacienteHttpService.findById(this._paciente.id, {}).subscribe((data) => this.relaciones.data = data.relaciones || []);
         }
     }
     /**
@@ -62,38 +55,15 @@ export class PacientePanelComponent {
      */
     @Output() selected: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
-    constructor(private plex: Plex, private pacienteService: PacienteService, private obraSocialService: ObraSocialService, private profeService: ProfeService) {
+    constructor(private plex: Plex, private pacienteHttpService: PacienteHttpService) {
         this.coberturaSocial = { data: null, loading: false, error: false };
         this.relaciones = { data: null, loading: false, error: false };
-    }
-
-    actualizarCoberturaSocial() {
-        // @jfgabriel | Deshabilitado momentáneamente hasta que se integren los nuevos servicios Obras Sociales
-        // if (this.request) {
-        //     this.request.unsubscribe();
-        // }
-        // this.coberturaSocial.data = null;
-        // this.coberturaSocial.loading = true;
-        // this.coberturaSocial.error = false;
-
-        // // Llama a la API
-        // if (this.paciente && this.paciente.documento) {
-        //     this.request = Observable.forkJoin([
-        //         this.obraSocialService.get({ dni: this.paciente.documento }, false),
-        //         this.profeService.get({ dni: this.paciente.documento }, false)]).subscribe(t => {
-        //             this.coberturaSocial.loading = false;
-        //             this.coberturaSocial.data = '*** SIN IMPLEMENTAR ***';
-        //         }, (err) => {
-        //             this.coberturaSocial.error = true;
-        //             this.coberturaSocial.loading = false;
-        //         });
-        // }
     }
 
     seleccionarRelacionado(relacionado: IPacienteRelacion) {
         if (relacionado.referencia) {
             this.plex.toast('info', 'Recuperando información del paciente', 'Información', 2000);
-            this.pacienteService.getById(relacionado.referencia).subscribe((data) => this.selected.emit(data));
+            this.pacienteHttpService.findById(relacionado.referencia, {}).subscribe((data) => this.selected.emit(data));
         } else {
             this.plex.info('warning', 'Este paciente no está registrado en MPI (índice de pacientes) y no puede seleccionarse');
         }
