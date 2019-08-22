@@ -13,17 +13,24 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     @ViewChildren('uploaded') childsComponents: QueryList<any>;
     @ViewChild('upload') pcUpload: ElementRef;
     @ViewChild('dropMe') dropMe: QueryList<any>;
-    imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
-    extensions = [
-        // Documentos
-        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt',
-        // Audio
-        'm4a', 'mp3', 'ogg', 'opus', 'aac', 'aiff',
-        // Video
-        'mp4', 'mpeg', 'mpg', 'mov', 'flv', 'avi', 'mkv', 'ogv',
-        // Otros
-        'dat'
+
+    image = [
+        'bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'
     ];
+
+    audio = [
+        'wav', 'm4a', 'mp3', 'ogg', 'opus', 'aac', 'aiff'
+    ];
+
+    video = [
+        'mp4', 'mpeg', 'mpg', 'mov', 'flv', 'avi', 'mkv', 'ogv'
+    ];
+
+    other = [
+        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt', 'dat'
+    ];
+
+    extensions: any[];
 
     adjunto: any;
     loading = false;
@@ -41,6 +48,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
 
 
     items = [];
+    mime: any;
 
     ngOnInit() {
 
@@ -49,7 +57,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
             { label: 'Subir desde App móvil', handler: (() => { this.fromMobile(); }) }
         ];
 
-        this.extensions = this.extensions.concat(this.imagenes);
+        this.extensions = this.image.concat(this.audio).concat(this.video).concat(this.other);
 
         if (!this.registro.valor) {
             this.registro.valor = {};
@@ -67,6 +75,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     }
 
     changeListener($event): void {
+        console.log($event);
         this.readThis($event.target);
     }
 
@@ -77,6 +86,11 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         if (!this.extensions.find((item) => item === ext.toLowerCase())) {
             (this.childsComponents.first as any).nativeElement.value = '';
             this.errorExt = true;
+
+            if (!this.waiting && !this.soloValores) {
+                this.plex.info('info', 'El formato de archivo no se reconoce y no se puede adjuntar.', 'Tipo de archivo no soportado');
+            }
+
             return;
         }
         let file: File = inputValue.files[0];
@@ -109,10 +123,9 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         }
     }
 
-    esImagen(extension) {
-        return this.imagenes.find(x => x === extension.toLowerCase());
+    esDeTipo(extension, tipo: 'image' | 'audio' | 'video' | 'other') {
+        return this[String(tipo)].find(x => x === extension.toLowerCase());
     }
-
 
     confirmarEliminarImagen($event) {
         this.plex.confirm('¿Eliminar imagen?', 'Confirmación', 'Eliminar', 'Cancelar').then(confirmed => {
