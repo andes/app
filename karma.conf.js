@@ -8,7 +8,9 @@ module.exports = function (config) {
         plugins: [
             require('karma-jasmine'),
             require('karma-chrome-launcher'),
-            require('karma-remap-istanbul'),
+            require('karma-jasmine-html-reporter'),
+            require('karma-coverage-istanbul-reporter'),
+            // require('@angular/cli/plugins/karma')
             require('@angular-devkit/build-angular/plugins/karma')
         ],
         // files: [{
@@ -21,14 +23,14 @@ module.exports = function (config) {
         // preprocessors: {
         //     './src/test.ts': ['@angular-devkit/build-angular']
         // },
-        remapIstanbulReporter: {
-            dir: require('path').join(__dirname, 'coverage'),
-            reports: {
-                html: 'coverage',
-                lcovonly: './coverage/coverage.lcov'
-            }
+        coverageIstanbulReporter: {
+            reports: ['html', 'lcovonly'],
+            fixWebpackSourcePaths: true
         },
-        reporters: ['progress', 'karma-remap-istanbul'],
+        angularCli: {
+            environment: 'dev'
+        },
+        reporters: ['progress', 'kjhtml'],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
