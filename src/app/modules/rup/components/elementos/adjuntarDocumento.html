@@ -2,8 +2,19 @@
     <section>
         <div class="adjunto" *ngFor="let doc of registro.valor.documentos; let i = index">
             <div class="img-container hover align-items-center">
+                <!-- es imagen -->
                 <img class="miniatura" (click)="activaLightbox(i)" [src]="createUrl(doc)" alt="{{ doc.ext }}"
-                    *ngIf="esImagen(doc.ext)" />
+                    *ngIf="esDeTipo(doc.ext, 'image')" />
+                <!-- es audio -->
+                <audio *ngIf="esDeTipo(doc.ext, 'audio')" [src]="createUrl(doc)" preload="auto" controls></audio>
+                <!-- es video -->
+                <video *ngIf="esDeTipo(doc.ext, 'video')" [src]="createUrl(doc)" preload="auto" controls></video>
+                <!-- es otro -->
+                <div *ngIf="esDeTipo(doc.ext, 'other')" class="d-flex align-items-center justify-content-center">
+                    <a [href]="createUrl(doc)" target="_blank" class="adjunto m-1 p-2 font-weight-bold">
+                        Documento ({{ doc.ext }})
+                    </a>
+                </div>
                 <plex-button *ngIf="!soloValores" icon="delete" size="sm" type="danger w-100"
                     (click)="confirmarEliminarImagen(doc)" title="Eliminar documento">
                 </plex-button>
@@ -12,11 +23,16 @@
                 [ngClass]="{'lightbox': i === indice && lightbox }">
                 <i (click)=imagenPrevia(i) class="mdi mdi-chevron-double-left hover previous parpadeo"></i>
                 <div class="img-container" [ngClass]="{'h-100 align-items-center': lightbox === true}">
-                    <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
+                    <img [src]="createUrl(doc)" alt="" *ngIf="esDeTipo(doc.ext, 'image')">
                 </div>
-                <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto m-1 p-2">
-                    {{ doc.ext }}
+                <a [href]="createUrl(doc)" target="_blank" *ngIf="esDeTipo(doc.ext, 'other')"
+                    class="adjunto m-1 p-2 font-weight-bold">
+                    Documento ({{ doc.ext }})
                 </a>
+                <!-- es audio -->
+                <audio *ngIf="esDeTipo(doc.ext, 'audio')" [src]="createUrl(doc)" preload="auto" controls></audio>
+                <!-- es video -->
+                <video *ngIf="esDeTipo(doc.ext, 'video')" [src]="createUrl(doc)" preload="auto" controls></video>
                 <i (click)=imagenSiguiente(i) class="mdi mdi-chevron-double-right hover next parpadeo"></i>
             </div>
             <div class="blend-overlay" *ngIf="soloValores">
@@ -42,20 +58,23 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <div class="image-container hr-inline-group" *ngIf="registro?.valor?.documentos?.length && fileToken">
-                    <plex-dropdown *ngIf="!soloValores" type="primary" class="agregar dropdown-inline font-size-150"
-                        [right]="false" icon="plus" [items]="items" [fitContainer]="true" fitContainerIcon="+"
-                        fitContainerSize="150">
+                <div class="hr-inline-group h-100" *ngIf="registro?.valor?.documentos?.length && fileToken">
+                    <plex-dropdown *ngIf="!soloValores" type="primary" class="agregar dropdown-inline" [right]="false"
+                        [items]="items">
+                        <div class="w-100 h-100 d-flex align-items-center justify-content-center">
+                            <i class="mdi mdi-plus mdi-48px text-white"></i>
+                        </div>
                     </plex-dropdown>
+                    <div class="agregar-overlay"></div>
                     <span *ngIf="waiting">
                         <plex-loader class="app-waiting" type="ball-pulse-sync"></plex-loader>
                         <plex-button type="danger" class="btn-sm" label="Cancelar" (click)="cancelar()"></plex-button>
                     </span>
-                    <div class="w-100 d-flex align-items-center subir-documento"
+                    <!-- <div class="w-100 d-flex align-items-center subir-documento"
                         *ngIf="!waiting && !soloValores && errorExt">
-                        <span class="badge-danger"> Archivo inválido </span>
+                        <span class="badge-danger"> Formato de archivo no soportado </span>
 
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>

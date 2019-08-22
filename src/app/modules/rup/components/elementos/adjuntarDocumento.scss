@@ -8,6 +8,7 @@ form {
     flex-direction: column;
     height: auto;
 }
+
 .image-container {
     background-color: #fdfdfd;
     padding: 0 10px 0 10px;
@@ -46,6 +47,19 @@ a.adjunto {
     max-width: 200px;
     max-height: 86px;
 }
+
+audio {
+    height: 45px;
+    width: 220px;
+    max-height: 125px;
+}
+
+video {
+    height: auto;
+    width: 220px;
+    max-height: 125px;
+}
+
 
 .x-mark {
     position: absolute;
@@ -155,9 +169,11 @@ a.adjunto {
     0% {
         opacity: 1.0;
     }
+
     50% {
         opacity: 0.0;
     }
+
     100% {
         opacity: 1.0;
     }
@@ -167,9 +183,11 @@ a.adjunto {
     0% {
         opacity: 1.0;
     }
+
     50% {
         opacity: 0.0;
     }
+
     100% {
         opacity: 1.0;
     }
@@ -179,9 +197,11 @@ a.adjunto {
     0% {
         opacity: 1.0;
     }
+
     50% {
         opacity: 0.0;
     }
+
     100% {
         opacity: 1.0;
     }
@@ -191,21 +211,16 @@ section {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-row-gap: 5px;
-    // display: flex;
-    // justify-items: left;
-    // grid-template-columns: 1fr;
-    // grid-template-rows: 1fr;
-    header {
-        
-    }
+
     .adjunto {
         display: flex;
         flex-flow: column;
         justify-content: space-between;
         width: 225px;
         border: 0;
-        margin-right: 5px;
+        margin-right: 2px;
         background-color: #5b5b5b;
+
         // &:hover {
         //     border: 2px inset #e2e2e2;
         //     transition: all ease .25s;
@@ -217,16 +232,19 @@ section {
             height: 220px;
             overflow: hidden;
             position: relative;
+
             .miniatura {
                 height: 100%;
                 max-height: 220px;
             }
+
             plex-button {
                 position: absolute;
                 top: 3px;
                 right: 3px;
             }
         }
+
         // Meh
         .blend-overlay {
             padding: 5px;
@@ -235,17 +253,20 @@ section {
             bottom: 0px;
             width: 225px;
             height: 90px;
+
             .info-container {
                 position: relative;
                 display: flex;
                 flex-direction: column;
                 padding-left: 5px;
                 width: 100%;
+
                 .fecha {
                     align-self: flex-start;
                     justify-self: flex-end;
                     margin-top: 8px;
                 }
+
                 .term {
                     display: flex;
                     align-items: flex-end;
@@ -253,39 +274,55 @@ section {
                     color: #e2e2e2;
                     margin-top: 4px;
                 }
-            } 
+            }
         }
+
         .form-container {
             padding: 0 5px;
+
             input {
                 border: 1px solid lightgray;
             }
         }
     }
+
     .agregar {
         display: flex;
         justify-content: center;
         align-items: center;
         width: 224px;
-        height: 300px;
+        height: inherit;
         border: 0;
         background-color: $blue;
+        position: relative;
+
         .dropdown-menu {
             width: 224px;
             justify-content: center;
             display: flex;
             transition: all ease .25s;
         }
+
         .dropdown-toggle::after {
             display: none;
         }
+
+    }
+
+    .agregar-overlay {
+        position: absolute;
+        width: 224px;
+        height: inherit;
+        z-index: 1;
+        pointer-events: auto;
+
         &:hover {
-            border: 5px solid #e2e2e2;
-            height: 300px;
+            border: 1px solid #e2e2e2;
             transition: all ease .25s;
         }
     }
 }
+
 .font-size-150 i {
     font-size: 150px;
     color: #ddd;
