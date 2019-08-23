@@ -801,8 +801,13 @@ export class PrestacionesService {
      * @returns string Icono a ser utilizado por la font de RUP
      * @memberof PrestacionesService
      */
-    public getIcon(conceptoSNOMED, esSolicitud) {
+    public getIcon(conceptoSNOMED, esSolicitud, customTag = null) {
         let icon = conceptoSNOMED.semanticTag;
+
+        if (customTag) {
+            return customTag;
+        }
+
 
         if (conceptoSNOMED.plan || this.esTurneable(conceptoSNOMED) || (typeof esSolicitud !== 'undefined' && esSolicitud)) {
             icon = 'plan';

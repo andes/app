@@ -24,7 +24,7 @@ export class VistaPrestacionComponent implements OnInit {
         this._idPrestacion = value;
         this.elementosRUPService.ready.subscribe((resultado) => {
             if (resultado) {
-                this.prestacionesService.getById(this.idPrestacion).subscribe(prestacion => {
+                this.servicioPrestacion.getById(this.idPrestacion).subscribe(prestacion => {
                     this.prestacion = prestacion;
                     this.pacienteService.getById(this.prestacion.paciente.id).subscribe(paciente => {
                         this.paciente = paciente;
@@ -37,7 +37,7 @@ export class VistaPrestacionComponent implements OnInit {
         return this._idPrestacion;
     }
 
-    constructor(public prestacionesService: PrestacionesService, public pacienteService: PacienteService, public elementosRUPService: ElementosRUPService) {
+    constructor(public servicioPrestacion: PrestacionesService, public pacienteService: PacienteService, public elementosRUPService: ElementosRUPService) {
     }
 
 
