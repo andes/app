@@ -28,7 +28,7 @@ export class VistaContextoPrestacionComponent implements OnInit {
 
     _registro: IPrestacionRegistro;
     _prestacion: IPrestacion;
-    constructor(public _prestacionesService: PrestacionesService) { }
+    constructor(public prestacionesService: PrestacionesService) { }
 
     ngOnInit() {
 
