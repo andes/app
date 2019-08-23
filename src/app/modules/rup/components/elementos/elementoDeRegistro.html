@@ -34,13 +34,13 @@
                         [dragOverClass]="'drag-target-border'" [ngClass]="{'relacionado': registro?.relacionadoCon}">
                         <div class="branch"></div>
                         <div
-                            class="rup-card {{ (registro.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(registro.concepto) }}">
+                            class="rup-card {{ (registro.esSolicitud) ? 'solicitud' : prestacionesService.getIcon(registro.concepto) }}">
                             <div class="rup-header">
                                 <div class="icon-rup drag-handle" draggable
                                     [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
                                     [dragClass]="'drag-target-border'" [dragData]="registro">
                                     <i
-                                        class="icon icon-rup-semantic-{{(registro.esSolicitud) ? prestacionesService.getIcon(registro.concepto, 'planes') : prestacionesService.getIcon(registro.concepto)}}"></i>
+                                        class="icon adi-semantic-{{(registro.esSolicitud) ? prestacionesService.getIcon(registro.concepto, 'planes') : prestacionesService.getIcon(registro.concepto)}}"></i>
                                 </div>
                                 <div class="title">
                                     {{registro.nombre}}
@@ -64,12 +64,13 @@
                                 <div class="actions"
                                     *ngIf="!confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i) )">
                                     <span
-                                        class="badge badge-{{ (registro.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(registro.concepto) }}">
+                                        class="badge badge-{{ (registro.esSolicitud) ? 'solicitud' : prestacionesService.getIcon(registro.concepto) }}">
                                         {{!registro.esSolicitud ? registro.concepto.semanticTag : 'solicitud'}}
                                     </span>
-                                    <span class="badge badge-info ml-1" *ngIf='registro.esPrimeraVez && prestacion.estados[prestacion.estados.length - 1].tipo === "validada"'>
+                                    <span class="badge badge-info ml-1"
+                                        *ngIf='registro.esPrimeraVez && prestacion.estados[prestacion.estados.length - 1].tipo === "validada"'>
                                         Es primera vez
-                                        
+
                                     </span>
                                     <a *ngIf="!soloValores" href="javascript:void(0);" title="Quitar de la consulta"
                                         (click)="confirmarEliminarRegistro(registro, 'card')"

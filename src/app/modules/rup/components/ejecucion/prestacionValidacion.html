@@ -137,13 +137,13 @@
                     </ng-container>
 
                     <div
-                        class="rup-card {{ elemento.esSolicitud ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }} elementoRup">
+                        class="rup-card {{ elemento.esSolicitud ? 'solicitud' : servicioPrestacion.getIcon(elemento.concepto) }} elementoRup">
                         <a name="{{ elemento.concepto.conceptId }}"></a>
 
                         <div class="rup-header">
                             <div class="icon-rup">
                                 <i
-                                    class="icon icon-rup-semantic-{{(elemento.esSolicitud) ? 'solicitud' : servicioPrestacion.getIcon(elemento.concepto)}}"></i>
+                                    class="icon adi-semantic-{{(elemento.esSolicitud) ? 'solicitud' : servicioPrestacion.getIcon(elemento.concepto)}}"></i>
                             </div>
                             <div class="title">
                                 <ng-container *ngIf="elemento?.nombre">
@@ -178,7 +178,7 @@
                             </div>
                             <div class="actions">
                                 <span
-                                    class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
+                                    class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'solicitud' : servicioPrestacion.getIcon(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
                                 <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento /
                                     diagnóstico principal</small>
                                 <!-- <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento / diagnóstico principal</small> -->
