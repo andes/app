@@ -163,14 +163,11 @@ export class TurnosPacienteComponent implements OnInit {
         };
 
         data['actualizaObraSocial'] = turno.paciente.obraSocial;
+        data['turno'] = turno;
         let bloqueId = (turno.bloque_id) ? turno.bloque_id : -1;
 
-        this.serviceTurno.patch(turno.agenda_id, bloqueId, turno.id, data).subscribe(resultado => {
-
-        });
+        this.serviceTurno.patch(turno.agenda_id, bloqueId, turno.id, data).subscribe({ error: e => console.error(e) });
         this.showArancelamientoForm.emit(turno);
-        turno.origen = 'rf_turnos';
-        this.servicioFA.post(turno).subscribe({ error: e => console.error(e) });
     }
 
     eventosTurno(turno, operacion) {
