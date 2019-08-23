@@ -27,11 +27,10 @@
                 <ng-container *ngFor="let elemento of prestacion.ejecucion.registros">
 
                     <div
-                        class="rup-card {{ elemento.esSolicitud ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">
+                        class="rup-card {{ elemento.esSolicitud ? 'solicitud' : servicioPrestacion.getIcon(elemento.concepto) }}">
                         <div class="rup-header">
                             <div class="icon-rup">
-                                <i
-                                    class="icon icon-rup-semantic-{{prestacionesService.getIcon(elemento.concepto)}}"></i>
+                                <i class="icon adi-semantic-{{prestacionesService.getIcon(elemento.concepto)}}"></i>
                             </div>
                             <div class="title">
                                 <ng-container *ngIf="elemento?.nombre">

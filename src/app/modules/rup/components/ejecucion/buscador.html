@@ -43,7 +43,7 @@
                             class="btn btn-block p-0 btn-{{ filtro.icon }}"
                             [ngClass]="{'active': filtroActual === filtro.key}"
                             [disabled]="!wizardActivo && getCantidadResultados(filtro.key) === 0">
-                            <i class="adi adi-rup-semantic-{{ filtro.icon }}"></i>
+                            <i class="adi adi-semantic-{{ filtro.icon }}"></i>
                             {{ filtro.titulo }}
                         </button>
                     </li>
@@ -94,7 +94,7 @@
     class="buscador-resultados">
     <cdk-virtual-scroll-viewport [itemSize]="55">
         <div *cdkVirtualFor="let registro of results[busquedaActual][filtroActual]"
-            [ngClass]="servicioPrestacion.getCssClass(registro, filtroActual === 'plan')">
+            [ngClass]="servicioPrestacion.getIcon(registro, filtroActual === 'plan')">
             <div draggable [dragScope]="'registros-rup'" [dragData]="registro" (onDragStart)="dragStart($event)"
                 (onDragEnd)="dragEnd($event)">
                 <rup-mini-card [registro]="registro" [filtroActual]="filtroActual" [emitirConceptos]="true"
@@ -137,11 +137,11 @@
                             (onDragEnd)="dragEnd($event)">
 
                             <div class="rup-card mini"
-                                [ngClass]="(items.nombre === 'planes') ? 'plan' : servicioPrestacion.getCssClass(item, filtroActual === 'plan')">
+                                [ngClass]="(items.nombre === 'planes') ? 'plan' : servicioPrestacion.getIcon(item, filtroActual === 'plan')">
                                 <div class="rup-header">
                                     <div class="icon-rup drag-handle p-0 pt-1">
                                         <i
-                                            class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(item, filtroActual === 'plan')}}"></i>
+                                            class="icon adi-semantic-{{servicioPrestacion.getIcon(item, filtroActual === 'plan')}}"></i>
                                     </div>
 
                                     <div class="rup-border">
@@ -157,7 +157,7 @@
                                                 <div class="p-0 pt-1 pr-1 float-right">
 
                                                     <small
-                                                        class="badge badge-{{ (items.nombre === 'planes') ? 'solicitud' : servicioPrestacion.getCssClass(item, filtroActual) }} text-default  pl-1 pr-1">
+                                                        class="badge badge-{{ (items.nombre === 'planes') ? 'solicitud' : servicioPrestacion.getIcon(item, filtroActual) }} text-default  pl-1 pr-1">
                                                         {{ (item.plan || items.nombre === 'planes' ||
                                                         esTurneable(item)) ? 'plan' : item.semanticTag }}
                                                     </small>

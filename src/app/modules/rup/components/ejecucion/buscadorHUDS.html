@@ -11,7 +11,7 @@
                             getCantidadResultados(filtro.key)}}</small>
                     <button (click)="filtroBuscador(filtro.key)" class="btn btn-block p-0 btn-{{ filtro.icon }}"
                         [ngClass]="{'active': filtroActual === filtro.key}">
-                        <i class="adi adi-rup-semantic-{{ filtro.icon }}"></i>
+                        <i class="adi adi-semantic-{{ filtro.icon }}"></i>
                         {{ filtro.titulo }}
                     </button>
                 </li>
