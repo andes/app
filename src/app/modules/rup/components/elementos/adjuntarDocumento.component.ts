@@ -1,4 +1,4 @@
-import { Component, Output, Input, EventEmitter, OnInit, ViewChildren, QueryList, ViewChild, ElementRef } from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { environment } from '../../../../../environments/environment';
 import { RupElement } from '../elementos';
@@ -10,27 +10,16 @@ import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
 })
 @RupElement('AdjuntarDocumentoComponent')
 export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
-    @ViewChildren('uploaded') childsComponents: QueryList<any>;
-    @ViewChild('upload') pcUpload: ElementRef;
-    @ViewChild('dropMe') dropMe: QueryList<any>;
-
-    image = [
-        'bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'
+    @ViewChildren('upload') childsComponents: QueryList<any>;
+    imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
+    extensions = [
+        // Documentos
+        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt',
+        // Audio/Video
+        'mp3', 'mp4', 'm4a', 'mpeg', 'mpg', 'mov', 'flv', 'avi', 'mkv',
+        // Otros
+        'dat'
     ];
-
-    audio = [
-        'wav', 'm4a', 'mp3', 'ogg', 'opus', 'aac', 'aiff'
-    ];
-
-    video = [
-        'mp4', 'mpeg', 'mpg', 'mov', 'flv', 'avi', 'mkv', 'ogv'
-    ];
-
-    other = [
-        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt', 'dat'
-    ];
-
-    extensions: any[];
 
     adjunto: any;
     loading = false;
@@ -46,18 +35,9 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     public descendientesInformeClinico: ISnomedConcept[] = [];
     public hoy = moment(new Date()).endOf('day').toDate();
 
-
-    items = [];
-    mime: any;
-
     ngOnInit() {
 
-        this.items = [
-            { label: 'Subir desde PC', handler: (() => { this.pcUpload.nativeElement.click(); return false; }) },
-            { label: 'Subir desde App móvil', handler: (() => { this.fromMobile(); }) }
-        ];
-
-        this.extensions = this.image.concat(this.audio).concat(this.video).concat(this.other);
+        this.extensions = this.extensions.concat(this.imagenes);
 
         if (!this.registro.valor) {
             this.registro.valor = {};
@@ -75,7 +55,6 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     }
 
     changeListener($event): void {
-        console.log($event);
         this.readThis($event.target);
     }
 
@@ -86,11 +65,6 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         if (!this.extensions.find((item) => item === ext.toLowerCase())) {
             (this.childsComponents.first as any).nativeElement.value = '';
             this.errorExt = true;
-
-            if (!this.waiting && !this.soloValores) {
-                this.plex.info('info', 'El formato de archivo no se reconoce y no se puede adjuntar.', 'Tipo de archivo no soportado');
-            }
-
             return;
         }
         let file: File = inputValue.files[0];
@@ -123,23 +97,12 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         }
     }
 
-    esDeTipo(extension, tipo: 'image' | 'audio' | 'video' | 'other') {
-        return this[String(tipo)].find(x => x === extension.toLowerCase());
+    esImagen(extension) {
+        return this.imagenes.find(x => x === extension.toLowerCase());
     }
 
-    confirmarEliminarImagen($event) {
-        this.plex.confirm('¿Eliminar imagen?', 'Confirmación', 'Eliminar', 'Cancelar').then(confirmed => {
-            if (confirmed) {
-                this.eliminarImagen($event);
-                return true;
-            } else {
-                return false;
-            }
-        });
-    }
-
-    eliminarImagen(ev) {
-        let index = this.registro.valor.documentos.indexOf(ev);
+    imageRemoved($event) {
+        let index = this.registro.valor.documentos.indexOf($event);
         this.registro.valor.documentos.splice(index, 1);
     }
 
