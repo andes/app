@@ -14,15 +14,15 @@
         <div class="datos pl-2" (click)="emitirAccion(registro, (registro.tipo ? registro.tipo: 'concepto'), 'tabs')">
             <b><span [ngClass]="{'bg-hilite': prestacionSeleccionada?.length > 0}">
                     {{ (registro?.concepto ? registro.concepto : registro ).term }}</span></b>
-            <div class="profesional">
-                {{ registro?.evoluciones ? 'Registrado por: ' + registro.evoluciones[0].profesional : 'Registrado por: ' + registro.profesional }}
+            <div *ngIf="registro?.evoluciones || registro?.profesional" class="profesional">
+                {{ registro?.evoluciones ? registro.evoluciones[0].profesional : registro.profesional }}
             </div>
             <div class="efector">
                 <span *ngIf="registro?.sugeridoPor" class="sugerido">
                     <i>Sugerido por {{ registro.sugeridoPor }}</i>
                 </span>
-                <span *ngIf="!registro?.sugeridoPor">
-                    {{ (registro?.concepto ? registro.concepto : registro)?.organizacion?.nombre }}
+                <span *ngIf="!registro?.sugeridoPor && registro?.organizacion?.nombre">
+                    {{ registro?.organizacion?.nombre }}
                 </span>
             </div>
         </div>
