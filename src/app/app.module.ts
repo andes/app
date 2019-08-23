@@ -225,7 +225,7 @@ import { UpdateContactoDireccionComponent } from './components/turnos/dashboard/
 import { RUPComponent } from './modules/rup/components/core/rup.component';
 import { ElementosRUPService } from './modules/rup/services/elementosRUP.service';
 import { BuscadorComponent } from './modules/rup/components/ejecucion/buscador.component';
-import { BuscadorHUDSComponent } from './modules/rup/components/ejecucion/buscadorHUDS.component';
+import { HudsBusquedaComponent } from './modules/rup/components/ejecucion/hudsBusqueda.component';
 import { PrestacionesService } from './modules/rup/services/prestaciones.service';
 import { AdjuntosService } from './modules/rup/services/adjuntos.service';
 
@@ -509,7 +509,6 @@ import { PasesListadoInternacionComponent } from './apps/rup/internacion/compone
 
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
 import { HUDSService } from './modules/rup/services/huds.service';
-import { RupMiniCardComponent } from './modules/rup/components/template/rup-mini-card/rup-mini-card.component';
 
 /** Configuraciones de entorno */
 import { environment } from '../environments/environment';
@@ -583,7 +582,7 @@ registerLocaleData(localeEs, 'es');
         SnomedBuscarComponent,
         DetalleAgendaComponent,
         HeaderPacienteComponent,
-        BuscadorHUDSComponent,
+        HudsBusquedaComponent,
         BuscadorComponent,
         VistaHudsComponent,
         VistaPrestacionComponent,
@@ -663,8 +662,6 @@ registerLocaleData(localeEs, 'es');
 
         // Buscador de turnos y prestaciones
         TurnosPrestacionesComponent,
-
-        RupMiniCardComponent,
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],

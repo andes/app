@@ -1,4 +1,4 @@
-@import '../core/variables';
+@import '../variables';
 .header {
     align-items: center;
 }
@@ -16,7 +16,7 @@
 }
 
 .buscador-resultados {
-    height: calc(100% - 195px);
+    height: calc(100% - 220px);
     cdk-virtual-scroll-viewport {
         height: 100%;
     }
@@ -132,9 +132,10 @@ $color in $rup_colors {
         font-size: 0.9rem;
         line-height: 1.2rem;
     }
-    .sugerido, .profesional {
+    .sugerido {
         font-weight: 400;
         font-size: 0.8rem;
+        float: left;
     }
 }
 

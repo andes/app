@@ -5,53 +5,50 @@ import { IBloque } from './IBloque';
 // Recordar actualizar Schema!
 
 export interface IAgenda {
-    id: string;
+    id: String;
     tipoPrestaciones: ITipoPrestacion[];
     // profesionales: IProfesional[];
     profesionales: [{
-        id: string,
-        nombre: string,
-        apellido: string
+        id: String,
+        nombre: String,
+        apellido: String
     }];
     organizacion: {
-        id: string,
-        nombre: string
+        id: String,
+        nombre: String
     };
     espacioFisico: {
-        id: string,
-        nombre: string,
+        id: String,
+        nombre: String,
         servicio: {
-            id: string,
-            nombre: string
+            id: String,
+            nombre: String
         };
         sector: {
-            id: string,
-            nombre: string
+            id: String,
+            nombre: String
         };
     };
     horaInicio: Date;
     horaFin: Date;
     intercalar: Boolean;
     bloques: IBloque[];
-    estado: string;
-    prePausada: string;
+    estado: String;
+    prePausada: String;
     sobreturnos?: ITurno[];
     turnosDisponibles: number; // Virtual
     turnosRestantesDelDia: number; // Virtual
     turnosRestantesProgramados: number; // Virtual
     turnosRestantesGestion: number; // Virtual
     turnosRestantesProfesional: number; // Virtual
-    estadosAgendas: string[];
-    nota: string;
+    estadosAgendas: String[];
+    nota: String;
     nominalizada: Boolean;
     dinamica: Boolean;
     cupo: Number;
     avisos: [{
-        profenionalId: string,
-        estado: string,
+        profenionalId: String,
+        estado: String,
         fecha: Date
     }];
-
-    // Virtuales
-    cantidadTurnos: number;
 }

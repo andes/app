@@ -20,7 +20,8 @@
                     </vista-registro>
 
                     <vista-procedimiento
-                        *ngIf="registro.data.class === 'plan' || registro.data.class === 'procedimiento' || registro.data.class === 'elementoderegistro' || registro.data.class === 'producto'"
+                        *ngIf="registro.data.class === 'plan' || registro.data.class === 'regimen' ||
+                        registro.data.class === 'procedimiento' || registro.data.class === 'elementoderegistro' || registro.data.class === 'producto'"
                         [registro]="registro.data" [paciente]="paciente">
                     </vista-procedimiento>
                 </plex-tab>
@@ -46,7 +47,7 @@
         </plex-tabs>
     </plex-layout-main>
     <plex-layout-sidebar>
-        <rup-buscador-huds #huds [paciente]="paciente" [emitirConceptos]="false"></rup-buscador-huds>
+        <rup-hudsBusqueda #huds [paciente]="paciente" [emitirConceptos]="false"></rup-hudsBusqueda>
     </plex-layout-sidebar>
     <plex-layout-footer>
         <plex-button position="left" label="VOLVER" (click)="volver()" type="info"></plex-button>
