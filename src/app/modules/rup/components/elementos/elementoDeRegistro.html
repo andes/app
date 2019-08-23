@@ -40,7 +40,7 @@
                                     [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
                                     [dragClass]="'drag-target-border'" [dragData]="registro">
                                     <i
-                                        class="icon adi-semantic-{{(registro.esSolicitud) ? prestacionesService.getIcon(registro.concepto, 'planes') : prestacionesService.getIcon(registro.concepto)}}"></i>
+                                        class="adi adi-semantic-{{(registro.esSolicitud) ? prestacionesService.getIcon(registro.concepto, 'planes') : prestacionesService.getIcon(registro.concepto)}}"></i>
                                 </div>
                                 <div class="title">
                                     {{registro.nombre}}
