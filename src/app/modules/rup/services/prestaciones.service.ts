@@ -822,6 +822,7 @@ export class PrestacionesService {
 
                 case 'procedimiento':
                 case 'entidad observable':
+                case 'regimen':
                 case 'régimen/tratamiento':
                     icon = 'procedimiento';
                     break;
