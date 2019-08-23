@@ -26,7 +26,7 @@
   "dependencies": {
     "@agm/core": "^1.0.0-beta.5",
     "@andes/auth": "^3.0.1",
-    "@andes/icons": "^0.6.1",
+    "@andes/icons": "^0.7.2",
     "@andes/match": "^1.1.12",
     "@andes/plex": "git://github.com/andes/plex.git#plex-opciones-dropdown",
     "@andes/shared": "^3.1.0",
