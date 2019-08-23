@@ -94,7 +94,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     public copiaFiltroActual: any;
 
-    public opcionDesplegada: String = null;
+    private opcionDesplegada: String = null;
 
     public search; // buscador de sugeridos y mis frecuentes
     private ultimoTipoBusqueda: any;
@@ -112,16 +112,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
         planes: 'Incluye todos los procedimientos/prácticas que se solicitan o planifican a futuro.<br><br>Ejemplos: Consulta de Neurología, Resonancia Magnética, Placa de torax',
         productos: 'Incluye medicamentos e insumos<br><br>Ejemplos: Amoxicilina 500 mg en capsulas, Acido Clavulánico, etc.',
     };
-
-    filtros: any = [
-        { titulo: 'TODOS', key: 'todos', icon: 'todos' },
-        { titulo: 'HALLAZGOS', key: 'hallazgos', icon: 'hallazgo' },
-        { titulo: 'TRASTORNOS', key: 'trastornos', icon: 'trastorno' },
-        { titulo: 'PROCEDIMIENTOS', key: 'procedimientos', icon: 'procedimiento' },
-        { titulo: 'SOLICITUDES', key: 'planes', icon: 'plan' },
-        { titulo: 'INSUMOS', key: 'productos', icon: 'producto' },
-    ];
-
     secciones: any;
 
     constructor(public servicioTipoPrestacion: TipoPrestacionService,

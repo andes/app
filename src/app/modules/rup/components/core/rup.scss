@@ -1,13 +1,9 @@
-@import './variables';
+@import '../variables';
 
-
-.bg-hilite {
-    background-color: $hilite;
-}
 
 // TODO: Crear paquete NPM con las fonts
 @import '../../assets/font.css';
-
+$rotate: -90deg;
 .rup-card {
     &:not(.mini) {
         border: 2px solid #ccc;
@@ -18,7 +14,70 @@
     margin-bottom: 10px;
     transition: 200ms all;
     -webkit-transition: 200ms all;
-    
+    &.mini {
+        margin-bottom: 2px;
+        .rup-header {
+            .icon-rup {
+                border-right: 2px solid #ccc;
+            }
+            .actions {
+                border-top: 2px solid #ccc;
+                border-bottom: 2px solid #ccc;
+                border-right: 2px solid #ccc;
+            }
+            .rup-border {
+                width: 100%;
+                border-top: 2px solid #ccc;
+                border-bottom: 2px solid #ccc;
+                border-right: 2px solid #ccc;
+            }
+        }
+        &:hover {
+            background: #eee;
+        }
+        .rup-border {
+            &:hover {
+                background: #eee;
+                border-right: 2px solid $blue;
+                border-bottom: 2px solid $blue;
+                border-top: 2px solid $blue;
+            }
+        }
+        @each $tag,
+        $color in $rup_colors {
+            .rup-border-#{$tag} {
+                &:hover {
+                    background: #eee;
+                    border-right: 2px solid $color;
+                    border-bottom: 2px solid $color;
+                    border-top: 2px solid $color;
+                }
+            }
+            &.#{$tag} {
+                &:hover,
+                &.active {
+                    box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
+                    .rup-header {
+                        .icon-rup {
+                            background: $color;
+                            i {
+                                color: white;
+                            }
+                        }
+                    }
+                }
+                .rup-header {
+                    .icon-rup {
+                        border: 2px solid $color;
+                        background: white;
+                        i {
+                            color: $color;
+                        }
+                    }
+                }
+            }
+        }
+    }
     @each $tag,
     $color in $rup_colors {
         &.#{$tag}:not(.mini) {
@@ -40,18 +99,15 @@
         }
     }
     .rup-header {
+        text-transform: capitalize;
         display: flex;
+        .icon-rup,
         .title,
         .actions {
-            padding: 10px 10px 5px 0;
-        }
-        .badge {
-            padding: 0.25em 0.4em;
+            padding: 5px;
         }
         .btn-icon-rup {
             line-height: 1.3em;
-            height: 20px;
-            padding: 0 2px;
         }
         .icon-rup {
             font-size: 1.2rem;
@@ -74,7 +130,7 @@
             background: white;
             font-size: 1rem;
             font-weight: 600;
-            padding: 10px;
+            padding: 10px 20px;
             display: inline-grid;
             .vinculadoCon {
                 display: inline-flex;
@@ -117,7 +173,7 @@
         }
         .content {
             margin: 0;
-            padding: 5px;
+            padding: 10px 20px;
             flex: 1;
             border-top: 1px solid #666;
         }
@@ -169,10 +225,10 @@
     .rup-header {
         text-transform: capitalize;
         display: flex;
+        .icon-rup,
         .title,
         .actions {
             padding: 5px;
-            padding-top: 10px;
         }
         .btn-icon-rup {
             line-height: 1.3em;
@@ -219,7 +275,7 @@
 
 .drag-handle {
     cursor: -webkit-grab;
-    // color: white;
+    color: white;
 }
 
 .drag-over-border {
@@ -348,7 +404,30 @@ $color in $rup_colors {
 }
 
 
-
+// ejemplo resultado: .semantic-badge hallazgo > .icon-rup {}
+@each $tag, $color in $rup_colors {
+    .semantic-badge-#{$tag} {
+        i {
+            border-bottom: 1px solid $color;
+            color: white;
+            background: $color !important;
+            mix-blend-mode: hard-light;
+            // padding-top: 3px;
+            // padding-bottom: 2px;
+            padding: 3px 3px 2px;
+        }
+        i:hover {
+            border: 2px solid $color;
+            box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
+        }
+    }
+    .semantic-text-#{$tag} {
+        color: $color;
+    }
+    .semantic-border-#{$tag} {
+        border-color: $color;
+    }
+}
 
 .input-group-addon {
     input {

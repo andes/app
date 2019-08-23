@@ -287,8 +287,7 @@ export class PrestacionesService {
                                     relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : [],
                                     valor: registro.valor
                                 }],
-                                registros: [registro],
-                                organizacion: prestaciones.find(x => x.id === registro.idPrestacion).solicitud.organizacion
+                                registros: [registro]
                             };
                             registroSalida.push(dato);
                         } else {
@@ -307,8 +306,7 @@ export class PrestacionesService {
                                 idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : ultimaEvolucion.idRegistroGenerado,
                                 informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
                                 relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : [],
-                                valor: registro.valor,
-                                organizacion: prestaciones.find(x => x.id === registro.idPrestacion).solicitud.organizacion
+                                valor: registro.valor
                             };
                             registroEncontrado.prestaciones.push(registro.idPrestacion);
                             registroEncontrado.evoluciones.push(nuevaEvolucion);
@@ -769,11 +767,10 @@ export class PrestacionesService {
      * @memberof PrestacionesService
      */
     public getCssClass(conceptoSNOMED, esSolicitud) {
-
         let clase = conceptoSNOMED.semanticTag;
 
         if (conceptoSNOMED.plan || this.esTurneable(conceptoSNOMED) || (typeof esSolicitud !== 'undefined' && esSolicitud)) {
-            clase = 'plan';
+            clase = 'solicitud';
         } else if (conceptoSNOMED.semanticTag === 'régimen/tratamiento') {
             clase = 'regimen';
         } else if (conceptoSNOMED.semanticTag === 'elemento de registro') {
@@ -784,10 +781,6 @@ export class PrestacionesService {
             clase = 'producto';
         } else if (conceptoSNOMED.semanticTag === 'entidad observable') {
             clase = 'procedimiento';
-        } else if (conceptoSNOMED.conceptId === '4241000179101') {
-            clase = 'laboratorio';
-        } else if (conceptoSNOMED.conceptId === '33879002') {
-            clase = 'vacuna';
         }
 
         return clase;
@@ -822,7 +815,6 @@ export class PrestacionesService {
 
                 case 'procedimiento':
                 case 'entidad observable':
-                case 'regimen':
                 case 'régimen/tratamiento':
                     icon = 'procedimiento';
                     break;

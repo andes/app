@@ -24,6 +24,7 @@ export class DinamicaFormComponent implements OnInit {
 
     // Eventos
     @Input() agenda: IAgenda;
+    @Output() save: EventEmitter<any> = new EventEmitter<any>();
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private plex: Plex,
