@@ -104,13 +104,17 @@ export class PlantillasRUPComponent implements OnInit {
 
     cargarPlantillas(procedimiento) {
         this.procedimiento = procedimiento;
+        this.subject.next([]);
         this.sp.get(procedimiento.conceptId).subscribe(plantillas => {
 
             if (plantillas) {
-                plantillas.filter(x => typeof x.handler !== 'function').map(y => {
-                    this.addElementToObservableArray(y);
+                plantillas.forEach(x => {
+                    if (x.id) {
+                        this.addElementToObservableArray(x);
+                    }
                 });
-
+            } else {
+                this.addElementToObservableArray({});
             }
         });
     }
@@ -151,6 +155,8 @@ export class PlantillasRUPComponent implements OnInit {
     verDescendientes(procedimiento) {
         this.snomedService.getQuery({ expression: `<<${procedimiento.conceptId}`, semanticTag: ['procedimiento'] }).subscribe(result => {
             this.descendientes = result;
+
+            // TODO: Mensajes HTML más robustos desde PLEX?
             this.plex.info('info', result.map(x => { return `<small class="d-block w-100 text-capitalize text-left ">${x.term}</small>`; }).join(''),
                 `Descendientes de ${this.procedimiento.term}`).then(infoResult => {
                     this.mostrarDescendientes = false;
