@@ -77,12 +77,12 @@
                                     <span>template de procedimiento</span>
                                 </div>
                                 <div class="content">
-                                    <plex-text label="Título: {{ plantilla.title }}" [(ngModel)]="plantilla.title"
-                                        name="title" [required]="true">
+                                    <plex-text label="Título" [(ngModel)]="plantilla.title" name="title"
+                                        [required]="true">
                                     </plex-text>
-                                    <plex-text label="Texto de item {{ '[' + plantilla.title + ']' }}"
-                                        [(ngModel)]="plantilla.descripcion" name="contenido" [html]="true"
-                                        [height]="100" [readonly]="false" class="w-100" [required]="true">
+                                    <plex-text label="Texto de plantilla" [(ngModel)]="plantilla.descripcion"
+                                        name="contenido" [html]="true" [height]="100" [readonly]="false" class="w-100"
+                                        [required]="true">
                                     </plex-text>
                                 </div>
                             </div>
