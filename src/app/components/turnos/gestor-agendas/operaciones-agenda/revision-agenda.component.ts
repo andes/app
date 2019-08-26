@@ -227,21 +227,21 @@ export class RevisionAgendaComponent implements OnInit {
 
         let listaTurnos = [];
         for (let i = 0; i < this.agenda.bloques.length; i++) {
-            listaTurnos = listaTurnos.concat(this.agenda.bloques[i].turnos);
+            listaTurnos = listaTurnos.concat(this.agenda.bloques[i].turnos.filter(t => t.estado !== 'suspendido'));
         }
         if (this.agenda.sobreturnos) {
-            listaTurnos = listaTurnos.concat(this.agenda.sobreturnos);
+            listaTurnos = listaTurnos.concat(this.agenda.sobreturnos.filter(st => st.estado !== 'suspendido'));
         }
 
         turnoSinVerificar = listaTurnos.find(t => {
-            return (t && t.paciente && t.paciente.id && !t.asistencia && t.estado !== 'suspendido' && t.estado !== 'turnoDoble');
+            return (t && t.paciente && t.paciente.id && !t.asistencia && t.estado !== 'turnoDoble');
         });
 
         turnoSinCodificar = listaTurnos.find(t => {
             return (
                 t && t.paciente && t.paciente.id &&
                 ((t.asistencia === 'asistio' && !t.diagnostico.codificaciones[0] || (t.diagnostico.codificaciones[0] && !t.diagnostico.codificaciones[0].codificacionAuditoria
-                    && !t.diagnostico.ilegible && t.asistencia === 'asistio')) || !t.asistencia)
+                    && !t.diagnostico.ilegible && t.asistencia === 'asistio')))
             );
         });
 
