@@ -31,7 +31,6 @@ export class PlantillasService {
             return this.server.get(this.url, { params }).pipe(map(plantillas => {
                 if (plantillas.length > 0) {
                     plantillas = [...plantillas,
-                    // { title: 'Reestablecer', handler: this.reestablecerTextoOriginal(conceptId) },
                     { title: 'Limpiar', handler: this.limpiarTextoPlantilla(conceptId), descripcion: '' }];
                     this.cache[conceptId].next(plantillas.map(p => {
                         return {
