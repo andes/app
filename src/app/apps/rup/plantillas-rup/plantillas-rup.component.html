@@ -1,7 +1,7 @@
 <plex-layout main="8">
     <plex-layout-main>
         <ng-container>
-            
+
             <div class="row" *ngIf="!procedimiento">
                 <div class="col">
                     <div class="jumbotron">
@@ -101,17 +101,13 @@
         <plex-loader *ngIf="loading" type="linear"></plex-loader>
         <plex-list *ngIf="procedimientos" [striped]="true" [selectable]="true">
             <plex-heading>
-                <b label>ID</b>
                 <b label>Nombre</b>
-                <b label>Tipo</b>
+                <b badge>Tipo</b>
             </plex-heading>
             <ng-container *ngFor="let pr of procedimientos">
                 <plex-item class="hover" [botonera]="false" (click)="cargarPlantillas(pr)">
-                    <plex-label>{{ pr.conceptId }}</plex-label>
                     <plex-label class="text-capitalize">{{ pr.term }}</plex-label>
-                    <div>
-                        <span class="badge badge-procedimiento">{{ pr.semanticTag }}</span>
-                    </div>
+                    <span class="badge badge-procedimiento">{{ pr.semanticTag }}</span>
                 </plex-item>
             </ng-container>
         </plex-list>
