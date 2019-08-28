@@ -105,6 +105,7 @@ export class PuntoInicioComponent implements OnInit {
 
     // tieneTurnosAsignados: true,
     actualizar() {
+        this.cancelarDinamica();
         const idsPrestacionesPermitidas = this.tiposPrestacion.map(t => t.conceptId);
         if (this.lastRequest) {
             this.lastRequest.unsubscribe();
@@ -221,6 +222,7 @@ export class PuntoInicioComponent implements OnInit {
      * Filtra el listado de agendas y prestaciones
      */
     filtrar() {
+        this.cancelarDinamica();
         // filtrar solo por las prestaciones que el profesional tenga disponibles
         this.agendaSeleccionada = null;
         this.agendas = JSON.parse(JSON.stringify(this.agendasOriginales));
@@ -456,6 +458,7 @@ export class PuntoInicioComponent implements OnInit {
     }
 
     cargarTurnos(agenda) {
+        this.cancelarDinamica();
         this.agendaSeleccionada = agenda ? agenda : 'fueraAgenda';
     }
 

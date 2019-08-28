@@ -39,7 +39,7 @@ export class DinamicaFormComponent implements OnInit {
     }
 
     searchStart() {
-        this.pacientes = null;
+        this.searchClear();
     }
 
     searchEnd(resultado: PacienteBuscarResultado) {
@@ -95,6 +95,7 @@ export class DinamicaFormComponent implements OnInit {
     }
 
     cancelar($event) {
+        this.searchClear();
         this.cancel.emit();
     }
 
@@ -127,6 +128,7 @@ export class DinamicaFormComponent implements OnInit {
             if (this.pacienteActivo) {
                 this.datosTurno.tipoPrestacion = this.turnoTipoPrestacion;
                 this.guardarDatosTurno();
+                this.searchClear();
             } else {
                 this.plex.info('warning', 'Debe seleccionar un paciente');
             }
