@@ -1,3 +1,4 @@
+import { Unsubscribe } from '@andes/shared';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TurnosPrestacionesService } from './services/turnos-prestaciones.service';
 import { Auth } from '@andes/auth';
@@ -17,7 +18,6 @@ import { Plex } from '@andes/plex';
 export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public busquedas;
     public mostrarMasOpciones;
-    private lastRequest: Subscription;
     private parametros;
     private hoy;
     public fechaDesde: any;
@@ -33,6 +33,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     prestacion: any;
     router: any;
     public prestaciones: any;
+
+    public botonGuardarDisabled: Boolean = true;
+
     constructor(
         private auth: Auth, private plex: Plex,
         private turnosPrestacionesService: TurnosPrestacionesService, public servicioPrestacion: TipoPrestacionService, public serviceProfesional: ProfesionalService,
@@ -80,12 +83,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             name: 'BUSCADOR DE TURNOS Y PRESTACIONES'
         }]);
     }
-    /* limpiamos la request que se haya ejecutado */
-    ngOnDestroy() {
-        if (this.lastRequest) {
-            this.lastRequest.unsubscribe();
-        }
-    }
+
+    ngOnDestroy() {}
+
     initialize() {
         let fecha = moment().format();
 
@@ -112,29 +112,46 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         });
 
     }
+
+    @Unsubscribe()
     buscar(parametros) {
 
         this.sumarB = (parametros.financiador === 'SUMAR' && this.sumar) ? true : false;
 
         this.showPrestacion = false;
         this.loading = true;
-        this.turnosPrestacionesService.get(parametros).subscribe((data) => {
+        return this.turnosPrestacionesService.get(parametros).subscribe((data) => {
             this.busquedas = this.ordenarPorFecha(data);
             this.loading = false;
         });
     }
+
     refreshSelection(value, tipo) {
+
         let fechaDesde = this.fechaDesde ? moment(this.fechaDesde).startOf('day') : null;
         let fechaHasta = this.fechaHasta ? moment(this.fechaHasta).endOf('day') : null;
+
+        this.botonGuardarDisabled =  (!this.documento || this.documento === '') && (!this.prestaciones || this.prestaciones.length === 0);
+
         if (fechaDesde && fechaDesde.isValid() && fechaHasta && fechaHasta.isValid()) {
             if (tipo === 'fechaDesde') {
                 if (fechaDesde.isValid()) {
+
+                    if (fechaDesde.month() < fechaHasta.month()) {
+                        this.fechaHasta = fechaHasta.subtract('months', 1).endOf('month').toDate();
+                    }
+
                     this.parametros['fechaDesde'] = fechaDesde.isValid() ? fechaDesde.toDate() : moment().format();
                     this.parametros['organizacion'] = this.auth.organizacion._id;
                 }
             }
             if (tipo === 'fechaHasta') {
                 if (fechaHasta.isValid()) {
+
+                    if (fechaDesde.month() < fechaHasta.month()) {
+                        this.fechaDesde = fechaDesde.add('months', 1).startOf('month').toDate();
+                    }
+
                     this.parametros['fechaHasta'] = fechaHasta.isValid() ? fechaHasta.toDate() : moment().format();
                     this.parametros['organizacion'] = this.auth.organizacion._id;
                 }
@@ -218,36 +235,25 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             turneable: 1
         }).subscribe(event.callback);
     }
+
+    @Unsubscribe()
     loadFinanciadores(event) {
         if (event.query && event.query !== '' && event.query.length > 2) {
-            if (this.lastRequest) {
-                this.lastRequest.unsubscribe();
-            }
             let query = {
                 nombre: event.query
             };
-            this.lastRequest = this.servicioOS.getListado(query).subscribe(event.callback);
+            return this.servicioOS.getListado(query).subscribe(event.callback);
         } else {
-            if (this.lastRequest) {
-                this.lastRequest.unsubscribe();
-            }
             event.callback([]);
         }
 
     }
+
+    @Unsubscribe()
     loadEquipoSalud(event) {
         if (event.query && event.query !== '' && event.query.length > 2) {
-            if (this.lastRequest) {
-                this.lastRequest.unsubscribe();
-            }
-            let query = {
-                nombreCompleto: event.query
-            };
-            this.lastRequest = this.serviceProfesional.get(query).subscribe(event.callback);
+            return this.serviceProfesional.get({ nombreCompleto: event.query }).subscribe(event.callback);
         } else {
-            if (this.lastRequest) {
-                this.lastRequest.unsubscribe();
-            }
             event.callback([]);
         }
     }
