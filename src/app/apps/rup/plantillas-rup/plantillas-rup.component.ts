@@ -177,7 +177,7 @@ export class PlantillasRUPComponent implements OnInit {
                     if (plantilla.id) {
                         this.sp.delete(plantilla.id).subscribe(result => {
                             this.subject.next(result);
-                            this.plex.toast('success', 'Título: ' + plantilla.title, 'Plantilla Eliminada')
+                            this.plex.toast('success', 'Título: ' + plantilla.title, 'Plantilla Eliminada');
                         });
                     } else {
                         this.removeElementFromObservableArray(idx);
@@ -204,5 +204,6 @@ export class PlantillasRUPComponent implements OnInit {
 
     cerrarProcedimiento() {
         this.procedimiento = null;
+        this.subject.next([]);
     }
 }
