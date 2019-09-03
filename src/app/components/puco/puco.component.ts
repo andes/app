@@ -186,10 +186,9 @@ export class PucoComponent implements OnInit, OnDestroy {
                                 this.usuarios.push({
                                     dni: this.resSumar.afidni,
                                     nombre: this.resSumar.afinombre + ' ' + this.resSumar.afiapellido,
-                                    financiador: 'Programa SUMAR'
-
-                                })
-                                this.pacienteSumar = this.resSumar;
+                                    financiador: 'Programa SUMAR',
+                                    claveBeneficiario: this.resSumar.clavebeneficiario
+                                });
                             }
                         });
                 } else {    // Cuando se quiere buscar un dni sin ingresar un periodo
@@ -219,8 +218,10 @@ export class PucoComponent implements OnInit, OnDestroy {
             dni: usuario.dni,
             nombre: usuario.nombre,
             codigoFinanciador: (usuario.codigoFinanciador) ? usuario.codigoFinanciador : '',
-            financiador: usuario.financiador
+            financiador: usuario.financiador,
+            claveBeneficiario: usuario.claveBeneficiario
         };
+
         this.documentosService.descargarConstanciaPuco(dto).subscribe((data: any) => {
             if (data) {
                 data.nombre = dto.nombre;
