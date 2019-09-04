@@ -58,7 +58,6 @@ import { Html2TextPipe } from './pipes/html2text.pipe';
 // Servicios
 
 // Auth
-import { PerfilUsuarioService } from './core/auth/services/perfilUsuarioService';
 
 // ... Tablas Maestras
 import { OrganizacionService } from './services/organizacion.service';
@@ -324,13 +323,6 @@ import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { VincularPacientesComponent } from './components/auditoria/vincular-pacientes.component';
 // import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
 
-// USUARIO
-import { ArbolPermisosComponent } from './core/auth/components/arbolPermisos.component';
-import { GestorUsuarioComponent } from './core/auth/components/gestorUsuario.component';
-import { SelectorUsuarioEfectorComponent } from './core/auth/components/selectorUsuarioEfector.component';
-import { PerfilFormComponent } from './core/auth/components/perfil-create-update.component';
-import { GestorPerfilesComponent } from './core/auth/components/gestorPerfiles.component';
-import { PermisosVisualizacionComponent } from './core/auth/components/permisosVisualizacion.component';
 
 // REPORTES
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
@@ -567,8 +559,7 @@ registerLocaleData(localeEs, 'es');
         ArancelamientoFormComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
-        PermisosComponent, ArbolPermisosComponent,
-        GestorUsuarioComponent, SelectorUsuarioEfectorComponent, PerfilFormComponent, GestorPerfilesComponent, PermisosVisualizacionComponent,
+        PermisosComponent,
         // AuditoriaPorBloqueComponent,
         PuntoInicioComponent,
         VincularPacientesComponent,
@@ -760,8 +751,7 @@ registerLocaleData(localeEs, 'es');
         HUDSService,
         TurnosPrestacionesService,
         PlantillasService,
-        InternacionCacheService,
-        PerfilUsuarioService
+        InternacionCacheService
     ]
 })
 

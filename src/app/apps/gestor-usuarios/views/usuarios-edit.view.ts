@@ -49,7 +49,7 @@ export class UsuariosEditComponent implements OnInit {
         private profesionalService: ProfesionalService,
         private organizacionService: OrganizacionService,
         public perfilesHttp: PerfilesHttp,
-        private permisosService: Permisos2Service
+        public permisosService: Permisos2Service
     ) { }
 
     getProfesional(user) {
