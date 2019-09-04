@@ -6,6 +6,7 @@ $color-rosa: #002B3A;
 $color-amarillo: #666600;
 $color-salmon: #E2917F;
 $color-coral: #ce803e;
+$color-verde-oscuro: #257300;
 
 $andes-azul-oscuro: #002838;
 $andes-azul: #0070cc;
@@ -17,6 +18,7 @@ $andes-verde: #00b9b1;
 $andes-verde-claro: #63c7b7;
 $andes-naranja: #ff4a1a;
 $andes-naranja-claro: #f4a03b;
+
 
 //
 // Clases
@@ -108,6 +110,12 @@ $andes-naranja-claro: #f4a03b;
     }
     &.andes-naranja-claro:hover {
         background: darken($andes-naranja-claro, 10%);
+    }
+    &.color-verde-oscuro {
+        background: $color-verde-oscuro;
+    }
+    &.color-verde-oscuro:hover {
+        background: darken($color-verde-oscuro, 10%);
     }
 }
 

@@ -515,6 +515,7 @@ import { PasesListadoInternacionComponent } from './apps/rup/internacion/compone
 
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
 import { HUDSService } from './modules/rup/services/huds.service';
+import { GestorUsuariosProvidersModule } from './apps/gestor-usuarios/gestor-usuarios.providers';
 
 /** Configuraciones de entorno */
 import { environment } from '../environments/environment';
@@ -540,6 +541,7 @@ registerLocaleData(localeEs, 'es');
         AgmCoreModule.forRoot({
             apiKey: environment.MAPS_KEY
         }),
+        GestorUsuariosProvidersModule
     ],
     declarations: [
         AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,

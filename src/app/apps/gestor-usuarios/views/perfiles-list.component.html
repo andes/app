@@ -1,0 +1,44 @@
+<plex-layout main="6">
+    <plex-layout-main>
+        <div class="row my-3">
+            <div class="col d-flex justify-content-end">
+                <!-- <plex-button size="sm" label="Volver" (click)="volver()" type="info"></plex-button> -->
+                <plex-button size="sm" icon="plus" (click)="nuevo()" type="success"></plex-button>
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="w-50">Nombre</th>
+                    <th>Alcance</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="hover" *ngFor="let perfil of perfilesHttp.perfiles$ | async" (click)="select(perfil)"
+                    [ngClass]="{'bg-inverse text-white': isSelected(perfil)}">
+                    <td>{{perfil.nombre}}</td>
+                    <td>
+                        <plex-badge type="info">
+                            {{ !perfil.organizacion ? 'LOCAL' : 'GLOBAL' }}
+                        </plex-badge>
+                    </td>
+                    <td>
+                        <plex-badge *ngIf="perfil.activo" type="success">
+                            {{ perfil.activo ? 'ACTIVO' : 'DESACTIVADO' }}
+                        </plex-badge>
+                    </td>
+                    <td>
+                        <plex-button type="danger" title="Borrar" (click)="remove(perfil)">
+                            <plex-icon name="delete"></plex-icon>
+                        </plex-button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <router-outlet></router-outlet>
+    </plex-layout-sidebar>
+</plex-layout>

@@ -1,0 +1,66 @@
+<plex-layout [main]="4">
+    <plex-layout-main>
+        <ng-container *ngIf="user$ | async as user">
+            <div class="row d-flex justify-content-between align-items-center">
+                <div class="col">
+                    <label class="block">Nombre</label>
+                    <span>{{ user.nombre }}</span>
+                </div>
+                <div class="col">
+                    <label class="block">Apellido</label>
+                    <span>{{ user.apellido }}</span>
+                </div>
+                <ng-container *ngIf="(profesional$ | async) as profesional">
+                    <div class="col">
+                        <label class="block"></label>
+                        <span class="badge-success"> Profesional </span>
+                    </div>
+                </ng-container>
+
+            </div>
+        </ng-container>
+        <div class="row">
+            <div class="col">
+                <label class="block"> Organizacion </label>
+                <h5> {{ orgName }} </h5>
+            </div>
+        </div>
+        <hr>
+        <h3> Perfiles </h3>
+        <div class="list-group" *ngIf="arbolPermisos.length">
+            <div class="list-group-item justify-content-between" *ngFor="let perfil of perfiles">
+                <span>
+                    {{perfil.nombre}}
+                </span>
+                <span>
+                    <plex-bool [ngModel]="habilitados[perfil.id].data | async"
+                               (change)="onChangePerfil($event, perfil)"></plex-bool>
+                </span>
+            </div>
+        </div>
+
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <div class="page-title d-flex justify-content-between align-items-center mb-2">
+            <span> Permisos del usuario </span>
+            <span>
+                <plex-button type="success" (click)="grabar()">
+                    GUARDAR
+                </plex-button>
+                <plex-button type="danger" (click)="borrar()">
+                    <plex-icon name="delete"></plex-icon>
+                </plex-button>
+                <plex-button type="info" (click)="copy()" title="Copiar permisos">
+                    <plex-icon name="content-copy"></plex-icon>
+                </plex-button>
+                <plex-button type="info" (click)="paste()" title="Pegar permisos" *ngIf="permisosService.hasCopy()">
+                    <plex-icon name="content-paste"></plex-icon>
+                </plex-button>
+
+            </span>
+        </div>
+
+        <arbol-permisos [permisos]="arbolPermisos" [userPermissions]="permisos$ | async" (change)="onChange()">
+        </arbol-permisos>
+    </plex-layout-sidebar>
+</plex-layout>

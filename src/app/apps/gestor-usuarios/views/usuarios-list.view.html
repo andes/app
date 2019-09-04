@@ -1,0 +1,126 @@
+<plex-layout [main]="6">
+    <plex-layout-main>
+        <header>
+            <div class="row">
+                <div class="col-5">
+                    <plex-text [(ngModel)]="search" placeholder="Buscar por DNI, nombre o apellido">
+                        <plex-icon name="account-search"></plex-icon>
+                    </plex-text>
+                </div>
+                <div class="col-5">
+                    <plex-select [(ngModel)]="organizacion" placeholder="Seleccione una organización"
+                                 [data]="organizaciones">
+                    </plex-select>
+                </div>
+                <div class="col-2">
+                    <plex-button type="success" size="sm" (click)="nuevo()" title="Nuevo usuario"
+                                 [disabled]="isNewDisabled">
+                        <plex-icon name="plus"></plex-icon>
+                    </plex-button>
+                </div>
+            </div>
+        </header>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Apellido</th>
+                    <th>Nombre</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="hover" *ngFor="let user of usuarios$ | async" (click)="select(user)"
+                    [ngClass]="{'bg-inverse text-white': userSelected?.id === user.id}">
+                    <td>{{user.usuario}}</td>
+                    <td *ngIf="user.apellido; else sinDatos">
+                        {{user.apellido}}
+                    </td>
+                    <td *ngIf="user.nombre; else sinDatos">
+                        {{user.nombre}}
+                    </td>
+                    <ng-template #sinDatos>
+                        <td> SIN DATOS</td>
+                    </ng-template>
+                </tr>
+            </tbody>
+        </table>
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <ng-container *ngIf="userSelected; else noSelected">
+            <div class="row mt-2">
+                <div class="col">
+                    <label class="block">Nombre</label>
+                    <span>{{ userSelected.nombre }}</span>
+                </div>
+                <div class="col">
+                    <label class="block">Apellido</label>
+                    <span>{{ userSelected.apellido }}</span>
+                </div>
+                <ng-container *ngIf="(userData$ | async) as profesional">
+                    <div class="col" *ngIf="profesional">
+                        <label class="block"></label>
+                        <span class="badge-success"> Profesional </span>
+                    </div>
+                </ng-container>
+            </div>
+            <hr>
+            <ng-container *ngIf="{ 
+                            orgList: orgList$ | async, 
+                            organizacionesParaAgregar: organizacionesParaAgregar$ | async  
+                        } as data">
+                <div class="page-title d-flex justify-content-between">
+                    <span>Organizaciones</span>
+                    <ng-container *ngIf="data.organizacionesParaAgregar?.length > 0">
+                        <plex-button [type]="!showNewOrgView ? 'success' : 'danger'" size="sm" (click)="toogleAddOrg()">
+                            <plex-icon name="plus" *ngIf="!showNewOrgView"></plex-icon>
+                            <plex-icon name="close" *ngIf="showNewOrgView"></plex-icon>
+                        </plex-button>
+                    </ng-container>
+                </div>
+                <div class="list-group" *ngIf="!showNewOrgView">
+                    <div class="list-group-item justify-content-between" *ngFor="let org of data.orgList">
+                        <span>{{ org.nombre }}</span>
+                        <span>
+                            <plex-button [type]="org.activo ? 'danger' : 'success'" size="sm"
+                                         [title]="org.activo ? 'Pausar' : 'Reanudar'" titlePosition="left"
+                                         (click)="toogleActivo(org)">
+                                <plex-icon *ngIf="!org.activo" name="play"></plex-icon>
+                                <plex-icon *ngIf="org.activo" name="pause"></plex-icon>
+                            </plex-button>
+                            <plex-button type="info" size="sm" title="Editar" titlePosition="left" (click)="edit(org)">
+                                <plex-icon name="pencil"></plex-icon>
+                            </plex-button>
+                        </span>
+                    </div>
+                    <div *ngIf="!data.orgList.length">
+                        No tiene organizaciónes asignadas. Agregue una para continuar.
+                    </div>
+                </div>
+                <div class="row" *ngIf="showNewOrgView">
+                    <div class="col-10">
+                        <plex-select [(ngModel)]="orgSelected" placeholder="Seleccione una organización"
+                                     [data]="data.organizacionesParaAgregar">
+                        </plex-select>
+                    </div>
+                    <div class="col">
+                        <plex-button type="success" size="sm" (click)="addOrgPermiso()">
+                            AGREGAR
+                        </plex-button>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+        <ng-template #noSelected>
+            <div class="page-title d-flex justify-content-between align-items-center mb-2">
+                <span> Gestor de Usuarios</span>
+                <plex-button type="info" (click)="toPerfiles()">
+                    VER PERFILES
+                </plex-button>
+            </div>
+            <div class="text-center">
+                <h6> Seleccione un usuario para operar </h6>
+                <img src="assets/img/users.png" alt="">
+            </div>
+        </ng-template>
+    </plex-layout-sidebar>
+</plex-layout>

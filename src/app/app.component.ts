@@ -76,7 +76,7 @@ export class AppComponent {
             accessList.push({ label: 'Solicitudes', icon: 'mdi mdi-open-in-app', route: '/solicitudes' });
         }
         if (this.auth.getPermissions('usuarios:?').length > 0) {
-            accessList.push({ label: 'Gestión de usuarios', icon: 'mdi mdi-account-key', route: '/gestionUsuarios' });
+            accessList.push({ label: 'Gestión de usuarios', icon: 'mdi mdi-account-key', route: '/gestor-usuarios/usuarios' });
         }
         if (this.auth.getPermissions('turnosPrestaciones:buscar').length > 0) {
             accessList.push({ label: 'Buscador de Turnos y Prestaciones', icon: 'table-search', route: '/buscador' });
