@@ -30,7 +30,6 @@ export class UsuariosEditComponent implements OnInit {
 
     public user$: Observable<any>;
     public profesional$: Observable<any>;
-    public organizacion: any;
 
     public permisos$: Observable<any>;
     @Observe({ initial: [] }) permisos;
@@ -134,8 +133,8 @@ export class UsuariosEditComponent implements OnInit {
     grabar() {
         const body = {
             permisos: this.permisos,
-            id: this.organizacion.id,
-            nombre: this.organizacion.nombre,
+            id: this.organizacionId,
+            nombre: this.orgName,
             perfiles: this.perfiles.filter(p => this.habilitados[p.id].bs.getValue()).map(p => {
                 return {
                     _id: p.id,
