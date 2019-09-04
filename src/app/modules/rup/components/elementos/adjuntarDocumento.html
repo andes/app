@@ -56,11 +56,10 @@
                 </span>
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="!soloValores">
             <div class="col-12">
                 <div class="hr-inline-group h-100" *ngIf="registro?.valor?.documentos?.length && fileToken">
-                    <plex-dropdown *ngIf="!soloValores" type="primary" class="agregar dropdown-inline" [right]="false"
-                        [items]="items">
+                    <plex-dropdown type="primary" class="agregar dropdown-inline" [right]="false" [items]="items">
                         <div class="w-100 h-100 d-flex align-items-center justify-content-center">
                             <i class="mdi mdi-plus mdi-48px text-white"></i>
                         </div>
