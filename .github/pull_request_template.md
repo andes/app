@@ -47,6 +47,11 @@ ejemplo: npm i git://github.com/andes/plex.git#nombre-de-rama -->
 - [ ] Si
 - [ ] No
 
+### Requiere actualizaciones de PLEX
+<!-- Marca con una X la casilla correcta y la versión de PLEX -->
+- [ ] Si
+- [ ] No
+
 ### Requiere actualizaciones en andes-test-integracion
 <!-- Marca con una X la casilla correcta y agregar link a PR-->
 - [ ] Si
