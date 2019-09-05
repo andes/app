@@ -185,4 +185,8 @@ export class UsuariosEditComponent implements OnInit {
     paste() {
         this.permisos = this.permisosService.paste();
     }
+
+    volver() {
+        this.router.navigate(['..'], { relativeTo: this.route });
+    }
 }

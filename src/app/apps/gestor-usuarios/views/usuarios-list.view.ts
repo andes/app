@@ -2,11 +2,10 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Router, ActivatedRoute } from '@angular/router';
-import { forkJoin, Observable, of, merge } from 'rxjs';
+import { Observable, of, merge } from 'rxjs';
 import { map, switchMap, tap, distinctUntilChanged, take, } from 'rxjs/operators';
 import { Permisos2Service } from '../services/permisos.service';
 import { UsuariosHttp } from '../services/usuarios.http';
-import { OrganizacionService } from '../../../services/organizacion.service';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { Observe, asObject, mergeObject, notNull, onlyNull, distincObject, cache } from '@andes/shared';
 import { Auth } from '@andes/auth';
@@ -20,11 +19,9 @@ export class UsuariosListComponent implements OnInit {
 
     constructor(
         private profesionalService: ProfesionalService,
-        private organizacionService: OrganizacionService,
         public permisosService: Permisos2Service,
         public usuariosHttp: UsuariosHttp,
         public plex: Plex,
-        private location: Location,
         private router: Router,
         private route: ActivatedRoute,
         private auth: Auth
@@ -140,7 +137,7 @@ export class UsuariosListComponent implements OnInit {
     }
 
     nuevo() {
-        this.usuariosHttp.find({ usuario: this.search }).pipe(
+        this.usuariosHttp.find({ documento: this.search }).pipe(
             map(users => users.length > 0),
             tap((found) => {
                 if (found) {
@@ -155,8 +152,8 @@ export class UsuariosListComponent implements OnInit {
                 return this.usuariosHttp.create(user);
             })
         ).subscribe((user) => {
-
-            this.plex.toast('succes', 'Usuarios creado exitosamente!', 'asdasd');
+            this.plex.toast('success', 'Usuarios creado exitosamente!');
+            this.organizacion = null;
         });
     }
 

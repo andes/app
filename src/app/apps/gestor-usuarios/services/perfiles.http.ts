@@ -72,7 +72,7 @@ export class PerfilesHttp {
 
 
     get(id): Observable<any> {
-        return this.server.get(`${this.url}/${id}`);
+        return this.server.get(`${this.url}/${id}`, { showError: false });
     }
 
     find(query = {}): Observable<any> {

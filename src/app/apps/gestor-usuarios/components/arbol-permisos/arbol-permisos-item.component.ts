@@ -93,6 +93,8 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                                 break;
                         }
                     }
+                } else {
+                    this.loading = false;
                 }
             }
         } else {

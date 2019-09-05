@@ -44,6 +44,7 @@ export class PerfilListComponent implements OnInit {
 
     remove(perfil) {
         this.perfilesHttp.delete(perfil.id).subscribe(() => {
+            this.router.navigate(['.'], { relativeTo: this.route });
             this.plex.toast('success', 'El perfil se ha borrado satisfactoriamente!');
             this.perfilesHttp.reset();
         });
@@ -54,6 +55,6 @@ export class PerfilListComponent implements OnInit {
     }
 
     volver() {
-        this.location.back();
+        this.router.navigate(['../usuarios'], { relativeTo: this.route });
     }
 }

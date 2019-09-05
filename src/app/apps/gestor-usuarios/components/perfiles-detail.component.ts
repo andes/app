@@ -39,6 +39,7 @@ export class PerfilDetailComponent implements OnInit {
         this.perfil.permisos = this.arbol.getPermisos();
         this.perfil.organizacion = !this.esGlobal ? this.auth.organizacion.id : null;
         this.perfilesHttp.save(this.perfil).subscribe(() => {
+            this.router.navigate(['..'], { relativeTo: this.route, replaceUrl: true });
             this.plex.toast('success', 'El perfil se ha guardado satisfactoriamente!');
             this.perfilesHttp.reset();
         });

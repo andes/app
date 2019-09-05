@@ -1,8 +1,8 @@
 <plex-layout main="6">
     <plex-layout-main>
         <div class="row my-3">
-            <div class="col d-flex justify-content-end">
-                <!-- <plex-button size="sm" label="Volver" (click)="volver()" type="info"></plex-button> -->
+            <div class="col d-flex justify-content-between">
+                <plex-button size="sm" label="VOLVER" (click)="volver()" type="danger"></plex-button>
                 <plex-button size="sm" label="NUEVO" (click)="nuevo()" type="success"></plex-button>
             </div>
         </div>
@@ -30,7 +30,7 @@
                         </plex-badge>
                     </td>
                     <td>
-                        <plex-button type="danger" title="Borrar" (click)="remove(perfil)">
+                        <plex-button type="danger" size="sm" title="Borrar" (click)="remove(perfil)">
                             <plex-icon name="delete"></plex-icon>
                         </plex-button>
                     </td>
