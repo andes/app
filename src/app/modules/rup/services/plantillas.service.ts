@@ -49,11 +49,11 @@ export class PlantillasService {
     }
 
     post(data): Observable<any> {
-        return this.server.post(`${this.url}`, { body: data });
+        return this.server.post(`${this.url}`, data);
     }
 
     patch(plantillaId, data): Observable<any> {
-        return this.server.patch(`${this.url}/${plantillaId}`, { body: data });
+        return this.server.patch(`${this.url}/${plantillaId}`, data);
     }
 
     delete(plantillaId): Observable<any> {
