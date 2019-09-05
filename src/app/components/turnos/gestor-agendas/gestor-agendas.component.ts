@@ -25,7 +25,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     showReasignarTurnoAgendas: boolean;
 
     private guardarAgendaPanel: ViewContainerRef;
-    @ViewChild('guardarAgendaPanel', { static: true }) set setGuardarAgendaPanel(theElementRef: ViewContainerRef) {
+    @ViewChild('guardarAgendaPanel', { static: false }) set setGuardarAgendaPanel(theElementRef: ViewContainerRef) {
         this.guardarAgendaPanel = theElementRef;
     }
 
