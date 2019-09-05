@@ -29,7 +29,7 @@ export class ProfesionalService {
      * @param {any} params Opciones de busqueda
      */
     getFirma(params: any): Observable<any> {
-        return this.server.get(this.profesionalUrl + '/firma', { params: params, showError: true });
+        return this.server.get(this.profesionalUrl + '/firma', { params: params, showError: false });
     }
 
     /**

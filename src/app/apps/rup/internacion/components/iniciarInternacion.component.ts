@@ -13,6 +13,8 @@ import { ProfesionalService } from '../../../../services/profesional.service';
 import { InternacionService } from '../services/internacion.service';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { IPrestacionRegistro } from '../../../../modules/rup/interfaces/prestacion.registro.interface';
+import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
     selector: 'rup-iniciarInternacion',
@@ -268,7 +270,7 @@ export class IniciarInternacionComponent implements OnInit {
             this.route.params.subscribe(params => {
                 if (params && params['id']) {
                     let id = params['id'];
-                    this.camasService.getCama(id).subscribe(cama => {
+                    this.camasService.getCama(id).pipe(catchError(() => of(null))).subscribe(cama => {
                         this.cama = cama;
                     });
                 }

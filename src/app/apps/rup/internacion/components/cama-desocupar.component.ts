@@ -6,7 +6,8 @@ import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { InternacionService } from '../services/internacion.service';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 
 @Component({

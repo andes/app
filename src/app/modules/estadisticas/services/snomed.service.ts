@@ -23,7 +23,7 @@ export class SnomedService {
     }
 
     getCie10(params: any): Observable<any> {
-        return this.server.get(this.snomedURL + '/map', { params: params, showError: true });
+        return this.server.get(this.snomedURL + '/map', { params: params, showError: false });
     }
 
     getQuery(params: any): Observable<any[]> {

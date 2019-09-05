@@ -13,6 +13,8 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
 import { ElementosRUPService } from '../../../../modules/rup/services/elementosRUP.service';
 import { InternacionService } from '../services/internacion.service';
 import { IPrestacionRegistro } from '../../../../modules/rup/interfaces/prestacion.registro.interface';
+import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
     templateUrl: 'ejecucionInternacion.html',
@@ -158,7 +160,7 @@ export class EjecucionInternacionComponent implements OnInit {
         if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada' &&
             egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
 
-            this.servicioInternacion.liberarCama(this.prestacion.id, egresoExiste.valor.InformeEgreso.fechaEgreso).subscribe(() => { });
+            this.servicioInternacion.liberarCama(this.prestacion.id, egresoExiste.valor.InformeEgreso.fechaEgreso).pipe(catchError(() => of(null))).subscribe(() => { });
 
         }
     }

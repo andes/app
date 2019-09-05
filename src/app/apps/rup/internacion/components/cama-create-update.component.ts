@@ -6,8 +6,8 @@ import { InternacionService } from '../services/internacion.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { CamasService } from '../services/camas.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
-import { Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { Subject, of } from 'rxjs';
+import { debounceTime, catchError } from 'rxjs/operators';
 
 @Component({
     selector: 'cama-create-update',
@@ -77,7 +77,7 @@ export class CamaCreateUpdateComponent implements OnInit {
             if (params && params['idCama']) {
                 this.nuevaCama = false;
                 let idCama = params['idCama'];
-                this.CamaService.getCama(idCama).subscribe(cama => {
+                this.CamaService.getCama(idCama).pipe(catchError(() => of(null))).subscribe(cama => {
                     this.cama = cama;
                     this.estado = Object.assign({}, this.cama.ultimoEstado);
                     if (this.controlEliminarCama()) {

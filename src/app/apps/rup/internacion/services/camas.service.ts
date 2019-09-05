@@ -11,7 +11,7 @@ export class CamasService {
     constructor(private server: Server) { }
 
     getCama(id: String): Observable<any> {
-        return this.server.get(this.camasUrl + '/' + id, null);
+        return this.server.get(this.camasUrl + '/' + id);
     }
 
     getCamas(params): Observable<ICama[]> {

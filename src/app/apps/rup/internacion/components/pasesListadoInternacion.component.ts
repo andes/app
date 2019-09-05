@@ -10,8 +10,8 @@ import { OrganizacionService } from '../../../../services/organizacion.service';
 import { CamasService } from '../services/camas.service';
 import * as enumerados from '../../../../utils/enumerados';
 import { ResumenInternacionComponent } from './resumenInternacion.component';
-import { Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { Subject, of } from 'rxjs';
+import { debounceTime, catchError } from 'rxjs/operators';
 
 // ../../../../services/internacion.service
 @Component({
