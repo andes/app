@@ -251,12 +251,11 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
                     && !t.diagnostico.ilegible && t.asistencia === 'asistio')) || !t.asistencia)
             );
         });
-
         if (!turnoSinCodificar) {
             // Se cambia de estado la agenda a Auditada
             patch = {
-                'op': this.estadoCodificado.id,
-                'estado': this.estadoCodificado.id
+                'op': 'auditada',
+                'estado': 'auditada'
             };
             label = 'Auditada';
         } else {
@@ -289,6 +288,24 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         }
     }
 
+    isRegistradoProfesional(turno) {
+        let sinCodificaciones;
+        let sinAuditorias;
+        if (turno && turno.diagnostico && turno.diagnostico.codificaciones) {
+            sinCodificaciones = turno.diagnostico.codificaciones.find(cod => (!cod.codificacionProfesional || !cod.codificacionProfesional.snomed || !cod.codificacionProfesional.snomed.term));
+            sinAuditorias = turno.diagnostico.codificaciones.find(cod => !cod.codificacionAuditoria);
+        }
+        let esCodificado = turno && turno.paciente && turno.asistencia && (turno.asistencia === 'noAsistio' || turno.asistencia === 'sinDatos' || (!sinCodificaciones && sinAuditorias));
+        return esCodificado;
+    }
+    isAuditado(turno) {
+        let sinAuditorias;
+        if (turno && turno.diagnostico && turno.diagnostico.codificaciones) {
+            sinAuditorias = turno.diagnostico.codificaciones.find(cod => !cod.codificacionAuditoria);
+        }
+        let esAuditado = turno && turno.paciente && turno.asistencia && (turno.asistencia === 'noAsistio' || turno.asistencia === 'sinDatos' || !sinAuditorias);
+        return esAuditado;
+    }
     cancelar() {
         this.turnoSeleccionado = null;
     }
