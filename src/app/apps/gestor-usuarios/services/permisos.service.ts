@@ -16,14 +16,9 @@ export class Permisos2Service {
 
     // [TODO] Poner cache
     // @Cache({})
-    organizaciones(params): Observable<any> {
-        return this.server.get('/auth/organizaciones', { params });
+    organizaciones(): Observable<any> {
+        return this.server.get('/modules/gestor-usuarios/organizaciones', {});
     }
-
-    actualizarEstadoPermisos(username, idOrganizacion) {
-        return this.server.put('/auth/estadoPermisos' + '/' + username, { idOrganizacion });
-    }
-
 
     copyPermisos = null;
     copy(permisos: string[]) {

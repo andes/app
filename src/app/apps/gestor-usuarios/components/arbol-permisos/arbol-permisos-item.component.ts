@@ -20,6 +20,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
     private seleccionados = [];
     private allModule = false;
     public itemsCount = 0;
+    public loading = true;
 
     @Input() item: any;
 
@@ -73,17 +74,20 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                 if (items.length > 0) {
                     if (items.indexOf('*') >= 0) {
                         this.all = true;
+                        this.loading = false;
                     } else {
                         this.all = false;
                         // [TODO] Buscar según el tipo
                         switch (this.item.type) {
                             case 'prestacion':
                                 this.servicioTipoPrestacion.get({ id: items }).subscribe((data) => {
+                                    this.loading = false;
                                     this.seleccionados = [...data];
                                 });
                                 break;
                             case 'organizacion':
                                 this.organizacionService.get({ ids: items }).subscribe((data) => {
+                                    this.loading = false;
                                     this.seleccionados = [...data];
                                 });
                                 break;
@@ -101,7 +105,6 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
 
     selectChange() {
         this.change.emit();
-        // console.log(this.seleccionados);
     }
 
     loadData(type, event) {
@@ -109,7 +112,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
         // [TODO] Filtrar otras tipos de datos
         let query: any = {};
         if (!event.query || event.query.length === 0) {
-            return event.callback(this.seleccionados);
+            return event.callback([...this.seleccionados]);
         }
         switch (type) {
             case 'prestacion':

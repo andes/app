@@ -11,6 +11,7 @@ import { Permisos2Service } from '../services/permisos.service';
 import { ArbolPermisosComponent } from '../components/arbol-permisos/arbol-permisos.component';
 import { Observe } from '@andes/shared';
 import { Plex } from '@andes/plex';
+import { Auth } from '@andes/auth';
 
 
 function elementAt(index = 0) {
@@ -23,7 +24,6 @@ function elementAt(index = 0) {
 })
 export class UsuariosEditComponent implements OnInit {
     @ViewChild(ArbolPermisosComponent) arbol: ArbolPermisosComponent;
-
     private userId = '';
     private organizacionId = '';
     public orgName = '';
@@ -43,6 +43,7 @@ export class UsuariosEditComponent implements OnInit {
         private location: Location,
         private router: Router,
         public plex: Plex,
+        private auth: Auth,
         private route: ActivatedRoute,
         public usuariosHttp: UsuariosHttp,
         private profesionalService: ProfesionalService,

@@ -35,7 +35,7 @@
             {{item.title}}
             <plex-bool *ngIf="!item.avoidAll" [(ngModel)]="all" label="Seleccionar todos" type="slide"> </plex-bool>
         </h5>
-        <plex-select [multiple]="true" [readonly]="all" [(ngModel)]="seleccionados" [data]="seleccionados"
+        <plex-select [multiple]="true" [readonly]="all" [(ngModel)]="seleccionados" *ngIf="!loading"
                      (getData)="loadData(item.type, $event)" placeholder="Seleccione los elementos con permisos"
                      (change)="selectChange()" name="plexSelect" idField="id"></plex-select>
     </div>

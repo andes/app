@@ -9,6 +9,7 @@ import { UsuariosHttp } from '../services/usuarios.http';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { Observe, asObject, mergeObject, notNull, onlyNull, distincObject, cache } from '@andes/shared';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'gestor-usarios-usuarios-list',
@@ -25,9 +26,14 @@ export class UsuariosListComponent implements OnInit {
         public plex: Plex,
         private location: Location,
         private router: Router,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private auth: Auth
     ) {
     }
+
+    public verPerfiles = this.auth.check('usuarios:perfiles:?') || this.auth.check('global:usuarios:perfiles:?');
+    public readOnly = !this.auth.check('usuarios:write');
+
 
     search$: Observable<any>;
     @Observe({ distinc: true, debounce: 300 }) search: string;
@@ -48,8 +54,7 @@ export class UsuariosListComponent implements OnInit {
         }, {
             name: 'Usuarios'
         }]);
-
-        this.usuarios$ = this.permisosService.organizaciones({ admin: true }).pipe(
+        this.usuarios$ = this.permisosService.organizaciones().pipe(
             tap(orgs => this.organizaciones = orgs),
             switchMap(() => {
                 return this.route.queryParams.pipe(

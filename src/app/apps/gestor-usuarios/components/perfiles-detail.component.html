@@ -14,7 +14,7 @@
             <plex-text label="Nombre" [(ngModel)]="perfil.nombre" name="nombre" [required]="true"></plex-text>
         </div>
         <!-- Agregar ngIf para mostrarlo solo cuando tenga permisos para crear un perfil global -->
-        <div class="col d-flex align-items-end" *ngIf="puedeModificarAlcance">
+        <div class="col d-flex align-items-end" *ngIf="canGlobal">
             <plex-bool label="Global" [(ngModel)]="esGlobal" type="slide" name="esGlobal"
                        (click)="esGlobal = !esGlobal">
             </plex-bool>

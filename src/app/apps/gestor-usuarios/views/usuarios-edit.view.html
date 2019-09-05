@@ -3,6 +3,10 @@
         <ng-container *ngIf="user$ | async as user">
             <div class="row d-flex justify-content-between align-items-center">
                 <div class="col">
+                    <label class="x">Documento</label>
+                    <span>{{ user.documento }}</span>
+                </div>
+                <div class="col">
                     <label class="block">Nombre</label>
                     <span>{{ user.nombre }}</span>
                 </div>
