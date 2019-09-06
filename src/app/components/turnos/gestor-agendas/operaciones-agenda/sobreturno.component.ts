@@ -35,12 +35,14 @@ export class AgregarSobreturnoComponent implements OnInit {
     public telefono = '';
     public cambioTelefono = false;
     public pacientes: any;
+    public obraSocialPaciente: any[] = [];
+    public prepagas: any[] = [];
+    showListaPrepagas: Boolean = false;
     public seleccion = null;
     public esEscaneado = false;
     public hoy = new Date();
     public inicio: Date;
     public fin: Date;
-
     public modelo: any = {
         obraSocial: '',
         prepaga: ''
@@ -53,6 +55,7 @@ export class AgregarSobreturnoComponent implements OnInit {
         private router: Router,
         private auth: Auth,
         private servicePaciente: PacienteService,
+        public obraSocialService: ObraSocialService,
         private route: ActivatedRoute) { }
 
     ngOnInit() {
@@ -143,7 +146,6 @@ export class AgregarSobreturnoComponent implements OnInit {
         if (!paciente || !paciente.documento) { return; }
         this.obraSocialService.getObrasSociales(paciente.documento).subscribe(resultado => {
             if (resultado.length) {
-                // this._obraSocial = resultado;
                 this.obraSocialPaciente = resultado.map((os: any) => {
                     let osPaciente;
 
@@ -161,8 +163,6 @@ export class AgregarSobreturnoComponent implements OnInit {
                     return osPaciente;
                 });
                 this.modelo.obraSocial = this.obraSocialPaciente[0].label;
-            } else {
-                // this._obraSocial = [];
             }
             this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
         });
@@ -238,6 +238,19 @@ export class AgregarSobreturnoComponent implements OnInit {
             } else {
                 this.paciente.carpetaEfectores.push(this.carpetaEfector);
             }
+
+            let osPaciente: any;
+            if (this.modelo.obraSocial === 'prepaga') {
+                osPaciente = this.modelo.prepaga;
+            } else if (this.modelo.obraSocial === 'SUMAR') {
+                osPaciente = {
+                    codigoPuco: null,
+                    financiador: 'SUMAR',
+                    nombre: null
+                };
+            } else {
+                osPaciente = this.paciente.financiador.find((os) => os.nombre === this.modelo.obraSocial);
+            }
             let pacienteSave = {
                 id: this.paciente.id,
                 documento: this.paciente.documento,
@@ -247,7 +260,7 @@ export class AgregarSobreturnoComponent implements OnInit {
                 sexo: this.paciente.sexo,
                 telefono: this.telefono,
                 carpetaEfectores: this.paciente.carpetaEfectores,
-                obraSocial: this.modelo.obraSocial
+                obraSocial: osPaciente
             };
 
             // Si cambió el teléfono lo actualizo en el MPI

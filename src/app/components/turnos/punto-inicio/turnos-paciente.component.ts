@@ -166,7 +166,7 @@ export class TurnosPacienteComponent implements OnInit {
         data['turno'] = turno;
         let bloqueId = (turno.bloque_id) ? turno.bloque_id : -1;
 
-        this.serviceTurno.patch(turno.agenda_id, bloqueId, turno.id, data).subscribe({ error: e => console.error(e) });
+        this.serviceTurno.patch(turno.agenda_id, bloqueId, turno.id, data).subscribe();
         this.showArancelamientoForm.emit(turno);
     }
 

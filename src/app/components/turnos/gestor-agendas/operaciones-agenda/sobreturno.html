@@ -10,6 +10,19 @@
                         <label>Paciente</label>
                         <div>{{paciente | paciente}}</div>
                     </div>
+                    <div class="col" *ngIf="modelo.obraSocial !== 'SUMAR'">
+                        <plex-radio [data]="obraSocialPaciente" [(ngModel)]="modelo.obraSocial" name="os"
+                                    (change)="seleccionarObraSocial($event)" label="Seleccione una Obra Social">
+                        </plex-radio>
+                        <plex-select *ngIf="showListaPrepagas" [(ngModel)]="modelo.prepaga" name="prepagas"
+                                     [data]="prepagas" label="Seleccione una Prepaga" idField="nombre"
+                                     labelField="nombre">
+                        </plex-select>
+                    </div>
+                    <div class="col" *ngIf="modelo.obraSocial === 'SUMAR'">
+                        <label>Programa</label>
+                        <div>{{modelo.obraSocial}}</div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col">
