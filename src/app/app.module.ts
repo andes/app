@@ -163,9 +163,9 @@ import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cr
 import { RelacionesPacientesComponent } from './core/mpi/components/relaciones-pacientes.component';
 import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
 import { PacienteCruComponent } from './core/mpi/components/paciente-cru.component';
-import { GoogleMapComponent } from './core/mpi/components/google-map.component';
 import { GeoreferenciaService } from './core/mpi/services/georeferencia.service';
 import { BotonesRegistroComponent } from './core/mpi/components/mpi-botones-registro.component';
+import { GeorrefMapComponent } from './core/mpi/components/georref-map.component';
 
 
 // PUCO/ObraSocial
@@ -642,9 +642,9 @@ registerLocaleData(localeEs, 'es');
         RelacionesPacientesComponent,
         BusquedaMpiComponent,
         PacienteCruComponent,
-        GoogleMapComponent,
         BotonesRegistroComponent,
         UpdateContactoDireccionComponent,
+        GeorrefMapComponent,
 
         // form Terapeutico
         FormTerapeuticoComponent,

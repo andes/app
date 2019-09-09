@@ -20,7 +20,6 @@ import { OrganizacionService } from '../../../services/organizacion.service';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HistorialBusquedaService } from '../services/historialBusqueda.service';
-
 @Component({
     selector: 'paciente-cru',
     templateUrl: 'paciente-cru.html',
@@ -37,11 +36,11 @@ export class PacienteCruComponent implements OnInit {
     parentescoModel: any[];
     relacionesBorradas: any[];
     backUpDatos = [];
-
     provincias: IProvincia[] = [];
     pacientesSimilares = [];
     barrios: any[] = [];
     localidades: any[] = [];
+    disableGeolocalizar = true;
 
     paisArgentina = null;
     provinciaActual = null;
@@ -132,8 +131,7 @@ export class PacienteCruComponent implements OnInit {
     public celularAndes: String = '';
     public activarApp = false;
 
-    // Google map
-    geoRefOrganizacion = []; // Coordenadas efector
+    // Georref-map
     geoReferenciaAux = []; // Coordenadas para la vista del mapa.
     infoMarcador: String = null;
 
@@ -180,16 +178,9 @@ export class PacienteCruComponent implements OnInit {
                 this.organizacionActual = org;
                 this.provinciaActual = org.direccion.ubicacion.provincia;
                 this.localidadActual = org.direccion.ubicacion.localidad;
-                this.loadPaciente();
-                if (org.direccion.geoReferencia) {
-                    this.geoReferenciaAux = org.direccion.geoReferencia;
-                } else {
-                    this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
-                        if (point) {
-                            this.geoReferenciaAux = [point.lat, point.lng];
-                        }
-                    });
-                }
+                setTimeout(() => {
+                    this.loadPaciente();
+                }, 1000);
             }
         });
         // Cargamos todas las provincias
@@ -212,7 +203,6 @@ export class PacienteCruComponent implements OnInit {
         this.estadosCiviles = enumerados.getObjEstadoCivil();
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.estados = enumerados.getEstados();
-
     }
 
     private loadPaciente() {
@@ -250,17 +240,7 @@ export class PacienteCruComponent implements OnInit {
                 }
             }
         } else {
-            // ubicacion inicial mapa de google cuando no se cargó ningun paciente
-            if (this.geoRefOrganizacion) {
-                this.geoReferenciaAux = this.geoRefOrganizacion;
-            } else {
-                this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
-                    if (point) {
-                        this.geoReferenciaAux = [point.lat, point.lng];
-                        this.infoMarcador = this.auth.organizacion.nombre;
-                    }
-                });
-            }
+            this.inicializarMapaDefault();
         }
     }
 
@@ -458,13 +438,13 @@ export class PacienteCruComponent implements OnInit {
             this.geoReferenciaAux = this.pacienteModel.direccion[0].geoReferencia;
             this.infoMarcador = null;
         } else {
-            if (this.geoRefOrganizacion) {
-                this.geoReferenciaAux = this.geoRefOrganizacion;
+            if (this.organizacionActual.direccion.geoReferencia) {
+                this.geoReferenciaAux = this.organizacionActual.direccion.geoReferencia;
             } else {
-                this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
+                let direccionCompleta = this.organizacionActual.direccion.valor + ', ' + this.localidadActual.nombre + ', ' + this.provinciaActual.nombre;
+                this.georeferenciaService.getGeoreferencia({ direccion: direccionCompleta }).subscribe(point => {
                     if (point) {
                         this.geoReferenciaAux = [point.lat, point.lng];
-                        this.infoMarcador = this.auth.organizacion.nombre;
                     }
                 });
             }
@@ -853,6 +833,14 @@ export class PacienteCruComponent implements OnInit {
             this.validado = false;
         }
         this.disableValidar = false;
+    }
+
+    checkDisableGeolocalizar(direccion) {
+        if (direccion.value) {
+            this.disableGeolocalizar = false;
+        } else {
+            this.disableGeolocalizar = true;
+        }
     }
 
 }

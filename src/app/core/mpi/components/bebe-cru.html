@@ -220,13 +220,13 @@
                                 </div>
                             </div>
 
-                            <!-- MAPA DE GOOGLE -->
+                            <!-- MAPA -->
                             <div class="col-8">
-                                <google-map [latitud]="geoReferenciaAux[0]" [longitud]="geoReferenciaAux[1]"
-                                            [infoMarker]="infoMarcador" (changeCoordenadas)="changeCoordenadas($event)">
-                                </google-map>
+                                <georref-map *ngIf="geoReferenciaAux.length" [latLong]="geoReferenciaAux"
+                                             (changeCoordinates)="changeCoordenadas($event)">
+                                </georref-map>
 
-                                <plex-button class="float-right" label="Actualizar" position="right" type="success"
+                                <plex-button class="float-right" label="Geolocalizar" position="right" type="success"
                                              (click)="actualizarMapa()"></plex-button>
                             </div>
                         </div>

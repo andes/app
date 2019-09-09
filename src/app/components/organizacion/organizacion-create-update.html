@@ -80,18 +80,7 @@
                                                placeholder="Ingrese CP..."></plex-text>
                                 </div>
                                 <div class="col-6" *ngIf="organizacionModel?.direccion?.geoReferencia?.length">
-                                    <agm-map [latitude]="organizacionModel.direccion.geoReferencia[0]"
-                                             [longitude]="organizacionModel.direccion.geoReferencia[1]" [zoom]="zoom"
-                                             [zoomControl]="false">
-                                        <agm-marker [latitude]="organizacionModel.direccion.geoReferencia[0]"
-                                                    [longitude]="organizacionModel.direccion.geoReferencia[1]"
-                                                    [markerDraggable]="!validadoSISA" (dragEnd)="movioMarker($event)">
-                                            <agm-info-window>
-                                                <strong class="auto"><b>{{organizacionModel.nombre}} </b><br>
-                                                    {{organizacionModel.direccion.valor}} </strong>
-                                            </agm-info-window>
-                                        </agm-marker>
-                                    </agm-map>
+                                    <georref-map [latLong]="organizacionModel.direccion.geoReferencia"></georref-map>
                                 </div>
                             </div>
                         </div>
