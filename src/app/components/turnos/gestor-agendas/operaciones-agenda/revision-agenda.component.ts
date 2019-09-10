@@ -246,7 +246,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
 
         turnoSinCodificar = listaTurnos.find(t => {
             return (
-                t && t.paciente && t.paciente.id &&
+                t && t.paciente && t.paciente.id && t.estado !== 'suspendido' && t.estado !== 'turnoDoble' &&
                 ((t.asistencia === 'asistio' && !t.diagnostico.codificaciones[0] || (t.diagnostico.codificaciones[0] && !t.diagnostico.codificaciones[0].codificacionAuditoria
                     && !t.diagnostico.ilegible && t.asistencia === 'asistio')) || !t.asistencia)
             );
@@ -291,7 +291,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     isRegistradoProfesional(turno) {
         let sinCodificaciones;
         let sinAuditorias;
-        if (turno && turno.diagnostico && turno.diagnostico.codificaciones) {
+        if (turno && turno.diagnostico && turno.diagnostico.codificaciones && turno.diagnostico.codificaciones.length) {
             sinCodificaciones = turno.diagnostico.codificaciones.find(cod => (!cod.codificacionProfesional || !cod.codificacionProfesional.snomed || !cod.codificacionProfesional.snomed.term));
             sinAuditorias = turno.diagnostico.codificaciones.find(cod => !cod.codificacionAuditoria);
         }
@@ -300,12 +300,16 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     }
     isAuditado(turno) {
         let sinAuditorias;
-        if (turno && turno.diagnostico && turno.diagnostico.codificaciones) {
+        if (turno && turno.diagnostico && turno.diagnostico.codificaciones && turno.diagnostico.codificaciones.length) {
             sinAuditorias = turno.diagnostico.codificaciones.find(cod => !cod.codificacionAuditoria);
+        }
+        if (turno && turno.diagnostico && turno.diagnostico.codificaciones && !turno.diagnostico.codificaciones.length) {
+            sinAuditorias = true; // El turno no tiene codificaciones asociadas
         }
         let esAuditado = turno && turno.paciente && turno.asistencia && (turno.asistencia === 'noAsistio' || turno.asistencia === 'sinDatos' || !sinAuditorias);
         return esAuditado;
     }
+
     cancelar() {
         this.turnoSeleccionado = null;
     }
