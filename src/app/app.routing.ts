@@ -72,8 +72,9 @@ import { CantidadConsultaXPrestacionComponent } from './components/reportes/cant
 // REPORTES SJ
 import { EncabezadoReportesDiariosComponent } from './components/reportesDiarios/encabezadoReportesDiarios.component';
 
-// CONFIGURACION PRESTACION
+// CONFIGURACIONES
 import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
+import { PlantillasRUPComponent } from './apps/rup/plantillas-rup/plantillas-rup.component';
 
 // Internacion
 import { MapaDeCamasComponent } from './apps/rup/internacion/components/mapa-de-camas.component';
@@ -161,7 +162,10 @@ const appRoutes: Routes = [
   { path: 'rup/internacion/censo/mensual', component: CensoMensualComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/internacion/listado', component: ListadoInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
-  // configuracion prestacion
+  { path: 'rup/plantillas', component: PlantillasRUPComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+
+
+  // Configuraciones / ABM
   { path: 'configuracionPrestacion', component: ConfiguracionPrestacionVisualizarComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // Mapa de camas

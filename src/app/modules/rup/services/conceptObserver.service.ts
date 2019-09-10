@@ -1,6 +1,6 @@
 
-import {filter} from 'rxjs/operators';
-import { BehaviorSubject ,  Observable ,  Subject } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { ISnomedConcept } from '../interfaces/snomed-concept.interface';
 import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface';
@@ -22,7 +22,7 @@ export class ConceptObserverService {
       this.observers[registro.concepto.conceptId] = new BehaviorSubject<IPrestacionRegistro>(registro);
     }
     // Filtra para que notifique al mismo elemento que lo generó el cambio
-    return this.observers[registro.concepto.conceptId].filter((value, index) => value !== registro);
+    return this.observers[registro.concepto.conceptId].pipe(filter((value, index) => value.id !== registro.id));
     // return this.observers[registro.concepto.conceptId];
   }
 

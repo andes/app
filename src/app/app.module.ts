@@ -126,7 +126,7 @@ import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesP
 import { CDAService } from './modules/rup/services/CDA.service';
 import { ResumenPacienteDinamicoService } from './modules/rup/services/resumenPaciente-dinamico.service';
 import { VacunasService } from './services/vacunas.service';
-
+import { PlantillasService } from './modules/rup/services/plantillas.service';
 
 
 
@@ -513,6 +513,7 @@ import { HUDSService } from './modules/rup/services/huds.service';
 /** Configuraciones de entorno */
 import { environment } from '../environments/environment';
 import { LugarDeNacimientoComponent } from './modules/rup/components/elementos/lugarDeNacimiento.component';
+import { PlantillasRUPComponent } from './apps/rup/plantillas-rup/plantillas-rup.component';
 
 registerLocaleData(localeEs, 'es');
 
@@ -662,6 +663,8 @@ registerLocaleData(localeEs, 'es');
 
         // Buscador de turnos y prestaciones
         TurnosPrestacionesComponent,
+
+        PlantillasRUPComponent,
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
@@ -748,6 +751,7 @@ registerLocaleData(localeEs, 'es');
         SnomedBuscarService,
         HUDSService,
         TurnosPrestacionesService,
+        PlantillasService
     ]
 })
 
