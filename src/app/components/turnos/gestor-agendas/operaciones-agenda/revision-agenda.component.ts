@@ -15,6 +15,7 @@ import { TurnoService } from './../../../../services/turnos/turno.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
 import { ISubscription } from 'rxjs/Subscription';
+import { Unsubscribe } from '@andes/shared';
 
 @Component({
     selector: 'revision-agenda',
@@ -432,15 +433,12 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     // ----------------------------------
 
     // Componente paciente-listado
-
-    onSelect(paciente: IPaciente): void {
+    @Unsubscribe()
+    onSelect(paciente: IPaciente) {
         this.resultadoBusqueda = [];
-        if (this.lastRequest) {
-            this.lastRequest.unsubscribe();
-        }
         // Es un paciente existente en ANDES??
         if (paciente && paciente.id) {
-            this.lastRequest = this.servicePaciente.getById(paciente.id).subscribe(
+            return this.servicePaciente.getById(paciente.id).subscribe(
                 pacienteMongo => {
                     this.paciente = pacienteMongo;
                     this.pacienteDetalle = pacienteMongo;
