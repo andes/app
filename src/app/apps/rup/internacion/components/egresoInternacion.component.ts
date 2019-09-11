@@ -578,21 +578,23 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
                 let fechaIngreso = moment(informeIngreso.informeIngreso.fechaIngreso);
                 if (fechaIngreso) {
                     let fechaEgreso = moment(fechaACargar);
-                    if ((fechaEgreso.diff(fechaIngreso, 'days', true) <= 0)) {
-                        this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a  ' + fechaIngreso.format('YYYY-MM-DD HH:mm'));
-                        // this.fechaEgreso = new Date();
+                    if ((fechaEgreso.diff(fechaIngreso) <= 0)) {
+                        this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a  ' + fechaIngreso.format('DD-MM-YYYY HH:mm'));
                         this.registro.valor.InformeEgreso.diasDeEstada = null;
                     } else {
                         if (this.camaSelected) {
-                            let fechaUltimoEstado = moment(this.camaSelected.ultimoEstado.fecha, 'YYYY-MM-DD HH:mm');
-                            if (fechaUltimoEstado && (fechaEgreso.diff(fechaUltimoEstado, 'days', true) <= 0)) {
+                            let fechaUltimoEstado = moment(this.camaSelected.ultimoEstado.fecha, 'DD-MM-YYYY HH:mm');
+                            if (fechaUltimoEstado && (fechaEgreso.diff(fechaUltimoEstado) <= 0)) {
                                 this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a ' + fechaUltimoEstado);
                                 this.registro.valor.InformeEgreso.diasDeEstada = null;
                                 return;
                             }
                         }
-                        let dateDif = fechaEgreso.diff(fechaIngreso, 'days');
-                        let diasEstada = fechaEgreso ? dateDif === 0 ? 1 : fechaEgreso.diff(fechaIngreso, 'days') : '1';
+                        /*  Si la fecha de egreso es el mismo día del ingreso -> debe mostrar 1 día de estada
+                            Si la fecha de egreso es al otro día del ingreso, no importa la hora -> debe mostrar 1 día de estada
+                            Si la fecha de egreso es posterior a los dos casos anteriores -> debe mostrar la diferencia de días */
+                        let dateDif = fechaEgreso.endOf('day').diff(fechaIngreso.startOf('day'), 'days');
+                        let diasEstada = dateDif === 0 ? 1 : dateDif;
                         this.registro.valor.InformeEgreso.diasDeEstada = diasEstada;
                     }
                 }
