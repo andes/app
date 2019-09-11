@@ -298,7 +298,7 @@
                                     (click)="seleccionarDiente(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular'))"
                                     [ngClass]="{'seleccionada': estaSeleccionada(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular'))}"
                                     d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z"
-                                    class="diente palatina {{ 'diente-' + getClassRegistro(diente,(esCuadranteIzquierdo(cuadrante) ? 'palatina' : 'vestibular'))?.concepto.semanticTag }}"
+                                      class="diente palatina {{ 'diente-' + getClassRegistro(diente,(esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular'))?.concepto.semanticTag }}"
                                     title="(esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular')" />
 
                                 <ng-container
