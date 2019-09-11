@@ -69,6 +69,8 @@ export class ListarSolicitudesComponent implements OnInit {
     @Output() carpetaPrestadaEmit: EventEmitter<any> = new EventEmitter<any>();
     @Output() recargarPrestamosEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
     @Output() imprimirSolicitudesEmit: EventEmitter<any> = new EventEmitter<any>();
+    @Output() mostrarSolicitudManualEventEmitter: EventEmitter<any> = new EventEmitter<any>();
+    @Output() prestarCarpetaEmitter: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
 
@@ -295,9 +297,7 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     showSolicitudManual() {
-        this.verSolicitudManual = false;
-        this.pacientesSearch = true;
-        this.verPrestar = false;
+        this.mostrarSolicitudManualEventEmitter.emit();
     }
 
     loadEstados(event) {
@@ -307,7 +307,7 @@ export class ListarSolicitudesComponent implements OnInit {
 
     prestar(solicitudCarpeta) {
         if (this.carpetasSeleccionadas.length === 0) {
-            this.carpetaPrestadaEmit.emit(solicitudCarpeta);
+            this.prestarCarpetaEmitter.emit(solicitudCarpeta);
             this.carpetaSeleccionada = solicitudCarpeta;
             this.verPrestar = true;
             this.verSolicitudManual = false;
@@ -332,95 +332,11 @@ export class ListarSolicitudesComponent implements OnInit {
         this.sortCarpetas();
     }
 
-    onCancelSolicitar(event) {
-        this.verSolicitudManual = false;
-        this.verPrestar = false;
-    }
-
-    onCancelPrestar(event) {
-        this.verPrestar = false;
-    }
-
-    cancelarPacienteSearch() {
-        this.pacientesSearch = false;
-    }
-
     onCarpeta(value) {
         this.recargarPrestamosEmit.emit(true);
         this.getCarpetas({}, null);
     }
 
-    buscarPaciente() {
-        this.verSolicitudManual = false;
-        this.pacientesSearch = true;
-    }
-
-    afterSearch(paciente: IPaciente): void {
-        this.pacientesSearch = false;
-        this.verNuevaCarpeta = false;
-        if (paciente.id) {
-            this.servicePaciente.getById(paciente.id).subscribe(
-                pacienteMPI => {
-                    this.paciente = pacienteMPI;
-                    if (this.obtenerCarpetaPaciente()) {
-                        this.verSolicitudManual = true;
-                    } else {
-                        this.verSolicitudManual = false;
-                        this.plex.confirm('El paciente ' + this.paciente.apellido + ', ' + this.paciente.nombre + '<br> no posee una carpeta en esta Institución. <br> Desea crear una nueva carpeta?').then((confirmar) => {
-                            if (confirmar) {
-                                this.verNuevaCarpeta = true;
-                            }
-                        });
-                    }
-                });
-        } else {
-            this.seleccion = paciente;
-            this.esEscaneado = true;
-            this.escaneado.emit(this.esEscaneado);
-            this.selected.emit(this.seleccion);
-            this.verSolicitudManual = false;
-        }
-    }
-
-    obtenerCarpetaPaciente() {
-        this.carpetaEfector = undefined;
-        let indiceCarpeta = -1;
-        if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) {
-            // Filtro por organizacion
-            indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
-            if (indiceCarpeta > -1 && this.paciente.carpetaEfectores[indiceCarpeta].nroCarpeta.indexOf('PDR') === -1) {
-                this.verSolicitudManual = true;
-                this.carpetaEfector = this.paciente.carpetaEfectores[indiceCarpeta];
-                return true;
-            }
-        }
-        if (!this.carpetaEfector) {
-            // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
-            this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
-                if (carpeta.length > 0) {
-                    carpeta.forEach(historial => {
-                        let index = historial.carpetaEfectores.findIndex(x => x.organizacion._id === this.auth.organizacion.id);
-                        if (index > -1) {
-                            let carpetaHistorica = historial.carpetaEfectores[index];
-                            if (carpetaHistorica.nroCarpeta.indexOf('PDR') === -1) {
-                                this.carpetaEfector = carpetaHistorica;
-                                this.servicePaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: [this.carpetaEfector] }).subscribe(
-                                    resultado => {
-                                        this.verSolicitudManual = true;
-                                    }
-                                );
-                            } else {
-                                return false;
-                            }
-                        }
-                    });
-                } else {
-                    this.verSolicitudManual = false;
-                    return false;
-                }
-            });
-        }
-    }
 
     fileExtension(file) {
         if (file.lastIndexOf('.') >= 0) {
@@ -464,16 +380,5 @@ export class ListarSolicitudesComponent implements OnInit {
         let token = window.sessionStorage.getItem('jwt');
         let url = environment.API + '/modules/cda/' + archivo + '?token=' + token;
         window.open(url);
-    }
-
-    // Se usa tanto para guardar como cancelar
-    afterComponenteCarpeta(carpetas) {
-        if (carpetas) {
-            let carpetaNueva = carpetas.find(x => x.organizacion._id === this.auth.organizacion.id);
-            let msj = `Nro de Carpeta ${carpetaNueva.nroCarpeta} asignada a ${this.paciente.apellido}, ${this.paciente.nombre}`;
-            this.plex.info('warning', msj);
-        } else {
-            this.verNuevaCarpeta = false;
-        }
     }
 }

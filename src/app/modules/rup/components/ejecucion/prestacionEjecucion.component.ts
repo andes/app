@@ -19,6 +19,8 @@ import { HeaderPacienteComponent } from '../../../../components/paciente/headerP
 import { SnomedBuscarService } from '../../../../components/snomed/snomed-buscar.service';
 import { HUDSService } from '../../services/huds.service';
 
+import { PlantillasService } from '../../services/plantillas.service';
+
 @Component({
     selector: 'rup-prestacionEjecucion',
     templateUrl: 'prestacionEjecucion.html',
@@ -109,6 +111,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     public flagValid = true;
 
+    public scopePrivacy = [];
     public registrosHUDS = [];
 
     constructor(
@@ -123,7 +126,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         private conceptObserverService: ConceptObserverService,
         private servicioSnomed: SnomedService,
         private buscadorService: SnomedBuscarService,
-        public huds: HUDSService
+        public huds: HUDSService,
+        public ps: PlantillasService
     ) {
     }
 
@@ -181,6 +185,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                             name: this.prestacion && this.prestacion.solicitud.tipoPrestacion.term ? this.prestacion.solicitud.tipoPrestacion.term : ''
                         }]);
 
+
                         // this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
                         // Si la prestación está validada, navega a la página de validación
                         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
@@ -192,9 +197,11 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                                     this.paciente = paciente;
                                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
-                                    this.obraSocialService.get({ dni: this.paciente.documento }).subscribe(os => {
-                                        this.obraSocialPaciente = os;
-                                    });
+                                    if (this.paciente.documento) {
+                                        this.obraSocialService.get({ dni: this.paciente.documento }).subscribe(os => {
+                                            this.obraSocialPaciente = os;
+                                        });
+                                    }
                                 });
                             }
                             // cambio: this.prestacionSolicitud = prestacion.solicitud;
@@ -212,16 +219,15 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                             // Muestra los registros (y los colapsa)
                             this.mostrarDatosEnEjecucion();
 
+                            this.prestacion.ejecucion.registros.map(x => {
+                                this.ps.get(x.concepto.conceptId).subscribe(() => { });
+                            });
 
                             if (this.elementoRUP.requeridos.length > 0) {
                                 for (let elementoRequerido of this.elementoRUP.requeridos) {
-
-                                    this.elementosRUPService.coleccionRetsetId[String(elementoRequerido.concepto.conceptId)] = elementoRequerido.params;
-
                                     let registoExiste = this.prestacion.ejecucion.registros.find(registro => registro.concepto.conceptId === elementoRequerido.concepto.conceptId);
-
                                     if (!registoExiste) {
-
+                                        this.elementosRUPService.coleccionRetsetId[String(elementoRequerido.concepto.conceptId)] = elementoRequerido.params;
                                         this.ejecutarConcepto(elementoRequerido.concepto);
                                     } else if (registoExiste.id && registoExiste.valor) {
                                         // Expandir sólo si no tienen algún valor
@@ -515,6 +521,11 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             esSolicitud = true;
         }
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
+        this.elementosRUPService.coleccionRetsetId[String(snomedConcept.conceptId)] = elementoRUP.params;
+
+        if (snomedConcept.semanticTag === 'procedimiento') {
+            this.ps.get(snomedConcept.conceptId).subscribe(() => { });
+        }
 
         // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
@@ -1075,7 +1086,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         if (this.itemsRegistros[indice]) {
             this.itemsRegistros[indice].collapse = !this.itemsRegistros[indice].collapse;
         }
-        this.registrosColapsados();
+        // this.registrosColapsados();
     }
 
     colapsarPrestaciones(option = 'expand') {
@@ -1261,6 +1272,21 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             }
         });
         return results;
+    }
+
+    onChangePrivacy(registro) {
+        this.scopePrivacy = [];
+        this.scopePrivacy = [{
+            label: registro.privacy.scope === 'public' ? 'Activar privacidad' : 'Desactivar privacidad',
+            handler: () => {
+                this.activarPrivacidad(registro);
+            }
+        }];
+    }
+
+    activarPrivacidad(registro) {
+        let scopeCruzado = { 'public': 'private', 'private': 'public' };
+        registro.privacy.scope = scopeCruzado[registro.privacy.scope];
     }
 
 }

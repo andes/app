@@ -25,7 +25,7 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
     selector: 'rup',
     styleUrls: [
-        'rup.scss',
+        '_rup.scss',
         // TODO: Crear package NPM con las fonts
         // '../../assets/font.css'
     ],
@@ -60,6 +60,15 @@ export class RUPComponent implements OnInit, AfterViewInit {
      * @memberof RUPComponent
      */
     private loadComponent() {
+        if (this.registro && !this.registro.privacy) {
+            setTimeout(() => {
+                if (this.params && this.params.privacy) {
+                    this.registro.privacy = { scope: this.params.privacy };
+                } else {
+                    this.registro.privacy = { scope: 'public' };
+                }
+            }, 0);
+        }
 
         // Cargamos el componente
         const component = ElementosRUPRegister.get(this.elementoRUP.componente).component;
@@ -112,7 +121,8 @@ export class RUPComponent implements OnInit, AfterViewInit {
         public servicioOrganizacion: OrganizacionService,
         public plex: Plex,
         public route: ActivatedRoute,
-        public agendaService: AgendaService
+        public agendaService: AgendaService,
+        public organizacionservice: OrganizacionService
     ) { }
 
     ngOnInit() {

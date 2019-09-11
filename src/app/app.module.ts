@@ -126,7 +126,7 @@ import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesP
 import { CDAService } from './modules/rup/services/CDA.service';
 import { ResumenPacienteDinamicoService } from './modules/rup/services/resumenPaciente-dinamico.service';
 import { VacunasService } from './services/vacunas.service';
-
+import { PlantillasService } from './modules/rup/services/plantillas.service';
 
 
 
@@ -482,7 +482,8 @@ let RUPComponentsArray = [
     CamaPrepararComponent,
     OcuparCamaComponent,
     EjecucionInternacionComponent,
-    EgresoInternacionComponent
+    EgresoInternacionComponent,
+    LugarDeNacimientoComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -508,7 +509,11 @@ import { PasesListadoInternacionComponent } from './apps/rup/internacion/compone
 
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
 import { HUDSService } from './modules/rup/services/huds.service';
-import { PreviousUrlService } from './services/previous-url.service';
+
+/** Configuraciones de entorno */
+import { environment } from '../environments/environment';
+import { LugarDeNacimientoComponent } from './modules/rup/components/elementos/lugarDeNacimiento.component';
+import { PlantillasRUPComponent } from './apps/rup/plantillas-rup/plantillas-rup.component';
 
 registerLocaleData(localeEs, 'es');
 
@@ -527,7 +532,7 @@ registerLocaleData(localeEs, 'es');
         ChartsModule,
         routing,
         AgmCoreModule.forRoot({
-            apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
+            apiKey: environment.MAPS_KEY
         }),
     ],
     declarations: [
@@ -658,6 +663,8 @@ registerLocaleData(localeEs, 'es');
 
         // Buscador de turnos y prestaciones
         TurnosPrestacionesComponent,
+
+        PlantillasRUPComponent,
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
@@ -744,7 +751,7 @@ registerLocaleData(localeEs, 'es');
         SnomedBuscarService,
         HUDSService,
         TurnosPrestacionesService,
-        PreviousUrlService
+        PlantillasService
     ]
 })
 

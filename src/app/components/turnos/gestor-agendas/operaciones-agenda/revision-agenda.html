@@ -192,18 +192,18 @@
                                                                 <span
                                                                     *ngIf="diagnostico.codificacionProfesional?.cie10 && (!diagnostico.codificacionAuditoria?.codigo || diagnostico.codificacionAuditoria?.codigo == diagnostico.codificacionProfesional?.cie10?.codigo )">
                                                                     ({{diagnostico.codificacionProfesional.cie10.codigo}})
-                                                                    {{diagnostico.codificacionProfesional.cie10.sinonimo}}
+                                                                    {{diagnostico.codificacionProfesional.cie10.nombre}}
                                                                 </span>
                                                                 <!-- Mostramos la codificación reparada -->
                                                                 <span
                                                                     *ngIf="diagnostico.codificacionAuditoria?.codigo && diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.codigo != diagnostico.codificacionProfesional?.cie10?.codigo">
                                                                     ({{diagnostico.codificacionAuditoria.codigo}})
-                                                                    {{diagnostico.codificacionAuditoria.sinonimo}}
+                                                                    {{diagnostico.codificacionAuditoria.nombre}}
                                                                 </span>
                                                                 <!-- Mostramos la codificación cuando no hay diagnóstico del profesional -->
                                                                 <span
-                                                                    *ngIf="!diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.sinonimo">({{diagnostico.codificacionAuditoria.codigo}})
-                                                                    {{diagnostico.codificacionAuditoria.sinonimo}}
+                                                                    *ngIf="!diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.nombre">({{diagnostico.codificacionAuditoria.codigo}})
+                                                                    {{diagnostico.codificacionAuditoria.nombre}}
                                                                 </span>
                                                             </div>
                                                         </td>
@@ -284,18 +284,18 @@
                                                                 <span
                                                                     *ngIf="diagnostico.codificacionProfesional?.cie10 && (!diagnostico.codificacionAuditoria?.codigo || diagnostico.codificacionAuditoria?.codigo == diagnostico.codificacionProfesional?.cie10?.codigo )">
                                                                     ({{diagnostico.codificacionProfesional.cie10.codigo}})
-                                                                    {{diagnostico.codificacionProfesional.cie10.sinonimo}}
+                                                                    {{diagnostico.codificacionProfesional.cie10.nombre}}
                                                                 </span>
                                                                 <!-- Mostramos la codificación reparada -->
                                                                 <span
                                                                     *ngIf="diagnostico.codificacionAuditoria?.codigo && diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.codigo != diagnostico.codificacionProfesional?.cie10?.codigo">
                                                                     ({{diagnostico.codificacionAuditoria.codigo}})
-                                                                    {{diagnostico.codificacionAuditoria.sinonimo}}
+                                                                    {{diagnostico.codificacionAuditoria.nombre}}
                                                                 </span>
                                                                 <!-- Mostramos la codificación cuando no hay diagnóstico del profesional -->
                                                                 <span
-                                                                    *ngIf="!diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.sinonimo">({{diagnostico.codificacionAuditoria.codigo}})
-                                                                    {{diagnostico.codificacionAuditoria.sinonimo}}
+                                                                    *ngIf="!diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.nombre">({{diagnostico.codificacionAuditoria.codigo}})
+                                                                    {{diagnostico.codificacionAuditoria.nombre}}
                                                                 </span>
                                                             </div>
                                                         </td>
@@ -331,8 +331,8 @@
                                             <h5>
                                                 <label> Mapeo a Cie10: </label>
                                                 <span
-                                                    *ngIf="diagnosticos[indiceReparo].codificacionProfesional.cie10?.sinonimo">
-                                                    {{diagnosticos[indiceReparo].codificacionProfesional.cie10.sinonimo}}</span>
+                                                    *ngIf="diagnosticos[indiceReparo].codificacionProfesional.cie10?.nombre">
+                                                    {{diagnosticos[indiceReparo].codificacionProfesional.cie10.nombre}}</span>
 
                                             </h5>
                                             <hr>

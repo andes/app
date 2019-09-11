@@ -111,3 +111,50 @@
         margin-left: 10px;
     }
 }
+
+.containterPrimeraVez {
+    position: relative;
+    top: -259px; 
+
+    .row{
+        padding-right: 0;
+    padding-left: 39px;
+    
+    }
+
+    .icon {
+        font-size: 28px;
+        color: #00A8E0;
+margin-left: 19px;
+        }
+
+
+    .titulo {
+        display: flex;
+        align-items: flex-start !important;
+        padding: 5px 0;    
+        text-transform: capitalize;
+
+        i,
+        strong {
+            color: #00A8E0;
+            font-weight: 400;
+        }
+
+        i {
+            font-size: 28px;
+        }
+
+        strong {
+            margin: auto;
+            margin-left: 5px;
+            font-size: 18px;
+        }
+
+        .contenido {
+            font-size: 24px;
+        }
+    }
+}
+
+

@@ -33,6 +33,9 @@ testem.log
 /e2e/*.js
 /e2e/*.map
 
+#Angular Files
+apiKeyMaps.ts
+
 #System Files
 .DS_Store
 Thumbs.db

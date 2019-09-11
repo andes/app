@@ -58,7 +58,7 @@ export class ArancelamientoFormComponent implements OnInit {
         forkJoin([
             this.organizacionService.configuracion(this.auth.organizacion.id),
             this.profesionalService.getFirma({ id: this.turno.profesionales[0]._id }),
-            this.servicioFA.get({ conceptId: this.turnoSeleccionado.tipoPrestacion.conceptId })
+            this.servicioFA.get({ idPrestacionTurneable: this.turnoSeleccionado.tipoPrestacion.conceptId })
         ]).subscribe((data) => {
             const [config, firma, resultadoFA] = data;
 
@@ -94,7 +94,7 @@ export class ArancelamientoFormComponent implements OnInit {
                     this.imprimir();
                     this.volverAPuntoInicio.emit();
                 }, 100);
-            } else {
+            } else if (this.turnoSeleccionado.paciente.documento) {
                 this.servicioOS.get({ dni: this.turnoSeleccionado.paciente.documento }).subscribe(resultado => {
                     if (resultado && resultado.length > 0) {
                         this.obraSocial = resultado[0].financiador;

@@ -423,6 +423,7 @@ export class TurnosComponent implements OnInit {
 
             turno.smsVisible = true;
             turno.smsLoader = true;
+            if (!this.turnosSeleccionados[x].paciente || !this.turnosSeleccionados[x].paciente.telefono) { return; }
 
             // Siempre chequear que exista el id de paciente, porque puede haber una key "paciente" vacía
             if (this.turnosSeleccionados[x].paciente && this.turnosSeleccionados[x].paciente.id) {

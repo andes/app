@@ -83,10 +83,9 @@ export class PrestarHcComponent implements OnInit {
             this.prestamo.datosPrestamo = { observaciones: this.prestarHC.observaciones };
         }
         this.prestamosService.prestarCarpeta(this.prestamo).subscribe(carpeta => {
+            this.carpetaPrestadaEmit.emit(false);
             this._carpeta = carpeta;
             this.plex.toast('success', 'La Carpeta se prestó correctamente', 'Información', 1000);
-            this.cancelPrestarEmit.emit(true);
-            this.carpetaPrestadaEmit.emit(this._carpeta);
         });
     }
 

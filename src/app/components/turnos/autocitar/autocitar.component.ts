@@ -68,64 +68,62 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
     }
 
     seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda) {
-
         let bloque = this.agendasAutocitar[indiceAgenda].bloques[indiceBloque];
         let turno = this.agendasAutocitar[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno];
-
         // Agenda con el turno que necesitamos
         this.agendaSeleccionada = this.agendasAutocitar[indiceAgenda];
-
         this.obraSocialPaciente = null;
-        this.obraSocialService.getObrasSociales({ dni: this.paciente.documento, sexo: this.paciente.sexo }).subscribe((resultado: IFinanciador[]) => {
-            if (resultado.length > 0) {
-                this.obraSocialPaciente = resultado[0];
-            }
-
-            // Paciente Turno
-            let pacienteSave = {
-                id: this.paciente.id,
-                documento: this.paciente.documento,
-                apellido: this.paciente.apellido,
-                nombre: this.paciente.nombre,
-                fechaNacimiento: this.paciente.fechaNacimiento,
-                sexo: this.paciente.sexo,
-                telefono: this.paciente.telefono,
-                carpetaEfectores: this.paciente.carpetaEfectores,
-                obraSocial: this.obraSocialPaciente
-            };
-
-
-            // Creo el Turno nuevo
-            let datosTurnoNuevo = {
-                idAgenda: this.agendaSeleccionada.id,
-                idBloque: bloque.id,
-                idTurno: turno.id,
-                paciente: pacienteSave,
-                tipoPrestacion: this.prestacionAutocitar,
-                tipoTurno: 'profesional',
-            };
-
-
-            // ¿Ragnar Turno?
-            this.plex.confirm(
-                `Confirmar turno el ${moment(turno.horaInicio).format('DD/MM/YYYY [a las] HH:mm [hs]')}`,
-                `¿Confirmar Autocitación?`)
-                .then((confirmado) => {
-                    if (!confirmado) {
-                        return false;
+        if (this.paciente && this.paciente.documento) {
+            this.obraSocialService.getObrasSociales(this.paciente.documento).subscribe(
+                (resultado: IFinanciador[]) => {
+                    if (resultado.length > 0) {
+                        this.obraSocialPaciente = resultado[0];
                     }
-                    // Guardo el Turno nuevo en la Agenda seleccionada como destino (PATCH)
-                    // y guardo los datos del turno "viejo/suspendido" en la nueva para poder referenciarlo
-                    this.servicioTurno.save(datosTurnoNuevo).subscribe(() => {
-                        this.plex.toast('success', 'Turno asigando correctamente', 'Autocitación', 3000);
-                        this.cancelarEmitter.emit(true);
-                    });
+                    this.confirmarTurno(bloque, turno);
+                },
+                () => {
+                    this.confirmarTurno(bloque, turno);
                 });
-        });
+        } else {
+            this.confirmarTurno(bloque, turno);
+        }
+    }
 
-
-
-
+    private confirmarTurno(bloque: IBloque, turno: ITurno) {
+        // Paciente Turno
+        let pacienteSave = {
+            id: this.paciente.id,
+            documento: this.paciente.documento,
+            apellido: this.paciente.apellido,
+            nombre: this.paciente.nombre,
+            fechaNacimiento: this.paciente.fechaNacimiento,
+            sexo: this.paciente.sexo,
+            telefono: this.paciente.telefono,
+            carpetaEfectores: this.paciente.carpetaEfectores,
+            obraSocial: this.obraSocialPaciente
+        };
+        // Creo el Turno nuevo
+        let datosTurnoNuevo = {
+            idAgenda: this.agendaSeleccionada.id,
+            idBloque: bloque.id,
+            idTurno: turno.id,
+            paciente: pacienteSave,
+            tipoPrestacion: this.prestacionAutocitar,
+            tipoTurno: 'profesional',
+        };
+        // ¿Ragnar Turno?
+        this.plex.confirm(`Confirmar turno el ${moment(turno.horaInicio).format('DD/MM/YYYY [a las] HH:mm [hs]')}`, `¿Confirmar Autocitación?`)
+            .then((confirmado) => {
+                if (!confirmado) {
+                    return false;
+                }
+                // Guardo el Turno nuevo en la Agenda seleccionada como destino (PATCH)
+                // y guardo los datos del turno "viejo/suspendido" en la nueva para poder referenciarlo
+                this.servicioTurno.save(datosTurnoNuevo).subscribe(() => {
+                    this.plex.toast('success', 'Turno asigando correctamente', 'Autocitación', 3000);
+                    this.cancelarEmitter.emit(true);
+                });
+            });
     }
 
     getHora(fecha) {

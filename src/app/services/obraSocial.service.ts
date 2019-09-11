@@ -9,6 +9,7 @@ export class ObraSocialService {
     private url = '/modules/obraSocial';  // URL to web api
 
     constructor(private server: Server) { }
+
     /**
      * Obtiene los datos de la obra social asociada a un paciente
      *
@@ -19,10 +20,6 @@ export class ObraSocialService {
 
     get(opciones: any, showError = true): Observable<IObraSocial[]> {
         return this.server.get(this.url + '/puco/', { params: opciones, showError: showError });
-    }
-
-    getPaciente(opciones: any, showError = true): Observable<IFinanciador[]> {
-        return this.server.get(this.url + '/paciente/', { params: opciones, showError: showError });
     }
 
     getPadrones(opciones: any): Observable<any[]> {
@@ -37,13 +34,7 @@ export class ObraSocialService {
         return this.server.get(this.url + '/prepagas/');
     }
 
-    getSumar(opciones: any): Observable<any[]> {
-        return this.server.get(this.url + '/sumar/');
+    getObrasSociales(documento: string, showError = true): Observable<IFinanciador[]> {
+        return this.server.get(`${this.url}/puco/${documento}`, null);
     }
-
-    getObrasSociales(opciones: any, showError = true): Observable<IFinanciador[]> {
-        return this.server.get(this.url + '/os/', { params: opciones, showError: showError });
-    }
-
-
 }

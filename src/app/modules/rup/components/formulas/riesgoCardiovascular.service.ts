@@ -11,7 +11,7 @@ export class RiesgoCardiovascularService extends FormulaBaseService {
         const diabetes = registros[3].valor;
         const sexo = (paciente.genero === 'masculino') ? 1 : 0;
         let value;
-        if (colesterol && sistolica && tabaquismo && diabetes && sexo) {
+        if (colesterol && sistolica && tabaquismo && diabetes && sexo !== null) {
             value = this.obtenerRiesgo(paciente.edad, colesterol, sistolica, tabaquismo, sexo, diabetes);
         } else {
             value = -1;

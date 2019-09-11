@@ -49,10 +49,15 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
                     );
 
                     // agregamos las leyendas del eje x
-                    this.barChartLabels = prestaciones.map(p => moment(p.fecha).format('ll'));
+                    this.barChartLabels = prestaciones.map(p => moment(p.fecha).format('DD-MM-YYYY'));
                     // set options charts
                     this.setChartOptions(prestaciones);
-                    this.barChartOptions.title.text += ' desde ' + moment(this.barChartLabels[0].fecha).format('DD-MM-YYYY') + ' hasta ' + moment(this.barChartLabels[this.barChartLabels.length - 1].fecha).format('DD-MM-YYYY');
+
+                    if (prestaciones.length > 1) {
+                        this.barChartOptions.title.text += ' desde ' + this.barChartLabels[0] + ' hasta ' + this.barChartLabels[this.barChartLabels.length - 1];
+                    } else {
+                        this.barChartOptions.title.text += ' al ' + this.barChartLabels[0];
+                    }
 
                 }
             });

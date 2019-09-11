@@ -197,6 +197,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     // esta funcion se repite en suspender turno
     // TODO: aplicar buenas practicas de programacion
     enviarSMS(paciente: any, mensaje) {
+        if (!paciente.telefono) { return; }
         let smsParams = {
             telefono: paciente.telefono,
             mensaje: mensaje,

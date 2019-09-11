@@ -10,7 +10,6 @@ import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { AppMobileService } from '../../../services/appMobile.service';
 import { PacienteCacheService } from '../../../core/mpi/services/pacienteCache.service';
-import { PreviousUrlService } from '../../../services/previous-url.service';
 @Component({
     selector: 'puntoInicio-turnos',
     templateUrl: 'puntoInicio-turnos.html',
@@ -61,7 +60,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
         private router: Router,
         private _activatedRoute: ActivatedRoute,
         private plex: Plex,
-        private previousUrlService: PreviousUrlService
     ) {
     }
 
@@ -76,7 +74,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.puedeDarTurno = this.auth.getPermissions('turnos:puntoInicio:darTurnos:?').length > 0;
         this.puedeCrearSolicitud = this.auth.getPermissions('turnos:puntoInicio:solicitud:?').length > 0;
         this.updateTitle('Punto de inicio');
-        this.previousUrlService.setUrl('citas/punto-inicio');
     }
 
     private updateTitle(nombre: string) {
@@ -99,14 +96,21 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.loading = true;
     }
 
-    onSearchEnd(pacientes: IPaciente[], escaneado: boolean) {
+    onSearchEnd(pacientes: any[], escaneado: boolean) {
         this.searchClear = false;
         this.loading = false;
         this.pacienteCache.setScanState(escaneado);
         if (escaneado && pacientes.length === 1) {
-            this.pacienteCache.setPaciente(pacientes[0]);
-            this.pacienteCache.setScanState(escaneado);
-            this.onPacienteSelected(pacientes[0]);
+            if (pacientes[0].paciente) {
+                this.pacienteCache.setPaciente(pacientes[0].paciente);
+                this.pacienteCache.setScanState(escaneado);
+                this.onPacienteSelected(pacientes[0].paciente);
+            } else {
+                this.pacienteCache.setPaciente(pacientes[0]);
+                this.pacienteCache.setScanState(escaneado);
+                this.onPacienteSelected(pacientes[0]);
+            }
+
             this.searchClear = true;
         } else {
             this.resultadoBusqueda = pacientes;
@@ -139,8 +143,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showTab = 0;
         this.paciente = paciente;
         if (!paciente.id || (paciente.estado === 'temporal' && paciente.scan)) {
-            this.previousUrlService.setUrl('citas/punto-inicio');
-            this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru
+            this.router.navigate(['/apps/mpi/paciente/con-dni/puntoInicio']);  // abre paciente-cru
         } else {
             this.getPacienteById(paciente.id);
         }
