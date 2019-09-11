@@ -121,13 +121,6 @@
                                                         title="Privado"></plex-dropdown> -->
                                                 </ng-container>
 
-
-                                                <plex-button (click)="cambiaValorCollapse(registro.id)" size="sm"
-                                                             type="primary" icon="chevron-down" class="collapse-card">
-                                                    <i class="mdi mdi-chevron-down"
-                                                       [ngClass]="{'spin-in' : !itemsRegistros[registro.id]?.collapse, 'spin-out' : itemsRegistros[registro.id]?.collapse}"></i>
-                                                </plex-button>
-
                                                 <ng-container
                                                               *ngIf="prestacion?.ejecucion?.registros !== null && prestacion?.ejecucion?.registros?.length > 1">
                                                     <plex-dropdown type="primary" class="dropdown-inline" [right]="true"
