@@ -49,10 +49,14 @@ export class PuntoInicioComponent implements OnInit {
     private prestacionesOriginales: any = [];
     public prestacionSeleccion: any;
     public paciente: any;
+    public loading: boolean;
 
     // ultima request que se almacena con el subscribe
     private lastRequest: ISubscription;
 
+
+    // timer
+    public interval: any;
 
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
@@ -64,6 +68,8 @@ export class PuntoInicioComponent implements OnInit {
         public servicioTipoPrestacion: TipoPrestacionService) { }
 
     ngOnInit() {
+        this.refreshAgenda();
+
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
         if (!this.auth.getPermissions('rup:?').length) {
             this.redirect('inicio');
@@ -94,6 +100,10 @@ export class PuntoInicioComponent implements OnInit {
 
     }
 
+    refreshAgenda() {
+            this.actualizar();
+    }
+
     redirect(pagina: string) {
         this.router.navigate(['./' + pagina]);
         return false;
@@ -105,6 +115,7 @@ export class PuntoInicioComponent implements OnInit {
 
     // tieneTurnosAsignados: true,
     actualizar() {
+        this.loading = true;
         this.cancelarDinamica();
         const idsPrestacionesPermitidas = this.tiposPrestacion.map(t => t.conceptId);
         if (this.lastRequest) {
@@ -213,8 +224,8 @@ export class PuntoInicioComponent implements OnInit {
                     });
                 });
             }
+            this.loading = false;
             this.fueraDeAgenda = this.mostrarTurnoPendiente(this.fueraDeAgenda);
-
         });
     }
 
