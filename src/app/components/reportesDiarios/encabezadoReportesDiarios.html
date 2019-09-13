@@ -92,5 +92,8 @@
         <plex-button position="right" type="success" label="Generar Reporte" (click)="generar()"></plex-button>
         <plex-button *ngIf="showBotonImprimir" position="right" type="default" label="Imprimir Reporte"
             (click)="imprimir(parametros['tipoReportes'])"></plex-button>
+            
+            <plex-button *ngIf="showBotonExportaXLS" position="right" type="default" label="Exportar a XLS"
+            (click)="toExcel(parametros['tipoReportes'])"></plex-button>
     </plex-layout-footer>
 </plex-layout>

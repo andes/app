@@ -1,3 +1,6 @@
+
+import {ExcelService} from '../../services/excel.service';
+
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TurnosPrestacionesService } from './services/turnos-prestaciones.service';
 import { Auth } from '@andes/auth';
@@ -15,6 +18,7 @@ import { Plex } from '@andes/plex';
 })
 
 export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
+    public xlsData;
     public busquedas;
     public mostrarMasOpciones;
     private lastRequest: ISubscription;
@@ -29,14 +33,15 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public arrayEstados;
     public sumarB = false;
     public arrayEstadosFacturacion;
-    public documento;
+    public showBotonExportaXLS = true;
     prestacion: any;
     router: any;
     public prestaciones: any;
     constructor(
         private auth: Auth, private plex: Plex,
         private turnosPrestacionesService: TurnosPrestacionesService, public servicioPrestacion: TipoPrestacionService, public serviceProfesional: ProfesionalService,
-        private servicioOS: ObraSocialService, private facturacionAutomaticaService: FacturacionAutomaticaService
+        private servicioOS: ObraSocialService, private facturacionAutomaticaService: FacturacionAutomaticaService,
+        private excelService: ExcelService
     ) { }
     ngOnInit() {
         this.arrayEstados = [{ id: 'Sin registro de asistencia', nombre: 'Sin registro de asistencia' }, { id: 'Ausente', nombre: 'Ausente' }, { id: 'Presente con registro del profesional', nombre: 'Presente con registro del profesional' }, { id: 'Presente sin registro del profesional', nombre: 'Presente sin registro del profesional' }];
@@ -109,6 +114,7 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         this.turnosPrestacionesService.get(params).subscribe((data) => {
             this.busquedas = this.ordenarPorFecha(data);
             this.loading = false;
+            this.xlsData = this.busquedas;
         });
 
     }
@@ -187,13 +193,6 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
                     this.parametros['estadoFacturacion'] = value.value.id;
                 } else {
                     this.parametros['estadoFacturacion'] = '';
-                }
-            }
-            if (tipo === 'documento') {
-                if (value.value) {
-                    this.parametros['documento'] = value.value;
-                } else {
-                    this.parametros['documento'] = '';
                 }
             }
             if (tipo === 'filter') {
@@ -278,4 +277,26 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         this.showPrestacion = false;
         this.prestacion = null;
     }
+
+    /*
+    public toExcel(cmpName) {
+
+        // creating a temporary HTML link element (they support setting file names)
+        let a = document.createElement('a');
+        // getting data from our div that contains the HTML table
+        let data_type = 'data:application/vnd.ms-excel;charset=utf-8,%EF%BB%BF';
+        let table_div = document.getElementById(cmpName);
+        let table_html = table_div.outerHTML.replace(/ /g, '%20');
+        a.href = data_type  + table_html;
+        // setting the file name
+        a.download = 'reporte.xls';
+        a.click();
+    }
+    */
+
+    toExcel(cmpName) {
+        let table: any;
+        table = document.querySelector('#tbl');
+        this.excelService.exportAsExcelFile(table, 'reporte_turnos_prestaciones');
+     }
 }

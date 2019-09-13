@@ -97,6 +97,8 @@ import { FacturacionAutomaticaService } from './services/facturacionAutomatica.s
 import { PeriodoPadronesPucoService } from './services/periodoPadronesPuco.service';
 import { PeriodoPadronesProfeService } from './services/periodoPadronesProfe.service';
 
+// Servicio Exportacion a Excel
+import {ExcelService} from '../app/services/excel.service';
 
 // TOP
 // ... Usuarios
@@ -675,6 +677,7 @@ registerLocaleData(localeEs, 'es');
         Auth,
         RoutingGuard,
         RoutingNavBar,
+        ExcelService,
         OrganizacionService,
         OcupacionService,
         ProvinciaService,

@@ -8,6 +8,8 @@ import { AgendaService } from '../../services/turnos/agenda.service';
 import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
 import { getObjMeses } from '../../../app/utils/enumerados';
 
+import {ExcelService} from '../../services/excel.service';
+
 @Component({
     selector: 'encabezadoReportesDiarios',
     templateUrl: 'encabezadoReportesDiarios.html',
@@ -17,6 +19,7 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
     // Variables comunes a varios reportes
+    public showBotonExportaXLS = false;
     public showBotonImprimir = false;
     public opcionesOrganizacion: any = [];
     public opcionesReportes: { id: number, nombre: string }[] = [];
@@ -49,7 +52,8 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
         private agendaService: AgendaService,
         private auth: Auth,
         private servicioOrganizacion: OrganizacionService,
-        private servicioPrestacion: TipoPrestacionService
+        private servicioPrestacion: TipoPrestacionService,
+        private excelService: ExcelService
     ) {
 
     }
@@ -126,6 +130,7 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
         this.showPlanillaC1 = false;
         this.showResumenDiarioMensual = false;
         this.showBotonImprimir = false;
+        this.showBotonExportaXLS = false;
     }
 
 
@@ -201,6 +206,7 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
                 this.showPlanillaC1 = false;
                 this.showResumenDiarioMensual = true;
                 this.showBotonImprimir = true;
+                this.showBotonExportaXLS = true;
             });
         }
 
@@ -211,6 +217,7 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
                 this.showResumenDiarioMensual = false;
                 this.showPlanillaC1 = true;
                 this.showBotonImprimir = true;
+                this.showBotonExportaXLS = true;
             });
         }
     }
@@ -242,6 +249,14 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
         WindowPrt.focus();
         WindowPrt.print();
         WindowPrt.close();
+    }
+
+    public toExcel(cmpName) {
+
+        let table: any;
+        table = document.getElementById(cmpName);
+        this.excelService.exportAsExcelFile(table, 'reportesDiarios');
+
     }
 
 }
