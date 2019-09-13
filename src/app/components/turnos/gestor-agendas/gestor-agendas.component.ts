@@ -144,7 +144,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
             // Si hay idAgenda en localStorage llamo a verAgenda()
             if (localStorage.getItem('idAgenda')) {
-                this.verAgenda({id: localStorage.getItem('idAgenda')}, false, null);
+                this.verAgenda({ id: localStorage.getItem('idAgenda') }, false, null);
             }
 
             localStorage.removeItem('filtrosGestorAgendas');
@@ -503,7 +503,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     }
 
     onSeleccionAgendaNoMultiple(ag) {
-        if (ag.estado === 'suspendida') {
+        if (ag && ag.estado && ag.estado === 'suspendida') {
             this.showSuspendida = true; // Mostramos los pacientes y sus teléfonos de la agenda suspendida
         }
         this.agendasSeleccionadas = [];
