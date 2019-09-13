@@ -120,9 +120,7 @@ export class IniciarInternacionComponent implements OnInit {
         edadAlIngreso: null,
         origen: null,
         ocupacionHabitual: null,
-        codOcupacionHabitual: null,
         situacionLaboral: null,
-        codSituacionLaboral: null,
         nivelInstruccion: null,
         especialidades: [],
         asociado: null,
@@ -422,16 +420,7 @@ export class IniciarInternacionComponent implements OnInit {
                 return;
             }
             // mapeamos los datos en los combos
-            if (this.informeIngreso.situacionLaboral) {
-                let situacionLaboralAux = this.informeIngreso.situacionLaboral;
-                this.informeIngreso.situacionLaboral = situacionLaboralAux.nombre;
-                this.informeIngreso.codSituacionLaboral = situacionLaboralAux.id;
-            }
-            if (this.informeIngreso.ocupacionHabitual) {
-                let ocupacionHabitualAux = this.informeIngreso.ocupacionHabitual;
-                this.informeIngreso.ocupacionHabitual = ocupacionHabitualAux.nombre;
-                this.informeIngreso.codOcupacionHabitual = ocupacionHabitualAux.codigo;
-            }
+            this.informeIngreso.situacionLaboral = (this.informeIngreso.situacionLaboral) ? this.informeIngreso.situacionLaboral.nombre : null;
             this.informeIngreso.nivelInstruccion = ((typeof this.informeIngreso.nivelInstruccion === 'string')) ? this.informeIngreso.nivelInstruccion : (Object(this.informeIngreso.nivelInstruccion).nombre);
             this.informeIngreso.asociado = ((typeof this.informeIngreso.asociado === 'string')) ? this.informeIngreso.asociado : (Object(this.informeIngreso.asociado).nombre);
             this.informeIngreso.origen = ((typeof this.informeIngreso.origen === 'string')) ? this.informeIngreso.origen : (Object(this.informeIngreso.origen).nombre);
