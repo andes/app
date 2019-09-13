@@ -82,9 +82,9 @@ export class IniciarInternacionComponent implements OnInit {
         { id: 'terciario/universitario completo', nombre: 'Terciario/Universitario completo' }
     ];
     public situacionesLaborales = [
-        { id: 'Trabaja o está de licencia', nombre: 'Trabaja o está de licencia' },
-        { id: 'No trabaja y busca trabajo', nombre: 'No trabaja y busca trabajo' },
-        { id: 'No trabaja y no busca trabajo', nombre: 'No trabaja y no busca trabajo' }
+        { id: 1, nombre: 'Trabaja o está de licencia' },
+        { id: 2, nombre: 'No trabaja y busca trabajo' },
+        { id: 3, nombre: 'No trabaja y no busca trabajo' }
     ];
     public pacienteAsociado = [
         { id: 'Plan de salud privado o Mutual', nombre: 'Plan de salud privado o Mutual' },
@@ -290,12 +290,10 @@ export class IniciarInternacionComponent implements OnInit {
         this.router.navigate(['rup/' + action + '/', id]);
     }
     getOcupaciones(event) {
-
         let ocupacionesHabituales = [];
         if (event && event.query) {
             let query = {
                 nombre: event.query
-
             };
             this.ocupacionService.getParams(query).subscribe((rta) => {
                 rta.map(dato => { dato.nom = '(' + dato.codigo + ') ' + dato.nombre; });
@@ -303,9 +301,7 @@ export class IniciarInternacionComponent implements OnInit {
                 ocupacionesHabituales = rta;
                 event.callback(ocupacionesHabituales);
             });
-
         } else {
-
             let ocupacionHabitual = [];
             if (this.informeIngreso.ocupacionHabitual) {
                 ocupacionHabitual = [this.informeIngreso.ocupacionHabitual];
@@ -313,6 +309,7 @@ export class IniciarInternacionComponent implements OnInit {
             event.callback(ocupacionHabitual);
         }
     }
+
     loadProfesionales(event) {
         let listaProfesionales = [];
         if (event.query) {
@@ -400,9 +397,17 @@ export class IniciarInternacionComponent implements OnInit {
                 this.plex.info('warning', 'Debe seleccionar una cama');
                 return;
             }
-            if (this.informeIngreso.organizacionOrigen === 'traslado' && !this.informeIngreso.organizacionOrigen) {
-                this.plex.info('warning', 'Debe seleccionar una organización');
-                return;
+            if (this.origenExterno) {   // origenHospitalizacion === 'traslado'
+                if (this.informeIngreso.organizacionOrigen) {
+                    let datosOrganizacionOrigen = {
+                        id: this.informeIngreso.organizacionOrigen.id,
+                        nombre: this.informeIngreso.organizacionOrigen.nombre
+                    };
+                    this.informeIngreso.organizacionOrigen = datosOrganizacionOrigen;
+                } else {
+                    this.plex.info('warning', 'Debe seleccionar una organización');
+                    return;
+                }
             }
 
             let fechaActual = new Date();
@@ -412,10 +417,9 @@ export class IniciarInternacionComponent implements OnInit {
                 return;
             }
             // mapeamos los datos en los combos
-            this.informeIngreso.situacionLaboral = ((typeof this.informeIngreso.situacionLaboral === 'string')) ? this.informeIngreso.situacionLaboral : (Object(this.informeIngreso.situacionLaboral).nombre);
+            this.informeIngreso.situacionLaboral = (this.informeIngreso.situacionLaboral) ? this.informeIngreso.situacionLaboral.nombre : null;
             this.informeIngreso.nivelInstruccion = ((typeof this.informeIngreso.nivelInstruccion === 'string')) ? this.informeIngreso.nivelInstruccion : (Object(this.informeIngreso.nivelInstruccion).nombre);
             this.informeIngreso.asociado = ((typeof this.informeIngreso.asociado === 'string')) ? this.informeIngreso.asociado : (Object(this.informeIngreso.asociado).nombre);
-            this.informeIngreso.ocupacionHabitual = this.informeIngreso.ocupacionHabitual;
             this.informeIngreso.origen = ((typeof this.informeIngreso.origen === 'string')) ? this.informeIngreso.origen : (Object(this.informeIngreso.origen).nombre);
             this.informeIngreso.PaseAunidadOrganizativa = this.informeIngreso.PaseAunidadOrganizativa;
             this.informeIngreso.fechaIngreso = fechaIngreso;
@@ -429,6 +433,19 @@ export class IniciarInternacionComponent implements OnInit {
                 this.informeIngreso.edadAlIngreso = this.servicioInternacion.calcularEdad(this.paciente.fechaNacimiento, this.informeIngreso.fechaIngreso);
             }
 
+            // armamos dto con datos principales del paciente
+            let dtoPaciente = {
+                id: this.paciente.id,
+                documento: this.paciente.documento,
+                nombre: this.paciente.nombre,
+                apellido: this.paciente.apellido,
+                sexo: this.paciente.sexo,
+                genero: this.paciente.genero,
+                fechaNacimiento: this.paciente.fechaNacimiento,
+                direccion: this.paciente.direccion,
+                telefono: this.paciente.telefono
+            };
+
             if (this.prestacion && this.prestacion.id) {
                 // reemplazamos el Informe de ingreso en la prestacion
                 let indexInforme = this.prestacion.ejecucion.registros.findIndex(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
@@ -439,32 +456,25 @@ export class IniciarInternacionComponent implements OnInit {
                 };
                 this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe(p => {
                     if (this.cama && !this.cama.ultimoEstado.idInternacion) {
+                        // vamos a actualizar el estado de la cama
+                        let dto = {
+                            fecha: this.informeIngreso.fechaIngreso,
+                            estado: 'ocupada',
+                            unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
+                            especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
+                            esCensable: this.cama.ultimoEstado.esCensable,
+                            genero: this.cama.ultimoEstado.genero ? this.cama.ultimoEstado.genero : null,
+                            paciente: dtoPaciente,
+                            idInternacion: this.prestacion.id,
+                            esMovimiento: true
+                        };
 
-
-                        let idPaciente = this.paciente ? this.paciente._id : this.prestacion.paciente.id;
-                        this.pacienteService.getById(idPaciente).subscribe(pacienteCompleto => {
-
-                            // vamos a actualizar el estado de la cama
-                            let dto = {
-                                fecha: this.informeIngreso.fechaIngreso,
-                                estado: 'ocupada',
-                                unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
-                                especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
-                                esCensable: this.cama.ultimoEstado.esCensable,
-                                genero: this.cama.ultimoEstado.genero ? this.cama.ultimoEstado.genero : null,
-                                paciente: pacienteCompleto,
-                                idInternacion: this.prestacion.id,
-                                esMovimiento: true
-                            };
-
-
-                            this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
-                                this.cama.ultimoEstado = camaActualizada.ultimoEstado;
-                                this.accionCama.emit({ cama: this.cama, accion: 'internarPaciente' });
-                                this.data.emit(false);
-                            }, (err1) => {
-                                this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
-                            });
+                        this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
+                            this.cama.ultimoEstado = camaActualizada.ultimoEstado;
+                            this.accionCama.emit({ cama: this.cama, accion: 'internarPaciente' });
+                            this.data.emit(false);
+                        }, (err1) => {
+                            this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
                         });
                     } else {
                         this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
@@ -495,8 +505,16 @@ export class IniciarInternacionComponent implements OnInit {
                 }
                 nuevoRegistro.valor = { informeIngreso: this.informeIngreso };
 
+                // armamos dto con datos principales del profesional
+                let dtoProfesional = {
+                    id: this.informeIngreso.profesional.id,
+                    documento: this.informeIngreso.profesional.documento,
+                    nombre: this.informeIngreso.profesional.nombre,
+                    apellido: this.informeIngreso.profesional.apellido
+                };
+
                 // creamos la prestacion de internacion y agregamos el registro de ingreso
-                let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, PrestacionesService.InternacionPrestacion, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso, null, this.informeIngreso.profesional);
+                let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, PrestacionesService.InternacionPrestacion, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso, null, dtoProfesional);
                 nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
 
@@ -513,7 +531,7 @@ export class IniciarInternacionComponent implements OnInit {
                             especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
                             esCensable: this.cama.ultimoEstado.esCensable,
                             genero: this.cama.ultimoEstado.genero ? this.cama.ultimoEstado.genero : null,
-                            paciente: this.paciente,
+                            paciente: dtoPaciente,
                             idInternacion: prestacion.id,
                             esMovimiento: true
                         };
