@@ -21,7 +21,6 @@ import { Unsubscribe } from '@andes/shared';
     selector: 'revision-agenda',
     templateUrl: 'revision-agenda.html',
     styleUrls: ['revision-agenda.scss'],
-    encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 
 export class RevisionAgendaComponent implements OnInit, OnDestroy {
