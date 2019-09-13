@@ -232,13 +232,13 @@
                                 </ng-container>
 
                                 <!-- VESTIBULAR/LINGUAL -->
-                                <path (mouseenter)="showTooltip(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'palatina'), false, 0)"
+                                <path (mouseenter)="showTooltip(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual'), false, 0)"
                                       (mouseleave)="hideTooltip()"
-                                      (click)="seleccionarDiente(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'palatina'))"
-                                      [ngClass]="{'seleccionada': estaSeleccionada(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'palatina'))}"
+                                      (click)="seleccionarDiente(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual'))"
+                                      [ngClass]="{'seleccionada': estaSeleccionada(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual'))}"
                                       d="M26,19.542c2.197,0,4.187,0.891,5.627,2.331l9.34-9.339c-3.831-3.831-9.122-6.2-14.967-6.2c-5.845,0-11.137,2.369-14.967,6.2l9.339,9.339C21.813,20.433,23.802,19.542,26,19.542z"
-                                      class="diente vestibular {{ 'diente-' + getClassRegistro(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'palatina'))?.concepto.semanticTag }}"
-                                      title="(esCuadranteInferior(cuadrante) ? 'vestibular' : 'palatina')" />
+                                      class="diente vestibular {{ 'diente-' + getClassRegistro(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual'))?.concepto.semanticTag }}"
+                                      title="(esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual')" />
 
                                 <ng-container
                                               *ngIf="getRegistrosRel(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'palatina'))?.length">
