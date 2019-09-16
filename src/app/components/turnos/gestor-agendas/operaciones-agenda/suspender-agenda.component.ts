@@ -83,9 +83,14 @@ export class SuspenderAgendaComponent implements OnInit {
 
         this.serviceAgenda.patch(this.agenda.id, patch).subscribe((resultado: any) => {
             // Si son múltiples, esperar a que todas se actualicen
-            this.agenda.estado = resultado.estado;
-            this.plex.toast('success', 'Información', 'La agenda cambió el estado a Suspendida');
-            this.returnSuspenderAgenda.emit(this.agenda);
+            if (resultado.mensaje) {
+                this.plex.info('warning', resultado.mensaje);
+                this.cancelar();
+            } else {
+                this.agenda.estado = resultado.estado;
+                this.plex.toast('success', 'Información', 'La agenda cambió el estado a Suspendida');
+                this.returnSuspenderAgenda.emit(this.agenda);
+            }
         });
     }
 
@@ -115,6 +120,7 @@ export class SuspenderAgendaComponent implements OnInit {
     }
 
     send(turno: any, mensaje) {
+        if (!turno.paciente || !turno.paciente.telefono) { return; }
         let smsParams = {
             telefono: turno.paciente.telefono,
             mensaje: mensaje,

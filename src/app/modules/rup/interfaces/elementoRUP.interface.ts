@@ -15,6 +15,8 @@ export interface IElementoRUP {
     // Indica si este elementoRUP aplica a una solicitud
     esSolicitud: Boolean;
 
+    privacy: String;
+
     // Indica si no muestra el motivo de consulta al validar
     motivoConsultaOpcional: Boolean;
 

@@ -83,7 +83,7 @@
                                             date: 'HH:mm'}} a {{unBloque.horaFin | date: 'HH:mm'}}</span>
                                     </div>
                                     <div *ngIf="unBloque.descripcion">{{unBloque.descripcion}}</div>
-                                    <plex-button *ngIf="!dinamica" icon="delete" type="primary" (click)="deleteBloque(i)">
+                                    <plex-button *ngIf="!dinamica && modelo.bloques.length > 1" icon="delete" type="primary" (click)="deleteBloque(i)">
                                     </plex-button>
                                 </div>
                             </div>

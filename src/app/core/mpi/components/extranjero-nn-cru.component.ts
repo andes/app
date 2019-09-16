@@ -18,8 +18,7 @@ import { GeoreferenciaService } from '../services/georeferencia.service';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { Auth } from '@andes/auth';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
-import { PreviousUrlService } from '../../../services/previous-url.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'extranjero-nn-cru',
@@ -119,7 +118,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
     verMapa = false; // boton
     geoReferenciaAux = []; // Se utiliza para chequear cambios.
     infoMarcador: String = null;
-
+    origen = '';
     constructor(
         private organizacionService: OrganizacionService,
         private auth: Auth,
@@ -132,13 +131,17 @@ export class ExtranjeroNNCruComponent implements OnInit {
         private barriosService: BarrioService,
         private parentescoService: ParentescoService,
         private pacienteService: PacienteService,
-        private previousUrlService: PreviousUrlService,
-        private _router: Router
+        private _router: Router,
+        private route: ActivatedRoute
     ) { }
 
 
     ngOnInit() {
         this.updateTitle('Registro de un paciente EXTRANJERO');
+
+        this.route.params.subscribe(params => {
+            this.origen = params['origen'];
+        });
 
         // Se cargan los parentescos para las relaciones
         this.parentescoService.get().subscribe(resultado => {
@@ -398,7 +401,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
     // ------------------ SAVE -----------------------------
 
     cancel() {
-        this.location.back();
+        this.redirect();
     }
 
     save(event) {
@@ -438,21 +441,35 @@ export class ExtranjeroNNCruComponent implements OnInit {
                         this.saveRelaciones(resultadoSave);
                     }
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
-                    // TODO: Esto es un poco hacky -- soluciona el problema de tener la url anterior
-                    // hasta la actualización a Angular 7.2, donde se incorpora la posibilidad de pasar un estado en el navigate
-                    let previousUrl = this.previousUrlService.getUrl();
-                    if (previousUrl && previousUrl.includes('citas/punto-inicio')) {
-                        this.previousUrlService.setUrl('');
-                        this._router.navigate(['citas/punto-inicio/' + resultadoSave.id]);
-                    } else {
-                        this._router.navigate(['apps/mpi/busqueda']);
-                    }
+                    this.redirect(resultadoSave);
                 },
                 error => {
                     this.plex.info('warning', 'Error guardando el paciente');
                 }
             );
         }
+    }
+
+    private redirect(resultadoSave?: any) {
+        switch (this.origen) {
+            case 'puntoInicio':
+                if (resultadoSave) {
+                    this._router.navigate(['citas/punto-inicio/' + resultadoSave.id]);
+                } else {
+                    this._router.navigate(['citas/punto-inicio/']);
+                }
+                break;
+            case 'mpi':
+                this._router.navigate(['apps/mpi/busqueda']);
+                break;
+            case 'sobreturno':
+                this._router.navigate(['citas/gestor_agendas']);
+                break;
+            default:
+                this._router.navigate(['apps/mpi/busqueda']);
+                break;
+        }
+
     }
 
     // Borra/agrega relaciones al paciente segun corresponda.

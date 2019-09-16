@@ -77,7 +77,11 @@ export class PacienteDetalleComponent implements OnInit {
     }
 
     loadObraSocial() {
-        this.obraSocialService.getObrasSociales({ dni: this._paciente.documento, sexo: this._paciente.sexo }).subscribe(resultado => {
+        if (!this._paciente || !this._paciente.documento) {
+            this.obraSocialCacheService.setFinanciadorPacienteCache(null);
+            return;
+        }
+        this.obraSocialService.getObrasSociales(this._paciente.documento).subscribe(resultado => {
             if (resultado.length > 0) {
                 this.obraSocial = resultado[0];
                 this.obraSocialCacheService.setFinanciadorPacienteCache(this.obraSocial);

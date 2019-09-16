@@ -1,111 +1,98 @@
-<form class="plex-layout ng-untouched ng-pristine ng-valid" novalidate="">
-    <section>
-        <div class="row">
-            <div class="col">
-                <plex-box>
-                    <div class="plex-box">
-                        <header>
-                            <div class="clearfix">
-                                <div class="page-title float-left">Historial de Préstamos</div>
-                            </div>
-                            <!-- Filtros -->
-                            <div class="row" style="margin-bottom: 0.25rem">
-                                <div class="col-4">
-                                    <plex-text [(ngModel)]="numeroCarpeta" name="numeroCarpeta" label="Número de carpeta"
-                                        placeholder="Escriba el número de carpeta" labelField="numero" [required]="true">
-                                    </plex-text>
-                                </div>
-                                <div class="col-2" style="margin-top:36px;">
-                                    <plex-button label="Buscar" type="primary" (click)="buscarHistorial()">
-                                    </plex-button>
-                                </div>
-                                <div class="col-6 text-right" *ngIf="paciente">
-                                    <h5>Paciente: <strong>{{ paciente.apellido }}, {{ paciente.nombre }}</strong> |
-                                        Documento: <strong>{{ paciente.documento }}</strong></h5>
-                                </div>
-                            </div>
-
-                            <table *ngIf="historial.length" class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Fecha</th>
-                                        <th>Movimiento</th>
-                                        <th>Ubicación</th>
-                                        <th>Observaciones</th>
-                                        <th>Observaciones de Prestamo Manual</th>
-                                        <th>Estado de devolución</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let movimiento of historial">
-                                        <td>
-                                            {{movimiento.createdAt | date:'dd-MM-yyyy'}}
-                                        </td>
-                                        <td *ngIf="!movimiento.datosSolicitudManual">
-                                            {{movimiento.estado == 'En archivo' ? 'Devuelta por:' : 'Prestada a:'}}
-                                            {{movimiento.datosPrestamo.turno.profesionales |
-                                            enumerar:['apellido','nombre'] }}
-                                            <br>
-                                            <span class="badge-success float-left">Solicitud Automática</span>
-                                        </td>
-                                        <td *ngIf="movimiento.datosSolicitudManual">
-                                            {{movimiento.estado == 'En archivo' ? 'Devuelta por:' : 'Prestada a:'}}
-                                            <span *ngIf="movimiento.datosSolicitudManual.profesional">
-                                                {{movimiento.datosSolicitudManual.profesional.apellido}},
-                                                {{movimiento.datosSolicitudManual.profesional.nombre}}
-                                            </span>
-                                            <span *ngIf="!movimiento.datosSolicitudManual.profesional">
-                                                {{movimiento.datosSolicitudManual.responsable.apellido}},
-                                                {{movimiento.datosSolicitudManual.responsable.nombre}}
-                                            </span>
-                                            <br>
-                                            <span class="badge-warning float-left">Solicitud Manual</span>
-                                        </td>
-                                        <td>
-                                            <span *ngIf="movimiento.datosSolicitudManual">
-                                                {{movimiento.datosSolicitudManual.espacioFisico?.nombre}}
-                                            </span>
-                                            <span *ngIf="!movimiento.datosSolicitudManual">
-                                                {{movimiento.datosPrestamo.turno.espacioFisico?.nombre}}
-                                                {{movimiento.datosPrestamo.turno.espacioFisico ? ' - ' : ''}}
-                                                {{movimiento.datosPrestamo.turno.espacioFisico?.servicio?.nombre}}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span *ngIf="movimiento.estado === 'En archivo'">
-                                                {{movimiento.datosDevolucion?.observaciones}}
-                                            </span>
-                                            <span *ngIf="movimiento.estado === 'Prestada'">
-                                                {{movimiento.datosPrestamo?.observaciones}}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span *ngIf="movimiento.datosSolicitudManual">{{movimiento.datosSolicitudManual.observaciones}}</span>
-                                        </td>
-                                        <td>
-                                            <span *ngIf="movimiento.estado === 'En archivo'">
-                                                {{movimiento.datosDevolucion?.estado}}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="row" *ngIf="inicioBusqueda && !historial.length">
-                                <div class="col-12 text-center" style="margin: 3rem">
-                                    <h3 *ngIf="paciente">
-                                        <i class="mdi mdi-folder-remove"></i> No hay movimientos de prestamos de la
-                                        carpeta consultada
-                                    </h3>
-                                    <h3 *ngIf="!paciente">
-                                        <i class="mdi mdi-folder-remove"></i> No existe este número de carpeta en esta
-                                        organización
-                                    </h3>
-                                </div>
-                            </div>
-                        </header>
-                    </div>
-                </plex-box>
-            </div>
+<fieldset>
+    <legend>Historial de Préstamos</legend>
+    <!-- Filtros -->
+    <div class="row" style="margin-bottom: 0.25rem">
+        <div class="col-4">
+            <plex-text [(ngModel)]="numeroCarpeta" name="numeroCarpeta" label="Número de carpeta"
+                placeholder="Escriba el número de carpeta" labelField="numero" [required]="true">
+            </plex-text>
         </div>
-    </section>
-</form>
+        <div class="col-2" style="margin-top:36px;">
+            <plex-button label="Buscar" type="primary" (click)="buscarHistorial()">
+            </plex-button>
+        </div>
+        <div class="col-6 text-right" *ngIf="paciente">
+            <h5>Paciente: <strong>{{ paciente.apellido }}, {{ paciente.nombre }}</strong> |
+                Documento: <strong>{{ paciente.documento }}</strong></h5>
+        </div>
+    </div>
+
+    <table *ngIf="historial.length" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Movimiento</th>
+                <th>Ubicación</th>
+                <th>Observaciones</th>
+                <th>Observaciones de Prestamo Manual</th>
+                <th>Estado de devolución</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let movimiento of historial">
+                <td>
+                    {{movimiento.createdAt | date:'dd-MM-yyyy'}}
+                </td>
+                <td *ngIf="!movimiento.datosSolicitudManual">
+                    {{movimiento.estado == 'En archivo' ? 'Devuelta por:' : 'Prestada a:'}}
+                    {{movimiento.datosPrestamo.turno.profesionales |
+                                            enumerar:['apellido','nombre'] }}
+                    <br>
+                    <span class="badge-success float-left">Solicitud Automática</span>
+                </td>
+                <td *ngIf="movimiento.datosSolicitudManual">
+                    {{movimiento.estado == 'En archivo' ? 'Devuelta por:' : 'Prestada a:'}}
+                    <span *ngIf="movimiento.datosSolicitudManual.profesional">
+                        {{movimiento.datosSolicitudManual.profesional.apellido}},
+                        {{movimiento.datosSolicitudManual.profesional.nombre}}
+                    </span>
+                    <span *ngIf="!movimiento.datosSolicitudManual.profesional">
+                        {{movimiento.datosSolicitudManual.responsable.apellido}},
+                        {{movimiento.datosSolicitudManual.responsable.nombre}}
+                    </span>
+                    <br>
+                    <span class="badge-warning float-left">Solicitud Manual</span>
+                </td>
+                <td>
+                    <span *ngIf="movimiento.datosSolicitudManual">
+                        {{movimiento.datosSolicitudManual.espacioFisico?.nombre}}
+                    </span>
+                    <span *ngIf="!movimiento.datosSolicitudManual">
+                        {{movimiento.datosPrestamo.turno.espacioFisico?.nombre}}
+                        {{movimiento.datosPrestamo.turno.espacioFisico ? ' - ' : ''}}
+                        {{movimiento.datosPrestamo.turno.espacioFisico?.servicio?.nombre}}
+                    </span>
+                </td>
+                <td>
+                    <span *ngIf="movimiento.estado === 'En archivo'">
+                        {{movimiento.datosDevolucion?.observaciones}}
+                    </span>
+                    <span *ngIf="movimiento.estado === 'Prestada'">
+                        {{movimiento.datosPrestamo?.observaciones}}
+                    </span>
+                </td>
+                <td>
+                    <span
+                        *ngIf="movimiento.datosSolicitudManual">{{movimiento.datosSolicitudManual.observaciones}}</span>
+                </td>
+                <td>
+                    <span *ngIf="movimiento.estado === 'En archivo'">
+                        {{movimiento.datosDevolucion?.estado}}
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="row" *ngIf="inicioBusqueda && !historial.length">
+        <div class="col-12 text-center" style="margin: 3rem">
+            <h3 *ngIf="paciente">
+                <i class="mdi mdi-folder-remove"></i> No hay movimientos de prestamos de la
+                carpeta consultada
+            </h3>
+            <h3 *ngIf="!paciente">
+                <i class="mdi mdi-folder-remove"></i> No existe este número de carpeta en esta
+                organización
+            </h3>
+        </div>
+    </div>
+</fieldset>

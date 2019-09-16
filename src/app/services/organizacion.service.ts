@@ -2,6 +2,7 @@ import { Server } from '@andes/shared';
 import { IOrganizacion } from './../interfaces/IOrganizacion';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs';
 
 // Prototipo de Decorador cache. Proximamente se implementa de forma global.
 function Cache({ key }) {
@@ -13,7 +14,7 @@ function Cache({ key }) {
             if (!_cache[objectKey]) {
                 return fn.call(this, args).do(x => _cache[objectKey] = x);
             } else {
-                return new Observable(resultado => resultado.next(_cache[objectKey]));
+                return of(_cache[objectKey]);
             }
         };
         return descriptor;

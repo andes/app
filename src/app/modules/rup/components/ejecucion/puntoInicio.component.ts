@@ -105,6 +105,7 @@ export class PuntoInicioComponent implements OnInit {
 
     // tieneTurnosAsignados: true,
     actualizar() {
+        this.cancelarDinamica();
         const idsPrestacionesPermitidas = this.tiposPrestacion.map(t => t.conceptId);
         if (this.lastRequest) {
             this.lastRequest.unsubscribe();
@@ -221,6 +222,7 @@ export class PuntoInicioComponent implements OnInit {
      * Filtra el listado de agendas y prestaciones
      */
     filtrar() {
+        this.cancelarDinamica();
         // filtrar solo por las prestaciones que el profesional tenga disponibles
         this.agendaSeleccionada = null;
         this.agendas = JSON.parse(JSON.stringify(this.agendasOriginales));
@@ -329,7 +331,7 @@ export class PuntoInicioComponent implements OnInit {
     iniciarPrestacion(paciente, snomedConcept, turno) {
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
-                this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
+                this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', turno.horaInicio, turno).subscribe(prestacion => {
                     this.routeTo('ejecucion', prestacion.id);
                 }, (err) => {
                     this.plex.info('warning', 'No fue posible crear la prestación', 'ERROR');
@@ -409,7 +411,7 @@ export class PuntoInicioComponent implements OnInit {
     iniciarPrestacionNoNominalizada(snomedConcept, turno) {
         this.plex.confirm('</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
-                this.servicioPrestacion.crearPrestacion(null, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
+                this.servicioPrestacion.crearPrestacion(null, snomedConcept, 'ejecucion', turno.horaInicio, turno).subscribe(prestacion => {
                     this.routeTo('ejecucion', prestacion.id);
                 }, (err) => {
                     this.plex.info('warning', 'No fue posible crear la prestación', 'ERROR');
@@ -456,6 +458,7 @@ export class PuntoInicioComponent implements OnInit {
     }
 
     cargarTurnos(agenda) {
+        this.cancelarDinamica();
         this.agendaSeleccionada = agenda ? agenda : 'fueraAgenda';
     }
 
@@ -536,11 +539,11 @@ export class PuntoInicioComponent implements OnInit {
     /**
        * Ejecutar una prestacion que esta en estado pendiente
     */
-    ejecutarPrestacionPendiente(idPrestacion, paciente, snomedConcept) {
+    ejecutarPrestacionPendiente(idPrestacion, paciente, snomedConcept, turno) {
         let params: any = {
             op: 'estadoPush',
             ejecucion: {
-                fecha: new Date(),
+                fecha: turno.horaInicio,
                 registros: [],
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }

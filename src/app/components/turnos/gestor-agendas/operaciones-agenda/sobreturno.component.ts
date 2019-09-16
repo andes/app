@@ -9,8 +9,6 @@ import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
-import { PreviousUrlService } from '../../../../services/previous-url.service';
-import { ObraSocialCacheService } from '../../../../services/obraSocialCache.service';
 
 @Component({
     selector: 'sobreturno',
@@ -74,15 +72,13 @@ export class AgregarSobreturnoComponent implements OnInit {
 
 
     constructor(
-        private previousUrlService: PreviousUrlService,
         private pacienteCache: PacienteCacheService,
         public plex: Plex,
         public serviceAgenda: AgendaService,
         public servicioTipoPrestacion: TipoPrestacionService,
         private router: Router,
         public auth: Auth,
-        public servicePaciente: PacienteService,
-        private obraSocialCacheService: ObraSocialCacheService) { }
+        public servicePaciente: PacienteService) { }
 
     ngOnInit() {
         this.inicio = new Date(this.hoy.setHours(this.agenda.horaInicio.getHours(), this.agenda.horaInicio.getMinutes(), 0, 0));
@@ -136,8 +132,7 @@ export class AgregarSobreturnoComponent implements OnInit {
         } else if (escaneado && pacientes.length === 1 && (!pacientes[0].id || (pacientes[0].estado === 'temporal' && pacientes[0].scan))) {
             this.pacienteCache.setPaciente(pacientes[0]);
             this.pacienteCache.setScanState(escaneado);
-            this.previousUrlService.setUrl('citas/gestor_agendas');
-            this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru
+            this.router.navigate(['/apps/mpi/paciente/con-dni/sobreturno']);  // abre paciente-cru
         } else {
             this.pacientes = pacientes;
         }

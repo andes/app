@@ -14,13 +14,11 @@ import * as moment from 'moment';
 import { Component, OnInit } from '@angular/core';
 import { PacienteCacheService } from '../services/pacienteCache.service';
 import { BarrioService } from '../../../services/barrio.service';
-import { Location } from '@angular/common';
 import { GeoreferenciaService } from '../services/georeferencia.service';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { Router, ActivatedRoute } from '@angular/router';
-import { PreviousUrlService } from '../../../services/previous-url.service';
 import { HistorialBusquedaService } from '../services/historialBusqueda.service';
 
 @Component({
@@ -125,7 +123,7 @@ export class PacienteCruComponent implements OnInit {
     public paciente: IPaciente;
     public nombrePattern: string;
     public showDeshacer = false;
-    public patronDocumento = /^[1-9]{1}[0-9]{6,7}$/;
+    public patronDocumento = /^[1-9]{1}[0-9]{5,7}$/;
     // PARA LA APP MOBILE
     public showMobile = false;
     public checkPass = false;
@@ -140,10 +138,10 @@ export class PacienteCruComponent implements OnInit {
     infoMarcador: String = null;
 
     opcion: any;
+    origen = '';
 
     constructor(
         private historialBusquedaService: HistorialBusquedaService,
-        private previousUrlService: PreviousUrlService,
         private organizacionService: OrganizacionService,
         private auth: Auth,
         private georeferenciaService: GeoreferenciaService,
@@ -165,13 +163,13 @@ export class PacienteCruComponent implements OnInit {
         this.updateTitle('Registrar un paciente');
         this.route.params.subscribe(params => {
             this.opcion = params['opcion'];
-            if (!this.opcion) {
-                // obtiene el paciente cacheado
-                this.paciente = this.pacienteCache.getPacienteValor();
-                // consulta a la cache si el paciente fue escaneado o no
-                this.escaneado = this.pacienteCache.getScanState();
-            }
+            this.origen = params['origen'];
+            this.paciente = this.pacienteCache.getPacienteValor();
+            this.escaneado = this.pacienteCache.getScanState();
+            this.pacienteCache.clearPaciente();
+            this.pacienteCache.clearScanState();
         });
+
         if (this.opcion === 'sin-dni') {
             this.noPoseeDNI = true;
             this.pacienteModel.documento = '';
@@ -582,7 +580,6 @@ export class PacienteCruComponent implements OnInit {
         if (faltaParentezco) {
             this.plex.info('warning', 'Existen relaciones sin parentezco. Completelas antes de guardar', 'Atención');
         } else {
-            this.pacienteCache.setScanState(false);
             this.disableGuardar = true;
             let pacienteGuardar: any = Object.assign({}, this.pacienteModel);
             pacienteGuardar.ignoreCheck = ignoreCheck;
@@ -622,23 +619,37 @@ export class PacienteCruComponent implements OnInit {
                             this.historialBusquedaService.add(resultadoSave);
                         }
                         this.plex.info('success', 'Los datos se actualizaron correctamente');
-                        // TODO: Esto es un poco hacky -- soluciona el problema de tener la url anterior
-                        // hasta la actualización a Angular 7.2, donde se incorpora la posibilidad de pasar un estado en el navigate
-                        let previousUrl = this.previousUrlService.getUrl();
-                        if (previousUrl && previousUrl.includes('citas/punto-inicio')) {
-                            this.previousUrlService.setUrl('');
-                            this._router.navigate(['citas/punto-inicio/' + resultadoSave.id]);
-                        } else {
-                            this._router.navigate(['apps/mpi/busqueda']);
-                        }
+
+                        this.redirect(resultadoSave);
                     }
                 },
                 error => {
                     this.plex.info('warning', 'Error guardando el paciente');
                 }
             );
-            this.pacienteCache.clearPaciente();
         }
+    }
+
+    private redirect(resultadoSave?: any) {
+        switch (this.origen) {
+            case 'puntoInicio':
+                if (resultadoSave) {
+                    this._router.navigate(['citas/punto-inicio/' + resultadoSave.id]);
+                } else {
+                    this._router.navigate(['citas/punto-inicio/']);
+                }
+                break;
+            case 'mpi':
+                this._router.navigate(['apps/mpi/busqueda']);
+                break;
+            case 'sobreturno':
+                this._router.navigate(['citas/gestor_agendas']);
+                break;
+            default:
+                this._router.navigate(['apps/mpi/busqueda']);
+                break;
+        }
+
     }
 
     // Borra/agrega relaciones al paciente segun corresponda.
@@ -723,15 +734,7 @@ export class PacienteCruComponent implements OnInit {
             this.historialBusquedaService.add(this.paciente);
         }
         this.showMobile = false;
-        this.pacienteCache.clearPaciente();
-        this.pacienteCache.clearScanState();
-        let previousUrl = this.previousUrlService.getUrl();
-        if (previousUrl && previousUrl.includes('citas/punto-inicio')) {
-            this.previousUrlService.setUrl('');
-            this._router.navigate(['citas/punto-inicio/']);
-        } else {
-            this._router.navigate(['apps/mpi/busqueda']);
-        }
+        this.redirect();
     }
 
     // ---------------- NOTIFICACIONES --------------------

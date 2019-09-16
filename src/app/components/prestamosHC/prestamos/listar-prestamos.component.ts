@@ -45,6 +45,7 @@ export class ListarPrestamosComponent implements OnInit {
     }
 
     @Output() carpetaDevueltaEmit: EventEmitter<any> = new EventEmitter<any>();
+    @Output() devolverCarpetaEmit: EventEmitter<any> = new EventEmitter<any>();
     @Output() recargarSolicitudesEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
     constructor(
@@ -213,11 +214,9 @@ export class ListarPrestamosComponent implements OnInit {
         event.callback(listaEstados);
     }
 
-    devolver(solicitudCarpeta) {
+    devolver(carpeta) {
         if (this.carpetasSeleccionadas.length === 0) {
-            this.carpetaDevueltaEmit.emit(solicitudCarpeta);
-            this.carpetaSeleccionada = solicitudCarpeta;
-            this.verDevolver = true;
+            this.devolverCarpetaEmit.emit(carpeta);
         }
     }
 
@@ -240,10 +239,6 @@ export class ListarPrestamosComponent implements OnInit {
 
     onShowDevolver(event) {
         this.verDevolver = true;
-    }
-
-    onCancelDevolver(event) {
-        this.verDevolver = false;
     }
 
     onCarpeta(value) {

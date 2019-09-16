@@ -4,11 +4,13 @@
 // The list of which env maps to which file can be found in `angular-cli.json`.
 
 let _package = require('../../package.json');
+import { apiKeys } from './apiKeyMaps';
 
 export const environment = {
     production: false,
     environmentName: 'testing',
     API: '/api',
     APIStatusCheck: true,
-    version: _package.version
+    version: _package.version,
+    MAPS_KEY: apiKeys.develop
 };

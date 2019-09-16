@@ -4,27 +4,33 @@
 // TODO: Crear paquete NPM con las fonts
 @import '../../assets/font.css';
 $rotate: -90deg;
+
 .rup-card {
     &:not(.mini) {
         border: 2px solid #ccc;
     }
+
     width: 100%;
     display: flex;
     flex-direction: column;
     margin-bottom: 10px;
     transition: 200ms all;
     -webkit-transition: 200ms all;
+
     &.mini {
         margin-bottom: 2px;
+
         .rup-header {
             .icon-rup {
                 border-right: 2px solid #ccc;
             }
+
             .actions {
                 border-top: 2px solid #ccc;
                 border-bottom: 2px solid #ccc;
                 border-right: 2px solid #ccc;
             }
+
             .rup-border {
                 width: 100%;
                 border-top: 2px solid #ccc;
@@ -32,9 +38,11 @@ $rotate: -90deg;
                 border-right: 2px solid #ccc;
             }
         }
+
         &:hover {
             background: #eee;
         }
+
         .rup-border {
             &:hover {
                 background: #eee;
@@ -43,6 +51,7 @@ $rotate: -90deg;
                 border-top: 2px solid $blue;
             }
         }
+
         @each $tag,
         $color in $rup_colors {
             .rup-border-#{$tag} {
@@ -53,23 +62,29 @@ $rotate: -90deg;
                     border-top: 2px solid $color;
                 }
             }
+
             &.#{$tag} {
+
                 &:hover,
                 &.active {
                     box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
+
                     .rup-header {
                         .icon-rup {
                             background: $color;
+
                             i {
                                 color: white;
                             }
                         }
                     }
                 }
+
                 .rup-header {
                     .icon-rup {
                         border: 2px solid $color;
                         background: white;
+
                         i {
                             color: $color;
                         }
@@ -78,6 +93,7 @@ $rotate: -90deg;
             }
         }
     }
+
     @each $tag,
     $color in $rup_colors {
         &.#{$tag}:not(.mini) {
@@ -85,12 +101,14 @@ $rotate: -90deg;
                 border: 2px solid $color;
                 box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
             }
+
             >.rup-header,
             >.rup-header .icon-rup,
             .rup-body .legend,
             .rup-footer .type {
                 background: $color !important;
             }
+
             >.rup-header .icon-rup {
                 border-bottom: 1px solid $color;
                 background: $color !important;
@@ -98,27 +116,33 @@ $rotate: -90deg;
             }
         }
     }
+
     .rup-header {
         text-transform: capitalize;
         display: flex;
+
         .icon-rup,
         .title,
         .actions {
             padding: 5px;
         }
+
         .btn-icon-rup {
             line-height: 1.3em;
         }
+
         .icon-rup {
             font-size: 1.2rem;
             width: 55px;
             text-align: center;
+
             i {
                 color: white;
                 font-size: 2.5rem;
                 line-height: 30px;
             }
         }
+
         .title {
             font-size: 1.3em;
             -ms-flex-preferred-size: 0;
@@ -132,24 +156,30 @@ $rotate: -90deg;
             font-weight: 600;
             padding: 10px 20px;
             display: inline-grid;
+
             .vinculadoCon {
                 display: inline-flex;
             }
         }
+
         .actions {
             background: white;
             margin-left: auto;
+
             .btn {
                 margin: 0 5px;
             }
+
             .btn:first-child {
                 margin-right: 0;
             }
         }
     }
+
     .rup-body {
         display: flex;
         min-height: 115px;
+
         .legend {
             padding-bottom: 10px;
             font-size: 1.2rem;
@@ -157,6 +187,7 @@ $rotate: -90deg;
             display: flex;
             justify-content: center;
             align-items: flex-end;
+
             span {
                 display: block;
                 text-transform: uppercase;
@@ -171,6 +202,7 @@ $rotate: -90deg;
                 width: 180px;
             }
         }
+
         .content {
             margin: 0;
             padding: 10px 20px;
@@ -178,13 +210,16 @@ $rotate: -90deg;
             border-top: 1px solid #666;
         }
     }
+
     .rup-footer {
         padding: 0;
         display: flex;
+
         .type {
             width: 55px;
         }
     }
+
     &:hover {
         .rup-header {
             .rup-icon {
@@ -199,13 +234,16 @@ $rotate: -90deg;
 
 // Para resumen de Epicrisis
 .rup-clear {
+
     @each $tag,
     $color in $rup_colors {
         &.#{$tag}:not(.mini) {
             border: 0;
+
             &:hover {
                 border: 0;
             }
+
             >.rup-header,
             >.rup-header .icon-rup,
             .rup-body .legend,
@@ -213,31 +251,38 @@ $rotate: -90deg;
                 background: transparent !important;
                 color: white;
             }
+
             >.rup-header .icon-rup {
                 border-bottom: 1px solid $color;
                 background: transparent !important;
             }
         }
     }
+
     .rup-card:not(.mini) {
         border: 0;
     }
+
     .rup-header {
         text-transform: capitalize;
         display: flex;
+
         .icon-rup,
         .title,
         .actions {
             padding: 5px;
         }
+
         .btn-icon-rup {
             line-height: 1.3em;
         }
+
         .icon-rup {
             font-size: 1.2rem;
             width: 55px;
             text-align: center;
             display: none;
+
             i {
                 color: $brand-primary;
                 font-size: 2.5rem;
@@ -245,6 +290,7 @@ $rotate: -90deg;
             }
         }
     }
+
     .rup-border {
         &:hover {
             background: #eee;
@@ -257,13 +303,13 @@ $rotate: -90deg;
 // TEMP
 .metadato.fundacional {
     .legend {
-        background: repeating-linear-gradient( 45deg, #606dbc, #606dbc 10px, #465298 10px, #465298 20px) !important;
+        background: repeating-linear-gradient(45deg, #606dbc, #606dbc 10px, #465298 10px, #465298 20px) !important;
     }
 }
 
 .calificador {
     .legend {
-        background: repeating-linear-gradient( 45deg, #C70039, #C70039 10px, #36131b 10px, #36131b 20px) !important;
+        background: repeating-linear-gradient(45deg, #C70039, #C70039 10px, #36131b 10px, #36131b 20px) !important;
     }
 }
 
@@ -300,6 +346,7 @@ $rotate: -90deg;
 
 .drop-area {
     min-height: 50px;
+
     p {
         font-size: 20px;
         margin: 0;
@@ -332,6 +379,7 @@ $rotate: -90deg;
     border: 2px dashed white;
     margin: 5px 0;
     text-align: center;
+
     .drop-posicion-hover {
         border: 2px dashed $dark-grey;
     }
@@ -343,6 +391,7 @@ $rotate: -90deg;
 
 .readonly {
     font-size: 16px;
+
     span {
         display: block;
         font-weight: normal;
@@ -361,6 +410,7 @@ $color in $rup_colors {
         border-color: $color;
         background: white;
     }
+
     .btn-#{$tag}:hover,
     .btn-#{$tag}:focus,
     .btn-#{$tag}:active,
@@ -370,6 +420,7 @@ $color in $rup_colors {
         // border-color: $hallazgos;
         color: initial;
     }
+
     .btn-#{$tag}:active,
     .btn-#{$tag}.active,
     .open .dropdown-toggle.btn-#{$tag} {
@@ -377,6 +428,7 @@ $color in $rup_colors {
         background-color: $color;
         background-image: none;
     }
+
     .btn-#{$tag}.disabled,
     .btn-#{$tag}[disabled] {
         background-color: #eee;
@@ -393,9 +445,11 @@ $color in $rup_colors {
         text-transform: uppercase;
         color: $color;
         border: 1px solid $color;
+
         &:focus {
             outline: 0;
         }
+
         &.active {
             background-color: $color;
             mix-blend-mode: hard-light;
@@ -405,7 +459,8 @@ $color in $rup_colors {
 
 
 // ejemplo resultado: .semantic-badge hallazgo > .icon-rup {}
-@each $tag, $color in $rup_colors {
+@each $tag,
+$color in $rup_colors {
     .semantic-badge-#{$tag} {
         i {
             border-bottom: 1px solid $color;
@@ -416,14 +471,17 @@ $color in $rup_colors {
             // padding-bottom: 2px;
             padding: 3px 3px 2px;
         }
+
         i:hover {
             border: 2px solid $color;
             box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
         }
     }
+
     .semantic-text-#{$tag} {
         color: $color;
     }
+
     .semantic-border-#{$tag} {
         border-color: $color;
     }
@@ -449,6 +507,7 @@ $color in $rup_colors {
 
 .anteriores {
     width: 100%;
+
     div {
         border: 1px solid #aaa;
     }
@@ -462,6 +521,7 @@ $color in $rup_colors {
     border-bottom: 8px solid transparent;
     border-right: 8px solid;
 }
+
 .menu-right {
     // display: inline-flex;
     width: 0px;
@@ -484,6 +544,7 @@ $color in $rup_colors {
     display: grid;
     grid-template-columns: $cols;
     grid-column-gap: 40px;
+
     .concepto {
         display: grid;
         grid-template-columns: .5fr;
@@ -492,61 +553,69 @@ $color in $rup_colors {
         margin-bottom: 20px;
         padding-bottom: 3px;
         align-items: flex-end;
+
         h4 {
             margin-bottom: 0;
             text-transform: capitalize;
         }
     }
+
     form {
         border: 0;
     }
 }
 
 @mixin grid-columna {
-    
+
     .prestacion-offset {
         display: flex;
         justify-content: space-between;
         grid-column: 1/2;
     }
+
     div:not(:first-of-type) {
-        &:not(.medicamento)
-        &:not(.col-12)
-        &:not(.col-6)
-        &:not(.diente-container) { 
+        &:not(.medicamento) &:not(.col-12) &:not(.col-6) &:not(.diente-container) {
             display: grid;
             grid-template-columns: 1fr .25fr;
-                div:nth-child(2) {
-                    display: flex;
-                    // justify-content: center;
-                }
+
+            div:nth-child(2) {
+                display: flex;
+                // justify-content: center;
+            }
         }
     }
+
     .columna-completa {
         grid-column: 1/3 !important;
         display: grid !important;
         grid-template-columns: 1fr;
         grid-template-rows: repeat(2, 1fr);
         margin-bottom: 10px;
-        .relaciones, .adjuntos {
+
+        .relaciones,
+        .adjuntos {
             grid-column: 1/3;
         }
+
         .adjuntos {
             border-bottom: 1px solid $brand-primary;
             height: 35px;
+
             .badge {
                 height: 32px !important;
             }
         }
-    
+
     }
+
     .divisor {
         display: flex;
         justify-content: space-between;
         align-items: center;
         border-bottom: 2px solid gray;
-        
+
     }
+
     .datos-prestacion {
         display: flex;
         align-content: center;
@@ -555,11 +624,13 @@ $color in $rup_colors {
         h5 {
             font-size: 1.5rem;
         }
+
         div {
             display: flex;
-        
+
         }
     }
+
     .borde-datos {
         border-left: 2px solid gray;
     }
@@ -569,10 +640,12 @@ $color in $rup_colors {
     .columna-datos {
         grid-column: 1/3;
         border-bottom: 2px solid darkgray;
+
         span {
             font-size: 1rem;
         }
-        &.no-border{
+
+        &.no-border {
             border-bottom: 0;
         }
     }
@@ -583,13 +656,14 @@ $color in $rup_colors {
     position: relative;
     top: -1px;
     z-index: 0 !important;
+
     form {
         border: none;
     }
 }
 
 .solo-valores-grid.hallazgos {
-    
+
     @include grid-columnas();
 
     .columna {
@@ -599,57 +673,59 @@ $color in $rup_colors {
         .evolucion {
             grid-column: 1/2;
         }
+
         .nav-fecha {
             align-items: center;
             height: 30px;
         }
+
         .text-black-50 {
             color: #eee !important;
         }
     }
-    
+
     @include grid-columna-datos();
 
     .badge {
-        font-size: 1rem !important; 
+        font-size: 1rem !important;
     }
 }
 
-.solo-valores-grid.hallazgos, 
-.solo-valores-grid.cda, 
-.solo-valores-grid.procedimientos, 
+.solo-valores-grid.hallazgos,
+.solo-valores-grid.cda,
+.solo-valores-grid.procedimientos,
 .solo-valores-grid.prestaciones {
     @include fix-tab-space();
 }
 
 .solo-valores-grid.procedimientos {
-    
+
     @include grid-columnas();
-    
+
     .columna {
-        @include grid-columna();        
+        @include grid-columna();
     }
-    
+
     @include grid-columna-datos();
-    
+
     .badge {
-        font-size: 1rem !important; 
+        font-size: 1rem !important;
     }
 
 }
 
 .solo-valores-grid.odontograma {
-    
+
     @include grid-columnas();
-    
+
     .columna {
-        @include grid-columna();        
+        @include grid-columna();
     }
-    
+
     @include grid-columna-datos();
-    
+
     .badge {
-        font-size: 1rem !important; 
+        font-size: 1rem !important;
     }
 
 }
@@ -664,10 +740,10 @@ observaciones {
 
 .nav-item-plan {
     background-color: white;
-    color: $solicitud; 
+    color: $solicitud;
+
     a.active {
         background-color: $solicitud !important;
-        color: white !important; 
+        color: white !important;
     }
 }
-
