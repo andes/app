@@ -77,6 +77,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                         this.loading = false;
                     } else {
                         this.all = false;
+                        this.loading = true;
                         // [TODO] Buscar según el tipo
                         switch (this.item.type) {
                             case 'prestacion':
@@ -94,6 +95,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                         }
                     }
                 } else {
+                    this.seleccionados = [];
                     this.loading = false;
                 }
             }
