@@ -2,6 +2,7 @@
     <div class="col-8">
         <table *ngIf="diagnosticos.length>0" class="table table-striped table-sm">
             <thead>
+                <tr>
                 <th>Código</th>
                 <th>Descripción</th>
                 <th>Descripción General</th>
@@ -22,6 +23,7 @@
                 <th style="text-align:center">Masculino</th>
                 <th style="text-align:center">Femenino</th>
                 <th style="text-align:center">Indeterminado</th>
+                </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let diagnostico of diagnosticos; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': seleccionada[i]}"
@@ -126,10 +128,12 @@
                 <legend>Listado de Pacientes {{diagnostico.reporteC2}}</legend>
                 <table class="table table-striped table-sm">
                     <thead>
+                        <tr>
                         <th>Documento</th>
                         <th>Nombre Completo</th>
                         <th>Sexo</th>
                         <th>Edad</th>
+                        </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let paciente of diagnostico.pacientes" class="hover" [ngClass]="{'bg-inverse text-white': false}">

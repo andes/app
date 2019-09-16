@@ -27,7 +27,7 @@
                             </div>
                             <br>
                             <div class="col-4">
-                                <plex-select [(ngModel)]="tipoReportes" name="tipoReportes" [data]="opciones" label-field="Tipo de reportes" label="Seleccione reporte"
+                                <plex-select id="tipoReportes" [(ngModel)]="tipoReportes" name="tipoReportes" [data]="opciones" label-field="Tipo de reportes" label="Seleccione reporte"
                                     [required]="true">
                                 </plex-select>
                             </div>
@@ -46,6 +46,8 @@
     </section>
 
     <footer>
+        <plex-button *ngIf="showBotonExportaXLS" class="float-right" type="default" label="Exportar a XLS"
+            (click)="toExcel(tipoReportes.nombre)"></plex-button>
         <plex-button type="success" label="Generar Reporte" (click)="imprimir()" class="float-right"></plex-button>
     </footer>
 

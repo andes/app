@@ -255,7 +255,7 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
 
         let table: any;
         table = document.getElementById(cmpName);
-        this.excelService.exportAsExcelFile(table, 'reportesDiarios');
+        this.excelService.exportAsExcelFile(table, cmpName);
 
     }
 

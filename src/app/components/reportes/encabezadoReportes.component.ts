@@ -7,6 +7,7 @@ import { Auth } from '@andes/auth';
 import * as moment from 'moment';
 import { OrganizacionService } from '../../services/organizacion.service';
 import { AgendaService } from '../../services/turnos/agenda.service';
+import {ExcelService} from '../../services/excel.service';
 
 @Component({
     selector: 'encabezadoReportes',
@@ -16,6 +17,8 @@ import { AgendaService } from '../../services/turnos/agenda.service';
 export class EncabezadoReportesComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
+
+    public showBotonExportaXLS = false;
 
     // Propiedades diagnostico
     public showConsultaDiagnostico = false;
@@ -54,6 +57,7 @@ export class EncabezadoReportesComponent implements OnInit {
         private agendaService: AgendaService,
         private auth: Auth,
         private servicioOrganizacion: OrganizacionService,
+        private excelService: ExcelService
 
     ) {
 
@@ -135,6 +139,7 @@ export class EncabezadoReportesComponent implements OnInit {
             this.showCantidadConsultaXPrestacion = false;
             this.agendaService.findConsultaDiagnosticos(this.parametros).subscribe((diagnosticos) => {
                 this.diagnosticos = diagnosticos;
+                this.showBotonExportaXLS = true;
             });
         }
         if (this.parametros['horaInicio'] && this.parametros['horaFin'] && this.tipoReportes.nombre === 'Reporte C2') {
@@ -157,6 +162,7 @@ export class EncabezadoReportesComponent implements OnInit {
                 this.totalMasculino = this.diagnosticos.map(elem => { return elem.sumaMasculino; }).reduce(this.add, 0);
                 this.totalFemenino = this.diagnosticos.map(elem => { return elem.sumaFemenino; }).reduce(this.add, 0);
                 this.totalOtro = this.diagnosticos.map(elem => { return elem.sumaOtro; }).reduce(this.add, 0);
+                this.showBotonExportaXLS = true;
             });
         }
         if (this.parametros['horaInicio'] && this.parametros['horaFin'] && this.parametros['organizacion'] && this.tipoReportes.nombre === 'Consultas por prestación') {
@@ -165,6 +171,7 @@ export class EncabezadoReportesComponent implements OnInit {
             this.showReporteC2 = false;
             this.agendaService.findCantidadConsultaXPrestacion(this.parametros).subscribe((diagnosticos) => {
                 this.diagnosticos = diagnosticos;
+                this.showBotonExportaXLS = true;
             });
         }
     }
@@ -173,7 +180,15 @@ export class EncabezadoReportesComponent implements OnInit {
         return a + b;
     }
 
+    public toExcel(cmpName) {
 
+        let table: any;
+        table =  document.getElementsByClassName('table')[0];
+        console.log(table);
+        console.log(cmpName);
+        this.excelService.exportAsExcelFile(table, cmpName);
+
+    }
 
 
 
