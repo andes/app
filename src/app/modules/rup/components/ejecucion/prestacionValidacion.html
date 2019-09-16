@@ -18,9 +18,8 @@
                             <ng-container *ngIf="validada && !prestacion.solicitud.tipoPrestacion.noNominalizada">
                                 <plex-button type="warning" icon="download mdi-14px" class="float-right ml-1"
                                              title="Descargar Resúmen PDF" titlePosition="top"
-                                             (click)="descargarResumen()" [disabled]="descargando">
+                                             (click)="descargarResumen()" [disabled]="!descargaCerrada">
                                 </plex-button>
-                                <plex-loader type="linear" *ngIf="descargando"></plex-loader>
                             </ng-container>
                         </div>
                     </div>
@@ -157,8 +156,8 @@
                                     </b>
                                 </div>
                                 <div class="float-left" *ngIf="elemento?.relacionadoCon">
-                                    <b class="clearfix" *ngIf="elemento?.relacionadoCon?.length > 0">Relacionado
-                                        con:</b>
+                                    <b class="clearfix" *ngIf="elemento?.relacionadoCon?.length > 0">Relacionado con:
+                                    </b>
                                     <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0 && !elementoRUP?.reglas?.requeridos?.relacionesMultiples"
                                            class="badge badge-info text-uppercase">
                                         {{ elemento.relacionadoCon[0]?.concepto?.term[0].toUpperCase() +
@@ -210,6 +209,14 @@
                                             <b> No hay turnos disponibles</b>
                                         </span>
                                     </span>
+                                </ng-container>
+                                <ng-container
+                                              *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && servicioPrestacion.getIcon(elemento.concepto, false) === 'procedimiento' && !elemento.esSolicitud">
+                                    <plex-button type="info" size="sm mdi-14px" icon="download"
+                                                 [disabled]="!descargaCerrada"
+                                                 (click)="descargarRegistro(elemento.id, elemento.concepto.term)">
+                                        <plex-badge type="info" size="sm">PDF</plex-badge>
+                                    </plex-button>
                                 </ng-container>
                             </div>
                         </div>
