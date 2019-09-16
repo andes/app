@@ -434,7 +434,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                 registroActual.relacionadoCon = registroActual.relacionadoCon.filter(rr => rr.id !== this.confirmarDesvincular[registroId].id && rr.concepto.conceptId !== this.confirmarDesvincular[registroId].concepto.conceptId);
             } else {
                 const cara = this.confirmarDesvincular[registroId].cara;
-                registroActual.relacionadoCon = registroActual.relacionadoCon.filter(rr => rr.cara !== cara);
+                const term = this.confirmarDesvincular[registroId].concepto.term;
+                registroActual.relacionadoCon = registroActual.relacionadoCon.filter(rr => rr.cara !== cara || rr.concepto.term !== term);
             }
             delete this.confirmarDesvincular[registroId];
         }
