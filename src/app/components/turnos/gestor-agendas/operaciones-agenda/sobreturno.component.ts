@@ -1,13 +1,12 @@
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { Observable } from 'rxjs/Observable';
 import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
-import { Component, Input, EventEmitter, Output, OnInit, HostBinding } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
-import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
 
 @Component({
@@ -16,73 +15,55 @@ import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCach
 })
 
 export class AgregarSobreturnoComponent implements OnInit {
-    public disableNuevoPaciente = true;
     public nota: any;
     public lenNota = 140;
-    changeCarpeta: boolean;
-    carpetaEfector: any;
-    private _agenda: any;
-    private _revision: any;
-
-    loading = false;
-    resultadoBusqueda: IPaciente[] = [];
-    searchClear = true;    // True si el campo de búsqueda se encuentra vacío
-
-    @HostBinding('class.plex-layout') layout = true;
-
-    @Input('agenda')
-    set agenda(value: any) {
-        this._agenda = value;
-    }
-    get agenda(): any {
-        return this._agenda;
-    }
-
-    @Input('revision')
-    set revision(value: any) {
-        this._revision = value;
-    }
-    get revision(): any {
-        return this._revision;
-    }
-
-    @Output() volverAlGestor = new EventEmitter<boolean>();
-    @Output() volverRevision = new EventEmitter<boolean>();
-    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
-    @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
-
-
-    paciente: IPaciente;
-    tipoPrestacion: ITipoPrestacion;
-    resultado: any;
-    showAgregarSobreturno = true;
-    showCreateUpdate = false;
-    showSobreturno = true;
-    pacientesSearch = false;
-    horaTurno = null;
-    telefono = '';
-    cambioTelefono = false;
-    pacientes: any;
-
+    public changeCarpeta: boolean;
+    public carpetaEfector: any;
+    public _revision: any = localStorage.getItem('revision') ? true : false;
+    public _agenda;
+    public agenda;
+    public loading = false;
+    public resultadoBusqueda: IPaciente[] = [];
+    public paciente: IPaciente;
+    public tipoPrestacion: ITipoPrestacion;
+    public resultado: any;
+    public showCreateUpdate = false;
+    public showSobreturno = true;
+    public pacientesSearch = false;
+    public horaTurno = null;
+    public telefono = '';
+    public cambioTelefono = false;
+    public pacientes: any;
     public seleccion = null;
     public esEscaneado = false;
-    hoy = new Date();
-    inicio: Date;
-    fin: Date;
+    public hoy = new Date();
+    public inicio: Date;
+    public fin: Date;
 
 
     constructor(
         private pacienteCache: PacienteCacheService,
-        public plex: Plex,
-        public serviceAgenda: AgendaService,
-        public servicioTipoPrestacion: TipoPrestacionService,
+        private plex: Plex,
+        private serviceAgenda: AgendaService,
         private router: Router,
-        public auth: Auth,
-        public servicePaciente: PacienteService) { }
+        private auth: Auth,
+        private servicePaciente: PacienteService,
+        private route: ActivatedRoute) { }
 
     ngOnInit() {
-        this.inicio = new Date(this.hoy.setHours(this.agenda.horaInicio.getHours(), this.agenda.horaInicio.getMinutes(), 0, 0));
-        this.fin = new Date(this.hoy.setHours(this.agenda.horaFin.getHours(), this.agenda.horaFin.getMinutes(), 0, 0));
+        this.route.params.subscribe(params => {
+            if (params && params['idAgenda']) {
+                this.serviceAgenda.getById(params['idAgenda']).subscribe(agenda => {
+                    this._agenda = agenda;
+                    this.agenda = agenda;
+                    this.inicio = new Date(this.hoy.setHours(this.agenda.horaInicio.getHours(), this.agenda.horaInicio.getMinutes(), 0, 0));
+                    this.fin = new Date(this.hoy.setHours(this.agenda.horaFin.getHours(), this.agenda.horaFin.getMinutes(), 0, 0));
+                    if (this.agenda.tipoPrestaciones.length === 1) {
+                        this.tipoPrestacion = this.agenda.tipoPrestaciones[0];
+                    }
+                });
+            }
+        });
 
         this.carpetaEfector = {
             organizacion: {
@@ -93,9 +74,6 @@ export class AgregarSobreturnoComponent implements OnInit {
         };
         this.showSobreturno = false;
         this.pacientesSearch = true;
-        if (this.agenda.tipoPrestaciones.length === 1) {
-            this.tipoPrestacion = this.agenda.tipoPrestaciones[0];
-        }
     }
 
 
@@ -117,14 +95,12 @@ export class AgregarSobreturnoComponent implements OnInit {
     // -------------- SOBRE BUSCADOR ----------------
 
     onSearchStart() {
-        this.disableNuevoPaciente = false;
         this.esEscaneado = false;
         this.paciente = null;
         this.loading = true;
     }
 
     onSearchEnd(pacientes: IPaciente[], escaneado: boolean) {
-        this.searchClear = false;
         this.loading = false;
         this.pacienteCache.setScanState(escaneado);
         if (escaneado && pacientes.length === 1 && pacientes[0].id) {
@@ -139,8 +115,6 @@ export class AgregarSobreturnoComponent implements OnInit {
     }
 
     onSearchClear() {
-        this.disableNuevoPaciente = true;
-        this.searchClear = true;
         this.resultadoBusqueda = [];
         this.paciente = null;
     }
@@ -188,9 +162,6 @@ export class AgregarSobreturnoComponent implements OnInit {
     cambiarCarpeta() {
         this.changeCarpeta = true;
     }
-
-    //////
-
 
     verificarTelefono(paciente: IPaciente) {
         // se busca entre los contactos si tiene un celular
@@ -282,8 +253,7 @@ export class AgregarSobreturnoComponent implements OnInit {
                 if (this.changeCarpeta) {
                     this.actualizarCarpetaPaciente();
                 }
-                this.volverAlGestor.emit(this.agenda);
-                this.volverRevision.emit(true);
+                this.volver();
             });
         } else {
             this.plex.info('warning', 'Debe completar los datos requeridos');
@@ -313,12 +283,11 @@ export class AgregarSobreturnoComponent implements OnInit {
         }
     }
 
-
-    cancelar() {
-        if (!this._revision) {
-            this.volverAlGestor.emit(true);
+    volver() {
+        if (this._revision) {
+            this.router.navigate(['citas/revision_agenda', this.agenda.id]);
         } else {
-            this.volverRevision.emit(true);
+            this.router.navigate(['citas/gestor_agendas']);
         }
     }
 }
