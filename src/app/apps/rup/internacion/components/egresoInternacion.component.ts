@@ -523,25 +523,22 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
 
         let desde = 'V00';
         let hasta = 'Y98';
-        if (this.registro.valor.InformeEgreso.causaExterna.producidaPor) {
+        let filtro;
 
+        if (this.registro.valor.InformeEgreso.causaExterna.producidaPor) {
 
             switch (this.registro.valor.InformeEgreso.causaExterna.producidaPor.id) {
                 case 'Accidente':
-                    desde = 'V01';
-                    hasta = 'X59';
+                    filtro = [{ desde: 'V01', hasta: 'X59' }, { desde: 'Y35', hasta: 'Y98' }];
                     break;
                 case 'lesionAutoinfligida':
-                    desde = 'X60';
-                    hasta = 'X84';
+                    filtro = [{ desde: 'X60', hasta: 'X84' }];
                     break;
                 case 'agresion':
-                    desde = 'X85';
-                    hasta = 'Y09';
+                    filtro = [{ desde: 'X85', hasta: 'Y09' }];
                     break;
                 case 'seIgnora': {
-                    desde = 'Y10';
-                    hasta = 'Y34';
+                    filtro = [{ desde: 'Y10', hasta: 'Y34' }];
                     break;
                 }
             }
@@ -549,8 +546,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
         if (event && event.query) {
             let query = {
                 nombre: event.query,
-                codigoDesde: desde,
-                codigoHasta: hasta
+                filtroRango: JSON.stringify(filtro)
             };
             this.cie10Service.get(query).subscribe((datos) => {
                 // mapeamos para mostrar el codigo primero y luego la descripcion
