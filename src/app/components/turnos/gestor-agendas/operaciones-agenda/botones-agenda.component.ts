@@ -238,7 +238,12 @@ export class BotonesAgendaComponent implements OnInit {
 
     puedoRevisar() {
         let agenda = this.agendasSeleccionadas[0];
-        return ((agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria' || agenda.estado === 'publicada' || agenda.estado === 'auditada') && moment(agenda.horaFin).isBefore(moment(new Date())));
+        let auditable = true;
+        for (let i = 0; i < agenda.bloques.length; i++) {
+            auditable = auditable && agenda.bloques[i].turnos.some((t: any) => t.auditable === false);
+        }
+        auditable = !auditable;
+        return (auditable && (agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria' || agenda.estado === 'publicada' || agenda.estado === 'auditada') && moment(agenda.horaFin).isBefore(moment(new Date())));
     }
 
     puedoImprimirCarpetas() {
