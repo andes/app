@@ -190,7 +190,7 @@ export class IniciarInternacionComponent implements OnInit {
         } else if (this.paciente && this.paciente.id) {
             this.btnIniciarGuardar = 'INICIAR';
             this.servicioPrestacion.internacionesXPaciente(this.paciente, 'ejecucion', this.auth.organizacion.id).subscribe(resultado => {
-                // Si el paciente ya tiene una internacion en ejecucion
+                // Si el paciente ya tiene una internacion en ejecucion (Puede ser que haya egresado pero aún no este validada la internacion)
                 if (resultado) {
                     if (resultado.cama) {
                         this.plex.info('warning', 'El paciente registra una internación en ejecución y está ocupando una cama');
@@ -210,13 +210,16 @@ export class IniciarInternacionComponent implements OnInit {
 
                         } else {
                             this.servicioPrestacion.getById(resultado.ultimaInternacion.id).subscribe(prestacion => {
-                                this.prestacion = prestacion;
+                                //   this.prestacion = prestacion;
                                 let existeRegistro = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
                                 if (existeRegistro) {
                                     // Carga la información completa del paciente
                                     this.pacienteService.getById(prestacion.paciente.id).subscribe(paciente => {
                                         this.paciente = paciente;
-                                        this.informeIngreso = existeRegistro.valor.informeIngreso;
+                                        let informeIngreso = existeRegistro.valor.informeIngreso;
+                                        this.informeIngreso.ocupacionHabitual = informeIngreso.ocupacionHabitual;
+                                        this.informeIngreso.situacionLaboral = { id: this.situacionesLaborales.find(sl => sl.nombre === informeIngreso.situacionLaboral).id, nombre: informeIngreso.situacionLaboral };
+                                        this.informeIngreso.nivelInstruccion = { id: this.nivelesInstruccion.find(ni => ni.nombre === informeIngreso.nivelInstruccion).id, nombre: informeIngreso.nivelInstruccion };
                                     });
                                 }
                             });
@@ -224,7 +227,7 @@ export class IniciarInternacionComponent implements OnInit {
 
                     }
                 } else {
-                    // Chequeamos si el paciente tiene una internacion validad anterios para copiar los datos
+                    // Chequeamos si el paciente tiene una internacion validad anterior para copiar los datos
                     this.servicioPrestacion.internacionesXPaciente(this.paciente, 'validada', null).subscribe(datosInternacion => {
                         if (datosInternacion) {
                             this.informeIngreso = this.buscarRegistroInforme(datosInternacion.ultimaInternacion);
