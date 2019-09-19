@@ -2,7 +2,7 @@
     <plex-layout-main>
         <div class="col-md-12">
             <fieldset>
-                <legend>Datos basicos</legend>
+                <legend>Datos básicos</legend>
             </fieldset>
             <form #formulario="ngForm">
                 <div class="row">
@@ -87,7 +87,23 @@
                             </div>
                         </fieldset>
                     </div>
+                </div>
 
+                <div class="row">
+                    <div class="col">
+                        <fieldset>
+                            <legend>Datos profesionales</legend>
+                            <div class="row">
+                                <div class="col">
+                                    <plex-select [(ngModel)]="profesional.profesionExterna" name="profesion" label="Profesión" [data]="profesiones" [required]="false">
+                                    </plex-select>
+                                </div>
+                                <div class="col">
+                                    <plex-text [(ngModel)]="profesional.matriculaExterna" name="matriculaExterna" label="Matrícula" [required]="false"></plex-text>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
                 </div>
             </form>
         </div>
