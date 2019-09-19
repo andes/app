@@ -1,12 +1,9 @@
 
 import { debounceTime } from 'rxjs/operators';
-import { ProfesionalCreateUpdateComponent } from './profesional-create-update.component';
 import { IProfesional } from './../../interfaces/IProfesional';
 import { ProfesionalService } from './../../services/profesional.service';
-import { Observable } from 'rxjs';
-import { Component, OnInit, Output, Input, EventEmitter, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Plex } from '@andes/plex';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
