@@ -101,7 +101,7 @@ import { ReglaService } from './services/top/reglas.service';
 import { FacturacionAutomaticaService } from './services/facturacionAutomatica.service';
 import { PeriodoPadronesPucoService } from './services/periodoPadronesPuco.service';
 import { PeriodoPadronesProfeService } from './services/periodoPadronesProfe.service';
-
+import { SIISAService } from './services/siisa.service';
 
 // TOP
 // ... Usuarios
@@ -723,6 +723,7 @@ registerLocaleData(localeEs, 'es');
         ProfeService,
         PeriodoPadronesPucoService,
         PeriodoPadronesProfeService,
+        SIISAService,
         ElementosRUPService,
         ConceptObserverService,
         LlavesTipoPrestacionService,
