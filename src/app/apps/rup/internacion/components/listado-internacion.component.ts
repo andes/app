@@ -110,6 +110,8 @@ export class ListadoInternacionComponent implements OnInit {
         if (event.desocupaCama) {
             this.filtrar();
             this.desocuparCama(event.egresoExiste, event.cama);
+        } else {
+            this.filtrar();
         }
     }
 
@@ -117,13 +119,13 @@ export class ListadoInternacionComponent implements OnInit {
     desocuparCama(egreso, unaCama) {
         let dto;
         if (!unaCama) {
-            let fechaEgreso = egreso.valor.InformeEgreso.fechaEgreso;
+            let fechaEgreso = egreso.InformeEgreso.fechaEgreso;
             this.servicioPrestacion.getPasesInternacion(this.internacionSelected.id).subscribe(lista => {
                 let listaFiltrada = lista.filter(c => c.estados.fecha < fechaEgreso);
                 this.camasService.getCama(listaFiltrada[listaFiltrada.length - 1]._id).subscribe(cama => {
                     if (cama) {
                         dto = {
-                            fecha: egreso.valor.InformeEgreso.fechaEgreso,
+                            fecha: egreso.InformeEgreso.fechaEgreso,
                             estado: this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible',
                             unidadOrganizativa: cama.ultimoEstado.unidadOrganizativa ? cama.ultimoEstado.unidadOrganizativa : null,
                             especialidades: cama.ultimoEstado.especialidades ? cama.ultimoEstado.especialidades : null,
