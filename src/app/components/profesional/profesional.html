@@ -131,6 +131,20 @@
                     </div>
                 </div>
             </div>
+            <div class="row mb-1" *ngIf="!profesionalSelected.profesionalMatriculado && (profesionalSelected.profesionExterna || profesionalSelected.matriculaExterna)">
+                <div class="col" *ngIf="profesionalSelected.profesionExterna">
+                    <label>Profesión Externa</label>
+                    <div>
+                        {{profesionalSelected.profesionExterna.nombre}}
+                    </div>
+                </div>
+                <div class="col" *ngIf="profesionalSelected.matriculaExterna">
+                    <label>Matrícula Externa</label>
+                    <div>
+                        {{profesionalSelected.matriculaExterna}}
+                    </div>
+                </div>
+            </div>
         </fieldset>
     </plex-layout-sidebar>
 
