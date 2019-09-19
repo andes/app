@@ -1,9 +1,8 @@
 import {
-    Component, OnInit, OnChanges, Output, Input,
-    EventEmitter, ElementRef, SimpleChanges,
-    ViewEncapsulation, ContentChildren, OnDestroy
+    Component, OnInit, Output, Input,
+    EventEmitter,
+    ViewEncapsulation, OnDestroy
 } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
 import { SubscriptionLike as ISubscription } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';

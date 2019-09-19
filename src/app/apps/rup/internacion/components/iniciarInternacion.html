@@ -85,7 +85,7 @@
 
                         <div class="row" *ngIf="origenExterno">
                             <div class="col-md">
-                                <plex-bool [(ngModel)]="check" type="slide" label="Otro" name="activo"></plex-bool>
+                                <plex-bool [(ngModel)]="check" type="slide" label="Otro" name="check" (change)="onchange($event)"></plex-bool>
                             </div>
                         </div>
                         <div class="row" *ngIf="origenExterno">
@@ -238,7 +238,8 @@
             <div class="col">
                 <label>Origen</label>
                 <p> {{informeIngreso.origen}} {{informeIngreso.organizacionOrigen ? '| ' +
-                    informeIngreso.organizacionOrigen.nombre : null}}</p>
+                    (informeIngreso.organizacionOrigen.nombre ? informeIngreso.organizacionOrigen.nombre :
+                    informeIngreso.organizacionOrigen) : null}}</p>
             </div>
         </div>
         <div class="row">
@@ -274,7 +275,7 @@
         <div class="row">
             <div class="col" *ngIf="informeIngreso.ocupacionHabitual">
                 <label>Ocupación Habitual</label>
-                <p>{{informeIngreso.ocupacionHabitual}}</p>
+                <p>{{informeIngreso.ocupacionHabitual.codigo}}, {{informeIngreso.ocupacionHabitual.nombre}}</p>
             </div>
         </div>
         <div class="row">

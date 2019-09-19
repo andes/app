@@ -160,7 +160,7 @@ export class CamasService {
     }
 
 
-    cambioEstadoMovimiento(cama: ICama, estado: String, fecha: Date, paciente: IPaciente, internacion: String, sugierePase) {
+    cambioEstadoMovimiento(idCama: String, ultimoEstado, estado: String, fecha: Date, paciente: IPaciente, internacion: String, sugierePase) {
 
         if (paciente) {
             paciente.id = paciente['_id'];
@@ -169,17 +169,17 @@ export class CamasService {
         let dto = {
             fecha: fecha,
             estado: estado,
-            unidadOrganizativa: cama.ultimoEstado.unidadOrganizativa ? cama.ultimoEstado.unidadOrganizativa : null,
-            especialidades: cama.ultimoEstado.especialidades ? cama.ultimoEstado.especialidades : null,
-            esCensable: cama.ultimoEstado.esCensable,
-            genero: cama.ultimoEstado.genero ? cama.ultimoEstado.genero : null,
+            unidadOrganizativa: ultimoEstado.unidadOrganizativa ? ultimoEstado.unidadOrganizativa : null,
+            especialidades: ultimoEstado.especialidades ? ultimoEstado.especialidades : null,
+            esCensable: ultimoEstado.esCensable,
+            genero: ultimoEstado.genero ? ultimoEstado.genero : null,
             paciente: paciente ? paciente : null,
             idInternacion: internacion ? internacion : null,
             esMovimiento: true,
             sugierePase: sugierePase ? sugierePase : null
         };
 
-        return this.cambiaEstado(cama.id, dto);
+        return this.cambiaEstado(idCama, dto);
 
     }
 
