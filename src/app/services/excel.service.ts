@@ -12,13 +12,13 @@ public exportAsExcelFile(tbl: any, excelFileName: string): void {
 
 
   let x = tbl.rows[0].cells[0].innerHTML.length;
-    //console.dir(x)
-    //console.dir(tbl.rows[0].cells.length);
+    // console.dir(x)
+    // console.dir(tbl.rows[0].cells.length);
 
    let configCol: any = [] ;
 
       for (let i = 0; i < tbl.rows[0].cells.length; i++) {
-     configCol.push( {'wpx':  180}); //tbl.rows[0].cells[i].innerHTML.length
+     configCol.push( {'wpx':  180}); // tbl.rows[0].cells[i].innerHTML.length
    }
 
    console.dir(configCol);
