@@ -8,7 +8,7 @@ const EXCEL_EXTENSION = '.xlsx';
 export class ExcelService {
 constructor() { }
 public exportAsExcelFile(tbl: any, excelFileName: string): void {
-  let fl = XLSX.utils.table_to_book(tbl, { /*Sheets: 'Reporte'}*/ );
+  let fl = XLSX.utils.table_to_book(tbl, { });
 
 
   let x = tbl.rows[0].cells[0].innerHTML.length;
