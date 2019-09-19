@@ -8,7 +8,7 @@ import { Component, OnInit, Output, Input, EventEmitter, ViewChild } from '@angu
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Plex } from '@andes/plex';
 import { DomSanitizer } from '@angular/platform-browser';
-
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'profesionales',
@@ -36,7 +36,7 @@ export class ProfesionalComponent implements OnInit {
     // cantidad: IProfesional[];
 
 
-    constructor(private formBuilder: FormBuilder, private profesionalService: ProfesionalService, public sanitizer: DomSanitizer) { }
+    constructor(private formBuilder: FormBuilder, private profesionalService: ProfesionalService, public sanitizer: DomSanitizer, private router: Router) { }
 
     ngOnInit() {
         this.searchForm = this.formBuilder.group({
@@ -74,8 +74,7 @@ export class ProfesionalComponent implements OnInit {
             this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp);
         });
     }
-
-
-
-
+    routeTo(action, id) {
+        this.router.navigate([`tm/profesional/${action}/${id}`]);
+    }
 }
