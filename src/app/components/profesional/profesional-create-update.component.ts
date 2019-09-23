@@ -87,7 +87,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
     validado = false;
     noPoseeContacto = false;
     private seEstaCreandoProfesional = true;
-    public profesiones: ISiisa[];
+    public profesiones: ISiisa[] = [];
     constructor(private formBuilder: FormBuilder,
         private profesionalService: ProfesionalService,
         private paisService: PaisService,
