@@ -11,8 +11,10 @@ import * as enumerados from '../../../../utils/enumerados';
 import { ResumenInternacionComponent } from './resumenInternacion.component';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { DocumentosService } from '../../../../services/documentos.service';
+import { saveAs } from 'file-saver';
+import { Slug } from 'ng2-slugify';
 
-// ../../../../services/internacion.service
 @Component({
     selector: 'app-listado-internacion',
     templateUrl: './listado-internacion.html',
@@ -39,6 +41,9 @@ export class ListadoInternacionComponent implements OnInit {
     public internacionSelected;
     public showEgreso = false;
     public soloValores = true;
+    private slug = new Slug('default'); // para documento csv
+    public permisoDescarga = false;
+
     constructor(
         public servicioPrestacion: PrestacionesService,
         private auth: Auth,
@@ -46,7 +51,8 @@ export class ListadoInternacionComponent implements OnInit {
         private router: Router,
         public organizacionService: OrganizacionService,
         private internacionService: InternacionService,
-        public camasService: CamasService) {
+        public camasService: CamasService,
+        private servicioDocumentos: DocumentosService) {
     }
 
     ngOnInit() {
@@ -63,7 +69,7 @@ export class ListadoInternacionComponent implements OnInit {
         this.filtros.fechaIngresoHasta = new Date();
         this.servicioPrestacion.listadoInternacion(this.filtros).subscribe(a => { this.listadoInternacion = a; });
         this.estadosInternacion = enumerados.getObjEstadoInternacion();
-
+        this.permisoDescarga = this.auth.check('internacion:descargarListado');
     }
 
 
@@ -117,6 +123,13 @@ export class ListadoInternacionComponent implements OnInit {
         }
     }
 
+    reporteInternaciones() {
+        this.servicioDocumentos.descargarReporteInternaciones({ filtros: this.filtros, organizacion: this.auth.organizacion.id }).subscribe(data => {
+            let blob = new Blob([data], { type: data.type });
+            saveAs(blob, this.slug.slugify('Internaciones' + ' ' + moment().format('DD-MM-YYYY-hmmss')) + '.xlsx');
+        });
+    }
+
 
     desocuparCama(egreso, unaCama) {
         let dto;
@@ -145,5 +158,4 @@ export class ListadoInternacionComponent implements OnInit {
             });
         }
     }
-
 }

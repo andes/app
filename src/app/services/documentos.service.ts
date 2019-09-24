@@ -1,4 +1,3 @@
-
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
@@ -7,6 +6,7 @@ import { catchError } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import { Slug } from 'ng2-slugify';
 import { tap } from 'rxjs/internal/operators/tap';
+
 
 @Injectable()
 export class DocumentosService {
@@ -60,6 +60,10 @@ export class DocumentosService {
         return Observable.throw(errMsg);
     }
 
+    protected extractData(res: any) {
+        return res.blob();
+    }
+
     descargarConstanciaPuco(params): Observable<any> {
         return this.download('constanciaPuco/pdf', params);
     }
@@ -68,5 +72,13 @@ export class DocumentosService {
         return this.download('censo', data);
     }
 
+    descargarReporteInternaciones(params): Observable<any> {
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('jwt') ? 'JWT ' + window.sessionStorage.getItem('jwt') : null
+        });
 
+        let options: any = { headers: headers, responseType: 'blob' };
+        return this.http.post(this.pdfURL + '/internaciones/Csv', params, options);
+    }
 }

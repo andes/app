@@ -25,6 +25,13 @@
                     <plex-select [(ngModel)]="filtros.estados" [data]='estadosInternacion' label="Estado"
                                  (change)="filtrar()"></plex-select>
                 </div>
+                <div *ngIf="permisoDescarga" class="col-1">
+                    <label>&nbsp;</label>
+                    <plex-button type="warning" icon="download mdi-14px" title="Descargar Csv" titlePosition="top"
+                                 (click)="reporteInternaciones()"
+                                 [disabled]="listadoInternacion && !listadoInternacion.length">
+                    </plex-button>
+                </div>
             </div>
         </header>
         <div class='row'>
