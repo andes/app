@@ -10,6 +10,10 @@ $rotate: -90deg;
         border: 2px solid #ccc;
     }
 
+    a[name] {
+        margin: 0;
+    }
+
     width: 100%;
     display: flex;
     flex-direction: column;
