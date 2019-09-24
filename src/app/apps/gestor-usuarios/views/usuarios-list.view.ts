@@ -4,7 +4,7 @@ import { Plex } from '@andes/plex';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable, of, merge } from 'rxjs';
 import { map, switchMap, tap, distinctUntilChanged, take, } from 'rxjs/operators';
-import { Permisos2Service } from '../services/permisos.service';
+import { PermisosService } from '../services/permisos.service';
 import { UsuariosHttp } from '../services/usuarios.http';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { Observe, asObject, mergeObject, notNull, onlyNull, distincObject, cache } from '@andes/shared';
@@ -19,7 +19,7 @@ export class UsuariosListComponent implements OnInit {
 
     constructor(
         private profesionalService: ProfesionalService,
-        public permisosService: Permisos2Service,
+        public permisosService: PermisosService,
         public usuariosHttp: UsuariosHttp,
         public plex: Plex,
         private router: Router,
@@ -75,7 +75,12 @@ export class UsuariosListComponent implements OnInit {
             mergeObject(),
             distincObject(),
             tap((params) => {
-                this.router.navigate([], { relativeTo: this.route, queryParams: params, queryParamsHandling: 'merge' });
+                this.router.navigate([], {
+                    relativeTo: this.route,
+                    queryParams: params,
+                    queryParamsHandling: 'merge',
+                    replaceUrl: true
+                });
             }),
             switchMap((query: any) => {
                 query = { ...query };

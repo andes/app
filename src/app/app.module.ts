@@ -75,7 +75,6 @@ import { ParentescoService } from './services/parentesco.service';
 import { ListaEsperaService } from './services/turnos/listaEspera.service';
 import { LogService } from './services/log.service';
 import { LogPacienteService } from './services/logPaciente.service';
-import { PermisosService } from './services/permisos.service';
 import { PrestamosService } from './services/prestamosHC/prestamos-hc.service';
 import { RenaperService } from './services/fuentesAutenticas/servicioRenaper.service';
 import { ConfiguracionPrestacionService } from './services/term/configuracionPrestacion.service';
@@ -721,7 +720,6 @@ registerLocaleData(localeEs, 'es');
         RenaperService,
         LogPacienteService,
         UsuarioService,
-        PermisosService,
         FrecuentesProfesionalService,
         DocumentosService,
         CamasService,

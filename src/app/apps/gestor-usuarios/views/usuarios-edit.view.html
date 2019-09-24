@@ -38,13 +38,13 @@
         <h3> Perfiles </h3>
         <div class="list-group" *ngIf="arbolPermisos.length">
             <ng-container *ngFor="let perfil of perfiles">
-                <div class="list-group-item justify-content-between" *ngIf="habilitados[perfil.id]">
+                <div class="list-group-item justify-content-between" *ngIf="habilitados[perfil.id] !== undefined">
                     <span>
                         {{perfil.nombre}}
                     </span>
                     <span>
-                        <plex-bool [ngModel]="habilitados[perfil.id].data | async"
-                                   (change)="onChangePerfil($event, perfil)"></plex-bool>
+                        <plex-bool [(ngModel)]="habilitados[perfil.id]" (change)="onChangePerfil($event, perfil)">
+                        </plex-bool>
                     </span>
                 </div>
             </ng-container>

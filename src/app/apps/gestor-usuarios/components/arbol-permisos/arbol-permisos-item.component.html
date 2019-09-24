@@ -17,11 +17,13 @@
 
             </span>
         </div>
-        <div *ngFor="let child of item.child; let indiceChild = index">
-            <arbol-permisos-item [item]="child" [parentPermission]="makePermission()"
-                                 [userPermissions]="userPermissions" (change)="change.emit()">
-            </arbol-permisos-item>
-        </div>
+        <ng-container *ngIf="!allModule">
+            <div *ngFor="let child of item.child; let indiceChild = index">
+                <arbol-permisos-item [item]="child" [parentPermission]="makePermission()"
+                                     [userPermissions]="userPermissions" (change)="change.emit()">
+                </arbol-permisos-item>
+            </div>
+        </ng-container>
     </plex-panel>
 </plex-accordion>
 <div *ngIf="item.type">

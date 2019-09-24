@@ -55,6 +55,18 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
         this.change.emit();
     }
 
+    removeInnerPermissions() {
+        const checker = shiroTrie.new();
+        checker.add(this.makePermission() + ':*');
+        for (let i = 0; i < this.userPermissions.length; i++) {
+            if (checker.check(this.userPermissions[i])) {
+                this.userPermissions.splice(i, 1);
+                i--;
+            }
+        }
+        this.userPermissions = [...this.userPermissions];
+    }
+
     public ngOnInit() {
         this.refresh();
     }

@@ -1,13 +1,13 @@
-import { OnInit, Component, ViewChild } from '@angular/core';
+import { OnInit, Component, ViewChild, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { map, pluck, switchMap, tap, publishReplay, refCount } from 'rxjs/operators';
+import { map, pluck, switchMap, tap, publishReplay, refCount, delay, takeUntil } from 'rxjs/operators';
 import { UsuariosHttp } from '../services/usuarios.http';
-import { Observable, forkJoin, BehaviorSubject } from 'rxjs';
+import { Observable, forkJoin, BehaviorSubject, Subject } from 'rxjs';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { PerfilesHttp } from '../services/perfiles.http';
-import { Permisos2Service } from '../services/permisos.service';
+import { PermisosService } from '../services/permisos.service';
 import { ArbolPermisosComponent } from '../components/arbol-permisos/arbol-permisos.component';
 import { Observe } from '@andes/shared';
 import { Plex } from '@andes/plex';
@@ -22,7 +22,9 @@ function elementAt(index = 0) {
     selector: 'gestor-usarios-usuarios-edit',
     templateUrl: 'usuarios-edit.view.html'
 })
-export class UsuariosEditComponent implements OnInit {
+export class UsuariosEditComponent implements OnInit, OnDestroy {
+    destroy$: Subject<boolean> = new Subject<boolean>();
+
     @ViewChild(ArbolPermisosComponent) arbol: ArbolPermisosComponent;
     private userId = '';
     private organizacionId = '';
@@ -49,7 +51,7 @@ export class UsuariosEditComponent implements OnInit {
         private profesionalService: ProfesionalService,
         private organizacionService: OrganizacionService,
         public perfilesHttp: PerfilesHttp,
-        public permisosService: Permisos2Service
+        public permisosService: PermisosService
     ) { }
 
     getProfesional(user) {
@@ -61,6 +63,11 @@ export class UsuariosEditComponent implements OnInit {
 
     getOrganizacion() {
         return this.organizacionService.getById(this.organizacionId);
+    }
+
+    ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.unsubscribe();
     }
 
     ngOnInit() {
@@ -80,6 +87,7 @@ export class UsuariosEditComponent implements OnInit {
             }),
             pluck('organizacion'),
             tap((id: any) => this.organizacionId = id),
+            takeUntil(this.destroy$)
         ).subscribe(() => {
             this.user$ = this.usuariosHttp.get(this.userId).pipe(
                 publishReplay(1),
@@ -103,13 +111,11 @@ export class UsuariosEditComponent implements OnInit {
                     })
                 ),
                 this.permisosService.get().pipe(tap(permisos => this.arbolPermisos = permisos))
-            ).subscribe(() => {
+            ).pipe(takeUntil(this.destroy$)).subscribe(() => { });
 
-            });
-
-            this.permisos$.subscribe((permisos) => {
+            this.permisos$.pipe(delay(1), takeUntil(this.destroy$)).subscribe((permisos) => {
                 this.perfiles.forEach(perfil => {
-                    const enabled = this.perfilesHttp.validatePerfil(this.permisos, perfil);
+                    const enabled = this.perfilesHttp.validatePerfil(permisos, perfil);
                     this.tooglePerfil(perfil, enabled);
                 });
             });
@@ -117,14 +123,7 @@ export class UsuariosEditComponent implements OnInit {
     }
 
     tooglePerfil(perfil, enabled) {
-        if (!this.habilitados[perfil.id]) {
-            const bs = new BehaviorSubject(enabled);
-            this.habilitados[perfil.id] = {
-                bs,
-                data: bs.asObservable()
-            };
-        }
-        this.habilitados[perfil.id].bs.next(enabled);
+        this.habilitados[perfil.id] = enabled;
     }
 
     onChange() {
@@ -136,7 +135,7 @@ export class UsuariosEditComponent implements OnInit {
             permisos: this.permisos,
             id: this.organizacionId,
             nombre: this.orgName,
-            perfiles: this.perfiles.filter(p => this.habilitados[p.id].bs.getValue()).map(p => {
+            perfiles: this.perfiles.filter(p => this.habilitados[p.id]).map(p => {
                 return {
                     _id: p.id,
                     nombre: p.nombre
@@ -148,6 +147,7 @@ export class UsuariosEditComponent implements OnInit {
             this.location.back();
         });
     }
+
     borrar() {
         return this.usuariosHttp.deleteOrganizacion(this.userId, this.organizacionId).subscribe(() => {
             this.plex.toast('success', 'Permisos eliminados exitosamente!');
@@ -173,7 +173,9 @@ export class UsuariosEditComponent implements OnInit {
                     }
                 }
             });
-            this.perfiles.filter(p => p.id !== perfilSelected.id).filter(p => this.habilitados[p.id].bs.getValue()).reduce((acc, val) => acc.concat(val.permisos), []).forEach(p => permisos.push(p));
+            this.perfiles.filter(p => p.id !== perfilSelected.id && this.habilitados[p.id])
+                .reduce((acc, val) => acc.concat(val.permisos), [])
+                .forEach(p => permisos.push(p));
             this.permisos = permisos;
         }
     }
@@ -187,6 +189,7 @@ export class UsuariosEditComponent implements OnInit {
     }
 
     volver() {
-        this.router.navigate(['..'], { relativeTo: this.route });
+        this.location.back();
+        // this.router.navigate(['..'], { relativeTo: this.route });
     }
 }

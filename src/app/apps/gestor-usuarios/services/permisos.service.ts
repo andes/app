@@ -4,12 +4,13 @@ import { Server, Cache } from '@andes/shared';
 
 
 @Injectable()
-export class Permisos2Service {
+export class PermisosService {
 
     private permisosUrl = '/core/tm/permisos';  // URL to web api
 
     constructor(private server: Server) { }
 
+    @Cache({ key: null })
     get(params?): Observable<any> {
         return this.server.get(this.permisosUrl, { params });
     }

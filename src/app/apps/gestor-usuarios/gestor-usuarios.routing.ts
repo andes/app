@@ -14,7 +14,8 @@ let routes = [
         ]
     },
     { path: 'usuarios', component: UsuariosListComponent },
-    { path: 'usuarios/:id', component: UsuariosEditComponent }
+    { path: 'usuarios/:id', component: UsuariosEditComponent },
+    { path: '', redirectTo: 'usuarios', pathMatch: 'full' }
 
 ];
 

@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { map, switchMap, tap, catchError } from 'rxjs/operators';
 import { Auth } from '@andes/auth';
 import { of } from 'rxjs';
-import { Permisos2Service } from '../services/permisos.service';
+import { PermisosService } from '../services/permisos.service';
 import { ArbolPermisosComponent } from './arbol-permisos/arbol-permisos.component';
 
 @Component({
@@ -30,7 +30,7 @@ export class PerfilDetailComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         public auth: Auth,
-        private permisosService: Permisos2Service
+        private permisosService: PermisosService
     ) {
 
     }
