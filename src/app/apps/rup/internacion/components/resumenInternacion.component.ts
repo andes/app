@@ -235,7 +235,7 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
                         this.prestacion = prestacion;
 
                         this.mostrarValidacion = true;
-                        this.refreshCamas.emit({ cama: null, desocupaCama: true });
+                        this.refreshCamas.emit({ cama: null, desocupaCama: false });
                     }, (err) => {
                         this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
                     });

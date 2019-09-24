@@ -1,5 +1,5 @@
 <div>
-    <form #formReparada="ngForm">
+    <form #formReparada="ngForm" *ngIf="prestacion && listaPasesCama  && listaPasesCama.length >= 0">
         <fieldset>
             <legend>Desocupar cama</legend>
             <div class="row">
@@ -14,7 +14,7 @@
                     </plex-datetime>
                 </div>
             </div>
-            <div class="row" *ngIf="elegirDesocupar">
+            <div class="row" *ngIf="elegirDesocupar && listaPasesCama  && listaPasesCama.length >= 0">
                 <div class="col-md">
                     <plex-radio *ngIf="opcionesDesocupar" [(ngModel)]="opcionDesocupar" [data]="opcionesDesocupar" name="desocupar"
                         (change)="actualizaTipo.next()">

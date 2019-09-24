@@ -116,7 +116,7 @@ export class MapaDeCamasComponent implements OnInit {
 
     ngOnInit() {
         if (!this.auth.check('internacion:mapaDeCamas')) {
-            this.router.navigate(['./inicio' ]);
+            this.router.navigate(['./inicio']);
         }
 
         this.refresh();
@@ -150,6 +150,11 @@ export class MapaDeCamasComponent implements OnInit {
             this.countFiltros();
             this.loader = false;
             if (camas) {
+                this.camas.sort(function (a, b) {
+                    let nombre1 = a.sectores[0].nombre;
+                    let nombre2 = b.sectores[0].nombre;
+                    return nombre1 > nombre2 ? 1 : -1;
+                });
                 this.camasService.getEstadoServicio(camas).subscribe(estado => {
                     this.estadoServicio = estado;
                 });

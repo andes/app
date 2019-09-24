@@ -26,7 +26,7 @@ export class CensoMensualComponent implements OnInit {
     public unidadOrganizativa;
     public resumenCensoTotal = [];
     public listaUnidadesOrganizativas = [];
-
+    public promedioDiasEstadaV;
     public diasFuncionamientoV;
     public promedioDisponibleV;
     public pacienteDiaV;
@@ -45,6 +45,7 @@ export class CensoMensualComponent implements OnInit {
         pacientesDia: 0,
         disponibles24: 0,
         disponibles0: 0,
+        diasEstada: 0,
         count: 0
     };
 
@@ -84,6 +85,7 @@ export class CensoMensualComponent implements OnInit {
             pacientesDia: 0,
             disponibles24: 0,
             disponibles0: 0,
+            diasEstada: 0,
             count: 0
         };
     }
@@ -128,6 +130,7 @@ export class CensoMensualComponent implements OnInit {
             this.totalResumenCenso.ingresoEgresoDia += element.censo.ingresoEgresoDia;
             this.totalResumenCenso.pacientesDia += element.censo.pacientesDia;
             this.totalResumenCenso.disponibles24 += element.censo.disponibles24;
+            this.totalResumenCenso.diasEstada += element.censo.diasEstada;
             this.totalResumenCenso.count++;
 
         });
@@ -140,7 +143,8 @@ export class CensoMensualComponent implements OnInit {
             pacDia: this.pacienteDiaV,
             mortHosp: this.mortalidadHospitalariaV,
             promPer: this.promedioPermanenciaV,
-            giroCama: this.giroV
+            giroCama: this.giroV,
+            promDiasEstada: this.promedioDiasEstadaV
         };
         let params = {
             usuario: this.auth.usuario.nombreCompleto,
@@ -183,13 +187,21 @@ export class CensoMensualComponent implements OnInit {
     }
 
     promedioDisponible() {
-        this.promedioDisponibleV = Math.round(this.totalResumenCenso.disponibles24 / this.totalResumenCenso.count).toFixed(2);
-        return this.promedioDisponibleV;
+        if (this.totalResumenCenso.count !== 0) {
+            this.promedioDisponibleV = this.totalResumenCenso.disponibles24 / this.totalResumenCenso.count;
+            return this.promedioDisponibleV;
+        } else {
+            return 0;
+        }
     }
 
     pacienteDia() {
-        this.pacienteDiaV = Math.round(this.totalResumenCenso.pacientesDia / this.totalResumenCenso.count).toFixed(2);
-        return this.pacienteDiaV;
+        if (this.totalResumenCenso.count !== 0) {
+            this.pacienteDiaV = Math.round(this.totalResumenCenso.pacientesDia / this.totalResumenCenso.count).toFixed(2);
+            return this.pacienteDiaV;
+        } else {
+            return 0;
+        }
     }
 
     mortalidadHospitalaria() {
@@ -213,6 +225,12 @@ export class CensoMensualComponent implements OnInit {
         let promedio = this.promedioDisponible();
         this.giroV = promedio === 0 ? 0 : (total / promedio).toFixed(2);
         return this.giroV;
+    }
+
+    promedioDiasEstada() {
+        let totalEgreso = this.totalResumenCenso.egresosAlta + this.totalResumenCenso.egresosDefuncion;
+        this.promedioDiasEstadaV = totalEgreso === 0 ? 0 : this.totalResumenCenso.diasEstada / totalEgreso;
+        return this.promedioDiasEstadaV;
     }
 
 

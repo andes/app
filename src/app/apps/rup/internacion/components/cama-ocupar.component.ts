@@ -128,7 +128,10 @@ export class OcuparCamaComponent implements OnInit {
                 let idInternacion = this.prestacion.id;
                 this.cama = this.camaSeleccionPase;
                 if (this.cama) {
-                    this.camasService.cambioEstadoMovimiento(this.camaSeleccionPase, 'ocupada', this.internacionService.combinarFechas(this.fecha, this.hora), paciente, idInternacion,
+                    const fechaMovimiento = this.internacionService.combinarFechas(this.fecha, this.hora);
+                    const filtroEstado = this.camaSeleccionPase.estados.filter(c => c.fecha < fechaMovimiento);
+                    const ultimoEstado = filtroEstado[filtroEstado.length - 1];
+                    this.camasService.cambioEstadoMovimiento(this.camaSeleccionPase.id, ultimoEstado, 'ocupada', fechaMovimiento, paciente, idInternacion,
                         this.paseAunidadOrganizativa).subscribe(camaCambio => {
                             this.camaSeleccionPase.ultimoEstado = camaCambio.ultimoEstado;
                             this.accionCama.emit({ cama: this.camaSeleccionPase, accion: 'internarPaciente' });
