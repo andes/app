@@ -1,0 +1,31 @@
+.blink {
+    animation: blink-animation 1s steps(5, start) infinite;
+    -webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+
+.blink-5 {
+    /* animation: blink-animation 1s steps(5, start) 5;
+    -webkit-animation: blink-animation 1s steps(5, start) 5; */
+
+
+    -webkit-animation: jumpInc 1s infinite;
+       -moz-animation: jumpInc 1s infinite;
+         -o-animation: jumpInc 1s infinite;
+            animation: jumpInc 1s infinite;
+}
+
+
+@keyframes jumpInc {
+  0%   {
+    margin-left: 0%;
+    opacity: 0;
+  }
+  50%  {
+    margin-left: 0%;
+    opacity: 1;
+  }
+  100% {
+    margin-left: 0%;
+    opacity: 0;
+  }
+}

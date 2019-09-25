@@ -1,0 +1,20 @@
+<form class="plex-layout" #form="ngForm">
+    <div *ngIf="pantalla">
+        <plex-text label="Nombre" placeholder="Nombre identificatorio" [(ngModel)]="pantalla.nombre" name="usuario"
+            [required]="true"></plex-text>
+
+        <plex-text label="Contenido digital" placeholder="Código playlist youtube" [(ngModel)]="pantalla.playlist"
+            name="playlist" [required]="false"></plex-text>
+
+        <plex-select [(ngModel)]="consultorios" multiple="true" [data]="espaciosFisicos" name="select"
+            label="Espacios físicos"></plex-select>
+    </div>
+    <div class="row" *ngIf="pantalla">
+        <div class="col-6">
+            <plex-button type="danger" (click)="cancelar()"> Cancelar </plex-button>
+        </div>
+        <div class="col-6">
+            <plex-button type="success" (click)="guardar()"> Grabar </plex-button>
+        </div>
+    </div>
+</form>

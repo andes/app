@@ -214,6 +214,8 @@ const appRoutes: Routes = [
   { path: 'gestor-usuarios', loadChildren: './apps/gestor-usuarios/gestor-usuarios.module#GestorUsuariosModule', canActivate: [RoutingNavBar, RoutingGuard] },
   // Campañas Salud
   { path: 'campaniasSalud', component: CampaniaSaludComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  // Turnero
+  { path: 'turnero', loadChildren: './modules/turnero/turnero.module#TurneroModule', canActivate: [RoutingNavBar, RoutingGuard] },
 
   // dejar siempre al último porque no encuentra las url después de esta
   { path: '**', redirectTo: 'inicio' }

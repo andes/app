@@ -69,4 +69,13 @@ export class AgendaService {
     clonar(data: any): Observable<IAgenda[]> {
         return this.server.post(this.agendaUrl + '/clonar', data);
     }
+
+    /**
+     *
+     * @param params Filtros de busqueda
+     */
+
+    estadisticas (params) {
+        return this.server.get('/modules/turnos/estadistica', { params });
+    }
 }

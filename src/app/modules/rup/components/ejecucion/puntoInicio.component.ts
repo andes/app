@@ -16,6 +16,9 @@ import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
 import { Subscription } from 'rxjs';
+import { TurneroService } from '../../../turnero/services/turnero.service';
+import { WebSocketService } from '../../../../services/websocket.service';
+import { OrganizacionService } from '../../../../services/organizacion.service';
 
 
 @Component({
@@ -44,26 +47,55 @@ export class PuntoInicioComponent implements OnInit {
     // habilita la busqueda del paciente
     public buscandoPaciente = false;
 
+    public index = 0;
+    public llamandoTurno = false;
+    public volverALlamar = false;
+
     // FILTROS
     private agendasOriginales: any = [];
     private prestacionesOriginales: any = [];
     public prestacionSeleccion: any;
     public paciente: any;
+    public mostrarBtnTurnero = false;
+    public ultimoLlamado;
 
+    public espaciosFisicosTurnero = [];
     // ultima request que se almacena con el subscribe
     private lastRequest: Subscription;
 
 
-    constructor(private router: Router,
-        private plex: Plex, public auth: Auth,
+    constructor(
+        private router: Router,
+        private plex: Plex,
+        public auth: Auth,
         public servicioAgenda: AgendaService,
         public servicioPrestacion: PrestacionesService,
         public servicePaciente: PacienteService,
         public serviceTurno: TurnoService,
         public snomed: SnomedService,
-        public servicioTipoPrestacion: TipoPrestacionService) { }
+        public servicioTipoPrestacion: TipoPrestacionService,
+        public servicioTurnero: TurneroService,
+        public ws: WebSocketService,
+        public servicioOrganizacion: OrganizacionService
+    ) { }
+
+    ngOnDestroy() {
+        this.ws.disconnect();
+    }
 
     ngOnInit() {
+        this.ws.connect();
+        this.servicioTurnero.get({}).subscribe((pantallas) => {
+            pantallas.forEach((pantalla: any) => {
+                pantalla.espaciosFisicos.forEach((ef) => {
+                    let i = this.espaciosFisicosTurnero.findIndex((e) => e === ef.id);
+                    if (i < 0) {
+                        this.espaciosFisicosTurnero.push(ef.id);
+                    }
+                });
+            });
+        });
+
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
         if (!this.auth.getPermissions('rup:?').length) {
             this.redirect('inicio');
@@ -200,7 +232,7 @@ export class PuntoInicioComponent implements OnInit {
             this.filtrar();
 
             if (this.agendas.length) {
-                this.agendaSeleccionada = this.agendas[0];
+                this.cargarTurnos(this.agendas[0]);
             }
 
             // recorremos agenda seleccionada para ver si tienen planes pendientes y mostrar en la vista..
@@ -311,6 +343,8 @@ export class PuntoInicioComponent implements OnInit {
 
         if (this.agendas.length) {
             this.agendaSeleccionada = this.agendas[0];
+            this.index = 0;
+            this.volverALlamar = false;
         }
 
     }
@@ -468,6 +502,14 @@ export class PuntoInicioComponent implements OnInit {
     cargarTurnos(agenda) {
         this.cancelarDinamica();
         this.agendaSeleccionada = agenda ? agenda : 'fueraAgenda';
+        if (agenda) {
+            let i = this.espaciosFisicosTurnero.findIndex((e) => e === agenda.espacioFisico.id);
+            if (i >= 0) {
+                this.mostrarBtnTurnero = true;
+                return;
+            }
+        }
+        this.mostrarBtnTurnero = false;
     }
 
     routeTo(action, id) {
@@ -520,6 +562,15 @@ export class PuntoInicioComponent implements OnInit {
             }
         }
         return prestaciones;
+    }
+
+    llamarTurnero(turno) {
+        this.llamandoTurno = true;
+        this.servicioTurnero.llamar(this.agendaSeleccionada, turno);
+
+        setTimeout(() => {
+            this.llamandoTurno = false;
+        }, 2200);
     }
 
     // Detecta si una Agenda es futura
