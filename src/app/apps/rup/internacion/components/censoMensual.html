@@ -4,18 +4,18 @@
             <div class="row">
                 <div class="col-md-2">
                     <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fechaDesde" [required]="true"
-                        name="fechaDesde" label="Desde">
+                                   name="fechaDesde" label="Desde">
                     </plex-datetime>
                 </div>
                 <div class="col-md-2">
                     <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fechaHasta" [required]="true"
-                        name="fechaHasta" label="Hasta">
+                                   name="fechaHasta" label="Hasta">
                     </plex-datetime>
                 </div>
                 <div class="col-md-4">
                     <plex-select (change)="reseteaBusqueda()" name="servicio" [required]="true"
-                        [data]="listaUnidadesOrganizativas" idField="term" labelField="term"
-                        [(ngModel)]="unidadOrganizativa" label="Unidad organizativa">
+                                 [data]="listaUnidadesOrganizativas" idField="term" labelField="term"
+                                 [(ngModel)]="unidadOrganizativa" label="Unidad organizativa">
                     </plex-select>
                 </div>
                 <div class="col-md-2">
@@ -25,7 +25,7 @@
                 <div class="col-md-2">
                     <label>&nbsp;</label>
                     <plex-button type="warning" icon="download mdi-14px" class="ml-1" title="Descargar"
-                        titlePosition="top" (click)="descargarCensoMensual()"></plex-button>
+                                 titlePosition="top" (click)="descargarCensoMensual()"></plex-button>
                 </div>
             </div>
         </header>
@@ -143,6 +143,6 @@
         </div>
     </plex-layout-main>
     <plex-layout-footer>
-        <plex-button position="left" label="Volver" type="danger" (click)='mapaDeCamas()'></plex-button>
+        <plex-button position="left" label="Volver" type="primary" (click)='mapaDeCamas()'></plex-button>
     </plex-layout-footer>
 </plex-layout>

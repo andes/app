@@ -1,7 +1,5 @@
-import { estados } from './../../../../utils/enumerados';
 import { HostBinding, EventEmitter, Component, OnInit, Input, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { InternacionService } from '../services/internacion.service';

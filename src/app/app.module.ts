@@ -389,8 +389,9 @@ import { ConfiguracionPrestacionVisualizarComponent } from './components/configu
 import { ConfiguracionPrestacionCrearComponent } from './components/configuracionPrestacion/configuracion-prestacion-crear.component';
 import { CamasService } from './apps/rup/internacion/services/camas.service';
 import { InternacionService } from './apps/rup/internacion/services/internacion.service';
+import { InternacionCacheService } from './apps/rup/internacion/services/internacion-cache.service';
 import { DesocuparCamaComponent } from './apps/rup/internacion/components/cama-desocupar.component';
-import { ListaEsperaInternacionComponent } from './apps/rup/internacion/components/listaEsperaInternacion.component';
+import { ListaEsperaInternacionComponent } from './apps/rup/internacion/components/lista-espera-internacion.component';
 import { EgresoInternacionComponent } from './apps/rup/internacion/components/egresoInternacion.component';
 import { ResumenInternacionComponent } from './apps/rup/internacion/components/resumenInternacion.component';
 import { CamaBloquearComponent } from './apps/rup/internacion/components/cama-bloquear.component';
@@ -750,7 +751,8 @@ registerLocaleData(localeEs, 'es');
         SnomedBuscarService,
         HUDSService,
         TurnosPrestacionesService,
-        PlantillasService
+        PlantillasService,
+        InternacionCacheService
     ]
 })
 
