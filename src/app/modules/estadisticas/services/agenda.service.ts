@@ -22,4 +22,8 @@ export class EstAgendasService {
         return this.server.post(this.baseURL + '/dashboard/localidades', params);
     }
 
+    descargarCSV (data) {
+        return this.server.post(this.baseURL + '/dashboard/descargarCsv', data);
+    }
+
 }
