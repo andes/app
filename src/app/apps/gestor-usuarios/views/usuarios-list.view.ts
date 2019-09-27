@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable, of, merge } from 'rxjs';
+import { Observable, of, merge, BehaviorSubject } from 'rxjs';
 import { map, switchMap, tap, distinctUntilChanged, take, } from 'rxjs/operators';
 import { PermisosService } from '../services/permisos.service';
 import { UsuariosHttp } from '../services/usuarios.http';
@@ -31,6 +31,8 @@ export class UsuariosListComponent implements OnInit {
     public verPerfiles = this.auth.check('usuarios:perfiles:?') || this.auth.check('global:usuarios:perfiles:?');
     public readOnly = !this.auth.check('usuarios:write');
 
+    refresh = new BehaviorSubject({});
+    refresh$ = this.refresh.asObservable();
 
     search$: Observable<any>;
     @Observe({ distinc: true, debounce: 300 }) search: string;
@@ -43,6 +45,8 @@ export class UsuariosListComponent implements OnInit {
 
 
     ngOnInit() {
+        this.verPerfiles = this.auth.check('usuarios:perfiles:?') || this.auth.check('global:usuarios:perfiles:?');
+
         this.plex.updateTitle([{
             route: '/inicio',
             name: 'Andes'
@@ -68,12 +72,12 @@ export class UsuariosListComponent implements OnInit {
             }),
             switchMap(() => {
                 return merge(
+                    this.refresh$,
                     this.search$.pipe(asObject('search', t => t.length ? t : null)),
                     this.organizacion$.pipe(asObject('organizacion', t => t.id)),
                 );
             }),
             mergeObject(),
-            distincObject(),
             tap((params) => {
                 this.router.navigate([], {
                     relativeTo: this.route,
@@ -159,6 +163,7 @@ export class UsuariosListComponent implements OnInit {
         ).subscribe((user) => {
             this.plex.toast('success', 'Usuarios creado exitosamente!');
             this.organizacion = null;
+            this.refresh.next({});
         });
     }
 

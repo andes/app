@@ -98,7 +98,7 @@
                                 <plex-icon *ngIf="org.activo" name="pause"></plex-icon>
                             </plex-button>
                             <plex-button type="warning" size="sm" title="Editar" titlePosition="left"
-                                         (click)="edit(org)">
+                                         (click)="edit(org)" *ngIf="!readOnly">
                                 <plex-icon name="pencil"></plex-icon>
                             </plex-button>
                         </span>
