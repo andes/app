@@ -5,8 +5,6 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
 import { PlexModule } from '@andes/plex';
-import { AuthModule } from '@andes/auth';
-
 import { GestorUsuariosRouting } from './gestor-usuarios.routing';
 import { PerfilListComponent } from './views/perfiles-list.component';
 import { PerfilDetailComponent } from './components/perfiles-detail.component';
@@ -20,7 +18,6 @@ import { UsuariosEditComponent } from './views/usuarios-edit.view';
     imports: [
         CommonModule,
         PlexModule,
-        AuthModule,
         FormsModule,
         RouterModule,
         HttpClientModule,
