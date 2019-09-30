@@ -1,6 +1,6 @@
 <form #form="ngForm">
     <div class="container-fluid col-12">
-        <div class="row mb-3" *ngIf="permiteCarga">
+        <div class="row mb-3" *ngIf="soloValores">
             <div class="col-12">
                 <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
                 <strong *ngIf="!soloValores">Cargar documentos</strong>
@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12" *ngIf="registro?.valor?.documentos?.length && fileToken && !parametroRegistro">
+            <div class="col-12" *ngIf="registro?.valor?.documentos?.length && fileToken && !registro">
                 <div class="image-container hr-inline-group">
                     <table class=" table table-striped">
                         <thead>
@@ -79,7 +79,7 @@
                     </table>
                 </div>
             </div>
-            <div class="col-12" *ngIf="parametroRegistro">
+            <div class="col-12" *ngIf="registro">
 
                 <ng-container *ngFor="let doc of registro.valor.documentos; let i = index">
                     <a (click)="activaLightbox(i)">

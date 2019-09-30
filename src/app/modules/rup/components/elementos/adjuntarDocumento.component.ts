@@ -11,9 +11,6 @@ import { isUndefined } from 'util';
 })
 @RupElement('AdjuntarDocumentoComponent')
 export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
-    @Input() permiteCarga: boolean;
-    @Input() parametroRegistro;
-
     @ViewChildren('upload') childsComponents: QueryList<any>;
     imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
     extensions = [
@@ -41,14 +38,14 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
 
     ngOnInit() {
 
-        if (isUndefined(this.permiteCarga)) {
-            this.permiteCarga = true;
+        if (isUndefined(this.soloValores)) {
+            this.soloValores = true;
         }
 
         this.extensions = this.extensions.concat(this.imagenes);
 
-        if (!isUndefined(this.parametroRegistro)) {
-            this.registro = this.parametroRegistro;
+        if (!isUndefined(this.registro)) {
+            this.registro = this.registro;
         }
         if (!this.registro.valor) {
             this.registro.valor = {};
