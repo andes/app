@@ -355,7 +355,14 @@ export class PrestacionValidacionComponent implements OnInit {
                     });
 
                     this.motivoReadOnly = true;
-                    if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                    if (this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                        // si la prestacion corresponde a una agenda no nominalizada, esta se audita una vez validada la prestacion
+                        let dto = {
+                            estado: 'auditada',
+                            op: 'auditada'
+                        };
+                        this.servicioAgenda.patch(localStorage.idAgenda, dto).subscribe();
+                    } else {
                         // actualizamos las prestaciones de la HUDS
                         this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id, true).subscribe(prestacionesSolicitadas => {
                             if (prestacionesSolicitadas) {
