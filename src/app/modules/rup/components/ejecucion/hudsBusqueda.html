@@ -93,8 +93,8 @@
         <!-- Vista: SOLICITUDES -->
         <ng-container *ngIf="filtroActual === 'solicitudes'">
             <ul *ngIf="procedimientos" class="hover conceptos list-unstyled">
-                <ng-container *ngFor="let registro of solicitudes; let iPrestacion = index">
-                    <li>
+                <ng-container *ngFor="let registro of solicitudesMezcladas; let iPrestacion = index">
+                    <li *ngIf="registro.origen === 'rup'">
                         <div class="rup-card mini procedimiento" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}" (click)="emitTabs(registro, 'concepto')">
                             <div class="rup-header">
                                 <div class="rup-border rup-border-procedimiento" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
@@ -113,7 +113,7 @@
                                                                     {{ registro.evoluciones[0].fechaCarga | fecha }}</small>
                                                                 <br>
                                                                 <small>Profesional: {{
-                                                            registro.evoluciones[0].profesional}}</small>
+                                                                    registro.evoluciones[0].profesional}}</small>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -132,9 +132,7 @@
                             </div>
                         </div>
                     </li>
-                </ng-container>
-                <ng-container *ngFor="let registro of solicitudesTOP">
-                    <li>
+                    <li *ngIf="registro.origen === 'top'">
                         <div class="rup-card mini procedimiento" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': true}" (click)="emitTabs(registro, 'solicitud')">
                             <div class="rup-header">
                                 <div class="rup-border rup-border-procedimiento" [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'rup-border-plan': true}">

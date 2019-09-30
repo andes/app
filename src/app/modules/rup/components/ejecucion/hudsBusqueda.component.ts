@@ -75,6 +75,7 @@ export class HudsBusquedaComponent implements OnInit {
     public todos: any = [];
     public solicitudes: any = [];
     public solicitudesTOP: any = [];
+    public solicitudesMezcladas: any = [];
 
     /**
      * Listado de todos los trastornos
@@ -280,9 +281,11 @@ export class HudsBusquedaComponent implements OnInit {
 
             this.servicioPrestacion.getByPacienteSolicitud(this.paciente.id).subscribe((solicitudes) => {
                 this.solicitudes = solicitudes;
+                this.cargargSolicitudesMezcladas();
             });
             this.servicioPrestacion.getSolicitudes({ idPaciente: this.paciente.id }).subscribe((solicitudesTOP) => {
                 this.solicitudesTOP = solicitudesTOP;
+                this.cargargSolicitudesMezcladas();
             });
         });
     }
@@ -352,7 +355,32 @@ export class HudsBusquedaComponent implements OnInit {
             case 'vacunas':
                 return this.vacunas.length;
             case 'solicitudes':
-                return this.solicitudes.length + this.solicitudesTOP.length;
+                return this.solicitudesMezcladas;
+        }
+    }
+
+    private cargargSolicitudesMezcladas() {
+        if (this.solicitudes.length && this.solicitudesTOP.length) {
+            this.solicitudes.forEach(solicitud => {
+                solicitud['origen'] = 'rup';
+                this.solicitudesMezcladas.push(solicitud);
+            });
+            this.solicitudesTOP.forEach(solicitud => {
+                solicitud['origen'] = 'top';
+                this.solicitudesMezcladas.push(solicitud);
+            });
+            this.solicitudesMezcladas.sort((sol1, sol2) => {
+                if (sol1.origen === 'rup' && sol2.origen === 'rup') {
+                    return sol2.evoluciones[0].fechaCarga - sol1.evoluciones[0].fechaCarga;
+                } else if (sol1.origen === 'rup' && sol2.origen === 'top') {
+                    return sol2.createdAt - sol1.evoluciones[0].fechaCarga;
+                } else if (sol1.origen === 'top' && sol2.origen === 'rup') {
+                    return sol2.evoluciones[0].fechaCarga - sol1.createdAt;
+                } else if (sol1.origen === 'top' && sol2.origen === 'top') {
+                    return sol2.createdAt - sol1.createdAt;
+                }
+                return null;
+            });
         }
     }
 
