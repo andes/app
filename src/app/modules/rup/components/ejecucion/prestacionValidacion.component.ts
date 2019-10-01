@@ -15,6 +15,9 @@ import 'rxjs/Rx';
 import { CodificacionService } from '../../services/codificacion.service';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { forkJoin } from 'rxjs';
+import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
+import { ReglaService } from '../../../../services/top/reglas.service';
+import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -116,7 +119,8 @@ export class PrestacionValidacionComponent implements OnInit {
         public servicioAgenda: AgendaService,
         private route: ActivatedRoute,
         private servicioDocumentos: DocumentosService,
-        private codificacionService: CodificacionService
+        private codificacionService: CodificacionService,
+        public servicioReglas: ReglaService
     ) {
     }
 
@@ -339,11 +343,11 @@ export class PrestacionValidacionComponent implements OnInit {
                 // cargar los conceptos mas frecuentes por profesional y tipo de prestación
                 // Se copian los registros de la ejecución actual, para agregarle la frecuencia
                 let registros = this.prestacion.ejecucion.registros;
-
                 // filtramos los planes que deben generar prestaciones pendientes (Planes con conceptos turneales)
                 let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
                 this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                     this.prestacion = prestacion;
+                    console.log(this.prestacion);
                     this.prestacion.ejecucion.registros.forEach(registro => {
                         if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                             if (registro.relacionadoCon[0] && (typeof registro.relacionadoCon[0] === 'string')) {
@@ -351,6 +355,21 @@ export class PrestacionValidacionComponent implements OnInit {
                                     return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
                                 });
                             }
+                        }
+                        if (registro.esSolicitud && registro.valor.solicitudPrestacion.organizacionDestino) {
+                            this.servicioReglas.get({
+                                organizacionOrigen: this.auth.organizacion.id,
+                                prestacionOrigen: this.prestacion.solicitud.tipoPrestacion.conceptId,
+                                prestacionDestino: registro.valor.solicitudPrestacion.prestacionSolicitada.conceptId
+                            }).subscribe(reglas => {
+                                if (reglas.length) {
+                                    const prestacionDestino = reglas[0].destino.prestacion; // para utilizar los datos de la regla y no un sinonimo
+                                    const prestacionSolicitud = this.servicioPrestacion.inicializarPrestacion(this.prestacion.paciente, prestacionDestino.conceptId, 'validacion');
+                                    this.servicioPrestacion.post(prestacionSolicitud);
+                                    this.plex.toast('success', 'La solicitud está en la bandeja de entrada del efector destino', 'Información', 300);
+                                }
+                            });
+
                         }
                     });
 
