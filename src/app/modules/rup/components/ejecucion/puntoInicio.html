@@ -175,7 +175,7 @@
                                         <div *ngIf="turno.prestacion && turno?.prestacion?.estados">
                                             <br />
                                             <span *ngIf="turno.asistencia !== 'noAsistio'" class="badge" [ngClass]="{ 'badge-success': turno.prestacion.estados[turno.prestacion.estados.length
-                    - 1].tipo==='validada' , 'badge-warning': turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo==='ejecucion'}">
+                    - 1].tipo==='validada' , 'badge-warning': turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion'}">
                                                 {{turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo}}
                                             </span>
 
@@ -187,14 +187,20 @@
                                                 {{turno.asistencia}} <ng-container *ngIf="turno.horaAsistencia"> {{ turno.horaAsistencia | hora }} hs </ng-container>
                                             </span>
                                             <br />
-
-                                            <span *ngIf="turno.asistencia === 'noAsistio'">
-                                                <plex-button type="danger btn-sm" icon="mdi mdi-backup-restore" (click)="registrarInasistencia(turno.paciente,agendaSeleccionada, turno.id, 'sacarAsistencia')"
-                                                             title="Revertir cambios">
-                                                </plex-button>
-                                            </span>
-
                                         </div>
+                                        <span *ngIf="turno.asistencia === 'noAsistio'">
+                                            <plex-button type="danger" icon="mdi mdi-backup-restore" (click)="registrarInasistencia(turno.paciente,agendaSeleccionada, turno.id, 'sacarAsistencia')"
+                                                            title="Revertir cambios">
+                                            </plex-button>
+                                        </span>
+                                        
+                                        <ng-container *ngIf="mostrarBtnTurnero && turno.paciente?.documento && (!turno.prestacion || (turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente') )">
+                                            <br/>
+                                            <plex-button (click)="llamarTurnero(turno)" size="sm" type="info" [disabled]="llamandoTurno" title="LLamar" >
+                                                <plex-icon name="bell-ring-outline"></plex-icon>
+                                            </plex-button>
+                                        </ng-container>
+                                        
                                     </td>
                                     <td>
                                         <span *ngIf="turno.paciente?.id">{{ turno.paciente | paciente }} </span>

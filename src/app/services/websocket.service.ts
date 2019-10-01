@@ -17,7 +17,7 @@ export class WebSocketService {
 
     connect() {
         let patch = Wildcard(io.Manager);
-        this.socket = io((environment as any).WS);
+        this.socket = io(environment.WS);
         patch(this.socket);
         this.events = new Subject();
 
