@@ -6,8 +6,7 @@
         (change)="verificarAutocitacion()" labelField="apellido + ' ' + nombre" [multiple]="true" label="Profesional(es) destino">
     </plex-select> -->
 
-    <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.organizacionDestino" name="organizacionDestino" (getData)="loadOrganizacion($event)"
-        label="Organización destino" placeholder="Seleccione la organización" labelField="nombre" [required]="true">
+    <plex-select *ngIf="organizaciones.length" [(ngModel)]="registro.valor.solicitudPrestacion.organizacionDestino" name="organizacionDestino" [data]="organizaciones" label="Organización destino" placeholder="Seleccione la organización" labelField="nombre" [required]="true">
     </plex-select>
 
     <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.profesionalesDestino" (getData)="loadProfesionales($event)"
