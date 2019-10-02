@@ -15,12 +15,15 @@ let routes = [
             path: 'create',
             component: PantallaDetalleComponent
         }]
-    }
+    },
+    { path: '', redirectTo: 'turnero', pathMatch: 'full' }
 ];
+
+
 
 @NgModule({
     imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule],
+    // exports: [RouterModule],
     providers: []
 })
 export class TurneroRouting { }

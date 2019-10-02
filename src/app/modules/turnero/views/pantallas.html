@@ -1,15 +1,12 @@
-<plex-layout main="8">
+<plex-layout main="{{ mostrarDetalle ? 8 : 12 }}">
     <plex-layout-main>
-        <header>
-            <h4> Configuración de turneros </h4>
-        </header>
-
-        <plex-button type="info" class="float-right" size="sm" (click)="nueva()"> Nueva pantalla </plex-button>
+        <plex-button type="info" class="float-right mb-3" size="sm" (click)="nueva()"> Nueva pantalla </plex-button>
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th> Nombre </th>
                     <th> Token </th>
+                    <th> Esp. Físicos </th>
                     <th> Activación </th>
                     <th> Acciones </th>
                 </tr>
@@ -17,6 +14,11 @@
             <tr *ngFor="let pantalla of pantallas">
                 <td> {{pantalla.nombre}} </td>
                 <td> {{pantalla.token ? pantalla.token : 'Activado' }} </td>
+                <td> 
+                    <ng-container *ngFor='let e of pantalla.espaciosFisicos; let i = index'>
+                        {{e.nombre}}<ng-container *ngIf='pantalla.espaciosFisicos[i+1]'>,&nbsp;</ng-container>
+                    </ng-container> 
+                </td>
                 <td>
                     <span *ngIf="pantalla.expirationTime && !vencido(pantalla.expirationTime)">
                         {{pantalla.expirationTime ? 'Hasta ' + (pantalla.expirationTime  | date: "HH:mm") : ''}}
@@ -27,15 +29,15 @@
                 </td>
                 <td>
                     <ng-container *ngIf="muestraAcciones">
-                        <plex-button type="danger" (click)="eliminar(pantalla)"> Eliminar </plex-button>
-                        <plex-button type="info" (click)="edit(pantalla)"> Editar </plex-button>
+                        <plex-button icon="delete" type="danger" (click)="eliminar(pantalla)" class="mr-3"></plex-button>
+                        <plex-button icon="pencil" type="info" (click)="edit(pantalla)"></plex-button>
                     </ng-container>
                 </td>
             </tr>
         </table>
     </plex-layout-main>
-    <plex-layout-sidebar>
-        <header> Detalles </header>
-        <router-outlet></router-outlet>
+    <plex-layout-sidebar *ngIf='mostrarDetalle'>
+        <pantalla-detalle (ocultarDetalleEmmiter)='ocultarDetalle()' [pantalla]='pantalla'>
+        </pantalla-detalle>
     </plex-layout-sidebar>
 </plex-layout>

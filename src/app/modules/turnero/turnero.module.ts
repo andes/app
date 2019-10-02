@@ -10,8 +10,6 @@ import { CommonModule } from '@angular/common';
 
 
 import { TurneroRouting } from './turnero.routing';
-import { PantallaService } from './services/pantalla.service';
-import { TurneroService } from './services/turnero.service';
 import { PantallasComponent } from './views/pantallas.component';
 import { PantallaDetalleComponent } from './views/pantalla-detalle.component';
 
@@ -38,10 +36,4 @@ import { PantallaDetalleComponent } from './views/pantalla-detalle.component';
     ]
 })
 export class TurneroModule {
-    static forRoot(): ModuleWithProviders {
-        return {
-            ngModule: TurneroModule,
-            providers: [PantallaService, TurneroService]
-        };
-    }
 }

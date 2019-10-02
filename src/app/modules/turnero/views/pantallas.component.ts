@@ -4,29 +4,35 @@ import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { WebSocketService } from '../../../services/websocket.service';
 import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
 
 @Component({
     templateUrl: 'pantallas.html'
 })
 export class PantallasComponent implements OnInit, OnDestroy {
     private sub;
+    public mostrarDetalle = false;
+    pantalla = null;
 
     get pantallas() {
         return this.pantallasService.pantallas;
     }
 
     get muestraAcciones() {
-        return !this.pantallasService.selected;
+        // return !this.pantallasService.selected;
+        return !this.pantalla;
     }
 
     constructor(
         public pantallasService: PantallaService,
         private router: Router,
         private ws: WebSocketService,
-        private auth: Auth
+        private auth: Auth,
+        private plex: Plex
     ) { }
 
     ngOnInit() {
+        this.plex.updateTitle('Configuración de turneros');
         let temp;
         this.ws.connect();
         this.ws.join(`turnero-${this.auth.organizacion.id}`);
@@ -75,7 +81,8 @@ export class PantallasComponent implements OnInit, OnDestroy {
     }
 
     edit(pantalla) {
-        // this.pantallasService.select(pantalla.id);
+        this.pantalla = pantalla;
+        this.mostrarDetalle = true;
         this.router.navigate(['/turnero/edit/' + pantalla.id]);
     }
 
@@ -84,13 +91,25 @@ export class PantallasComponent implements OnInit, OnDestroy {
     }
 
     nueva() {
+        this.pantalla = {
+            nombre: '',
+            espaciosFisicos: []
+        };
+        this.mostrarDetalle = true;
         this.router.navigate(['/turnero/create']);
     }
 
     eliminar(p) {
-        this.pantallasService.remove(p).subscribe(() => {
-
+        this.plex.confirm('Eliminar pantalla "' + p.nombre + '"', '¿Desea eliminar?').then(x => {
+            if (x) {
+                this.pantallasService.remove(p).subscribe(() => { });
+            }
         });
+    }
+
+    ocultarDetalle() {
+        this.mostrarDetalle = false;
+        this.pantalla = null;
     }
 
 }

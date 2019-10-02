@@ -1,20 +1,23 @@
-<form class="plex-layout" #form="ngForm">
-    <div *ngIf="pantalla">
-        <plex-text label="Nombre" placeholder="Nombre identificatorio" [(ngModel)]="pantalla.nombre" name="usuario"
-            [required]="true"></plex-text>
-
-        <plex-text label="Contenido digital" placeholder="Código playlist youtube" [(ngModel)]="pantalla.playlist"
-            name="playlist" [required]="false"></plex-text>
-
-        <plex-select [(ngModel)]="consultorios" multiple="true" [data]="espaciosFisicos" name="select"
-            label="Espacios físicos"></plex-select>
-    </div>
+<header>
     <div class="row" *ngIf="pantalla">
-        <div class="col-6">
-            <plex-button type="danger" (click)="cancelar()"> Cancelar </plex-button>
+        <div class="col-md-7">
+            <div class="clearfix">
+                <div class="page-title float-left">Detalle</div>
+            </div>
         </div>
-        <div class="col-6">
-            <plex-button type="success" (click)="guardar()"> Grabar </plex-button>
+        <div class="col d-flex justify-content-end">
+            <plex-button label="Cancelar" type="danger" (click)="back()"></plex-button>
+            <plex-button label="Guardar" type="success" (click)="guardar()"></plex-button>
         </div>
     </div>
-</form>
+</header>
+<div *ngIf="pantalla">
+    <plex-text label="Nombre" placeholder="Nombre identificatorio" [(ngModel)]="pantalla.nombre" name="usuario"
+        [required]="true"></plex-text>
+
+    <plex-text label="Contenido digital" placeholder="Código playlist youtube" [(ngModel)]="pantalla.playlist"
+        name="playlist" [required]="false"></plex-text>
+
+    <plex-select [(ngModel)]="consultorios" multiple="true" [data]="espaciosFisicos" name="select" [required]="true"
+        label="Espacios físicos"></plex-select>
+</div>

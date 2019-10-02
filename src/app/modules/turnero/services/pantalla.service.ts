@@ -7,40 +7,14 @@ export class PantallaService {
 
     private baseURL = '/modules/turnero/pantalla';  // URL to web api
 
-    public get selected () {
-        if (!this._select) {
-            this._select = this.pantallas.find((item) => item.id === this._selectID);
-            if (this._select) {
-                this._select = JSON.parse(JSON.stringify(this._select));
-                if (!this._select.espaciosFisicos) {
-                    this._select.espaciosFisicos = [];
-                }
-                return this._select;
-            }
-            return null;
-        }
-        return this._select;
-    }
     public pantallas = [];
 
-    private _selectID = null;
-    private _select = null;
-
     constructor(private server: Server, public auth: Auth) { }
-
-    select(id) {
-        this._select = null;
-        this._selectID = id;
-    }
 
     list (params = null) {
         return this.server.get(this.baseURL, { params }).subscribe((data) => {
             this.pantallas = data;
         });
-    }
-
-    get (id) {
-        return this.server.get(this.baseURL + id);
     }
 
     save (pantalla) {
@@ -78,7 +52,6 @@ export class PantallaService {
             }
         });
     }
-
 
     getEspacios (params: any) {
         return this.server.get('/modules/turnos/espacioFisico', { params: params, showError: true });

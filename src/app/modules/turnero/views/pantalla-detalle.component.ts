@@ -1,32 +1,26 @@
-import { Component, OnInit, OnDestroy, OnChanges } from '@angular/core';
+import { Plex } from '@andes/plex';
+import { Component, OnInit, OnDestroy, EventEmitter, Output, Input } from '@angular/core';
 import { PantallaService } from '../services/pantalla.service';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Auth } from '@andes/auth';
+import { Unsubscribe } from '@andes/shared';
 
 @Component({
+    selector: 'pantalla-detalle',
     templateUrl: 'pantalla-detalle.html'
 })
 export class PantallaDetalleComponent implements OnInit, OnDestroy {
     public espaciosFisicos = [];
-    private sub = null;
-    private id;
 
-    public nuevaPantalla = {
-        nombre: '',
-        espaciosFisicos: []
-    };
+    @Output() ocultarDetalleEmmiter: EventEmitter<any> = new EventEmitter<any>();
+    @Input() pantalla: any;
 
     constructor(
         public pantallasService: PantallaService,
-        private route: ActivatedRoute,
         private _location: Location,
-        private auth: Auth
+        private auth: Auth,
+        private plex: Plex
     ) { }
-
-    get pantalla() {
-        return this.id ? this.pantallasService.selected : this.nuevaPantalla;
-    }
 
     get consultorios() {
         return this.pantalla.espaciosFisicos;
@@ -37,35 +31,22 @@ export class PantallaDetalleComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.pantallasService.getEspacios({ organizacion: this.auth.organizacion.id }).subscribe((data) => {
-            this.espaciosFisicos = data;
-        });
-        this.id = this.route.snapshot.params['id'];
-
-        // uso setImmediate por un detalle de angular.
-        setImmediate(() => {
-            this.pantallasService.select(this.id);
-        });
-
-        this.sub = this.route.params.subscribe(params => {
-            setImmediate(() => {
-                this.pantallasService.select(params['id']);
-            });
-        });
+        this.pantallasService.getEspacios({ organizacion: this.auth.organizacion.id }).subscribe(data => this.espaciosFisicos = data);
     }
 
     ngOnDestroy() {
-        this.pantallasService.select(null);
-        this.sub.unsubscribe();
     }
 
+    @Unsubscribe()
     guardar() {
-        this.pantallasService.save(this.pantalla).subscribe(() => {
-            this._location.back();
+        return this.pantallasService.save(this.pantalla).subscribe(() => {
+            this.plex.toast('success', 'Pantalla guardada correctamente', 'Pantalla guardada', 100);
+            this.back();
         });
     }
 
-    cancelar() {
+    back() {
+        this.ocultarDetalleEmmiter.emit();
         this._location.back();
     }
 }
