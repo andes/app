@@ -1,12 +1,13 @@
 <section>
     <div class="row">
-        <div class="col-7 h-100">
+        <div class="col-6 h-100">
             <plex-box>
                 <!-- Box header -->
                 <header>
                     <div class="clearfix">
                         <div class="page-title float-left">Punto de inicio | Consultorio</div>
-                        <div class="float-right">
+                        <div justify="end">
+                            <!-- <plex-button title="Mostrar mis reglas" icon="mdi mdi-ruler" [type]="(mostrarReglas) ? 'primary' : 'default'" (click)="mostrarReglas = !mostrarReglas"></plex-button> -->
                             <plex-button title="Mostrar sólo mis agendas" icon="mdi mdi-calendar-multiple-check"
                                          [type]="(soloMisAgendas) ? 'primary' : 'default'"
                                          (click)="soloMisAgendas = true; filtrar()"></plex-button>
@@ -127,13 +128,33 @@
                 </table>
             </plex-box>
         </div>
-        <div class="col h-100">
+
+        <div class="col h-100" *ngIf="mostrarReglas">
+            <plex-box>
+                <fieldset>
+                    <legend>Mis reglas de Solicitudes</legend>
+                </fieldset>
+                <ng-container>
+                    <div class="row">
+                        <div class="col-12">
+                            <visualizacion-reglas [esParametrizado]="true"></visualizacion-reglas>
+                        </div>
+                    </div>
+                </ng-container>
+            </plex-box>
+        </div>
+        <div class="col h-100" *ngIf="!mostrarReglas">
             <dinamica *ngIf="buscandoPaciente" [agenda]="agendaSeleccionada" (cancel)="cancelarDinamica()"></dinamica>
 
             <plex-box *ngIf="!buscandoPaciente">
-                <fieldset>
+                <!-- <fieldset>
                     <legend>Detalle de la agenda</legend>
-                </fieldset>
+                </fieldset> -->
+                <div>
+                    <plex-help type="help" icon="information" titulo="Reglas TOP" tituloBoton="Reglas TOP" size="sm">
+                        <visualizacion-reglas [esParametrizado]="true"></visualizacion-reglas>
+                    </plex-help>
+                </div>
 
                 <ng-container
                               *ngIf="agendaSeleccionada && agendaSeleccionada !== 'fueraAgenda' && (agendaSeleccionada.dinamica || getCantidadPacientes(agendaSeleccionada) || agendaSeleccionada.tipoPrestaciones[0].noNominalizada)">

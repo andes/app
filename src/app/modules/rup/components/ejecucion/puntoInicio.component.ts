@@ -56,7 +56,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public espaciosFisicosTurnero = [];
     // ultima request que se almacena con el subscribe
     private lastRequest: Subscription;
-
+    public mostrarReglas = false;
 
     constructor(
         private router: Router,
