@@ -1,6 +1,6 @@
 <plex-layout main="12">
     <plex-layout-main>
-        <header>
+        <header *ngIf="!esParametrizado">
             <div class="row">
                 <div class="col-md-3">
                     <plex-select [(ngModel)]="organizacionOrigen" name="orgOrigen" (getData)="loadOrganizaciones($event)"
@@ -34,7 +34,7 @@
                 <table *ngIf="filtroIngresado() && filas?.length" class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Organización origen</th>
+                            <th *ngIf="!esParametrizado">Organización origen</th>
                             <th>Prestación origen</th>
                             <th>Organización destino</th>
                             <th>Prestación destino</th>
@@ -43,11 +43,11 @@
                     <tbody>
                         <tr *ngFor="let fila of filas">
 
-                            <td>{{fila.organizacionOrigen.nombre}}</td>
+                            <td *ngIf="!esParametrizado">{{fila.organizacionOrigen.nombre}}</td>
                             <td>{{fila.prestacionOrigen.prestacion.term}}</td>
                             <td>{{fila.organizacionDestino.nombre}}</td>
                             <td>{{fila.prestacionDestino.term}}</td>
-                            <td *ngIf="!seleccionada">
+                            <td *ngIf="!seleccionada && !esParametrizado">
                                 <plex-badge *ngIf="fila.prestacionOrigen.auditable" type="success">
                                     auditable </plex-badge>
                             </td>
@@ -57,7 +57,7 @@
             </div>
         </div>
     </plex-layout-main>
-    <plex-layout-footer>
+    <plex-layout-footer *ngIf="!esParametrizado">
         <plex-button label="Volver" type="danger" position="left" routerLink="/solicitudes"></plex-button>
     </plex-layout-footer>
 </plex-layout>
