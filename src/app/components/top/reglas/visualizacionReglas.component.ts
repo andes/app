@@ -155,6 +155,17 @@ export class VisualizacionReglasComponent implements OnInit {
                 }
             });
         }
+        if (this.esParametrizado) {
+            this.filas.sort((fila1, fila2) => {
+                if (fila2.prestacionDestino.term < fila1.prestacionDestino.term) {
+                    return 1;
+                }
+                if (fila2.prestacionDestino.term > fila1.prestacionDestino.term) {
+                    return -1;
+                }
+                return 0;
+            });
+        }
     }
 }
 
