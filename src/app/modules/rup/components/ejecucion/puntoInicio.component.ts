@@ -14,9 +14,10 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
-import { Subscription } from 'rxjs';
 import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
 import { WebSocketService } from '../../../../services/websocket.service';
+import { ISubscription } from 'rxjs/Subscription';
+
 
 @Component({
     selector: 'rup-puntoInicio',
@@ -61,7 +62,7 @@ export class PuntoInicioComponent implements OnInit {
 
     public espaciosFisicosTurnero = [];
     // ultima request que se almacena con el subscribe
-    private lastRequest: Subscription;
+    private lastRequest: ISubscription;
     public mostrarReglas = false;
 
     constructor(
