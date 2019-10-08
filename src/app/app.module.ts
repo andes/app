@@ -135,8 +135,6 @@ import { PlantillasService } from './modules/rup/services/plantillas.service';
 
 
 // Componentes
-import { LoginComponent } from './components/login/login.component';
-import { SelectOrganizacionComponent } from './components/login/selectOrganizacion.component';
 import { InicioComponent } from './components/inicio/inicio.component';
 
 // Sugerencias
@@ -545,7 +543,7 @@ registerLocaleData(localeEs, 'es');
         GestorUsuariosProvidersModule
     ],
     declarations: [
-        AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,
+        AppComponent, InicioComponent,
         OrganizacionComponent, OrganizacionCreateUpdateComponent,
         CamaCreateUpdateComponent, CamasListadoComponent,
         ProfesionalComponent, ProfesionalCreateUpdateComponent,
@@ -687,7 +685,6 @@ registerLocaleData(localeEs, 'es');
         HttpClient,
         Plex,
         Server,
-        Auth,
         RoutingGuard,
         RoutingNavBar,
         OrganizacionService,

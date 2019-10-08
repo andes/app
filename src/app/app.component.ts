@@ -39,7 +39,7 @@ export class AppComponent {
         if (this.auth.loggedIn()) {
             this.auth.organizaciones().subscribe(data => {
                 if (data.length > 1) {
-                    this.menuList = [{ label: 'Seleccionar Organización', icon: 'home', route: '/selectOrganizacion' }, ...this.menuList];
+                    this.menuList = [{ label: 'Seleccionar Organización', icon: 'home', route: '/auth/select-organizacion' }, ...this.menuList];
                     this.plex.updateMenu(this.menuList);
                 }
             });
@@ -52,7 +52,9 @@ export class AppComponent {
             accessList.push({ label: 'CITAS: Punto de Inicio', icon: 'calendar', route: '/citas/punto-inicio' });
         }
 
-        accessList.push({ label: 'CITAS: Espacios Físicos', icon: 'cogs', route: 'tm/mapa_espacio_fisico' });
+        if (this.auth.getPermissions('espaciosFisicos:?').length > 0) {
+            accessList.push({ label: 'CITAS: Espacios Físicos', icon: 'cogs', route: 'tm/mapa_espacio_fisico' });
+        }
 
         if (this.auth.getPermissions('mpi:?').length > 0) {
             accessList.push({ label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: '/apps/mpi/busqueda' });
@@ -104,7 +106,7 @@ export class AppComponent {
             this.menuList.push(permiso);
         });
         this.menuList.push({ divider: true });
-        this.menuList.push({ label: 'Cerrar Sesión', icon: 'logout', route: '/login' });
+        this.menuList.push({ label: 'Cerrar Sesión', icon: 'logout', route: '/auth/logout' });
 
         // Actualizamos la lista de menú
         this.plex.updateMenu(this.menuList);

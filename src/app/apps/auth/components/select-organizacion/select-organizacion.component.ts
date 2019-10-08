@@ -2,13 +2,12 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { AppComponent } from '../../app.component';
-import { OrganizacionService } from '../../services/organizacion.service';
+import { AppComponent } from '../../../../app.component';
+import { OrganizacionService } from '../../../../services/organizacion.service';
 
 @Component({
-    templateUrl: 'selectOrganizacion.html',
-    styleUrls: ['selectOrganizacion.scss'],
-    encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
+    templateUrl: 'select-organizacion.html',
+    styleUrls: ['select-organizacion.scss']
 })
 export class SelectOrganizacionComponent implements OnInit {
     public organizaciones = null;
@@ -37,7 +36,7 @@ export class SelectOrganizacionComponent implements OnInit {
 
     seleccionar(organizacion) {
         this.auth.setOrganizacion(organizacion).subscribe(() => {
-            this.organizacionService.configuracion(this.auth.organizacion.id).subscribe(() => {});
+            this.organizacionService.configuracion(this.auth.organizacion.id).subscribe(() => { });
             this.plex.updateUserInfo({ usuario: this.auth.usuario });
             this.appComponent.checkPermissions();
             this.router.navigate(['inicio']);
