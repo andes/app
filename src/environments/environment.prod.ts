@@ -5,7 +5,7 @@ export const environment = {
   production: true,
   environmentName: 'produccion',
   API: '/api',
-  WS: '/',
+  WS: '/api',
   APIStatusCheck: true,
   version: _package.version,
   MAPS_KEY: apiKeys.produccion
