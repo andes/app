@@ -17,7 +17,7 @@ export class WebSocketService {
 
     connect() {
         let patch = Wildcard(io.Manager);
-        this.socket = io(environment.WS, { transports: ['websocket'] });
+        this.socket = io({ path: environment.WS, transports: ['websocket'] });
         patch(this.socket);
         this.events = new Subject();
 
