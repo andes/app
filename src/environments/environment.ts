@@ -9,7 +9,7 @@ export const environment = {
   production: false,
   environmentName: 'development',
   API: '//localhost:3002/api',
-  WS: '//localhost:3002/api', // para websocket
+  WS: '//localhost:3002/ws', // para websocket
   APIStatusCheck: false,
   version: _package.version,
   MAPS_KEY: ''

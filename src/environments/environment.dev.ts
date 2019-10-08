@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   environmentName: 'development',
   API: '//localhost:3002/api',
-  WS: '//localhost:3002/api',
+  WS: '//localhost:3002/ws',
   APIStatusCheck: false,
   version: _package.version,
   MAPS_KEY: apiKeys.develop
