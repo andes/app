@@ -1,4 +1,3 @@
-import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -7,7 +6,7 @@ import { map, switchMap, tap, distinctUntilChanged, take, } from 'rxjs/operators
 import { PermisosService } from '../services/permisos.service';
 import { UsuariosHttp } from '../services/usuarios.http';
 import { ProfesionalService } from '../../../services/profesional.service';
-import { Observe, asObject, mergeObject, notNull, onlyNull, distincObject, cache } from '@andes/shared';
+import { Observe, asObject, mergeObject, notNull, onlyNull, cache } from '@andes/shared';
 import { Auth } from '@andes/auth';
 
 @Component({
@@ -93,7 +92,6 @@ export class UsuariosListComponent implements OnInit {
                 }
                 return this.usuariosHttp.find({ ...query, fields: '-password -permisosGlobales' });
             }),
-            tap((users) => this.notFound = users.length === 0),
             tap(() => this.userSelected = null),
             cache()
         );
@@ -139,31 +137,34 @@ export class UsuariosListComponent implements OnInit {
             cache()
         );
     }
-    private notFound = true;
     get isNewDisabled() {
-        return !/^\d{7,8}$/.test(this.search) || !this.notFound;
+        return !/^\d{7,8}$/.test(this.search);
 
     }
 
     nuevo() {
-        this.usuariosHttp.find({ documento: this.search }).pipe(
-            map(users => users.length > 0),
-            tap((found) => {
-                if (found) {
-                    this.plex.info('error', 'El usuario existe');
-                }
-            }),
-            onlyNull(),
-            switchMap(() => {
-                return this.usuariosHttp.ldap(this.search);
-            }),
-            switchMap((user) => {
-                return this.usuariosHttp.create(user);
-            })
-        ).subscribe((user) => {
-            this.plex.toast('success', 'Usuarios creado exitosamente!');
-            this.organizacion = null;
-            this.refresh.next({});
+        this.plex.confirm('¿Querés dar de alta el usuario?', 'ALTA DE USUARIO').then((resultado) => {
+            if (resultado) {
+                this.usuariosHttp.find({ documento: this.search }).pipe(
+                    map(users => users.length > 0),
+                    tap((found) => {
+                        if (found) {
+                            this.plex.info('error', 'El usuario existe');
+                        }
+                    }),
+                    onlyNull(),
+                    switchMap(() => {
+                        return this.usuariosHttp.ldap(this.search);
+                    }),
+                    switchMap((user) => {
+                        return this.usuariosHttp.create(user);
+                    })
+                ).subscribe((user) => {
+                    this.plex.toast('success', 'Usuarios creado exitosamente!');
+                    this.organizacion = null;
+                    this.refresh.next({});
+                });
+            }
         });
     }
 

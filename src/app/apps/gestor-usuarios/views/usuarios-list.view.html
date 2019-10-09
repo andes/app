@@ -2,49 +2,57 @@
     <plex-layout-main>
         <header>
             <div class="row">
-                <div class="col-5">
+                <div class="col-6">
                     <plex-text [(ngModel)]="search" placeholder="Buscar por DNI, nombre o apellido">
                         <plex-icon name="account-search"></plex-icon>
                     </plex-text>
                 </div>
-                <div class="col-5">
+                <div class="col-6">
                     <plex-select [(ngModel)]="organizacion" placeholder="Seleccione una organización"
                                  [data]="organizaciones">
                     </plex-select>
                 </div>
-                <div class="col-2">
-                    <plex-button type="success" size="sm" (click)="nuevo()" title="Nuevo usuario"
-                                 [disabled]="isNewDisabled" *ngIf="!readOnly">
-                        NUEVO USUARIO
-                        <!-- <plex-icon name="plus"></plex-icon> -->
-                    </plex-button>
-                </div>
             </div>
         </header>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Usuario</th>
-                    <th>Apellido</th>
-                    <th>Nombre</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="hover" *ngFor="let user of usuarios$ | async" (click)="select(user)"
-                    [ngClass]="{'bg-inverse text-white': userSelected?.id === user.id}">
-                    <td>{{user.usuario}}</td>
-                    <td *ngIf="user.apellido; else sinDatos">
-                        {{user.apellido}}
-                    </td>
-                    <td *ngIf="user.nombre; else sinDatos">
-                        {{user.nombre}}
-                    </td>
-                    <ng-template #sinDatos>
-                        <td> SIN DATOS </td>
-                    </ng-template>
-                </tr>
-            </tbody>
-        </table>
+        <ng-container *ngIf="(usuarios$ | async) as usuarios">
+            <table class="table table-striped" *ngIf="usuarios.length > 0">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Apellido</th>
+                        <th>Nombre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="hover" *ngFor="let user of usuarios" (click)="select(user)"
+                        [ngClass]="{'bg-inverse text-white': userSelected?.id === user.id}">
+                        <td>{{user.usuario}}</td>
+                        <td *ngIf="user.apellido; else sinDatos">
+                            {{user.apellido}}
+                        </td>
+                        <td *ngIf="user.nombre; else sinDatos">
+                            {{user.nombre}}
+                        </td>
+                        <ng-template #sinDatos>
+                            <td> SIN DATOS </td>
+                        </ng-template>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="row" *ngIf="usuarios.length === 0">
+                <div class="col">
+                    <div class="alert alert-danger d-flex justify-content-between">
+                        <div>
+                            <plex-icon name="account-alert"></plex-icon>
+                            No se encontró ningún usuario.
+                        </div>
+                        <plex-button type="success" size="sm" (click)="nuevo()" *ngIf="!isNewDisabled">
+                            NUEVO USUARIO
+                        </plex-button>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
     </plex-layout-main>
     <plex-layout-sidebar>
         <ng-container *ngIf="userSelected; else noSelected">
