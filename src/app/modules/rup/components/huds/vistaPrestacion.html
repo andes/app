@@ -7,7 +7,7 @@
                 {{ prestacion.ejecucion.fecha | date: 'EEE dd/MM/yyyy HH:MM' }}
             </div>
             <div class="col-6"
-                *ngIf="(getTimestamp(prestacion.ejecucion.fecha) - getTimestamp(prestacion.solicitud.fecha)) > 1000">
+                 *ngIf="(getTimestamp(prestacion.ejecucion.fecha) - getTimestamp(prestacion.solicitud.fecha)) > 1000">
                 <b> Solicitada el: </b>
                 {{ prestacion.solicitud.fecha | date: 'EEE dd/MM/yyyy HH:MM' }}
             </div>
@@ -27,23 +27,27 @@
                 <ng-container *ngFor="let elemento of prestacion.ejecucion.registros">
 
                     <div
-                        class="rup-card {{ elemento.esSolicitud ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">
+                         class="rup-card {{ elemento.esSolicitud ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">
                         <div class="rup-header">
                             <div class="icon-rup">
                                 <i
-                                    class="icon icon-rup-semantic-{{ servicioPrestacion.getIcon(elemento.concepto) }}"></i>
+                                   class="icon icon-rup-semantic-{{ servicioPrestacion.getIcon(elemento.concepto) }}"></i>
                             </div>
                             <div class="title">
                                 <ng-container *ngIf="elemento?.nombre">
                                     {{ elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1) }}
                                 </ng-container>
+                                <div class="float-left"
+                                     *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length">
+                                    <b class="clearfix">Relacionado con:</b>
+                                    <ng-container *ngFor="let relacionado of elemento?.relacionadoCon">
+                                        <small class="badge badge-info badge-170 mr-1">
+                                            {{ relacionado | relacionRUP }}
+                                        </small>
+                                    </ng-container>
+                                </div>
                             </div>
                             <div class="actions">
-                                <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0"
-                                    class="badge badge-info">
-                                    <b> Relacionado con: </b>
-                                    {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
-                                </small>
                                 <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">
                                     Procedimiento / diagnóstico principal
                                 </small>
@@ -59,9 +63,9 @@
                                 <div class="row" *ngIf="paciente">
                                     <div class="col-12">
                                         <rup [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)"
-                                            [params]="elementosRUPService.selectPorRefsetId(elemento.concepto)"
-                                            [prestacion]="prestacion" [registro]="elemento" [paciente]="paciente"
-                                            [soloValores]="true" [vistaHUDS]="false">
+                                             [params]="elementosRUPService.selectPorRefsetId(elemento.concepto)"
+                                             [prestacion]="prestacion" [registro]="elemento" [paciente]="paciente"
+                                             [soloValores]="true" [vistaHUDS]="false">
                                         </rup>
                                     </div>
                                 </div>
