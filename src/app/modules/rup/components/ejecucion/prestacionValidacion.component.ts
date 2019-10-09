@@ -356,21 +356,7 @@ export class PrestacionValidacionComponent implements OnInit {
                                 });
                             }
                         }
-                        if (registro.esSolicitud && registro.valor.solicitudPrestacion.organizacionDestino) {
-                            this.servicioReglas.get({
-                                organizacionOrigen: this.auth.organizacion.id,
-                                prestacionOrigen: this.prestacion.solicitud.tipoPrestacion.conceptId,
-                                prestacionDestino: registro.valor.solicitudPrestacion.prestacionSolicitada.conceptId
-                            }).subscribe(reglas => {
-                                if (reglas.length) {
-                                    const prestacionDestino = reglas[0].destino.prestacion; // para utilizar los datos de la regla y no un sinonimo
-                                    const prestacionSolicitud = this.servicioPrestacion.inicializarPrestacion(this.prestacion.paciente, prestacionDestino.conceptId, 'validacion');
-                                    this.servicioPrestacion.post(prestacionSolicitud);
-                                    this.plex.toast('success', 'La solicitud está en la bandeja de entrada del efector destino', 'Información', 300);
-                                }
-                            });
 
-                        }
                     });
 
                     this.motivoReadOnly = true;
