@@ -81,6 +81,7 @@ import { PlantillasRUPComponent } from './apps/rup/plantillas-rup/plantillas-rup
 // Internacion
 import { MapaDeCamasComponent } from './apps/rup/internacion/components/mapa-de-camas.component';
 import { ListadoInternacionComponent } from './apps/rup/internacion/components/listado-internacion.component';
+import { ListaEsperaInternacionComponent } from './apps/rup/internacion/components/lista-espera-internacion.component';
 
 // Solicitudes
 import { CensoDiarioComponent } from './apps/rup/internacion/components/censoDiario.component';
@@ -167,6 +168,7 @@ const appRoutes: Routes = [
   { path: 'rup/internacion/censo', component: CensoDiarioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/internacion/censo/mensual', component: CensoMensualComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/internacion/listado', component: ListadoInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'rup/internacion/listaEspera', component: ListaEsperaInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   { path: 'rup/plantillas', component: PlantillasRUPComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
