@@ -12,6 +12,7 @@ import { ArbolPermisosItemComponent } from './components/arbol-permisos/arbol-pe
 import { ArbolPermisosComponent } from './components/arbol-permisos/arbol-permisos.component';
 import { UsuariosListComponent } from './views/usuarios-list.view';
 import { UsuariosEditComponent } from './views/usuarios-edit.view';
+import { UsuarioDetalleComponent } from './components/usuario-detalle/usuario-detalle.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { UsuariosEditComponent } from './views/usuarios-edit.view';
         ArbolPermisosComponent,
         ArbolPermisosItemComponent,
         UsuariosListComponent,
-        UsuariosEditComponent
+        UsuariosEditComponent,
+        UsuarioDetalleComponent
     ],
     exports: [],
 })

@@ -5,7 +5,6 @@ import { Observable, of, merge, BehaviorSubject } from 'rxjs';
 import { map, switchMap, tap, distinctUntilChanged, take, } from 'rxjs/operators';
 import { PermisosService } from '../services/permisos.service';
 import { UsuariosHttp } from '../services/usuarios.http';
-import { ProfesionalService } from '../../../services/profesional.service';
 import { Observe, asObject, mergeObject, notNull, onlyNull, cache } from '@andes/shared';
 import { Auth } from '@andes/auth';
 
@@ -17,7 +16,6 @@ import { Auth } from '@andes/auth';
 export class UsuariosListComponent implements OnInit {
 
     constructor(
-        private profesionalService: ProfesionalService,
         public permisosService: PermisosService,
         public usuariosHttp: UsuariosHttp,
         public plex: Plex,
@@ -94,20 +92,6 @@ export class UsuariosListComponent implements OnInit {
             }),
             tap(() => this.userSelected = null),
             cache()
-        );
-
-        this.userData$ = this.userSelected$.pipe(
-            notNull(),
-            distinctUntilChanged((a: any, b: any) => a.id === b.id),
-            switchMap((user: any) => {
-                return this.profesionalService.get({
-                    documento: user.usuario
-                });
-            }),
-            cache(),
-            map((profesional: any) => {
-                return { profesional: profesional.length ? profesional[0] : null };
-            })
         );
 
         this.organizacionesParaAgregar$ = this.userSelected$.pipe(

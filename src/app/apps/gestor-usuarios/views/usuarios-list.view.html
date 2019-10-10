@@ -1,6 +1,11 @@
 <plex-layout [main]="6">
     <plex-layout-main>
         <header>
+            <plex-title titulo="Gestor de Usuarios">
+                <plex-button type="info" (click)="toPerfiles()" *ngIf="verPerfiles">
+                    VER PERFILES
+                </plex-button>
+            </plex-title>
             <div class="row">
                 <div class="col-6">
                     <plex-text [(ngModel)]="search" placeholder="Buscar por DNI, nombre o apellido">
@@ -56,33 +61,13 @@
     </plex-layout-main>
     <plex-layout-sidebar>
         <ng-container *ngIf="userSelected; else noSelected">
-            <div class="row mt-2">
-                <div class="col">
-                    <label class="block">Documento</label>
-                    <span>{{ userSelected.documento }}</span>
-                </div>
-                <div class="col">
-                    <label class="block">Nombre</label>
-                    <span>{{ userSelected.nombre }}</span>
-                </div>
-                <div class="col">
-                    <label class="block">Apellido</label>
-                    <span>{{ userSelected.apellido }}</span>
-                </div>
-                <ng-container *ngIf="(userData$ | async) as profesional">
-                    <div class="col" *ngIf="profesional">
-                        <label class="block"></label>
-                        <span class="badge-success"> Profesional </span>
-                    </div>
-                </ng-container>
-            </div>
+            <gestor-usarios-usuario-detalle [usuario]="userSelected"></gestor-usarios-usuario-detalle>
             <hr>
             <ng-container *ngIf="{ 
                             orgList: orgList$ | async, 
                             organizacionesParaAgregar: organizacionesParaAgregar$ | async  
                         } as data">
-                <div class="page-title d-flex justify-content-between">
-                    <span>Organizaciones</span>
+                <plex-title titulo="Organizaciones">
                     <ng-container *ngIf="data.organizacionesParaAgregar?.length > 0">
                         <plex-button type="success" size="sm" (click)="toogleAddOrg()"
                                      *ngIf="!readOnly && !showNewOrgView">
@@ -94,8 +79,9 @@
                             <plex-icon name="close"></plex-icon>
                         </plex-button>
                     </ng-container>
-                </div>
-                <div class="list-group" *ngIf="!showNewOrgView">
+
+                </plex-title>
+                <div class="list-group mt-2" *ngIf="!showNewOrgView">
                     <div class="list-group-item justify-content-between" *ngFor="let org of data.orgList">
                         <span>{{ org.nombre }}</span>
                         <span>
@@ -115,7 +101,7 @@
                         No tiene organizaciónes asignadas. Agregue una para continuar.
                     </div>
                 </div>
-                <div class="row" *ngIf="showNewOrgView">
+                <div class="row mt-2" *ngIf="showNewOrgView">
                     <div class="col-10">
                         <plex-select [(ngModel)]="orgSelected" placeholder="Seleccione una organización"
                                      [data]="data.organizacionesParaAgregar">
@@ -130,15 +116,9 @@
             </ng-container>
         </ng-container>
         <ng-template #noSelected>
-            <div class="page-title d-flex justify-content-between align-items-center mb-2">
-                <span> Gestor de Usuarios</span>
-                <plex-button type="info" (click)="toPerfiles()" *ngIf="verPerfiles">
-                    VER PERFILES
-                </plex-button>
-            </div>
             <div class="text-center">
-                <h6> Seleccione un usuario para operar </h6>
                 <img src="assets/img/users.png" alt="">
+                <h5> Seleccione un usuario para ver sus detalles. </h5>
             </div>
         </ng-template>
     </plex-layout-sidebar>

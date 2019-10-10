@@ -4,7 +4,6 @@ import { Location } from '@angular/common';
 import { map, pluck, switchMap, tap, publishReplay, refCount, delay, takeUntil } from 'rxjs/operators';
 import { UsuariosHttp } from '../services/usuarios.http';
 import { Observable, forkJoin, BehaviorSubject, Subject } from 'rxjs';
-import { ProfesionalService } from '../../../services/profesional.service';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { PerfilesHttp } from '../services/perfiles.http';
 import { PermisosService } from '../services/permisos.service';
@@ -31,7 +30,6 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
     public orgName = '';
 
     public user$: Observable<any>;
-    public profesional$: Observable<any>;
 
     public permisos$: Observable<any>;
     @Observe({ initial: [] }) permisos;
@@ -48,18 +46,12 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
         private auth: Auth,
         private route: ActivatedRoute,
         public usuariosHttp: UsuariosHttp,
-        private profesionalService: ProfesionalService,
         private organizacionService: OrganizacionService,
         public perfilesHttp: PerfilesHttp,
         public permisosService: PermisosService
     ) { }
 
-    getProfesional(user) {
-        return this.profesionalService.get({
-            documento: user.usuario,
-            fields: 'nombre'
-        });
-    }
+
 
     getOrganizacion() {
         return this.organizacionService.getById(this.organizacionId);
@@ -94,10 +86,6 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
                 refCount()
             );
 
-            this.profesional$ = this.user$.pipe(
-                switchMap(this.getProfesional.bind(this)),
-                elementAt()
-            );
 
             forkJoin(
                 this.perfilesHttp.find().pipe(tap(perfiles => this.perfiles = perfiles)),

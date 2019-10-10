@@ -6,27 +6,7 @@
             </div>
         </div>
         <ng-container *ngIf="user$ | async as user">
-            <div class="row d-flex justify-content-between align-items-center">
-                <div class="col">
-                    <label class="x">Documento</label>
-                    <span>{{ user.documento }}</span>
-                </div>
-                <div class="col">
-                    <label class="block">Nombre</label>
-                    <span>{{ user.nombre }}</span>
-                </div>
-                <div class="col">
-                    <label class="block">Apellido</label>
-                    <span>{{ user.apellido }}</span>
-                </div>
-                <ng-container *ngIf="(profesional$ | async) as profesional">
-                    <div class="col">
-                        <label class="block"></label>
-                        <span class="badge-success"> Profesional </span>
-                    </div>
-                </ng-container>
-
-            </div>
+            <gestor-usarios-usuario-detalle [usuario]="user"></gestor-usarios-usuario-detalle>
         </ng-container>
         <div class="row">
             <div class="col">
