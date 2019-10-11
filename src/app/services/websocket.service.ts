@@ -16,8 +16,9 @@ export class WebSocketService {
     }
 
     connect() {
+        console.log('Connect Socket');
         let patch = Wildcard(io.Manager);
-        this.socket = io({ path: environment.WS, transports: ['websocket'] });
+        this.socket = io(environment.WS, { transports: ['websocket', 'polling'] });
         patch(this.socket);
         this.events = new Subject();
 
@@ -52,6 +53,7 @@ export class WebSocketService {
     }
 
     emit(event, data) {
+        console.log('Emit', this.socket);
         this.socket.emit(event, data);
     }
 

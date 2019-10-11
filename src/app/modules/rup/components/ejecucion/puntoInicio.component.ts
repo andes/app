@@ -82,17 +82,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.ws.connect();
-        this.servicioTurnero.get({}).subscribe((pantallas) => {
-            pantallas.forEach((pantalla: any) => {
-                pantalla.espaciosFisicos.forEach((ef) => {
-                    let i = this.espaciosFisicosTurnero.findIndex((e) => e === ef.id);
-                    if (i < 0) {
-                        this.espaciosFisicosTurnero.push(ef.id);
-                    }
-                });
-            });
-        });
 
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
         if (!this.auth.getPermissions('rup:?').length) {
@@ -121,6 +110,19 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 });
             }
         }
+
+        this.ws.connect();
+        this.servicioTurnero.get({}).subscribe((pantallas) => {
+            pantallas.forEach((pantalla: any) => {
+                pantalla.espaciosFisicos.forEach((ef) => {
+                    let i = this.espaciosFisicosTurnero.findIndex((e) => e === ef.id);
+                    if (i < 0) {
+                        this.espaciosFisicosTurnero.push(ef.id);
+                    }
+                });
+            });
+        });
+
 
     }
 
@@ -500,7 +502,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     cargarTurnos(agenda) {
         this.cancelarDinamica();
         this.agendaSeleccionada = agenda ? agenda : 'fueraAgenda';
-        if (agenda) {
+        if (agenda && agenda.espacioFisico && agenda.espacioFisico.id) {
             let i = this.espaciosFisicosTurnero.findIndex((e) => e === agenda.espacioFisico.id);
             if (i >= 0) {
                 this.mostrarBtnTurnero = true;
