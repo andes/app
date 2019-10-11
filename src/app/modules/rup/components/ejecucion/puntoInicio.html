@@ -36,7 +36,7 @@
                 </header>
 
                 <!--Resultados-->
-                <plex-loader type="ball-pulse-sync" *ngIf="loading"></plex-loader>
+                
                 <table class="table table-striped table-sm" *ngIf="!loading">
                     <thead>
                         <th>Agenda</th>
@@ -131,7 +131,7 @@
                 <fieldset>
                     <legend>Detalle de la agendas </legend>
                 </fieldset>
-                <plex-loader type="ball-pulse-sync" *ngIf="loading"></plex-loader>
+                
                 <ng-container *ngIf="!loading && agendaSeleccionada && agendaSeleccionada !== 'fueraAgenda' && (agendaSeleccionada.dinamica || getCantidadPacientes(agendaSeleccionada) || agendaSeleccionada.tipoPrestaciones[0].noNominalizada)">
                     <div class="row">
                         <div class="col-12">
