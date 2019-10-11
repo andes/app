@@ -327,6 +327,7 @@ export class TurnosComponent implements OnInit {
         // Patchea los turnosSeleccionados (1 o más turnos)
         this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
             this.actualizarBotonesAgendasEmiter.emit(resultado);
+            this.agenda.bloques = resultado.bloques;
         });
 
         // Reset botones y turnos seleccionados
