@@ -35,7 +35,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
     parentescoModel: any[];
     relacionesBorradas: any[];
     tipoIdentificacion: any[];
-
+    disableGeolocalizar = true;
     provincias: IProvincia[] = [];
     pacientesSimilares = [];
     localidades: any[] = [];
@@ -174,17 +174,20 @@ export class ExtranjeroNNCruComponent implements OnInit {
                 this.organizacionActual = org;
                 this.provinciaActual = org.direccion.ubicacion.provincia;
                 this.localidadActual = org.direccion.ubicacion.localidad;
-                this.geoReferenciaAux = org.direccion.geoReferencia;
+                setTimeout(() => {
+                    if (org.direccion.geoReferencia) {
+                        this.geoReferenciaAux = org.direccion.geoReferencia;
+                    } else {
+                        let direccionCompleta = org.direccion.valor + ', ' + this.localidadActual.nombre + ', ' + this.provinciaActual.nombre;
+                        this.georeferenciaService.getGeoreferencia({ direccion: direccionCompleta }).subscribe(point => {
+                            if (point) {
+                                this.geoReferenciaAux = [point.lat, point.lng];
+                            }
+                        });
+                    }
+                }, 1000);
             }
         });
-        // ubicacion inicial mapa de google en seccion domicilio
-        // Por defecto el mapa se posiciona referenciando al centro de salud actual
-        // this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
-        //     if (point) {
-        //         this.geoReferenciaAux = [point.lat, point.lng];
-        //         this.infoMarcador = this.auth.organizacion.nombre;
-        //     }
-        // });
     }
 
     private updateTitle(nombre: string) {
@@ -539,5 +542,13 @@ export class ExtranjeroNNCruComponent implements OnInit {
     changeCoordenadas(coordenadas) {
         this.geoReferenciaAux = coordenadas;    // Se actualiza vista del mapa
         this.pacienteModel.direccion[0].geoReferencia = coordenadas;    // Se asigna nueva georeferencia al paciente
+    }
+
+    checkDisableGeolocalizar(direccion) {
+        if (direccion.value) {
+            this.disableGeolocalizar = false;
+        } else {
+            this.disableGeolocalizar = true;
+        }
     }
 }

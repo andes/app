@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { IPaciente } from '../interfaces/IPaciente';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 import { PacienteBuscarResultado } from '../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
@@ -25,7 +25,7 @@ import { Router, ActivatedRoute } from '@angular/router';
     selector: 'apps/mpi/bebe',
     templateUrl: 'bebe-cru.html'
 })
-export class BebeCruComponent implements OnInit {
+export class BebeCruComponent implements AfterViewInit {
 
     direccion: IDireccion = {
         valor: '',
@@ -147,7 +147,7 @@ export class BebeCruComponent implements OnInit {
     }
 
 
-    ngOnInit() {
+    ngAfterViewInit() {
         this.opcionesSexo = enumerados.getObjSexos();
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.route.params.subscribe(params => {
@@ -178,7 +178,8 @@ export class BebeCruComponent implements OnInit {
                 if (org.direccion.geoReferencia) {
                     this.geoReferenciaAux = org.direccion.geoReferencia;
                 } else {
-                    this.organizacionService.getGeoreferencia(this.auth.organizacion.id).subscribe(point => {
+                    let direccionCompleta = org.direccion.valor + ', ' + this.localidadActual.nombre + ', ' + this.provinciaActual.nombre;
+                    this.georeferenciaService.getGeoreferencia({ direccion: direccionCompleta }).subscribe(point => {
                         if (point) {
                             this.geoReferenciaAux = [point.lat, point.lng];
                         }
