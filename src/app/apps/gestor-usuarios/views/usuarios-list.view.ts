@@ -42,8 +42,6 @@ export class UsuariosListComponent implements OnInit {
 
 
     ngOnInit() {
-        this.verPerfiles = this.auth.check('usuarios:perfiles:?') || this.auth.check('global:usuarios:perfiles:?');
-
         this.plex.updateTitle([{
             route: '/inicio',
             name: 'Andes'
@@ -121,6 +119,7 @@ export class UsuariosListComponent implements OnInit {
             cache()
         );
     }
+
     get isNewDisabled() {
         return !/^\d{7,8}$/.test(this.search);
 

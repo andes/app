@@ -62,35 +62,37 @@
     <plex-layout-sidebar>
         <ng-container *ngIf="userSelected; else noSelected">
             <gestor-usarios-usuario-detalle [usuario]="userSelected"></gestor-usarios-usuario-detalle>
-            <hr>
             <ng-container *ngIf="{ 
                             orgList: orgList$ | async, 
                             organizacionesParaAgregar: organizacionesParaAgregar$ | async  
                         } as data">
                 <plex-title titulo="Organizaciones">
-                    <ng-container *ngIf="data.organizacionesParaAgregar?.length > 0">
-                        <plex-button type="success" size="sm" (click)="toogleAddOrg()"
-                                     *ngIf="!readOnly && !showNewOrgView">
+                    <ng-container *ngIf="data.organizacionesParaAgregar?.length > 0 && !readOnly">
+                        <plex-button type="success" size="sm" (click)="toogleAddOrg()" *ngIf="!showNewOrgView">
                             AGREGAR ORGANIZACION
-                            <!-- <plex-icon name="plus"></plex-icon> -->
                         </plex-button>
-                        <plex-button type="danger" size="sm" (click)="toogleAddOrg()"
-                                     *ngIf="!readOnly && showNewOrgView">
+                        <plex-button type="danger" size="sm" (click)="toogleAddOrg()" *ngIf="showNewOrgView">
                             <plex-icon name="close"></plex-icon>
                         </plex-button>
                     </ng-container>
 
                 </plex-title>
                 <div class="list-group mt-2" *ngIf="!showNewOrgView">
-                    <div class="list-group-item justify-content-between" *ngFor="let org of data.orgList">
-                        <span>{{ org.nombre }}</span>
+                    <div justify class="list-group-item" *ngFor="let org of data.orgList">
+                        {{ org.nombre }}
                         <span>
-                            <plex-button [type]="org.activo ? 'danger' : 'success'" size="sm"
-                                         [title]="org.activo ? 'Desactivar' : 'Activar'" titlePosition="left"
-                                         (click)="toogleActivo(org)" *ngIf="!readOnly">
-                                <plex-icon *ngIf="!org.activo" name="play"></plex-icon>
-                                <plex-icon *ngIf="org.activo" name="pause"></plex-icon>
-                            </plex-button>
+                            <ng-container *ngIf="org.activo && !readOnly">
+                                <plex-button type="danger" size="sm" title="Desactivar" titlePosition="left"
+                                             (click)="toogleActivo(org)">
+                                    <plex-icon name="pause"></plex-icon>
+                                </plex-button>
+                            </ng-container>
+                            <ng-container *ngIf="!org.activo && !readOnly">
+                                <plex-button type="success" size="sm" title="Activar" titlePosition="left"
+                                             (click)="toogleActivo(org)">
+                                    <plex-icon *ngIf="!org.activo" name="play"></plex-icon>
+                                </plex-button>
+                            </ng-container>
                             <plex-button type="warning" size="sm" title="Editar" titlePosition="left"
                                          (click)="edit(org)" *ngIf="!readOnly">
                                 <plex-icon name="pencil"></plex-icon>
