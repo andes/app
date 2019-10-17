@@ -279,6 +279,7 @@ export class ListarSolicitudesComponent implements OnInit {
             });
         } else {
             this.carpetasSeleccionadas = [];
+            this.mostrarMsjMultiCarpeta = false;
         }
         this.verPrestar = false;
     }
@@ -290,12 +291,13 @@ export class ListarSolicitudesComponent implements OnInit {
                     carpeta.organizacion = this.auth.organizacion;
                 });
                 this.prestamosService.prestarCarpetas(this.carpetasSeleccionadas).subscribe(carpeta => {
-                    this.verPrestar = false;
-                    this.plex.toast('success', 'Las carpetas se entregaron correctamente', 'Información', 1000);
-                    this.recargarPrestamosEmit.emit(true);
                     this.getCarpetas({}, null);
-                    this.marcarTodas = false;
                     this.carpetasSeleccionadas = [];
+                    this.verPrestar = false;
+                    this.recargarPrestamosEmit.emit(true);
+                    this.marcarTodas = false;
+                    this.mostrarMsjMultiCarpeta = false;
+                    this.plex.toast('success', 'Las carpetas se entregaron correctamente', 'Información', 1000);
                 });
             }
         });

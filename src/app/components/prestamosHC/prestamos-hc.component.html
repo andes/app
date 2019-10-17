@@ -4,7 +4,7 @@
 
             <plex-tabs *ngIf="!imprimirSolicitudes" (change)="onTabsChange()">
                 <plex-tab label="Solicitudes de Carpetas">
-                    <app-listar-solicitudes (recargarPrestaplmosEmit)="prestamos.getCarpetas({}, null)"
+                    <app-listar-solicitudes (recargarPrestamosEmit)="prestamos.getCarpetas({}, null)"
                         (prestarCarpetaEmitter)="onPrestarCarpeta($event)"
                         (mostrarSolicitudManualEventEmitter)="mostrarSolicitudManual()"
                         (imprimirSolicitudesEmit)="imprimirCarpetas($event)"
