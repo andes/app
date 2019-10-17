@@ -56,6 +56,9 @@ import { RelacionRUPPipe } from './pipes/relacionRUP.pipe';
 import { Html2TextPipe } from './pipes/html2text.pipe';
 
 // Servicios
+
+// Auth
+
 // ... Tablas Maestras
 import { OrganizacionService } from './services/organizacion.service';
 import { OcupacionService } from './services/ocupacion/ocupacion.service';
@@ -72,7 +75,6 @@ import { ParentescoService } from './services/parentesco.service';
 import { ListaEsperaService } from './services/turnos/listaEspera.service';
 import { LogService } from './services/log.service';
 import { LogPacienteService } from './services/logPaciente.service';
-import { PermisosService } from './services/permisos.service';
 import { PrestamosService } from './services/prestamosHC/prestamos-hc.service';
 import { RenaperService } from './services/fuentesAutenticas/servicioRenaper.service';
 import { ConfiguracionPrestacionService } from './services/term/configuracionPrestacion.service';
@@ -320,11 +322,6 @@ import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { VincularPacientesComponent } from './components/auditoria/vincular-pacientes.component';
 // import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
 
-// USUARIO
-import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
-import { UsuarioCreateComponent } from './components/usuario/usuarioCreate.component';
-import { UsuarioUpdateComponent } from './components/usuario/usuarioUpdate.component';
-import { ArbolPermisosComponent } from './components/usuario/arbolPermisos.component';
 
 // REPORTES
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
@@ -509,6 +506,7 @@ import { PasesListadoInternacionComponent } from './apps/rup/internacion/compone
 
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
 import { HUDSService } from './modules/rup/services/huds.service';
+import { GestorUsuariosProvidersModule } from './apps/gestor-usuarios/gestor-usuarios.providers';
 
 /** Configuraciones de entorno */
 import { environment } from '../environments/environment';
@@ -534,6 +532,7 @@ registerLocaleData(localeEs, 'es');
         AgmCoreModule.forRoot({
             apiKey: environment.MAPS_KEY
         }),
+        GestorUsuariosProvidersModule
     ],
     declarations: [
         AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,
@@ -559,7 +558,7 @@ registerLocaleData(localeEs, 'es');
         ArancelamientoFormComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
-        PermisosComponent, ArbolPermisosComponent,
+        PermisosComponent,
         // AuditoriaPorBloqueComponent,
         PuntoInicioComponent,
         VincularPacientesComponent,
@@ -568,7 +567,6 @@ registerLocaleData(localeEs, 'es');
         HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
         TurnosPacienteComponent,
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
-        BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
         ReporteC2Component,
         ConsultaDiagnosticoComponent,
         CantidadConsultaXPrestacionComponent,
@@ -722,7 +720,6 @@ registerLocaleData(localeEs, 'es');
         RenaperService,
         LogPacienteService,
         UsuarioService,
-        PermisosService,
         FrecuentesProfesionalService,
         DocumentosService,
         CamasService,

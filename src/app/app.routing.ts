@@ -63,9 +63,6 @@ import { AuditoriaPrestacionPacienteComponent } from './components/auditoria/pre
 import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 
-// USUARIO
-import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
-
 // REPORTES
 import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
 import { EncabezadoReportesComponent } from './components/reportes/encabezadoReportes.component';
@@ -183,9 +180,6 @@ const appRoutes: Routes = [
   // Préstamos HC
   { path: 'prestamosHC', component: PrestamosHcComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
-  // Gestion de usuarios
-  { path: 'gestionUsuarios', component: BusquedaUsuarioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-
   // formulario terapeutico
   { path: 'formularioTerapeutico', component: FormTerapeuticoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
@@ -218,6 +212,7 @@ const appRoutes: Routes = [
 
   { path: 'estadisticas', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'dashboard', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'gestor-usuarios', loadChildren: './apps/gestor-usuarios/gestor-usuarios.module#GestorUsuariosModule', canActivate: [RoutingNavBar, RoutingGuard] },
   // Campañas Salud
   { path: 'campaniasSalud', component: CampaniaSaludComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
