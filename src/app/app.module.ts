@@ -21,6 +21,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 // Global
 import { PlexModule } from '@andes/plex';
@@ -532,6 +533,7 @@ registerLocaleData(localeEs, 'es');
         AgmCoreModule.forRoot({
             apiKey: environment.MAPS_KEY
         }),
+        InfiniteScrollModule,
         GestorUsuariosProvidersModule
     ],
     declarations: [

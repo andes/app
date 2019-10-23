@@ -81,23 +81,23 @@
                             </div>
                         </div>
                     </header>
-
                     <!--Resultados-->
                     <div *ngIf="!agendas?.length" class="alert alert-default">
                         <i class="mdi mdi-emoticon-sad"></i> No hay agendas que coincidan con los filtros de búsqueda
                     </div>
 
-                    <table *ngIf="agendas?.length" class="table table-striped table-sm">
+                    <table *ngIf="agendas?.length" class="table table-striped table-sm table-lista-agendas">
                         <thead>
-                            <th></th>
+                            <th class="small"></th>
                             <th>Fecha y Hora</th>
                             <th>Tipos de prestación</th>
-                            <th class="text-right estado">Estado</th>
+                            <th class="text-right estado medium">Estado</th>
                         </thead>
-                        <tbody>
+                        <tbody infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50"
+                               (scrolled)="onScroll()" [scrollWindow]="false">
                             <tr *ngFor="let agenda of agendas; let i=index" class="hover"
                                 [ngClass]="{'bg-inverse text-white': estaSeleccionada(this.agenda) >= 0}">
-                                <td (click)="verAgenda(agenda, true, $event)">
+                                <td class="small" (click)="verAgenda(agenda, true, $event)">
                                     <i *ngIf="estaSeleccionada(agenda) >= 0" class="mdi mdi-checkbox-marked"></i>
                                     <i *ngIf="!(estaSeleccionada(agenda) >= 0)"
                                        class="mdi mdi-checkbox-blank-outline"></i>
@@ -138,7 +138,8 @@
                                         </ng-container>
                                     </div>
                                 </td>
-                                <td (click)="verAgenda(agenda, false, $event)" class="text-right align-middle estado">
+                                <td (click)="verAgenda(agenda, false, $event)"
+                                    class="text-right align-middle estado medium">
                                     <span class="badge-info float-right" *ngIf="agenda.dinamica">Dinámica</span>
                                     <span class="badge-danger float-right" *ngIf="!agenda.nominalizada">No
                                         Nominalizada</span>
@@ -158,6 +159,7 @@
                         </tbody>
                     </table>
                 </plex-box>
+
             </div>
 
             <!-- Panel derecho -->

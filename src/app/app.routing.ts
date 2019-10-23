@@ -166,7 +166,6 @@ const appRoutes: Routes = [
   { path: 'rup/internacion/censo/mensual', component: CensoMensualComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/internacion/listado', component: ListadoInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/internacion/listaEspera', component: ListaEsperaInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-
   { path: 'rup/plantillas', component: PlantillasRUPComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
 
