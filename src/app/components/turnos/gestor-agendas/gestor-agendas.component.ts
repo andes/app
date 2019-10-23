@@ -23,7 +23,6 @@ import { ISubscription } from 'rxjs/Subscription';
 export class GestorAgendasComponent implements OnInit, OnDestroy {
 
     showReasignarTurnoAgendas: boolean;
-    @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
     private guardarAgendaPanel: ViewContainerRef;
     @ViewChild('guardarAgendaPanel') set setGuardarAgendaPanel(theElementRef: ViewContainerRef) {
