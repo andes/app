@@ -27,6 +27,7 @@ import { InicioComponent } from './components/inicio/inicio.component';
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 import { OrganizacionSectoresComponent } from './components/organizacion/organizacion-sectores.component';
+import { OrganizacionOfertaPrestacionalComponent } from './components/organizacion/organizacion-prestaciones.component';
 
 // ... CITAS
 import { PlanificarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/planificar-agenda.component';
@@ -109,6 +110,7 @@ const appRoutes: Routes = [
   // Tablas maestras
   { path: 'tm/organizacion', component: OrganizacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'tm/organizacion/:id/sectores', component: OrganizacionSectoresComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'tm/organizacion/:id/ofertas_prestacionales', component: OrganizacionOfertaPrestacionalComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'tm/organizacion/cama/:idCama', component: CamaCreateUpdateComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'tm/organizacion/cama', component: CamaCreateUpdateComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'tm/profesional', component: ProfesionalComponent, canActivate: [RoutingNavBar, RoutingGuard] },
