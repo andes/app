@@ -16,8 +16,6 @@ import { SnomedService } from '../../../../services/term/snomed.service';
 import { Subscription } from 'rxjs';
 import { TurneroService } from '../../../turnero/services/turnero.service';
 import { WebSocketService } from '../../../../services/websocket.service';
-import { OrganizacionService } from '../../../../services/organizacion.service';
-
 
 @Component({
     selector: 'rup-puntoInicio',
@@ -45,7 +43,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     // habilita la busqueda del paciente
     public buscandoPaciente = false;
 
-    public index = 0;
     public llamandoTurno = false;
     public volverALlamar = false;
 
@@ -54,8 +51,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     private prestacionesOriginales: any = [];
     public prestacionSeleccion: any;
     public paciente: any;
-    public mostrarBtnTurnero = false;
-    public ultimoLlamado;
+    public ultimoLlamado: any;
 
     public espaciosFisicosTurnero = [];
     // ultima request que se almacena con el subscribe
@@ -73,8 +69,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         public snomed: SnomedService,
         public servicioTipoPrestacion: TipoPrestacionService,
         public servicioTurnero: TurneroService,
-        public ws: WebSocketService,
-        public servicioOrganizacion: OrganizacionService
+        public ws: WebSocketService
     ) { }
 
     ngOnDestroy() {
@@ -112,18 +107,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         }
 
         this.ws.connect();
-        this.servicioTurnero.get({}).subscribe((pantallas) => {
-            pantallas.forEach((pantalla: any) => {
-                pantalla.espaciosFisicos.forEach((ef) => {
-                    let i = this.espaciosFisicosTurnero.findIndex((e) => e === ef.id);
-                    if (i < 0) {
-                        this.espaciosFisicosTurnero.push(ef.id);
-                    }
-                });
-            });
+        this.servicioTurnero.get({'fields': 'espaciosFisicos.id'}).subscribe((pantallas) => {
+            this.espaciosFisicosTurnero = pantallas.reduce((listado, p) => listado.concat(p.espaciosFisicos), []).map((espacio: any) => { return espacio.id; } );
         });
-
-
     }
 
     redirect(pagina: string) {
@@ -343,7 +329,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
         if (this.agendas.length) {
             this.agendaSeleccionada = this.agendas[0];
-            this.index = 0;
             this.volverALlamar = false;
         }
 
@@ -502,14 +487,10 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     cargarTurnos(agenda) {
         this.cancelarDinamica();
         this.agendaSeleccionada = agenda ? agenda : 'fueraAgenda';
-        if (agenda && agenda.espacioFisico && agenda.espacioFisico.id) {
-            let i = this.espaciosFisicosTurnero.findIndex((e) => e === agenda.espacioFisico.id);
-            if (i >= 0) {
-                this.mostrarBtnTurnero = true;
-                return;
-            }
-        }
-        this.mostrarBtnTurnero = false;
+    }
+
+    mostrarBotonTurnero(agenda) {
+        return (agenda && agenda.espacioFisico && agenda.espacioFisico.id && (this.espaciosFisicosTurnero.findIndex((e) => e === agenda.espacioFisico.id) >= 0));
     }
 
     routeTo(action, id) {

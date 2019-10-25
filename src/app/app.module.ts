@@ -540,8 +540,7 @@ registerLocaleData(localeEs, 'es');
             apiKey: environment.MAPS_KEY
         }),
         InfiniteScrollModule,
-        GestorUsuariosProvidersModule,
-        TurneroModule.forRoot()
+        GestorUsuariosProvidersModule
     ],
     declarations: [
         AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,

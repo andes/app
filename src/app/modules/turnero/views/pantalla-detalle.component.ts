@@ -1,9 +1,9 @@
-import { Plex } from '@andes/plex';
 import { Component, OnInit, OnDestroy, EventEmitter, Output, Input } from '@angular/core';
-import { PantallaService } from '../services/pantalla.service';
+import { Plex } from '@andes/plex';
 import { Location } from '@angular/common';
 import { Auth } from '@andes/auth';
 import { Unsubscribe } from '@andes/shared';
+import { PantallaService } from '../services/pantalla.service';
 
 @Component({
     selector: 'pantalla-detalle',
