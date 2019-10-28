@@ -284,7 +284,7 @@ export class HudsBusquedaComponent implements OnInit {
 
             this.servicioPrestacion.getByPacienteSolicitud(this.paciente.id).subscribe((solicitudes) => {
                 this.solicitudes = solicitudes;
-                this.servicioPrestacion.getSolicitudes({ idPaciente: this.paciente.id, origenTOP: true }).subscribe((solicitudesTOP) => {
+                this.servicioPrestacion.getSolicitudes({ idPaciente: this.paciente.id, origen: 'top' }).subscribe((solicitudesTOP) => {
                     this.solicitudesTOP = solicitudesTOP;
                     this.cargarSolicitudesMezcladas();
                 });
