@@ -25,6 +25,9 @@ export class HudsBusquedaComponent implements OnInit {
     hallazgosCronicosAux: any[];
     hallazgosNoActivosAux: any;
     filtroActual: any = 'planes';
+
+    solicitudesMezcladas = [];
+
     public loading = false;
 
     public cdas = [];
@@ -202,6 +205,7 @@ export class HudsBusquedaComponent implements OnInit {
             case 'concepto':
                 registro.class = this.servicioPrestacion.getCssClass(registro.concepto, null);
                 if (registro.esSolicitud) {
+                    registro.tipo = 'solicitud';
                     registro.class = 'plan';
                 }
                 break;
@@ -280,16 +284,26 @@ export class HudsBusquedaComponent implements OnInit {
 
             this.servicioPrestacion.getByPacienteSolicitud(this.paciente.id).subscribe((solicitudes) => {
                 this.solicitudes = solicitudes;
+                this.servicioPrestacion.getSolicitudes({ idPaciente: this.paciente.id, origenTOP: true }).subscribe((solicitudesTOP) => {
+                    this.solicitudesTOP = solicitudesTOP;
+                    this.cargarSolicitudesMezcladas();
+                });
             });
-            this.servicioPrestacion.getSolicitudes({ idPaciente: this.paciente.id, origenTOP: true }).subscribe((solicitudesTOP) => {
-                this.solicitudesTOP = solicitudesTOP;
-            });
+        });
+    }
+
+    private cargarSolicitudesMezcladas() {
+        this.solicitudesMezcladas = this.solicitudes.concat(this.solicitudesTOP);
+        this.solicitudesMezcladas.sort((e1, e2) => {
+                let fecha1 = e1.fechaEjecucion ? e1.fechaEjecucion : e1.solicitud.fecha;
+                let fecha2 = e2.fechaEjecucion ? e2.fechaEjecucion : e2.solicitud.fecha;
+                return fecha2 - fecha1;
         });
     }
 
     // Trae los procedimientos registrados para el paciente
     listarProcedimientos() {
-        this.servicioPrestacion.getByPacienteProcedimiento(this.paciente.id, true).subscribe(procedimientos => {
+        this.servicioPrestacion.getByPacienteProcedimiento(this.paciente.id).subscribe(procedimientos => {
             this.procedimientos = procedimientos;
             this.procedimientosCopia = procedimientos;
         });
@@ -297,7 +311,7 @@ export class HudsBusquedaComponent implements OnInit {
 
     // Trae los medicamentos registrados para el paciente
     listarMedicamentos() {
-        this.servicioPrestacion.getByPacienteMedicamento(this.paciente.id, true).subscribe(medicamentos => {
+        this.servicioPrestacion.getByPacienteMedicamento(this.paciente.id).subscribe(medicamentos => {
             this.productos = medicamentos;
             this.productosCopia = medicamentos;
         });
@@ -352,7 +366,7 @@ export class HudsBusquedaComponent implements OnInit {
             case 'vacunas':
                 return this.vacunas.length;
             case 'solicitudes':
-                return this.solicitudes.length + this.solicitudesTOP.length;
+                return this.solicitudesMezcladas.length;
         }
     }
 
@@ -395,5 +409,9 @@ export class HudsBusquedaComponent implements OnInit {
             this.prestaciones = this.prestaciones.filter(p => p.fecha >= moment(this.fechaInicio).startOf('day').toDate() &&
                 p.fecha <= moment(this.fechaFin).endOf('day').toDate());
         }
+    }
+
+    clickSolicitud(registro) {
+        this.emitTabs(registro, (registro.evoluciones ? 'concepto' : 'solicitud'));
     }
 }

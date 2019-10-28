@@ -329,52 +329,32 @@ export class PrestacionesService {
      * Método getByPacienteHallazgo lista todo los hallazgos registrados del paciente
      * @param {String} idPaciente
      */
-    getByPacienteHallazgo(idPaciente: any, soloValidados?: boolean): Observable<any[]> {
-        return this.getConceptosByPaciente(idPaciente, true).pipe(map((registros) => {
-            return registros.filter((reg) => {
-                return PrestacionesService.SemanticTags.hallazgo.find(e => e === reg.concepto.semanticTag);
-            });
-        }));
+    getByPacienteHallazgo(idPaciente: any): Observable<any[]> {
+        return this.getConceptosByPaciente(idPaciente, true).pipe(map(r => r.filter(reg => PrestacionesService.SemanticTags.hallazgo.find(e => e === reg.concepto.semanticTag))));
     }
 
-    getByPacienteTrastorno(idPaciente: any, soloValidados?: boolean): Observable<any[]> {
-        return this.getConceptosByPaciente(idPaciente, true).pipe(map((registros) => {
-            return registros.filter((reg) => {
-                return PrestacionesService.SemanticTags.trastorno.find(e => e === reg.concepto.semanticTag);
-            });
-        }));
+    getByPacienteTrastorno(idPaciente: any): Observable<any[]> {
+        return this.getConceptosByPaciente(idPaciente, true).pipe(map(r => r.filter(reg => PrestacionesService.SemanticTags.trastorno.find(e => e === reg.concepto.semanticTag))));
     }
 
-    getByPacienteProcedimiento(idPaciente: any, soloValidados?: boolean) {
-        return this.getConceptosByPaciente(idPaciente, true).pipe(map((registros) => {
-            return registros.filter((reg) => {
-                return PrestacionesService.SemanticTags.procedimiento.find(e => e === reg.concepto.semanticTag && !reg.esSolicitud);
-            });
-        }));
+    getByPacienteProcedimiento(idPaciente: any) {
+        return this.getConceptosByPaciente(idPaciente, true).pipe(map(r => r.filter(reg => PrestacionesService.SemanticTags.procedimiento.find(e => e === reg.concepto.semanticTag && !reg.esSolicitud))));
     }
 
     /**
      * Método getByPacienteSolicitud lista todas las solicitudes registrados del paciente
      * @param {String} idPaciente
      */
-    getByPacienteSolicitud(idPaciente: any, soloValidados?: boolean) {
-        return this.getConceptosByPaciente(idPaciente, true).pipe(map((registros) => {
-            return registros.filter((reg) => {
-                return PrestacionesService.SemanticTags.procedimiento.find(e => e === reg.concepto.semanticTag && reg.esSolicitud);
-            });
-        }));
+    getByPacienteSolicitud(idPaciente: any) {
+        return this.getConceptosByPaciente(idPaciente, true).pipe(map(r => r.filter((reg) => PrestacionesService.SemanticTags.procedimiento.find(e => e === reg.concepto.semanticTag && reg.esSolicitud))));
     }
 
     /**
      * Método getByPacienteMedicamento lista todos los medicamentos registrados del paciente
      * @param {String} idPaciente
      */
-    getByPacienteMedicamento(idPaciente: any, soloValidados?: boolean): Observable<any[]> {
-        return this.getConceptosByPaciente(idPaciente, true).pipe(map((registros) => {
-            return registros.filter((reg) => {
-                return PrestacionesService.SemanticTags.producto.find(e => e === reg.concepto.semanticTag);
-            });
-        }));
+    getByPacienteMedicamento(idPaciente: any): Observable<any[]> {
+        return this.getConceptosByPaciente(idPaciente, true).pipe(map(r => r.filter((reg) => PrestacionesService.SemanticTags.producto.find(e => e === reg.concepto.semanticTag))));
     }
 
     getCDAByPaciente(idPaciente, conceptId = null) {
@@ -393,7 +373,7 @@ export class PrestacionesService {
      * @param {String} idPaciente
      */
     getUnTrastornoPaciente(idPaciente: any, concepto: any): Observable<any> {
-        return this.getByPacienteTrastorno(idPaciente, true).pipe(map(hallazgos => {
+        return this.getByPacienteTrastorno(idPaciente).pipe(map(hallazgos => {
             return hallazgos.find(registro => {
                 if ((registro.concepto.conceptId === concepto.conceptId) && (registro.evoluciones[0].esCronico || registro.evoluciones[0].estado === 'activo')) {
                     return registro;

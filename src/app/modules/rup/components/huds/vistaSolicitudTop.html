@@ -53,11 +53,11 @@
                             <span>{{motivoRechazo}}</span>
                         </ng-container>
                         <b>Archivos Adjuntos</b>
-                        <rup-adjuntar-documento *ngIf="registro?.solicitud?.registros[0].valor.documentos.length"
+                        <rup-adjuntar-documento *ngIf="registro?.solicitud?.registros[0].valor.documentos?.length"
                                                 [permiteCarga]="false"
                                                 [parametroRegistro]="registro.solicitud.registros[0]">
                         </rup-adjuntar-documento>
-                        <small *ngIf="!registro?.solicitud?.registros[0].valor.documentos.length">(Sin documentos
+                        <small *ngIf="!registro?.solicitud?.registros[0].valor.documentos?.length">(Sin documentos
                             adujuntos)</small>
                     </div>
                 </div>

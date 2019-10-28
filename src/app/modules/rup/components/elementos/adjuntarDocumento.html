@@ -36,11 +36,11 @@
                                 <td>
                                     <a (click)="activaLightbox(i)">
                                         <div class="image hover">
-                                            <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
-                                            <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)"
-                                               class="adjunto">
-                                                {{ doc.ext }}
-                                            </a>
+                                                <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
+                                                <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)"
+                                                class="adjunto">
+                                                    {{ doc.ext }}
+                                                </a>
                                         </div>
                                     </a><br>
                                     <p class="text-center small">{{doc.ext}}</p>
@@ -84,9 +84,9 @@
                 <ng-container *ngFor="let doc of registro.valor.documentos; let i = index">
                     <a (click)="activaLightbox(i)">
                         <div class="image hover">
-                            <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
-                            <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto">
-                                {{ doc.ext }}
+                            <a [href]="createUrl(doc)" target="_blank" class="{{!esImagen(doc.ext) ? 'adjunto' : ''}} ">
+                                <ng-container *ngIf="!esImagen(doc.ext)">{{ doc.ext }}</ng-container>  
+                                <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
                             </a>
                         </div>
                     </a>
