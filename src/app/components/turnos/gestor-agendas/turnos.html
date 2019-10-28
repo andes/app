@@ -138,20 +138,67 @@
                     </tr>
                 </tbody>
             </table>
+            <!--Configuración inicial de agenda-->
+            <div class="row" *ngIf="bloque.descripcion || bloque.citarPorBloque || bloque.pacienteSimultaneos">
+                <div class="col-md">
+                    <plex-help type="help" icon="information-variant" titulo="Configuración inicial del bloque">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="container mt-2 mb-2">
+                                    <div class="row" justify>
+                                        <div class="col">
+                                            <span>
+                                                <h2 class="text-info">
+                                                    {{bloque.accesoDirectoDelDia ? bloque.accesoDirectoDelDia : 0}}</h2>
+                                                <span class="small">Turnos <br><b>del día</b></span>
+                                            </span>
+                                        </div>
+                                        <div class="col">
+                                            <span>
+                                                <h2 class="text-info">
+                                                    {{bloque.accesoDirectoProgramado ? bloque.accesoDirectoProgramado : 0}}
+                                                </h2>
+                                                <span class="small">Turnos <br><b>programados</b></span>
+                                            </span>
+                                        </div>
+                                        <div class="col">
+                                            <span>
+                                                <h2 class="text-info">
+                                                    {{bloque.reservadoProfesional ? bloque.reservadoProfesional : 0}}
+                                                </h2>
+                                                <span class="small">Turnos <br><b>profesional</b></span>
+                                            </span>
+                                        </div>
+                                        <div class="col">
+                                            <span>
+                                                <h2 class="text-info">
+                                                    {{bloque.reservadoGestion ? bloque.reservadoGestion : 0}}</h2>
+                                                <span class="small">Turnos <br><b>con llave</b></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </plex-help>
+                    <hr>
+                </div>
+            </div>
             <table class="table">
-                <thead *ngIf="bloque.descripcion || bloque.citarPorBloque">
-                    <tr>
-                        <th *ngIf="!agenda.nominalizada && bloque.descripcion">{{bloque.descripcion}} de {{
+                <tr *ngIf="bloque.descripcion || bloque.citarPorBloque || bloque.pacienteSimultaneos">
+                    <td *ngIf="!agenda.nominalizada && bloque.descripcion"><b>{{bloque.descripcion}} de {{
                             bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin | date: 'HH:mm'}}
-                            hs
-                        </th>
-                        <th *ngIf="agenda.nominalizada && bloque.descripcion">{{bloque.descripcion}}
-                        </th>
-                        <th *ngIf="bloque.citarPorBloque">
-                            <span class="text-info">Citación por segmento</span>
-                        </th>
-                    </tr>
-                </thead>
+                            hs</b>
+                    </td>
+                    <td *ngIf="agenda.nominalizada && bloque.descripcion"><b>{{bloque.descripcion}}</b>
+                    </td>
+                    <td justify="end" *ngIf="bloque.pacienteSimultaneos">
+                        <plex-badge type="info"> {{bloque.cantidadSimultaneos}} PACIENTES SIMULTÁNEOS </plex-badge>
+                    </td>
+                    <td justify="end" *ngIf="bloque.citarPorBloque">
+                        <plex-badge type="info"> {{bloque.cantidadBloque}} PACIENTES POR BLOQUE </plex-badge>
+                    </td>
+                </tr>
             </table>
             <table *ngIf="agenda.nominalizada" class="table table-striped">
                 <tbody>
