@@ -65,10 +65,15 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     private lastRequest: Subscription;
     public mostrarReglas = false;
 
-    constructor(
-        private router: Router,
-        private plex: Plex,
-        public auth: Auth,
+    // public dropdownPaciente: DropdownItem[] = [
+    //     { label: 'Autocitación', icon: 'dna', handler: (() => this.crearPrestacion('autocitar')) },
+    //     { label: 'Fuera de Agenda', icon: 'flag', handler: (() => this.crearPrestacion('fueraAgenda')) },
+    //     { divider: true },
+    //     { label: 'Item con handler', icon: 'wrench', handler: (() => this.verHuds()) }
+    // ];
+
+    constructor(private router: Router,
+        private plex: Plex, public auth: Auth,
         public servicioAgenda: AgendaService,
         public servicioPrestacion: PrestacionesService,
         public servicePaciente: PacienteService,
