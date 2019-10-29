@@ -1,114 +1,62 @@
-<section>
-    <div class="row">
-        <div class="col-6 h-100">
-            <plex-box>
-                <!-- Box header -->
-                <header>
-                    <div class="clearfix">
-                        <div class="page-title float-left">Punto de inicio | Consultorio</div>
-                        <div justify="end">
-                            <!-- <plex-button title="Mostrar mis reglas" icon="mdi mdi-ruler" [type]="(mostrarReglas) ? 'primary' : 'default'" (click)="mostrarReglas = !mostrarReglas"></plex-button> -->
-                            <plex-button title="Mostrar sólo mis agendas" icon="mdi mdi-calendar-multiple-check"
-                                         [type]="(soloMisAgendas) ? 'primary' : 'default'"
-                                         (click)="soloMisAgendas = true; filtrar()"></plex-button>
-                            <plex-button title="Mostrar todas las agendas" icon="mdi mdi-asterisk"
-                                         [type]="(!soloMisAgendas) ? 'primary' : 'default'"
-                                         (click)="soloMisAgendas = false; filtrar()"></plex-button>
-                        </div>
-                    </div>
+<plex-layout main="6">
+    <plex-layout-main>
+        <!-- Box header -->
+        <header>
+            <div class="clearfix">
+                <div class="page-title float-left">Punto de inicio | Consultorio</div>
+                <div justify="end">
+                    <!-- <plex-button title="Mostrar mis reglas" icon="mdi mdi-ruler" [type]="(mostrarReglas) ? 'primary' : 'default'" (click)="mostrarReglas = !mostrarReglas"></plex-button> -->
+                    <plex-button title="Mostrar sólo mis agendas" icon="mdi mdi-calendar-multiple-check"
+                                 [type]="(soloMisAgendas) ? 'primary' : 'default'"
+                                 (click)="soloMisAgendas = true; filtrar()"></plex-button>
+                    <plex-button title="Mostrar todas las agendas" icon="mdi mdi-asterisk"
+                                 [type]="(!soloMisAgendas) ? 'primary' : 'default'"
+                                 (click)="soloMisAgendas = false; filtrar()"></plex-button>
+                </div>
+            </div>
 
-                    <!-- Filtros -->
-                    <div class="row">
-                        <div class="col-4">
-                            <plex-datetime type="date" [(ngModel)]="fecha" (change)="actualizar()" name="horaInicio"
-                                           label="Fecha" [required]="true" skipBy="day">
-                            </plex-datetime>
-                        </div>
-                        <div class="col-3">
-                            <plex-text [(ngModel)]="paciente" (change)="filtrar()" [required]="true"
-                                       label="Buscar paciente"></plex-text>
-                        </div>
-                        <div class="col">
-                            <plex-select [(ngModel)]="prestacionSeleccion" [required]="true" name="nombrePrestacion"
-                                         label="Filtrar por prestación" [data]="tiposPrestacion" labelField="term"
-                                         (change)="filtrar()">
-                            </plex-select>
-                        </div>
-                    </div>
-                </header>
+            <!-- Filtros -->
+            <div class="row">
+                <div class="col-4">
+                    <plex-datetime type="date" [(ngModel)]="fecha" (change)="actualizar()" name="horaInicio"
+                                   label="Fecha" [required]="true" skipBy="day">
+                    </plex-datetime>
+                </div>
+                <div class="col-3">
+                    <plex-text [(ngModel)]="paciente" (change)="filtrar()" [required]="true" label="Buscar paciente">
+                    </plex-text>
+                </div>
+                <div class="col">
+                    <plex-select [(ngModel)]="prestacionSeleccion" [required]="true" name="nombrePrestacion"
+                                 label="Filtrar por prestación" [data]="tiposPrestacion" labelField="term"
+                                 (change)="filtrar()">
+                    </plex-select>
+                </div>
+            </div>
+        </header>
 
-                <!--Resultados-->
-                <table class="table table-striped table-sm">
-                    <thead>
-                        <th>Agenda</th>
-                        <th>Tipos de prestación</th>
-                        <th></th>
-                    </thead>
-                    <!-- No hay agendas -->
-                    <tbody>
-                        <ng-container *ngIf="!agendas.length">
-                            <tr>
-                                <td colspan="3">
-                                    <i class="mdi mdi-emoticon-sad"></i> No hay agendas programadas para este día
-                                </td>
-                            </tr>
-                        </ng-container>
+        <!--Resultados-->
+        <table class="table table-striped table-sm">
+            <thead>
+                <th>Agenda</th>
+                <th>Tipos de prestación</th>
+                <th></th>
+            </thead>
+            <tbody>
+                <ng-container *ngIf="!agendas.length">
+                    <tr>
+                        <td colspan="3">
+                            <i class="mdi mdi-emoticon-sad"></i> No hay agendas programadas para este día
+                        </td>
+                    </tr>
+                </ng-container>
 
-                        <!-- Listado de agendas -->
 
-                        <ng-container *ngIf="agendas.length">
-                            <ng-container *ngFor="let agenda of agendas; let i=index">
-                                <tr class="hover" [ngClass]="{'bg-inverse text-white': agendaSeleccionada == agenda}"
-                                    (click)="cargarTurnos(this.agenda)"
-                                    *ngIf="agenda.dinamica || getCantidadPacientes(agenda) || agenda.tipoPrestaciones[0].noNominalizada">
-
-                                    <td>
-                                        <div>
-                                            {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}}
-                                            hs
-                                            <span *ngIf="agenda.nota">
-                                                <i title="{{agenda.nota}}" class="mdi mdi-comment"></i>
-                                            </span>
-                                        </div>
-                                        <div>
-                                            <span
-                                                  *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
-                                            <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio
-                                                físico no asignado</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
-                                            {{tipoPrestacion.nombre}}
-                                        </div>
-                                        <div>
-                                            <span *ngIf="agenda.profesionales?.length == 0"
-                                                  class="text-danger">Profesional
-                                                no asignado</span>
-                                            <ng-container *ngIf="agenda.profesionales">
-                                                <div *ngFor="let profesional of agenda.profesionales">
-                                                    {{profesional | profesional}}
-                                                </div>
-                                            </ng-container>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <ng-container
-                                                      *ngIf="agenda.estado !== 'disponible' && !agenda.tipoPrestaciones[0].noNominalizada">
-                                            <span class="badge-info float-right">pacientes
-                                                {{getCantidadPacientes(agenda)}}
-                                                <ng-container *ngIf="!agenda.dinamica">/ {{agenda.cantidadTurnos}}
-                                                </ng-container>
-                                            </span>
-                                        </ng-container>
-                                        <ng-container *ngIf="agenda.tipoPrestaciones[0].noNominalizada">
-                                            <span class="badge-info float-right">No nominalizada
-                                            </span>
-                                        </ng-container>
-                                    </td>
-                                </tr>
-                            </ng-container>
-                        </ng-container>
+                <ng-container *ngIf="agendas.length">
+                    <ng-container *ngFor="let agenda of agendas; let i=index">
+                        <tr class="hover" [ngClass]="{'bg-inverse text-white': agendaSeleccionada == agenda}"
+                            (click)="cargarTurnos(this.agenda)"
+                            *ngIf="agenda.dinamica || getCantidadPacientes(agenda) || agenda.tipoPrestaciones[0].noNominalizada">
 
                             <td>
                                 <div>
@@ -120,255 +68,35 @@
                                 </div>
                                 <div>
                                     <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
-                                    <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">
-                                        Espacio físico no asignado
-                                    </span>
+                                    <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio
+                                        físico no asignado</span>
                                 </div>
                             </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </plex-box>
-        </div>
-
-        <div class="col h-100" *ngIf="mostrarReglas">
-            <plex-box>
-                <fieldset>
-                    <legend>Mis reglas de Solicitudes</legend>
-                </fieldset>
-                <ng-container>
-                    <div class="row">
-                        <div class="col-12">
-                            <visualizacion-reglas [esParametrizado]="true"></visualizacion-reglas>
-                        </div>
-                    </div>
-                </ng-container>
-            </plex-box>
-        </div>
-        <div class="col h-100" *ngIf="!mostrarReglas">
-            <dinamica *ngIf="buscandoPaciente" [agenda]="agendaSeleccionada" (cancel)="cancelarDinamica()"></dinamica>
-
-            <plex-box *ngIf="!buscandoPaciente">
-                <!-- <fieldset>
-                    <legend>Detalle de la agenda</legend>
-                </fieldset> -->
-                <div>
-                    <plex-help type="help" icon="information" titulo="Reglas TOP" tituloBoton="Reglas TOP" size="sm">
-                        <visualizacion-reglas [esParametrizado]="true"></visualizacion-reglas>
-                    </plex-help>
-                </div>
-
-                <ng-container
-                              *ngIf="agendaSeleccionada && agendaSeleccionada !== 'fueraAgenda' && (agendaSeleccionada.dinamica || getCantidadPacientes(agendaSeleccionada) || agendaSeleccionada.tipoPrestaciones[0].noNominalizada)">
-                    <div class="row">
-                        <div class="col-12">
-                            <ng-container>
-                                {{ agendaSeleccionada.horaInicio | date: 'EEE' }}
-                                {{ agendaSeleccionada.horaInicio | fecha}},
-                                {{ agendaSeleccionada.horaInicio | date: 'HH:mm'}} a
-                                {{ agendaSeleccionada.horaFin | date: 'HH:mm'}} hs
-                                <span class="badge-info" *ngIf="agendaSeleccionada.dinamica">
-                                    Dinámica
-                                </span>
-                                <div *ngFor="let tipoPrestacion of agendaSeleccionada.tipoPrestaciones">
+                            <td>
+                                <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
                                     {{tipoPrestacion.nombre}}
                                 </div>
-
-                                <div *ngIf="agendaSeleccionada.nota" class="alert alert-info">
-                                    <i class="mdi mdi-comment mr-3"></i>
-                                    {{ agendaSeleccionada.nota }}
+                                <div>
+                                    <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional
+                                        no asignado</span>
+                                    <ng-container *ngIf="agenda.profesionales">
+                                        <div *ngFor="let profesional of agenda.profesionales">
+                                            {{profesional | profesional}}
+                                        </div>
+                                    </ng-container>
                                 </div>
-                            </ng-container>
-                        </div>
-                    </div>
-
-                    <!--SobreTurnos-->
-                    <table *ngFor="let bloque of agendaSeleccionada.bloques" class="table table-striped">
-                        <thead *ngIf="bloque.descripcion">
-                            <tr>
-                                <th *ngIf="!agendaSeleccionada.nominalizada" colspan="4">
-                                    {{bloque.descripcion}} de {{ bloque.horaInicio | date: 'HH:mm'}} a {{
-                                    bloque.horaFin | date: 'HH:mm'}} hs
-                                </th>
-                                <th *ngIf="agendaSeleccionada.nominalizada" colspan="4">
-                                    {{bloque.descripcion}}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <ng-container *ngFor="let turno of bloque.turnos; let i=index">
-                                <tr *ngIf="turno" class="hover">
-                                    <td>
-                                        <ng-container *ngIf="!agendaSeleccionada.dinamica">
-                                            <strong>{{ turno.horaInicio | date: 'HH:mm' }}</strong>
-                                        </ng-container>
-
-                                        <div *ngIf="turno.prestacion && turno?.prestacion?.estados">
-                                            <br />
-                                            <span *ngIf="turno.asistencia !== 'noAsistio'" class="badge"
-                                                  [ngClass]="{ 'badge-success': turno.prestacion.estados[turno.prestacion.estados.length
-                    - 1].tipo==='validada' , 'badge-warning': turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo==='ejecucion'}">
-                                                {{turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo}}
-                                            </span>
-
-                                        </div>
-                                        <div
-                                             *ngIf="turno && turno.paciente && turno.asistencia && turno.estado !== 'suspendido'">
-
-                                            <span class="badge "
-                                                  [ngClass]="{ 'badge-success': turno.asistencia === 'asistio', 'badge-danger': turno.asistencia === 'noAsistio'} ">
-                                                {{turno.asistencia}} <ng-container *ngIf="turno.horaAsistencia">
-                                                    {{ turno.horaAsistencia | hora }} hs </ng-container>
-                                            </span>
-                                            <br />
-
-                                            <span *ngIf="turno.asistencia === 'noAsistio'">
-                                                <plex-button type="danger btn-sm" icon="mdi mdi-backup-restore"
-                                                             (click)="registrarInasistencia(turno.paciente,agendaSeleccionada, turno.id, 'sacarAsistencia')"
-                                                             title="Revertir cambios">
-                                                </plex-button>
-                                            </span>
-
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span *ngIf="turno.paciente?.id">{{ turno.paciente | paciente }} </span>
-                                        <small>
-                                            <span *ngIf="turno.paciente?.id">
-                                                <br>
-                                                <span *ngIf="turno.paciente.documento !== ''"> DNI
-                                                    {{turno.paciente.documento | number}}</span>
-                                                <span *ngIf="turno.paciente.documento === ''"> Sin documento
-                                                    (temporal)</span>
-                                            </span>
-                                            <span
-                                                  *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores && turno.paciente.carpetaEfectores?.length > 0">
-                                                | Nro Carpeta
-                                                <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">{{
-                                                    carpeta.nroCarpeta }}
-                                                </span>
-                                            </span>
-                                        </small>
-                                        <br
-                                            *ngIf="turno.paciente?.id && turno.tipoPrestacion && agendaSeleccionada.tipoPrestaciones.length > 1">
-                                        <small>
-                                            <span class="text-muted"
-                                                  *ngIf="turno.paciente?.id && turno.tipoPrestacion && agendaSeleccionada.tipoPrestaciones.length > 1">
-                                                {{turno.tipoPrestacion.nombre}}
-                                            </span>
-                                            <ng-container class="text-muted"
-                                                          *ngIf="turno?.prestacion?.solicitud?.profesional">
-                                                <br> Prof.: {{turno.prestacion.solicitud.profesional | profesional}}
-                                            </ng-container>
-                                        </small>
-
-
-                                        <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}"
-                                              *ngIf="turno && turno.estado === 'turnoDoble'">Turno
-                                            Doble
-                                        </span>
-                                        <span class="badge badge-danger"
-                                              *ngIf="turno && turno.estado === 'suspendido'">Suspendido</span>
-                                        <span *ngIf="turno && turno.nota">
-                                            <i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i>
-                                        </span>
-
-                                        <div *ngIf="turno && turno.confirmatedAt">
-                                            <br />
-                                            <span class="badge badge-default"
-                                                  title="{{turno.confirmatedAt | date: 'medium'}}">
-                                                Confirmado
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span *ngIf="turno.prestacion?.turnosPedientes"
-                                              title="Turno autocitado sin asignar" class="badge badge-warning">
-                                            <i class="mdi mdi-message-alert"></i>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <ng-container *ngIf="turno.tipoPrestacion && turno.paciente?.id">
-
-                                            <plex-button size="block" (click)="routeTo('vista', turno.paciente.id)"
-                                                         label="VER HUDS" type="primary btn-sm">
-                                            </plex-button>
-                                            <!--Iniciar una prestacion a partir de una solicitud pendiente (es decir una prestacion en estado pendiente) -->
-                                            <plex-button size="block"
-                                                         *ngIf="!esFutura(agendaSeleccionada) && turno.paciente && turno.estado !== 'suspendido'  && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente' && tienePermisos(turno.tipoPrestacion, turno.prestacion) && verificarAsistencia(turno)"
-                                                         label="INICIAR PRESTACIÓN" type="success btn-sm"
-                                                         (click)="ejecutarPrestacionPendiente(turno.prestacion.id,turno.paciente, turno.tipoPrestacion, turno)">
-                                            </plex-button>
-
-                                            <!--Una agenda futura muestra en boton deshabilitado -->
-                                            <plex-button size="block"
-                                                         *ngIf="esFutura(agendaSeleccionada) && turno.paciente && turno.estado !== 'suspendido'  && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente' && tienePermisos(turno.tipoPrestacion, turno.prestacion) && verificarAsistencia(turno)"
-                                                         label="INICIAR PRESTACIÓN" type="disabled btn-sm"
-                                                         title="Disponible {{diaAgenda(agendaSeleccionada)}}"
-                                                         titlePosition="top"></plex-button>
-
-                                            <plex-button size="block"
-                                                         *ngIf="!esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && turno.paciente && !turno.prestacion && tienePermisos(turno.tipoPrestacion, turno.prestacion) && verificarAsistencia(turno)"
-                                                         label="INICIAR PRESTACIÓN" type="success btn-sm"
-                                                         (click)="iniciarPrestacion(turno.paciente, turno.tipoPrestacion, turno)">
-                                            </plex-button>
-
-                                            <plex-button size="block"
-                                                         *ngIf="esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && turno.paciente && !turno.prestacion && verificarAsistencia(turno)"
-                                                         label="INICIAR PRESTACIÓN" type="disabled btn-sm"
-                                                         title="Disponible {{diaAgenda(agendaSeleccionada)}}"
-                                                         titlePosition="top"></plex-button>
-
-                                            <plex-button size="block"
-                                                         *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(turno.tipoPrestacion,turno.prestacion) && verificarAsistencia(turno)"
-                                                         label="CONTINUAR REGISTRO" type="primary btn-sm"
-                                                         (click)="routeTo('ejecucion', turno.prestacion.id)">
-                                            </plex-button>
-
-                                            <plex-button size="block"
-                                                         *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'validada' && tienePermisos(turno.tipoPrestacion, turno.prestacion)"
-                                                         label="VER RESUMEN" type="success btn-sm"
-                                                         (click)="routeTo('validacion', turno.prestacion.id)">
-                                            </plex-button>
-
-                                            <plex-button size="block"
-                                                         *ngIf="!turno.asistencia && !esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && turno.paciente && (!turno.prestacion || (turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente') || turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion')"
-                                                         type="warning btn-sm" label="REGISTRAR INASISTENCIA"
-                                                         (click)="registrarInasistencia(turno.paciente,agendaSeleccionada, turno.id, 'noAsistio')">
-                                            </plex-button>
-
-                                        </ng-container>
-                                        <ng-container *ngIf="agendaSeleccionada.tipoPrestaciones[0].noNominalizada">
-                                            <!--TODO -> revisar cuando se defina el estado final de las agendas no nominalizadas agendaSeleccionada.estado !== 'auditada'-->
-                                            <plex-button size="block"
-                                                         *ngIf="!turno.asistencia &&  !esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && !turno.prestacion && tienePermisos(turno.tipoPrestacion, turno.prestacion)"
-                                                         label="INICIAR PRESTACIÓN" type="success btn-sm"
-                                                         (click)="iniciarPrestacionNoNominalizada(turno.tipoPrestacion, turno)">
-                                            </plex-button>
-
-                                            <plex-button size="block"
-                                                         *ngIf="!turno.asistencia &&  esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && !turno.prestacion"
-                                                         label="INICIAR PRESTACIÓN" type="disabled btn-sm"
-                                                         title="Disponible {{diaAgenda(agendaSeleccionada)}}"
-                                                         titlePosition="top"></plex-button>
-
-                                            <plex-button size="block"
-                                                         *ngIf="turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(turno.tipoPrestacion,turno.prestacion)"
-                                                         label="CONTINUAR REGISTRO" type="primary btn-sm"
-                                                         (click)="routeTo('ejecucion', turno.prestacion.id)">
-                                            </plex-button>
-
-                                            <plex-button size="block"
-                                                         *ngIf="turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'validada' && tienePermisos(turno.tipoPrestacion, turno.prestacion)"
-                                                         label="VER RESUMEN" type="success btn-sm"
-                                                         (click)="routeTo('validacion', turno.prestacion.id)">
-                                            </plex-button>
+                            </td>
+                            <td>
+                                <ng-container
+                                              *ngIf="agenda.estado !== 'disponible' && !agenda.tipoPrestaciones[0].noNominalizada">
+                                    <span class="badge-info float-right">pacientes
+                                        {{getCantidadPacientes(agenda)}}
+                                        <ng-container *ngIf="!agenda.dinamica">/ {{agenda.cantidadTurnos}}
                                         </ng-container>
                                     </span>
                                 </ng-container>
                                 <ng-container *ngIf="agenda.tipoPrestaciones[0].noNominalizada">
-                                    <span class="badge-info float-right">
-                                        No nominalizada
+                                    <span class="badge-info float-right">No nominalizada
                                     </span>
                                 </ng-container>
                             </td>
@@ -383,11 +111,8 @@
                     </td>
                     <td colspan="2">
                         <span class="badge-info float-right">
-                            <ng-container *ngIf="fueraDeAgenda.length === 1">
-                                1 paciente
-                            </ng-container>
-                            <ng-container *ngIf="fueraDeAgenda.length > 1">
-                                {{fueraDeAgenda.length}} pacientes
+                            <ng-container *ngIf="fueraDeAgenda.length === 1">1 paciente</ng-container>
+                            <ng-container *ngIf="fueraDeAgenda.length > 1">{{fueraDeAgenda.length}} pacientes
                             </ng-container>
                         </span>
                     </td>
@@ -397,12 +122,26 @@
     </plex-layout-main>
     <plex-layout-sidebar>
         <div>
+            <!-- <div class="col h-100" *ngIf="mostrarReglas">
+            <fieldset>
+                <legend>Mis reglas de Solicitudes</legend>
+            </fieldset>
+            <div class="row">
+                <div class="col-12">
+                    <visualizacion-reglas [esParametrizado]="true"></visualizacion-reglas>
+                </div>
+            </div>
+        </div> -->
             <div class="col h-100" *ngIf="!mostrarReglas">
                 <dinamica *ngIf="buscandoPaciente" [agenda]="agendaSeleccionada" (cancel)="cancelarDinamica()">
                 </dinamica>
 
                 <ng-container *ngIf="!buscandoPaciente">
                     <plex-title justify titulo="Detalles" size="md">
+                        <plex-help type="help" icon="information" titulo="Reglas TOP" tituloBoton="Reglas TOP"
+                                   size="sm">
+                            <visualizacion-reglas [esParametrizado]="true"></visualizacion-reglas>
+                        </plex-help>
                     </plex-title>
 
                     <ng-container
@@ -429,20 +168,16 @@
                             </div>
                         </div>
 
-
-                        </tbody>
-                    </table>
-                    <ng-container
-                                  *ngIf="agendaSeleccionada.dinamica && !esFutura(agendaSeleccionada) && ((agendaSeleccionada.cupo && agendaSeleccionada.cupo > 0) || agendaSeleccionada.cupo < 0)">
-                        <plex-button label="AGREGAR PACIENTE" type="primary" class="float-right mr-1"
-                                     (click)="buscarPaciente()"></plex-button>
-                    </ng-container>
-                    <ng-container>
-                        <table *ngIf="agendaSeleccionada.sobreturnos" class="table table-striped">
-                            <thead>
-                                <tr *ngIf="agendaSeleccionada.sobreturnos.length > 0">
-                                    <th colspan="4">
-                                        Sobreturnos
+                        <!--SobreTurnos-->
+                        <table *ngFor="let bloque of agendaSeleccionada.bloques" class="table table-striped">
+                            <thead *ngIf="bloque.descripcion">
+                                <tr>
+                                    <th *ngIf="!agendaSeleccionada.nominalizada" colspan="4">
+                                        {{bloque.descripcion}} de {{ bloque.horaInicio | date: 'HH:mm'}} a {{
+                                    bloque.horaFin | date: 'HH:mm'}} hs
+                                    </th>
+                                    <th *ngIf="agendaSeleccionada.nominalizada" colspan="4">
+                                        {{bloque.descripcion}}
                                     </th>
                                 </tr>
                             </thead>
@@ -450,32 +185,26 @@
                                 <ng-container *ngFor="let turno of bloque.turnos; let i=index">
                                     <tr *ngIf="turno" class="hover">
                                         <td>
-                                            <strong>{{ sobreturno.horaInicio | date: 'HH:mm' }}</strong>
-                                            <div
-                                                 *ngIf="sobreturno && sobreturno.prestacion && sobreturno?.prestacion?.estados">
-                                                <span *ngIf="sobreturno.asistencia !== 'noAsistio'" class="badge"
-                                                      [ngClass]="{'badge-success': sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'validada',
-                                                        'badge-warning': sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'ejecucion'}">
-                                                    {{sobreturno.prestacion.estados[sobreturno.prestacion.estados.length
-                                                    - 1].tipo}}
-                                                </span>
+                                            <ng-container *ngIf="!agendaSeleccionada.dinamica">
+                                                <strong>{{ turno.horaInicio | date: 'HH:mm' }}</strong>
+                                            </ng-container>
+
+                                            <div *ngIf="turno.prestacion && turno?.prestacion?.estados">
                                                 <br />
-                                                <span *ngIf="turno.asistencia !== 'noAsistio'" class="badge" [ngClass]="{ 
-                                                          'badge-success': 
-                                                                turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo==='validada', 
-                                                          'badge-warning': 
-                                                                turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo==='ejecucion'
-                                                        }">
+                                                <span *ngIf="turno.asistencia !== 'noAsistio'" class="badge"
+                                                      [ngClass]="{ 'badge-success': turno.prestacion.estados[turno.prestacion.estados.length
+                    - 1].tipo==='validada' , 'badge-warning': turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo==='ejecucion'}">
                                                     {{turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo}}
                                                 </span>
 
                                             </div>
                                             <div
-                                                 *ngIf="sobreturno && sobreturno.paciente && sobreturno.asistencia && sobreturno.estado !== 'suspendido'">
+                                                 *ngIf="turno && turno.paciente && turno.asistencia && turno.estado !== 'suspendido'">
 
-                                                <span class="badge"
-                                                      [ngClass]="{ 'badge-warning': sobreturno.asistencia === 'asistio', 'badge-danger': sobreturno.asistencia === 'noAsistio'}">
-                                                    {{sobreturno.asistencia}}
+                                                <span class="badge "
+                                                      [ngClass]="{ 'badge-success': turno.asistencia === 'asistio', 'badge-danger': turno.asistencia === 'noAsistio'} ">
+                                                    {{turno.asistencia}} <ng-container *ngIf="turno.horaAsistencia">
+                                                        {{ turno.horaAsistencia | hora }} hs </ng-container>
                                                 </span>
                                                 <br />
 
@@ -493,19 +222,16 @@
                                             <small>
                                                 <span *ngIf="turno.paciente?.id">
                                                     <br>
-                                                    <span *ngIf="turno.paciente.documento !== ''">
-                                                        DNI {{turno.paciente.documento | number}}
-                                                    </span>
-                                                    <span *ngIf="turno.paciente.documento === ''">
-                                                        Sin documento (temporal)
-                                                    </span>
+                                                    <span *ngIf="turno.paciente.documento !== ''"> DNI
+                                                        {{turno.paciente.documento | number}}</span>
+                                                    <span *ngIf="turno.paciente.documento === ''"> Sin documento
+                                                        (temporal)</span>
                                                 </span>
                                                 <span
-                                                      *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.carpetaEfectores && sobreturno?.paciente?.carpetaEfectores?.length > 0">
+                                                      *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores && turno.paciente.carpetaEfectores?.length > 0">
                                                     | Nro Carpeta
-                                                    <span
-                                                          *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores | slice:0:1;">
-                                                        {{carpeta.nroCarpeta}}
+                                                    <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">{{
+                                                    carpeta.nroCarpeta }}
                                                     </span>
                                                 </span>
                                             </small>
@@ -518,75 +244,82 @@
                                                 </span>
                                                 <ng-container class="text-muted"
                                                               *ngIf="turno?.prestacion?.solicitud?.profesional">
-                                                    <br>
-                                                    Prof.: {{turno.prestacion.solicitud.profesional | profesional}}
+                                                    <br> Prof.: {{turno.prestacion.solicitud.profesional | profesional}}
                                                 </ng-container>
                                             </small>
 
-                                            <span class="text-muted"
-                                                  *ngIf="sobreturno.paciente?.id && sobreturno.tipoPrestacion">
-                                                <small> {{sobreturno.tipoPrestacion.nombre}} </small>
-                                            </span>
-                                            <ng-container class="text-muted"
-                                                          *ngIf="sobreturno?.prestacion?.solicitud?.profesional">
-                                                <br>
-                                                <small> Prof.: {{sobreturno.prestacion.solicitud.profesional |
-                                                    profesional}}
-                                                </small>
-                                            </ng-container>
 
+                                            <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}"
+                                                  *ngIf="turno && turno.estado === 'turnoDoble'">Turno
+                                                Doble
+                                            </span>
                                             <span class="badge badge-danger"
-                                                  *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</span>
-                                            <span *ngIf="sobreturno && sobreturno.nota">
-                                                <i title="{{sobreturno.nota}}"
+                                                  *ngIf="turno && turno.estado === 'suspendido'">Suspendido</span>
+                                            <span *ngIf="turno && turno.nota">
+                                                <i title="{{turno.nota}}"
                                                    class="text-warning warning mdi mdi-message"></i>
                                             </span>
 
                                             <div *ngIf="turno && turno.confirmatedAt">
                                                 <br />
                                                 <span class="badge badge-default"
-                                                      title="{{sobreturno.confirmatedAt | date: 'medium'}}">
+                                                      title="{{turno.confirmatedAt | date: 'medium'}}">
                                                     Confirmado
                                                 </span>
                                             </div>
                                         </td>
                                         <td>
-                                            <span *ngIf="sobreturno.prestacion?.turnosPedientes"
+                                            <span *ngIf="turno.prestacion?.turnosPedientes"
                                                   title="Turno autocitado sin asignar" class="badge badge-warning">
                                                 <i class="mdi mdi-message-alert"></i>
                                             </span>
                                         </td>
                                         <td>
-                                            <ng-container *ngIf="sobreturno.tipoPrestacion && sobreturno.paciente?.id">
-                                                <plex-button size="block"
-                                                             (click)="routeTo('vista', sobreturno.paciente.id)"
+                                            <ng-container *ngIf="turno.tipoPrestacion && turno.paciente?.id">
+
+                                                <plex-button size="block" (click)="routeTo('vista', turno.paciente.id)"
                                                              label="VER HUDS" type="primary btn-sm">
                                                 </plex-button>
+                                                <!--Iniciar una prestacion a partir de una solicitud pendiente (es decir una prestacion en estado pendiente) -->
                                                 <plex-button size="block"
-                                                             *ngIf="!esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && sobreturno.estado !== 'suspendido' && sobreturno.paciente && !sobreturno.prestacion && tienePermisos(sobreturno.tipoPrestacion) && verificarAsistencia(sobreturno)"
+                                                             *ngIf="!esFutura(agendaSeleccionada) && turno.paciente && turno.estado !== 'suspendido'  && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente' && tienePermisos(turno.tipoPrestacion, turno.prestacion) && verificarAsistencia(turno)"
                                                              label="INICIAR PRESTACIÓN" type="success btn-sm"
-                                                             (click)="iniciarPrestacion(sobreturno.paciente, sobreturno.tipoPrestacion, sobreturno)">
+                                                             (click)="ejecutarPrestacionPendiente(turno.prestacion.id,turno.paciente, turno.tipoPrestacion, turno)">
                                                 </plex-button>
 
+                                                <!--Una agenda futura muestra en boton deshabilitado -->
                                                 <plex-button size="block"
-                                                             *ngIf="esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && sobreturno.estado !== 'suspendido' && sobreturno.paciente && !sobreturno.prestacion && verificarAsistencia(sobreturno)"
+                                                             *ngIf="esFutura(agendaSeleccionada) && turno.paciente && turno.estado !== 'suspendido'  && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente' && tienePermisos(turno.tipoPrestacion, turno.prestacion) && verificarAsistencia(turno)"
                                                              label="INICIAR PRESTACIÓN" type="disabled btn-sm"
-                                                             title="Disponible el {{diaAgenda(agendaSeleccionada)}}"
+                                                             title="Disponible {{diaAgenda(agendaSeleccionada)}}"
                                                              titlePosition="top"></plex-button>
 
                                                 <plex-button size="block"
-                                                             *ngIf="sobreturno.paciente && sobreturno.estado !== 'suspendido' && sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(sobreturno.tipoPrestacion)"
-                                                             label="CONTINUAR REGISTRO" type="primary btn-sm"
-                                                             (click)="routeTo('ejecucion', sobreturno.prestacion.id)">
+                                                             *ngIf="!esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && turno.paciente && !turno.prestacion && tienePermisos(turno.tipoPrestacion, turno.prestacion) && verificarAsistencia(turno)"
+                                                             label="INICIAR PRESTACIÓN" type="success btn-sm"
+                                                             (click)="iniciarPrestacion(turno.paciente, turno.tipoPrestacion, turno)">
                                                 </plex-button>
 
                                                 <plex-button size="block"
-                                                             *ngIf="sobreturno.paciente && sobreturno.estado !== 'suspendido' && sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'validada' && tienePermisos(sobreturno.tipoPrestacion)"
-                                                             label="VER RESUMEN" type="success btn-sm"
-                                                             (click)="routeTo('validacion', sobreturno.prestacion.id)">
-                                                </plex-button>
+                                                             *ngIf="esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && turno.paciente && !turno.prestacion && verificarAsistencia(turno)"
+                                                             label="INICIAR PRESTACIÓN" type="disabled btn-sm"
+                                                             title="Disponible {{diaAgenda(agendaSeleccionada)}}"
+                                                             titlePosition="top"></plex-button>
+
                                                 <plex-button size="block"
-                                                             *ngIf="!sobreturno.asistencia &&!esFutura(agendaSeleccionada)&& agendaSeleccionada.estado !== 'auditada' && sobreturno.estado !== 'suspendido' && sobreturno.paciente && (!sobreturno.prestacion || (sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'pendiente')|| sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'ejecucion')"
+                                                             *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(turno.tipoPrestacion,turno.prestacion) && verificarAsistencia(turno)"
+                                                             label="CONTINUAR REGISTRO" type="primary btn-sm"
+                                                             (click)="routeTo('ejecucion', turno.prestacion.id)">
+                                                </plex-button>
+
+                                                <plex-button size="block"
+                                                             *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'validada' && tienePermisos(turno.tipoPrestacion, turno.prestacion)"
+                                                             label="VER RESUMEN" type="success btn-sm"
+                                                             (click)="routeTo('validacion', turno.prestacion.id)">
+                                                </plex-button>
+
+                                                <plex-button size="block"
+                                                             *ngIf="!turno.asistencia && !esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && turno.paciente && (!turno.prestacion || (turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente') || turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion')"
                                                              type="warning btn-sm" label="REGISTRAR INASISTENCIA"
                                                              (click)="registrarInasistencia(turno.paciente,agendaSeleccionada, turno.id, 'noAsistio')">
                                                 </plex-button>
@@ -779,19 +512,19 @@
                             </table>
                         </ng-container>
                     </ng-container>
-                </ng-container>
-                <!-- Pacientes Fuera de Agenda -->
-                <ng-container *ngIf="agendaSeleccionada && agendaSeleccionada === 'fueraAgenda'">
+                    <!-- Pacientes Fuera de Agenda -->
+                    <ng-container *ngIf="agendaSeleccionada && agendaSeleccionada === 'fueraAgenda'">
 
-                    <!--Turnos-->
-                    <table class="table table-striped">
-                        <tbody>
-                            <tr *ngFor="let prestacion of fueraDeAgenda" class="hover">
-                                <td>
-                                    <strong *ngIf="prestacion">{{ prestacion.solicitud.fecha | date: 'HH:mm' }}</strong>
-                                    <br>
-                                    <span class="badge"
-                                          [ngClass]="{'badge-success': prestacion.estados[prestacion.estados.length - 1].tipo === 'validada',
+                        <!--Turnos-->
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr *ngFor="let prestacion of fueraDeAgenda" class="hover">
+                                    <td>
+                                        <strong
+                                                *ngIf="prestacion">{{ prestacion.solicitud.fecha | date: 'HH:mm' }}</strong>
+                                        <br>
+                                        <span class="badge"
+                                              [ngClass]="{'badge-success': prestacion.estados[prestacion.estados.length - 1].tipo === 'validada',
                                                     'badge-warning': prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'}">
                                             {{prestacion.estados[prestacion.estados.length - 1].tipo}}
                                         </span>
@@ -800,60 +533,29 @@
                                     <td>
                                         <span *ngIf="prestacion && prestacion.paciente">{{ prestacion.paciente | paciente
                                         }} </span>
-                                    <span
-                                          *ngIf="prestacion && prestacion.solicitud.tipoPrestacion.noNominalizada">{{prestacion.solicitud.tipoPrestacion.term}}</span>
-                                    <small>
-                                        <span *ngIf="prestacion && prestacion.paciente">
-                                            <br>
-                                            <span *ngIf="prestacion.paciente.documento !== ''">
-                                                DNI {{prestacion.paciente.documento|number}}
+                                        <span
+                                              *ngIf="prestacion && prestacion.solicitud.tipoPrestacion.noNominalizada">{{prestacion.solicitud.tipoPrestacion.term}}</span>
+                                        <small>
+                                            <span *ngIf="prestacion && prestacion.paciente">
+                                                <br>
+                                                <span *ngIf="prestacion.paciente.documento !== ''">
+                                                    DNI {{prestacion.paciente.documento|number}}
+                                                </span>
+                                                <span *ngIf="prestacion.paciente.documento === ''">
+                                                    Sin documento (temporal)
+                                                </span>
                                             </span>
-                                            <span *ngIf="prestacion.paciente.documento === ''">
-                                                Sin documento (temporal)
-                                            </span>
-                                        </span>
-                                    </small>
-                                    <br />
-                                    <small *ngIf="prestacion && !prestacion.solicitud.tipoPrestacion.noNominalizada"
-                                           class="text-muted">{{prestacion.solicitud.tipoPrestacion.term}}</small>
-                                    <small *ngIf="prestacion && prestacion.solicitud.tipoPrestacion.noNominalizada"
-                                           class="text-muted">No nominalizada</small>
-                                    <ng-container *ngIf="prestacion?.solicitud?.profesional">
-                                        <br> Prof.: {{prestacion.solicitud.profesional | profesional}}
-                                    </ng-container>
-                                </td>
-                                <td>
-
-                                </td>
-                                <td>
-                                    <span *ngIf="prestacion.turnosPedientes" title="Turno autocitado sin asignar"
-                                          class="badge badge-warning">
-                                        <i class="mdi mdi-message-alert"></i>
-                                    </span>
-                                </td>
-                                <td>
-                                    <plex-button size="block"
-                                                 *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada"
-                                                 (click)="routeTo('vista', prestacion.paciente.id)" label="VER HUDS"
-                                                 type="primary btn-sm">
-                                    </plex-button>
-
-                                    <plex-button size="block"
-                                                 *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'"
-                                                 (click)="routeTo('ejecucion', prestacion.id)"
-                                                 label="CONTINUAR REGISTRO" type="success btn-sm">
-                                    </plex-button>
-
-                                    <plex-button size="block"
-                                                 *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'"
-                                                 (click)="routeTo('validacion', prestacion.id)" label="VER RESUMEN"
-                                                 type="success btn-sm">
-                                    </plex-button>
-
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                        </small>
+                                        <br />
+                                        <small *ngIf="prestacion && !prestacion.solicitud.tipoPrestacion.noNominalizada"
+                                               class="text-muted">{{prestacion.solicitud.tipoPrestacion.term}}</small>
+                                        <small *ngIf="prestacion && prestacion.solicitud.tipoPrestacion.noNominalizada"
+                                               class="text-muted">No nominalizada</small>
+                                        <ng-container *ngIf="prestacion?.solicitud?.profesional">
+                                            <br> Prof.: {{prestacion.solicitud.profesional | profesional}}
+                                        </ng-container>
+                                    </td>
+                                    <td>
 
                                     </td>
                                     <td>
@@ -888,17 +590,7 @@
 
                     </ng-container>
 
-        </div>
-        <div class="col-8">
-            <div class="row">
-                <div class="col-12">
-                    <plex-button label="HUDS DE UN PACIENTE" type="primary" class="float-right mr-1"
-                                 (click)="verHuds()"></plex-button>
-                    <plex-button label="PACIENTE FUERA DE AGENDA" type="primary" class="float-right mr-1"
-                                 (click)="crearPrestacion('fueraAgenda')"></plex-button>
-                    <plex-button label="PACIENTE AUTOCITADO" type="primary" class="float-right mr-1"
-                                 (click)="crearPrestacion('autocitar')"></plex-button>
-                </div>
+                </ng-container>
             </div>
 
         </div>
