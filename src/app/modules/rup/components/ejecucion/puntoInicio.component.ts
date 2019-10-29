@@ -15,6 +15,7 @@ import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
 import { Subscription } from 'rxjs';
+import { HUDSService } from '../../services/huds.service';
 import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
 import { WebSocketService } from '../../../../services/websocket.service';
 
@@ -63,12 +64,22 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public espaciosFisicosTurnero = [];
     // ultima request que se almacena con el subscribe
     private lastRequest: Subscription;
-    public mostrarReglas = false;
 
-    constructor(
-        private router: Router,
-        private plex: Plex,
-        public auth: Auth,
+    // motivo acceso a huds (modal)
+    public motivosAccesoHuds = [
+        { id: 'continuidad', nombre: 'Continuidad del cuidado del paciente', valor: true },
+        { id: 'facturación/auditoría', nombre: 'Facturación / Auditoría', valor: false },
+        { id: 'urgencia', nombre: 'Urgencia / Emergencia', valor: false }
+    ];
+    public motivoSelected = this.motivosAccesoHuds[0].nombre;
+    public routeToParams = [];
+    public accesoHudsPrestacion = null;
+    public accesoHudsPaciente = null;
+    public accesoHudsTurno = null;
+
+    constructor(private router: Router,
+        private plex: Plex, public auth: Auth,
+        private hudsService: HUDSService,
         public servicioAgenda: AgendaService,
         public servicioPrestacion: PrestacionesService,
         public servicePaciente: PacienteService,
@@ -357,18 +368,23 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     iniciarPrestacion(paciente, snomedConcept, turno) {
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
-                this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
-                    if (prestacion.error) {
-                        this.plex.info('info', prestacion.error, 'Aviso');
-                    } else {
-                        this.routeTo('ejecucion', prestacion.id);
-                    }
-                }, (err) => {
-                    if (err === 'ya_iniciada') {
-                        this.plex.info('info', 'La prestación ya fue iniciada por otro profesional', 'Aviso');
-                    } else {
-                        this.plex.info('warning', err, 'Error');
-                    }
+                // se obtiene token y loguea el acceso a la huds del paciente
+                this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional.id, turno.id, snomedConcept._id).subscribe(hudsToken => {
+                    localStorage.setItem('huds-token', hudsToken.token);
+
+                    this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
+                        if (prestacion.error) {
+                            this.plex.info('info', prestacion.error, 'Aviso');
+                        } else {
+                            this.routeTo('ejecucion', prestacion.id);
+                        }
+                    }, (err) => {
+                        if (err === 'ya_iniciada') {
+                            this.plex.info('info', 'La prestación ya fue iniciada por otro profesional', 'Aviso');
+                        } else {
+                            this.plex.info('warning', err, 'Error');
+                        }
+                    });
                 });
             } else {
                 return false;
@@ -510,7 +526,11 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             let agenda = this.agendaSeleccionada ? this.agendaSeleccionada : null;
             localStorage.setItem('idAgenda', agenda.id);
         }
-        this.router.navigate(['rup/' + action + '/', id]);
+        if (id) {
+            this.router.navigate(['rup/' + action + '/', id]);
+        } else {
+            this.router.navigate(['rup/' + action]);
+        }
     }
 
     // dada una prestación busca las prestaciones generadas (por planes) que esten pendientes y sin turno asignado.
@@ -591,7 +611,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     /**
        * Ejecutar una prestacion que esta en estado pendiente
     */
-    ejecutarPrestacionPendiente(idPrestacion, paciente, snomedConcept, turno) {
+    ejecutarPrestacionPendiente(prestacion, paciente, snomedConcept, turno) {
         let params: any = {
             op: 'estadoPush',
             ejecucion: {
@@ -605,10 +625,15 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Iniciar Prestación?').then(confirmacion => {
             if (confirmacion) {
-                this.servicioPrestacion.patch(idPrestacion, params).subscribe(prestacion => {
-                    this.router.navigate(['/rup/ejecucion', idPrestacion]);
-                }, (err) => {
-                    this.plex.info('warning', 'No fue posible iniciar la prestación: ' + err, 'ERROR');
+                // se obtiene token y loguea el acceso a la huds del paciente
+                this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, prestacion.term, this.auth.profesional.id, turno, prestacion.id).subscribe(hudsToken => {
+                    localStorage.setItem('huds-token', hudsToken.token);
+
+                    this.servicioPrestacion.patch(prestacion.id, params).subscribe(() => {
+                        this.router.navigate(['/rup/ejecucion', prestacion.id]);
+                    }, (err) => {
+                        this.plex.info('warning', 'No fue posible iniciar la prestación: ' + err, 'ERROR');
+                    });
                 });
             } else {
                 return false;
@@ -683,5 +708,34 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         return !this.esFutura(this.agendaSeleccionada) && this.agendaSeleccionada.estado !== 'auditada' &&
             turno.estado !== 'suspendido' && (!turno.asistencia || (turno.asistencia && turno.asistencia === 'asistio')) &&
             turno.paciente && turno.diagnostico.codificaciones.length === 0;
+    }
+
+    changeMotivoAccesoHuds(seleccion) {
+        this.motivosAccesoHuds.forEach(motivo => {
+            motivo.valor = (motivo.id === seleccion.id) ? true : false;
+        });
+        this.motivoSelected = seleccion.nombre;
+    }
+
+    setRouteToParams(params) {
+        this.routeToParams = params;
+    }
+
+    preAccesoHuds() {
+        this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.accesoHudsPaciente, this.motivoSelected, this.auth.profesional.id, this.accesoHudsTurno, this.accesoHudsPrestacion).subscribe(hudsToken => {
+            if (!this.accesoHudsPaciente && !this.accesoHudsPrestacion && this.routeToParams && this.routeToParams[0] === 'huds') {
+                // Se esta accediendo a 'HUDS DE UN PACIENTE'
+                localStorage.setItem('motivoAccesoHuds', this.motivoSelected);
+                this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
+            } else {
+                // se obtiene token y loguea el acceso a la huds del paciente
+                localStorage.setItem('hudsToken', hudsToken.token);
+                this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
+            }
+            this.routeToParams = [];
+            this.accesoHudsPaciente = null;
+            this.accesoHudsTurno = null;
+            this.accesoHudsPrestacion = null;
+        });
     }
 }

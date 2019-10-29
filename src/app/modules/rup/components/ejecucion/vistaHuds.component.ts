@@ -22,7 +22,8 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
 
     @Output() cambiarPaciente = new EventEmitter<boolean>();
     paciente: IPaciente = null;
-    public activeIndex = 0;
+    public activeIndexPrestacion = 0;
+    public activeIndexResumen = 0;
 
     public mostrarCambiaPaciente = false;
     public registros = [];
@@ -58,11 +59,20 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
             name: 'Historia Única De Salud'
         }]);
 
+        if (!this.auth.profesional && this.auth.getPermissions('huds:?').length <= 0) {
+            this.redirect('inicio');
+        }
+
+        if (!this.auth.profesional && this.auth.getPermissions('huds:?').length > 0) {
+            this.mostrarCambiaPaciente = true;
+        }
+
+
         this.huds.registrosHUDS.subscribe((datos) => {
             if (this.registros.length < datos.length) {
-                this.activeIndex = datos.length + 1;
-            } else if (this.activeIndex > datos.length) {
-                this.activeIndex = this.activeIndex - 1;
+                this.activeIndexPrestacion = datos.length + 1;
+            } else if (this.activeIndexPrestacion > datos.length) {
+                this.activeIndexPrestacion = this.activeIndexPrestacion - 1;
             }
             this.registros = [...datos];
         });
@@ -76,14 +86,6 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         // Limpiar los valores observados al iniciar la ejecución
         // Evita que se autocompleten valores de una consulta anterior
         this.conceptObserverService.destroy();
-
-        if (!this.auth.profesional && this.auth.getPermissions('huds:?').length <= 0) {
-            this.redirect('inicio');
-        }
-
-        if (!this.auth.profesional && this.auth.getPermissions('huds:?').length > 0) {
-            this.mostrarCambiaPaciente = true;
-        }
 
         if (!this.paciente) {
             this.route.params.subscribe(params => {
@@ -130,7 +132,8 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     * @param ruta
     */
     volver() {
-        this.location.back();
+        // this.location.back();
+        this.router.navigate(['/rup']);
     }
 
     evtCambiaPaciente() {

@@ -9,6 +9,7 @@ import { ObraSocialService } from '../../services/obraSocial.service';
 import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
 
 import { Plex } from '@andes/plex';
+import { HUDSService } from '../../modules/rup/services/huds.service';
 @Component({
     selector: 'turnos-prestaciones',
     templateUrl: 'turnos-prestaciones.html',
@@ -39,7 +40,7 @@ export class TurnosPrestacionesComponent implements OnInit {
     constructor(
         private auth: Auth, private plex: Plex,
         private turnosPrestacionesService: TurnosPrestacionesService, public servicioPrestacion: TipoPrestacionService, public serviceProfesional: ProfesionalService,
-        private servicioOS: ObraSocialService, private facturacionAutomaticaService: FacturacionAutomaticaService
+        private servicioOS: ObraSocialService, private facturacionAutomaticaService: FacturacionAutomaticaService, private hudsService: HUDSService
     ) { }
     ngOnInit() {
         this.arrayEstados = [{ id: 'Sin registro de asistencia', nombre: 'Sin registro de asistencia' }, { id: 'Ausente', nombre: 'Ausente' }, { id: 'Presente con registro del profesional', nombre: 'Presente con registro del profesional' }, { id: 'Presente sin registro del profesional', nombre: 'Presente sin registro del profesional' }];
@@ -251,12 +252,17 @@ export class TurnosPrestacionesComponent implements OnInit {
     }
 
     mostrarPrestacion(datos) {
-        this.showPrestacion = true;
-        this.prestacion = datos;
-        this.busquedas.map(item => {
-            item.seleccionada = false;
+        let matriculaProfesional = this.serviceProfesional.get;
+        this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, datos.paciente, 'facturación/auditoría', this.auth.profesional.id, datos.turno._id, datos.turno.tipoPrestacion._id).subscribe(hudsToken => {
+            // se obtiene token y loguea el acceso a la huds del paciente
+            localStorage.setItem('huds-token', hudsToken);
+            this.showPrestacion = true;
+            this.prestacion = datos;
+            this.busquedas.map(item => {
+                item.seleccionada = false;
+            });
+            datos.seleccionada = true;
         });
-        datos.seleccionada = true;
     }
 
     recupero() {

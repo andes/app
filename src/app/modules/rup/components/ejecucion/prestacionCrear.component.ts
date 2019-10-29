@@ -11,6 +11,8 @@ import { IAgenda } from '../../../../interfaces/turnos/IAgenda';
 import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 import { ObraSocialCacheService } from '../../../../services/obraSocialCache.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
+import { HUDSService } from '../../services/huds.service';
+
 @Component({
     templateUrl: 'prestacionCrear.html'
 })
@@ -46,7 +48,7 @@ export class PrestacionCrearComponent implements OnInit {
      */
     public showDarTurnos = false;
 
-    get btnLabel () {
+    get btnLabel() {
         if (this.opcion === 'fueraAgenda') {
             return 'INICIAR PRESTACIÓN';
         } else {
@@ -54,7 +56,7 @@ export class PrestacionCrearComponent implements OnInit {
         }
     }
 
-    btnClick () {
+    btnClick() {
         if (this.opcion === 'fueraAgenda') {
             this.iniciarPrestacion();
         } else {
@@ -69,7 +71,8 @@ export class PrestacionCrearComponent implements OnInit {
         public servicioPrestacion: PrestacionesService,
         public servicioTipoPrestacion: TipoPrestacionService,
         private location: Location,
-        private osService: ObraSocialCacheService) { }
+        private osService: ObraSocialCacheService,
+        private hudsService: HUDSService) { }
 
     ngOnInit() {
         // Carga tipos de prestaciones permitidas para el usuario
@@ -148,6 +151,10 @@ export class PrestacionCrearComponent implements OnInit {
                     fechaNacimiento: this.paciente.fechaNacimiento,
                     obraSocial: obraSocialPaciente
                 };
+                // se obtiene token y loguea el acceso a la huds del paciente
+                this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.paciente, 'Fuera de agenda', this.auth.profesional.id, null, this.tipoPrestacionSeleccionada.id).subscribe(hudsToken => {
+                    localStorage.setItem('huds-token', hudsToken.token);
+                });
             }
             let conceptoSnomed = this.tipoPrestacionSeleccionada;
             let nuevaPrestacion;
@@ -336,7 +343,4 @@ export class PrestacionCrearComponent implements OnInit {
         }
         this.resultadoBusqueda = [];
     }
-    // ----------------------------------
-
-
 }

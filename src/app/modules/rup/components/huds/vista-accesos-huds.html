@@ -1,0 +1,60 @@
+<table class="table table-striped table-sm mt-2">
+    <!-- No hay accesos -->
+    <tbody>
+        <ng-container *ngIf="!accesosHuds?.length">
+            <tr>
+                <td colspan="3">
+                    <i class="mdi mdi-emoticon-sad"></i> No hay accesos a la huds
+                </td>
+            </tr>
+        </ng-container>
+
+        <!-- Listado de accesos -->
+
+        <ng-container *ngFor="let acceso of accesosHuds; let i=index">
+            <tr class="hover md-2" [ngClass]="{'bg-inverse text-white': false}">
+
+                <td>
+                    <div *ngIf="acceso.fecha">
+                        <span class="text-info"><strong>
+                                {{acceso.fecha | date: 'dd/MM/yyyy'}}</strong></span>
+                    </div>
+                    <div>
+                        <span class="text-secondary">{{acceso.fecha | date: 'HH:mm'}}</span>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="acceso.usuario?.nombreCompleto">
+                        <strong>{{acceso.usuario.nombreCompleto}}</strong>
+                    </div>
+                    <div>
+                        <span *ngIf="acceso.matricula" class="text-secondary">Matrícula:
+                            {{acceso.matricula}}</span>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="acceso.motivo">
+                        <strong>Motivo
+                            de consulta</strong>
+                    </div>
+                    <div>
+                        <span *ngIf="acceso.motivo" class="text-secondary">{{acceso.motivo}}</span>
+                    </div>
+                </td>
+                <td>
+                    <ng-container *ngIf="acceso.organizacion && acceso.organizacion.nombre">
+                        <span class="badge-info float-right">
+                            {{acceso.organizacion.nombre}}
+                        </span>
+                    </ng-container>
+                </td>
+                <td>
+                    <ng-container *ngIf="acceso.cliente && acceso.cliente.ip">
+                        <span class="badge-info float-right">{{ acceso.cliente.ip }}
+                        </span>
+                    </ng-container>
+                </td>
+            </tr>
+        </ng-container>
+    </tbody>
+</table>
