@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Type } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs/Rx';
 import { Server } from '@andes/shared';
 
@@ -16,7 +16,7 @@ export class HUDSService {
     private _obsRegistros = new BehaviorSubject<ElementoHUDS[]>([]);
     public registrosHUDS = this._obsRegistros.asObservable();
     public activeTab = -1;
-    private hudsUrl = '/modules/huds/huds-accesos';
+    private hudsUrl = '/modules/huds';
 
     constructor(private server: Server) { }
 
@@ -104,12 +104,12 @@ export class HUDSService {
             idTurno: idTurno,
             idPrestacion: idPrestacion
         };
-        return this.server.post(this.hudsUrl + '/huds-token', paramsToken);
+        return this.server.post(this.hudsUrl + '/token', paramsToken);
 
     }
 
     getAccesos(params: any): Observable<any> {
-        return this.server.get(this.hudsUrl, { params: params });
+        return this.server.get(this.hudsUrl + '/accesos', { params: params });
     }
 
     getHudsToken() {

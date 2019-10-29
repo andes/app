@@ -11,7 +11,6 @@ export class AuthInterceptorService implements HttpInterceptor {
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const token: string = this.hudsService.getHudsToken();
-        console.log('interceptor: ', token);
         let request = req;
 
         return next.handle(request);
