@@ -1,10 +1,11 @@
 
 import { forkJoin as observableForkJoin } from 'rxjs';
-import { Component, OnInit, HostBinding, OnDestroy } from '@angular/core';
+
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { Auth } from '@andes/auth';
-import { Plex } from '@andes/plex';
+import { Plex, DropdownItem } from '@andes/plex';
 import { EstadosAgenda } from './../../../../components/turnos/enums';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
@@ -21,8 +22,7 @@ import { WebSocketService } from '../../../../services/websocket.service';
     selector: 'rup-puntoInicio',
     templateUrl: 'puntoInicio.html'
 })
-export class PuntoInicioComponent implements OnInit, OnDestroy {
-    @HostBinding('class.plex-layout') layout = true;
+export class PuntoInicioComponent implements OnInit {
 
     // Fecha seleccionada
     public fecha: Date = new Date();

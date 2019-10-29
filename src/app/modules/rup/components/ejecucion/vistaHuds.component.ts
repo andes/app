@@ -19,7 +19,6 @@ import { Location } from '@angular/common';
 })
 export class VistaHudsComponent implements OnInit, OnDestroy {
 
-    @HostBinding('class.plex-layout') layout = true;
 
     @Output() cambiarPaciente = new EventEmitter<boolean>();
     paciente: IPaciente = null;
