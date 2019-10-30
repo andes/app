@@ -2,18 +2,24 @@
     <div class="row">
         <div class="col">
             <ng-container *ngIf="!soloValores; else showSoloValores">
-                <plex-radio [(ngModel)]="valor" [data]="options" 
-                            name="binario" [type]="params?.plexRadioType" 
+                <plex-radio [(ngModel)]="valor" [data]="options" name="binario" [type]="params?.plexRadioType"
                             [required]="params?.required" [label]="label" (change)="onChange()">
                 </plex-radio>
-                <plex-text *ngIf="valor && valor === 'Otro'" label="Otro" name="otro" [(ngModel)]="registro.valor.otro" [required]="true">
+                <plex-text *ngIf="valor && (valor === 'Otro' || valor === 'No aplica')" label="Descripción"
+                           name="descripcion" [(ngModel)]="registro.valor.descripcion" [required]="true">
                 </plex-text>
+                <ng-container *ngIf="showOkayOptions">
+                    <plex-radio [(ngModel)]="valor" [data]="okayOptions" name="okayBinario" [label]=""
+                                [type]="params?.plexRadioType" [required]="showOkayOptions"
+                                (change)="onChangeOkayOpt()">
+                    </plex-radio>
+                </ng-container>
             </ng-container>
             <ng-template #showSoloValores>
                 <label>
-                    {{label}} 
+                    {{label}}
                 </label>
-                {{ registro.valor.id !== 'Otro' ? registro.valor.label : registro.valor.otro }}
+                {{ registro.valor.id !== 'Otro' ? registro.valor.label : registro.valor.descripcion }}
             </ng-template>
         </div>
     </div>

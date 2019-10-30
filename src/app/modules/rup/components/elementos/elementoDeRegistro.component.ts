@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
-import { Subscription } from 'rxjs/Subscription';
 import { RupElement } from '.';
 @Component({
     selector: 'rup-ElementoDeRegistroComponent',
@@ -27,11 +26,13 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
     public scopeEliminar: String;
 
     public conceptosPermitidos: any[] = [];
+    public conceptosSeleccionar: any[] = [];
+    public conceptoElegido: any = null;
 
     public itemsRegistros = {};
     // boleean para verificar si estan todos los conceptos colapsados
     public collapse = true;
-
+    public ocultarPanel = false;
     public conceptosTurneables: any[];
     suscriptionBuscador: any;
     seleccionado: any;
@@ -50,6 +51,19 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
                 this.conceptosPermitidos = resultado;
             });
         }
+
+        if (this.params.query) {
+            this.snomedService.getQuery({ expression: this.params.query }).subscribe(resultado => {
+                this.conceptosSeleccionar = resultado.map(r => { r['checked'] = false; return r; });
+                if (this.params.extraQuery) {
+                    // agregamos al resultado las opciones extra, si existieran
+                    this.conceptosSeleccionar = this.conceptosSeleccionar.concat(this.params.extraQuery);
+                    // determinamos visibilidad del panel 'agregar prestaciones asociadas al tratamiento'
+                    this.ocultarPanel = !this.params.extraQuery.some(opt => opt.checked);
+                }
+            });
+        }
+
         this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
             this.conceptosTurneables = conceptosTurneables;
         });
@@ -71,6 +85,32 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
     }
 
 
+    seleccionarOpcion(data) {
+        if (data.checked) {
+            // quitamos los conceptos de la selección
+            this.conceptosSeleccionar.forEach(unConcepto => {
+                unConcepto.checked = false;
+            });
+            this.registro.registros = [];
+            // cargamos el nuevo concepto seleccionado
+            data.checked = true;
+            let esConceptoSnomed = true;
+            // chequeamos si es concepto snomed o una opcion extra del elementoRUP
+            if (this.params && this.params.extraQuery) {
+                this.ocultarPanel = !this.params.extraQuery.some(opt => opt.checked);
+                esConceptoSnomed = this.ocultarPanel;
+            }
+            if (esConceptoSnomed) {
+                this.ejecutarConceptoInside(data);
+            }
+        } else {
+            let indexEncontrado = this.registro.registros.findIndex(r => (data.conceptId === r.concepto.conceptId));
+            this.registro.registros.splice(indexEncontrado, 1);
+            if (this.params && this.params.extraQuery) {
+                this.ocultarPanel = true;
+            }
+        }
+    }
 
     onConceptoDrop(e: any) {
 

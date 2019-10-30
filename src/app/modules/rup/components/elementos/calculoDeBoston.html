@@ -8,19 +8,20 @@
                 <ng-template #showTerm>
                     <label class="text-capitalize">{{ registro.concepto.term }}</label>
                 </ng-template>
-                <plex-radio label="CI" [(ngModel)]="registro?.valor.ci" [data]="opciones" name="CI" type="horizontal" (change)="changeNumber()"
-                    required="true">
+                <plex-radio label="CI" [(ngModel)]="registro?.valor.ci" [data]="opciones" name="CI" type="horizontal"
+                            (change)="changeNumber()" required="true">
                 </plex-radio> <br>
-                <plex-radio label="CT" [(ngModel)]="registro?.valor.ct" [data]="opciones" name="CT" type="horizontal" (change)="changeNumber()"
-                    required="true">
+                <plex-radio label="CT" [(ngModel)]="registro?.valor.ct" [data]="opciones" name="CT" type="horizontal"
+                            (change)="changeNumber()" required="true">
                 </plex-radio><br>
-                <plex-radio label="CD" [(ngModel)]="registro?.valor.cd" [data]="opciones" name="CD" type="horizontal" (change)="changeNumber()"
-                    required="true">
+                <plex-radio label="CD" [(ngModel)]="registro?.valor.cd" [data]="opciones" name="CD" type="horizontal"
+                            (change)="changeNumber()" required="true">
                 </plex-radio>
             </div>
             <div class="col-3">
                 <plex-text label="Resultado test de Boston" [(ngModel)]="valorBoston" name="boston" [readonly]="true">
                 </plex-text>
+                <span *ngIf="evaluacionResultado"> {{ evaluacionResultado }}</span>
             </div>
         </div>
     </ng-container>
