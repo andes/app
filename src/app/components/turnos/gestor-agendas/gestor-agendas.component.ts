@@ -360,6 +360,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showListadoTurnos = false;
         this.showCarpetas = false;
         if (this.parametros) {
+            this.parametros.skip = 0;
+            this.parametros.limit = 15;
             this.getAgendas();
         } else {
             this.loadAgendas();
