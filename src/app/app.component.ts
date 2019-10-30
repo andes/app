@@ -127,7 +127,7 @@ export class AppComponent {
             document.documentElement.style.setProperty(`--${key}`, PROPERTIES[key]);
         });
 
-        let token = window.sessionStorage.getItem('jwt');
+        let token = this.auth.getToken();
         if (token) {
             this.ws.setToken(token);
         }

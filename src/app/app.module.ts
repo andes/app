@@ -407,7 +407,7 @@ import { CampaniaSaludService } from './apps/campaniaSalud/services/campaniaSalu
 import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campaniaSalud.component';
 import { CampaniaVisualizacionComponent } from './apps/campaniaSalud/components/campaniaVisualizacion.component';
 import { CampaniaFormComponent } from './apps/campaniaSalud/components/campania-create-update.component';
-import { TurneroProvidersModule } from './modules/turnero/turnero.providers';
+import { TurneroProvidersModule } from './apps/turnero/turnero.providers';
 
 let RUPComponentsArray = [
     SelectPorRefsetComponent,

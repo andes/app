@@ -14,7 +14,7 @@ import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
 import { Subscription } from 'rxjs';
-import { TurneroService } from '../../../turnero/services/turnero.service';
+import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
 import { WebSocketService } from '../../../../services/websocket.service';
 
 @Component({
@@ -489,8 +489,8 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.agendaSeleccionada = agenda ? agenda : 'fueraAgenda';
     }
 
-    mostrarBotonTurnero(agenda) {
-        return (agenda && agenda.espacioFisico && agenda.espacioFisico.id && (this.espaciosFisicosTurnero.findIndex((e) => e === agenda.espacioFisico.id) >= 0));
+    mostrarBotonTurnero(agenda, turno) {
+        return (agenda && agenda.espacioFisico && agenda.espacioFisico.id && (this.espaciosFisicosTurnero.findIndex((e) => e === agenda.espacioFisico.id) >= 0))  && turno.paciente &&  turno.paciente.id && (!turno.prestacion || (turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente') );
     }
 
     routeTo(action, id) {

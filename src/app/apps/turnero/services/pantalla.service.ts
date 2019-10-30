@@ -53,8 +53,4 @@ export class PantallaService {
         });
     }
 
-    getEspacios (params: any) {
-        return this.server.get('/modules/turnos/espacioFisico', { params: params, showError: true });
-    }
-
 }

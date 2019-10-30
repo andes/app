@@ -194,7 +194,7 @@
                                             </plex-button>
                                         </span>
                                         
-                                        <ng-container *ngIf="mostrarBotonTurnero(agendaSeleccionada) && turno.paciente?.id && (!turno.prestacion || (turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente') )">
+                                        <ng-container *ngIf="mostrarBotonTurnero(agendaSeleccionada, turno)">
                                             <br/>
                                             <plex-button (click)="llamarTurnero(turno)" size="sm" type="info" [disabled]="llamandoTurno" title="LLamar" >
                                                 <plex-icon name="bell-ring-outline"></plex-icon>

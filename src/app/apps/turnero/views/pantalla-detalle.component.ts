@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 import { Auth } from '@andes/auth';
 import { Unsubscribe } from '@andes/shared';
 import { PantallaService } from '../services/pantalla.service';
+import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.service';
 
 @Component({
     selector: 'pantalla-detalle',
@@ -19,7 +20,8 @@ export class PantallaDetalleComponent implements OnInit, OnDestroy {
         public pantallasService: PantallaService,
         private _location: Location,
         private auth: Auth,
-        private plex: Plex
+        private plex: Plex,
+        public espacioFisicoService: EspacioFisicoService,
     ) { }
 
     get consultorios() {
@@ -31,7 +33,7 @@ export class PantallaDetalleComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.pantallasService.getEspacios({ organizacion: this.auth.organizacion.id }).subscribe(data => this.espaciosFisicos = data);
+        this.espacioFisicoService.get({ organizacion: this.auth.organizacion.id }).subscribe(data => this.espaciosFisicos = data);
     }
 
     ngOnDestroy() {
