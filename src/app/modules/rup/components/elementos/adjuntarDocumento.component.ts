@@ -3,6 +3,7 @@ import { RUPComponent } from './../core/rup.component';
 import { environment } from '../../../../../environments/environment';
 import { RupElement } from '../elementos';
 import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
+import { isUndefined } from 'util';
 @Component({
     selector: 'rup-adjuntar-documento',
     templateUrl: 'adjuntarDocumento.html',
@@ -10,6 +11,9 @@ import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
 })
 @RupElement('AdjuntarDocumentoComponent')
 export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
+    @Input() permiteCarga: boolean;
+    @Input() parametroRegistro;
+
     @ViewChildren('upload') childsComponents: QueryList<any>;
     imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
     extensions = [
@@ -37,8 +41,15 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
 
     ngOnInit() {
 
+        if (isUndefined(this.permiteCarga)) {
+            this.permiteCarga = true;
+        }
+
         this.extensions = this.extensions.concat(this.imagenes);
 
+        if (!isUndefined(this.parametroRegistro)) {
+            this.registro = this.parametroRegistro;
+        }
         if (!this.registro.valor) {
             this.registro.valor = {};
         }
