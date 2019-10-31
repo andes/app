@@ -245,7 +245,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
                         forkJoin(subscriptions).subscribe((codigos: any[]) => {
                             for (let index = 0; index < this.c2Array.length; index++) {
-                                if (!codigos[index].c2) {
+                                if ((codigos[index] !== null && !codigos[index].c2)) {
                                     this.c2Array.splice(index, 1);
                                     index--;
                                 } else {
