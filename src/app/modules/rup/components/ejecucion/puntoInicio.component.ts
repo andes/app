@@ -31,7 +31,13 @@ export class PuntoInicioComponent implements OnInit {
     // Agenda seleccionada
     public agendaSeleccionada;
     // Mostrar sólo mis agendas
-    public soloMisAgendas = true;
+    public filtroAgendas = {
+        radio: 1
+    };
+    public opciones = [
+        { id: 1, label: 'Mias' },
+        { id: 2, label: 'Todas' }
+    ];
     // Lista de prestaciones filtradas por fecha, tipos de prestaciones permitidas, ...
     public prestaciones: any = [];
     // Tipos de prestacion que el usuario tiene permiso
@@ -248,7 +254,7 @@ export class PuntoInicioComponent implements OnInit {
         this.fueraDeAgenda = this.prestacionesOriginales;
 
         // filtramos por agendas propias o todas menos las propias
-        if (this.soloMisAgendas) {
+        if (this.filtroAgendas.radio === 1) {
             this.agendas = this.agendas.filter(agenda => {
                 return (agenda.profesionales && agenda.profesionales.find(profesional => {
                     return (profesional.id === this.auth.profesional.id);

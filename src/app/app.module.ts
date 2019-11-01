@@ -475,7 +475,6 @@ let RUPComponentsArray = [
     VistaRegistroComponent,
     VistaProcedimientoComponent,
     VistaPrestacionComponent,
-    VistaSolicitudTopComponent,
     VistaContextoPrestacionComponent,
     ProcedimientoDeEnfermeriaComponent,
     CamaBloquearComponent,
@@ -505,7 +504,6 @@ import { UploadFileComponent } from './shared/components/upload-file.component';
 import { CodificacionService } from './modules/rup/services/codificacion.service';
 import { VistaRegistroComponent } from './modules/rup/components/huds/vistaRegistro';
 import { VistaProcedimientoComponent } from './modules/rup/components/huds/vistaProcedimiento';
-import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaSolicitudTop';
 import { VistaContextoPrestacionComponent } from './modules/rup/components/huds/vistaContextoPrestacion';
 import { VistaDetalleRegistroComponent } from './modules/rup/components/huds/vistaDetalleRegistro';
 import { PasesListadoInternacionComponent } from './apps/rup/internacion/components/pasesListadoInternacion.component';
@@ -520,6 +518,8 @@ import { LugarDeNacimientoComponent } from './modules/rup/components/elementos/l
 import { PlantillasRUPComponent } from './apps/rup/plantillas-rup/plantillas-rup.component';
 import { LogoSvgComponent } from './styles/logo.svg';
 import { AcronimoSvgComponent } from './styles/acronimo.svg';
+import { ListaReglasComponent } from './components/top/reglas/listaReglas.component';
+import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaSolicitudTop';
 
 registerLocaleData(localeEs, 'es');
 
@@ -613,7 +613,6 @@ registerLocaleData(localeEs, 'es');
         ListaEsperaInternacionComponent,
         VistaRegistroComponent,
         VistaProcedimientoComponent,
-        VistaSolicitudTopComponent,
         VistaPrestacionComponent,
         VistaContextoPrestacionComponent,
         VistaDetalleRegistroComponent,
@@ -639,7 +638,9 @@ registerLocaleData(localeEs, 'es');
         SectoresItemComponent,
         PucoComponent,
         ReglasComponent,
+        ListaReglasComponent,
         VisualizacionReglasComponent,
+        VistaSolicitudTopComponent,
         // MPI
         PacienteBuscarComponent,
         PacienteListadoComponent,
