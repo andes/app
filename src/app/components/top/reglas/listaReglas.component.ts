@@ -10,9 +10,14 @@ import { Auth } from '@andes/auth';
 @Component({
     selector: 'lista-reglas',
     templateUrl: './listaReglas.html',
-    // styleUrls: [
-    //     `reglas.scss`
-    // ]
+    styles: [`
+        .text-ellipsis {
+            max-width: 220px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    `]
 })
 export class ListaReglasComponent implements OnInit {
     @Input()

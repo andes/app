@@ -644,7 +644,6 @@ registerLocaleData(localeEs, 'es');
         PucoComponent,
         ReglasComponent,
         ListaReglasComponent,
-        VisualizacionReglasTopComponent,
         VisualizacionReglasComponent,
         VistaSolicitudTopComponent,
         // MPI
