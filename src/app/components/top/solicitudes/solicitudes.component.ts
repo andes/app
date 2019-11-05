@@ -58,7 +58,7 @@ export class SolicitudesComponent implements OnInit {
     public estados = [
         { id: 'auditoria', nombre: 'AUDITORIA' },
         { id: 'pendiente', nombre: 'PENDIENTE' },
-        { id: 'rechazada', nombre: 'RECHAZADA' },
+        { id: 'rechazada', nombre: 'CONTRARREFERIDA' },
         { id: 'turnoDado', nombre: 'TURNO DADO' },
         { id: 'anulada', nombre: 'ANULADA' }
     ];
@@ -461,7 +461,7 @@ export class SolicitudesComponent implements OnInit {
                 this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
                     respuesta => {
                         this.cargarSolicitudes();
-                        this.plex.toast('danger', '', 'Solicitud Rechazada');
+                        this.plex.toast('danger', '', 'Solicitud CONTRARREFERIDA');
                     }
                 );
             }
