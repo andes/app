@@ -59,7 +59,7 @@
                         <!-- Tipo Prestación Destino -->
                         <div class="row">
                             <div class="col">
-                                <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" name="tipoPrestacion"
+                                <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" name="tipoPrestacionDestino"
                                     (getData)="loadTipoPrestaciones($event)" label="Tipo de Prestación Solicitada"
                                     placeholder="Tipos de Prestación solicitada" [required]="true"
                                     (change)="onSelectPrestacionOrigen()">
@@ -114,7 +114,7 @@
                         <!-- Tipo Prestación origen -->
                         <div class="row">
                             <div class="col">
-                                <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen" name="tipoPrestacion"
+                                <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen" name="tipoPrestacionOrigen"
                                     (change)="onSelect()" (getData)="loadTipoPrestaciones($event)"
                                     label="Tipos de Prestación Origen" placeholder="Tipos de Prestación Origen"
                                     [required]="true">
@@ -144,7 +144,7 @@
                         <!-- Tipo Prestación Destino -->
                         <div class="row">
                             <div class="col">
-                                <plex-select [(ngModel)]="prestacionDestino" name="tipoPrestacion"
+                                <plex-select [(ngModel)]="prestacionDestino" name="tipoPrestacionDestino"
                                     [data]="dataReglasDestino" label="Tipo de Prestación Solicitada"
                                     placeholder="Tipos de Prestación solicitada" [required]="true"
                                     (change)="onSelectPrestacionDestino()">
