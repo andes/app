@@ -308,20 +308,14 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
         if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
             this.registro.esDiagnosticoPrincipal = true;
         }
-        // if (!this.procedimientosObstetricos) {
-        //     this.registro.valor.InformeEgreso.terminacionEmbarazo = undefined;
-        //     this.registro.valor.InformeEgreso.edadGestacional = undefined;
-        //     this.registro.valor.InformeEgreso.paridad = undefined;
-        //     this.registro.valor.InformeEgreso.tipoParto = undefined;
-        //     this.registro.valor.InformeEgreso.nacimientos = [
-        //         {
-        //             pesoAlNacer: null,
-        //             condicionAlNacer: null,
-        //             terminacion: null,
-        //             sexo: null
-        //         }
-        //     ];
-        // }
+
+        if (this.registro.valor.InformeEgreso.UnidadOrganizativaDestino) {
+            let datosOrganizacionDestino = {
+                id: this.registro.valor.InformeEgreso.UnidadOrganizativaDestino.id,
+                nombre: this.registro.valor.InformeEgreso.UnidadOrganizativaDestino.nombre
+            };
+            this.registro.valor.InformeEgreso.UnidadOrganizativaDestino = datosOrganizacionDestino;
+        }
 
         let existeEgreso = this.internacionService.verRegistro(this.prestacion, 'egreso');
         if (!existeEgreso) {
@@ -523,25 +517,22 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
 
         let desde = 'V00';
         let hasta = 'Y98';
-        if (this.registro.valor.InformeEgreso.causaExterna.producidaPor) {
+        let filtro;
 
+        if (this.registro.valor.InformeEgreso.causaExterna.producidaPor) {
 
             switch (this.registro.valor.InformeEgreso.causaExterna.producidaPor.id) {
                 case 'Accidente':
-                    desde = 'V01';
-                    hasta = 'X59';
+                    filtro = [{ desde: 'V01', hasta: 'X59' }, { desde: 'Y35', hasta: 'Y98' }];
                     break;
                 case 'lesionAutoinfligida':
-                    desde = 'X60';
-                    hasta = 'X84';
+                    filtro = [{ desde: 'X60', hasta: 'X84' }];
                     break;
                 case 'agresion':
-                    desde = 'X85';
-                    hasta = 'Y09';
+                    filtro = [{ desde: 'X85', hasta: 'Y09' }];
                     break;
                 case 'seIgnora': {
-                    desde = 'Y10';
-                    hasta = 'Y34';
+                    filtro = [{ desde: 'Y10', hasta: 'Y34' }];
                     break;
                 }
             }
@@ -549,8 +540,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
         if (event && event.query) {
             let query = {
                 nombre: event.query,
-                codigoDesde: desde,
-                codigoHasta: hasta
+                filtroRango: JSON.stringify(filtro)
             };
             this.cie10Service.get(query).subscribe((datos) => {
                 // mapeamos para mostrar el codigo primero y luego la descripcion
@@ -578,21 +568,23 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
                 let fechaIngreso = moment(informeIngreso.informeIngreso.fechaIngreso);
                 if (fechaIngreso) {
                     let fechaEgreso = moment(fechaACargar);
-                    if ((fechaEgreso.diff(fechaIngreso, 'days', true) <= 0)) {
-                        this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a  ' + fechaIngreso.format('YYYY-MM-DD HH:mm'));
-                        // this.fechaEgreso = new Date();
+                    if ((fechaEgreso.diff(fechaIngreso) <= 0)) {
+                        this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a  ' + fechaIngreso.format('DD-MM-YYYY HH:mm'));
                         this.registro.valor.InformeEgreso.diasDeEstada = null;
                     } else {
                         if (this.camaSelected) {
-                            let fechaUltimoEstado = moment(this.camaSelected.ultimoEstado.fecha, 'YYYY-MM-DD HH:mm');
-                            if (fechaUltimoEstado && (fechaEgreso.diff(fechaUltimoEstado, 'days', true) <= 0)) {
+                            let fechaUltimoEstado = moment(this.camaSelected.ultimoEstado.fecha, 'DD-MM-YYYY HH:mm');
+                            if (fechaUltimoEstado && (fechaEgreso.diff(fechaUltimoEstado) <= 0)) {
                                 this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a ' + fechaUltimoEstado);
                                 this.registro.valor.InformeEgreso.diasDeEstada = null;
                                 return;
                             }
                         }
-                        let dateDif = fechaEgreso.diff(fechaIngreso, 'days');
-                        let diasEstada = fechaEgreso ? dateDif === 0 ? 1 : fechaEgreso.diff(fechaIngreso, 'days') : '1';
+                        /*  Si la fecha de egreso es el mismo día del ingreso -> debe mostrar 1 día de estada
+                            Si la fecha de egreso es al otro día del ingreso, no importa la hora -> debe mostrar 1 día de estada
+                            Si la fecha de egreso es posterior a los dos casos anteriores -> debe mostrar la diferencia de días */
+                        let dateDif = fechaEgreso.endOf('day').diff(fechaIngreso.startOf('day'), 'days');
+                        let diasEstada = dateDif === 0 ? 1 : dateDif;
                         this.registro.valor.InformeEgreso.diasDeEstada = diasEstada;
                     }
                 }
