@@ -197,18 +197,23 @@ export class NuevaSolicitudComponent implements OnInit {
     }
 
     onSelect() {
-        if (this.tipoSolicitud === 'salida' && this.auth.organizacion.id && this.modelo.solicitud.tipoPrestacionOrigen && this.modelo.solicitud.tipoPrestacionOrigen.conceptId) {
-            this.servicioReglas.get({ organizacionOrigen: this.auth.organizacion.id, prestacionOrigen: this.modelo.solicitud.tipoPrestacionOrigen.conceptId })
-                .subscribe(
-                    res => {
-                        this.arrayReglasDestino = res;
-                        this.dataReglasDestino = res.map(elem => { return { id: elem.destino.prestacion.conceptId, nombre: elem.destino.prestacion.term }; });
-                        this.dataOrganizacionesDestino = res.map(elem => { return { id: elem.destino.organizacion.id, nombre: elem.destino.organizacion.nombre }; });
-
-                    }
-                );
+        if (this.tipoSolicitud === 'salida') {
+            if (this.auth.organizacion.id && this.modelo.solicitud.tipoPrestacionOrigen && this.modelo.solicitud.tipoPrestacionOrigen.conceptId) {
+                this.servicioReglas.get({ organizacionOrigen: this.auth.organizacion.id, prestacionOrigen: this.modelo.solicitud.tipoPrestacionOrigen.conceptId })
+                    .subscribe(
+                        res => {
+                            this.arrayReglasDestino = res;
+                            this.dataReglasDestino = res.map(elem => { return { id: elem.destino.prestacion.conceptId, nombre: elem.destino.prestacion.term }; });
+                            this.dataOrganizacionesDestino = res.map(elem => { return { id: elem.destino.organizacion.id, nombre: elem.destino.organizacion.nombre }; });
+                        }
+                    );
+            } else {
+                this.dataOrganizacionesDestino = [];
+                this.modelo.solicitud.organizacion = null;
+            }
         }
-        if (this.tipoSolicitud === 'entrada' && this.auth.organizacion.id && this.modelo.solicitud.tipoPrestacion && this.modelo.solicitud.tipoPrestacion.conceptId) {
+
+        if (this.tipoSolicitud === 'entrada' && this.auth.organizacion.id) {
             if (this.prestacionOrigen) {
                 let regla: any = this.arrayReglasOrigen.find((rule: any) => { return rule.prestacion.conceptId === this.prestacionOrigen.id; });
 
@@ -218,6 +223,9 @@ export class NuevaSolicitudComponent implements OnInit {
                     this.modelo.estados.push({ tipo: 'pendiente' });
                 }
                 this.modelo.solicitud.tipoPrestacionOrigen = regla.prestacion;
+            } else {
+                this.prestacionOrigen = null;
+                this.modelo.solicitud.tipoPrestacionOrigen = null;
             }
         }
     }
@@ -229,6 +237,12 @@ export class NuevaSolicitudComponent implements OnInit {
                 this.arrayReglasOrigen = regla.origen.prestaciones;
                 this.dataTipoPrestacionesOrigen = regla.origen.prestaciones.map(elem => { return { id: elem.prestacion.conceptId, nombre: elem.prestacion.term }; });
             }
+        } else {
+            if (!this.modelo.solicitud.tipoPrestacion) {
+                this.dataOrganizacionesOrigen = [];
+            }
+            this.dataReglasDestino = [];
+            this.prestacionOrigen = null;
         }
     }
 
@@ -236,17 +250,18 @@ export class NuevaSolicitudComponent implements OnInit {
         if (this.tipoSolicitud === 'salida') {
             if (this.modelo.solicitud.organizacion) {
                 this.servicioReglas.get({
-                    organizacionOrigen: this.auth.organizacion.id,
-                    organizacionDestino: this.modelo.solicitud.organizacion.id,
-                    prestacionOrigen: this.modelo.solicitud.tipoPrestacionOrigen.conceptId
-                })
-                    .subscribe(
-                        res => {
-                            this.dataReglasDestino = res.map(elem => { return { id: elem.destino.prestacion.conceptId, nombre: elem.destino.prestacion.term }; });
-                        }
-                    );
+                organizacionOrigen: this.auth.organizacion.id,
+                organizacionDestino: this.modelo.solicitud.organizacion.id,
+                prestacionOrigen: this.modelo.solicitud.tipoPrestacionOrigen.conceptId })
+                .subscribe( res => this.dataReglasDestino = res.map(elem => { return { id: elem.destino.prestacion.conceptId, nombre: elem.destino.prestacion.term }; }));
+            } else {
+                if (!this.modelo.solicitud.tipoPrestacionOrigen) {
+                    this.dataOrganizacionesDestino = [];
+                    this.modelo.solicitud.organizacion = null;
+                }
+                this.dataReglasDestino = [];
+                this.prestacionDestino = null;
             }
-
         }
     }
 
@@ -259,7 +274,14 @@ export class NuevaSolicitudComponent implements OnInit {
                         this.dataOrganizacionesOrigen = res.map(elem => { return { id: elem.origen.organizacion.id, nombre: elem.origen.organizacion.nombre }; });
                     }
                 );
+        } else {
+            this.clearOrganizacionesOrigen();
         }
+    }
+
+    clearOrganizacionesOrigen() {
+        this.dataOrganizacionesOrigen = [];
+        this.modelo.solicitud.organizacionOrigen = null;
     }
 
     onSelectPrestacionDestino() {
@@ -272,6 +294,8 @@ export class NuevaSolicitudComponent implements OnInit {
             } else {
                 this.modelo.estados.push({ tipo: 'pendiente' });
             }
+        } else if (!this.modelo.solicitud.organizacion) {
+            this.dataReglasDestino = [];
         }
     }
 
