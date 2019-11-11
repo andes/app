@@ -15,6 +15,9 @@ import 'rxjs/Rx';
 import { CodificacionService } from '../../services/codificacion.service';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { forkJoin } from 'rxjs';
+import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
+import { ReglaService } from '../../../../services/top/reglas.service';
+import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -116,7 +119,8 @@ export class PrestacionValidacionComponent implements OnInit {
         public servicioAgenda: AgendaService,
         private route: ActivatedRoute,
         private servicioDocumentos: DocumentosService,
-        private codificacionService: CodificacionService
+        private codificacionService: CodificacionService,
+        public servicioReglas: ReglaService
     ) {
     }
 
@@ -321,7 +325,7 @@ export class PrestacionValidacionComponent implements OnInit {
             return false;
         }
         if (!existeDiagnostico && this.prestacion.solicitud.ambitoOrigen !== 'internacion' && !this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
-            this.plex.toast('info', 'Debe seleccionar un procedimiento / diagnostico principal', 'procedimiento / diagnostico principal', 1000);
+            this.plex.toast('info', 'Debe seleccionar un procedimiento / diagnóstico principal', 'procedimiento / diagóstico principal', 1000);
             return false;
         }
         if (diagnosticoRepetido) {
@@ -332,14 +336,10 @@ export class PrestacionValidacionComponent implements OnInit {
             if (!validar) {
                 return false;
             } else {
-                // if (['73761001', '2341000013106'].indexOf(this.prestacion.solicitud.tipoPrestacion.conceptId) >= 0) {
-                //     this.prestacion.ejecucion.registros = [this.prestacion.ejecucion.registros[this.prestacion.ejecucion.registros.length - 1]];
-                // }
-
+                let seCreoSolicitud = false;
                 // cargar los conceptos mas frecuentes por profesional y tipo de prestación
                 // Se copian los registros de la ejecución actual, para agregarle la frecuencia
                 let registros = this.prestacion.ejecucion.registros;
-
                 // filtramos los planes que deben generar prestaciones pendientes (Planes con conceptos turneales)
                 let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
                 this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
@@ -352,6 +352,13 @@ export class PrestacionValidacionComponent implements OnInit {
                                 });
                             }
                         }
+                        if (!seCreoSolicitud && registro.esSolicitud && registro.valor.solicitudPrestacion.organizacionDestino) {
+                            seCreoSolicitud = true;
+                            this.plex.info('success', 'La solicitud está en la bandeja de entrada de la organización destino', 'Información');
+                        }
+
+
+
                     });
 
                     this.motivoReadOnly = true;

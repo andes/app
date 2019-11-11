@@ -1,13 +1,14 @@
 
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { Injectable, Output, EventEmitter } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
 import { IPrestacionGetParams } from '../interfaces/prestacionGetParams.interface';
 import { SnomedService } from '../../../services/term/snomed.service';
+import { ReglaService } from '../../../services/top/reglas.service';
 
 
 
@@ -104,7 +105,7 @@ export class PrestacionesService {
 
     public conceptosTurneables: any[];
 
-    constructor(private server: Server, public auth: Auth, private servicioTipoPrestacion: TipoPrestacionService, public snomed: SnomedService) {
+    constructor(private server: Server, public auth: Auth, private servicioTipoPrestacion: TipoPrestacionService, public snomed: SnomedService, private servicioReglas: ReglaService) {
 
         this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
             this.conceptosTurneables = conceptosTurneables;
@@ -606,64 +607,78 @@ export class PrestacionesService {
 
     validarPrestacion(prestacion, planes): Observable<any> {
         let planesCrear = undefined;
+        let planesAux = undefined;
+        let postRequest = [];
 
         if (planes.length) {
             planesCrear = [];
+            planesAux = [];
             planes.forEach(plan => {
                 if (plan.semanticTag !== 'metadato fundacional') {
-
                     // verificamos si existe la prestacion creada anteriormente. Para no duplicar.
                     let existePrestacion = null;
                     if (this.cache[prestacion.paciente.id]) {
                         existePrestacion = this.cache[prestacion.paciente.id].find(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === prestacion.id && p.solicitud.registros[0]._id === plan.id);
                     }
-                    if (!existePrestacion) {
-                        // Si se trata de una autocitación o consulta de seguimiento donde el profesional selecciono
-                        // que prestacion quiere solicitar debo hacer ese cambio
-                        let conceptoSolicitud = plan.concepto;
-                        if (plan.valor && plan.valor.solicitudPrestacion.prestacionSolicitada) {
-                            conceptoSolicitud = plan.valor.solicitudPrestacion.prestacionSolicitada;
-                        }
-
-                        // Controlemos que se trata de una prestación turneable.
-                        // Solo creamos prestaciones pendiente para conceptos turneables
-
-                        let existeConcepto = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId && c.term === conceptoSolicitud.term);
-                        if (existeConcepto) {
-                            // creamos objeto de prestacion
-                            let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, existeConcepto, 'validacion', 'ambulatorio');
-                            // asignamos el tipoPrestacionOrigen a la solicitud
-                            nuevaPrestacion.solicitud.tipoPrestacionOrigen = prestacion.solicitud.tipoPrestacion;
-                            // asignamos la prestacion de origen
-                            nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
-
-                            // Asignamos organizacionOrigen y profesionalOrigen de la solicitud originada
-                            nuevaPrestacion.solicitud.organizacionOrigen = prestacion.solicitud.organizacion;
-                            nuevaPrestacion.solicitud.profesionalOrigen = prestacion.solicitud.profesional;
-
-                            // Si se asignó una organización destino desde la prestación que origina la solicitud
-                            if (plan.valor.solicitudPrestacion.organizacionDestino) {
-                                nuevaPrestacion.solicitud.organizacion = plan.valor.solicitudPrestacion.organizacionDestino;
-                            }
-                            // Si se asignó un profesional destino desde la prestación que origina la solicitud
-                            if (!plan.valor.solicitudPrestacion.autocitado) {
-                                nuevaPrestacion.solicitud.profesional = {};
-                            }
-                            if (plan.valor.solicitudPrestacion.profesionalesDestino) {
-                                nuevaPrestacion.solicitud.profesional = plan.valor.solicitudPrestacion.profesionalesDestino[0];
-                            }
-
-                            // agregamos los registros en la solicitud
-                            nuevaPrestacion.solicitud.registros.push(plan);
-
-                            planesCrear.push(nuevaPrestacion);
-                        }
+                    if (!existePrestacion && plan.valor && plan.valor.solicitudPrestacion.organizacionDestino) {
+                        planesAux.push(plan);
                     }
                 }
             });
 
+            planesAux.forEach(plan => {
+                postRequest.push(this.servicioReglas.get({
+                    organizacionOrigen: this.auth.organizacion.id,
+                    prestacionOrigen: prestacion.solicitud.tipoPrestacion.conceptId,
+                    prestacionDestino: plan.valor.solicitudPrestacion.prestacionSolicitada.conceptId,
+                    organizacionDestino: plan.valor.solicitudPrestacion.organizacionDestino.id
+                }));
+            });
         }
-        // hacemos el patch y luego creamos los planes
+        if (postRequest && postRequest.length) {
+            return forkJoin(postRequest).pipe(
+                switchMap((reglas: any) => {
+                    for (let i = 0; i < reglas.length; i++) {
+                        const prestacionDestino = reglas[i][0].destino.prestacion; // para utilizar los datos de la regla y no un sinonimo
+
+                        // creamos objeto de prestacion
+                        let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, prestacionDestino, 'validacion', 'ambulatorio');
+                        // asignamos el tipoPrestacionOrigen a la solicitud
+                        nuevaPrestacion.solicitud.tipoPrestacionOrigen = prestacion.solicitud.tipoPrestacion;
+                        // asignamos la prestacion de origen
+                        nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
+
+                        // Asignamos organizacionOrigen y profesionalOrigen de la solicitud originada
+                        nuevaPrestacion.solicitud.organizacionOrigen = prestacion.solicitud.organizacion;
+                        nuevaPrestacion.solicitud.profesionalOrigen = prestacion.solicitud.profesional;
+
+                        // Si se asignó una organización destino desde la prestación que origina la solicitud
+                        if (planesAux[i].valor.solicitudPrestacion.organizacionDestino) {
+                            nuevaPrestacion.solicitud.organizacion = planesAux[i].valor.solicitudPrestacion.organizacionDestino;
+                        }
+                        // Si se asignó un profesional destino desde la prestación que origina la solicitud
+                        if (!planesAux[i].valor.solicitudPrestacion.autocitado) {
+                            nuevaPrestacion.solicitud.profesional = {};
+                        }
+                        if (planesAux[i].valor.solicitudPrestacion.profesionalesDestino) {
+                            nuevaPrestacion.solicitud.profesional = planesAux[i].valor.solicitudPrestacion.profesionalesDestino[0];
+                        }
+
+                        // agregamos los registros en la solicitud
+                        nuevaPrestacion.solicitud.registros.push(planesAux[i]);
+
+                        planesCrear.push(nuevaPrestacion);
+
+                    }
+                    return this.efectuarPatch(prestacion, planesCrear);
+                })
+            );
+        } else {
+            return this.efectuarPatch(prestacion, undefined);
+        }
+    }
+
+    private efectuarPatch(prestacion, planesCrear): Observable<any> {
         prestacion.ejecucion.registros.forEach(x => {
             if (x.relacionadoCon && x.relacionadoCon.length) {
                 x.relacionadoCon.forEach(y => {
@@ -671,7 +686,6 @@ export class PrestacionesService {
                 });
             }
         });
-
         let dto: any = {
             op: 'estadoPush',
             estado: { tipo: 'validada' },

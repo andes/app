@@ -21,6 +21,7 @@ import { Cie10Service } from '../../../../services/term/cie10.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { ElementosRUPRegister } from '../elementos';
 import { ActivatedRoute } from '@angular/router';
+import { ReglaService } from '../../../../services/top/reglas.service';
 
 @Component({
     selector: 'rup',
@@ -122,7 +123,8 @@ export class RUPComponent implements OnInit, AfterViewInit {
         public plex: Plex,
         public route: ActivatedRoute,
         public agendaService: AgendaService,
-        public organizacionservice: OrganizacionService
+        public organizacionservice: OrganizacionService,
+        public servicioReglas: ReglaService
     ) { }
 
     ngOnInit() {

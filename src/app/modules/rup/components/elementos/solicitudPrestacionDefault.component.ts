@@ -10,7 +10,7 @@ import { RupElement } from '.';
 export class SolicitudPrestacionDefaultComponent extends RUPComponent implements OnInit {
 
     private listaPlanes: any = [];
-
+    public organizaciones: any[] = [];
     // public puedeAutocitar: Boolean = false;
 
     ngOnInit() {
@@ -20,7 +20,13 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
             };
             this.registro.valor.solicitudPrestacion['autocitado'] = false;
             this.registro.valor.solicitudPrestacion['prestacionSolicitada'] = this.registro.concepto;
-
+            this.servicioReglas.get({
+                organizacionOrigen: this.auth.organizacion.id,
+                prestacionOrigen: this.prestacion.solicitud.tipoPrestacion.conceptId,
+                prestacionDestino: this.registro.concepto.conceptId
+            }).subscribe(reglas => {
+                this.organizaciones = reglas.map(elem => { return { id: elem.destino.organizacion.id, nombre: elem.destino.organizacion.nombre }; });
+            });
         }
     }
 
