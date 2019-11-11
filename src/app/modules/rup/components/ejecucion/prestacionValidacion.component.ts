@@ -354,7 +354,7 @@ export class PrestacionValidacionComponent implements OnInit {
                         }
                         if (!seCreoSolicitud && registro.esSolicitud && registro.valor.solicitudPrestacion.organizacionDestino) {
                             seCreoSolicitud = true;
-                            this.plex.toast('success', 'La solicitud está en la bandeja de entrada de la organización destino', 'Información', 300);
+                            this.plex.info('success', 'La solicitud está en la bandeja de entrada de la organización destino', 'Información');
                         }
 
 

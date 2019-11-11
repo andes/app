@@ -1,17 +1,22 @@
 <ng-container *ngIf="!soloValores">
-    <plex-text label="Motivo" multiline="true" autoFocus="1" [(ngModel)]="registro.valor.solicitudPrestacion.motivo" name="motivo"></plex-text>
-    <plex-text label="Indicaciones" multiline="true" [(ngModel)]="registro.valor.solicitudPrestacion.indicaciones" name="indicaciones"></plex-text>
+    <plex-text label="Motivo" multiline="true" autoFocus="1" [(ngModel)]="registro.valor.solicitudPrestacion.motivo"
+               name="motivo"></plex-text>
+    <plex-text label="Indicaciones" multiline="true" [(ngModel)]="registro.valor.solicitudPrestacion.indicaciones"
+               name="indicaciones"></plex-text>
 
     <!-- <plex-select [(ngModel)]="registro.valor?.solicitudPrestacion?Prestacion.profesionales" (getData)="loadProfesionales($event)" placeholder="Profesionales"
         (change)="verificarAutocitacion()" labelField="apellido + ' ' + nombre" [multiple]="true" label="Profesional(es) destino">
     </plex-select> -->
 
-    <plex-select *ngIf="organizaciones.length" [(ngModel)]="registro.valor.solicitudPrestacion.organizacionDestino" name="organizacionDestino" [data]="organizaciones" label="Organización destino" placeholder="Seleccione la organización" labelField="nombre" [required]="true">
+    <plex-select *ngIf="organizaciones.length || registro.valor.solicitudPrestacion.organizacionDestino"
+                 [(ngModel)]="registro.valor.solicitudPrestacion.organizacionDestino" name="organizacionDestino"
+                 [data]="organizaciones" label="Organización destino" placeholder="Seleccione la organización"
+                 labelField="nombre" [required]="true">
     </plex-select>
 
-    <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.profesionalesDestino" (getData)="loadProfesionales($event)"
-        placeholder="Profesionales" (change)="verificarAutocitacion()" labelField="apellido + ' ' + nombre" [multiple]="true"
-        label="Profesional(es) destino">
+    <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.profesionalesDestino"
+                 (getData)="loadProfesionales($event)" placeholder="Profesionales" (change)="verificarAutocitacion()"
+                 labelField="apellido + ' ' + nombre" [multiple]="true" label="Profesional(es) destino">
     </plex-select>
 
 </ng-container>
@@ -29,13 +34,15 @@
         </div>
         <div *ngIf="registro.valor?.solicitudPrestacion?.organizacionDestino">
             <span>Organización a la cual se solicita</span>
-            <ng-container *ngIf="registro.valor?.solicitudPrestacion?.organizacionDestino && registro.valor?.solicitudPrestacion?.organizacionDestino?.id">
+            <ng-container
+                          *ngIf="registro.valor?.solicitudPrestacion?.organizacionDestino && registro.valor?.solicitudPrestacion?.organizacionDestino?.id">
                 {{ registro.valor.solicitudPrestacion.organizacionDestino.nombre }}
             </ng-container>
         </div>
         <div *ngIf="registro?.valor?.solicitudPrestacion?.profesionalesDestino">
             <span>Profesional/es</span>
-            <ng-container *ngIf="registro?.valor?.solicitudPrestacion?.profesionalesDestino && registro?.valor?.solicitudPrestacion?.profesionalesDestino.length">
+            <ng-container
+                          *ngIf="registro?.valor?.solicitudPrestacion?.profesionalesDestino && registro?.valor?.solicitudPrestacion?.profesionalesDestino.length">
                 <ng-container *ngFor="let profesional of registro.valor?.solicitudPrestacion?.profesionalesDestino">
                     {{ profesional.apellido }}, {{ profesional.nombre }}
                 </ng-container>
