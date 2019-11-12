@@ -16,7 +16,7 @@ export class HUDSService {
     private _obsRegistros = new BehaviorSubject<ElementoHUDS[]>([]);
     public registrosHUDS = this._obsRegistros.asObservable();
     public activeTab = -1;
-    private hudsUrl = '/modules/huds';
+    private hudsUrl = '/modules/huds/huds-accesos';
 
     constructor(private server: Server) { }
 
@@ -108,7 +108,11 @@ export class HUDSService {
 
     }
 
-    getAccesos(idPaciente: any, params: any): Observable<any> {
-        return this.server.get(this.hudsUrl + '/accesos/' + idPaciente, params);
+    getAccesos(params: any): Observable<any> {
+        return this.server.get(this.hudsUrl, { params: params });
+    }
+
+    getHudsToken() {
+        return localStorage.getItem('huds-token');
     }
 }

@@ -18,15 +18,10 @@ export class VistaAccesosHudsComponent implements OnInit {
 
     ngOnInit() {
         let params = {
-            fields: 'paciente'
+            paciente: this.paciente.id
         };
-        this.hudsService.getAccesos(this.paciente.id, params).subscribe(res => {
-            if (res) {
-                res.forEach((documento: any) => {
-                    this.accesosHuds = this.accesosHuds.concat(documento.accesos);
-                });
-                this.accesosHuds.sort((a, b) => moment(a.fecha) < moment(b.fecha) ? 1 : -1);
-            }
+        this.hudsService.getAccesos(params).subscribe(res => {
+            this.accesosHuds = res;
         });
     }
 }

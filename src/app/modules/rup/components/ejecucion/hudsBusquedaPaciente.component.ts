@@ -74,7 +74,7 @@ export class HudsBusquedaPacienteComponent implements OnInit {
         if (paciente && paciente.id && this.motivoAccesoHuds) {
             // se obtiene token y loguea el acceso a la huds del paciente
             this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, this.motivoAccesoHuds, this.auth.profesional.id, null, null).subscribe(hudsToken => {
-                localStorage.setItem('hudsToken', hudsToken);
+                localStorage.setItem('huds-token', hudsToken.token);
                 localStorage.removeItem('motivoAccesoHuds');
                 this.router.navigate(['/rup/huds/paciente/' + paciente.id]);
             });

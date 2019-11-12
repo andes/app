@@ -722,20 +722,20 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     preAccesoHuds() {
-        this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.accesoHudsPaciente, this.motivoSelected, this.auth.profesional.id, this.accesoHudsTurno, this.accesoHudsPrestacion).subscribe(hudsToken => {
-            if (!this.accesoHudsPaciente && !this.accesoHudsPrestacion && this.routeToParams && this.routeToParams[0] === 'huds') {
-                // Se esta accediendo a 'HUDS DE UN PACIENTE'
-                localStorage.setItem('motivoAccesoHuds', this.motivoSelected);
-                this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
-            } else {
+        if (!this.accesoHudsPaciente && !this.accesoHudsPrestacion && this.routeToParams && this.routeToParams[0] === 'huds') {
+            // Se esta accediendo a 'HUDS DE UN PACIENTE'
+            localStorage.setItem('motivoAccesoHuds', this.motivoSelected);
+            this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
+        } else {
+            this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.accesoHudsPaciente, this.motivoSelected, this.auth.profesional.id, this.accesoHudsTurno, this.accesoHudsPrestacion).subscribe(hudsToken => {
                 // se obtiene token y loguea el acceso a la huds del paciente
-                localStorage.setItem('hudsToken', hudsToken.token);
+                localStorage.setItem('huds-token', hudsToken.token);
                 this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
-            }
-            this.routeToParams = [];
-            this.accesoHudsPaciente = null;
-            this.accesoHudsTurno = null;
-            this.accesoHudsPrestacion = null;
-        });
+                this.routeToParams = [];
+                this.accesoHudsPaciente = null;
+                this.accesoHudsTurno = null;
+                this.accesoHudsPrestacion = null;
+            });
+        }
     }
 }

@@ -9,7 +9,7 @@ import { IPrestacion } from '../interfaces/prestacion.interface';
 import { IPrestacionGetParams } from '../interfaces/prestacionGetParams.interface';
 import { SnomedService } from '../../../services/term/snomed.service';
 import { ReglaService } from '../../../services/top/reglas.service';
-
+import { HUDSService } from '../services/huds.service';
 
 
 @Injectable()
@@ -105,7 +105,7 @@ export class PrestacionesService {
 
     public conceptosTurneables: any[];
 
-    constructor(private server: Server, public auth: Auth, private servicioTipoPrestacion: TipoPrestacionService, public snomed: SnomedService, private servicioReglas: ReglaService) {
+    constructor(private server: Server, public auth: Auth, private servicioTipoPrestacion: TipoPrestacionService, public snomed: SnomedService, private servicioReglas: ReglaService, private hudsService: HUDSService) {
 
         this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
             this.conceptosTurneables = conceptosTurneables;
@@ -180,7 +180,8 @@ export class PrestacionesService {
                 params: {
                     idPaciente: idPaciente,
                     ordenFecha: true,
-                    sinEstado: 'modificada'
+                    sinEstado: 'modificada',
+                    hudsToken: this.hudsService.getHudsToken()
                 },
                 options: {
                     showError: true
@@ -360,11 +361,14 @@ export class PrestacionesService {
     }
 
     getCDAByPaciente(idPaciente, conceptId = null) {
-        let opt = {};
+        let opt: any = {
+            params: {
+                hudsToken: this.hudsService.getHudsToken()
+            }
+        };
         if (conceptId) {
-            opt = { params: { prestacion: conceptId } };
+            opt.params.prestacion = { prestacion: conceptId };
         }
-
         return this.server.get(`/modules/cda/paciente/${idPaciente}`, opt);
     }
 
@@ -429,10 +433,11 @@ export class PrestacionesService {
         let opt = {
             params: {
                 'expresion': expresion,
-                'deadLine': deadLine
+                'deadLine': deadLine,
+                hudsToken: this.hudsService.getHudsToken()
             },
             options: {
-                showError: true
+                // showError: true
             }
         };
 

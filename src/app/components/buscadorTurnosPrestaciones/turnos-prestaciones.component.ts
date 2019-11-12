@@ -252,10 +252,9 @@ export class TurnosPrestacionesComponent implements OnInit {
     }
 
     mostrarPrestacion(datos) {
-        let matriculaProfesional = this.serviceProfesional.get;
         this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, datos.paciente, 'facturación/auditoría', this.auth.profesional.id, datos.turno._id, datos.turno.tipoPrestacion._id).subscribe(hudsToken => {
             // se obtiene token y loguea el acceso a la huds del paciente
-            localStorage.setItem('huds-token', hudsToken);
+            localStorage.setItem('huds-token', hudsToken.token);
             this.showPrestacion = true;
             this.prestacion = datos;
             this.busquedas.map(item => {

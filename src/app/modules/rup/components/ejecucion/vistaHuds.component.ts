@@ -67,7 +67,6 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
             this.mostrarCambiaPaciente = true;
         }
 
-
         this.huds.registrosHUDS.subscribe((datos) => {
             if (this.registros.length < datos.length) {
                 this.activeIndexPrestacion = datos.length + 1;
@@ -76,6 +75,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
             }
             this.registros = [...datos];
         });
+
         // consultamos desde que pagina se ingreso para poder volver a la misma
         this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
             if (resp) {
