@@ -1,4 +1,4 @@
-ARG NODE_VERSION=10
+ARG NODE_VERSION=10-alpine
 
 FROM node:${NODE_VERSION}
 ARG ENVIRONMENT=prod
@@ -8,7 +8,7 @@ ENV node_env=development
 
 
 WORKDIR /usr/src/app
-COPY package.json package-lock.json ./ 
+COPY package.json package-lock.json webpack.config.js ./ 
 
 RUN npm install
 
