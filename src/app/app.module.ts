@@ -245,7 +245,12 @@ import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucio
 import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
 import { ResumenPacienteDinamicoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
 import { ResumenPacienteDinamicoNinoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico-nino.component';
-
+import { PlantillasRUPComponent } from './apps/rup/plantillas-rup/plantillas-rup.component';
+import { ListaReglasComponent } from './components/top/reglas/listaReglas.component';
+import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaSolicitudTop';
+import { RUPFueraDeAgendaComponent } from './modules/rup/components/ejecucion/punto-inicio/rup-fuera-de-agenda.component';
+import { RUPTurnosComponent } from './modules/rup/components/ejecucion/punto-inicio/rup-turnos.component';
+import { RUPSobreturnosComponent } from './modules/rup/components/ejecucion/punto-inicio/rup-sobreturnos.component';
 
 // Legacy para RUP
 // TODO: ver con JGabriel!!!
@@ -518,11 +523,8 @@ import { GestorUsuariosProvidersModule } from './apps/gestor-usuarios/gestor-usu
 /** Configuraciones de entorno */
 import { environment } from '../environments/environment';
 import { LugarDeNacimientoComponent } from './modules/rup/components/elementos/lugarDeNacimiento.component';
-import { PlantillasRUPComponent } from './apps/rup/plantillas-rup/plantillas-rup.component';
 import { LogoSvgComponent } from './styles/logo.svg';
 import { AcronimoSvgComponent } from './styles/acronimo.svg';
-import { ListaReglasComponent } from './components/top/reglas/listaReglas.component';
-import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaSolicitudTop';
 
 registerLocaleData(localeEs, 'es');
 
@@ -572,8 +574,11 @@ registerLocaleData(localeEs, 'es');
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
         PermisosComponent,
-        // AuditoriaPorBloqueComponent,
+        // RUP:
         PuntoInicioComponent,
+        RUPFueraDeAgendaComponent,
+        RUPTurnosComponent,
+        RUPSobreturnosComponent,
         VincularPacientesComponent,
         LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
         AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,

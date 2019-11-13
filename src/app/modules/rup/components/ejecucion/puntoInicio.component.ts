@@ -21,7 +21,12 @@ import { WebSocketService } from '../../../../services/websocket.service';
 
 @Component({
     selector: 'rup-puntoInicio',
-    templateUrl: 'puntoInicio.html'
+    templateUrl: 'puntoInicio.html',
+    styles: [`
+        .align-items-start {
+            align-items: flex-start !important;
+        }
+    `]
 })
 export class PuntoInicioComponent implements OnInit, OnDestroy {
 
@@ -36,8 +41,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         radio: 1
     };
     public opciones = [
-        { id: 1, label: 'Mias' },
-        { id: 2, label: 'Todas' }
+        { id: 1, label: 'mías' },
+        { id: 2, label: 'todas' },
+        // { id: 3, label: 'fuera de agenda' },
     ];
     // Lista de prestaciones filtradas por fecha, tipos de prestaciones permitidas, ...
     public prestaciones: any = [];
@@ -366,7 +372,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                     if (prestacion.error) {
                         this.plex.info('info', prestacion.error, 'Aviso');
                     } else {
-                        this.routeTo('ejecucion', prestacion.id);
+                        this.servicioPrestacion.routeTo(this.agendaSeleccionada, 'ejecucion', prestacion.id);
                     }
                 }, (err) => {
                     if (err === 'ya_iniciada') {
@@ -450,7 +456,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.plex.confirm('</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
                 this.servicioPrestacion.crearPrestacion(null, snomedConcept, 'ejecucion', turno.horaInicio, turno).subscribe(prestacion => {
-                    this.routeTo('ejecucion', prestacion.id);
+                    this.servicioPrestacion.routeTo(this.agendaSeleccionada, 'ejecucion', prestacion.id);
                 }, (err) => {
                     this.plex.info('warning', 'No fue posible crear la prestación', 'ERROR');
                 });
@@ -504,18 +510,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     cargarTurnos(agenda) {
         this.cancelarDinamica();
         this.agendaSeleccionada = agenda ? agenda : 'fueraAgenda';
-    }
-
-    mostrarBotonTurnero(agenda, turno) {
-        return (agenda && agenda.espacioFisico && agenda.espacioFisico.id && (this.espaciosFisicosTurnero.findIndex((e) => e === agenda.espacioFisico.id) >= 0)) && turno.paciente && turno.paciente.id && this.verificarAsistencia(turno) && (turno.estado !== 'suspendido') && (!turno.prestacion || (turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente'));
-    }
-
-    routeTo(action, id) {
-        if (this.agendaSeleccionada && this.agendaSeleccionada !== 'fueraAgenda') {
-            let agenda = this.agendaSeleccionada ? this.agendaSeleccionada : null;
-            localStorage.setItem('idAgenda', agenda.id);
-        }
-        this.router.navigate(['rup/' + action + '/', id]);
     }
 
     // dada una prestación busca las prestaciones generadas (por planes) que esten pendientes y sin turno asignado.
@@ -619,17 +613,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 return false;
             }
         });
-    }
-
-    verificarAsistencia(turno) {
-        if (!turno.asistencia) {
-            return true;
-        } else {
-            if (turno.asistencia === 'asistio') {
-                return true;
-            }
-        }
-        return false;
     }
 
     verIniciarPrestacionPendiente(turno, agenda) {

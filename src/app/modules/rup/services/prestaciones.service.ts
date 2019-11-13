@@ -9,6 +9,7 @@ import { IPrestacion } from '../interfaces/prestacion.interface';
 import { IPrestacionGetParams } from '../interfaces/prestacionGetParams.interface';
 import { SnomedService } from '../../../services/term/snomed.service';
 import { ReglaService } from '../../../services/top/reglas.service';
+import { Router } from '@angular/router';
 
 
 
@@ -105,7 +106,13 @@ export class PrestacionesService {
 
     public conceptosTurneables: any[];
 
-    constructor(private server: Server, public auth: Auth, private servicioTipoPrestacion: TipoPrestacionService, public snomed: SnomedService, private servicioReglas: ReglaService) {
+    constructor(
+        private server: Server,
+        public auth: Auth,
+        private servicioTipoPrestacion: TipoPrestacionService,
+        public snomed: SnomedService,
+        private router: Router,
+        private servicioReglas: ReglaService) {
 
         this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
             this.conceptosTurneables = conceptosTurneables;
@@ -941,4 +948,35 @@ export class PrestacionesService {
 
     }
 
+    tienePermisos(tipoPrestacion, prestacion) {
+        let permisos = this.auth.getPermissions('rup:tipoPrestacion:?');
+        let existe = permisos.find(permiso => (permiso === tipoPrestacion._id));
+        // vamos a comprobar si el turno tiene una prestacion asociada y si ya esta en ejecucion
+        // por otro profesional. En ese caso no debería poder entrar a ejecutar o validar la prestacion
+        if (prestacion) {
+            if (prestacion.estados[prestacion.estados.length - 1].tipo !== 'pendiente' && prestacion.estados[prestacion.estados.length - 1].createdBy.username !== this.auth.usuario.username) {
+                return null;
+            }
+        }
+        return existe;
+    }
+
+    verificarAsistencia(turno) {
+        if (!turno.asistencia) {
+            return true;
+        } else {
+            if (turno.asistencia === 'asistio') {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    routeTo(agendaSeleccionada, action, id) {
+        if (agendaSeleccionada && agendaSeleccionada !== 'fueraAgenda') {
+            let agenda = agendaSeleccionada ? agendaSeleccionada : null;
+            localStorage.setItem('idAgenda', agenda.id);
+        }
+        this.router.navigate(['rup/' + action + '/', id]);
+    }
 }

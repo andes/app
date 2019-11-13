@@ -751,3 +751,39 @@ observaciones {
         color: white !important;
     }
 }
+
+.prestacion {
+    height: 67px;
+    min-height: 67px;
+    border-top: 2px solid #ccc;
+    border-bottom: 2px solid #ccc;
+    border-right: 2px solid #ccc;
+    border-left: 2px solid #ccc;
+    &:hover {
+        background: #eee;
+        border-right: 2px solid $solicitud;
+        border-bottom: 2px solid $solicitud;
+        border-top: 2px solid $solicitud;
+        border-left: 2px solid $solicitud;
+    }
+    .rup-icon {
+        background: $solicitud;
+        padding: 8px;
+    }
+
+    div {
+        line-height: 16px;
+        &.info {
+            width: 100%;
+            margin-left: .5rem;
+            div {
+                height: 28px;
+            }
+            small, b {
+                font-size: 14px;
+            }
+            
+        }
+    }
+}
+
