@@ -23,7 +23,7 @@ jobs:
       - run:
           name: tsc
           command: npm run build:prod -- --progress=false
-          no_output_timeout: 20m
+          no_output_timeout: 30m
       - store_artifacts:
           path: ./dist
           destination: dist-folder
