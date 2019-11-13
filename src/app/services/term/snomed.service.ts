@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Server, Cache } from '@andes/shared';
 
@@ -10,13 +10,13 @@ export class SnomedService {
     constructor(private server: Server) {
     }
 
-    @Cache({ key : 'search' })
+    @Cache({ key: 'search' })
     get(params: any): Observable<any[]> {
         return this.server.get(this.snomedURL, { params: params, showError: true });
     }
 
     getCie10(params: any): Observable<any> {
-        return this.server.get(this.snomedURL + '/map', { params: params, showError: true });
+        return this.server.get(this.snomedURL + '/map', { params: params, showError: false });
     }
 
     getQuery(params: any): Observable<any[]> {

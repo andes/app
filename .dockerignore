@@ -8,6 +8,7 @@ logs
 **.js
 *.map
 **.map
+!webpack.config.js
 
 # Dependency directories
 node_modules

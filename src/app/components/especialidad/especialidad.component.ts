@@ -3,7 +3,7 @@ import {debounceTime} from 'rxjs/operators';
 import { EspecialidadCreateUpdateComponent } from './especialidad-create-update.component';
 import { IEspecialidad } from './../../interfaces/IEspecialidad';
 import { EspecialidadService } from './../../services/especialidad.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Plex } from '@andes/plex';

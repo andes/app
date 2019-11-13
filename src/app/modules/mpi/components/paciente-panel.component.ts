@@ -4,7 +4,6 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { ObraSocialService } from '../../../services/obraSocial.service';
 import { ProfeService } from '../../../services/profe.service';
-import { Subscription } from 'rxjs/Subscription';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
 
 @Component({
@@ -14,7 +13,6 @@ import { PacienteService } from '../../../core/mpi/services/paciente.service';
 })
 export class PacientePanelComponent {
     private _paciente: IPaciente;
-    private request: Subscription;
 
     // Propiedades públicas
     public coberturaSocial: {

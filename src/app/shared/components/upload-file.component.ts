@@ -28,7 +28,7 @@ export class UploadFileComponent {
 
     @Output() onProgress = new EventEmitter<IProgress>();
     @Output() onUpload = new EventEmitter<ICompleted>();
-    @ViewChild('upload') uploadElement: ElementRef;
+    @ViewChild('upload', { static: true }) uploadElement: ElementRef;
 
     public disabled = false;
     public currentFileUpload: File;

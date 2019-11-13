@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TurnosPrestacionesService } from './services/turnos-prestaciones.service';
 import { Auth } from '@andes/auth';
 import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
-import { ISubscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { ProfesionalService } from '../../services/profesional.service';
 import { ObraSocialService } from '../../services/obraSocial.service';
 import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
@@ -17,7 +17,7 @@ import { Plex } from '@andes/plex';
 export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     public busquedas;
     public mostrarMasOpciones;
-    private lastRequest: ISubscription;
+    private lastRequest: Subscription;
     private parametros;
     private hoy;
     public fechaDesde: any;

@@ -11,13 +11,11 @@ import { DocumentosService } from './../../../../services/documentos.service';
 import { Slug } from 'ng2-slugify';
 import { saveAs } from 'file-saver';
 import * as moment from 'moment';
-import 'rxjs/Rx';
 import { CodificacionService } from '../../services/codificacion.service';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
-import { forkJoin } from 'rxjs';
-import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 import { ReglaService } from '../../../../services/top/reglas.service';
-import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -268,7 +266,7 @@ export class PrestacionValidacionComponent implements OnInit {
                                     secondaryConcepts: this.prestacion.ejecucion.registros.map(r => r.concepto.conceptId)
                                 };
                                 this.codigosCie10[registro.id] = {};
-                                this.SNOMED.getCie10(parametros).subscribe(codigo => {
+                                this.SNOMED.getCie10(parametros).pipe(catchError(() => of(null))).subscribe(codigo => {
                                     this.codigosCie10[registro.id] = codigo;
                                 });
                             }

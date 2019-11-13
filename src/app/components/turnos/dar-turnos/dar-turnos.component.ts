@@ -4,7 +4,7 @@ import { Component, Input, OnInit, Output, EventEmitter, HostBinding } from '@an
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { EstadosDarTurnos } from './enums';
 import { EstadosAgenda } from './../enums';
 import { PrestacionesService } from './../../../modules/rup/services/prestaciones.service';

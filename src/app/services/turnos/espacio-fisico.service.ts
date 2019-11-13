@@ -1,6 +1,6 @@
 import { Server } from '@andes/shared';
 import { IEspacioFisico } from './../../interfaces/turnos/IEspacioFisico';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 

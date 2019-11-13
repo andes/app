@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { IProfesional } from './../interfaces/IProfesional';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
@@ -29,7 +29,7 @@ export class ProfesionalService {
      * @param {any} params Opciones de busqueda
      */
     getFirma(params: any): Observable<any> {
-        return this.server.get(this.profesionalUrl + '/firma', { params: params, showError: true });
+        return this.server.get(this.profesionalUrl + '/firma', { params: params, showError: false });
     }
 
     /**

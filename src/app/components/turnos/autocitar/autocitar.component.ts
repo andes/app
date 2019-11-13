@@ -2,7 +2,7 @@ import { Component, Input, EventEmitter, Output, OnInit, HostBinding } from '@an
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { IBloque } from './../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../interfaces/turnos/ITurno';

@@ -38,6 +38,13 @@ $plex-tabs-color-extend: (
     otro: $otro
 );
 
+.logo-nav {
+    float: left;
+    background-color: var(--nav-bar-icon-color);;
+    width: 100px;
+    height: 50px;
+    padding: 7px;
+}
 
 // Plex
 @import '~@andes/plex/src/lib/styles.scss';

@@ -1,11 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Subject } from 'rxjs/Rx';
+import { Subject } from 'rxjs';
 import { CamasService } from '../services/camas.service';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { InternacionService } from '../services/internacion.service';
 import { Router } from '@angular/router';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
     selector: 'cama-ocupar',
@@ -50,7 +51,7 @@ export class OcuparCamaComponent implements OnInit {
         private internacionService: InternacionService,
         private router: Router) {
         this.disponibles
-            .debounceTime(1000)
+            .pipe(debounceTime(1000))
             .subscribe(val => {
                 this.selectCamasDisponibles(this.paseAunidadOrganizativa);
             });

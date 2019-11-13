@@ -1,6 +1,6 @@
 import { Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ICodificacionPrestacion } from '../interfaces/ICodificacion';
 
 @Injectable()

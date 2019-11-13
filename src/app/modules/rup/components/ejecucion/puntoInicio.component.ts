@@ -15,7 +15,7 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
-import { SubscriptionLike as ISubscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -51,7 +51,7 @@ export class PuntoInicioComponent implements OnInit {
     public paciente: any;
 
     // ultima request que se almacena con el subscribe
-    private lastRequest: ISubscription;
+    private lastRequest: Subscription;
 
 
     constructor(private router: Router,

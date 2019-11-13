@@ -31,7 +31,7 @@ export class RelacionesPacientesComponent implements OnInit {
         return this._paciente;
     }
     @Output() actualizar: EventEmitter<any> = new EventEmitter<any>();
-    @ViewChild('listadoRel') listado: ElementRef;
+    @ViewChild('listadoRel', { static: true }) listado: ElementRef;
 
     _paciente: IPaciente;
     parentescoModel: any[] = [];

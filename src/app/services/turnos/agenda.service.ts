@@ -1,5 +1,5 @@
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { environment } from '../../../environments/environment';

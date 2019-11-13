@@ -1,8 +1,7 @@
 
 import { Injectable } from '@angular/core';
-import { Headers, Http, RequestOptions, RequestMethod, Response } from '@angular/http';
 
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 // Import RxJs required methods
 
 
@@ -14,7 +13,7 @@ export class AuditoriaService {
 
     private auditoriaURL = '/core/mpi/auditoria/matching';
 
-    constructor(private server: Server, private http: Http) { }
+    constructor(private server: Server) { }
 
     get(): Observable<IAudit[]> {
         return this.server.get(this.auditoriaURL);

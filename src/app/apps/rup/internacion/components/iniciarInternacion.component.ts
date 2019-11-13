@@ -13,6 +13,8 @@ import { ProfesionalService } from '../../../../services/profesional.service';
 import { InternacionService } from '../services/internacion.service';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { IPrestacionRegistro } from '../../../../modules/rup/interfaces/prestacion.registro.interface';
+import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
     selector: 'rup-iniciarInternacion',
@@ -189,7 +191,7 @@ export class IniciarInternacionComponent implements OnInit {
             this.btnIniciarGuardar = 'INICIAR';
             this.servicioPrestacion.internacionesXPaciente(this.paciente, 'ejecucion', this.auth.organizacion.id).subscribe(resultado => {
                 // Si el paciente ya tiene una internacion en ejecucion (Puede ser que haya egresado pero aún no este validada la internacion)
-                if (resultado) {
+                if (resultado && resultado.length) {
                     if (resultado.cama) {
                         this.plex.info('warning', 'El paciente registra una internación en ejecución y está ocupando una cama');
                         // Salimos del iniciar internacion
@@ -227,7 +229,7 @@ export class IniciarInternacionComponent implements OnInit {
                 } else {
                     // Chequeamos si el paciente tiene una internacion validad anterior para copiar los datos
                     this.servicioPrestacion.internacionesXPaciente(this.paciente, 'validada', null).subscribe(datosInternacion => {
-                        if (datosInternacion) {
+                        if (datosInternacion && datosInternacion.length) {
                             this.informeIngreso = this.buscarRegistroInforme(datosInternacion.ultimaInternacion);
                         }
                         this.buscandoPaciente = false;
@@ -268,7 +270,7 @@ export class IniciarInternacionComponent implements OnInit {
             this.route.params.subscribe(params => {
                 if (params && params['id']) {
                     let id = params['id'];
-                    this.camasService.getCama(id).subscribe(cama => {
+                    this.camasService.getCama(id).pipe(catchError(() => of(null))).subscribe(cama => {
                         this.cama = cama;
                     });
                 }

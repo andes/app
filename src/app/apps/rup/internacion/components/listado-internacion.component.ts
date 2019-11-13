@@ -9,6 +9,8 @@ import { OrganizacionService } from '../../../../services/organizacion.service';
 import { CamasService } from '../services/camas.service';
 import * as enumerados from '../../../../utils/enumerados';
 import { ResumenInternacionComponent } from './resumenInternacion.component';
+import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 // ../../../../services/internacion.service
 @Component({
@@ -122,7 +124,7 @@ export class ListadoInternacionComponent implements OnInit {
             let fechaEgreso = egreso.InformeEgreso.fechaEgreso;
             this.servicioPrestacion.getPasesInternacion(this.internacionSelected.id).subscribe(lista => {
                 let listaFiltrada = lista.filter(c => c.estados.fecha < fechaEgreso);
-                this.camasService.getCama(listaFiltrada[listaFiltrada.length - 1]._id).subscribe(cama => {
+                this.camasService.getCama(listaFiltrada[listaFiltrada.length - 1]._id).pipe(catchError(() => of(null))).subscribe(cama => {
                     if (cama) {
                         dto = {
                             fecha: egreso.InformeEgreso.fechaEgreso,

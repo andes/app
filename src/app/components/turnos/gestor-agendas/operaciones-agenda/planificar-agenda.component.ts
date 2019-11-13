@@ -1,7 +1,7 @@
 import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
 import { OrganizacionService } from './../../../../services/organizacion.service';
 import { Component, EventEmitter, Output, OnInit, Input, HostBinding, AfterViewInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import * as moment from 'moment';
@@ -11,8 +11,7 @@ import { TipoPrestacionService } from './../../../../services/tipoPrestacion.ser
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
-import { ISubscription } from 'rxjs/Subscription';
-import { TipoPrestacionComponent } from '../../../tipoPrestacion/tipoPrestacion.component';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'planificar-agenda',
@@ -55,7 +54,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     cupoMaximo: Number;
     setCupo = false;
     // ultima request de profesionales que se almacena con el subscribe
-    private lastRequest: ISubscription;
+    private lastRequest: Subscription;
 
     constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public organizacionService: OrganizacionService,
         public serviceAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }

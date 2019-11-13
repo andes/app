@@ -19,9 +19,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { LOCALE_ID } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { HttpModule } from '@angular/http';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { HttpClient } from '@angular/common/http';
 
 // Global
 import { PlexModule } from '@andes/plex';
@@ -515,6 +515,8 @@ import { GestorUsuariosProvidersModule } from './apps/gestor-usuarios/gestor-usu
 import { environment } from '../environments/environment';
 import { LugarDeNacimientoComponent } from './modules/rup/components/elementos/lugarDeNacimiento.component';
 import { PlantillasRUPComponent } from './apps/rup/plantillas-rup/plantillas-rup.component';
+import { LogoSvgComponent } from './styles/logo.svg';
+import { AcronimoSvgComponent } from './styles/acronimo.svg';
 
 registerLocaleData(localeEs, 'es');
 
@@ -525,7 +527,6 @@ registerLocaleData(localeEs, 'es');
         ReactiveFormsModule,
         FormsModule,
         HttpClientModule,
-        HttpModule,
         PlexModule,
         AuthModule,
         ScrollingModule,
@@ -668,6 +669,8 @@ registerLocaleData(localeEs, 'es');
         TurnosPrestacionesComponent,
 
         PlantillasRUPComponent,
+        LogoSvgComponent,
+        AcronimoSvgComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
@@ -676,6 +679,7 @@ registerLocaleData(localeEs, 'es');
             provide: LOCALE_ID,
             useValue: 'es-AR'
         },
+        HttpClient,
         Plex,
         Server,
         Auth,

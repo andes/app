@@ -15,7 +15,6 @@ import { FiltrosSolicitudesComponent } from './components/top/filtrosSolicitudes
 import { PlexModule } from '@andes/plex';
 import { ChartsModule } from 'ng2-charts';
 import { HttpClientModule } from '@angular/common/http';
-import { HttpModule } from '@angular/http';
 import { CitasComponent } from './components/citas/citas.component';
 import { EstadisticasRouting } from './estadisticas.routing';
 import { CommonModule } from '@angular/common';
@@ -33,7 +32,6 @@ import { SumPipe } from './pipes/sum.pipe';
         ChartsModule,
         FormsModule,
         HttpClientModule,
-        HttpModule,
         EstadisticasRouting
     ],
     declarations: [

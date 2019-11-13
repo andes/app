@@ -6,7 +6,9 @@ import { FacturacionAutomaticaService } from './../../../../services/facturacion
 import { ObraSocialService } from './../../../../services/obraSocial.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { ProfesionalService } from '../../../../services/profesional.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
 @Component({
     selector: 'arancelamiento-form',
     templateUrl: 'arancelamiento-form.html',
@@ -57,7 +59,7 @@ export class ArancelamientoFormComponent implements OnInit {
     ngOnInit() {
         forkJoin([
             this.organizacionService.configuracion(this.auth.organizacion.id),
-            this.profesionalService.getFirma({ id: this.turno.profesionales[0]._id }),
+            this.profesionalService.getFirma({ id: this.turno.profesionales[0]._id }).pipe(catchError(() => of(null))),
             this.servicioFA.get({ idPrestacionTurneable: this.turnoSeleccionado.tipoPrestacion.conceptId })
         ]).subscribe((data) => {
             const [config, firma, resultadoFA] = data;

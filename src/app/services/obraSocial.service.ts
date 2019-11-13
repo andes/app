@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { IObraSocial } from '../interfaces/IObraSocial';
 import { IFinanciador } from '../interfaces/IFinanciador';
 

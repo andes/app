@@ -10,7 +10,8 @@ import { InternacionService } from '../services/internacion.service';
 import * as moment from 'moment';
 
 import { CamasService } from '../services/camas.service';
-import { Subject } from 'rxjs/Rx';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
     selector: 'rup-egresoInternacion',
@@ -123,7 +124,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
 
     ) {
         this.mySubject
-            .debounceTime(1000)
+            .pipe(debounceTime(1000))
             .subscribe(val => {
                 this.calcularDiasEstada();
             });

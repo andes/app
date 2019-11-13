@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { environment } from './../../../environments/environment';
 import { Server } from '@andes/shared';
 import { IConfigPrestacion } from './../../interfaces/turnos/IConfigPrestacion';

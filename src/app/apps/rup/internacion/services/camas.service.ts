@@ -1,6 +1,5 @@
 import { Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
-// import { Observable } from 'rxjs/Observable';
 import { ICama } from '../interfaces/ICama';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { Observable } from 'rxjs';
@@ -12,7 +11,7 @@ export class CamasService {
     constructor(private server: Server) { }
 
     getCama(id: String): Observable<any> {
-        return this.server.get(this.camasUrl + '/' + id, null);
+        return this.server.get(this.camasUrl + '/' + id);
     }
 
     getCamas(params): Observable<ICama[]> {

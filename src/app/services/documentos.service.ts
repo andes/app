@@ -1,9 +1,9 @@
 
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { Http, Response, ResponseContentType, RequestMethod } from '@angular/http';
-import { Headers, RequestOptions } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class DocumentosService {
@@ -11,33 +11,28 @@ export class DocumentosService {
     // URL to web api
     private pdfURL = environment.API + '/modules/descargas';
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) { }
+
+    download(url, data): Observable<any> {
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('jwt') ? 'JWT ' + window.sessionStorage.getItem('jwt') : ''
+        });
+
+        let options: any = { headers: headers, responseType: 'blob' };
+        return this.http.post(this.pdfURL + '/' + url, data, options).pipe(
+            catchError(this.handleError)
+        );
+    }
 
 
     descargar(data): Observable<any> {
-        let headers = new Headers({
-            'Content-Type': 'application/json',
-            'Authorization': window.sessionStorage.getItem('jwt') ? 'JWT ' + window.sessionStorage.getItem('jwt') : null
-        });
-
-        let options = new RequestOptions({ headers: headers, responseType: ResponseContentType.Blob, method: RequestMethod.Post });
-        return this.http.post(this.pdfURL + '/censoMensual', data, options)
-            .map(this.extractData)
-            .catch(this.handleError);
+        return this.download('censoMensual', data);
     }
 
 
     descargarV2(data): Observable<any> {
-
-        let headers = new Headers({
-            'Content-Type': 'application/json',
-            'Authorization': window.sessionStorage.getItem('jwt') ? 'JWT ' + window.sessionStorage.getItem('jwt') : null
-        });
-
-        let options = new RequestOptions({ headers: headers, responseType: ResponseContentType.Blob, method: RequestMethod.Post });
-        return this.http.post(this.pdfURL + '/pdf', data, options)
-            .map(this.extractData)
-            .catch(this.handleError);
+        return this.download('pdf', data);
     }
 
     private handleError(error: any) {
@@ -45,32 +40,13 @@ export class DocumentosService {
             error.status ? `${error.status} - ${error.statusText}` : 'Server error';
         return Observable.throw(errMsg);
     }
-    protected extractData(res: Response) {
-        return res.blob();
-    }
 
     descargarConstanciaPuco(params): Observable<any> {
-        let headers = new Headers({
-            'Content-Type': 'application/json',
-        });
-        let options = new RequestOptions({ headers: headers, responseType: ResponseContentType.Blob, method: RequestMethod.Post });
-
-        return this.http.post(this.pdfURL + '/constanciaPuco/pdf', params, options)
-            .map(this.extractData)
-            .catch(this.handleError);
+        return this.download('constanciaPuco/pdf', params);
     }
 
     descargarCenso(data): Observable<any> {
-
-        let headers = new Headers({
-            'Content-Type': 'application/json',
-            'Authorization': window.sessionStorage.getItem('jwt') ? 'JWT ' + window.sessionStorage.getItem('jwt') : null
-        });
-
-        let options = new RequestOptions({ headers: headers, responseType: ResponseContentType.Blob, method: RequestMethod.Post });
-        return this.http.post(this.pdfURL + '/censo', data, options)
-            .map(this.extractData)
-            .catch(this.handleError);
+        return this.download('censo', data);
     }
 
 

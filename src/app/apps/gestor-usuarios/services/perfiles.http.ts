@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Server } from '@andes/shared';
 import { BehaviorSubject, zip } from 'rxjs';
-import { switchMap, distinctUntilChanged, map, tap, publishReplay, refCount, combineAll, merge } from 'rxjs/operators';
+import { switchMap, distinctUntilChanged, map, tap,  merge } from 'rxjs/operators';
 import { cache } from '@andes/shared';
 
 let shiroTrie = require('shiro-trie');

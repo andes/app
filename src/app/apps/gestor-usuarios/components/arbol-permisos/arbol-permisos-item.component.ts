@@ -29,7 +29,7 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
 
     @Output() change = new EventEmitter();
 
-    @ViewChild('panel') accordions: PlexPanelComponent;
+    @ViewChild('panel', { static: false }) accordions: PlexPanelComponent;
     @ViewChildren(ArbolPermisosItemComponent) childsComponents: QueryList<ArbolPermisosItemComponent>;
 
     ngAfterViewInit() {

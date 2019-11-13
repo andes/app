@@ -24,7 +24,7 @@ function elementAt(index = 0) {
 export class UsuariosEditComponent implements OnInit, OnDestroy {
     destroy$: Subject<boolean> = new Subject<boolean>();
 
-    @ViewChild(ArbolPermisosComponent) arbol: ArbolPermisosComponent;
+    @ViewChild(ArbolPermisosComponent, { static: true }) arbol: ArbolPermisosComponent;
     private userId = '';
     private organizacionId = '';
     public orgName = '';

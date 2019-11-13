@@ -10,7 +10,8 @@ import { OrganizacionService } from '../../../../services/organizacion.service';
 import { CamasService } from '../services/camas.service';
 import * as enumerados from '../../../../utils/enumerados';
 import { ResumenInternacionComponent } from './resumenInternacion.component';
-import { Subject } from 'rxjs';
+import { Subject, of } from 'rxjs';
+import { debounceTime, catchError } from 'rxjs/operators';
 
 // ../../../../services/internacion.service
 @Component({
@@ -62,7 +63,7 @@ export class PasesListadoInternacionComponent implements OnInit {
         private internacionService: InternacionService, public prestacionesService: PrestacionesService, public CamaService: CamasService) {
 
         this.actualizaTipo
-            .debounceTime(1000)
+            .pipe(debounceTime(1000))
             .subscribe(val => {
                 this.operacionDesocuparCama();
             });
