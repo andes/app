@@ -21,6 +21,9 @@ jobs:
           name: lint
           command: npm run lint
       - run:
+          name: clean Browserlist
+          command: rm browserslist && touch browserslist
+      - run:
           name: tsc
           command: npm run build:prod -- --progress=false
           no_output_timeout: 30m
