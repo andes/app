@@ -95,6 +95,7 @@ import { ObraSocialCacheService } from './services/obraSocialCache.service';
 
 import { ProfeService } from './services/profe.service';
 import { ReglasComponent } from './components/top/reglas/reglas.component';
+import { VisualizacionReglasTopComponent } from './components/top/reglas/visualizacionReglasTop.component';
 import { VisualizacionReglasComponent } from './components/top/reglas/visualizacionReglas.component';
 import { ReglaService } from './services/top/reglas.service';
 import { FacturacionAutomaticaService } from './services/facturacionAutomatica.service';
@@ -639,6 +640,7 @@ registerLocaleData(localeEs, 'es');
         PucoComponent,
         ReglasComponent,
         ListaReglasComponent,
+        VisualizacionReglasTopComponent,
         VisualizacionReglasComponent,
         VistaSolicitudTopComponent,
         // MPI

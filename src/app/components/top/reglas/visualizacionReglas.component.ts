@@ -6,7 +6,6 @@ import { IRegla } from '../../../interfaces/IRegla';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 import { Auth } from '@andes/auth';
-
 @Component({
     selector: 'visualizacion-reglas',
     templateUrl: './visualizacionReglas.html'

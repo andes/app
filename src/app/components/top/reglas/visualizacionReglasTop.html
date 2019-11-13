@@ -1,0 +1,9 @@
+<plex-layout main="12">
+    <plex-layout-main>
+        <visualizacion-reglas [esParametrizado]="esParametrizado">
+        </visualizacion-reglas>
+    </plex-layout-main>
+    <plex-layout-footer *ngIf="!esParametrizado">
+        <plex-button label="Volver" type="danger" position="left" routerLink="/solicitudes"></plex-button>
+    </plex-layout-footer>
+</plex-layout>
