@@ -143,7 +143,7 @@ export class AgregarSobreturnoComponent implements OnInit {
 
     loadObraSocial(paciente) {
         // TODO: si es en colegio médico hay que buscar en el paciente
-        if (!paciente || !paciente.documento) { return; }
+        if (paciente && paciente.documento) {
         this.obraSocialService.getObrasSociales(paciente.documento).subscribe(resultado => {
             if (resultado.length) {
                 this.obraSocialPaciente = resultado.map((os: any) => {
@@ -166,6 +166,7 @@ export class AgregarSobreturnoComponent implements OnInit {
             }
             this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
         });
+    }
     }
 
     seleccionarObraSocial(event) {
@@ -193,7 +194,7 @@ export class AgregarSobreturnoComponent implements OnInit {
                 this.carpetaEfector = this.paciente.carpetaEfectores[indiceCarpeta];
             }
         }
-        if (indiceCarpeta === -1) {
+        if (indiceCarpeta === -1 && (this.paciente && this.paciente.documento)) {
             // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
             this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
                 if (carpeta.nroCarpeta) {
@@ -239,7 +240,7 @@ export class AgregarSobreturnoComponent implements OnInit {
                 this.paciente.carpetaEfectores.push(this.carpetaEfector);
             }
 
-            let osPaciente: any;
+            let osPaciente: any  = '';
             if (this.modelo.obraSocial === 'prepaga') {
                 osPaciente = this.modelo.prepaga;
             } else if (this.modelo.obraSocial === 'SUMAR') {
@@ -249,7 +250,7 @@ export class AgregarSobreturnoComponent implements OnInit {
                     nombre: null
                 };
             } else {
-                osPaciente = this.paciente.financiador.find((os) => os.nombre === this.modelo.obraSocial);
+                osPaciente =  this.paciente.financiador && (this.paciente.financiador.find((os) => os.nombre === this.modelo.obraSocial));
             }
             let pacienteSave = {
                 id: this.paciente.id,
