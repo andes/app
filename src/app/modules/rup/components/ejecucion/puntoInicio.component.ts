@@ -1,11 +1,11 @@
 
 import { forkJoin as observableForkJoin } from 'rxjs';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { Auth } from '@andes/auth';
-import { Plex, DropdownItem } from '@andes/plex';
+import { Plex } from '@andes/plex';
 import { EstadosAgenda } from './../../../../components/turnos/enums';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
@@ -14,16 +14,16 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
+import { Subscription } from 'rxjs';
 import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
 import { WebSocketService } from '../../../../services/websocket.service';
-import { ISubscription } from 'rxjs/Subscription';
 
 
 @Component({
     selector: 'rup-puntoInicio',
     templateUrl: 'puntoInicio.html'
 })
-export class PuntoInicioComponent implements OnInit {
+export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     // Fecha seleccionada
     public fecha: Date = new Date();
@@ -62,7 +62,7 @@ export class PuntoInicioComponent implements OnInit {
 
     public espaciosFisicosTurnero = [];
     // ultima request que se almacena con el subscribe
-    private lastRequest: ISubscription;
+    private lastRequest: Subscription;
     public mostrarReglas = false;
 
     constructor(
