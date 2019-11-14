@@ -1,7 +1,7 @@
 <plex-layout main="7">
     <plex-layout-main>
         <!-- Box header -->
-        <plex-title main justify titulo="Punto de inicio | Consultorio">
+        <plex-title main titulo="Punto de inicio | Consultorio">
             <plex-help type="info" titulo="Reglas TOP" tituloBoton="Reglas TOP">
                 <visualizacion-reglas info [esParametrizado]="true"></visualizacion-reglas>
             </plex-help>
@@ -25,16 +25,6 @@
             </div>
             <div class="pr-0 col-4">
                 <label class="form-control-label">Agendas</label>
-                <!-- <plex-button title="Mostrar sólo mis agendas" icon="mdi mdi-calendar-multiple-check"
-                                 [type]="(soloMisAgendas) ? 'primary' : 'default'"
-                                 (click)="soloMisAgendas = true; filtrar()">
-                    </plex-button>
-                    <plex-button title="Mostrar todas las agendas" icon="mdi mdi-asterisk"
-                                 [type]="(!soloMisAgendas) ? 'primary' : 'default'"
-                                 (click)="soloMisAgendas = false; filtrar()">
-                    </plex-button> -->
-                <!-- <plex-bool label="" name="activo" (change)="filtrar()" [(ngModel)]="soloMisAgendas">
-                </plex-bool> -->
                 <div class="d-flex align-items-end h-50">
                     <plex-radio class="form-check form-check-inline" [(ngModel)]="filtroAgendas.radio" [data]="opciones"
                                 name="agendas" type="horizontal" (change)="filtrar();">
@@ -77,8 +67,9 @@
                                 </div>
                                 <div>
                                     <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
-                                    <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio
-                                        físico no asignado</span>
+                                    <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">
+                                        Espacio físico no asignado
+                                    </span>
                                 </div>
                             </td>
                             <td>
@@ -86,8 +77,9 @@
                                     {{tipoPrestacion.nombre}}
                                 </div>
                                 <div>
-                                    <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional
-                                        no asignado</span>
+                                    <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">
+                                        Profesional no asignado
+                                    </span>
                                     <ng-container *ngIf="agenda.profesionales">
                                         <div *ngFor="let profesional of agenda.profesionales">
                                             {{profesional | profesional}}
@@ -98,14 +90,16 @@
                             <td>
                                 <ng-container
                                               *ngIf="agenda.estado !== 'disponible' && !agenda.tipoPrestaciones[0].noNominalizada">
-                                    <span class="badge-info float-right">pacientes
-                                        {{getCantidadPacientes(agenda)}}
-                                        <ng-container *ngIf="!agenda.dinamica">/ {{agenda.cantidadTurnos}}
+                                    <span class="badge-info float-right">
+                                        pacientes {{getCantidadPacientes(agenda)}}
+                                        <ng-container *ngIf="!agenda.dinamica">
+                                            / {{agenda.cantidadTurnos}}
                                         </ng-container>
                                     </span>
                                 </ng-container>
                                 <ng-container *ngIf="agenda.tipoPrestaciones[0].noNominalizada">
-                                    <span class="badge-info float-right">No nominalizada
+                                    <span class="badge-info float-right">
+                                        No nominalizada
                                     </span>
                                 </ng-container>
                             </td>
@@ -120,8 +114,11 @@
                     </td>
                     <td colspan="2">
                         <span class="badge-info float-right">
-                            <ng-container *ngIf="fueraDeAgenda.length === 1">1 paciente</ng-container>
-                            <ng-container *ngIf="fueraDeAgenda.length > 1">{{fueraDeAgenda.length}} pacientes
+                            <ng-container *ngIf="fueraDeAgenda.length === 1">
+                                1 paciente
+                            </ng-container>
+                            <ng-container *ngIf="fueraDeAgenda.length > 1">
+                                {{fueraDeAgenda.length}} pacientes
                             </ng-container>
                         </span>
                     </td>
@@ -131,26 +128,12 @@
     </plex-layout-main>
     <plex-layout-sidebar>
         <div>
-            <!-- <div class="col h-100" *ngIf="mostrarReglas">
-            <fieldset>
-                <legend>Mis reglas de Solicitudes</legend>
-            </fieldset>
-            <div class="row">
-                <div class="col-12">
-                    <visualizacion-reglas [esParametrizado]="true"></visualizacion-reglas>
-                </div>
-            </div>
-        </div> -->
             <div class="col h-100" *ngIf="!mostrarReglas">
                 <dinamica *ngIf="buscandoPaciente" [agenda]="agendaSeleccionada" (cancel)="cancelarDinamica()">
                 </dinamica>
 
                 <ng-container *ngIf="!buscandoPaciente">
                     <plex-title justify titulo="Detalles" size="md">
-                        <!-- <plex-help type="help" icon="information" titulo="Reglas TOP" tituloBoton="Reglas TOP"
-                                   size="sm">
-                            <visualizacion-reglas [esParametrizado]="true"></visualizacion-reglas>
-                        </plex-help> -->
                     </plex-title>
 
                     <ng-container
@@ -200,9 +183,12 @@
 
                                             <div *ngIf="turno.prestacion && turno?.prestacion?.estados">
                                                 <br />
-                                                <span *ngIf="turno.asistencia !== 'noAsistio'" class="badge"
-                                                      [ngClass]="{ 'badge-success': turno.prestacion.estados[turno.prestacion.estados.length
-                    - 1].tipo==='validada' , 'badge-warning': turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo==='ejecucion'}">
+                                                <span *ngIf="turno.asistencia !== 'noAsistio'" class="badge" [ngClass]="{ 
+                                                          'badge-success': 
+                                                                turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo==='validada', 
+                                                          'badge-warning': 
+                                                                turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo==='ejecucion'
+                                                        }">
                                                     {{turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo}}
                                                 </span>
 
@@ -231,16 +217,18 @@
                                             <small>
                                                 <span *ngIf="turno.paciente?.id">
                                                     <br>
-                                                    <span *ngIf="turno.paciente.documento !== ''"> DNI
-                                                        {{turno.paciente.documento | number}}</span>
-                                                    <span *ngIf="turno.paciente.documento === ''"> Sin documento
-                                                        (temporal)</span>
+                                                    <span *ngIf="turno.paciente.documento !== ''">
+                                                        DNI {{turno.paciente.documento | number}}
+                                                    </span>
+                                                    <span *ngIf="turno.paciente.documento === ''">
+                                                        Sin documento (temporal)
+                                                    </span>
                                                 </span>
                                                 <span
                                                       *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores && turno.paciente.carpetaEfectores?.length > 0">
                                                     | Nro Carpeta
-                                                    <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">{{
-                                                    carpeta.nroCarpeta }}
+                                                    <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">
+                                                        {{ carpeta.nroCarpeta }}
                                                     </span>
                                                 </span>
                                             </small>
@@ -253,14 +241,15 @@
                                                 </span>
                                                 <ng-container class="text-muted"
                                                               *ngIf="turno?.prestacion?.solicitud?.profesional">
-                                                    <br> Prof.: {{turno.prestacion.solicitud.profesional | profesional}}
+                                                    <br>
+                                                    Prof.: {{turno.prestacion.solicitud.profesional | profesional}}
                                                 </ng-container>
                                             </small>
 
 
                                             <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}"
-                                                  *ngIf="turno && turno.estado === 'turnoDoble'">Turno
-                                                Doble
+                                                  *ngIf="turno && turno.estado === 'turnoDoble'">
+                                                Turno Doble
                                             </span>
                                             <span class="badge badge-danger"
                                                   *ngIf="turno && turno.estado === 'suspendido'">Suspendido</span>

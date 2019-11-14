@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { Auth } from '@andes/auth';
-import { Plex, DropdownItem } from '@andes/plex';
+import { Plex } from '@andes/plex';
 import { EstadosAgenda } from './../../../../components/turnos/enums';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
