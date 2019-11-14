@@ -34,12 +34,12 @@
                     </div>
                 </td>
                 <td class="medium">
-                    <div *ngIf="acceso.motivo">
+                    <div *ngIf="acceso.motivoAcceso">
                         <strong>Motivo
                             de consulta</strong>
                     </div>
                     <div>
-                        <span *ngIf="acceso.motivo" class="text-secondary">{{acceso.motivo}}</span>
+                        <span *ngIf="acceso.motivoAcceso" class="text-secondary">{{acceso.motivoAcceso}}</span>
                     </div>
                 </td>
                 <td class="medium">
@@ -49,12 +49,6 @@
                         </span>
                     </ng-container>
                 </td>
-                <!-- <td>
-                    <ng-container *ngIf="acceso.cliente && acceso.cliente.ip">
-                        <span class="badge-info float-right">{{ acceso.cliente.ip }}
-                        </span>
-                    </ng-container>
-                </td> -->
             </tr>
         </ng-container>
     </tbody>

@@ -133,6 +133,7 @@ export class PrestacionesService {
      * @memberof PrestacionesService
      */
     getSolicitudes(params: any): Observable<IPrestacion[]> {
+        params.hudsToken = this.hudsService.getHudsToken();
         return this.server.get(this.prestacionesUrl + '/solicitudes', { params: params, showError: true });
     }
 
