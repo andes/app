@@ -450,7 +450,7 @@ export class PrestacionesService {
             let prestacionesXtipo = [];
             prestaciones.forEach(prestacion => {
                 if (prestacion.solicitud.tipoPrestacion.conceptId === conceptId) {
-                    prestacionesXtipo = [...prestacionesXtipo, ...prestacion];
+                    prestacionesXtipo = [...prestacionesXtipo, prestacion];
                 }
             });
             return prestacionesXtipo;
