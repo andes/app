@@ -249,7 +249,7 @@ export class AgregarSobreturnoComponent implements OnInit {
                     nombre: null
                 };
             } else {
-                osPaciente = this.paciente.financiador.find((os) => os.nombre === this.modelo.obraSocial);
+                osPaciente = this.paciente.financiador && this.paciente.financiador.find((os) => os.nombre === this.modelo.obraSocial);
             }
             let pacienteSave = {
                 id: this.paciente.id,
