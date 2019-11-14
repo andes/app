@@ -17,6 +17,8 @@ import { SnomedService } from '../../../../services/term/snomed.service';
 import { Subscription } from 'rxjs';
 import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
 import { WebSocketService } from '../../../../services/websocket.service';
+import { ISubscription } from 'rxjs/Subscription';
+
 
 
 @Component({
