@@ -4,7 +4,8 @@ import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 
 @Component({
     selector: 'vista-accesos-huds',
-    templateUrl: 'vista-accesos-huds.html'
+    templateUrl: 'vista-accesos-huds.html',
+    styleUrls: ['./vista-accesos-huds.scss']
 })
 
 export class VistaAccesosHudsComponent implements OnInit {
@@ -15,13 +16,35 @@ export class VistaAccesosHudsComponent implements OnInit {
     ) { }
 
     public accesosHuds = [];
+    public params;
+    private scrollEnd = false;
 
     ngOnInit() {
-        let params = {
-            paciente: this.paciente.id
+        this.params = {
+            paciente: this.paciente.id,
+            skip: 0,
+            limit: 10
         };
-        this.hudsService.getAccesos(params).subscribe(res => {
-            this.accesosHuds = res;
+        this.getAccesos();
+    }
+
+    onScroll() {
+        if (!this.scrollEnd) {
+            this.getAccesos();
+        }
+    }
+
+    getAccesos() {
+        if (this.params.skip === 0) {
+            this.accesosHuds = [];
+        }
+        this.hudsService.getAccesos(this.params).subscribe(accesos => {
+            this.accesosHuds = this.accesosHuds.concat(accesos);
+            this.params.skip = this.accesosHuds.length;
+            // si vienen menos registros que la cantidad límite significa que ya se cargaron todos
+            if (!accesos.length || accesos.length < this.params.limit) {
+                this.scrollEnd = true;
+            }
         });
     }
 }
