@@ -1,5 +1,5 @@
+import { RelacionesPacientesComponent } from './relaciones-pacientes.component';
 import { AppMobileService } from './../../../services/appMobile.service';
-import { ParentescoService } from './../../../services/parentesco.service';
 import { IContacto } from './../../../interfaces/IContacto';
 import { IDireccion } from '../../../core/mpi/interfaces/IDireccion';
 import { LocalidadService } from './../../../services/localidad.service';
@@ -11,7 +11,7 @@ import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { IProvincia } from './../../../interfaces/IProvincia';
 import { Plex } from '@andes/plex';
 import * as moment from 'moment';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PacienteCacheService } from '../services/pacienteCache.service';
 import { BarrioService } from '../../../services/barrio.service';
 import { GeoreferenciaService } from '../services/georeferencia.service';
@@ -26,6 +26,7 @@ import { HistorialBusquedaService } from '../services/historialBusqueda.service'
     styleUrls: ['paciente-cru.scss']
 })
 export class PacienteCruComponent implements OnInit {
+    @ViewChild(RelacionesPacientesComponent, { static: true }) relacionesPacientes: RelacionesPacientesComponent;
 
     foto = '';
     estados = [];
@@ -33,7 +34,6 @@ export class PacienteCruComponent implements OnInit {
     generos: any[];
     estadosCiviles: any[];
     tipoComunicacion: any[];
-    parentescoModel: any[];
     relacionesBorradas: any[];
     backUpDatos = [];
     provincias: IProvincia[] = [];
@@ -59,7 +59,7 @@ export class PacienteCruComponent implements OnInit {
     viveProvActual = false;
     changeRelaciones = false;
     posibleDuplicado = false;
-    loading = false;
+    loading = true;
     autoFocus = 0;
     hoy = moment().endOf('day').toDate();
     showCargar: boolean;
@@ -148,7 +148,6 @@ export class PacienteCruComponent implements OnInit {
         private localidadService: LocalidadService,
         private barriosService: BarrioService,
         private pacienteService: PacienteService,
-        private parentescoService: ParentescoService,
         public appMobile: AppMobileService,
         private pacienteCache: PacienteCacheService,
         private _router: Router,
@@ -159,15 +158,6 @@ export class PacienteCruComponent implements OnInit {
 
     ngOnInit() {
         this.updateTitle('Registrar un paciente');
-        this.route.params.subscribe(params => {
-            this.opcion = params['opcion'];
-            this.origen = params['origen'];
-            this.paciente = this.pacienteCache.getPacienteValor();
-            this.escaneado = this.pacienteCache.getScanState();
-            this.pacienteCache.clearPaciente();
-            this.pacienteCache.clearScanState();
-        });
-
         if (this.opcion === 'sin-dni') {
             this.noPoseeDNI = true;
             this.pacienteModel.documento = '';
@@ -176,27 +166,31 @@ export class PacienteCruComponent implements OnInit {
         this.organizacionService.getById(this.auth.organizacion.id).subscribe((org: IOrganizacion) => {
             if (org) {
                 this.organizacionActual = org;
+                this.paciente = this.pacienteCache.getPacienteValor();
+                this.escaneado = this.pacienteCache.getScanState();
+                this.loadPaciente();
+                this.pacienteCache.clearPaciente();
+                this.pacienteCache.clearScanState();
                 this.provinciaActual = org.direccion.ubicacion.provincia;
                 this.localidadActual = org.direccion.ubicacion.localidad;
-                setTimeout(() => {
-                    this.loadPaciente();
-                }, 1000);
+
+                this.route.params.subscribe(params => {
+                    this.opcion = params['opcion'];
+                    this.origen = params['origen'];
+                });
+
+                // Cargamos todas las provincias
+                this.provinciaService.get({}).subscribe(rta => {
+                    this.provincias = rta;
+                });
+                this.paisService.get({
+                    nombre: 'Argentina'
+                }).subscribe(arg => {
+                    this.paisArgentina = arg[0];
+                });
             }
         });
-        // Cargamos todas las provincias
-        this.provinciaService.get({}).subscribe(rta => {
-            this.provincias = rta;
-        });
-        // Se cargan los parentescos para las relaciones
-        this.parentescoService.get().subscribe(resultado => {
-            this.parentescoModel = resultado;
-        });
-        // Set País Argentina
-        this.paisService.get({
-            nombre: 'Argentina'
-        }).subscribe(arg => {
-            this.paisArgentina = arg[0];
-        });
+
         this.showCargar = false;
         this.sexos = enumerados.getObjSexos();
         this.generos = enumerados.getObjGeneros();
@@ -226,6 +220,7 @@ export class PacienteCruComponent implements OnInit {
                         this.paciente = Object.assign({}, resultado);
                     }
                     this.actualizarDatosPaciente();
+                    this.loading = false;
                 });
             } else {
                 if (this.escaneado) {
@@ -237,10 +232,12 @@ export class PacienteCruComponent implements OnInit {
                     this.pacienteModel.estado = 'validado';
                     this.paciente = Object.assign({}, this.pacienteModel);
                     this.actualizarDatosPaciente();
+                    this.loading = false;
                 }
             }
         } else {
             this.inicializarMapaDefault();
+            this.loading = false;
         }
     }
 
@@ -641,13 +638,8 @@ export class PacienteCruComponent implements OnInit {
             // Borramos relaciones
             if (this.relacionesBorradas.length > 0) {
                 this.relacionesBorradas.forEach(rel => {
-                    let relacionOpuesta = this.parentescoModel.find((elem) => {
-                        if (elem.nombre === rel.relacion.opuesto) {
-                            return elem;
-                        }
-                    });
                     let dto = {
-                        relacion: relacionOpuesta,
+                        relacion: this.relacionesPacientes.parentescoModel.find(e => e.nombre === rel.relacion.opuesto),
                         referencia: unPacienteSave.id,
                     };
                     if (rel.referencia) {
@@ -661,13 +653,8 @@ export class PacienteCruComponent implements OnInit {
             // agregamos las relaciones opuestas
             if (unPacienteSave.relaciones && unPacienteSave.relaciones.length > 0) {
                 unPacienteSave.relaciones.forEach(rel => {
-                    let relacionOpuesta = this.parentescoModel.find((elem) => {
-                        if (elem.nombre === rel.relacion.opuesto) {
-                            return elem;
-                        }
-                    });
                     let dto = {
-                        relacion: relacionOpuesta,
+                        relacion: this.relacionesPacientes.parentescoModel.find(e => e.nombre === rel.relacion.opuesto),
                         referencia: unPacienteSave.id,
                         nombre: unPacienteSave.nombre,
                         apellido: unPacienteSave.apellido,
