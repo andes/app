@@ -153,10 +153,6 @@ export class PrestacionCrearComponent implements OnInit {
                     fechaNacimiento: this.paciente.fechaNacimiento,
                     obraSocial: obraSocialPaciente
                 };
-                // se obtiene token y loguea el acceso a la huds del paciente
-                this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.paciente, 'Fuera de agenda', this.auth.profesional.id, null, this.tipoPrestacionSeleccionada.id).subscribe(hudsToken => {
-                    localStorage.setItem('huds-token', hudsToken.token);
-                });
             }
             let conceptoSnomed = this.tipoPrestacionSeleccionada;
             let nuevaPrestacion;

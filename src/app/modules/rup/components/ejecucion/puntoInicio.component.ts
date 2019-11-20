@@ -19,7 +19,6 @@ import { HUDSService } from '../../services/huds.service';
 import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
 import { WebSocketService } from '../../../../services/websocket.service';
 
-
 @Component({
     selector: 'rup-puntoInicio',
     templateUrl: 'puntoInicio.html'
