@@ -490,7 +490,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     mostrarBotonTurnero(agenda, turno) {
-        return (agenda && agenda.espacioFisico && agenda.espacioFisico.id && (this.espaciosFisicosTurnero.findIndex((e) => e === agenda.espacioFisico.id) >= 0))  && turno.paciente &&  turno.paciente.id && (!turno.prestacion || (turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente') );
+        return (agenda && agenda.espacioFisico && agenda.espacioFisico.id && (this.espaciosFisicosTurnero.findIndex((e) => e === agenda.espacioFisico.id) >= 0))  && turno.paciente &&  turno.paciente.id && this.verificarAsistencia(turno) && (!turno.prestacion || (turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente') );
     }
 
     routeTo(action, id) {
