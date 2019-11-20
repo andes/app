@@ -31,7 +31,7 @@
             </span>
             <br>
             <b *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.documentos">Archivos Adjuntos</b>
-            <div class="row" *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.documentos">
+            <div class="row" *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.documentos?.length">
                 <div class="col-12">
                     <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
                         <ng-container *ngFor="let doc of this.prestacionSeleccionada.solicitud.registros[0].valor.documentos; let i = index">
@@ -60,6 +60,23 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col">
+            <hr>
+            <b>Usuario de Creación</b>
+            <br>
+            <span>{{prestacionSeleccionada.createdBy.nombreCompleto}}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <b>Fecha de Creación</b>
+            <br>
+            <span>{{prestacionSeleccionada.createdAt | date: "dd/MM/yyyy 'a las' HH:mm " }}</span>
+        </div>
+    </div>
+    <br/>
 
     <div class="row" *ngIf="!showConfirmar">
         <div class="col-6 text-left">

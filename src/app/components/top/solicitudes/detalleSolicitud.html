@@ -103,18 +103,17 @@
             </span>
         </div>
     </div>
-    <div class="row" *ngIf="prestacionSeleccionada.solicitud.registros.length>0 && prestacionSeleccionada.solicitud.registros[0]?.valor">
+    <div class="row" *ngIf="prestacionSeleccionada.solicitud.registros.length>0 && prestacionSeleccionada.solicitud.registros[0]?.valor && prestacionSeleccionada.solicitud.registros[0].valor?.solicitudPrestacion.motivo">
         <div class="col">
             <hr>
-            <b *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.solicitudPrestacion.motivo">Motivo de
-                Solicitud</b>
+            <b>Motivo de Solicitud</b>
             <br>
-            <span *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.solicitudPrestacion">
+            <span>
                 {{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.motivo}}
             </span>
         </div>
     </div>
-    <div class="row" *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.documentos">
+    <div class="row" *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.documentos?.length">
         <div class="col-12">
             <b>Archivos Adjuntos</b>
             <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
@@ -138,6 +137,22 @@
                     </div>
                 </ng-container>
             </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <hr>
+            <b>Usuario de Creación</b>
+            <br>
+            <span>{{prestacionSeleccionada.createdBy.nombreCompleto}}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <b>Fecha de Creación</b>
+            <br>
+            <span>{{prestacionSeleccionada.createdAt | date: "dd/MM/yyyy 'a las' HH:mm " }}</span>
         </div>
     </div>
 </plex-box>
