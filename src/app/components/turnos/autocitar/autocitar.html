@@ -18,7 +18,7 @@
                                     Paciente: {{paciente | paciente }}
                                     <small>
                                         <span *ngIf="paciente.documento !== ''">| DNI
-                                            {{paciente.documento | number}}</span>
+                                            {{paciente.documento}}</span>
                                         <span *ngIf="paciente.documento === ''">| Sin documento (temporal)</span>
                                     </small>
                                     <br>
