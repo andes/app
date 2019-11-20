@@ -14,11 +14,10 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
-import { Subscription } from 'rxjs';
+import { Subscription, concat } from 'rxjs';
 import { HUDSService } from '../../services/huds.service';
 import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
 import { WebSocketService } from '../../../../services/websocket.service';
-
 
 @Component({
     selector: 'rup-puntoInicio',
@@ -368,23 +367,26 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     iniciarPrestacion(paciente, snomedConcept, turno) {
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
-                // se obtiene token y loguea el acceso a la huds del paciente
-                this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional.id, turno.id, snomedConcept._id).subscribe(hudsToken => {
-                    localStorage.setItem('huds-token', hudsToken.token);
-
-                    this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
-                        if (prestacion.error) {
-                            this.plex.info('info', prestacion.error, 'Aviso');
+                const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional.id, turno.id, snomedConcept._id);
+                const crear = this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno);
+                const res = concat(token, crear);
+                res.subscribe(input => {
+                    if (input.token) {
+                        // se obtuvo token y loguea el acceso a la huds del paciente
+                        localStorage.setItem('huds-token', input.token);
+                    } else {
+                        if (input.error) {
+                            this.plex.info('info', input.error, 'Aviso');
                         } else {
-                            this.routeTo('ejecucion', prestacion.id);
+                            this.routeTo('ejecucion', input.id); // prestfacion
                         }
-                    }, (err) => {
-                        if (err === 'ya_iniciada') {
-                            this.plex.info('info', 'La prestación ya fue iniciada por otro profesional', 'Aviso');
-                        } else {
-                            this.plex.info('warning', err, 'Error');
-                        }
-                    });
+                    }
+                }, (err) => {
+                    if (err === 'ya_iniciada') {
+                        this.plex.info('info', 'La prestación ya fue iniciada por otro profesional', 'Aviso');
+                    } else {
+                        this.plex.info('warning', err, 'Error');
+                    }
                 });
             } else {
                 return false;
@@ -625,18 +627,18 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Iniciar Prestación?').then(confirmacion => {
             if (confirmacion) {
-                // se obtiene token y loguea el acceso a la huds del paciente
-                this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, prestacion.term, this.auth.profesional.id, turno, prestacion.id).subscribe(hudsToken => {
-                    localStorage.setItem('huds-token', hudsToken.token);
-
-                    this.servicioPrestacion.patch(prestacion.id, params).subscribe(() => {
+                const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, prestacion.term, this.auth.profesional.id, turno, prestacion.id);
+                const patch = this.servicioPrestacion.patch(prestacion.id, params);
+                const res = concat(token, patch);
+                res.subscribe(input => {
+                    if (input.token) {
+                        // se obtuvo token y loguea el acceso a la huds del paciente
+                        localStorage.setItem('huds-token', input.token);
+                    } else {
+                        // prestacion
                         this.router.navigate(['/rup/ejecucion', prestacion.id]);
-                    }, (err) => {
-                        this.plex.info('warning', 'No fue posible iniciar la prestación: ' + err, 'ERROR');
-                    });
+                    }
                 });
-            } else {
-                return false;
             }
         });
     }
