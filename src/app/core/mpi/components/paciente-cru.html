@@ -212,7 +212,7 @@
                                 <div class="row">
                                     <div class="col">
                                         <plex-text label="Dirección" [(ngModel)]="pacienteModel.direccion[0].valor"
-                                                   (change)="checkDisableGeolocalizar($event)" name="direccion"
+                                                   (change)="checkDisableGeolocalizar($event.value)" name="direccion"
                                                    placeholder="Ej: Avenida las Flores 1200">
                                         </plex-text>
                                         <!--table>
