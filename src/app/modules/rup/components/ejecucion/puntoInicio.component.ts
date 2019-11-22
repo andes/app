@@ -1,8 +1,6 @@
 
 import { forkJoin as observableForkJoin } from 'rxjs';
-import { estados } from './../../../../utils/enumerados';
-
-import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
+import { Component, OnInit, HostBinding, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { Auth } from '@andes/auth';
@@ -16,13 +14,14 @@ import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
 import { Subscription } from 'rxjs';
-
+import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
+import { WebSocketService } from '../../../../services/websocket.service';
 
 @Component({
     selector: 'rup-puntoInicio',
     templateUrl: 'puntoInicio.html'
 })
-export class PuntoInicioComponent implements OnInit {
+export class PuntoInicioComponent implements OnInit, OnDestroy {
     @HostBinding('class.plex-layout') layout = true;
 
     // Fecha seleccionada
@@ -44,26 +43,41 @@ export class PuntoInicioComponent implements OnInit {
     // habilita la busqueda del paciente
     public buscandoPaciente = false;
 
+    public llamandoTurno = false;
+    public volverALlamar = false;
+
     // FILTROS
     private agendasOriginales: any = [];
     private prestacionesOriginales: any = [];
     public prestacionSeleccion: any;
     public paciente: any;
+    public ultimoLlamado: any;
 
+    public espaciosFisicosTurnero = [];
     // ultima request que se almacena con el subscribe
     private lastRequest: Subscription;
 
 
-    constructor(private router: Router,
-        private plex: Plex, public auth: Auth,
+    constructor(
+        private router: Router,
+        private plex: Plex,
+        public auth: Auth,
         public servicioAgenda: AgendaService,
         public servicioPrestacion: PrestacionesService,
         public servicePaciente: PacienteService,
         public serviceTurno: TurnoService,
         public snomed: SnomedService,
-        public servicioTipoPrestacion: TipoPrestacionService) { }
+        public servicioTipoPrestacion: TipoPrestacionService,
+        public servicioTurnero: TurneroService,
+        public ws: WebSocketService
+    ) { }
+
+    ngOnDestroy() {
+        this.ws.disconnect();
+    }
 
     ngOnInit() {
+
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
         if (!this.auth.getPermissions('rup:?').length) {
             this.redirect('inicio');
@@ -92,6 +106,10 @@ export class PuntoInicioComponent implements OnInit {
             }
         }
 
+        this.ws.connect();
+        this.servicioTurnero.get({'fields': 'espaciosFisicos.id'}).subscribe((pantallas) => {
+            this.espaciosFisicosTurnero = pantallas.reduce((listado, p) => listado.concat(p.espaciosFisicos), []).map((espacio: any) => { return espacio.id; } );
+        });
     }
 
     redirect(pagina: string) {
@@ -200,7 +218,7 @@ export class PuntoInicioComponent implements OnInit {
             this.filtrar();
 
             if (this.agendas.length) {
-                this.agendaSeleccionada = this.agendas[0];
+                this.cargarTurnos(this.agendas[0]);
             }
 
             // recorremos agenda seleccionada para ver si tienen planes pendientes y mostrar en la vista..
@@ -311,6 +329,7 @@ export class PuntoInicioComponent implements OnInit {
 
         if (this.agendas.length) {
             this.agendaSeleccionada = this.agendas[0];
+            this.volverALlamar = false;
         }
 
     }
@@ -470,6 +489,10 @@ export class PuntoInicioComponent implements OnInit {
         this.agendaSeleccionada = agenda ? agenda : 'fueraAgenda';
     }
 
+    mostrarBotonTurnero(agenda, turno) {
+        return (agenda && agenda.espacioFisico && agenda.espacioFisico.id && (this.espaciosFisicosTurnero.findIndex((e) => e === agenda.espacioFisico.id) >= 0))  && turno.paciente &&  turno.paciente.id && this.verificarAsistencia(turno) && (turno.estado !== 'suspendido') && (!turno.prestacion || (turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente') );
+    }
+
     routeTo(action, id) {
         if (this.agendaSeleccionada && this.agendaSeleccionada !== 'fueraAgenda') {
             let agenda = this.agendaSeleccionada ? this.agendaSeleccionada : null;
@@ -520,6 +543,15 @@ export class PuntoInicioComponent implements OnInit {
             }
         }
         return prestaciones;
+    }
+
+    llamarTurnero(turno) {
+        this.llamandoTurno = true;
+        this.servicioTurnero.llamar(this.agendaSeleccionada, turno);
+
+        setTimeout(() => {
+            this.llamandoTurno = false;
+        }, 2200);
     }
 
     // Detecta si una Agenda es futura

@@ -10,6 +10,7 @@ export const environment = {
     production: false,
     environmentName: 'testing',
     API: '/api',
+    WS: '/',
     APIStatusCheck: true,
     version: _package.version,
     MAPS_KEY: apiKeys.develop

@@ -80,6 +80,7 @@ import { PrestamosService } from './services/prestamosHC/prestamos-hc.service';
 import { RenaperService } from './services/fuentesAutenticas/servicioRenaper.service';
 import { ConfiguracionPrestacionService } from './services/term/configuracionPrestacion.service';
 import { PrestacionLegacyService } from './services/prestacionLegacy.service';
+import { WebSocketService } from './services/websocket.service';
 
 // ... Turnos
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
@@ -406,6 +407,7 @@ import { CampaniaSaludService } from './apps/campaniaSalud/services/campaniaSalu
 import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campaniaSalud.component';
 import { CampaniaVisualizacionComponent } from './apps/campaniaSalud/components/campaniaVisualizacion.component';
 import { CampaniaFormComponent } from './apps/campaniaSalud/components/campania-create-update.component';
+import { TurneroProvidersModule } from './apps/turnero/turnero.providers';
 
 let RUPComponentsArray = [
     SelectPorRefsetComponent,
@@ -530,6 +532,7 @@ registerLocaleData(localeEs, 'es');
         PlexModule,
         AuthModule,
         ScrollingModule,
+        TurneroProvidersModule,
         NgDragDropModule.forRoot(),
         ChartsModule,
         routing,
@@ -758,7 +761,8 @@ registerLocaleData(localeEs, 'es');
         HUDSService,
         TurnosPrestacionesService,
         PlantillasService,
-        InternacionCacheService
+        InternacionCacheService,
+        WebSocketService
     ]
 })
 
