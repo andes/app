@@ -252,6 +252,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
             );
         });
         if (!turnoSinCodificar) {
+            this.agenda.estado = 'auditada';
             // Se cambia de estado la agenda a Auditada
             patch = {
                 'op': 'auditada',
@@ -261,6 +262,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         } else {
             if (!turnoSinVerificar) { // Si todos los turnos tienen la asistencia verificada
                 // Se cambia de estado la agenda a pendienteAuditoria
+                this.agenda.estado = 'pendienteAuditoria';
                 patch = {
                     'op': 'pendienteAuditoria',
                     'estado': 'pendienteAuditoria'
@@ -270,6 +272,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
                 // este caso se dá cuando se agregan sobreturnos desde la auditoria
                 // si hay algún turno sin verificar asistencia y la agenda ya está en otro estado, se vuelve a pendiente asisitencia
                 if (this.agenda.estado !== 'pendienteAsistencia') {
+                    this.agenda.estado = 'pendienteAsistencia';
                     // Se cambia de estado la agenda a pendienteAuditoria
                     patch = {
                         'op': 'pendienteAsistencia',
@@ -356,6 +359,10 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
     agregarSobreturno() {
         localStorage.setItem('revision', 'true');
         this.router.navigate(['citas/sobreturnos', this.agenda._id]);
+    }
+
+    agregarPaciente() {
+        this.router.navigate(['citas/paciente', this.agenda._id]);
     }
 
     refresh() {
