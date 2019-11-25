@@ -136,11 +136,12 @@ export class TurnosPacienteComponent implements OnInit {
             this.plex.toast('danger', 'Seleccione una Prepaga', '¡Atención!');
             return;
         }
-        if (turno.obraSocial === 'prepaga' || turno.prepaga) {
+        if (turno.obraSocial === 'prepaga' && turno.prepaga) {
             this.obraSocialSeleccionada = turno.prepaga.nombre;
         } else {
-            this.obraSocialSeleccionada = (turno.obraSocial) ? turno.obraSocial : (turno.paciente.obraSocial) ? turno.paciente.obraSocial.nombre : null;
+            this.obraSocialSeleccionada = (turno.obraSocial) ? turno.obraSocial : (turno.paciente.obraSocial) ? turno.paciente.obraSocial.nombre : turno.prepaga.nombre;
         }
+
         if (!this.obraSocialSeleccionada) {
             this.plex.toast('danger', 'Seleccione una obra social o prepaga', '¡Atención!');
             return;
