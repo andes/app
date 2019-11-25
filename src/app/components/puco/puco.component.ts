@@ -182,12 +182,13 @@ export class PucoComponent implements OnInit, OnDestroy {
                                         this.usuarios = <any>this.resProfe;
                                     }
                                 }
-                            } else if (this.resSumar) {
+                            } else if (this.resSumar.length > 0) {
+                                const dataSumar = this.resSumar[0];
                                 this.usuarios.push({
-                                    dni: this.resSumar.afidni,
-                                    nombre: this.resSumar.afinombre + ' ' + this.resSumar.afiapellido,
+                                    dni: dataSumar.afidni,
+                                    nombre: `${dataSumar.afinombre} ${dataSumar.afiapellido}`,
                                     financiador: 'Programa SUMAR',
-                                    claveBeneficiario: this.resSumar.clavebeneficiario
+                                    claveBeneficiario: dataSumar.clavebeneficiario
                                 });
                             }
                         });
