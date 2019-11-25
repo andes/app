@@ -201,7 +201,7 @@ export class UpdateContactoDireccionComponent implements OnInit {
         if (valid.formValid) {
             this.eliminarContactosVacios();
             this.paciente.contacto = this.arrayContactos;
-            this.paciente.direccion = [this.direccion];
+            this.paciente.direccion[0] = this.direccion;
 
             this.pacienteService.save(this.paciente).subscribe();
 
