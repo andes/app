@@ -25,8 +25,8 @@
             </div>
         </div>
         <br>
-        <div justify class="align-items-start">
-            <div [ngClass]="{'w-100': fueraDeAgenda.length === 0, 'w-75': fueraDeAgenda.length > 0}">
+        <div justify class="align-items-start agendas row">
+            <div class="col pr-0" [ngClass]="{'w-100': fueraDeAgenda.length === 0, 'w-75': fueraDeAgenda.length > 0}">
                 <plex-title justify titulo="Agendas" size="sm">
                     <plex-radio class="form-check form-check-inline" [(ngModel)]="filtroAgendas.radio" [data]="opciones"
                                 name="agendas" type="horizontal" (change)="filtrar();">
@@ -39,13 +39,14 @@
                 </ng-container>
                 <ng-container *ngIf="agendas.length">
                     <ng-container *ngFor="let agenda of agendas; let i=index">
-                        <div class="hover" (click)="cargarTurnos(agenda)"
-                             [ngClass]="{'bg-inverse text-white': agendaSeleccionada == agenda}" justify>
-                            <plex-icon name="calendar mdi-48px"
-                                       [ngClass]="{'text-white': agendaSeleccionada == agenda, 'text-primary': agendaSeleccionada !== agenda}">
-                            </plex-icon>
-                            <div class="d-flex flex-column">
-                                <div>
+                        <div class="citas-agenda-card hover pr-1" (click)="cargarTurnos(agenda)"
+                             [ngClass]="{'bg-inverse-dark text-white': agendaSeleccionada == agenda}">
+                            <div class="citas-icon">
+                                <plex-icon name="calendar mdi-36px d-inline-flex bg-primary text-white">
+                                </plex-icon>
+                            </div>
+                            <div class="d-flex flex-column justify-content-center pl-1">
+                                <div class="font-weight-bold">
                                     <plex-icon name="clock-outline mpi-24px"
                                                [ngClass]="{'text-white': agendaSeleccionada == agenda, 'text-primary': agendaSeleccionada !== agenda}">
                                     </plex-icon>
@@ -58,9 +59,10 @@
                                         físico no asignado</small>
                                 </div>
                             </div>
-                            <div class="d-flex flex-column">
-                                <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones" class="text-capitalize">
-                                    {{ tipoPrestacion.nombre }}
+                            <div class="d-flex flex-column justify-content-center pl-1">
+                                <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones"
+                                     class="text-capitalize font-weight-bold">
+                                    {{ tipoPrestacion.term }}
                                 </div>
                                 <div>
                                     <ng-container *ngIf="agenda.profesionales">
@@ -72,17 +74,17 @@
                                         no asignado</small>
                                 </div>
                             </div>
-                            <ng-container
-                                          *ngIf="agenda.estado !== 'disponible' && !agenda.tipoPrestaciones[0].noNominalizada">
-                                <i class="icon icon-andes-paciente"></i>
+                            <div *ngIf="agenda.estado !== 'disponible' && !agenda.tipoPrestaciones[0].noNominalizada"
+                                 justify="center">
+                                <div class="citas-icon-sm">
+                                    <i class="icon icon-andes-paciente"></i>
+                                </div>
                                 <span class="badge" [ngClass]="{'badge-light': agendaSeleccionada === agenda, 'badge-info':
                                     agendaSeleccionada !== agenda}">
-                                    <i class="icon icon-andes-paciente"></i>
                                     {{ getCantidadPacientes(agenda) }}/<ng-container *ngIf="!agenda.dinamica">
-                                        {{ agenda.cantidadTurnos }}
-                                    </ng-container>
+                                        {{ agenda.cantidadTurnos }}</ng-container>
                                 </span>
-                            </ng-container>
+                            </div>
                             <ng-container *ngIf="agenda.tipoPrestaciones[0].noNominalizada">
                                 <plex-badge type="info">No nominalizada</plex-badge>
                             </ng-container>
@@ -108,112 +110,121 @@
                 </div>
             </div>
         </div>
-        <!--Resultados-->
-        <!-- <table class="table table-striped table-sm">
-            <thead>
-                <th>Agenda</th>
-                <th>Tipos de prestación</th>
-                <th></th>
-            </thead>
-            <tbody>
-                <ng-container *ngIf="!agendas.length">
-                    <tr>
-                        <td colspan="3">
-                            <i class="mdi mdi-emoticon-sad"></i> No hay agendas programadas para este día
-                        </td>
-                    </tr>
-                </ng-container>
 
 
-                <ng-container *ngIf="agendas.length">
-                    <ng-container *ngFor="let agenda of agendas; let i=index">
-                        <tr class="hover" [ngClass]="{'bg-inverse text-white': agendaSeleccionada == agenda}"
-                            (click)="cargarTurnos(this.agenda)"
-                            *ngIf="agenda.dinamica || getCantidadPacientes(agenda) || agenda.tipoPrestaciones[0].noNominalizada">
+        <ng-container *ngIf="agendas.length">
+            <ng-container *ngFor="let agenda of agendas; let i=index">
+                <tr class="hover" [ngClass]="{'bg-inverse text-white': agendaSeleccionada == agenda}"
+                    (click)="cargarTurnos(this.agenda)"
+                    *ngIf="agenda.dinamica || getCantidadPacientes(agenda) || agenda.tipoPrestaciones[0].noNominalizada">
 
-                            <td>
-                                <div>
-                                    {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}}
-                                    hs
-                                    <span *ngIf="agenda.nota">
-                                        <i title="{{agenda.nota}}" class="mdi mdi-comment"></i>
-                                    </span>
-                                </div>
-                                <div>
-                                    <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
-                                    <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">
-                                        Espacio físico no asignado
-                                    </span>
-                                </div>
-                            </td>
-                            <td>
-                                <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
-                                    {{tipoPrestacion.term}}
-                                </div>
-                                <div>
-                                    <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">
-                                        Profesional no asignado
-                                    </span>
-                                    <ng-container *ngIf="agenda.profesionales">
-                                        <div *ngFor="let profesional of agenda.profesionales">
-                                            {{profesional | profesional}}
-                                        </div>
-                                    </ng-container>
-                                </div>
-                            </td>
-                            <td>
-                                <ng-container
-                                              *ngIf="agenda.estado !== 'disponible' && !agenda.tipoPrestaciones[0].noNominalizada">
-                                    <span class="badge-info float-right">
-                                        pacientes {{getCantidadPacientes(agenda)}}
-                                        <ng-container *ngIf="!agenda.dinamica">
-                                            / {{agenda.cantidadTurnos}}
-                                        </ng-container>
-                                    </span>
-                                </ng-container>
-                                <ng-container *ngIf="agenda.tipoPrestaciones[0].noNominalizada">
-                                    <span class="badge-info float-right">
-                                        No nominalizada
-                                    </span>
-                                </ng-container>
-                            </td>
-                        </tr>
-                    </ng-container>
-                </ng-container>
-
-                <tr class="hover" (click)="cargarTurnos()" *ngIf="fueraDeAgenda && fueraDeAgenda.length"
-                    [ngClass]="{'bg-inverse text-white': agendaSeleccionada == 'fueraAgenda'}">
                     <td>
-                        Fuera de agenda
+                        <div>
+                            {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}}
+                            hs
+                            <span *ngIf="agenda.nota">
+                                <i title="{{agenda.nota}}" class="mdi mdi-comment"></i>
+                            </span>
+                        </div>
+                        <div>
+                            <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
+                            <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">
+                                Espacio físico no asignado
+                            </span>
+                        </div>
                     </td>
-                    <td colspan="2">
-                        <span class="badge-info float-right">
-                            <ng-container *ngIf="fueraDeAgenda.length === 1">
-                                1 paciente
+                    <td>
+                        <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
+                            {{tipoPrestacion.term}}
+                        </div>
+                        <div>
+                            <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">
+                                Profesional no asignado
+                            </span>
+                            <ng-container *ngIf="agenda.profesionales">
+                                <div *ngFor="let profesional of agenda.profesionales">
+                                    {{profesional | profesional}}
+                                </div>
                             </ng-container>
-                            <ng-container *ngIf="fueraDeAgenda.length > 1">
-                                {{fueraDeAgenda.length}} pacientes
-                            </ng-container>
-                        </span>
+                        </div>
+                    </td>
+                    <td>
+                        <ng-container
+                                      *ngIf="agenda.estado !== 'disponible' && !agenda.tipoPrestaciones[0].noNominalizada">
+                            <span class="badge-info float-right">
+                                pacientes {{getCantidadPacientes(agenda)}}
+                                <ng-container *ngIf="!agenda.dinamica">
+                                    / {{agenda.cantidadTurnos}}
+                                </ng-container>
+                            </span>
+                        </ng-container>
+                        <ng-container *ngIf="agenda.tipoPrestaciones[0].noNominalizada">
+                            <span class="badge-info float-right">
+                                No nominalizada
+                            </span>
+                        </ng-container>
                     </td>
                 </tr>
-            </tbody>
+            </ng-container>
+        </ng-container>
+
+        <tr class="hover" (click)="cargarTurnos()" *ngIf="fueraDeAgenda && fueraDeAgenda.length"
+            [ngClass]="{'bg-inverse text-white': agendaSeleccionada == 'fueraAgenda'}">
+            <td>
+                Fuera de agenda
+            </td>
+            <td colspan="2">
+                <span class="badge-info float-right">
+                    <ng-container *ngIf="fueraDeAgenda.length === 1">
+                        1 paciente
+                    </ng-container>
+                    <ng-container *ngIf="fueraDeAgenda.length > 1">
+                        {{fueraDeAgenda.length}} pacientes
+                    </ng-container>
+                </span>
+            </td>
+        </tr>
+        </tbody>
         </table> -->
     </plex-layout-main>
     <plex-layout-sidebar>
         <div>
-            <plex-title justify titulo="Detalles" size="md">
+            <plex-title justify [titulo]="(agendaSeleccionada !== 'fueraAgenda' ? 'Turnos' : 'Detalles')" size="md">
+                <plex-help type="info" titulo="Agenda" *ngIf="agendaSeleccionada">
+                    <div class="row">
+                        <div class="col">
+                            {{ agendaSeleccionada.horaInicio | date: 'EEE' }}
+                            {{ agendaSeleccionada.horaInicio | fecha }},
+                            {{ agendaSeleccionada.horaInicio | date: 'HH:mm' }} a
+                            {{ agendaSeleccionada.horaFin | date: 'HH:mm' }} hs
+                            <span class="badge-info" *ngIf="agendaSeleccionada.dinamica">
+                                Dinámica
+                            </span>
+                            <div *ngFor="let tipoPrestacion of agendaSeleccionada.tipoPrestaciones">
+                                {{ tipoPrestacion.term }}
+                            </div>
+                            <div *ngIf="agendaSeleccionada.nota" class="alert alert-info">
+                                <i class="mdi mdi-comment mr-3"></i>
+                                {{ agendaSeleccionada.nota }}
+                            </div>
+                        </div>
+                    </div>
+                </plex-help>
             </plex-title>
             <rup-fuera-de-agenda *ngIf="agendaSeleccionada === 'fueraAgenda'" [fueraDeAgenda]="fueraDeAgenda">
             </rup-fuera-de-agenda>
 
+            <!-- <pre>
+                {{ buscandoPaciente }}
+                {{ agendaSeleccionada | json }}
+            </pre> -->
             <div class="col h-100" *ngIf="agendaSeleccionada">
                 <dinamica *ngIf="buscandoPaciente" [agenda]="agendaSeleccionada" (cancel)="cancelarDinamica()">
                 </dinamica>
 
                 <ng-container *ngIf="!buscandoPaciente">
                     <ng-container
-                                  *ngIf="agendaSeleccionada && agendaSeleccionada !== 'fueraAgenda' && (agendaSeleccionada.dinamica || getCantidadPacientes(agendaSeleccionada) || agendaSeleccionada?.tipoPrestaciones[0].noNominalizada)">
+                                  *ngIf="agendaSeleccionada && agendaSeleccionada !== 'fueraAgenda' && (agendaSeleccionada.dinamica || (getCantidadPacientes(agendaSeleccionada) <= agendaSeleccionada.cantidadTurnos) || agendaSeleccionada?.tipoPrestaciones[0].noNominalizada)">
                         <div class="row">
                             <div class="col-12">
                                 <ng-container>
@@ -224,9 +235,8 @@
                                     <span class="badge-info" *ngIf="agendaSeleccionada.dinamica">
                                         Dinámica
                                     </span>
-
                                     <div *ngFor="let tipoPrestacion of agendaSeleccionada.tipoPrestaciones">
-                                        {{tipoPrestacion.nombre}}
+                                        {{ tipoPrestacion.term }}
                                     </div>
                                     <div *ngIf="agendaSeleccionada.nota" class="alert alert-info">
                                         <i class="mdi mdi-comment mr-3"></i>

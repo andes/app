@@ -49,7 +49,7 @@
                 {{ prestacion.estados[prestacion.estados.length - 1].tipo }}
             </plex-badge>
         </div>
-        <div class="d-flex flex-column p-1 pt-2">
+        <div class="d-flex flex-column p-1 pt-2 buttons">
             <plex-button type="success" size="sm" class="mb-1"
                          *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'"
                          (click)="servicioPrestacion.routeTo(false, 'ejecucion', prestacion.id)">CONTINUAR REGISTRO
@@ -58,7 +58,7 @@
                          *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'"
                          (click)="servicioPrestacion.routeTo(false, 'validacion', prestacion.id)">VER RESUMEN
             </plex-button>
-            <plex-button type="primary" size="sm" class="mb-1"
+            <plex-button type="primary" size="sm" class="my-1"
                          *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada"
                          (click)="servicioPrestacion.routeTo(false, 'vista', prestacion.paciente.id)">VER HUDS
             </plex-button>

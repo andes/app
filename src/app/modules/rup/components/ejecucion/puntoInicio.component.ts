@@ -14,7 +14,6 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
-import { Subscription } from 'rxjs';
 import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
 import { WebSocketService } from '../../../../services/websocket.service';
 import { ISubscription } from 'rxjs/Subscription';
@@ -24,11 +23,8 @@ import { ISubscription } from 'rxjs/Subscription';
 @Component({
     selector: 'rup-puntoInicio',
     templateUrl: 'puntoInicio.html',
-    styles: [`
-        .align-items-start {
-            align-items: flex-start !important;
-        }
-    `]
+
+    styleUrls: [`../core/_rup.scss`]
 })
 export class PuntoInicioComponent implements OnInit, OnDestroy {
 

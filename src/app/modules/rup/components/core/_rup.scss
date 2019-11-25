@@ -784,6 +784,64 @@ observaciones {
             }
             
         }
+        &.buttons {
+            min-width: 160px;
+        }
     }
 }
 
+.citas-agenda-card {
+    display: grid;
+    grid-template-columns: 50px 1fr 1fr 84px;
+    border: 2px solid $blue;
+    margin-bottom: 2px;
+    
+    &.bg-inverse-dark {
+        background: $dark-blue;
+        border: 0;
+    }
+    .citas-icon {
+        width: 50px;
+        display: flex;
+        justify-content: center;
+        background: $blue;
+    }
+    .citas-icon-sm {
+        color: #eee;
+        background: $blue;
+        padding: 2px 6px;
+        height: 26px;
+    }
+    .badge {
+        padding: 6px;
+        border: 1px solid;
+    }
+}
+
+.citas-turno-card {
+    display: grid;
+    grid-template-columns: 50px 110px 1fr 1fr;
+    border: 2px solid $blue;
+    margin-bottom: 2px;
+    
+    &.bg-inverse-dark {
+        background: $dark-blue;
+        border: 0;
+    }
+    .citas-icon {
+        width: 50px;
+        display: flex;
+        justify-content: center;
+        background: $blue;
+    }
+    .citas-icon-sm {
+        color: #eee;
+        background: $blue;
+        padding: 2px 6px;
+        height: 26px;
+    }
+    .badge {
+        padding: 6px;
+        border: 1px solid;
+    }
+}

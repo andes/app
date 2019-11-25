@@ -5,7 +5,10 @@ import { PrestacionesService } from '../../../services/prestaciones.service';
 
 @Component({
     selector: 'rup-turnos',
-    templateUrl: 'rup-turnos.html'
+    templateUrl: 'rup-turnos.html',
+    styleUrls: [
+        '../../core/_rup.scss'
+    ]
 })
 export class RUPTurnosComponent implements OnInit {
 
