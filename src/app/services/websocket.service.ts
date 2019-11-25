@@ -26,10 +26,6 @@ export class WebSocketService {
             this.events.next({ event: data[0], data: data[1] });
         });
 
-        this.socket.on('reconnect_attempt', () => {
-            this.socket.io.opts.transports = ['polling', 'websocket'];
-        });
-
         this.socket.on('connect', () => {
             if (this.token) {
                 this.emitAuth();
