@@ -75,9 +75,10 @@
                                           class="badge badge-{{ (registro.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(registro.concepto) }}">
                                         {{!registro.esSolicitud ? registro.concepto.semanticTag : 'solicitud'}}
                                     </span>
-                                    <span class="badge badge-info ml-1" *ngIf='registro.esPrimeraVez && prestacion.estados[prestacion.estados.length - 1].tipo === "validada"'>
+                                    <span class="badge badge-info ml-1"
+                                          *ngIf='registro.esPrimeraVez && prestacion.estados[prestacion.estados.length - 1].tipo === "validada"'>
                                         Es primera vez
-                                        
+
                                     </span>
                                     <a *ngIf="!soloValores" href="javascript:void(0);" title="Quitar de la consulta"
                                        (click)="confirmarEliminarRegistro(registro, 'card')"
@@ -102,10 +103,10 @@
                                             Debe completar los datos
                                         </span>
                                     </div> -->
-                                    <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)"
+                                    <rup [elementoRUP]="elementosRUPService.elementoRegistro(registro)"
                                          [prestacion]="prestacion" [paciente]="paciente" [registro]="registro"
-                                         [soloValores]="soloValores"
-                                         [params]="elementosRUPService.selectPorRefsetId(registro.concepto)"></rup>
+                                         [soloValores]="soloValores" [params]="elementosRUPService.getParams(registro)">
+                                    </rup>
                                 </div>
                             </div>
                             <!-- ... Footer -->

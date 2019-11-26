@@ -10,6 +10,7 @@ export class IRegistroPrivacy {
 export class IPrestacionRegistro {
     id: string;
     idPrestacion: string;
+    elementoRUP: string;
     // Indica el nombre del registro, calculado por el elementoRUP.
     // Ejemplo: 'Prescripción de novalgina'
     nombre: string;
@@ -37,6 +38,10 @@ export class IPrestacionRegistro {
     transformado: any;
     esPrimeraVez: boolean;
 
+    hasSections: Boolean;
+    isSection: Boolean;
+    noIndex: Boolean;
+
     createdAt: Date;
 
     // Virtuales 🤷
@@ -44,6 +49,7 @@ export class IPrestacionRegistro {
 
     constructor(elementoRUP: IElementoRUP, snomedConcept: ISnomedConcept) {
         this.id = (new ObjectID()).toString();
+        this.elementoRUP = elementoRUP.id;
         this.nombre = snomedConcept.term;
         this.concepto = snomedConcept;
         this.destacado = false;
@@ -51,6 +57,9 @@ export class IPrestacionRegistro {
         this.valor = null;
         this.relacionadoCon = [];
         this.registros = [];
+        this.hasSections = false;
+        this.isSection = false;
+        this.noIndex = false;
         if (elementoRUP && elementoRUP.requeridos) {
             elementoRUP.requeridos.forEach((item) => {
                 this.registros.push(new IPrestacionRegistro(item.elementoRUP, item.concepto));

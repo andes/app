@@ -1,5 +1,6 @@
 <header *ngIf="prestacion">
-    <header-paciente *ngIf="paciente" (evtData)="cambioDePaciente($event)" [cambiarPaciente]="false" [paciente]="paciente"></header-paciente>
+    <header-paciente *ngIf="paciente" (evtData)="cambioDePaciente($event)" [cambiarPaciente]="false"
+                     [paciente]="paciente"></header-paciente>
 </header>
 <section *ngIf="prestacion && paciente">
     <div class="row">
@@ -14,11 +15,13 @@
                             <header-paciente *ngIf="paciente" [paciente]="paciente"></header-paciente>
                             <div class="row">
                                 <div class="col">
-                                    <ng-container *ngFor="let elemento of prestacion.ejecucion.registros; let i = index">
+                                    <ng-container
+                                                  *ngFor="let elemento of prestacion.ejecucion.registros; let i = index">
                                         <div class="rup-card elementoderegistro elementoRup">
                                             <div class="rup-header">
                                                 <div class="icon-rup drag-handle">
-                                                    <i class="icon icon-rup-semantic-{{(elemento.esSolicitud) ? servicioPrestacion.getIcon(elemento.concepto, 'planes') : servicioPrestacion.getIcon(elemento.concepto)}}"></i>
+                                                    <i
+                                                       class="icon icon-rup-semantic-{{(elemento.esSolicitud) ? servicioPrestacion.getIcon(elemento.concepto, 'planes') : servicioPrestacion.getIcon(elemento.concepto)}}"></i>
                                                 </div>
                                                 <div class="title">
                                                     <ng-container *ngIf="elemento?.nombre">
@@ -33,13 +36,19 @@
                                                     </span>
                                                 </div>
                                                 <div class="content">
-                                                    <ng-container *ngIf="elemento.concepto.conceptId == 721915006 || prestacion.estados[prestacion.estados.length - 1].tipo == 'validada'">
-                                                        <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
-                                                            [registro]="elemento" [soloValores]="true"></rup>
+                                                    <ng-container
+                                                                  *ngIf="elemento.concepto.conceptId == 721915006 || prestacion.estados[prestacion.estados.length - 1].tipo == 'validada'">
+                                                        <rup [paciente]="paciente"
+                                                             [elementoRUP]="elementosRUPService.elementoRegistro(elemento)"
+                                                             [prestacion]="prestacion" [registro]="elemento"
+                                                             [soloValores]="true"></rup>
                                                     </ng-container>
-                                                    <ng-container *ngIf="elemento.concepto.conceptId != 721915006 && prestacion.estados[prestacion.estados.length - 1].tipo != 'validada'">
-                                                        <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
-                                                            [registro]="elemento" [soloValores]="false"></rup>
+                                                    <ng-container
+                                                                  *ngIf="elemento.concepto.conceptId != 721915006 && prestacion.estados[prestacion.estados.length - 1].tipo != 'validada'">
+                                                        <rup [paciente]="paciente"
+                                                             [elementoRUP]="elementosRUPService.elementoRegistro(elemento)"
+                                                             [prestacion]="prestacion" [registro]="elemento"
+                                                             [soloValores]="false"></rup>
                                                     </ng-container>
 
                                                 </div>
@@ -108,7 +117,8 @@
                                                     <i class=" mdi mdi-plus "></i>
                                                 </button>
                                             </div>
-                                            <div class="p-0 pt-1 pr-3 float-right" *ngIf="this.epicrisisEjecucion?.length > 0">
+                                            <div class="p-0 pt-1 pr-3 float-right"
+                                                 *ngIf="this.epicrisisEjecucion?.length > 0">
                                                 <span class="badge badge-success">En ejecucion</span>
                                             </div>
                                         </div>
@@ -158,14 +168,17 @@
             <plex-button class="float-left " type="primary " label="Volver" (click)="cancelar() "></plex-button>
         </div>
         <div class="col-6 text-right">
-            <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' " label="Guardar Internación"
-                (click)="guardarPrestacion() " type="success " class="float-right "></plex-button>
+            <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' "
+                         label="Guardar Internación" (click)="guardarPrestacion() " type="success "
+                         class="float-right "></plex-button>
 
             <plex-button *ngIf="prestacion && mostrarValidacion && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' "
-                label="Validar Internación " (click)="validar() " type="success " class="float-right "></plex-button>
+                         label="Validar Internación " (click)="validar() " type="success " class="float-right ">
+            </plex-button>
 
-            <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo==='validada' " label="Romper Validación"
-                (click)="romperValidacion() " type="danger " class="float-right "></plex-button>
+            <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo==='validada' "
+                         label="Romper Validación" (click)="romperValidacion() " type="danger " class="float-right ">
+            </plex-button>
         </div>
     </div>
 </footer>

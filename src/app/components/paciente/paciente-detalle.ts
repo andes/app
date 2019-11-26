@@ -68,7 +68,7 @@ export class PacienteDetalleComponent implements OnInit {
         this.backUpDatos['fechaNacimiento'] = this.paciente.fechaNacimiento;
         this.backUpDatos['foto'] = this.paciente.foto;
         this.backUpDatos['cuil'] = this.paciente.cuil;
-        if (this.paciente.direccion) {
+        if (this.paciente.direccion && this.paciente.direccion.length > 0) {
             this.backUpDatos['direccion'] = this.paciente.direccion[0].valor;
             this.backUpDatos['codigoPostal'] = this.paciente.direccion[0].codigoPostal;
         }
