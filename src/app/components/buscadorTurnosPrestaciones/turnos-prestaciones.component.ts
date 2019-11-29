@@ -11,7 +11,16 @@ import { Plex } from '@andes/plex';
 @Component({
     selector: 'turnos-prestaciones',
     templateUrl: 'turnos-prestaciones.html',
-
+    styles: [`
+        .text-truncate {
+            overflow: hidden;
+        }
+        .text-truncate::after {
+            width: 110px;
+            content: "...";
+            padding: 0 3px;
+        }
+    `]
 })
 
 export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
