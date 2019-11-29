@@ -88,7 +88,7 @@
         </tr>
     </thead> -->
     <ng-container *ngFor="let turno of bloque.turnos; let i=index">
-        <div *ngIf="turno" class="citas-turno-card hover">
+        <div *ngIf="turno" class="citas-turno-card">
             <div class="d-flex align-items-start">
                 <div class="citas-icon">
                     <plex-icon name="clock-outline mdi-36px d-inline-flex bg-primary text-white"
@@ -101,44 +101,20 @@
 
                 <div class="font-weight-bold" *ngIf="!agendaSeleccionada.dinamica">
                     <strong>{{ turno.horaInicio | date: 'HH:mm' }} hs</strong>
+                    <ng-container *ngIf="turno.prestacion && turno?.prestacion?.estados">
+                        <span *ngIf="turno.asistencia !== 'noAsistio'" class="badge"
+                              [ngClass]="{ 'badge-success': turno.prestacion.estados[turno.prestacion.estados.length-1].tipo==='validada' , 'badge-warning': turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo==='ejecucion'}">
+                            {{ turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo }}
+                        </span>
+                    </ng-container>
                 </div>
 
-                <div *ngIf="turno.prestacion && turno?.prestacion?.estados">
-                    <br />
-                    <span *ngIf="turno.asistencia !== 'noAsistio'" class="badge"
-                          [ngClass]="{ 'badge-success': turno.prestacion.estados[turno.prestacion.estados.length-1].tipo==='validada' , 'badge-warning': turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo==='ejecucion'}">
-                        {{ turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo }}
-                    </span>
 
-                </div>
-                <div *ngIf="turno && turno.paciente && turno.asistencia && turno.estado !== 'suspendido'">
-
-                    <span class="badge "
-                          [ngClass]="{ 'badge-success': turno.asistencia === 'asistio', 'badge-danger': turno.asistencia === 'noAsistio'} ">
-                        {{ turno.asistencia }} <ng-container *ngIf="turno.horaAsistencia">
-                            {{ turno.horaAsistencia | hora }} hs </ng-container>
-                    </span>
-                    <br />
-
-                    <span *ngIf="turno.asistencia === 'noAsistio'">
-                        <plex-button type="danger btn-sm" icon="mdi mdi-backup-restore"
-                                     (click)="registrarInasistencia(turno.paciente,agendaSeleccionada, turno.id, 'sacarAsistencia')"
-                                     title="Revertir cambios">
-                        </plex-button>
-                    </span>
-
-                </div>
-
-                <small>
-                    <!-- <span class="text-muted"
-                          *ngIf="turno.paciente?.id && turno.tipoPrestacion && agendaSeleccionada.tipoPrestaciones.length > 1">
-                        {{turno.tipoPrestacion.nombre}}
-                    </span> -->
+                <!-- <small>
                     <ng-container class="text-muted" *ngIf="turno?.prestacion?.solicitud?.profesional">
                         <br>{{turno.prestacion.solicitud.profesional | profesional}}
                     </ng-container>
-                </small>
-
+                </small> -->
 
                 <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}"
                       *ngIf="turno && turno.estado === 'turnoDoble'">Turno
@@ -187,17 +163,30 @@
             </div>
             <div justify="end" *ngIf="turno.tipoPrestacion && turno.paciente?.id">
 
-                <!-- Ver HUDS -->
-                <plex-button size="sm" (click)="routeTo('vista', turno.paciente.id)" type="primary btn-sm"
-                             title="Ver HUDS">
-                    <i class="icon icon-andes-paciente"></i>
-                </plex-button>
+                <ng-container *ngIf="turno.asistencia && turno.estado !== 'suspendido'">
+
+                    <span class="badge mr-1"
+                          [ngClass]="{ 'badge-success': turno.asistencia === 'asistio', 'badge-danger': turno.asistencia === 'noAsistio'} ">
+                        {{ turno.asistencia }} <ng-container *ngIf="turno.horaAsistencia">
+                            {{ turno.horaAsistencia | hora }} hs </ng-container>
+                    </span>
+                    <span *ngIf="turno.asistencia === 'noAsistio'">
+                        <plex-button type="danger btn-sm" icon="mdi mdi-backup-restore"
+                                     (click)="registrarInasistencia(turno.paciente,agendaSeleccionada, turno.id, 'sacarAsistencia')"
+                                     title="Revertir cambios">
+                        </plex-button>
+                    </span>
+
+                </ng-container>
+
+
                 <!--Iniciar una prestacion a partir de una solicitud pendiente (es decir una prestacion en estado pendiente) -->
-                <plex-button size="sm"
+                <plex-button class="mr-1" size="sm"
                              *ngIf="turno.paciente && turno.estado !== 'suspendido'  && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente' && servicioPrestacion.tienePermisos(turno.tipoPrestacion, turno.prestacion) && servicioPrestacion.verificarAsistencia(turno)"
-                             icon="plus-circle" type="success btn-sm"
+                             type="success"
                              (click)="ejecutarPrestacionPendiente(turno.prestacion.id,turno.paciente, turno.tipoPrestacion, turno)"
                              [disabled]="esFutura">
+                    <i class="mdi mdi-plus-circle mdi-24px"></i>
                 </plex-button>
 
                 <!--Una agenda futura muestra en boton deshabilitado -->
@@ -208,11 +197,11 @@
                     </plex-button> -->
 
                 <!-- Iniciar Prestación -->
-                <plex-button size="sm"
+                <plex-button class="mr-1" size="sm"
                              *ngIf="agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && turno.paciente && !turno.prestacion && servicioPrestacion.tienePermisos(turno.tipoPrestacion, turno.prestacion) && servicioPrestacion.verificarAsistencia(turno)"
-                             icon="plus-circle" type="success btn-sm"
-                             (click)="iniciarPrestacion(turno.paciente, turno.tipoPrestacion, turno)"
-                             [disabled]="esFutura">
+                             type="success" (click)="iniciarPrestacion(turno.paciente, turno.tipoPrestacion, turno)"
+                             [disabled]="esFutura" title="Iniciar Prestación">
+                    <i class="mdi mdi-plus-circle mdi-24px"></i>
                 </plex-button>
 
                 <!-- <plex-button size="sm"
@@ -221,22 +210,30 @@
                              title="Disponible {{diaAgenda(agendaSeleccionada)}}" titlePosition="top">
                 </plex-button> -->
 
-                <plex-button size="sm"
+                <plex-button class="mr-1" size="sm"
                              *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion' && servicioPrestacion.tienePermisos(turno.tipoPrestacion, turno.prestacion) && servicioPrestacion.verificarAsistencia(turno)"
                              label="CONTINUAR REGISTRO" type="primary btn-sm"
                              (click)="routeTo('ejecucion', turno.prestacion.id)">
                 </plex-button>
 
-                <plex-button size="sm"
+                <plex-button class="mr-1" size="sm"
                              *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'validada' && servicioPrestacion.tienePermisos(turno.tipoPrestacion, turno.prestacion)"
                              label="VER RESUMEN" type="success btn-sm"
                              (click)="routeTo('validacion', turno.prestacion.id)">
                 </plex-button>
 
-                <plex-button size="sm"
+                <plex-button class="mr-1" size="sm"
                              *ngIf="!turno.asistencia && !esFutura && agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && turno.paciente && (!turno.prestacion || (turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente') || turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion')"
-                             type="warning btn-sm" icon="account-remove"
-                             (click)="registrarInasistencia(turno.paciente,agendaSeleccionada, turno.id, 'noAsistio')">
+                             type="warning btn-sm"
+                             (click)="registrarInasistencia(turno.paciente,agendaSeleccionada, turno.id, 'noAsistio')"
+                             title="Registrar inasistencia">
+                    <i class="mdi mdi-account-remove mdi-24px"></i>
+                </plex-button>
+
+                <!-- Ver HUDS -->
+                <plex-button class="mr-1" size="sm" (click)="routeTo('vista', turno.paciente.id)" type="primary btn-sm"
+                             title="Ver HUDS">
+                    <i class="icon icon-andes-paciente adi-24px"></i>
                 </plex-button>
 
             </div>

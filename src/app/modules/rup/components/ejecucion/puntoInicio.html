@@ -189,7 +189,8 @@
     </plex-layout-main>
     <plex-layout-sidebar>
         <div>
-            <plex-title justify [titulo]="(agendaSeleccionada !== 'fueraAgenda' ? 'Turnos' : 'Detalles')" size="md">
+            <plex-title justify type="help" [titulo]="(agendaSeleccionada !== 'fueraAgenda' ? 'Turnos' : 'Detalles')"
+                        size="md">
                 <plex-help type="info" titulo="Agenda" *ngIf="agendaSeleccionada">
                     <div class="row">
                         <div class="col">

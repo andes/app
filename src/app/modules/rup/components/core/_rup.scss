@@ -820,7 +820,7 @@ observaciones {
 
 .citas-turno-card {
     display: grid;
-    grid-template-columns: 50px 110px 1fr 1fr;
+    grid-template-columns: 50px 110px 1fr .5fr;
     border: 2px solid $blue;
     margin-bottom: 2px;
     
@@ -844,4 +844,20 @@ observaciones {
         padding: 6px;
         border: 1px solid;
     }
+}
+
+.adi-24px {
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+}
+
+.adi-36px {
+    font-size: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 45px;
 }
