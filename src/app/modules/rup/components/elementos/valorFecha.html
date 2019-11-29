@@ -1,0 +1,13 @@
+<form #form="ngForm">
+    <div class="row flex-column">
+        <div class="col-12">
+            <ng-container *ngIf="!soloValores; else showSoloValores">
+                <plex-datetime [(ngModel)]="registro.valor" [label]="params.title ? params.title : registro.concepto.term" name="DateValue" [type]="params.type ? params.type : 'date'" [required]="params.required ? params.required : false">
+                </plex-datetime>
+            </ng-container>
+            <ng-template #showSoloValores>
+                {{DateFormat}}
+            </ng-template>
+        </div>
+    </div>
+</form>
