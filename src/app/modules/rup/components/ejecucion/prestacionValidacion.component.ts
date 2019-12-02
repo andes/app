@@ -8,9 +8,6 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { DocumentosService } from './../../../../services/documentos.service';
-import { Slug } from 'ng2-slugify';
-import { saveAs } from 'file-saver';
-import * as moment from 'moment';
 import { CodificacionService } from '../../services/codificacion.service';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { ReglaService } from '../../../../services/top/reglas.service';
@@ -35,9 +32,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
     // Tiene permisos para descargar?
     public puedeDescargarPDF = false;
-
-    // Usa el keymap 'default'
-    private slug = new Slug('default');
+    descargaCerrada: any = true;
 
     // Id de la Agenda desde localStorage (revisar si aun hace falta)
     public idAgenda: any;
@@ -101,11 +96,9 @@ export class PrestacionValidacionComponent implements OnInit {
         { id: true, label: 'Si' },
         { id: false, label: 'No' }
     ];
-    public nombreArchivo: any;
     public btnVolver;
     public rutaVolver;
-    descargando = false;
-    verMasRelaciones = [];
+    verMasRelaciones: any = [];
 
     constructor(public servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -683,75 +676,39 @@ export class PrestacionValidacionComponent implements OnInit {
 
     descargarResumen() {
 
-        this.descargando = true;
+        this.descargaCerrada = false;
 
         this.prestacion.ejecucion.registros.forEach(x => {
             x.icon = 'down';
         });
-        setTimeout(() => {
 
-            this.nombreArchivo = this.slug.slugify(this.prestacion.solicitud.tipoPrestacion.term);
-            let content = '';
-            let headerPrestacion: any = document.getElementById('pageHeader').cloneNode(true);
-            let datosSolicitud: any = document.getElementById('datosSolicitud').cloneNode(true);
-
-
-            const header = `
-                    <div class="resumen-solicitud">
-                        ${datosSolicitud.innerHTML}
-                    </div>
-                `;
-
-            content += header;
-            content += `
-                <div class="paciente">
-                    <b>Paciente:</b> ${this.paciente.apellido}, ${this.paciente.nombre} -
-                    ${this.paciente.documento} - ${moment(this.paciente.fechaNacimiento).fromNow(true)}
-                </div>
-                `;
-
-            // agregamos prestaciones
-            let elementosRUP: HTMLCollection = document.getElementsByClassName('rup-card');
-
-            const total = elementosRUP.length;
-            for (let i = 0; i < total; i++) {
-                content += ' <div class="rup-card">' + elementosRUP[i].innerHTML + '</div>';
-            }
-
-            // Sanitizar? no se recibe HTML "foráneo", quizá no haga falta
-            // content = this.sanitizer.sanitize(1, content);
-
-            // this.servicioDocumentos.descargar(content).subscribe(data => {
-            //     if (data) {
-            //         // Generar descarga como PDF
-            //         this.descargarArchivo(data, { type: 'application/pdf' });
-            //     } else {
-            //         // Fallback a impresión normal desde el navegador
-            //         window.print();
-            //     }
-            // });
-
+        setTimeout(async () => {
             let informe = {
                 idPrestacion: this.prestacion.id
             };
 
-            this.servicioDocumentos.descargarV2(informe).subscribe(data => {
-                if (data) {
-                    // Generar descarga como PDF
-                    this.descargarArchivo(data, { type: 'application/pdf' });
-                    this.descargando = false;
-                } else {
-                    // Fallback a impresión normal desde el navegador
-                    window.print();
-                }
+            this.servicioDocumentos.descargarArchivo(informe, this.prestacion.solicitud.tipoPrestacion.term, { type: 'application/pdf' }).subscribe(result => {
+                this.descargaCerrada = true;
             });
+
         });
     }
 
-    private descargarArchivo(data: any, headers: any): void {
-        let blob = new Blob([data], headers);
-        saveAs(blob, this.nombreArchivo + this.slug.slugify('-' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf');
+    async descargarRegistro(idRegistro, term) {
+
+        this.descargaCerrada = false;
+
+        let informe = {
+            idPrestacion: this.prestacion.id,
+            idRegistro
+        };
+
+        this.servicioDocumentos.descargarArchivo(informe, term, { type: 'application/pdf' }).subscribe(result => {
+            this.descargaCerrada = true;
+        });
+
     }
+
     /**
      * Busca los grupos de la búsqueda guiada a los que pertenece un concepto
      * @param {IConcept} concept
