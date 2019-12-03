@@ -1,0 +1,85 @@
+<plex-layout main="12">
+    <plex-layout-main>
+        <plex-title titulo="Censo Diario"></plex-title>
+        <fieldset>
+            <div class="row">
+                <div class="col-md-3">
+                    <plex-datetime type="date" [(ngModel)]="fecha" name="fecha" label="Fecha" (change)="resetCenso()">
+                    </plex-datetime>
+                </div>
+                <div class="col-md-3" *ngIf="unidadesOranizativas.length > 0">
+                    <plex-select label="Unidad Organizativa" [(ngModel)]="selectedUnidadOranizativa" name="sectores"
+                                 [data]="unidadesOranizativas" [required]="true">
+                    </plex-select>
+                </div>
+                <div class="col-md-2">
+                    <br>
+                    <plex-button [disabled]="!fecha || !selectedUnidadOranizativa" label="GENERAR CENSO" type="primary"
+                                 (click)="generarCensoDiario()">
+                    </plex-button>
+                    <plex-button [disabled]="!censo" title="Descargar censo diario" type="warning">
+                        <plex-icon name="download"></plex-icon>
+                    </plex-button>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset *ngIf="censoPacientes.length > 0">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Paciente</th>
+                        <th>Cama</th>
+                        <th>Ingreso</th>
+                        <th>Pases De</th>
+                        <th>Egreso</th>
+                        <th>Pases A</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let censoP of censoPacientes">
+                        <td>{{censoP.datos.paciente.apellido}}, {{censoP.datos.paciente.nombre}} |
+                            {{censoP.datos.paciente.documento}} </td>
+                        <td>{{censoP.datos.cama.nombre}},
+                            {{censoP.datos.cama.sectores[censoP.datos.cama.sectores.length -1].nombre}}</td>
+                        <td>{{censoP.actividad[censoP.actividad.length - 1].ingreso}}</td>
+                        <td>{{censoP.actividad[censoP.actividad.length - 1].paseDe}}</td>
+                        <td>{{censoP.actividad[censoP.actividad.length - 1].egreso}}</td>
+                        <td>{{censoP.actividad[censoP.actividad.length - 1].paseA}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
+        <fieldset *ngIf="censo">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Existencia a las 0</th>
+                        <th>Ingresos</th>
+                        <th>Pases De</th>
+                        <th>Altas</th>
+                        <th>Defunciones</th>
+                        <th>Pases A</th>
+                        <th>Existencia a las 24</th>
+                        <th>Ingresos y egresos</th>
+                        <th>Pacientes Dia</th>
+                        <th>Disponibles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{censo.existenciaALas0}}</td>
+                        <td>{{censo.ingresos}}</td>
+                        <td>{{censo.pasesDe}}</td>
+                        <td>{{censo.altas}}</td>
+                        <td>{{censo.defunciones}}</td>
+                        <td>{{censo.pasesA}}</td>
+                        <td>{{censo.existenciaALas24}}</td>
+                        <td>{{censo.ingresosYEgresos}}</td>
+                        <td>{{censo.pacientesDia}}</td>
+                        <td>{{censo.disponibles}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
+    </plex-layout-main>
+</plex-layout>

@@ -519,6 +519,7 @@ import { LogoSvgComponent } from './styles/logo.svg';
 import { AcronimoSvgComponent } from './styles/acronimo.svg';
 import { ListaReglasComponent } from './components/top/reglas/listaReglas.component';
 import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaSolicitudTop';
+import { MapaCamasService } from './apps/rup/mapa-camas/mapa-camas.service';
 
 import { MPILibModule } from './modules/mpi/mpi-lib.module';
 
