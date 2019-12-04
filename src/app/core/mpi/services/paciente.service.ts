@@ -147,11 +147,11 @@ export class PacienteService {
         return this.setActivo(paciente);
     }
 
-    save(paciente: IPaciente, ignoreCheck: boolean = false): Observable<IPaciente> {
+    save(paciente: IPaciente, ignoreCheck: boolean = false, incluirTemporales: boolean = true): Observable<IPaciente> {
         if (paciente.id) {
             return this.server.put(`${this.pacienteUrl}/${paciente.id}`, { paciente, ignoreCheck });
         } else {
-            return this.server.post(this.pacienteUrl, { paciente, ignoreCheck });
+            return this.server.post(this.pacienteUrl, { paciente, ignoreCheck, incluirTemporales });
         }
     }
     getSiguienteCarpeta(): Observable<any> {
