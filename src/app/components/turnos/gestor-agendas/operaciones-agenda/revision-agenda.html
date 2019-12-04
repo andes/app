@@ -499,7 +499,7 @@
                                     <small>
                                         <span
                                               *ngIf="sobreturno.paciente && sobreturno.paciente.id && sobreturno.paciente.documento !== ''">|
-                                            DNI: {{ sobreturno.paciente.documento | number }}</span>
+                                            DNI: {{ sobreturno.paciente.documento }}</span>
                                         <span *ngIf="sobreturno.paciente && sobreturno.paciente.id && sobreturno.paciente.documento === ''"
                                               class="text-danger">| DNI: Sin documento (temporal)</span>
                                     </small>

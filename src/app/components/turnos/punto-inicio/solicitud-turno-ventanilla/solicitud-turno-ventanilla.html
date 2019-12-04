@@ -7,7 +7,7 @@
             <div class="col-12">
                 <label>Paciente</label> {{ modelo.paciente | paciente }}
                 <span>Documento:
-                    <span *ngIf="modelo.paciente.documento !== ''">{{ modelo.paciente.documento | number }}</span>
+                    <span *ngIf="modelo.paciente.documento !== ''">{{ modelo.paciente.documento }}</span>
                     <span *ngIf="modelo.paciente.documento === ''" class="text-danger">Sin documento</span>
                 </span>
                 <span>Fecha de nacimiento
