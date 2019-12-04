@@ -1,3 +1,4 @@
+import { Unsubscribe } from '@andes/shared';
 
 import { forkJoin as observableForkJoin } from 'rxjs';
 
@@ -28,7 +29,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     // Fecha seleccionada
     public fecha: Date = new Date();
     // Lista de agendas filtradas por fecha, tipos de prestaciones permitidas, ...
-    public agendas: IAgenda[] = [];
+    public agendas = [];
     // Agenda seleccionada
     public agendaSeleccionada;
     // Mostrar sólo mis agendas
@@ -63,6 +64,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public espaciosFisicosTurnero = [];
     // ultima request que se almacena con el subscribe
     private lastRequest: Subscription;
+    private interval;
 
     public showModalMotivo = false;
     public motivoVerContinuarPrestacion = 'Continuidad del cuidado del paciente';
@@ -85,6 +87,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnDestroy() {
+        this.stopAgendaRefresh();
         this.ws.disconnect();
     }
 
@@ -148,23 +151,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 tipoPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
             }),
             // Prestaciones
-            this.servicioPrestacion.get({
-                fechaDesde: this.fecha ? this.fecha : new Date(),
-                fechaHasta: new Date(),
-                organizacion: this.auth.organizacion.id,
-                sinEstado: 'modificada',
-                ambitoOrigen: 'ambulatorio',
-                tipoPrestaciones: idsPrestacionesPermitidas
-            }),
+            this.getPrestaciones(),
             // buscamos las prestaciones pendientes que este asociadas a un turno para ejecutarlas
-            this.servicioPrestacion.get({
-                solicitudHasta: moment(this.fecha).isValid() ? moment(this.fecha).endOf('day').toDate() : new Date(),
-                organizacion: this.auth.organizacion.id,
-                estado: 'pendiente',
-                tieneTurno: true,
-                ambitoOrigen: 'ambulatorio',
-                tipoPrestaciones: idsPrestacionesPermitidas
-            })
+            this.getPrestacionesPendientes()
         ).subscribe(data => {
             this.agendas = data[0];
             this.prestaciones = data[1];
@@ -175,39 +164,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             if (this.agendas.length) {
 
                 // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
-                this.agendas.forEach(agenda => {
-                    agenda['cantidadTurnos'] = 0;
-                    // loopeamos los bloques de la agendas
-                    agenda.bloques.forEach(bloques => {
-                        agenda['cantidadTurnos'] += bloques.turnos.length;
-                        // loopeamos los turnos dentro de los bloques
-                        bloques.turnos.forEach(turno => {
-                            let indexPrestacion = this.prestaciones.findIndex(prestacion => {
-                                return (prestacion.solicitud.turno && prestacion.solicitud.turno === turno.id);
-                            });
-                            // asignamos la prestacion al turno
-                            turno['prestacion'] = this.prestaciones[indexPrestacion];
-                            if (turno.paciente && turno.paciente.carpetaEfectores) {
-                                (turno.paciente.carpetaEfectores as any) = turno.paciente.carpetaEfectores.filter((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
-                            }
-
-                        });
-                    });
-
-                    // busquemos si hay sobreturnos para vincularlos con la prestacion correspondiente
-                    if (agenda.sobreturnos) {
-                        agenda.sobreturnos.forEach(sobreturno => {
-                            let indexPrestacion = this.prestaciones.findIndex(prestacion => {
-                                return (prestacion.solicitud.turno && prestacion.solicitud.turno === sobreturno.id);
-                            });
-                            // asignamos la prestacion al turno
-                            sobreturno['prestacion'] = this.prestaciones[indexPrestacion];
-                            if (sobreturno.paciente && sobreturno.paciente.carpetaEfectores) {
-                                (sobreturno.paciente.carpetaEfectores as any) = sobreturno.paciente.carpetaEfectores.filter((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
-                            }
-                        });
-                    }
-                });
+                this.agendas.forEach(agenda => this.cargarPrestacionesTurnos(agenda));
             }
 
             this.agendasOriginales = JSON.parse(JSON.stringify(this.agendas));
@@ -230,7 +187,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 this.cargarTurnos(this.agendas[0]);
             }
 
-            // recorremos agenda seleccionada para ver si tienen planes pendientes y mostrar en la vista..
+           // recorremos agenda seleccionada para ver si tienen planes pendientes y mostrar en la vista..
             if (this.agendaSeleccionada) {
                 this.agendaSeleccionada.bloques.forEach(element => {
                     element.turnos.forEach(turno => {
@@ -241,7 +198,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 });
             }
             this.fueraDeAgenda = this.mostrarTurnoPendiente(this.fueraDeAgenda);
-
         });
     }
 
@@ -249,6 +205,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
      * Filtra el listado de agendas y prestaciones
      */
     filtrar() {
+        this.stopAgendaRefresh();
         this.cancelarDinamica();
         // filtrar solo por las prestaciones que el profesional tenga disponibles
         this.agendaSeleccionada = null;
@@ -338,6 +295,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
         if (this.agendas.length) {
             this.agendaSeleccionada = this.agendas[0];
+            this.intervalAgendaRefresh();
             this.volverALlamar = false;
         }
 
@@ -388,66 +346,13 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
 
     registrarInasistencia(paciente, agenda: IAgenda = null, turno, operacion) {
-        let cambios;
-        cambios = {
-            op: operacion,
-            turnos: [turno]
-        };
-        if (operacion === 'noAsistio') {
-            this.plex.confirm(`¿Está seguro que desea registrar la inasistencia del paciente: <b> ${paciente.apellido} ${paciente.nombre} </b> ?`).then(confirmacion => {
-                if (confirmacion) {
-                    this.servicioAgenda.patch(agenda.id, cambios).subscribe(() => {
-                        this.actualizar();
-                    });
-                } else {
-                    return false;
-                }
-            });
-        } else {
-            this.plex.confirm(`¿Está seguro que desea revertir los cambios?`).then(confirmacion => {
-                if (confirmacion) {
-                    this.servicioAgenda.patch(agenda.id, cambios).subscribe(() => {
-                        this.actualizar();
-                    });
-                } else {
-                    return false;
-                }
-            });
-        }
+        const msg = operacion === 'noAsistio' ?
+            `¿Está seguro que desea registrar la inasistencia del paciente: <b> ${paciente.apellido} ${paciente.nombre} </b> ?` :
+            `¿Está seguro que desea revertir los cambios?`;
 
-        // En caso de crear una prestación
-        //     let planes = [];
-        //     this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
-        //         if (prestacion) {
-        //             prestacion.ejecucion.registros.push({
-        //                 esDiagnosticoPrincipal: true,
-        //                 nombre: 'no asistió',
-        //                 concepto: {
-        //                     refsetIds: [
-        //                         '900000000000497000'
-        //                     ],
-        //                     fsn: 'no asistió (hallazgo)',
-        //                     semanticTag: 'hallazgo',
-        //                     conceptId: '281399006',
-        //                     term: 'no asistió',
-        //                 },
-        //                 valor: {
-        //                     estado: 'activo',
-        //                     fechaInicio: new Date(),
-        //                 }
-        //             });
-        //             this.servicioPrestacion.validarPrestacion(prestacion, planes).subscribe(() => {
-        //                 this.plex.toast('success', 'Se registro la inasistencia del paciente', 'Información', 300);
-        //                 this.actualizar();
-
-        //             }, (err) => {
-        //                 this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
-        //             });
-        //         }
-        //     }, (err) => {
-        //         this.plex.alert('No fue posible crear la prestación', 'ERROR');
-        //     });
-
+        this.plex.confirm(msg).then(confirmacion =>
+            confirmacion ? this.servicioAgenda.patch(agenda.id, { op: operacion, turnos: [turno] }).subscribe(this.actualizar.bind(this)) : false
+        );
     }
 
 
@@ -509,6 +414,98 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     cargarTurnos(agenda) {
         this.cancelarDinamica();
         this.agendaSeleccionada = agenda ? agenda : 'fueraAgenda';
+        this.intervalAgendaRefresh();
+    }
+
+    @Unsubscribe()
+    reloadAgenda() {
+        return this.agendaSeleccionada.id ? observableForkJoin(
+            this.servicioAgenda.getById(this.agendaSeleccionada.id),
+            this.getPrestaciones(),
+            this.getPrestacionesPendientes()
+        ).subscribe(data => {
+                let agenda = data[0];
+                this.prestaciones = data[1];
+                if (data[2]) {
+                    this.prestaciones = [...this.prestaciones, ...data[2]];
+                }
+
+                this.cargarPrestacionesTurnos(agenda);
+                this.agendas[this.agendas.indexOf(this.agendaSeleccionada)] = this.agendaSeleccionada = agenda;
+            }
+        ) : null;
+    }
+
+    getPrestaciones() {
+        return this.servicioPrestacion.get({
+            fechaDesde: this.fecha ? this.fecha : new Date(),
+            fechaHasta: new Date(),
+            organizacion: this.auth.organizacion.id,
+            sinEstado: 'modificada',
+            ambitoOrigen: 'ambulatorio',
+            tipoPrestaciones: this.tiposPrestacion.map(t => t.conceptId)
+        });
+    }
+
+    getPrestacionesPendientes() {
+        return this.servicioPrestacion.get({
+            solicitudHasta: moment(this.fecha).isValid() ? moment(this.fecha).endOf('day').toDate() : new Date(),
+            organizacion: this.auth.organizacion.id,
+            estado: 'pendiente',
+            tieneTurno: true,
+            ambitoOrigen: 'ambulatorio',
+            tipoPrestaciones: this.tiposPrestacion.map(t => t.conceptId)
+        });
+    }
+
+    cargarPrestacionesTurnos(agenda) {
+        // if (agenda) {
+            // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
+            agenda['cantidadTurnos'] = 0;
+            agenda.bloques.forEach(bloques => {
+                agenda['cantidadTurnos'] += bloques.turnos.length;
+                // loopeamos los turnos dentro de los bloques
+                bloques.turnos.forEach(turno => {
+                    let indexPrestacion = this.prestaciones.findIndex(prestacion => {
+                        return (prestacion.solicitud.turno && prestacion.solicitud.turno === turno.id);
+                    });
+                    // asignamos la prestacion al turno
+                    turno['prestacion'] = this.prestaciones[indexPrestacion];
+                    if (turno.paciente && turno.paciente.carpetaEfectores) {
+                        (turno.paciente.carpetaEfectores as any) = turno.paciente.carpetaEfectores.filter((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
+                    }
+
+                });
+            });
+
+            // busquemos si hay sobreturnos para vincularlos con la prestacion correspondiente
+            if (agenda.sobreturnos) {
+                agenda.sobreturnos.forEach(sobreturno => {
+                    let indexPrestacion = this.prestaciones.findIndex(prestacion => {
+                        return (prestacion.solicitud.turno && prestacion.solicitud.turno === sobreturno.id);
+                    });
+                    // asignamos la prestacion al turno
+                    sobreturno['prestacion'] = this.prestaciones[indexPrestacion];
+                    if (sobreturno.paciente && sobreturno.paciente.carpetaEfectores) {
+                        (sobreturno.paciente.carpetaEfectores as any) = sobreturno.paciente.carpetaEfectores.filter((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
+                    }
+                });
+            }
+        // }
+    }
+
+    intervalAgendaRefresh() {
+        this.stopAgendaRefresh();
+        if (this.agendaSeleccionada && this.agendaSeleccionada !== 'fueraAgenda' && moment(this.agendaSeleccionada.horaInicio).isSame(new Date(), 'day')) {
+            const timeOut = 30000; // Lapso de tiempo en que se recargara la agenda seleccionada
+            this.interval = setInterval(this.reloadAgenda.bind(this), timeOut);
+        }
+    }
+
+    stopAgendaRefresh() {
+        if (this.interval) {
+            clearInterval(this.interval);
+        }
     }
 
     mostrarBotonTurnero(agenda, turno) {
