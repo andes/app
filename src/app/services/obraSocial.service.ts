@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Observable } from 'rxjs';
 import { IObraSocial } from '../interfaces/IObraSocial';
-import { IFinanciador } from '../interfaces/IFinanciador';
 
 @Injectable()
 export class ObraSocialService {
@@ -27,18 +26,18 @@ export class ObraSocialService {
     }
 
     getListado(opciones: any): Observable<any[]> {
-        return this.server.get(this.url + '/', { params: opciones });
+        return this.server.get(this.url + '/obrasSociales', { params: opciones });
     }
 
     getPrepagas(): Observable<any[]> {
         return this.server.get(this.url + '/prepagas/');
     }
 
-    getObrasSociales(documento: string, showError = true): Observable<IFinanciador[]> {
-        return this.server.get(`${this.url}/puco/${documento}`, null);
+    getObrasSociales(documento: string, showError = true): Observable<IObraSocial[]> {
+        return this.server.get(`${this.url}/obraSocial/${documento}`, null);
     }
 
-    getSumar(opciones: any): Observable<IFinanciador[]> {
+    getSumar(opciones: any): Observable<IObraSocial[]> {
         return this.server.get(this.url + '/padronSumar/', { params: opciones });
     }
 }

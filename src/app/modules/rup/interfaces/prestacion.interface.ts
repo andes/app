@@ -1,7 +1,7 @@
 import { IPrestacionEstado } from './prestacion.estado.interface';
 import { IPrestacionRegistro } from './prestacion.registro.interface';
 import { ISnomedConcept } from './snomed-concept.interface';
-import { IFinanciador } from '../../../interfaces/IFinanciador';
+import { IObraSocial } from '../../../interfaces/IObraSocial';
 
 export class IPrestacion {
     id: string;
@@ -16,7 +16,7 @@ export class IPrestacion {
         telefono: string,
         sexo: string,
         fechaNacimiento: Date,
-        obraSocial?: IFinanciador // Refactor cobertura
+        obraSocial?: IObraSocial // Refactor cobertura
     };
     // Datos de la solicitud
     solicitud: {
