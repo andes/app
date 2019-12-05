@@ -27,8 +27,8 @@ import { ListaEsperaService } from '../../../services/turnos/listaEspera.service
 import { SmsService } from './../../../services/turnos/sms.service';
 import { TurnoService } from './../../../services/turnos/turno.service';
 import { HeaderPacienteComponent } from '../../paciente/headerPaciente.component';
-import { IFinanciador } from '../../../interfaces/IFinanciador';
 import { ObraSocialCacheService } from '../../../services/obraSocialCache.service';
+import { IObraSocial } from '../../../interfaces/IObraSocial';
 
 @Component({
     selector: 'dar-turnos',
@@ -132,7 +132,7 @@ export class DarTurnosComponent implements OnInit {
     reqfiltros = false;
     permitirTurnoDoble = false;
     carpetaEfector: any;
-    obraSocialPaciente: IFinanciador;
+    obraSocialPaciente: IObraSocial;
     motivoConsulta: string;
     showTab = 0;
 

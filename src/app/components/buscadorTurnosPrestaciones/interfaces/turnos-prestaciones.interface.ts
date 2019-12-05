@@ -1,4 +1,3 @@
-import { IFinanciador } from '../../../interfaces/IFinanciador';
 import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 import { IProfesional } from '../../../interfaces/IProfesional';
 import { ITurno } from '../../../interfaces/turnos/ITurno';
