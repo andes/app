@@ -50,7 +50,7 @@
     <plex-layout-footer>
         <plex-button position="left" type="danger" label="CANCELAR" (click)="cancelar()">
         </plex-button>
-        <plex-button position="right" [label]="btnLabel" type="success" (click)="btnClick()">
+        <plex-button [disabled]="disableGuardar" position="right" [label]="btnLabel" type="success" (click)="btnClick()">
         </plex-button>
     </plex-layout-footer>
 </plex-layout>
