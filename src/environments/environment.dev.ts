@@ -5,8 +5,8 @@ import { apiKeys } from './apiKeyMaps';
 export const environment = {
   production: false,
   environmentName: 'development',
-  API: '//localhost:3002/api',
   WS: '//localhost:3002',
+  API: '//localhost:3002/api',
   APIStatusCheck: false,
   version: _package.version,
   MAPS_KEY: apiKeys.develop

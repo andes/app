@@ -24,10 +24,8 @@ import { ProfesionalComponent } from './components/profesional/profesional.compo
 import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { InicioComponent } from './components/inicio/inicio.component';
-import { LoginComponent } from './components/login/login.component';
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
-import { SelectOrganizacionComponent } from './components/login/selectOrganizacion.component';
 import { OrganizacionSectoresComponent } from './components/organizacion/organizacion-sectores.component';
 
 // ... CITAS
@@ -206,8 +204,7 @@ const appRoutes: Routes = [
 
   // Principal
   { path: 'inicio', component: InicioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'selectOrganizacion', component: SelectOrganizacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'login', component: LoginComponent, canActivate: [RoutingNavBar] },
+  { path: 'auth', loadChildren: './apps/auth/auth.module#AuthAppModule' },
 
   { path: 'estadisticas', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'dashboard', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingNavBar, RoutingGuard] },
