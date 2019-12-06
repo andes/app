@@ -20,6 +20,7 @@ import { OrganizacionService } from '../../../services/organizacion.service';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HistorialBusquedaService } from '../services/historialBusqueda.service';
+
 @Component({
     selector: 'paciente-cru',
     templateUrl: 'paciente-cru.html',
@@ -118,6 +119,7 @@ export class PacienteCruComponent implements OnInit {
         reportarError: false,
         notaError: ''
     };
+    public temporalParaVinculacion = null;
     public disableValidar = true;
     public escaneado = false;
     public paciente: IPaciente;
@@ -581,33 +583,54 @@ export class PacienteCruComponent implements OnInit {
 
             this.pacienteService.save(pacienteGuardar, ignoreCheck, false).subscribe(
                 (resultadoSave: any) => {
-                    // Existen sugerencias de pacientes similares?
-                    if (resultadoSave.resultadoMatching && resultadoSave.resultadoMatching.length > 0) {
-                        this.pacientesSimilares = this.escaneado ? resultadoSave.resultadoMatching.filter(elem => elem.paciente.estado === 'validado') : resultadoSave.resultadoMatching;
-                        // Si el matcheo es alto o el dni-sexo está repetido no podemos ignorar las sugerencias
-                        this.visualizarIgnorarGuardar = !resultadoSave.macheoAlto && !resultadoSave.dniRepetido;
-                        if (!this.visualizarIgnorarGuardar) {
-                            this.plex.info('danger', 'El paciente ya existe, verifique las sugerencias');
-                        } else {
-                            this.plex.info('warning', 'Existen pacientes similares, verifique las sugerencias');
-                        }
+                    if (this.temporalParaVinculacion) {
+                        let dataLink = {
+                            entidad: 'ANDES',
+                            valor: this.temporalParaVinculacion.id
+                        };
+                        // Vinculamos al paciente validado con el temporal existente
+                        this.pacienteService.postIdentificadores(resultadoSave.id, {
+                            'op': 'link',
+                            'dto': dataLink
+                        }).subscribe(pacienteBase => {
+                            if (this.changeRelaciones) {
+                                this.saveRelaciones(pacienteBase);
+                            }
+                            if (this.escaneado) {
+                                // Si el paciente fue escaneado se agrega al historial de búsqueda
+                                this.historialBusquedaService.add(pacienteBase);
+                            }
+                            this.plex.info('success', 'Los datos se actualizaron correctamente');
+                            this.plex.toast('success', 'Se vincularon pacientes existentes.', 'Información', 3000);
+                            this.redirect(pacienteBase);
+                        });
                     } else {
-                        if (this.changeRelaciones) {
-                            this.saveRelaciones(resultadoSave);
+                        // Existen sugerencias de pacientes similares?
+                        if (resultadoSave.resultadoMatching && resultadoSave.resultadoMatching.length > 0) {
+                            this.pacientesSimilares = this.escaneado ? resultadoSave.resultadoMatching.filter(elem => elem.paciente.estado === 'validado') : resultadoSave.resultadoMatching;
+                            // Si el matcheo es alto o el dni-sexo está repetido no podemos ignorar las sugerencias
+                            this.visualizarIgnorarGuardar = !resultadoSave.macheoAlto && !resultadoSave.dniRepetido;
+                            if (!this.visualizarIgnorarGuardar) {
+                                this.plex.info('danger', 'El paciente ya existe, verifique las sugerencias');
+                            } else {
+                                this.plex.info('warning', 'Existen pacientes similares, verifique las sugerencias');
+                            }
+                        } else {
+                            if (this.changeRelaciones) {
+                                this.saveRelaciones(resultadoSave);
+                            }
+                            if (this.escaneado) {
+                                // Si el paciente fue escaneado se agrega al historial de búsqueda
+                                this.historialBusquedaService.add(resultadoSave);
+                            }
+                            this.plex.info('success', 'Los datos se actualizaron correctamente');
+                            this.redirect(resultadoSave);
                         }
-                        if (this.escaneado) {
-                            // Si el paciente fue escaneado se agrega al historial de búsqueda
-                            this.historialBusquedaService.add(resultadoSave);
-                        }
-                        this.plex.info('success', 'Los datos se actualizaron correctamente');
-
-                        this.redirect(resultadoSave);
                     }
                 },
                 error => {
                     this.plex.info('warning', 'Error guardando el paciente');
-                }
-            );
+                });
         }
     }
 
@@ -634,7 +657,7 @@ export class PacienteCruComponent implements OnInit {
     }
 
     // Borra/agrega relaciones al paciente segun corresponda.
-    saveRelaciones(unPacienteSave) {
+    saveRelaciones(unPacienteSave): any {
         if (unPacienteSave) {
             // Borramos relaciones
             if (this.relacionesBorradas.length > 0) {
@@ -764,41 +787,41 @@ export class PacienteCruComponent implements OnInit {
         this.pacienteService.validar(this.pacienteModel).subscribe(
             resultado => {
                 this.loading = false;
-                if (resultado.existente) {
-                    // PACIENTE EXISTENTE EN ANDES
-                    if (resultado.paciente.estado === 'validado') {
-                        this.validado = true;
-                    }
+                if (resultado.existente && resultado.existente.estado === 'validado') {
+                    // PACIENTE EXISTENTE EN ANDES (VALIDADO)
+                    this.validado = true;
                     this.plex.info('info', 'El paciente que está cargando ya existe en el sistema', 'Atención');
                     this.pacienteModel = resultado.paciente;
-                } else if (resultado.validado) {
-                    // VALIDACION MEDIANTE FUENTES AUTENTICAS EXITOSA
-                    this.setBackup();
-                    this.validado = true;
-                    this.showDeshacer = true;
-                    this.pacienteModel.nombre = resultado.paciente.nombre;
-                    this.pacienteModel.apellido = resultado.paciente.apellido;
-                    this.pacienteModel.estado = resultado.paciente.estado;
-                    this.pacienteModel.fechaNacimiento = moment(resultado.paciente.fechaNacimiento).add(4, 'h').toDate(); // mas mers alert
-                    this.pacienteModel.foto = resultado.paciente.foto;
-                    //  Se completan datos FALTANTES
-                    if (!this.pacienteModel.direccion[0].valor && resultado.paciente.direccion && resultado.paciente.direccion[0].valor) {
-                        this.pacienteModel.direccion[0].valor = resultado.paciente.direccion[0].valor;
-                        this.checkDisableGeolocalizar(this.pacienteModel.direccion[0].valor);
-                    }
-                    if (!this.pacienteModel.direccion[0].codigoPostal && resultado.paciente.cpostal) {
-                        this.pacienteModel.direccion[0].codigoPostal = resultado.paciente.cpostal;
-                    }
-                    if (resultado.paciente.direccion[1]) {  // direccion legal
-                        this.pacienteModel.direccion[1] = resultado.paciente.direccion[1];
-                    }
-                    if (!this.pacienteModel.cuil && resultado.paciente.cuil) {
-                        this.pacienteModel.cuil = resultado.paciente.cuil;
-                    }
-                    this.plex.toast('success', '¡Paciente Validado!');
                 } else {
-                    this.plex.toast('danger', 'Validación Fallida');
-                    this.disableValidar = false;
+                    // VALIDACION MEDIANTE FUENTES AUTENTICAS EXITOSA
+                    if (resultado.validado) {
+                        if (resultado.existente) {
+                            // PACIENTE EXISTENTE EN ANDES (TEMPORAL). Se vincula nuevo validado al temporal existente al momento de guardar.
+                            this.temporalParaVinculacion = resultado.existente;
+                        }
+                        this.setBackup();   // en caso de requerir deshacer validación
+                        this.validado = true;
+                        this.showDeshacer = true;
+                        this.pacienteModel.nombre = resultado.paciente.nombre;
+                        this.pacienteModel.apellido = resultado.paciente.apellido;
+                        this.pacienteModel.estado = resultado.paciente.estado;
+                        this.pacienteModel.fechaNacimiento = moment(resultado.paciente.fechaNacimiento).add(4, 'h').toDate(); // mas mers alert
+                        this.pacienteModel.foto = resultado.paciente.foto;
+                        //  Se completan datos FALTANTES
+                        if (!this.pacienteModel.direccion[0].valor && resultado.paciente.direccion && resultado.paciente.direccion[0].valor) {
+                            this.pacienteModel.direccion[0].valor = resultado.paciente.direccion[0].valor;
+                        }
+                        if (!this.pacienteModel.direccion[0].codigoPostal && resultado.paciente.cpostal) {
+                            this.pacienteModel.direccion[0].codigoPostal = resultado.paciente.cpostal;
+                        }
+                        if (!this.pacienteModel.cuil && resultado.paciente.cuil) {
+                            this.pacienteModel.cuil = resultado.paciente.cuil;
+                        }
+                        this.plex.toast('success', '¡Paciente Validado!');
+                    } else {
+                        this.plex.toast('danger', 'Validación Fallida');
+                        this.disableValidar = false;
+                    }
                 }
             },
             () => {
