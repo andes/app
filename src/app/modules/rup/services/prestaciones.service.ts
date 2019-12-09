@@ -5,6 +5,7 @@ import { Injectable, Output, EventEmitter } from '@angular/core';
 import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
+import { Plex } from '@andes/plex';
 import { IPrestacion } from '../interfaces/prestacion.interface';
 import { IPrestacionGetParams } from '../interfaces/prestacionGetParams.interface';
 import { SnomedService } from '../../../services/term/snomed.service';
@@ -109,6 +110,7 @@ export class PrestacionesService {
     constructor(
         private server: Server,
         public auth: Auth,
+        public plex: Plex,
         private servicioTipoPrestacion: TipoPrestacionService,
         public snomed: SnomedService,
         private router: Router,
@@ -972,11 +974,29 @@ export class PrestacionesService {
         return false;
     }
 
-    routeTo(agendaSeleccionada, action, id) {
-        if (agendaSeleccionada && agendaSeleccionada !== 'fueraAgenda') {
-            let agenda = agendaSeleccionada ? agendaSeleccionada : null;
-            localStorage.setItem('idAgenda', agenda.id);
-        }
+    routeTo(action, id) {
         this.router.navigate(['rup/' + action + '/', id]);
+    }
+
+    iniciarPrestacion(paciente, snomedConcept, turno) {
+        this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
+            if (confirmacion) {
+                this.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
+                    if (prestacion.error) {
+                        this.plex.info('info', prestacion.error, 'Aviso');
+                    } else {
+                        this.routeTo('ejecucion', prestacion.id);
+                    }
+                }, (err) => {
+                    if (err === 'ya_iniciada') {
+                        this.plex.info('info', 'La prestación ya fue iniciada por otro profesional', 'Aviso');
+                    } else {
+                        this.plex.info('warning', err, 'Error');
+                    }
+                });
+            } else {
+                return false;
+            }
+        });
     }
 }
