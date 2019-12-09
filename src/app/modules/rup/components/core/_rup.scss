@@ -818,9 +818,22 @@ observaciones {
     }
 }
 
+
 .citas-turno-card {
+    --icon-size: 70px;
+    --icon-size-sm: 40px;
     display: grid;
-    grid-template-columns: 50px 110px 1fr .5fr;
+    grid-template-columns: var(--icon-size) auto 1fr;
+    >:nth-child(2) {
+        line-height: 1.3rem;
+    }
+    &.sm {
+        grid-template-columns: var(--icon-size-sm) auto 1fr;
+        :nth-child(2) {
+            display: flex;
+            align-items: center;
+        }
+    }
     border: 2px solid $blue;
     margin-bottom: 2px;
     
@@ -829,10 +842,30 @@ observaciones {
         border: 0;
     }
     .citas-icon {
-        width: 50px;
+        width: var(--icon-size);
+        height: var(--icon-size);
         display: flex;
+        flex-direction: column;
         justify-content: center;
+        align-items: center;
         background: $blue;
+        color: $light-grey;
+        &.sm {
+            
+            strong {
+                font-size: 14px;
+            }
+            width: var(--icon-size-sm);
+            height: var(--icon-size-sm);
+            line-height: 0;
+        }
+        plex-icon {
+            height: 50px;
+            font-size: 36px;
+        }
+        plex-icon.sm {
+            height: 22px;
+        }
     }
     .citas-icon-sm {
         color: #eee;

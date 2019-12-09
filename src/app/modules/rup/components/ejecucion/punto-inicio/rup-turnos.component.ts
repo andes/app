@@ -1,5 +1,5 @@
 
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { PrestacionesService } from '../../../services/prestaciones.service';
 
@@ -13,13 +13,25 @@ import { PrestacionesService } from '../../../services/prestaciones.service';
 export class RUPTurnosComponent implements OnInit {
 
     @Input() agendaSeleccionada;
+    @Input() tipo: 'turnos' | 'sobreturnos';
     @Input() esFutura;
+
+    @Output() asistencia: EventEmitter<any> = new EventEmitter();
+    turnos: any;
 
     constructor(public auth: Auth, public servicioPrestacion: PrestacionesService) {
 
     }
 
     ngOnInit() {
+    }
+
+    get actualizarTurnos() {
+        return this.tipo === 'turnos' ? this.agendaSeleccionada.bloques : [{ turnos: this.agendaSeleccionada.sobreturnos }];
+    }
+
+    registrarInasistenciaEmit(event) {
+        this.asistencia.emit(event);
     }
 
 }

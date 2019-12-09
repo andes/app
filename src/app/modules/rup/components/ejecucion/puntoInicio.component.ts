@@ -363,30 +363,16 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.router.navigate(['/rup/huds']);
     }
 
-    iniciarPrestacion(paciente, snomedConcept, turno) {
-        this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
-            if (confirmacion) {
-                this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
-                    if (prestacion.error) {
-                        this.plex.info('info', prestacion.error, 'Aviso');
-                    } else {
-                        this.servicioPrestacion.routeTo(this.agendaSeleccionada, 'ejecucion', prestacion.id);
-                    }
-                }, (err) => {
-                    if (err === 'ya_iniciada') {
-                        this.plex.info('info', 'La prestación ya fue iniciada por otro profesional', 'Aviso');
-                    } else {
-                        this.plex.info('warning', err, 'Error');
-                    }
-                });
-            } else {
-                return false;
-            }
-        });
-    }
 
 
-    registrarInasistencia(paciente, agenda: IAgenda = null, turno, operacion) {
+
+    registrarInasistencia(datos) {
+
+        const paciente = datos[0];
+        const agenda: IAgenda = datos[1];
+        const turno = datos[2];
+        const operacion = datos[3];
+
         let cambios;
         cambios = {
             op: operacion,
@@ -403,7 +389,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 }
             });
         } else {
-            this.plex.confirm(`¿Está seguro que desea revertir los cambios?`).then(confirmacion => {
+            this.plex.confirm(`¿Está seguro que quiere quitar la inasistencia?`).then(confirmacion => {
                 if (confirmacion) {
                     this.servicioAgenda.patch(agenda.id, cambios).subscribe(() => {
                         this.actualizar();
@@ -414,39 +400,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             });
         }
 
-        // En caso de crear una prestación
-        //     let planes = [];
-        //     this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
-        //         if (prestacion) {
-        //             prestacion.ejecucion.registros.push({
-        //                 esDiagnosticoPrincipal: true,
-        //                 nombre: 'no asistió',
-        //                 concepto: {
-        //                     refsetIds: [
-        //                         '900000000000497000'
-        //                     ],
-        //                     fsn: 'no asistió (hallazgo)',
-        //                     semanticTag: 'hallazgo',
-        //                     conceptId: '281399006',
-        //                     term: 'no asistió',
-        //                 },
-        //                 valor: {
-        //                     estado: 'activo',
-        //                     fechaInicio: new Date(),
-        //                 }
-        //             });
-        //             this.servicioPrestacion.validarPrestacion(prestacion, planes).subscribe(() => {
-        //                 this.plex.toast('success', 'Se registro la inasistencia del paciente', 'Información', 300);
-        //                 this.actualizar();
-
-        //             }, (err) => {
-        //                 this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
-        //             });
-        //         }
-        //     }, (err) => {
-        //         this.plex.alert('No fue posible crear la prestación', 'ERROR');
-        //     });
-
     }
 
 
@@ -454,7 +407,11 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.plex.confirm('</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
                 this.servicioPrestacion.crearPrestacion(null, snomedConcept, 'ejecucion', turno.horaInicio, turno).subscribe(prestacion => {
-                    this.servicioPrestacion.routeTo(this.agendaSeleccionada, 'ejecucion', prestacion.id);
+                    this.servicioPrestacion.routeTo('ejecucion', prestacion.id);
+                    if (this.agendaSeleccionada && this.agendaSeleccionada !== 'fueraAgenda') {
+                        let agenda = this.agendaSeleccionada ? this.agendaSeleccionada : null;
+                        localStorage.setItem('idAgenda', agenda.id);
+                    }
                 }, (err) => {
                     this.plex.info('warning', 'No fue posible crear la prestación', 'ERROR');
                 });
@@ -468,7 +425,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
      * Recorremos los bloques y los turnos de una agenda
      * y verifica si hay algun paciente agregado
      */
-    getCantidadPacientes(agenda) {
+    getCantidadPacientes(agenda): number {
         let total = 0;
 
         let lengthBloques = agenda.bloques.length;
@@ -486,20 +443,24 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         return total;
     }
 
-    /**
-     * Comprueba si el turno tiene una prestacion asociada y si ya esta en ejecucion
-     * por otro profesional. En ese caso no debería poder entrar a ejecutar o validar la prestacion
-     *
-     * @param {*} turno
-     * @returns
-     * @memberof PuntoInicioComponent
-     */
-    tienePermisos(turno) {
-        let existe = this.auth.getPermissions('rup:tipoPrestacion:?').find(permiso => (permiso === turno.tipoPrestacion._id));
-        if (turno.prestacion) {
-            const estado = turno.prestacion.estados[turno.prestacion.estados.length - 1];
-            if (estado.tipo !== 'pendiente' && estado.createdBy.username !== this.auth.usuario.username) {
-                return false;
+    getCantidadPacientesAgendas(agendas): number {
+        return agendas.forEach(agenda => {
+            if (this.getCantidadPacientes(agenda) > 0) {
+                return this.getCantidadPacientes(agenda);
+            } else {
+                return 0;
+            }
+        });
+    }
+
+    tienePermisos(tipoPrestacion, prestacion) {
+        let permisos = this.auth.getPermissions('rup:tipoPrestacion:?');
+        let existe = permisos.find(permiso => (permiso === tipoPrestacion._id));
+        // vamos a comprobar si el turno tiene una prestacion asociada y si ya esta en ejecucion
+        // por otro profesional. En ese caso no debería poder entrar a ejecutar o validar la prestacion
+        if (prestacion) {
+            if (prestacion.estados[prestacion.estados.length - 1].tipo !== 'pendiente' && prestacion.estados[prestacion.estados.length - 1].createdBy.username !== this.auth.usuario.username) {
+                return null;
             }
         }
         return existe;

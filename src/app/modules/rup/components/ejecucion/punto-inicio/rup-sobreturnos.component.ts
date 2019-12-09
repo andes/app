@@ -5,7 +5,10 @@ import { PrestacionesService } from '../../../services/prestaciones.service';
 
 @Component({
     selector: 'rup-sobreturnos',
-    templateUrl: 'rup-sobreturnos.html'
+    templateUrl: 'rup-sobreturnos.html',
+    styleUrls: [
+        '../../core/_rup.scss'
+    ]
 })
 export class RUPSobreturnosComponent implements OnInit {
 
