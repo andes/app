@@ -4,17 +4,20 @@
             <div class="page-title float-left">SOLICITUD DE {{ tipoSolicitud.toUpperCase() }}</div>
         </div>
     </header>
-    <div class="row" *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
+    <div class="row"
+         *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
         <div class="col">
             <!-- Cuando la solicitud fue rechazada muestra los datos del rechazo -->
             <b>Motivo de Rechazo</b>
             <br>
-            <span class="text-left" *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
+            <span class="text-left"
+                  *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
                 {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo}}</span>
             <br>
             <b>Usuario que rechaza</b>
             <br>
-            <span class="text-left" *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
+            <span class="text-left"
+                  *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
                 {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdBy | profesional}}</span>
             <br>
         </div>
@@ -103,7 +106,8 @@
             </span>
         </div>
     </div>
-    <div class="row" *ngIf="prestacionSeleccionada.solicitud.registros.length>0 && prestacionSeleccionada.solicitud.registros[0]?.valor && prestacionSeleccionada.solicitud.registros[0].valor?.solicitudPrestacion.motivo">
+    <div class="row"
+         *ngIf="prestacionSeleccionada.solicitud.registros.length>0 && prestacionSeleccionada.solicitud.registros[0]?.valor && prestacionSeleccionada.solicitud.registros[0].valor?.solicitudPrestacion.motivo">
         <div class="col">
             <hr>
             <b>Motivo de Solicitud</b>
@@ -117,7 +121,8 @@
         <div class="col-12">
             <b>Archivos Adjuntos</b>
             <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
-                <ng-container *ngFor="let doc of this.prestacionSeleccionada.solicitud.registros[0].valor.documentos; let i = index">
+                <ng-container
+                              *ngFor="let doc of this.prestacionSeleccionada.solicitud.registros[0].valor.documentos; let i = index">
                     <a (click)="activaLightbox(i)">
                         <div class="image hover">
                             <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
@@ -126,8 +131,8 @@
                             </a>
                         </div>
                     </a>
-                    <div (click)="lightbox = false" *ngIf="i === indice && lightbox" [ngClass]="{'lightbox': i === indice && lightbox }"
-                        class="hover">
+                    <div (click)="lightbox = false" *ngIf="i === indice && lightbox"
+                         [ngClass]="{'lightbox': i === indice && lightbox }" class="hover">
                         <i (click)=imagenPrevia(i) class="mdi mdi-chevron-double-left previous parpadeo"></i>
                         <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
                         <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto m-1 p-2">
@@ -143,7 +148,7 @@
     <div class="row">
         <div class="col">
             <hr>
-            <b>Usuario de Creación</b>
+            <b>Creado por</b>
             <br>
             <span>{{prestacionSeleccionada.createdBy.nombreCompleto}}</span>
         </div>
