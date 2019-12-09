@@ -41,6 +41,7 @@ export interface IAgenda {
     turnosRestantesProgramados: number; // Virtual
     turnosRestantesGestion: number; // Virtual
     turnosRestantesProfesional: number; // Virtual
+    cantidadTurnos: number; // Virtual
     estadosAgendas: String[];
     nota: String;
     nominalizada: Boolean;
@@ -51,6 +52,4 @@ export interface IAgenda {
         estado: String,
         fecha: Date
     }];
-    // virtual
-    cantidadTurnos: number;
 }
