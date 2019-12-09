@@ -33,7 +33,7 @@ export interface IAgenda {
     horaFin: Date;
     intercalar: Boolean;
     bloques: IBloque[];
-    estado: String;
+    estado: string;
     prePausada: String;
     sobreturnos?: ITurno[];
     turnosDisponibles: number; // Virtual
@@ -51,4 +51,6 @@ export interface IAgenda {
         estado: String,
         fecha: Date
     }];
+    // virtual
+    cantidadTurnos: number;
 }
