@@ -1139,12 +1139,10 @@ export class DarTurnosComponent implements OnInit {
     }
 
     noSeAsignaTurno() {
+        console.log(this.opciones.tipoPrestacion);
         let listaEspera: any;
         let operacion: Observable<IListaEspera>;
-        let datosPrestacion = !this.opciones.tipoPrestacion ? null : {
-            id: this.opciones.tipoPrestacion.id,
-            nombre: this.opciones.tipoPrestacion.nombre
-        };
+        let datosPrestacion = this.opciones.tipoPrestacion;
         let datosProfesional = !this.opciones.profesional ? null : {
             id: this.opciones.profesional.id,
             nombre: this.opciones.profesional.nombre,
@@ -1156,12 +1154,17 @@ export class DarTurnosComponent implements OnInit {
             apellido: this.paciente.apellido,
             documento: this.paciente.documento
         };
+        let organizacion = !this.auth.organizacion ? null : {
+            id: this.auth.organizacion.id,
+            nombre: this.auth.organizacion.nombre
+        };
         listaEspera = !this.agenda ? null : {
             fecha: this.agenda.horaInicio,
             estado: 'Demanda Rechazada',
             tipoPrestacion: datosPrestacion,
             profesional: datosProfesional,
             paciente: datosPaciente,
+            organizacion: organizacion
         };
         if (listaEspera !== null) {
             operacion = this.serviceListaEspera.post(listaEspera);
