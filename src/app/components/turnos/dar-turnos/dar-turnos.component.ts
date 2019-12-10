@@ -1139,7 +1139,6 @@ export class DarTurnosComponent implements OnInit {
     }
 
     noSeAsignaTurno() {
-        console.log(this.opciones.tipoPrestacion);
         let listaEspera: any;
         let operacion: Observable<IListaEspera>;
         let datosPrestacion = this.opciones.tipoPrestacion;
