@@ -66,7 +66,7 @@ export class ResumenPacienteDinamicoComponent implements OnInit {
         // Loopeamos los conceptos que no son graficos y recupermaos su ultimo registro
         for (let concepto of this.conceptos) {
             this.elementos = [...this.elementos, this.elementosRUPService.buscarElemento(concepto, false)];
-            this.prestacionesService.getRegistrosHuds(this.paciente.id, '>>' + concepto.conceptId).subscribe(prestaciones => {
+            this.prestacionesService.getRegistrosHuds(this.paciente.id, '<<' + concepto.conceptId).subscribe(prestaciones => {
                 if (prestaciones.length) {
                     this.registros = [...this.registros, prestaciones[prestaciones.length - 1]];
                 }
