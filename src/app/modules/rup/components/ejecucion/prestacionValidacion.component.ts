@@ -318,6 +318,7 @@ export class PrestacionValidacionComponent implements OnInit {
             return false;
         }
         this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
+            this.servicioPrestacion.clearConceptosPaciente(this.paciente.id);
             if (!validar) {
                 return false;
             } else {
@@ -341,9 +342,6 @@ export class PrestacionValidacionComponent implements OnInit {
                             seCreoSolicitud = true;
                             this.plex.info('success', 'La solicitud está en la bandeja de entrada de la organización destino', 'Información');
                         }
-
-
-
                     });
 
                     this.motivoReadOnly = true;

@@ -1,5 +1,5 @@
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { Component, OnInit, Output, Input, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Component, Output, AfterViewInit, Input, EventEmitter, ViewEncapsulation, AfterContentInit } from '@angular/core';
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -13,7 +13,7 @@ import { HUDSService } from '../../services/huds.service';
     // Use to disable CSS Encapsulation for this component
     encapsulation: ViewEncapsulation.None
 })
-export class HudsBusquedaComponent implements OnInit {
+export class HudsBusquedaComponent implements AfterContentInit {
     laboratoriosFS: any;
     laboratorios: any = [];
     vacunas: any = [];
@@ -127,7 +127,7 @@ export class HudsBusquedaComponent implements OnInit {
      *
      * @memberof PrestacionEjecucionComponent
      */
-    ngOnInit() {
+    ngAfterContentInit() {
         if (this.paciente) {
             this.listarPrestaciones();
             this.listarConceptos();
