@@ -109,10 +109,10 @@ export class HUDSService {
     }
 
     getAccesos(params: any): Observable<any> {
-        return this.server.get(this.hudsUrl + '/accesos', { params: params });
+        return this.server.get(this.hudsUrl, { params: params });
     }
 
     getHudsToken() {
-        return localStorage.getItem('huds-token');
+        return window.sessionStorage.getItem('huds-token');
     }
 }

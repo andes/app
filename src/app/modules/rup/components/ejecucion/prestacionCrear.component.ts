@@ -189,7 +189,7 @@ export class PrestacionCrearComponent implements OnInit {
                 res.subscribe(input => {
                     if (input.token) {
                         // se obtuvo token y loguea el acceso a la huds del paciente
-                        localStorage.setItem('huds-token', input.token);
+                        window.sessionStorage.setItem('huds-token', input.token);
                     } else {
                         localStorage.removeItem('idAgenda');
                         this.router.navigate(['/rup/ejecucion', input.id]); // prestacion

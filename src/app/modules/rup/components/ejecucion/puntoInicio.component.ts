@@ -373,7 +373,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 res.subscribe(input => {
                     if (input.token) {
                         // se obtuvo token y loguea el acceso a la huds del paciente
-                        localStorage.setItem('huds-token', input.token);
+                        window.sessionStorage.setItem('huds-token', input.token);
                     } else {
                         if (input.error) {
                             this.plex.info('info', input.error, 'Aviso');
@@ -633,7 +633,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 res.subscribe(input => {
                     if (input.token) {
                         // se obtuvo token y loguea el acceso a la huds del paciente
-                        localStorage.setItem('huds-token', input.token);
+                        window.sessionStorage.setItem('huds-token', input.token);
                     } else {
                         // prestacion
                         this.router.navigate(['/rup/ejecucion', prestacion.id]);
@@ -726,12 +726,12 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     preAccesoHuds() {
         if (!this.accesoHudsPaciente && !this.accesoHudsPrestacion && this.routeToParams && this.routeToParams[0] === 'huds') {
             // Se esta accediendo a 'HUDS DE UN PACIENTE'
-            localStorage.setItem('motivoAccesoHuds', this.motivoSelected);
+            window.sessionStorage.setItem('motivoAccesoHuds', this.motivoSelected);
             this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
         } else {
             this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.accesoHudsPaciente, this.motivoSelected, this.auth.profesional.id, this.accesoHudsTurno, this.accesoHudsPrestacion).subscribe(hudsToken => {
                 // se obtiene token y loguea el acceso a la huds del paciente
-                localStorage.setItem('huds-token', hudsToken.token);
+                window.sessionStorage.setItem('huds-token', hudsToken.token);
                 this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
                 this.routeToParams = [];
                 this.accesoHudsPaciente = null;
@@ -739,5 +739,11 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 this.accesoHudsPrestacion = null;
             });
         }
+    }
+
+    setAccesoHudsParams(paciente, turno, prestacion) {
+        this.accesoHudsPaciente = paciente;
+        this.accesoHudsTurno = turno;
+        this.accesoHudsPrestacion = prestacion;
     }
 }

@@ -42,7 +42,7 @@ export class HudsBusquedaPacienteComponent implements OnInit {
             this.router.navigate(['inicio']);
         }
         // se obtiene el motivo de acceso a la huds que seleccionó el profesional
-        this.motivoAccesoHuds = localStorage.getItem('motivoAccesoHuds');
+        this.motivoAccesoHuds = window.sessionStorage.getItem('motivoAccesoHuds');
         if (!this.motivoAccesoHuds) {
             this.router.navigate(['rup']);
         }
@@ -74,8 +74,8 @@ export class HudsBusquedaPacienteComponent implements OnInit {
         if (paciente && paciente.id && this.motivoAccesoHuds) {
             // se obtiene token y loguea el acceso a la huds del paciente
             this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, this.motivoAccesoHuds, this.auth.profesional.id, null, null).subscribe(hudsToken => {
-                localStorage.setItem('huds-token', hudsToken.token);
-                localStorage.removeItem('motivoAccesoHuds');
+                window.sessionStorage.setItem('huds-token', hudsToken.token);
+                window.sessionStorage.removeItem('motivoAccesoHuds');
                 this.router.navigate(['/rup/huds/paciente/' + paciente.id]);
             });
         } else {
