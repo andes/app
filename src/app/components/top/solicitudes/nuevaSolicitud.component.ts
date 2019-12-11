@@ -236,14 +236,15 @@ export class NuevaSolicitudComponent implements OnInit {
         if (this.tipoSolicitud === 'salida') {
             if (this.modelo.solicitud.organizacion) {
                 this.servicioReglas.get({
-                organizacionOrigen: this.auth.organizacion.id,
-                organizacionDestino: this.modelo.solicitud.organizacion.id,
-                prestacionOrigen: this.modelo.solicitud.tipoPrestacionOrigen.conceptId })
-                .subscribe(
-                    res => {
-                        this.dataReglasDestino = res.map(elem => { return { id: elem.destino.prestacion.conceptId, nombre: elem.destino.prestacion.term }; });
-                    }
-                );
+                    organizacionOrigen: this.auth.organizacion.id,
+                    organizacionDestino: this.modelo.solicitud.organizacion.id,
+                    prestacionOrigen: this.modelo.solicitud.tipoPrestacionOrigen.conceptId
+                })
+                    .subscribe(
+                        res => {
+                            this.dataReglasDestino = res.map(elem => { return { id: elem.destino.prestacion.conceptId, nombre: elem.destino.prestacion.term }; });
+                        }
+                    );
             }
 
         }
@@ -377,7 +378,6 @@ export class NuevaSolicitudComponent implements OnInit {
         let myReader: FileReader = new FileReader();
 
         myReader.onloadend = (e) => {
-            console.log(this.childsComponents.first);
             (this.childsComponents.first as any).nativeElement.value = '';
             let metadata = {};
             this.adjuntosService.upload(myReader.result, metadata).subscribe((data) => {

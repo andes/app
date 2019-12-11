@@ -107,8 +107,8 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         }
 
         this.ws.connect();
-        this.servicioTurnero.get({'fields': 'espaciosFisicos.id'}).subscribe((pantallas) => {
-            this.espaciosFisicosTurnero = pantallas.reduce((listado, p) => listado.concat(p.espaciosFisicos), []).map((espacio: any) => { return espacio.id; } );
+        this.servicioTurnero.get({ 'fields': 'espaciosFisicos.id' }).subscribe((pantallas) => {
+            this.espaciosFisicosTurnero = pantallas.reduce((listado, p) => listado.concat(p.espaciosFisicos), []).map((espacio: any) => { return espacio.id; });
         });
     }
 
@@ -402,7 +402,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         //     let planes = [];
         //     this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
         //         if (prestacion) {
-        //             console.log('prestacion', prestacion);
         //             prestacion.ejecucion.registros.push({
         //                 esDiagnosticoPrincipal: true,
         //                 nombre: 'no asistió',
@@ -496,7 +495,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     mostrarBotonTurnero(agenda, turno) {
-        return (agenda && agenda.espacioFisico && agenda.espacioFisico.id && (this.espaciosFisicosTurnero.findIndex((e) => e === agenda.espacioFisico.id) >= 0))  && turno.paciente &&  turno.paciente.id && this.verificarAsistencia(turno) && (turno.estado !== 'suspendido') && (!turno.prestacion || (turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente') );
+        return (agenda && agenda.espacioFisico && agenda.espacioFisico.id && (this.espaciosFisicosTurnero.findIndex((e) => e === agenda.espacioFisico.id) >= 0)) && turno.paciente && turno.paciente.id && this.verificarAsistencia(turno) && (turno.estado !== 'suspendido') && (!turno.prestacion || (turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente'));
     }
 
     routeTo(action, id) {

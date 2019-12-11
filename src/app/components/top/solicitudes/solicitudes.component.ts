@@ -293,7 +293,7 @@ export class SolicitudesComponent implements OnInit {
 
             }, err => {
                 if (err) {
-                    console.log(err);
+                    // [] Que onda no hace nada!!
                 }
             });
         }

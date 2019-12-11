@@ -4,7 +4,6 @@ import { RUPComponent } from './../core/rup.component';
 import { IPrestacionGetParams } from '../../interfaces/prestacionGetParams.interface';
 import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
 import { RupElement } from '.';
-import swal from 'sweetalert2';
 
 @Component({
     selector: 'rup-OdontogramaRefset',
@@ -78,8 +77,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     public cargandoUltimoOdontograma = true;
 
     ngOnInit() {
-
-        console.log(typeof this.params);
 
         // Traer EL odontograma, los dientes
         this.snomedService.getQuery({
