@@ -65,8 +65,6 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
                 tipo: String
 
             }; // this.modelo
-            // console.log("this.modelo");
-            // console.log(this.modelo);
         } else {
             this.granularidad.id = this.modelo.granularidad;
             this.tipo.id = this.modelo.tipo;
@@ -143,31 +141,9 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
 
     // ****************************************** //
     onSave() {
-        // if (this.reglas.nombre && this.reglas.valor && this.reglas.condicion) {
-        //     this.arrayReglas.push(this.reglas);
-        //     console.log(this.arrayReglas);
-        // }
-        // this.modelo.ejecucion[0].reglas = this.arrayReglas;
-
-
-
 
         this.modelo.granularidad = this.granularidad.id;
         this.modelo.tipo = this.tipo.id;
-        // Modo Update
-        // console.log(this.modelo);
-        // //delete this.modelo.ejecucion //.$order;
-        // for (var i in this.modelo.ejecucion) {
-        //     delete this.modelo.ejecucion[i].$order;
-        // }
-        // console.log('----------------------');
-        // console.log(this.modelo);
-        // console.log('----------------------');
-        //  this.modelo.ejecucion[0].idTipoPrestacion = "2222";
-        // this.modelo.ejecucion[0].reglas[0].nombre = "prueba22";
-        // this.modelo.ejecucion[0].reglas[0].valor = 33;
-        // this.modelo.ejecucion[0].reglas[0].condicion = "condicion22";
-        // console.log(this.modelo);
         let method = (this.seleccion) ? this.tipoPrestacionService.put(this.modelo) : this.tipoPrestacionService.post(this.modelo);
 
         method.subscribe(tipoPrestacion => {
@@ -186,31 +162,5 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
 
 
 
-    // Ejecucion() {
-    //     this.showRegla = true;
-    //     this.modelo.ejecucion[0].idTipoPrestacion = this.seleccionado.id;
-    //     console.log(this.modelo.ejecucion[0].idTipoPrestacion);
-    //     console.log("###modelo");
-    //     console.log(this.modelo);
-    //     // console.log(this.modelo.ejecucion.idTipoPrestacion);
-    //     // console.log(this.reglas);
 
-    // }
-
-    // AgregarReglas() {
-    //     if (this.reglas.nombre && this.reglas.valor && this.reglas.condicion) {
-    //         this.arrayReglas.push(this.reglas);
-    //         console.log(this.arrayReglas);
-    //     }
-    //     this.modelo.ejecucion[0].reglas = this.arrayReglas;
-    //     // console.log(this.reglas);
-    //     console.log("###modelo");
-    //     console.log(this.modelo);
-    // }
-    // QuitaReglas(id) {
-    //     this.arrayReglas.splice(id,1);
-    // }
-
-
-
-} // export class TipoPrestacionCreateUpdateComponent
+}

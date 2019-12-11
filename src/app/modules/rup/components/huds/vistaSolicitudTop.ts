@@ -22,7 +22,6 @@ export class VistaSolicitudTopComponent implements OnInit {
         if (this.estado === 'rechazada') {
             this.motivoRechazo = this.registro.estados[this.registro.estados.length - 1].motivoRechazo;
         }
-        console.log('estado ', this.estado);
         if (this.registro.solicitud.turno) {
             let params = {
                 id: this.registro.solicitud.turno

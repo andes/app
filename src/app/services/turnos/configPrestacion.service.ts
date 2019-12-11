@@ -24,7 +24,6 @@ export class ConfigPrestacionService {
         alert('Reimplementar con Server');
         throw new Error('Reimplementar con Server');
         // let bodyString = JSON.stringify(prestacion); // Stringify payload
-        // console.log(bodyString);
         // let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         // let options = new RequestOptions({ headers: headers }); // Create a request option
         // return this.http.post(this.configPrestacionUrl, bodyString, options) // ...using post request

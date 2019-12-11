@@ -43,7 +43,6 @@ export class Tabla2DComponent implements OnInit, OnChanges {
     private slug = new Slug('default');
 
     descargar(value) {
-        // console.log('filtros ', this.filtros)
         // ARMAR CSV para visualizar todos los datos
         let tabla = Object.keys(value).map(city => {
             let dataReturn = { Localidad: city };

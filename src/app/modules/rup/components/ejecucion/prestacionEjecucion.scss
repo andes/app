@@ -1,5 +1,11 @@
 @import '../core/rup';
 
+::ng-root {
+    .plex-box-content {
+        padding-right: 0;
+    }
+}
+
 //
 .prestacionActual {
     background-color: #66666652;

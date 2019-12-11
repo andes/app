@@ -4,7 +4,7 @@ import { ObjectID } from 'bson';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 export class IRegistroPrivacy {
-    scope: String;
+    scope: string;
 }
 
 export class IPrestacionRegistro {

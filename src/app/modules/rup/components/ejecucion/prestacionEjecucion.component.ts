@@ -114,8 +114,10 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     public scopePrivacy = [];
     public registrosHUDS = [];
 
-    verMasRelaciones = [];
-
+    // Historial HUDS de registros relacionados a un concepto
+    detalleConceptoHUDS: any;
+    detalleRegistrosHUDS: any;
+    verMasRelaciones: any[] = [];
     constructor(
         private obraSocialService: ObraSocialService,
         public servicioPrestacion: PrestacionesService,
@@ -269,6 +271,11 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     public onCloseTab(index) {
         this.huds.remove(index - 2);
+        if (this.detalleRegistrosHUDS && this.detalleConceptoHUDS) {
+            this.detalleRegistrosHUDS = null;
+            this.detalleConceptoHUDS = null;
+            this.activeIndex = 0;
+        }
     }
 
     /**
@@ -434,6 +441,9 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             if (this.confirmarDesvincular[registroId] && !this.confirmarDesvincular[registroId].cara) {
                 registroActual.relacionadoCon = registroActual.relacionadoCon.filter(rr => rr.id !== this.confirmarDesvincular[registroId].id && rr.concepto.conceptId !== this.confirmarDesvincular[registroId].concepto.conceptId);
             } else {
+
+                registroActual.relacionadoCon = this.elementosRUPService.desvincularOdontograma(this.confirmarDesvincular, registroActual, registroId);
+
                 const cara = this.confirmarDesvincular[registroId].cara;
                 const term = this.confirmarDesvincular[registroId].concepto.term;
                 registroActual.relacionadoCon = registroActual.relacionadoCon.filter(rr => rr.cara !== cara || rr.concepto.term !== term);
@@ -1041,18 +1051,14 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     }
 
     // Búsqueda que filtra según concepto
-    ejecutarAccion(data) {
-        // this.tipoBusqueda = [];
-        // if (data && data.conceptos) {
-        //     // tipoBusqueda
-        //     this.tipoBusqueda = data;
-        //     // this.registrosHuds = [...this.registrosHuds, data];
-        // } else {
-        //     this.tipoBusqueda = null;
-        //     this.filtroRefset = null;
-
-        // }
-
+    recibirAccion(datosRecibidos, destino = 'tab') {
+        if (destino === 'tab') {
+            this.detalleConceptoHUDS = datosRecibidos.evento.datos[0];
+            this.detalleConceptoHUDS['caraCuadrante'] = datosRecibidos.evento.datos[1];
+            this.detalleRegistrosHUDS = datosRecibidos.evento.datos[2];
+            this.activeIndex = this.activeIndex + 2;
+        }
+        datosRecibidos = null;
     }
 
     cargaItems(registroActual, indice) {

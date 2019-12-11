@@ -29,7 +29,6 @@ export class EspecialidadCreateUpdateComponent implements OnInit {
                 activo: true,
             };
         }
-        // console.log(this.modelo.codigo.sisa);
         // this.modelo.codigo.sisa = " ";
     }
 

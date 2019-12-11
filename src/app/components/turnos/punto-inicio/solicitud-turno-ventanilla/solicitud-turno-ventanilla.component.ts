@@ -146,7 +146,6 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
             this.servicioReglas.get({ organizacionDestino: this.auth.organizacion.id, prestacionDestino: this.modelo.solicitud.tipoPrestacion.conceptId })
                 .subscribe(
                     res => {
-                        console.log(res);
                         this.arrayOrganizacionesOrigen = res;
                         this.dataOrganizacionesOrigen = res.map(elem => { return { id: elem.origen.organizacion.id, nombre: elem.origen.organizacion.nombre }; });
                     }
