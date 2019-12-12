@@ -4,6 +4,7 @@ import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { AppComponent } from '../../../../app.component';
 import { OrganizacionService } from '../../../../services/organizacion.service';
+import { HotjarService } from '../../../../shared/services/hotJar.service';
 
 @Component({
     templateUrl: 'select-organizacion.html',
@@ -17,7 +18,8 @@ export class SelectOrganizacionComponent implements OnInit {
         private auth: Auth,
         private router: Router,
         public appComponent: AppComponent,
-        public organizacionService: OrganizacionService
+        public organizacionService: OrganizacionService,
+        private hotjar: HotjarService
     ) { }
 
     ngOnInit() {
@@ -41,6 +43,7 @@ export class SelectOrganizacionComponent implements OnInit {
                 this.plex.updateUserInfo({ usuario: this.auth.usuario });
                 this.appComponent.checkPermissions();
                 this.router.navigate(['inicio']);
+                this.hotjar.initialize();
             });
         }, (err) => {
             this.plex.info('danger', 'Error al seleccionar organización');

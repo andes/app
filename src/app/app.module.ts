@@ -29,7 +29,6 @@ import { PlexModule } from '@andes/plex';
 import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
 import { AuthModule } from '@andes/auth';
-import { Auth } from '@andes/auth';
 import { RoutingGuard, RoutingNavBar, RoutingHudsGuard } from './app.routings-guard.class';
 import { AgmCoreModule } from '@agm/core';
 import { MapsComponent } from './utils/mapsComponent';
@@ -513,6 +512,7 @@ import { PasesListadoInternacionComponent } from './apps/rup/internacion/compone
 import { VistaAccesosHudsComponent } from './modules/rup/components/huds/vista-accesos-huds.component';
 import { ModalMotivoAccesoHudsComponent } from './modules/rup/components/huds/modal-motivo-acceso-huds.component';
 
+import { HotjarService } from './shared/services/hotJar.service';
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
 import { HUDSService } from './modules/rup/services/huds.service';
 import { GestorUsuariosProvidersModule } from './apps/gestor-usuarios/gestor-usuarios.providers';
@@ -776,7 +776,8 @@ registerLocaleData(localeEs, 'es');
         TurnosPrestacionesService,
         PlantillasService,
         InternacionCacheService,
-        WebSocketService
+        WebSocketService,
+        HotjarService
     ]
 })
 
