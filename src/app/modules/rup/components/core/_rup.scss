@@ -744,61 +744,49 @@ observaciones {
 
 .nav-item-plan {
     background-color: white;
-    color: $solicitud;
+    color: $blue;
 
     a.active {
-        background-color: $solicitud !important;
+        background-color: $blue !important;
         color: white !important;
     }
 }
 
 .prestacion {
-    height: 67px;
-    min-height: 67px;
-    border-top: 2px solid #ccc;
-    border-bottom: 2px solid #ccc;
-    border-right: 2px solid #ccc;
-    border-left: 2px solid #ccc;
+
+    display: grid;
+    grid-template-columns: 50px 1fr .5fr;
+    border: 2px solid #ccc;
+    
     &:hover {
         background: #eee;
-        border-right: 2px solid $solicitud;
-        border-bottom: 2px solid $solicitud;
-        border-top: 2px solid $solicitud;
-        border-left: 2px solid $solicitud;
+        border: 2px solid $blue;
     }
     .rup-icon {
-        background: $solicitud;
-        padding: 8px;
+        color: white;
+        height: 75px;
+        width: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: $blue;
+        i {
+            height: 46px;
+            font-size: 36px;
+        }
     }
 
-    div {
-        line-height: 16px;
-        &.info {
-            width: 100%;
-            margin-left: .5rem;
-            div {
-                height: 28px;
-            }
-            small, b {
-                font-size: 14px;
-            }
-            
-        }
-        &.buttons {
-            min-width: 160px;
-        }
-    }
 }
 
 .citas-agenda-card {
     display: grid;
-    grid-template-columns: 50px 1fr 1fr 84px;
+    grid-template-columns: 50px .6fr 1fr 84px;
     border: 2px solid $blue;
     margin-bottom: 2px;
     
     &.bg-inverse-dark {
         background: $dark-blue;
-        border: 0;
+        border: 2px solid $dark-blue;
     }
     .citas-icon {
         width: 50px;
@@ -806,43 +794,62 @@ observaciones {
         justify-content: center;
         background: $blue;
     }
-    .citas-icon-sm {
-        color: #eee;
-        background: $blue;
-        padding: 2px 6px;
-        height: 26px;
+    
+    .badge {
+        padding: 6px;
+        border: 1px solid $blue;
     }
+}
+
+.citas-icon-sm {
+    color: #eee;
+    background: $blue;
+    padding: 2px 6px;
+    height: 26px;
+}
+
+.fuera-agenda-card {
+    .rup-icon {
+        background: $blue;
+        color: $light-grey;
+    }
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    border: 1px solid $blue;
     .badge {
         padding: 6px;
         border: 1px solid;
     }
+    &.bg-inverse-dark {
+        color: $light-grey;
+        background: $dark-blue;
+    }
 }
-
 
 .citas-turno-card {
     --icon-size: 70px;
-    --icon-size-sm: 40px;
+    --icon-size-sm: 50px;
     display: grid;
-    grid-template-columns: var(--icon-size) auto 1fr;
+    grid-template-columns: calc(var(--icon-size) - 20px) auto 1fr;
     >:nth-child(2) {
         line-height: 1.3rem;
     }
     &.sm {
-        grid-template-columns: var(--icon-size-sm) auto 1fr;
+        grid-template-columns: calc(var(--icon-size) - 20px) auto 1fr;
         :nth-child(2) {
             display: flex;
             align-items: center;
         }
     }
-    border: 2px solid $blue;
+    border: 2px solid #ccc;
     margin-bottom: 2px;
     
     &.bg-inverse-dark {
         background: $dark-blue;
-        border: 0;
+        border: 2px solid $dark-blue;
     }
     .citas-icon {
-        width: var(--icon-size);
+        width: calc(var(--icon-size) - 20px);
         height: var(--icon-size);
         display: flex;
         flex-direction: column;
@@ -860,7 +867,7 @@ observaciones {
             line-height: 0;
         }
         plex-icon {
-            height: 50px;
+            height: 46px;
             font-size: 36px;
         }
         plex-icon.sm {
@@ -876,6 +883,10 @@ observaciones {
     .badge {
         padding: 6px;
         border: 1px solid;
+    }
+    &:hover {
+        background: #eee;
+        border: 2px solid $blue;
     }
 }
 

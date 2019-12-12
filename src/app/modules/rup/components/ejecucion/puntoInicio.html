@@ -1,4 +1,4 @@
-<plex-layout main="6">
+<plex-layout main="7">
     <plex-layout-main>
         <!-- Box header -->
         <plex-title main titulo="Punto de inicio | Consultorio">
@@ -25,10 +25,11 @@
             </div>
         </div>
         <br>
-        <div justify class="align-items-start agendas row">
-            <div class="col pr-0" [ngClass]="{'w-100': fueraDeAgenda.length === 0, 'w-75': fueraDeAgenda.length > 0}">
+        <div class="row agendas d-flex justify-content-between align-items-start">
+            <div class="col pr-0 mr-1"
+                 [ngClass]="{'w-100': fueraDeAgenda.length === 0, 'w-75': fueraDeAgenda.length > 0}">
                 <plex-title justify titulo="Agendas" size="sm">
-                    <plex-radio class="form-check form-check-inline" [(ngModel)]="filtroAgendas.radio" [data]="opciones"
+                    <plex-radio class="form-check-inline" [(ngModel)]="filtroAgendas.radio" [data]="opciones"
                                 name="agendas" type="horizontal" (change)="filtrar();">
                     </plex-radio>
                 </plex-title>
@@ -39,7 +40,6 @@
                 </ng-container>
 
                 <ng-container *ngIf="agendas.length">
-
                     <ng-container *ngFor="let agenda of agendas; let i=index">
                         <div *ngIf="agenda.dinamica || getCantidadPacientes(agenda) || agenda.tipoPrestaciones[0].noNominalizada"
                              class="citas-agenda-card hover pr-1" (click)="cargarTurnos(agenda)"
@@ -79,8 +79,9 @@
                                     </small>
                                 </div>
                             </div>
-                            <div *ngIf="agenda.estado !== 'disponible' && !agenda.tipoPrestaciones[0].noNominalizada"
-                                 justify="center">
+                            <div class="mr-1"
+                                 *ngIf="agenda.estado !== 'disponible' && !agenda.tipoPrestaciones[0].noNominalizada"
+                                 justify="end">
                                 <div class="citas-icon-sm">
                                     <i class="icon icon-andes-paciente"></i>
                                 </div>
@@ -97,12 +98,35 @@
                     </ng-container>
                 </ng-container>
             </div>
-            <div class="mx-2"></div>
-            <br>
+            <!-- Lista de Fuera de Agenda -->
             <div [ngClass]="{'w-25': fueraDeAgenda.length > 0, 'd-none': fueraDeAgenda.length === 0}">
+                <plex-title titulo="Fuera de Agenda" size="sm"></plex-title>
+                <ng-container *ngFor="let fao of fueraDeAgendaOrdenadas; let fac=index">
+                    <div class="hover fuera-agenda-card mr-2 mb-1"
+                         [ngClass]="{'bg-inverse-dark': indexFueraAgenda === fac}">
+                        <div justify="center" class="rup-icon" (click)="cargarFueraAgenda(fac)">
+                            <i class="icon icon-rup-semantic-plan adi-24px"></i>
+                        </div>
+                        <div class="mx-1" justify *ngFor="let p of fao; let c=index" (click)="cargarFueraAgenda(fac)">
+                            <ng-container *ngIf="c === 0">
+                                <small><b class="text-capitalize">{{ p.term }}</b> </small>
+                                <!-- <div class="citas-icon-sm">
+                                    <i class="icon icon-andes-paciente"></i> -->
+                                <div class="citas-icon-sm">
+                                    <i class="icon icon-andes-paciente"></i>
+                                </div>
+                                <!-- <plex-badge type="info"></plex-badge> -->
+                                <span class="badge badge-info">{{ fao.length }}</span>
+                                <!-- </div> -->
+                            </ng-container>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+
+            <!-- <div [ngClass]="{'w-25': fueraDeAgenda.length > 0, 'd-none': fueraDeAgenda.length === 0}">
                 <plex-title justify titulo="Fuera de Agenda" size="sm"></plex-title>
                 <div class="d-flex hover" (click)="cargarTurnos()" *ngIf="fueraDeAgenda && fueraDeAgenda.length">
-                    <!-- [ngClass]="{'bg-inverse text-white': agendaSeleccionada == 'fueraAgenda'}" -->
                     <ng-container *ngIf="fueraDeAgenda.length > 0">
                         <i class="icon icon-rup-semantic-plan"></i>
                         <div>
@@ -113,7 +137,7 @@
                     </ng-container>
 
                 </div>
-            </div>
+            </div> -->
         </div>
 
 
@@ -195,7 +219,7 @@
     <plex-layout-sidebar>
 
         <plex-title justify *ngIf="!agendaSeleccionada?.dinamica"
-                    [titulo]="(agendaSeleccionada !== 'fueraAgenda' ? 'Turnos' : 'Detalles')" size="md">
+                    [titulo]="(agendaSeleccionada !== 'fueraAgenda' ? 'Turnos' : 'Fuera de Agenda')" size="md">
         </plex-title>
 
         <plex-title justify *ngIf="agendaSeleccionada?.dinamica && !buscandoPaciente" titulo="Dinámica" size="md">
@@ -205,31 +229,9 @@
         </plex-title>
 
         <div class="h-100" *ngIf="agendaSeleccionada">
-            <!-- <div
-                 *ngIf="agendaSeleccionada && agendaSeleccionada !== 'fueraAgenda' && (agendaSeleccionada.dinamica || getCantidadPacientes(agendaSeleccionada) || agendaSeleccionada.tipoPrestaciones[0].noNominalizada)">
-                <div class="row">
-                    <div class="col d-flex">
-                        {{ agendaSeleccionada.horaInicio | date: 'EEE' }}
-                        {{ agendaSeleccionada.horaInicio | fecha }},
-                        {{ agendaSeleccionada.horaInicio | date: 'HH:mm' }} a
-                        <div class="float-right">
-                            {{ agendaSeleccionada.horaFin | date: 'HH:mm' }} hs
-                            <plex-badge type="info" *ngIf="agendaSeleccionada?.dinamica">
-                                Dinámica
-                            </plex-badge>
-                            <div class="text-capitalize"
-                                 *ngFor="let tipoPrestacion of agendaSeleccionada.tipoPrestaciones">
-                                {{ tipoPrestacion.term }}
-                            </div>
-                            <div *ngIf="agendaSeleccionada.nota" class="alert alert-info">
-                                <i class="mdi mdi-comment mr-3"></i>
-                                {{ agendaSeleccionada.nota }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            <rup-fuera-de-agenda *ngIf="agendaSeleccionada === 'fueraAgenda'" [fueraDeAgenda]="fueraDeAgenda">
+
+            <rup-fuera-de-agenda *ngIf="agendaSeleccionada === 'fueraAgenda'"
+                                 [fueraDeAgenda]="fueraDeAgendaSeleccionada">
             </rup-fuera-de-agenda>
             <dinamica *ngIf="buscandoPaciente" [agenda]="agendaSeleccionada" (cancel)="cancelarDinamica()">
             </dinamica>

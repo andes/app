@@ -1,138 +1,41 @@
 <ng-container *ngFor="let prestacion of fueraDeAgenda">
-    <div justify class="prestacion">
+    <!-- {{ prestacion | json }} -->
+    <div class="prestacion">
         <div class="rup-icon">
-            <!-- <i class="icon icon-rup-semantic-plan"></i> -->
-            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="45px" height="45px"
-                 viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
-                <g>
-                    <path fill="#FFFFFF"
-                          d="M8.366,46.955v3.748H0V32.468h8.614v3.748h8.37l3.617-2.5l8.37-3.247c1.33-0.329,2.328-0.498,2.996-0.498
-            c1.003,0,1.832,0.335,2.497,1c0.67,0.666,1.001,1.497,1.001,2.499c0,1.082-0.583,2.079-1.751,2.996l-2.996,1.623h3.999l1.371-3.871
-            c0.499-1.498,1.58-2.249,3.246-2.249c1.084,0,1.999,0.499,2.75,1.501c0.667,0.667,0.831,1.666,0.498,2.996l-0.252,0.498
-            l1.003-0.498c0.831-0.499,1.874-0.751,3.12-0.751c0.999,0,1.83,0.335,2.498,1.002c0.669,0.667,0.998,1.456,0.998,2.369
-            c0,1.667-0.665,2.749-1.997,3.247l-6.368,3.247l-12.366,2.374H13.234l-4.62-0.999H8.366z M6.117,47.954V34.719H2.496v13.235H6.117z
-             M17.483,38.587H8.614v6.243l4.872,0.878h15.485l11.862-2.373l5.871-3.499c0.33-0.33,0.498-0.665,0.498-1
-            c0-0.663-0.329-0.996-0.997-0.996c-0.333,0-0.998,0.166-1.999,0.501l-3.869,1.996H29.968l-4.62-2.248l6.871-4.121
-            c0.329-0.332,0.498-0.664,0.498-0.999c0-0.665-0.332-1-0.996-1c-0.504,0-1.251,0.17-2.251,0.499l-8.364,3.247L17.483,38.587z
-             M35.277,1.811c0.954,1.043,1.561,2.479,1.813,4.309v1.249c-0.331,4.415-4.077,9.158-11.24,14.238
-            c-7.324-5.246-11.116-9.994-11.364-14.238V6.12c0.081-1.747,0.646-3.162,1.688-4.245C17.211,0.793,18.356,0.168,19.605,0h0.997
-            c1.918,0,3.666,0.916,5.248,2.749C27.347,0.916,29.052,0,30.97,0h0.997C33.216,0.168,34.323,0.769,35.277,1.811z M32.843,11.114
-            c0.831-1.163,1.391-2.455,1.684-3.87c0.294-1.414-0.229-2.749-1.557-3.997c-0.751-0.75-1.42-1-2-0.75
-            c-0.669,0.336-0.584,0.835,0.247,1.5c1.331,1.334,1.856,2.645,1.562,3.931c-0.292,1.294-0.706,2.435-1.248,3.438
-            c-0.541,0.997-0.731,1.495-0.561,1.495C31.388,12.861,32.009,12.282,32.843,11.114z M37.089,38.341h2.245l0.751-2.374
-            c0-0.332-0.083-0.581-0.252-0.75c-0.331-0.333-0.58-0.498-0.747-0.498c-0.331,0-0.668,0.165-1,0.498L37.089,38.341z" />
-                </g>
-            </svg>
+            <i class="icon icon-rup-semantic-plan"></i>
         </div>
         <div class="d-flex flex-column info">
-            <div class="d-flex flex-column" *ngIf="prestacion?.paciente">
+            <div class="d-flex flex-column ml-1" *ngIf="prestacion?.paciente">
                 <b>{{ prestacion.paciente | paciente }}</b>
                 <small class="text-muted"
                        *ngIf="prestacion?.paciente?.documento !== ''">{{ prestacion.paciente.documento | number }}</small>
                 <small class="text-muted" *ngIf="prestacion.paciente.documento === ''">Sin documento (temporal)</small>
             </div>
-            <div class="d-flex flex-column">
-                <b class="term" *ngIf="prestacion.solicitud?.tipoPrestacion">
-                    {{ prestacion.solicitud.tipoPrestacion.term }}
-                </b>
-                <small class="text-muted"
-                       *ngIf="prestacion?.solicitud">{{ prestacion.solicitud.profesional | profesional }}</small>
+            <div class="d-flex ml-1">
+                <plex-badge type="info" class="mb-1 mr-1" *ngIf="prestacion?.solicitud?.fecha">
+                    inicio {{ prestacion.solicitud.fecha | date: 'HH:mm' }} hs
+                </plex-badge>
+                <plex-badge type="warning" class="mb-1" *ngIf="prestacion?.solicitud?.fecha">
+                    {{ prestacion.estados[prestacion.estados.length - 1].tipo }}
+                </plex-badge>
             </div>
         </div>
-        <div class="d-flex flex-column p-1 pt-2">
-            <plex-badge type="info" class="mb-1" *ngIf="prestacion?.solicitud?.fecha">
-                <plex-icon name="clock-outline"></plex-icon>
-                {{ prestacion.solicitud.fecha | date: 'HH:mm' }} hs
-            </plex-badge>
-            <plex-badge type="info" class="mb-1" *ngIf="prestacion?.solicitud?.fecha">
-                {{ prestacion.estados[prestacion.estados.length - 1].tipo }}
-            </plex-badge>
-        </div>
-        <div class="d-flex flex-column p-1 pt-2 buttons">
-            <plex-button type="success" size="sm" class="mb-1"
+        <div justify="end">
+            <plex-button class="mr-1" type="success" size="sm"
                          *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'"
-                         (click)="servicioPrestacion.routeTo(false, 'ejecucion', prestacion.id)">CONTINUAR REGISTRO
+                         (click)="servicioPrestacion.routeTo('ejecucion', prestacion.id)" title="Continuar Prestación">
+                <i class="mdi mdi-pencil mdi-24px"></i>
             </plex-button>
-            <plex-button type="success" size="sm"
+            <plex-button class="mr-1" type="success" size="sm"
                          *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'"
-                         (click)="servicioPrestacion.routeTo(false, 'validacion', prestacion.id)">VER RESUMEN
+                         (click)="servicioPrestacion.routeTo('validacion', prestacion.id)" title="Ver resumen">
+                <i class="icon icon-andes-documento adi-24px"></i>
             </plex-button>
-            <plex-button type="primary" size="sm" class="my-1"
+            <plex-button class="mr-1" type="primary" size="sm"
                          *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada"
-                         (click)="servicioPrestacion.routeTo(false, 'vista', prestacion.paciente.id)">VER HUDS
+                         (click)="servicioPrestacion.routeTo('vista', prestacion.paciente.id)" title="Ver HUDS">
+                <i class="icon icon-andes-paciente adi-24px"></i>
             </plex-button>
         </div>
     </div>
 </ng-container>
-
-
-<!-- Pacientes Fuera de Agenda -->
-<!-- <table class="table table-striped">
-    <tbody>
-        <tr *ngFor="let prestacion of fueraDeAgenda" class="hover">
-            <td>
-                <div class="col-2 icon-rup drag-handle">
-                    <i class="icon icon-rup-semantic-plan"></i>
-                </div>
-                <strong *ngIf="prestacion">{{ prestacion.solicitud.fecha | date: 'HH:mm' }}</strong>
-                <br>
-                <span class="badge"
-                      [ngClass]="{'badge-success': prestacion.estados[prestacion.estados.length - 1].tipo === 'validada',
-                                'badge-warning': prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'}">
-                    {{prestacion.estados[prestacion.estados.length - 1].tipo}}
-                </span>
-
-            </td>
-            <td>
-                <span *ngIf="prestacion && prestacion.paciente">{{ prestacion.paciente | paciente
-                    }} </span>
-                <span
-                      *ngIf="prestacion && prestacion.solicitud.tipoPrestacion.noNominalizada">{{prestacion.solicitud.tipoPrestacion.term}}</span>
-                <small>
-                    <span *ngIf="prestacion && prestacion.paciente">
-                        <br>
-                        <span *ngIf="prestacion.paciente.documento !== ''">
-                            DNI {{prestacion.paciente.documento|number}}
-                        </span>
-                        <span *ngIf="prestacion.paciente.documento === ''">
-                            Sin documento (temporal)
-                        </span>
-                    </span>
-                </small>
-                <br />
-                <small *ngIf="prestacion && !prestacion.solicitud.tipoPrestacion.noNominalizada"
-                       class="text-muted">{{prestacion.solicitud.tipoPrestacion.term}}</small>
-                <small *ngIf="prestacion && prestacion.solicitud.tipoPrestacion.noNominalizada" class="text-muted">No
-                    nominalizada</small>
-                <ng-container *ngIf="prestacion?.solicitud?.profesional">
-                    <br> Prof.: {{prestacion.solicitud.profesional | profesional}}
-                </ng-container>
-            </td>
-            <td>
-
-            </td>
-            <td>
-                <span *ngIf="prestacion.turnosPedientes" title="Turno autocitado sin asignar"
-                      class="badge badge-warning">
-                    <i class="mdi mdi-message-alert"></i>
-                </span>
-            </td>
-            <td>
-                <plex-button size="block" *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada"
-                             (click)="servicioPrestacion.routeTo(false, 'vista', prestacion.paciente.id)" label="VER HUDS" type="primary btn-sm">
-                </plex-button>
-
-                <plex-button size="block" *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'"
-                             (click)="servicioPrestacion.routeTo(false, 'ejecucion', prestacion.id)" label="CONTINUAR REGISTRO"
-                             type="success btn-sm">
-                </plex-button>
-
-                <plex-button size="block" *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'"
-                             (click)="servicioPrestacion.routeTo(false, 'validacion', prestacion.id)" label="VER RESUMEN" type="success btn-sm">
-                </plex-button>
-
-            </td>
-        </tr>
-    </tbody>
-</table> -->

@@ -68,6 +68,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     // ultima request que se almacena con el subscribe
     private lastRequest: Subscription;
     public mostrarReglas = false;
+    fueraDeAgendaOrdenadas: any;
+    fueraDeAgendaSeleccionada: any;
+    indexFueraAgenda: any;
 
     // public dropdownPaciente: DropdownItem[] = [
     //     { label: 'Autocitación', icon: 'dna', handler: (() => this.crearPrestacion('autocitar')) },
@@ -252,6 +255,17 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         });
     }
 
+    groupBy(arr, property) {
+        return arr.reduce((memo, x) => {
+            if (!memo[x[property]]) {
+                memo[x[property]] = [];
+            }
+            memo[x[property]].push(x);
+            return memo;
+        }, {});
+    }
+
+
     /**
      * Filtra el listado de agendas y prestaciones
      */
@@ -262,6 +276,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.agendas = JSON.parse(JSON.stringify(this.agendasOriginales));
         // this.agendas = this.agendasOriginales;
         this.fueraDeAgenda = this.prestacionesOriginales;
+
+        let group = this.prestacionesOriginales.map(x => x.solicitud.tipoPrestacion);
+        this.fueraDeAgendaOrdenadas = Object.values(this.groupBy(group, 'conceptId'));
 
         // filtramos por agendas propias o todas menos las propias
         if (this.filtroAgendas.radio === 1) {
@@ -362,9 +379,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     verHuds() {
         this.router.navigate(['/rup/huds']);
     }
-
-
-
 
     registrarInasistencia(datos) {
 
@@ -468,7 +482,15 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     cargarTurnos(agenda) {
         this.cancelarDinamica();
-        this.agendaSeleccionada = agenda ? agenda : 'fueraAgenda';
+        this.agendaSeleccionada = agenda;
+        this.indexFueraAgenda = null;
+    }
+
+    cargarFueraAgenda(index) {
+        this.agendaSeleccionada = 'fueraAgenda';
+        this.indexFueraAgenda = index;
+        this.cancelarDinamica();
+        this.fueraDeAgendaSeleccionada = this.fueraDeAgenda.filter(x => this.fueraDeAgendaOrdenadas[index].find(y => y.conceptId === x.solicitud.tipoPrestacion.conceptId));
     }
 
     // dada una prestación busca las prestaciones generadas (por planes) que esten pendientes y sin turno asignado.

@@ -250,7 +250,6 @@ import { ListaReglasComponent } from './components/top/reglas/listaReglas.compon
 import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaSolicitudTop';
 import { RUPFueraDeAgendaComponent } from './modules/rup/components/ejecucion/punto-inicio/rup-fuera-de-agenda.component';
 import { RUPTurnosComponent } from './modules/rup/components/ejecucion/punto-inicio/rup-turnos.component';
-import { RUPSobreturnosComponent } from './modules/rup/components/ejecucion/punto-inicio/rup-sobreturnos.component';
 
 // Legacy para RUP
 // TODO: ver con JGabriel!!!
@@ -578,7 +577,6 @@ registerLocaleData(localeEs, 'es');
         PuntoInicioComponent,
         RUPFueraDeAgendaComponent,
         RUPTurnosComponent,
-        RUPSobreturnosComponent,
         VincularPacientesComponent,
         LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
         AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
