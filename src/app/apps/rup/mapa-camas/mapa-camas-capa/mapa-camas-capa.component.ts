@@ -55,6 +55,7 @@ export class MapaCamasCapaComponent implements OnInit {
 
     getMaquinaEstados() {
         this.mapaCamasService.getMaquinaEstados(this.organizacion, this.ambito, this.capa).subscribe(maquinaEstados => {
+            // [TODO] Sin no esta configurado que avise y no pinche
             this.maquinaEstados = maquinaEstados[0];
             this.estados = maquinaEstados[0].estados;
             this.relaciones = maquinaEstados[0].relaciones;

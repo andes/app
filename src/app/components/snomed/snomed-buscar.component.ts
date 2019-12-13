@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, Input, EventEmitter, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { SnomedService } from './../../services/term/snomed.service';
+import { SnomedService } from '../../apps/mitos';
 import { Unsubscribe } from '@andes/shared';
 import { SnomedBuscarService } from './snomed-buscar.service';
 

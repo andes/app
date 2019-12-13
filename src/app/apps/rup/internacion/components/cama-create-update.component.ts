@@ -5,7 +5,7 @@ import { Auth } from '@andes/auth';
 import { InternacionService } from '../services/internacion.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { CamasService } from '../services/camas.service';
-import { SnomedService } from '../../../../services/term/snomed.service';
+import { SnomedService } from '../../../mitos';
 import { Subject, of } from 'rxjs';
 import { debounceTime, catchError } from 'rxjs/operators';
 

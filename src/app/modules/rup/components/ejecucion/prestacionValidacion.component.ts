@@ -1,5 +1,5 @@
 import { AgendaService } from './../../../../services/turnos/agenda.service';
-import { SnomedService } from './../../../../services/term/snomed.service';
+import { SnomedService } from '../../../../apps/mitos';
 import { Component, OnInit, Output, EventEmitter, HostBinding, ViewEncapsulation } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';

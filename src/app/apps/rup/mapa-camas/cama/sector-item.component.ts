@@ -1,4 +1,4 @@
-import { SnomedService } from '../../../../services/term/snomed.service';
+import { SnomedService } from '../../../mitos';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import { ISectores } from '../../../../interfaces/IOrganizacion';

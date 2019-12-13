@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 import { ProcedimientosQuirurgicosService } from '../../../../services/procedimientosQuirurgicos.service';
-import { Cie10Service } from '../../../../services/term/cie10.service';
+import { Cie10Service } from '../../../mitos';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { InternacionService } from '../services/internacion.service';
 import * as moment from 'moment';

@@ -8,7 +8,7 @@ import { CamasService } from '../services/camas.service';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 import { FinanciadorService } from '../../../../services/financiador.service';
 import { OcupacionService } from '../../../../services/ocupacion/ocupacion.service';
-import { SnomedService } from '../../../../services/term/snomed.service';
+import { SnomedService } from '../../../mitos';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { ElementosRUPService } from '../../../../modules/rup/services/elementosRUP.service';
 import { InternacionService } from '../services/internacion.service';

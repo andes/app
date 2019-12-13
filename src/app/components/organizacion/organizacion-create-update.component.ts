@@ -1,5 +1,5 @@
 import { Auth } from '@andes/auth';
-import { SnomedService } from './../../services/term/snomed.service';
+import { SnomedService } from '../../apps/mitos';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import * as enumerados from './../../utils/enumerados';

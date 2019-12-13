@@ -108,12 +108,6 @@ import { SIISAService } from './services/siisa.service';
 // ... Usuarios
 import { UsuarioService } from './services/usuarios/usuario.service';
 
-// ... term
-import { Cie10Service } from './services/term/cie10.service';
-
-// SNOMED
-import { SnomedService } from './services/term/snomed.service';
-
 // ... Llaves
 import { LlavesTipoPrestacionService } from './services/llaves/llavesTipoPrestacion.service';
 
@@ -544,7 +538,7 @@ import { ListaReglasComponent } from './components/top/reglas/listaReglas.compon
 import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaSolicitudTop';
 import { MapaCamasService } from './apps/rup/mapa-camas/mapa-camas.service';
 
-import { MPILibModule } from './modules/mpi/mpi-lib.module';
+import { MitosModule } from './apps/mitos';
 
 registerLocaleData(localeEs, 'es');
 
@@ -561,6 +555,7 @@ registerLocaleData(localeEs, 'es');
         TurneroProvidersModule,
         NgDragDropModule.forRoot(),
         ChartsModule,
+        MitosModule.forRoot(),
         routing,
         AgmCoreModule.forRoot({
             apiKey: environment.MAPS_KEY
@@ -755,8 +750,6 @@ registerLocaleData(localeEs, 'es');
         AuditoriaPorBloqueService,
         AuditoriaService,
         AuditoriaPrestacionPacienteService,
-        SnomedService,
-        Cie10Service,
         SisaService,
         SintysService,
         AnsesService,
