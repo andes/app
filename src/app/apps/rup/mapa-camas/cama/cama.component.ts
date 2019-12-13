@@ -4,7 +4,7 @@ import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { MapaCamasService } from '../mapa-camas.service';
 import { Plex } from '@andes/plex';
-import { SnomedService } from '../../../../services/term/snomed.service';
+import { SnomedService, SnomedExpression } from '../../../mitos';
 
 @Component({
     selector: 'app-cama',
@@ -12,6 +12,8 @@ import { SnomedService } from '../../../../services/term/snomed.service';
 })
 
 export class CamaMainComponent implements OnInit {
+    public expr = SnomedExpression;
+
     public ambito = 'internacion';
     public capa: string;
     public fecha = moment().toDate();
@@ -23,10 +25,9 @@ export class CamaMainComponent implements OnInit {
     public cama: any;
     public estado: any;
 
+
     constructor(
         public authService: Auth,
-        private router: Router,
-        private snomed: SnomedService,
         private plex: Plex,
         private route: ActivatedRoute,
         private organizacionService: OrganizacionService,
@@ -43,9 +44,12 @@ export class CamaMainComponent implements OnInit {
             name: 'Cama'
         }]);
 
+
+
         this.organizacionService.getById(this.authService.organizacion.id).subscribe(organizacion => {
             this.organizacion = organizacion;
             this.sectores = this.organizacionService.getFlatTree(this.organizacion);
+
             this.unidadesOrganizativas = this.organizacion.unidadesOrganizativas;
         });
 
@@ -53,7 +57,6 @@ export class CamaMainComponent implements OnInit {
             this.capa = params.get('capa');
             if (params.get('id')) {
                 let idCama = params.get('id');
-                console.log('ID CAMA: ', idCama);
                 this.mapaCamasService.getCama(this.ambito, this.capa, this.fecha, idCama)
                     .subscribe(cama => {
                         this.cama = cama;
@@ -77,27 +80,4 @@ export class CamaMainComponent implements OnInit {
 
     }
 
-    loadTipoDeCama($event) {
-        this.snomed.getQuery({ expression: '^2051000013106' }).subscribe(result => {
-            $event.callback(result);
-        });
-    }
-
-    loadEquipamientos($event) {
-        this.snomed.getQuery({ expression: '^2061000013108' }).subscribe(result => {
-            $event.callback(result);
-        });
-    }
-
-    loadEspecialidades($event) {
-        this.snomed.getQuery({ expression: '<<394733009' }).subscribe(result => {
-            $event.callback(result);
-        });
-    }
-
-    loadGenero($event) {
-        this.snomed.getQuery({ expression: '703118005 OR 703117000' }).subscribe(result => {
-            $event.callback(result);
-        });
-    }
 }

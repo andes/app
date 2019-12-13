@@ -22,8 +22,8 @@
                         </plex-select>
                     </div>
                     <div class="col-4">
-                        <plex-select name="tipoCama" (getData)="loadTipoDeCama($event)" idField="term" labelField="term"
-                                     [required]="true" [(ngModel)]="cama.tipoCama" label="Tipo de cama">
+                        <plex-select name="tipoCama" [snomedExpression]="expr.TipoDeCama" [required]="true"
+                                     [(ngModel)]="cama.tipoCama" label="Tipo de cama">
                         </plex-select>
                     </div>
                     <div class="col-4">
@@ -33,20 +33,19 @@
                 </div>
                 <div class="row">
                     <div class="col-4">
-                        <plex-select name="equipamiento" [multiple]="true" (getData)="loadEquipamientos($event)"
-                                     idField="term" labelField="term" [(ngModel)]="cama.equipamiento"
-                                     label="Equipamiento">
+                        <plex-select name="equipamiento" [multiple]="true" [snomedExpression]="expr.Equipaminetos"
+                                     [(ngModel)]="cama.equipamiento" label="Equipamiento">
                         </plex-select>
                     </div>
                     <div class="col-4">
-                        <plex-select name="especialidad" [required]="true" (getData)="loadEspecialidades($event)"
-                                     idField="term" labelField="term" [(ngModel)]="cama.especialidades"
-                                     [multiple]="true" label="Especialidad/es">
+                        <plex-select name="especialidad" [required]="true" [snomedExpression]="expr.Especialidades"
+                                     [preload]="false" [(ngModel)]="cama.especialidades" [multiple]="true"
+                                     label="Especialidad/es">
                         </plex-select>
                     </div>
                     <div class="col-4">
-                        <plex-select name="genero" (getData)="loadGenero($event)" label="Genero" idField="term"
-                                     labelField="term" [(ngModel)]="cama.genero">
+                        <plex-select [snomedExpression]="expr.Genero" name="genero" label="Genero"
+                                     [(ngModel)]="cama.genero">
                         </plex-select>
                     </div>
                 </div>
