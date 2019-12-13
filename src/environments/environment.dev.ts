@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   environmentName: 'development',
   WS: '//localhost:3002',
-  API: 'https://demo.andes.gob.ar/api',
+  API: '//localhost:3002/api',
   APIStatusCheck: false,
   version: _package.version,
   MAPS_KEY: apiKeys.develop
