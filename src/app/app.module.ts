@@ -354,6 +354,29 @@ import { CamaEstadoComponent } from './apps/rup/internacion/components/camaEstad
 import { OrganizacionSectoresComponent } from './components/organizacion/organizacion-sectores.component';
 import { OrganizacionOfertaPrestacionalComponent } from './components/organizacion/organizacion-prestaciones.component';
 
+// MAPA CAMAS
+import { MapaCamasMainComponent } from './apps/rup/mapa-camas/mapa-camas-main.component';
+import { MapaCamasCapaComponent } from './apps/rup/mapa-camas/mapa-camas-capa/mapa-camas-capa.component';
+import { CensosDiariosComponent } from './apps/rup/mapa-camas/censos/censo-diario/censo-diario.component';
+import { FiltrosCamasComponent } from './apps/rup/mapa-camas/mapa-camas-capa/filtros-camas.component';
+import { CamaMainComponent } from './apps/rup/mapa-camas/cama/cama.component';
+import { ItemSectorComponent } from './apps/rup/mapa-camas/cama/sector-item.component';
+import { ItemCamaComponent } from './apps/rup/mapa-camas/mapa-camas-capa/item-cama.component';
+import { EstadoServicioComponent } from './apps/rup/mapa-camas/sidebar/estado-servicio.component';
+import { IngresarPacienteComponent } from './apps/rup/mapa-camas/sidebar/ingresar-paciente.component';
+import { MapaCamasService } from './apps/rup/mapa-camas/mapa-camas.service';
+
+let mapaCamasComponents = [
+    MapaCamasMainComponent,
+    MapaCamasCapaComponent,
+    CensosDiariosComponent,
+    FiltrosCamasComponent,
+    CamaMainComponent,
+    EstadoServicioComponent,
+    ItemSectorComponent,
+    ItemCamaComponent,
+    IngresarPacienteComponent
+];
 
 // Solicitudes
 import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.component';
@@ -599,6 +622,9 @@ registerLocaleData(localeEs, 'es');
         VistaPrestacionComponent,
         VistaCDAComponent,
         HudsBusquedaPacienteComponent,
+        PacienteBuscarComponent,
+        PacienteListadoComponent,
+        PacientePanelComponent,
 
         // RUP
         ...RUPComponentsArray,
@@ -645,7 +671,6 @@ registerLocaleData(localeEs, 'es');
         ListaReglasComponent,
         VisualizacionReglasTopComponent,
         VisualizacionReglasComponent,
-        VistaSolicitudTopComponent,
         // MPI
         BebeCruComponent,
         ExtranjeroNNCruComponent,
@@ -654,6 +679,8 @@ registerLocaleData(localeEs, 'es');
         BusquedaMpiComponent,
         PacienteCruComponent,
         GeorrefMapComponent,
+        PacienteBuscarComponent,
+        PacienteListadoComponent,
 
         // form Terapeutico
         FormTerapeuticoComponent,
@@ -767,6 +794,7 @@ registerLocaleData(localeEs, 'es');
         PlantillasService,
         InternacionCacheService,
         WebSocketService,
+        MapaCamasService
         HotjarService
     ]
 })

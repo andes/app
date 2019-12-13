@@ -1,0 +1,25 @@
+<fieldset>
+    <div class="row">
+        <div class="col-md-3">
+            <plex-text type="text" [(ngModel)]="filtro.paciente" (ngModelChange)="filtrar()" label="Paciente">
+            </plex-text>
+        </div>
+        <div class="col-md-3" *ngIf="unidadesOrganizativas.length > 0">
+            <plex-select label="Unidad Organizativa" [(ngModel)]="filtro.unidadOrganizativa"
+                         [data]="unidadesOrganizativas" (change)="filtrar()">
+            </plex-select>
+        </div>
+        <div class="col-md-2" *ngIf="sectores.length > 0">
+            <plex-select label="Sector" [(ngModel)]="filtro.sector" [data]="sectores" (change)="filtrar()">
+            </plex-select>
+        </div>
+        <div class="col-md-2" *ngIf="tiposCama.length > 0">
+            <plex-select label="Tipo de Cama" [(ngModel)]="filtro.tipoCama" (change)="filtrar()" [data]="tiposCama">
+            </plex-select>
+        </div>
+        <div class="col-md-2">
+            <plex-select label="Censable" [(ngModel)]="filtro.censable" (change)="filtrar()" [data]="censables">
+            </plex-select>
+        </div>
+    </div>
+</fieldset>

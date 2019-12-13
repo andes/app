@@ -1,0 +1,71 @@
+<plex-layout main="8">
+    <plex-layout-main>
+        <form #form="ngForm" *ngIf="cama">
+            <plex-title titulo="DATOS DE CAMA">
+                <plex-button label="GUARDAR" type="success" [disabled]="!cama.nombre || !cama.unidadOrganizativa || !cama.tipoCama || 
+                !cama.especialidades || !cama.sectores" (click)="save()"></plex-button>
+                <plex-button label="DAR DE BAJA" type="danger"></plex-button>
+            </plex-title>
+            <fieldset>
+                <div class="row">
+                    <div class="col-12">
+                        <plex-text type="text" [(ngModel)]="cama.nombre" label="Nombre" name="nombre"
+                                   placeholder="Nombre" [required]="true">
+                        </plex-text>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <plex-select [(ngModel)]="cama.unidadOrganizativa" name="unidadOrganizativa" [required]="true"
+                                     [data]="organizacion?.unidadesOrganizativas" idField="term" labelField="term"
+                                     label="Unidad organizativa">
+                        </plex-select>
+                    </div>
+                    <div class="col-4">
+                        <plex-select name="tipoCama" (getData)="loadTipoDeCama($event)" idField="term" labelField="term"
+                                     [required]="true" [(ngModel)]="cama.tipoCama" label="Tipo de cama">
+                        </plex-select>
+                    </div>
+                    <div class="col-4">
+                        <plex-bool type="slide" [(ngModel)]="cama.esCensable" label="Es censable" name="censable">
+                        </plex-bool>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <plex-select name="equipamiento" [multiple]="true" (getData)="loadEquipamientos($event)"
+                                     idField="term" labelField="term" [(ngModel)]="cama.equipamiento"
+                                     label="Equipamiento">
+                        </plex-select>
+                    </div>
+                    <div class="col-4">
+                        <plex-select name="especialidad" [required]="true" (getData)="loadEspecialidades($event)"
+                                     idField="term" labelField="term" [(ngModel)]="cama.especialidades"
+                                     [multiple]="true" label="Especialidad/es">
+                        </plex-select>
+                    </div>
+                    <div class="col-4">
+                        <plex-select name="genero" (getData)="loadGenero($event)" label="Genero" idField="term"
+                                     labelField="term" [(ngModel)]="cama.genero">
+                        </plex-select>
+                    </div>
+                </div>
+                <div class="row" *ngIf="sectores">
+                    <div class="col-12">
+                        <plex-select name="sectores" [data]="sectores" label="Ubicación" idField="_id"
+                                     labelField="nombre" [required]="true" [(ngModel)]="cama.sectores">
+                        </plex-select>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </plex-layout-main>
+    <plex-layout-sidebar type="invert">
+        <plex-title titulo="MAPA DE ORGANIZACION">
+        </plex-title>
+        <div *ngIf="organizacion">
+            <sector-item *ngFor="let unidad of organizacion.mapaSectores" [root]="unidad" [actions]="false">
+            </sector-item>
+        </div>
+    </plex-layout-sidebar>
+</plex-layout>

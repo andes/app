@@ -4,7 +4,7 @@ import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'app-mapa-camas-main',
-    template: ``,
+    template: '',
 })
 
 export class MapaCamasMainComponent implements OnInit {

@@ -1,0 +1,17 @@
+<plex-title justify titulo="ESTADO DEL SERVICIO">
+    <plex-badge type="info" size="sm">{{fecha | date: 'dd/MM/yyyy'}} | {{fecha | date: 'HH:mm'}}
+    </plex-badge>
+    <plex-datetime btnOnly="true" size="sm" type="date" [(ngModel)]="fecha" (change)="getEstadosCamas()" name="fecha"
+                   class="d-inline-block">
+    </plex-datetime>
+</plex-title>
+<ng-container *ngIf="camasXEstado">
+    <div class="row" *ngFor="let estado of estados">
+        <div class="col" *ngIf="camasXEstado[estado.key]">
+            <div>
+                <i class="adi adi-cama"></i>
+            </div>
+            <p>Camas {{estado.label}}: {{camasXEstado[estado.key].length}}</p>
+        </div>
+    </div>
+</ng-container>

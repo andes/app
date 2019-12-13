@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
-import { OrganizacionService } from '../../../../services/organizacion.service';
-import { MapaCamasService } from '../mapa-camas.service';
+import { OrganizacionService } from '../../../../../services/organizacion.service';
+import { MapaCamasService } from '../../mapa-camas.service';
 
 @Component({
     selector: 'app-censo-diario',
     templateUrl: './censo-diario.component.html',
 })
 
-export class CensoDiarioComponent implements OnInit {
+export class CensosDiariosComponent implements OnInit {
     fecha = moment().toDate();
 
     organizacion;

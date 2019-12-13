@@ -1,0 +1,33 @@
+<ng-container *ngIf="cama" class="bg-invert">
+    <td>
+        <plex-bool type="checkbox"></plex-bool>
+    </td>
+    <td>
+        <span class="d-block"><strong>{{cama.nombre}}</strong></span>
+        <span class="d-block">{{cama.sectores[cama.sectores.length - 1].nombre}}</span>
+    </td>
+    <td>
+        <span *ngIf="!cama.paciente" class="d-block">Sin paciente</span>
+        <span *ngIf="cama.paciente" class="d-block">{{cama.paciente.apellido}},
+            {{cama.paciente.nombre}}</span>
+        <span class="d-block"></span>
+    </td>
+    <td>
+        <span *ngIf="cama.unidadOrganizativa" class="d-block">{{cama.unidadOrganizativa.term}}</span>
+        <span class="d-block"></span>
+    </td>
+    <td>
+        <plex-badge [type]="estadoActual.color" justify="center">
+            {{estadoActual.label}}
+        </plex-badge>
+        <span class="d-block"></span>
+    </td>
+    <td justify="end">
+        <ng-container *ngFor="let destino of destinos">
+            <plex-button [icon]="destino.icon" [type]="destino.color" size="sm" (click)="accion(destino.key)">
+            </plex-button>
+        </ng-container>
+        <plex-button icon="pencil" type="warning" size="sm" (click)="goTo()">
+        </plex-button>
+    </td>
+</ng-container>

@@ -1,0 +1,19 @@
+<plex-title justify titulo="INGRESAR PACIENTE">
+    <plex-badge type="info" size="sm">{{fecha | date: 'dd/MM/yyyy'}} | {{fecha | date: 'HH:mm'}}
+    </plex-badge>
+    <plex-button icon="close" type="danger" size="sm" (click)="cancelar()">
+    </plex-button>
+</plex-title>
+<fieldset>
+    <div class="row">
+        <div class="col-8">
+            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (data)="onPacienteCancel()">
+            </paciente-buscar>
+        </div>
+        <div class="col-4">
+            <plex-button type="danger" label="Cancelar" (click)="onPacienteCancel()"></plex-button>
+        </div>
+    </div>
+    <paciente-listado [pacientes]="pacientes" [autoselect]="false" (selected)="onPacienteSelected($event)">
+    </paciente-listado>
+</fieldset>

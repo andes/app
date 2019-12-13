@@ -107,6 +107,10 @@ import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campania
 // Buscador de turnos y prestaciones
 import { TurnosPrestacionesComponent } from './components/buscadorTurnosPrestaciones/turnos-prestaciones.component';
 import { NuevaSolicitudComponent } from './components/top/solicitudes/nuevaSolicitud.component';
+import { CensosDiariosComponent } from './apps/rup/mapa-camas/censos/censo-diario/censo-diario.component';
+import { CamaMainComponent } from './apps/rup/mapa-camas/cama/cama.component';
+import { MapaCamasMainComponent } from './apps/rup/mapa-camas/mapa-camas-main.component';
+import { MapaCamasCapaComponent } from './apps/rup/mapa-camas/mapa-camas-capa/mapa-camas-capa.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -221,8 +225,12 @@ const appRoutes: Routes = [
   // Turnero
   { path: 'pantallas', loadChildren: './apps/turnero/turnero.module#TurneroModule', canActivate: [RoutingNavBar, RoutingGuard] },
 
-  { path: 'internacion', loadChildren: './apps/rup/mapa-camas/mapa-camas.module#MapaCamasModule', canActivate: [RoutingNavBar, RoutingGuard] },
-
+  // { path: 'internacion', loadChildren: './apps/rup/mapa-camas/mapa-camas.module#MapaCamasModule', canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'internacion/mapa-camas/:capa', component: MapaCamasCapaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'internacion/mapa-camas', component: MapaCamasMainComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'internacion/cama/:capa/:id', component: CamaMainComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'internacion/cama/:capa', component: CamaMainComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'internacion/censo/diario', component: CensosDiariosComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
     // dejar siempre al último porque no encuentra las url después de esta
     { path: '**', redirectTo: 'inicio' }

@@ -6,102 +6,34 @@
             </plex-dropdown>
             <plex-button label="VOLVER" type="danger"></plex-button>
         </plex-title>
-        <fieldset>
-            <div class="row">
-                <div class="col-md-3">
-                    <plex-text type="text" [(ngModel)]="filtro.paciente" (change)="filtrar('paciente')"
-                               label="Paciente">
-                    </plex-text>
-                </div>
-                <div class="col-md-3" *ngIf="unidadesOrganizativas.length > 0">
-                    <plex-select label="Unidad Organizativa" [(ngModel)]="filtro.unidadOrganizativa"
-                                 [data]="unidadesOrganizativas" (change)="filtrar('unidadOrganizativa')">
-                    </plex-select>
-                </div>
-                <div class="col-md-2" *ngIf="sectores.length > 0">
-                    <plex-select label="Sector" [(ngModel)]="filtro.sector" [data]="sectores" (change)="filtrar()">
-                    </plex-select>
-                </div>
-                <div class="col-md-2" *ngIf="tiposCama.length > 0">
-                    <plex-select label="Tipo de Cama" [(ngModel)]="filtro.tipoCama" (change)="filtrar('tipoCama')"
-                                 [data]="tiposCama">
-                    </plex-select>
-                </div>
-                <div class="col-md-2">
-                    <plex-select label="Censable" [(ngModel)]="filtro.censable" (change)="filtrar('sector')"
-                                 [data]="censables">
-                    </plex-select>
-                </div>
-            </div>
-        </fieldset>
+        <app-filtros-camas *ngIf="unidadesOrganizativas && sectores && tiposCama"
+                           [unidadesOrganizativas]="unidadesOrganizativas" [sectores]="sectores" [tiposCama]="tiposCama"
+                           (filtrarTabla)="filtrarTabla($event)"></app-filtros-camas>
         <plex-title titulo="LISTADO DE CAMAS" size="sm">
-            <plex-button label="AGREGAR CAMA" type="success" size="sm"></plex-button>
+            <plex-button label="AGREGAR CAMA" type="success" size="sm" (click)="agregarCama()"></plex-button>
             <plex-button icon="format-list-bulleted" type="primary" size="sm"></plex-button>
         </plex-title>
-        <fieldset>
-            <table class="table table-striped table-hover" *ngIf="snapshot">
-                <thead>
+        <fieldset *ngIf="snapshot">
+            <table class="table table-striped table-hover" *ngIf="estados">
+                <tr>
                     <th></th>
                     <th>CAMA</th>
                     <th>PACIENTE</th>
                     <th>UNIDAD ORGANIZATIVA</th>
-                    <th>SECTOR</th>
                     <th>ESTADO</th>
                     <th>ACCIONES</th>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let cama of snapshot">
-                        <td>
-                            <plex-bool type="checkbox"></plex-bool>
-                        </td>
-                        <td>
-                            <span class="d-block">{{cama.nombre}}</span>
-                            <span class="d-block"></span>
-                        </td>
-                        <td>
-                            <span *ngIf="!cama.paciente" class="d-block">Sin paciente</span>
-                            <span *ngIf="cama.paciente" class="d-block">{{cama.paciente.apellido}},
-                                {{cama.paciente.nombre}}</span>
-                            <span class="d-block"></span>
-                        </td>
-                        <td>
-                            <span *ngIf="cama.unidadOrganizativa"
-                                  class="d-block">{{cama.unidadOrganizativa.term}}</span>
-                            <span class="d-block"></span>
-                        </td>
-                        <td>
-                            <span class="d-block">{{cama.sectores[cama.sectores.length - 1].nombre}}</span>
-                            <span class="d-block"></span>
-                        </td>
-                        <td>
-                            <plex-badge *ngIf="cama.estado === 'disponible'" type="success">
-                                {{cama.estado}}
-                            </plex-badge>
-                            <plex-badge *ngIf="cama.estado === 'desocupada'" type="warning">
-                                {{cama.estado}}
-                            </plex-badge>
-                            <plex-badge *ngIf="cama.estado === 'ocupada'" type="danger">
-                                {{cama.estado}}
-                            </plex-badge>
-                            <span class="d-block"></span>
-                        </td>
-                        <td>
-                            <plex-button icon="dots-vertical" type="secondary" size="sm">
-                            </plex-button>
-                        </td>
-                    </tr>
-                </tbody>
+                </tr>
+                <tr app-item-cama *ngFor="let cama of camas | async" [cama]="cama" [estados]="estados"
+                    [relaciones]="relaciones" [capa]="capa" (accionCama)="accionCama($event)">
+                </tr>
             </table>
         </fieldset>
     </plex-layout-main>
 
-    <plex-layout-sidebar type="invert">
-        <plex-title titulo="ESTADO DEL SERVICIO">
-            <plex-badge type="info">{{fecha | date: 'dd/MM/yyyy'}} | {{fecha | date: 'HH:mm'}}</plex-badge>
-            <plex-button icon="calendar" type="primary" size="sm" (click)="seleccionarFecha()"></plex-button>
-            <plex-datetime [hidden]="true" type="date" [(ngModel)]="fecha" (change)="getSnapshot()" name="fecha"
-                           #dateSelect>
-            </plex-datetime>
-        </plex-title>
+    <plex-layout-sidebar type="invert" *ngIf="snapshot">
+        <app-estado-servicio *ngIf="!selectedCama && !estadoDestino" [fecha]="fecha" [camas]="snapshot"
+                             [estados]="estados" (buscarEstados)="getSnapshot($event)"></app-estado-servicio>
+        <app-ingresar-paciente *ngIf="selectedCama && estadoDestino === 'ocupada'" [fecha]="fecha" [cama]="selectedCama"
+                               (cancelIngreso)="cancelIngreso()"></app-ingresar-paciente>
     </plex-layout-sidebar>
 </plex-layout>

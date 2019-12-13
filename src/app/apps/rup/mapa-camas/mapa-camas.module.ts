@@ -6,10 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { PlexModule } from '@andes/plex';
 import { MapaCamasRouting } from './mapa-camas.routing';
-import { MapaCamasMainComponent } from './mapa-camas-main.component';
-import { MapaCamasCapaComponent } from './mapa-camas-capa/mapa-camas-capa.component';
-import { MapaCamasService } from './mapa-camas.service';
-import { CensoDiarioComponent } from './censo-diario/censo-diario.component';
+
 
 @NgModule({
     imports: [
@@ -21,11 +18,9 @@ import { CensoDiarioComponent } from './censo-diario/censo-diario.component';
         MapaCamasRouting,
     ],
     declarations: [
-        MapaCamasMainComponent,
-        MapaCamasCapaComponent,
-        CensoDiarioComponent
+
     ],
-    providers: [MapaCamasService],
+    providers: [],
     exports: [],
 })
 export class MapaCamasModule {
