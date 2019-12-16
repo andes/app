@@ -54,15 +54,18 @@
                             </td>
                             <td>
                                 <plex-button *ngIf="puedeDarTurno" title="Dar Turno" icon="calendar-plus"
-                                             (click)="verificarOperacion('darTurno', paciente)"></plex-button>
+                                             (click)="verificarOperacion('darTurno', paciente)"
+                                             [disabled]="paciente.fechaFallecimiento"></plex-button>
                             </td>
                             <td>
                                 <plex-button *ngIf="puedeCrearSolicitud" title="Solicitudes" icon="open-in-app"
-                                             (click)="verificarOperacion('ingresarSolicitud', paciente)"></plex-button>
+                                             (click)="verificarOperacion('ingresarSolicitud', paciente)"
+                                             [disabled]="paciente.fechaFallecimiento"></plex-button>
                             </td>
                             <td>
                                 <plex-button title="Activar App" icon="cellphone-android"
-                                             (click)="verificarOperacion('activarApp', paciente)"></plex-button>
+                                             (click)="verificarOperacion('activarApp', paciente)"
+                                             [disabled]="paciente.fechaFallecimiento"></plex-button>
                             </td>
                         </tr>
                     </tbody>

@@ -4,10 +4,12 @@
             <div class="col-6 h-100">
                 <fieldset>
                     <legend>Datos principales</legend>
-                    <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha y hora de la prestación">
+                    <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha"
+                                   label="Fecha y hora de la prestación">
                     </plex-datetime>
-                    <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion" label="Seleccione el tipo de prestación"
-                        labelField="term" [data]="tiposPrestacion" [required]="true" (change)="seleccionarTipoPrestacion()">
+                    <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion"
+                                 label="Seleccione el tipo de prestación" labelField="term" [data]="tiposPrestacion"
+                                 [required]="true" (change)="seleccionarTipoPrestacion()">
                     </plex-select>
                 </fieldset>
             </div>
@@ -15,7 +17,8 @@
                 <fieldset>
                     <legend>Datos del paciente</legend>
                     <paciente-detalle *ngIf="paciente" [paciente]="paciente"></paciente-detalle>
-                    <plex-button label="SELECCIONAR PACIENTE" type="primary" (click)="showBuscarPaciente()"></plex-button>
+                    <plex-button label="SELECCIONAR PACIENTE" type="primary" (click)="showBuscarPaciente()">
+                    </plex-button>
                 </fieldset>
             </div>
         </div>
@@ -26,19 +29,21 @@
                     <div class="row">
                         <div class="col-12">
                             <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                (searchClear)="onSearchClear()">
+                                             (searchClear)="onSearchClear()">
                             </paciente-buscar>
                         </div>
                     </div>
                     <plex-loader *ngIf="loading"></plex-loader>
                     <div class=" row" *ngIf="!showHuds">
                         <div class="col-12">
-                            <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
-                                [autoselect]="false" (selected)="onSelect($event)">
+                            <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length"
+                                              [pacientes]="resultadoBusqueda" [autoselect]="false"
+                                              (selected)="onSelect($event)">
                             </paciente-listado>
 
-                            <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
-                                ¡No se encontró ningún paciente!
+                            <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length && !searchClear"
+                                 class="alert alert-danger">
+                                <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
                             </div>
                         </div>
                     </div>
@@ -57,4 +62,4 @@
 
 <!-- Lista de Agendas para dar turnos autocitados -->
 <autocitar-turno *ngIf="showAutocitar && paciente" (cancelarEmitter)="cancelarAutocitar()" [paciente]="paciente"
-    [agendasAutocitar]="agendasAutocitar" [prestacionAutocitar]="prestacionAutocitar"></autocitar-turno>
+                 [agendasAutocitar]="agendasAutocitar" [prestacionAutocitar]="prestacionAutocitar"></autocitar-turno>

@@ -13,6 +13,7 @@
     <div class="row mb-1">
         <div class="col">
             <span *ngIf="paciente.documento" class="mr-1">{{ paciente.documento }}</span>
+            <plex-badge *ngIf="paciente.fechaFallecimiento" type="danger"><b>Fallecido</b></plex-badge> 
             <span class="badge" [ngClass]="{'badge-success': paciente.estado === 'validado', 'badge-warning': paciente.estado !== 'validado'}">
                 {{ paciente.estado | uppercase }} </span>
         </div>
@@ -22,6 +23,10 @@
             <label>Fecha de nacimiento</label>
             <span>{{ paciente.fechaNacimiento | fecha:'utc' }}</span> | <span>{{ paciente | edad }}</span>
         </div>
+    </div>
+    <div *ngIf="paciente.fechaNacimiento">
+        <label>Fecha de Defunción</label>
+        <span>{{ paciente.fechaFallecimiento | fecha:'utc' }}</span>
     </div>
     <div class="row mb-1">
         <div *ngIf="paciente.sexo" class="col-6">

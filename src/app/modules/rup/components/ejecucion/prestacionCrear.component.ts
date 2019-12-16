@@ -25,6 +25,7 @@ export class PrestacionCrearComponent implements OnInit {
     solicitudTurno: any;
     agendasAutocitacion: IAgenda[];
     opcion: any;
+    searchClear = true;
     // @HostBinding('class.plex-layout') layout = true;
 
     // Fecha seleccionada
@@ -45,7 +46,7 @@ export class PrestacionCrearComponent implements OnInit {
      */
     public showDarTurnos = false;
 
-    get btnLabel () {
+    get btnLabel() {
         if (this.opcion === 'fueraAgenda') {
             return 'INICIAR PRESTACIÓN';
         } else {
@@ -53,7 +54,7 @@ export class PrestacionCrearComponent implements OnInit {
         }
     }
 
-    btnClick () {
+    btnClick() {
         if (this.opcion === 'fueraAgenda') {
             this.iniciarPrestacion();
         } else {
@@ -304,6 +305,7 @@ export class PrestacionCrearComponent implements OnInit {
     }
 
     searchEnd(resultado) {
+        this.searchClear = false;
         this.loading = false;
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
@@ -313,6 +315,7 @@ export class PrestacionCrearComponent implements OnInit {
     }
 
     onSearchClear() {
+        this.searchClear = true;
         this.resultadoBusqueda = [];
         this.paciente = null;
     }
@@ -324,13 +327,14 @@ export class PrestacionCrearComponent implements OnInit {
     onSelect(paciente: IPaciente): void {
         // Es un paciente existente en ANDES??
         if (paciente && paciente.id) {
-            this.paciente = paciente;
-            this.buscandoPaciente = false;
-
-        } else {
-            this.plex.info('warning', 'Paciente no encontrado', '¡Error!');
+            if (paciente.fechaFallecimiento) {
+                this.plex.info('warning', paciente.apellido + ' ' + paciente.nombre + ' se encuentra fallecido. No puede iniciarse una prestación.');
+            } else {
+                this.paciente = paciente;
+                this.buscandoPaciente = false;
+                this.resultadoBusqueda = [];
+            }
         }
-        this.resultadoBusqueda = [];
     }
     // ----------------------------------
 

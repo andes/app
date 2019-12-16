@@ -18,6 +18,8 @@
                 </div>
                 <hr>
             </header>
+
+            <!-- Documento y fecha de nacimiento y defuncion en caso de paciente fallecido -->
             <div class="row">
                 <div class="col-6">
                     <i class="mdi mdi-account-card-details"></i>
@@ -36,6 +38,19 @@
                     {{paciente.fechaNacimiento | fecha:'utc'}} ({{paciente | edad}})
                 </div>
             </div>
+            <div class="row" *ngIf="paciente?.fechaFallecimiento" >
+                <div class="col-6 offset-md-6">
+                        <i class="mdi mdi-calendar-today"></i>
+                    <span class="text-primary">Fecha de defunción</span>
+                </div>
+            </div>
+            <div class="row" *ngIf="paciente?.fechaFallecimiento">
+                <div class="col-6 offset-md-6">
+                    {{paciente.fechaFallecimiento | fecha:'utc'}}
+                </div>
+            </div>
+
+            <!-- Direccion y contacto -->
             <div class="row">
                 <div class="col-6" >
                     <span *ngIf="paciente?.direccion && paciente.direccion[0]?.valor">
@@ -62,6 +77,8 @@
                     </span>
                 </div>
             </div>
+
+            <!-- Obra social  -->
             <div class="row" *ngIf="_paciente?.financiador?.length">
                 <div class="col-6" *ngIf="_paciente?.financiador[0].financiador === 'SUMAR'">
                     <i class="mdi mdi-account-card-details"></i>

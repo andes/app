@@ -22,19 +22,19 @@
                 <td>{{_unaRel.apellido}} {{_unaRel.nombre}}</td>
                 <td>
                     <plex-select [(ngModel)]="_unaRel.relacion" name="relacion-{{k}}" [data]="parentescoModel"
-                        [required]="true" placeholder="Seleccione...">
+                        [required]="true" placeholder="Seleccione..." [readonly]="paciente.fechaFallecimiento">
                     </plex-select>
                 </td>
                 <td class="text-center">
-                    <plex-button label="" type="danger btn-sm" icon="close" (click)="removeRelacion(k)"></plex-button>
+                    <plex-button label="" type="danger btn-sm" icon="close" (click)="removeRelacion(k)" [disabled]="paciente.fechaFallecimiento"></plex-button>
                 </td>
             </tr>
         </tbody>
     </table>
     <br>
     <div class="row">
-        <div class="col">
-            <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes)" (searchClear)="onSearchClear()"></paciente-buscar>
+        <div class="col" *ngIf="!paciente.fechaFallecimiento">
+            <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes)" (searchClear)="onSearchClear()" readonly="pacienteModel.fechaFallecimiento"></paciente-buscar>
         </div>
     </div>
     <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>

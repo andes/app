@@ -37,6 +37,10 @@
         <label>Fecha de Nacimiento</label>
         <span class="text-danger">Sin fecha de nacimiento</span>
     </div>
+    <div *ngIf="_paciente.fechaNacimiento">
+        <label>Fecha de Defunción</label>
+        <span>{{ _paciente.fechaFallecimiento | fecha:'utc' }}</span>
+    </div>
     <div>
         <label>Edad</label>
         <span>{{ _paciente | edad }}</span>
