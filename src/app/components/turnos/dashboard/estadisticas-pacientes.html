@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div class="row" *ngIf="paciente?.financiador?.length">
-                <div class="col-6" *ngIf="paciente?.financiador[0].nombre">
+                <div class="col-6" *ngIf="paciente?.financiador[0].financiador">
                     {{paciente.financiador[0].financiador}}
                 </div>
                 <div class="col-6" *ngIf="paciente?.financiador[0].numeroAfiliado">
