@@ -1,27 +1,31 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ReglaService } from '../../../services/top/reglas.service';
 import { OrganizacionService } from '../../../services/organizacion.service';
-import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
+import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { IRegla } from '../../../interfaces/IRegla';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 import { Auth } from '@andes/auth';
+
 @Component({
-    selector: 'visualizacion-reglas',
-    templateUrl: './visualizacionReglas.html'
+    selector: 'lista-reglas',
+    templateUrl: './listaReglas.html',
+    // styleUrls: [
+    //     `reglas.scss`
+    // ]
 })
-export class VisualizacionReglasComponent implements OnInit {
+export class ListaReglasComponent implements OnInit {
     @Input()
     esParametrizado = false;
     /**
      * Organización ingresada en el filtro de organización origen
      * @type {IOrganizacion}
-     * @memberof VisualizacionReglasComponent
+     * @memberof ListaReglasComponent
      */
     /**
      * Prestación ingresada en el filtro de prestación origen
      * @type {IOrganizacion}
-     * @memberof VisualizacionReglasComponent
+     * @memberof ListaReglasComponent
      */
     organizacionOrigen: IOrganizacion;
     prestacionOrigen: ITipoPrestacion;
@@ -29,13 +33,13 @@ export class VisualizacionReglasComponent implements OnInit {
     /**
      * Organización ingresada en el filtro de organización destino
      * @type {IOrganizacion}
-     * @memberof VisualizacionReglasComponent
+     * @memberof ListaReglasComponent
      */
     organizacionDestino: IOrganizacion;
     /**
      * Prestación ingresada en el filtro de prestación destino
      * @type {ITipoPrestacion}
-     * @memberof VisualizacionReglasComponent
+     * @memberof ListaReglasComponent
      */
     prestacionDestino: ITipoPrestacion;
     /**
@@ -43,7 +47,7 @@ export class VisualizacionReglasComponent implements OnInit {
      * más sencillo que en HTML
      *
      * @type {any[]}
-     * @memberof VisualizacionReglasComponent
+     * @memberof ListaReglasComponent
      */
     filas: any[];
 
@@ -65,7 +69,7 @@ export class VisualizacionReglasComponent implements OnInit {
      * Si se ingresa "spi dan" trae Hospital Bouquet Roldan
      *
      * @param {*} event
-     * @memberof VisualizacionReglasComponent
+     * @memberof ListaReglasComponent
      */
     loadOrganizaciones(event) {
         if (event.query) {
@@ -82,7 +86,7 @@ export class VisualizacionReglasComponent implements OnInit {
      * Trae las prestaciones con nombre "igual" al texto ingresado.
      * Si se ingresa "sulta dica" trae Consulta médica general
      * @param {*} event
-     * @memberof VisualizacionReglasComponent
+     * @memberof ListaReglasComponent
      */
     loadPrestaciones(event) {
         this.servicioPrestacion.get({
@@ -93,7 +97,7 @@ export class VisualizacionReglasComponent implements OnInit {
     /**
      * Recarga los datos de la tabla según los filtros ingresados. Debe tener por lo menos un filtro ingresado para que
      * se actualice la tabla
-     * @memberof VisualizacionReglasComponent
+     * @memberof ListaReglasComponent
      */
     actualizarTabla() {
         if (this.filtroIngresado()) {
@@ -119,7 +123,7 @@ export class VisualizacionReglasComponent implements OnInit {
     /**
      * Devuelve si se ha cargado uno de los filtros
      * @returns {boolean}
-     * @memberof VisualizacionReglasComponent
+     * @memberof ListaReglasComponent
      */
     filtroIngresado(): boolean {
         return (this.organizacionOrigen !== null && this.organizacionOrigen !== undefined) ||
@@ -131,7 +135,7 @@ export class VisualizacionReglasComponent implements OnInit {
     /**
      * Acomoda los datos de las reglas de forma que se pueda acceder facilmente desde la tabla
      *
-     * @memberof VisualizacionReglasComponent
+     * @memberof ListaReglasComponent
      */
     obtenerFilasTabla(reglas: [IRegla]) {
         this.filas = [];

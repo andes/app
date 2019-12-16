@@ -1,6 +1,7 @@
 
 import { forkJoin as observableForkJoin } from 'rxjs';
-import { Component, OnInit, HostBinding, OnDestroy } from '@angular/core';
+
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { Auth } from '@andes/auth';
@@ -17,12 +18,12 @@ import { Subscription } from 'rxjs';
 import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
 import { WebSocketService } from '../../../../services/websocket.service';
 
+
 @Component({
     selector: 'rup-puntoInicio',
     templateUrl: 'puntoInicio.html'
 })
 export class PuntoInicioComponent implements OnInit, OnDestroy {
-    @HostBinding('class.plex-layout') layout = true;
 
     // Fecha seleccionada
     public fecha: Date = new Date();
@@ -31,7 +32,13 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     // Agenda seleccionada
     public agendaSeleccionada;
     // Mostrar sólo mis agendas
-    public soloMisAgendas = true;
+    public filtroAgendas = {
+        radio: 1
+    };
+    public opciones = [
+        { id: 1, label: 'Mias' },
+        { id: 2, label: 'Todas' }
+    ];
     // Lista de prestaciones filtradas por fecha, tipos de prestaciones permitidas, ...
     public prestaciones: any = [];
     // Tipos de prestacion que el usuario tiene permiso
@@ -56,7 +63,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public espaciosFisicosTurnero = [];
     // ultima request que se almacena con el subscribe
     private lastRequest: Subscription;
-
+    public mostrarReglas = false;
 
     constructor(
         private router: Router,
@@ -248,7 +255,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.fueraDeAgenda = this.prestacionesOriginales;
 
         // filtramos por agendas propias o todas menos las propias
-        if (this.soloMisAgendas) {
+        if (this.filtroAgendas.radio === 1) {
             this.agendas = this.agendas.filter(agenda => {
                 return (agenda.profesionales && agenda.profesionales.find(profesional => {
                     return (profesional.id === this.auth.profesional.id);
