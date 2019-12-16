@@ -1,13 +1,13 @@
 
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Auth } from '@andes/auth';
-import { PrestacionesService } from '../../../services/prestaciones.service';
+import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 
 @Component({
     selector: 'rup-turnos',
     templateUrl: 'rup-turnos.html',
     styleUrls: [
-        '../../core/_rup.scss'
+        './turnos-rup.scss'
     ]
 })
 export class RUPTurnosComponent implements OnInit {

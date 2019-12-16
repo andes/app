@@ -1,8 +1,10 @@
 @import '../variables';
 
-
 // TODO: Crear paquete NPM con las fonts
 @import '../../assets/font.css';
+
+@import '~@andes/icons/scss/andes-icons';
+
 $rotate: -90deg;
 
 .rup-card {

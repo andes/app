@@ -417,56 +417,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
 
-    iniciarPrestacionNoNominalizada(snomedConcept, turno) {
-        this.plex.confirm('</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
-            if (confirmacion) {
-                this.servicioPrestacion.crearPrestacion(null, snomedConcept, 'ejecucion', turno.horaInicio, turno).subscribe(prestacion => {
-                    this.servicioPrestacion.routeTo('ejecucion', prestacion.id);
-                    if (this.agendaSeleccionada && this.agendaSeleccionada !== 'fueraAgenda') {
-                        let agenda = this.agendaSeleccionada ? this.agendaSeleccionada : null;
-                        localStorage.setItem('idAgenda', agenda.id);
-                    }
-                }, (err) => {
-                    this.plex.info('warning', 'No fue posible crear la prestación', 'ERROR');
-                });
-            } else {
-                return false;
-            }
-        });
-    }
-
-    /**
-     * Recorremos los bloques y los turnos de una agenda
-     * y verifica si hay algun paciente agregado
-     */
-    getCantidadPacientes(agenda): number {
-        let total = 0;
-
-        let lengthBloques = agenda.bloques.length;
-        for (let indexBloque = 0; indexBloque < lengthBloques; indexBloque++) {
-
-            let _turnos = agenda.bloques[indexBloque].turnos.filter(t => {
-                total += (t.paciente && t.paciente.id) ? 1 : 0;
-            });
-        }
-        if (agenda.sobreturnos && agenda.sobreturnos.length > 0) {
-            total = total + agenda.sobreturnos.length;
-        }
-
-
-        return total;
-    }
-
-    getCantidadPacientesAgendas(agendas): number {
-        return agendas.forEach(agenda => {
-            if (this.getCantidadPacientes(agenda) > 0) {
-                return this.getCantidadPacientes(agenda);
-            } else {
-                return 0;
-            }
-        });
-    }
-
     tienePermisos(tipoPrestacion, prestacion) {
         let permisos = this.auth.getPermissions('rup:tipoPrestacion:?');
         let existe = permisos.find(permiso => (permiso === tipoPrestacion._id));
@@ -553,11 +503,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         return fechaAgenda.isAfter(fechaActual);
     }
 
-    // Detecta si "hoy" es el día de la Agenda
-    diaAgenda(agenda: IAgenda) {
-        return moment(agenda.horaInicio).fromNow();
-    }
-
 
     // buscar paciente para asigar en las agendas dinamicas
     buscarPaciente() {
@@ -568,33 +513,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.buscandoPaciente = false;
     }
 
-    /**
-       * Ejecutar una prestacion que esta en estado pendiente
-    */
-    ejecutarPrestacionPendiente(idPrestacion, paciente, snomedConcept, turno) {
-        let params: any = {
-            op: 'estadoPush',
-            ejecucion: {
-                fecha: turno.horaInicio,
-                registros: [],
-                // organizacion desde la que se solicita la prestacion
-                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
-            },
-            estado: { tipo: 'ejecucion' }
-        };
 
-        this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Iniciar Prestación?').then(confirmacion => {
-            if (confirmacion) {
-                this.servicioPrestacion.patch(idPrestacion, params).subscribe(prestacion => {
-                    this.router.navigate(['/rup/ejecucion', idPrestacion]);
-                }, (err) => {
-                    this.plex.info('warning', 'No fue posible iniciar la prestación: ' + err, 'ERROR');
-                });
-            } else {
-                return false;
-            }
-        });
-    }
 
     verIniciarPrestacionPendiente(turno, agenda) {
         let condAsistencia = false;

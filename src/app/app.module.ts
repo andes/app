@@ -248,8 +248,8 @@ import { ResumenPacienteDinamicoNinoComponent } from './modules/rup/components/e
 import { PlantillasRUPComponent } from './apps/rup/plantillas-rup/plantillas-rup.component';
 import { ListaReglasComponent } from './components/top/reglas/listaReglas.component';
 import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaSolicitudTop';
-import { RUPFueraDeAgendaComponent } from './modules/rup/components/ejecucion/punto-inicio/rup-fuera-de-agenda.component';
-import { RUPTurnosComponent } from './modules/rup/components/ejecucion/punto-inicio/rup-turnos.component';
+import { RUPFueraDeAgendaComponent } from './components/turnos/turnos-rup/rup-fuera-de-agenda.component';
+import { RUPTurnosComponent } from './components/turnos/turnos-rup/rup-turnos.component';
 
 // Legacy para RUP
 // TODO: ver con JGabriel!!!

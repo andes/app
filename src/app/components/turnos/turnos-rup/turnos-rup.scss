@@ -1,0 +1,143 @@
+$adi-font-path: '~@andes/icons/fonts/';
+
+@import '~@andes/icons/scss/andes-icons';
+@import '~@andes/plex/src/lib/css/variables';
+@import '../../../modules/rup/assets/font.css';
+
+.prestacion {
+
+    display: grid;
+    grid-template-columns: 50px 1fr .5fr;
+    border: 2px solid #ccc;
+    
+    &:hover {
+        background: #eee;
+        border: 2px solid $blue;
+    }
+    .rup-icon {
+        color: white;
+        height: 75px;
+        width: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: $blue;
+        i {
+            height: 46px;
+            font-size: 36px;
+        }
+    }
+
+}
+
+.citas-agenda-card {
+    display: grid;
+    grid-template-columns: 50px .6fr 1fr 84px;
+    border: 2px solid $blue;
+    margin-bottom: 2px;
+    
+    &.bg-inverse-dark {
+        background: $dark-blue;
+        border: 2px solid $dark-blue;
+    }
+    .citas-icon {
+        width: 50px;
+        display: flex;
+        justify-content: center;
+        background: $blue;
+    }
+    
+    .badge {
+        padding: 6px;
+        border: 1px solid $blue;
+    }
+}
+
+.citas-icon-sm {
+    color: #eee;
+    background: $blue;
+    padding: 2px 6px;
+    height: 26px;
+}
+
+
+
+.citas-turno-card {
+    --icon-size: 70px;
+    --icon-size-sm: 50px;
+    display: grid;
+    grid-template-columns: calc(var(--icon-size) - 20px) auto 1fr;
+    >:nth-child(2) {
+        line-height: 1.3rem;
+    }
+    &.sm {
+        grid-template-columns: calc(var(--icon-size) - 20px) auto 1fr;
+        :nth-child(2) {
+            display: flex;
+            align-items: center;
+        }
+    }
+    border: 2px solid #ccc;
+    margin-bottom: 2px;
+    
+    &.bg-inverse-dark {
+        background: $dark-blue;
+        border: 2px solid $dark-blue;
+    }
+    .citas-icon {
+        width: calc(var(--icon-size) - 20px);
+        height: var(--icon-size);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: $blue;
+        color: $light-grey;
+        &.sm {
+            
+            strong {
+                font-size: 14px;
+            }
+            width: var(--icon-size-sm);
+            height: var(--icon-size-sm);
+            line-height: 0;
+        }
+        plex-icon {
+            height: 46px;
+            font-size: 36px;
+        }
+        plex-icon.sm {
+            height: 22px;
+        }
+    }
+    .citas-icon-sm {
+        color: #eee;
+        background: $blue;
+        padding: 2px 6px;
+        height: 26px;
+    }
+    .badge {
+        padding: 6px;
+        border: 1px solid;
+    }
+    &:hover {
+        background: #eee;
+        border: 2px solid $blue;
+    }
+}
+
+.adi-24px {
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+}
+
+.adi-36px {
+    font-size: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 45px;
+}
