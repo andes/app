@@ -117,6 +117,13 @@ $andes-naranja-claro: #f4a03b;
     &.color-verde-oscuro:hover {
         background: darken($color-verde-oscuro, 10%);
     }
+
+    &.analytics {
+        background: #662482;
+    }
+    &.analytics:hover {
+        background: darken(#662482, 10%);
+    }
 }
 
 .contenedor-marca-h {

@@ -18,6 +18,7 @@ export class InicioComponent implements AfterViewInit {
     public solicitudes = '';
     public prestamosHC = '';
     public dashboard = false;
+    public analytics = '';
     public usuarios = '';
     public denied = false;
     public accessList: any = [];
@@ -43,6 +44,11 @@ export class InicioComponent implements AfterViewInit {
 
             if (this.auth.getPermissions('mpi:?').length > 0) {
                 this.mpi = 'mpi';
+                this.denied = false;
+            }
+
+            if (this.auth.getPermissions('analytics:?').length > 0) {
+                this.analytics = 'analytics';
                 this.denied = false;
             }
 
@@ -77,5 +83,10 @@ export class InicioComponent implements AfterViewInit {
                 this.denied = false;
             }
         });
+    }
+
+    anlytics() {
+        const token = this.auth.getToken();
+        window.location.assign(`https://analytics.andes.gob.ar/auth/login?token=${token}`);
     }
 }

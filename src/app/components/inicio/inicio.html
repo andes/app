@@ -96,7 +96,15 @@
                         <div class="detalle">Visualice datos estadísticos<br>en gráficos y tablas</div>
                     </div>
                 </div>
-
+                <div *ngIf="analytics" class="col-xs-12 col-sm-6 col-md-4">
+                    <div class="boton analytics" (click)="anlytics()">
+                        <i class="icono mdi mdi-poll"></i>
+                        <div class="titulo">Analytics</div>
+                        <div class="subtitulo">Navegador HUDS<br>&nbsp;</div>
+                        <div class="detalle">Permite la búsqueda, visualización y refinamiento<br>de datos de salud
+                            registrados en ANDES</div>
+                    </div>
+                </div>
 
             </div>
 
