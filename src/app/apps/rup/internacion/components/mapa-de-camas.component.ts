@@ -106,7 +106,6 @@ export class MapaDeCamasComponent implements OnInit {
         private plex: Plex,
         private router: Router,
         private servicioPaciente: PacienteService,
-
         public organizacionService: OrganizacionService,
         private internacionService: InternacionService,
         public camasService: CamasService,
@@ -626,8 +625,6 @@ export class MapaDeCamasComponent implements OnInit {
         this.showIngreso = true;
         this.editarIngreso = false;
         this.prestacionPorInternacion = null; // BORRAR
-
-
     }
 
     searchStart() {
