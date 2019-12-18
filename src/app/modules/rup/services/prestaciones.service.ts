@@ -640,12 +640,19 @@ export class PrestacionesService {
             return forkJoin(postRequest).pipe(
                 switchMap((reglas: any) => {
                     for (let i = 0; i < reglas.length; i++) {
-                        const prestacionDestino = reglas[i][0].destino.prestacion; // para utilizar los datos de la regla y no un sinonimo
-
+                        const regla = reglas[i][0];
+                        const prestacionOrigen = regla.origen.prestaciones.find(p => p.prestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId);
+                        const prestacionDestino = regla.destino.prestacion; // para utilizar los datos de la regla y no un sinonimo
                         // creamos objeto de prestacion
                         let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, prestacionDestino, 'validacion', 'ambulatorio');
                         // asignamos el tipoPrestacionOrigen a la solicitud
-                        nuevaPrestacion.solicitud.tipoPrestacionOrigen = prestacion.solicitud.tipoPrestacion;
+                        nuevaPrestacion.solicitud.tipoPrestacionOrigen = prestacionOrigen.prestacion ? prestacionOrigen.prestacion : prestacion.solicitud.tipoPrestacion;
+                        if (prestacionOrigen.auditable) {
+                            nuevaPrestacion['estados'] = {
+                                fecha: new Date(),
+                                tipo: 'auditoria'
+                            };
+                        }
                         // asignamos la prestacion de origen
                         nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
 
