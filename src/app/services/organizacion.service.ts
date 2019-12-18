@@ -147,5 +147,4 @@ export class OrganizacionService {
     getOrgSisa(cod: string): Observable<any> {
         return this.server.get(this.organizacionUrl + '/sisa/' + cod);
     }
-
 }

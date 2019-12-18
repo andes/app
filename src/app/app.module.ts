@@ -359,6 +359,7 @@ import { MapaDeCamasComponent } from './apps/rup/internacion/components/mapa-de-
 import { CamaComponent } from './apps/rup/internacion/components/cama.component';
 import { CamaEstadoComponent } from './apps/rup/internacion/components/camaEstado.component';
 import { OrganizacionSectoresComponent } from './components/organizacion/organizacion-sectores.component';
+import { OrganizacionOfertaPrestacionalComponent } from './components/organizacion/organizacion-prestaciones.component';
 
 
 // Solicitudes
@@ -636,6 +637,7 @@ registerLocaleData(localeEs, 'es');
         OcuparCamaComponent,
         DesocuparCamaComponent,
         OrganizacionSectoresComponent,
+        OrganizacionOfertaPrestacionalComponent,
         SectoresItemComponent,
         PucoComponent,
         ReglasComponent,

@@ -1,0 +1,122 @@
+<plex-layout [main]='(editando || agregando) ? "7": "12"'>
+    <plex-layout-main>
+        <plex-title titulo="Ofertas Prestacionales">
+            <plex-button type="primary" icon="plus" (click)="onAgregar()" [disabled]="(agregando || editando)">
+            </plex-button>
+        </plex-title>
+        <fieldset>
+            <div class="row">
+                <div class="col">
+                    <div class="table-responsive">
+                        <table *ngIf="organizacion" class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Prestación</th>
+                                    <th>Detalle</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="hover" *ngFor="let ofertaPrestacional of organizacion.ofertaPrestacional"
+                                    label="elemento ofertaPrestacional"
+                                    [ngClass]="{'bg-inverse text-white': (ofertaPrestacionalSeleccionada && ofertaPrestacional.prestacion.conceptId === ofertaPrestacionalSeleccionada.prestacion.conceptId)}">
+                                    <td>
+                                        <span *ngIf="ofertaPrestacional?.fsn !== ''"
+                                              class="d-block">{{ofertaPrestacional.prestacion.fsn}}</span>
+                                    </td>
+                                    <td>
+                                        <span *ngIf="ofertaPrestacional?.detalle !== ''"
+                                              class="d-block">{{ofertaPrestacional.detalle}}</span>
+                                    </td>
+                                    <td>
+                                        <plex-button icon="pencil" type="success" (click)="onEditar(ofertaPrestacional)"
+                                                     [disabled]="(agregando || editando)"></plex-button>
+                                        <plex-button icon="delete" type="danger"
+                                                     (click)="eliminarOferta(ofertaPrestacional)"
+                                                     [disabled]="(agregando || editando)"></plex-button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </plex-layout-main>
+    <plex-layout-sidebar *ngIf="editando && !agregando">
+        <ng-container>
+            <plex-title titulo="Editar Concepto">
+                <plex-button icon="check" type="success" (click)="editarOferta()" [disabled]="!hayCambios()">
+                </plex-button>
+                <plex-button icon="close" type="danger" (click)="cancelarEditar()">
+                </plex-button>
+            </plex-title>
+            <div class="row">
+                <div class="col">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <plex-select [(ngModel)]="prestacion" name="ofertaPrestacionalSeleccionada"
+                                                     label="Tipo de prestación" (getData)="loadTipoPrestaciones($event)"
+                                                     [required]="true" [closeAfterSelect]="true">
+                                        </plex-select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <plex-text label="Detalle" [(ngModel)]="detalle" name="detalle"
+                                                   [required]="false"></plex-text>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </plex-layout-sidebar>
+    <plex-layout-sidebar *ngIf="!ofertaPrestacionalSeleccionada && agregando">
+        <ng-container>
+            <plex-title titulo="Nueva Oferta Prestacional">
+                <plex-button icon="check" type="success" (click)="agregarOferta()" [disabled]="!modelo.prestacion">
+                </plex-button>
+                <plex-button icon="close" type="danger" (click)="cancelarAgregar()">
+                </plex-button>
+            </plex-title>
+            <div class="row">
+                <div class="col">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <plex-select [(ngModel)]="modelo.prestacion"
+                                                     name="conceptoTurneableSeleccionado" label="Tipo de prestación"
+                                                     (getData)="loadTipoPrestaciones($event)" [required]="true"
+                                                     [closeAfterSelect]="true">
+                                        </plex-select>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <plex-text label="Detalle" [(ngModel)]="modelo.detalle" name="detalle"
+                                                   [required]="false"></plex-text>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </plex-layout-sidebar>
+</plex-layout>
+<footer>
+    <div class="text-left">
+        <plex-button label="Volver" type="danger" (click)="volver()" [disabled]="(agregando || editando)">
+        </plex-button>
+    </div>
+</footer>
