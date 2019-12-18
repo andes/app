@@ -123,6 +123,8 @@ export class MapaCamasCapaComponent implements OnInit {
                 this.snapshot = this.snapshot.filter(snap => snap.esCensable);
             }
         }
+
+        this.camas = Observable.of(this.snapshot);
     }
 
     agregarCama() {

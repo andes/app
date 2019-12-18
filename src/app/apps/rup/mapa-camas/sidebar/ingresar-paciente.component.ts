@@ -32,7 +32,6 @@ export class IngresarPacienteComponent implements OnInit {
 
     onPacienteSelected(event) {
         this.pacienteSelected = event;
-        console.log(event);
     }
 
     searchStart() {

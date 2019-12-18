@@ -354,22 +354,22 @@ import { MapaCamasCapaComponent } from './apps/rup/mapa-camas/mapa-camas-capa/ma
 import { CensosDiariosComponent } from './apps/rup/mapa-camas/censos/censo-diario/censo-diario.component';
 import { FiltrosCamasComponent } from './apps/rup/mapa-camas/mapa-camas-capa/filtros-camas.component';
 import { CamaMainComponent } from './apps/rup/mapa-camas/cama/cama.component';
-import { ItemSectorComponent } from './apps/rup/mapa-camas/cama/sector-item.component';
 import { ItemCamaComponent } from './apps/rup/mapa-camas/mapa-camas-capa/item-cama.component';
 import { EstadoServicioComponent } from './apps/rup/mapa-camas/sidebar/estado-servicio.component';
 import { IngresarPacienteComponent } from './apps/rup/mapa-camas/sidebar/ingresar-paciente.component';
 import { MapaCamasService } from './apps/rup/mapa-camas/mapa-camas.service';
+import { CensosMensualesComponent } from './apps/rup/mapa-camas/censos/censo-mensual/censo-mensual.component';
 
 let mapaCamasComponents = [
     MapaCamasMainComponent,
     MapaCamasCapaComponent,
     CensosDiariosComponent,
+    CensosMensualesComponent,
     FiltrosCamasComponent,
     CamaMainComponent,
     EstadoServicioComponent,
-    ItemSectorComponent,
     ItemCamaComponent,
-    IngresarPacienteComponent
+    IngresarPacienteComponent,
 ];
 
 // Solicitudes

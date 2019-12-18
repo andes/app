@@ -16,13 +16,13 @@
         <span *ngIf="cama.unidadOrganizativa" class="d-block">{{cama.unidadOrganizativa.term}}</span>
         <span class="d-block"></span>
     </td>
-    <td>
-        <plex-badge [type]="estadoActual.color" justify="center">
+    <td justify>
+        <plex-badge [type]="estadoActual.color">
             {{estadoActual.label}}
         </plex-badge>
         <span class="d-block"></span>
     </td>
-    <td justify="end">
+    <td>
         <ng-container *ngFor="let destino of destinos">
             <plex-button [icon]="destino.icon" [type]="destino.color" size="sm" (click)="accion(destino.key)">
             </plex-button>

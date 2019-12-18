@@ -23,22 +23,21 @@ export class MapaCamasService {
         });
     }
 
-    patchCama(cama, ambito, capa) {
+    patchCama(cama, ambito, capa, fecha) {
         let params = {
-            ...cama, ambito, capa
+            ...cama, ambito, capa, fecha
         };
-
-        return this.server.patch(this.url + `/camas/${cama._id}`, {
-            params,
-            showError: true
-        });
-    }
-
-    storeCama(cama, ambito, capa) {
-        return this.server.post(this.url + `/camas`, {
-            params: { ...cama, ambito, capa },
-            showError: true
-        });
+        if (cama._id) {
+            return this.server.patch(this.url + `/camas/${cama._id}`, {
+                params,
+                showError: true
+            });
+        } else {
+            return this.server.post(this.url + `/camas`, {
+                params: { ...cama, ambito, capa },
+                showError: true
+            });
+        }
     }
 
     getMaquinaEstados(organizacion, ambito, capa): Observable<any[]> {
@@ -51,6 +50,13 @@ export class MapaCamasService {
     censoDiario(fecha, unidadOrganizativa): Observable<any[]> {
         return this.server.get(this.url + '/censoDiario', {
             params: { fecha, unidadOrganizativa },
+            showError: true
+        });
+    }
+
+    censoMensual(fechaDesde, fechaHasta, unidadOrganizativa): Observable<any[]> {
+        return this.server.get(this.url + '/censoMensual', {
+            params: { fechaDesde, fechaHasta, unidadOrganizativa },
             showError: true
         });
     }

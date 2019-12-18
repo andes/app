@@ -29,6 +29,7 @@ export class CamaMainComponent implements OnInit {
     constructor(
         public authService: Auth,
         private plex: Plex,
+        private router: Router,
         private route: ActivatedRoute,
         private organizacionService: OrganizacionService,
         private mapaCamasService: MapaCamasService,
@@ -68,16 +69,13 @@ export class CamaMainComponent implements OnInit {
     }
 
     save() {
-        if (this.cama._id) {
-            this.mapaCamasService.patchCama(this.cama, this.ambito, this.capa).subscribe(response => {
-
-            });
-        } else {
-            this.mapaCamasService.storeCama(this.cama, this.ambito, this.capa).subscribe(response => {
-
-            });
-        }
-
+        this.mapaCamasService.patchCama(this.cama, this.ambito, this.capa, this.fecha).subscribe(response => {
+            if (response) {
+                this.router.navigate(['/internacion/mapa-camas']);
+            } else {
+                this.plex.info('warning', 'ERROR: Ocurrio un problema al guardar la cama');
+            }
+        });
     }
 
 }

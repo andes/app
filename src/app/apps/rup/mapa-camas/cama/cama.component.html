@@ -4,14 +4,19 @@
             <plex-title titulo="DATOS DE CAMA">
                 <plex-button label="GUARDAR" type="success" [disabled]="!cama.nombre || !cama.unidadOrganizativa || !cama.tipoCama || 
                 !cama.especialidades || !cama.sectores" (click)="save()"></plex-button>
-                <plex-button label="DAR DE BAJA" type="danger"></plex-button>
+                <plex-button label="DAR DE BAJA" type="danger" *ngIf="cama._id"></plex-button>
             </plex-title>
             <fieldset>
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-8">
                         <plex-text type="text" [(ngModel)]="cama.nombre" label="Nombre" name="nombre"
                                    placeholder="Nombre" [required]="true">
                         </plex-text>
+                    </div>
+                    <div class="col-4" *ngIf="!cama._id">
+                        <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fechaDisponible"
+                                       label="Disponible desde:">
+                        </plex-datetime>
                     </div>
                 </div>
                 <div class="row">
@@ -59,12 +64,12 @@
             </fieldset>
         </form>
     </plex-layout-main>
-    <plex-layout-sidebar type="invert">
+    <plex-layout-sidebar>
         <plex-title titulo="MAPA DE ORGANIZACION">
         </plex-title>
         <div *ngIf="organizacion">
-            <sector-item *ngFor="let unidad of organizacion.mapaSectores" [root]="unidad" [actions]="false">
-            </sector-item>
+            <sectores-item *ngFor="let unidad of organizacion.mapaSectores" [root]="unidad" [actions]="false">
+            </sectores-item>
         </div>
     </plex-layout-sidebar>
 </plex-layout>

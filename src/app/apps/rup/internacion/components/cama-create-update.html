@@ -67,7 +67,7 @@
             <div class="page-title">Mapa de la organización</div>
         </header>
         <div *ngIf="organizacion">
-            <sectores-item *ngFor="let unidad of organizacion.mapaSectores" [root]="unidad" [actions]="false">
+            <sectores-item *ngFor="let sector of organizacion.mapaSectores" [root]="sector" [actions]="false">
             </sectores-item>
         </div>
     </plex-layout-sidebar>
