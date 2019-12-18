@@ -18,7 +18,7 @@
                                  (click)="generarCensoDiario()">
                     </plex-button>
                     <plex-button [disabled]="!censo" title="Descargar censo diario" type="warning">
-                        <plex-icon name="download"></plex-icon>
+                        <plex-icon name="download" (click)="descargarCenso($event.formValid)"></plex-icon>
                     </plex-button>
                 </div>
             </div>
@@ -67,16 +67,16 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{censo.existenciaALas0}}</td>
+                        <td>{{censo.existencia0}}</td>
                         <td>{{censo.ingresos}}</td>
                         <td>{{censo.pasesDe}}</td>
-                        <td>{{censo.altas}}</td>
-                        <td>{{censo.defunciones}}</td>
+                        <td>{{censo.egresosAlta}}</td>
+                        <td>{{censo.egresosDefuncion}}</td>
                         <td>{{censo.pasesA}}</td>
-                        <td>{{censo.existenciaALas24}}</td>
-                        <td>{{censo.ingresosYEgresos}}</td>
+                        <td>{{censo.existencia24}}</td>
+                        <td>{{censo.ingresoEgresoDia}}</td>
                         <td>{{censo.pacientesDia}}</td>
-                        <td>{{censo.disponibles}}</td>
+                        <td>{{censo.disponibles24}}</td>
                     </tr>
                 </tbody>
             </table>

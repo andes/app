@@ -21,7 +21,6 @@ export class EstadoServicioComponent implements OnInit {
 
     ngOnInit() {
         this.camasXEstado = this.groupBy(this.camas, 'estado');
-        console.log(this.camasXEstado);
     }
 
     groupBy(xs: any[], key: string) {

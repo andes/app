@@ -52,7 +52,7 @@ export class CensosMensualesComponent implements OnInit {
             organizacion.unidadesOrganizativas.map(u => {
                 index = this.unidadesOranizativas.findIndex(uo => uo.id === u.conceptId);
                 if (index < 0) {
-                    this.unidadesOranizativas.push({ 'id': u.conceptId, 'nombre': u.term });
+                    this.unidadesOranizativas.push({ 'id': u.conceptId, 'nombre': u.term, 'term': u.term });
                 }
             });
         });
@@ -89,7 +89,6 @@ export class CensosMensualesComponent implements OnInit {
                         fecha: c.fecha
                     });
                 });
-                console.log(this.censo);
                 this.calcularDatosCensoTotal();
             });
     }
