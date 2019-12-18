@@ -1,5 +1,5 @@
 
-import { forkJoin as observableForkJoin } from 'rxjs';
+import { forkJoin as observableForkJoin, Subscription } from 'rxjs';
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
@@ -16,8 +16,6 @@ import { TurnoService } from '../../../../services/turnos/turno.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
 import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
 import { WebSocketService } from '../../../../services/websocket.service';
-import { ISubscription } from 'rxjs/Subscription';
-
 
 
 @Component({
@@ -416,20 +414,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     }
 
-
-    tienePermisos(tipoPrestacion, prestacion) {
-        let permisos = this.auth.getPermissions('rup:tipoPrestacion:?');
-        let existe = permisos.find(permiso => (permiso === tipoPrestacion._id));
-        // vamos a comprobar si el turno tiene una prestacion asociada y si ya esta en ejecucion
-        // por otro profesional. En ese caso no debería poder entrar a ejecutar o validar la prestacion
-        if (prestacion) {
-            if (prestacion.estados[prestacion.estados.length - 1].tipo !== 'pendiente' && prestacion.estados[prestacion.estados.length - 1].createdBy.username !== this.auth.usuario.username) {
-                return null;
-            }
-        }
-        return existe;
-    }
-
     cargarTurnos(agenda) {
         this.cancelarDinamica();
         this.agendaSeleccionada = agenda;
@@ -533,7 +517,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
         return (this.esFutura(agenda) && turno.paciente && turno.estado !== 'suspendido' && turno.prestacion &&
             turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente' &&
-            this.tienePermisos(turno) && condAsistencia);
+            this.servicioPrestacion.tienePermisos(turno) && condAsistencia);
     }
 
 
@@ -554,7 +538,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         }
 
         return (!this.esFutura(agenda) && turno.paciente && turno.estado !== 'suspendido' &&
-            this.tienePermisos(turno) && condAsistencia);
+            this.servicioPrestacion.tienePermisos(turno) && condAsistencia);
     }
 
     /**

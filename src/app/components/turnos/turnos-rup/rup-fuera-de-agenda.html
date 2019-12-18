@@ -7,8 +7,11 @@
         <div class="d-flex flex-column info">
             <div class="d-flex flex-column ml-1" *ngIf="prestacion?.paciente">
                 <b>{{ prestacion.paciente | paciente }}</b>
-                <small class="text-muted"
-                       *ngIf="prestacion?.paciente?.documento !== ''">{{ prestacion.paciente.documento | number }}</small>
+                <small class="d-flex align-items-center text-muted" *ngIf="prestacion?.paciente?.documento !== ''">
+                    <plex-copy [value]="prestacion.paciente.documento">
+                        {{ prestacion.paciente.documento | number }}</plex-copy>
+                </small>
+
                 <small class="text-muted" *ngIf="prestacion.paciente.documento === ''">Sin documento (temporal)</small>
             </div>
             <div class="d-flex ml-1">

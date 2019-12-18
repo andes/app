@@ -123,81 +123,6 @@
             </div>
         </div>
 
-
-        <ng-container *ngIf="agendas.length">
-            <ng-container *ngFor="let agenda of agendas; let i=index">
-                <tr class="hover" [ngClass]="{'bg-inverse text-white': agendaSeleccionada == agenda}"
-                    (click)="cargarTurnos(this.agenda)"
-                    *ngIf="agenda.dinamica || getCantidadPacientes(agenda) || agenda.tipoPrestaciones[0].noNominalizada">
-
-                    <td>
-                        <div>
-                            {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}}
-                            hs
-                            <span *ngIf="agenda.nota">
-                                <i title="{{agenda.nota}}" class="mdi mdi-comment"></i>
-                            </span>
-                        </div>
-                        <div>
-                            <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
-                            <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">
-                                Espacio físico no asignado
-                            </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
-                            {{tipoPrestacion.term}}
-                        </div>
-                        <div>
-                            <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">
-                                Profesional no asignado
-                            </span>
-                            <ng-container *ngIf="agenda.profesionales">
-                                <div *ngFor="let profesional of agenda.profesionales">
-                                    {{profesional | profesional}}
-                                </div>
-                            </ng-container>
-                        </div>
-                    </td>
-                    <td>
-                        <ng-container
-                                      *ngIf="agenda.estado !== 'disponible' && !agenda.tipoPrestaciones[0].noNominalizada">
-                            <span class="badge-info float-right">
-                                pacientes {{getCantidadPacientes(agenda)}}
-                                <ng-container *ngIf="!agenda.dinamica">
-                                    / {{agenda.cantidadTurnos}}
-                                </ng-container>
-                            </span>
-                        </ng-container>
-                        <ng-container *ngIf="agenda.tipoPrestaciones[0].noNominalizada">
-                            <span class="badge-info float-right">
-                                No nominalizada
-                            </span>
-                        </ng-container>
-                    </td>
-                </tr>
-            </ng-container>
-        </ng-container>
-
-        <tr class="hover" (click)="cargarTurnos()" *ngIf="fueraDeAgenda && fueraDeAgenda.length"
-            [ngClass]="{'bg-inverse text-white': agendaSeleccionada == 'fueraAgenda'}">
-            <td>
-                Fuera de agenda
-            </td>
-            <td colspan="2">
-                <span class="badge-info float-right">
-                    <ng-container *ngIf="fueraDeAgenda.length === 1">
-                        1 paciente
-                    </ng-container>
-                    <ng-container *ngIf="fueraDeAgenda.length > 1">
-                        {{fueraDeAgenda.length}} pacientes
-                    </ng-container>
-                </span>
-            </td>
-        </tr>
-        </tbody>
-        </table> -->
     </plex-layout-main>
     <plex-layout-sidebar>
 
@@ -213,7 +138,8 @@
             </plex-title>
 
             <!-- Agenda dinámica -->
-            <dinamica *ngIf="buscandoPaciente" [agenda]="agendaSeleccionada" (cancel)="cancelarDinamica()">
+            <dinamica *ngIf="buscandoPaciente && agendaSeleccionada.dinamica" [agenda]="agendaSeleccionada"
+                      (cancel)="cancelarDinamica()">
             </dinamica>
 
             <!-- Fuera de Agenda -->
@@ -243,16 +169,16 @@
                             </span>
                         </div>
                     </div>
+                    <!-- Turnos -->
+                    <rup-turnos *ngIf="agendaSeleccionada" [agendaSeleccionada]="agendaSeleccionada" tipo="turnos"
+                                [esFutura]="esFutura(agendaSeleccionada)" (asistencia)="registrarInasistencia($event)">
+                    </rup-turnos>
+
+                    <!-- Sobreturnos -->
+                    <rup-turnos *ngIf="agendaSeleccionada" [agendaSeleccionada]="agendaSeleccionada" tipo="sobreturnos">
+                    </rup-turnos>
                 </ng-container>
 
-                <!-- Turnos -->
-                <rup-turnos *ngIf="agendaSeleccionada" [agendaSeleccionada]="agendaSeleccionada" tipo="turnos"
-                            [esFutura]="esFutura(agendaSeleccionada)" (asistencia)="registrarInasistencia($event)">
-                </rup-turnos>
-
-                <!-- Sobreturnos -->
-                <rup-turnos *ngIf="agendaSeleccionada" [agendaSeleccionada]="agendaSeleccionada" tipo="sobreturnos">
-                </rup-turnos>
 
             </ng-container>
         </div>

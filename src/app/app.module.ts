@@ -648,6 +648,7 @@ registerLocaleData(localeEs, 'es');
         ReglasComponent,
         ListaReglasComponent,
         VisualizacionReglasComponent,
+        VisualizacionReglasTopComponent,
         VistaSolicitudTopComponent,
         // MPI
         PacienteBuscarComponent,

@@ -829,8 +829,8 @@ observaciones {
 }
 
 .citas-turno-card {
-    --icon-size: 70px;
-    --icon-size-sm: 50px;
+    --icon-size: 75px;
+    --icon-size-sm: 55px;
     display: grid;
     grid-template-columns: calc(var(--icon-size) - 20px) auto 1fr;
     >:nth-child(2) {

@@ -28,6 +28,10 @@ $adi-font-path: '~@andes/icons/fonts/';
         }
     }
 
+    small {
+        height: 19px;
+    }
+
 }
 
 .citas-agenda-card {
@@ -69,6 +73,9 @@ $adi-font-path: '~@andes/icons/fonts/';
     grid-template-columns: calc(var(--icon-size) - 20px) auto 1fr;
     >:nth-child(2) {
         line-height: 1.3rem;
+        small {
+            height: 20px;
+        }
     }
     &.sm {
         grid-template-columns: calc(var(--icon-size) - 20px) auto 1fr;
