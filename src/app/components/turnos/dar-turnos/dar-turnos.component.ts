@@ -119,7 +119,6 @@ export class DarTurnosComponent implements OnInit {
     tipoTurno: string;
     tiposTurnosSelect: string;
     tiposTurnosLabel: string;
-    filtradas: any = [];
     hoy: Date;
     bloque: IBloque;
     delDiaDisponibles: number;
@@ -377,7 +376,8 @@ export class DarTurnosComponent implements OnInit {
                 }
             }
             if (!this.opciones.tipoPrestacion) {
-                params['tipoPrestaciones'] = this.filtradas.map((f) => { return f.id; });
+                params['tipoPrestaciones'] = (this.permisos[0] === '*') ? [] : this.permisos;
+
             }
             // Traer las agendas
             this.serviceAgenda.get(params).subscribe(agendas => {
@@ -457,7 +457,7 @@ export class DarTurnosComponent implements OnInit {
             this.indice = 0;
             this.agenda = agendasDelDia[0];
         }
-        let agendaDeHoy = this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate();
+        let esAgendaDeHoy = this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate();
         let turnoAnterior = null;
         this.turnoDoble = false;
         // Ver si cambió el estado de la agenda en otro lado
@@ -469,41 +469,9 @@ export class DarTurnosComponent implements OnInit {
             } else {
 
                 this.alternativas = [];
-                // Tipo de Prestación, para poder filtrar las agendas
-                let tipoPrestacion: string = this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : '';
                 // Se filtran los bloques segun el filtro tipoPrestacion
-                this.bloques = this.agenda.bloques.filter(
-                    function (value) {
-                        let prestacionesBlq = value.tipoPrestaciones.map(function (obj) {
-                            return obj.id;
-                        });
-                        if (tipoPrestacion) {
-                            return (prestacionesBlq.indexOf(tipoPrestacion) >= 0);
-                        } else {
-                            return true;
-                        }
-                    }
-                );
-                if (this.solicitudPrestacion) {
-                    // Se muestran solo los bloques que tengan turnos para el tipo correspondiente
-                    this.bloques = this.bloques.filter(
-                        function (value, esSolicitud) {
-                            if (agendaDeHoy) {
-                                return (value.restantesDelDia) + (value.restantesProgramados) > 0;
-                            } else {
-                                return ((value.restantesProgramados) + (value.restantesGestion) + (value.restantesProfesional) > 0);
-                            }
-                        });
-                } else {
-                    this.bloques = this.bloques.filter(
-                        function (value, esSolicitud) {
-                            if (agendaDeHoy) {
-                                return (value.restantesDelDia) + (value.restantesProgramados) > 0;
-                            } else {
-                                return (value.restantesProgramados > 0);
-                            }
-                        });
-                }
+
+                this.filtrarBloques(esAgendaDeHoy);
 
                 if (this.agenda) {
 
@@ -543,8 +511,8 @@ export class DarTurnosComponent implements OnInit {
                             this.agenda.bloques.forEach((bloque, indexBloque) => {
                                 countBloques.push({
                                     // Si la agenda es de hoy los programados se suman a los del día
-                                    delDia: agendaDeHoy ? (bloque.restantesDelDia as number) + (bloque.restantesProgramados as number) : bloque.restantesDelDia,
-                                    programado: agendaDeHoy ? 0 : bloque.restantesProgramados,
+                                    delDia: esAgendaDeHoy ? (bloque.restantesDelDia as number) + (bloque.restantesProgramados as number) : bloque.restantesDelDia,
+                                    programado: esAgendaDeHoy ? 0 : bloque.restantesProgramados,
                                     gestion: bloque.restantesGestion,
                                     profesional: bloque.restantesProfesional
                                 });
@@ -562,7 +530,7 @@ export class DarTurnosComponent implements OnInit {
                                 this.profesionalDisponibles += countBloques[indexBloque].profesional;
                             });
 
-                            if (agendaDeHoy) {
+                            if (esAgendaDeHoy) {
                                 this.tiposTurnosSelect = 'delDia';
                                 if (this.agenda.estado === 'publicada') {
                                     this.estadoT = (this.delDiaDisponibles > 0) ? 'seleccionada' : 'noTurnos';
@@ -605,6 +573,55 @@ export class DarTurnosComponent implements OnInit {
                 }
             }
         });
+    }
+
+    private filtrarBloques(esAgendaDeHoy) {
+        // Tipo de Prestación, para poder filtrar las agendas
+        let tipoPrestacion: string = this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : '';
+
+        this.bloques = this.agenda.bloques.filter(
+            function (value) {
+                let prestacionesBlq = value.tipoPrestaciones.map(function (obj) {
+                    return obj.id;
+                });
+                if (tipoPrestacion) {
+                    return (prestacionesBlq.indexOf(tipoPrestacion) >= 0);
+                } else {
+                    return true;
+                }
+            }
+        );
+
+        // Filtra bloques cuyos tipos prestaciones se correspondan con los permisos del usuario
+        if (this.permisos[0] !== '*') {
+            this.bloques = this.bloques.filter( bloque => bloque.tipoPrestaciones.some( p => this.permisos.includes(p.id) ));
+        }
+
+        // Si existe una selección de filtro tipo de prestación, filtra bloques cuyos tipos prestaciones se correspondan con los filtros seleccionados
+        if (this.opciones.tipoPrestacion) {
+            this.bloques = this.bloques.filter( bloque => bloque.tipoPrestaciones.map( e => e.conceptId ).includes(this.opciones.tipoPrestacion.conceptId) );
+        }
+
+        if (this.solicitudPrestacion) {
+            // Se muestran solo los bloques que tengan turnos para el tipo correspondiente
+            this.bloques = this.bloques.filter(
+                function (value) {
+                    if (esAgendaDeHoy) {
+                        return (value.restantesDelDia) + (value.restantesProgramados) > 0;
+                    } else {
+                        return ((value.restantesProgramados) + (value.restantesGestion) + (value.restantesProfesional) > 0);
+                    }
+                });
+        } else {
+            this.bloques = this.bloques.filter(
+                function (value) {
+                    if (esAgendaDeHoy) {
+                        return (value.restantesDelDia) + (value.restantesProgramados) > 0;
+                    } else {
+                        return (value.restantesProgramados > 0);
+                    }
+                });
+        }
     }
 
     /**
