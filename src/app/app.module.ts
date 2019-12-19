@@ -81,6 +81,7 @@ import { RenaperService } from './services/fuentesAutenticas/servicioRenaper.ser
 import { ConfiguracionPrestacionService } from './services/term/configuracionPrestacion.service';
 import { PrestacionLegacyService } from './services/prestacionLegacy.service';
 import { WebSocketService } from './services/websocket.service';
+import { InstitucionService } from './services/turnos/institucion.service';
 
 // ... Turnos
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
@@ -768,7 +769,8 @@ registerLocaleData(localeEs, 'es');
         TurnosPrestacionesService,
         PlantillasService,
         InternacionCacheService,
-        WebSocketService
+        WebSocketService,
+        InstitucionService
     ]
 })
 

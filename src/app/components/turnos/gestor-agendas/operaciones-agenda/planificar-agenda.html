@@ -80,7 +80,11 @@
                             </div>
                             <div class="row" *ngIf="!espacioFisicoPropios">
                                 <div class="col">
+<<<<<<< HEAD
                                     <plex-select [(ngModel)]="modelo.espacioFisico" name="otrosEspacios"
+=======
+                                    <plex-select [(ngModel)]="modelo.otroEspacioFisico" name="otrosEspacios"
+>>>>>>> feat(citas): se agrega opcion para seleccionar instituciones
                                                  (getData)="loadEspaciosFisicos($event)"
                                                  label="Seleccione un espacio físico"
                                                  placeholder="Seleccione un espacio físico" labelField="nombre"
@@ -284,7 +288,11 @@
                             </div>
                             <div *ngIf="elementoActivo.pacienteSimultaneos" class="col-4">
                                 <plex-int [(ngModel)]="elementoActivo.cantidadSimultaneos" name="cantidadSimultaneos"
+<<<<<<< HEAD
                                           suffix="Pacientes" [min]=1 required>
+=======
+                                          suffix="Pacientes" required>
+>>>>>>> feat(citas): se agrega opcion para seleccionar instituciones
                                 </plex-int>
                             </div>
                         </div>
@@ -294,7 +302,11 @@
                                            name="citarPorBloque"></plex-bool>
                             </div>
                             <div *ngIf="elementoActivo.citarPorBloque" class="col-4">
+<<<<<<< HEAD
                                 <plex-int [(ngModel)]="elementoActivo.cantidadBloque" [min]=1
+=======
+                                <plex-int [(ngModel)]="elementoActivo.cantidadBloque"
+>>>>>>> feat(citas): se agrega opcion para seleccionar instituciones
                                           [max]="elementoActivo.cantidadTurnos" name="cantidadBloque" suffix="Pacientes"
                                           required>
                                 </plex-int>
