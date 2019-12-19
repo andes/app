@@ -19,11 +19,13 @@ export class ResumenDiarioMensualComponent implements OnInit {
 
     fecha = new Date();
 
+    private reporteProps;
     private _reporte;
     @Input('reporte') // recibe un array
 
     set reporte(value: any) {
         this._reporte = value;
+        this.reporteProps = Object.keys(value);
     }
 
     get reporte(): any {

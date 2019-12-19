@@ -196,7 +196,6 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
         if (this.parametros['prestacion'] && this.parametros['organizacion'] && this.parametros['tipoReportes'] && this.parametros['mes'] && this.parametros['anio'] && this.parametros['tipoReportes'] === 'Resumen diario mensual') {
 
             this.agendaService.findResumenDiarioMensual(this.parametros).subscribe((reporte) => {
-
                 this.reporte = reporte;
                 this.showPlanillaC1 = false;
                 this.showResumenDiarioMensual = true;
