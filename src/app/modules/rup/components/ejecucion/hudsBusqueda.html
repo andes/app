@@ -157,10 +157,12 @@
                                         </div>
                                         <div class="col-2 p-0 m-0">
                                             <div class="p-0 pt-1 pr-1 float-right">
-                                                <small class="badge badge-info text-default p-1">
-                                                    <ng-container *ngIf='registro.evoluciones'>RUP</ng-container>
-                                                    <ng-container *ngIf='!registro.evoluciones'>TOP</ng-container>
-                                                </small>
+                                                <plex-button *ngIf='registro.evoluciones' size="sm" class="btn"
+                                                             type="info" icon="mdi mdi-information-outline"
+                                                             title="Registrado por profesional"></plex-button>
+                                                <plex-button *ngIf='!registro.evoluciones' size="sm" class="btn"
+                                                             type="info" icon="mdi mdi-information-outline"
+                                                             title="Registrado por gestión"></plex-button>
                                             </div>
                                         </div>
                                     </div>
