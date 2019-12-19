@@ -1,36 +1,40 @@
 <plex-layout main="{{ mostrarDetalle ? 8 : 12 }}">
     <plex-layout-main>
-        <plex-button type="info" class="float-right mb-3" size="sm" (click)="nueva()"> Nueva pantalla </plex-button>
+        <plex-button type="success" class="float-right mb-3" size="sm" (click)="nueva()"> Nueva pantalla </plex-button>
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th> Nombre </th>
-                    <th> Token </th>
+                    <th> Tipo </th>
+                    <th> Código </th>
                     <th> Esp. Físicos </th>
                     <th> Activación </th>
-                    <th> Acciones </th>
+                    <th *ngIf="muestraAcciones"> Acciones </th>
                 </tr>
             </thead>
-            <tr *ngFor="let pantalla of pantallas">
+            <tr *ngFor="let pantalla of pantallas" [ngClass]="{'bg-inverse': pantalla.bloqueada}">
                 <td> {{pantalla.nombre}} </td>
+                <td> {{pantalla.tipo}} </td>
                 <td> {{pantalla.token ? pantalla.token : 'Activado' }} </td>
-                <td> 
+                <td>
+                    {{pantalla.tipo == 'totem' ? 'No corresponde' : '' }}
                     <ng-container *ngFor='let e of pantalla.espaciosFisicos; let i = index'>
                         {{e.nombre}}<ng-container *ngIf='pantalla.espaciosFisicos[i+1]'>,&nbsp;</ng-container>
-                    </ng-container> 
+                    </ng-container>
                 </td>
                 <td>
-                    <span *ngIf="pantalla.expirationTime && !vencido(pantalla.expirationTime)">
+                    <span *ngIf=" pantalla.expirationTime && !vencido(pantalla.expirationTime) && !pantalla.bloqueada">
                         {{pantalla.expirationTime ? 'Hasta ' + (pantalla.expirationTime  | date: "HH:mm") : ''}}
                     </span>
-                    <span *ngIf="!pantalla.expirationTime || vencido(pantalla.expirationTime)">
+                    <span *ngIf="(!pantalla.expirationTime || vencido(pantalla.expirationTime))">
                         <plex-button type="info" (click)="renovar(pantalla)"> Renovar </plex-button>
                     </span>
                 </td>
                 <td>
                     <ng-container *ngIf="muestraAcciones">
-                        <plex-button icon="delete" type="danger" (click)="eliminar(pantalla)" class="mr-3"></plex-button>
-                        <plex-button icon="pencil" type="info" (click)="edit(pantalla)"></plex-button>
+                        <plex-button icon="delete" type="danger" (click)="eliminar(pantalla)" class="mr-3">
+                        </plex-button>
+                        <plex-button icon="pencil" type="info" (click)="edit(pantalla)" class="mr-3"></plex-button>
                     </ng-container>
                 </td>
             </tr>

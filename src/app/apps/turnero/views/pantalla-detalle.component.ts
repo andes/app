@@ -12,6 +12,9 @@ import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.
 })
 export class PantallaDetalleComponent implements OnInit, OnDestroy {
     public espaciosFisicos = [];
+    public turnero = false;
+    public listaTipos = [];
+    public esTurnero = false;
 
     @Output() ocultarDetalleEmmiter: EventEmitter<any> = new EventEmitter<any>();
     @Input() pantalla: any;
@@ -34,6 +37,8 @@ export class PantallaDetalleComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.espacioFisicoService.get({ organizacion: this.auth.organizacion.id }).subscribe(data => this.espaciosFisicos = data);
+        this.listaTipos = [{ id: 'totem', nombre: 'Totem' }, { id: 'turnero', nombre: 'Turnero' }];
+        this.esTurnero = this.pantalla.tipo === 'turnero';
     }
 
     ngOnDestroy() {
@@ -45,6 +50,15 @@ export class PantallaDetalleComponent implements OnInit, OnDestroy {
             this.plex.toast('success', 'Pantalla guardada correctamente', 'Pantalla guardada', 100);
             this.back();
         });
+    }
+
+    changeTipo(event) {
+        this.pantalla.tipo = event.value.id;
+        if (this.pantalla.tipo === 'totem') {
+            this.esTurnero = false;
+        } else {
+            this.esTurnero = true;
+        }
     }
 
     back() {

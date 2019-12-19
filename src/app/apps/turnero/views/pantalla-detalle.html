@@ -1,23 +1,36 @@
-<header>
-    <div class="row" *ngIf="pantalla">
-        <div class="col-md-7">
-            <div class="clearfix">
-                <div class="page-title float-left">Detalle</div>
+<plex-title main titulo="Detalle de pantallas" size="sm">
+    <plex-button label="Cancelar" type="danger" (click)="back()" size="sm"></plex-button>
+    <plex-button label="Guardar" type="success" (click)="guardar()" size="sm"></plex-button>
+</plex-title>
+<div *ngIf="pantalla">
+    <fieldset>
+        <div class="row">
+            <div class="col-md">
+                <plex-text label="Nombre" placeholder="Nombre identificatorio" [(ngModel)]="pantalla.nombre"
+                           name="usuario" [required]="true"></plex-text>
             </div>
         </div>
-        <div class="col d-flex justify-content-end">
-            <plex-button label="Cancelar" type="danger" (click)="back()"></plex-button>
-            <plex-button label="Guardar" type="success" (click)="guardar()"></plex-button>
+        <div class="row">
+            <div class="col-md">
+                <plex-select name="tipoPantalla" [required]="true" [data]="listaTipos" idField="id" labelField="nombre"
+                             [(ngModel)]="pantalla.tipo" label="Tipo de pantalla" (change)="changeTipo($event)">
+                </plex-select>
+
+            </div>
         </div>
-    </div>
-</header>
-<div *ngIf="pantalla">
-    <plex-text label="Nombre" placeholder="Nombre identificatorio" [(ngModel)]="pantalla.nombre" name="usuario"
-        [required]="true"></plex-text>
+        <div class="row">
+            <div class="col-md">
+                <plex-text label="Contenido digital" *ngIf="esTurnero" placeholder="Código playlist youtube"
+                           [(ngModel)]="pantalla.playlist" name="playlist" [required]="false"></plex-text>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md">
+                <plex-select [(ngModel)]="consultorios" *ngIf="esTurnero" multiple="true" [data]="espaciosFisicos"
+                             name="select" [required]="true" label="Espacios físicos">
+                </plex-select>
+            </div>
+        </div>
+    </fieldset>
 
-    <plex-text label="Contenido digital" placeholder="Código playlist youtube" [(ngModel)]="pantalla.playlist"
-        name="playlist" [required]="false"></plex-text>
-
-    <plex-select [(ngModel)]="consultorios" multiple="true" [data]="espaciosFisicos" name="select" [required]="true"
-        label="Espacios físicos"></plex-select>
 </div>

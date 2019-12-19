@@ -8,7 +8,8 @@ import { PantallaService } from '../services/pantalla.service';
 
 
 @Component({
-    templateUrl: 'pantallas.html'
+    templateUrl: 'pantallas.html',
+    styleUrls: ['pantallas.scss'],
 })
 export class PantallasComponent implements OnInit, OnDestroy {
     private sub;
@@ -33,7 +34,7 @@ export class PantallasComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit() {
-        this.plex.updateTitle('Configuración de turneros');
+        this.plex.updateTitle('Configuración de pantallas interactivas');
         let temp;
         this.ws.connect();
         this.ws.join(`turnero-${this.auth.organizacion.id}`);
@@ -84,20 +85,23 @@ export class PantallasComponent implements OnInit, OnDestroy {
     edit(pantalla) {
         this.pantalla = pantalla;
         this.mostrarDetalle = true;
-        this.router.navigate(['/turnero/edit/' + pantalla.id]);
+        this.router.navigate(['/pantallas/edit/' + pantalla.id]);
     }
 
     renovar(pantalla) {
-        this.pantallasService.retoken(pantalla).subscribe(() => { });
+        this.pantallasService.retoken(pantalla).subscribe(() => {
+            this.plex.toast('success', 'Pantalla renovada correctamente', 'Pantalla renovada', 1000);
+        });
     }
 
     nueva() {
         this.pantalla = {
             nombre: '',
-            espaciosFisicos: []
+            espaciosFisicos: [],
+            organizacion: this.auth.organizacion.id
         };
         this.mostrarDetalle = true;
-        this.router.navigate(['/turnero/create']);
+        this.router.navigate(['/pantallas/create']);
     }
 
     eliminar(p) {
