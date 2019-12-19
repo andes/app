@@ -8,7 +8,19 @@ export class InstitucionService {
     private institucionUrl = '/modules/turnos/institucion';  // URL to web api
     constructor(private server: Server) { }
 
-    get(nombre): Observable<IInstitucion[]> {
-        return this.server.get(this.institucionUrl + `?nombre=${nombre}`);
+    get(params): Observable<IInstitucion[]> {
+        return this.server.get(this.institucionUrl, { params: params, showError: true });
+    }
+
+    post(institucion): Observable<IInstitucion> {
+        return this.server.post(this.institucionUrl + '/institucion/', institucion);
+    }
+
+    patch(id, cambios: any, options: any = {}): Observable<IInstitucion> {
+        return this.server.patch(this.institucionUrl + '/institucion/' + `${id}`, cambios);
+    }
+
+    delete(institcion: IInstitucion): Observable<any> {
+        return this.server.delete(this.institucionUrl + '/institucion/' + `${institcion.id}`);
     }
 }
