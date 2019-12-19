@@ -3,11 +3,11 @@ let _package = require('../../package.json');
 import { apiKeys } from './apiKeyMaps';
 
 export const environment = {
-  production: false,
+  production: true,
   environmentName: 'development',
-  WS: '//localhost:3002',
-  API: 'https://demo.andes.gob.ar/api',
-  APIStatusCheck: false,
+  WS: 'http://localhost:3002',
+  API: 'http://localhost:3002/api',
+  APIStatusCheck: true,
   version: _package.version,
   MAPS_KEY: apiKeys.develop
 };

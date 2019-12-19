@@ -2,7 +2,7 @@ let _package = require('../../package.json');
 import { apiKeys } from './apiKeyMaps';
 
 export const environment = {
-  production: true,
+  production: false,
   environmentName: 'produccion',
   API: '/api',
   WS: '/',

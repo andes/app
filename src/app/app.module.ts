@@ -309,6 +309,12 @@ import { ValorFechaComponent } from './modules/rup/components/elementos/valorFec
 import { MoleculaBaseComponent } from './modules/rup/components/elementos/moleculaBase.component';
 import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria.component';
 
+// Agregados Dani
+import { SelectPorRequeridosComponent } from './modules/rup/components/elementos/SelectPorRequeridos.component';
+import { UltimaFechaComponent } from './modules/rup/components/elementos/ultimaFecha.component';
+import { EtapaPubertadComponent } from './modules/rup/components/elementos/EtapaPubertad.component';
+import { ConsultaAdolescenteSanoComponent } from './modules/rup/components/elementos/consultaAdolescenteSano.component';
+
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
@@ -409,6 +415,10 @@ import { CampaniaFormComponent } from './apps/campaniaSalud/components/campania-
 import { TurneroProvidersModule } from './apps/turnero/turnero.providers';
 
 let RUPComponentsArray = [
+    SelectPorRequeridosComponent,
+    UltimaFechaComponent,
+    EtapaPubertadComponent,
+    ConsultaAdolescenteSanoComponent,
     SelectPorRefsetComponent,
     AutocitadoComponent,
     EvolucionProblemaDefaultComponent,
