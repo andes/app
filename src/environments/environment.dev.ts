@@ -7,7 +7,7 @@ export const environment = {
   environmentName: 'development',
   WS: 'http://localhost:3002',
   API: 'http://localhost:3002/api',
-  APIStatusCheck: true,
+  APIStatusCheck: false,
   version: _package.version,
   MAPS_KEY: apiKeys.develop
 };
