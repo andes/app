@@ -1,0 +1,6 @@
+export const apiKeys = {
+    produccion: '',
+    develop: ''
+};
+
+export const mapCenter = [];
