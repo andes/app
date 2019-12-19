@@ -64,13 +64,8 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     // ultima request que se almacena con el subscribe
     private lastRequest: Subscription;
 
-    // motivo acceso a huds (modal)
-    public motivosAccesoHuds = [
-        { id: 'continuidad', nombre: 'Continuidad del cuidado del paciente', valor: true },
-        { id: 'facturación/auditoría', nombre: 'Facturación / Auditoría', valor: false },
-        { id: 'urgencia', nombre: 'Urgencia / Emergencia', valor: false }
-    ];
-    public motivoSelected = this.motivosAccesoHuds[0].nombre;
+    public showModalMotivo = false;
+    public motivoVerContinuarPrestacion = 'Continuidad del cuidado del paciente';
     public routeToParams = [];
     public accesoHudsPrestacion = null;
     public accesoHudsPaciente = null;
@@ -378,7 +373,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                         if (input.error) {
                             this.plex.info('info', input.error, 'Aviso');
                         } else {
-                            this.routeTo('ejecucion', input.id); // prestfacion
+                            this.routeTo('ejecucion', input.id); // prestacion
                         }
                     }
                 }, (err) => {
@@ -712,38 +707,35 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             turno.paciente && turno.diagnostico.codificaciones.length === 0;
     }
 
-    changeMotivoAccesoHuds(seleccion) {
-        this.motivosAccesoHuds.forEach(motivo => {
-            motivo.valor = (motivo.id === seleccion.id) ? true : false;
-        });
-        this.motivoSelected = seleccion.nombre;
-    }
-
     setRouteToParams(params) {
         this.routeToParams = params;
     }
 
-    preAccesoHuds() {
-        if (!this.accesoHudsPaciente && !this.accesoHudsPrestacion && this.routeToParams && this.routeToParams[0] === 'huds') {
-            // Se esta accediendo a 'HUDS DE UN PACIENTE'
-            window.sessionStorage.setItem('motivoAccesoHuds', this.motivoSelected);
-            this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
-        } else {
-            this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.accesoHudsPaciente, this.motivoSelected, this.auth.profesional.id, this.accesoHudsTurno, this.accesoHudsPrestacion).subscribe(hudsToken => {
-                // se obtiene token y loguea el acceso a la huds del paciente
-                window.sessionStorage.setItem('huds-token', hudsToken.token);
+    preAccesoHuds(motivoAccesoHuds) {
+        if (motivoAccesoHuds) {
+            if (!this.accesoHudsPaciente && !this.accesoHudsPrestacion && this.routeToParams && this.routeToParams[0] === 'huds') {
+                // Se esta accediendo a 'HUDS DE UN PACIENTE'
+                window.sessionStorage.setItem('motivoAccesoHuds', motivoAccesoHuds);
                 this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
-                this.routeToParams = [];
-                this.accesoHudsPaciente = null;
-                this.accesoHudsTurno = null;
-                this.accesoHudsPrestacion = null;
-            });
+            } else {
+                this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.accesoHudsPaciente, motivoAccesoHuds, this.auth.profesional.id, this.accesoHudsTurno, this.accesoHudsPrestacion).subscribe(hudsToken => {
+                    // se obtiene token y loguea el acceso a la huds del paciente
+                    window.sessionStorage.setItem('huds-token', hudsToken.token);
+                    this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
+                    this.routeToParams = [];
+                    this.accesoHudsPaciente = null;
+                    this.accesoHudsTurno = null;
+                    this.accesoHudsPrestacion = null;
+                });
+            }
         }
+        this.showModalMotivo = false;
     }
 
     setAccesoHudsParams(paciente, turno, prestacion) {
         this.accesoHudsPaciente = paciente;
         this.accesoHudsTurno = turno;
         this.accesoHudsPrestacion = prestacion;
+        this.showModalMotivo = true;
     }
 }

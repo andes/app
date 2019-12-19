@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-12">
                 <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                    (searchClear)="onSearchClear()">
+                                 (searchClear)="onSearchClear()">
                 </paciente-buscar>
             </div>
         </div>
@@ -11,7 +11,7 @@
         <div class=" row">
             <div class="col-12">
                 <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
-                    [autoselect]="false" (selected)="onSelect($event)">
+                                  [autoselect]="false" (selected)="onSelect($event)">
                 </paciente-listado>
 
                 <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
@@ -19,12 +19,11 @@
                 </div>
             </div>
         </div>
+
+        <modal-motivo-acceso-huds [show]="showModalMotivo" (motivoAccesoHuds)="onConfirmSelect($event)">
+        </modal-motivo-acceso-huds>
     </plex-layout-main>
     <plex-layout-footer>
         <plex-button position="left" label="Cancelar" type="info" (click)='onCancel()'></plex-button>
     </plex-layout-footer>
 </plex-layout>
-
-
-<!-- <pacientesSearch (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="true"
-    [modoCompleto]="true" [bloquearCreate]="true"></pacientesSearch> -->

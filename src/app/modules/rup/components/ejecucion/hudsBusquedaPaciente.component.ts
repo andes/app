@@ -1,9 +1,10 @@
-import { Router, ActivatedRoute } from '@angular/router';
-import { Component, OnInit, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { HUDSService } from '../../services/huds.service';
+import { ModalMotivoAccesoHudsComponent as modal } from '../huds/modal-motivo-acceso-huds.component';
 
 @Component({
     selector: 'rup-hudsBusquedaPaciente',
@@ -15,10 +16,11 @@ export class HudsBusquedaPacienteComponent implements OnInit {
     public esProfesional = false;
     // ---- Variables asociadas a componentes paciente buscar y paciente listado
     resultadoBusqueda = null;
-    pacienteSelected = null;
     loading = false;
     routeParams: any;
-    public motivoAccesoHuds;
+    // public motivoAccesoHuds;
+    showModalMotivo = false;
+    pacienteSelected = null;
 
     constructor(
         public plex: Plex,
@@ -40,11 +42,6 @@ export class HudsBusquedaPacienteComponent implements OnInit {
 
         if (!this.auth.profesional && this.auth.getPermissions('huds:?').length <= 0) {
             this.router.navigate(['inicio']);
-        }
-        // se obtiene el motivo de acceso a la huds que seleccionó el profesional
-        this.motivoAccesoHuds = window.sessionStorage.getItem('motivoAccesoHuds');
-        if (!this.motivoAccesoHuds) {
-            this.router.navigate(['rup']);
         }
     }
 
@@ -70,17 +67,22 @@ export class HudsBusquedaPacienteComponent implements OnInit {
     }
 
     onSelect(paciente: IPaciente): void {
-        this.resultadoBusqueda = [];
-        if (paciente && paciente.id && this.motivoAccesoHuds) {
+        if (paciente) {
+            this.pacienteSelected = paciente;
+            this.showModalMotivo = true;
+        }
+    }
+
+    onConfirmSelect(motivoAccesoHuds) {
+        if (motivoAccesoHuds) {
             // se obtiene token y loguea el acceso a la huds del paciente
-            this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, this.motivoAccesoHuds, this.auth.profesional.id, null, null).subscribe(hudsToken => {
+            this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.pacienteSelected, motivoAccesoHuds, this.auth.profesional.id, null, null).subscribe(hudsToken => {
                 window.sessionStorage.setItem('huds-token', hudsToken.token);
                 window.sessionStorage.removeItem('motivoAccesoHuds');
-                this.router.navigate(['/rup/huds/paciente/' + paciente.id]);
+                this.router.navigate(['/rup/huds/paciente/' + this.pacienteSelected.id]);
             });
-        } else {
-            this.plex.info('warning', 'Paciente no encontrado', '¡Error!');
         }
+        this.showModalMotivo = false;
     }
 }
 

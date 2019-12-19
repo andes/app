@@ -511,6 +511,7 @@ import { VistaContextoPrestacionComponent } from './modules/rup/components/huds/
 import { VistaDetalleRegistroComponent } from './modules/rup/components/huds/vistaDetalleRegistro';
 import { PasesListadoInternacionComponent } from './apps/rup/internacion/components/pasesListadoInternacion.component';
 import { VistaAccesosHudsComponent } from './modules/rup/components/huds/vista-accesos-huds.component';
+import { ModalMotivoAccesoHudsComponent } from './modules/rup/components/huds/modal-motivo-acceso-huds.component';
 
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
 import { HUDSService } from './modules/rup/services/huds.service';
@@ -622,6 +623,7 @@ registerLocaleData(localeEs, 'es');
         VistaContextoPrestacionComponent,
         VistaDetalleRegistroComponent,
         VistaAccesosHudsComponent,
+        ModalMotivoAccesoHudsComponent,
 
         // Solicitudes
         SolicitudesComponent,
