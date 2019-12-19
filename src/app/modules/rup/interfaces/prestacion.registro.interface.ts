@@ -49,7 +49,7 @@ export class IPrestacionRegistro {
 
     constructor(elementoRUP: IElementoRUP, snomedConcept: ISnomedConcept) {
         this.id = (new ObjectID()).toString();
-        this.elementoRUP = elementoRUP.id;
+        this.elementoRUP = elementoRUP ? elementoRUP.id : null;
         this.nombre = snomedConcept.term;
         this.concepto = snomedConcept;
         this.destacado = false;
