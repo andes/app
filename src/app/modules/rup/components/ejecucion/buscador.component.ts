@@ -194,6 +194,12 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
             // inicializamos el filtro actual para los hallazgos
             this.filtroActual = 'todos';
+
+            if (this.results['misFrecuentes']['todos'].length) {
+                this.busquedaActual = 'misFrecuentes';
+            } else if (this.results['sugeridos']['todos'].length) {
+                this.busquedaActual = 'sugeridos';
+            }
         });
 
     }
