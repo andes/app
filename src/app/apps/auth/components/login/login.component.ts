@@ -14,6 +14,10 @@ export class LoginComponent implements OnInit {
     public usuario: number;
     public password: string;
     public loading = false;
+    public deshabilitar = false;
+    public autoFocus = 1;
+    public versionAPP = environment.version;
+    public regionesValidas = ['America/Buenos_Aires', 'America/Catamarca', 'America/Cordoba', 'America/Jujuy', 'America/Argentina/La_Rioja', 'America/Mendoza', 'America/Argentina/Rio_Gallegos', 'America/Argentina/Salta', 'America/Argentina/San_Juan', 'America/Argentina/San_Luis', 'America/Argentina/Tucuman', 'America/Argentina/Ushuaia'];
 
     constructor(
         private plex: Plex,
@@ -27,8 +31,25 @@ export class LoginComponent implements OnInit {
         this.ws.close();
     }
 
+    husoHorarioCorrecto() {
+        let timeZone;
+        let result = false;
+        if (typeof Intl === 'object' && typeof Intl.DateTimeFormat === 'function') {
+            timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            if (this.regionesValidas.indexOf(timeZone) === -1) {
+                this.plex.info('danger', 'Su computadora está configurada en una región no válida. Por favor, verifique y vuelva a intentar.');
+                this.loading = false;
+                this.deshabilitar = false;
+            } else {
+                result = true;
+            }
+        }
+        return result;
+    }
+
     login(event) {
-        if (event.formValid) {
+        if (event.formValid && this.husoHorarioCorrecto()) {
+            this.deshabilitar = true;
             this.loading = true;
             this.auth.login(this.usuario.toString(), this.password).subscribe(() => {
                 this.ws.setToken(window.sessionStorage.getItem('jwt'));
@@ -36,9 +57,9 @@ export class LoginComponent implements OnInit {
             }, () => {
                 this.plex.info('danger', 'Usuario o contraseña incorrectos');
                 this.loading = false;
+                this.deshabilitar = false;
             });
         }
     }
-
 
 }
