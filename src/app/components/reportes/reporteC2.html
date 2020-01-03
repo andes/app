@@ -120,7 +120,7 @@
 
     </div>
     <!--Panel Pacientes-->
-    <div class="col-4">
+    <div class="col-4" *ngIf="listaPacientes">
         <plex-box>
             <fieldset>
                 <legend>Listado de Pacientes {{diagnostico.reporteC2}}</legend>
