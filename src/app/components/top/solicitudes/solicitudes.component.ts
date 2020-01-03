@@ -1,3 +1,4 @@
+import { PrestacionValidacionComponent } from './../../../modules/rup/components/ejecucion/prestacionValidacion.component';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -18,7 +19,6 @@ export class SolicitudesComponent implements OnInit {
 
     paciente: any;
     turnoSeleccionado: any;
-    solicitudSeleccionada: any;
     pacienteSeleccionado: any;
     showDarTurnos: boolean;
     solicitudTurno: any;
@@ -61,6 +61,10 @@ export class SolicitudesComponent implements OnInit {
         { id: 'rechazada', nombre: 'RECHAZADA' },
         { id: 'turnoDado', nombre: 'TURNO DADO' },
         { id: 'anulada', nombre: 'ANULADA' }
+    ];
+    public prioridad;
+    public prioridades = [
+        { id: 'prioritario', nombre: 'PRIORITARIO' },
     ];
     prestacionSeleccionada: any;
 
@@ -137,15 +141,9 @@ export class SolicitudesComponent implements OnInit {
     }
 
     loadPrestaciones(event) {
-        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
-            let dataF;
-            if (this.prestacionesPermisos[0] === '*') {
-                dataF = data;
-            } else {
-                dataF = data.filter((x) => { return this.prestacionesPermisos.indexOf(x.id) >= 0; });
-            }
-            event.callback(dataF);
-        });
+        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe(data =>
+            event.callback(this.prestacionesPermisos[0] === '*' ? data : data.filter(e => this.prestacionesPermisos.indexOf(e.id) >= 0 ))
+        );
     }
 
     cambio(activeTab) {
@@ -163,22 +161,13 @@ export class SolicitudesComponent implements OnInit {
         return this.prestaciones.findIndex(x => x.id === solicitud._id);
     }
 
-    seleccionar(arrayPrestaciones, indice) {
-        for (let i = 0; i < this.prestaciones.length; i++) {
-            this.prestaciones[i].seleccionada = false;
-        }
-        let indicePrestacion = this.prestaciones.findIndex((prest: any) => { return prest.id === arrayPrestaciones[indice].id; });
-        this.prestaciones[indicePrestacion].seleccionada = true;
-        this.solicitudSeleccionada = this.prestaciones[indicePrestacion].solicitud;
-        this.prestacionSeleccionada = this.prestaciones[indicePrestacion];
-        this.pacienteSolicitud = this.prestaciones[indicePrestacion].paciente;
-        if (this.prestaciones[indicePrestacion].solicitud && this.prestaciones[indicePrestacion].solicitud.turno) {
-            let params = {
-                id: this.solicitudSeleccionada.turno
-            };
-            this.servicioTurnos.getTurnos(params).subscribe(turnos => {
-                this.turnoSeleccionado = turnos[0].bloques[0].turnos[0];
-            });
+    seleccionar(prestacion) {
+        this.prestaciones.forEach(e => e.seleccionada = false);
+        prestacion.seleccionada = true;
+        this.prestacionSeleccionada = prestacion;
+        this.pacienteSolicitud = prestacion.paciente;
+        if (prestacion.solicitud && prestacion.solicitud.turno) {
+            this.servicioTurnos.getTurnos({ id: prestacion.solicitud.turno }).subscribe(turnos => this.turnoSeleccionado = turnos[0].bloques[0].turnos[0] );
         } else {
             this.turnoSeleccionado = null;
         }
@@ -194,7 +183,7 @@ export class SolicitudesComponent implements OnInit {
     }
 
     cancelar(prestacionSolicitud) {
-        this.plex.confirm('¿Realmente quiere cancelar la solicitud?', 'Atención').then((confirmar) => {
+        this.plex.confirm('¿Realmente quiere cancelar la solicitud?', 'Atención').then(confirmar => {
             if (confirmar) {
                 let cambioEstado: any = {
                     op: 'estadoPush',
@@ -211,11 +200,9 @@ export class SolicitudesComponent implements OnInit {
         });
     }
 
-    anular(arrayPrestaciones, indice) {
-        let indicePrestacion = this.prestaciones.findIndex((prest: any) => { return prest.id === arrayPrestaciones[indice].id; });
-        this.solicitudSeleccionada = this.prestaciones[indicePrestacion].solicitud;
-        this.prestacionSeleccionada = this.prestaciones[indicePrestacion];
-        this.pacienteSolicitud = this.prestaciones[indicePrestacion].paciente;
+    anular(prestacion) {
+        this.prestacionSeleccionada = prestacion;
+        this.pacienteSolicitud = prestacion.paciente;
         this.showAnular = true;
         this.showSidebar = false;
     }
@@ -231,11 +218,9 @@ export class SolicitudesComponent implements OnInit {
         this.showEditarReglas = false;
     }
 
-    auditar(arrayPrestaciones, indice) {
-        let indicePrestacion = this.prestaciones.findIndex((prest: any) => { return prest.id === arrayPrestaciones[indice].id; });
-        this.solicitudSeleccionada = this.prestaciones[indicePrestacion].solicitud;
-        this.prestacionSeleccionada = this.prestaciones[indicePrestacion];
-        this.pacienteSolicitud = this.prestaciones[indicePrestacion].paciente;
+    auditar(prestacion) {
+        this.prestacionSeleccionada = prestacion;
+        this.pacienteSolicitud = prestacion.paciente;
         this.showAuditar = true;
         this.showSidebar = false;
     }
@@ -280,10 +265,14 @@ export class SolicitudesComponent implements OnInit {
                 }
             }
 
+            if (this.prioridad) {
+                params['prioridad'] = this.prioridad.id;
+            }
+
             return this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
                 this.prestaciones = resultado;
-                this.prestacionesSalida = resultado.filter((prest: any) => { return (prest.solicitud.organizacionOrigen) ? (this.auth.organizacion.id === prest.solicitud.organizacionOrigen.id) : false; });
-                this.prestacionesEntrada = resultado.filter((prest: any) => { return (prest.solicitud.organizacion) ? this.auth.organizacion.id === prest.solicitud.organizacion.id : false; });
+                this.prestacionesSalida = resultado.filter((prest: any) => prest.solicitud.organizacionOrigen ? (this.auth.organizacion.id === prest.solicitud.organizacionOrigen.id) : false );
+                this.prestacionesEntrada = resultado.filter((prest: any) => prest.solicitud.organizacion ? this.auth.organizacion.id === prest.solicitud.organizacion.id : false );
                 if (this.paciente) {
                     this.filtrarPaciente();
                 }
@@ -448,10 +437,14 @@ export class SolicitudesComponent implements OnInit {
         this.showAuditar = false;
         if (event.status) {
             if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
-                let patch = {
+                let patch: any = {
                     op: 'estadoPush',
                     estado: { tipo: 'pendiente' }
                 };
+
+                if (event.prioridad) {
+                    patch.prioridad = event.prioridad;
+                }
                 this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
                     respuesta => {
                         this.cargarSolicitudes();

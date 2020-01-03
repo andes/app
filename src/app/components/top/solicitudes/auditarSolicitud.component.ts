@@ -30,6 +30,11 @@ export class AuditarSolicitudComponent implements OnInit {
     lightbox = false;
     indice;
     showConfirmar = false;
+    showPrioridad = false;
+    prioridad;
+    prioridades = [
+        {id: 'prioritario', nombre: 'PRIORITARIO'}
+    ];
     motivo = '';
     constructor(
         public plex: Plex,
@@ -46,7 +51,7 @@ export class AuditarSolicitudComponent implements OnInit {
     }
 
     aceptar() {
-        this.returnAuditoria.emit({ status: true });
+        this.showPrioridad = true;
     }
 
     rechazar() {
@@ -60,6 +65,20 @@ export class AuditarSolicitudComponent implements OnInit {
     confirmarRechazar() {
         this.returnAuditoria.emit({ status: false, motivo: this.motivo });
         this.showConfirmar = false;
+    }
+
+    cancelarAceptar() {
+        this.showPrioridad = false;
+    }
+
+    confirmarAceptar() {
+        let e: any = {
+            status: true,
+            prioridad: this.prioridad ? this.prioridad.id : null
+        };
+
+        this.returnAuditoria.emit(e);
+        this.showPrioridad = false;
     }
 
     esImagen(extension) {
