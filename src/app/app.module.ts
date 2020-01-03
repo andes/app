@@ -523,6 +523,7 @@ import { LogoSvgComponent } from './styles/logo.svg';
 import { AcronimoSvgComponent } from './styles/acronimo.svg';
 import { ListaReglasComponent } from './components/top/reglas/listaReglas.component';
 import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaSolicitudTop';
+import { EspacioFisicoPipe } from './pipes/espacioFisico.pipe';
 
 registerLocaleData(localeEs, 'es');
 
@@ -556,7 +557,7 @@ registerLocaleData(localeEs, 'es');
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         PacienteDetalleComponent, DashboardComponent,
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, HoraPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
-        FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe, ReplacePipe,
+        FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe, ReplacePipe, EspacioFisicoPipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, DinamicaFormComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         Html2TextPipe, RelacionRUPPipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,

@@ -121,7 +121,10 @@
                                                 ?' - ' + agenda.espacioFisico.servicio.nombre : '') +
                                                 (agenda.espacioFisico.edificio?.descripcion
                                                 ? ' (' + agenda.espacioFisico.edificio.descripcion + ')' : '') }}</small>
-                                        <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico
+                                        <small
+                                               *ngIf="agenda.otroEspacioFisico?.nombre">{{agenda.otroEspacioFisico.nombre}}</small>
+                                        <span *ngIf="!agenda.espacioFisico?.nombre && !agenda.otroEspacioFisico?.nombre"
+                                              class="text-danger">Espacio físico
                                             no asignado</span>
                                     </div>
                                 </td>
