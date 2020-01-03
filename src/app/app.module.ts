@@ -384,6 +384,7 @@ import { SelectOrganizacionDirective } from './directives/organizacion-select.di
 import { SelectProfesionalesDirective } from './directives/profesionales-select.directive';
 import { SelectPrestacionesDirective } from './directives/prestaciones-select.directive';
 import { SelectFinanciadorDirective } from './directives/financiador-select-directive';
+import { EspacioFisicoPipe } from './pipes/espacioFisico.pipe';
 
 import { ConceptosTurneablesService } from './services/conceptos-turneables.service';
 import { DisclaimerService } from './services/disclaimer.service';
@@ -426,7 +427,7 @@ registerLocaleData(localeEs, 'es');
         UploadFileComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, HoraPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
-        FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe, ReplacePipe,
+        FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe, ReplacePipe, EspacioFisicoPipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, DinamicaFormComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         Html2TextPipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,

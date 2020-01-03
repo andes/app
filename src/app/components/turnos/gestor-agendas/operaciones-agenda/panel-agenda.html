@@ -2,19 +2,31 @@
     <legend>Editar agenda</legend>
 
     <div class="row">
-        <div class="col-6">
+        <div class="col-md">
             <!-- Equipo de Salud -->
-            <plex-select [(ngModel)]="agenda.profesionales" name="profesionales" tmProfesionales label="Equipo de Salud"
-                         placeholder="Seleccione el equipo de salud" closeAfterSelect="true"
-                         (change)="validarSolapamientos('profesionales')" [multiple]="true">
+            <plex-select [(ngModel)]="agenda.profesionales" name="profesionales" (getData)="loadProfesionales($event)"
+                         label="Equipo de Salud" placeholder="Seleccione el equipo de salud" closeAfterSelect="true"
+                         labelField="apellido + ' ' + nombre" (change)="validarSolapamientos('profesionales')"
+                         [multiple]="true">
             </plex-select>
         </div>
-        <div class="col-6">
+    </div>
+    <div class="row">
+        <div class="col-md">
             <!-- Espacio Físico -->
-            <plex-select [(ngModel)]="agenda.espacioFisico" name="espacioFisico" (getData)="loadEspacios($event)"
-                         label="Espacio Físico" placeholder="Seleccione un espacio"
-                         labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio ? edificio.descripcion : '' + ')'"
+
+            <plex-bool [(ngModel)]="espacioFisicoPropio" name="espacioFisicoPropios" type="slide"
+                       label="{{textoEspacio}}" (change)="filtrarEspacioFisico()">
+            </plex-bool>
+
+            <plex-select *ngIf="espacioFisicoPropio" [(ngModel)]="agenda.espacioFisico" name="espacioFisico"
+                         (getData)="loadEspacios($event)" label="Espacio Físico" placeholder="Seleccione un espacio"
+                         labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio ? edificio.descripcion' : 'a' + ')'"
                          (change)="validarSolapamientos('espacioFisico')">
+            </plex-select>
+            <plex-select *ngIf="!espacioFisicoPropio" [(ngModel)]="agenda.otroEspacioFisico" name="otroEspacio"
+                         (getData)="loadEspacios($event)" label="Espacio Físico" placeholder="Seleccione un espacio"
+                         labelField="nombre">
             </plex-select>
         </div>
     </div>

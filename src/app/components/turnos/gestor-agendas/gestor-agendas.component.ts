@@ -13,6 +13,7 @@ import * as moment from 'moment';
 import { enumToArray } from '../../../utils/enums';
 import { ITurno } from '../../../interfaces/turnos/ITurno';
 import { Subscription } from 'rxjs';
+import { InstitucionService } from '../../../services/turnos/institucion.service';
 
 @Component({
     selector: 'gestor-agendas',
@@ -89,7 +90,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
     constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: TipoPrestacionService,
         public serviceProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService,
-        public serviceAgenda: AgendaService, private router: Router,
+        public serviceAgenda: AgendaService, public serviceInstitucion: InstitucionService, private router: Router,
         public auth: Auth) { }
 
     /* limpiamos la request que se haya ejecutado */
@@ -126,6 +127,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             idTipoPrestacion: '',
             idProfesional: '',
             espacioFisico: '',
+            otroEspacioFisico: '',
             estado: '',
             skip: 0,
             limit: 15
@@ -219,9 +221,14 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         }
         if (tipo === 'espacioFisico') {
             if (value.value !== null) {
-                this.parametros['espacioFisico'] = value.value.id;
+                if (value.value.organizacion) {
+                    this.parametros['espacioFisico'] = value.value.id;
+                } else {
+                    this.parametros['otroEspacioFisico'] = value.value.id;
+                }
             } else {
                 this.parametros['espacioFisico'] = '';
+                this.parametros['otroEspacioFisico'] = '';
             }
         }
         if (tipo === 'estado') {
@@ -464,6 +471,15 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                 organizacion: this.auth.organizacion.id
             };
             this.servicioEspacioFisico.get(query).subscribe(resultado => {
+                if (this.modelo.espacioFisico) {
+                    listaEspaciosFisicos = resultado ? this.modelo.espacioFisico.concat(resultado) : this.modelo.espacioFisico;
+                } else {
+                    listaEspaciosFisicos = resultado;
+                }
+                event.callback(listaEspaciosFisicos);
+            });
+            // Para que el filtro muestre las instituciones
+            this.serviceInstitucion.get(query.nombre).subscribe(resultado => {
                 if (this.modelo.espacioFisico) {
                     listaEspaciosFisicos = resultado ? this.modelo.espacioFisico.concat(resultado) : this.modelo.espacioFisico;
                 } else {

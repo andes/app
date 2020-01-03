@@ -323,9 +323,9 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div *ngIf="agenda.espacioFisico" class="col">
+                            <div *ngIf="agenda.espacioFisico || agenda.otroEspacioFisico" class="col">
                                 <label>Espacio Físico</label>
-                                <div>{{agenda.espacioFisico.nombre}}</div>
+                                <div>{{agenda | espacioFisico}}</div>
                             </div>
                             <div class="col">
                                 <ng-container *ngIf="!desplegarOS && obraSocialPaciente">
