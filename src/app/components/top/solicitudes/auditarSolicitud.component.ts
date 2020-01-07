@@ -35,7 +35,9 @@ export class AuditarSolicitudComponent implements OnInit {
     prioridades = [
         {id: 'prioritario', nombre: 'PRIORITARIO'}
     ];
-    motivo = '';
+    solicitudAceptada = false;
+    corfirmarAuditoria = false;
+    observaciones = '';
     constructor(
         public plex: Plex,
         public adjuntosService: AdjuntosService,
@@ -51,33 +53,31 @@ export class AuditarSolicitudComponent implements OnInit {
     }
 
     aceptar() {
+        this.corfirmarAuditoria = true;
         this.showPrioridad = true;
-    }
-
-    rechazar() {
+        this.solicitudAceptada = true;
         this.showConfirmar = true;
     }
 
-    cancelarRechazar() {
-        this.showConfirmar = false;
+    rechazar() {
+        this.corfirmarAuditoria = true;
+        this.solicitudAceptada = false;
+        this.showConfirmar = true;
     }
 
-    confirmarRechazar() {
-        this.returnAuditoria.emit({ status: false, motivo: this.motivo });
-        this.showConfirmar = false;
+    confirmar() {
+        if (this.corfirmarAuditoria) {
+            this.returnAuditoria.emit({ status: this.solicitudAceptada, observaciones: this.observaciones, prioridad: this.prioridad ? this.prioridad.id : null });
+            this.showPrioridad = false;
+        }
+    }
+
+    cancelar() {
+        this.solicitudAceptada = true;
+        this.corfirmarAuditoria = false;
     }
 
     cancelarAceptar() {
-        this.showPrioridad = false;
-    }
-
-    confirmarAceptar() {
-        let e: any = {
-            status: true,
-            prioridad: this.prioridad ? this.prioridad.id : null
-        };
-
-        this.returnAuditoria.emit(e);
         this.showPrioridad = false;
     }
 

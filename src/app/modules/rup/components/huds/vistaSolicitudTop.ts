@@ -11,7 +11,7 @@ export class VistaSolicitudTopComponent implements OnInit {
     @Input() registro: any;
     turno: any;
     estado: string;
-    motivoRechazo = '';
+    observaciones = '';
 
     constructor(
         public servicioTurnos: TurnoService,
@@ -19,9 +19,13 @@ export class VistaSolicitudTopComponent implements OnInit {
 
     ngOnInit() {
         this.estado = this.registro.estados[this.registro.estados.length - 1].tipo;
-        if (this.estado === 'rechazada') {
-            this.motivoRechazo = this.registro.estados[this.registro.estados.length - 1].motivoRechazo;
+
+        if (this.registro.estados[this.registro.estados.length - 1].observaciones) {
+            this.observaciones = this.registro.estados[this.registro.estados.length - 1].observaciones;
+        } else if (this.registro.estados[this.registro.estados.length - 1].motivoRechazo) { // DEPRECADO
+            this.observaciones = this.registro.estados[this.registro.estados.length - 1].motivoRechazo;
         }
+
         if (this.registro.solicitud.turno) {
             let params = {
                 id: this.registro.solicitud.turno

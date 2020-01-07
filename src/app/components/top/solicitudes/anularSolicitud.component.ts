@@ -55,8 +55,6 @@ export class AnularSolicitudComponent implements OnInit {
 
     cancelarAnular() {
         this.returnAnular.emit({ status: true });
-
-        // this.showConfirmar = false;
     }
 
     confirmarAnular() {

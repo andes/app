@@ -48,10 +48,10 @@
                             <b>Fecha Turno</b>
                             <span>{{ turno.horaInicio | fecha }} - {{ turno.horaInicio | date: 'HH:mm' }}</span>
                         </ng-container>
-                        <ng-container *ngIf="motivoRechazo">
-                            <b>Respuesta</b>
-                            <span>{{motivoRechazo}}</span>
-                        </ng-container>
+                        <ng-container *ngIf="observaciones">
+                            <b>Observaciones</b>
+                            <span>{{observaciones}}</span>
+                            </ng-container>
                         <b>Archivos Adjuntos</b>
                         <rup-adjuntar-documento *ngIf="registro?.solicitud?.registros[0].valor.documentos?.length"
                                                 [permiteCarga]="false"
