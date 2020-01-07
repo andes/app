@@ -39,6 +39,7 @@ export class PrestacionCrearComponent implements OnInit {
     // segun el tipo de prestación elegida se selecciona paciente o no
     public mostrarPaciente = false;
     public loading = false;
+    public disableGuardar = false;
     public resultadoBusqueda = [];
     /**
      * Indica si muestra el calendario para dar turno autocitado
@@ -178,10 +179,13 @@ export class PrestacionCrearComponent implements OnInit {
             if (pacientePrestacion) {
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
             }
+
+            this.disableGuardar = true;
             this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
                 localStorage.removeItem('idAgenda');
                 this.router.navigate(['/rup/ejecucion', prestacion.id]);
             }, (err) => {
+                this.disableGuardar = false;
                 this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err);
             });
         }
