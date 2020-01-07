@@ -85,14 +85,13 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
         // inicializamos variable resultsAux con la misma estructura que results
         this.resultsAux = Object.assign({}, this.results);
         // inicializamos el filtro actual para los hallazgos
-        this.filtroActual = 'todos';
+        // this.ultimoTipoBusqueda = this.busquedaActual;
         // Se inicializa el buscador básico, principal
         await this.inicializarBuscadorBasico();
 
     }
 
     inicializarBuscadorBasico() {
-        this.busquedaActual = 'buscadorBasico';
         this.servicioTipoPrestacion.get({}).subscribe(async conceptosTurneables => {
             this.conceptosTurneables = conceptosTurneables;
             if (this.frecuentesTipoPrestacion.length > 0) {
@@ -105,10 +104,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
                 // filtramos los resultados
                 this.filtrarResultados('sugeridos');
                 this.resultsAux.sugeridos = Object.assign({}, this.results.sugeridos);
-                // seteamos el tipo de búsqueda actual como sugeridos
-                this.busquedaActual = 'sugeridos';
-            } else {
-                this.busquedaActual = 'buscadorBasico';
             }
 
             let fp = await this.inicializarFrecuentesProfesional();
@@ -139,14 +134,16 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
 
             this.resultsAux.frecuentesTP = Object.assign({}, this.results.frecuentesTP);
 
+            if (this.results['misFrecuentes']['todos'] && this.results['misFrecuentes']['todos'].length) {
+                this.busquedaActual = 'misFrecuentes';
+            } else if (this.results['sugeridos']['todos'] && this.results['sugeridos']['todos'].length) {
+                this.busquedaActual = 'sugeridos';
+            } else {
+                this.busquedaActual = 'buscadorBasico';
+            }
+
             // inicializamos el filtro actual para los hallazgos
             this.filtroActual = 'todos';
-
-            if (this.results['misFrecuentes']['todos'].length) {
-                this.busquedaActual = 'misFrecuentes';
-            } else if (this.results['sugeridos']['todos'].length) {
-                this.busquedaActual = 'sugeridos';
-            }
         });
 
     }
