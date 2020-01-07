@@ -88,19 +88,16 @@ export class PanelAgendaComponent implements OnInit {
                 if (this.agenda.profesionales) {
                     profesional = this.agenda.profesionales;
                 }
-                let espacioFisico = this.agenda.espacioFisico;
-                if (this.agenda.espacioFisico) {
-                    delete espacioFisico.$order;
+                let espacioFisico;
+                let otroEspacioFisico;
+                // Para asegurar que guarde una de las dos opciones, espacioFisico u otroEspaciofisico
+                if (this.espacioFisicoPropio) {
+                    espacioFisico = this.agenda.espacioFisico;
+                    otroEspacioFisico = null;
                 } else {
                     espacioFisico = null;
+                    otroEspacioFisico = this.agenda.otroEspacioFisico;
                 }
-                let otroEspacioFisico = this.agenda.otroEspacioFisico;
-                if (this.agenda.otroEspacioFisico) {
-                    delete otroEspacioFisico.$order;
-                } else {
-                    otroEspacioFisico = null;
-                }
-
 
                 let patch = {
                     'op': 'editarAgenda',
@@ -277,8 +274,6 @@ export class PanelAgendaComponent implements OnInit {
     }
 
     filtrarEspacioFisico() {
-        this.agenda.espacioFisico = null;
-        this.agenda.otroEspacioFisico = null;
         if (!this.espacioFisicoPropio) {
             this.textoEspacio = 'Otros Espacios Físicos';
         } else {

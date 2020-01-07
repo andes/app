@@ -29,6 +29,11 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     private _editarAgenda: any;
     @Input('editaAgenda')
     set editaAgenda(value: any) {
+        if (value.otroEspacioFisico) {
+            this.espacioFisicoPropios = false;
+        } else {
+            this.espacioFisicoPropios = true;
+        }
         this._editarAgenda = value;
     }
     get editaAgenda(): any {
@@ -151,8 +156,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
      * @memberof PlanificarAgendaComponent
      */
     filtrarEspacioFisico() {
-        this.modelo.espacioFisico = null;
-        this.modelo.otroEspacioFisico = null;
         if (!this.espacioFisicoPropios) {
             this.textoEspacio = 'Otros Espacios Físicos';
             this.showBloque = true;
@@ -766,6 +769,11 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
 
             this.modelo.organizacion = this.auth.organizacion;
             let bloques = this.modelo.bloques;
+            if (this.espacioFisicoPropios) {
+                this.modelo.otroEspacioFisico = null;
+            } else {
+                this.modelo.espacioFisico = null;
+            }
 
             bloques.forEach((bloque, index) => {
                 bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
