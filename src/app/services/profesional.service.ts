@@ -44,9 +44,8 @@ export class ProfesionalService {
         return this.server.get(this.profesionalUrl + '/foto/', { params: params });
     }
 
-    saveProfesional(profesionalModel: any, esAltaProfesional: boolean = true) {
-        return esAltaProfesional ? this.server.post(this.profesionalUrl, profesionalModel) :
-            this.server.patch(`${this.profesionalUrl}/${profesionalModel.id}`, profesionalModel);
+    saveProfesional(profesionalModel: any) {
+        return profesionalModel.id ? this.server.patch(`${this.profesionalUrl}/${profesionalModel.id}`, profesionalModel) : this.server.post(this.profesionalUrl, { profesional: profesionalModel });
     }
 
     disable(profesional: IProfesional): Observable<IProfesional> {

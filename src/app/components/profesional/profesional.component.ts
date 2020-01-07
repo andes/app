@@ -32,7 +32,6 @@ export class ProfesionalComponent implements OnInit {
     nuevoProfesional = false;
     // cantidad: IProfesional[];
 
-
     constructor(private formBuilder: FormBuilder, private profesionalService: ProfesionalService, public sanitizer: DomSanitizer, private router: Router) { }
 
     ngOnInit() {
@@ -64,13 +63,17 @@ export class ProfesionalComponent implements OnInit {
         });
     }
 
-
     seleccionarProfesional(profesional) {
         this.profesionalSelected = profesional;
-        this.profesionalService.getFoto({ id: this.profesionalSelected.id }).subscribe(resp => {
-            this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp);
-        });
+        if (this.profesionalSelected.validadoRenaper) {
+            this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl(this.profesionalSelected.foto);
+        } else {
+            this.profesionalService.getFoto({ id: this.profesionalSelected.id }).subscribe(resp => {
+                this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp);
+            });
+        }
     }
+
     routeTo(action, id) {
         this.router.navigate([`tm/profesional/${action}/${id}`]);
     }
