@@ -255,7 +255,14 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
 
         let table: any;
         table = document.getElementById(cmpName);
-        this.excelService.exportAsExcelFile(table, `reportesDiarios_${this.prestacion.nombre}_${this.mes.nombre}_${this.anio.nombre}`);
+        if (this.showResumenDiarioMensual)
+        {
+            this.excelService.exportAsExcelFile(table, `reportesDiarios_${this.prestacion.nombre}_${this.mes.nombre}_${this.anio.nombre}`);
+        } else {
+            let str:any = new Date(this.fecha);
+            str = `${str.getDate()}_${str.getMonth() + 1}_${str.getFullYear()}`;
+            this.excelService.exportAsExcelFile(table, `reportesDiarios_${this.prestacion.nombre}_${str}`);
+        }
 
     }
 
