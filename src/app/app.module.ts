@@ -23,6 +23,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { HttpClient } from '@angular/common/http';
+import { ExcelService } from './services/xlsx.service';
 
 // Global
 import { PlexModule } from '@andes/plex';
@@ -700,6 +701,7 @@ registerLocaleData(localeEs, 'es');
         HttpClient,
         Plex,
         Server,
+        ExcelService,
         RoutingGuard,
         RoutingNavBar,
         RoutingHudsGuard,

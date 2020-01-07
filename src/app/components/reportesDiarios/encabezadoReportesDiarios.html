@@ -79,18 +79,21 @@
                         [readonly]="organizacion === null">
                     </plex-select>
                 </div>
-            </div> 
+            </div>
         </header>
 
         <resumenDiarioMensual *ngIf="showResumenDiarioMensual" [reporte]="reporte"
             [parametros]="parametros" id="Resumen diario mensual"></resumenDiarioMensual>
         <planillaC1 *ngIf="showPlanillaC1" [reporte]="reporte" [parametros]="parametros"
-            id="Planilla C1"></planillaC1> 
+            id="Planilla C1"></planillaC1>
     </plex-layout-main>
 
     <plex-layout-footer>
         <plex-button position="right" type="success" label="Generar Reporte" (click)="generar()"></plex-button>
         <plex-button *ngIf="showBotonImprimir" position="right" type="default" label="Imprimir Reporte"
             (click)="imprimir(parametros['tipoReportes'])"></plex-button>
+
+            <plex-button *ngIf="showBotonExportaXLS" position="right" type="default" label="Exportar a XLS"
+            (click)="toExcel(parametros['tipoReportes'])"></plex-button>
     </plex-layout-footer>
 </plex-layout>
