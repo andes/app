@@ -104,7 +104,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         trastorno: ['trastorno'],
         procedimiento: ['procedimiento', 'entidad observable', 'régimen/tratamiento'],
         plan: ['procedimiento', 'régimen/tratamiento'],
-        producto: ['producto', 'objeto físico', 'medicamento clínico'],
+        producto: ['producto', 'objeto físico', 'medicamento clínico', 'fármaco de uso clínico'],
         elementoderegistro: ['elemento de registro'],
         laboratorios: ['laboratorios'],
         vacunas: ['vacunas'],
