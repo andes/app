@@ -1,20 +1,4 @@
 <ng-container>
-    <paciente-detalle [paciente]="paciente" orientacion="horizontal" [esTab]="esTab"></paciente-detalle>
-    <!-- <div class="row">
-        <div class="col">
-            <div>
-                <p>
-                    <b>Solicitada por el profesional:</b> {{prestacion.solicitud.profesional | profesional }}
-                    <br>
-                    <b>Desde la Organización:</b> {{prestacion.solicitud.organizacion.nombre}}
-                    <br>
-                    <b>Fecha:</b> {{prestacion.solicitud.fecha | fecha}}
-                </p>
-                <p *ngIf="prestacion.solicitud.prestacionOrigen">
-                    Prestación de origen: {{ prestacion.solicitud.prestacionOrigen }}
-                </p>
-            </div>
-        </div>
-    </div>
-    <hr> -->
+    <paciente-detalle [paciente]="paciente" orientacion="horizontal"></paciente-detalle>
+    <hr>
 </ng-container>

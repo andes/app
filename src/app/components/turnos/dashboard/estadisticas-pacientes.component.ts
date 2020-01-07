@@ -13,7 +13,7 @@ import { LogPacienteService } from '../../../services/logPaciente.service';
 })
 
 export class EstadisticasPacientesComponent implements OnInit {
-
+    pacienteFields = ['sexo', 'fechaNacimiento', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
     nroCarpeta: any;
     _paciente: IPaciente;
     turnosPaciente: any;
