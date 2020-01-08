@@ -71,7 +71,7 @@ export class FiltrosSolicitudesComponent implements OnChanges {
     public estados = [
         { id: 'auditoria', nombre: 'AUDITORIA' },
         { id: 'pendiente', nombre: 'PENDIENTE' },
-        { id: 'rechazada', nombre: 'RECHAZADA' },
+        { id: 'rechazada', nombre: 'CONTRARREFERIDA' },
         { id: 'turnoDado', nombre: 'TURNO DADO' },
         { id: 'anulada', nombre: 'ANULADA' }
     ];

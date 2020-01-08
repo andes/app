@@ -7,14 +7,14 @@
     <div class="row"
          *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
         <div class="col">
-            <!-- Cuando la solicitud fue rechazada muestra los datos del rechazo -->
-            <b>Motivo de Rechazo</b>
+            <!-- Cuando la solicitud fue contrarreferida muestra los datos de la respuesta -->
+            <b>Respuesta</b>
             <br>
             <span class="text-left"
                   *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
                 {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo}}</span>
             <br>
-            <b>Usuario que rechaza</b>
+            <b>Usuario que responde</b>
             <br>
             <span class="text-left"
                   *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
@@ -24,7 +24,7 @@
     </div>
     <div class="row" *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'anulada'">
         <div class="col">
-            <!-- Cuando la solicitud fue rechazada muestra los datos del rechazo -->
+            <!-- Cuando la solicitud fue contrarreferida muestra los datos de la anulación -->
             <b>Motivo de Anulación</b>
             <br>
             <span class="text-left">
