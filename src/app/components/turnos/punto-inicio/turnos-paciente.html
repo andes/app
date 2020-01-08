@@ -62,7 +62,14 @@
                                             {{turno.espacioFisico.nombre}}
                                         </div>
                                     </div>
-                                    <div *ngIf="!turno.espacioFisico?.nombre" class="text-danger">Espacio
+                                    <div *ngIf="turno && turno.otroEspacioFisico">
+                                        <div class="col-md">
+                                            <strong>Espacio Físico</strong>
+                                            {{turno.otroEspacioFisico.nombre}}
+                                        </div>
+                                    </div>
+                                    <div *ngIf="!turno.espacioFisico?.nombre && !turno.otroEspacioFisico?.nombre"
+                                         class="text-danger">Espacio
                                         físico no asignado</div>
 
                                 </div>
