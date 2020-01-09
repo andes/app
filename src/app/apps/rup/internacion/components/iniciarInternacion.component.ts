@@ -190,8 +190,8 @@ export class IniciarInternacionComponent implements OnInit {
         } else if (this.paciente && this.paciente.id) {
             this.btnIniciarGuardar = 'INICIAR';
             this.servicioPrestacion.internacionesXPaciente(this.paciente, 'ejecucion', this.auth.organizacion.id).subscribe(resultado => {
-                // Si el paciente ya tiene una internacion en ejecucion (Puede ser que haya egresado pero aún no este validada la internacion)
-                if (resultado && resultado.length) {
+                // Si el paciente ya tiene una internacion en ejecucion (Puede que haya egresado pero aún la internacion no este validada)
+                if (resultado && resultado.ultimaInternacion) {
                     if (resultado.cama) {
                         this.plex.info('warning', 'El paciente registra una internación en ejecución y está ocupando una cama');
                         // Salimos del iniciar internacion
@@ -229,7 +229,7 @@ export class IniciarInternacionComponent implements OnInit {
                 } else {
                     // Chequeamos si el paciente tiene una internacion validad anterior para copiar los datos
                     this.servicioPrestacion.internacionesXPaciente(this.paciente, 'validada', null).subscribe(datosInternacion => {
-                        if (datosInternacion && datosInternacion.length) {
+                        if (datosInternacion && datosInternacion.ultimaInternacion) {
                             this.informeIngreso = this.buscarRegistroInforme(datosInternacion.ultimaInternacion);
                         }
                         this.buscandoPaciente = false;

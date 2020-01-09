@@ -331,7 +331,7 @@ export class MapaDeCamasComponent implements OnInit {
                 // vamos a liberar la cama
                 // this.prestacionDelPaciente(e.cama);
                 let dto = {
-                    fecha: e.egresoExiste.valor.InformeEgreso.fechaEgreso,
+                    fecha: e.egresoExiste.InformeEgreso.fechaEgreso,
                     estado: this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible',
                     unidadOrganizativa: e.cama.ultimoEstado.unidadOrganizativa ? e.cama.ultimoEstado.unidadOrganizativa : null,
                     especialidades: e.cama.ultimoEstado.especialidades ? e.cama.ultimoEstado.especialidades : null,
