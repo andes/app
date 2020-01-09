@@ -60,6 +60,7 @@ export class SolicitudesComponent implements OnInit {
         { id: 'pendiente', nombre: 'PENDIENTE' },
         { id: 'rechazada', nombre: 'CONTRARREFERIDA' },
         { id: 'turnoDado', nombre: 'TURNO DADO' },
+        { id: 'registroHUDS', nombre: 'REGISTRO EN HUDS' },
         { id: 'anulada', nombre: 'ANULADA' }
     ];
     public prioridad;
@@ -238,13 +239,17 @@ export class SolicitudesComponent implements OnInit {
                 ordenFechaDesc: true
             };
             if (this.estado) {
-                if (this.estado.id !== 'turnoDado') {
+
+                if (this.estado.id === 'turnoDado') {
+                    params['tieneTurno'] = true;
+                } else if (this.estado.id === 'registroHUDS') {
+                    params['tieneTurno'] = true;
+                    params['estados'] = ['validada'];
+                } else {
                     params['estados'] = [this.estado.id];
                     if (this.estado.id === 'pendiente') {
                         params['tieneTurno'] = false;
                     }
-                } else {
-                    params['tieneTurno'] = true;
                 }
             } else {
                 params['estados'] = [
