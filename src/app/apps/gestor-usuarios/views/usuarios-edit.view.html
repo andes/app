@@ -1,17 +1,11 @@
 <plex-layout [main]="4">
     <plex-layout-main>
-        <div justify="start">
+        <plex-title [titulo]="orgName" size="sm">
             <plex-button size="sm" label="VOLVER" (click)="volver()" type="danger"></plex-button>
-        </div>
+        </plex-title>
         <ng-container *ngIf="user$ | async as user">
             <gestor-usarios-usuario-detalle [usuario]="user"></gestor-usarios-usuario-detalle>
         </ng-container>
-        <div class="row">
-            <div class="col">
-                <label class="block"> Organizacion </label>
-                <span> {{ orgName }} </span>
-            </div>
-        </div>
         <plex-title titulo="Perfiles habilitados"></plex-title>
         <div class="list-group mt-2" *ngIf="arbolPermisos.length">
             <ng-container *ngFor="let perfil of perfiles">
