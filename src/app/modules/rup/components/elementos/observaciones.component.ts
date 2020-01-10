@@ -1,4 +1,4 @@
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { RupElement } from '.';
 
@@ -7,17 +7,31 @@ import { RupElement } from '.';
     templateUrl: 'observaciones.html'
 })
 @RupElement('ObservacionesComponent')
-export class ObservacionesComponent extends RUPComponent implements OnInit {
+export class ObservacionesComponent extends RUPComponent implements OnInit, AfterViewInit {
     public referentSet = [];
     // suscriptionSeccion: any;
     seleccionado: any;
     suscriptionBuscador: any;
+
+    // Se usa por un bug en el quill-editor al ser cargado dinamicamente.
+    afterInit = false;
+
+
+    ngAfterViewInit() {
+        setTimeout(() => {
+            this.afterInit = true;
+        }, 300);
+    }
+
     ngOnInit() {
         if (!this.params) {
             this.params = {};
         }
         this.params.required = this.params && this.params.required ? this.params.required : false;
         this.registro.valido = true;
+        if (!this.registro.valor || this.registro.valor.length === 0) {
+            this.afterInit = true;
+        }
         // Observa cuando cambia la propiedad 'Sistolica' en otro elemento RUP
         if (!this.soloValores) {
             this.conceptObserverService.observe(this.registro).subscribe((data) => {
