@@ -24,7 +24,6 @@ export class EtapaPubertadComponent extends RUPComponent implements OnInit {
             for (let i in this.conceptos) {
                 let concepto = this.conceptos[i];
                 let a = this.estaSeleccionado(concepto);
-                this.registro.valor[i] = {};
                 this.registro.valor[i] = a;
             }
         }

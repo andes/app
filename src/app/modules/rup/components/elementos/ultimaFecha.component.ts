@@ -56,7 +56,6 @@ export class UltimaFechaComponent extends RUPComponent implements OnInit {
 
                 // Se da vuelta el array, para que quede el último registro en la última posición del array (length - 1)
                 this.consultasValidadas = consultasPaciente;
-                // console.dir(this.consultasValidadas);
 
                 // Hay registros anteriores en la HUDS?
                 if (this.consultasValidadas && this.consultasValidadas.length > 0) {
@@ -72,7 +71,6 @@ export class UltimaFechaComponent extends RUPComponent implements OnInit {
                     // Si se encontro consulta se guardan registros
                     if (this.ultimaConsulta) {
                         this.registro.valor = this.ultimaConsulta.valor;
-                        console.dir(this.registro.valor);
                         this.calculaTiempo();
                         this.min = this.registro.valor;
                     }
@@ -84,24 +82,26 @@ export class UltimaFechaComponent extends RUPComponent implements OnInit {
     }
 
     calculaTiempo() {
-        let tiempo = null;
-        let hoy;
-        let anio;
-        let mes;
-
-        hoy = new Date();
         if (!isNullOrUndefined(this.registro.valor)) {
-            tiempo = new Date(hoy.getTime() - this.registro.valor.getTime());
-            anio = tiempo.getUTCFullYear() - 1970;
-            mes = tiempo.getUTCMonth();
-            if (anio > 100) {
-                this.alerta = '';
-            } else {
-                this.alerta = 'Han pasado: ' + anio + ' año/s y ' + mes + ' mes/es';
+            const tiempo = new Date(new Date().getTime() - this.registro.valor.getTime());
+            const dateStrArray = [];
+
+            const anios = tiempo.getUTCFullYear() - 1970;
+            if (anios > 0) {
+                dateStrArray.push(`${anios} año${anios > 1 ? 's' : ''}`);
             }
 
-        } else {
-            this.alerta = '';
+            const meses = tiempo.getUTCMonth();
+            if (meses > 0) {
+                dateStrArray.push(`${meses} mes${meses > 1 ? 'es' : ''}`);
+            }
+
+            const dias = tiempo.getUTCDate();
+            if (dias) {
+                dateStrArray.push(`${dias} dia${dias > 1 ? 's' : ''}`);
+            }
+            // Reemplaza la ultima coma por un "y"
+            this.alerta = `Han pasado ${dateStrArray.join(', ').replace(/(\b, \b)(?!.*\1)/, ' y ')}`;
         }
     }
 
