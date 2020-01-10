@@ -47,7 +47,7 @@ export class ListarSolicitudesComponent implements OnInit {
     public changeCarpeta = false;
 
     public filters: any = {
-        organizacion: this.auth.organizacion._id
+        organizacion: this.auth.organizacion.id
     };
 
     public verPrestar: Boolean = false;

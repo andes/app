@@ -190,7 +190,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             let fechaDesde = moment(this.fechaDesde).startOf('day');
             if (fechaDesde.isValid()) {
                 this.parametros['fechaDesde'] = fechaDesde.isValid() ? fechaDesde : moment().format();
-                this.parametros['organizacion'] = this.auth.organizacion._id;
+                this.parametros['organizacion'] = this.auth.organizacion.id;
                 this.fechaHasta = moment(this.fechaHasta).startOf('day');
             }
         }
@@ -198,7 +198,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             let fechaHasta = moment(this.fechaHasta).endOf('day');
             if (fechaHasta.isValid()) {
                 this.parametros['fechaHasta'] = fechaHasta.isValid() ? fechaHasta : moment().format();
-                this.parametros['organizacion'] = this.auth.organizacion._id;
+                this.parametros['organizacion'] = this.auth.organizacion.id;
                 this.fechaDesde = moment(this.fechaDesde).startOf('day');
             }
         }
@@ -291,7 +291,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.fechaHasta = moment(this.fechaHasta).endOf('day');
         this.parametros.fechaDesde = this.fechaDesde;
         this.parametros.fechaHasta = this.fechaHasta;
-        this.parametros.organizacion = this.auth.organizacion._id;
+        this.parametros.organizacion = this.auth.organizacion.id;
         this.parametros.skip = 0;
 
         if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {

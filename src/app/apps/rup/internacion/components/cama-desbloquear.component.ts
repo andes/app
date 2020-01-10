@@ -43,7 +43,7 @@ export class CamaDesbloquearComponent implements OnInit {
         this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
     }
     comprobarWorkflow() {
-        return this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id);
+        return this.internacionService.usaWorkflowCompleto(this.auth.organizacion.id);
     }
 
 

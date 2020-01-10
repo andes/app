@@ -38,7 +38,7 @@ export class ListarTurnosComponent implements OnInit {
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:agenda:puedeImprimir:').length > 0;
-        this.desplegarOS = this.auth.organizacion._id === '5a5e3f7e0bd5677324737244';
+        this.desplegarOS = this.auth.organizacion.id === '5a5e3f7e0bd5677324737244';
     }
 
     // Abre diálogo de impresión del navegador

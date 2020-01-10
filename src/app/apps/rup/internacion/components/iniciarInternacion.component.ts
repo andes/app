@@ -324,7 +324,7 @@ export class IniciarInternacionComponent implements OnInit {
             });
         } else {
             if (this.auth.profesional && !this.informeIngreso.profesional) {
-                this.servicioProfesional.get({ id: this.auth.profesional.id }).subscribe(resultado => {
+                this.servicioProfesional.get({ id: this.auth.profesional }).subscribe(resultado => {
                     if (resultado) {
                         this.informeIngreso.profesional = resultado[0] ? resultado[0] : null;
                         let callback = (resultado) ? resultado : null;

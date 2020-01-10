@@ -30,7 +30,7 @@ export class ListarPrestamosComponent implements OnInit {
     public marcarTodas: Boolean = false;
 
     public filters: any = {
-        organizacion: this.auth.organizacion._id
+        organizacion: this.auth.organizacion.id
     };
 
     public verDevolver: Boolean = false;

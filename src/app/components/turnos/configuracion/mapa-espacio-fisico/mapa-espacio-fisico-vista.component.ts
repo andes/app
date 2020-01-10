@@ -55,7 +55,7 @@ export class MapaEspacioFisicoVistaComponent implements OnInit {
         //     this.editar = true;
         // }
         // buscamos la organizacion para obtener el listado de edificios
-        this.organizacionService.getById(this.auth.organizacion._id).subscribe(organizacion => {
+        this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
             this.organizacion = organizacion;
             this.listadoEdificios = organizacion.edificio;
             // si la organizacion tiene un solo edificio definido lo agregamos como filtro por defecto

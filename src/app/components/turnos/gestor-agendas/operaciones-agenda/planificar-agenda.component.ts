@@ -128,7 +128,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     loadOrganizationData() {
-        this.organizacionService.getById(this.auth.organizacion._id).subscribe(org => {
+        this.organizacionService.getById(this.auth.organizacion.id).subscribe(org => {
             let organization: any = org;
             if (organization && organization.turnosMobile) {
                 this.mobileEnabled = organization.turnosMobile;
@@ -137,7 +137,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     loadSectores(event) {
-        this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(respuesta => {
+        this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion.id }).subscribe(respuesta => {
             let sectores = respuesta.map((ef) => {
                 return (typeof ef.sector !== 'undefined' && ef.sector.nombre !== '-' ? { nombre: ef.sector.nombre, id: ef.sector.id } : []);
             });

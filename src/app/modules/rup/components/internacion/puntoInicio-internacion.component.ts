@@ -60,32 +60,32 @@ export class PuntoInicioInternacionComponent implements OnInit {
     onPacienteSelected(paciente) {
         this.showLoader = true;
         this.pacienteSeleccionado = paciente;
-        this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, this.conceptosInternacion.epicrisis.term, this.auth.profesional.id, null, null).subscribe(hudsToken => {
-        window.sessionStorage.setItem('huds-token', hudsToken.token);
-        this.servicioPrestacion.internacionesXPaciente(paciente, 'ejecucion', this.auth.organizacion.id).subscribe(resultado => {
-            // Si el paciente ya tiene una internacion en ejecucion
-            if (resultado && resultado.length) {
-                this.servicioPrestacion.get({ idPrestacionOrigen: resultado.ultimaInternacion.id }).subscribe(prestacionExiste => {
-                    if (prestacionExiste.length) {
-                        this.internacionEjecucion = prestacionExiste[0];
-                        this.showInternacionEjecucion = true;
-                    }
-                });
-            } else {
-                this.showInternacionEjecucion = false;
-            }
+        this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, this.conceptosInternacion.epicrisis.term, this.auth.profesional, null, null).subscribe(hudsToken => {
+            window.sessionStorage.setItem('huds-token', hudsToken.token);
+            this.servicioPrestacion.internacionesXPaciente(paciente, 'ejecucion', this.auth.organizacion.id).subscribe(resultado => {
+                // Si el paciente ya tiene una internacion en ejecucion
+                if (resultado && resultado.length) {
+                    this.servicioPrestacion.get({ idPrestacionOrigen: resultado.ultimaInternacion.id }).subscribe(prestacionExiste => {
+                        if (prestacionExiste.length) {
+                            this.internacionEjecucion = prestacionExiste[0];
+                            this.showInternacionEjecucion = true;
+                        }
+                    });
+                } else {
+                    this.showInternacionEjecucion = false;
+                }
+            });
+            this.servicioPrestacion.getPrestacionesXtipo(paciente.id, this.conceptosInternacion.epicrisis.conceptId).subscribe(epicrisis => {
+                this.epicrisisPaciente = epicrisis
+                    .map(e => {
+                        if (e.ejecucion.registros.length > 0 && e.ejecucion.registros[0] && e.ejecucion.registros[0].registros.length > 0) {
+                            e.ejecucion.registros[0].registros[0].valor = e.ejecucion.registros[0].registros[0].valor.substring(0, 100);
+                        }
+                        return e;
+                    });
+                this.showLoader = false;
+            });
         });
-        this.servicioPrestacion.getPrestacionesXtipo(paciente.id, this.conceptosInternacion.epicrisis.conceptId).subscribe(epicrisis => {
-            this.epicrisisPaciente = epicrisis
-            .map(e => {
-                    if (e.ejecucion.registros.length > 0 && e.ejecucion.registros[0] && e.ejecucion.registros[0].registros.length > 0) {
-                        e.ejecucion.registros[0].registros[0].valor = e.ejecucion.registros[0].registros[0].valor.substring(0, 100);
-                    }
-                    return e;
-                });
-            this.showLoader = false;
-        });
-    });
     }
 
     /**

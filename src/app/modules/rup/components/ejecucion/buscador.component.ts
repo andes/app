@@ -206,7 +206,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     private inicializarFrecuentesProfesional() {
         const queryFP = {
-            'idProfesional': this.auth.profesional.id,
+            'idProfesional': this.auth.profesional,
             'tipoPrestacion': this.conceptoFrecuente.conceptId,
             'idOrganizacion': this.auth.organizacion.id,
         };

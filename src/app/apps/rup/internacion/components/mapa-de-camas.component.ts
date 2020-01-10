@@ -132,7 +132,7 @@ export class MapaDeCamasComponent implements OnInit {
         }]);
 
         this.filtros.opciones.censo = enumerados.getObjCenso();
-        this.isWorkflowCompleto = this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id);
+        this.isWorkflowCompleto = this.internacionService.usaWorkflowCompleto(this.auth.organizacion.id);
         this.altaBajaCama = this.auth.getPermissions('internacion:cama:create?').length > 0 && this.auth.getPermissions('internacion:cama:baja?').length > 0;
 
         let cachePrestacion = this.cacheService.getData();
@@ -150,7 +150,7 @@ export class MapaDeCamasComponent implements OnInit {
         this.limpiarFiltros();
         this.filtros.opciones.censo = enumerados.getObjCenso();
         this.loader = true;
-        this.camasService.getCamasXFecha(this.auth.organizacion._id, this.fecha).subscribe(camas => {
+        this.camasService.getCamasXFecha(this.auth.organizacion.id, this.fecha).subscribe(camas => {
             this.camas = camas;
             this.countFiltros();
             this.loader = false;
@@ -331,8 +331,13 @@ export class MapaDeCamasComponent implements OnInit {
                 // vamos a liberar la cama
                 // this.prestacionDelPaciente(e.cama);
                 let dto = {
+<<<<<<< HEAD
                     fecha: e.egresoExiste.InformeEgreso.fechaEgreso,
                     estado: this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible',
+=======
+                    fecha: e.egresoExiste.valor.InformeEgreso.fechaEgreso,
+                    estado: this.internacionService.usaWorkflowCompleto(this.auth.organizacion.id) ? 'desocupada' : 'disponible',
+>>>>>>> feat(core): reduce el tamaño del token
                     unidadOrganizativa: e.cama.ultimoEstado.unidadOrganizativa ? e.cama.ultimoEstado.unidadOrganizativa : null,
                     especialidades: e.cama.ultimoEstado.especialidades ? e.cama.ultimoEstado.especialidades : null,
                     esCensable: e.cama.ultimoEstado.esCensable,
@@ -742,7 +747,7 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     buscarHistorial() {
-        this.camasService.getHistorialCama(this.auth.organizacion._id, moment(this.fechaDesde).startOf('day').toDate(), moment(this.fechaHasta).endOf('day').toDate(), this.camaSeleccionada.id).subscribe(historial => {
+        this.camasService.getHistorialCama(this.auth.organizacion.id, moment(this.fechaDesde).startOf('day').toDate(), moment(this.fechaHasta).endOf('day').toDate(), this.camaSeleccionada.id).subscribe(historial => {
             this.inicioBusqueda = true;
             if (historial.length > 0) {
                 this.historial = historial;

@@ -162,10 +162,11 @@ export class PrestacionCrearComponent implements OnInit {
                     fecha: this.fecha,
                     tipoPrestacion: conceptoSnomed,
                     // profesional logueado
-                    profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    profesional: {
+                        id: this.auth.profesional,
+                        nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido,
+                        documento: this.auth.usuario.documento
                     },
                     // organizacion desde la que se solicita la prestacion
                     organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
@@ -184,7 +185,7 @@ export class PrestacionCrearComponent implements OnInit {
             this.disableGuardar = true;
             if (pacientePrestacion) {
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
-                const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.paciente, 'Fuera de agenda', this.auth.profesional.id, null, this.tipoPrestacionSeleccionada.id);
+                const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.paciente, 'Fuera de agenda', this.auth.profesional, null, this.tipoPrestacionSeleccionada.id);
                 const nuevaPrest = this.servicioPrestacion.post(nuevaPrestacion);
                 const res = concat(token, nuevaPrest);
 
@@ -223,7 +224,7 @@ export class PrestacionCrearComponent implements OnInit {
             fechaDesde: moment(new Date()).startOf('day').toDate(),
             estados: ['disponible', 'publicada'],
             organizacion: this.auth.organizacion.id,
-            profesionales: [this.auth.profesional.id]
+            profesionales: [this.auth.profesional]
         };
         this.servicioAgenda.get(params).subscribe(agendas => {
             this.agendasAutocitar = agendas;
@@ -288,20 +289,27 @@ export class PrestacionCrearComponent implements OnInit {
                     hallazgos: [],
                     prestacionOrigen: null,
                     // profesional logueado
-                    profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    profesional: {
+                        id: this.auth.profesional,
+                        nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido,
+                        documento: this.auth.usuario.documento
                     },
                     // organizacion desde la que se solicita la prestacion
-                    organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.id.nombre },
+                    organizacion: {
+                        id: this.auth.organizacion.id,
+                        nombre: this.auth.organizacion.nombre
+                    },
                 },
                 ejecucion: {
                     fecha: new Date(),
                     registros: [],
                     turno: unPacientePresente.turno.id,
                     // organizacion desde la que se solicita la prestacion
-                    organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.id.nombre }
+                    organizacion: {
+                        id: this.auth.organizacion.id,
+                        nombre: this.auth.organizacion.nombre
+                    }
                 },
                 estados: {
                     fecha: new Date(),

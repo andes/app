@@ -26,7 +26,7 @@ export class PlantillasService {
             const params = {
                 conceptId,
                 organizacion: this.auth.organizacion.id,
-                profesional: this.auth.profesional && this.auth.profesional.id
+                profesional: this.auth.profesional
             };
             return this.server.get(this.url, { params }).pipe(map(plantillas => {
                 if (plantillas.length > 0) {

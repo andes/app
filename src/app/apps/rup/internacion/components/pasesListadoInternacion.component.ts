@@ -166,7 +166,7 @@ export class PasesListadoInternacionComponent implements OnInit {
                 let paciente = this.cama.estados.paciente;
                 let idInternacion = this.cama.estados.idInternacion;
                 if (this.opcionDesocupar === 'movimiento' || this.opcionDesocupar === 'pase') {
-                    let nuevoEstado = this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible';
+                    let nuevoEstado = this.internacionService.usaWorkflowCompleto(this.auth.organizacion.id) ? 'desocupada' : 'disponible';
                     const fechaMovimiento = this.internacionService.combinarFechas(this.fecha, this.hora);
                     // Primero desocupamos la cama donde esta el paciente actualmente
                     this.camasService.cambioEstadoMovimiento(this.cama._id, this.cama.estados, nuevoEstado, fechaMovimiento, null, null, this.PaseAunidadOrganizativa).subscribe(camaActualizada => {

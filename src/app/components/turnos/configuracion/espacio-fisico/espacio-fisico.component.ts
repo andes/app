@@ -46,7 +46,7 @@ export class EspacioFisicoComponent implements OnInit {
             'servicio': this.filtros && this.filtros.servicio,
             'sector': this.filtros && this.filtros.sector,
             'activo': this.filtros && this.filtros.activo,
-            'organizacion': this.auth.organizacion._id
+            'organizacion': this.auth.organizacion.id
         };
 
         this.espacioFisicoService.get(parametros).subscribe(

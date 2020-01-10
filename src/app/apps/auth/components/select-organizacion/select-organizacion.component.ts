@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -36,10 +36,12 @@ export class SelectOrganizacionComponent implements OnInit {
 
     seleccionar(organizacion) {
         this.auth.setOrganizacion(organizacion).subscribe(() => {
-            this.organizacionService.configuracion(this.auth.organizacion.id).subscribe(() => { });
-            this.plex.updateUserInfo({ usuario: this.auth.usuario });
-            this.appComponent.checkPermissions();
-            this.router.navigate(['inicio']);
+            this.auth.session().subscribe(() => {
+                this.organizacionService.configuracion(this.auth.organizacion.id).subscribe(() => { });
+                this.plex.updateUserInfo({ usuario: this.auth.usuario });
+                this.appComponent.checkPermissions();
+                this.router.navigate(['inicio']);
+            });
         }, (err) => {
             this.plex.info('danger', 'Error al seleccionar organización');
         });
