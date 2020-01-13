@@ -25,9 +25,7 @@
                         </plex-datetime>
                     </div>
                     <div class="col-3">
-                        <plex-text [(ngModel)]="paciente" name="paciente" (change)="filtrarPaciente()"
-                                   label="Buscar paciente">
-                        </plex-text>
+                        <plex-text [(ngModel)]="paciente" name="paciente" (change)="onPacienteChange()" label="Buscar paciente" debounce="400"></plex-text>
                     </div>
                     <div class="col-1 text-right">
                         <label>
@@ -50,7 +48,7 @@
                         </plex-select>
                     </div>
                     <div class="col-3">
-                        <plex-select [(ngModel)]="estado" (change)="cargarSolicitudes()" [data]="estados" name="estado"
+                        <plex-select [(ngModel)]="estado" [data]="estados" name="estado"
                                      label="Estado" ngModelOptions="{standalone: true}" (change)="cargarSolicitudes()">
                         </plex-select>
                     </div>
@@ -69,7 +67,7 @@
                         <div class="row">
 
                             <div class="col-12">
-                                <ng-container *ngIf="!prestaciones.length">
+                                <ng-container *ngIf="!(prestacionesEntrada?.length)">
                                     <tr>
                                         <td colspan="3">
                                             <i class="mdi mdi-emoticon-sad"></i> No hay Solicitudes
@@ -81,7 +79,8 @@
                                 </ng-container>
                             </div>
                             <div class="col-12">
-                                <table *ngIf="prestaciones?.length" class="table table-striped table-sm">
+
+                                <table *ngIf="prestacionesEntrada?.length" class="table table-striped table-sm table-lista-solicitudes" >
                                     <thead>
                                         <th>Fecha</th>
                                         <th>Paciente</th>
@@ -92,8 +91,8 @@
                                         <th>Prioridad</th>
                                         <th>Estado</th>
                                         <th>Operaciones</th>
-                                    </thead>
-                                    <tbody>
+                                    </thead>        
+                                    <tbody infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolled)="onScroll()" [scrollWindow]="false" >
                                         <tr *ngFor="let prestacion of prestacionesEntrada; let i=index" class="hover"
                                             [ngClass]="{'bg-inverse text-white': (prestacion.seleccionada===true)}">
                                             <td (click)="seleccionar(prestacion)">{{prestacion.solicitud.fecha
@@ -182,7 +181,7 @@
                         <div class="row">
 
                             <div class="col-12">
-                                <ng-container *ngIf="!prestaciones.length">
+                                <ng-container *ngIf="!(prestacionesSalida?.length)">
                                     <tr>
                                         <td colspan="3">
                                             <i class="mdi mdi-emoticon-sad"></i> No hay Solicitudes
@@ -194,7 +193,7 @@
                                 </ng-container>
                             </div>
                             <div class="col-12 ">
-                                <table *ngIf="prestaciones?.length" class="table table-striped table-sm">
+                                <table *ngIf="prestacionesSalida?.length" class="table table-striped table-sm table-lista-solicitudes">
                                     <thead>
                                         <th>Fecha</th>
                                         <th>Paciente</th>
@@ -205,7 +204,7 @@
                                         <th>Estado</th>
                                         <th>Operaciones</th>
                                     </thead>
-                                    <tbody>
+                                    <tbody infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolled)="onScroll()" [scrollWindow]="false">
                                         <tr *ngFor="let prestacion of prestacionesSalida; let i=index" class="hover"
                                             (click)="seleccionar(prestacion)"
                                             [ngClass]="{'bg-inverse text-white': (prestacion.seleccionada===true)}">
