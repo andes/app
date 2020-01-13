@@ -45,6 +45,9 @@ export class CensosDiariosComponent implements OnInit {
     }
 
     generarCensoDiario() {
+        this.censoPacientes = [];
+        this.censo = {};
+
         this.mapaCamasService.censoDiario(moment(this.fecha).toDate(), this.selectedUnidadOranizativa.id)
             .subscribe((censoDiario: any) => {
                 this.censo = {

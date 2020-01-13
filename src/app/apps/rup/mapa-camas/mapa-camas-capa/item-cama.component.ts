@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 
@@ -12,11 +12,11 @@ export class ItemCamaComponent implements OnInit {
     @Input() cama: any;
     @Input() estados: any;
     @Input() relaciones: any;
-
+    @Input() selected: boolean;
     @Output() accionCama = new EventEmitter<any>();
 
-    estadoActual: any;
-    destinos = [];
+    public estadoCama;
+    public relacionesPosibles;
 
     constructor(
         public auth: Auth,
@@ -24,11 +24,26 @@ export class ItemCamaComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.estadoActual = this.estados.filter(est => this.cama.estado === est.key)[0];
+        this.getEstadosRelacionesCama();
+    }
+
+    // tslint:disable-next-line:use-lifecycle-interface
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes && this.estadoCama) {
+            if (this.cama.estado !== this.estadoCama.key) {
+                this.getEstadosRelacionesCama();
+            }
+        }
+
+    }
+
+    getEstadosRelacionesCama() {
+        this.relacionesPosibles = [];
+        this.estadoCama = this.estados.filter(est => this.cama.estado === est.key)[0];
         this.estados.map(est => this.relaciones.map(rel => {
-            if (this.estadoActual.key === rel.origen) {
-                if (est.key === rel.destino) {
-                    this.destinos.push(est);
+            if (this.estadoCama.key === rel.origen) {
+                if (est.key === rel.destino && rel.destino !== 'inactiva') {
+                    this.relacionesPosibles.push(rel);
                 }
             }
         }));
@@ -38,7 +53,7 @@ export class ItemCamaComponent implements OnInit {
         this.router.navigate([`/internacion/cama/${this.capa}/${this.cama._id}`]);
     }
 
-    accion(estadoDestino) {
-        this.accionCama.emit({ cama: this.cama, estadoDestino });
+    accion(relacion) {
+        this.accionCama.emit({ cama: this.cama, relacion });
     }
 }

@@ -24,16 +24,33 @@
                     <th>ACCIONES</th>
                 </tr>
                 <tr app-item-cama *ngFor="let cama of camas | async" [cama]="cama" [estados]="estados"
-                    [relaciones]="relaciones" [capa]="capa" (accionCama)="accionCama($event)">
+                    [relaciones]="relaciones" [capa]="capa" [selected]="(selectedCama && cama._id === selectedCama._id)"
+                    (accionCama)="selectCama($event)"
+                    [ngClass]="{'invert': (selectedCama && cama._id === selectedCama._id)}">
                 </tr>
             </table>
         </fieldset>
     </plex-layout-main>
-
     <plex-layout-sidebar type="invert" *ngIf="snapshot">
-        <app-estado-servicio *ngIf="!selectedCama && !estadoDestino" [fecha]="fecha" [camas]="snapshot"
-                             [estados]="estados" (buscarEstados)="getSnapshot($event)"></app-estado-servicio>
-        <app-ingresar-paciente *ngIf="selectedCama && estadoDestino === 'ocupada'" [fecha]="fecha" [cama]="selectedCama"
-                               (cancelIngreso)="cancelIngreso()"></app-ingresar-paciente>
+        <app-estado-servicio *ngIf="!accion" [fecha]="fecha" [camas]="snapshot" [estados]="estados"
+                             [relaciones]="relaciones" (buscarEstados)="getSnapshot($event)">
+        </app-estado-servicio>
+        <app-ingresar-paciente *ngIf="accion === 'internarPaciente'" [fecha]="fecha" [camas]="opcionesCamas"
+                               [selectedCama]="selectedCama" (cancel)="volverAResumen()"
+                               (cambiarFecha)="getSnapshot($event)" (cambiarCama)="cambiarCama($event)"
+                               (refresh)="refresh($event)">
+        </app-ingresar-paciente>
+        <app-desocupar-cama *ngIf="accion === 'desocuparCama'" [fecha]="fecha" [selectedCama]="selectedCama"
+                            (cancel)="volverAResumen()" (cambiarFecha)="getSnapshot($event)"
+                            (accionDesocupar)="accionDesocupar($event)">
+        </app-desocupar-cama>
+        <app-egresar-paciente *ngIf="accion === 'egresarPaciente'" [fecha]="fecha" [capa]="capa"
+                              [selectedCama]="selectedCama" [unidadesOrganizativas]="unidadesOrganizativas"
+                              (refresh)="refresh($event)">
+        </app-egresar-paciente>
+        <app-cama-destino-generico *ngIf="accion === 'destinoGenerico'" [fecha]=" fecha" [camas]="opcionesCamas"
+                                   [selectedCama]="selectedCama" [destino]="estadoDestino" (cancel)="volverAResumen()"
+                                   (cambiarFecha)="getSnapshot($event)" (cambiarCama)="cambiarCama($event)">
+        </app-cama-destino-generico>
     </plex-layout-sidebar>
 </plex-layout>

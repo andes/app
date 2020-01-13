@@ -1,7 +1,14 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { ProfesionalService } from '../../../../services/profesional.service';
+import { OcupacionService } from '../../../../services/ocupacion/ocupacion.service';
+import { OrganizacionService } from '../../../../services/organizacion.service';
+import { SnomedExpression } from '../../../mitos';
+import { IPrestacionRegistro } from '../../../../modules/rup/interfaces/prestacion.registro.interface';
+import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
+import { MapaCamasService } from '../mapa-camas.service';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -10,28 +17,110 @@ import { Plex } from '@andes/plex';
 
 export class IngresarPacienteComponent implements OnInit {
     @Input() fecha: Date;
-    @Input() cama: any;
+    @Input() selectedCama: any;
+    @Input() camas: any;
 
-    @Output() cancelIngreso = new EventEmitter<any>();
+    @Output() cancel = new EventEmitter<any>();
+    @Output() cambiarFecha = new EventEmitter<any>();
+    @Output() cambiarCama = new EventEmitter<any>();
+    @Output() refresh = new EventEmitter<any>();
 
-    pacientes = [];
-    pacienteSelected: any;
+    public ambito = 'internacion';
+    public capa: string;
+
+    public expr = SnomedExpression;
+    public fechaValida = true;
+
+    public pacientes = [];
+    public paciente: any;
+    public obraSocial: any;
+    public origenExterno = false;
+    public datosBasicos = false;
+
+    public informeIngreso = {
+        fechaIngreso: new Date(),
+        horaNacimiento: new Date(),
+        edadAlIngreso: null,
+        origen: null,
+        ocupacionHabitual: null,
+        situacionLaboral: null,
+        nivelInstruccion: null,
+        especialidades: [],
+        asociado: null,
+        obraSocial: null,
+        nroCarpeta: null,
+        motivo: null,
+        organizacionOrigen: null,
+        profesional: null,
+        PaseAunidadOrganizativa: null
+    };
+
+    public snomedIngreso = {
+        fsn: 'documento de solicitud de admisión (elemento de registro)',
+        semanticTag: 'elemento de registro',
+        refsetIds: ['900000000000497000'],
+        conceptId: '721915006',
+        term: 'documento de solicitud de admisión'
+    };
+
+    public pacienteAsociado = [
+        { id: 'Plan de salud privado o Mutual', nombre: 'Plan de salud privado o Mutual' },
+        { id: 'Plan o Seguro público', nombre: 'Plan o Seguro público' },
+        { id: 'Ninguno', nombre: 'Ninguno' }
+    ];
+
+    public origenHospitalizacion = [
+        { id: 'consultorio externo', nombre: 'Consultorio externo' },
+        { id: 'emergencia', nombre: 'Emergencia' },
+        { id: 'traslado', nombre: 'Traslado' },
+        { id: 'sala de parto', nombre: 'Sala de parto' },
+        { id: 'otro', nombre: 'Otro' }
+    ];
+
+    public nivelesInstruccion = [
+        { id: 'ninguno', nombre: 'Ninguno' },
+        { id: 'primario incompleto', nombre: 'Primario incompleto' },
+        { id: 'primario completo', nombre: 'Primario completo' },
+        { id: 'secundario incompleto', nombre: 'Secundario incompleto' },
+        { id: 'secundario completo', nombre: 'Secundario completo' },
+        { id: 'Ciclo EGB (1 y 2) incompleto', nombre: 'Ciclo EGB (1 y 2) incompleto' },
+        { id: 'Ciclo EGB (1 y 2) completo', nombre: 'Ciclo EGB (1 y 2) completo' },
+        { id: 'Ciclo EGB 3 incompleto', nombre: 'Ciclo EGB 3 incompleto' },
+        { id: 'Ciclo EGB 3 completo', nombre: 'Ciclo EGB 3 completo' },
+        { id: 'Polimodal incompleto', nombre: 'Polimodal incompleto' },
+        { id: 'Polimodal completo', nombre: 'Polimodal completo' },
+        { id: 'terciario/universitario incompleto', nombre: 'Terciario/Universitario incompleto' },
+        { id: 'terciario/universitario completo', nombre: 'Terciario/Universitario completo' }
+    ];
+
+    public situacionesLaborales = [
+        { id: 1, nombre: 'Trabaja o está de licencia' },
+        { id: 2, nombre: 'No trabaja y busca trabajo' },
+        { id: 3, nombre: 'No trabaja y no busca trabajo' }
+    ];
+
     constructor(
         private plex: Plex,
-        public auth: Auth,
-        private router: Router,
+        private route: ActivatedRoute,
+        private servicioProfesional: ProfesionalService,
+        private ocupacionService: OcupacionService,
+        private organizacionService: OrganizacionService,
+        private servicioPrestacion: PrestacionesService,
+        private mapaCamasService: MapaCamasService,
     ) { }
 
     ngOnInit() {
-
+        this.route.paramMap.subscribe(params => {
+            this.capa = params.get('capa');
+        });
     }
 
     cancelar() {
-        this.cancelIngreso.emit();
+        this.cancel.emit();
     }
 
     onPacienteSelected(event) {
-        this.pacienteSelected = event;
+        this.paciente = event;
     }
 
     searchStart() {
@@ -44,5 +133,231 @@ export class IngresarPacienteComponent implements OnInit {
         } else {
             this.pacientes = resultado.pacientes;
         }
+    }
+
+    loadProfesionales(event) {
+        let listaProfesionales = [];
+        if (event.query) {
+            let query = {
+                nombreCompleto: event.query
+            };
+            this.servicioProfesional.get(query).subscribe(resultado => {
+                listaProfesionales = resultado;
+                event.callback(listaProfesionales);
+
+            });
+        } else {
+            event.callback(listaProfesionales);
+        }
+    }
+
+    loadOrganizacion(event) {
+        if (event.query) {
+            let query = {
+                nombre: event.query
+            };
+            this.organizacionService.get(query).subscribe(event.callback);
+        } else {
+            let organizacionSalida = [];
+            if (this.informeIngreso && this.informeIngreso.organizacionOrigen) {
+                organizacionSalida = [this.informeIngreso.organizacionOrigen];
+            }
+            event.callback(organizacionSalida);
+        }
+    }
+
+    getOcupaciones(event) {
+        let ocupacionesHabituales = [];
+        if (event && event.query) {
+            let query = {
+                nombre: event.query
+            };
+            this.ocupacionService.getParams(query).subscribe((rta) => {
+                rta.map(dato => { dato.nom = '(' + dato.codigo + ') ' + dato.nombre; });
+
+                ocupacionesHabituales = rta;
+                event.callback(ocupacionesHabituales);
+            });
+        } else {
+            let ocupacionHabitual = [];
+            if (this.informeIngreso.ocupacionHabitual) {
+                ocupacionHabitual = [this.informeIngreso.ocupacionHabitual];
+            }
+            event.callback(ocupacionHabitual);
+        }
+    }
+
+    changeOrigenHospitalizacion(event) {
+        if (event.value) {
+            if (event.value.id === 'traslado') {
+                this.origenExterno = true;
+            } else {
+                this.origenExterno = false;
+                this.informeIngreso.organizacionOrigen = null;
+            }
+        }
+    }
+
+    cambiarFechaIngreso(fecha) {
+        if (fecha <= moment().toDate()) {
+            this.fechaValida = true;
+            this.cambiarFecha.emit(fecha);
+        } else {
+            this.fechaValida = false;
+        }
+    }
+
+    cambiarSeleccionCama() {
+        this.cambiarCama.emit(this.selectedCama);
+    }
+
+    toggleDatos() {
+        this.datosBasicos = !this.datosBasicos;
+    }
+
+    calcularEdad(fechaNacimiento: Date, fechaCalculo: Date): any {
+        let edad: any;
+        let fechaNac: any;
+        let fechaActual: Date = fechaCalculo ? fechaCalculo : new Date();
+        let fechaAct: any;
+        let difAnios: any;
+        let difDias: any;
+        let difMeses: any;
+        let difD: any;
+        let difHs: any;
+        let difMn: any;
+
+        fechaNac = moment(fechaNacimiento, 'YYYY-MM-DD HH:mm:ss');
+        fechaAct = moment(fechaActual, 'YYYY-MM-DD HH:mm:ss');
+        difDias = fechaAct.diff(fechaNac, 'd'); // Diferencia en días
+        difAnios = Math.floor(difDias / 365.25);
+        difMeses = Math.floor(difDias / 30.4375);
+        difHs = fechaAct.diff(fechaNac, 'h'); // Diferencia en horas
+        difMn = fechaAct.diff(fechaNac, 'm'); // Diferencia en minutos
+
+        if (difAnios !== 0) {
+            edad = {
+                valor: difAnios,
+                unidad: 'año/s'
+            };
+        } else if (difMeses !== 0) {
+            edad = {
+                valor: difMeses,
+                unidad: 'mes/es'
+            };
+        } else if (difDias !== 0) {
+            edad = {
+                valor: difDias,
+                unidad: 'día/s'
+            };
+        } else if (difHs !== 0) {
+            edad = {
+                valor: difHs,
+                unidad: 'hora/s'
+            };
+        } else if (difMn !== 0) {
+            edad = {
+                valor: difMn,
+                unidad: 'minuto/s'
+            };
+        }
+
+        return (String(edad.valor) + ' ' + edad.unidad);
+    }
+
+    cambiarPaciente() {
+        this.paciente = null;
+        this.datosBasicos = false;
+    }
+
+    guardar(valid) {
+        if (valid.formValid) {
+            let fechaIngreso = moment(this.fecha).toDate();
+
+            // Verificamos si es de origen externo
+            if (this.origenExterno) {
+                this.informeIngreso.organizacionOrigen = {
+                    id: this.informeIngreso.organizacionOrigen.id,
+                    nombre: this.informeIngreso.organizacionOrigen.nombre
+                };
+            }
+
+            // construimos el informe de ingreso
+            this.informeIngreso.situacionLaboral = (this.informeIngreso.situacionLaboral) ? this.informeIngreso.situacionLaboral.nombre : null;
+            this.informeIngreso.nivelInstruccion = (Object(this.informeIngreso.nivelInstruccion).nombre);
+            this.informeIngreso.asociado = (Object(this.informeIngreso.asociado).nombre);
+            this.informeIngreso.origen = (Object(this.informeIngreso.origen).nombre);
+            this.informeIngreso.PaseAunidadOrganizativa = this.informeIngreso.PaseAunidadOrganizativa;
+            this.informeIngreso.fechaIngreso = fechaIngreso;
+            if (this.paciente.fechaNacimiento) {
+                this.informeIngreso.edadAlIngreso = this.calcularEdad(this.paciente.fechaNacimiento, this.informeIngreso.fechaIngreso);
+
+            }
+
+            // armamos dto con datos principales del paciente
+            let dtoPaciente = {
+                id: this.paciente.id,
+                documento: this.paciente.documento,
+                nombre: this.paciente.nombre,
+                apellido: this.paciente.apellido,
+                sexo: this.paciente.sexo,
+                genero: this.paciente.genero,
+                fechaNacimiento: this.paciente.fechaNacimiento,
+                direccion: this.paciente.direccion,
+                telefono: this.paciente.telefono
+            };
+
+            if (this.selectedCama.idInternacion) {
+                console.log(this.selectedCama);
+            } else {
+                this.guardarPrestacion(dtoPaciente);
+            }
+        }
+    }
+
+    guardarPrestacion(paciente) {
+        // armamos el elemento data a agregar al array de registros
+        let nuevoRegistro = new IPrestacionRegistro(null, this.snomedIngreso);
+
+        nuevoRegistro.valor = { informeIngreso: this.informeIngreso };
+
+        // armamos dto con datos principales del profesional
+        let dtoProfesional = {
+            id: this.informeIngreso.profesional.id,
+            documento: this.informeIngreso.profesional.documento,
+            nombre: this.informeIngreso.profesional.nombre,
+            apellido: this.informeIngreso.profesional.apellido
+        };
+
+        // creamos la prestacion de internacion y agregamos el registro de ingreso
+        let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, PrestacionesService.InternacionPrestacion, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso, null, dtoProfesional);
+        nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
+        nuevaPrestacion.paciente['_id'] = this.paciente.id;
+
+        if (this.obraSocial) {
+            nuevaPrestacion.solicitud.obraSocial = { codigoPuco: this.obraSocial.codigoFinanciador, nombre: this.obraSocial.nombre };
+        }
+
+        this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+            if (this.selectedCama) {
+                // Se modifica el estado de la cama
+                this.selectedCama.estado = 'ocupada';
+                this.selectedCama.idInternacion = prestacion.id;
+                this.selectedCama.paciente = paciente;
+
+                this.mapaCamasService.patchCama(this.selectedCama, this.ambito, this.capa, this.fecha).subscribe(camaActualizada => {
+                    this.plex.info('success', 'Paciente internado');
+                    this.refresh.emit({ cama: this.selectedCama, accion: 'internarPaciente' });
+                }, (err1) => {
+                    this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
+                });
+            } else if (this.capa === 'estadistica') {
+                this.plex.info('warning', 'Paciente ingresado a lista de espera');
+                this.refresh.emit({ cama: this.selectedCama, accion: 'listaDeEspera' });
+            }
+
+        }, (err) => {
+            this.plex.info('danger', 'ERROR: La prestación no pudo ser registrada');
+        });
     }
 }

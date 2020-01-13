@@ -23,18 +23,19 @@ export class MapaCamasService {
         });
     }
 
-    patchCama(cama, ambito, capa, fecha) {
+    patchCama(data, ambito, capa, fecha) {
         let params = {
-            ...cama, ambito, capa, fecha
+            ...data, ambito, capa, fecha
         };
-        if (cama._id) {
-            return this.server.patch(this.url + `/camas/${cama._id}`, {
+        if (data._id) {
+            console.log(data._id);
+            return this.server.patch(this.url + `/camas/${data._id}`, {
                 params,
                 showError: true
             });
         } else {
             return this.server.post(this.url + `/camas`, {
-                params: { ...cama, ambito, capa },
+                params: { ...data, ambito, capa },
                 showError: true
             });
         }

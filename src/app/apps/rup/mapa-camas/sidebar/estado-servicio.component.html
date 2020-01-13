@@ -6,12 +6,15 @@
     </plex-datetime>
 </plex-title>
 <ng-container *ngIf="camasXEstado">
-    <div class="row" *ngFor="let estado of estados">
-        <div class="col" *ngIf="camasXEstado[estado.key]">
-            <div>
-                <i class="adi adi-cama"></i>
-            </div>
-            <p>Camas {{estado.label}}: {{camasXEstado[estado.key].length}}</p>
-        </div>
+    <div class="container-resumen">
+        <app-icono-camita icono="adi adi-cama" class="subcontainer-resumen total" nombre="Totales"
+                          [cantidad]="camas.length">
+        </app-icono-camita>
+        <ng-container *ngFor="let estado of estados">
+            <app-icono-camita [icono]="estado.icon" [class]="'subcontainer-resumen ' + estado.key"
+                              [nombre]="estado.label + 's'"
+                              [cantidad]="camasXEstado[estado.key] ? camasXEstado[estado.key].length : 0">
+            </app-icono-camita>
+        </ng-container>
     </div>
 </ng-container>

@@ -359,6 +359,10 @@ import { EstadoServicioComponent } from './apps/rup/mapa-camas/sidebar/estado-se
 import { IngresarPacienteComponent } from './apps/rup/mapa-camas/sidebar/ingresar-paciente.component';
 import { MapaCamasService } from './apps/rup/mapa-camas/mapa-camas.service';
 import { CensosMensualesComponent } from './apps/rup/mapa-camas/censos/censo-mensual/censo-mensual.component';
+import { IconoCamitaComponent } from './apps/rup/mapa-camas/sidebar/icono-camita.component';
+import { CamaDestinoGenericoComponent } from './apps/rup/mapa-camas/sidebar/cama-destino-generico.component';
+import { CamaDesocuparComponent } from './apps/rup/mapa-camas/sidebar/desocupar-cama.component';
+import { EgresarPacienteComponent } from './apps/rup/mapa-camas/sidebar/egresar-paciente.component';
 
 let mapaCamasComponents = [
     MapaCamasMainComponent,
@@ -370,6 +374,10 @@ let mapaCamasComponents = [
     EstadoServicioComponent,
     ItemCamaComponent,
     IngresarPacienteComponent,
+    IconoCamitaComponent,
+    CamaDestinoGenericoComponent,
+    CamaDesocuparComponent,
+    EgresarPacienteComponent
 ];
 
 // Solicitudes
@@ -536,7 +544,6 @@ import { LogoSvgComponent } from './styles/logo.svg';
 import { AcronimoSvgComponent } from './styles/acronimo.svg';
 import { ListaReglasComponent } from './components/top/reglas/listaReglas.component';
 import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaSolicitudTop';
-import { MapaCamasService } from './apps/rup/mapa-camas/mapa-camas.service';
 
 import { MitosModule } from './apps/mitos';
 

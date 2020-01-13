@@ -1,0 +1,17 @@
+<div>
+    <form #formReparada="ngForm" *ngIf="listaPasesCama">
+        <plex-title justify titulo="Desocupar cama">
+            <plex-button icon="arrow-left" type="danger" size="sm" (click)="cancelar()">
+            </plex-button>
+        </plex-title>
+        <fieldset>
+            <label>¿Qué desea hacer?</label>
+            <plex-button label="Cambiar cama" type="primary" size="block">
+            </plex-button>
+            <plex-button label="Egresar paciente" type="warning" size="block" (click)="egresarPaciente()">
+            </plex-button>
+            <plex-button label="Cambiar de unidad organizativa" type="seondary" size="block">
+            </plex-button>
+        </fieldset>
+    </form>
+</div>

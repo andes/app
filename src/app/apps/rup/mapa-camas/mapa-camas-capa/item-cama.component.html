@@ -1,6 +1,6 @@
-<ng-container *ngIf="cama" class="bg-invert">
+<ng-container *ngIf="cama">
     <td>
-        <plex-bool type="checkbox"></plex-bool>
+        <plex-bool type="checkbox" [(ngModel)]="selected"></plex-bool>
     </td>
     <td>
         <span class="d-block"><strong>{{cama.nombre}}</strong></span>
@@ -17,14 +17,14 @@
         <span class="d-block"></span>
     </td>
     <td justify>
-        <plex-badge [type]="estadoActual.color">
-            {{estadoActual.label}}
+        <plex-badge [type]="estadoCama.color">
+            {{estadoCama.label}}
         </plex-badge>
         <span class="d-block"></span>
     </td>
     <td>
-        <ng-container *ngFor="let destino of destinos">
-            <plex-button [icon]="destino.icon" [type]="destino.color" size="sm" (click)="accion(destino.key)">
+        <ng-container *ngFor="let relacion of relacionesPosibles">
+            <plex-button [icon]="relacion.icon" [type]="relacion.color" size="sm" (click)="accion(relacion)">
             </plex-button>
         </ng-container>
         <plex-button icon="pencil" type="warning" size="sm" (click)="goTo()">

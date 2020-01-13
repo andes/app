@@ -36,6 +36,10 @@ export class MapaCamasCapaComponent implements OnInit {
 
     selectedCama: any;
     estadoDestino: any;
+
+    opcionesCamas = [];
+    accion = null;
+
     constructor(
         public auth: Auth,
         private plex: Plex,
@@ -131,13 +135,36 @@ export class MapaCamasCapaComponent implements OnInit {
         this.router.navigate([`/internacion/cama/${this.capa}`]);
     }
 
-    accionCama(accion) {
+    selectCama(accion) {
         this.selectedCama = accion.cama;
-        this.estadoDestino = accion.estadoDestino;
+        if (accion.relacion) {
+            this.estadoDestino = accion.relacion.destino;
+            this.accion = accion.relacion.accion;
+            let relacionesConDestino = this.relaciones.filter(rel => rel.destino === accion.relacion.destino);
+            relacionesConDestino.map(rel => {
+                this.opcionesCamas.push(...this.snapshot.filter(snap => snap.estado === rel.origen));
+            });
+        }
     }
 
-    cancelIngreso() {
+    accionDesocupar(event) {
+        this.accion = event.accion;
+    }
+
+    refresh(accion) {
+        let i = this.snapshot.findIndex((snap: any) => snap._id === accion.cama._id);
+        this.snapshot[i] = accion.cama;
+        this.camas = Observable.of(this.snapshot);
+        this.volverAResumen();
+    }
+
+    volverAResumen() {
         this.selectedCama = null;
         this.estadoDestino = null;
+        this.accion = null;
+    }
+
+    cambiarCama(selectedCama) {
+        this.selectedCama = selectedCama;
     }
 }

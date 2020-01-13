@@ -41,10 +41,10 @@
                             {{censoP.datos.paciente.documento}} </td>
                         <td>{{censoP.datos.cama.nombre}},
                             {{censoP.datos.cama.sectores[censoP.datos.cama.sectores.length -1].nombre}}</td>
-                        <td>{{censoP.actividad[censoP.actividad.length - 1].ingreso}}</td>
-                        <td>{{censoP.actividad[censoP.actividad.length - 1].paseDe}}</td>
-                        <td>{{censoP.actividad[censoP.actividad.length - 1].egreso}}</td>
-                        <td>{{censoP.actividad[censoP.actividad.length - 1].paseA}}</td>
+                        <td>{{censoP.actividad[censoP.actividad.length - 1]?.ingreso}}</td>
+                        <td>{{censoP.actividad[censoP.actividad.length - 1]?.paseDe}}</td>
+                        <td>{{censoP.actividad[censoP.actividad.length - 1]?.egreso}}</td>
+                        <td>{{censoP.actividad[censoP.actividad.length - 1]?.paseA}}</td>
                     </tr>
                 </tbody>
             </table>

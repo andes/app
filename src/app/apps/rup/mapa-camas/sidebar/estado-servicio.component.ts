@@ -5,12 +5,14 @@ import { Auth } from '@andes/auth';
 @Component({
     selector: 'app-estado-servicio',
     templateUrl: './estado-servicio.component.html',
+    styleUrls: ['./estado-servicio.component.scss'],
 })
 
 export class EstadoServicioComponent implements OnInit {
     @Input() fecha: Date;
     @Input() camas: any;
     @Input() estados: any;
+    @Input() relaciones: any;
     @Output() buscarEstados = new EventEmitter<Date>();
 
     camasXEstado: any;

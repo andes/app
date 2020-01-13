@@ -4,7 +4,7 @@
             <plex-title titulo="DATOS DE CAMA">
                 <plex-button label="GUARDAR" type="success" [disabled]="!cama.nombre || !cama.unidadOrganizativa || !cama.tipoCama || 
                 !cama.especialidades || !cama.sectores" (click)="save()"></plex-button>
-                <plex-button label="DAR DE BAJA" type="danger" *ngIf="cama._id"></plex-button>
+                <plex-button label="DAR DE BAJA" type="danger" *ngIf="cama._id" (click)="darBaja()"></plex-button>
             </plex-title>
             <fieldset>
                 <div class="row">
