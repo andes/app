@@ -554,7 +554,7 @@ $andes-gris: #a5a1a1;
 // EXTENSIONES
 // ------------------------------------
 // Estilos sidebar
-plex-layout-sidebar#panel-lateral>DIV {
+plex-box#panel-lateral>DIV {
     h3,
     h4,
     h5,
@@ -604,7 +604,7 @@ plex-layout-sidebar#panel-lateral>DIV {
         display: flex;
         flex-direction: column;
         justify-content: space-between; // Contenedor tabs 
-  //      plex-tabs.andes-contenedor-tabs {}
+        plex-tabs.andes-contenedor-tabs {}
         // tab head
         %base-tab {
             display: flex;
@@ -749,7 +749,7 @@ plex-layout-sidebar#panel-lateral>DIV {
                     }
                     i {
                         display: inline-block;
-                  //      float: right;
+                        float: right;
                         transition: all 1s ease;
                         &.flechita {
                             &.norotada {
@@ -831,10 +831,6 @@ plex-layout-sidebar#panel-lateral>DIV {
 }
 
 // GLOBALES
-plex-layout {
-    margin-bottom: 0 !important;
-}
-
 hr {
     border: solid 1px;
     &.separate {
@@ -890,5 +886,3 @@ hr {
 
     z-index: 4;
 }
-
-
