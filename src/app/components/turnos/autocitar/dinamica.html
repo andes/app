@@ -18,11 +18,12 @@
                 </div>
                 <div class="row">
                     <div class="col-md">
-                        <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                         (searchClear)="searchClear()"></paciente-buscar>
-                        <paciente-listado *ngIf="pacientes && pacientes.length" [type]="'sm'" [pacientes]="pacientes"
-                                          [autoselect]="false" (selected)="onPacienteSelected($event)">
-                        </paciente-listado>
+                        <mpi-paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
+                                             (searchClear)="searchClear()"></mpi-paciente-buscar>
+                        <mpi-paciente-listado *ngIf="pacientes && pacientes.length" [type]="'sm'"
+                                              [pacientes]="pacientes" [autoselect]="false"
+                                              (selected)="onPacienteSelected($event)">
+                        </mpi-paciente-listado>
                         <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
                             ¡No se encontró ningún paciente!
                         </div>

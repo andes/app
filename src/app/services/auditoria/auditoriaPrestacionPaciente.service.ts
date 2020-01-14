@@ -2,7 +2,6 @@ import { Server } from '@andes/shared';
 import { IAuditoriaPrestacionPaciente } from './../../interfaces/auditoria/IAuditoriaPrestacionPaciente';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class AuditoriaPrestacionPacienteService {
@@ -10,7 +9,7 @@ export class AuditoriaPrestacionPacienteService {
     constructor(private server: Server) { }
 
     get(params: any): Observable<IAuditoriaPrestacionPaciente[]> {
-        return this.server.get(this.auditoriaURL, {params: params, showError: true});
+        return this.server.get(this.auditoriaURL, { params: params, showError: true });
     }
 
     /**

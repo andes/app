@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -10,10 +10,10 @@ import { EstadosAgenda } from './../../enums';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 
 // Servicios
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { PacienteHttpService } from '../../../../apps/mpi/pacientes/services/pacienteHttp.service';
 import { TurnoService } from './../../../../services/turnos/turno.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
-import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
+import { PacienteCacheService } from '../../../../apps/mpi/pacientes/services/pacienteCache.service';
 import { ISubscription } from 'rxjs/Subscription';
 import { Unsubscribe } from '@andes/shared';
 
@@ -59,7 +59,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         public auth: Auth,
         public serviceTurno: TurnoService,
         public serviceAgenda: AgendaService,
-        public servicePaciente: PacienteService,
+        public servicePaciente: PacienteHttpService,
         private route: ActivatedRoute) {
     }
 
@@ -155,7 +155,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
             }
             if (turno.paciente && turno.paciente.id) {
                 this.pacienteDetalle = turno.paciente;
-                this.lastRequest = this.servicePaciente.getById(turno.paciente.id).subscribe(
+                this.lastRequest = this.servicePaciente.findById(turno.paciente.id, {}).subscribe(
                     pacienteMongo => {
                         this.pacienteDetalle = pacienteMongo;
                         delete this.pacienteDetalle.cuil;
@@ -437,7 +437,7 @@ export class RevisionAgendaComponent implements OnInit, OnDestroy {
         this.resultadoBusqueda = [];
         // Es un paciente existente en ANDES??
         if (paciente && paciente.id) {
-            return this.servicePaciente.getById(paciente.id).subscribe(
+            return this.servicePaciente.findById(paciente.id, {}).subscribe(
                 pacienteMongo => {
                     this.paciente = pacienteMongo;
                     this.pacienteDetalle = pacienteMongo;

@@ -1,9 +1,6 @@
 import { Component, Input, EventEmitter, Output, OnInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
-import * as moment from 'moment';
 
 @Component({
     selector: 'listar-carpetas',
@@ -34,7 +31,7 @@ export class ListarCarpetasComponent implements OnInit {
     turnosAsignados = [];
     titulo = '';
 
-    constructor(public plex: Plex, public servicePaciente: PacienteService, public auth: Auth) { }
+    constructor(public plex: Plex, public auth: Auth) { }
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:agenda:puedeImprimir:').length > 0;

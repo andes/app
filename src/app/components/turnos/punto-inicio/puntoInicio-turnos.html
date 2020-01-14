@@ -1,26 +1,19 @@
 <plex-layout main="7" *ngIf="!showCreateUpdate && showDashboard && !showDarTurnos">
     <plex-layout-main>
         <!-- BOTONES DE REGISTRO MPI -->
-        <div class="row">
-            <div class="col-9 pr-0">
-                <paciente-buscar (searchStart)="onSearchStart()"
-                                 (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
-                                 (searchClear)="onSearchClear()">
-                </paciente-buscar>
-            </div>
-            <div class="col-3">
-                <mpi-botones-registro [hostComponent]="'puntoInicio'" [disabled]="disableNuevoPaciente">
-                </mpi-botones-registro>
-            </div>
-        </div>
+        <mpi-paciente-buscar (searchStart)="onSearchStart()"
+                             (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
+                             (searchClear)="onSearchClear()">
+        </mpi-paciente-buscar>
 
         <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
         <div class="row pt-2">
             <!-- LISTA DE RESULTADOS DE LA BÚSQUEDA -->
             <div class="col pr-2" *ngIf="!paciente">
-                <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
-                                  [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
+                <mpi-paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length"
+                                      [pacientes]="resultadoBusqueda" [autoselect]="false"
+                                      (selected)="onPacienteSelected($event)"></mpi-paciente-listado>
                 <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length && !searchClear" class="alert alert-danger">
                     <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
                 </div>

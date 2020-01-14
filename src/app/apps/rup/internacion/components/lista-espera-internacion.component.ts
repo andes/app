@@ -1,18 +1,19 @@
-import { Component, OnInit, HostBinding } from '@angular/core';
+import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
 import { Auth } from '@andes/auth';
-import { Router } from '@angular/router';
+import { Plex } from '@andes/plex';
+import { Router, ActivatedRoute } from '@angular/router';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
-import { InternacionCacheService } from '../services/internacion-cache.service';
-
+import { InternacionService } from '../services/internacion.service';
 @Component({
-    selector: 'lista-espera-internacion',
-    templateUrl: 'lista-espera-internacion.html',
-    styleUrls: ['mapa-de-camas.component.scss'],
+    selector: 'listaEsperaInternacion',
+    templateUrl: 'lista-espera-internacion.html'
+
 })
 export class ListaEsperaInternacionComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true;
-
+    @Output() showCamas = new EventEmitter<any>();
+    @Output() prestacion = new EventEmitter<any>();
     public parametros;
     public fechaDesde: any;
     public fechaHasta: any;
@@ -32,9 +33,11 @@ export class ListaEsperaInternacionComponent implements OnInit {
     public select: any = {};
 
     constructor(private router: Router,
+        private route: ActivatedRoute,
+        private plex: Plex,
         public auth: Auth,
         public prestacionService: PrestacionesService,
-        private cacheService: InternacionCacheService) { }
+        private internacionService: InternacionService) { }
 
     ngOnInit() {
         this.fechaDesde = moment(new Date()).subtract(1, 'M').toDate();
@@ -46,6 +49,7 @@ export class ListaEsperaInternacionComponent implements OnInit {
         this.prestacionService.getInternacionesPendientes(this.parametros).subscribe(data => {
             this.prestacionesPendientes = data;
             this.prestacionesPendientesCopy = JSON.parse(JSON.stringify(this.prestacionesPendientes));
+
         });
     }
 
@@ -62,18 +66,19 @@ export class ListaEsperaInternacionComponent implements OnInit {
     /**
      * Regreso al mapa de camas.
      */
-    volver() {
-        this.router.navigate(['internacion/camas']);
+    onCancel() {
+        this.prestacion.emit(null);
+        this.showCamas.emit(false);
     }
 
     /**
-     * Se cachea la prestacion y navega al mapa de camas para seleccionar una cama
+     * Emito la prestacion y retorno al mapa de camas para seleccionar una cama
      * desocupada
      * @param prestacion
      */
     darCama(prestacion) {
-        this.cacheService.setData(prestacion, 'lista-espera');
-        this.router.navigate(['internacion/camas']);
+        this.prestacion.emit(prestacion);
+        this.showCamas.emit(false);
     }
 
     filtrar() {
@@ -106,4 +111,3 @@ export class ListaEsperaInternacionComponent implements OnInit {
         });
     }
 }
-

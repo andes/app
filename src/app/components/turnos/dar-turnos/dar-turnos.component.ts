@@ -19,7 +19,7 @@ import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
 import { CalendarioDia } from './calendario-dia.class';
 
 // Servicios
-import { PacienteService } from '../../../core/mpi/services/paciente.service';
+import { PacienteHttpService } from '../../../apps/mpi/pacientes/services/pacienteHttp.service';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
@@ -29,6 +29,7 @@ import { TurnoService } from './../../../services/turnos/turno.service';
 import { HeaderPacienteComponent } from '../../paciente/headerPaciente.component';
 import { IFinanciador } from '../../../interfaces/IFinanciador';
 import { ObraSocialCacheService } from '../../../services/obraSocialCache.service';
+import { CarpetaPacientesService } from '../../../services/carpetaPaciente.service';
 
 @Component({
     selector: 'dar-turnos',
@@ -155,11 +156,12 @@ export class DarTurnosComponent implements OnInit {
     public mostrarCalendario = false;
 
     constructor(
+        public serviceNroCarpeta: CarpetaPacientesService,
         public serviceProfesional: ProfesionalService,
         public serviceAgenda: AgendaService,
         public serviceListaEspera: ListaEsperaService,
         public serviceTurno: TurnoService,
-        public servicePaciente: PacienteService,
+        public servicePaciente: PacienteHttpService,
         public servicioTipoPrestacion: TipoPrestacionService,
         public servicioPrestacionPaciente: PrestacionesService,
         public servicioOS: ObraSocialService,
@@ -203,7 +205,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     actualizarDatosPaciente(idPaciente) {
-        this.servicePaciente.getById(idPaciente).subscribe(
+        this.servicePaciente.findById(idPaciente, {}).subscribe(
             pacienteMPI => {
                 this.paciente = pacienteMPI;
                 this.verificarTelefono(pacienteMPI);
@@ -704,7 +706,7 @@ export class DarTurnosComponent implements OnInit {
         }
         if (indiceCarpeta === -1) {
             // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
-            this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
+            this.serviceNroCarpeta.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
                 // Si la carpeta en carpetaPaciente tiene una longitud mayor a 0, se filtra por organización para obtener nroCarpeta.
                 if (carpeta.length > 0) {
                     let carpetaE = carpeta[0].carpetaEfectores.find((carpetaEf: any) => carpetaEf.organizacion._id === this.auth.organizacion.id);
@@ -783,11 +785,7 @@ export class DarTurnosComponent implements OnInit {
                 this.paciente.contacto = [nuevoCel];
             }
             // Actualizo teléfono del paciente en MPI
-            let cambios = {
-                'op': 'updateContactos',
-                'contacto': this.paciente.contacto
-            };
-            this.servicePaciente.patch(this.paciente.id, cambios).subscribe(resultado => {
+            this.servicePaciente.update(this.paciente).subscribe(resultado => {
                 if (resultado) {
                     this.plex.toast('info', 'Datos del paciente actualizados');
                 }
@@ -818,41 +816,41 @@ export class DarTurnosComponent implements OnInit {
      * DAR TURNO
      */
     darTurno() {
-        if (this.turnoTipoPrestacion) {
-            this.turnoTipoPrestacion['_id'] = this.turnoTipoPrestacion.id;
-            this.hideDarTurno = true; // ocultamos el boton confirmar para evitar efecto gatillo facil
-            // Ver si cambió el estado de la agenda desde otro lado
-            this.serviceAgenda.getById(this.agenda.id).subscribe(agd => {
-                if (agd.estado !== 'disponible' && agd.estado !== 'publicada') {
-                    this.plex.info('warning', 'Esta agenda ya no está disponible.');
-                    this.actualizar('');
-                    return false;
-                } else {
-                    if (this.changeCarpeta && this.carpetaEfector.nroCarpeta && this.carpetaEfector.nroCarpeta !== '' && this.carpetaEfector.nroCarpeta !== this.nroCarpetaOriginal) {
-                        this.carpetaEfector.nroCarpeta = this.carpetaEfector.nroCarpeta.trim(); // quitamos los espacios
-                        let indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
-                        if (indiceCarpeta > -1) {
-                            this.paciente.carpetaEfectores[indiceCarpeta] = this.carpetaEfector;
-                        } else {
-                            this.paciente.carpetaEfectores.push(this.carpetaEfector);
-                        }
-                        this.servicePaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.paciente.carpetaEfectores }).subscribe(
-                            resultadoCarpeta => {
-                                this.guardarTurno(agd);
-                            }, error => {
-                                this.plex.toast('danger', 'El número de carpeta ya existe');
-                                this.hideDarTurno = false;
-                            }
-                        );
+        //     if (this.turnoTipoPrestacion) {
+        //         this.turnoTipoPrestacion['_id'] = this.turnoTipoPrestacion.id;
+        //         this.hideDarTurno = true; // ocultamos el boton confirmar para evitar efecto gatillo facil
+        //         // Ver si cambió el estado de la agenda desde otro lado
+        //         this.serviceAgenda.getById(this.agenda.id).subscribe(agd => {
+        //             if (agd.estado !== 'disponible' && agd.estado !== 'publicada') {
+        //                 this.plex.info('warning', 'Esta agenda ya no está disponible.');
+        //                 this.actualizar('');
+        //                 return false;
+        //             } else {
+        //                 if (this.changeCarpeta && this.carpetaEfector.nroCarpeta && this.carpetaEfector.nroCarpeta !== '' && this.carpetaEfector.nroCarpeta !== this.nroCarpetaOriginal) {
+        //                     this.carpetaEfector.nroCarpeta = this.carpetaEfector.nroCarpeta.trim(); // quitamos los espacios
+        //                     let indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
+        //                     if (indiceCarpeta > -1) {
+        //                         this.paciente.carpetaEfectores[indiceCarpeta] = this.carpetaEfector;
+        //                     } else {
+        //                         this.paciente.carpetaEfectores.push(this.carpetaEfector);
+        //                     }
+        //                     this.servicePaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.paciente.carpetaEfectores }).subscribe(
+        //                         resultadoCarpeta => {
+        //                             this.guardarTurno(agd);
+        //                         }, error => {
+        //                             this.plex.toast('danger', 'El número de carpeta ya existe');
+        //                             this.hideDarTurno = false;
+        //                         }
+        //                     );
 
-                    } else {
-                        this.guardarTurno(agd);
-                    }
-                }
-            });
-        } else {
-            this.plex.info('warning', '', 'Seleccione un tipo de prestación');
-        }
+        //                 } else {
+        //                     this.guardarTurno(agd);
+        //                 }
+        //             }
+        //         });
+        //     } else {
+        //         this.plex.info('warning', '', 'Seleccione un tipo de prestación');
+        //     }
 
     }
 
@@ -1095,7 +1093,7 @@ export class DarTurnosComponent implements OnInit {
         this.paciente = paciente;
         this.showDarTurnos = true;
         if (paciente.id) {
-            this.servicePaciente.getById(paciente.id).subscribe(
+            this.servicePaciente.findById(paciente.id, {}).subscribe(
                 pacienteMPI => {
                     this.paciente = pacienteMPI;
                     this.pacientesSearch = false;
@@ -1104,7 +1102,8 @@ export class DarTurnosComponent implements OnInit {
                     this.obtenerCarpetaPaciente();
                     this.getUltimosTurnos();
                     if (!this.paciente.scan) {
-                        this.servicePaciente.patch(paciente.id, { op: 'updateScan', scan: paciente.scan }).subscribe();
+                        this.paciente.scan = paciente.scan;
+                        this.servicePaciente.update(this.paciente.id).subscribe();
                     }
                     if (this.paciente.documento) {
                         this.osService.getFinanciadorPacienteCache().subscribe((financiador) => {

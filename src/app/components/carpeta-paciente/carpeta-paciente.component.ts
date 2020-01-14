@@ -2,7 +2,8 @@ import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { ITurno } from './../../interfaces/turnos/ITurno';
-import { PacienteService } from '../../core/mpi/services/paciente.service';
+import { CarpetaPacientesService } from '../../services/carpetaPaciente.service';
+import { PacienteHttpService } from '../../apps/mpi/pacientes/services/pacienteHttp.service';
 import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 
 @Component({
@@ -29,7 +30,7 @@ export class CarpetaPacienteComponent implements OnInit {
     paciente: any;
     showEdit = false;
     nroCarpetaSugerido: string;
-    constructor(public auth: Auth, public plex: Plex, public servicioPaciente: PacienteService) { }
+    constructor(public auth: Auth, public plex: Plex, public servicioPacientes: PacienteHttpService, public servicioCarpetasPacientes: CarpetaPacientesService) { }
 
     ngOnInit() {
         // Verificamos permiso para editar carpeta de un paciente
@@ -45,7 +46,7 @@ export class CarpetaPacienteComponent implements OnInit {
         if (this.turnoSeleccionado && this.turnoSeleccionado.paciente.id) {
             this.paciente = this.turnoSeleccionado.paciente;
             // Obtenemos el paciente completo. (entró por parametro el turno)
-            this.servicioPaciente.getById(this.paciente.id).subscribe(resultado => {
+            this.servicioPacientes.findById(this.paciente.id, {}).subscribe(resultado => {
                 this.paciente = resultado;
                 this.getCarpetas(this.paciente);
             });
@@ -79,7 +80,7 @@ export class CarpetaPacienteComponent implements OnInit {
         }
         if (this.indiceCarpeta === -1) { // buscamos en la colección de carpetas importadas desde SIPS
             // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
-            this.servicioPaciente.getNroCarpeta({ documento: paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
+            this.servicioCarpetasPacientes.getNroCarpeta({ documento: paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
                 // Si la carpeta en carpetaPaciente tiene una longitud mayor a 0, se filtra por organización para obtener nroCarpeta.
                 if (carpeta.length > 0) {
                     let carpetaE = carpeta[0].carpetaEfectores.find((carpetaEf: any) => carpetaEf.organizacion._id === this.auth.organizacion.id);
@@ -91,7 +92,7 @@ export class CarpetaPacienteComponent implements OnInit {
                     }
                     if (!this.carpetaPaciente || this.carpetaPaciente.nroCarpeta === '') {
                         this.showNuevaCarpeta = true;
-                        this.servicioPaciente.getSiguienteCarpeta().subscribe((sugerenciaCarpeta: string) => {
+                        this.servicioCarpetasPacientes.getSiguienteCarpeta().subscribe((sugerenciaCarpeta: string) => {
                             this.nroCarpetaSugerido = '' + sugerenciaCarpeta;
                         });
                     }
@@ -103,42 +104,41 @@ export class CarpetaPacienteComponent implements OnInit {
     }
 
 
-    guardarCarpetaPaciente(nuevaCarpeta = false) {
-        if (this.autorizado && this.carpetaPaciente.nroCarpeta && this.carpetaPaciente.nroCarpeta !== '' && this.carpetaPaciente.nroCarpeta !== this.nroCarpetaOriginal) {
-            this.carpetaPaciente.nroCarpeta = this.carpetaPaciente.nroCarpeta.trim();
-            if (this.indiceCarpeta > -1) {
-                this.carpetaEfectores[this.indiceCarpeta] = this.carpetaPaciente;
-            } else {
-                this.carpetaEfectores.push(this.carpetaPaciente);
-                this.indiceCarpeta = this.carpetaEfectores.length - 1;
-            }
+    // guardarCarpetaPaciente(nuevaCarpeta = false) {
+    //     if (this.autorizado && this.carpetaPaciente.nroCarpeta && this.carpetaPaciente.nroCarpeta !== '' && this.carpetaPaciente.nroCarpeta !== this.nroCarpetaOriginal) {
+    //         this.carpetaPaciente.nroCarpeta = this.carpetaPaciente.nroCarpeta.trim();
+    //         if (this.indiceCarpeta > -1) {
+    //             this.carpetaEfectores[this.indiceCarpeta] = this.carpetaPaciente;
+    //         } else {
+    //             this.carpetaEfectores.push(this.carpetaPaciente);
+    //             this.indiceCarpeta = this.carpetaEfectores.length - 1;
+    //         }
 
-            this.servicioPaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.carpetaEfectores }).subscribe(
-                resultadoCarpeta => {
-                    this.guardarCarpetaEmit.emit(this.carpetaEfectores);
-                    this.plex.toast('success', 'Nuevo número de carpeta establecido');
-                    this.nroCarpetaOriginal = this.carpetaPaciente.nroCarpeta;
-                    this.showNuevaCarpeta = false;
-                    if (nuevaCarpeta) {
-                        this.servicioPaciente.incrementarNroCarpeta().subscribe();
-                    }
-                },
-                error => {
-                    this.plex.toast('danger', 'El número de carpeta ya existe');
-                    if (this.indiceCarpeta < 0) {
-                        this.carpetaEfectores.pop();
-                    }
-                    this.carpetaPaciente.nroCarpeta = this.nroCarpetaOriginal;
-                }
-            );
-        } else {
-            this.plex.info('warning', '', 'Ingrese un número de carpeta válido');
-            this.carpetaPaciente.nroCarpeta = this.nroCarpetaOriginal;
-            this.guardarCarpetaEmit.emit(false);
-        }
-        this.showEdit = false;
-        this.showList = true;
-    }
+    //         this.servicioPacientes.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.carpetaEfectores }).subscribe(() => {
+    //                 this.guardarCarpetaEmit.emit(this.carpetaEfectores);
+    //                 this.plex.toast('success', 'Nuevo número de carpeta establecido');
+    //                 this.nroCarpetaOriginal = this.carpetaPaciente.nroCarpeta;
+    //                 this.showNuevaCarpeta = false;
+    //                 if (nuevaCarpeta) {
+    //                     this.servicioCarpetasPacientes.incrementarNroCarpeta().subscribe();
+    //                 }
+    //             },
+    //             error => {
+    //                 this.plex.toast('danger', 'El número de carpeta ya existe');
+    //                 if (this.indiceCarpeta < 0) {
+    //                     this.carpetaEfectores.pop();
+    //                 }
+    //                 this.carpetaPaciente.nroCarpeta = this.nroCarpetaOriginal;
+    //             }
+    //         );
+    //     } else {
+    //         this.plex.info('warning', '', 'Ingrese un número de carpeta válido');
+    //         this.carpetaPaciente.nroCarpeta = this.nroCarpetaOriginal;
+    //         this.guardarCarpetaEmit.emit(false);
+    //     }
+    //     this.showEdit = false;
+    //     this.showList = true;
+    // }
 
     cancelar() {
         this.carpetaPaciente.nroCarpeta = '';

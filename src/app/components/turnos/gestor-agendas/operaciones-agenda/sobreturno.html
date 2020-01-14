@@ -57,18 +57,18 @@
                     <div class="col">
                         <div class="panel panel-default">
                             <div class="clear"></div>
-                            <paciente-buscar (searchStart)="onSearchStart()"
-                                             (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
-                                             (searchClear)="onSearchClear()">
-                            </paciente-buscar>
+                            <mpi-paciente-buscar (searchStart)="onSearchStart()"
+                                                 (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
+                                                 (searchClear)="onSearchClear()">
+                            </mpi-paciente-buscar>
                         </div>
                     </div>
                 </div>
                 <plex-loader *ngIf="loading"></plex-loader>
                 <div class="row">
                     <div class="col-12">
-                        <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
-                                          [autoselect]="false" (selected)="onSelect($event)"></paciente-listado>
+                        <mpi-paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
+                                              [autoselect]="false" (selected)="onSelect($event)"></mpi-paciente-listado>
 
                         <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
                             ¡No se encontró ningún paciente!

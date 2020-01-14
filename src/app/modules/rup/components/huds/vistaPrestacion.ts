@@ -2,10 +2,8 @@ import { Component, ViewEncapsulation, Input, HostBinding } from '@angular/core'
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
-import { Plex } from '@andes/plex';
-import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { PacienteHttpService } from '../../../../apps/mpi/pacientes/services/pacienteHttp.service';
 
 @Component({
     selector: 'vista-prestacion',
@@ -23,7 +21,7 @@ export class VistaPrestacionComponent {
 
     constructor(
         public servicioPrestacion: PrestacionesService,
-        private servicioPaciente: PacienteService,
+        private servicioPaciente: PacienteHttpService,
         public elementosRUPService: ElementosRUPService) {
     }
 
@@ -36,7 +34,7 @@ export class VistaPrestacionComponent {
             if (resultado) {
                 this.servicioPrestacion.getById(this.idPrestacion).subscribe(prestacion => {
                     this.prestacion = prestacion;
-                    this.servicioPaciente.getById(this.prestacion.paciente.id).subscribe(paciente => {
+                    this.servicioPaciente.findById(this.prestacion.paciente.id, {}).subscribe(paciente => {
                         this.paciente = paciente;
                     });
                 });

@@ -1,6 +1,6 @@
 import { LogService } from './../../services/log.service';
-import { PacienteService } from '../../core/mpi/services/paciente.service';
-import { Component, Output, EventEmitter, OnInit, Input } from '@angular/core';
+import { PacienteHttpService } from '../../apps/mpi/pacientes/services/pacienteHttp.service';
+import { Component, Input, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
 
@@ -54,7 +54,7 @@ export class DashboardComponent implements OnInit {
         private plex: Plex,
         private server: Server,
         private logService: LogService,
-        private pacienteService: PacienteService) {
+        private pacienteService: PacienteHttpService) {
     }
 
     ngOnInit() {
@@ -62,17 +62,16 @@ export class DashboardComponent implements OnInit {
     }
 
     private getDashboard() {
-        this.pacienteService.getDashboard()
-            .subscribe(data => {
-                this.loading = false;
-                this.dashboardData = data;
-                this.loadPatientData();
-                this.loadLogData();
-                this.chart.datasets[0].data[0] = this.validados;
-                this.chart.datasets[0].data[1] = this.temporales;
-                this.chart.datasets[0].data[2] = this.scan;
-                this.chart.datasets[0].data[3] = this.scansFallidos;
-            });
+        // this.pacienteService.getDashboard().subscribe(data => {
+        //         this.loading = false;
+        //         this.dashboardData = data;
+        //         this.loadPatientData();
+        //         this.loadLogData();
+        //         this.chart.datasets[0].data[0] = this.validados;
+        //         this.chart.datasets[0].data[1] = this.temporales;
+        //         this.chart.datasets[0].data[2] = this.scan;
+        //         this.chart.datasets[0].data[3] = this.scansFallidos;
+        //     });
     }
 
     private loadPatientData() {

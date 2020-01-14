@@ -9,11 +9,11 @@ import {
     EventEmitter
 } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { ParentescoService } from '../../../services/parentesco.service';
+import { ParentescoService } from '../../pacientes/services/parentesco.service';
 import { IPaciente } from '../interfaces/IPaciente';
 
 @Component({
-    selector: 'relaciones-pacientes',
+    selector: 'mpi-paciente-relaciones',
     templateUrl: 'relaciones-pacientes.html',
     styleUrls: ['relaciones-pacientes.scss']
 })

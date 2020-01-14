@@ -1,0 +1,31 @@
+<plex-layout main="8">
+    <plex-layout-main>
+        <fieldset>
+            <mpi-paciente-buscar (searchStart)="onSearchStart()"
+                                 (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado, $event.busqueda)"
+                                 (searchClear)="onSearchClear()"></mpi-paciente-buscar>
+
+            <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+
+            <mpi-paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
+                                  [autoselect]="false" (selected)="onPacienteSelected($event)">
+            </mpi-paciente-listado>
+            <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length && !searchClear" class="alert alert-danger">
+                <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
+            </div>
+        </fieldset>
+    </plex-layout-main>
+
+    <plex-layout-sidebar>
+        <fieldset>
+            <legend>Búsquedas recientes</legend>
+            <div class="row">
+                <div class="col">
+                    <mpi-paciente-listado type="sm" [pacientes]="historialSeleccionados" [autoselect]="false"
+                                          (selected)="onPacienteSelected($event)"></mpi-paciente-listado>
+                </div>
+            </div>
+        </fieldset>
+    </plex-layout-sidebar>
+
+</plex-layout>

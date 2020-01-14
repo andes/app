@@ -1,4 +1,4 @@
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { PacienteHttpService } from '../../../../apps/mpi/pacientes/services/pacienteHttp.service';
 import { Observable } from 'rxjs';
 import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
 import { Component, OnInit } from '@angular/core';
@@ -7,8 +7,9 @@ import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
-import { PacienteCacheService } from '../../../../core/mpi/services/pacienteCache.service';
+import { PacienteCacheService } from '../../../../apps/mpi/pacientes/services/pacienteCache.service';
 import { ObraSocialService } from './../../../../services/obraSocial.service';
+import { CarpetaPacientesService } from '../../../../services/carpetaPaciente.service';
 
 @Component({
     selector: 'sobreturno',
@@ -54,8 +55,9 @@ export class AgregarSobreturnoComponent implements OnInit {
         private serviceAgenda: AgendaService,
         private router: Router,
         private auth: Auth,
-        private servicePaciente: PacienteService,
+        private servicePaciente: PacienteHttpService,
         public obraSocialService: ObraSocialService,
+        private carpetaPacienteService: CarpetaPacientesService,
         private route: ActivatedRoute) { }
 
     ngOnInit() {
@@ -89,7 +91,7 @@ export class AgregarSobreturnoComponent implements OnInit {
         this.showCreateUpdate = false;
         this.showSobreturno = true;
         if (paciente) {
-            this.servicePaciente.getById(paciente.id).subscribe(
+            this.servicePaciente.findById(paciente.id, {}).subscribe(
                 pacienteMPI => {
                     this.paciente = pacienteMPI;
                     this.verificarTelefono(pacienteMPI);
@@ -128,7 +130,7 @@ export class AgregarSobreturnoComponent implements OnInit {
     }
 
     onSelect(paciente: any): void {
-        this.servicePaciente.getById(paciente.id).subscribe(
+        this.servicePaciente.findById(paciente.id, {}).subscribe(
             pacienteMPI => {
                 this.paciente = pacienteMPI;
                 this.verificarTelefono(this.paciente);
@@ -195,7 +197,7 @@ export class AgregarSobreturnoComponent implements OnInit {
         }
         if (indiceCarpeta === -1) {
             // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
-            this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
+            this.carpetaPacienteService.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
                 if (carpeta.nroCarpeta) {
                     this.carpetaEfector.nroCarpeta = carpeta.nroCarpeta;
                     this.changeCarpeta = true;
@@ -205,8 +207,8 @@ export class AgregarSobreturnoComponent implements OnInit {
     }
 
     actualizarCarpetaPaciente() {
-        this.servicePaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.paciente.carpetaEfectores }).subscribe(resultadoCarpeta => {
-        });
+        //     this.servicePaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.paciente.carpetaEfectores }).subscribe(resultadoCarpeta => {
+        //  });
     }
 
     // Se ejecuta al modificar el campo NroCarpeta
@@ -289,13 +291,7 @@ export class AgregarSobreturnoComponent implements OnInit {
                 } else {
                     this.paciente.contacto = [nuevoCel];
                 }
-                let cambios = {
-                    'op': 'updateContactos',
-                    'contacto': this.paciente.contacto
-                };
-                mpi = this.servicePaciente.patch(pacienteSave.id, cambios);
-                mpi.subscribe(resultado => {
-
+                this.servicePaciente.update(this.paciente).subscribe(resultado => {
                     if (resultado) {
                         this.plex.info('success', 'Se actualizó el numero de telefono');
                     }

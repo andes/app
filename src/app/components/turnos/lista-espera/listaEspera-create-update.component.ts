@@ -14,7 +14,7 @@ import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
 import { ProfesionalService } from './../../../services/profesional.service';
-import { PacienteService } from '../../../core/mpi/services/paciente.service';
+import { PacienteHttpService } from '../../../apps/mpi/pacientes/services/pacienteHttp.service';
 
 @Component({
     selector: 'listaEspera-create-update',
@@ -50,7 +50,7 @@ export class ListaEsperaCreateUpdateComponent implements OnInit {
     constructor(
         public formBuilder: FormBuilder,
         public profesionalService: ProfesionalService,
-        public pacienteService: PacienteService,
+        public pacienteService: PacienteHttpService,
         public listaEsperaService: ListaEsperaService,
         public prestacionService: TipoPrestacionService,
         public plex: Plex,

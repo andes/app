@@ -68,7 +68,7 @@ import { EspecialidadService } from './services/especialidad.service';
 import { BarrioService } from './services/barrio.service';
 import { LocalidadService } from './services/localidad.service';
 import { PaisService } from './services/pais.service';
-import { PacienteService } from './core/mpi/services/paciente.service';
+import { PacienteHttpService } from './apps/mpi/pacientes/services/pacienteHttp.service';
 import { TipoEstablecimientoService } from './services/tipoEstablecimiento.service';
 import { ProvinciaService } from './services/provincia.service';
 import { FinanciadorService } from './services/financiador.service';
@@ -159,16 +159,17 @@ import { HeaderPacienteComponent } from './components/paciente/headerPaciente.co
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { PacienteDetalleComponent } from './components/paciente/paciente-detalle';
 
-import { PacienteBuscarComponent } from './modules/mpi/components/paciente-buscar.component';
-import { PacienteListadoComponent } from './modules/mpi/components/paciente-listado.component';
-import { PacientePanelComponent } from './modules/mpi/components/paciente-panel.component';
-import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cru.component';
-import { RelacionesPacientesComponent } from './core/mpi/components/relaciones-pacientes.component';
-import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
-import { PacienteCruComponent } from './core/mpi/components/paciente-cru.component';
-import { GeoreferenciaService } from './core/mpi/services/georeferencia.service';
-import { BotonesRegistroComponent } from './core/mpi/components/mpi-botones-registro.component';
-import { GeorrefMapComponent } from './core/mpi/components/georref-map.component';
+import { PacienteBuscarComponent } from './apps/mpi/pacientes/components/paciente-buscar.component';
+import { PacienteBuscarService } from './apps/mpi/pacientes/components/paciente-buscar.service';
+import { PacienteListadoComponent } from './apps/mpi/pacientes/components/paciente-listado.component';
+import { PacientePanelComponent } from './apps/mpi/pacientes/components/paciente-panel.component';
+// import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cru.component';
+import { RelacionesPacientesComponent } from './apps/mpi/pacientes/components/relaciones-pacientes.component';
+import { PacienteBuscadorComponent } from './apps/mpi/pacientes/views/paciente-buscador.component';
+import { PacienteCruComponent } from './apps/mpi/pacientes/views/paciente-cru.component';
+import { GeoreferenciaService } from './apps/mpi/pacientes/services/georeferencia.service';
+// import { BotonesRegistroComponent } from './core/mpi/components/mpi-botones-registro.component';
+import { GeorrefMapComponent } from './apps/mpi/pacientes/components/georref-map.component';
 
 
 // PUCO/ObraSocial
@@ -496,10 +497,10 @@ import { FormTerapeuticoService } from './services/formTerapeutico/formTerapeuti
 import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem.component';
 import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
-import { BebeCruComponent } from './core/mpi/components/bebe-cru.component';
-import { NotaComponent } from './core/mpi/components/notas-paciente.component';
-import { PacienteCacheService } from './core/mpi/services/pacienteCache.service';
-import { HistorialBusquedaService } from './core/mpi/services/historialBusqueda.service';
+// import { BebeCruComponent } from './core/mpi/components/bebe-cru.component';
+import { NotaComponent } from './apps/mpi/pacientes/components/notas-paciente.component'; ////
+import { PacienteCacheService } from './apps/mpi/pacientes/services/pacienteCache.service';
+import { HistorialBusquedaService } from './apps/mpi/pacientes/services/historialBusqueda.service';
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { ChartComponent } from './modules/rup/components/elementos/chart.component';
 import { UploadFileComponent } from './shared/components/upload-file.component';
@@ -598,7 +599,6 @@ registerLocaleData(localeEs, 'es');
         VistaPrestacionComponent,
         VistaCDAComponent,
         HudsBusquedaPacienteComponent,
-        PacienteBuscarComponent,
         PacienteListadoComponent,
         PacientePanelComponent,
 
@@ -650,13 +650,13 @@ registerLocaleData(localeEs, 'es');
         PacienteListadoComponent,
         PacientePanelComponent,
         PacientePanelComponent,
-        BebeCruComponent,
-        ExtranjeroNNCruComponent,
+        //  BebeCruComponent,
+        //    ExtranjeroNNCruComponent,
         NotaComponent,
         RelacionesPacientesComponent,
-        BusquedaMpiComponent,
+        PacienteBuscadorComponent,
         PacienteCruComponent,
-        BotonesRegistroComponent,
+        //     BotonesRegistroComponent,
         UpdateContactoDireccionComponent,
         GeorrefMapComponent,
 
@@ -703,7 +703,7 @@ registerLocaleData(localeEs, 'es');
         PaisService,
         LocalidadService,
         BarrioService,
-        PacienteService,
+        PacienteHttpService,
         FinanciadorService,
         ParentescoService,
         appRoutingProviders,
@@ -768,7 +768,8 @@ registerLocaleData(localeEs, 'es');
         TurnosPrestacionesService,
         PlantillasService,
         InternacionCacheService,
-        WebSocketService
+        WebSocketService,
+        PacienteBuscarService
     ]
 })
 

@@ -26,8 +26,8 @@ import {
     AppMobileService
 } from '../../../services/appMobile.service';
 import {
-    PacienteService
-} from '../../../core/mpi/services/paciente.service';
+    PacienteHttpService
+} from '../../../apps/mpi/pacientes/services/pacienteHttp.service';
 
 @Component({
     selector: 'activar-app',
@@ -48,7 +48,7 @@ export class ActivarAppComponent implements OnInit, OnChanges {
     // Inicialización
     constructor(
         public serviceTurno: TurnoService,
-        public servicePaciente: PacienteService,
+        public servicePaciente: PacienteHttpService,
         public plex: Plex,
         public auth: Auth,
         public appMobile: AppMobileService
@@ -62,7 +62,7 @@ export class ActivarAppComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: any) {
-        this.servicePaciente.getById(this.paciente.id).subscribe(p => {
+        this.servicePaciente.findById(this.paciente.id, {}).subscribe(p => {
             this.paciente = p;
             this.celular = this.contacto('celular');
             this.email = this.contacto('email');
@@ -125,11 +125,6 @@ export class ActivarAppComponent implements OnInit, OnChanges {
         if (this.celular && this.email) {
             this.addContacto('celular', this.celular);
             this.addContacto('email', this.email);
-            let cambios = {
-                'op': 'updateContactos',
-                'contacto': this.paciente.contacto
-            };
-
 
             if (this.hideButton && !this.hideButtonResend) {
                 let contacto = {
@@ -147,7 +142,7 @@ export class ActivarAppComponent implements OnInit, OnChanges {
                     telefono: this.celular
                 };
                 this.appMobile.create(this.paciente.id, contacto).subscribe((datos) => {
-                    this.servicePaciente.patch(this.paciente.id, cambios).subscribe(resultado => {
+                    this.servicePaciente.update(this.paciente).subscribe(resultado => {
                         if (resultado) {
                             this.plex.toast('info', 'Datos del paciente actualizados');
                         }

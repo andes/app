@@ -13,7 +13,7 @@ import { ProvinciaService } from '../../../services/provincia.service';
 import { BarrioService } from '../../../services/barrio.service';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { IDireccion } from '../../../core/mpi/interfaces/IDireccion';
-import { PacienteService } from '../../../core/mpi/services/paciente.service';
+import { PacienteHttpService } from '../../../apps/mpi/pacientes/services/pacienteHttp.service';
 import { ILocalidad } from '../../../interfaces/ILocalidad';
 
 @Component({
@@ -69,7 +69,7 @@ export class UpdateContactoDireccionComponent implements OnInit {
     barriosNeuquen: any[];
 
     // Inicialización
-    constructor(private pacienteService: PacienteService,
+    constructor(private pacienteService: PacienteHttpService,
         private paisService: PaisService,
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,

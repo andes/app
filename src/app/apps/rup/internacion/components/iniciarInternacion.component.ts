@@ -11,7 +11,7 @@ import { OcupacionService } from '../../../../services/ocupacion/ocupacion.servi
 import { SnomedService } from '../../../../services/term/snomed.service';
 import { ProfesionalService } from '../../../../services/profesional.service';
 import { InternacionService } from '../services/internacion.service';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { PacienteHttpService } from '../../../../apps/mpi/pacientes/services/pacienteHttp.service';
 import { IPrestacionRegistro } from '../../../../modules/rup/interfaces/prestacion.registro.interface';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -147,7 +147,7 @@ export class IniciarInternacionComponent implements OnInit {
         private internacionService: InternacionService,
         public servicioProfesional: ProfesionalService,
         public servicioInternacion: InternacionService,
-        public pacienteService: PacienteService,
+        public pacienteService: PacienteHttpService,
         public snomed: SnomedService
     ) { }
 
@@ -214,7 +214,7 @@ export class IniciarInternacionComponent implements OnInit {
                                 let existeRegistro = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
                                 if (existeRegistro) {
                                     // Carga la información completa del paciente
-                                    this.pacienteService.getById(prestacion.paciente.id).subscribe(paciente => {
+                                    this.pacienteService.findById(prestacion.paciente.id, {}).subscribe(paciente => {
                                         this.paciente = paciente;
                                         let informeIngreso = existeRegistro.valor.informeIngreso;
                                         this.informeIngreso.ocupacionHabitual = informeIngreso.ocupacionHabitual;

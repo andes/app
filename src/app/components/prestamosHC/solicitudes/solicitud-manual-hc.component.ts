@@ -6,8 +6,8 @@ import { ProfesionalService } from '../../../services/profesional.service';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
-import { PacienteService } from '../../../core/mpi/services/paciente.service';
-
+import { PacienteHttpService } from '../../../apps/mpi/pacientes/services/pacienteHttp.service';
+import { CarpetaPacientesService } from '../../../services/carpetaPaciente.service';
 
 
 @Component({
@@ -45,7 +45,8 @@ export class SolicitudManualComponent implements OnInit {
         public servicioPrestacion: TipoPrestacionService,
         public servicioEspacioFisico: EspacioFisicoService,
         public servicioProfesional: ProfesionalService,
-        public servicePaciente: PacienteService,
+        public servicePaciente: PacienteHttpService,
+        public carpetaPacienteService: CarpetaPacientesService,
         public auth: Auth) {
     }
 
@@ -102,10 +103,10 @@ export class SolicitudManualComponent implements OnInit {
 
     searchPaciente(paciente) {
         if (paciente && paciente.id) {
-            this.servicePaciente.getById(paciente.id).subscribe(
+            this.servicePaciente.findById(paciente.id, {}).subscribe(
                 pacienteMPI => {
                     this.paciente = pacienteMPI;
-                    this.obtenerCarpetaPaciente( () => {
+                    this.obtenerCarpetaPaciente(() => {
                         this.solicitud = {};
                         this.solicitud.organizacion = this.auth.organizacion;
                         this.solicitud.paciente = this.paciente;
@@ -145,7 +146,7 @@ export class SolicitudManualComponent implements OnInit {
         if (this.paciente.carpetaEfectores) {
             this.carpetaEfector = this.paciente.carpetaEfectores.find(e => (e.organizacion as any)._id === this.auth.organizacion.id);
             if (!this.carpetaEfector) {
-                this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe( carpetas => {
+                this.carpetaPacienteService.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpetas => {
                     if (carpetas.length > 0) {
                         let _carpetaEfector = carpetas[0].carpetaEfectores.find((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
                         if (_carpetaEfector.nroCarpeta) {

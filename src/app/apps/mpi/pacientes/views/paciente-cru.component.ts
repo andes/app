@@ -1,32 +1,36 @@
-import { AppMobileService } from './../../../services/appMobile.service';
-import { ParentescoService } from './../../../services/parentesco.service';
-import { IContacto } from './../../../interfaces/IContacto';
-import { IDireccion } from '../../../core/mpi/interfaces/IDireccion';
-import { LocalidadService } from './../../../services/localidad.service';
-import { ProvinciaService } from './../../../services/provincia.service';
-import { PaisService } from './../../../services/pais.service';
-import { PacienteService } from '../../../core/mpi/services/paciente.service';
-import * as enumerados from './../../../utils/enumerados';
-import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
-import { IProvincia } from './../../../interfaces/IProvincia';
+import { AppMobileService } from '../../../../services/appMobile.service';
+import { ParentescoService } from '../services/parentesco.service';
+import { IContacto } from '../../../../interfaces/IContacto';
+import { IDireccion } from '../interfaces/IDireccion';
+import { LocalidadService } from '../../../../services/localidad.service';
+import { ProvinciaService } from '../../../../services/provincia.service';
+import { PaisService } from '../../../../services/pais.service';
+import { PacienteHttpService } from '../services/pacienteHttp.service';
+import * as enumerados from '../../../../utils/enumerados';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
+import { IProvincia } from '../../../../interfaces/IProvincia';
 import { Plex } from '@andes/plex';
 import * as moment from 'moment';
 import { Component, OnInit } from '@angular/core';
 import { PacienteCacheService } from '../services/pacienteCache.service';
-import { BarrioService } from '../../../services/barrio.service';
+import { BarrioService } from '../../../../services/barrio.service';
 import { GeoreferenciaService } from '../services/georeferencia.service';
 import { Auth } from '@andes/auth';
-import { OrganizacionService } from '../../../services/organizacion.service';
-import { IOrganizacion } from '../../../interfaces/IOrganizacion';
+import { OrganizacionService } from '../../../../services/organizacion.service';
+import { IOrganizacion } from '../../../../interfaces/IOrganizacion';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HistorialBusquedaService } from '../services/historialBusqueda.service';
+import { IPacienteRelacion } from '../interfaces/IPacienteRelacion.inteface';
+import { ValidacionService } from '../services/validacion.service';
+import { RelacionesHttpService } from '../services/relacionesHttp.service';
+
 @Component({
     selector: 'paciente-cru',
     templateUrl: 'paciente-cru.html',
     styleUrls: ['paciente-cru.scss']
 })
-export class PacienteCruComponent implements OnInit {
 
+export class PacienteCruComponent implements OnInit {
     foto = '';
     estados = [];
     sexos: any[];
@@ -117,6 +121,22 @@ export class PacienteCruComponent implements OnInit {
         reportarError: false,
         notaError: ''
     };
+
+    public relacion: IPacienteRelacion = {
+        relacion: {
+            id: '',
+            nombre: '',
+            opuesto: ''
+        },
+        referencia: '',
+        nombre: '',
+        apellido: '',
+        documento: '',
+        fechaNacimiento: null,
+        sexo: '',
+        foto: ''
+    };
+
     public disableValidar = true;
     public escaneado = false;
     public paciente: IPaciente;
@@ -147,8 +167,10 @@ export class PacienteCruComponent implements OnInit {
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
         private barriosService: BarrioService,
-        private pacienteService: PacienteService,
+        private pacienteService: PacienteHttpService,
         private parentescoService: ParentescoService,
+        private relacionesService: RelacionesHttpService,
+        private validacionService: ValidacionService,
         public appMobile: AppMobileService,
         private pacienteCache: PacienteCacheService,
         private _router: Router,
@@ -159,6 +181,11 @@ export class PacienteCruComponent implements OnInit {
 
     ngOnInit() {
         this.updateTitle('Registrar un paciente');
+        this.sexos = enumerados.getObjSexos();
+        this.generos = enumerados.getObjGeneros();
+        this.estadosCiviles = enumerados.getObjEstadoCivil();
+        this.tipoComunicacion = enumerados.getObjTipoComunicacion();
+        this.estados = enumerados.getEstados();
         this.route.params.subscribe(params => {
             this.opcion = params['opcion'];
             this.origen = params['origen'];
@@ -198,11 +225,6 @@ export class PacienteCruComponent implements OnInit {
             this.paisArgentina = arg[0];
         });
         this.showCargar = false;
-        this.sexos = enumerados.getObjSexos();
-        this.generos = enumerados.getObjGeneros();
-        this.estadosCiviles = enumerados.getObjEstadoCivil();
-        this.tipoComunicacion = enumerados.getObjTipoComunicacion();
-        this.estados = enumerados.getEstados();
     }
 
     private loadPaciente() {
@@ -210,7 +232,7 @@ export class PacienteCruComponent implements OnInit {
 
             if (this.paciente.id) {
                 // Busco el paciente en mongodb
-                this.pacienteService.getById(this.paciente.id).subscribe(resultado => {
+                this.pacienteService.findById(this.paciente.id, {}).subscribe(resultado => {
 
                     if (resultado) {
                         if (!resultado.scan) {
@@ -577,7 +599,7 @@ export class PacienteCruComponent implements OnInit {
                 pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadActual;
             }
 
-            this.pacienteService.save(pacienteGuardar, ignoreCheck, false).subscribe(
+            this.pacienteService.save(pacienteGuardar).subscribe(
                 (resultadoSave: any) => {
                     // Existen sugerencias de pacientes similares?
                     if (resultadoSave.resultadoMatching && resultadoSave.resultadoMatching.length > 0) {
@@ -647,10 +669,7 @@ export class PacienteCruComponent implements OnInit {
                         referencia: unPacienteSave.id,
                     };
                     if (rel.referencia) {
-                        this.pacienteService.patch(rel.referencia, {
-                            'op': 'deleteRelacion',
-                            'dto': dto
-                        }).subscribe();
+                        this.relacionesService.delete(unPacienteSave, dto).subscribe();
                     }
                 });
             }
@@ -671,10 +690,7 @@ export class PacienteCruComponent implements OnInit {
                         foto: unPacienteSave.foto ? unPacienteSave.foto : null
                     };
                     if (dto.referencia) {
-                        this.pacienteService.patch(rel.referencia, {
-                            'op': 'updateRelacion',
-                            'dto': dto
-                        }).subscribe();
+                        this.relacionesService.set(unPacienteSave, dto).subscribe();
                     }
                 });
             }
@@ -759,16 +775,24 @@ export class PacienteCruComponent implements OnInit {
         }
         this.disableValidar = true;
         this.loading = true;
-        this.pacienteService.validar(this.pacienteModel).subscribe(
+        this.validacionService.validar(this.pacienteModel).subscribe(
             resultado => {
                 this.loading = false;
-                if (resultado.existente) {
+                // este bloque era el que estaba
+                // if (resultado.existente) {
+                //     // PACIENTE EXISTENTE EN ANDES
+                //     if (resultado.paciente.estado === 'validado') {
+                //         this.validado = true;
+                //     }
+                //     this.plex.info('info', 'El paciente que está cargando ya existe en el sistema', 'Atención');
+                //     this.pacienteModel = resultado.paciente;
+                if (resultado.estado === 'validado') {
                     // PACIENTE EXISTENTE EN ANDES
-                    if (resultado.paciente.estado === 'validado') {
-                        this.validado = true;
-                    }
+                    // if (resultado.paciente.estado === 'validado') {
+                    //     this.validado = true;
+                    // }
                     this.plex.info('info', 'El paciente que está cargando ya existe en el sistema', 'Atención');
-                    this.pacienteModel = resultado.paciente;
+                    this.pacienteModel = resultado;
                 } else if (resultado.validado) {
                     // VALIDACION MEDIANTE FUENTES AUTENTICAS EXITOSA
                     this.setBackup();

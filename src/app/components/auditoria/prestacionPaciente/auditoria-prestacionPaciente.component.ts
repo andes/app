@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import * as moment from 'moment';
 import { Auth } from '@andes/auth';
 import { IAuditoriaPrestacionPaciente } from './../../../interfaces/auditoria/IAuditoriaPrestacionPaciente';
 import { AuditoriaPrestacionPacienteService } from './../../../services/auditoria/auditoriaPrestacionPaciente.service';
@@ -29,7 +27,7 @@ export class AuditoriaPrestacionPacienteComponent implements OnInit {
     tengoDatos = true;
     loader = false;
 
-    constructor(private formBuilder: FormBuilder,
+    constructor(
         private auditoriaPrestacionPacienteService: AuditoriaPrestacionPacienteService,
         private prestacionPacienteService: PrestacionesService,
         public auth: Auth) { }

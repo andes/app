@@ -4,7 +4,7 @@ import { Component, OnInit, Output, EventEmitter, HostBinding, ViewEncapsulation
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { PacienteHttpService } from '../../../../apps/mpi/pacientes/services/pacienteHttp.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { DocumentosService } from './../../../../services/documentos.service';
@@ -102,7 +102,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
     constructor(public servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
-        private servicioPaciente: PacienteService, private SNOMED: SnomedService,
+        private servicioPaciente: PacienteHttpService, private SNOMED: SnomedService,
         public plex: Plex, public auth: Auth, private router: Router,
         public servicioAgenda: AgendaService,
         private route: ActivatedRoute,
@@ -200,7 +200,7 @@ export class PrestacionValidacionComponent implements OnInit {
             });
             if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
                 // Carga la información completa del paciente
-                this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
+                this.servicioPaciente.findById(prestacion.paciente.id, {}).subscribe(paciente => {
                     this.paciente = paciente;
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                     let registros = this.prestacion.ejecucion.registros;

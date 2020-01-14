@@ -14,21 +14,21 @@
                             <!-- ----------- Búsqueda de pacientes -------------- -->
                             <div class="row">
                                 <div class="col-12">
-                                    <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                        (searchClear)="onSearchClear()">
-                                    </paciente-buscar>
+                                    <mpi-paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
+                                                         (searchClear)="onSearchClear()">
+                                    </mpi-paciente-buscar>
                                 </div>
                             </div>
                             <plex-loader *ngIf="loading"></plex-loader>
                             <div class="row">
                                 <div class="col-12">
-                                    <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length"
-                                        [pacientes]="resultadoBusqueda" [autoselect]="false"
-                                        (selected)="seleccionarPaciente($event)">
-                                    </paciente-listado>
+                                    <mpi-paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length"
+                                                          [pacientes]="resultadoBusqueda" [autoselect]="false"
+                                                          (selected)="seleccionarPaciente($event)">
+                                    </mpi-paciente-listado>
 
                                     <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length"
-                                        class="alert alert-default">
+                                         class="alert alert-default">
                                         ¡No se encontró ningún paciente!
                                     </div>
                                 </div>
@@ -41,7 +41,7 @@
                     <div class="row">
                         <div class="col-6" *ngIf=" !showSeleccionarPaciente" [plexWizard]="0">
                             <plex-datetime type="date" [(ngModel)]="modelo.solicitud.fecha" name="fechaSolicitud"
-                                label="Fecha en que el profesional solicitó la prestación" [required]="true">
+                                           label="Fecha en que el profesional solicitó la prestación" [required]="true">
                             </plex-datetime>
                         </div>
                     </div>
@@ -53,16 +53,17 @@
                         <div class="row">
                             <div class="col d-flex">
                                 <plex-bool class="align-self-center" [(ngModel)]="autocitado" label="Autocitado"
-                                    name="autocitado"></plex-bool>
+                                           name="autocitado"></plex-bool>
                             </div>
                         </div>
                         <!-- Tipo Prestación Destino -->
                         <div class="row">
                             <div class="col">
                                 <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" name="tipoPrestacionDestino"
-                                    (getData)="loadTipoPrestaciones($event)" label="Tipo de Prestación Solicitada"
-                                    placeholder="Tipos de Prestación solicitada" [required]="true"
-                                    (change)="onSelectPrestacionOrigen()">
+                                             (getData)="loadTipoPrestaciones($event)"
+                                             label="Tipo de Prestación Solicitada"
+                                             placeholder="Tipos de Prestación solicitada" [required]="true"
+                                             (change)="onSelectPrestacionOrigen()">
                                 </plex-select>
                             </div>
                         </div>
@@ -70,9 +71,10 @@
                         <div class="row">
                             <div class="col" *ngIf="!autocitado">
                                 <plex-select [(ngModel)]="modelo.solicitud.organizacionOrigen" name="organizacionOrigen"
-                                    [data]="dataOrganizacionesOrigen" label="Organización origen"
-                                    placeholder="Seleccione la organización" labelField="nombre"
-                                    (change)="onSelectOrganizacionOrigen(); checkProfesional()" [required]="true">
+                                             [data]="dataOrganizacionesOrigen" label="Organización origen"
+                                             placeholder="Seleccione la organización" labelField="nombre"
+                                             (change)="onSelectOrganizacionOrigen(); checkProfesional()"
+                                             [required]="true">
                                 </plex-select>
                             </div>
                         </div>
@@ -80,8 +82,9 @@
                         <div class="row">
                             <div class="col" *ngIf="!autocitado">
                                 <plex-select [(ngModel)]="prestacionOrigen" [data]="dataTipoPrestacionesOrigen"
-                                    name="tipoPrestacion" (change)="onSelect()" label="Tipos de Prestación Origen"
-                                    placeholder="Tipos de Prestación Origen" [required]="true">
+                                             name="tipoPrestacion" (change)="onSelect()"
+                                             label="Tipos de Prestación Origen" placeholder="Tipos de Prestación Origen"
+                                             [required]="true">
                                 </plex-select>
                             </div>
                         </div>
@@ -89,10 +92,10 @@
                         <div class="row">
                             <div class="col">
                                 <plex-select [(ngModel)]="modelo.solicitud.profesionalOrigen" name="profesionalOrigen"
-                                    (getData)="loadProfesionales($event)" label="Profesional solicitante"
-                                    placeholder="Escriba el apellido del Profesional"
-                                    labelField="apellido + ' ' + nombre" [required]="true"
-                                    (change)="checkProfesional()">
+                                             (getData)="loadProfesionales($event)" label="Profesional solicitante"
+                                             placeholder="Escriba el apellido del Profesional"
+                                             labelField="apellido + ' ' + nombre" [required]="true"
+                                             (change)="checkProfesional()">
                                 </plex-select>
                             </div>
                         </div>
@@ -100,9 +103,10 @@
                         <div class="row">
                             <div class="col" *ngIf="!autocitado">
                                 <plex-select *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.profesional"
-                                    label="Profesional destino" name="profesional" (getData)="loadProfesionales($event)"
-                                    (change)="checkProfesional()" placeholder="Escriba el apellido de un Profesional"
-                                    labelField="apellido + ' ' + nombre">
+                                             label="Profesional destino" name="profesional"
+                                             (getData)="loadProfesionales($event)" (change)="checkProfesional()"
+                                             placeholder="Escriba el apellido de un Profesional"
+                                             labelField="apellido + ' ' + nombre">
                                 </plex-select>
                             </div>
                         </div>
@@ -114,10 +118,10 @@
                         <!-- Tipo Prestación origen -->
                         <div class="row">
                             <div class="col">
-                                <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen" name="tipoPrestacionOrigen"
-                                    (change)="onSelect()" (getData)="loadTipoPrestaciones($event)"
-                                    label="Tipos de Prestación Origen" placeholder="Tipos de Prestación Origen"
-                                    [required]="true">
+                                <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen"
+                                             name="tipoPrestacionOrigen" (change)="onSelect()"
+                                             (getData)="loadTipoPrestaciones($event)" label="Tipos de Prestación Origen"
+                                             placeholder="Tipos de Prestación Origen" [required]="true">
                                 </plex-select>
                             </div>
                         </div>
@@ -125,9 +129,9 @@
                         <div class="row">
                             <div class="col">
                                 <plex-select [(ngModel)]="modelo.solicitud.profesionalOrigen" name="profesionalOrigen"
-                                    (getData)="loadProfesionales($event)" label="Profesional solicitante"
-                                    placeholder="Escriba el apellido del Profesional"
-                                    labelField="apellido + ' ' + nombre" [required]="true">
+                                             (getData)="loadProfesionales($event)" label="Profesional solicitante"
+                                             placeholder="Escriba el apellido del Profesional"
+                                             labelField="apellido + ' ' + nombre" [required]="true">
                                 </plex-select>
                             </div>
                         </div>
@@ -135,9 +139,9 @@
                         <div class="row">
                             <div class="col">
                                 <plex-select [(ngModel)]="modelo.solicitud.organizacion" name="organizacionDestino"
-                                    label="Organización destino" placeholder="Seleccione la organización"
-                                    labelField="nombre" [data]="dataOrganizacionesDestino" [required]="true"
-                                    (change)="onSelectOrganizacionDestino()">
+                                             label="Organización destino" placeholder="Seleccione la organización"
+                                             labelField="nombre" [data]="dataOrganizacionesDestino" [required]="true"
+                                             (change)="onSelectOrganizacionDestino()">
                                 </plex-select>
                             </div>
                         </div>
@@ -145,9 +149,9 @@
                         <div class="row">
                             <div class="col">
                                 <plex-select [(ngModel)]="prestacionDestino" name="tipoPrestacionDestino"
-                                    [data]="dataReglasDestino" label="Tipo de Prestación Solicitada"
-                                    placeholder="Tipos de Prestación solicitada" [required]="true"
-                                    (change)="onSelectPrestacionDestino()">
+                                             [data]="dataReglasDestino" label="Tipo de Prestación Solicitada"
+                                             placeholder="Tipos de Prestación solicitada" [required]="true"
+                                             (change)="onSelectPrestacionDestino()">
                                 </plex-select>
                             </div>
                         </div>
@@ -155,9 +159,10 @@
                         <div class="row">
                             <div class="col">
                                 <plex-select *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.profesional"
-                                    label="Profesional destino" name="profesional" (getData)="loadProfesionales($event)"
-                                    placeholder="Escriba el apellido de un Profesional"
-                                    labelField="apellido + ' ' + nombre">
+                                             label="Profesional destino" name="profesional"
+                                             (getData)="loadProfesionales($event)"
+                                             placeholder="Escriba el apellido de un Profesional"
+                                             labelField="apellido + ' ' + nombre">
                                 </plex-select>
                             </div>
                         </div>
@@ -169,7 +174,7 @@
                     <div class="row" *ngIf="!showSeleccionarPaciente">
                         <div class="col">
                             <plex-text [(ngModel)]="motivo" label="Notas / Diagnóstico / Motivo" name="motivo"
-                                multiline="true" [required]="true"></plex-text>
+                                       multiline="true" [required]="true"></plex-text>
                         </div>
                     </div>
                     <!-- Adjuntar Archivo -->
@@ -183,7 +188,7 @@
                                 <strong *ngIf="!soloValores">Cargar documentos</strong>
                                 <span *ngIf="!waiting && !soloValores">
                                     <plex-button type="primary" class="btn-sm" label="Desde mi PC"
-                                        (click)="upload.click()"></plex-button>
+                                                 (click)="upload.click()"></plex-button>
                                     <span *ngIf="errorExt">
                                         <span class="badge-danger"> Archivo inválido </span>
                                     </span>
@@ -191,7 +196,7 @@
                                 <span *ngIf="waiting">
                                     <plex-loader class="app-waiting" type="ball-pulse-sync"></plex-loader>
                                     <plex-button type="danger" class="btn-sm" label="Cancelar"
-                                        (click)="cancelarAdjunto()"></plex-button>
+                                                 (click)="cancelarAdjunto()"></plex-button>
                                 </span>
                             </div>
                         </div>
@@ -204,7 +209,7 @@
 
                                                 <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
                                                 <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)"
-                                                    class="adjunto">
+                                                   class="adjunto">
                                                     {{ doc.ext }}
                                                 </a>
                                                 <div *ngIf="!soloValores" class="x-mark" (click)="imageRemoved(doc)">
@@ -213,16 +218,16 @@
                                             </div>
                                         </a>
                                         <div (click)="lightbox = false" *ngIf="i === indice && lightbox"
-                                            [ngClass]="{'lightbox': i === indice && lightbox }" class="hover">
+                                             [ngClass]="{'lightbox': i === indice && lightbox }" class="hover">
                                             <i (click)=imagenPrevia(i)
-                                                class="mdi mdi-chevron-double-left previous parpadeo"></i>
+                                               class="mdi mdi-chevron-double-left previous parpadeo"></i>
                                             <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
                                             <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)"
-                                                class="adjunto m-1 p-2">
+                                               class="adjunto m-1 p-2">
                                                 {{ doc.ext }}
                                             </a>
                                             <i (click)=imagenSiguiente(i)
-                                                class="mdi mdi-chevron-double-right next parpadeo"></i>
+                                               class="mdi mdi-chevron-double-right next parpadeo"></i>
                                         </div>
                                     </ng-container>
                                 </div>
@@ -245,6 +250,6 @@
         <plex-button class="float-left mr-1" position="left" type="danger" label="Cancelar" (click)="cancelar()">
         </plex-button>
         <plex-button position="right" class="float-right mr-1" type="success" label="Guardar"
-            (click)="guardarSolicitud($event)" validateForm="true"> </plex-button>
+                     (click)="guardarSolicitud($event)" validateForm="true"> </plex-button>
     </footer>
 </form>

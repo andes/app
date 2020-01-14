@@ -44,10 +44,10 @@ import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/o
 // ... MPI
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
-import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cru.component';
-import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
-import { PacienteCruComponent } from './core/mpi/components/paciente-cru.component';
-import { BebeCruComponent } from './core/mpi/components/bebe-cru.component';
+// import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cru.component';
+import { PacienteBuscadorComponent } from './apps/mpi/pacientes/views/paciente-buscador.component';
+import { PacienteCruComponent } from './apps/mpi/pacientes/views/paciente-cru.component';
+// import { BebeCruComponent } from './core/mpi/components/bebe-cru.component';
 
 // ... Obras sociales
 import { PucoComponent } from './components/puco/puco.component';
@@ -120,12 +120,12 @@ const appRoutes: Routes = [
   { path: 'tm/mapa_espacio_fisico', component: MapaEspacioFisicoVistaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // MPI
-  { path: 'apps/mpi/busqueda', component: BusquedaMpiComponent, canActivate: [RoutingGuard] },
-  { path: 'apps/mpi/bebe', component: BebeCruComponent, canActivate: [RoutingGuard] },
+  { path: 'apps/mpi/busqueda', component: PacienteBuscadorComponent, canActivate: [RoutingGuard] },
+  // { path: 'apps/mpi/bebe', component: BebeCruComponent, canActivate: [RoutingGuard] },
   { path: 'apps/mpi/paciente', component: PacienteCruComponent, canActivate: [RoutingGuard] },
-  { path: 'apps/mpi/extranjero', component: ExtranjeroNNCruComponent, canActivate: [RoutingGuard] },
-  { path: 'apps/mpi/bebe/:origen', component: BebeCruComponent, canActivate: [RoutingGuard] },
-  { path: 'apps/mpi/extranjero/:origen', component: ExtranjeroNNCruComponent, canActivate: [RoutingGuard] },
+  // { path: 'apps/mpi/extranjero', component: ExtranjeroNNCruComponent, canActivate: [RoutingGuard] },
+  // { path: 'apps/mpi/bebe/:origen', component: BebeCruComponent, canActivate: [RoutingGuard] },
+  // { path: 'apps/mpi/extranjero/:origen', component: ExtranjeroNNCruComponent, canActivate: [RoutingGuard] },
   { path: 'apps/mpi/paciente/:opcion/:origen', component: PacienteCruComponent, canActivate: [RoutingGuard] },
   { path: 'apps/mpi/auditoria/vincular-pacientes', component: VincularPacientesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'apps/mpi/auditoria', component: AuditoriaComponent, canActivate: [RoutingNavBar, RoutingGuard] },

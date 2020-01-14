@@ -5,7 +5,7 @@ import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { IElementoRUP } from './../../interfaces/elementoRUP.interface';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { PacienteHttpService } from '../../../../apps/mpi/pacientes/services/pacienteHttp.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
@@ -125,7 +125,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         public plex: Plex, public auth: Auth,
         private router: Router, private route: ActivatedRoute,
         public servicioTipoPrestacion: TipoPrestacionService,
-        private servicioPaciente: PacienteService,
+        private servicioPaciente: PacienteHttpService,
         private servicioAgenda: AgendaService,
         private conceptObserverService: ConceptObserverService,
         private servicioSnomed: SnomedService,
@@ -198,7 +198,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
                             // Carga la información completa del paciente
                             if (!prestacion.solicitud.tipoPrestacion.noNominalizada) {
-                                this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
+                                this.servicioPaciente.findById(prestacion.paciente.id, {}).subscribe(paciente => {
                                     this.paciente = paciente;
                                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                                     if (this.paciente.documento) {

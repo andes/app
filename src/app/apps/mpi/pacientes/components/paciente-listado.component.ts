@@ -1,10 +1,10 @@
 import { IPacienteMatch } from './../interfaces/IPacienteMatch.inteface';
-import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Plex } from '@andes/plex';
 
 @Component({
-    selector: 'paciente-listado',
+    selector: 'mpi-paciente-listado',
     templateUrl: 'paciente-listado.html',
     styleUrls: ['paciente-listado.scss']
 })

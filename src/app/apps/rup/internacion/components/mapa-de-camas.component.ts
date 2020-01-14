@@ -12,7 +12,7 @@ import { CamasService } from '../services/camas.service';
 import { PacienteBuscarResultado } from '../../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 import { ElementosRUPService } from '../../../../modules/rup/services/elementosRUP.service';
 import * as enumerados from './../../../../utils/enumerados';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { PacienteHttpService } from '../../../../apps/mpi/pacientes/services/pacienteHttp.service';
 import { InternacionCacheService } from '../services/internacion-cache.service';
 @Component({
     selector: 'app-mapa-de-camas',
@@ -105,7 +105,7 @@ export class MapaDeCamasComponent implements OnInit {
         public auth: Auth,
         private plex: Plex,
         private router: Router,
-        private servicioPaciente: PacienteService,
+        private servicioPaciente: PacienteHttpService,
         public organizacionService: OrganizacionService,
         private internacionService: InternacionService,
         public camasService: CamasService,
@@ -521,7 +521,7 @@ export class MapaDeCamasComponent implements OnInit {
             this.prestacionPorInternacion = this.prestacion;
         }
         if (this.prestacionPorInternacion) {
-            this.servicioPaciente.getById(this.prestacionPorInternacion.paciente.id).subscribe(paciente => {
+            this.servicioPaciente.findById(this.prestacionPorInternacion.paciente.id, {}).subscribe(paciente => {
                 this.pacienteSelected = paciente;
                 this.accion = 'ocupar';
                 this.showIngreso = false;

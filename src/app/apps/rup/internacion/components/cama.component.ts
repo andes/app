@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { InternacionService } from '../services/internacion.service';
 import { CamasService } from '../services/camas.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { PacienteHttpService } from '../../../../apps/mpi/pacientes/services/pacienteHttp.service';
 
 @Component({
     selector: 'cama',
@@ -51,7 +51,7 @@ export class CamaComponent implements OnInit {
         private camasService: CamasService,
         private router: Router,
         public organizacionService: OrganizacionService,
-        private pacienteService: PacienteService,
+        private pacienteService: PacienteHttpService,
         private internacionService: InternacionService) { }
 
     ngOnInit() {
@@ -225,7 +225,7 @@ export class CamaComponent implements OnInit {
         let idPaciente = paciente ? paciente._id : this.prestacion.paciente.id;
         idInternacion = idInternacion ? idInternacion : this.prestacion.id;
         cama = cama ? cama : this.cama;
-        this.pacienteService.getById(idPaciente).subscribe(pacienteCompleto => {
+        this.pacienteService.findById(idPaciente, {}).subscribe(pacienteCompleto => {
             dto = {
                 fecha: new Date,
                 estado: 'ocupada',

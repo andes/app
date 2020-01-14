@@ -10,7 +10,7 @@ import { EstadosAgenda } from './../../../../components/turnos/enums';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { PacienteHttpService } from '../../../../apps/mpi/pacientes/services/pacienteHttp.service';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
@@ -71,7 +71,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         public auth: Auth,
         public servicioAgenda: AgendaService,
         public servicioPrestacion: PrestacionesService,
-        public servicePaciente: PacienteService,
+        public servicePaciente: PacienteHttpService,
         public serviceTurno: TurnoService,
         public snomed: SnomedService,
         public servicioTipoPrestacion: TipoPrestacionService,

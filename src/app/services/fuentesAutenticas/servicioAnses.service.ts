@@ -1,9 +1,6 @@
-import { PacienteService } from '../../core/mpi/services/paciente.service';
-import * as https from 'https';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Observable } from 'rxjs';
-
 
 @Injectable()
 export class AnsesService {

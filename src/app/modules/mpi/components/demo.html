@@ -2,12 +2,13 @@
     <plex-layout-main>
         <header>
             <!-- Buscador  -->
-            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"></paciente-buscar>
+            <mpi-paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"></mpi-paciente-buscar>
         </header>
         <!-- Listado de pacientes -->
-        <paciente-listado [pacientes]="pacientes" [autoselect]="false" (selected)="seleccionarPaciente($event)" (hover)="hoverPaciente($event)"></paciente-listado>
+        <mpi-paciente-listado [pacientes]="pacientes" [autoselect]="false" (selected)="seleccionarPaciente($event)"
+                              (hover)="hoverPaciente($event)"></mpi-paciente-listado>
     </plex-layout-main>
     <plex-layout-sidebar>
-        <paciente-panel [paciente]="pacienteActivo"></paciente-panel>
+        <mpi-paciente-panel [paciente]="pacienteActivo"></mpi-paciente-panel>
     </plex-layout-sidebar>
 </plex-layout>

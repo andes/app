@@ -7,10 +7,10 @@ import { Auth } from '@andes/auth';
 import { HistorialBusquedaService } from '../services/historialBusqueda.service';
 
 @Component({
-    selector: 'busqueda-mpi',
-    templateUrl: 'busqueda-mpi.html'
+    selector: 'paciente-buscador',
+    templateUrl: 'paciente-buscador.html'
 })
-export class BusquedaMpiComponent implements OnInit {
+export class PacienteBuscadorComponent implements OnInit {
     public disableNuevoPaciente = true;
     loading = false;
     resultadoBusqueda: IPaciente[] = [];

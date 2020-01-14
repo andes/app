@@ -11,7 +11,7 @@ import OlSourceVector from 'ol/source/Vector';
 import OlLayerVector from 'ol/layer/Vector';
 import { Component, Output, EventEmitter, Input, AfterViewInit } from '@angular/core';
 import { defaults as defaultInteractions } from 'ol/interaction.js';
-import { mapCenter } from '../../../../environments/apiKeyMaps';
+import { mapCenter } from '../../../../../environments/apiKeyMaps';
 
 
 @Component({

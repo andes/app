@@ -34,20 +34,20 @@
                             <div class="col">
                                 <div class="panel panel-default">
                                     <div class="clear"></div>
-                                    <paciente-buscar (searchStart)="searchStart()"
+                                    <mpi-paciente-buscar (searchStart)="searchStart()"
                                                      (searchEnd)="searchEnd($event.pacientes,$event.escaneado)"
                                                      (searchClear)="onSearchClear()">
-                                    </paciente-buscar>
+                                    </mpi-paciente-buscar>
                                 </div>
                             </div>
                         </div>
                         <plex-loader *ngIf="loading && pacientesSearch"></plex-loader>
                         <div class="row" *ngIf="pacientesSearch">
                             <div class="col-12">
-                                <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length"
+                                <mpi-paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length"
                                                   [pacientes]="resultadoBusqueda" [autoselect]="false"
                                                   (selected)="onSelect($event)">
-                                </paciente-listado>
+                                </mpi-paciente-listado>
                                 <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length" class="alert alert-default">
                                     ¡No se encontró ningún paciente!
                                 </div>

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
-import { PacienteService } from '../../core/mpi/services/paciente.service';
+import { PacienteHttpService } from '../../apps/mpi/pacientes/services/pacienteHttp.service';
+import { ValidacionService } from '../../apps/mpi/pacientes/services/validacion.service';
 import { RenaperService } from './../../services/fuentesAutenticas/servicioRenaper.service';
 import { SisaService } from './../../services/fuentesAutenticas/servicioSisa.service';
 import { Plex } from '@andes/plex';
@@ -50,9 +51,10 @@ export class PacienteDetalleComponent implements OnInit {
         private plex: Plex,
         public auth: Auth,
         private sisaService: SisaService,
-        private pacienteService: PacienteService,
+        private pacienteService: PacienteHttpService,
         private obraSocialService: ObraSocialService,
-        private obraSocialCacheService: ObraSocialCacheService) {
+        private obraSocialCacheService: ObraSocialCacheService,
+        private validacionService: ValidacionService) {
         this.nombrePattern = pacienteService.nombreRegEx;
 
     }
@@ -105,7 +107,7 @@ export class PacienteDetalleComponent implements OnInit {
         }
         this.deshabilitarValidar = true;
         this.loading = true;
-        this.pacienteService.validar(patient).subscribe(resultado => {
+        this.validacionService.validar(patient).subscribe(resultado => {
             this.loading = false;
             if (resultado.existente) {
                 this.plex.info('info', 'El paciente que está cargando ya existe en el sistema', 'Atención');

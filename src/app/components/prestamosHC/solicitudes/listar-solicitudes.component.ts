@@ -7,7 +7,7 @@ import * as moment from 'moment';
 
 // Servicios
 import { PrestamosService } from './../../../services/prestamosHC/prestamos-hc.service';
-import { PacienteService } from '../../../core/mpi/services/paciente.service';
+import { PacienteHttpService } from '../../../apps/mpi/pacientes/services/pacienteHttp.service';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { EspacioFisicoService } from '../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from '../../../services/profesional.service';
@@ -90,7 +90,7 @@ export class ListarSolicitudesComponent implements OnInit {
         public servicioEspacioFisico: EspacioFisicoService,
         public servicioProfesional: ProfesionalService,
         public auth: Auth,
-        public servicePaciente: PacienteService,
+        public servicePaciente: PacienteHttpService,
         public servicioOS: ObraSocialService,
         public servicioCDA: CDAService,
     ) {

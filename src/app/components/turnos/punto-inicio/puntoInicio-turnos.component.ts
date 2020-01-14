@@ -7,9 +7,9 @@ import { Plex } from '@andes/plex';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 
 // Servicios
-import { PacienteService } from '../../../core/mpi/services/paciente.service';
+import { PacienteHttpService } from '../../../apps/mpi/pacientes/services/pacienteHttp.service';
 import { AppMobileService } from '../../../services/appMobile.service';
-import { PacienteCacheService } from '../../../core/mpi/services/pacienteCache.service';
+import { PacienteCacheService } from '../../../apps/mpi/pacientes/services/pacienteCache.service';
 @Component({
     selector: 'puntoInicio-turnos',
     templateUrl: 'puntoInicio-turnos.html',
@@ -54,7 +54,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
     constructor(
         private pacienteCache: PacienteCacheService,
-        public servicePaciente: PacienteService,
+        public servicePaciente: PacienteHttpService,
         public auth: Auth,
         public appMobile: AppMobileService,
         private router: Router,
@@ -151,7 +151,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
     private getPacienteById(idPaciente: string) {
         this.showMostrarEstadisticasAgendas = false;
-        this.servicePaciente.getById(idPaciente).subscribe(pacienteMPI => {
+        this.servicePaciente.findById(idPaciente, {}).subscribe(pacienteMPI => {
             this.paciente = pacienteMPI;
             if (this.esOperacion) {
                 this.esOperacion = false;

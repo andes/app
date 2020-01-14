@@ -9,7 +9,7 @@ import { PrestacionesService } from '../../../../modules/rup/services/prestacion
 import { FinanciadorService } from '../../../../services/financiador.service';
 import { OcupacionService } from '../../../../services/ocupacion/ocupacion.service';
 import { SnomedService } from '../../../../services/term/snomed.service';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { PacienteHttpService } from '../../../../apps/mpi/pacientes/services/pacienteHttp.service';
 import { ElementosRUPService } from '../../../../modules/rup/services/elementosRUP.service';
 import { InternacionService } from '../services/internacion.service';
 import { IPrestacionRegistro } from '../../../../modules/rup/interfaces/prestacion.registro.interface';
@@ -94,7 +94,7 @@ export class EjecucionInternacionComponent implements OnInit {
         public financiadorService: FinanciadorService,
         public ocupacionService: OcupacionService,
         public snomedService: SnomedService,
-        private servicioPaciente: PacienteService,
+        private servicioPaciente: PacienteHttpService,
         public elementosRUPService: ElementosRUPService,
         public servicioInternacion: InternacionService,
         private location: Location) { }
@@ -116,7 +116,7 @@ export class EjecucionInternacionComponent implements OnInit {
         this.servicioPrestacion.getById(id).subscribe(prestacion => {
             this.prestacion = prestacion;
             // Carga la información completa del paciente
-            this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
+            this.servicioPaciente.findById(prestacion.paciente.id, {}).subscribe(paciente => {
                 this.paciente = paciente;
             });
             // recuperamos si tiene una epicrisis en ejecucion.

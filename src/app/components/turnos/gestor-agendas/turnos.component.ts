@@ -3,7 +3,7 @@ import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { PacienteService } from '../../../core/mpi/services/paciente.service';
+import { PacienteHttpService } from '../../../apps/mpi/pacientes/services/pacienteHttp.service';
 import { SmsService } from './../../../services/turnos/sms.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
@@ -85,7 +85,7 @@ export class TurnosComponent implements OnInit {
     public arrayDelDia = [];
 
     // Inicialización
-    constructor(public plex: Plex, public smsService: SmsService, public serviceAgenda: AgendaService, public listaEsperaService: ListaEsperaService, public servicePaciente: PacienteService, public auth: Auth) { }
+    constructor(public plex: Plex, public smsService: SmsService, public serviceAgenda: AgendaService, public listaEsperaService: ListaEsperaService, public servicePaciente: PacienteHttpService, public auth: Auth) { }
 
     ngOnInit() {
         this.turnosSeleccionados = [];
