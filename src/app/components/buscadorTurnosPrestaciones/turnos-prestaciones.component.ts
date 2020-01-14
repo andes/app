@@ -1,5 +1,5 @@
 import { Unsubscribe } from '@andes/shared';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TurnosPrestacionesService } from './services/turnos-prestaciones.service';
 import { Auth } from '@andes/auth';
 import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
@@ -15,7 +15,7 @@ import { Plex } from '@andes/plex';
 
 })
 
-export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
+export class TurnosPrestacionesComponent implements OnInit {
     public busquedas;
     public mostrarMasOpciones;
     private parametros;
@@ -84,7 +84,6 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         }]);
     }
 
-    ngOnDestroy() { }
 
     initialize() {
         let fecha = moment().format();
