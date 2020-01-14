@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Unsubscribe } from '@andes/shared';
+import { Component, OnInit } from '@angular/core';
 import { TurnosPrestacionesService } from './services/turnos-prestaciones.service';
 import { Auth } from '@andes/auth';
 import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
@@ -14,10 +15,9 @@ import { Plex } from '@andes/plex';
 
 })
 
-export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
+export class TurnosPrestacionesComponent implements OnInit {
     public busquedas;
     public mostrarMasOpciones;
-    private lastRequest: Subscription;
     private parametros;
     private hoy;
     public fechaDesde: any;
@@ -33,6 +33,9 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
     prestacion: any;
     router: any;
     public prestaciones: any;
+
+    public botonBuscarDisabled: Boolean = false;
+
     constructor(
         private auth: Auth, private plex: Plex,
         private turnosPrestacionesService: TurnosPrestacionesService, public servicioPrestacion: TipoPrestacionService, public serviceProfesional: ProfesionalService,
@@ -80,12 +83,8 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             name: 'BUSCADOR DE TURNOS Y PRESTACIONES'
         }]);
     }
-    /* limpiamos la request que se haya ejecutado */
-    ngOnDestroy() {
-        if (this.lastRequest) {
-            this.lastRequest.unsubscribe();
-        }
-    }
+
+
     initialize() {
         let fecha = moment().format();
 
@@ -112,20 +111,30 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
         });
 
     }
+
+    @Unsubscribe()
     buscar(parametros) {
 
         this.sumarB = (parametros.financiador === 'SUMAR' && this.sumar) ? true : false;
 
         this.showPrestacion = false;
         this.loading = true;
-        this.turnosPrestacionesService.get(parametros).subscribe((data) => {
+        return this.turnosPrestacionesService.get(parametros).subscribe((data) => {
             this.busquedas = this.ordenarPorFecha(data);
             this.loading = false;
         });
     }
+
     refreshSelection(value, tipo) {
+
         let fechaDesde = this.fechaDesde ? moment(this.fechaDesde).startOf('day') : null;
         let fechaHasta = this.fechaHasta ? moment(this.fechaHasta).endOf('day') : null;
+
+        if (this.fechaDesde && this.fechaHasta) {
+            let diff = moment(this.fechaHasta).diff(moment(this.fechaDesde), 'days');
+            this.botonBuscarDisabled = diff > 31;
+        }
+
         if (fechaDesde && fechaDesde.isValid() && fechaHasta && fechaHasta.isValid()) {
             if (tipo === 'fechaDesde') {
                 if (fechaDesde.isValid()) {
@@ -218,36 +227,25 @@ export class TurnosPrestacionesComponent implements OnInit, OnDestroy {
             turneable: 1
         }).subscribe(event.callback);
     }
+
+    @Unsubscribe()
     loadFinanciadores(event) {
         if (event.query && event.query !== '' && event.query.length > 2) {
-            if (this.lastRequest) {
-                this.lastRequest.unsubscribe();
-            }
             let query = {
                 nombre: event.query
             };
-            this.lastRequest = this.servicioOS.getListado(query).subscribe(event.callback);
+            return this.servicioOS.getListado(query).subscribe(event.callback);
         } else {
-            if (this.lastRequest) {
-                this.lastRequest.unsubscribe();
-            }
             event.callback([]);
         }
 
     }
+
+    @Unsubscribe()
     loadEquipoSalud(event) {
         if (event.query && event.query !== '' && event.query.length > 2) {
-            if (this.lastRequest) {
-                this.lastRequest.unsubscribe();
-            }
-            let query = {
-                nombreCompleto: event.query
-            };
-            this.lastRequest = this.serviceProfesional.get(query).subscribe(event.callback);
+            return this.serviceProfesional.get({ nombreCompleto: event.query }).subscribe(event.callback);
         } else {
-            if (this.lastRequest) {
-                this.lastRequest.unsubscribe();
-            }
             event.callback([]);
         }
     }
