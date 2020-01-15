@@ -45,7 +45,7 @@ export class ProfesionalService {
     }
 
     saveProfesional(profesionalModel: any) {
-        return this.server.post(this.profesionalUrl, profesionalModel);
+        return profesionalModel.id ? this.server.patch(`${this.profesionalUrl}/${profesionalModel.id}`, profesionalModel) : this.server.post(this.profesionalUrl, { profesional: profesionalModel });
     }
 
     disable(profesional: IProfesional): Observable<IProfesional> {

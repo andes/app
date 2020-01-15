@@ -1,14 +1,11 @@
 
 import { debounceTime } from 'rxjs/operators';
-import { ProfesionalCreateUpdateComponent } from './profesional-create-update.component';
 import { IProfesional } from './../../interfaces/IProfesional';
 import { ProfesionalService } from './../../services/profesional.service';
-import { Observable } from 'rxjs';
-import { Component, OnInit, Output, Input, EventEmitter, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Plex } from '@andes/plex';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
-
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'profesionales',
@@ -35,8 +32,7 @@ export class ProfesionalComponent implements OnInit {
     nuevoProfesional = false;
     // cantidad: IProfesional[];
 
-
-    constructor(private formBuilder: FormBuilder, private profesionalService: ProfesionalService, public sanitizer: DomSanitizer) { }
+    constructor(private formBuilder: FormBuilder, private profesionalService: ProfesionalService, public sanitizer: DomSanitizer, private router: Router) { }
 
     ngOnInit() {
         this.searchForm = this.formBuilder.group({
@@ -67,15 +63,18 @@ export class ProfesionalComponent implements OnInit {
         });
     }
 
-
     seleccionarProfesional(profesional) {
         this.profesionalSelected = profesional;
-        this.profesionalService.getFoto({ id: this.profesionalSelected.id }).subscribe(resp => {
-            this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp);
-        });
+        if (this.profesionalSelected.validadoRenaper) {
+            this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl(this.profesionalSelected.foto);
+        } else {
+            this.profesionalService.getFoto({ id: this.profesionalSelected.id }).subscribe(resp => {
+                this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp);
+            });
+        }
     }
 
-
-
-
+    routeTo(action, id) {
+        this.router.navigate([`tm/profesional/${action}/${id}`]);
+    }
 }
