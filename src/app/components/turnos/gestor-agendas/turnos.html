@@ -270,87 +270,6 @@
                             <span class="text-danger" *ngIf="sobreturno?.estado === 'suspendido'">(suspendido)</span>
                         </small>
                         <small>
-                            <span *ngIf="turno?.paciente?.id && turno.paciente.documento !== ''">
-                                <br>DNI {{ turno.paciente.documento }}</span>
-                            <span *ngIf="turno?.paciente?.id && turno.paciente.documento === ''">
-                                <br>Sin documento (temporal)
-                            </span>
-                            <span *ngIf="turno.estado ==='asignado' && turno.paciente.carpetaEfectores">
-                                <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">
-                                    <span
-                                          *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null">
-                                        | Nro Carpeta {{carpeta.nroCarpeta}} </span>
-                                </span>
-                            </span>
-                        </small>
-                        <br *ngIf="sobreturno?.paciente?.id">
-                        <small>
-                            <span
-                                  *ngIf="sobreturno?.paciente?.id && sobreturno.tipoPrestacion && agenda.tipoPrestaciones.length > 1">{{sobreturno.tipoPrestacion.nombre}}</span>
-                        </small>
-
-                        <span *ngIf="sobreturno && sobreturno.estado === 'disponible'">Disponible</span>
-                        <span [ngClass]="{'text-danger': sobreturno.estado === 'suspendido'}"
-                              *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</span>
-                    </td>
-                    <td>
-                        <small *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente"
-                               class="badge badge-info float-right" title="Ya reasignado" titlePosition="left">
-                            <i class="mdi mdi-account-check"></i>
-                        </small>
-                        <small *ngIf="turno?.paciente?.id && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'"
-                               class="badge badge-success float-right" title="Asistió" titlePosition="left">
-                            <i class="mdi mdi-account-check"></i>
-                        </small>
-                        <small *ngIf="turno?.paciente?.id && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'"
-                               class="badge badge-danger float-right" title="No asistió" titlePosition="left">
-                            <i class="mdi mdi-account-remove"></i>
-                        </small>
-                        <small *ngIf="turno?.paciente?.id && turno.confirmedAt" title="Confirmó asistencia"
-                               class="float-right">
-                            <i class="text-success mdi mdi-emoticon-happy"></i>
-                        </small>
-                        <small *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && !turno.reasignado?.siguiente"
-                               class="badge badge-danger float-right" title="Aun no reasignado" titlePosition="left">
-                            <i class="mdi mdi-account-alert"></i>
-                        </small>
-                        <small *ngIf="turno?.nota" class="badge badge-warning float-right" title="{{turno.nota}}"
-                               titlePosition="left">
-                            <i class="text-warning warning mdi mdi-message"></i>
-                        </small>
-                        <small *ngIf="sobreturno?.estado !== 'disponible' && sobreturno?.estado !== 'turnoDoble'"
-                               class="badge badge-default float-right">
-                            <popover-audit placement="left" [data]="sobreturno" [showUpdate]="true"></popover-audit>
-                        </small>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <!--Sobreturnos-->
-        <table class="table table-striped">
-            <thead *ngIf="agenda.sobreturnos && agenda.sobreturnos.length > 0">
-                <tr>
-                    <th colspan="4">Sobreturnos
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let sobreturno of agenda.sobreturnos; let i=index" class="hover"
-                    [ngClass]="{'bg-inverse text-white': estaSeleccionado(agenda.sobreturnos[i])}">
-                    <td (click)="seleccionarTurno(sobreturno, true, true)">
-                        <i *ngIf="estaSeleccionado(agenda.sobreturnos[i])" class="mdi mdi-checkbox-marked"></i>
-                        <i *ngIf="!estaSeleccionado(agenda.sobreturnos[i])" class="mdi mdi-checkbox-blank-outline"></i>
-                    </td>
-                    <td (click)="seleccionarTurno(agenda.sobreturnos[i], false, true)">
-                        <strong *ngIf="sobreturno">{{ sobreturno.horaInicio | date: 'HH:mm' }}</strong>
-                    </td>
-                    <td (click)="seleccionarTurno(agenda.sobreturnos[i], false, true)">
-                        <small *ngIf="sobreturno?.paciente?.id"
-                               [ngClass]="{'text-danger' : sobreturno?.estado === 'suspendido'}">{{
-                            sobreturno.paciente | paciente }}
-                            <span class="text-danger" *ngIf="sobreturno?.estado === 'suspendido'">(suspendido)</span>
-                        </small>
-                        <small>
                             <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.documento !== ''">
                                 <br> DNI {{sobreturno.paciente.documento}}</span>
                             <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.documento === ''">
@@ -398,54 +317,48 @@
         </table>
     </div>
 
-    <!-- Muestra el panel de Liberar turno -->
-    <div class="clear"></div>
-    <liberar-turno *ngIf="showLiberarTurno" [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados"
-                   (saveLiberarTurno)="saveLiberarTurno($event)"
-                   (reasignarTurnoLiberado)="reasignarTurnoLiberado($event)"
-                   (cancelaLiberarTurno)="cancelaLiberarTurno($event)">
-    </liberar-turno>
+</div>
 
-    <!-- Muestra el panel de Liberar turno -->
-    <div class="clear"></div>
-    <liberar-turno *ngIf="showLiberarTurno" [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados"
-                   (saveLiberarTurno)="saveLiberarTurno($event)"
-                   (reasignarTurnoLiberado)="reasignarTurnoLiberado($event)"
-                   (cancelaLiberarTurno)="cancelaLiberarTurno($event)">
-    </liberar-turno>
+<!-- Muestra el panel de Liberar turno -->
+<div class="clear"></div>
+<liberar-turno *ngIf="showLiberarTurno" [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados"
+               (saveLiberarTurno)="saveLiberarTurno($event)" (reasignarTurnoLiberado)="reasignarTurnoLiberado($event)"
+               (cancelaLiberarTurno)="cancelaLiberarTurno($event)">
+</liberar-turno>
 
-    <!-- Muestra el panel de Suspender turno -->
-    <div class="clear"></div>
-    <suspender-turno *ngIf="showSuspenderTurno" [agenda]="agenda" [accion]="'suspenderTurno'"
-                     [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="saveSuspenderTurno($event)"
-                     (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)"
-                     (cancelaSuspenderTurno)="cancelaSuspenderTurno($event)">
-    </suspender-turno>
+<!-- Muestra el panel de Suspender turno -->
+<div class="clear"></div>
+<suspender-turno *ngIf="showSuspenderTurno" [agenda]="agenda" [accion]="'suspenderTurno'"
+                 [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="saveSuspenderTurno($event)"
+                 (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)"
+                 (cancelaSuspenderTurno)="cancelaSuspenderTurno($event)">
+</suspender-turno>
 
-    <!-- Muestra el panel de Nota -->
-    <div class="clear"></div>
-    <agregar-nota-turno *ngIf="showAgregarNotaTurno" [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados"
-                        (saveAgregarNotaTurno)="saveAgregarNotaTurno($event)"
-                        (cancelaAgregarNota)="cancelaAgregarNota($event)">
-    </agregar-nota-turno>
+<!-- Muestra el panel de Nota -->
+<div class="clear"></div>
+<agregar-nota-turno *ngIf="showAgregarNotaTurno" [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados"
+                    (saveAgregarNotaTurno)="saveAgregarNotaTurno($event)"
+                    (cancelaAgregarNota)="cancelaAgregarNota($event)">
+</agregar-nota-turno>
 
-    <!-- Muestra el panel de Carpeta Paciente -->
-    <div *ngIf="showCarpetaPaciente && turnosSeleccionados[0].paciente">
-        <fieldset>
-            <legend>Editar número de carpeta del paciente</legend>
-            <div class="col-12">
-                <label>Paciente</label>
-            </div>
-            <div class=" col-12 ">
-                <span>
-                    {{turnosSeleccionados[0].paciente | paciente}}
-                </span>
-            </div>
-        </fieldset>
-        <carpeta-paciente [turnoSeleccionado]="turnosSeleccionados[0] " (guardarCarpetaEmit)="afterComponenteCarpeta($event)
-        " (cancelarCarpetaEmit)="afterComponenteCarpeta($event) ">
-        </carpeta-paciente>
-        <div class="col-12 text-center">
-            <plex-button type="warning" class="text-center" icon="mdi mdi-arrow-left" title="volver"
-                         (click)="afterComponenteCarpeta()"></plex-button>
+<!-- Muestra el panel de Carpeta Paciente -->
+<div *ngIf="showCarpetaPaciente && turnosSeleccionados[0].paciente">
+    <fieldset>
+        <legend>Editar número de carpeta del paciente</legend>
+        <div class="col-12">
+            <label>Paciente</label>
         </div>
+        <div class=" col-12 ">
+            <span>
+                {{turnosSeleccionados[0].paciente | paciente}}
+            </span>
+        </div>
+    </fieldset>
+    <carpeta-paciente [turnoSeleccionado]="turnosSeleccionados[0] " (guardarCarpetaEmit)="afterComponenteCarpeta($event)
+        " (cancelarCarpetaEmit)="afterComponenteCarpeta($event) ">
+    </carpeta-paciente>
+    <div class="col-12 text-center">
+        <plex-button type="warning" class="text-center" icon="mdi mdi-arrow-left" title="volver"
+                     (click)="afterComponenteCarpeta()"></plex-button>
+    </div>
+</div>
