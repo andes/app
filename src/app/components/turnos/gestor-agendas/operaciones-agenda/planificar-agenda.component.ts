@@ -158,8 +158,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     filtrarEspacioFisico() {
         if (!this.espacioFisicoPropios) {
             this.textoEspacio = 'Otros Espacios Físicos';
+            this.modelo.espacioFisico = null;
             this.showBloque = true;
         } else {
+            this.modelo.otroEspacioFisico = null;
             this.textoEspacio = 'Espacios físicos de la organización';
         }
     }

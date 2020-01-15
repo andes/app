@@ -490,7 +490,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         } else {
             event.callback(this.modelo.espacioFisico || []);
         }
-
     }
 
     verAgenda(agenda, multiple, e) {
