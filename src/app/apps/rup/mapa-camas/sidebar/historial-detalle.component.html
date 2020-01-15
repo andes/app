@@ -1,0 +1,49 @@
+<plex-title titulo="Historial de movimientos"></plex-title>
+
+<div class="row mb-1">
+    <div class="col">
+        <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" [debounce]="400"
+                       (change)="onChange($event)">
+        </plex-datetime>
+    </div>
+    <div class="col">
+        <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" [debounce]="400"
+                       (change)="onChange($event)">
+        </plex-datetime>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>FECHA</th>
+            <th>PACIENTE</th>
+            <th>UNIDAD ORGANIZATIVA</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of historial$ | async">
+            <td>
+                {{ item.fecha | fecha }}
+                {{ item.fecha | hora }}
+            </td>
+            <td *ngIf="item.paciente; else sinPaciente">
+                {{ item.paciente | paciente }}
+            </td>
+            <ng-template #sinPaciente>
+                <td class="text-danger">SIN PACIENTE</td>
+            </ng-template>
+            <td>
+                {{ item.unidadOrganizativa.term }}
+            </td>
+            <td>
+                <ng-container *ngIf="getEstado(item) as estadoCama">
+                    <plex-badge [type]="estadoCama.color">
+                        {{estadoCama.label}}
+                    </plex-badge>
+                </ng-container>
+            </td>
+        </tr>
+    </tbody>
+</table>

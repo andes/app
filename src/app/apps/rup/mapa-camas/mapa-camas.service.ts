@@ -16,6 +16,16 @@ export class MapaCamasService {
         });
     }
 
+    historial(ambito: string, capa: string, cama: string, desde: Date, hasta: Date): Observable<any[]> {
+        const params = {
+            ambito,
+            capa,
+            desde,
+            hasta
+        };
+        return this.server.get(`${this.url}/camas/${cama}/historial`, { params });
+    }
+
     getCama(ambito, capa, fecha, idCama): Observable<any[]> {
         return this.server.get(this.url + `/camas/${idCama}`, {
             params: { ambito, capa, fecha },
