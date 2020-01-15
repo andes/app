@@ -2,11 +2,12 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
-import { SnomedExpression, Cie10Service } from '../../../mitos';
+import { Cie10Service } from '../../../mitos';
 import { Plex } from '@andes/plex';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { MapaCamasService } from '../mapa-camas.service';
 import { ProcedimientosQuirurgicosService } from '../../../../services/procedimientosQuirurgicos.service';
+import { modelRegistroInternacion, listaTipoEgreso, causaExterna, opcionesTipoParto, opcionesCondicionAlNacer, opcionesTerminacion, opcionesSexo } from '../constantes-internacion';
 
 @Component({
     selector: 'app-egresar-paciente',
@@ -14,6 +15,7 @@ import { ProcedimientosQuirurgicosService } from '../../../../services/procedimi
 })
 
 export class EgresarPacienteComponent implements OnInit {
+    // EVENTOS
     @Input() fecha: Date;
     @Input() capa: string;
     @Input() selectedCama: any;
@@ -25,65 +27,27 @@ export class EgresarPacienteComponent implements OnInit {
     @Output() cambiarCama = new EventEmitter<any>();
     @Output() refresh = new EventEmitter<any>();
 
+    // CONSTANTES
+    public listaTipoEgreso = listaTipoEgreso;
+    public causaExterna = causaExterna;
+    public opcionesTipoParto = opcionesTipoParto;
+    public opcionesCondicionAlNacer = opcionesCondicionAlNacer;
+    public opcionesTerminacion = opcionesTerminacion;
+    public opcionesSexo = opcionesSexo;
+
+    // VARIABLES
     public ambito = 'internacion';
     public fechaValida = true;
     public esTraslado = false;
     public prestacion;
     public informeIngreso;
-    public registro: any = {
-        destacado: false,
-        esSolicitud: false,
-        esDiagnosticoPrincipal: false,
-        esPrimeraVez: undefined,
-        relacionadoCon: [],
-        nombre: 'alta del paciente',
-        concepto: {
-            fsn: 'alta del paciente (procedimiento)',
-            semanticTag: 'procedimiento',
-            refsetIds: ['900000000000497000'],
-            conceptId: '58000006',
-            term: 'alta del paciente'
-        },
-        valor: {
-            InformeEgreso: {
-                fechaEgreso: null,
-                nacimientos: [
-                    {
-                        pesoAlNacer: null,
-                        condicionAlNacer: null,
-                        terminacion: null,
-                        sexo: null
-                    }
-                ],
-                procedimientosQuirurgicos: [],
-                causaExterna: {
-                    producidaPor: null,
-                    lugar: null,
-                    comoSeProdujo: null
-                },
-            }
-        }
-    };
+    public registro: any = modelRegistroInternacion;
 
     public procedimientosObstetricos = false;
     public procedimientosObstetricosNoReq = false;
     public existeCausaExterna = false;
 
     public listaProcedimientosQuirurgicos: any[];
-    public listaTipoEgreso = [{ id: 'Alta médica', nombre: 'Alta médica' }, { id: 'Defunción', nombre: 'Defunción' },
-    { id: 'Traslado', nombre: 'Traslado' }, { id: 'Retiro Voluntario', nombre: 'Retiro Voluntario' }, { id: 'Otro', nombre: 'Otro' }];
-    public causaExterna = {
-        producidaPor: [{ id: 'Accidente', nombre: 'Accidente' }, { id: 'lesionAutoinfligida', nombre: 'Lesión autoinflingida' },
-        { id: 'agresion', nombre: 'Agresión' }, { id: 'seIgnora', nombre: 'Se ignora' }
-        ],
-        lugar: [{ id: 'domicilioParticular', nombre: 'Domicilio Particular' }, { id: 'viaPublico', nombre: 'Vía pública' },
-        { id: 'lugarDetrabajo', nombre: 'Lugar de trabajo' }, { id: 'otro', nombre: 'otro' }, { id: 'seIgnora', nombre: 'Se ignora' }
-        ]
-    };
-    public opcionesTipoParto = [{ id: 'Simple', label: 'Simple' }, { id: 'Multiple', label: 'Multiple' }];
-    public opcionesCondicionAlNacer = [{ id: 'Nac. Vivo', label: 'Nac. Vivo' }, { id: 'Def. fetal', label: 'Def. fetal' }];
-    public opcionesTerminacion = [{ id: 'Vaginal', label: 'Vaginal' }, { id: 'Cesária', label: 'Cesária' }];
-    public opcionesSexo = [{ id: 'Femenino', label: 'Femenino' }, { id: 'Masculino', label: 'Masculino' }, { id: 'Indeterminado', label: 'Indeterminado' }];
 
 
     constructor(

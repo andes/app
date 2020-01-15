@@ -1,8 +1,7 @@
 <plex-title justify [titulo]="titulo">
     <plex-button icon="arrow-left" type="danger" size="sm" (click)="cancelar()">
     </plex-button>
-    <plex-button *ngIf="paciente" icon="check" type="success" size="sm" [validateForm]="formIngreso"
-                 (click)="guardar($event)">
+    <plex-button icon="check" type="success" size="sm" (click)="guardar($event)" [disabled]="!fechaValida">
     </plex-button>
 </plex-title>
 <fieldset>

@@ -1,0 +1,53 @@
+<plex-tabs>
+    <plex-tab *ngIf="cama" label="CAMA" size="full">
+        <ng-container>
+            <plex-title justify titulo="DATOS DE CAMA">
+                <ng-container *ngFor="let relacion of relacionesPosibles">
+                    <plex-button [icon]="relacion.icon" [type]="relacion.color" size="sm" (click)="accion(relacion)">
+                    </plex-button>
+                </ng-container>
+                <plex-button icon="pencil" type="warning" size="sm" (click)="goTo()">
+                </plex-button>
+            </plex-title>
+            <fieldset>
+                <plex-detail size="md" direction="row">
+                    <plex-icon [name]="iconoCama" prefix="adi"></plex-icon>
+                    <plex-badge [type]="estadoCama.color"> {{estadoCama.label}}</plex-badge>
+                    <plex-badge type="info"> {{censable}}</plex-badge>
+                    <plex-badge type="info"> {{genero}}</plex-badge>
+                    <div title>{{ cama.nombre }}</div>
+                    <plex-label titulo="Unidad Organizativa" [subtitulo]="cama.unidadOrganizativa.term"></plex-label>
+                    <plex-label titulo="Sector" [subtitulo]="sector"></plex-label>
+                    <plex-label titulo="Especialidades" [subtitulo]="especialidades"></plex-label>
+                    <plex-label titulo="Tipo de cama" [subtitulo]="cama.tipoCama.term"></plex-label>
+                </plex-detail>
+            </fieldset>
+        </ng-container>
+        <ng-container *ngIf="paciente">
+            <plex-title size="sm" justify titulo="DATOS DE PACIENTE">
+                <plex-button label="EGRESAR" type="danger" size="sm" (click)="accion(egreso)">
+                </plex-button>
+                <plex-button label="VER EPICRISIS" type="success" size="sm" (click)="verEpicrisis()">
+                </plex-button>
+            </plex-title>
+            <fieldset>
+                <plex-detail size="md" direction="row">
+                    <plex-icon name="paciente" prefix="adi"></plex-icon>
+                    <plex-badge [type]="validadoColor"> {{paciente.estado}}</plex-badge>
+                    <div title>{{ paciente.apellido }}, {{ paciente.nombre }}</div>
+                    <div subtitle>{{ paciente.documento }}</div>
+                    <plex-label titulo="Fecha de Nacimiento"
+                                [subtitulo]="paciente.fechaNacimiento | date: 'dd/MM/yyyy'">
+                    </plex-label>
+                    <plex-label titulo="Edad" [subtitulo]="edadPaciente"></plex-label>
+                </plex-detail>
+            </fieldset>
+        </ng-container>
+    </plex-tab>
+    <plex-tab label="INTERNACION">
+        <app-internacion-detalle></app-internacion-detalle>
+    </plex-tab>
+    <plex-tab label="HISTORIAL">
+
+    </plex-tab>
+</plex-tabs>

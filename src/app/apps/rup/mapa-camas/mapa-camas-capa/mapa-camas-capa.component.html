@@ -23,9 +23,9 @@
                     <th>ESTADO</th>
                     <th>ACCIONES</th>
                 </tr>
-                <tr app-item-cama *ngFor="let cama of camas | async" [cama]="cama" [estados]="estados"
+                <tr app-item-cama *ngFor="let cama of camas | async; let i=index;" [cama]="cama" [estados]="estados"
                     [relaciones]="relaciones" [capa]="capa" [selected]="(selectedCama && cama._id === selectedCama._id)"
-                    (accionCama)="selectCama($event)"
+                    (accionCama)="selectCama($event)" (click)="verDetalle(i)"
                     [ngClass]="{'invert': (selectedCama && cama._id === selectedCama._id)}">
                 </tr>
             </table>
@@ -48,9 +48,13 @@
                               [selectedCama]="selectedCama" [unidadesOrganizativas]="unidadesOrganizativas"
                               (refresh)="refresh($event)">
         </app-egresar-paciente>
-        <app-cama-destino-generico *ngIf="accion === 'destinoGenerico'" [fecha]=" fecha" [camas]="opcionesCamas"
-                                   [selectedCama]="selectedCama" [destino]="estadoDestino" (cancel)="volverAResumen()"
-                                   (cambiarFecha)="getSnapshot($event)" (cambiarCama)="cambiarCama($event)">
+        <app-cama-destino-generico *ngIf="accion === 'accionGenerica'" [capa]="capa" [fecha]=" fecha"
+                                   [camas]="opcionesCamas" [selectedCama]="selectedCama" [destino]="estadoDestino"
+                                   (cancel)="volverAResumen()" (cambiarFecha)="getSnapshot($event)"
+                                   (cambiarCama)="cambiarCama($event)" (refresh)="refresh($event)">
         </app-cama-destino-generico>
+        <app-cama-detalle *ngIf="accion === 'verDetalle'" [capa]="capa" [cama]="selectedCama" [estados]="estados"
+                          [relaciones]="relaciones" (cancel)="volverAResumen()" (accionCama)="selectCama($event)">
+        </app-cama-detalle>
     </plex-layout-sidebar>
 </plex-layout>

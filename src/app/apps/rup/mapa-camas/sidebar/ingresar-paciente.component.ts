@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Auth } from '@andes/auth';
+import { ActivatedRoute } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { ProfesionalService } from '../../../../services/profesional.service';
 import { OcupacionService } from '../../../../services/ocupacion/ocupacion.service';
@@ -9,6 +8,7 @@ import { SnomedExpression } from '../../../mitos';
 import { IPrestacionRegistro } from '../../../../modules/rup/interfaces/prestacion.registro.interface';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 import { MapaCamasService } from '../mapa-camas.service';
+import { snomedIngreso, pacienteAsociado, origenHospitalizacion, nivelesInstruccion, situacionesLaborales, modelInformeIngreso } from '../constantes-internacion';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -16,6 +16,8 @@ import { MapaCamasService } from '../mapa-camas.service';
 })
 
 export class IngresarPacienteComponent implements OnInit {
+
+    // EVENTOS
     @Input() fecha: Date;
     @Input() selectedCama: any;
     @Input() camas: any;
@@ -25,6 +27,13 @@ export class IngresarPacienteComponent implements OnInit {
     @Output() cambiarCama = new EventEmitter<any>();
     @Output() refresh = new EventEmitter<any>();
 
+    // CONSTANTES
+    public pacienteAsociado = pacienteAsociado;
+    public origenHospitalizacion = origenHospitalizacion;
+    public nivelesInstruccion = nivelesInstruccion;
+    public situacionesLaborales = situacionesLaborales;
+
+    // VARIABLES
     public ambito = 'internacion';
     public capa: string;
 
@@ -37,67 +46,7 @@ export class IngresarPacienteComponent implements OnInit {
     public origenExterno = false;
     public datosBasicos = false;
 
-    public informeIngreso = {
-        fechaIngreso: new Date(),
-        horaNacimiento: new Date(),
-        edadAlIngreso: null,
-        origen: null,
-        ocupacionHabitual: null,
-        situacionLaboral: null,
-        nivelInstruccion: null,
-        especialidades: [],
-        asociado: null,
-        obraSocial: null,
-        nroCarpeta: null,
-        motivo: null,
-        organizacionOrigen: null,
-        profesional: null,
-        PaseAunidadOrganizativa: null
-    };
-
-    public snomedIngreso = {
-        fsn: 'documento de solicitud de admisión (elemento de registro)',
-        semanticTag: 'elemento de registro',
-        refsetIds: ['900000000000497000'],
-        conceptId: '721915006',
-        term: 'documento de solicitud de admisión'
-    };
-
-    public pacienteAsociado = [
-        { id: 'Plan de salud privado o Mutual', nombre: 'Plan de salud privado o Mutual' },
-        { id: 'Plan o Seguro público', nombre: 'Plan o Seguro público' },
-        { id: 'Ninguno', nombre: 'Ninguno' }
-    ];
-
-    public origenHospitalizacion = [
-        { id: 'consultorio externo', nombre: 'Consultorio externo' },
-        { id: 'emergencia', nombre: 'Emergencia' },
-        { id: 'traslado', nombre: 'Traslado' },
-        { id: 'sala de parto', nombre: 'Sala de parto' },
-        { id: 'otro', nombre: 'Otro' }
-    ];
-
-    public nivelesInstruccion = [
-        { id: 'ninguno', nombre: 'Ninguno' },
-        { id: 'primario incompleto', nombre: 'Primario incompleto' },
-        { id: 'primario completo', nombre: 'Primario completo' },
-        { id: 'secundario incompleto', nombre: 'Secundario incompleto' },
-        { id: 'secundario completo', nombre: 'Secundario completo' },
-        { id: 'Ciclo EGB (1 y 2) incompleto', nombre: 'Ciclo EGB (1 y 2) incompleto' },
-        { id: 'Ciclo EGB (1 y 2) completo', nombre: 'Ciclo EGB (1 y 2) completo' },
-        { id: 'Ciclo EGB 3 incompleto', nombre: 'Ciclo EGB 3 incompleto' },
-        { id: 'Ciclo EGB 3 completo', nombre: 'Ciclo EGB 3 completo' },
-        { id: 'Polimodal incompleto', nombre: 'Polimodal incompleto' },
-        { id: 'Polimodal completo', nombre: 'Polimodal completo' },
-        { id: 'terciario/universitario incompleto', nombre: 'Terciario/Universitario incompleto' },
-        { id: 'terciario/universitario completo', nombre: 'Terciario/Universitario completo' }
-    ];
-
-    public situacionesLaborales = [
-        { id: 1, nombre: 'Trabaja o está de licencia' },
-        { id: 2, nombre: 'No trabaja y busca trabajo' },
-        { id: 3, nombre: 'No trabaja y no busca trabajo' }
-    ];
+    public informeIngreso = modelInformeIngreso;
 
     constructor(
         private plex: Plex,
@@ -308,7 +257,7 @@ export class IngresarPacienteComponent implements OnInit {
             };
 
             if (this.selectedCama.idInternacion) {
-                console.log(this.selectedCama);
+                // console.log(this.selectedCama);
             } else {
                 this.guardarPrestacion(dtoPaciente);
             }
@@ -317,7 +266,7 @@ export class IngresarPacienteComponent implements OnInit {
 
     guardarPrestacion(paciente) {
         // armamos el elemento data a agregar al array de registros
-        let nuevoRegistro = new IPrestacionRegistro(null, this.snomedIngreso);
+        let nuevoRegistro = new IPrestacionRegistro(null, snomedIngreso);
 
         nuevoRegistro.valor = { informeIngreso: this.informeIngreso };
 

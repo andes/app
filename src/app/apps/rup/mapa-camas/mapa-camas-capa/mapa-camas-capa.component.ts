@@ -167,4 +167,16 @@ export class MapaCamasCapaComponent implements OnInit {
     cambiarCama(selectedCama) {
         this.selectedCama = selectedCama;
     }
+
+    verDetalle(indexCama) {
+        if (!this.estadoDestino) {
+            if (this.selectedCama && this.snapshot[indexCama].idCama === this.selectedCama.idCama) {
+                this.volverAResumen();
+            } else {
+                this.selectedCama = this.snapshot[indexCama];
+                this.estadoDestino = null;
+                this.accion = 'verDetalle';
+            }
+        }
+    }
 }

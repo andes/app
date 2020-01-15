@@ -28,7 +28,6 @@ export class MapaCamasService {
             ...data, ambito, capa, fecha
         };
         if (data._id) {
-            console.log(data._id);
             return this.server.patch(this.url + `/camas/${data._id}`, {
                 params,
                 showError: true

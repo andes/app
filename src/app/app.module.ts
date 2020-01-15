@@ -363,6 +363,8 @@ import { IconoCamitaComponent } from './apps/rup/mapa-camas/sidebar/icono-camita
 import { CamaDestinoGenericoComponent } from './apps/rup/mapa-camas/sidebar/cama-destino-generico.component';
 import { CamaDesocuparComponent } from './apps/rup/mapa-camas/sidebar/desocupar-cama.component';
 import { EgresarPacienteComponent } from './apps/rup/mapa-camas/sidebar/egresar-paciente.component';
+import { CamaDetalleComponent } from './apps/rup/mapa-camas/sidebar/cama-detalle.component';
+import { InternacionDetalleComponent } from './apps/rup/mapa-camas/sidebar/internacion-detalle.component';
 
 let mapaCamasComponents = [
     MapaCamasMainComponent,
@@ -377,7 +379,9 @@ let mapaCamasComponents = [
     IconoCamitaComponent,
     CamaDestinoGenericoComponent,
     CamaDesocuparComponent,
-    EgresarPacienteComponent
+    EgresarPacienteComponent,
+    CamaDetalleComponent,
+    InternacionDetalleComponent
 ];
 
 // Solicitudes
@@ -647,6 +651,9 @@ registerLocaleData(localeEs, 'es');
         VistaAccesosHudsComponent,
         ModalMotivoAccesoHudsComponent,
 
+        // MAPA DE CAMAS
+        mapaCamasComponents,
+
         // Solicitudes
         SolicitudesComponent,
         DetalleSolicitudComponent,
@@ -673,6 +680,8 @@ registerLocaleData(localeEs, 'es');
         ListaReglasComponent,
         VisualizacionReglasTopComponent,
         VisualizacionReglasComponent,
+        VistaSolicitudTopComponent,
+
         // MPI
         BebeCruComponent,
         ExtranjeroNNCruComponent,

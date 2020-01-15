@@ -40,6 +40,7 @@ export class ItemCamaComponent implements OnInit {
     getEstadosRelacionesCama() {
         this.relacionesPosibles = [];
         this.estadoCama = this.estados.filter(est => this.cama.estado === est.key)[0];
+        console.log(this.estadoCama);
         this.estados.map(est => this.relaciones.map(rel => {
             if (this.estadoCama.key === rel.origen) {
                 if (est.key === rel.destino && rel.destino !== 'inactiva') {
