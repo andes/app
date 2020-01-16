@@ -95,11 +95,10 @@ export class SolicitudesComponent implements OnInit {
 
     filtrarPaciente() {
         if (this.paciente) {
-            let auxEntrada = this.prestacionesEntrada;
             let auxSalida = this.prestacionesSalida;
 
             let search = this.paciente.toLowerCase();
-            this.prestacionesEntrada = auxEntrada.filter(t => {
+            this.prestacionesEntrada = this.prestacionesEntrada.filter(t => {
                 let nombreCompleto = '';
                 if (t.paciente && t.paciente.id) {
                     nombreCompleto = t.paciente.apellido + ' ' + t.paciente.nombre;
