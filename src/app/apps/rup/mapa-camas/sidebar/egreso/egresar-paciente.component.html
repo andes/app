@@ -1,38 +1,55 @@
 <form #formIngreso="ngForm">
-    <plex-title justify titulo="EGRESAR PACIENTE">
-        <plex-button icon="arrow-left" type="danger" size="sm" (click)="cancelar()">
-        </plex-button>
-        <plex-button icon="check" type="success" size="sm" [validateForm]="formIngreso" (click)="guardar($event)">
-        </plex-button>
-    </plex-title>
-    <ng-container *ngIf="!paciente">
-        <div class="row ">
-            <div class="col-6 ">
-                <plex-datetime type="date" name="fecha-hora" label="Fecha" [(ngModel)]="fecha" [required]="true"
-                               (change)="cambioFecha($event.value)">
-                </plex-datetime>
+    <fieldset>
+        <plex-title justify titulo="EGRESO">
+            <plex-button icon="arrow-left" type="danger" size="sm" (click)="cancelar()">
+            </plex-button>
+            <plex-button icon="check" type="success" size="sm" [validateForm]="formIngreso" (click)="guardar($event)">
+            </plex-button>
+        </plex-title>
+        <ng-container *ngIf="!paciente">
+            <div class="row ">
+                <div class="col-6 ">
+                    <plex-datetime type="date" name="fecha-hora" label="Fecha" [(ngModel)]="fecha" [required]="true"
+                                   (change)="cambioFecha($event.value)">
+                    </plex-datetime>
+                </div>
+                <div class="col-6 ">
+                    <plex-datetime type="time" name="fecha-hora" label="Hora" [(ngModel)]="fecha" [required]="true"
+                                   (change)="cambioFecha($event.value)">
+                    </plex-datetime>
+                </div>
+                <div *ngIf="!fechaValida" class="alert alert-danger">
+                    La fecha y hora no puede ser menor a la fecha de ingreso del paciente
+                    ({{informeIngreso.fechaIngreso | date: 'dd/MM/yyyy HH:mm'}}).
+                </div>
             </div>
-            <div class="col-6 ">
-                <plex-datetime type="time" name="fecha-hora" label="Hora" [(ngModel)]="fecha" [required]="true"
-                               (change)="cambioFecha($event.value)">
-                </plex-datetime>
+            <div class="row ">
+                <div class="col">
+                    <plex-select label="Tipo de egreso" [(ngModel)]="registro.valor.InformeEgreso.tipoEgreso"
+                                 name="InformeEgreso.tipoEgreso " [data]="listaTipoEgreso" placeholder="Seleccione... "
+                                 [required]="true">
+                    </plex-select>
+                </div>
             </div>
-            <div *ngIf="!fechaValida" class="alert alert-danger">
-                La fecha y hora no puede ser menor a la fecha de ingreso del paciente
-                ({{informeIngreso.fechaIngreso | date: 'dd/MM/yyyy HH:mm'}}).
-            </div>
-        </div>
-        <div class="row ">
-            <div class="col-6 ">
+        </ng-container>
+    </fieldset>
+    <fieldset>
+        <plex-title justify size="sm" titulo="Datos Estadisticos"></plex-title>
+        <div class="row">
+            <div class="col-4">
                 <plex-int name="diasEstada" label="Días de estada" suffix="Días"
                           [(ngModel)]="registro.valor.InformeEgreso.diasDeEstada" placeholder="" [required]="true"
                           [readonly]="true"></plex-int>
             </div>
-            <div class="col-6">
-                <plex-select label="Tipo de egreso" [(ngModel)]="registro.valor.InformeEgreso.tipoEgreso"
-                             name="InformeEgreso.tipoEgreso " [data]="listaTipoEgreso" placeholder="Seleccione... "
-                             [required]="true">
-                </plex-select>
+            <div class="col-4">
+                <plex-int name="diasDeEstada" label="Otros días de estada" suffix="Días"
+                          [(ngModel)]="registro.valor.InformeEgreso.diasEstadaOtrasCircunstancias" placeholder="">
+                </plex-int>
+            </div>
+            <div class="col-4">
+                <plex-int name="diasDePermisoDeSalida" label="Días de permiso de salida" suffix="Días"
+                          [(ngModel)]="registro.valor.InformeEgreso.diasDePermisoDeSalida" placeholder="">
+                </plex-int>
             </div>
         </div>
         <div class="row ">
@@ -80,20 +97,10 @@
         </div>
         <div class="row">
             <div class="col-6" *ngIf='registro.valor.InformeEgreso.otrasCircunstancias'>
-                <plex-int name="diasDeEstada" label="Otros días de estada" suffix="Días"
-                          [(ngModel)]="registro.valor.InformeEgreso.diasEstadaOtrasCircunstancias" placeholder="">
-                </plex-int>
-            </div>
-            <div class="col-{{registro.valor.InformeEgreso.otrasCircunstancias ? 6 : 12}}">
-                <label></label>
-                <plex-int name="diasDePermisoDeSalida" label="Días de permiso de salida" suffix="Días"
-                          [(ngModel)]="registro.valor.InformeEgreso.diasDePermisoDeSalida" placeholder="">
-                </plex-int>
+
             </div>
         </div>
-        <div class="row">&nbsp;</div>
-
-        <fieldset *ngIf="ExisteCausaExterna">
+        <ng-container *ngIf="ExisteCausaExterna">
             <legend>Causa Externa</legend>
             <div *ngIf="ExisteCausaExterna" class="row">
                 <div class="col">
@@ -122,46 +129,40 @@
                     </plex-select>
                 </div>
             </div>
-        </fieldset>
-        <div class="row">&nbsp;</div>
-        <fieldset>
-            <legend class="small">Procedimientos Quirúrgicos</legend>
-            <ng-container>
-                <ng-container
-                              *ngFor=" let procedimiento of registro.valor.InformeEgreso.procedimientosQuirurgicos; let i = index ">
-                    <div class="row">
-                        <div class="col-6">
-                            <plex-select label="Procedimientos" [(ngModel)]="procedimiento.procedimiento"
-                                         name="InformeEgreso.procedimientoQuirurgico-{{i}}"
-                                         (getData)="getListaProcedimientosQuirurgicos($event)"
-                                         placeholder="Seleccione..." labelField="nom">
-                            </plex-select>
+        </ng-container>
+    </fieldset>
+    <fieldset>
+        <plex-title justify size="sm" titulo="Procedimientos Quirurgicos">
+            <plex-label titulo="Nuevo Procedimiento"></plex-label>
+            <plex-button type="success" icon="plus" size="sm" (click)="addProcedimientoQuirurgico()">
+            </plex-button>
+        </plex-title>
+        <ng-container
+                      *ngFor=" let procedimiento of registro.valor.InformeEgreso.procedimientosQuirurgicos; let i = index ">
+            <div class="row">
+                <div class="col-6">
+                    <plex-select label="Procedimientos" [(ngModel)]="procedimiento.procedimiento"
+                                 name="InformeEgreso.procedimientoQuirurgico-{{i}}"
+                                 (getData)="getListaProcedimientosQuirurgicos($event)" placeholder="Seleccione..."
+                                 labelField="nom">
+                    </plex-select>
 
 
-                        </div>
-                        <div class="col-6">
-                            <plex-datetime name="fecha-procedimientoQuirurgico-{{i}}" label="Fecha" type="date"
-                                           [(ngModel)]="procedimiento.fecha">
-                            </plex-datetime>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-2 p-1 float-right">
-                            <plex-button *ngIf="i > 0" label="" type="danger btn-sm" icon="close"
-                                         (click)="removeProcedimiento(i)"></plex-button>
-                        </div>
-                    </div>
-                </ng-container>
-                <div class="row">
-                    <div class="col float-right">
-                        <plex-button label="Agregar procedimiento" type="success btn-sm" icon=""
-                                     (click)="addProcedimientoQuirurgico()"></plex-button>
-                    </div>
                 </div>
-            </ng-container>
-        </fieldset>
-        <div class="row">&nbsp;</div>
-        <fieldset *ngIf="procedimientosObstetricos || procedimientosObstetricosNoReq">
+                <div class="col-6">
+                    <plex-datetime name="fecha-procedimientoQuirurgico-{{i}}" label="Fecha" type="date"
+                                   [(ngModel)]="procedimiento.fecha">
+                    </plex-datetime>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2 p-1 float-right">
+                    <plex-button *ngIf="i > 0" label="" type="danger btn-sm" icon="close"
+                                 (click)="removeProcedimiento(i)"></plex-button>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="procedimientosObstetricos || procedimientosObstetricosNoReq">
             <legend class="small">Procedimientos Obstétricos
             </legend>
             <div *ngIf="procedimientosObstetricos || procedimientosObstetricosNoReq">
@@ -228,6 +229,6 @@
                     </div>
                 </div>
             </div>
-        </fieldset>
-    </ng-container>
+        </ng-container>
+    </fieldset>
 </form>

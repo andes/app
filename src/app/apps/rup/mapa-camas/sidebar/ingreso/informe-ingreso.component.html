@@ -1,0 +1,15 @@
+<ng-container *ngIf="detalle">
+    <plex-title justify titulo="INGRESO">
+        <plex-button icon="arrow-left" type="danger" size="sm" (click)="cancelar()">
+        </plex-button>
+        <plex-button icon="pencil" type="warning" size="sm" (click)="onEdit()">
+        </plex-button>
+    </plex-title>
+    <app-ingreso-detalle *ngIf="informeIngreso" [cama]="cama" [informeIngreso]="informeIngreso"></app-ingreso-detalle>
+</ng-container>
+<ng-container *ngIf="!detalle">
+    <app-ingresar-paciente [camas]="camas" [cama]="cama" [paciente]="cama.paciente" (cancel)="cancelar()"
+                           (cambiarFecha)="cambiarFechaIngreso($event)" (cambiarCama)="cambiarSeleccionCama($event)"
+                           (refresh)="refescar($event)">
+    </app-ingresar-paciente>
+</ng-container>

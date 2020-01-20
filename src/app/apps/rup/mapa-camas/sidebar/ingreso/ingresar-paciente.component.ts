@@ -1,14 +1,14 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Plex } from '@andes/plex';
-import { ProfesionalService } from '../../../../services/profesional.service';
-import { OcupacionService } from '../../../../services/ocupacion/ocupacion.service';
-import { OrganizacionService } from '../../../../services/organizacion.service';
-import { SnomedExpression } from '../../../mitos';
-import { IPrestacionRegistro } from '../../../../modules/rup/interfaces/prestacion.registro.interface';
-import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
-import { MapaCamasService } from '../mapa-camas.service';
-import { snomedIngreso, pacienteAsociado, origenHospitalizacion, nivelesInstruccion, situacionesLaborales, modelInformeIngreso } from '../constantes-internacion';
+import { ProfesionalService } from '../../../../../services/profesional.service';
+import { OcupacionService } from '../../../../../services/ocupacion/ocupacion.service';
+import { OrganizacionService } from '../../../../../services/organizacion.service';
+import { SnomedExpression } from '../../../../mitos';
+import { IPrestacionRegistro } from '../../../../../modules/rup/interfaces/prestacion.registro.interface';
+import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
+import { MapaCamasService } from '../../mapa-camas.service';
+import { snomedIngreso, pacienteAsociado, origenHospitalizacion, nivelesInstruccion, situacionesLaborales } from '../../constantes-internacion';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -18,9 +18,10 @@ import { snomedIngreso, pacienteAsociado, origenHospitalizacion, nivelesInstrucc
 export class IngresarPacienteComponent implements OnInit {
 
     // EVENTOS
-    @Input() fecha: Date;
-    @Input() selectedCama: any;
+    @Input() cama: any;
     @Input() camas: any;
+    @Input() detalle = false;
+    @Input() paciente = null;
 
     @Output() cancel = new EventEmitter<any>();
     @Output() cambiarFecha = new EventEmitter<any>();
@@ -32,6 +33,7 @@ export class IngresarPacienteComponent implements OnInit {
     public origenHospitalizacion = origenHospitalizacion;
     public nivelesInstruccion = nivelesInstruccion;
     public situacionesLaborales = situacionesLaborales;
+    public snomedIngreso = snomedIngreso;
 
     // VARIABLES
     public ambito = 'internacion';
@@ -41,12 +43,27 @@ export class IngresarPacienteComponent implements OnInit {
     public fechaValida = true;
 
     public pacientes = [];
-    public paciente: any;
     public obraSocial: any;
     public origenExterno = false;
     public datosBasicos = false;
-
-    public informeIngreso = modelInformeIngreso;
+    public prestacion;
+    public informeIngreso = {
+        fechaIngreso: new Date(),
+        horaNacimiento: new Date(),
+        edadAlIngreso: null,
+        origen: null,
+        ocupacionHabitual: null,
+        situacionLaboral: null,
+        nivelInstruccion: null,
+        especialidades: [],
+        asociado: null,
+        obraSocial: null,
+        nroCarpeta: null,
+        motivo: null,
+        organizacionOrigen: null,
+        profesional: null,
+        PaseAunidadOrganizativa: null
+    };
 
     constructor(
         private plex: Plex,
@@ -62,6 +79,15 @@ export class IngresarPacienteComponent implements OnInit {
         this.route.paramMap.subscribe(params => {
             this.capa = params.get('capa');
         });
+
+        if (this.cama.idInternacion) {
+            this.servicioPrestacion.getById(this.cama.idInternacion).subscribe(prestacion => {
+                this.prestacion = prestacion;
+                this.informeIngreso = prestacion.ejecucion.registros[0].valor.informeIngreso;
+            })
+        } else {
+            console.log(this.informeIngreso)
+        }
     }
 
     cancelar() {
@@ -157,61 +183,11 @@ export class IngresarPacienteComponent implements OnInit {
     }
 
     cambiarSeleccionCama() {
-        this.cambiarCama.emit(this.selectedCama);
+        this.cambiarCama.emit(this.cama);
     }
 
     toggleDatos() {
         this.datosBasicos = !this.datosBasicos;
-    }
-
-    calcularEdad(fechaNacimiento: Date, fechaCalculo: Date): any {
-        let edad: any;
-        let fechaNac: any;
-        let fechaActual: Date = fechaCalculo ? fechaCalculo : new Date();
-        let fechaAct: any;
-        let difAnios: any;
-        let difDias: any;
-        let difMeses: any;
-        let difD: any;
-        let difHs: any;
-        let difMn: any;
-
-        fechaNac = moment(fechaNacimiento, 'YYYY-MM-DD HH:mm:ss');
-        fechaAct = moment(fechaActual, 'YYYY-MM-DD HH:mm:ss');
-        difDias = fechaAct.diff(fechaNac, 'd'); // Diferencia en días
-        difAnios = Math.floor(difDias / 365.25);
-        difMeses = Math.floor(difDias / 30.4375);
-        difHs = fechaAct.diff(fechaNac, 'h'); // Diferencia en horas
-        difMn = fechaAct.diff(fechaNac, 'm'); // Diferencia en minutos
-
-        if (difAnios !== 0) {
-            edad = {
-                valor: difAnios,
-                unidad: 'año/s'
-            };
-        } else if (difMeses !== 0) {
-            edad = {
-                valor: difMeses,
-                unidad: 'mes/es'
-            };
-        } else if (difDias !== 0) {
-            edad = {
-                valor: difDias,
-                unidad: 'día/s'
-            };
-        } else if (difHs !== 0) {
-            edad = {
-                valor: difHs,
-                unidad: 'hora/s'
-            };
-        } else if (difMn !== 0) {
-            edad = {
-                valor: difMn,
-                unidad: 'minuto/s'
-            };
-        }
-
-        return (String(edad.valor) + ' ' + edad.unidad);
     }
 
     cambiarPaciente() {
@@ -221,8 +197,6 @@ export class IngresarPacienteComponent implements OnInit {
 
     guardar(valid) {
         if (valid.formValid) {
-            let fechaIngreso = moment(this.fecha).toDate();
-
             // Verificamos si es de origen externo
             if (this.origenExterno) {
                 this.informeIngreso.organizacionOrigen = {
@@ -233,13 +207,12 @@ export class IngresarPacienteComponent implements OnInit {
 
             // construimos el informe de ingreso
             this.informeIngreso.situacionLaboral = (this.informeIngreso.situacionLaboral) ? this.informeIngreso.situacionLaboral.nombre : null;
-            this.informeIngreso.nivelInstruccion = (Object(this.informeIngreso.nivelInstruccion).nombre);
-            this.informeIngreso.asociado = (Object(this.informeIngreso.asociado).nombre);
-            this.informeIngreso.origen = (Object(this.informeIngreso.origen).nombre);
+            this.informeIngreso.nivelInstruccion = ((typeof this.informeIngreso.nivelInstruccion === 'string')) ? this.informeIngreso.nivelInstruccion : (Object(this.informeIngreso.nivelInstruccion).nombre);
+            this.informeIngreso.asociado = ((typeof this.informeIngreso.asociado === 'string')) ? this.informeIngreso.asociado : (Object(this.informeIngreso.asociado).nombre);
+            this.informeIngreso.origen = ((typeof this.informeIngreso.origen === 'string')) ? this.informeIngreso.origen : (Object(this.informeIngreso.origen).nombre);
             this.informeIngreso.PaseAunidadOrganizativa = this.informeIngreso.PaseAunidadOrganizativa;
-            this.informeIngreso.fechaIngreso = fechaIngreso;
             if (this.paciente.fechaNacimiento) {
-                this.informeIngreso.edadAlIngreso = this.calcularEdad(this.paciente.fechaNacimiento, this.informeIngreso.fechaIngreso);
+                this.informeIngreso.edadAlIngreso = this.mapaCamasService.calcularEdad(this.paciente.fechaNacimiento, this.informeIngreso.fechaIngreso);
 
             }
 
@@ -256,12 +229,34 @@ export class IngresarPacienteComponent implements OnInit {
                 telefono: this.paciente.telefono
             };
 
-            if (this.selectedCama.idInternacion) {
-                // console.log(this.selectedCama);
+            if (this.prestacion) {
+                this.actualizarPrestacion(dtoPaciente);
             } else {
                 this.guardarPrestacion(dtoPaciente);
             }
         }
+    }
+
+    actualizarPrestacion(paciente) {
+        // reemplazamos el Informe de ingreso en la prestacion
+        let indexInforme = this.prestacion.ejecucion.registros.findIndex(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
+        this.prestacion.ejecucion.registros[indexInforme].valor = { informeIngreso: this.informeIngreso };
+        let cambios = {
+            op: 'registros',
+            registros: this.prestacion.ejecucion.registros
+        };
+        this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe(p => {
+            this.informeIngreso = p.ejecucion.registros[0].valor.informeIngreso;
+            this.mapaCamasService.patchCama(this.cama, this.ambito, this.capa, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
+                this.cama.paciente = paciente;
+                this.refresh.emit({ cama: this.cama, accion: 'internarPaciente' });
+                this.plex.info('success', 'Ingreso editado!');
+            }, (err1) => {
+                this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
+            });
+        }, (err) => {
+            this.plex.info('danger', err);
+        });
     }
 
     guardarPrestacion(paciente) {
@@ -288,21 +283,21 @@ export class IngresarPacienteComponent implements OnInit {
         }
 
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
-            if (this.selectedCama) {
+            if (this.cama) {
                 // Se modifica el estado de la cama
-                this.selectedCama.estado = 'ocupada';
-                this.selectedCama.idInternacion = prestacion.id;
-                this.selectedCama.paciente = paciente;
+                this.cama.estado = 'ocupada';
+                this.cama.idInternacion = prestacion.id;
+                this.cama.paciente = paciente;
 
-                this.mapaCamasService.patchCama(this.selectedCama, this.ambito, this.capa, this.fecha).subscribe(camaActualizada => {
+                this.mapaCamasService.patchCama(this.cama, this.ambito, this.capa, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
                     this.plex.info('success', 'Paciente internado');
-                    this.refresh.emit({ cama: this.selectedCama, accion: 'internarPaciente' });
+                    this.refresh.emit({ cama: this.cama, accion: 'internarPaciente' });
                 }, (err1) => {
                     this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
                 });
             } else if (this.capa === 'estadistica') {
                 this.plex.info('warning', 'Paciente ingresado a lista de espera');
-                this.refresh.emit({ cama: this.selectedCama, accion: 'listaDeEspera' });
+                this.refresh.emit({ cama: this.cama, accion: 'listaDeEspera' });
             }
 
         }, (err) => {

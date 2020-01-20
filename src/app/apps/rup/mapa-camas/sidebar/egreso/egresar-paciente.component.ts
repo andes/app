@@ -1,13 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
-import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
-import { Cie10Service } from '../../../mitos';
+import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
+import { Cie10Service } from '../../../../mitos';
 import { Plex } from '@andes/plex';
-import { OrganizacionService } from '../../../../services/organizacion.service';
-import { MapaCamasService } from '../mapa-camas.service';
-import { ProcedimientosQuirurgicosService } from '../../../../services/procedimientosQuirurgicos.service';
-import { modelRegistroInternacion, listaTipoEgreso, causaExterna, opcionesTipoParto, opcionesCondicionAlNacer, opcionesTerminacion, opcionesSexo } from '../constantes-internacion';
+import { OrganizacionService } from '../../../../../services/organizacion.service';
+import { MapaCamasService } from '../../mapa-camas.service';
+import { ProcedimientosQuirurgicosService } from '../../../../../services/procedimientosQuirurgicos.service';
+import { modelRegistroInternacion, listaTipoEgreso, causaExterna, opcionesTipoParto, opcionesCondicionAlNacer, opcionesTerminacion, opcionesSexo } from '../../constantes-internacion';
 
 @Component({
     selector: 'app-egresar-paciente',
@@ -18,9 +18,8 @@ export class EgresarPacienteComponent implements OnInit {
     // EVENTOS
     @Input() fecha: Date;
     @Input() capa: string;
-    @Input() selectedCama: any;
+    @Input() cama: any;
     @Input() camas: any;
-    @Input() unidadesOrganizativas: any;
 
     @Output() cancel = new EventEmitter<any>();
     @Output() cambiarFecha = new EventEmitter<any>();
@@ -41,7 +40,40 @@ export class EgresarPacienteComponent implements OnInit {
     public esTraslado = false;
     public prestacion;
     public informeIngreso;
-    public registro: any = modelRegistroInternacion;
+    public registro: any = {
+        destacado: false,
+        esSolicitud: false,
+        esDiagnosticoPrincipal: false,
+        esPrimeraVez: undefined,
+        relacionadoCon: [],
+        nombre: 'alta del paciente',
+        concepto: {
+            fsn: 'alta del paciente (procedimiento)',
+            semanticTag: 'procedimiento',
+            refsetIds: ['900000000000497000'],
+            conceptId: '58000006',
+            term: 'alta del paciente'
+        },
+        valor: {
+            InformeEgreso: {
+                fechaEgreso: null,
+                nacimientos: [
+                    {
+                        pesoAlNacer: null,
+                        condicionAlNacer: null,
+                        terminacion: null,
+                        sexo: null
+                    }
+                ],
+                procedimientosQuirurgicos: [],
+                causaExterna: {
+                    producidaPor: null,
+                    lugar: null,
+                    comoSeProdujo: null
+                },
+            }
+        }
+    };
 
     public procedimientosObstetricos = false;
     public procedimientosObstetricosNoReq = false;
@@ -53,7 +85,6 @@ export class EgresarPacienteComponent implements OnInit {
     constructor(
         public auth: Auth,
         public plex: Plex,
-        private router: Router,
         public cie10Service: Cie10Service,
         private organizacionService: OrganizacionService,
         private servicioPrestacion: PrestacionesService,
@@ -63,11 +94,14 @@ export class EgresarPacienteComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.prestacionesService.getById(this.selectedCama.idInternacion).subscribe(prestacion => {
-            this.prestacion = prestacion;
-            this.informeIngreso = prestacion.ejecucion.registros[0].valor.informeIngreso;
-            this.calcularDiasEstada();
-        });
+        if (this.cama.idInternacion) {
+            this.prestacionesService.getById(this.cama.idInternacion).subscribe(prestacion => {
+                this.prestacion = prestacion;
+                this.informeIngreso = prestacion.ejecucion.registros[0].valor.informeIngreso;
+                this.calcularDiasEstada();
+            });
+        }
+
     }
 
     cancelar() {
@@ -87,8 +121,8 @@ export class EgresarPacienteComponent implements OnInit {
     }
 
     calcularDiasEstada() {
-        if (this.selectedCama) {
-            let fechaUltimoEstado = moment(this.selectedCama.fecha, 'DD-MM-YYYY HH:mm');
+        if (this.cama) {
+            let fechaUltimoEstado = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm');
             if (this.fecha < fechaUltimoEstado) {
                 this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a ' + fechaUltimoEstado);
                 this.registro.valor.InformeEgreso['diasDeEstada'] = null;
@@ -104,7 +138,7 @@ export class EgresarPacienteComponent implements OnInit {
     }
 
     cambiarSeleccionCama() {
-        this.cambiarCama.emit(this.selectedCama);
+        this.cambiarCama.emit(this.cama);
     }
 
 
@@ -208,13 +242,13 @@ export class EgresarPacienteComponent implements OnInit {
                 };
                 this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
                     // Se modifica el estado de la cama
-                    this.selectedCama.estado = 'disponible';
-                    this.selectedCama.idInternacion = null;
-                    this.selectedCama.paciente = null;
+                    this.cama.estado = 'disponible';
+                    this.cama.idInternacion = null;
+                    this.cama.paciente = null;
 
-                    this.mapaCamasService.patchCama(this.selectedCama, this.ambito, this.capa, this.fecha).subscribe(camaActualizada => {
+                    this.mapaCamasService.patchCama(this.cama, this.ambito, this.capa, this.fecha).subscribe(camaActualizada => {
                         this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
-                        this.refresh.emit({ cama: this.selectedCama });
+                        this.refresh.emit({ cama: this.cama });
                     }, (err1) => {
                         this.plex.info('danger', err1, 'Error al intentar desocupar la cama');
                     });

@@ -1,7 +1,9 @@
-<plex-tabs>
-    <plex-tab *ngIf="cama" label="CAMA" size="full">
+<plex-tabs size="full" [activeIndex]="tabIndex" (change)="cambiarTab($event)">
+    <plex-tab *ngIf="cama" label="CAMA">
         <ng-container>
             <plex-title justify titulo="DATOS DE CAMA">
+                <plex-button icon="arrow-left" type="danger" size="sm" (click)="cancelar()">
+                </plex-button>
                 <ng-container *ngFor="let relacion of relacionesPosibles">
                     <plex-button [icon]="relacion.icon" [type]="relacion.color" size="sm" (click)="accion(relacion)">
                     </plex-button>
@@ -10,23 +12,21 @@
                 </plex-button>
             </plex-title>
             <fieldset>
-                <plex-detail size="md" direction="row">
+                <plex-detail size="lg" direction="row">
                     <plex-icon [name]="iconoCama" prefix="adi"></plex-icon>
                     <plex-badge [type]="estadoCama.color"> {{estadoCama.label}}</plex-badge>
                     <plex-badge type="info"> {{censable}}</plex-badge>
                     <plex-badge type="info"> {{genero}}</plex-badge>
-                    <div title>{{ cama.nombre }}</div>
+                    <div [class]="titleColor" title>{{ cama.nombre }}</div>
                     <plex-label titulo="Unidad Organizativa" [subtitulo]="cama.unidadOrganizativa.term"></plex-label>
-                    <plex-label titulo="Sector" [subtitulo]="sector"></plex-label>
                     <plex-label titulo="Especialidades" [subtitulo]="especialidades"></plex-label>
                     <plex-label titulo="Tipo de cama" [subtitulo]="cama.tipoCama.term"></plex-label>
+                    <plex-label titulo="Sector" [subtitulo]="sector"></plex-label>
                 </plex-detail>
             </fieldset>
         </ng-container>
         <ng-container *ngIf="paciente">
             <plex-title size="sm" justify titulo="DATOS DE PACIENTE">
-                <plex-button label="EGRESAR" type="danger" size="sm" (click)="accion(egreso)">
-                </plex-button>
                 <plex-button label="VER EPICRISIS" type="success" size="sm" (click)="verEpicrisis()">
                 </plex-button>
             </plex-title>
@@ -44,8 +44,10 @@
             </fieldset>
         </ng-container>
     </plex-tab>
-    <plex-tab label="INTERNACION">
-        <app-internacion-detalle></app-internacion-detalle>
+    <plex-tab *ngIf="paciente" label="INTERNACION">
+        <app-internacion-detalle [fecha]="fecha" [capa]="capa" [camas]="camas" [cama]="cama" [estados]="estados"
+                                 [relaciones]="relaciones" (refresh)="refrescar($event)">
+        </app-internacion-detalle>
     </plex-tab>
     <plex-tab label="HISTORIAL">
         <app-historial-detalle [cama]="cama" [capa]="capa" [estados]="estados"></app-historial-detalle>

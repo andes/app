@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
-import { CamasService } from '../../internacion/services/camas.service';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { Router } from '@angular/router';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 import { ElementosRUPService } from '../../../../modules/rup/services/elementosRUP.service';
+import { MapaCamasService } from '../mapa-camas.service';
 
 
 @Component({
@@ -13,12 +13,15 @@ import { ElementosRUPService } from '../../../../modules/rup/services/elementosR
 export class CamaDetalleComponent implements OnInit {
     // Eventos
     @Input() capa: string;
+    @Input() fecha: Date;
     @Input() cama: any;
+    @Input() camas: any;
     @Input() estados: any;
     @Input() relaciones: any;
 
     @Output() cancel = new EventEmitter<any>();
     @Output() accionCama = new EventEmitter<any>();
+    @Output() refresh = new EventEmitter<any>();
 
     // VARIABLES
     public estadoCama;
@@ -31,15 +34,16 @@ export class CamaDetalleComponent implements OnInit {
     public sector;
     public especialidades;
     public validadoColor;
-    public egreso;
     public conceptosInternacion;
+    public titleColor;
+    public tabIndex = 0;
 
     constructor(
         private router: Router,
-        private camaService: CamasService,
         private pacienteService: PacienteService,
         private prestacionService: PrestacionesService,
-        private elementoRupService: ElementosRUPService
+        private elementoRupService: ElementosRUPService,
+        private mapaCamasService: MapaCamasService
     ) { }
 
     ngOnInit() {
@@ -60,6 +64,7 @@ export class CamaDetalleComponent implements OnInit {
                 this.getDatosCama();
                 this.getRelacionesPosibles();
             }
+            this.cambiarTab(0);
         }
 
     }
@@ -78,6 +83,8 @@ export class CamaDetalleComponent implements OnInit {
         for (const especialidad of this.cama.especialidades) {
             this.especialidades += especialidad.term + ', ';
         }
+
+        this.titleColor = 'text-' + this.estadoCama.color;
     }
 
     getPaciente() {
@@ -88,7 +95,7 @@ export class CamaDetalleComponent implements OnInit {
             } else {
                 this.validadoColor = 'warning';
             }
-            this.edadPaciente = this.calcularEdad(this.paciente.fechaNacimiento, moment().toDate());
+            this.edadPaciente = this.mapaCamasService.calcularEdad(this.paciente.fechaNacimiento, moment().toDate());
         });
     }
 
@@ -98,11 +105,7 @@ export class CamaDetalleComponent implements OnInit {
             this.relaciones.map(rel => {
                 if (this.estadoCama.key === rel.origen) {
                     if (est.key === rel.destino && rel.destino !== 'inactiva') {
-                        if (rel.accion === 'desocuparCama') {
-                            this.egreso = rel;
-                        } else {
-                            this.relacionesPosibles.push(rel);
-                        }
+                        this.relacionesPosibles.push(rel);
                     }
                 }
             })
@@ -113,57 +116,8 @@ export class CamaDetalleComponent implements OnInit {
         this.cancel.emit();
     }
 
-    calcularEdad(fechaNacimiento: Date, fechaCalculo: Date): any {
-        let edad: any;
-        let fechaNac: any;
-        let fechaActual: Date = fechaCalculo ? fechaCalculo : new Date();
-        let fechaAct: any;
-        let difAnios: any;
-        let difDias: any;
-        let difMeses: any;
-        let difHs: any;
-        let difMn: any;
-
-        fechaNac = moment(fechaNacimiento, 'YYYY-MM-DD HH:mm:ss');
-        fechaAct = moment(fechaActual, 'YYYY-MM-DD HH:mm:ss');
-        difDias = fechaAct.diff(fechaNac, 'd'); // Diferencia en días
-        difAnios = Math.floor(difDias / 365.25);
-        difMeses = Math.floor(difDias / 30.4375);
-        difHs = fechaAct.diff(fechaNac, 'h'); // Diferencia en horas
-        difMn = fechaAct.diff(fechaNac, 'm'); // Diferencia en minutos
-
-        if (difAnios !== 0) {
-            edad = {
-                valor: difAnios,
-                unidad: 'año/s'
-            };
-        } else if (difMeses !== 0) {
-            edad = {
-                valor: difMeses,
-                unidad: 'mes/es'
-            };
-        } else if (difDias !== 0) {
-            edad = {
-                valor: difDias,
-                unidad: 'día/s'
-            };
-        } else if (difHs !== 0) {
-            edad = {
-                valor: difHs,
-                unidad: 'hora/s'
-            };
-        } else if (difMn !== 0) {
-            edad = {
-                valor: difMn,
-                unidad: 'minuto/s'
-            };
-        }
-
-        return (String(edad.valor) + ' ' + edad.unidad);
-    }
-
-    verEpicrisis() {
-
+    cambiarTab(index) {
+        this.tabIndex = index;
     }
 
     goTo() {
@@ -191,5 +145,9 @@ export class CamaDetalleComponent implements OnInit {
                 this.router.navigate(['rup/ejecucion', prestacionExiste[0].id]);
             }
         });
+    }
+
+    refrescar(accion) {
+        this.refresh.emit(accion)
     }
 }

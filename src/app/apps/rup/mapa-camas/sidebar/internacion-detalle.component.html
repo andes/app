@@ -1,9 +1,35 @@
-<ng-container>
-    <plex-title justify titulo="DATOS DE INTERNACION">
-        <plex-button icon="arrow-left" type="danger" size="sm" (click)="cancelar()">
-        </plex-button>
-    </plex-title>
-    <fieldset>
-
-    </fieldset>
-</ng-container>
+<div class="mt-2">
+    <ng-container *ngIf="!mostrar">
+        <fieldset>
+            <div class="row">
+                <div class="col-3">
+                    <plex-button label="INGRESO" type="primary" size="block" [disabled]="!habilitarIngreso"
+                                 (click)="toggleMostrar('ingreso')">
+                    </plex-button>
+                </div>
+                <div class="col-6">
+                    <plex-button label="MOVIMIENTOS CAMA" type="primary" size="block"
+                                 (click)="toggleMostrar('movimientos')">
+                    </plex-button>
+                </div>
+                <div class="col-3">
+                    <plex-button label="EGRESO" type="primary" size="block" [disabled]="!habilitarEgreso"
+                                 (click)="toggleMostrar('egreso')">
+                    </plex-button>
+                </div>
+            </div>
+        </fieldset>
+    </ng-container>
+    <ng-container *ngIf="mostrar === 'ingreso'">
+        <app-informe-ingreso [capa]="capa" [fecha]="fecha" [camas]="camas" [cama]="cama" [detalle]="true"
+                             (cancel)="toggleMostrar(null)">
+        </app-informe-ingreso>
+    </ng-container>
+    <ng-container *ngIf="mostrar === 'movimientos'">
+    </ng-container>
+    <ng-container *ngIf="mostrar === 'egreso'">
+        <app-egresar-paciente [fecha]="fecha" [capa]="capa" [cama]="cama" (cancel)="toggleMostrar(null)"
+                              (refresh)="refrescar($event)">
+        </app-egresar-paciente>
+    </ng-container>
+</div>
