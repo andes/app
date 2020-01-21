@@ -61,6 +61,27 @@
                             </span>
                         </small>
                     </ng-container>
+                    <ng-container *ngIf="agendaSeleccionada.tipoPrestaciones[0].noNominalizada">
+                        <div class="d-flex flex-column">
+                            <span>
+                                <ng-container *ngIf="agendaSeleccionada.profesionales">
+                                    <span *ngFor="let profesional of agendaSeleccionada.profesionales">
+                                        {{ profesional | profesional }}
+                                    </span>
+                                </ng-container>
+                                <span *ngIf="agendaSeleccionada.profesionales.length === 0" class="font-italic">
+                                    Equipo de Salud no asignado
+                                </span>
+                            </span>
+                            <div>
+                                <small
+                                       *ngIf="agendaSeleccionada.espacioFisico?.nombre">{{ agendaSeleccionada.espacioFisico.nombre }}</small>
+                                <small *ngIf="!agendaSeleccionada.espacioFisico?.nombre" class="font-italic">
+                                    Espacio físico no asignado
+                                </small>
+                            </div>
+                        </div>
+                    </ng-container>
                     <plex-badge [ngClass]="{'mr-1': turno.asistencia !== 'noAsistio'}" size="sm"
                                 *ngIf="turno.asistencia"
                                 type="{{ turno.asistencia === 'asistio' ? 'info' : 'warning' }}">
@@ -69,7 +90,7 @@
                         </ng-container>
                     </plex-badge>
                     <plex-button class="mr-1" *ngIf="turno.asistencia === 'noAsistio'" type="warning" size="sm"
-                                 (click)="registrarInasistenciaEmit([turno.paciente,agendaSeleccionada, turno.id, 'sacarAsistencia'])"
+                                 (click)="registrarInasistenciaEmit([turno.paciente, agendaSeleccionada, turno.id, 'sacarAsistencia'])"
                                  title="Revertir inasistencia">
                         <i class="mdi mdi-backup-restore"></i>
                     </plex-button>
@@ -87,7 +108,9 @@
                         </plex-badge>
                     </div>
 
-                    <plex-badge *ngIf="turno?.estado == 'disponible'" type="info">{{ turno.estado }}</plex-badge>
+                    <plex-badge *ngIf="turno?.estado == 'disponible' && !agendaSeleccionada.tipoPrestaciones[0].noNominalizada"
+                                type="info">
+                        {{ turno.estado }}</plex-badge>
 
                     <ng-container *ngIf="turno.asistencia && turno.estado !== 'suspendido'">
 
@@ -144,9 +167,9 @@
 
                 <plex-button size="sm"
                              *ngIf="esFutura && agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && turno.paciente && !turno.prestacion && servicioPrestacion.verificarAsistencia(turno)"
-                             icon="plus-circle" type="disabled"
-                             title="Disponible {{ servicioPrestacion.diaAgenda(agendaSeleccionada) }}"
+                             type="disabled" title="Disponible {{ servicioPrestacion.diaAgenda(agendaSeleccionada) }}"
                              titlePosition="top">
+                    <i class="mdi mdi-plus-circle mdi-24px"></i>
                 </plex-button>
 
                 <plex-button class="mr-1" size="sm"
@@ -181,17 +204,19 @@
             </div>
             <div justify="end" *ngIf="agendaSeleccionada.tipoPrestaciones[0].noNominalizada">
                 <!--TODO -> revisar cuando se defina el estado final de las agendas no nominalizadas agendaSeleccionada.estado !== 'auditada'-->
-                <plex-button size="sm"
-                             *ngIf="!turno.asistencia &&  !esFutura && agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && !turno.prestacion && servicioPrestacion.tienePermisos(turno)"
-                             icon="plus-circle" type="success"
-                             (click)="servicioPrestacion.iniciarPrestacionNoNominalizada(turno.tipoPrestacion, turno)">
+                <plex-button class="mr-1" size="sm"
+                             *ngIf="!turno.asistencia && !esFutura && agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && !turno.prestacion && servicioPrestacion.tienePermisos(turno)"
+                             type="success"
+                             (click)="servicioPrestacion.iniciarPrestacionNoNominalizada(turno.tipoPrestacion, turno)"
+                             title="Iniciar Prestación">
+                    <i class="mdi mdi-plus-circle mdi-24px"></i>
                 </plex-button>
 
-                <plex-button size="sm"
-                             *ngIf="!turno.asistencia &&  esFutura && agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && !turno.prestacion"
-                             icon="plus-circle" type="disabled"
-                             title="Disponible {{ servicioPrestacion.diaAgenda(agendaSeleccionada) }}"
-                             titlePosition="top">
+                <plex-button class="mr-1" size="sm"
+                             *ngIf="!turno.asistencia && esFutura && agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && !turno.prestacion"
+                             type="disabled" title="Disponible {{ servicioPrestacion.diaAgenda(agendaSeleccionada) }}"
+                             titlePosition="top" title="Iniciar Prestación">
+                    <i class="mdi mdi-plus-circle mdi-24px"></i>
                 </plex-button>
 
                 <plex-button class="mr-1" size="sm" type="success"
