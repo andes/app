@@ -19,6 +19,7 @@ import { IObraSocial } from '../../../interfaces/IObraSocial';
 // Interfaces
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { environment } from '../../../../environments/environment';
+import { Unsubscribe } from '@andes/shared';
 
 @Component({
     selector: 'app-listar-solicitudes',
@@ -105,6 +106,19 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     getCarpetas(value, filter) {
+        this.refreshFilters(value, filter);
+        this.searchCarpetas();
+    }
+
+    @Unsubscribe()
+    searchCarpetas() {
+        return this.prestamosService.getCarpetasSolicitud(this.filters).subscribe(carpetas => {
+            this.carpetas = carpetas;
+            this.sortCarpetas();
+        });
+    }
+
+    refreshFilters(value, filter) {
         if (filter === 'fechaDesde') {
             let fechaDesde = moment(this.fechaDesde).startOf('day');
             let _fechaHasta = moment(this.fechaHasta).endOf('day');
@@ -153,11 +167,6 @@ export class ListarSolicitudesComponent implements OnInit {
         }
 
         this.filters['mostrarPrestamos'] = true;
-
-        this.prestamosService.getCarpetasSolicitud(this.filters).subscribe(carpetas => {
-            this.carpetas = carpetas;
-            this.sortCarpetas();
-        });
     }
 
     loadPrestaciones(event) {
@@ -270,6 +279,7 @@ export class ListarSolicitudesComponent implements OnInit {
             });
         } else {
             this.carpetasSeleccionadas = [];
+            this.mostrarMsjMultiCarpeta = false;
         }
         this.verPrestar = false;
     }
@@ -281,12 +291,13 @@ export class ListarSolicitudesComponent implements OnInit {
                     carpeta.organizacion = this.auth.organizacion;
                 });
                 this.prestamosService.prestarCarpetas(this.carpetasSeleccionadas).subscribe(carpeta => {
-                    this.verPrestar = false;
-                    this.plex.toast('success', 'Las carpetas se entregaron correctamente', 'Información', 1000);
-                    this.recargarPrestamosEmit.emit(true);
                     this.getCarpetas({}, null);
-                    this.marcarTodas = false;
                     this.carpetasSeleccionadas = [];
+                    this.verPrestar = false;
+                    this.recargarPrestamosEmit.emit(true);
+                    this.marcarTodas = false;
+                    this.mostrarMsjMultiCarpeta = false;
+                    this.plex.toast('success', 'Las carpetas se entregaron correctamente', 'Información', 1000);
                 });
             }
         });

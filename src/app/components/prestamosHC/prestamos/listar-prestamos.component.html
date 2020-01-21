@@ -1,5 +1,13 @@
 <fieldset>
-    <legend>Préstamos de Carpetas</legend>
+    <legend>Préstamos de Carpetas
+        <div class='float-right'>
+            <span *ngIf="carpetasSeleccionadas.length > 0">
+                <plex-button type='success' icon="mdi mdi-clipboard-arrow-left" title="Devolver todas"
+                    (click)="devolverCarpetas()">
+                </plex-button>
+            </span>
+        </div>
+    </legend>
     <!-- Filtros -->
     <div class="row">
         <div class="col-3">
@@ -120,8 +128,3 @@
         </tbody>
     </table>
 </fieldset>
-
-<plex-layout-footer *ngIf="carpetasSeleccionadas.length > 0">
-    <button type="primary" class="btn btn-primary" label="Devolver Carpetas" (click)="devolverCarpetas()">Devolver
-        Carpetas</button>
-</plex-layout-footer>

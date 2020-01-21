@@ -13,8 +13,8 @@ import { ListarSolicitudesComponent } from './solicitudes/listar-solicitudes.com
 
 
 export class PrestamosHcComponent implements OnInit {
-    @ViewChild('solicitudes', { static: true }) solicitudes: ListarSolicitudesComponent;
-    @ViewChild('prestamos', { static: true }) prestamos: ListarPrestamosComponent;
+    @ViewChild('solicitudes', { static: false }) solicitudes: ListarSolicitudesComponent;
+    @ViewChild('prestamos', { static: false }) prestamos: ListarPrestamosComponent;
 
     recargaPrestamos: any = false;
     recargaSolicitudes: any = false;

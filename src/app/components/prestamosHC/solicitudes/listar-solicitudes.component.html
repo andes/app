@@ -3,8 +3,14 @@
     <legend>
         Solicitudes de Carpetas
         <div class='float-right'>
+            <span *ngIf="carpetasSeleccionadas.length > 0 && !pacientesSearch">
+                <plex-button type='success' icon="mdi mdi-share" title="Prestar todas"
+                    (click)="prestarCarpetas()">
+                </plex-button>
+            </span>
             <span>
-                <plex-button icon="mdi mdi-printer" *ngIf="carpetas.length" title="Imprimir solicitudes" (click)="showImprimirCarpetas()">
+                <plex-button icon="mdi mdi-printer" *ngIf="carpetas.length" title="Imprimir solicitudes"
+                    (click)="showImprimirCarpetas()">
                 </plex-button>
             </span>
             <span>
@@ -16,6 +22,13 @@
     </legend>
 
     <div class="row">
+            <!-- <div class="col-12"> -->
+        <div class="col-12" *ngIf="mostrarMsjMultiCarpeta">
+            <span class="badge-warning">
+                Hay solicitudes de carpetas sin seleccionar. No se puede prestar carpetas para el mismo paciente y la misma
+                fecha.
+            </span>
+        </div>
         <div class="col-3">
             <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')"
                 name="fechaDesde" label="Desde" class="fechas">
@@ -103,8 +116,10 @@
                     </td>
                     <!-- Profesional -->
                     <td *ngIf="carpeta.datosPrestamo?.turno">
-                        {{carpeta.datosPrestamo.turno.profesionales |
-                                            enumerar:['apellido','nombre'] }}
+                        <ng-container *ngIf="carpeta.datosPrestamo.turno.profesionales">
+                                {{carpeta.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}
+                        </ng-container>
+                        
                     </td>
                     <td *ngIf="carpeta.datosSolicitudManual">
                         {{carpeta.datosSolicitudManual.profesional ?
@@ -156,12 +171,3 @@
     </div>
 
 </fieldset>
-
-<plex-layout-footer *ngIf="carpetasSeleccionadas.length > 0 && !pacientesSearch">
-    <button type="primary" class="btn btn-primary" label="Prestar Carpetas" (click)="prestarCarpetas()">Prestar
-        Carpetas</button>
-    <span class="badge-warning float-right" *ngIf="mostrarMsjMultiCarpeta">
-        Hay solicitudes de carpetas sin seleccionar. No se puede prestar carpetas para el mismo paciente y la misma
-        fecha.
-    </span>
-</plex-layout-footer>
