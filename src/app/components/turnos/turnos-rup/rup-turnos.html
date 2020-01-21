@@ -53,9 +53,9 @@
                             </span>
                             <span class="ml-1"
                                   *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores && turno.paciente.carpetaEfectores?.length > 0">
-                                Carpeta:
                                 <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">
-                                    <plex-copy [value]="carpeta.nroCarpeta">
+                                    <plex-copy [value]="carpeta.nroCarpeta"
+                                               *ngIf="carpeta.nroCarpeta && carpeta.nroCarpeta !== ''">
                                         {{ carpeta.nroCarpeta }}</plex-copy>
                                 </span>
                             </span>
