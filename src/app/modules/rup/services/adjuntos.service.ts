@@ -1,16 +1,26 @@
-import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, timer } from 'rxjs';
 import { Auth } from '@andes/auth';
-import { Server } from '@andes/shared';
+import { Server, cache } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
+import { switchMap } from 'rxjs/operators';
+
+const REFRESH_INTERVAL = 1000 * 60 * 60;
 
 @Injectable()
 export class AdjuntosService {
+    private timer$ = timer(0, REFRESH_INTERVAL);
+    public token$ = this.timer$.pipe(
+        switchMap(_ => this.generateToken()),
+        cache()
+    );
 
     private prestacionesUrl = '/modules/mobileApp/prestaciones-adjuntar';  // URL to web api
 
-    constructor(private server: Server, public auth: Auth) { }
+    constructor(
+        private server: Server,
+        public auth: Auth
+    ) { }
 
     /**
      * Solicitad a la app mobile archivos
@@ -31,7 +41,7 @@ export class AdjuntosService {
      * @param params.estado estado para filtrar.
      */
 
-    get (params) {
+    get(params) {
         return this.server.get(this.prestacionesUrl, { params });
     }
 
@@ -39,7 +49,7 @@ export class AdjuntosService {
     /**
      * Borra una solicitud de ajuntar archivo
      */
-    delete (id) {
+    delete(id) {
         return this.server.delete(this.prestacionesUrl + '/' + id);
     }
 
@@ -49,15 +59,16 @@ export class AdjuntosService {
      * @param {string} metadata.prestacion Id de la prestacion
      * @param {string} metadata.registro Id del registro
      */
-    upload (file, metadata) {
-        return this.server.post('/modules/rup/store', {file, metadata});
+    upload(file, metadata) {
+        return this.server.post('/modules/rup/store', { file, metadata });
     }
 
     /**
      * Genera un token de archivo
+     * [TODO] Mover a @andes/auth
      */
 
-     generateToken() {
+    generateToken() {
         return this.server.post('/auth/file-token', {});
-     }
+    }
 }

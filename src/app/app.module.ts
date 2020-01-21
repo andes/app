@@ -519,6 +519,7 @@ import { LogoSvgComponent } from './styles/logo.svg';
 import { AcronimoSvgComponent } from './styles/acronimo.svg';
 import { ListaReglasComponent } from './components/top/reglas/listaReglas.component';
 import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaSolicitudTop';
+import { FotoDirective } from './components/paciente/paciente-detalle-foto.directive';
 
 import { MPILibModule } from './modules/mpi/mpi-lib.module';
 
@@ -653,6 +654,7 @@ registerLocaleData(localeEs, 'es');
         BusquedaMpiComponent,
         PacienteCruComponent,
         GeorrefMapComponent,
+        FotoDirective,
 
         // form Terapeutico
         FormTerapeuticoComponent,

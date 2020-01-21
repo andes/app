@@ -3,6 +3,9 @@ import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 import { ObraSocialService } from '../../services/obraSocial.service';
 import { IFinanciador } from '../../interfaces/IFinanciador';
 import { ObraSocialCacheService } from '../../services/obraSocialCache.service';
+import { AdjuntosService } from '../../modules/rup/services/adjuntos.service';
+import { Observable } from 'rxjs';
+import { pluck } from 'rxjs/operators';
 
 @Component({
     selector: 'paciente-detalle',
@@ -15,6 +18,7 @@ export class PacienteDetalleComponent implements OnInit {
     @Input() fields: string[] = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado'];
 
     obraSocial: IFinanciador;
+    token$: Observable<string>;
 
     get showSexo() {
         return this.fields.findIndex(i => i === 'sexo') >= 0;
@@ -91,7 +95,8 @@ export class PacienteDetalleComponent implements OnInit {
 
     constructor(
         private obraSocialService: ObraSocialService,
-        private obraSocialCacheService: ObraSocialCacheService) {
+        private obraSocialCacheService: ObraSocialCacheService
+    ) {
     }
 
     ngOnInit() {
