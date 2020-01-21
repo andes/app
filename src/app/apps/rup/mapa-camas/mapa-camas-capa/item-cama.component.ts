@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
+import { MapaCamasService } from '../mapa-camas.service';
 
 @Component({
     selector: 'tr[app-item-cama]',
@@ -8,22 +9,26 @@ import { Auth } from '@andes/auth';
 })
 
 export class ItemCamaComponent implements OnInit {
-    @Input() capa: string;
     @Input() cama: any;
     @Input() estados: any;
     @Input() relaciones: any;
     @Input() selected: boolean;
     @Output() accionCama = new EventEmitter<any>();
 
+    public capa: string;
     public estadoCama;
     public relacionesPosibles;
 
     constructor(
         public auth: Auth,
         private router: Router,
-    ) { }
+        private mapaCamasService: MapaCamasService
+    ) {
+    }
 
     ngOnInit() {
+        this.capa = this.mapaCamasService.capa;
+
         this.getEstadosRelacionesCama();
     }
 

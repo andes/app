@@ -12,7 +12,6 @@ import { MapaCamasService } from '../mapa-camas.service';
 })
 export class CamaDetalleComponent implements OnInit {
     // Eventos
-    @Input() capa: string;
     @Input() fecha: Date;
     @Input() cama: any;
     @Input() camas: any;
@@ -24,6 +23,7 @@ export class CamaDetalleComponent implements OnInit {
     @Output() refresh = new EventEmitter<any>();
 
     // VARIABLES
+    public capa: string;
     public estadoCama;
     public genero;
     public censable;
@@ -44,9 +44,12 @@ export class CamaDetalleComponent implements OnInit {
         private prestacionService: PrestacionesService,
         private elementoRupService: ElementosRUPService,
         private mapaCamasService: MapaCamasService
-    ) { }
+    ) {
+    }
 
     ngOnInit() {
+        this.capa = this.mapaCamasService.capa;
+
         this.getDatosCama();
         this.getRelacionesPosibles();
         this.genero = (this.cama.genero.term === 'género masculino') ? 'Cama Masculina' : 'Cama Femenina';
@@ -148,6 +151,6 @@ export class CamaDetalleComponent implements OnInit {
     }
 
     refrescar(accion) {
-        this.refresh.emit(accion)
+        this.refresh.emit(accion);
     }
 }

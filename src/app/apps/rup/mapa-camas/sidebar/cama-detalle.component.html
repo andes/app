@@ -44,12 +44,12 @@
             </fieldset>
         </ng-container>
     </plex-tab>
-    <plex-tab *ngIf="paciente" label="INTERNACION">
-        <app-internacion-detalle [fecha]="fecha" [capa]="capa" [camas]="camas" [cama]="cama" [estados]="estados"
+    <plex-tab *ngIf="capa === 'estadistica' && paciente" label="INTERNACION">
+        <app-internacion-detalle [fecha]="fecha" [camas]="camas" [cama]="cama" [estados]="estados"
                                  [relaciones]="relaciones" (refresh)="refrescar($event)">
         </app-internacion-detalle>
     </plex-tab>
     <plex-tab label="HISTORIAL">
-        <app-historial-detalle [cama]="cama" [capa]="capa" [estados]="estados"></app-historial-detalle>
+        <app-historial-detalle [cama]="cama" [estados]="estados"></app-historial-detalle>
     </plex-tab>
 </plex-tabs>

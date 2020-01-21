@@ -12,6 +12,7 @@ import { PrestacionesService } from '../../../../modules/rup/services/prestacion
 export class CamaDesocuparComponent implements OnInit {
     // Eventos
     @Input() fecha: Date;
+    @Input() camas: any;
     @Input() selectedCama: any;
 
     @Output() cancel = new EventEmitter<any>();
@@ -46,6 +47,10 @@ export class CamaDesocuparComponent implements OnInit {
 
     cancelar() {
         this.cancel.emit();
+    }
+
+    cambiarCama() {
+        this.accionDesocupar.emit({ cama: this.selectedCama, accion: 'cambiarCama' });
     }
 
     egresarPaciente() {

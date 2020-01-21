@@ -1,13 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Observable } from 'rxjs';
-import { ICama } from './interfaces/ICama';
 
 @Injectable()
 export class MapaCamasService {
 
+    public ambito = 'internacion';
+    public capa;
     private url = '/modules/rup/internacion';
     constructor(private server: Server) { }
+
+    setCapa(capa: string) {
+        this.capa = capa;
+    }
 
     snapshot(ambito, capa, fecha): Observable<any[]> {
         return this.server.get(this.url + '/camas', {
@@ -16,14 +21,15 @@ export class MapaCamasService {
         });
     }
 
-    historial(ambito: string, capa: string, cama: string, desde: Date, hasta: Date): Observable<any[]> {
+    historial(ambito: string, capa: string, desde: Date, hasta: Date, filtros): Observable<any[]> {
         const params = {
             ambito,
             capa,
             desde,
-            hasta
+            hasta,
+            ...filtros
         };
-        return this.server.get(`${this.url}/camas/${cama}/historial`, { params });
+        return this.server.get(`${this.url}/camas/historial`, { params });
     }
 
     getCama(ambito, capa, fecha, idCama): Observable<any[]> {

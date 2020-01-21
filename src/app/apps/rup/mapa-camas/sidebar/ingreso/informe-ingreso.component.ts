@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
+import { MapaCamasService } from '../../mapa-camas.service';
 
 @Component({
     selector: 'app-informe-ingreso',
@@ -8,7 +9,6 @@ import { PrestacionesService } from '../../../../../modules/rup/services/prestac
 
 export class InformeIngresoComponent implements OnInit {
     // EVENTOS
-    @Input() capa;
     @Input() fecha: Date;
     @Input() cama: any;
     @Input() camas: any;
@@ -21,14 +21,18 @@ export class InformeIngresoComponent implements OnInit {
     @Output() refresh = new EventEmitter<any>();
 
     // VARIABLES
+    public capa: string;
     public prestacion;
     public informeIngreso;
 
     constructor(
-        private prestacionesService: PrestacionesService
-    ) { }
+        private prestacionesService: PrestacionesService,
+        private mapaCamasService: MapaCamasService,
+    ) {
+    }
 
     ngOnInit() {
+        this.capa = this.mapaCamasService.capa;
         this.getPrestacion();
     }
 

@@ -43,7 +43,6 @@ export class SectoresItemComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.root);
     }
 
     /**

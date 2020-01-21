@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map, switchMap, startWith } from 'rxjs/operators';
 import { MapaCamasService } from '../mapa-camas.service';
@@ -7,12 +7,12 @@ import { MapaCamasService } from '../mapa-camas.service';
     selector: 'app-historial-detalle',
     templateUrl: './historial-detalle.component.html'
 })
-export class HistorialDetalleComponent {
-    @Input() ambito = 'internacion';
-    @Input() capa = '';
-
+export class HistorialDetalleComponent implements OnInit {
     @Input() cama: any;
     @Input() estados: any;
+
+    public ambito: string;
+    public capa: string;
 
     public desde: Date = new Date();
     public hasta: Date = new Date();
@@ -28,13 +28,20 @@ export class HistorialDetalleComponent {
             };
         }),
         switchMap((filtros: any) => {
-            return this.mapaCamasService.historial(this.ambito, this.capa, this.cama.idCama, filtros.desde, filtros.hasta);
+            return this.mapaCamasService.historial(this.ambito, this.capa, filtros.desde, filtros.hasta, { idCama: this.cama.idCama });
         }),
     );
 
     constructor(
         private mapaCamasService: MapaCamasService
-    ) { }
+    ) {
+
+    }
+
+    ngOnInit() {
+        this.ambito = this.mapaCamasService.ambito;
+        this.capa = this.mapaCamasService.capa;
+    }
 
     onChange($event) {
         const filtros = {

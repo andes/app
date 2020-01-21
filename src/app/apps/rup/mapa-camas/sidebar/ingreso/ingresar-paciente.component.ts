@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { ProfesionalService } from '../../../../../services/profesional.service';
 import { OcupacionService } from '../../../../../services/ocupacion/ocupacion.service';
@@ -36,7 +35,7 @@ export class IngresarPacienteComponent implements OnInit {
     public snomedIngreso = snomedIngreso;
 
     // VARIABLES
-    public ambito = 'internacion';
+    public ambito: string;
     public capa: string;
 
     public expr = SnomedExpression;
@@ -67,26 +66,23 @@ export class IngresarPacienteComponent implements OnInit {
 
     constructor(
         private plex: Plex,
-        private route: ActivatedRoute,
         private servicioProfesional: ProfesionalService,
         private ocupacionService: OcupacionService,
         private organizacionService: OrganizacionService,
         private servicioPrestacion: PrestacionesService,
         private mapaCamasService: MapaCamasService,
-    ) { }
+    ) {
+
+    }
 
     ngOnInit() {
-        this.route.paramMap.subscribe(params => {
-            this.capa = params.get('capa');
-        });
-
+        this.ambito = this.mapaCamasService.ambito;
+        this.capa = this.mapaCamasService.capa;
         if (this.cama.idInternacion) {
             this.servicioPrestacion.getById(this.cama.idInternacion).subscribe(prestacion => {
                 this.prestacion = prestacion;
                 this.informeIngreso = prestacion.ejecucion.registros[0].valor.informeIngreso;
-            })
-        } else {
-            console.log(this.informeIngreso)
+            });
         }
     }
 
@@ -197,25 +193,6 @@ export class IngresarPacienteComponent implements OnInit {
 
     guardar(valid) {
         if (valid.formValid) {
-            // Verificamos si es de origen externo
-            if (this.origenExterno) {
-                this.informeIngreso.organizacionOrigen = {
-                    id: this.informeIngreso.organizacionOrigen.id,
-                    nombre: this.informeIngreso.organizacionOrigen.nombre
-                };
-            }
-
-            // construimos el informe de ingreso
-            this.informeIngreso.situacionLaboral = (this.informeIngreso.situacionLaboral) ? this.informeIngreso.situacionLaboral.nombre : null;
-            this.informeIngreso.nivelInstruccion = ((typeof this.informeIngreso.nivelInstruccion === 'string')) ? this.informeIngreso.nivelInstruccion : (Object(this.informeIngreso.nivelInstruccion).nombre);
-            this.informeIngreso.asociado = ((typeof this.informeIngreso.asociado === 'string')) ? this.informeIngreso.asociado : (Object(this.informeIngreso.asociado).nombre);
-            this.informeIngreso.origen = ((typeof this.informeIngreso.origen === 'string')) ? this.informeIngreso.origen : (Object(this.informeIngreso.origen).nombre);
-            this.informeIngreso.PaseAunidadOrganizativa = this.informeIngreso.PaseAunidadOrganizativa;
-            if (this.paciente.fechaNacimiento) {
-                this.informeIngreso.edadAlIngreso = this.mapaCamasService.calcularEdad(this.paciente.fechaNacimiento, this.informeIngreso.fechaIngreso);
-
-            }
-
             // armamos dto con datos principales del paciente
             let dtoPaciente = {
                 id: this.paciente.id,
@@ -229,11 +206,57 @@ export class IngresarPacienteComponent implements OnInit {
                 telefono: this.paciente.telefono
             };
 
-            if (this.prestacion) {
-                this.actualizarPrestacion(dtoPaciente);
+            if (this.capa === 'estadistica') {
+                this.ingresoExtendido(dtoPaciente);
             } else {
-                this.guardarPrestacion(dtoPaciente);
+                this.ingresoSimplificado('ocupada', dtoPaciente, null);
             }
+        }
+    }
+
+    ingresoSimplificado(estado, paciente, idInternacion = null) {
+        // Se modifica el estado de la cama
+        this.cama.estado = estado;
+        this.cama.paciente = paciente;
+        if (idInternacion) {
+            this.cama.idInternacion = idInternacion;
+        } else {
+            this.cama.idInternacion = (m = Math, d = Date, h = 16, s = s => m.floor(s).toString(h)) =>
+                s(d.now() / 1000) + ' '.repeat(h).replace(/./g, () => s(m.random() * h));
+        }
+
+        this.mapaCamasService.patchCama(this.cama, this.ambito, this.capa, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
+            this.plex.info('success', 'Paciente internado');
+            this.refresh.emit({ cama: this.cama, accion: 'internarPaciente' });
+        }, (err1) => {
+            this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
+        });
+    }
+
+    ingresoExtendido(paciente) {
+        // Verificamos si es de origen externo
+        if (this.origenExterno) {
+            this.informeIngreso.organizacionOrigen = {
+                id: this.informeIngreso.organizacionOrigen.id,
+                nombre: this.informeIngreso.organizacionOrigen.nombre
+            };
+        }
+
+        // construimos el informe de ingreso
+        this.informeIngreso.situacionLaboral = (this.informeIngreso.situacionLaboral) ? this.informeIngreso.situacionLaboral.nombre : null;
+        this.informeIngreso.nivelInstruccion = ((typeof this.informeIngreso.nivelInstruccion === 'string')) ? this.informeIngreso.nivelInstruccion : (Object(this.informeIngreso.nivelInstruccion).nombre);
+        this.informeIngreso.asociado = ((typeof this.informeIngreso.asociado === 'string')) ? this.informeIngreso.asociado : (Object(this.informeIngreso.asociado).nombre);
+        this.informeIngreso.origen = ((typeof this.informeIngreso.origen === 'string')) ? this.informeIngreso.origen : (Object(this.informeIngreso.origen).nombre);
+        this.informeIngreso.PaseAunidadOrganizativa = this.informeIngreso.PaseAunidadOrganizativa;
+        if (this.paciente.fechaNacimiento) {
+            this.informeIngreso.edadAlIngreso = this.mapaCamasService.calcularEdad(this.paciente.fechaNacimiento, this.informeIngreso.fechaIngreso);
+
+        }
+
+        if (this.prestacion) {
+            this.actualizarPrestacion(paciente);
+        } else {
+            this.crearPrestacion(paciente);
         }
     }
 
@@ -245,21 +268,15 @@ export class IngresarPacienteComponent implements OnInit {
             op: 'registros',
             registros: this.prestacion.ejecucion.registros
         };
-        this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe(p => {
-            this.informeIngreso = p.ejecucion.registros[0].valor.informeIngreso;
-            this.mapaCamasService.patchCama(this.cama, this.ambito, this.capa, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
-                this.cama.paciente = paciente;
-                this.refresh.emit({ cama: this.cama, accion: 'internarPaciente' });
-                this.plex.info('success', 'Ingreso editado!');
-            }, (err1) => {
-                this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
-            });
+        this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe((prestacion: any) => {
+            this.informeIngreso = prestacion.ejecucion.registros[0].valor.informeIngreso;
+            this.ingresoSimplificado('ocupada', paciente, prestacion._id);
         }, (err) => {
             this.plex.info('danger', err);
         });
     }
 
-    guardarPrestacion(paciente) {
+    crearPrestacion(paciente) {
         // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(null, snomedIngreso);
 
@@ -284,17 +301,7 @@ export class IngresarPacienteComponent implements OnInit {
 
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
             if (this.cama) {
-                // Se modifica el estado de la cama
-                this.cama.estado = 'ocupada';
-                this.cama.idInternacion = prestacion.id;
-                this.cama.paciente = paciente;
-
-                this.mapaCamasService.patchCama(this.cama, this.ambito, this.capa, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
-                    this.plex.info('success', 'Paciente internado');
-                    this.refresh.emit({ cama: this.cama, accion: 'internarPaciente' });
-                }, (err1) => {
-                    this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
-                });
+                this.ingresoSimplificado('ocupada', paciente, prestacion.id);
             } else if (this.capa === 'estadistica') {
                 this.plex.info('warning', 'Paciente ingresado a lista de espera');
                 this.refresh.emit({ cama: this.cama, accion: 'listaDeEspera' });

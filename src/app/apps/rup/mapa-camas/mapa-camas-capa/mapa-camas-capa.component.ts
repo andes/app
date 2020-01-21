@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -49,20 +49,27 @@ export class MapaCamasCapaComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.organizacion = this.auth.organizacion.id;
-        this.route.paramMap.subscribe(params => {
-            this.capa = params.get('capa');
-            this.getSnapshot();
-            this.getMaquinaEstados();
+        this.ambito = this.mapaCamasService.ambito;
+
+        this.route.params.subscribe(params => {
+            this.capa = params['capa'];
+            this.mapaCamasService.setCapa(params['capa']);
         });
+
+        this.organizacion = this.auth.organizacion.id;
+        this.getSnapshot();
+        this.getMaquinaEstados();
     }
 
     getMaquinaEstados() {
         this.mapaCamasService.getMaquinaEstados(this.organizacion, this.ambito, this.capa).subscribe(maquinaEstados => {
-            // [TODO] Sin no esta configurado que avise y no pinche
             this.maquinaEstados = maquinaEstados[0];
-            this.estados = maquinaEstados[0].estados;
-            this.relaciones = maquinaEstados[0].relaciones;
+            if (this.maquinaEstados) {
+                this.estados = maquinaEstados[0].estados;
+                this.relaciones = maquinaEstados[0].relaciones;
+            } else {
+                this.plex.info('warning', 'No se han configurado los estados de camas!');
+            }
         });
     }
 

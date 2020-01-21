@@ -10,7 +10,6 @@ import { Plex } from '@andes/plex';
 })
 
 export class CamaDestinoGenericoComponent implements OnInit {
-    @Input() capa: string;
     @Input() fecha: Date;
     @Input() selectedCama: any;
     @Input() camas: any;
@@ -21,7 +20,8 @@ export class CamaDestinoGenericoComponent implements OnInit {
     @Output() cambiarCama = new EventEmitter<any>();
     @Output() refresh = new EventEmitter<any>();
 
-    public ambito = 'internacion';
+    public ambito: string;
+    public capa: string;
     public titulo: string;
     public fechaValida = true;
 
@@ -30,9 +30,13 @@ export class CamaDestinoGenericoComponent implements OnInit {
         private plex: Plex,
         private router: Router,
         private mapaCamasService: MapaCamasService
-    ) { }
+    ) {
+
+    }
 
     ngOnInit() {
+        this.ambito = this.mapaCamasService.ambito;
+        this.capa = this.mapaCamasService.capa;
         this.titulo = 'CAMBIAR A ' + this.destino.toUpperCase();
     }
 

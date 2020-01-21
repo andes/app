@@ -1,0 +1,36 @@
+<plex-title titulo="Movimientos de Internación"></plex-title>
+
+<div class="row mb-1">
+    <div class="col">
+        <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" (change)="getMovimientos()">
+        </plex-datetime>
+    </div>
+    <div class="col">
+        <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" (change)="getMovimientos()">
+        </plex-datetime>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>FECHA</th>
+            <th>CAMA</th>
+            <th>UNIDAD ORGANIZATIVA</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let movimiento of movimientos">
+            <td>
+                {{ movimiento.fecha | fecha }}
+                {{ movimiento.fecha | hora }}
+            </td>
+            <td>
+                {{ movimiento.nombre }}
+            </td>
+            <td>
+                {{ movimiento.unidadOrganizativa.term }}
+            </td>
+        </tr>
+    </tbody>
+</table>

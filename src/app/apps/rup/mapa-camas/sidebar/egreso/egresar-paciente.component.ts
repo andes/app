@@ -17,7 +17,6 @@ import { modelRegistroInternacion, listaTipoEgreso, causaExterna, opcionesTipoPa
 export class EgresarPacienteComponent implements OnInit {
     // EVENTOS
     @Input() fecha: Date;
-    @Input() capa: string;
     @Input() cama: any;
     @Input() camas: any;
 
@@ -35,7 +34,8 @@ export class EgresarPacienteComponent implements OnInit {
     public opcionesSexo = opcionesSexo;
 
     // VARIABLES
-    public ambito = 'internacion';
+    public ambito: string;
+    public capa: string;
     public fechaValida = true;
     public esTraslado = false;
     public prestacion;
@@ -91,10 +91,14 @@ export class EgresarPacienteComponent implements OnInit {
         private prestacionesService: PrestacionesService,
         private mapaCamasService: MapaCamasService,
         public procedimientosQuirurgicosService: ProcedimientosQuirurgicosService,
-    ) { }
+    ) {
+
+    }
 
     ngOnInit() {
-        if (this.cama.idInternacion) {
+        this.ambito = this.mapaCamasService.ambito;
+        this.capa = this.mapaCamasService.capa;
+        if (this.capa === 'estadistica') {
             this.prestacionesService.getById(this.cama.idInternacion).subscribe(prestacion => {
                 this.prestacion = prestacion;
                 this.informeIngreso = prestacion.ejecucion.registros[0].valor.informeIngreso;
@@ -234,29 +238,41 @@ export class EgresarPacienteComponent implements OnInit {
 
     guardar(valid) {
         if (valid.formValid) {
-            let registros = this.controlRegistrosGuardar();
-            if (registros) {
-                let params: any = {
-                    op: 'registros',
-                    registros: registros
-                };
-                this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
-                    // Se modifica el estado de la cama
-                    this.cama.estado = 'disponible';
-                    this.cama.idInternacion = null;
-                    this.cama.paciente = null;
-
-                    this.mapaCamasService.patchCama(this.cama, this.ambito, this.capa, this.fecha).subscribe(camaActualizada => {
-                        this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
-                        this.refresh.emit({ cama: this.cama });
-                    }, (err1) => {
-                        this.plex.info('danger', err1, 'Error al intentar desocupar la cama');
-                    });
-                });
+            if (this.capa === 'estadistica') {
+                this.egresoExtendido();
+            } else {
+                this.egresoSimplificado('disponible');
             }
         } else {
             this.plex.info('info', 'ERROR: Los datos de egreso no estan completos');
             return;
+        }
+    }
+
+    egresoSimplificado(estado) {
+        // Se modifica el estado de la cama
+        this.cama.estado = estado;
+        this.cama.idInternacion = null;
+        this.cama.paciente = null;
+
+        this.mapaCamasService.patchCama(this.cama, this.ambito, this.capa, this.fecha).subscribe(camaActualizada => {
+            this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
+            this.refresh.emit({ cama: this.cama });
+        }, (err1) => {
+            this.plex.info('danger', err1, 'Error al intentar desocupar la cama');
+        });
+    }
+
+    egresoExtendido() {
+        let registros = this.controlRegistrosGuardar();
+        if (registros) {
+            let params: any = {
+                op: 'registros',
+                registros: registros
+            };
+            this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
+                this.egresoSimplificado('disponible');
+            });
         }
     }
 

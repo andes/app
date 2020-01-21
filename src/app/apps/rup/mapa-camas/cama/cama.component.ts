@@ -15,7 +15,7 @@ import * as moment from 'moment';
 export class CamaMainComponent implements OnInit {
     public expr = SnomedExpression;
 
-    public ambito = 'internacion';
+    public ambito: string;
     public capa: string;
     public fecha = moment().toDate();
     public organizacion: any;
@@ -35,9 +35,14 @@ export class CamaMainComponent implements OnInit {
         private route: ActivatedRoute,
         private organizacionService: OrganizacionService,
         private mapaCamasService: MapaCamasService,
-    ) { }
+    ) {
+
+    }
 
     ngOnInit() {
+        this.ambito = this.mapaCamasService.ambito;
+        this.capa = this.mapaCamasService.capa;
+
         this.plex.updateTitle([{
             route: '/inicio',
             name: 'Andes'
@@ -55,14 +60,12 @@ export class CamaMainComponent implements OnInit {
         this.organizacionService.getById(this.authService.organizacion.id).subscribe(organizacion => {
             this.organizacion = organizacion;
             this.sectores = this.organizacionService.getFlatTree(this.organizacion);
-
             this.unidadesOrganizativas = this.organizacion.unidadesOrganizativas;
         });
     }
 
     getCama() {
         this.route.paramMap.subscribe(params => {
-            this.capa = params.get('capa');
             if (params.get('id')) {
                 let idCama = params.get('id');
                 this.mapaCamasService.getCama(this.ambito, this.capa, this.fecha, idCama)

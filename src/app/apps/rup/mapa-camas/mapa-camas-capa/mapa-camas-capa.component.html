@@ -1,22 +1,23 @@
 <plex-layout main="8">
     <plex-layout-main>
-        <plex-title titulo="Mapa de Camas">
-            <plex-button label="LISTADO DE INTERNACIÓN" type="primary"></plex-button>
-            <plex-dropdown label="VER CENSO" type="primary" class="d-inline-block" [items]="itemsDropdown">
-            </plex-dropdown>
-            <plex-button label="VOLVER" type="danger"></plex-button>
-        </plex-title>
-        <app-filtros-camas *ngIf="unidadesOrganizativas && sectores && tiposCama"
-                           [unidadesOrganizativas]="unidadesOrganizativas" [sectores]="sectores" [tiposCama]="tiposCama"
-                           (filtrarTabla)="filtrarTabla($event)"></app-filtros-camas>
-        <plex-title titulo="LISTADO DE CAMAS" size="sm">
-            <plex-button label="AGREGAR CAMA" type="success" size="sm" (click)="agregarCama()"></plex-button>
-            <plex-button icon="format-list-bulleted" type="primary" size="sm"></plex-button>
-        </plex-title>
+        <header>
+            <plex-title titulo="Mapa de Camas">
+                <plex-button label="LISTADO DE INTERNACIÓN" type="primary"></plex-button>
+                <plex-dropdown label="VER CENSO" type="primary" class="d-inline-block" [items]="itemsDropdown">
+                </plex-dropdown>
+                <plex-button label="VOLVER" type="danger"></plex-button>
+            </plex-title>
+            <app-filtros-camas *ngIf="unidadesOrganizativas && sectores && tiposCama"
+                               [unidadesOrganizativas]="unidadesOrganizativas" [sectores]="sectores"
+                               [tiposCama]="tiposCama" (filtrarTabla)="filtrarTabla($event)"></app-filtros-camas>
+            <plex-title titulo="LISTADO DE CAMAS" size="sm">
+                <plex-button label="AGREGAR CAMA" type="success" size="sm" (click)="agregarCama()"></plex-button>
+                <plex-button icon="format-list-bulleted" type="primary" size="sm"></plex-button>
+            </plex-title>
+        </header>
         <fieldset *ngIf="snapshot">
             <table class="table table-striped table-hover" *ngIf="estados">
                 <tr>
-                    <th></th>
                     <th>CAMA</th>
                     <th>PACIENTE</th>
                     <th>UNIDAD ORGANIZATIVA</th>
@@ -24,7 +25,7 @@
                     <th>ACCIONES</th>
                 </tr>
                 <tr app-item-cama *ngFor="let cama of camas | async; let i=index;" [cama]="cama" [estados]="estados"
-                    [relaciones]="relaciones" [capa]="capa" [selected]="(selectedCama && cama._id === selectedCama._id)"
+                    [relaciones]="relaciones" [selected]="(selectedCama && cama._id === selectedCama._id)"
                     (accionCama)="selectCama($event)" (click)="verDetalle(i)"
                     [ngClass]="{'invert': (selectedCama && cama._id === selectedCama._id)}">
                 </tr>
@@ -35,25 +36,29 @@
         <app-estado-servicio *ngIf="!accion" [fecha]="fecha" [camas]="snapshot" [estados]="estados"
                              [relaciones]="relaciones" (buscarEstados)="getSnapshot($event)">
         </app-estado-servicio>
-        <app-informe-ingreso *ngIf="accion === 'internarPaciente'" [capa]="capa" [camas]="opcionesCamas"
-                             [cama]="selectedCama" (cancel)="volverAResumen()" (cambiarFecha)="getSnapshot($event)"
+        <app-informe-ingreso *ngIf="accion === 'internarPaciente'" [camas]="opcionesCamas" [cama]="selectedCama"
+                             (cancel)="volverAResumen()" (cambiarFecha)="getSnapshot($event)"
                              (cambiarCama)="cambiarCama($event)" (refresh)="refresh($event)">
         </app-informe-ingreso>
-        <app-desocupar-cama *ngIf="accion === 'desocuparCama'" [fecha]="fecha" [selectedCama]="selectedCama"
-                            (cancel)="volverAResumen()" (cambiarFecha)="getSnapshot($event)"
-                            (accionDesocupar)="accionDesocupar($event)">
+        <app-desocupar-cama *ngIf="accion === 'desocuparCama'" [fecha]="fecha" [camas]="snapshot"
+                            [selectedCama]="selectedCama" (cancel)="volverAResumen()"
+                            (cambiarFecha)="getSnapshot($event)" (accionDesocupar)="accionDesocupar($event)">
         </app-desocupar-cama>
-        <app-egresar-paciente *ngIf="accion === 'egresarPaciente'" [fecha]="fecha" [capa]="capa" [cama]="selectedCama"
+
+        <app-cambiar-cama *ngIf="accion === 'cambiarCama'" [camas]="snapshot" [cama]="selectedCama"
+                          (refresh)="refresh($event)">
+        </app-cambiar-cama>
+        <app-egresar-paciente *ngIf="accion === 'egresarPaciente'" [fecha]="fecha" [cama]="selectedCama"
                               (cancel)="volverAResumen()" (refresh)="refresh($event)">
         </app-egresar-paciente>
-        <app-cama-destino-generico *ngIf="accion === 'accionGenerica'" [capa]="capa" [fecha]=" fecha"
-                                   [camas]="opcionesCamas" [selectedCama]="selectedCama" [destino]="estadoDestino"
-                                   (cancel)="volverAResumen()" (cambiarFecha)="getSnapshot($event)"
-                                   (cambiarCama)="cambiarCama($event)" (refresh)="refresh($event)">
+        <app-cama-destino-generico *ngIf="accion === 'accionGenerica'" [fecha]=" fecha" [camas]="opcionesCamas"
+                                   [selectedCama]="selectedCama" [destino]="estadoDestino" (cancel)="volverAResumen()"
+                                   (cambiarFecha)="getSnapshot($event)" (cambiarCama)="cambiarCama($event)"
+                                   (refresh)="refresh($event)">
         </app-cama-destino-generico>
-        <app-cama-detalle *ngIf="accion === 'verDetalle'" [fecha]="fecha" [capa]="capa" [camas]="opcionesCamas"
-                          [cama]="selectedCama" [estados]="estados" [relaciones]="relaciones"
-                          (cancel)="volverAResumen()" (accionCama)="selectCama($event)" (refresh)="refresh($event)">
+        <app-cama-detalle *ngIf="accion === 'verDetalle'" [fecha]="fecha" [camas]="opcionesCamas" [cama]="selectedCama"
+                          [estados]="estados" [relaciones]="relaciones" (cancel)="volverAResumen()"
+                          (accionCama)="selectCama($event)" (refresh)="refresh($event)">
         </app-cama-detalle>
     </plex-layout-sidebar>
 </plex-layout>

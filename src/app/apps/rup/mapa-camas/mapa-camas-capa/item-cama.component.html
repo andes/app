@@ -1,8 +1,5 @@
 <ng-container *ngIf="cama">
     <td>
-        <plex-bool type="checkbox" [(ngModel)]="selected" readonly></plex-bool>
-    </td>
-    <td>
         <span class="d-block"><strong>{{cama.nombre}}</strong></span>
         <span class="d-block">{{cama.sectores[cama.sectores.length - 1].nombre}}</span>
     </td>

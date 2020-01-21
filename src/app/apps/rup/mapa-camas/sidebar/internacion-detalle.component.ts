@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { Auth } from '@andes/auth';
+import { MapaCamasService } from '../mapa-camas.service';
 
 @Component({
     selector: 'app-internacion-detalle',
@@ -8,7 +9,6 @@ import { Auth } from '@andes/auth';
 
 export class InternacionDetalleComponent implements OnInit {
     // EVENTOS
-    @Input() capa: string;
     @Input() fecha: Date;
     @Input() cama: any;
     @Input() camas: any;
@@ -18,6 +18,7 @@ export class InternacionDetalleComponent implements OnInit {
     @Output() refresh = new EventEmitter<any>();
 
     // VARIABLES
+    public capa: string;
     public fechaIngreso;
     public paciente;
     public estadoCama;
@@ -30,9 +31,12 @@ export class InternacionDetalleComponent implements OnInit {
 
     constructor(
         public auth: Auth,
-    ) { }
+        private mapaCamasService: MapaCamasService,
+    ) {
+    }
 
     ngOnInit() {
+        this.capa = this.mapaCamasService.capa;
         this.estadoCama = this.estados.filter(est => this.cama.estado === est.key)[0];
         this.getRelacionesPosibles();
     }
