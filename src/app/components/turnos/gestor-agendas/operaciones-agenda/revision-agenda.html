@@ -492,7 +492,7 @@
                                 </td>
                                 <td (click)="seleccionarTurno(agenda.sobreturnos[i], -1)">
                                     <strong *ngIf="sobreturno">{{ sobreturno.horaInicio | date: 'HH:mm' }}</strong>
-                                </td>
+                                </td> 
                                 <td (click)="seleccionarTurno(agenda.sobreturnos[i], -1)">
                                     <span *ngIf="sobreturno.paciente && sobreturno.paciente.id">{{ sobreturno.paciente |
                                         paciente }} </span>
@@ -533,7 +533,9 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <plex-button type="primary" label="Agregar Sobreturno" (click)="agregarSobreturno()">
+                    <plex-button *ngIf='!agenda.dinamica' type="primary" label="Agregar Sobreturno" (click)="agregarSobreturno()">
+                    </plex-button>
+                    <plex-button *ngIf='agenda.dinamica && agenda.cupo' type="primary" label="Agregar Paciente" (click)="agregarPaciente()">
                     </plex-button>
                 </div>
 
