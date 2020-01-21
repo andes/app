@@ -987,7 +987,7 @@ export class PrestacionesService {
     }
 
     iniciarPrestacion(paciente, snomedConcept, turno) {
-        this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
+        this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Tipo de Prestación: <b class="text-capitalize">' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
                 this.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
                     if (prestacion.error) {
@@ -1023,7 +1023,7 @@ export class PrestacionesService {
             estado: { tipo: 'ejecucion' }
         };
 
-        this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Iniciar Prestación?').then(confirmacion => {
+        this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Tipo de Prestación: <b class="text-capitalize">' + snomedConcept.term + '</b>', '¿Iniciar Prestación?').then(confirmacion => {
             if (confirmacion) {
                 this.patch(idPrestacion, params).subscribe(prestacion => {
                     this.router.navigate(['/rup/ejecucion', idPrestacion]);
@@ -1041,7 +1041,7 @@ export class PrestacionesService {
     }
 
     iniciarPrestacionNoNominalizada(snomedConcept, turno, agenda) {
-        this.plex.confirm('</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
+        this.plex.confirm('</b><br>Tipo de Prestación: <b class="text-capitalize">' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
                 this.crearPrestacion(null, snomedConcept, 'ejecucion', turno.horaInicio, turno).subscribe(prestacion => {
                     this.routeTo('ejecucion', prestacion.id);
@@ -1080,13 +1080,16 @@ export class PrestacionesService {
         return total;
     }
 
-    getCantidadPacientesAgendas(agendas): number {
-        return agendas.forEach(agenda => {
-            if (this.getCantidadPacientes(agenda) > 0) {
-                return this.getCantidadPacientes(agenda);
-            } else {
-                return 0;
-            }
-        });
+    hayPacientesEnAgendas(agendas): boolean {
+        return agendas.findIndex(x => this.getCantidadPacientes(x) > 0) > -1;
     }
+
+    hayAgendasDinamicas(agendas): boolean {
+        return agendas.findIndex(x => x.dinamica) > -1;
+    }
+
+    hayAgendasNoNominalizadas(agendas): boolean {
+        return agendas.findIndex(x => x.tipoPrestaciones[0].noNominalizada) > -1;
+    }
+
 }
