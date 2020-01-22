@@ -666,7 +666,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showListadoTurnos = false;
         this.showAgregarNotaAgenda = false;
         if (agenda) {
-            this.getAgendas();
+            this.loadAgendas();
+            this.verAgenda(agenda, false, null);
         }
     }
 
