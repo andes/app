@@ -1,29 +1,27 @@
-<plex-box>
-    <header>
-        <div class="clearfix">
-            <div class="page-title float-left">SOLICITUD DE {{ tipoSolicitud.toUpperCase() }}</div>
-        </div>
-    </header>
-    <div class="row" *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones || prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo">
+<div class="mt-3">
+    <div class="row"
+         *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
         <div class="col">
             <!-- Cuando la solicitud fue rechazada muestra los datos del rechazo -->
             <b>Observaciones</b>
             <br>
-            
-            <span class="text-left" *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones">
+
+            <span class="text-left"
+                  *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones">
                 {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones}}
             </span>
-            
-            <span class="text-left" *ngIf="!prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones && prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo">    
+
+            <span class="text-left"
+                  *ngIf="!prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones && prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo">
                 {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo}}
             </span>
-            
+
             <br>
             <b>Usuario que responde</b>
             <br>
             <span class="text-left"
-                *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones || prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo">
-                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdBy | profesional}}</span> 
+                  *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones || prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo">
+                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdBy | profesional}}</span>
             <br>
         </div>
     </div>
@@ -32,10 +30,12 @@
             <!-- Cuando la solicitud fue contrarreferida muestra los datos de la anulación -->
             <b>Motivo de Anulación</b>
             <br>
-            <span *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones" class="text-left">
+            <span *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones"
+                  class="text-left">
                 {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones}}</span>
             <br>
-            <span *ngIf="!prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones" class="text-left">
+            <span *ngIf="!prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones"
+                  class="text-left">
                 {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo}}</span>
             <br>
             <b>Usuario que anula</b>
@@ -170,4 +170,4 @@
             <span>{{prestacionSeleccionada.createdAt | date: "dd/MM/yyyy 'a las' HH:mm " }}</span>
         </div>
     </div>
-</plex-box>
+</div>

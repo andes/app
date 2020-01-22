@@ -1,9 +1,4 @@
-<plex-box>
-    <header>
-        <div class="clearfix">
-            <div class="page-title float-left">ANULAR SOLICITUD</div>
-        </div>
-    </header>
+<div class="mt-3">
     <div class="row">
         <div class="col-12 text-left">
             <b>Paciente</b>
@@ -17,10 +12,11 @@
     <div class="row">
         <div class="col-6 text-left">
             <b>Fecha Solicitud</b>
-            <br> {{ prestacionSeleccionada?.solicitud.horaInicio | fecha }}
+            <br> {{ prestacionSeleccionada?.solicitud.fecha | fecha }}
         </div>
     </div>
-    <div class="row" *ngIf="prestacionSeleccionada?.solicitud.registros.length>0 && prestacionSeleccionada?.solicitud.registros[0].valor">
+    <div class="row"
+         *ngIf="prestacionSeleccionada?.solicitud.registros.length>0 && prestacionSeleccionada?.solicitud.registros[0].valor">
         <div class="col-12">
             <hr>
 
@@ -36,25 +32,30 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
-                            <ng-container *ngFor="let doc of this.prestacionSeleccionada.solicitud.registros[0].valor.documentos; let i = index">
+                            <ng-container
+                                          *ngFor="let doc of this.prestacionSeleccionada.solicitud.registros[0].valor.documentos; let i = index">
                                 <a (click)="activaLightbox(i)">
                                     <div class="image hover">
 
                                         <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
-                                        <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto">
+                                        <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)"
+                                           class="adjunto">
                                             {{ doc.ext }}
                                         </a>
                                     </div>
                                 </a>
 
-                                <div (click)="lightbox = false" *ngIf="i === indice && lightbox" [ngClass]="{'lightbox': i === indice && lightbox }"
-                                    class="hover">
-                                    <i (click)=imagenPrevia(i) class="mdi mdi-chevron-double-left previous parpadeo"></i>
+                                <div (click)="lightbox = false" *ngIf="i === indice && lightbox"
+                                     [ngClass]="{'lightbox': i === indice && lightbox }" class="hover">
+                                    <i (click)=imagenPrevia(i)
+                                       class="mdi mdi-chevron-double-left previous parpadeo"></i>
                                     <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
-                                    <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto m-1 p-2">
+                                    <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)"
+                                       class="adjunto m-1 p-2">
                                         {{ doc.ext }}
                                     </a>
-                                    <i (click)=imagenSiguiente(i) class="mdi mdi-chevron-double-right next parpadeo"></i>
+                                    <i (click)=imagenSiguiente(i)
+                                       class="mdi mdi-chevron-double-right next parpadeo"></i>
                                 </div>
                             </ng-container>
                         </div>
@@ -68,7 +69,8 @@
     <span>
         <div class="row">
             <div class="col-12">
-                <plex-text label="Motivo de Anulación" multiline="true" name="motivo" [(ngModel)]="motivo" [required]="true">
+                <plex-text label="Motivo de Anulación" multiline="true" name="motivo" [(ngModel)]="motivo"
+                           [required]="true">
                 </plex-text>
             </div>
         </div>
@@ -82,4 +84,4 @@
             </div>
         </div>
     </span>
-</plex-box>
+</div>

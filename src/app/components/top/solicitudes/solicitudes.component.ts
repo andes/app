@@ -143,7 +143,7 @@ export class SolicitudesComponent implements OnInit {
 
     loadPrestaciones(event) {
         this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe(data =>
-            event.callback(this.prestacionesPermisos[0] === '*' ? data : data.filter(e => this.prestacionesPermisos.indexOf(e.id) >= 0 ))
+            event.callback(this.prestacionesPermisos[0] === '*' ? data : data.filter(e => this.prestacionesPermisos.indexOf(e.id) >= 0))
         );
     }
 
@@ -152,6 +152,12 @@ export class SolicitudesComponent implements OnInit {
         this.activeTab = activeTab;
         this.showSidebar = false;
         this.tipoSolicitud = (this.activeTab === 0) ? 'entrada' : 'salida';
+    }
+
+    cerrar() {
+        this.showSidebar = false;
+        this.showAnular = false;
+        this.showAuditar = false;
     }
 
     refreshSelection(value, tipo) {
@@ -168,7 +174,7 @@ export class SolicitudesComponent implements OnInit {
         this.prestacionSeleccionada = prestacion;
         this.pacienteSolicitud = prestacion.paciente;
         if (prestacion.solicitud && prestacion.solicitud.turno) {
-            this.servicioTurnos.getTurnos({ id: prestacion.solicitud.turno }).subscribe(turnos => this.turnoSeleccionado = turnos[0].bloques[0].turnos[0] );
+            this.servicioTurnos.getTurnos({ id: prestacion.solicitud.turno }).subscribe(turnos => this.turnoSeleccionado = turnos[0].bloques[0].turnos[0]);
         } else {
             this.turnoSeleccionado = null;
         }
@@ -205,6 +211,7 @@ export class SolicitudesComponent implements OnInit {
         this.prestacionSeleccionada = prestacion;
         this.pacienteSolicitud = prestacion.paciente;
         this.showAnular = true;
+        this.showAuditar = false;
         this.showSidebar = false;
     }
 
@@ -223,6 +230,7 @@ export class SolicitudesComponent implements OnInit {
         this.prestacionSeleccionada = prestacion;
         this.pacienteSolicitud = prestacion.paciente;
         this.showAuditar = true;
+        this.showAnular = false;
         this.showSidebar = false;
     }
 
@@ -276,8 +284,8 @@ export class SolicitudesComponent implements OnInit {
 
             return this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
                 this.prestaciones = resultado;
-                this.prestacionesSalida = resultado.filter((prest: any) => prest.solicitud.organizacionOrigen ? (this.auth.organizacion.id === prest.solicitud.organizacionOrigen.id) : false );
-                this.prestacionesEntrada = resultado.filter((prest: any) => prest.solicitud.organizacion ? this.auth.organizacion.id === prest.solicitud.organizacion.id : false );
+                this.prestacionesSalida = resultado.filter((prest: any) => prest.solicitud.organizacionOrigen ? (this.auth.organizacion.id === prest.solicitud.organizacionOrigen.id) : false);
+                this.prestacionesEntrada = resultado.filter((prest: any) => prest.solicitud.organizacion ? this.auth.organizacion.id === prest.solicitud.organizacion.id : false);
                 if (this.paciente) {
                     this.filtrarPaciente();
                 }
