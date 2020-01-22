@@ -482,7 +482,7 @@
                                                 <ng-container
                                                               *ngIf="sobreturno.tipoPrestacion && sobreturno.paciente?.id">
                                                     <plex-button size="block"
-                                                                 (click)="routeTo('vista', sobreturno.paciente.id)"
+                                                                 (click)="setRouteToParams(['vista', sobreturno.paciente.id]); setAccesoHudsParams(sobreturno.paciente, sobreturno.id, sobreturno.tipoPrestacion.id)"
                                                                  label="VER HUDS" type="primary btn-sm">
                                                     </plex-button>
                                                     <plex-button size="block"
@@ -500,13 +500,13 @@
                                                     <plex-button size="block"
                                                                  *ngIf="sobreturno.paciente && sobreturno.estado !== 'suspendido' && sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(sobreturno)"
                                                                  label="CONTINUAR REGISTRO" type="primary btn-sm"
-                                                                 (click)="routeTo('ejecucion', sobreturno.prestacion.id)">
+                                                                 (click)="setRouteToParams(['ejecucion', sobreturno.prestacion.id]); accesoHudsPaciente = sobreturno.paciente; accesoHudsTurno = sobreturno.id; accesoHudsPrestacion = sobreturno.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)">
                                                     </plex-button>
 
                                                     <plex-button size="block"
                                                                  *ngIf="sobreturno.paciente && sobreturno.estado !== 'suspendido' && sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'validada' && tienePermisos(sobreturno)"
                                                                  label="VER RESUMEN" type="success btn-sm"
-                                                                 (click)="routeTo('validacion', sobreturno.prestacion.id)">
+                                                                 (click)="setRouteToParams(['validacion', sobreturno.prestacion.id]); accesoHudsPaciente = sobreturno.paciente; accesoHudsTurno = sobreturno.id; accesoHudsPrestacion = sobreturno.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)">
                                                     </plex-button>
                                                     <plex-button size="block"
                                                                  *ngIf="!sobreturno.asistencia &&!esFutura(agendaSeleccionada)&& agendaSeleccionada.estado !== 'auditada' && sobreturno.estado !== 'suspendido' && sobreturno.paciente && (!sobreturno.prestacion || (sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'pendiente')|| sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'ejecucion')"
@@ -578,7 +578,7 @@
                                     <td>
                                         <plex-button size="block"
                                                      *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada"
-                                                     (click)="setRouteToParams(['vista', prestacion.paciente.id]); accesoHudsPaciente = prestacion.paciente; accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id"
+                                                     (click)="setRouteToParams(['vista', prestacion.paciente.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id)"
                                                      label="VER HUDS" type="primary btn-sm">
                                         </plex-button>
 
@@ -617,3 +617,7 @@
         </plex-button>
     </plex-layout-footer>
 </plex-layout>
+
+
+<modal-motivo-acceso-huds [show]="showModalMotivo" (motivoAccesoHuds)="preAccesoHuds($event)">
+</modal-motivo-acceso-huds>

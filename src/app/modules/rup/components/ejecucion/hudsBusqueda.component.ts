@@ -95,7 +95,6 @@ export class HudsBusquedaComponent implements OnInit {
          * Listado de todos los hallazgos no activos
          */
     public hallazgosNoActivos: any = [];
-
     public fechaInicio;
     public fechaFin;
     public showFiltros = false;
@@ -110,7 +109,6 @@ export class HudsBusquedaComponent implements OnInit {
         laboratorios: ['laboratorios'],
         vacunas: ['vacunas'],
     };
-
 
 
     public txtABuscar;
@@ -295,9 +293,9 @@ export class HudsBusquedaComponent implements OnInit {
     private cargarSolicitudesMezcladas() {
         this.solicitudesMezcladas = this.solicitudes.concat(this.solicitudesTOP);
         this.solicitudesMezcladas.sort((e1, e2) => {
-                let fecha1 = e1.fechaEjecucion ? e1.fechaEjecucion : e1.solicitud.fecha;
-                let fecha2 = e2.fechaEjecucion ? e2.fechaEjecucion : e2.solicitud.fecha;
-                return fecha2 - fecha1;
+            let fecha1 = e1.fechaEjecucion ? e1.fechaEjecucion : e1.solicitud.fecha;
+            let fecha2 = e2.fechaEjecucion ? e2.fechaEjecucion : e2.solicitud.fecha;
+            return fecha2 - fecha1;
         });
     }
 

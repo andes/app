@@ -81,7 +81,6 @@ export class HUDSService {
                         break;
                 }
             }
-
         }
         return -1;
     }
