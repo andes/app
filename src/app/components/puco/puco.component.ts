@@ -130,7 +130,7 @@ export class PucoComponent implements OnInit, OnDestroy {
         periodo1 = new Date(periodo1);
         periodo2 = new Date(periodo2);
         let p1 = moment(periodo1).startOf('month').format('YYYY-MM-DD');
-        let p2 = moment(periodo2).startOf('month').format('YYYY-MM-DD');
+        let p2 = moment(periodo2).add(3, 'hours').startOf('month').format('YYYY-MM-DD');
 
         if (moment(p1).diff(p2) > 0) {
             return p2;
