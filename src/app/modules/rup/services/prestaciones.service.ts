@@ -150,6 +150,10 @@ export class PrestacionesService {
             options.showError = true;
         }
 
+        if (params.idPaciente) {
+            params['hudsToken'] = this.hudsService.getHudsToken();
+        }
+
         let opt = { params: params, options };
 
         return this.server.get(this.prestacionesUrl, opt);
