@@ -132,10 +132,11 @@ export class HudsBusquedaComponent implements OnInit {
             this.listarPrestaciones();
             this.listarConceptos();
         }
+        const token = this.huds.getHudsToken();
         // Cuando se inicia una prestación debemos volver a consultar si hay CDA nuevos al ratito.
         // [TODO] Ser notificado via websockets
         setTimeout(() => {
-            this.buscarCDAPacientes();
+            this.buscarCDAPacientes(token);
         }, 1000 * 30);
 
     }
@@ -252,7 +253,7 @@ export class HudsBusquedaComponent implements OnInit {
             });
             this.prestacionesCopia = this.prestaciones;
             this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
-            this.buscarCDAPacientes();
+            this.buscarCDAPacientes(this.huds.getHudsToken());
         });
     }
 
@@ -317,8 +318,8 @@ export class HudsBusquedaComponent implements OnInit {
 
 
     // Trae los cdas registrados para el paciente
-    buscarCDAPacientes() {
-        this.servicioPrestacion.getCDAByPaciente(this.paciente.id).subscribe(registros => {
+    buscarCDAPacientes(token) {
+        this.servicioPrestacion.getCDAByPaciente(this.paciente.id, token).subscribe(registros => {
             this.cdas = registros.map(cda => {
                 cda.id = cda.cda_id;
                 return {

@@ -360,10 +360,10 @@ export class PrestacionesService {
         return this.getConceptosByPaciente(idPaciente, true).pipe(map(r => r.filter((reg) => PrestacionesService.SemanticTags.producto.find(e => e === reg.concepto.semanticTag))));
     }
 
-    getCDAByPaciente(idPaciente, conceptId = null) {
+    getCDAByPaciente(idPaciente, token, conceptId = null) {
         let opt: any = {
             params: {
-                hudsToken: this.hudsService.getHudsToken()
+                hudsToken: token
             }
         };
         if (conceptId) {
