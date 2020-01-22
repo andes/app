@@ -76,8 +76,9 @@ export class ClonarAgendaComponent implements OnInit {
         };
         this.serviceAgenda.get(params).subscribe(agendas => {
             this.agendas = agendas;
+            this.cargarCalendario();
         });
-        this.cargarCalendario();
+
     }
 
     private cargarCalendario() {
