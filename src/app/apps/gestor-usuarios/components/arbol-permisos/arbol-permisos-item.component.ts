@@ -2,6 +2,7 @@ import { Component, Input, ViewChildren, QueryList, OnChanges, AfterViewInit, Vi
 import { PlexPanelComponent } from '@andes/plex/src/lib/accordion/panel.component';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
+import { Auth } from '@andes/auth';
 // import { IPermiso } from '../interfaces/IPermiso';
 let shiroTrie = require('shiro-trie');
 
@@ -37,9 +38,21 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
 
     constructor(
         private servicioTipoPrestacion: TipoPrestacionService,
-        private organizacionService: OrganizacionService
+        private organizacionService: OrganizacionService,
+        private auth: Auth
     ) { }
 
+    get isHidden() {
+        if (this.item.visibility) {
+            if (this.item.visibility === 'hidden') {
+                return true;
+            } else if (this.item.visibility === 'restricted') {
+                const permitido = this.auth.getPermissions(this.makePermission() + ':?').length > 0;
+                return !permitido;
+            }
+        }
+        return false;
+    }
     expand($event) {
         if ($event) {
             if (this.allModule) {

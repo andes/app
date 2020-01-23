@@ -1,4 +1,4 @@
-<plex-accordion *ngIf="item.child">
+<plex-accordion *ngIf="item.child" [hidden]="isHidden">
     <plex-panel (toggle)="expand($event)" #panel>
         <div plex-accordion-title class="d-flex justify-content-between align-items-center">
             <span>
@@ -26,7 +26,7 @@
         </ng-container>
     </plex-panel>
 </plex-accordion>
-<div *ngIf="item.type">
+<div *ngIf="item.type" [hidden]="isHidden">
 
     <plex-bool [(ngModel)]="state" *ngIf="item.type === 'boolean'" [label]="item.title" type="slide"
                (change)="selectChange()"> </plex-bool>
