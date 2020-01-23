@@ -92,32 +92,22 @@
     <span *ngIf="showConfirmar">
         <div class="row">
             <div class="col-12">
-                <plex-text label="Respuesta" multiline="true" name="motivo" [(ngModel)]="motivo"> </plex-text>
+                <plex-text label="Observaciones" multiline="true" name="observaciones" [(ngModel)]="observaciones"> </plex-text>
             </div>
         </div>
-        <div class="row">
-            <div class="col-6 text-left">
-                <plex-button type="danger" (click)="cancelarRechazar()">Cancelar</plex-button>
-            </div>
-            <div class="col-6 text-right">
-                <plex-button type="success" (click)="confirmarRechazar()">Confirmar</plex-button>
-            </div>
-        </div>
-    </span>
-    <span *ngIf="showPrioridad">
-        <div class="row">
+        <div class="row" *ngIf="solicitudAceptada" >
             <div class="col-12">
                 <plex-select [(ngModel)]="prioridad" [data]="prioridades" name="prioridad" label="Prioridad"
-                             ngModelOptions="{standalone: true}">
+                        ngModelOptions="{standalone: true}">
                 </plex-select>
             </div>
         </div>
         <div class="row">
             <div class="col-6 text-left">
-                <plex-button type="danger" (click)="cancelarAceptar()">Cancelar</plex-button>
+                <plex-button type="danger" (click)="cancelar()">Cancelar</plex-button>
             </div>
             <div class="col-6 text-right">
-                <plex-button type="success" (click)="confirmarAceptar()">Confirmar</plex-button>
+                <plex-button type="success" (click)="confirmar()">Confirmar</plex-button>
             </div>
         </div>
     </span>

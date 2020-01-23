@@ -4,21 +4,26 @@
             <div class="page-title float-left">SOLICITUD DE {{ tipoSolicitud.toUpperCase() }}</div>
         </div>
     </header>
-    <div class="row"
-         *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
+    <div class="row" *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones || prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo">
         <div class="col">
-            <!-- Cuando la solicitud fue contrarreferida muestra los datos de la respuesta -->
-            <b>Respuesta</b>
+            <!-- Cuando la solicitud fue rechazada muestra los datos del rechazo -->
+            <b>Observaciones</b>
             <br>
-            <span class="text-left"
-                  *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
-                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo}}</span>
+            
+            <span class="text-left" *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones">
+                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones}}
+            </span>
+            
+            <span class="text-left" *ngIf="!prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones && prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo">    
+                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo}}
+            </span>
+            
             <br>
             <b>Usuario que responde</b>
             <br>
             <span class="text-left"
-                  *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
-                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdBy | profesional}}</span>
+                *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones || prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo">
+                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdBy | profesional}}</span> 
             <br>
         </div>
     </div>
@@ -27,7 +32,10 @@
             <!-- Cuando la solicitud fue contrarreferida muestra los datos de la anulación -->
             <b>Motivo de Anulación</b>
             <br>
-            <span class="text-left">
+            <span *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones" class="text-left">
+                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones}}</span>
+            <br>
+            <span *ngIf="!prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones" class="text-left">
                 {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo}}</span>
             <br>
             <b>Usuario que anula</b>

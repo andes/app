@@ -440,36 +440,30 @@ export class SolicitudesComponent implements OnInit {
 
     returnAuditoria(event) {
         this.showAuditar = false;
-        if (event.status) {
-            if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
-                let patch: any = {
-                    op: 'estadoPush',
-                    estado: { tipo: 'pendiente' }
-                };
 
-                if (event.prioridad) {
-                    patch.prioridad = event.prioridad;
+        if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length) {
+            let patch: any = {
+                op: 'estadoPush',
+                estado: {
+                    tipo: event.status ? 'pendiente' : 'rechazada',
+                    observaciones: event.observaciones
                 }
-                this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
-                    respuesta => {
-                        this.cargarSolicitudes();
-                        this.plex.toast('success', '', 'Solicitud Aceptada');
-                    }
-                );
+            };
+
+            // DEPRECADO
+            if (!event.status) {
+                patch.motivoRechazo = event.observaciones;
             }
-        } else {
-            if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
-                let patch = {
-                    op: 'estadoPush',
-                    estado: { tipo: 'rechazada', motivoRechazo: event.motivo }
-                };
-                this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
-                    respuesta => {
-                        this.cargarSolicitudes();
-                        this.plex.toast('danger', '', 'Solicitud CONTRARREFERIDA');
-                    }
-                );
+            if (event.prioridad) {
+                patch.prioridad = event.prioridad;
             }
+
+            this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
+                respuesta => {
+                    this.cargarSolicitudes();
+                    this.plex.toast(event.status ? 'success' : 'danger', '', event.status ? 'Solicitud Aceptada' : 'Solicitud CONTRARREFERIDA');
+                }
+            );
         }
     }
 
@@ -479,7 +473,11 @@ export class SolicitudesComponent implements OnInit {
             if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
                 let patch = {
                     op: 'estadoPush',
-                    estado: { tipo: 'anulada', motivoRechazo: event.motivo }
+                    estado: {
+                        tipo: 'anulada',
+                        motivoRechazo: event.motivo, // 'motivoRechazo' se reemplaza con 'observaciones'
+                        observaciones: event.motivo
+                    }
                 };
                 this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
                     respuesta => {
