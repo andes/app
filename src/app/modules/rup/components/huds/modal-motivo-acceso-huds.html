@@ -3,30 +3,41 @@
     <plex-modal-title type="danger">Historia Universal Digital de Salud</plex-modal-title>
     <plex-modal-subtitle type="">Por favor, indique el motivo de acceso:</plex-modal-subtitle>
     <main>
-        <form action="">
+        <form action="" class="w-50">
             <plex-list minWidth="true">
                 <plex-item layout="izquierda">
-                    <plex-bool [(ngModel)]="motivosAccesoHuds[0].valor" name="checkAccesoContinuidad"
+                    <plex-bool [(ngModel)]="motivosAccesoHuds[0].valor" name="checkAccesoAuditoria"
                                [readonly]="motivosAccesoHuds[0].valor"
                                (change)="changeMotivoAccesoHuds(motivosAccesoHuds[0])"></plex-bool>
-                    <plex-label>Continuidad del cuidado del paciente
+                    <plex-label>Procesos de Auditoría
                     </plex-label>
                 </plex-item>
                 <plex-item layout="izquierda">
-                    <plex-bool [(ngModel)]="motivosAccesoHuds[1].valor" name="checkAccesoAuditoria"
+                    <plex-bool [(ngModel)]="motivosAccesoHuds[1].valor" name="checkAccesoUrgencia"
                                [readonly]="motivosAccesoHuds[1].valor"
                                (change)="changeMotivoAccesoHuds(motivosAccesoHuds[1])"></plex-bool>
-                    <plex-label>Auditoría</plex-label>
+                    <plex-label>Intervención de Urgencia/Emergencia</plex-label>
                 </plex-item>
                 <plex-item layout="izquierda">
-                    <plex-bool [(ngModel)]="motivosAccesoHuds[2].valor" name="checkAccesoUrgencia"
+                    <plex-bool [(ngModel)]="motivosAccesoHuds[2].valor" name="checkAccesoAdministrativo"
                                [readonly]="motivosAccesoHuds[2].valor"
                                (change)="changeMotivoAccesoHuds(motivosAccesoHuds[2])"></plex-bool>
-                    <plex-label>Urgencia / Emergencia</plex-label>
+                    <plex-label>Procesos Administrativos</plex-label>
+                </plex-item>
+                <plex-item layout="izquierda">
+                    <plex-bool [(ngModel)]="motivosAccesoHuds[3].valor" name="checkAccesoIntervencion"
+                               [readonly]="motivosAccesoHuds[3].valor"
+                               (change)="changeMotivoAccesoHuds(motivosAccesoHuds[3])"></plex-bool>
+                    <plex-label>Invervención en el proceso de cuidado del paciente.</plex-label>
                 </plex-item>
             </plex-list>
+            <br>
+            <b>
+                Recuerde que todos los ingresos y acciones realizados por UD. en la HUDS quedarán registrados
+            </b>
         </form>
     </main>
+
     <plex-button modal right type="success" (click)="notificarAccion(true)"> ACEPTAR </plex-button>
     <plex-button modal left type="danger" (click)="notificarAccion(false)"> CANCELAR </plex-button>
 </plex-modal>

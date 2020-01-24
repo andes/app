@@ -19,9 +19,10 @@ export class ModalMotivoAccesoHudsComponent {
     @Output() motivoAccesoHuds = new EventEmitter<any>();
 
     public motivosAccesoHuds = [
-        { id: 'continuidad', nombre: 'Continuidad del cuidado del paciente', valor: true },
-        { id: 'facturación/auditoría', nombre: 'Facturación / Auditoría', valor: false },
-        { id: 'urgencia', nombre: 'Urgencia / Emergencia', valor: false }
+        { id: 'auditoria', nombre: 'Procesos de Auditoría', valor: true },
+        { id: 'urgencia', nombre: 'Intervención de Urgencia/Emergencia', valor: false },
+        { id: 'administrativo', nombre: 'Procesos Administrativos', valor: false },
+        { id: 'continuidad', nombre: 'Invervención en el proceso de cuidado del paciente', valor: false }
     ];
     public motivoSelected = this.motivosAccesoHuds[0].nombre;
 
