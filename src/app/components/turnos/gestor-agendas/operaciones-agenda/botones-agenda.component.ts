@@ -69,19 +69,23 @@ export class BotonesAgendaComponent implements OnInit {
                 'op': estado,
                 'estado': estado
             };
-
             this.serviceAgenda.patch(agenda.id, patch).subscribe((resultado: any) => {
                 // Si son múltiples, esperar a que todas se actualicen
-                agenda.estado = resultado.estado;
-                if (alertCount === 0) {
-                    if (this.cantidadSeleccionadas === 1) {
-                        this.plex.toast('success', 'Información', 'La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
-                        this.actualizarEstadoEmit.emit(estado);
-                    } else {
-                        this.plex.toast('success', 'Información', 'Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
-                        this.actualizarEstadoEmit.emit(estado);
+                if (resultado.mensaje === undefined) {
+                    agenda.estado = resultado.estado;
+                    if (alertCount === 0) {
+                        if (this.cantidadSeleccionadas === 1) {
+                            this.plex.toast('success', 'Información', 'La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                            this.actualizarEstadoEmit.emit(estado);
+                        } else {
+                            this.plex.toast('success', 'Información', 'Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                            this.actualizarEstadoEmit.emit(estado);
+                        }
+                        alertCount++;
                     }
-                    alertCount++;
+                } else {
+                    this.plex.info('warning', 'Otro usuario ha modificado el estado de la agenda seleccionada, su gestor se ha actualizado', resultado.mensaje);
+                    this.actualizarEstadoEmit.emit(estado);
                 }
             });
         });

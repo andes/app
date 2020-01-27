@@ -83,8 +83,8 @@ export class SuspenderAgendaComponent implements OnInit {
 
         this.serviceAgenda.patch(this.agenda.id, patch).subscribe((resultado: any) => {
             // Si son múltiples, esperar a que todas se actualicen
-            if (resultado.mensaje) {
-                this.plex.info('warning', resultado.mensaje);
+            if (resultado.mensaje !== undefined) {
+                this.plex.info('warning', 'Otro usuario ha modificado el estado de la agenda seleccionada, su gestor se ha actualizado', resultado.mensaje);
                 this.cancelar();
             } else {
                 this.agenda.estado = resultado.estado;

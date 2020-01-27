@@ -106,13 +106,19 @@ export class PanelAgendaComponent implements OnInit {
                     'otroEspacioFisico': otroEspacioFisico
                 };
 
-                this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-                    this.agenda = resultado;
-                    this.plex.toast('success', 'Información', 'La agenda se guardó correctamente ');
-                    this.actualizarEstadoEmit.emit(true);
+                this.serviceAgenda.patch(agenda.id, patch).subscribe((resultado: any) => {
+                    if (resultado.mensaje === undefined) {
+                        this.agenda = resultado;
+                        this.plex.toast('success', 'Información', 'La agenda se guardó correctamente ');
+                        this.actualizarEstadoEmit.emit(true);
+                    } else {
+                        this.plex.info('warning', 'Otro usuario ha modificado el estado de la agenda seleccionada, su gestor se ha actualizado', resultado.mensaje);
+                        this.actualizarEstadoEmit.emit(true);
+                    }
                 });
             }
         }
+
     }
 
 
