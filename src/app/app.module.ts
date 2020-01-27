@@ -30,7 +30,7 @@ import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
 import { AuthModule } from '@andes/auth';
 import { Auth } from '@andes/auth';
-import { RoutingGuard, RoutingNavBar } from './app.routings-guard.class';
+import { RoutingGuard, RoutingNavBar, RoutingHudsGuard } from './app.routings-guard.class';
 import { AgmCoreModule } from '@agm/core';
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
@@ -510,6 +510,8 @@ import { VistaProcedimientoComponent } from './modules/rup/components/huds/vista
 import { VistaContextoPrestacionComponent } from './modules/rup/components/huds/vistaContextoPrestacion';
 import { VistaDetalleRegistroComponent } from './modules/rup/components/huds/vistaDetalleRegistro';
 import { PasesListadoInternacionComponent } from './apps/rup/internacion/components/pasesListadoInternacion.component';
+import { VistaAccesosHudsComponent } from './modules/rup/components/huds/vista-accesos-huds.component';
+import { ModalMotivoAccesoHudsComponent } from './modules/rup/components/huds/modal-motivo-acceso-huds.component';
 
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
 import { HUDSService } from './modules/rup/services/huds.service';
@@ -620,6 +622,8 @@ registerLocaleData(localeEs, 'es');
         VistaPrestacionComponent,
         VistaContextoPrestacionComponent,
         VistaDetalleRegistroComponent,
+        VistaAccesosHudsComponent,
+        ModalMotivoAccesoHudsComponent,
 
         // Solicitudes
         SolicitudesComponent,
@@ -696,6 +700,7 @@ registerLocaleData(localeEs, 'es');
         Server,
         RoutingGuard,
         RoutingNavBar,
+        RoutingHudsGuard,
         OrganizacionService,
         OcupacionService,
         ProvinciaService,

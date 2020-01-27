@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { CanActivate } from '@angular/router';
+import { Router, CanActivate } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { HUDSService } from './modules/rup/services/huds.service';
 
 @Injectable()
 export class RoutingGuard implements CanActivate {
@@ -27,5 +27,19 @@ export class RoutingNavBar implements CanActivate {
         this.plex.clearNavbar();
         this.plex.updateTitle('ANDES | Apps de Salud');
         return true;
+    }
+}
+
+@Injectable()
+export class RoutingHudsGuard implements CanActivate {
+    constructor(private router: Router, private hudsService: HUDSService) { }
+
+    canActivate() {
+        if (this.hudsService.getHudsToken()) {
+            return true;
+        } else {
+            this.router.navigate(['inicio']);
+            return false;
+        }
     }
 }

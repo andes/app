@@ -1,5 +1,6 @@
-import { Injectable, Type } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs/Rx';
+import { Server } from '@andes/shared';
 
 // Por el momento lo dejo en any.
 // Este alias me permite en el futuro cambiar el tipo en todos lados
@@ -9,16 +10,15 @@ interface ElementoHUDS {
     data: Registro;
 }
 
-
-
 @Injectable()
 export class HUDSService {
     private _registrosHUDS: ElementoHUDS[] = [];
     private _obsRegistros = new BehaviorSubject<ElementoHUDS[]>([]);
     public registrosHUDS = this._obsRegistros.asObservable();
     public activeTab = -1;
+    private hudsUrl = '/modules/huds/accesos';
 
-    constructor() { }
+    constructor(private server: Server) { }
 
     /**
      * Controladores globales de las tabs de la huds
@@ -40,7 +40,7 @@ export class HUDSService {
      * @param registro Elemento seleccionado en hudsBusqueda.
      * @param tipo 'cda' 'rup' 'concepto'.
      */
-    public toogle (registro: Registro, tipo: string) {
+    public toogle(registro: Registro, tipo: string) {
         const index = this.index(registro, tipo);
         if (index === -1) {
             const elemento: ElementoHUDS = {
@@ -81,12 +81,37 @@ export class HUDSService {
                         break;
                 }
             }
-
         }
         return -1;
     }
 
     isOpen(registro: Registro, tipo: string) {
         return this.index(registro, tipo) >= 0;
+    }
+
+
+    /**
+    * Genera un token para el acceso a la HUDS de un paciente
+    */
+    generateHudsToken(usuario, organizacion, paciente, motivo, profesional, idTurno, idPrestacion) {
+        let paramsToken = {
+            usuario: usuario,
+            organizacion: organizacion,
+            paciente: paciente,
+            motivo: motivo,
+            profesional: profesional,
+            idTurno: idTurno,
+            idPrestacion: idPrestacion
+        };
+        return this.server.post(this.hudsUrl + '/token', paramsToken);
+
+    }
+
+    getAccesos(params: any): Observable<any> {
+        return this.server.get(this.hudsUrl, { params: params });
+    }
+
+    getHudsToken() {
+        return window.sessionStorage.getItem('huds-token');
     }
 }

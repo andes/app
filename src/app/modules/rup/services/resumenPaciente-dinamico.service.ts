@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Observable } from 'rxjs';
+import { HUDSService } from '../services/huds.service';
 
 @Injectable()
 export class ResumenPacienteDinamicoService {
@@ -21,7 +22,7 @@ export class ResumenPacienteDinamicoService {
         { titulo: 'Desarrollo psicomotor', conceptId: '65401001' }    // desarrollo psicomotor
     ];
 
-    constructor(private server: Server) { }
+    constructor(private server: Server, private hudsService: HUDSService) { }
 
     /**
      * Devuelve todas las prestaciones de un paciente en las que se encuentren los conceptos (y/o hijos) especificados
@@ -30,7 +31,7 @@ export class ResumenPacienteDinamicoService {
      * Además se especifica la expresion de la consulta a filtrar y un arreglo con los conceptos buscados.
      */
     get(idPaciente: String): Observable<any[]> {
-        let params = { consultaPrincipal: this.consultaPrincipal, conceptos: JSON.stringify(this.conceptosBuscados) };
+        let params = { consultaPrincipal: this.consultaPrincipal, hudsToken: this.hudsService.getHudsToken(), conceptos: JSON.stringify(this.conceptosBuscados) };
         return this.server.get(this.resumenURL + '/resumenPaciente/' + idPaciente, { params: params, showError: true });
     }
 }

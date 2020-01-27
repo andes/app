@@ -11,6 +11,10 @@ import { IAgenda } from '../../../../interfaces/turnos/IAgenda';
 import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 import { ObraSocialCacheService } from '../../../../services/obraSocialCache.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
+import { HUDSService } from '../../services/huds.service';
+import { concat } from 'rxjs';
+import { tap } from 'rxjs/operators';
+
 @Component({
     templateUrl: 'prestacionCrear.html'
 })
@@ -46,7 +50,7 @@ export class PrestacionCrearComponent implements OnInit {
      */
     public showDarTurnos = false;
 
-    get btnLabel () {
+    get btnLabel() {
         if (this.opcion === 'fueraAgenda') {
             return 'INICIAR PRESTACIÓN';
         } else {
@@ -54,7 +58,7 @@ export class PrestacionCrearComponent implements OnInit {
         }
     }
 
-    btnClick () {
+    btnClick() {
         if (this.opcion === 'fueraAgenda') {
             this.iniciarPrestacion();
         } else {
@@ -69,7 +73,8 @@ export class PrestacionCrearComponent implements OnInit {
         public servicioPrestacion: PrestacionesService,
         public servicioTipoPrestacion: TipoPrestacionService,
         private location: Location,
-        private osService: ObraSocialCacheService) { }
+        private osService: ObraSocialCacheService,
+        private hudsService: HUDSService) { }
 
     ngOnInit() {
         // Carga tipos de prestaciones permitidas para el usuario
@@ -168,26 +173,42 @@ export class PrestacionCrearComponent implements OnInit {
                 ejecucion: {
                     fecha: this.fecha,
                     registros: [],
-                    // organizacion desde la que se solicita la prestacion
-                    organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
+                    // organizacion desde la que se solicita la prestaci                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
                 },
                 estados: {
                     fecha: new Date(),
                     tipo: 'ejecucion'
                 }
             };
+            this.disableGuardar = true;
             if (pacientePrestacion) {
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
+                const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.paciente, 'Fuera de agenda', this.auth.profesional.id, null, this.tipoPrestacionSeleccionada.id);
+                const nuevaPrest = this.servicioPrestacion.post(nuevaPrestacion);
+                const res = concat(token, nuevaPrest);
+
+                res.subscribe(input => {
+                    if (input.token) {
+                        // se obtuvo token y loguea el acceso a la huds del paciente
+                        window.sessionStorage.setItem('huds-token', input.token);
+                    } else {
+                        localStorage.removeItem('idAgenda');
+                        this.router.navigate(['/rup/ejecucion', input.id]); // prestacion
+                    }
+                }, (err) => {
+                    this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err);
+                });
+            } else {
+                this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+                    localStorage.removeItem('idAgenda');
+                    this.router.navigate(['/rup/ejecucion', prestacion.id]);
+                }, (err) => {
+                    this.disableGuardar = false;
+                    this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err);
+                });
+
             }
 
-            this.disableGuardar = true;
-            this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
-                localStorage.removeItem('idAgenda');
-                this.router.navigate(['/rup/ejecucion', prestacion.id]);
-            }, (err) => {
-                this.disableGuardar = false;
-                this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err);
-            });
         }
     }
 
@@ -336,7 +357,4 @@ export class PrestacionCrearComponent implements OnInit {
         }
         this.resultadoBusqueda = [];
     }
-    // ----------------------------------
-
-
 }
