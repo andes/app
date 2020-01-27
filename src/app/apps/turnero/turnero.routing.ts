@@ -16,7 +16,7 @@ let routes = [
             component: PantallaDetalleComponent
         }]
     },
-    { path: '', redirectTo: 'turnero', pathMatch: 'full' }
+    { path: '', redirectTo: 'pantallas', pathMatch: 'full' }
 ];
 
 
