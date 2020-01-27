@@ -19,18 +19,22 @@ export class ModalMotivoAccesoHudsComponent {
     @Output() motivoAccesoHuds = new EventEmitter<any>();
 
     public motivosAccesoHuds = [
-        { id: 'auditoria', nombre: 'Procesos de Auditoría', valor: true },
+        { id: 'auditoria', nombre: 'Procesos de Auditoría', valor: false },
         { id: 'urgencia', nombre: 'Intervención de Urgencia/Emergencia', valor: false },
         { id: 'administrativo', nombre: 'Procesos Administrativos', valor: false },
         { id: 'continuidad', nombre: 'Invervención en el proceso de cuidado del paciente', valor: false }
     ];
-    public motivoSelected = this.motivosAccesoHuds[0].nombre;
+    public motivoSelected = null;
 
     public changeMotivoAccesoHuds(seleccion) {
         this.motivosAccesoHuds.forEach(motivo => {
             motivo.valor = (motivo.id === seleccion.id) ? true : false;
         });
         this.motivoSelected = seleccion.nombre;
+    }
+
+    motivoSelect() {
+        return (this.motivoSelected === null);
     }
 
     notificarAccion(flag: boolean) {

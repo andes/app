@@ -38,6 +38,8 @@
         </form>
     </main>
 
-    <plex-button modal right type="success" (click)="notificarAccion(true)"> ACEPTAR </plex-button>
+    <plex-button modal right type="success" (click)="notificarAccion(true)" [disabled]="motivoSelect()"> ACEPTAR </plex-button>
     <plex-button modal left type="danger" (click)="notificarAccion(false)"> CANCELAR </plex-button>
+
+ 
 </plex-modal>
