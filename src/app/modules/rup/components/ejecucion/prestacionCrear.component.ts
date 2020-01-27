@@ -180,6 +180,7 @@ export class PrestacionCrearComponent implements OnInit {
                     tipo: 'ejecucion'
                 }
             };
+            this.disableGuardar = true;
             if (pacientePrestacion) {
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
                 const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.paciente, 'Fuera de agenda', this.auth.profesional.id, null, this.tipoPrestacionSeleccionada.id);
@@ -197,16 +198,17 @@ export class PrestacionCrearComponent implements OnInit {
                 }, (err) => {
                     this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err);
                 });
+            } else {
+                this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+                    localStorage.removeItem('idAgenda');
+                    this.router.navigate(['/rup/ejecucion', prestacion.id]);
+                }, (err) => {
+                    this.disableGuardar = false;
+                    this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err);
+                });
+
             }
 
-            this.disableGuardar = true;
-            this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
-                localStorage.removeItem('idAgenda');
-                this.router.navigate(['/rup/ejecucion', prestacion.id]);
-            }, (err) => {
-                this.disableGuardar = false;
-                this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err);
-            });
         }
     }
 
