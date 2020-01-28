@@ -71,20 +71,20 @@ export class BotonesAgendaComponent implements OnInit {
             };
             this.serviceAgenda.patch(agenda.id, patch).subscribe((resultado: any) => {
                 // Si son múltiples, esperar a que todas se actualicen
-                if (resultado.mensaje === undefined) {
-                    agenda.estado = resultado.estado;
-                    if (alertCount === 0) {
-                        if (this.cantidadSeleccionadas === 1) {
-                            this.plex.toast('success', 'Información', 'La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
-                            this.actualizarEstadoEmit.emit(estado);
-                        } else {
-                            this.plex.toast('success', 'Información', 'Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
-                            this.actualizarEstadoEmit.emit(estado);
-                        }
-                        alertCount++;
+                agenda.estado = resultado.estado;
+                if (alertCount === 0) {
+                    if (this.cantidadSeleccionadas === 1) {
+                        this.plex.toast('success', 'Información', 'La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                        this.actualizarEstadoEmit.emit(estado);
+                    } else {
+                        this.plex.toast('success', 'Información', 'Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                        this.actualizarEstadoEmit.emit(estado);
                     }
-                } else {
-                    this.plex.info('warning', 'Otro usuario ha modificado el estado de la agenda seleccionada, su gestor se ha actualizado', resultado.mensaje);
+                    alertCount++;
+                }
+            }, err => {
+                if (err) {
+                    this.plex.info('warning', 'Otro usuario ha modificado el estado de la agenda seleccionada, su gestor se ha actualizado', err);
                     this.actualizarEstadoEmit.emit(estado);
                 }
             });
