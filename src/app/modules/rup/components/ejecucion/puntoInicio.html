@@ -294,7 +294,7 @@
                                                 <plex-button size="block"
                                                              *ngIf="!esFutura(agendaSeleccionada) && turno.paciente && turno.estado !== 'suspendido'  && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente' && tienePermisos(turno) && verificarAsistencia(turno)"
                                                              label="INICIAR PRESTACIÓN" type="success btn-sm"
-                                                             (click)="ejecutarPrestacionPendiente(turno.prestacion.id,turno.paciente, turno.tipoPrestacion, turno)">
+                                                             (click)="ejecutarPrestacionPendiente(turno.prestacion, turno.paciente, turno.tipoPrestacion, turno)">
                                                 </plex-button>
 
                                                 <!--Una agenda futura muestra en boton deshabilitado -->
