@@ -22,7 +22,7 @@ export class ModalMotivoAccesoHudsComponent {
         { id: 'auditoria', nombre: 'Procesos de Auditoría', valor: false },
         { id: 'urgencia', nombre: 'Intervención de Urgencia/Emergencia', valor: false },
         { id: 'administrativo', nombre: 'Procesos Administrativos', valor: false },
-        { id: 'continuidad', nombre: 'Invervención en el proceso de cuidado del paciente', valor: false }
+        { id: 'continuidad', nombre: 'Intervención en el proceso de cuidado del paciente', valor: false }
     ];
     public motivoSelected = null;
 
