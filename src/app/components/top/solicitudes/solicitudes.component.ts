@@ -243,11 +243,20 @@ export class SolicitudesComponent implements OnInit {
                 'auditoria',
                 'pendiente',
                 'rechazada',
-                'validada'
+                'validada',
+                'asignada'
             ];
         }
         if (this.organizacion) {
             params['organizacionOrigen'] = this.organizacion.id;
+        }
+        if (this.prestacionDestino) {
+            params['prestacionDestino'] = this.prestacionDestino.id;
+        } else {
+            params['estados'] = [this.estado.id];
+            if (this.estado.id === 'pendiente') {
+                params['tieneTurno'] = false;
+            }
         }
         if (this.prestacionDestino) {
             params['prestacionDestino'] = this.prestacionDestino.id;
