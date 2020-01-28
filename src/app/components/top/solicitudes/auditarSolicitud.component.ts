@@ -3,6 +3,8 @@ import { Input, Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
 import { environment } from '../../../../environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ProfesionalService } from '../../../services/profesional.service';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'auditar-solicitud',
@@ -32,16 +34,21 @@ export class AuditarSolicitudComponent implements OnInit {
     showConfirmar = false;
     showPrioridad = false;
     prioridad;
+    profesional;
+    profesionales = [];
     prioridades = [
-        {id: 'prioritario', nombre: 'PRIORITARIO'}
+        { id: 'prioritario', nombre: 'PRIORITARIO' }
     ];
-    solicitudAceptada = false;
+    estadoSolicitud = 0;
     corfirmarAuditoria = false;
+    solicitudAsignada = false;
     observaciones = '';
     constructor(
         public plex: Plex,
         public adjuntosService: AdjuntosService,
         public sanitazer: DomSanitizer,
+        public servicioProfesional: ProfesionalService,
+        public auth: Auth,
 
     ) { }
 
@@ -52,29 +59,40 @@ export class AuditarSolicitudComponent implements OnInit {
         });
     }
 
+
     aceptar() {
         this.corfirmarAuditoria = true;
         this.showPrioridad = true;
-        this.solicitudAceptada = true;
+        this.estadoSolicitud = 1;
+        this.showConfirmar = true;
+    }
+
+    asignar() {
+        this.corfirmarAuditoria = true;
+        this.solicitudAsignada = true;
+        this.estadoSolicitud = 2;
         this.showConfirmar = true;
     }
 
     rechazar() {
         this.corfirmarAuditoria = true;
-        this.solicitudAceptada = false;
+        this.estadoSolicitud = 3;
         this.showConfirmar = true;
     }
 
     confirmar() {
         if (this.corfirmarAuditoria) {
-            this.returnAuditoria.emit({ status: this.solicitudAceptada, observaciones: this.observaciones, prioridad: this.prioridad ? this.prioridad.id : null });
+            this.returnAuditoria.emit({ status: this.estadoSolicitud, observaciones: this.observaciones, prioridad: this.prioridad ? this.prioridad.id : null, profesional: this.profesional ? this.profesional : null });
             this.showPrioridad = false;
         }
     }
 
     cancelar() {
-        this.solicitudAceptada = true;
+        this.estadoSolicitud = 0;
         this.corfirmarAuditoria = false;
+        this.showConfirmar = false;
+        this.showPrioridad = false;
+        this.solicitudAsignada = false;
     }
 
     cancelarAceptar() {
@@ -101,6 +119,17 @@ export class AuditarSolicitudComponent implements OnInit {
         if (this.prestacionSeleccionada.solicitud.registros[0].valor.documentos[index].ext !== 'pdf') {
             this.lightbox = true;
             this.indice = index;
+        }
+    }
+
+    loadProfesionales(event) {
+        if (event.query) {
+            let query = {
+                nombreCompleto: event.query
+            };
+            this.servicioProfesional.get(query).subscribe(event.callback);
+        } else {
+            event.callback([]);
         }
     }
 

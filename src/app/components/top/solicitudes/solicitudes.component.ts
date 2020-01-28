@@ -58,6 +58,7 @@ export class SolicitudesComponent implements OnInit {
     public estados = [
         { id: 'auditoria', nombre: 'AUDITORIA' },
         { id: 'pendiente', nombre: 'PENDIENTE' },
+        { id: 'asignada', nombre: 'ASIGNADA' },
         { id: 'rechazada', nombre: 'CONTRARREFERIDA' },
         { id: 'turnoDado', nombre: 'TURNO DADO' },
         { id: 'registroHUDS', nombre: 'REGISTRO EN HUDS' },
@@ -238,6 +239,7 @@ export class SolicitudesComponent implements OnInit {
             }
         } else {
             params['estados'] = [
+                'asignada',
                 'auditoria',
                 'pendiente',
                 'rechazada',
@@ -414,6 +416,14 @@ export class SolicitudesComponent implements OnInit {
                     // Se puede auditar?
                     this.auditarArrayEntrada[i] = false;
                     break;
+                case 'asignada':
+                    // Se puede visualizar?
+                    this.visualizarEntrada[i] = true;
+                    // Se puede dar turno?
+                    this.darTurnoArrayEntrada[i] = false;
+                    // Se puede auditar?
+                    this.auditarArrayEntrada[i] = false;
+                    break;
             }
         }
     }
@@ -447,7 +457,7 @@ export class SolicitudesComponent implements OnInit {
             let patch: any = {
                 op: 'estadoPush',
                 estado: {
-                    tipo: event.status ? 'pendiente' : 'rechazada',
+                    tipo: event.status === 1 ? 'pendiente' : (event.status === 2 ? 'asignada' : 'rechazada'),
                     observaciones: event.observaciones
                 }
             };
@@ -459,7 +469,9 @@ export class SolicitudesComponent implements OnInit {
             if (event.prioridad) {
                 patch.prioridad = event.prioridad;
             }
-
+            if (event.profesional) {
+                patch.profesional = event.profesional;
+            }
             this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
                 respuesta => {
                     this.cargarSolicitudes();
