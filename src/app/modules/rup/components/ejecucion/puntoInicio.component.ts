@@ -622,7 +622,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Iniciar Prestación?').then(confirmacion => {
             if (confirmacion) {
-                const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, prestacion.term, this.auth.profesional.id, turno, prestacion.id);
+                const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional.id, turno, prestacion.id);
                 const patch = this.servicioPrestacion.patch(prestacion.id, params);
                 const res = concat(token, patch);
                 res.subscribe(input => {
