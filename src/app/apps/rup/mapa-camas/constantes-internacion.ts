@@ -24,6 +24,14 @@ export const snomedIngreso = {
     term: 'documento de solicitud de admisión'
 };
 
+export const snomedEgreso = {
+    fsn: 'alta del paciente (procedimiento)',
+    semanticTag: 'procedimiento',
+    refsetIds: ['900000000000497000'],
+    conceptId: '58000006',
+    term: 'alta del paciente'
+};
+
 export const pacienteAsociado = [
     { id: 'Plan de salud privado o Mutual', nombre: 'Plan de salud privado o Mutual' },
     { id: 'Plan o Seguro público', nombre: 'Plan o Seguro público' },

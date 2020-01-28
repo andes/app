@@ -112,6 +112,7 @@ import { CamaMainComponent } from './apps/rup/mapa-camas/cama/cama.component';
 import { MapaCamasMainComponent } from './apps/rup/mapa-camas/mapa-camas-main.component';
 import { MapaCamasCapaComponent } from './apps/rup/mapa-camas/mapa-camas-capa/mapa-camas-capa.component';
 import { CensosMensualesComponent } from './apps/rup/mapa-camas/censos/censo-mensual/censo-mensual.component';
+import { InternacionListadoComponent } from './apps/rup/mapa-camas/listado-internacion/listado-internacion.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -236,6 +237,8 @@ const appRoutes: Routes = [
 
   { path: 'internacion/censo/diario', component: CensosDiariosComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'internacion/censo/mensual', component: CensosMensualesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+
+  { path: 'internacion/listado-internacion', component: InternacionListadoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
     // dejar siempre al último porque no encuentra las url después de esta
     { path: '**', redirectTo: 'inicio' }

@@ -10,21 +10,14 @@ import { MapaCamasService } from '../mapa-camas.service';
 export class InternacionDetalleComponent implements OnInit {
     // EVENTOS
     @Input() fecha: Date;
-    @Input() cama: any;
-    @Input() camas: any;
-    @Input() estados: any;
-    @Input() relaciones: any;
+    @Input() prestacion: any;
+    @Input() relacionesPosibles: any;
 
     @Output() refresh = new EventEmitter<any>();
 
     // VARIABLES
     public capa: string;
-    public fechaIngreso;
     public paciente;
-    public estadoCama;
-    public prestacion;
-    public informeIngreso;
-    public relacionesPosibles;
     public habilitarIngreso = false;
     public habilitarEgreso = false;
     public mostrar;
@@ -37,33 +30,25 @@ export class InternacionDetalleComponent implements OnInit {
 
     ngOnInit() {
         this.capa = this.mapaCamasService.capa;
-        this.estadoCama = this.estados.filter(est => this.cama.estado === est.key)[0];
-        this.getRelacionesPosibles();
+        this.habilitarOpciones();
     }
 
     // tslint:disable-next-line:use-lifecycle-interface
     ngOnChanges(changes: SimpleChanges) {
-        if (changes && this.estadoCama) {
-            if (this.cama.idCama !== changes['cama']) {
+        if (changes && this.prestacion) {
+            if (this.prestacion._id !== changes['prestacion']) {
                 this.mostrar = null;
                 this.habilitarIngreso = false;
                 this.habilitarEgreso = false;
-                this.getRelacionesPosibles();
+                this.habilitarOpciones();
             }
         }
 
     }
 
-    getRelacionesPosibles() {
-        this.relacionesPosibles = [];
-        this.estados.map(est =>
-            this.relaciones.map(rel => {
-                if (this.estadoCama.key === rel.origen) {
-                    if (est.key === rel.destino && rel.destino !== 'inactiva') {
-                        this.relacionesPosibles.push(rel);
-                    }
-                }
-
+    habilitarOpciones() {
+        if (this.relacionesPosibles) {
+            this.relacionesPosibles.map(rel => {
                 if (rel.accion === 'ingresarPaciente') {
                     this.habilitarIngreso = true;
                 }
@@ -71,11 +56,12 @@ export class InternacionDetalleComponent implements OnInit {
                 if (rel.accion === 'desocuparCama') {
                     this.habilitarEgreso = true;
                 }
-            })
-        );
+            });
 
-        if (this.cama.paciente) {
-            this.paciente = this.cama.paciente;
+        }
+
+        if (this.prestacion.paciente) {
+            this.paciente = this.prestacion.paciente;
             this.habilitarIngreso = true;
         }
     }

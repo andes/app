@@ -54,9 +54,9 @@ export class CambiarCamaComponent implements OnInit {
             this.cama.paciente = null;
 
             let fecha = moment().toDate();
-            this.mapaCamasService.patchCama(camaElegida, this.ambito, this.capa, fecha).subscribe(camaActualizada => {
+            this.mapaCamasService.patchCama(camaElegida, fecha).subscribe(camaActualizada => {
                 this.refresh.emit({ cama: camaElegida, accion: 'internarPaciente' });
-                this.mapaCamasService.patchCama(this.cama, this.ambito, this.capa, fecha).subscribe(cama => {
+                this.mapaCamasService.patchCama(this.cama, fecha).subscribe(cama => {
                     this.refresh.emit({ cama: this.cama, accion: 'internarPaciente' });
                     this.plex.info('success', 'Cambio de cama exitoso!');
                 });

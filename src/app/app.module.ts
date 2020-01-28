@@ -370,6 +370,7 @@ import { IngresoDetalleComponent } from './apps/rup/mapa-camas/sidebar/ingreso/i
 import { HistorialDetalleComponent } from './apps/rup/mapa-camas/sidebar/historial-detalle.component';
 import { MovimientosInternacionComponent } from './apps/rup/mapa-camas/sidebar/movimientos-internacion/movimientos-internacion.component';
 import { CambiarCamaComponent } from './apps/rup/mapa-camas/sidebar/cambiar-cama.component';
+import { InternacionListadoComponent } from './apps/rup/mapa-camas/listado-internacion/listado-internacion.component';
 
 let mapaCamasComponents = [
     MapaCamasMainComponent,
@@ -391,7 +392,8 @@ let mapaCamasComponents = [
     IngresoDetalleComponent,
     HistorialDetalleComponent,
     MovimientosInternacionComponent,
-    CambiarCamaComponent
+    CambiarCamaComponent,
+    InternacionListadoComponent
 ];
 
 // Solicitudes

@@ -14,17 +14,17 @@ export class MapaCamasService {
         this.capa = capa;
     }
 
-    snapshot(ambito, capa, fecha): Observable<any[]> {
+    snapshot(fecha, idInternacion = null): Observable<any[]> {
         return this.server.get(this.url + '/camas', {
-            params: { ambito, capa, fecha },
+            params: { ambito: this.ambito, capa: this.capa, fecha, internacion: idInternacion },
             showError: true
         });
     }
 
-    historial(ambito: string, capa: string, desde: Date, hasta: Date, filtros): Observable<any[]> {
+    historial(desde: Date, hasta: Date, filtros): Observable<any[]> {
         const params = {
-            ambito,
-            capa,
+            ambito: this.ambito,
+            capa: this.capa,
             desde,
             hasta,
             ...filtros
@@ -32,16 +32,16 @@ export class MapaCamasService {
         return this.server.get(`${this.url}/camas/historial`, { params });
     }
 
-    getCama(ambito, capa, fecha, idCama): Observable<any[]> {
+    getCama(fecha, idCama): Observable<any[]> {
         return this.server.get(this.url + `/camas/${idCama}`, {
-            params: { ambito, capa, fecha },
+            params: { ambito: this.ambito, capa: this.capa, fecha },
             showError: true
         });
     }
 
-    patchCama(data, ambito, capa, fecha) {
+    patchCama(data, fecha) {
         let params = {
-            ...data, ambito, capa, fecha
+            ...data, ambito: this.ambito, capa: this.capa, fecha
         };
         if (data._id) {
             return this.server.patch(this.url + `/camas/${data._id}`, {
@@ -50,15 +50,15 @@ export class MapaCamasService {
             });
         } else {
             return this.server.post(this.url + `/camas`, {
-                params: { ...data, ambito, capa },
+                params: { ...data, ambito: this.ambito, capa: this.capa },
                 showError: true
             });
         }
     }
 
-    getMaquinaEstados(organizacion, ambito, capa): Observable<any[]> {
+    getMaquinaEstados(organizacion): Observable<any[]> {
         return this.server.get(this.url + `/estados`, {
-            params: { organizacion, ambito, capa },
+            params: { organizacion, ambito: this.ambito, capa: this.capa },
             showError: true
         });
     }

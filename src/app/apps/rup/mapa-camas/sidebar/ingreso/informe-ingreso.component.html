@@ -5,11 +5,12 @@
         <plex-button icon="pencil" type="warning" size="sm" (click)="onEdit()">
         </plex-button>
     </plex-title>
-    <app-ingreso-detalle *ngIf="informeIngreso" [cama]="cama" [informeIngreso]="informeIngreso"></app-ingreso-detalle>
+    <app-ingreso-detalle *ngIf="informeIngreso" [prestacion]="prestacion" [informeIngreso]="informeIngreso">
+    </app-ingreso-detalle>
 </ng-container>
 <ng-container *ngIf="!detalle">
-    <app-ingresar-paciente [camas]="camas" [cama]="cama" [paciente]="cama.paciente" (cancel)="cancelar()"
-                           (cambiarFecha)="cambiarFechaIngreso($event)" (cambiarCama)="cambiarSeleccionCama($event)"
-                           (refresh)="refescar($event)">
+    <app-ingresar-paciente [camas]="camas" [cama]="cama" [prestacion]="prestacion" [paciente]="paciente"
+                           (cancel)="cancelar()" (cambiarFecha)="cambiarFechaIngreso($event)"
+                           (cambiarCama)="cambiarSeleccionCama($event)" (refresh)="refescar($event)">
     </app-ingresar-paciente>
 </ng-container>

@@ -10,8 +10,9 @@ import { MapaCamasService } from '../../mapa-camas.service';
 export class InformeIngresoComponent implements OnInit {
     // EVENTOS
     @Input() fecha: Date;
-    @Input() cama: any;
-    @Input() camas: any;
+    @Input() cama;
+    @Input() camas;
+    @Input() prestacion;
     @Input() detalle = false;
     @Input() edit = false;
 
@@ -22,32 +23,29 @@ export class InformeIngresoComponent implements OnInit {
 
     // VARIABLES
     public capa: string;
-    public prestacion;
     public informeIngreso;
+    public paciente;
 
     constructor(
-        private prestacionesService: PrestacionesService,
         private mapaCamasService: MapaCamasService,
     ) {
     }
 
     ngOnInit() {
         this.capa = this.mapaCamasService.capa;
-        this.getPrestacion();
+        if (this.prestacion) {
+            this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
+            this.paciente = this.prestacion.paciente;
+        }
+
+        if (this.cama) {
+            this.paciente = this.cama.paciente;
+        }
     }
 
     onEdit() {
         this.detalle = false;
         this.edit = true;
-    }
-
-    getPrestacion() {
-        if (this.cama.idInternacion) {
-            this.prestacionesService.getById(this.cama.idInternacion).subscribe(prestacion => {
-                this.prestacion = prestacion;
-                this.informeIngreso = prestacion.ejecucion.registros[0].valor.informeIngreso;
-            });
-        }
     }
 
     cambiarFechaIngreso(fecha) {

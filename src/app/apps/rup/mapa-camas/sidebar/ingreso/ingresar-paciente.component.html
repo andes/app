@@ -16,7 +16,6 @@
     </fieldset>
 </ng-container>
 <form #formIngreso="ngForm">
-
     <ng-container *ngIf="paciente && informeIngreso">
         <plex-title justify titulo="INGRESO">
             <plex-button icon="arrow-left" type="danger" size="sm" (click)="cancelar()">
@@ -39,7 +38,8 @@
             </div>
             <ng-container *ngIf="datosBasicos">
                 <plex-title size="sm" justify titulo="DATOS BÁSICOS">
-                    <plex-button label="CAMBIAR PACIENTE" type="warning" size="sm" (click)="cambiarPaciente()">
+                    <plex-button *ngIf="!prestacion" label="CAMBIAR PACIENTE" type="warning" size="sm"
+                                 (click)="cambiarPaciente()">
                     </plex-button>
                 </plex-title>
                 <fieldset>
@@ -103,10 +103,13 @@
                     </div>
                     <div class="row">
                         <div class="col-md">
-                            <plex-select [required]="true" [(ngModel)]="cama" name="cama" [data]="camas"
-                                         placeholder="Elija cama" label="Cama" idField="nombre" labelField="nombre"
-                                         (change)="cambiarSeleccionCama()">
+                            <plex-select *ngIf="!prestacion" [required]="true" [(ngModel)]="cama" name="cama"
+                                         [data]="camas" placeholder="Elija cama" label="Cama" idField="nombre"
+                                         labelField="nombre" (change)="cambiarSeleccionCama()">
                             </plex-select>
+                            <plex-text *ngIf="prestacion && cama" [required]="true" [disabled]="true" label="Cama"
+                                       name="cama" [(ngModel)]="cama.nombre">
+                            </plex-text>
                         </div>
                     </div>
                     <ng-container *ngIf="capa === 'estadistica'">

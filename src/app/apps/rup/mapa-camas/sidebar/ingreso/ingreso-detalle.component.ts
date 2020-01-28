@@ -9,7 +9,6 @@ import { PrestacionesService } from '../../../../../modules/rup/services/prestac
 
 export class IngresoDetalleComponent implements OnInit {
     // EVENTOS
-    @Input() cama: any;
     @Input() prestacion;
     @Input() informeIngreso;
 
@@ -22,7 +21,7 @@ export class IngresoDetalleComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.paciente = this.cama.paciente;
+        this.paciente = this.prestacion.paciente;
         this.fechaIngreso = this.informeIngreso.fechaIngreso;
     }
 }

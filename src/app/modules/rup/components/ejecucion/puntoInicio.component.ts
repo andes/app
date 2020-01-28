@@ -14,7 +14,7 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { TurnoService } from '../../../../services/turnos/turno.service';
-import { SnomedService } from '../../../../services/term/snomed.service';
+import { SnomedService } from '../../../../apps/mitos';
 import { Subscription, concat } from 'rxjs';
 import { HUDSService } from '../../services/huds.service';
 import { TurneroService } from '../../../../apps/turnero/services/turnero.service';

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../../mapa-camas.service';
 
@@ -9,7 +9,9 @@ import { MapaCamasService } from '../../mapa-camas.service';
 
 export class MovimientosInternacionComponent implements OnInit {
     // EVENTOS
-    @Input() cama;
+    @Input() prestacion;
+
+    @Output() cancel = new EventEmitter<any>();
 
     // VARIABLES
     public ambito: string;
@@ -31,9 +33,13 @@ export class MovimientosInternacionComponent implements OnInit {
     }
 
     getMovimientos() {
-        this.mapaCamasService.historial(this.ambito, this.capa, this.desde, this.hasta, { idInternacion: this.cama.idInternacion }).subscribe(movimientos => {
+        this.mapaCamasService.historial(this.desde, this.hasta, { idInternacion: this.prestacion._id }).subscribe(movimientos => {
             this.movimientos = movimientos;
             this.movimientos.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
         });
+    }
+
+    cancelar() {
+        this.cancel.emit();
     }
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -45,6 +46,7 @@ export class MapaCamasCapaComponent implements OnInit {
         private plex: Plex,
         private router: Router,
         private route: ActivatedRoute,
+        private location: Location,
         private mapaCamasService: MapaCamasService,
     ) { }
 
@@ -62,7 +64,7 @@ export class MapaCamasCapaComponent implements OnInit {
     }
 
     getMaquinaEstados() {
-        this.mapaCamasService.getMaquinaEstados(this.organizacion, this.ambito, this.capa).subscribe(maquinaEstados => {
+        this.mapaCamasService.getMaquinaEstados(this.organizacion).subscribe(maquinaEstados => {
             this.maquinaEstados = maquinaEstados[0];
             if (this.maquinaEstados) {
                 this.estados = maquinaEstados[0].estados;
@@ -78,7 +80,7 @@ export class MapaCamasCapaComponent implements OnInit {
             fecha = this.fecha;
         }
 
-        this.mapaCamasService.snapshot(this.ambito, this.capa, moment(fecha).toDate()).subscribe(snap => {
+        this.mapaCamasService.snapshot(moment(fecha).toDate()).subscribe(snap => {
             this.snapshot = snap;
             this.auxSnapshot = snap;
             this.camas = Observable.of(snap);
@@ -142,6 +144,10 @@ export class MapaCamasCapaComponent implements OnInit {
         this.router.navigate([`/internacion/cama/${this.capa}`]);
     }
 
+    verListadoInternacion() {
+        this.router.navigate([`/internacion/listado-internacion`]);
+    }
+
     selectCama(accion) {
         this.selectedCama = accion.cama;
         if (accion.relacion) {
@@ -185,5 +191,9 @@ export class MapaCamasCapaComponent implements OnInit {
                 this.accion = 'verDetalle';
             }
         }
+    }
+
+    volver() {
+        this.location.back();
     }
 }

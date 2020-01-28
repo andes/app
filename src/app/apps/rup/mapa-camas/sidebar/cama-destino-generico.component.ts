@@ -51,7 +51,7 @@ export class CamaDestinoGenericoComponent implements OnInit {
                 // Se modifica el estado de la cama
                 this.selectedCama.estado = this.destino;
 
-                this.mapaCamasService.patchCama(this.selectedCama, this.ambito, this.capa, this.fecha).subscribe(camaActualizada => {
+                this.mapaCamasService.patchCama(this.selectedCama, this.fecha).subscribe(camaActualizada => {
                     this.plex.info('success', 'Cama ' + this.destino);
                     this.refresh.emit({ cama: this.selectedCama });
                 }, (err1) => {

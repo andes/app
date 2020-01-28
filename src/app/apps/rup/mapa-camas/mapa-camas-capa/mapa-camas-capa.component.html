@@ -2,10 +2,11 @@
     <plex-layout-main>
         <header>
             <plex-title titulo="Mapa de Camas">
-                <plex-button label="LISTADO DE INTERNACIÓN" type="primary"></plex-button>
+                <plex-button label="LISTADO DE INTERNACIÓN" type="primary" (click)="verListadoInternacion()">
+                </plex-button>
                 <plex-dropdown label="VER CENSO" type="primary" class="d-inline-block" [items]="itemsDropdown">
                 </plex-dropdown>
-                <plex-button label="VOLVER" type="danger"></plex-button>
+                <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
             </plex-title>
             <app-filtros-camas *ngIf="unidadesOrganizativas && sectores && tiposCama"
                                [unidadesOrganizativas]="unidadesOrganizativas" [sectores]="sectores"

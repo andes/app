@@ -19,6 +19,7 @@ export class IngresarPacienteComponent implements OnInit {
     // EVENTOS
     @Input() cama: any;
     @Input() camas: any;
+    @Input() prestacion: any;
     @Input() detalle = false;
     @Input() paciente = null;
 
@@ -45,7 +46,6 @@ export class IngresarPacienteComponent implements OnInit {
     public obraSocial: any;
     public origenExterno = false;
     public datosBasicos = false;
-    public prestacion;
     public informeIngreso = {
         fechaIngreso: new Date(),
         horaNacimiento: new Date(),
@@ -78,10 +78,12 @@ export class IngresarPacienteComponent implements OnInit {
     ngOnInit() {
         this.ambito = this.mapaCamasService.ambito;
         this.capa = this.mapaCamasService.capa;
-        if (this.cama.idInternacion) {
-            this.servicioPrestacion.getById(this.cama.idInternacion).subscribe(prestacion => {
-                this.prestacion = prestacion;
-                this.informeIngreso = prestacion.ejecucion.registros[0].valor.informeIngreso;
+
+        if (this.prestacion && !this.cama) {
+            let fechaIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
+            this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
+            this.mapaCamasService.snapshot(fechaIngreso, this.prestacion._id).subscribe((cama: any) => {
+                this.cama = cama[0];
             });
         }
     }
@@ -225,7 +227,7 @@ export class IngresarPacienteComponent implements OnInit {
                 s(d.now() / 1000) + ' '.repeat(h).replace(/./g, () => s(m.random() * h));
         }
 
-        this.mapaCamasService.patchCama(this.cama, this.ambito, this.capa, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
+        this.mapaCamasService.patchCama(this.cama, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
             this.plex.info('success', 'Paciente internado');
             this.refresh.emit({ cama: this.cama, accion: 'internarPaciente' });
         }, (err1) => {

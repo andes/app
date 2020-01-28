@@ -21,15 +21,15 @@
         </fieldset>
     </ng-container>
     <ng-container *ngIf="mostrar === 'ingreso'">
-        <app-informe-ingreso [fecha]="fecha" [camas]="camas" [cama]="cama" [detalle]="true"
-                             (cancel)="toggleMostrar(null)">
+        <app-informe-ingreso [fecha]="fecha" [prestacion]="prestacion" [detalle]="true" (cancel)="toggleMostrar(null)">
         </app-informe-ingreso>
     </ng-container>
     <ng-container *ngIf="mostrar === 'movimientos'">
-        <app-movimientos-internacion [cama]="cama"></app-movimientos-internacion>
+        <app-movimientos-internacion [prestacion]="prestacion" (cancel)="toggleMostrar(null)">
+        </app-movimientos-internacion>
     </ng-container>
     <ng-container *ngIf="mostrar === 'egreso'">
-        <app-egresar-paciente [fecha]="fecha" [cama]="cama" (cancel)="toggleMostrar(null)"
+        <app-egresar-paciente [fecha]="fecha" [prestacion]="prestacion" (cancel)="toggleMostrar(null)"
                               (refresh)="refrescar($event)">
         </app-egresar-paciente>
     </ng-container>

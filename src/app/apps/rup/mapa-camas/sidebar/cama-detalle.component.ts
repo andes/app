@@ -24,6 +24,7 @@ export class CamaDetalleComponent implements OnInit {
 
     // VARIABLES
     public capa: string;
+    public prestacion;
     public estadoCama;
     public genero;
     public censable;
@@ -75,6 +76,7 @@ export class CamaDetalleComponent implements OnInit {
     getDatosCama() {
         this.paciente = null;
         if (this.cama.paciente) {
+            this.getPrestacion();
             this.getPaciente();
         }
 
@@ -88,6 +90,12 @@ export class CamaDetalleComponent implements OnInit {
         }
 
         this.titleColor = 'text-' + this.estadoCama.color;
+    }
+
+    getPrestacion() {
+        this.prestacionService.getById(this.cama.idInternacion).subscribe(prestacion => {
+            this.prestacion = prestacion;
+        });
     }
 
     getPaciente() {

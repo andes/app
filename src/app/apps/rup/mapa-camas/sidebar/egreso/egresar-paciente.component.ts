@@ -18,7 +18,7 @@ export class EgresarPacienteComponent implements OnInit {
     // EVENTOS
     @Input() fecha: Date;
     @Input() cama: any;
-    @Input() camas: any;
+    @Input() prestacion: any;
 
     @Output() cancel = new EventEmitter<any>();
     @Output() cambiarFecha = new EventEmitter<any>();
@@ -38,7 +38,6 @@ export class EgresarPacienteComponent implements OnInit {
     public capa: string;
     public fechaValida = true;
     public esTraslado = false;
-    public prestacion;
     public informeIngreso;
     public registro: any = {
         destacado: false,
@@ -78,7 +77,6 @@ export class EgresarPacienteComponent implements OnInit {
     public procedimientosObstetricos = false;
     public procedimientosObstetricosNoReq = false;
     public existeCausaExterna = false;
-
     public listaProcedimientosQuirurgicos: any[];
 
 
@@ -88,7 +86,6 @@ export class EgresarPacienteComponent implements OnInit {
         public cie10Service: Cie10Service,
         private organizacionService: OrganizacionService,
         private servicioPrestacion: PrestacionesService,
-        private prestacionesService: PrestacionesService,
         private mapaCamasService: MapaCamasService,
         public procedimientosQuirurgicosService: ProcedimientosQuirurgicosService,
     ) {
@@ -99,11 +96,15 @@ export class EgresarPacienteComponent implements OnInit {
         this.ambito = this.mapaCamasService.ambito;
         this.capa = this.mapaCamasService.capa;
         if (this.capa === 'estadistica') {
-            this.prestacionesService.getById(this.cama.idInternacion).subscribe(prestacion => {
-                this.prestacion = prestacion;
-                this.informeIngreso = prestacion.ejecucion.registros[0].valor.informeIngreso;
-                this.calcularDiasEstada();
-            });
+            this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
+            let fechaIngreso = this.informeIngreso.fechaIngreso;
+            this.calcularDiasEstada();
+
+            if (this.prestacion && !this.cama) {
+                this.mapaCamasService.snapshot(fechaIngreso, this.prestacion._id).subscribe(camas => {
+                    this.cama = camas[0];
+                });
+            }
         }
 
     }
@@ -255,7 +256,7 @@ export class EgresarPacienteComponent implements OnInit {
         this.cama.idInternacion = null;
         this.cama.paciente = null;
 
-        this.mapaCamasService.patchCama(this.cama, this.ambito, this.capa, this.fecha).subscribe(camaActualizada => {
+        this.mapaCamasService.patchCama(this.cama, this.fecha).subscribe(camaActualizada => {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
             this.refresh.emit({ cama: this.cama });
         }, (err1) => {

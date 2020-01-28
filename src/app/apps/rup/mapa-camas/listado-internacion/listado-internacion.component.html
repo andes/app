@@ -1,0 +1,90 @@
+<plex-layout main="{{selectedInternacion? 8 : 12}}">
+    <plex-layout-main>
+        <header>
+            <plex-title titulo="LISTADO DE INTERNACION">
+                <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
+            </plex-title>
+            <div class="row">
+                <div class="col-2">
+                    <plex-text (change)="filtrar()" [(ngModel)]="filtros.documento" label="Documento">
+                    </plex-text>
+                </div>
+                <div class="col-2">
+                    <plex-text (change)="filtrar()" [(ngModel)]="filtros.apellido" label="Apellido">
+                    </plex-text>
+                </div>
+
+                <div class="col-2">
+                    <plex-datetime type="date" (change)='getPrestaciones()' [(ngModel)]="filtros.fechaDesde"
+                                   name="fechaDesde" label="Desde" [required]="true">
+                    </plex-datetime>
+                </div>
+
+                <div class="col-2">
+                    <plex-datetime type="date" [(ngModel)]="filtros.fechaHasta" name='fechaHasta' label="Hasta"
+                                   (change)="getPrestaciones()"></plex-datetime>
+                </div>
+                <div class="col-3">
+                    <plex-select [(ngModel)]="filtros.estado" [data]='estadosInternacion' label="Estado"
+                                 (change)="filtrar()"></plex-select>
+                </div>
+                <div *ngIf="permisoDescarga" class="col-1">
+                    <label>&nbsp;</label>
+                    <plex-button type="warning" icon="download mdi-14px" title="Descargar Csv" titlePosition="top"
+                                 (click)="reporteInternaciones()"
+                                 [disabled]="listadoInternacion && !listadoInternacion.length">
+                    </plex-button>
+                </div>
+            </div>
+        </header>
+        <div class='row'>
+            <div class='col-12'>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Apellido y nombre</th>
+                            <th rowspan="2">Dni</th>
+                            <th rowspan="2">Fecha de ingreso</th>
+                            <th rowspan="2">Fecha de egreso</th>
+                            <th rowspan="2">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let internacion of listaInternacion, let indice = index"
+                            [ngClass]="{'bg-inverse text-white': (this.selectedInternacion && this.selectedInternacion.id === internacion.id)}"
+                            (click)='seleccionarInternacion(internacion)'>
+                            <td>
+                                {{internacion.paciente | paciente }}
+                            </td>
+                            <td>
+                                {{internacion.paciente.documento}}
+                            </td>
+                            <td>
+                                {{devuelveFecha(internacion,"ingreso") | fecha}} {{devuelveFecha(internacion,"ingreso")
+                                    | hora}}
+                            </td>
+                            <td>
+                                <span *ngIf='devuelveFecha(internacion,"egreso")'>
+                                    {{devuelveFecha(internacion,"egreso") | fecha}}
+                                    {{devuelveFecha(internacion,"egreso") | hora}}</span>
+                            </td>
+                            <td>
+                                <span> {{internacion.estados[internacion.estados.length - 1].tipo}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </plex-layout-main>
+    <plex-layout-sidebar type="invert" *ngIf='selectedInternacion'>
+        <header>
+            <plex-title titulo="DATOS DE INTERNACION">
+                <plex-button icon="arrow-left" type="danger" size="sm" (click)="cancelar()">
+                </plex-button>
+            </plex-title>
+        </header>
+        <app-internacion-detalle [fecha]="fecha" [prestacion]="selectedInternacion" (refresh)="refrescar($event)">
+        </app-internacion-detalle>
+    </plex-layout-sidebar>
+</plex-layout>

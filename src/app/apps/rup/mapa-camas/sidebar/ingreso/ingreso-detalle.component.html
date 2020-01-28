@@ -10,11 +10,14 @@
             </plex-label>
             <plex-label titulo="Edad al Ingreso" [subtitulo]="informeIngreso.edadAlIngreso">
             </plex-label>
-            <plex-label titulo="Situacion Laboral" [subtitulo]="informeIngreso.situacionLaboral">
+            <plex-label *ngIf="informeIngreso.situacionLaboral" titulo="Situacion Laboral"
+                        [subtitulo]="informeIngreso.situacionLaboral">
             </plex-label>
-            <plex-label titulo="Nivel de Instruccion" [subtitulo]="informeIngreso.nivelInstruccion">
+            <plex-label *ngIf="informeIngreso.nivelInstruccion" titulo="Nivel de Instruccion"
+                        [subtitulo]="informeIngreso.nivelInstruccion">
             </plex-label>
-            <plex-label titulo="Ocupacion Habitual" [subtitulo]="informeIngreso.ocupacionHabitual?.nombre">
+            <plex-label *ngIf="informeIngreso.ocupacionHabitual" titulo="Ocupacion Habitual"
+                        [subtitulo]="informeIngreso.ocupacionHabitual?.nombre">
             </plex-label>
         </plex-detail>
     </fieldset>

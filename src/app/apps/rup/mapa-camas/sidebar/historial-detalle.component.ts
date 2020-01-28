@@ -28,7 +28,7 @@ export class HistorialDetalleComponent implements OnInit {
             };
         }),
         switchMap((filtros: any) => {
-            return this.mapaCamasService.historial(this.ambito, this.capa, filtros.desde, filtros.hasta, { idCama: this.cama.idCama });
+            return this.mapaCamasService.historial(filtros.desde, filtros.hasta, { idCama: this.cama.idCama });
         }),
     );
 
