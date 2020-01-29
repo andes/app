@@ -8,15 +8,24 @@ export class MapaCamasService {
     public ambito = 'internacion';
     public capa;
     private url = '/modules/rup/internacion';
-    constructor(private server: Server) { }
+
+    constructor(
+        private server: Server
+    ) { }
 
     setCapa(capa: string) {
         this.capa = capa;
     }
 
-    snapshot(fecha, idInternacion = null): Observable<any[]> {
+    snapshot(fecha, idInternacion = null, ambito: string = null, capa: string = null, estado: string = null): Observable<any[]> {
         return this.server.get(this.url + '/camas', {
-            params: { ambito: this.ambito, capa: this.capa, fecha, internacion: idInternacion },
+            params: {
+                ambito: ambito || this.ambito,
+                capa: capa || this.capa,
+                fecha,
+                internacion: idInternacion,
+                estado
+            },
             showError: true
         });
     }
@@ -39,20 +48,17 @@ export class MapaCamasService {
         });
     }
 
-    patchCama(data, fecha) {
+    patchCama(data, fecha, ambito: string = null, capa: string = null) {
         let params = {
-            ...data, ambito: this.ambito, capa: this.capa, fecha
+            ...data,
+            ambito: ambito || this.ambito,
+            capa: capa || this.capa,
+            fecha
         };
         if (data._id) {
-            return this.server.patch(this.url + `/camas/${data._id}`, {
-                params,
-                showError: true
-            });
+            return this.server.patch(this.url + `/camas/${data._id}`, params);
         } else {
-            return this.server.post(this.url + `/camas`, {
-                params: { ...data, ambito: this.ambito, capa: this.capa },
-                showError: true
-            });
+            return this.server.post(this.url + `/camas`, { ...data, ambito: this.ambito, capa: this.capa, fecha });
         }
     }
 
@@ -68,6 +74,10 @@ export class MapaCamasService {
             params: { fecha, unidadOrganizativa },
             showError: true
         });
+    }
+
+    listaEspera(ambito: string, capa: string): Observable<any[]> {
+        return this.server.get(`${this.url}/lista-espera`, { params: { ambito, capa } });
     }
 
     censoMensual(fechaDesde, fechaHasta, unidadOrganizativa): Observable<any[]> {

@@ -393,7 +393,8 @@ let mapaCamasComponents = [
     HistorialDetalleComponent,
     MovimientosInternacionComponent,
     CambiarCamaComponent,
-    InternacionListadoComponent
+    InternacionListadoComponent,
+    InternacionListaEsperaComponent
 ];
 
 // Solicitudes
@@ -562,6 +563,7 @@ import { ListaReglasComponent } from './components/top/reglas/listaReglas.compon
 import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaSolicitudTop';
 
 import { MitosModule } from './apps/mitos';
+import { InternacionListaEsperaComponent } from './apps/rup/mapa-camas/lista-espera/lista-espera.component';
 
 registerLocaleData(localeEs, 'es');
 

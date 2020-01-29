@@ -85,7 +85,7 @@ export class CamaMainComponent implements OnInit {
     }
 
     save() {
-        this.mapaCamasService.patchCama(this.capa, this.fecha).subscribe(response => {
+        this.mapaCamasService.patchCama(this.cama, this.fecha).subscribe(response => {
             if (response) {
                 this.router.navigate(['/internacion/mapa-camas']);
             } else {
@@ -99,7 +99,7 @@ export class CamaMainComponent implements OnInit {
 
         this.plex.confirm('¿Dar de baja la cama "' + this.cama.nombre + '"?', '¿Desea dar de baja?').then(confirmacion => {
             if (confirmacion) {
-                this.mapaCamasService.patchCama(this.capa, this.fecha).subscribe(response => {
+                this.mapaCamasService.patchCama(this.cama, this.fecha).subscribe(response => {
                     if (response) {
                         this.plex.info('', 'La cama fue dada de baja');
                         this.router.navigate(['/internacion/mapa-camas']);

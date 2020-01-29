@@ -196,4 +196,8 @@ export class MapaCamasCapaComponent implements OnInit {
     volver() {
         this.location.back();
     }
+
+    gotoListaEspera() {
+        this.router.navigate([`/internacion/${this.ambito}/${this.capa}/lista-espera`]);
+    }
 }

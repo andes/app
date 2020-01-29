@@ -113,6 +113,7 @@ import { MapaCamasMainComponent } from './apps/rup/mapa-camas/mapa-camas-main.co
 import { MapaCamasCapaComponent } from './apps/rup/mapa-camas/mapa-camas-capa/mapa-camas-capa.component';
 import { CensosMensualesComponent } from './apps/rup/mapa-camas/censos/censo-mensual/censo-mensual.component';
 import { InternacionListadoComponent } from './apps/rup/mapa-camas/listado-internacion/listado-internacion.component';
+import { InternacionListaEsperaComponent } from './apps/rup/mapa-camas/lista-espera/lista-espera.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -185,6 +186,7 @@ const appRoutes: Routes = [
   { path: 'internacion/camas', component: MapaDeCamasComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'internacion/inicio', component: PuntoInicioInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
+
   // Préstamos HC
   { path: 'prestamosHC', component: PrestamosHcComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
@@ -240,8 +242,10 @@ const appRoutes: Routes = [
 
   { path: 'internacion/listado-internacion', component: InternacionListadoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
-    // dejar siempre al último porque no encuentra las url después de esta
-    { path: '**', redirectTo: 'inicio' }
+  { path: 'internacion/:ambito/:capa/lista-espera', component: InternacionListaEsperaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+
+  // dejar siempre al último porque no encuentra las url después de esta
+  { path: '**', redirectTo: 'inicio' }
 ];
 
 export const appRoutingProviders: any[] = [];
