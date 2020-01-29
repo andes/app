@@ -173,7 +173,8 @@ export class PrestacionCrearComponent implements OnInit {
                 ejecucion: {
                     fecha: this.fecha,
                     registros: [],
-                    // organizacion desde la que se solicita la prestaci                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
+                    // organizacion desde la que se solicita la prestación
+                    organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
                 },
                 estados: {
                     fecha: new Date(),
