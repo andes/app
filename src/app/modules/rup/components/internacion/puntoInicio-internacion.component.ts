@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
 import { Auth } from '@andes/auth';
+import { HUDSService } from '../../services/huds.service';
 
 @Component({
     selector: 'app-punto-inicio-internacion',
@@ -26,7 +27,8 @@ export class PuntoInicioInternacionComponent implements OnInit {
         private plex: Plex,
         private router: Router,
         private elementoRupService: ElementosRUPService,
-        private auth: Auth
+        private auth: Auth,
+        public hudsService: HUDSService
     ) { }
 
     ngOnInit() {
@@ -58,6 +60,8 @@ export class PuntoInicioInternacionComponent implements OnInit {
     onPacienteSelected(paciente) {
         this.showLoader = true;
         this.pacienteSeleccionado = paciente;
+        this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, this.conceptosInternacion.epicrisis.term, this.auth.profesional.id, null, null).subscribe(hudsToken => {
+        window.sessionStorage.setItem('huds-token', hudsToken.token);
         this.servicioPrestacion.internacionesXPaciente(paciente, 'ejecucion', this.auth.organizacion.id).subscribe(resultado => {
             // Si el paciente ya tiene una internacion en ejecucion
             if (resultado && resultado.length) {
@@ -81,6 +85,7 @@ export class PuntoInicioInternacionComponent implements OnInit {
                 });
             this.showLoader = false;
         });
+    });
     }
 
     /**
