@@ -17,7 +17,7 @@
                             <li class="list-group-item">Opcionalmente podés elegir seleccionar a todos los descendientes
                                 del concepto.</li>
                             <li class="list-group-item">Hacé click en "Guardar todos" o el botón con el signo <i
-                                    class="mdi mdi-check"></i> para guardar una plantilla individual</li>
+                                   class="mdi mdi-check"></i> para guardar una plantilla individual</li>
                         </ol>
                     </div>
                 </div>
@@ -27,10 +27,10 @@
                     <h4 class="text-capitalize">Plantilla: {{ procedimiento.term }}</h4>
                     <div class="d-flex justify-content-end" *ngIf="plantillas$">
                         <plex-button *ngIf="procedimiento" type="warning" label="Cerrar"
-                            (click)="cerrarProcedimiento()">
+                                     (click)="cerrarProcedimiento()">
                         </plex-button>
                         <plex-button *ngIf="procedimiento" type="info" label="Agregar plantilla"
-                            (click)="agregarPlantilla(procedimiento)" class="ml-2">
+                                     (click)="agregarPlantilla(procedimiento)" class="ml-2">
                         </plex-button>
                         <!-- <plex-button type="success" label="Guardar todas" (click)="guardarPlantillas()" class="ml-2">
                         </plex-button> -->
@@ -43,7 +43,7 @@
                         <plex-bool type="slide" label="Aplicar a los descendientes" [(ngModel)]="incluyeDescendientes">
                         </plex-bool>
                         <a class="hover mx-2" title="Ver descendientes" titlePosition="left"
-                            (click)="verDescendientes(procedimiento)"><i class="mdi mdi-help-circle"></i></a>
+                           (click)="verDescendientes(procedimiento)"><i class="mdi mdi-help-circle"></i></a>
                     </div>
                 </div>
             </div>
@@ -65,10 +65,10 @@
                                 </div>
                                 <div class="actions">
                                     <plex-button icon="check" type="success" size="sm"
-                                        (click)="guardarPlantilla(plantilla, procedimiento.conceptId)">
+                                                 (click)="guardarPlantilla(plantilla, procedimiento.conceptId)">
                                     </plex-button>
                                     <plex-button icon="delete" type="danger" size="sm"
-                                        (click)="eliminarPlantilla(plantilla, i)">
+                                                 (click)="eliminarPlantilla(plantilla, i)">
                                     </plex-button>
                                 </div>
                             </div>
@@ -78,11 +78,11 @@
                                 </div>
                                 <div class="content">
                                     <plex-text label="Título" [(ngModel)]="plantilla.title" name="title"
-                                        [required]="true">
+                                               [required]="true">
                                     </plex-text>
                                     <plex-text label="Texto de plantilla" [(ngModel)]="plantilla.descripcion"
-                                        name="contenido" [html]="true" [height]="100" [readonly]="false" class="w-100"
-                                        [required]="true">
+                                               name="contenido" [html]="true" [height]="100" [readonly]="false"
+                                               class="w-100" [required]="true">
                                     </plex-text>
                                 </div>
                             </div>
@@ -97,9 +97,9 @@
             <div class="page-title">Buscar Procedimiento</div>
         </header>
         <plex-text [(ngModel)]="searchTerm" name="searchTerm" [debounce]="600" (change)="buscarProcedimiento()"
-            placeholder="Buscar un procedimiento..." autoFocus="true"></plex-text>
+                   placeholder="Buscar un procedimiento..." autoFocus="true"></plex-text>
         <plex-loader *ngIf="loading" type="linear"></plex-loader>
-        <plex-list *ngIf="procedimientos" [striped]="true" [selectable]="true">
+        <plex-list *ngIf="procedimientos" [striped]="true">
             <plex-heading>
                 <b label>Nombre</b>
                 <b badge>Tipo</b>
