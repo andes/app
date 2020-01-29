@@ -320,13 +320,13 @@
                                                 <plex-button size="block"
                                                              *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(turno) && verificarAsistencia(turno)"
                                                              label="CONTINUAR REGISTRO" type="primary btn-sm"
-                                                             (click)="setRouteToParams(['ejecucion', turno.prestacion.id]); accesoHudsPaciente = turno.paciente; accesoHudsTurno = turno.id; accesoHudsPrestacion = turno.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)">
+                                                             (click)="setRouteToParams(['ejecucion', turno.prestacion.id]); setAccesoHudsParams(turno.paciente, turno.id, turno.tipoPrestacion.id); preAccesoHuds(motivoVerContinuarPrestacion)">
                                                 </plex-button>
 
                                                 <plex-button size="block"
                                                              *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'validada' && tienePermisos(turno)"
                                                              label="VER RESUMEN" type="success btn-sm"
-                                                             (click)="setRouteToParams(['validacion', turno.prestacion.id]); accesoHudsPaciente = turno.paciente; accesoHudsTurno = turno.id; accesoHudsPrestacion = turno.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)">
+                                                             (click)="setRouteToParams(['validacion', turno.prestacion.id]); setAccesoHudsParams(turno.paciente, turno.id, turno.tipoPrestacion.id); preAccesoHuds(motivoVerContinuarPrestacion)">
                                                 </plex-button>
 
                                                 <plex-button size="block"
@@ -500,13 +500,13 @@
                                                     <plex-button size="block"
                                                                  *ngIf="sobreturno.paciente && sobreturno.estado !== 'suspendido' && sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(sobreturno)"
                                                                  label="CONTINUAR REGISTRO" type="primary btn-sm"
-                                                                 (click)="setRouteToParams(['ejecucion', sobreturno.prestacion.id]); accesoHudsPaciente = sobreturno.paciente; accesoHudsTurno = sobreturno.id; accesoHudsPrestacion = sobreturno.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)">
+                                                                 (click)="setRouteToParams(['ejecucion', sobreturno.prestacion.id]); setAccesoHudsParams(sobreturno.paciente, sobreturno.id, sobreturno.tipoPrestacion.id); preAccesoHuds(motivoVerContinuarPrestacion)">
                                                     </plex-button>
 
                                                     <plex-button size="block"
                                                                  *ngIf="sobreturno.paciente && sobreturno.estado !== 'suspendido' && sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'validada' && tienePermisos(sobreturno)"
                                                                  label="VER RESUMEN" type="success btn-sm"
-                                                                 (click)="setRouteToParams(['validacion', sobreturno.prestacion.id]); accesoHudsPaciente = sobreturno.paciente; accesoHudsTurno = sobreturno.id; accesoHudsPrestacion = sobreturno.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)">
+                                                                 (click)="setRouteToParams(['validacion', sobreturno.prestacion.id]); setAccesoHudsParams(sobreturno.paciente, sobreturno.id, sobreturno.tipoPrestacion.id); preAccesoHuds(motivoVerContinuarPrestacion)">
                                                     </plex-button>
                                                     <plex-button size="block"
                                                                  *ngIf="!sobreturno.asistencia &&!esFutura(agendaSeleccionada)&& agendaSeleccionada.estado !== 'auditada' && sobreturno.estado !== 'suspendido' && sobreturno.paciente && (!sobreturno.prestacion || (sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'pendiente')|| sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'ejecucion')"
@@ -584,13 +584,13 @@
 
                                         <plex-button size="block"
                                                      *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'"
-                                                     (click)="setRouteToParams(['ejecucion', prestacion.id]); accesoHudsPaciente = prestacion.paciente; accesoHudsTurno = null; accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)"
+                                                     (click)="setRouteToParams(['ejecucion', prestacion.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id); preAccesoHuds(motivoVerContinuarPrestacion)"
                                                      label="CONTINUAR REGISTRO" type="success btn-sm">
                                         </plex-button>
 
                                         <plex-button size="block"
                                                      *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'"
-                                                     (click)="setRouteToParams(['validacion', prestacion.id]); accesoHudsPaciente = prestacion.paciente; accesoHudsTurno = null; accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)"
+                                                     (click)="setRouteToParams(['validacion', prestacion.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id); preAccesoHuds(motivoVerContinuarPrestacion)"
                                                      label="VER RESUMEN" type="success btn-sm">
                                         </plex-button>
 
