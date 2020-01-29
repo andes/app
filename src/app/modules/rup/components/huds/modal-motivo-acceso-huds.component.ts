@@ -9,37 +9,34 @@ import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 export class ModalMotivoAccesoHudsComponent {
 
     @ViewChild('modal', { static: true }) modal: PlexModalComponent;
+
     @Input()
     set show(value) {
         if (value) {
             this.modal.show();
+            this.motivoSelected = null;
         }
     }
 
     @Output() motivoAccesoHuds = new EventEmitter<any>();
 
     public motivosAccesoHuds = [
-        { id: 'auditoria', nombre: 'Procesos de Auditoría', valor: false },
-        { id: 'urgencia', nombre: 'Intervención de Urgencia/Emergencia', valor: false },
-        { id: 'administrativo', nombre: 'Procesos Administrativos', valor: false },
-        { id: 'continuidad', nombre: 'Intervención en el proceso de cuidado del paciente', valor: false }
+        { id: 'auditoria', label: 'Procesos de Auditoría' },
+        { id: 'urgencia', label: 'Intervención de Urgencia/Emergencia' },
+        { id: 'administrativo', label: 'Procesos Administrativos' },
+        { id: 'continuidad', label: 'Intervención en el proceso de cuidado del paciente' }
     ];
+
     public motivoSelected = null;
 
-    public changeMotivoAccesoHuds(seleccion) {
-        this.motivosAccesoHuds.forEach(motivo => {
-            motivo.valor = (motivo.id === seleccion.id) ? true : false;
-        });
-        this.motivoSelected = seleccion.nombre;
-    }
-
     motivoSelect() {
-        return (this.motivoSelected === null);
+        return this.motivoSelected === null;
     }
 
     notificarAccion(flag: boolean) {
         if (flag) {
-            this.motivoAccesoHuds.emit(this.motivoSelected);
+            const item = this.motivosAccesoHuds.find((elem) => elem.id === this.motivoSelected);
+            this.motivoAccesoHuds.emit(item.label);
         } else {
             this.motivoAccesoHuds.emit(null);
         }
