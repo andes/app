@@ -7,54 +7,58 @@
                     <plex-title titulo="Bloques y turnos" size="sm">
                         <plex-badge [type]="estadosAgenda[agenda.estado]?.class">{{
                         estadosAgenda[agenda.estado]?.nombre }}</plex-badge>
+                        <plex-help type="help" icon="information-variant" titulo="Detalle de agenda">
+                            <div class="container mb-4">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio
+                                    | date:
+                                    'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date:
+                                    'HH:mm'}} hs
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Tipos de prestación</label>
+                                        <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
+                                            {{tipoPrestacion.nombre}}</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Equipo de Salud</label>
+                                        <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Equipo de
+                                            Salud
+                                            no
+                                            asignado</span>
+                                        <ng-container *ngIf="agenda.profesionales">
+                                            <div *ngFor="let profesional of agenda.profesionales">
+                                                {{profesional | profesional}}
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Espacio físico</label>
+                                        <span
+                                              *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
+                                        <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico
+                                            no
+                                            asignado</span>
+                                    </div>
+                                </div>
+                                <div *ngIf="agenda.dinamica" class="row">
+                                    <div class="col-12">
+                                        <label>Cupos disponibles</label>
+                                        <span *ngIf="agenda.cupo > -1">{{agenda.cupo}}</span>
+                                        <span *ngIf="agenda.cupo == -1">Sin límite</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </plex-help>
                     </plex-title>
-                    <plex-help type="help" icon="information-variant" titulo="Detalle de agenda">
-                        <div class="container mb-4">
-                            <div class="row">
-                                <div class="col-12">
-                                    <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio
-                                                        | date:
-                                                        'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date:
-                                                        'HH:mm'}} hs
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <label>Tipos de prestación</label>
-                                    <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
-                                        {{tipoPrestacion.nombre}}</div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <label>Equipo de Salud</label>
-                                    <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Equipo de Salud
-                                        no
-                                        asignado</span>
-                                    <ng-container *ngIf="agenda.profesionales">
-                                        <div *ngFor="let profesional of agenda.profesionales">
-                                            {{profesional | profesional}}
-                                        </div>
-                                    </ng-container>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <label>Espacio físico</label>
-                                    <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
-                                    <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no
-                                        asignado</span>
-                                </div>
-                            </div>
-                            <div *ngIf="agenda.dinamica" class="row">
-                                <div class="col-12">
-                                    <label>Cupos disponibles</label>
-                                    <span *ngIf="agenda.cupo > -1">{{agenda.cupo}}</span>
-                                    <span *ngIf="agenda.cupo == -1">Sin límite</span>
-                                </div>
-                            </div>
-                        </div>
-                    </plex-help>
+
                 </header>
                 <!--Nota-->
                 <div *ngIf="agenda.nota" class="alert alert-default mb-0">
@@ -107,7 +111,7 @@
                 </td>
             </tr>
         </table>
-        <h5 *ngIf="!agenda.nominalizada">Actividad No Nominalizada, no se dan turnos</h5>
+        <small *ngIf="!agenda.nominalizada"><i>*Actividad no nominalizada, no se dan turnos</i></small>
         <!--Turnos-->
         <ng-container *ngFor="let bloque of agenda.bloques | sortBloques let k = index">
             <table *ngIf="agenda.nominalizada && !agenda.dinamica"
@@ -138,20 +142,67 @@
                     </tr>
                 </tbody>
             </table>
+            <!--Configuración inicial de agenda-->
             <table class="table">
-                <thead *ngIf="bloque.descripcion || bloque.citarPorBloque">
-                    <tr>
-                        <th *ngIf="!agenda.nominalizada && bloque.descripcion">{{bloque.descripcion}} de {{
+                <tr *ngIf="bloque && !agenda.dinamica && agenda.nominalizada">
+                    <td *ngIf="!agenda.nominalizada && bloque.descripcion"><b>{{bloque.descripcion}} de {{
                             bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin | date: 'HH:mm'}}
-                            hs
-                        </th>
-                        <th *ngIf="agenda.nominalizada && bloque.descripcion">{{bloque.descripcion}}
-                        </th>
-                        <th *ngIf="bloque.citarPorBloque">
-                            <span class="text-info">Citación por segmento</span>
-                        </th>
-                    </tr>
-                </thead>
+                            hs</b>
+                    </td>
+                    <td *ngIf="agenda.nominalizada && bloque.descripcion"><b>{{bloque.descripcion}}</b>
+                    </td>
+                    <td *ngIf="agenda.nominalizada && !bloque.descripcion"><b>Detalle de bloque</b>
+                    </td>
+                    <td justify="end">
+                        <plex-badge *ngIf="bloque.pacienteSimultaneos" type="info"> {{bloque.cantidadSimultaneos}}
+                            PACIENTES
+                            SIMULTÁNEOS </plex-badge>
+
+                        <plex-badge *ngIf="bloque.citarPorBloque" type="info"> {{bloque.cantidadBloque}} PACIENTES POR
+                            BLOQUE </plex-badge>
+                        <plex-help type="help" icon="settings" titulo="Configuración inicial del bloque">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="container mt-2 mb-2">
+                                        <div class="row" justify>
+                                            <div class="col">
+                                                <span>
+                                                    <h2 class="text-info">
+                                                        {{bloque.accesoDirectoDelDia ? bloque.accesoDirectoDelDia : 0}}
+                                                    </h2>
+                                                    <span class="small">Turnos <br><b>del día</b></span>
+                                                </span>
+                                            </div>
+                                            <div class="col">
+                                                <span>
+                                                    <h2 class="text-info">
+                                                        {{bloque.accesoDirectoProgramado ? bloque.accesoDirectoProgramado : 0}}
+                                                    </h2>
+                                                    <span class="small">Turnos <br><b>programados</b></span>
+                                                </span>
+                                            </div>
+                                            <div class="col">
+                                                <span>
+                                                    <h2 class="text-info">
+                                                        {{bloque.reservadoProfesional ? bloque.reservadoProfesional : 0}}
+                                                    </h2>
+                                                    <span class="small">Turnos <br><b>profesional</b></span>
+                                                </span>
+                                            </div>
+                                            <div class="col">
+                                                <span>
+                                                    <h2 class="text-info">
+                                                        {{bloque.reservadoGestion ? bloque.reservadoGestion : 0}}</h2>
+                                                    <span class="small">Turnos <br><b>con llave</b></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </plex-help>
+                    </td>
+                </tr>
             </table>
             <table *ngIf="agenda.nominalizada" class="table table-striped">
                 <tbody>
@@ -350,7 +401,7 @@
         </div>
         <div class=" col-12 ">
             <span>
-                {{turnosSeleccionados[0].paciente | paciente}}
+                {{turnosSeleccionados[0].paciente | paciente }}
             </span>
         </div>
     </fieldset>
