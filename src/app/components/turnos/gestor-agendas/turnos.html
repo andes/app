@@ -111,7 +111,7 @@
                 </td>
             </tr>
         </table>
-        <h5 *ngIf="!agenda.nominalizada">Actividad No Nominalizada, no se dan turnos</h5>
+        <small *ngIf="!agenda.nominalizada"><i>*Actividad no nominalizada, no se dan turnos</i></small>
         <!--Turnos-->
         <ng-container *ngFor="let bloque of agenda.bloques | sortBloques let k = index">
             <table *ngIf="agenda.nominalizada && !agenda.dinamica"
