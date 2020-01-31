@@ -1,12 +1,81 @@
 <ng-container *ngIf="detalle">
     <plex-title justify titulo="INGRESO">
-        <plex-button icon="arrow-left" type="danger" size="sm" (click)="cancelar()">
+        <plex-button *ngIf="btnClose" title="cerrar" icon="close" type="danger" size="sm" (click)="onClose()">
         </plex-button>
-        <plex-button icon="pencil" type="warning" size="sm" (click)="onEdit()">
+        <plex-button title="editar" icon="pencil" type="warning" size="sm" (click)="onEdit()">
         </plex-button>
     </plex-title>
-    <app-ingreso-detalle *ngIf="informeIngreso" [prestacion]="prestacion" [informeIngreso]="informeIngreso">
-    </app-ingreso-detalle>
+    <ng-container *ngIf="informeIngreso">
+        <fieldset>
+            <plex-title size="sm" titulo="DATOS DE PACIENTE">
+            </plex-title>
+            <plex-detail size="md" direction="row" *ngIf="paciente">
+                <plex-icon name="paciente" prefix="adi"></plex-icon>
+                <div title>{{ paciente.apellido }}, {{ paciente.nombre }}</div>
+                <div subtitle>{{ paciente.documento }}</div>
+                <plex-label titulo="Fecha de Nacimiento" [subtitulo]="paciente.fechaNacimiento | date: 'dd/MM/yyyy'">
+                </plex-label>
+                <plex-label titulo="Edad al Ingreso" [subtitulo]="informeIngreso.edadAlIngreso">
+                </plex-label>
+                <plex-label *ngIf="informeIngreso.situacionLaboral" titulo="Situacion Laboral"
+                            [subtitulo]="informeIngreso.situacionLaboral">
+                </plex-label>
+                <plex-label *ngIf="informeIngreso.nivelInstruccion" titulo="Nivel de Instruccion"
+                            [subtitulo]="informeIngreso.nivelInstruccion">
+                </plex-label>
+                <plex-label *ngIf="informeIngreso.ocupacionHabitual" titulo="Ocupacion Habitual"
+                            [subtitulo]="informeIngreso.ocupacionHabitual?.nombre">
+                </plex-label>
+            </plex-detail>
+        </fieldset>
+        <fieldset>
+            <plex-title size="sm" titulo="DATOS DE INTERNACION">
+            </plex-title>
+            <div class="row">
+                <div class="col-6">
+                    <plex-label titulo="Fecha ingreso" [subtitulo]="fechaIngreso | date: 'dd/MM/yyyy HH:mm'">
+                    </plex-label>
+                </div>
+                <div class="col-6">
+                    <plex-label titulo="Motivo" [subtitulo]="informeIngreso.motivo">
+                    </plex-label>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-6">
+                    <plex-label titulo="Origen" [subtitulo]="informeIngreso.origen">
+                    </plex-label>
+                </div>
+                <div class="col-6">
+                    <plex-label titulo="Especialidad/es" [subtitulo]="informeIngreso.obraSocial">
+                    </plex-label>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-6">
+                    <plex-label titulo="Profesional responsable"
+                                [subtitulo]="informeIngreso.profesional.apellido + ', ' + informeIngreso.profesional.nombre">
+                    </plex-label>
+                </div>
+                <div class="col-6">
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <plex-title size="sm" titulo="COBERTURA">
+            </plex-title>
+            <div class="row">
+                <div class="col-6">
+                    <plex-label titulo="Cobertura" [subtitulo]="informeIngreso.asociado">
+                    </plex-label>
+                </div>
+                <div class="col-6">
+                    <plex-label titulo="Obra social" [subtitulo]="informeIngreso.obraSocial">
+                    </plex-label>
+                </div>
+            </div>
+        </fieldset>
+    </ng-container>
 </ng-container>
 <ng-container *ngIf="!detalle">
     <app-ingresar-paciente [camas]="camas" [cama]="cama" [prestacion]="prestacion" [paciente]="paciente"

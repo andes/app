@@ -12,15 +12,24 @@ export class InternacionDetalleComponent implements OnInit {
     @Input() fecha: Date;
     @Input() prestacion: any;
     @Input() relacionesPosibles: any;
+    @Input() btnClose = false;
 
+    @Output() close = new EventEmitter<any>();
+    @Output() toggleEditar = new EventEmitter<any>();
     @Output() refresh = new EventEmitter<any>();
+    @Output() cambioCama = new EventEmitter<any>();
 
     // VARIABLES
     public capa: string;
     public paciente;
-    public habilitarIngreso = false;
-    public habilitarEgreso = false;
     public mostrar;
+    public items;
+    public active;
+    public habilitarIngreso;
+    public habilitarEgreso;
+    public detalleEgreso = false;
+    public editar = false;
+
 
     constructor(
         public auth: Auth,
@@ -30,23 +39,24 @@ export class InternacionDetalleComponent implements OnInit {
 
     ngOnInit() {
         this.capa = this.mapaCamasService.capa;
-        this.habilitarOpciones();
+        this.verificarOpciones();
+        this.mostrar = 'ingreso';
     }
 
     // tslint:disable-next-line:use-lifecycle-interface
     ngOnChanges(changes: SimpleChanges) {
         if (changes && this.prestacion) {
             if (this.prestacion._id !== changes['prestacion']) {
-                this.mostrar = null;
+                this.mostrar = 'ingreso';
                 this.habilitarIngreso = false;
                 this.habilitarEgreso = false;
-                this.habilitarOpciones();
+                this.verificarOpciones();
             }
         }
 
     }
 
-    habilitarOpciones() {
+    verificarOpciones() {
         if (this.relacionesPosibles) {
             this.relacionesPosibles.map(rel => {
                 if (rel.accion === 'ingresarPaciente') {
@@ -57,20 +67,53 @@ export class InternacionDetalleComponent implements OnInit {
                     this.habilitarEgreso = true;
                 }
             });
-
         }
 
         if (this.prestacion.paciente) {
             this.paciente = this.prestacion.paciente;
             this.habilitarIngreso = true;
+            this.habilitarEgreso = true;
+        }
+
+        this.habilitarOpciones();
+    }
+
+    habilitarOpciones() {
+        this.items = [];
+
+        if (this.habilitarIngreso) {
+            this.items.push({ key: 'ingreso', label: 'INGRESO' });
+        }
+
+        this.items.push({ key: 'movimientos', label: 'MOVIMIENTOS' });
+
+        if (this.habilitarEgreso) {
+            this.items.push({ key: 'egreso', label: 'EGRESO' });
+            if (this.prestacion.ejecucion.registros[1]) {
+                this.detalleEgreso = true;
+            }
         }
     }
 
-    toggleMostrar(componente) {
-        this.mostrar = componente;
+    activatedOption(opcion) {
+        this.mostrar = opcion;
+        this.active = opcion;
+    }
+
+    onClose() {
+        this.close.emit();
+    }
+
+    editarFormulario(editar: boolean) {
+        this.editar = editar;
+        this.toggleEditar.emit(editar);
     }
 
     refrescar(accion) {
         this.refresh.emit(accion);
+    }
+
+    cambiarCama() {
+        this.cambioCama.emit();
     }
 }

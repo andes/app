@@ -1,8 +1,11 @@
 <plex-title titulo="Movimientos de Internación">
-    <plex-button icon="arrow-left" type="danger" size="sm" (click)="cancelar()">
-    </plex-button>
+    <plex-button *ngIf="btnClose" icon="close" type="danger" size="sm" (click)="onClose()"></plex-button>
 </plex-title>
-
+<div class="row">
+    <div class="col">
+        <plex-button *ngIf="btnClose" label="Cambiar cama" type="info" size="sm" (click)="cambiarCama()"></plex-button>
+    </div>
+</div>
 <div class="row mb-1">
     <div class="col">
         <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" (change)="getMovimientos()">

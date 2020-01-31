@@ -42,13 +42,13 @@
                              (cancel)="volverAResumen()" (cambiarFecha)="getSnapshot($event)"
                              (cambiarCama)="cambiarCama($event)" (refresh)="refresh($event)">
         </app-informe-ingreso>
-        <app-desocupar-cama *ngIf="accion === 'desocuparCama'" [fecha]="fecha" [camas]="snapshot"
-                            [selectedCama]="selectedCama" (cancel)="volverAResumen()"
-                            (cambiarFecha)="getSnapshot($event)" (accionDesocupar)="accionDesocupar($event)">
+        <app-desocupar-cama *ngIf="accion === 'desocuparCama'" [fecha]="fecha" [camas]="snapshot" [cama]="selectedCama"
+                            (cancel)="volverAResumen()" (cambiarFecha)="getSnapshot($event)"
+                            (accionDesocupar)="accionDesocupar($event)">
         </app-desocupar-cama>
 
-        <app-cambiar-cama *ngIf="accion === 'cambiarCama'" [camas]="snapshot" [cama]="selectedCama"
-                          (refresh)="refresh($event)">
+        <app-cambiar-cama *ngIf="accion === 'cambiarCama'" [camasDisponibles]="camasDisponibles" [cama]="selectedCama"
+                          [cambiarUO]="cambiarUO" (cancel)="volverAResumen()" (refresh)="refresh($event)">
         </app-cambiar-cama>
         <app-egresar-paciente *ngIf="accion === 'egresarPaciente'" [fecha]="fecha" [cama]="selectedCama"
                               (cancel)="volverAResumen()" (refresh)="refresh($event)">

@@ -41,6 +41,9 @@ export class MapaCamasCapaComponent implements OnInit {
     opcionesCamas = [];
     accion = null;
 
+    cambiarUO;
+    camasDisponibles;
+
     constructor(
         public auth: Auth,
         private plex: Plex,
@@ -160,8 +163,10 @@ export class MapaCamasCapaComponent implements OnInit {
         }
     }
 
-    accionDesocupar(event) {
-        this.accion = event.accion;
+    accionDesocupar(accion) {
+        this.accion = 'cambiarCama';
+        this.cambiarUO = accion.cambiarUO;
+        this.camasDisponibles = accion.camasDisponibles;
     }
 
     refresh(accion) {

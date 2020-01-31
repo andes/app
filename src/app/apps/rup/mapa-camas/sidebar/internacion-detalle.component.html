@@ -1,36 +1,23 @@
 <div class="mt-2">
-    <ng-container *ngIf="!mostrar">
-        <fieldset>
-            <div class="row">
-                <div class="col-3">
-                    <plex-button label="INGRESO" type="primary" size="block" [disabled]="!habilitarIngreso"
-                                 (click)="toggleMostrar('ingreso')">
-                    </plex-button>
-                </div>
-                <div class="col-6">
-                    <plex-button label="MOVIMIENTOS CAMA" type="primary" size="block"
-                                 (click)="toggleMostrar('movimientos')">
-                    </plex-button>
-                </div>
-                <div class="col-3">
-                    <plex-button label="EGRESO" type="primary" size="block" [disabled]="!habilitarEgreso"
-                                 (click)="toggleMostrar('egreso')">
-                    </plex-button>
-                </div>
-            </div>
-        </fieldset>
+    <ng-container *ngIf="!editar">
+        <plex-options [items]="items" (activated)="activatedOption($event)"></plex-options>
     </ng-container>
+
     <ng-container *ngIf="mostrar === 'ingreso'">
-        <app-informe-ingreso [fecha]="fecha" [prestacion]="prestacion" [detalle]="true" (cancel)="toggleMostrar(null)">
+        <app-informe-ingreso [fecha]="fecha" [prestacion]="prestacion" [detalle]="true" [btnClose]="btnClose"
+                             (toggleEditar)="editarFormulario($event)" (cancel)="activatedOption(null)"
+                             (close)="onClose()">
         </app-informe-ingreso>
     </ng-container>
     <ng-container *ngIf="mostrar === 'movimientos'">
-        <app-movimientos-internacion [prestacion]="prestacion" (cancel)="toggleMostrar(null)">
+        <app-movimientos-internacion [prestacion]="prestacion" (cancel)="activatedOption(null)" [btnClose]="btnClose"
+                                     (close)="onClose()" (cambioCama)="cambiarCama()">
         </app-movimientos-internacion>
     </ng-container>
     <ng-container *ngIf="mostrar === 'egreso'">
-        <app-egresar-paciente [fecha]="fecha" [prestacion]="prestacion" (cancel)="toggleMostrar(null)"
-                              (refresh)="refrescar($event)">
-        </app-egresar-paciente>
+        <app-informe-egreso [fecha]="fecha" [prestacion]="prestacion" [detalle]="detalleEgreso" [btnClose]="btnClose"
+                            (cancel)="activatedOption(null)" (toggleEditar)="editarFormulario($event)"
+                            (refresh)="refrescar($event)" (cancel)="onClose()">
+        </app-informe-egreso>
     </ng-container>
 </div>

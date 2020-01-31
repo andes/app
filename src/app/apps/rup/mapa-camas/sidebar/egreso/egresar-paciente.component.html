@@ -1,23 +1,22 @@
-<form #formIngreso="ngForm">
+<form #formEgreso="ngForm">
     <fieldset>
         <plex-title justify titulo="EGRESO">
-            <plex-button icon="arrow-left" type="danger" size="sm" (click)="cancelar()">
+            <plex-button icon="arrow-left" title="volver" type="danger" size="sm" (click)="cancelar()">
             </plex-button>
-            <plex-button icon="check" type="success" size="sm" [validateForm]="formIngreso" (click)="guardar($event)">
+            <plex-button title="guardar" icon="check" type="success" size="sm" [validateForm]="formEgreso"
+                         (click)="guardar($event)">
             </plex-button>
         </plex-title>
         <ng-container *ngIf="!paciente">
             <div class="row ">
-                <div class="col-6 ">
-                    <plex-datetime type="date" name="fecha-hora" label="Fecha" [(ngModel)]="fecha" [required]="true"
+                <div class="col">
+                    <plex-datetime label="Fecha y hora de egreso" [(ngModel)]="registro.valor.InformeEgreso.fechaEgreso"
+                                   name="fechaEgreso" required label="Fecha Egreso"
                                    (change)="cambioFecha($event.value)">
                     </plex-datetime>
                 </div>
-                <div class="col-6 ">
-                    <plex-datetime type="time" name="fecha-hora" label="Hora" [(ngModel)]="fecha" [required]="true"
-                                   (change)="cambioFecha($event.value)">
-                    </plex-datetime>
-                </div>
+            </div>
+            <div class="row">
                 <div *ngIf="!fechaValida" class="alert alert-danger">
                     La fecha y hora no puede ser menor a la fecha de ingreso del paciente
                     ({{informeIngreso.fechaIngreso | date: 'dd/MM/yyyy HH:mm'}}).

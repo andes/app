@@ -34,6 +34,10 @@ export class IngresarPacienteComponent implements OnInit {
     public nivelesInstruccion = nivelesInstruccion;
     public situacionesLaborales = situacionesLaborales;
     public snomedIngreso = snomedIngreso;
+    public items = [
+        { key: 'datosBasicos', label: 'DATOS BÁSICOS' },
+        { key: 'datosInternacion', label: 'DATOS DE INTERNACIÓN' },
+    ];
 
     // VARIABLES
     public ambito: string;
@@ -43,9 +47,9 @@ export class IngresarPacienteComponent implements OnInit {
     public fechaValida = true;
 
     public pacientes = [];
+    public edadPaciente;
     public obraSocial: any;
     public origenExterno = false;
-    public datosBasicos = false;
     public informeIngreso = {
         fechaIngreso: new Date(),
         horaNacimiento: new Date(),
@@ -78,6 +82,10 @@ export class IngresarPacienteComponent implements OnInit {
     ngOnInit() {
         this.ambito = this.mapaCamasService.ambito;
         this.capa = this.mapaCamasService.capa;
+
+        if (this.paciente) {
+            this.edadPaciente = this.mapaCamasService.calcularEdad(this.paciente.fechaNacimiento, moment().toDate());
+        }
 
         if (this.prestacion && !this.cama) {
             let fechaIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
@@ -184,13 +192,8 @@ export class IngresarPacienteComponent implements OnInit {
         this.cambiarCama.emit(this.cama);
     }
 
-    toggleDatos() {
-        this.datosBasicos = !this.datosBasicos;
-    }
-
     cambiarPaciente() {
         this.paciente = null;
-        this.datosBasicos = false;
     }
 
     guardar(valid) {

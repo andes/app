@@ -38,6 +38,7 @@ export class CamaDetalleComponent implements OnInit {
     public conceptosInternacion;
     public titleColor;
     public tabIndex = 0;
+    public editar = false;
 
     constructor(
         private router: Router,
@@ -156,6 +157,10 @@ export class CamaDetalleComponent implements OnInit {
                 this.router.navigate(['rup/ejecucion', prestacionExiste[0].id]);
             }
         });
+    }
+
+    editarFormulario(editar: boolean) {
+        this.editar = editar;
     }
 
     refrescar(accion) {

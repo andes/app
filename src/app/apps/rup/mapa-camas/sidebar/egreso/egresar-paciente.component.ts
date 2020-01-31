@@ -107,6 +107,10 @@ export class EgresarPacienteComponent implements OnInit {
             }
         }
 
+        if (this.prestacion.ejecucion.registros[1]) {
+            this.registro.valor.InformeEgreso = this.prestacion.ejecucion.registros[1].valor.InformeEgreso;
+        }
+
     }
 
     cancelar() {

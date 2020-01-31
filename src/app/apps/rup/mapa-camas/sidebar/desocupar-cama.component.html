@@ -1,16 +1,42 @@
 <div>
-    <form #formReparada="ngForm" *ngIf="listaPasesCama">
-        <plex-title justify titulo="Desocupar cama">
+    <form #formReparada="ngForm">
+        <plex-title justify [titulo]="(!prestacion) ? 'Desocupar cama' : 'Cambio de cama'">
             <plex-button icon="arrow-left" type="danger" size="sm" (click)="cancelar()">
             </plex-button>
         </plex-title>
         <fieldset>
+            <ng-container *ngIf="prestacion">
+                <div class="row">
+                    <div class="col">
+                        <plex-datetime type="datetime" label="Fecha y hora de cambio de cama" [(ngModel)]="fecha"
+                                       name="fechaCambio" required (change)="verificarFecha($event.value)">
+                        </plex-datetime>
+                    </div>
+                </div>
+                <ng-container *ngIf="!fechaValida">
+                    <div class="row-md">
+                        <div class="alert alert-danger">
+                            {{mensajeError}}
+                        </div>
+                    </div>
+                </ng-container>
+                <div class="row" *ngIf="cama">
+                    <div class="col">
+                        <br>
+                        <h5>Cama utilizada en esa fecha:</h5>
+                        <p>{{cama.nombre}}</p>
+                    </div>
+                </div>
+            </ng-container>
             <label>¿Qué desea hacer?</label>
-            <plex-button label="Cambiar cama" type="primary" size="block" (click)="cambiarCama()">
+            <plex-button label="Cambiar cama" type="primary" size="block"
+                         [disabled]="(!fechaValida) || !(camasMismaUO.length > 0)" (click)="cambiarCama(false)">
             </plex-button>
-            <plex-button label="Egresar paciente" type="warning" size="block" (click)="egresarPaciente()">
+            <plex-button *ngIf="!prestacion" label="Egresar paciente" type="warning" size="block"
+                         (click)="egresarPaciente()">
             </plex-button>
-            <plex-button label="Cambiar de unidad organizativa" type="seondary" size="block">
+            <plex-button label="Cambiar de unidad organizativa" type="secondary" size="block"
+                         [disabled]="(!fechaValida) || !(camasDistintaUO.length > 0)" (click)="cambiarCama(true)">
             </plex-button>
         </fieldset>
     </form>

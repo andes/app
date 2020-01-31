@@ -15,14 +15,14 @@
                 </div>
 
                 <div class="col-2">
-                    <plex-datetime type="date" (change)='getPrestaciones()' [(ngModel)]="filtros.fechaDesde"
-                                   name="fechaDesde" label="Desde" [required]="true">
+                    <plex-datetime type="date" (change)='getPrestaciones()' [(ngModel)]="filtros.fechaIngresoDesde"
+                                   name="fechaIngresoDesde" label="Desde" [required]="true">
                     </plex-datetime>
                 </div>
 
                 <div class="col-2">
-                    <plex-datetime type="date" [(ngModel)]="filtros.fechaHasta" name='fechaHasta' label="Hasta"
-                                   (change)="getPrestaciones()"></plex-datetime>
+                    <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoHasta" name='fechaIngresoHasta'
+                                   label="Hasta" (change)="getPrestaciones()"></plex-datetime>
                 </div>
                 <div class="col-3">
                     <plex-select [(ngModel)]="filtros.estado" [data]='estadosInternacion' label="Estado"
@@ -78,13 +78,14 @@
         </div>
     </plex-layout-main>
     <plex-layout-sidebar type="invert" *ngIf='selectedInternacion'>
-        <header>
-            <plex-title titulo="DATOS DE INTERNACION">
-                <plex-button icon="arrow-left" type="danger" size="sm" (click)="cancelar()">
-                </plex-button>
-            </plex-title>
-        </header>
-        <app-internacion-detalle [fecha]="fecha" [prestacion]="selectedInternacion" (refresh)="refrescar($event)">
+        <app-internacion-detalle *ngIf="mostrar === 'datosInternacion'" [fecha]="fecha"
+                                 [prestacion]="selectedInternacion" [btnClose]="true" (close)="cancelar()"
+                                 (refresh)="refrescar($event)" (cambioCama)="cambiarCama()">
         </app-internacion-detalle>
+        <app-desocupar-cama *ngIf="mostrar === 'desocuparCama'" [prestacion]="selectedInternacion"
+                            (cancel)="volverADetalle()" (accionDesocupar)="accionDesocupar($event)">
+        </app-desocupar-cama>
+        <app-cambiar-cama *ngIf="mostrar === 'cambiarCama'" [camasDisponibles]="camasDisponibles" [cama]="cama"
+                          [cambiarUO]="cambiarUO" (cancel)="volverADetalle()"></app-cambiar-cama>
     </plex-layout-sidebar>
 </plex-layout>

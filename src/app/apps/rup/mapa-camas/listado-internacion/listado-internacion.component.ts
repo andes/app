@@ -22,18 +22,22 @@ export class InternacionListadoComponent implements OnInit {
     // VARIABLES
     public ambito = 'internacion';
     public capa = 'estadistica';
+    public mostrar = 'datosInternacion';
     public listaInternacion;
     public listaInternacionAux;
     public estadosInternacion;
     public permisoDescarga = false;
     public selectedInternacion;
+    public cambiarUO = false;
+    public camasDisponibles;
+    public cama;
 
     public filtros = {
         documento: null,
         apellido: null,
-        fechaDesde: moment().subtract(1, 'months').toDate(),
-        fechaHasta: moment().toDate(),
-        estado: null,
+        fechaIngresoDesde: moment().subtract(1, 'months').toDate(),
+        fechaIngresoHasta: moment().toDate(),
+        estados: null,
         organizacion: this.auth.organizacion.id,
         conceptId: PrestacionesService.InternacionPrestacion.conceptId,
         ordenFecha: true
@@ -64,8 +68,8 @@ export class InternacionListadoComponent implements OnInit {
     }
 
     getPrestaciones() {
-        if (this.filtros.estado) {
-            this.filtros['estadoString'] = this.filtros.estado.id;
+        if (this.filtros.estados) {
+            this.filtros['estadoString'] = this.filtros.estados.id;
         } else {
             this.filtros['estadoString'] = '';
         }
@@ -87,8 +91,8 @@ export class InternacionListadoComponent implements OnInit {
             this.listaInternacion = this.listaInternacion.filter(internacion => internacion.paciente.apellido.toLowerCase().includes(this.filtros.apellido.toLowerCase()));
         }
 
-        if (this.filtros.estado) {
-            this.listaInternacion = this.listaInternacion.filter(internacion => internacion.estados[internacion.estados.length - 1].tipo.toLowerCase().includes(this.filtros.estado.nombre.toLowerCase()));
+        if (this.filtros.estados) {
+            this.listaInternacion = this.listaInternacion.filter(internacion => internacion.estados[internacion.estados.length - 1].tipo.toLowerCase().includes(this.filtros.estados.nombre.toLowerCase()));
         }
     }
 
@@ -139,5 +143,20 @@ export class InternacionListadoComponent implements OnInit {
 
     volver() {
         this.location.back();
+    }
+
+    cambiarCama() {
+        this.mostrar = 'desocuparCama';
+    }
+
+    volverADetalle() {
+        this.mostrar = 'datosInternacion';
+    }
+
+    accionDesocupar(accion) {
+        this.mostrar = 'cambiarCama';
+        this.cambiarUO = accion.cambiarUO;
+        this.camasDisponibles = accion.camasDisponibles;
+        this.cama = accion.cama;
     }
 }

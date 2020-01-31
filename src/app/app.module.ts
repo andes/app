@@ -366,11 +366,11 @@ import { EgresarPacienteComponent } from './apps/rup/mapa-camas/sidebar/egreso/e
 import { CamaDetalleComponent } from './apps/rup/mapa-camas/sidebar/cama-detalle.component';
 import { InternacionDetalleComponent } from './apps/rup/mapa-camas/sidebar/internacion-detalle.component';
 import { InformeIngresoComponent } from './apps/rup/mapa-camas/sidebar/ingreso/informe-ingreso.component';
-import { IngresoDetalleComponent } from './apps/rup/mapa-camas/sidebar/ingreso/ingreso-detalle.component';
 import { HistorialDetalleComponent } from './apps/rup/mapa-camas/sidebar/historial-detalle.component';
 import { MovimientosInternacionComponent } from './apps/rup/mapa-camas/sidebar/movimientos-internacion/movimientos-internacion.component';
 import { CambiarCamaComponent } from './apps/rup/mapa-camas/sidebar/cambiar-cama.component';
 import { InternacionListadoComponent } from './apps/rup/mapa-camas/listado-internacion/listado-internacion.component';
+import { InformeEgresoComponent } from './apps/rup/mapa-camas/sidebar/egreso/informe-egreso.component';
 
 let mapaCamasComponents = [
     MapaCamasMainComponent,
@@ -389,7 +389,7 @@ let mapaCamasComponents = [
     CamaDetalleComponent,
     InternacionDetalleComponent,
     InformeIngresoComponent,
-    IngresoDetalleComponent,
+    InformeEgresoComponent,
     HistorialDetalleComponent,
     MovimientosInternacionComponent,
     CambiarCamaComponent,

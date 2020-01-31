@@ -10,8 +10,10 @@ import { MapaCamasService } from '../../mapa-camas.service';
 export class MovimientosInternacionComponent implements OnInit {
     // EVENTOS
     @Input() prestacion;
+    @Input() btnClose = false;
 
-    @Output() cancel = new EventEmitter<any>();
+    @Output() close = new EventEmitter<any>();
+    @Output() cambioCama = new EventEmitter<any>();
 
     // VARIABLES
     public ambito: string;
@@ -39,7 +41,11 @@ export class MovimientosInternacionComponent implements OnInit {
         });
     }
 
-    cancelar() {
-        this.cancel.emit();
+    onClose() {
+        this.close.emit();
+    }
+
+    cambiarCama() {
+        this.cambioCama.emit();
     }
 }

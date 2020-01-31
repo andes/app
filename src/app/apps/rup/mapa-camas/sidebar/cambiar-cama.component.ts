@@ -11,9 +11,11 @@ import { Plex } from '@andes/plex';
 export class CambiarCamaComponent implements OnInit {
 
     // EVENTOS
-    @Input() camas: any;
+    @Input() camasDisponibles: any;
     @Input() cama: any;
+    @Input() cambiarUO = false;
 
+    @Output() cancel = new EventEmitter<any>();
     @Output() refresh = new EventEmitter<any>();
 
     // VARIABLES
@@ -33,18 +35,14 @@ export class CambiarCamaComponent implements OnInit {
 
     ngOnInit() {
         this.camasOpciones = [];
-        this.camas.map(cama => {
-            if (cama.unidadOrganizativa.conceptId === this.cama.unidadOrganizativa.conceptId) {
-                if (cama.estado === 'disponible') {
-                    this.camasOpciones.push({ id: cama.idCama, nombre: cama.nombre });
-                }
-            }
+        this.camasDisponibles.map(cama => {
+            this.camasOpciones.push({ id: cama.idCama, nombre: cama.nombre });
         });
     }
 
     guardar(valid) {
         if (valid.formValid) {
-            let camaElegida = this.camas.find(cama => cama.idCama === this.nuevaCama.id);
+            let camaElegida = this.camasDisponibles.find(cama => cama.idCama === this.nuevaCama.id);
             camaElegida.estado = this.cama.estado;
             camaElegida.idInternacion = this.cama.idInternacion;
             camaElegida.paciente = this.cama.paciente;
@@ -62,5 +60,9 @@ export class CambiarCamaComponent implements OnInit {
                 });
             });
         }
+    }
+
+    volver() {
+        this.cancel.emit();
     }
 }

@@ -14,9 +14,12 @@ export class InformeIngresoComponent implements OnInit {
     @Input() camas;
     @Input() prestacion;
     @Input() detalle = false;
+    @Input() btnClose = false;
     @Input() edit = false;
 
     @Output() cancel = new EventEmitter<any>();
+    @Output() close = new EventEmitter<any>();
+    @Output() toggleEditar = new EventEmitter<any>();
     @Output() cambiarFecha = new EventEmitter<any>();
     @Output() cambiarCama = new EventEmitter<any>();
     @Output() refresh = new EventEmitter<any>();
@@ -43,7 +46,12 @@ export class InformeIngresoComponent implements OnInit {
         }
     }
 
+    onClose() {
+        this.close.emit();
+    }
+
     onEdit() {
+        this.toggleEditar.emit(true);
         this.detalle = false;
         this.edit = true;
     }
@@ -66,6 +74,7 @@ export class InformeIngresoComponent implements OnInit {
             this.cancel.emit();
         } else {
             this.edit = false;
+            this.toggleEditar.emit(false);
             this.detalle = true;
         }
     }

@@ -1,0 +1,26 @@
+<ng-container *ngIf="informeEgreso && detalle">
+    <plex-title justify titulo="EGRESO">
+        <plex-button *ngIf="btnClose" title="cerrar" icon="close" type="danger" size="sm" (click)="onClose()">
+        </plex-button>
+        <plex-button title="editar" icon="pencil" type="warning" size="sm" (click)="onEdit()">
+        </plex-button>
+    </plex-title>
+    <fieldset>
+        <div class="row">
+            <div class="col-12">
+                <plex-label titulo="Fecha egreso" [subtitulo]="informeEgreso.fechaEgreso | date: 'dd/MM/yyyy HH:mm'">
+                </plex-label>
+            </div>
+            <div class="col-12">
+                <plex-label titulo="Tipo de egreso" [subtitulo]="informeEgreso.tipoEgreso.nombre">
+                </plex-label>
+            </div>
+        </div>
+    </fieldset>
+</ng-container>
+<ng-container *ngIf="!informeEgreso || !detalle">
+    <app-egresar-paciente [cama]="cama" [prestacion]="prestacion" (cancel)="cancelar()"
+                          (cambiarFecha)="cambiarFechaIngreso($event)" (cambiarCama)="cambiarSeleccionCama($event)"
+                          (refresh)="refescar($event)">
+    </app-egresar-paciente>
+</ng-container>
