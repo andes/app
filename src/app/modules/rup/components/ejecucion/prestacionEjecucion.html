@@ -97,9 +97,8 @@
                                         <div class="actions"
                                              *ngIf="!confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i) )">
 
-                                            <ng-container *ngIf="registro?.privacy?.scope">
-                                                <span class="badge-info float-left"
-                                                      *ngIf="registro?.privacy?.scope !== 'public'">
+                                            <ng-container *ngIf="registro?.privacy?.scope !== 'public'">
+                                                <span class="badge-info float-left" >
                                                     Registro Privado
                                                 </span>
                                             </ng-container>
