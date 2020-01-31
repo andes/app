@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { Location } from '@angular/common';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -31,6 +31,8 @@ export class InternacionListadoComponent implements OnInit {
     public cambiarUO = false;
     public camasDisponibles;
     public cama;
+    public puedeValidar = false;
+    public puedeRomper = false;
 
     public filtros = {
         documento: null,
@@ -123,10 +125,13 @@ export class InternacionListadoComponent implements OnInit {
     }
 
     seleccionarInternacion(internacion) {
-        if (this.selectedInternacion && this.selectedInternacion._id === internacion._id) {
-            this.selectedInternacion = null;
-        } else {
-            this.selectedInternacion = Object.assign({}, internacion);
+        if (this.mostrar === 'datosInternacion') {
+            if (this.selectedInternacion && this.selectedInternacion._id === internacion._id) {
+                this.selectedInternacion = null;
+            } else {
+                this.selectedInternacion = Object.assign({}, internacion);
+                this.verificarInternacion();
+            }
         }
     }
 
@@ -158,5 +163,83 @@ export class InternacionListadoComponent implements OnInit {
         this.cambiarUO = accion.cambiarUO;
         this.camasDisponibles = accion.camasDisponibles;
         this.cama = accion.cama;
+    }
+
+    verificarInternacion() {
+        this.puedeValidar = false;
+        this.puedeRomper = false;
+        if (this.selectedInternacion.ejecucion.registros[1]) {
+            if (this.selectedInternacion.estados[this.selectedInternacion.estados.length - 1].tipo !== 'validada') {
+                const informeEgreso = this.selectedInternacion.ejecucion.registros[1].valor.InformeEgreso;
+                if (informeEgreso) {
+                    if (informeEgreso.fechaEgreso && informeEgreso.tipoEgreso && informeEgreso.diagnosticoPrincipal) {
+                        this.puedeValidar = true;
+                    }
+                }
+            } else {
+                this.puedeRomper = true;
+            }
+        }
+    }
+
+    validar() {
+        this.plex.confirm('Luego de validar la prestación ya no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
+            if (validar) {
+                if (this.selectedInternacion.ejecucion.registros[1]) {
+                    let egresoExiste = this.selectedInternacion.ejecucion.registros[1].valor;
+                    if (egresoExiste && this.selectedInternacion.estados[this.selectedInternacion.estados.length - 1].tipo !== 'validada') {
+                        if (egresoExiste.InformeEgreso.fechaEgreso && egresoExiste.InformeEgreso.tipoEgreso &&
+                            egresoExiste.InformeEgreso.diagnosticoPrincipal) {
+                            this.prestacionService.validarPrestacion(this.selectedInternacion, []).subscribe(prestacion => {
+                                this.selectedInternacion = prestacion;
+                                this.verificarInternacion();
+                                this.refreshTable(prestacion);
+                            }, (err) => {
+                                this.plex.info('danger', 'ERROR: No es posible validar la prestación');
+                            });
+                        } else {
+                            this.plex.info('danger', 'ERROR: Debe completar los datos mínimos de egreso para validar la internación');
+                        }
+                    } else {
+                        this.plex.info('danger', 'ERROR: Debe completar los datos mínimos de egreso para validar la internación');
+                    }
+                }
+            }
+        });
+    }
+
+    romperValidacion() {
+        this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación').then(validar => {
+            if (validar) {
+                // guardamos una copia de la prestacion antes de romper la validacion.
+                let prestacionCopia = JSON.parse(JSON.stringify(this.selectedInternacion));
+                // Agregamos el estado de la prestacion copiada.
+                let estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia.id };
+                // Guardamos la prestacion copia
+                this.prestacionService.clonar(prestacionCopia, estado).subscribe(prestacionClonada => {
+                    let prestacionModificada = prestacionClonada;
+                    // hacemos el patch y luego creamos los planes
+                    let cambioEstado: any = {
+                        op: 'romperValidacion',
+                        estado: { tipo: 'ejecucion', idOrigenModifica: prestacionModificada.id },
+                        desdeInternacion: true
+                    };
+                    // Vamos a cambiar el estado de la prestación a ejecucion
+                    this.prestacionService.patch(this.selectedInternacion.id, cambioEstado).subscribe(prestacion => {
+                        this.selectedInternacion = prestacion;
+                        this.verificarInternacion();
+                        this.refreshTable(prestacion);
+                    }, (err) => {
+                        this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
+                    });
+                });
+            }
+        });
+    }
+
+    refreshTable(prestacion) {
+        const index = this.listaInternacionAux.findIndex(internacion => internacion._id === prestacion._id);
+        this.listaInternacionAux[index] = prestacion;
+        this.filtrar();
     }
 }

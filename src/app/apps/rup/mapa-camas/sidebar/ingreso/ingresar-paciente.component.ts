@@ -97,7 +97,11 @@ export class IngresarPacienteComponent implements OnInit {
     }
 
     cancelar() {
-        this.cancel.emit();
+        if (!this.prestacion && this.paciente) {
+            this.paciente = null;
+        } else {
+            this.cancel.emit();
+        }
     }
 
     onPacienteSelected(event) {
@@ -190,10 +194,6 @@ export class IngresarPacienteComponent implements OnInit {
 
     cambiarSeleccionCama() {
         this.cambiarCama.emit(this.cama);
-    }
-
-    cambiarPaciente() {
-        this.paciente = null;
     }
 
     guardar(valid) {

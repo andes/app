@@ -78,9 +78,18 @@
         </div>
     </plex-layout-main>
     <plex-layout-sidebar type="invert" *ngIf='selectedInternacion'>
+        <plex-title titulo="DATOS DE INTERNACION">
+            <plex-button *ngIf="!puedeRomper" label="Validar internacion" type="success" size="sm"
+                         [disabled]="!puedeValidar" (click)="validar()">
+            </plex-button>
+            <plex-button *ngIf="puedeRomper" label="ROMPER VALIDACION" type="warning" size="sm"
+                         (click)="romperValidacion()">
+            </plex-button>
+            <plex-button title="cerrar" icon="close" type="danger" size="sm" (click)="cancelar()">
+            </plex-button>
+        </plex-title>
         <app-internacion-detalle *ngIf="mostrar === 'datosInternacion'" [fecha]="fecha"
-                                 [prestacion]="selectedInternacion" [btnClose]="true" (close)="cancelar()"
-                                 (refresh)="refrescar($event)" (cambioCama)="cambiarCama()">
+                                 [prestacion]="selectedInternacion" (close)="cancelar()" (cambioCama)="cambiarCama()">
         </app-internacion-detalle>
         <app-desocupar-cama *ngIf="mostrar === 'desocuparCama'" [prestacion]="selectedInternacion"
                             (cancel)="volverADetalle()" (accionDesocupar)="accionDesocupar($event)">

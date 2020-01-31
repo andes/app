@@ -164,9 +164,13 @@ export class MapaCamasCapaComponent implements OnInit {
     }
 
     accionDesocupar(accion) {
-        this.accion = 'cambiarCama';
-        this.cambiarUO = accion.cambiarUO;
-        this.camasDisponibles = accion.camasDisponibles;
+        if (!accion.egresar) {
+            this.accion = 'cambiarCama';
+            this.cambiarUO = accion.cambiarUO;
+            this.camasDisponibles = accion.camasDisponibles;
+        } else {
+            this.accion = accion.egresar;
+        }
     }
 
     refresh(accion) {

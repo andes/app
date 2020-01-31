@@ -109,6 +109,6 @@ export class CamaDesocuparComponent implements OnInit {
     }
 
     egresarPaciente() {
-        this.accionDesocupar.emit({ cama: this.cama, accion: 'egresarPaciente' });
+        this.accionDesocupar.emit({ camasDisponibles: null, cama: this.cama, cambiarUO: null, egresar: 'egresarPaciente' });
     }
 }

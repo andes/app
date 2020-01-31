@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { MapaCamasService } from '../../mapa-camas.service';
 
@@ -14,11 +14,9 @@ export class InformeIngresoComponent implements OnInit {
     @Input() camas;
     @Input() prestacion;
     @Input() detalle = false;
-    @Input() btnClose = false;
     @Input() edit = false;
 
     @Output() cancel = new EventEmitter<any>();
-    @Output() close = new EventEmitter<any>();
     @Output() toggleEditar = new EventEmitter<any>();
     @Output() cambiarFecha = new EventEmitter<any>();
     @Output() cambiarCama = new EventEmitter<any>();
@@ -28,6 +26,7 @@ export class InformeIngresoComponent implements OnInit {
     public capa: string;
     public informeIngreso;
     public paciente;
+    public prestacionValidada = false;
 
     constructor(
         private mapaCamasService: MapaCamasService,
@@ -37,6 +36,7 @@ export class InformeIngresoComponent implements OnInit {
     ngOnInit() {
         this.capa = this.mapaCamasService.capa;
         if (this.prestacion) {
+            this.prestacionValidada = (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada');
             this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
             this.paciente = this.prestacion.paciente;
         }
@@ -46,18 +46,22 @@ export class InformeIngresoComponent implements OnInit {
         }
     }
 
-    onClose() {
-        this.close.emit();
+    // tslint:disable-next-line:use-lifecycle-interface
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes && this.prestacion) {
+            if (this.prestacion._id !== changes['prestacion']) {
+                this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
+                this.paciente = this.prestacion.paciente;
+                this.prestacionValidada = (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada');
+            }
+        }
+
     }
 
     onEdit() {
         this.toggleEditar.emit(true);
         this.detalle = false;
         this.edit = true;
-    }
-
-    cambiarFechaIngreso(fecha) {
-        this.cambiarFecha.emit(fecha);
     }
 
     cambiarSeleccionCama(selectedCama) {

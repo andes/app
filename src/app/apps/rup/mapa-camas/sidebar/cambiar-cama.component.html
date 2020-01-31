@@ -1,8 +1,9 @@
 <form #formCambiarCama="ngForm">
     <plex-title justify [titulo]="(!cambiarUO) ? 'Cambiar cama' : 'Cambiar Unidad Organizativa'">
-        <plex-button icon="arrow-left" type="danger" size="sm" (click)="cancelar()">
+        <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="volver()">
         </plex-button>
-        <plex-button icon="check" type="success" size="sm" [validateForm]="formCambiarCama" (click)="guardar($event)">
+        <plex-button title="guardar" icon="check" type="success" size="sm" [validateForm]="formCambiarCama"
+                     (click)="guardar($event)">
         </plex-button>
     </plex-title>
     <fieldset>

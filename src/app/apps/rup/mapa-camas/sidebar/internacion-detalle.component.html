@@ -4,20 +4,19 @@
     </ng-container>
 
     <ng-container *ngIf="mostrar === 'ingreso'">
-        <app-informe-ingreso [fecha]="fecha" [prestacion]="prestacion" [detalle]="true" [btnClose]="btnClose"
-                             (toggleEditar)="editarFormulario($event)" (cancel)="activatedOption(null)"
-                             (close)="onClose()">
+        <app-informe-ingreso [fecha]="fecha" [prestacion]="prestacion" [detalle]="true"
+                             (toggleEditar)="editarFormulario($event)" (cancel)="activatedOption(null)">
         </app-informe-ingreso>
     </ng-container>
     <ng-container *ngIf="mostrar === 'movimientos'">
-        <app-movimientos-internacion [prestacion]="prestacion" (cancel)="activatedOption(null)" [btnClose]="btnClose"
-                                     (close)="onClose()" (cambioCama)="cambiarCama()">
+        <app-movimientos-internacion [prestacion]="prestacion" (cancel)="activatedOption(null)"
+                                     (cambioCama)="cambiarCama()">
         </app-movimientos-internacion>
     </ng-container>
     <ng-container *ngIf="mostrar === 'egreso'">
-        <app-informe-egreso [fecha]="fecha" [prestacion]="prestacion" [detalle]="detalleEgreso" [btnClose]="btnClose"
-                            (cancel)="activatedOption(null)" (toggleEditar)="editarFormulario($event)"
-                            (refresh)="refrescar($event)" (cancel)="onClose()">
+        <app-informe-egreso [fecha]="fecha" [prestacion]="prestacion" [detalle]="detalleEgreso"
+                            (cancel)="activatedOption(null);" (toggleEditar)="editarFormulario($event)"
+                            (refresh)="refrescar($event)">
         </app-informe-egreso>
     </ng-container>
 </div>

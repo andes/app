@@ -1,5 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { Cie10Service } from '../../../../mitos';
@@ -7,7 +6,7 @@ import { Plex } from '@andes/plex';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import { MapaCamasService } from '../../mapa-camas.service';
 import { ProcedimientosQuirurgicosService } from '../../../../../services/procedimientosQuirurgicos.service';
-import { modelRegistroInternacion, listaTipoEgreso, causaExterna, opcionesTipoParto, opcionesCondicionAlNacer, opcionesTerminacion, opcionesSexo } from '../../constantes-internacion';
+import { listaTipoEgreso, causaExterna, opcionesTipoParto, opcionesCondicionAlNacer, opcionesTerminacion, opcionesSexo } from '../../constantes-internacion';
 
 @Component({
     selector: 'app-egresar-paciente',
@@ -37,6 +36,7 @@ export class EgresarPacienteComponent implements OnInit {
     public ambito: string;
     public capa: string;
     public fechaValida = true;
+    public mensajeError;
     public esTraslado = false;
     public informeIngreso;
     public registro: any = {
@@ -95,37 +95,47 @@ export class EgresarPacienteComponent implements OnInit {
     ngOnInit() {
         this.ambito = this.mapaCamasService.ambito;
         this.capa = this.mapaCamasService.capa;
+
         if (this.capa === 'estadistica') {
             this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
             let fechaIngreso = this.informeIngreso.fechaIngreso;
             this.calcularDiasEstada();
-
-            if (this.prestacion && !this.cama) {
-                this.mapaCamasService.snapshot(fechaIngreso, this.prestacion._id).subscribe(camas => {
-                    this.cama = camas[0];
-                });
+            if (this.prestacion) {
+                if (this.prestacion.ejecucion.registros[1]) {
+                    this.registro.valor.InformeEgreso = this.prestacion.ejecucion.registros[1].valor.InformeEgreso;
+                    this.verificarFecha(this.registro.valor.InformeEgreso.fechaEgreso);
+                } else {
+                    this.verificarFecha(moment().toDate());
+                }
+                if (!this.cama) {
+                    this.mapaCamasService.snapshot(fechaIngreso, this.prestacion._id).subscribe(camas => {
+                        this.cama = camas[0];
+                    });
+                }
             }
+        } else {
+            this.fechaValida = true;
+            this.registro.valor.InformeEgreso.fechaEgreso = moment().toDate();
         }
-
-        if (this.prestacion.ejecucion.registros[1]) {
-            this.registro.valor.InformeEgreso = this.prestacion.ejecucion.registros[1].valor.InformeEgreso;
-        }
-
     }
 
     cancelar() {
         this.cancel.emit();
     }
 
-    cambioFecha(fecha) {
+    verificarFecha(fecha) {
+        this.fechaValida = false;
         if (fecha > this.informeIngreso.fechaIngreso) {
-            this.fechaValida = true;
-            this.calcularDiasEstada();
-            this.cambiarFecha.emit(fecha);
+            if (fecha <= moment().toDate()) {
+                this.fechaValida = true;
+                this.registro.valor.InformeEgreso.fechaEgreso = fecha;
+                this.calcularDiasEstada();
+                this.cambiarFecha.emit(fecha);
+            } else {
+                this.mensajeError = `La fecha y hora no puede ser mayor a la de hoy (${moment().format('DD/MM/YYYY HH:mm')})`;
+            }
         } else {
-            this.fechaValida = false;
-            this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a  ' + moment(this.informeIngreso.fechaIngreso).format('DD-MM-YYYY HH:mm'));
-            this.registro.valor.InformeEgreso['diasDeEstada'] = null;
+            this.mensajeError = `La fecha y hora no puede ser menor o igual a la de ingreso (${moment(this.informeIngreso.fechaIngreso).format('DD/MM/YYYY HH:mm')})`;
         }
     }
 
@@ -149,7 +159,6 @@ export class EgresarPacienteComponent implements OnInit {
     cambiarSeleccionCama() {
         this.cambiarCama.emit(this.cama);
     }
-
 
     loadOrganizacion(event) {
         if (event.query) {
@@ -283,7 +292,6 @@ export class EgresarPacienteComponent implements OnInit {
 
     controlRegistrosGuardar() {
         let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
-        this.registro.valor.InformeEgreso.fechaEgreso = this.fecha;
         if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
             this.registro.esDiagnosticoPrincipal = true;
         }

@@ -1,14 +1,11 @@
 <ng-container *ngIf="detalle">
     <plex-title justify titulo="INGRESO">
-        <plex-button *ngIf="btnClose" title="cerrar" icon="close" type="danger" size="sm" (click)="onClose()">
-        </plex-button>
-        <plex-button title="editar" icon="pencil" type="warning" size="sm" (click)="onEdit()">
+        <plex-button *ngIf="!prestacionValidada" title="editar" icon="pencil" type="warning" size="sm"
+                     (click)="onEdit()">
         </plex-button>
     </plex-title>
     <ng-container *ngIf="informeIngreso">
         <fieldset>
-            <plex-title size="sm" titulo="DATOS DE PACIENTE">
-            </plex-title>
             <plex-detail size="md" direction="row" *ngIf="paciente">
                 <plex-icon name="paciente" prefix="adi"></plex-icon>
                 <div title>{{ paciente.apellido }}, {{ paciente.nombre }}</div>
@@ -33,7 +30,8 @@
             </plex-title>
             <div class="row">
                 <div class="col-6">
-                    <plex-label titulo="Fecha ingreso" [subtitulo]="fechaIngreso | date: 'dd/MM/yyyy HH:mm'">
+                    <plex-label titulo="Fecha ingreso"
+                                [subtitulo]="informeIngreso.fechaIngreso | date: 'dd/MM/yyyy HH:mm'">
                     </plex-label>
                 </div>
                 <div class="col-6">

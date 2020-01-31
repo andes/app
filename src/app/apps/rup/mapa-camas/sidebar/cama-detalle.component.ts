@@ -77,7 +77,9 @@ export class CamaDetalleComponent implements OnInit {
     getDatosCama() {
         this.paciente = null;
         if (this.cama.paciente) {
-            this.getPrestacion();
+            if (this.capa === 'estadistica') {
+                this.getPrestacion();
+            }
             this.getPaciente();
         }
 

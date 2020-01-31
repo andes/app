@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../mapa-camas.service';
+import { Plex } from '@andes/plex';
+import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 
 @Component({
     selector: 'app-internacion-detalle',
@@ -12,9 +14,7 @@ export class InternacionDetalleComponent implements OnInit {
     @Input() fecha: Date;
     @Input() prestacion: any;
     @Input() relacionesPosibles: any;
-    @Input() btnClose = false;
 
-    @Output() close = new EventEmitter<any>();
     @Output() toggleEditar = new EventEmitter<any>();
     @Output() refresh = new EventEmitter<any>();
     @Output() cambioCama = new EventEmitter<any>();
@@ -33,6 +33,8 @@ export class InternacionDetalleComponent implements OnInit {
 
     constructor(
         public auth: Auth,
+        private plex: Plex,
+        private prestacionesService: PrestacionesService,
         private mapaCamasService: MapaCamasService,
     ) {
     }
@@ -96,12 +98,10 @@ export class InternacionDetalleComponent implements OnInit {
     }
 
     activatedOption(opcion) {
-        this.mostrar = opcion;
-        this.active = opcion;
-    }
-
-    onClose() {
-        this.close.emit();
+        if (opcion) {
+            this.mostrar = opcion;
+            this.active = opcion;
+        }
     }
 
     editarFormulario(editar: boolean) {

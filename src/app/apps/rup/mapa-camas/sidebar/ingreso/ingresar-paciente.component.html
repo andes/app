@@ -18,20 +18,15 @@
 <form #formIngreso="ngForm">
     <ng-container *ngIf="paciente && informeIngreso">
         <plex-title justify titulo="INGRESO">
-            <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="cancelar()">
-            </plex-button>
             <plex-button title="guardar" icon="check" type="success" size="sm" [validateForm]="formIngreso"
                          (click)="guardar($event)">
+            </plex-button>
+            <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="cancelar()">
             </plex-button>
         </plex-title>
         <fieldset>
             <ng-container>
                 <fieldset>
-                    <plex-title size="sm" justify titulo="DATOS DE PACIENTE">
-                        <plex-button *ngIf="!prestacion" label="CAMBIAR PACIENTE" type="warning" size="sm"
-                                     (click)="cambiarPaciente()">
-                        </plex-button>
-                    </plex-title>
                     <fieldset>
                         <plex-detail size="md" direction="row">
                             <plex-icon name="paciente" prefix="adi"></plex-icon>

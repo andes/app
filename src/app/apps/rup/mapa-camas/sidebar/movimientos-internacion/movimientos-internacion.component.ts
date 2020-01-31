@@ -10,9 +10,7 @@ import { MapaCamasService } from '../../mapa-camas.service';
 export class MovimientosInternacionComponent implements OnInit {
     // EVENTOS
     @Input() prestacion;
-    @Input() btnClose = false;
 
-    @Output() close = new EventEmitter<any>();
     @Output() cambioCama = new EventEmitter<any>();
 
     // VARIABLES
@@ -21,6 +19,7 @@ export class MovimientosInternacionComponent implements OnInit {
     public movimientos;
     public desde = moment().toDate();
     public hasta = moment().toDate();
+    public prestacionValidada = false;
 
     constructor(
         public auth: Auth,
@@ -32,6 +31,10 @@ export class MovimientosInternacionComponent implements OnInit {
         this.capa = this.mapaCamasService.capa;
 
         this.getMovimientos();
+
+        if (this.prestacion) {
+            this.prestacionValidada = (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada');
+        }
     }
 
     getMovimientos() {
@@ -39,10 +42,6 @@ export class MovimientosInternacionComponent implements OnInit {
             this.movimientos = movimientos;
             this.movimientos.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
         });
-    }
-
-    onClose() {
-        this.close.emit();
     }
 
     cambiarCama() {
