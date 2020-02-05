@@ -331,13 +331,8 @@ export class MapaDeCamasComponent implements OnInit {
                 // vamos a liberar la cama
                 // this.prestacionDelPaciente(e.cama);
                 let dto = {
-<<<<<<< HEAD
-                    fecha: e.egresoExiste.InformeEgreso.fechaEgreso,
-                    estado: this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible',
-=======
                     fecha: e.egresoExiste.valor.InformeEgreso.fechaEgreso,
                     estado: this.internacionService.usaWorkflowCompleto(this.auth.organizacion.id) ? 'desocupada' : 'disponible',
->>>>>>> feat(core): reduce el tamaño del token
                     unidadOrganizativa: e.cama.ultimoEstado.unidadOrganizativa ? e.cama.ultimoEstado.unidadOrganizativa : null,
                     especialidades: e.cama.ultimoEstado.especialidades ? e.cama.ultimoEstado.especialidades : null,
                     esCensable: e.cama.ultimoEstado.esCensable,

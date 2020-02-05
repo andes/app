@@ -715,7 +715,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 window.sessionStorage.setItem('motivoAccesoHuds', motivoAccesoHuds);
             } else {
                 if (this.accesoHudsPaciente) {
-                    this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.accesoHudsPaciente, motivoAccesoHuds, this.auth.profesional.id, this.accesoHudsTurno, this.accesoHudsPrestacion).subscribe(hudsToken => {
+                    this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.accesoHudsPaciente, motivoAccesoHuds, this.auth.profesional, this.accesoHudsTurno, this.accesoHudsPrestacion).subscribe(hudsToken => {
                         // se obtiene token y loguea el acceso a la huds del paciente
                         window.sessionStorage.setItem('huds-token', hudsToken.token);
                         this.routeToParams = [];
