@@ -35,6 +35,9 @@ export class EgresarPacienteComponent implements OnInit {
     // VARIABLES
     public ambito: string;
     public capa: string;
+    public organizacion;
+    public maquinaEstados;
+    public estadoDestino;
     public fechaValida = true;
     public mensajeError;
     public esTraslado = false;
@@ -95,12 +98,11 @@ export class EgresarPacienteComponent implements OnInit {
     ngOnInit() {
         this.ambito = this.mapaCamasService.ambito;
         this.capa = this.mapaCamasService.capa;
-
         if (this.capa === 'estadistica') {
-            this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
-            let fechaIngreso = this.informeIngreso.fechaIngreso;
-            this.calcularDiasEstada();
             if (this.prestacion) {
+                this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
+                let fechaIngreso = this.informeIngreso.fechaIngreso;
+                this.calcularDiasEstada();
                 if (this.prestacion.ejecucion.registros[1]) {
                     this.registro.valor.InformeEgreso = this.prestacion.ejecucion.registros[1].valor.InformeEgreso;
                     this.verificarFecha(this.registro.valor.InformeEgreso.fechaEgreso);
@@ -110,13 +112,37 @@ export class EgresarPacienteComponent implements OnInit {
                 if (!this.cama) {
                     this.mapaCamasService.snapshot(fechaIngreso, this.prestacion._id).subscribe(camas => {
                         this.cama = camas[0];
+                        this.getMaquinaEstados();
                     });
                 }
+            } else {
+                this.getMaquinaEstados();
+                this.servicioPrestacion.getById(this.cama.idInternacion).subscribe(prestacion => {
+                    this.prestacion = prestacion;
+                    this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
+                    this.calcularDiasEstada();
+                    this.verificarFecha(moment().toDate());
+                })
             }
         } else {
             this.fechaValida = true;
+            this.getMaquinaEstados();
             this.registro.valor.InformeEgreso.fechaEgreso = moment().toDate();
         }
+    }
+
+    getMaquinaEstados() {
+        this.mapaCamasService.getMaquinaEstados(this.auth.organizacion.id).subscribe(maquinaEstados => {
+            this.maquinaEstados = maquinaEstados[0];
+            if (this.maquinaEstados) {
+                let relaciones = maquinaEstados[0].relaciones;
+                relaciones.map(rel => {
+                    if (!this.estadoDestino && rel.origen === this.cama.estado) {
+                        this.estadoDestino = rel.destino;
+                    }
+                });
+            }
+        });
     }
 
     cancelar() {
@@ -255,7 +281,7 @@ export class EgresarPacienteComponent implements OnInit {
             if (this.capa === 'estadistica') {
                 this.egresoExtendido();
             } else {
-                this.egresoSimplificado('disponible');
+                this.egresoSimplificado(this.estadoDestino);
             }
         } else {
             this.plex.info('info', 'ERROR: Los datos de egreso no estan completos');
@@ -285,7 +311,7 @@ export class EgresarPacienteComponent implements OnInit {
                 registros: registros
             };
             this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
-                this.egresoSimplificado('disponible');
+                this.egresoSimplificado(this.estadoDestino);
             });
         }
     }

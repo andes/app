@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter, ViewChild } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../mapa-camas.service';
-import { Plex } from '@andes/plex';
+import { Plex, PlexOptionsComponent } from '@andes/plex';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 
 @Component({
@@ -18,6 +18,8 @@ export class InternacionDetalleComponent implements OnInit {
     @Output() toggleEditar = new EventEmitter<any>();
     @Output() refresh = new EventEmitter<any>();
     @Output() cambioCama = new EventEmitter<any>();
+
+    @ViewChild(PlexOptionsComponent, { static: false }) plexOptions: PlexOptionsComponent;
 
     // VARIABLES
     public capa: string;
@@ -100,6 +102,7 @@ export class InternacionDetalleComponent implements OnInit {
     activatedOption(opcion) {
         if (opcion) {
             this.mostrar = opcion;
+            this.plexOptions.activate(opcion);
             this.active = opcion;
         }
     }

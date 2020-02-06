@@ -68,13 +68,7 @@ export class InformeEgresoComponent implements OnInit {
     }
 
     cancelar() {
-        if (!this.edit || !this.informeEgreso) {
-            this.cancel.emit();
-        } else {
-            this.edit = false;
-            this.toggleEditar.emit(false);
-            this.detalle = true;
-        }
+        this.cancel.emit();
     }
 
     refescar(accion) {

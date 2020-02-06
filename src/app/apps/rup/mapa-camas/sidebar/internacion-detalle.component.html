@@ -5,17 +5,17 @@
 
     <ng-container *ngIf="mostrar === 'ingreso'">
         <app-informe-ingreso [fecha]="fecha" [prestacion]="prestacion" [detalle]="true"
-                             (toggleEditar)="editarFormulario($event)" (cancel)="activatedOption(null)">
+                             (toggleEditar)="editarFormulario($event)" (cancel)="activatedOption('ingreso')">
         </app-informe-ingreso>
     </ng-container>
     <ng-container *ngIf="mostrar === 'movimientos'">
-        <app-movimientos-internacion [prestacion]="prestacion" (cancel)="activatedOption(null)"
+        <app-movimientos-internacion [prestacion]="prestacion" (cancel)="activatedOption('ingreso')"
                                      (cambioCama)="cambiarCama()">
         </app-movimientos-internacion>
     </ng-container>
     <ng-container *ngIf="mostrar === 'egreso'">
         <app-informe-egreso [fecha]="fecha" [prestacion]="prestacion" [detalle]="detalleEgreso"
-                            (cancel)="activatedOption(null);" (toggleEditar)="editarFormulario($event)"
+                            (cancel)="activatedOption('egreso')" (toggleEditar)="editarFormulario($event)"
                             (refresh)="refrescar($event)">
         </app-informe-egreso>
     </ng-container>

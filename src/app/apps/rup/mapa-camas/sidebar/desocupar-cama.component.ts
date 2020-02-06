@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MapaCamasService } from '../mapa-camas.service';
+import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 
 
 @Component({
@@ -29,21 +30,24 @@ export class CamaDesocuparComponent implements OnInit {
 
     // Constructor
     constructor(
-        private mapaCamasService: MapaCamasService
+        private mapaCamasService: MapaCamasService,
+        private prestacionesService: PrestacionesService
     ) { }
 
     ngOnInit() {
+        this.fecha = moment().toDate();
+
         if (this.prestacion) {
             this.fechaIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
             if (this.prestacion.ejecucion.registros[1]) {
                 this.fechaEgreso = this.prestacion.ejecucion.registros[1].valor.InformeEgreso.fechaEgreso;
                 this.fecha = this.fechaEgreso;
-            } else {
-                this.fecha = moment().toDate();
             }
+
             this.verificarFecha(this.fecha);
         } else if (this.camas) {
             this.obtenerCamasDisponibles();
+            this.fechaValida = true;
         }
     }
 
@@ -63,13 +67,14 @@ export class CamaDesocuparComponent implements OnInit {
         this.camasMismaUO = [];
         this.camasDistintaUO = [];
         this.camas.map(cama => {
-            if (!cama.paciente) {
+            if (cama.estado === 'disponible') {
                 if (cama.idCama !== this.cama.idCama) {
                     if (cama.unidadOrganizativa.conceptId === this.cama.unidadOrganizativa.conceptId) {
                         this.camasMismaUO.push(cama);
                     } else {
                         this.camasDistintaUO.push(cama);
                     }
+                    console.log(this.camasDistintaUO)
                 }
             }
         });
@@ -78,6 +83,7 @@ export class CamaDesocuparComponent implements OnInit {
     verificarFecha(fecha) {
         this.fechaValida = false;
         if (fecha > this.fechaIngreso) {
+            console.log('hola')
             if (this.fechaEgreso) {
                 if (fecha < this.fechaEgreso) {
                     this.fechaValida = true;
@@ -86,6 +92,7 @@ export class CamaDesocuparComponent implements OnInit {
                     this.mensajeError = `La fecha y hora no puede ser mayor o igual a la de egreso (${moment(this.fechaEgreso).format('DD/MM/YYYY HH:mm')})`;
                 }
             } else if (fecha <= moment().toDate()) {
+                console.log('hola2')
                 this.fechaValida = true;
                 this.getSnapshot();
             } else {

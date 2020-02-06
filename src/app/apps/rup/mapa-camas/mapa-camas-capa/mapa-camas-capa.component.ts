@@ -69,6 +69,7 @@ export class MapaCamasCapaComponent implements OnInit {
     getMaquinaEstados() {
         this.mapaCamasService.getMaquinaEstados(this.organizacion).subscribe(maquinaEstados => {
             this.maquinaEstados = maquinaEstados[0];
+
             if (this.maquinaEstados) {
                 this.estados = maquinaEstados[0].estados;
                 this.relaciones = maquinaEstados[0].relaciones;
@@ -100,7 +101,6 @@ export class MapaCamasCapaComponent implements OnInit {
                     this.tiposCama.push({ 'id': s.tipoCama.conceptId, 'nombre': s.tipoCama.term });
                 }
 
-                this.tiposCama.push(s.sectores[s.sectores.length - 1].nombre);
                 index = this.unidadesOrganizativas.findIndex(i => i.conceptId === s.unidadOrganizativa.conceptId);
                 if (index < 0) {
                     this.unidadesOrganizativas.push({ id: s.unidadOrganizativa.conceptId, nombre: s.unidadOrganizativa.term });
