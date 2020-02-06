@@ -5,6 +5,9 @@
             <plex-help type="info" titulo="Reglas Solicitudes" tituloBoton="Reglas Solicitudes">
                 <visualizacion-reglas info [esParametrizado]="true"></visualizacion-reglas>
             </plex-help>
+            <plex-button type="warning" size="sm" title="Tiene {{solicitudes.length}} asignada/s"
+                         (click)="irASolicitudes()"> Mis
+                solicitudes</plex-button>
         </plex-title>
 
         <!-- Filtros -->
@@ -188,10 +191,10 @@
 
                                             <div *ngIf="turno.prestacion && turno?.prestacion?.estados">
                                                 <br />
-                                                <span *ngIf="turno.asistencia !== 'noAsistio'" class="badge" [ngClass]="{ 
-                                                          'badge-success': 
-                                                                turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo==='validada', 
-                                                          'badge-warning': 
+                                                <span *ngIf="turno.asistencia !== 'noAsistio'" class="badge" [ngClass]="{
+                                                          'badge-success':
+                                                                turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo==='validada',
+                                                          'badge-warning':
                                                                 turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo==='ejecucion'
                                                         }">
                                                     {{turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo}}

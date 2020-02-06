@@ -1,4 +1,4 @@
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding } from '@angular/core';
@@ -7,6 +7,9 @@ import { TipoPrestacionService } from './../../../services/tipoPrestacion.servic
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { Unsubscribe } from '@andes/shared';
+import { HUDSService } from '../../../modules/rup/services/huds.service';
+import { ObraSocialCacheService } from '../../../services/obraSocialCache.service';
+import { concat } from 'rxjs';
 
 @Component({
     selector: 'solicitudes',
@@ -18,6 +21,7 @@ export class SolicitudesComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
 
     paciente: any;
+    fecha: any;
     turnoSeleccionado: any;
     pacienteSeleccionado: any;
     showDarTurnos: boolean;
@@ -30,6 +34,8 @@ export class SolicitudesComponent implements OnInit {
     public permisos;
     public showCargarSolicitud = false;
     public showBotonCargarSolicitud = true;
+    public prestaciones = [];
+    public showIniciarPrestacion = false;
     public fechaDesde: Date = new Date();
     public fechaHasta: Date = new Date();
     public darTurnoArraySalida = [];
@@ -41,7 +47,8 @@ export class SolicitudesComponent implements OnInit {
     public tipoSolicitud = 'entrada';
     public prestacionesSalida = [];
     public prestacionesEntrada = [];
-
+    public salidaCache: any;
+    public entradaCache: any;
     public showEditarReglas = false;
     public panelIndex = 0;
     public pacienteSolicitud: any;
@@ -53,9 +60,23 @@ export class SolicitudesComponent implements OnInit {
     public permisosReglas;
     public permisoAnular = false;
     public showAnular = false;
+    public showCitar = false;
+    public showDetalle = false;
     public prestacionDestino;
     public estado;
-    public estados = [
+    public estadoEntrada;
+    public estadoSalida;
+    public asignadas = false;
+    public estadosEntrada = [
+        { id: 'auditoria', nombre: 'AUDITORIA' },
+        { id: 'pendiente', nombre: 'PENDIENTE' },
+        { id: 'asignada', nombre: 'ASIGNADA' },
+        { id: 'rechazada', nombre: 'CONTRARREFERIDA' },
+        { id: 'turnoDado', nombre: 'TURNO DADO' },
+        { id: 'registroHUDS', nombre: 'REGISTRO EN HUDS' },
+        { id: 'anulada', nombre: 'ANULADA' }
+    ];
+    public estadosSalida = [
         { id: 'auditoria', nombre: 'AUDITORIA' },
         { id: 'pendiente', nombre: 'PENDIENTE' },
         { id: 'asignada', nombre: 'ASIGNADA' },
@@ -69,15 +90,23 @@ export class SolicitudesComponent implements OnInit {
         { id: 'prioritario', nombre: 'PRIORITARIO' },
     ];
     prestacionSeleccionada: any;
+    public showModalMotivo = false;
+    public motivoVerContinuarPrestacion = 'Continuidad del cuidado del paciente';
+    public routeToParams = [];
+    public accesoHudsPrestacion = null;
+    public accesoHudsPaciente = null;
+    public accesoHudsTurno = null;
 
     constructor(
-        private auth: Auth,
+        public auth: Auth,
         private plex: Plex,
         private servicioPrestacion: PrestacionesService,
         public servicioTipoPrestacion: TipoPrestacionService,
         public servicioTurnos: TurnoService,
         public servicioOrganizacion: OrganizacionService,
-        public router: Router
+        public router: Router, private route: ActivatedRoute,
+        private hudsService: HUDSService,
+        private osService: ObraSocialCacheService,
     ) { }
 
     ngOnInit() {
@@ -90,6 +119,16 @@ export class SolicitudesComponent implements OnInit {
         this.prestacionesPermisos = this.auth.getPermissions('solicitudes:tipoPrestacion:?');
         this.permisoAnular = this.auth.check('solicitudes:anular');
         this.showCargarSolicitud = false;
+        let currentUrl = this.router.url;
+        if (this.router.url === '/asignadas') {
+            this.asignadas = true;
+            this.estadosEntrada = [
+                { id: 'asignada', nombre: 'ASIGNADA' }
+            ];
+            this.fechaDesde = null;
+            this.fechaHasta = null;
+            this.estadoEntrada = { id: 'asignada', nombre: 'ASIGNADA' };
+        }
         this.cargarSolicitudes();
     }
 
@@ -124,9 +163,12 @@ export class SolicitudesComponent implements OnInit {
     }
 
     cerrar() {
-        this.showSidebar = false;
+        this.showDetalle = false;
         this.showAnular = false;
         this.showAuditar = false;
+        this.showCitar = false;
+        this.showIniciarPrestacion = false;
+        this.showSidebar = false;
     }
 
     refreshSelection(value, tipo) {
@@ -148,8 +190,11 @@ export class SolicitudesComponent implements OnInit {
         } else {
             this.turnoSeleccionado = null;
         }
+        this.showDetalle = true;
         this.showSidebar = true;
+        this.showAnular = false;
         this.showAuditar = false;
+        this.showIniciarPrestacion = false;
     }
 
     darTurno(prestacionSolicitud) {
@@ -181,8 +226,33 @@ export class SolicitudesComponent implements OnInit {
         this.prestacionSeleccionada = prestacion;
         this.pacienteSolicitud = prestacion.paciente;
         this.showAnular = true;
+        this.showSidebar = true;
         this.showAuditar = false;
-        this.showSidebar = false;
+        this.showDetalle = false;
+        this.showCitar = false;
+        this.showIniciarPrestacion = false;
+    }
+
+    citar(prestacion) {
+        this.prestacionSeleccionada = prestacion;
+        this.pacienteSolicitud = prestacion.paciente;
+        this.showCitar = true;
+        this.showSidebar = true;
+        this.showAnular = false;
+        this.showAuditar = false;
+        this.showDetalle = false;
+        this.showIniciarPrestacion = false;
+    }
+
+    iniciarPrestacion(prestacion) {
+        this.prestacionSeleccionada = prestacion;
+        this.pacienteSolicitud = prestacion.paciente;
+        this.showIniciarPrestacion = true;
+        this.showSidebar = true;
+        this.showCitar = false;
+        this.showAnular = false;
+        this.showAuditar = false;
+        this.showDetalle = false;
     }
 
     volverDarTurno() {
@@ -200,8 +270,11 @@ export class SolicitudesComponent implements OnInit {
         this.prestacionSeleccionada = prestacion;
         this.pacienteSolicitud = prestacion.paciente;
         this.showAuditar = true;
+        this.showSidebar = true;
         this.showAnular = false;
-        this.showSidebar = false;
+        this.showDetalle = false;
+        this.showCitar = false;
+        this.showIniciarPrestacion = false;
     }
 
     editarReglas() {
@@ -457,11 +530,16 @@ export class SolicitudesComponent implements OnInit {
 
     afterDetalleSolicitud(event) {
         this.showSidebar = false;
+        this.showAnular = false;
+        this.showAuditar = false;
+        this.showDetalle = false;
+        this.showCitar = false;
+        this.showIniciarPrestacion = false;
     }
 
     returnAuditoria(event) {
         this.showAuditar = false;
-
+        this.showSidebar = false;
         if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length) {
             let patch: any = {
                 op: 'estadoPush',
@@ -492,6 +570,7 @@ export class SolicitudesComponent implements OnInit {
 
     returnAnular(event) {
         this.showAnular = false;
+        this.showSidebar = false;
         if (event.status === false) {
             if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
                 let patch = {
@@ -517,4 +596,162 @@ export class SolicitudesComponent implements OnInit {
             this.buscarSolicitudes();
         }
     }
+    returnCitar(event) {
+        this.showCitar = false;
+        this.showSidebar = false;
+        if (event.status === false) {
+            if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
+                let patch = {
+                    op: 'estadoPush',
+                    estado: {
+                        tipo: 'pendiente',
+                        observaciones: event.motivo
+                    }
+                };
+                this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
+                    respuesta => {
+                        this.cargarSolicitudes();
+                        this.plex.toast('success', '', 'Solicitud enviada a pendientes');
+                    }
+                );
+            }
+        }
+    }
+
+    routeTo(action, id) {
+        if (id) {
+            this.router.navigate(['rup/' + action + '/', id]);
+        } else {
+            this.router.navigate(['rup/' + action]);
+        }
+    }
+
+    setRouteToParams(params) {
+        this.routeToParams = params;
+    }
+
+    preAccesoHuds(motivoAccesoHuds) {
+        if (motivoAccesoHuds) {
+            if (!this.accesoHudsPaciente && !this.accesoHudsPrestacion && this.routeToParams && this.routeToParams[0] === 'huds') {
+                // Se esta accediendo a 'HUDS DE UN PACIENTE'
+                window.sessionStorage.setItem('motivoAccesoHuds', motivoAccesoHuds);
+                this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
+            } else {
+                this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.accesoHudsPaciente, motivoAccesoHuds, this.auth.profesional, this.accesoHudsTurno, this.accesoHudsPrestacion).subscribe(hudsToken => {
+                    // se obtiene token y loguea el acceso a la huds del paciente
+                    window.sessionStorage.setItem('huds-token', hudsToken.token);
+                    this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
+                    this.routeToParams = [];
+                    this.accesoHudsPaciente = null;
+                    this.accesoHudsTurno = null;
+                    this.accesoHudsPrestacion = null;
+                });
+            }
+        }
+        this.showModalMotivo = false;
+    }
+
+    setAccesoHudsParams(paciente, turno, prestacion) {
+        this.accesoHudsPaciente = paciente;
+        this.accesoHudsTurno = turno;
+        this.accesoHudsPrestacion = prestacion;
+        this.showModalMotivo = true;
+    }
+
+    returnPrestacion(event) {
+        this.showIniciarPrestacion = false;
+        this.showSidebar = false;
+        if (event.status === false) {
+            let solicitud = event.prestacionSeleccionada;
+            this.plex.confirm('Paciente: <b>' + solicitud.paciente.apellido + ', ' + solicitud.paciente.nombre + '.</b><br>Prestación: <b>' + solicitud.solicitud.tipoPrestacion.term + '</b>', '¿Está seguro de querer iniciar una pestación?').then(confirmacion => {
+                if (confirmacion) {
+                    let obraSocialPaciente;
+                    this.osService.getFinanciadorPacienteCache().subscribe((financiador) => {
+                        obraSocialPaciente = financiador;
+                    });
+                    if (solicitud.solicitud.tipoPrestacion) {
+                        let conceptoSnomed = solicitud.solicitud.tipoPrestacion;
+                        let nuevaPrestacion;
+                        nuevaPrestacion = {
+                            paciente: solicitud.paciente,
+                            solicitud: {
+                                fecha: event.fecha,
+                                tipoPrestacion: conceptoSnomed,
+                                // profesional logueado
+                                profesional:
+                                {
+                                    id: this.auth.profesional, nombre: this.auth.usuario.nombre,
+                                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                                },
+                                // organizacion desde la que se solicita la prestacion
+                                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
+                            },
+                            ejecucion: {
+                                fecha: event.fecha,
+                                registros: [],
+                                // organizacion desde la que se solicita la prestación
+                                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
+                            },
+                            estados: {
+                                fecha: new Date(),
+                                tipo: 'ejecucion'
+                            }
+                        };
+                        if (solicitud.paciente) {
+                            nuevaPrestacion.paciente['_id'] = solicitud.paciente.id;
+                            const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, solicitud.paciente, 'Fuera de agenda', this.auth.profesional, null, solicitud.solicitud.tipoPrestacion.id);
+                            const nuevaPrest = this.servicioPrestacion.post(nuevaPrestacion);
+                            const res = concat(token, nuevaPrest);
+
+                            res.subscribe(input => {
+                                if (input.token) {
+                                    // se obtuvo token y loguea el acceso a la huds del paciente
+                                    window.sessionStorage.setItem('huds-token', input.token);
+                                } else {
+                                    if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
+                                        let patch = {
+                                            op: 'estadoPush',
+                                            estado: {
+                                                tipo: 'validada',
+                                                observaciones: event.motivo
+                                            }
+                                        };
+                                        this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
+                                            () => {
+                                                this.router.navigate(['/rup/ejecucion', input.id]); // prestacion
+                                            }
+                                        );
+                                    }
+                                }
+                            }, (err) => {
+                                this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err);
+                            });
+                        } else {
+                            this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+                                if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
+                                    let patch = {
+                                        op: 'estadoPush',
+                                        estado: {
+                                            tipo: 'validada',
+                                            observaciones: event.motivo
+                                        }
+                                    };
+                                    this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
+                                        () => {
+                                            this.router.navigate(['/rup/ejecucion', prestacion.id]);
+                                        }
+                                    );
+                                }
+                            }, (err) => {
+                                this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err);
+                            });
+                        }
+                    }
+                } else {
+                    return false;
+                }
+            });
+        }
+    }
+
 }
