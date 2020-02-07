@@ -230,19 +230,6 @@ export class TurnosPrestacionesComponent implements OnInit {
     }
 
     @Unsubscribe()
-    loadFinanciadores(event) {
-        if (event.query && event.query !== '' && event.query.length > 2) {
-            let query = {
-                nombre: event.query
-            };
-            return this.servicioOS.getListado(query).subscribe(event.callback);
-        } else {
-            event.callback([]);
-        }
-
-    }
-
-    @Unsubscribe()
     loadEquipoSalud(event) {
         if (event.query && event.query !== '' && event.query.length > 2) {
             return this.serviceProfesional.get({ nombreCompleto: event.query }).subscribe(event.callback);
