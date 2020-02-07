@@ -104,7 +104,11 @@ export class HUDSService {
             idPrestacion: idPrestacion
         };
         return this.server.post(this.hudsUrl + '/token', paramsToken);
+    }
 
+    checkHudsToken(idPaciente: string) {
+        let opt = { token: window.sessionStorage.getItem('huds-token'), paciente: idPaciente };
+        return this.server.get(this.hudsUrl + '/checkToken', { params: opt });
     }
 
     getAccesos(params: any): Observable<any> {

@@ -359,10 +359,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     iniciarPrestacion(paciente, snomedConcept, turno) {
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
-                const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional, turno.id, snomedConcept._id);
-                const crear = this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno);
-                const res = concat(token, crear);
-                res.subscribe(input => {
+                const token$ = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional, turno.id, snomedConcept._id);
+                const crear$ = this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno);
+                concat(token$, crear$).subscribe(input => {
                     if (input.token) {
                         // se obtuvo token y loguea el acceso a la huds del paciente
                         window.sessionStorage.setItem('huds-token', input.token);
@@ -619,10 +618,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Iniciar Prestación?').then(confirmacion => {
             if (confirmacion) {
-                const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional, turno, prestacion.id);
-                const patch = this.servicioPrestacion.patch(prestacion.id, params);
-                const res = concat(token, patch);
-                res.subscribe(input => {
+                const token$ = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional, turno, prestacion.id);
+                const patch$ = this.servicioPrestacion.patch(prestacion.id, params);
+                concat(token$, patch$).subscribe(input => {
                     if (input.token) {
                         // se obtuvo token y loguea el acceso a la huds del paciente
                         window.sessionStorage.setItem('huds-token', input.token);
@@ -697,8 +695,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
      * @memberof PuntoInicioComponent
      */
     esHabilitadoRegistrarInasistencia(turno): Boolean {
-        let horaActual = moment(new Date()).format('LT');
-        let horaTurno = moment(turno.horaInicio).format('LT');
         return !this.esFutura(this.agendaSeleccionada) && this.agendaSeleccionada.estado !== 'auditada' &&
             turno.estado !== 'suspendido' && (!turno.asistencia || (turno.asistencia && turno.asistencia === 'asistio')) &&
             turno.paciente && turno.diagnostico.codificaciones.length === 0;
@@ -732,10 +728,19 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.showModalMotivo = false;
     }
 
-    setAccesoHudsParams(paciente, turno, prestacion) {
+    setAccesoHudsParams(paciente, turno, prestacion, vistaHuds?) {
         this.accesoHudsPaciente = paciente;
         this.accesoHudsTurno = turno;
         this.accesoHudsPrestacion = prestacion;
-        this.showModalMotivo = true;
+        if (vistaHuds) {
+            // si se quiere acceder desde el boton 'ver huds' se verifica token actual
+            this.hudsService.checkHudsToken(paciente.id).subscribe(tokenValido => {
+                if (tokenValido) {
+                    this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
+                } else {
+                    this.showModalMotivo = true;    // Se muestra modal para seleccionar motivo
+                }
+            });
+        }
     }
 }

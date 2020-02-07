@@ -12,8 +12,9 @@ import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 import { ObraSocialCacheService } from '../../../../services/obraSocialCache.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { HUDSService } from '../../services/huds.service';
-import { concat } from 'rxjs';
+import { concat, merge } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { CompileTemplateMetadata } from '@angular/compiler';
 
 @Component({
     templateUrl: 'prestacionCrear.html'
@@ -183,34 +184,40 @@ export class PrestacionCrearComponent implements OnInit {
                 }
             };
             this.disableGuardar = true;
+            const nuevoToken$ = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.paciente, 'Fuera de agenda', this.auth.profesional, null, this.tipoPrestacionSeleccionada.id);
+            const nuevaPrest$ = this.servicioPrestacion.post(nuevaPrestacion);
+
             if (pacientePrestacion) {
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
-                const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.paciente, 'Fuera de agenda', this.auth.profesional, null, this.tipoPrestacionSeleccionada.id);
-                const nuevaPrest = this.servicioPrestacion.post(nuevaPrestacion);
-                const res = concat(token, nuevaPrest);
-
-                res.subscribe(input => {
-                    if (input.token) {
-                        // se obtuvo token y loguea el acceso a la huds del paciente
-                        window.sessionStorage.setItem('huds-token', input.token);
+                this.hudsService.checkHudsToken(this.paciente.id).subscribe(tokenValido => {
+                    if (tokenValido) {
+                        nuevaPrest$.subscribe(prestacion => {
+                            localStorage.removeItem('idAgenda');
+                            this.router.navigate(['/rup/ejecucion', prestacion.id]); // prestacion
+                        });
                     } else {
-                        localStorage.removeItem('idAgenda');
-                        this.router.navigate(['/rup/ejecucion', input.id]); // prestacion
+                        concat(nuevoToken$, nuevaPrest$).subscribe(resp => {
+                            if (resp.token) {
+                                // se obtuvo token y loguea el acceso a la huds del paciente
+                                window.sessionStorage.setItem('huds-token', resp.token);
+                            } else {
+                                localStorage.removeItem('idAgenda');
+                                this.router.navigate(['/rup/ejecucion', resp.id]); // prestacion
+                            }
+                        }, (err) => {
+                            this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err);
+                        });
                     }
-                }, (err) => {
-                    this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err);
                 });
             } else {
-                this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+                nuevaPrest$.subscribe(prestacion => {
                     localStorage.removeItem('idAgenda');
                     this.router.navigate(['/rup/ejecucion', prestacion.id]);
                 }, (err) => {
                     this.disableGuardar = false;
                     this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err);
                 });
-
             }
-
         }
     }
 

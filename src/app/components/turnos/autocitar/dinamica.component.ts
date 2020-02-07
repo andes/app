@@ -9,6 +9,9 @@ import { TurnoService } from '../../../services/turnos/turno.service';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { Router } from '@angular/router';
 import { ObraSocialService } from '../../../services/obraSocial.service';
+import { Auth } from '@andes/auth';
+import { HUDSService } from '../../../modules/rup/services/huds.service';
+import { concat } from 'rxjs';
 
 @Component({
     selector: 'dinamica',
@@ -31,7 +34,9 @@ export class DinamicaFormComponent implements OnInit {
         private router: Router,
         public serviceTurno: TurnoService,
         public servicioPrestacion: PrestacionesService,
-        private obraSocialService: ObraSocialService) {
+        private obraSocialService: ObraSocialService,
+        private auth: Auth,
+        private hudsService: HUDSService) {
     }
 
     ngOnInit() {
@@ -146,6 +151,7 @@ export class DinamicaFormComponent implements OnInit {
         if (this.agenda.dinamica) {
             this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre +
                 '.</b><br>Prestación: <b>' + this.datosTurno.tipoPrestacion.term + '</b>', '¿Está seguro de que desea agregar el paciente a la agenda?').then(confirmacion => {
+
                     if (confirmacion) {
                         let datosConfirma = {
                             nota: '',
@@ -154,11 +160,17 @@ export class DinamicaFormComponent implements OnInit {
                             paciente: paciente,
                             idAgenda: this.agenda.id
                         };
-                        // guardamos el turno
-                        this.serviceTurno.saveDinamica(datosConfirma).subscribe(
-                            agendaResultado => {
+                        const token$ = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, 'Agenda dinámica', this.auth.profesional, null, this.datosTurno.tipoPrestacion.id);
+                        const saveDinamica$ = this.serviceTurno.saveDinamica(datosConfirma);
+
+                        concat(token$, saveDinamica$).subscribe(resp => {
+                            if (resp.token) {
+                                // se obtuvo token y loguea el acceso a la huds del paciente
+                                window.sessionStorage.setItem('huds-token', resp.token);
+                            } else {
+                                localStorage.removeItem('idAgenda');
                                 // TODO::revisar si podemos obtener directamente desde la api el turno agregado
-                                const turnos = agendaResultado.bloques[0].turnos;
+                                const turnos = resp.bloques[0].turnos;
                                 const turnoDado = turnos[turnos.length - 1];
                                 // creamos la prestación
                                 this.servicioPrestacion.crearPrestacion(paciente, this.datosTurno.tipoPrestacion, 'ejecucion', new Date(), turnoDado.id).subscribe(prestacion => {
@@ -166,14 +178,12 @@ export class DinamicaFormComponent implements OnInit {
                                 }, (err) => {
                                     this.plex.info('danger', 'No fue posible crear la prestación');
                                 });
-                            },
-                            error => {
-
-                            });
+                            }
+                        }, (err) => {
+                            this.plex.info('danger', 'Ocurrió un error agregando al paciente');
+                        });
                     }
-
                 });
         }
     }
-
 }
