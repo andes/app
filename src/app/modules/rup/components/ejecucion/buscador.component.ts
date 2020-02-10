@@ -1,6 +1,7 @@
+import { LugarDeNacimientoComponent } from './../elementos/lugarDeNacimiento.component';
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
-import { Component, OnInit, Output, Input, EventEmitter, SimpleChanges, OnChanges, Renderer2 } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, SimpleChanges, OnChanges, Renderer2, ViewChild } from '@angular/core';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { FrecuentesProfesionalService } from '../../services/frecuentesProfesional.service';
 import { Auth } from '@andes/auth';
@@ -8,6 +9,8 @@ import { IPrestacion } from './../../interfaces/prestacion.interface';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
 import { ISnomedSearchResult } from './../../interfaces/snomedSearchResult.interface';
 import { SnomedBuscarService } from '../../../../components/snomed/snomed-buscar.service';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 @Component({
     selector: 'rup-buscador',
@@ -99,6 +102,12 @@ export class BuscadorComponent implements OnInit, OnChanges {
     public search; // buscador de sugeridos y mis frecuentes
     private ultimoTipoBusqueda: any;
     refSet: any;
+    batch = 25;
+    finFrecuentes = false;
+    skip = 0;
+    viewport: CdkVirtualScrollViewport;
+    offset = new BehaviorSubject(null);
+    infinite: Observable<any[]>;
 
     /**
      * Permite reusar los textos en los textos en el wizard y los tooltips
@@ -135,15 +144,14 @@ export class BuscadorComponent implements OnInit, OnChanges {
         await this.inicializarBuscadorBasico();
 
         // Se inicializa el buscador guiado, secundario
-        this.gruposGuiada = await this.inicializarBusquedaGuiada();
+        let rup: Observable<any>;
+        rup = this.elementoRUP.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId);
+        rup.subscribe((resultado) => {
+            this.gruposGuiada = resultado;
+        }
+        );
 
         this.filtrarResultadosBusquedaGuiada();
-    }
-
-    inicializarBusquedaGuiada() {
-        // Se traen los Conceptos Turneables para poder quitarlos de la lista de
-        // Procedimientos
-        return this.elementoRUP.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).toPromise();
     }
 
     inicializarBuscadorBasico() {
@@ -165,62 +173,102 @@ export class BuscadorComponent implements OnInit, OnChanges {
             } else {
                 this.busquedaActual = 'buscadorBasico';
             }
+            const queryFP = {
+                'idProfesional': this.auth.profesional,
+                'tipoPrestacion': this.conceptoFrecuente.conceptId,
+                'idOrganizacion': this.auth.organizacion.id,
+                'skip': 0,
+                'limit': this.batch
+            };
+            let fp;
+            let frecuentes: Observable<any>;
+            frecuentes = this.frecuentesProfesionalService.get(queryFP);
+            frecuentes.subscribe((resultado) => {
+                fp = resultado;
+                if (fp && fp.length) {
+                    const frecuentesProfesional = fp.map((res: any) => {
+                        let concepto = res.concepto;
+                        (concepto as any).frecuencia = res.frecuencia;
+                        (concepto as any).esSolicitud = res.esSolicitud;
+                        return concepto;
+                    });
 
-            let fp = await this.inicializarFrecuentesProfesional();
-            if (fp && fp.length) {
-                const frecuentesProfesional = fp.map((res: any) => {
+                    this.results['misFrecuentes']['todos'] = frecuentesProfesional;
+                    this.filtrarResultados('misFrecuentes');
+                    this.resultsAux.misFrecuentes = Object.assign({}, this.results.misFrecuentes);
+                    if (!this.results['misFrecuentes']['todos'].length || this.results['misFrecuentes']['todos'].length < 24) {
+                        this.finFrecuentes = true;
+                    }
+                }
+            }
+            );
+            let frecuentesTP;
+            let queryFTP = {
+                'tipoPrestacion': this.prestacion.solicitud.tipoPrestacion.conceptId
+            };
+            let frecTP: Observable<any>;
+            frecTP = this.frecuentesProfesionalService.get(queryFTP);
+            frecTP.subscribe((resultado) => {
+                frecuentesTP = resultado;
+                this.results['frecuentesTP']['todos'] = frecuentesTP.map(res => {
                     let concepto = res.concepto;
-                    (concepto as any).frecuencia = res.frecuencia;
-                    (concepto as any).esSolicitud = res.esSolicitud;
+                    concepto.frecuencia = res.frecuencia;
+                    concepto.esSolicitud = res.esSolicitud;
                     return concepto;
                 });
+                this.filtrarResultados('frecuentesTP');
 
-                this.results['misFrecuentes']['todos'] = frecuentesProfesional;
-                this.filtrarResultados('misFrecuentes');
-                this.resultsAux.misFrecuentes = Object.assign({}, this.results.misFrecuentes);
-            } else {
-                this.results['misFrecuentes']['todos'] = [];
-            }
+                this.resultsAux.frecuentesTP = Object.assign({}, this.results.frecuentesTP);
 
-            let frecuentesTP = await this.inicializarFrecuentesTP();
+                // inicializamos el filtro actual para los hallazgos
+                this.filtroActual = 'todos';
 
-            this.results['frecuentesTP']['todos'] = frecuentesTP.map(res => {
-                let concepto = res.concepto;
-                concepto.frecuencia = res.frecuencia;
-                concepto.esSolicitud = res.esSolicitud;
-                return concepto;
+                if (this.results['misFrecuentes']['todos'].length) {
+                    this.busquedaActual = 'misFrecuentes';
+                } else if (this.results['sugeridos']['todos'].length) {
+                    this.busquedaActual = 'sugeridos';
+                }
             });
-            this.filtrarResultados('frecuentesTP');
 
-            this.resultsAux.frecuentesTP = Object.assign({}, this.results.frecuentesTP);
 
-            // inicializamos el filtro actual para los hallazgos
-            this.filtroActual = 'todos';
-
-            if (this.results['misFrecuentes']['todos'].length) {
-                this.busquedaActual = 'misFrecuentes';
-            } else if (this.results['sugeridos']['todos'].length) {
-                this.busquedaActual = 'sugeridos';
-            }
         });
 
     }
 
-    private inicializarFrecuentesProfesional() {
-        const queryFP = {
-            'idProfesional': this.auth.profesional,
-            'tipoPrestacion': this.conceptoFrecuente.conceptId,
-            'idOrganizacion': this.auth.organizacion.id,
-        };
-        return this.frecuentesProfesionalService.get(queryFP).toPromise();
-    }
-
-
-    private inicializarFrecuentesTP() {
-        let queryFTP = {
-            'tipoPrestacion': this.prestacion.solicitud.tipoPrestacion.conceptId
-        };
-        return this.frecuentesProfesionalService.getXPrestacion(queryFTP).toPromise();
+    nextBatch(e) {
+        if (this.busquedaActual === 'misFrecuentes') {
+            if (this.finFrecuentes || e < (this.results['misFrecuentes']['todos'].length - 10)) {
+                return;
+            } else {
+                this.skip = this.skip + 25;
+                const queryFP = {
+                    'idProfesional': this.auth.profesional,
+                    'tipoPrestacion': this.conceptoFrecuente.conceptId,
+                    'idOrganizacion': this.auth.organizacion.id,
+                    'skip': this.skip,
+                    'limit': this.batch
+                };
+                let frecuentes: Observable<any>;
+                frecuentes = this.frecuentesProfesionalService.get(queryFP);
+                frecuentes.subscribe((resultado) => {
+                    if (!resultado.length || resultado.length < 25) {
+                        this.finFrecuentes = true;
+                    }
+                    if (resultado && resultado.length) {
+                        const frecuentesProfesional = resultado.map((res: any) => {
+                            let concepto = res.concepto;
+                            (concepto as any).frecuencia = res.frecuencia;
+                            (concepto as any).esSolicitud = res.esSolicitud;
+                            return concepto;
+                        });
+                        this.results['misFrecuentes']['todos'] = this.results['misFrecuentes']['todos'].concat(frecuentesProfesional);
+                        this.filtrarResultados('misFrecuentes');
+                        this.resultsAux.misFrecuentes = Object.assign({}, this.results.misFrecuentes);
+                    }
+                    return resultado;
+                });
+            }
+        }
     }
 
     /**
@@ -314,12 +362,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
         } else {
             // si el string de búsqueda esta vacío, reiniciamos los resultados desde la copia auxiliar
             // y seteamos en los filtros actuales
-            // this.results[this.busquedaActual][concepto] = this.resultsAux[this.busquedaActual][this.filtroActual];
             this.results[this.busquedaActual] = this.resultsAux[this.busquedaActual];
         }
-
-        // filtramos los resultados
-        // this.filtrarResultados(this.busquedaActual);
     }
 
     /**
@@ -417,7 +461,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
             // asignamos a una variable auxiliar para luego restaurar los valores
             // en caso de buscar o filtrar
             this.resultsAux['buscadorBasico'] = this.results['buscadorBasico'];
-            // this.resultsAux['busquedaGuiada'] = this.results['busquedaGuiada'];
 
         }
 
