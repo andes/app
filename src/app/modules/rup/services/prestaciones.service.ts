@@ -294,7 +294,8 @@ export class PrestacionesService {
                                     relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : [],
                                     valor: registro.valor
                                 }],
-                                registros: [registro]
+                                registros: [registro],
+                                privacy: (registro.privacy && registro.privacy.scope) ? registro.privacy.scope : 'public'
                             };
                             registroSalida.push(dato);
                         } else {
@@ -320,6 +321,7 @@ export class PrestacionesService {
                             registroEncontrado.registros.push(registro);
                             // ordenamos las evoluciones para que la primero del array sea la ultima registrada
                             registroEncontrado.evoluciones = registroEncontrado.evoluciones.sort((a, b) => b.fechaCarga - a.fechaCarga);
+                            registroEncontrado.privacy = (registro.privacy && registro.privacy.scope) ? registro.privacy.scope : 'public';
                         }
                     }
                 });

@@ -7,7 +7,7 @@
                         {{ registro.concepto.term[0].toUpperCase() + registro.concepto.term.slice(1) }}
                     </h4>
                     <div>
-                        <small class="badge badge-danger" *ngIf="elemento?.privacy?.scope !== 'public'">
+                        <small class="badge badge-danger" *ngIf="registro.privacy !== 'public'">
                             Registro Privado
                         </small>
                         <span
