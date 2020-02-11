@@ -15,7 +15,7 @@ export interface ITurno {
         alias: string,
         documento: string,
         fechaNacimiento: Date,
-        telefono: String,
+        telefono: string,
         sexo: String,
         carpetaEfectores: [{
             organizacion: string,
@@ -51,8 +51,13 @@ export interface ITurno {
         type: string,
         enum: ['edilicia', 'profesional', 'organizacion', 'agendaSuspendida']
     };
-    avisoSuspension: {
-        type: string,
-        enum: ['pendiente', 'no enviado', 'enviado', 'fallido']
-    };
+    avisoSuspension: avisoSuspensionEnum;
+    confirmedAt: Date;
+}
+
+export enum avisoSuspensionEnum {
+    PENDIENTE = 'pendiente',
+    NO_ENVIADO = 'no enviado',
+    ENVIADO = 'enviado',
+    FALLIDO = 'fallido'
 }

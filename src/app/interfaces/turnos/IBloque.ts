@@ -21,4 +21,5 @@ export interface IBloque {
     citarPorBloque: Boolean;
     cantidadBloque: number;
     turnos: ITurno[];
+    restantesMobile: number;
 }

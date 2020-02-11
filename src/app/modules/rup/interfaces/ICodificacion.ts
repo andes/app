@@ -14,14 +14,18 @@ interface ICodificacion {
 export interface ICodificacionPrestacion {
     id?: String;
     idPrestacion: String;
+    prestacion: any;
     paciente: {
         id: String,
         nombre: String,
         apellido: String,
-        documento: String,
+        documento: string,
         telefono?: String,
         sexo: String,
-        fechaNacimiento: Date
+        fechaNacimiento: Date,
+        edad: number
     };
     diagnostico: { codificaciones: ICodificacion[] };
+    createdAt: Date;
+    createdBy: any;
 }
