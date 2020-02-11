@@ -158,7 +158,7 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
         // nos fijamos si el concepto ya aparece en los registros
         let egresoExiste = registros.find(registro => registro.concepto.conceptId === this.conceptoEgreso.conceptId);
         if (egresoExiste && egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
-            this.refreshCamas.emit({ cama: this.camaSeleccionada, desocupaCama: true, egresoExiste });
+            this.refreshCamas.emit({ cama: this.camaSeleccionada, desocupaCama: true, egresoExiste: egresoExiste.valor });
         }
     }
 
