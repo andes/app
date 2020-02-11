@@ -1,13 +1,11 @@
 <plex-layout main="8">
     <plex-layout-main>
-        <div
-             *ngIf="turnoSeleccionado && turnoSeleccionado.estado !== 'suspendido' && turnoSeleccionado.estado !== 'turnoDoble'">
+        <ng-container
+                      *ngIf="turnoSeleccionado && turnoSeleccionado.estado !== 'suspendido' && turnoSeleccionado.estado !== 'turnoDoble'">
             <!--REGISTRO DE ASISTENCIA-->
-            <header>
-                <div class="clearfix">
-                    <div class="page-title">REGISTROS DEL TURNO</div>
-                </div>
-            </header>
+            <plex-title titulo="Registros del Turno">
+
+            </plex-title>
             <div class="row">
                 <div class="col">
                     <span *ngIf="pacienteDetalle">
@@ -53,7 +51,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- ------------------------------------------------ -->
                     </div>
                 </div>
             </div>
@@ -341,75 +338,71 @@
                 </div>
                 <!--/ CODIFICACION-->
             </div>
-        </div>
+        </ng-container>
     </plex-layout-main>
     <plex-layout-sidebar>
         <div *ngIf="agenda">
+            <plex-title titulo="Revisión de Agendas" size="sm">
+                <plex-button size="sm" type="danger" label="Volver" (click)="volver()"></plex-button>
+            </plex-title>
             <header class="header-fixed" [ngClass]="{'header-fixed-front': mostrarHeaderCompleto}">
-                <fieldset>
-                    <legend>
-                        <div class="clearfix">
-                            <span class="float-left">Revisión de Agendas</span>
-                        </div>
-                    </legend>
-                    <!--Header de la agenda-->
-                    <div class="alert alert-default mb-0">
-                        <div class="float-right">
-                            <plex-button type="default" title="Mostrar detalle de la agenda" titlePosition="left"
-                                         [icon]="mostrarHeaderCompleto ? 'chevron-up' : 'chevron-down'"
-                                         (click)="mostrarHeaderCompleto = !mostrarHeaderCompleto"></plex-button>
-                        </div>
-                        <!--Header pequeño-->
-                        <div *ngIf="!mostrarHeaderCompleto && agenda" class="row">
-                            <div class="col-12">
-                                {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date:
+                <!--Header de la agenda-->
+                <div class="alert alert-default mb-0">
+                    <div class="float-right">
+                        <plex-button type="default" title="Mostrar detalle de la agenda" titlePosition="left"
+                                     [icon]="mostrarHeaderCompleto ? 'chevron-up' : 'chevron-down'"
+                                     (click)="mostrarHeaderCompleto = !mostrarHeaderCompleto"></plex-button>
+                    </div>
+                    <!--Header pequeño-->
+                    <div *ngIf="!mostrarHeaderCompleto && agenda" class="row">
+                        <div class="col-12">
+                            {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date:
                                 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date:
                                 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
-                                <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
-                                    {{tipoPrestacion.nombre}}</div>
-                            </div>
+                            <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
+                                {{tipoPrestacion.nombre}}</div>
                         </div>
-                        <!--Header completo-->
-                        <div *ngIf="mostrarHeaderCompleto" class="row">
-                            <div class="col-12">
-                                <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio
+                    </div>
+                    <!--Header completo-->
+                    <div *ngIf="mostrarHeaderCompleto" class="row">
+                        <div class="col-12">
+                            <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio
                                 | fecha}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin |
                                 date: 'HH:mm'}} hs
-                            </div>
                         </div>
-                        <div *ngIf="mostrarHeaderCompleto" class="row">
-                            <div class="col-12">
-                                <label>Tipos de prestación</label>
-                                <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
-                                    {{tipoPrestacion.nombre}}</div>
-                            </div>
+                    </div>
+                    <div *ngIf="mostrarHeaderCompleto" class="row">
+                        <div class="col-12">
+                            <label>Tipos de prestación</label>
+                            <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
+                                {{tipoPrestacion.nombre}}</div>
                         </div>
-                        <div *ngIf="mostrarHeaderCompleto" class="row">
-                            <div class="col-12">
-                                <label>Equipo de Salud</label>
-                                <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Equipo de Salud
-                                    no
-                                    asignado</span>
-                                <ng-container *ngIf="agenda.profesionales">
-                                    <div *ngFor="let profesional of agenda.profesionales">{{profesional |
+                    </div>
+                    <div *ngIf="mostrarHeaderCompleto" class="row">
+                        <div class="col-12">
+                            <label>Equipo de Salud</label>
+                            <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Equipo de Salud
+                                no
+                                asignado</span>
+                            <ng-container *ngIf="agenda.profesionales">
+                                <div *ngFor="let profesional of agenda.profesionales">{{profesional |
                                         profesional}}</div>
-                                </ng-container>
-                            </div>
-                        </div>
-                        <div *ngIf="mostrarHeaderCompleto" class="row">
-                            <div class="col-12">
-                                <label>Espacio físico</label>
-                                <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
-                                <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no
-                                    asignado</span>
-                            </div>
+                            </ng-container>
                         </div>
                     </div>
-                    <!--Nota-->
-                    <div *ngIf="agenda && agenda.nota" class="alert alert-default mb-0">
-                        <i class="mdi mdi-comment mr-3"></i>{{ agenda.nota }}
+                    <div *ngIf="mostrarHeaderCompleto" class="row">
+                        <div class="col-12">
+                            <label>Espacio físico</label>
+                            <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
+                            <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no
+                                asignado</span>
+                        </div>
                     </div>
-                </fieldset>
+                </div>
+                <!--Nota-->
+                <div *ngIf="agenda && agenda.nota" class="alert alert-default mb-0">
+                    <i class="mdi mdi-comment mr-3"></i>{{ agenda.nota }}
+                </div>
             </header>
             <div class="row">
                 <div class="col">
@@ -492,7 +485,7 @@
                                 </td>
                                 <td (click)="seleccionarTurno(agenda.sobreturnos[i], -1)">
                                     <strong *ngIf="sobreturno">{{ sobreturno.horaInicio | date: 'HH:mm' }}</strong>
-                                </td> 
+                                </td>
                                 <td (click)="seleccionarTurno(agenda.sobreturnos[i], -1)">
                                     <span *ngIf="sobreturno.paciente && sobreturno.paciente.id">{{ sobreturno.paciente |
                                         paciente }} </span>
@@ -533,17 +526,15 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <plex-button *ngIf='!agenda.dinamica' type="primary" label="Agregar Sobreturno" (click)="agregarSobreturno()">
+                    <plex-button *ngIf='!agenda.dinamica' type="primary" label="Agregar Sobreturno"
+                                 (click)="agregarSobreturno()">
                     </plex-button>
-                    <plex-button *ngIf='agenda.dinamica && agenda.cupo' type="primary" label="Agregar Paciente" (click)="agregarPaciente()">
+                    <plex-button *ngIf='agenda.dinamica && agenda.cupo' type="primary" label="Agregar Paciente"
+                                 (click)="agregarPaciente()">
                     </plex-button>
                 </div>
 
             </div>
         </div>
     </plex-layout-sidebar>
-
-    <plex-layout-footer>
-        <plex-button position="right" type="primary" label="Volver" (click)="volver()"></plex-button>
-    </plex-layout-footer>
 </plex-layout>

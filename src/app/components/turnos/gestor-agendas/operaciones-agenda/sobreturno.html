@@ -1,9 +1,12 @@
 <plex-layout main="8">
     <plex-layout-main>
         <form #form="ngForm">
-            <header>
-                <div class="page-title">Agregar Sobreturno</div>
-            </header>
+            <plex-title titulo="Agregar Sobreturno">
+                <plex-button type="danger" label="Cancelar" (click)="volver()"></plex-button>
+                <plex-button *ngIf="paciente" [validateForm]="form" label="Guardar" type="success"
+                             (click)="guardar($event)" class="ml-2">
+                </plex-button>
+            </plex-title>
             <span *ngIf="showSobreturno && paciente">
                 <div *ngIf="paciente?.id" class="row">
                     <div class="col">
@@ -79,40 +82,33 @@
         </form>
     </plex-layout-main>
     <plex-layout-sidebar>
-        <header>
-            <div class="page-title">Agenda seleccionada</div>
-        </header>
-        <!--Agenda seleccionada-->
-        <div class="text-center" *ngIf="agenda">
+        <plex-title titulo="Agenda seleccionada"></plex-title>
 
-            <h4>
+        <!--Agenda seleccionada-->
+        <div *ngIf="agenda">
+            <br>
+
+            <h5>
                 <span class="mdi mdi-calendar-today"> Hora Agenda </span>
-            </h4>
-            <span>{{ agenda.horaInicio | date: 'EEE d MMM' }} | Inicio:
+            </h5>
+            <div>{{ agenda.horaInicio | date: 'EEE d MMM' }} | Inicio:
                 {{ agenda.horaInicio | date: 'HH:mm' }} - Fin:
                 {{ agenda.horaFin | date: 'HH:mm' }}
-            </span>
-            <br>
-            <h4>
+            </div>
+            <hr>
+            <h5>
                 <span class="mdi mdi-hospital">Prestación </span>
-            </h4>
-            <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
+            </h5>
+            <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones" class="text-capitalize">
                 {{ tipoPrestacion.nombre }}
             </div>
-            <br>
-            <h4>
+            <hr>
+            <h5>
                 <span class="mdi mdi-account">Equipo de Salud </span>
-            </h4>
+            </h5>
             <div *ngFor="let profesional of agenda.profesionales let i = index">
                 {{profesional | profesional}}
             </div>
         </div>
     </plex-layout-sidebar>
-    <plex-layout-footer>
-        <plex-button position="left" type="danger" label="Cancelar" (click)="volver()">
-        </plex-button>
-        <plex-button position="right" *ngIf="paciente" [validateForm]="form" label="Guardar" type="success"
-                     (click)="guardar($event)">
-        </plex-button>
-    </plex-layout-footer>
 </plex-layout>

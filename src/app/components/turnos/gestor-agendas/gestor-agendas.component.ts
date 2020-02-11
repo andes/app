@@ -70,6 +70,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public prestacionesPermisos = [];
     public puedeCrearAgenda: Boolean;
     private scrollEnd = false;
+    public main = 12;
 
     // ultima request de profesionales que se almacena con el subscribe
     private lastRequestProf: Subscription;
@@ -478,6 +479,9 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     }
 
     verAgenda(agenda, multiple, e) {
+
+        this.main = 8;
+
         // Si se presionó el boton suspender, no se muestran otras agendas hasta que se confirme o cancele la acción.
         if (!this.showSuspenderAgenda) {
             this.showBotonesAgenda = false;

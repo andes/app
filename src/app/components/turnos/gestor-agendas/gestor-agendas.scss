@@ -12,42 +12,53 @@
     }
 }
 
-.table-lista-agendas {
-    
-    height:100%; 
-    tbody {
-        display: block;
-        height: 100%;
-        overflow: scroll;
-        td:not(:first) {
-            min-width: 200px !important;
+plex-layout-main {
+
+
+    .list-container {
+        height: calc(100% - 140px);
+    }
+    .table-lista-agendas {
+        
+        height:100%; 
+        tbody {
+            display: block;
+            height: 100%;
+            overflow: scroll;
+            td:not(:first) {
+                min-width: 200px !important;
+            }
         }
-    }
-    thead,
-    tbody tr {
-        display: table;
-        width: 100%;
-        table-layout: fixed;
-        &:last-child{
-            margin-bottom: 2rem;
+        thead,
+        tbody tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+            &:last-child{
+                margin-bottom: 2rem;
+            }
         }
-    }
-    .small {
-        width: 5%;
-    }
-    .medium {
-        width: 20%;
-    }
-    span.badge,
-    span.badge-default {
-        font-size: 0.6rem;
+        .small {
+            width: 5%;
+        }
+        .medium {
+            width: 20%;
+        }
+        span.badge,
+        span.badge-default {
+            font-size: 0.6rem;
+        }
     }
 }
 
 ::ng-deep {
     // Se quita scroll del padre del contenedor con scroll infinito
-    body > app > plex-app > div > gestor-agendas > form > section > div > div.col.h-100 > plex-box > div > div {
+    gestor-agendas plex-layout-main .plex-box-content {
         overflow-y: hidden !important;
         padding-right: 0 !important;
+    }
+    planificar-agenda plex-layout-main .plex-box-content {
+        overflow-y: initial !important;
+        padding-right: 10px !important;
     }
 }

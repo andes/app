@@ -23,7 +23,6 @@ import { Subscription } from 'rxjs';
 export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     hideGuardar: boolean;
     subscriptionID: any;
-    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     private _editarAgenda: any;
     @Input('editaAgenda')
@@ -53,6 +52,9 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     showBloque = true;
     cupoMaximo: Number;
     setCupo = false;
+
+    main = 6;
+
     // ultima request de profesionales que se almacena con el subscribe
     private lastRequest: Subscription;
 
@@ -341,6 +343,8 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         this.noNominalizada = false;
         this.dinamica = false;
         this.modelo.nominalizada = true;
+
+        this.main = 6;
 
         if (this.modelo.tipoPrestaciones && this.modelo.tipoPrestaciones.length === 1) {
             if (this.modelo.tipoPrestaciones[0].noNominalizada) {
@@ -660,7 +664,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 }
 
                 if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) > bloque.cantidadTurnos) {
-                    alerta = 'Bloque ' + (bloque.indice + 1) + ': La cantidad de turnos asignados es mayor a la cantidad disponible';
+                    alerta = 'Bloque ' + (bloque.indice + 1) + ': La cantidad de turnos es mayor a la cantidad disponible';
                     this.alertas.push(alerta);
                 }
 
@@ -747,7 +751,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             indice++;
         } while (bloqueConPrestActiva && indice < this.modelo.bloques.length);
 
-        if ($event.formValid && this.verificarNoNominalizada() &&
+        if (this.verificarNoNominalizada() &&
             bloqueConPrestActiva &&
             arrayPrestaciones.length === this.modelo.tipoPrestaciones.length) {
             let espOperation: Observable<IAgenda>;

@@ -1,54 +1,45 @@
-<form *ngIf="showCarpetas" class="plex-layout">
-    <div id="printpage">
-        <section>
-            <plex-box>
-                <header>
-                    <div class="row">
-                        <div class="col-4">
-                            <plex-text name="titulo" [(ngModel)]="titulo" placeholder="Título">
-                            </plex-text>
-                        </div>
-                        <div class="col-4">{{agendasSeleccionadas[0].horaInicio | fecha}}</div>
-                    </div>
-                </header>
-                <table *ngFor="let agenda of agendasSeleccionadas">
-                    <thead>
-                        <th colspan="14">
-                            <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Equipo de Salud no asignado</span>
-                            <span *ngIf="agenda.profesionales?.length > 0">* {{ agenda.profesionales | enumerar:['apellido','nombre'] }}</span>
-                        </th>
-                    </thead>
-                    <tbody>
-                        <ng-container *ngFor="let bloque of agenda.bloques">
-                            <tr *ngFor="let turno of bloque.turnos; let i=index">
-                                <td *ngIf="turno.estado === 'asignado' && turno.paciente?.carpetaEfectores?.length > 0">
-                                    <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">
-                                        <span *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta !== '' && !carpeta.nroCarpeta.includes('PDR')">
-                                            {{carpeta.nroCarpeta}} - {{ turno.paciente.apellido + ", " + turno.paciente.nombre }}
-                                        </span>
-                                    </span>
-                                </td>
-                            </tr>
-                        </ng-container>
-                    </tbody>
-                    <br>
-                </table>
-            </plex-box>
-        </section>
-    </div>
-
-
-    <!--Footer-->
-    <footer>
-        <div class="row">
-            <div class="col text-left">
+<plex-layout *ngIf="showCarpetas">
+    <plex-layout-main>
+        <div id="printpage">
+            <plex-title titulo="Carpetas de Pacientes">
                 <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
                 <plex-button type="success" label="Imprimir" (click)="imprimir()"></plex-button>
-                <!-- <plex-button type="primary" icon="mdi mdi-arrow-left" label="Volver al gestor" (click)="cancelar()"></plex-button> -->
-            </div>
-
-            <div class="col-1 text-right">
-            </div>
+            </plex-title>
+            <header>
+                <div class="row">
+                    <div class="col-4">
+                        <plex-text name="titulo" [(ngModel)]="titulo" placeholder="Título">
+                        </plex-text>
+                    </div>
+                    <div class="col-4">{{agendasSeleccionadas[0].horaInicio | fecha}}</div>
+                </div>
+            </header>
+            <table *ngFor="let agenda of agendasSeleccionadas">
+                <thead>
+                    <th colspan="14">
+                        <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Equipo de Salud no
+                            asignado</span>
+                        <span *ngIf="agenda.profesionales?.length > 0">*
+                            {{ agenda.profesionales | enumerar:['apellido','nombre'] }}</span>
+                    </th>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let bloque of agenda.bloques">
+                        <tr *ngFor="let turno of bloque.turnos; let i=index">
+                            <td *ngIf="turno.estado === 'asignado' && turno.paciente?.carpetaEfectores?.length > 0">
+                                <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">
+                                    <span
+                                          *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta !== '' && !carpeta.nroCarpeta.includes('PDR')">
+                                        {{carpeta.nroCarpeta}} -
+                                        {{ turno.paciente.apellido + ", " + turno.paciente.nombre }}
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+                <br>
+            </table>
         </div>
-    </footer>
-</form>
+    </plex-layout-main>
+</plex-layout>

@@ -1,204 +1,213 @@
-<form *ngIf="showListarTurnos" class="plex-layout">
-    <div *ngIf="autorizado" id="printpage">
-        <section>
-            <div class="row">
-                <div class="col">
-                    <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
-                    <plex-button type="success" label="Imprimir" (click)="imprimir()"></plex-button>
-                </div>
-            </div>
-            <span *ngFor="let agenda of agendas">
-                <plex-box>
-                    <!--Header de listado de Turnos-->
-                    <header>
-                        <div>
-                            <div class="row">
-                                <div class="col">
-                                    <label>Agenda </label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio
+<plex-layout *ngIf="showListarTurnos">
+    <plex-layout-main *ngIf="autorizado" id="printpage">
+        <plex-title titulo="Listado de Turnos">
+            <plex-button type="danger" label="Cancelar" (click)="cancelar()" class="mr-2"></plex-button>
+            <plex-button type="success" label="Imprimir" (click)="imprimir()"></plex-button>
+        </plex-title>
+        <span *ngFor="let agenda of agendas">
+            <plex-box>
+                <!--Header de listado de Turnos-->
+                <header>
+                    <div>
+                        <div class="row">
+                            <div class="col">
+                                <label>Agenda </label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio
                                     | fecha}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin |
                                     date: 'HH:mm'}} hs
-                                </div>
-                                <div class="col">
-                                    <label>Tipos de prestación</label>
-                                    <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
-                                </div>
-
-                                <div class="col">
-                                    <label>Equipo de Salud</label>
-                                    <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Equipo de Salud no
-                                        asignado</span>
-                                    <ng-container *ngIf="agenda.profesionales">
-                                        <div>{{agenda.profesionales | enumerar:['apellido','nombre']}}</div>
-                                    </ng-container>
+                            </div>
+                            <div class="col">
+                                <label>Tipos de prestación</label>
+                                <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}
                                 </div>
                             </div>
-                        </div>
-                    </header>
-                    <!--Listado de turnos-->
-                    <!--Turnos-->
-                    <table *ngFor="let bloque of agenda.bloques | sortBloques" class="table-bordered">
-                        <thead>
-                            <tr>
-                                <th colspan="14">&raquo; Bloque
-                                    <span *ngIf="bloque.descripcion"> {{ bloque.descripcion }} </span> de {{
-                                    bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin
-                                    | date: 'HH:mm'}} hs
-                                </th>
-                            </tr>
-                            <tr>
-                                <th>Hora Turno</th>
-                                <th>DNI | Nro. Carpeta</th>
-                                <th >Obra Social</th>
-                                <th>Apellidos y Nombres</th>
-                                <th>Fecha Nac</th>
-                                <th>Sexo</th>
-                                <th>Diagnóstico</th>
-                                <th>Primera Vez</th>
-                                <th>Ulterior</th>
-                                <th>C2</th>
-                                <!--<th>Resolución en el efector</th>
-                            <th>Otros</th>-->
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let turno of bloque.turnos; let i=index">
-                                <td>
-                                    <small>
-                                        <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
-                                    </small>
-                                </td>
-                                <!--documento, carpetaPaciente-->
-                                <td>
-                                    <span *ngIf="turno?.paciente?.id">
-                                        <small>
-                                            <span *ngIf="turno.paciente.documento !== ''">{{ turno.paciente.documento |
-                                                number }}</span>
-                                            <span *ngIf="turno.paciente.documento === ''">Sin documento (temporal)</span>
-                                        </small>
-                                    </span>
-                                    <span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0">
-                                        <small> | </small>
-                                        <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">
-                                            <small *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null">{{carpeta.nroCarpeta}}
-                                            </small>
-                                        </span>
-                                        <small *ngIf="turno.tipoTurno === 'profesional'" class="text-danger">(autocitado)</small>
-                                    </span>
-                                </td>
-                                <!-- OBRA SOCIAL -->
-                                <td><span *ngIf="turno?.paciente?.obraSocial?.financiador"><small>{{turno.paciente.obraSocial.financiador}}</small></span>
-                                    <br><span *ngIf="turno?.paciente?.obraSocial?.numeroAfiliado">{{turno.paciente.obraSocial.numeroAfiliado}}</span></td>
-                                <td>
-                                    <small *ngIf="turno?.paciente?.id">{{ turno.paciente | paciente }}</small>
-                                    <small [ngClass]="{'text-+danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno
-                                        Doble</small>
-                                    <small [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</small>
-                                </td>
-                                <td>
-                                    <small
-                                           *ngIf="turno?.paciente?.id && turno?.paciente?.fechaNacimiento">{{ turno.paciente.fechaNacimiento | fecha:'utc' }}</small>
-                                </td>
-                                <td>
-                                    <small *ngIf="turno?.paciente?.id && turno?.paciente?.sexo">{{ turno.paciente |
-                                        sexo }}</small>
-                                </td>
-                                <td style="width:350px"></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!--Listado de sobreturnos-->
-                    <!--Turnos-->
-                    <table *ngIf="agenda.sobreturnos.length > 0" class="table-bordered">
-                        <thead>
-                            <tr>
-                                <th colspan="14">&raquo; Sobreturnos
-                                </th>
-                            </tr>
-                            <tr>
-                                <th>Hora Turno</th>
-                                <th>DNI | Nro. Carpeta</th>
-                                <th >Obra Social</th>
-                                <th>Apellidos y Nombres</th>
-                                <th>Fecha Nacimiento</th>
-                                <th>Sexo</th>
-                                <th>Diagnóstico</th>
-                                <th>Primera Vez</th>
-                                <th>Ulterior</th>
-                                <th>C2</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let sobreturno of agenda.sobreturnos; let i=index">
-                                <td>
-                                    <small>
-                                        <strong *ngIf="sobreturno">{{ sobreturno.horaInicio | date: 'HH:mm' }}</strong>
-                                    </small>
-                                </td>
-                                <!--documento, carpetaPaciente-->
-                                <td>
-                                    <span *ngIf="sobreturno?.paciente?.id">
-                                        <small>
-                                            <span *ngIf="sobreturno.paciente.documento !== ''">{{
-                                                sobreturno.paciente.documento }}</span>
-                                            <span *ngIf="sobreturno.paciente.documento === ''">Sin documento (temporal)</span>
-                                        </small>
-                                    </span>
-                                    <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.carpetaEfectores?.length > 0">
-                                        <small> | </small>
-                                        <span *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores">
-                                            <small *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null">{{carpeta.nroCarpeta}}
-                                            </small>
-                                        </span>
-                                        <small *ngIf="sobreturno.tipoTurno === 'profesional'" class="text-danger">(autocitado)</small>
-                                    </span>
-                                </td>
-                                <!-- OBRA SOCIAL -->
-                                <td><small>{{sobreturno?.paciente?.obraSocial?.financiador}}</small>  </td>
 
-                                <td>
-                                    <small *ngIf="sobreturno?.paciente?.id">{{ sobreturno.paciente | paciente }}</small>
-                                    <small [ngClass]="{'text-danger': sobreturno.estado === 'suspendido'}" *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</small>
-                                </td>
-                                <td>
-                                    <small
-                                           *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.fechaNacimiento">{{ sobreturno.paciente.fechaNacimiento | fecha:'utc' }}</small>
-                                </td>
-                                <td>
-                                    <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.sexo">{{
-                                        sobreturno.paciente | sexo }}</small>
-                                </td>
-                                <td style="width:350px"></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <br>
-                    <div class="row">
-                        <div class="col-8">
-
-                        </div>
-                        <div class="col-4">
-                            <hr>
-                            <label>Firma Equipo de Salud</label>
+                            <div class="col">
+                                <label>Equipo de Salud</label>
+                                <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Equipo de Salud no
+                                    asignado</span>
+                                <ng-container *ngIf="agenda.profesionales">
+                                    <div>{{agenda.profesionales | enumerar:['apellido','nombre']}}</div>
+                                </ng-container>
+                            </div>
                         </div>
                     </div>
-                    <hr>
-                    <!-- Hardcodear está mal, sin embargo el style del css -->
-                    <div style="page-break-before:always"></div>
-                </plex-box>
-            </span>
+                </header>
+                <!--Listado de turnos-->
+                <!--Turnos-->
+                <table *ngFor="let bloque of agenda.bloques | sortBloques" class="table-bordered">
+                    <thead>
+                        <tr>
+                            <th colspan="14">&raquo; Bloque
+                                <span *ngIf="bloque.descripcion"> {{ bloque.descripcion }} </span> de {{
+                                    bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin
+                                    | date: 'HH:mm'}} hs
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Hora Turno</th>
+                            <th>DNI | Nro. Carpeta</th>
+                            <th>Obra Social</th>
+                            <th>Apellidos y Nombres</th>
+                            <th>Fecha Nac</th>
+                            <th>Sexo</th>
+                            <th>Diagnóstico</th>
+                            <th>Primera Vez</th>
+                            <th>Ulterior</th>
+                            <th>C2</th>
+                            <!--<th>Resolución en el efector</th>
+                            <th>Otros</th>-->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let turno of bloque.turnos; let i=index">
+                            <td>
+                                <small>
+                                    <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
+                                </small>
+                            </td>
+                            <!--documento, carpetaPaciente-->
+                            <td>
+                                <span *ngIf="turno?.paciente?.id">
+                                    <small>
+                                        <span *ngIf="turno.paciente.documento !== ''">{{ turno.paciente.documento |
+                                                number }}</span>
+                                        <span *ngIf="turno.paciente.documento === ''">Sin documento (temporal)</span>
+                                    </small>
+                                </span>
+                                <span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0">
+                                    <small> | </small>
+                                    <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">
+                                        <small
+                                               *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null">{{carpeta.nroCarpeta}}
+                                        </small>
+                                    </span>
+                                    <small *ngIf="turno.tipoTurno === 'profesional'"
+                                           class="text-danger">(autocitado)</small>
+                                </span>
+                            </td>
+                            <!-- OBRA SOCIAL -->
+                            <td><span
+                                      *ngIf="turno?.paciente?.obraSocial?.financiador"><small>{{turno.paciente.obraSocial.financiador}}</small></span>
+                                <br><span
+                                      *ngIf="turno?.paciente?.obraSocial?.numeroAfiliado">{{turno.paciente.obraSocial.numeroAfiliado}}</span>
+                            </td>
+                            <td>
+                                <small *ngIf="turno?.paciente?.id">{{ turno.paciente | paciente }}</small>
+                                <small [ngClass]="{'text-+danger': turno.estado === 'turnoDoble'}"
+                                       *ngIf="turno && turno.estado === 'turnoDoble'">Turno
+                                    Doble</small>
+                                <small [ngClass]="{'text-danger': turno.estado === 'suspendido'}"
+                                       *ngIf="turno && turno.estado === 'suspendido'">Suspendido</small>
+                            </td>
+                            <td>
+                                <small
+                                       *ngIf="turno?.paciente?.id && turno?.paciente?.fechaNacimiento">{{ turno.paciente.fechaNacimiento | fecha:'utc' }}</small>
+                            </td>
+                            <td>
+                                <small *ngIf="turno?.paciente?.id && turno?.paciente?.sexo">{{ turno.paciente |
+                                        sexo }}</small>
+                            </td>
+                            <td style="width:350px"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!--Listado de sobreturnos-->
+                <!--Turnos-->
+                <table *ngIf="agenda.sobreturnos.length > 0" class="table-bordered">
+                    <thead>
+                        <tr>
+                            <th colspan="14">&raquo; Sobreturnos
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Hora Turno</th>
+                            <th>DNI | Nro. Carpeta</th>
+                            <th>Obra Social</th>
+                            <th>Apellidos y Nombres</th>
+                            <th>Fecha Nacimiento</th>
+                            <th>Sexo</th>
+                            <th>Diagnóstico</th>
+                            <th>Primera Vez</th>
+                            <th>Ulterior</th>
+                            <th>C2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let sobreturno of agenda.sobreturnos; let i=index">
+                            <td>
+                                <small>
+                                    <strong *ngIf="sobreturno">{{ sobreturno.horaInicio | date: 'HH:mm' }}</strong>
+                                </small>
+                            </td>
+                            <!--documento, carpetaPaciente-->
+                            <td>
+                                <span *ngIf="sobreturno?.paciente?.id">
+                                    <small>
+                                        <span *ngIf="sobreturno.paciente.documento !== ''">{{
+                                                sobreturno.paciente.documento }}</span>
+                                        <span *ngIf="sobreturno.paciente.documento === ''">Sin documento
+                                            (temporal)</span>
+                                    </small>
+                                </span>
+                                <span
+                                      *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.carpetaEfectores?.length > 0">
+                                    <small> | </small>
+                                    <span *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores">
+                                        <small
+                                               *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null">{{carpeta.nroCarpeta}}
+                                        </small>
+                                    </span>
+                                    <small *ngIf="sobreturno.tipoTurno === 'profesional'"
+                                           class="text-danger">(autocitado)</small>
+                                </span>
+                            </td>
+                            <!-- OBRA SOCIAL -->
+                            <td><small>{{sobreturno?.paciente?.obraSocial?.financiador}}</small> </td>
 
-        </section>
-    </div>
+                            <td>
+                                <small *ngIf="sobreturno?.paciente?.id">{{ sobreturno.paciente | paciente }}</small>
+                                <small [ngClass]="{'text-danger': sobreturno.estado === 'suspendido'}"
+                                       *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</small>
+                            </td>
+                            <td>
+                                <small
+                                       *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.fechaNacimiento">{{ sobreturno.paciente.fechaNacimiento | fecha:'utc' }}</small>
+                            </td>
+                            <td>
+                                <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.sexo">{{
+                                        sobreturno.paciente | sexo }}</small>
+                            </td>
+                            <td style="width:350px"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <div class="row">
+                    <div class="col-8">
 
-    <div class="row" *ngIf="!autorizado">
-        <div class="col">
-            No tiene permisos para ejecutar esta acción
+                    </div>
+                    <div class="col-4">
+                        <hr>
+                        <label>Firma Equipo de Salud</label>
+                    </div>
+                </div>
+                <hr>
+                <!-- Hardcodear está mal, sin embargo el style del css -->
+                <div style="page-break-before:always"></div>
+            </plex-box>
+        </span>
+
+        <div class="row" *ngIf="!autorizado">
+            <div class="col">
+                No tiene permisos para ejecutar esta acción
+            </div>
         </div>
-    </div>
-</form>
+    </plex-layout-main>
+
+</plex-layout>
