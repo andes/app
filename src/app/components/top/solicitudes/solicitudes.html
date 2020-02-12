@@ -142,7 +142,10 @@
                                             <td *ngIf="!prestacion.solicitud.turno" class="text-center estado"
                                                 (click)="seleccionar(prestacion)">
                                                 <span class="badge badge-info"
-                                                      *ngIf="prestacion.estados[prestacion.estados.length-1].tipo !== 'rechazada' && prestacion.estados[prestacion.estados.length-1].tipo !== 'auditoria'">{{prestacion.estados[prestacion.estados.length-1].tipo}}</span>
+                                                      *ngIf="prestacion.estados[prestacion.estados.length-1].tipo !== 'validada' && prestacion.estados[prestacion.estados.length-1].tipo !== 'rechazada' && prestacion.estados[prestacion.estados.length-1].tipo !== 'auditoria'">{{prestacion.estados[prestacion.estados.length-1].tipo}}</span>
+                                                <span class="badge badge-success"
+                                                      *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'validada'">Registro
+                                                    en HUDS</span>
                                                 <span class="badge badge-info"
                                                       *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'rechazada'">CONTRARREFERIDA</span>
                                                 <span class="badge badge-warning"
@@ -249,13 +252,13 @@
                                             <td class="text-center">
                                                 <ng-container
                                                               *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'rechazada'">
-                                                    <span class="badge badge-info">CONTRARREFERIDA</span>
+                                                    <span class="badge badge-danger">CONTRARREFERIDA</span>
                                                 </ng-container>
                                                 <ng-container
                                                               *ngIf="prestacion.estados[prestacion.estados.length-1].tipo !== 'rechazada'">
                                                     <span *ngIf="!prestacion.solicitud.turno">
                                                         <span
-                                                              class="badge badge-danger">{{prestacion.estados[prestacion.estados.length-1].tipo}}</span>
+                                                              class="badge badge-info">{{prestacion.estados[prestacion.estados.length-1].tipo}}</span>
                                                     </span>
                                                     <span *ngIf="visualizarSalida[i]">
                                                         <span class="badge badge-success">Turno Dado</span>

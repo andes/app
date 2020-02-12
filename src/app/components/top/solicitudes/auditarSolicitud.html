@@ -112,10 +112,14 @@
     <br />
 
     <div class="row" *ngIf="!showConfirmar && !showPrioridad">
-        <div class="col-12" justify="center">
-            <plex-button type="info" size="sm" (click)="rechazar()">Responder</plex-button>
-            <plex-button type="warning" size="sm" (click)="asignar()">Asignar</plex-button>
-            <plex-button type="success" size="sm" (click)="aceptar()">Aceptar</plex-button>
+        <div class="col-4">
+            <plex-button type="info btn-block" (click)="rechazar()">Responder</plex-button>
+        </div>
+        <div class="col-4">
+            <plex-button type="warning btn-block" (click)="asignar()">Asignar</plex-button>
+        </div>
+        <div class="col-4">
+            <plex-button type="success btn-block" (click)="aceptar()">Aceptar</plex-button>
         </div>
     </div>
     <!--  BOX MOTIVO Y CONFIRMAR RESPUESTA -->
