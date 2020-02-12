@@ -71,7 +71,7 @@ export class EncabezadoReportesComponent implements OnInit {
         this.parametros = {
             horaInicio: this.horaInicio,
             horaFin: this.horaFin,
-            organizacion: this.auth.organizacion._id
+            organizacion: this.auth.organizacion.id
         };
         this.opciones = [{
             id: 1,
@@ -118,7 +118,7 @@ export class EncabezadoReportesComponent implements OnInit {
         }
         if (tipo === 'organizacion') {
             if (value.value !== null) {
-                this.parametros['organizacion'] = this.auth.organizacion._id;
+                this.parametros['organizacion'] = this.auth.organizacion.id;
             } else {
                 this.parametros['organizacion'] = '';
             }

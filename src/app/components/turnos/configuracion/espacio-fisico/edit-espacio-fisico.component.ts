@@ -61,14 +61,14 @@ export class EditEspacioFisicoComponent implements OnInit {
     }
 
     loadEdificios(event) {
-        this.organizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
+        this.organizacionService.getById(this.auth.organizacion.id).subscribe(respuesta => {
             event.callback(respuesta.edificio);
         });
     }
 
     loadSectores(event) {
         // let sectores = [];
-        this.espacioFisicoService.get({ organizacion: this.auth.organizacion._id }).subscribe(respuesta => {
+        this.espacioFisicoService.get({ organizacion: this.auth.organizacion.id }).subscribe(respuesta => {
             let sectores = respuesta.map((ef) => {
                 return (typeof ef.sector !== 'undefined' && ef.sector.nombre !== '-' ? ef.sector : []);
             }).filter((elem, index, self) => {
@@ -81,7 +81,7 @@ export class EditEspacioFisicoComponent implements OnInit {
 
     loadServicios(event) {
         let servicios = [];
-        this.espacioFisicoService.get({ organizacion: this.auth.organizacion._id }).subscribe(respuesta => {
+        this.espacioFisicoService.get({ organizacion: this.auth.organizacion.id }).subscribe(respuesta => {
             servicios = respuesta.map((ef) => {
                 return (typeof ef.servicio !== 'undefined' ? ef.servicio : []);
             });

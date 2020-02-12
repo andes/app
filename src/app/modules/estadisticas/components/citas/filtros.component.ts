@@ -93,7 +93,7 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
 
     ngAfterViewInit() {
         if (!this.verProfesionales) {
-            this.servicioProfesional.get({ id: this.auth.profesional.id }).subscribe(resultado => {
+            this.servicioProfesional.get({ id: this.auth.profesional }).subscribe(resultado => {
                 this.seleccion.profesional = resultado;
             });
         }

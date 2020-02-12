@@ -74,7 +74,7 @@ export class TurnosPrestacionesComponent implements OnInit {
         this.parametros = {
             fechaDesde: this.fechaDesde,
             fechaHasta: this.fechaHasta,
-            organizacion: this.auth.organizacion._id
+            organizacion: this.auth.organizacion.id
         };
         this.plex.updateTitle([{
             route: '/',
@@ -99,7 +99,7 @@ export class TurnosPrestacionesComponent implements OnInit {
         const params = {
             fechaDesde: this.fechaDesde,
             fechaHasta: this.fechaHasta,
-            organizacion: this.auth.organizacion._id,
+            organizacion: this.auth.organizacion.id,
             idPrestacion: '',
             idProfesional: '',
             financiadores: '',
@@ -140,13 +140,13 @@ export class TurnosPrestacionesComponent implements OnInit {
             if (tipo === 'fechaDesde') {
                 if (fechaDesde.isValid()) {
                     this.parametros['fechaDesde'] = fechaDesde.isValid() ? fechaDesde.toDate() : moment().format();
-                    this.parametros['organizacion'] = this.auth.organizacion._id;
+                    this.parametros['organizacion'] = this.auth.organizacion.id;
                 }
             }
             if (tipo === 'fechaHasta') {
                 if (fechaHasta.isValid()) {
                     this.parametros['fechaHasta'] = fechaHasta.isValid() ? fechaHasta.toDate() : moment().format();
-                    this.parametros['organizacion'] = this.auth.organizacion._id;
+                    this.parametros['organizacion'] = this.auth.organizacion.id;
                 }
             }
             if (tipo === 'prestaciones') {
@@ -252,7 +252,7 @@ export class TurnosPrestacionesComponent implements OnInit {
     }
 
     mostrarPrestacion(datos) {
-        this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, datos.paciente, 'auditoria', this.auth.profesional ? this.auth.profesional.id : null, datos.turno ? datos.turno.id : null, datos.idPrestacion ? datos.idPrestacion : null).subscribe(hudsToken => {
+        this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, datos.paciente, 'auditoria', this.auth.profesional ? this.auth.profesional : null, datos.turno ? datos.turno.id : null, datos.idPrestacion ? datos.idPrestacion : null).subscribe(hudsToken => {
             // se obtiene token y loguea el acceso a la huds del paciente
             window.sessionStorage.setItem('huds-token', hudsToken.token);
             this.showPrestacion = true;

@@ -502,7 +502,7 @@ export class PrestacionValidacionComponent implements OnInit {
                 fechaDesde: new Date(),
                 organizacion: this.auth.organizacion.id,
                 estados: ['disponible', 'publicada'],
-                profesionales: [this.auth.profesional.id]
+                profesionales: [this.auth.profesional]
             }).subscribe(agendas => {
                 // Buscar agendas con bloques donde "restantesProfesional" > 0
                 agendas = agendas.filter(a => a.bloques.find(b => b.restantesProfesional > 0));

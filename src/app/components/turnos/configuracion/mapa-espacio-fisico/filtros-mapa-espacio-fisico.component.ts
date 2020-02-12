@@ -83,13 +83,9 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
     }
 
     loadEdificios(event) {
-        // this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
-        //     event.callback(respuesta.edificio);
-        // });
         if (event.query) {
             let query = {
-                edificio: event.query,
-                // organizacion: this.auth.organizacion._id
+                edificio: event.query
             };
             this.servicioEspacioFisico.get(query).subscribe(listaEdificios => {
                 event.callback(listaEdificios);
@@ -100,15 +96,11 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
     }
 
     loadEspacios(event) {
-        // this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
-        // this.servicioEspacioFisico.get({}).subscribe(event.callback);
-
         let listaEspaciosFisicos = [];
         if (event.query) {
             let query = {
                 nombre: event.query,
                 activo: true
-                // organizacion: this.auth.organizacion._id
             };
             this.servicioEspacioFisico.get(query).subscribe(respuesta => {
                 if (this.agenda.espacioFisico) {

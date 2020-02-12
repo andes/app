@@ -168,7 +168,7 @@ export class PanelAgendaComponent implements OnInit {
         let query: any = {
             limit: 20,
             activo: true,
-            organizacion: this.auth.organizacion._id
+            organizacion: this.auth.organizacion.id
         };
 
         if (agenda.espacioFisico) {

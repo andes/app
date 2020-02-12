@@ -97,25 +97,22 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         if (!this.auth.profesional) {
             this.redirect('inicio');
         } else {
-            if (!this.auth.profesional.id) {
-                this.redirect('inicio');
-            } else {
-                this.plex.updateTitle([{
-                    route: '/',
-                    name: 'ANDES'
-                }, {
-                    name: 'RUP'
-                }]);
 
-                this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
-                    if (data && data.length <= 0) {
-                        this.redirect('inicio');
-                    }
-                    this.tiposPrestacion = data;
-                    localStorage.removeItem('idAgenda');
-                    this.actualizar();
-                });
-            }
+            this.plex.updateTitle([{
+                route: '/',
+                name: 'ANDES'
+            }, {
+                name: 'RUP'
+            }]);
+
+            this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
+                if (data && data.length <= 0) {
+                    this.redirect('inicio');
+                }
+                this.tiposPrestacion = data;
+                localStorage.removeItem('idAgenda');
+                this.actualizar();
+            });
         }
 
         this.ws.connect();
@@ -263,7 +260,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         if (this.filtroAgendas.radio === 1) {
             this.agendas = this.agendas.filter(agenda => {
                 return (agenda.profesionales && agenda.profesionales.find(profesional => {
-                    return (profesional.id === this.auth.profesional.id);
+                    return (profesional.id === this.auth.profesional);
                 }));
             });
         }
@@ -362,7 +359,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     iniciarPrestacion(paciente, snomedConcept, turno) {
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
-                const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional.id, turno.id, snomedConcept._id);
+                const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional, turno.id, snomedConcept._id);
                 const crear = this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno);
                 const res = concat(token, crear);
                 res.subscribe(input => {
@@ -622,7 +619,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Iniciar Prestación?').then(confirmacion => {
             if (confirmacion) {
-                const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional.id, turno, prestacion.id);
+                const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional, turno, prestacion.id);
                 const patch = this.servicioPrestacion.patch(prestacion.id, params);
                 const res = concat(token, patch);
                 res.subscribe(input => {
@@ -718,7 +715,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 window.sessionStorage.setItem('motivoAccesoHuds', motivoAccesoHuds);
             } else {
                 if (this.accesoHudsPaciente) {
-                    this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.accesoHudsPaciente, motivoAccesoHuds, this.auth.profesional.id, this.accesoHudsTurno, this.accesoHudsPrestacion).subscribe(hudsToken => {
+                    this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.accesoHudsPaciente, motivoAccesoHuds, this.auth.profesional, this.accesoHudsTurno, this.accesoHudsPrestacion).subscribe(hudsToken => {
                         // se obtiene token y loguea el acceso a la huds del paciente
                         window.sessionStorage.setItem('huds-token', hudsToken.token);
                         this.routeToParams = [];

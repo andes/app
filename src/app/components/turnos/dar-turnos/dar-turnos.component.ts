@@ -366,7 +366,7 @@ export class DarTurnosComponent implements OnInit {
             params = {
                 rango: true, desde: new Date(), hasta: fechaHasta,
                 idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : ''),
-                organizacion: this.auth.organizacion._id,
+                organizacion: this.auth.organizacion.id,
                 nominalizada: true
             };
             if (this.opciones.profesional && this.autocitado) {
@@ -1223,7 +1223,7 @@ export class DarTurnosComponent implements OnInit {
     */
     desplegarObraSocial() {
         let puco = this.obraSocialPaciente && this.obraSocialPaciente.codigoPuco ? true : false;
-        return (this.auth.organizacion._id === '5a5e3f7e0bd5677324737244' && !puco);
+        return (this.auth.organizacion.id === '5a5e3f7e0bd5677324737244' && !puco);
     }
 
 

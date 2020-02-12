@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { WebSocketService } from '../../../../services/websocket.service';
-import { environment } from '../../../../../environments/environment';
 @Component({
     templateUrl: 'login.html',
     styleUrls: ['login.scss'],
@@ -25,15 +24,13 @@ export class LoginComponent implements OnInit {
     login(event) {
         if (event.formValid) {
             this.loading = true;
-            this.auth.login(this.usuario.toString(), this.password)
-                .subscribe((data) => {
-                    this.plex.updateUserInfo({ usuario: this.auth.usuario });
-                    this.ws.setToken(window.sessionStorage.getItem('jwt'));
-                    this.router.navigate(['/auth/select-organizacion']);
-                }, (err) => {
-                    this.plex.info('danger', 'Usuario o contraseña incorrectos');
-                    this.loading = false;
-                });
+            this.auth.login(this.usuario.toString(), this.password).subscribe(() => {
+                this.ws.setToken(window.sessionStorage.getItem('jwt'));
+                this.router.navigate(['/auth/select-organizacion']);
+            }, () => {
+                this.plex.info('danger', 'Usuario o contraseña incorrectos');
+                this.loading = false;
+            });
         }
     }
 

@@ -32,6 +32,9 @@ export class AppComponent {
     }
 
     private menuList = [];
+
+    public loading = true;
+
     public checkPermissions(): any {
         let accessList = [];
         this.menuList = [];
@@ -117,21 +120,26 @@ export class AppComponent {
         // Configura server. Debería hacerse desde un provider (http://stackoverflow.com/questions/39033835/angularjs2-preload-server-configuration-before-the-application-starts)
         server.setBaseURL(environment.API);
 
-        // Inicializa el menú
-        this.checkPermissions();
-
         // Inicializa la vista
         this.plex.updateTitle('ANDES | Apps de Salud');
 
         // Inicializa el chequeo de conectividad
         this.initStatusCheck();
+
         Object.keys(PROPERTIES).forEach(key => {
             document.documentElement.style.setProperty(`--${key}`, PROPERTIES[key]);
         });
 
-        let token = this.auth.getToken();
+        const token = this.auth.getToken();
         if (token) {
             this.ws.setToken(token);
+            this.auth.session().subscribe(() => {
+                // Inicializa el menú
+                this.checkPermissions();
+                this.loading = false;
+            });
+        } else {
+            this.loading = true;
         }
     }
 

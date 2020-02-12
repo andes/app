@@ -140,8 +140,8 @@ export class ListadoInternacionComponent implements OnInit {
                 this.camasService.getCama(listaFiltrada[listaFiltrada.length - 1]._id).pipe(catchError(() => of(null))).subscribe(cama => {
                     if (cama) {
                         dto = {
-                            fecha: fechaEgreso,
-                            estado: this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible',
+                            fecha: egreso.InformeEgreso.fechaEgreso,
+                            estado: this.internacionService.usaWorkflowCompleto(this.auth.organizacion.id) ? 'desocupada' : 'disponible',
                             unidadOrganizativa: cama.ultimoEstado.unidadOrganizativa ? cama.ultimoEstado.unidadOrganizativa : null,
                             especialidades: cama.ultimoEstado.especialidades ? cama.ultimoEstado.especialidades : null,
                             esCensable: cama.ultimoEstado.esCensable,

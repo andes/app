@@ -130,7 +130,7 @@ export class DesocuparCamaComponent implements OnInit {
 
                 const fechaMovimiento = this.internacionService.combinarFechas(this.fecha, this.hora);
                 if (this.opcionDesocupar === 'movimiento' || this.opcionDesocupar === 'pase') {
-                    let nuevoEstado = this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible';
+                    let nuevoEstado = this.internacionService.usaWorkflowCompleto(this.auth.organizacion.id) ? 'desocupada' : 'disponible';
                     // Primero desocupamos la cama donde esta el paciente actualmente
                     const filtroEstado = this.cama.estados.filter(c => c.fecha < fechaMovimiento && c.idInternacion === this.prestacion.id);
                     const ultimoEstado = filtroEstado[filtroEstado.length - 1];

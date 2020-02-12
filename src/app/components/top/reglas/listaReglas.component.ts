@@ -55,7 +55,7 @@ export class ListaReglasComponent implements OnInit {
 
     ngOnInit() {
         if (this.esParametrizado) {
-            this.organizacionOrigen = this.auth.organizacion;
+            this.organizacionOrigen = this.auth.organizacion as any;
 
             let idPrestacionesPermisoProfesional = this.auth.getPermissions('rup:tipoPrestacion:?');
             this.servicioPrestacion.get({ id: idPrestacionesPermisoProfesional }).subscribe(prestaciones => {
