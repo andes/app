@@ -206,9 +206,9 @@ export class PrestacionValidacionComponent implements OnInit {
                     let registros = this.prestacion.ejecucion.registros;
 
                     if (!this.validada) {
-                        function puederSerC2(registro) {
+                        const puederSerC2 = (registro) => {
                             return (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'situacion');
-                        }
+                        };
 
                         const encolarRequestCIE10 = (registro) => {
                             let parametros = {
