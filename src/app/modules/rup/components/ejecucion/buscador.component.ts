@@ -178,6 +178,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
                 this.results['misFrecuentes']['todos'] = frecuentesProfesional;
                 this.filtrarResultados('misFrecuentes');
                 this.resultsAux.misFrecuentes = Object.assign({}, this.results.misFrecuentes);
+            } else {
+                this.results['misFrecuentes']['todos'] = [];
             }
 
             let frecuentesTP = await this.inicializarFrecuentesTP();
