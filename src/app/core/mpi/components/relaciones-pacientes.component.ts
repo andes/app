@@ -101,13 +101,8 @@ export class RelacionesPacientesComponent implements OnInit {
 
     seleccionarPacienteRelacionado(pacienteEncontrado) {
         if (pacienteEncontrado) {
-            let ultimaRelacion = null;
-            let permitirNuevaRelacion = true;
+            let permitirNuevaRelacion = this.checkVinculo();
             // Control: Si los datos de las relaciones agregadas anteriormente no estan completas, no se permitira agregar nuevas.
-            if (this.paciente.relaciones && this.paciente.relaciones.length) {
-                ultimaRelacion = this.paciente.relaciones[this.paciente.relaciones.length - 1];
-                permitirNuevaRelacion = ultimaRelacion.relacion; // Boolean(ultimaRelacion.documento && ultimaRelacion.apellido && ultimaRelacion.nombre && ultimaRelacion.relacion);
-            }
             if (permitirNuevaRelacion) {
                 this.buscarPacRel = '';
                 let unaRelacion = Object.assign({}, {
@@ -146,9 +141,23 @@ export class RelacionesPacientesComponent implements OnInit {
                 // Se borran los resultados de la búsqueda.
                 this.posiblesRelaciones = null;
             } else {
-                this.plex.toast('info', 'Antes de agregar una nueva relación debe completar las existentes.', 'Informacion');
+                this.plex.toast('info', 'Antes de agregar una nueva relación debe completar las existentes.', 'Información');
             }
         }
+    }
+
+    // Dado un indice, retorna el tipo de vinculo segun el array de relaciones del paciente
+    // Si indice es undefined, retorna siempre true indicando que se puede agregar una nueva relacion
+    private checkVinculo(index?): Boolean {
+        let relacion = null;
+        if (this.paciente.relaciones && this.paciente.relaciones.length) {
+            if (!index) {
+                index = this.paciente.relaciones.length - 1;
+            }
+            relacion = this.paciente.relaciones[index];
+            return relacion.relacion;
+        }
+        return true;
     }
 
     removeRelacion(i) {
@@ -160,6 +169,12 @@ export class RelacionesPacientesComponent implements OnInit {
             }
             this.paciente.relaciones.splice(i, 1);
             // notificamos cambios
+            this.actualizar.emit({ relaciones: this.paciente.relaciones, relacionesBorradas: this.relacionesBorradas });
+        }
+    }
+
+    cambioRelacion(i) {
+        if (this.checkVinculo(i)) {
             this.actualizar.emit({ relaciones: this.paciente.relaciones, relacionesBorradas: this.relacionesBorradas });
         }
     }
