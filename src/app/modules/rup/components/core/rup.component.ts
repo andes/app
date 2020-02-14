@@ -35,7 +35,7 @@ import { ReglaService } from '../../../../services/top/reglas.service';
 })
 export class RUPComponent implements OnInit, AfterViewInit {
     @ViewChildren(RUPComponent) rupElements: QueryList<RUPComponent>;
-    @ViewChild('form', { static: true }) formulario: any;
+    @ViewChild('form', { static: false }) formulario: any;
     public rupInstance: any;
 
     // Propiedades
@@ -115,7 +115,8 @@ export class RUPComponent implements OnInit, AfterViewInit {
         public elementosRUPService: ElementosRUPService,
         public prestacionesService: PrestacionesService,
         public servicioTipoPrestacion: TipoPrestacionService,
-        public auth: Auth, public ocupacionService: OcupacionService,
+        public auth: Auth,
+        public ocupacionService: OcupacionService,
         public financiadorService: FinanciadorService,
         public serviceProfesional: ProfesionalService,
         public adjuntosService: AdjuntosService,
@@ -129,7 +130,8 @@ export class RUPComponent implements OnInit, AfterViewInit {
         public agendaService: AgendaService,
         public organizacionservice: OrganizacionService,
         public servicioReglas: ReglaService
-    ) { }
+    ) {
+    }
 
     ngOnInit() {
         this.loadComponent();
