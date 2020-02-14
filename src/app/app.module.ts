@@ -482,7 +482,8 @@ let RUPComponentsArray = [
     LugarDeNacimientoComponent,
     SelectOrganizacionComponent,
     SelectProfesionalComponent,
-    SelectPrestacionComponent
+    SelectPrestacionComponent,
+    SelectSnomedComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -533,6 +534,7 @@ import { SelectProfesionalComponent } from './modules/rup/components/elementos/r
 import { SelectOrganizacionComponent } from './modules/rup/components/elementos/rupers/select-organizacion.component';
 import { ConceptosTurneablesService } from './services/conceptos-turneables.service';
 import { SelectPrestacionComponent } from './modules/rup/components/elementos/rupers/select-prestacion.component';
+import { SelectSnomedComponent } from './modules/rup/components/elementos/rupers/select-snomed.component';
 
 
 registerLocaleData(localeEs, 'es');
