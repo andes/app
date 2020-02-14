@@ -479,7 +479,9 @@ let RUPComponentsArray = [
     OcuparCamaComponent,
     EjecucionInternacionComponent,
     EgresoInternacionComponent,
-    LugarDeNacimientoComponent
+    LugarDeNacimientoComponent,
+    SelectOrganizacionComponent,
+    SelectProfesionalComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -526,6 +528,9 @@ import { ConceptosTurneablesService } from './services/conceptos-turneables.serv
 import { SelectFinanciadorDirective } from './directives/financiador-select-directive';
 
 import { MPILibModule } from './modules/mpi/mpi-lib.module';
+import { SelectProfesionalComponent } from './modules/rup/components/elementos/rupers/select-profesional.component';
+import { SelectOrganizacionComponent } from './modules/rup/components/elementos/rupers/select-organizacion.component';
+
 
 registerLocaleData(localeEs, 'es');
 

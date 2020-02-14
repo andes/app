@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { RupElement } from '../index';
+import { OnInit, Component, AfterViewInit } from '@angular/core';
 import { RUPComponent } from '../../core/rup.component';
 import { Unsubscribe } from '@andes/shared';
-import { IOrganizacion } from '../../../../../interfaces/IOrganizacion';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { RupElement } from '..';
 
 /**
  * Params:
@@ -12,35 +11,24 @@ import { Observable } from 'rxjs';
  * multiple: Permite elegir multiples organizaciones
  * required: Es requerida para grabar
  * allowOther: Permite elegir texto libre.
+ * preload: Carga el plex-select al renderizar el componente.
+ *          Ejecuta el request a la API con todos los datos.
  */
 
+export abstract class SelectBaseComponent extends RUPComponent implements OnInit, AfterViewInit {
 
-export abstract class SelectBaseComponent extends RUPComponent implements OnInit {
+    public idField = 'id';
 
     public labelField = 'nombre';
+
+    public dataLoaded: any[] = [];
 
     public itemSelected: any | any[] = null;
 
     public otherEnabled: Boolean = false;
 
-    public otherText: String = '';
 
-    ngOnInit() {
-        if (this.registro && this.registro.valor) {
-            const org = this.registro.valor;
-            if (Array.isArray(org)) {
-                this.itemSelected = org;
-            } else {
-                if (org.id) {
-                    this.itemSelected = org;
-                    this.otherEnabled = false;
-                } else {
-                    this.otherEnabled = true;
-                    this.otherText = org.nombre;
-                }
-            }
-        }
-    }
+    public otherText: String = '';
 
     get titulo() {
         if (this.params.title !== null && this.params.title !== undefined) {
@@ -55,6 +43,38 @@ export abstract class SelectBaseComponent extends RUPComponent implements OnInit
             return this.params.allowOther;
         } else {
             return false;
+        }
+    }
+
+    abstract getData(input: string): Observable<any[]>;
+
+    ngOnInit() {
+        if (!this.params) {
+            this.params = {};
+        }
+
+        if (this.registro && this.registro.valor) {
+            const org = this.registro.valor;
+            if (Array.isArray(org)) {
+                this.itemSelected = org;
+            } else {
+                if (org.id) {
+                    this.itemSelected = org;
+                    this.otherEnabled = false;
+                } else {
+                    this.otherEnabled = true;
+                    this.otherText = org.nombre;
+                }
+            }
+        }
+
+    }
+
+    ngAfterViewInit() {
+        if (this.params.preload) {
+            this.getData(undefined).subscribe((data) => {
+                this.dataLoaded = data;
+            });
         }
     }
 
@@ -94,5 +114,5 @@ export abstract class SelectBaseComponent extends RUPComponent implements OnInit
         }
     }
 
-    abstract getData(input: string): Observable<any[]>;
+
 }
