@@ -17,31 +17,33 @@ import { SelectBaseComponent } from './select-base.component';
  * allowOther: Permite elegir texto libre.
  * preload: Carga el plex-select al renderizar el componente.
  *          Ejecuta el request a la API con todos los datos.
+ * presmisos: string shiro de donde buscar las prestaciones con permisos
  */
 
 @Component({
-    selector: 'rup-select-profesionales',
+    selector: 'rup-select-prestaciones',
     templateUrl: './select-base.component.html'
 })
-@RupElement('SelectProfesionalComponent')
-export class SelectProfesionalComponent extends SelectBaseComponent {
+@RupElement('SelectPrestacionComponent')
+export class SelectPrestacionComponent extends SelectBaseComponent {
 
     public idField = 'id';
 
-
-    public labelField = `apellido + ' ' + nombre`;
+    public labelField = `term`;
 
 
     getData(input: string) {
-        let query = {
-            nombreCompleto: input
-        };
-        return this.serviceProfesional.get(query);
+        const permisos = this.params.permisos || undefined;
+        let term = undefined;
+        if (input && input.length > 0) {
+            term = `^${input}`;
+        }
+        return this.conceptosTurneablesService.search({ permisos, term });
 
     }
 
     displayName(item) {
-        return item.apellido + ' ' + item.nombre;
+        return item.term;
     }
 
 }
