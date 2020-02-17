@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { WebSocketService } from '../../../../services/websocket.service';
+import { HotjarService } from '../../../../shared/services/hotJar.service';
+
 @Component({
     templateUrl: 'login.html',
     styleUrls: ['login.scss'],
@@ -13,13 +15,17 @@ export class LoginComponent implements OnInit {
     public password: string;
     public loading = false;
 
-    constructor(private plex: Plex, private auth: Auth, private router: Router, public ws: WebSocketService) { }
+    constructor(
+        private plex: Plex,
+        private auth: Auth,
+        private router: Router,
+        public ws: WebSocketService
+    ) { }
 
     ngOnInit() {
         this.auth.logout();
         this.ws.close();
     }
-
 
     login(event) {
         if (event.formValid) {

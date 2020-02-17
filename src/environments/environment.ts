@@ -12,5 +12,6 @@ export const environment = {
   WS: '//localhost:3002', // para websocket
   APIStatusCheck: false,
   version: _package.version,
-  MAPS_KEY: ''
+  MAPS_KEY: '',
+  HOTJAR_KEY: ''
 };

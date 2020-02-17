@@ -4,3 +4,7 @@ export const apiKeys = {
 };
 
 export const mapCenter = [];
+
+export const hotjar = {
+    key: 'XXXX'
+};
