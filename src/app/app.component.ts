@@ -7,6 +7,7 @@ import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
 import { PROPERTIES } from './styles/properties';
 import { WebSocketService } from './services/websocket.service';
+import { HotjarService } from './shared/services/hotJar.service';
 
 // import { RxSocket } from 'rx-socket.io-client';
 
@@ -116,7 +117,13 @@ export class AppComponent {
         return accessList;
     }
 
-    constructor(public plex: Plex, public server: Server, public auth: Auth, public ws: WebSocketService) {
+    constructor(
+        public plex: Plex,
+        public server: Server,
+        public auth: Auth,
+        public ws: WebSocketService,
+        private hotjar: HotjarService
+    ) {
         // Configura server. Debería hacerse desde un provider (http://stackoverflow.com/questions/39033835/angularjs2-preload-server-configuration-before-the-application-starts)
         server.setBaseURL(environment.API);
 
@@ -132,6 +139,7 @@ export class AppComponent {
 
         const token = this.auth.getToken();
         if (token) {
+            this.hotjar.initialize();
             this.ws.setToken(token);
             this.auth.session().subscribe(() => {
                 // Inicializa el menú

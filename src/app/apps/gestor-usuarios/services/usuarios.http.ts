@@ -1,19 +1,35 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Server } from '@andes/shared';
-import { BehaviorSubject, zip } from 'rxjs';
-import { switchMap, distinctUntilChanged, map, tap, publishReplay, refCount, combineAll, merge } from 'rxjs/operators';
+import { Server, cache } from '@andes/shared';
+import { Auth } from '@andes/auth';
+import { throwError } from 'rxjs';
 
 @Injectable()
 export class UsuariosHttp {
     private url = '/modules/gestor-usuarios/usuarios';  // URL to web api
 
-    constructor(private server: Server) {
+    constructor(
+        private server: Server,
+        private auth: Auth
+    ) { }
 
+    private me$: Observable<any>;
+    me(): Observable<any> {
+        if (this.auth.usuario) {
+            if (this.me$) {
+                return this.me$;
+            }
+            this.me$ = this.get(this.auth.usuario.documento, '-organizaciones').pipe(
+                cache() // Desde donde se llame, solo se va a ejecutar una vez.
+            );
+            return this.me$;
+        } else {
+            return throwError(new Error('not_loggin'));
+        }
     }
 
-    get(id): Observable<any> {
-        return this.server.get(`${this.url}/${id}`);
+    get(id, fields = null): Observable<any> {
+        return this.server.get(`${this.url}/${id}`, { params: { fields } });
     }
 
     find(query = {}): Observable<any> {
