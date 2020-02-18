@@ -350,15 +350,15 @@ import { OrganizacionOfertaPrestacionalComponent } from './components/organizaci
 
 // MAPA CAMAS
 import { MapaCamasMainComponent } from './apps/rup/mapa-camas/mapa-camas-main.component';
-import { MapaCamasCapaComponent } from './apps/rup/mapa-camas/mapa-camas-capa/mapa-camas-capa.component';
-import { CensosDiariosComponent } from './apps/rup/mapa-camas/censos/censo-diario/censo-diario.component';
-import { FiltrosCamasComponent } from './apps/rup/mapa-camas/mapa-camas-capa/filtros-camas.component';
-import { CamaMainComponent } from './apps/rup/mapa-camas/cama/cama.component';
-import { ItemCamaComponent } from './apps/rup/mapa-camas/mapa-camas-capa/item-cama.component';
+import { MapaCamasCapaComponent } from './apps/rup/mapa-camas/views/mapa-camas-capa/mapa-camas-capa.component';
+import { CensosDiariosComponent } from './apps/rup/mapa-camas/views/censos/censo-diario/censo-diario.component';
+import { FiltrosCamasComponent } from './apps/rup/mapa-camas/views/mapa-camas-capa/filtros-camas.component';
+import { CamaMainComponent } from './apps/rup/mapa-camas/views/cama/cama.component';
+import { ItemCamaComponent } from './apps/rup/mapa-camas/views/mapa-camas-capa/item-cama.component';
 import { EstadoServicioComponent } from './apps/rup/mapa-camas/sidebar/estado-servicio.component';
 import { IngresarPacienteComponent } from './apps/rup/mapa-camas/sidebar/ingreso/ingresar-paciente.component';
 import { MapaCamasService } from './apps/rup/mapa-camas/services/mapa-camas.service';
-import { CensosMensualesComponent } from './apps/rup/mapa-camas/censos/censo-mensual/censo-mensual.component';
+import { CensosMensualesComponent } from './apps/rup/mapa-camas/views/censos/censo-mensual/censo-mensual.component';
 import { IconoCamitaComponent } from './apps/rup/mapa-camas/sidebar/icono-camita.component';
 import { CamaDestinoGenericoComponent } from './apps/rup/mapa-camas/sidebar/cama-destino-generico.component';
 import { CamaDesocuparComponent } from './apps/rup/mapa-camas/sidebar/desocupar-cama.component';
@@ -369,7 +369,7 @@ import { InformeIngresoComponent } from './apps/rup/mapa-camas/sidebar/ingreso/i
 import { HistorialDetalleComponent } from './apps/rup/mapa-camas/sidebar/historial-detalle.component';
 import { MovimientosInternacionComponent } from './apps/rup/mapa-camas/sidebar/movimientos-internacion/movimientos-internacion.component';
 import { CambiarCamaComponent } from './apps/rup/mapa-camas/sidebar/cambiar-cama.component';
-import { InternacionListadoComponent } from './apps/rup/mapa-camas/listado-internacion/listado-internacion.component';
+import { InternacionListadoComponent } from './apps/rup/mapa-camas/views/listado-internacion/listado-internacion.component';
 import { InformeEgresoComponent } from './apps/rup/mapa-camas/sidebar/egreso/informe-egreso.component';
 
 let mapaCamasComponents = [
@@ -563,7 +563,7 @@ import { ListaReglasComponent } from './components/top/reglas/listaReglas.compon
 import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaSolicitudTop';
 
 import { MitosModule } from './apps/mitos';
-import { InternacionListaEsperaComponent } from './apps/rup/mapa-camas/lista-espera/lista-espera.component';
+import { InternacionListaEsperaComponent } from './apps/rup/mapa-camas/views/lista-espera/lista-espera.component';
 import { MapaCamasHTTP } from './apps/rup/mapa-camas/services/mapa-camas.http';
 
 registerLocaleData(localeEs, 'es');

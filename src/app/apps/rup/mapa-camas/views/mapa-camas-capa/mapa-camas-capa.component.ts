@@ -4,11 +4,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import * as moment from 'moment';
-import { ISnapshot } from '../interfaces/ISnapshot';
-import { MapaCamasService } from '../services/mapa-camas.service';
+import { ISnapshot } from '../../interfaces/ISnapshot';
+import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-import { IMaquinaEstados } from '../interfaces/IMaquinaEstados';
+import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 
 @Component({
     selector: 'app-mapa-camas-capa',

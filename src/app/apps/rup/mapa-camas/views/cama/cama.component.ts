@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
-import { OrganizacionService } from '../../../../services/organizacion.service';
-import { MapaCamasService } from '../services/mapa-camas.service';
+import { OrganizacionService } from '../../../../../services/organizacion.service';
+import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Plex } from '@andes/plex';
-import { SnomedService, SnomedExpression } from '../../../mitos';
+import { SnomedService, SnomedExpression } from '../../../../mitos';
 import * as moment from 'moment';
 
 @Component({

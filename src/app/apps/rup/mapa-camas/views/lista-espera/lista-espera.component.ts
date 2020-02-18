@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MapaCamasService } from '../services/mapa-camas.service';
+import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap, switchMapTo } from 'rxjs/operators';

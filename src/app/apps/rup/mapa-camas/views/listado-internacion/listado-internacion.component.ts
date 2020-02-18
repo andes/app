@@ -2,11 +2,11 @@ import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { Location } from '@angular/common';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { snomedIngreso, snomedEgreso } from '../constantes-internacion';
-import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
-import * as enumerados from '../../../../utils/enumerados';
-import { MapaCamasService } from '../services/mapa-camas.service';
-import { DocumentosService } from '../../../../services/documentos.service';
+import { snomedIngreso, snomedEgreso } from '../../constantes-internacion';
+import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
+import * as enumerados from '../../../../../utils/enumerados';
+import { MapaCamasService } from '../../services/mapa-camas.service';
+import { DocumentosService } from '../../../../../services/documentos.service';
 import { saveAs } from 'file-saver';
 import { Slug } from 'ng2-slugify';
 

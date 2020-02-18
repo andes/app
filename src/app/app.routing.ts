@@ -110,10 +110,10 @@ import { NuevaSolicitudComponent } from './components/top/solicitudes/nuevaSolic
 import { CensosDiariosComponent } from './apps/rup/mapa-camas/censos/censo-diario/censo-diario.component';
 import { CamaMainComponent } from './apps/rup/mapa-camas/cama/cama.component';
 import { MapaCamasMainComponent } from './apps/rup/mapa-camas/mapa-camas-main.component';
-import { MapaCamasCapaComponent } from './apps/rup/mapa-camas/mapa-camas-capa/mapa-camas-capa.component';
-import { CensosMensualesComponent } from './apps/rup/mapa-camas/censos/censo-mensual/censo-mensual.component';
-import { InternacionListadoComponent } from './apps/rup/mapa-camas/listado-internacion/listado-internacion.component';
-import { InternacionListaEsperaComponent } from './apps/rup/mapa-camas/lista-espera/lista-espera.component';
+import { MapaCamasCapaComponent } from './apps/rup/mapa-camas/views/mapa-camas-capa/mapa-camas-capa.component';
+import { CensosMensualesComponent } from './apps/rup/mapa-camas/views/censos/censo-mensual/censo-mensual.component';
+import { InternacionListadoComponent } from './apps/rup/mapa-camas/views/listado-internacion/listado-internacion.component';
+import { InternacionListaEsperaComponent } from './apps/rup/mapa-camas/views/lista-espera/lista-espera.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
