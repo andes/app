@@ -1,12 +1,6 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RupElement } from '../index';
-import { RUPComponent } from '../../core/rup.component';
-import { Unsubscribe } from '@andes/shared';
 import { SelectBaseComponent } from './select-base.component';
-
-/**
- * ATENCION: Debido al dependecy inyection de Angular no se pudo crear una componente Select de base.
- */
 
 /**
  * Params:
