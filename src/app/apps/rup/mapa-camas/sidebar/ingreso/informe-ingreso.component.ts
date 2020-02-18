@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
-import { MapaCamasService } from '../../mapa-camas.service';
+import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 
 @Component({

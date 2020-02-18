@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Observable } from 'rxjs';
-import { ISnapshot } from './interfaces/ISnapshot';
-import { ICama } from './interfaces/ICama';
-import { IMaquinaEstados } from './interfaces/IMaquinaEstados';
+import { ISnapshot } from '../interfaces/ISnapshot';
+import { ICama } from '../interfaces/ICama';
+import { IMaquinaEstados } from '../interfaces/IMaquinaEstados';
+import { MapaCamasHTTP, IFiltrosHistorial } from './mapa-camas.http';
 
 @Injectable()
 export class MapaCamasService {
@@ -13,7 +14,7 @@ export class MapaCamasService {
     private url = '/modules/rup/internacion';
 
     constructor(
-        private server: Server
+        private camasHTTP: MapaCamasHTTP
     ) { }
 
     setCapa(capa: string) {
@@ -21,73 +22,42 @@ export class MapaCamasService {
     }
 
     snapshot(fecha, idInternacion = null, ambito: string = null, capa: string = null, estado: string = null): Observable<ISnapshot[]> {
-        return this.server.get(this.url + '/camas', {
-            params: {
-                ambito: ambito || this.ambito,
-                capa: capa || this.capa,
-                fecha,
-                internacion: idInternacion,
-                estado
-            },
-            showError: true
-        });
+        ambito = ambito || this.ambito;
+        capa = capa || this.capa;
+
+        return this.camasHTTP.snapshot(ambito, capa, fecha, idInternacion, estado);
     }
 
-    historial(desde: Date, hasta: Date, filtros): Observable<ISnapshot[]> {
-        const params = {
-            ambito: this.ambito,
-            capa: this.capa,
-            desde,
-            hasta,
-            ...filtros
-        };
-        return this.server.get(`${this.url}/camas/historial`, { params });
+    historial(desde: Date, hasta: Date, filtros: IFiltrosHistorial): Observable<ISnapshot[]> {
+        return this.camasHTTP.historial(this.ambito, this.capa, desde, hasta, filtros);
     }
 
-    getCama(fecha, idCama): Observable<ICama[]> {
-        return this.server.get(this.url + `/camas/${idCama}`, {
-            params: { ambito: this.ambito, capa: this.capa, fecha },
-            showError: true
-        });
+    get(fecha, idCama): Observable<ICama[]> {
+        return this.camasHTTP.get(this.ambito, this.capa, fecha, idCama);
     }
 
-    patchCama(data, fecha, ambito: string = null, capa: string = null): Observable<ICama> {
-        let params = {
-            ...data,
-            ambito: ambito || this.ambito,
-            capa: capa || this.capa,
-            fecha
-        };
-        if (data._id) {
-            return this.server.patch(this.url + `/camas/${data._id}`, params);
-        } else {
-            return this.server.post(this.url + `/camas`, { ...data, ambito: this.ambito, capa: this.capa, fecha });
-        }
+    save(data, fecha, ambito: string = null, capa: string = null): Observable<ICama> {
+        ambito = ambito || this.ambito;
+        capa = capa || this.capa;
+        return this.camasHTTP.save(ambito, capa, fecha, data);
     }
 
     getMaquinaEstados(organizacion): Observable<IMaquinaEstados[]> {
-        return this.server.get(this.url + `/estados`, {
-            params: { organizacion, ambito: this.ambito, capa: this.capa },
-            showError: true
-        });
+        return this.camasHTTP.getMaquinaEstados(this.ambito, this.capa, organizacion);
     }
 
     censoDiario(fecha, unidadOrganizativa): Observable<any[]> {
-        return this.server.get(this.url + '/censoDiario', {
-            params: { fecha, unidadOrganizativa },
-            showError: true
-        });
+        return this.camasHTTP.censoDiario(fecha, unidadOrganizativa);
     }
 
     listaEspera(ambito: string, capa: string): Observable<any[]> {
-        return this.server.get(`${this.url}/lista-espera`, { params: { ambito, capa } });
+        ambito = ambito || this.ambito;
+        capa = capa || this.capa;
+        return this.camasHTTP.listaEspera(ambito, capa);
     }
 
     censoMensual(fechaDesde, fechaHasta, unidadOrganizativa): Observable<any[]> {
-        return this.server.get(this.url + '/censoMensual', {
-            params: { fechaDesde, fechaHasta, unidadOrganizativa },
-            showError: true
-        });
+        return this.camasHTTP.censoMensual(fechaDesde, fechaHasta, unidadOrganizativa);
     }
 
     calcularEdad(fechaNacimiento: Date, fechaCalculo: Date): any {

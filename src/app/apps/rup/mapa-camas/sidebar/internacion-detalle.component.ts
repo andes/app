@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter, ViewChild } from '@angular/core';
 import { Auth } from '@andes/auth';
-import { MapaCamasService } from '../mapa-camas.service';
+import { MapaCamasService } from '../services/mapa-camas.service';
 import { Plex, PlexOptionsComponent } from '@andes/plex';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';

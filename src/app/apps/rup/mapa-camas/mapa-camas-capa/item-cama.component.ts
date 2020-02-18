@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
-import { MapaCamasService } from '../mapa-camas.service';
+import { MapaCamasService } from '../services/mapa-camas.service';
 
 @Component({
     selector: 'tr[app-item-cama]',

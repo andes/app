@@ -6,7 +6,7 @@ import { OrganizacionService } from '../../../../../services/organizacion.servic
 import { SnomedExpression } from '../../../../mitos';
 import { IPrestacionRegistro } from '../../../../../modules/rup/interfaces/prestacion.registro.interface';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
-import { MapaCamasService } from '../../mapa-camas.service';
+import { MapaCamasService } from '../../services/mapa-camas.service';
 import { snomedIngreso, pacienteAsociado, origenHospitalizacion, nivelesInstruccion, situacionesLaborales } from '../../constantes-internacion';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
@@ -231,7 +231,7 @@ export class IngresarPacienteComponent implements OnInit {
                 s(d.now() / 1000) + ' '.repeat(h).replace(/./g, () => s(m.random() * h)));
         }
 
-        this.mapaCamasService.patchCama(this.cama, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
+        this.mapaCamasService.save(this.cama, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
             this.plex.info('success', 'Paciente internado');
             this.refresh.emit({ cama: this.cama, accion: 'internarPaciente' });
         }, (err1) => {

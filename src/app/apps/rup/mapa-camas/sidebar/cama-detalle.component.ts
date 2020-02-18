@@ -3,7 +3,7 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
 import { Router } from '@angular/router';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 import { ElementosRUPService } from '../../../../modules/rup/services/elementosRUP.service';
-import { MapaCamasService } from '../mapa-camas.service';
+import { MapaCamasService } from '../services/mapa-camas.service';
 import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
 
 

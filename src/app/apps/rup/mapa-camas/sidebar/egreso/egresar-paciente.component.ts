@@ -4,7 +4,7 @@ import { PrestacionesService } from '../../../../../modules/rup/services/prestac
 import { Cie10Service } from '../../../../mitos';
 import { Plex } from '@andes/plex';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
-import { MapaCamasService } from '../../mapa-camas.service';
+import { MapaCamasService } from '../../services/mapa-camas.service';
 import { ProcedimientosQuirurgicosService } from '../../../../../services/procedimientosQuirurgicos.service';
 import { listaTipoEgreso, causaExterna, opcionesTipoParto, opcionesCondicionAlNacer, opcionesTerminacion, opcionesSexo } from '../../constantes-internacion';
 import { ISnapshot } from '../../interfaces/ISnapshot';
@@ -298,7 +298,7 @@ export class EgresarPacienteComponent implements OnInit {
         this.cama.idInternacion = null;
         this.cama.paciente = null;
 
-        this.mapaCamasService.patchCama(this.cama, this.fecha).subscribe(camaActualizada => {
+        this.mapaCamasService.save(this.cama, this.fecha).subscribe(camaActualizada => {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
             this.refresh.emit({ cama: this.cama });
         }, (err1) => {

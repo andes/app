@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map, switchMap, startWith } from 'rxjs/operators';
-import { MapaCamasService } from '../mapa-camas.service';
+import { MapaCamasService } from '../services/mapa-camas.service';
 
 @Component({
     selector: 'app-historial-detalle',

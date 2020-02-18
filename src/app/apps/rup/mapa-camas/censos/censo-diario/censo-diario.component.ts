@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
-import { MapaCamasService } from '../../mapa-camas.service';
+import { MapaCamasService } from '../../services/mapa-camas.service';
 import { DocumentosService } from '../../../../../services/documentos.service';
 import { Slug } from 'ng2-slugify';
 import { saveAs } from 'file-saver';

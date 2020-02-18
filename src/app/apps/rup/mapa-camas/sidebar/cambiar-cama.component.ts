@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Auth } from '@andes/auth';
-import { MapaCamasService } from '../mapa-camas.service';
+import { MapaCamasService } from '../services/mapa-camas.service';
 import { Plex } from '@andes/plex';
 
 @Component({
@@ -52,9 +52,9 @@ export class CambiarCamaComponent implements OnInit {
             this.cama.paciente = null;
 
             let fecha = moment().toDate();
-            this.mapaCamasService.patchCama(camaElegida, fecha).subscribe(camaActualizada => {
+            this.mapaCamasService.save(camaElegida, fecha).subscribe(camaActualizada => {
                 this.refresh.emit({ cama: camaElegida, accion: 'internarPaciente' });
-                this.mapaCamasService.patchCama(this.cama, fecha).subscribe(cama => {
+                this.mapaCamasService.save(this.cama, fecha).subscribe(cama => {
                     this.refresh.emit({ cama: this.cama, accion: 'internarPaciente' });
                     this.plex.info('success', 'Cambio de cama exitoso!');
                 });

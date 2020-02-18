@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MapaCamasService } from '../mapa-camas.service';
+import { MapaCamasService } from '../services/mapa-camas.service';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap, switchMapTo } from 'rxjs/operators';
@@ -59,7 +59,7 @@ export class InternacionListaEsperaComponent implements OnInit {
 
             this.route.params.pipe(
                 switchMap((params: any) => {
-                    return this.mapaCamaService.patchCama(this.camaSelected, fecha, params.ambito, params.capa);
+                    return this.mapaCamaService.save(this.camaSelected, fecha, params.ambito, params.capa);
                 })
             ).subscribe(() => {
                 this.camaSelected = null;

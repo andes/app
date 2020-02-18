@@ -357,7 +357,7 @@ import { CamaMainComponent } from './apps/rup/mapa-camas/cama/cama.component';
 import { ItemCamaComponent } from './apps/rup/mapa-camas/mapa-camas-capa/item-cama.component';
 import { EstadoServicioComponent } from './apps/rup/mapa-camas/sidebar/estado-servicio.component';
 import { IngresarPacienteComponent } from './apps/rup/mapa-camas/sidebar/ingreso/ingresar-paciente.component';
-import { MapaCamasService } from './apps/rup/mapa-camas/mapa-camas.service';
+import { MapaCamasService } from './apps/rup/mapa-camas/services/mapa-camas.service';
 import { CensosMensualesComponent } from './apps/rup/mapa-camas/censos/censo-mensual/censo-mensual.component';
 import { IconoCamitaComponent } from './apps/rup/mapa-camas/sidebar/icono-camita.component';
 import { CamaDestinoGenericoComponent } from './apps/rup/mapa-camas/sidebar/cama-destino-generico.component';
@@ -564,6 +564,7 @@ import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaS
 
 import { MitosModule } from './apps/mitos';
 import { InternacionListaEsperaComponent } from './apps/rup/mapa-camas/lista-espera/lista-espera.component';
+import { MapaCamasHTTP } from './apps/rup/mapa-camas/services/mapa-camas.http';
 
 registerLocaleData(localeEs, 'es');
 
