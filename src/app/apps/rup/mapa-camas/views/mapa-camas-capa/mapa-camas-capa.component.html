@@ -17,8 +17,8 @@
                 <plex-button icon="format-list-bulleted" type="primary" size="sm"></plex-button>
             </plex-title>
         </header>
-        <fieldset *ngIf="snapshot">
-            <table class="table table-striped table-hover" *ngIf="estados">
+        <fieldset>
+            <table class="table table-striped table-hover">
                 <tr>
                     <th>CAMA</th>
                     <th>PACIENTE</th>
@@ -26,10 +26,9 @@
                     <th>ESTADO</th>
                     <th>ACCIONES</th>
                 </tr>
-                <tr app-item-cama *ngFor="let cama of camas | async; let i=index;" [cama]="cama" [estados]="estados"
-                    [relaciones]="relaciones" [selected]="(selectedCama && cama._id === selectedCama._id)"
-                    (accionCama)="selectCama($event)" (click)="verDetalle(i)"
-                    [ngClass]="{'invert': (selectedCama && cama._id === selectedCama._id)}">
+                <tr app-item-cama *ngFor="let cama of camas | async" [cama]="cama"
+                    (accionCama)="selectCama(cama, $event)" (click)="verDetalle(cama)"
+                    [class.invert]="selectedCama && cama._id === selectedCama._id">
                 </tr>
             </table>
         </fieldset>

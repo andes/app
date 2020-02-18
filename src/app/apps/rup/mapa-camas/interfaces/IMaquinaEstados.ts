@@ -3,19 +3,21 @@ export interface IMaquinaEstados {
     organizacion: String;
     ambito: String;
     capa: String;
-    estados: [{
-        key: String;
-        label: String;
-        color: String;
-        icon: String;
-    }];
-    relaciones: [{
-        origen: String;
-        destino: String;
-        color: String;
-        icon: String;
-        accion: String;
-    }];
+    estados: IMAQEstado[];
+    relaciones: IMAQRelacion[];
 }
 
+export interface IMAQEstado {
+    key: String;
+    label: String;
+    color: String;
+    icon: String;
+}
 
+export interface IMAQRelacion {
+    origen: String;
+    destino: String;
+    color: String;
+    icon: String;
+    accion: String;
+}

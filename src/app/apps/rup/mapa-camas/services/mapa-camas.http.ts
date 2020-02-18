@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { ISnapshot } from '../interfaces/ISnapshot';
 import { ICama } from '../interfaces/ICama';
 import { IMaquinaEstados } from '../interfaces/IMaquinaEstados';
+import { map } from 'rxjs/operators';
 
 export type IFiltrosHistorial = any;
 
@@ -60,11 +61,18 @@ export class MapaCamasHTTP {
         }
     }
 
-    getMaquinaEstados(ambito: string, capa: string, organizacion: string): Observable<IMaquinaEstados[]> {
+    getMaquinaEstados(ambito: string, capa: string, organizacion: string): Observable<IMaquinaEstados> {
         return this.server.get(this.url + `/estados`, {
             params: { organizacion, ambito, capa },
             showError: true
-        });
+        }).pipe(
+            map(maquinaEstados => {
+                if (maquinaEstados && maquinaEstados.length > 0) {
+                    return maquinaEstados[0];
+                }
+                throwError('NO HAY MAQUINA DE ESTADO');
+            })
+        );
     }
 
     censoDiario(fecha: Date, unidadOrganizativa: string): Observable<any[]> {

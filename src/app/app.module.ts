@@ -354,7 +354,7 @@ import { MapaCamasCapaComponent } from './apps/rup/mapa-camas/views/mapa-camas-c
 import { CensosDiariosComponent } from './apps/rup/mapa-camas/views/censos/censo-diario/censo-diario.component';
 import { FiltrosCamasComponent } from './apps/rup/mapa-camas/views/mapa-camas-capa/filtros-camas.component';
 import { CamaMainComponent } from './apps/rup/mapa-camas/views/cama/cama.component';
-import { ItemCamaComponent } from './apps/rup/mapa-camas/views/mapa-camas-capa/item-cama.component';
+import { ItemCamaComponent } from './apps/rup/mapa-camas/views/mapa-camas-capa/item-cama/item-cama.component';
 import { EstadoServicioComponent } from './apps/rup/mapa-camas/sidebar/estado-servicio.component';
 import { IngresarPacienteComponent } from './apps/rup/mapa-camas/sidebar/ingreso/ingresar-paciente.component';
 import { MapaCamasService } from './apps/rup/mapa-camas/services/mapa-camas.service';

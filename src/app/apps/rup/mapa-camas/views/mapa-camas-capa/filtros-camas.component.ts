@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
+import { MapaCamasService } from '../../services/mapa-camas.service';
 
 @Component({
     selector: 'app-filtros-camas',
@@ -14,11 +15,15 @@ export class FiltrosCamasComponent implements OnInit {
     @Output() filtrarTabla = new EventEmitter<any>();
 
     filtro: any = {};
-    censables = [{ id: 0, nombre: 'No censable' }, { id: 1, nombre: 'Censable' }];
+    censables = [
+        { id: 0, nombre: 'No censable' },
+        { id: 1, nombre: 'Censable' }
+    ];
 
     constructor(
         public auth: Auth,
         private router: Router,
+        public mapaCamasService: MapaCamasService
     ) { }
 
     ngOnInit() {
@@ -26,6 +31,8 @@ export class FiltrosCamasComponent implements OnInit {
     }
 
     filtrar() {
-        this.filtrarTabla.emit(this.filtro);
+        // this.filtrarTabla.emit(this.filtro);
+
+        this.mapaCamasService.unidadOrganizativaSelected.next(this.filtro.unidadOrganizativa);
     }
 }

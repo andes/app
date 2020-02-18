@@ -11,13 +11,13 @@ export interface ISnapshot {
     sugierePase?: Boolean;
     fecha: Date;
     unidadOrganizativa: ISnomedConcept;
-    especialidades: [ISnomedConcept];
+    especialidades: ISnomedConcept[];
     ambito: String;
     unidadOrganizativaOriginal: ISnomedConcept;
-    sectores: [ISectores];
+    sectores: ISectores[];
     nombre: String;
     tipoCama: ISnomedConcept;
-    equipamiento: [ISnomedConcept];
+    equipamiento: ISnomedConcept[];
     idCama: String;
     paciente?: {
         id: String,

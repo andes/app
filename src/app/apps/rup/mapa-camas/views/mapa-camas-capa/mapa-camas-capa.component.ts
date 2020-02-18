@@ -7,8 +7,9 @@ import * as moment from 'moment';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
+import { take, map, pluck, tap, timeInterval, delay } from 'rxjs/operators';
+import { interval } from 'rxjs';
 
 @Component({
     selector: 'app-mapa-camas-capa',
@@ -18,6 +19,10 @@ import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 })
 
 export class MapaCamasCapaComponent implements OnInit {
+    capa$: Observable<string>;
+
+
+
     organizacion: string;
     fecha = moment().toDate();
     ambito: string;
@@ -59,16 +64,28 @@ export class MapaCamasCapaComponent implements OnInit {
     ngOnInit() {
         this.ambito = this.mapaCamasService.ambito;
 
-        this.route.params.subscribe(params => {
-            this.capa = params['capa'];
-            this.mapaCamasService.setCapa(params['capa']);
-        });
+        this.capa$ = this.route.params.pipe(
+            take(1),
+            pluck('capa'),
+            // [TODO] chequear permisos
+            tap((capa) => {
+                this.capa = capa; // BORRAR
+                this.mapaCamasService.setAmbito('internacion');
+                this.mapaCamasService.setCapa(capa);
+            })
+        );
+        this.capa$.subscribe();
+
+        this.mapaCamasService.setFecha(new Date());
+
+        this.mapaCamasService.setOrganizacion(this.auth.organizacion.id);
 
         this.organizacion = this.auth.organizacion.id;
         this.getSnapshot();
-        this.getMaquinaEstados();
+        // this.getMaquinaEstados();
     }
 
+    // DEAD
     getMaquinaEstados() {
         this.mapaCamasService.getMaquinaEstados(this.organizacion).subscribe((maquinaEstados: IMaquinaEstados[]) => {
             this.maquinaEstados = maquinaEstados[0];
@@ -87,28 +104,30 @@ export class MapaCamasCapaComponent implements OnInit {
             fecha = this.fecha;
         }
 
-        this.mapaCamasService.snapshot(moment(fecha).toDate()).subscribe((snap: ISnapshot[]) => {
-            this.snapshot = snap;
-            this.auxSnapshot = snap;
-            this.camas = Observable.of(snap);
-            let index;
-            snap.map(s => {
-                index = this.sectores.findIndex(i => i.id === s.sectores[s.sectores.length - 1].nombre);
-                if (index < 0) {
-                    this.sectores.push({ 'id': s.sectores[s.sectores.length - 1].nombre, 'nombre': s.sectores[s.sectores.length - 1].nombre });
-                }
+        this.camas = this.mapaCamasService.snapshotFiltrado$;
 
-                index = this.tiposCama.findIndex(i => i.id === s.tipoCama.conceptId);
-                if (index < 0) {
-                    this.tiposCama.push({ 'id': s.tipoCama.conceptId, 'nombre': s.tipoCama.term });
-                }
+        // this.mapaCamasService.snapshot(moment(fecha).toDate()).subscribe((snap: ISnapshot[]) => {
+        //     this.snapshot = snap;
+        //     this.auxSnapshot = snap;
+        //     this.camas = Observable.of(snap);
+        //     let index;
+        //     snap.map(s => {
+        //         index = this.sectores.findIndex(i => i.id === s.sectores[s.sectores.length - 1].nombre);
+        //         if (index < 0) {
+        //             this.sectores.push({ 'id': s.sectores[s.sectores.length - 1].nombre, 'nombre': s.sectores[s.sectores.length - 1].nombre });
+        //         }
 
-                index = this.unidadesOrganizativas.findIndex(i => i.conceptId === s.unidadOrganizativa.conceptId);
-                if (index < 0) {
-                    this.unidadesOrganizativas.push({ id: s.unidadOrganizativa.conceptId, nombre: s.unidadOrganizativa.term });
-                }
-            });
-        });
+        //         index = this.tiposCama.findIndex(i => i.id === s.tipoCama.conceptId);
+        //         if (index < 0) {
+        //             this.tiposCama.push({ 'id': s.tipoCama.conceptId, 'nombre': s.tipoCama.term });
+        //         }
+
+        //         index = this.unidadesOrganizativas.findIndex(i => i.conceptId === s.unidadOrganizativa.conceptId);
+        //         if (index < 0) {
+        //             this.unidadesOrganizativas.push({ id: s.unidadOrganizativa.conceptId, nombre: s.unidadOrganizativa.term });
+        //         }
+        //     });
+        // });
     }
 
     filtrarTabla(filtros) {
@@ -153,12 +172,12 @@ export class MapaCamasCapaComponent implements OnInit {
         this.router.navigate([`/internacion/listado-internacion`]);
     }
 
-    selectCama(accion) {
-        this.selectedCama = accion.cama;
-        if (accion.relacion) {
-            this.estadoDestino = accion.relacion.destino;
-            this.accion = accion.relacion.accion;
-            let relacionesConDestino = this.relaciones.filter(rel => rel.destino === accion.relacion.destino);
+    selectCama(cama, relacion) {
+        this.selectedCama = cama;
+        if (relacion) {
+            this.estadoDestino = relacion.destino;
+            this.accion = relacion.accion;
+            let relacionesConDestino = this.relaciones.filter(rel => rel.destino === relacion.destino);
             relacionesConDestino.map(rel => {
                 this.opcionesCamas.push(...this.snapshot.filter(snap => snap.estado === rel.origen));
             });
@@ -192,12 +211,12 @@ export class MapaCamasCapaComponent implements OnInit {
         this.selectedCama = selectedCama;
     }
 
-    verDetalle(indexCama) {
+    verDetalle(cama) {
         if (!this.estadoDestino) {
-            if (this.selectedCama && this.snapshot[indexCama].idCama === this.selectedCama.idCama) {
+            if (this.selectedCama && cama.idCama === this.selectedCama.idCama) {
                 this.volverAResumen();
             } else {
-                this.selectedCama = this.snapshot[indexCama];
+                this.selectedCama = cama;
                 this.estadoDestino = null;
                 this.accion = 'verDetalle';
             }
