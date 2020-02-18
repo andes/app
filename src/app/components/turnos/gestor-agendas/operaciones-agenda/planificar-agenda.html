@@ -1,11 +1,8 @@
 <plex-layout [main]="main" *ngIf="autorizado && showAgenda">
     <plex-layout-main>
-        <header>
-            <plex-title *ngIf="!editaAgenda" titulo="{{ !editaAgenda ? 'Crear agenda' : 'Editar agenda'}}">
-
-            </plex-title>
-        </header>
-        <form #form="ngForm" class="w-100">
+        <plex-title *ngIf="!editaAgenda" titulo="{{ !editaAgenda ? 'Crear agenda' : 'Editar agenda'}}">
+        </plex-title>
+        <form #form="ngForm">
             <div class="row">
                 <div class="col-4">
                     <plex-datetime type="date" [(ngModel)]="modelo.fecha" [required]="true" autoFocus="true"
@@ -86,43 +83,41 @@
         </div>
 
         <!--Lista de Bloques-->
-        <div *ngIf="showBloque && modelo.bloques && modelo.bloques.length > 0" class="pt-3">
-            <fieldset>
-                <legend>Bloques
-                    <plex-button *ngIf="!dinamica" class="float-right" icon="plus" type="success btn-sm"
-                                 title="Agregar Bloque" (click)="addBloque()">
-                    </plex-button>
-                </legend>
-                <div class="list-group">
-                    <div *ngFor="let unBloque of modelo.bloques; let i=index"
-                         class="list-group-item justify-content-between hover" [ngClass]="{active: i==bloqueActivo}"
-                         (click)="activarBloque(i)">
-                        <div>
-                            <span *ngIf="unBloque.horaInicio && unBloque.horaFin">{{unBloque.horaInicio |
-                                            date: 'HH:mm'}} a {{unBloque.horaFin | date: 'HH:mm'}}</span>
-                        </div>
-                        <div *ngIf="unBloque.descripcion">{{unBloque.descripcion}}</div>
-                        <plex-button *ngIf="!dinamica && modelo.bloques.length > 1" icon="delete" type="primary"
-                                     (click)="deleteBloque(i)">
-                        </plex-button>
+        <div *ngIf="showBloque && modelo.bloques && modelo.bloques.length > 0" class="row">
+            <plex-title size="sm" titulo="Bloques">
+                <plex-button *ngIf="!dinamica" class="float-right" icon="plus" type="success btn-sm"
+                             title="Agregar Bloque" (click)="addBloque()">
+                </plex-button>
+            </plex-title>
+            <div class="list-group">
+                <div *ngFor="let unBloque of modelo.bloques; let i=index"
+                     class="list-group-item justify-content-between hover" [ngClass]="{active: i==bloqueActivo}"
+                     (click)="activarBloque(i)">
+                    <div>
+                        <span *ngIf="unBloque.horaInicio && unBloque.horaFin">
+                            {{ unBloque.horaInicio | date: 'HH:mm'}} a {{unBloque.horaFin | date: 'HH:mm' }}
+                        </span>
                     </div>
+                    <div *ngIf="unBloque.descripcion">{{unBloque.descripcion}}</div>
+                    <plex-button *ngIf="!dinamica && modelo.bloques.length > 1" icon="delete" type="primary"
+                                 (click)="deleteBloque(i)">
+                    </plex-button>
                 </div>
-            </fieldset>
+            </div>
         </div>
-        <!--Edición del bloque activo-->
+
     </plex-layout-main>
     <plex-layout-sidebar class="h-100">
-        <header>
-            <plex-title titulo="Bloque">
-                <div *ngIf="alertas.length" role="alert">
-                    <div class="alert alert-warning mb-0">
-                        <div *ngFor="let alert of alertas; let i=index">
-                            <i class="mdi mdi-alert-outline float-left mr-3"></i>{{alert}}
-                        </div>
+        <!--Edición del bloque activo-->
+        <plex-title titulo="Bloque">
+            <div *ngIf="alertas.length" role="alert">
+                <div class="alert alert-warning mb-0">
+                    <div *ngFor="let alert of alertas; let i=index">
+                        <i class="mdi mdi-alert-outline float-left mr-3"></i>{{alert}}
                     </div>
                 </div>
-            </plex-title>
-        </header>
+            </div>
+        </plex-title>
         <ng-container *ngIf="elementoActivo && bloqueActivo >= 0 && !showMapaEspacioFisico && !dinamica">
 
             <div class="row">
@@ -327,12 +322,10 @@
     <plex-layout-footer *ngIf="autorizado && !alertas.length && form.valid && !hideGuardar">
         <plex-button position="left" type="danger" label="Cancelar" (click)="cancelar()">
         </plex-button>
-        <!-- <form #form="ngForm"> -->
         <plex-button position="right" label="Guardar" type="success" (click)="onSave($event, false)" class="mr-2">
         </plex-button>
         <plex-button position="right" label="Guardar y clonar" type="success" (click)="onSave($event, true)">
         </plex-button>
-        <!-- </form> -->
     </plex-layout-footer>
 
 </plex-layout>
