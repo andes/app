@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { Auth } from '@andes/auth';
+import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 
 @Component({
     selector: 'app-informe-egreso',
@@ -11,7 +12,7 @@ export class InformeEgresoComponent implements OnInit {
     @Input() fecha: Date;
     @Input() cama;
     @Input() camas;
-    @Input() prestacion;
+    @Input() prestacion: IPrestacion;
     @Input() detalle = false;
     @Input() edit = false;
 
@@ -46,16 +47,12 @@ export class InformeEgresoComponent implements OnInit {
     // tslint:disable-next-line:use-lifecycle-interface
     ngOnChanges(changes: SimpleChanges) {
         if (changes && this.prestacion) {
-            if (this.prestacion._id !== changes['prestacion']) {
-                if (this.prestacion) {
-                    this.prestacionValidada = (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada');
-                    if (this.prestacion.ejecucion.registros[1]) {
-                        this.informeEgreso = this.prestacion.ejecucion.registros[1].valor.InformeEgreso;
-                        this.fecha = this.informeEgreso.fechaEgreso;
-                    } else {
-                        this.fecha = moment().toDate();
-                    }
-                }
+            this.prestacionValidada = (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada');
+            if (this.prestacion.ejecucion.registros[1]) {
+                this.informeEgreso = this.prestacion.ejecucion.registros[1].valor.InformeEgreso;
+                this.fecha = this.informeEgreso.fechaEgreso;
+            } else {
+                this.fecha = moment().toDate();
             }
         }
 

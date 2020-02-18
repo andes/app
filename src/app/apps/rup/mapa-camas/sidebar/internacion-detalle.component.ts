@@ -3,6 +3,7 @@ import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../mapa-camas.service';
 import { Plex, PlexOptionsComponent } from '@andes/plex';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
+import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
 
 @Component({
     selector: 'app-internacion-detalle',
@@ -12,7 +13,7 @@ import { PrestacionesService } from '../../../../modules/rup/services/prestacion
 export class InternacionDetalleComponent implements OnInit {
     // EVENTOS
     @Input() fecha: Date;
-    @Input() prestacion: any;
+    @Input() prestacion: IPrestacion;
     @Input() relacionesPosibles: any;
 
     @Output() toggleEditar = new EventEmitter<any>();
@@ -50,12 +51,10 @@ export class InternacionDetalleComponent implements OnInit {
     // tslint:disable-next-line:use-lifecycle-interface
     ngOnChanges(changes: SimpleChanges) {
         if (changes && this.prestacion) {
-            if (this.prestacion._id !== changes['prestacion']) {
-                this.mostrar = 'ingreso';
-                this.habilitarIngreso = false;
-                this.habilitarEgreso = false;
-                this.verificarOpciones();
-            }
+            this.mostrar = 'ingreso';
+            this.habilitarIngreso = false;
+            this.habilitarEgreso = false;
+            this.verificarOpciones();
         }
 
     }

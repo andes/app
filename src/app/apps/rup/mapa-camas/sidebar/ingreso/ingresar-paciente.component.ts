@@ -8,6 +8,8 @@ import { IPrestacionRegistro } from '../../../../../modules/rup/interfaces/prest
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { MapaCamasService } from '../../mapa-camas.service';
 import { snomedIngreso, pacienteAsociado, origenHospitalizacion, nivelesInstruccion, situacionesLaborales } from '../../constantes-internacion';
+import { ISnapshot } from '../../interfaces/ISnapshot';
+import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -17,9 +19,8 @@ import { snomedIngreso, pacienteAsociado, origenHospitalizacion, nivelesInstrucc
 export class IngresarPacienteComponent implements OnInit {
 
     // EVENTOS
-    @Input() cama: any;
-    @Input() camas: any;
-    @Input() prestacion: any;
+    @Input() cama: ISnapshot;
+    @Input() prestacion: IPrestacion;
     @Input() detalle = false;
     @Input() paciente = null;
 
@@ -90,7 +91,7 @@ export class IngresarPacienteComponent implements OnInit {
         if (this.prestacion && !this.cama) {
             let fechaIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
             this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
-            this.mapaCamasService.snapshot(fechaIngreso, this.prestacion._id).subscribe((cama: any) => {
+            this.mapaCamasService.snapshot(fechaIngreso, this.prestacion.id).subscribe((cama: ISnapshot[]) => {
                 this.cama = cama[0];
             });
         }
@@ -226,8 +227,8 @@ export class IngresarPacienteComponent implements OnInit {
         if (idInternacion) {
             this.cama.idInternacion = idInternacion;
         } else {
-            this.cama.idInternacion = (m = Math, d = Date, h = 16, s = s => m.floor(s).toString(h)) =>
-                s(d.now() / 1000) + ' '.repeat(h).replace(/./g, () => s(m.random() * h));
+            this.cama.idInternacion = String((m = Math, d = Date, h = 16, s = s => m.floor(s).toString(h)) =>
+                s(d.now() / 1000) + ' '.repeat(h).replace(/./g, () => s(m.random() * h)));
         }
 
         this.mapaCamasService.patchCama(this.cama, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {

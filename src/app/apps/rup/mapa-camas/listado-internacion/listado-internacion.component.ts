@@ -18,7 +18,6 @@ import { Slug } from 'ng2-slugify';
 export class InternacionListadoComponent implements OnInit {
     private slug = new Slug('default'); // para documento csv
 
-
     // VARIABLES
     public ambito = 'internacion';
     public capa = 'estadistica';

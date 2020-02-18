@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../../mapa-camas.service';
+import { ISnapshot } from '../../interfaces/ISnapshot';
+import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 
 @Component({
     selector: 'app-movimientos-internacion',
@@ -9,14 +11,14 @@ import { MapaCamasService } from '../../mapa-camas.service';
 
 export class MovimientosInternacionComponent implements OnInit {
     // EVENTOS
-    @Input() prestacion;
+    @Input() prestacion: IPrestacion;
 
     @Output() cambioCama = new EventEmitter<any>();
 
     // VARIABLES
     public ambito: string;
     public capa: string;
-    public movimientos;
+    public movimientos: ISnapshot[];
     public desde = moment().toDate();
     public hasta = moment().toDate();
     public prestacionValidada = false;
@@ -38,7 +40,7 @@ export class MovimientosInternacionComponent implements OnInit {
     }
 
     getMovimientos() {
-        this.mapaCamasService.historial(this.desde, this.hasta, { idInternacion: this.prestacion._id }).subscribe(movimientos => {
+        this.mapaCamasService.historial(this.desde, this.hasta, { idInternacion: this.prestacion.id }).subscribe((movimientos: ISnapshot[]) => {
             this.movimientos = movimientos;
             this.movimientos.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
         });

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { MapaCamasService } from '../../mapa-camas.service';
+import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 
 @Component({
     selector: 'app-informe-ingreso',
@@ -12,7 +13,7 @@ export class InformeIngresoComponent implements OnInit {
     @Input() fecha: Date;
     @Input() cama;
     @Input() camas;
-    @Input() prestacion;
+    @Input() prestacion: IPrestacion;
     @Input() detalle = false;
     @Input() edit = false;
 
@@ -49,11 +50,9 @@ export class InformeIngresoComponent implements OnInit {
     // tslint:disable-next-line:use-lifecycle-interface
     ngOnChanges(changes: SimpleChanges) {
         if (changes && this.prestacion) {
-            if (this.prestacion._id !== changes['prestacion']) {
-                this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
-                this.paciente = this.prestacion.paciente;
-                this.prestacionValidada = (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada');
-            }
+            this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
+            this.paciente = this.prestacion.paciente;
+            this.prestacionValidada = (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada');
         }
 
     }

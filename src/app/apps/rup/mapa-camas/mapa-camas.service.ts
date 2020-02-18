@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Observable } from 'rxjs';
+import { ISnapshot } from './interfaces/ISnapshot';
+import { ICama } from './interfaces/ICama';
+import { IMaquinaEstados } from './interfaces/IMaquinaEstados';
 
 @Injectable()
 export class MapaCamasService {
@@ -17,7 +20,7 @@ export class MapaCamasService {
         this.capa = capa;
     }
 
-    snapshot(fecha, idInternacion = null, ambito: string = null, capa: string = null, estado: string = null): Observable<any[]> {
+    snapshot(fecha, idInternacion = null, ambito: string = null, capa: string = null, estado: string = null): Observable<ISnapshot[]> {
         return this.server.get(this.url + '/camas', {
             params: {
                 ambito: ambito || this.ambito,
@@ -30,7 +33,7 @@ export class MapaCamasService {
         });
     }
 
-    historial(desde: Date, hasta: Date, filtros): Observable<any[]> {
+    historial(desde: Date, hasta: Date, filtros): Observable<ISnapshot[]> {
         const params = {
             ambito: this.ambito,
             capa: this.capa,
@@ -41,14 +44,14 @@ export class MapaCamasService {
         return this.server.get(`${this.url}/camas/historial`, { params });
     }
 
-    getCama(fecha, idCama): Observable<any[]> {
+    getCama(fecha, idCama): Observable<ICama[]> {
         return this.server.get(this.url + `/camas/${idCama}`, {
             params: { ambito: this.ambito, capa: this.capa, fecha },
             showError: true
         });
     }
 
-    patchCama(data, fecha, ambito: string = null, capa: string = null) {
+    patchCama(data, fecha, ambito: string = null, capa: string = null): Observable<ICama> {
         let params = {
             ...data,
             ambito: ambito || this.ambito,
@@ -62,7 +65,7 @@ export class MapaCamasService {
         }
     }
 
-    getMaquinaEstados(organizacion): Observable<any[]> {
+    getMaquinaEstados(organizacion): Observable<IMaquinaEstados[]> {
         return this.server.get(this.url + `/estados`, {
             params: { organizacion, ambito: this.ambito, capa: this.capa },
             showError: true

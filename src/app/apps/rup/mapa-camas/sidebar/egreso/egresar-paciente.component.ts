@@ -7,6 +7,9 @@ import { OrganizacionService } from '../../../../../services/organizacion.servic
 import { MapaCamasService } from '../../mapa-camas.service';
 import { ProcedimientosQuirurgicosService } from '../../../../../services/procedimientosQuirurgicos.service';
 import { listaTipoEgreso, causaExterna, opcionesTipoParto, opcionesCondicionAlNacer, opcionesTerminacion, opcionesSexo } from '../../constantes-internacion';
+import { ISnapshot } from '../../interfaces/ISnapshot';
+import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
+import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 
 @Component({
     selector: 'app-egresar-paciente',
@@ -16,8 +19,8 @@ import { listaTipoEgreso, causaExterna, opcionesTipoParto, opcionesCondicionAlNa
 export class EgresarPacienteComponent implements OnInit {
     // EVENTOS
     @Input() fecha: Date;
-    @Input() cama: any;
-    @Input() prestacion: any;
+    @Input() cama: ISnapshot;
+    @Input() prestacion: IPrestacion;
 
     @Output() cancel = new EventEmitter<any>();
     @Output() cambiarFecha = new EventEmitter<any>();
@@ -36,7 +39,7 @@ export class EgresarPacienteComponent implements OnInit {
     public ambito: string;
     public capa: string;
     public organizacion;
-    public maquinaEstados;
+    public maquinaEstados: IMaquinaEstados;
     public estadoDestino;
     public fechaValida = true;
     public mensajeError;
@@ -110,7 +113,7 @@ export class EgresarPacienteComponent implements OnInit {
                     this.verificarFecha(moment().toDate());
                 }
                 if (!this.cama) {
-                    this.mapaCamasService.snapshot(fechaIngreso, this.prestacion._id).subscribe(camas => {
+                    this.mapaCamasService.snapshot(fechaIngreso, this.prestacion.id).subscribe((camas: ISnapshot[]) => {
                         this.cama = camas[0];
                         this.getMaquinaEstados();
                     });
@@ -122,7 +125,7 @@ export class EgresarPacienteComponent implements OnInit {
                     this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
                     this.calcularDiasEstada();
                     this.verificarFecha(moment().toDate());
-                })
+                });
             }
         } else {
             this.fechaValida = true;
@@ -132,7 +135,7 @@ export class EgresarPacienteComponent implements OnInit {
     }
 
     getMaquinaEstados() {
-        this.mapaCamasService.getMaquinaEstados(this.auth.organizacion.id).subscribe(maquinaEstados => {
+        this.mapaCamasService.getMaquinaEstados(this.auth.organizacion.id).subscribe((maquinaEstados: IMaquinaEstados[]) => {
             this.maquinaEstados = maquinaEstados[0];
             if (this.maquinaEstados) {
                 let relaciones = maquinaEstados[0].relaciones;

@@ -76,8 +76,8 @@
     </ng-container>
 </ng-container>
 <ng-container *ngIf="!detalle">
-    <app-ingresar-paciente [camas]="camas" [cama]="cama" [prestacion]="prestacion" [paciente]="paciente"
-                           (cancel)="cancelar()" (cambiarFecha)="cambiarFechaIngreso($event)"
-                           (cambiarCama)="cambiarSeleccionCama($event)" (refresh)="refescar($event)">
+    <app-ingresar-paciente [cama]="cama" [prestacion]="prestacion" [paciente]="paciente" (cancel)="cancelar()"
+                           (cambiarFecha)="cambiarFechaIngreso($event)" (cambiarCama)="cambiarSeleccionCama($event)"
+                           (refresh)="refescar($event)">
     </app-ingresar-paciente>
 </ng-container>

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 import { ElementosRUPService } from '../../../../modules/rup/services/elementosRUP.service';
 import { MapaCamasService } from '../mapa-camas.service';
+import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
 
 
 @Component({
@@ -24,7 +25,7 @@ export class CamaDetalleComponent implements OnInit {
 
     // VARIABLES
     public capa: string;
-    public prestacion;
+    public prestacion: IPrestacion;
     public estadoCama;
     public genero;
     public censable;

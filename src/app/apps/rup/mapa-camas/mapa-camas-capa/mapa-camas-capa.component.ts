@@ -4,9 +4,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import * as moment from 'moment';
+import { ISnapshot } from '../interfaces/ISnapshot';
 import { MapaCamasService } from '../mapa-camas.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import { IMaquinaEstados } from '../interfaces/IMaquinaEstados';
+
 @Component({
     selector: 'app-mapa-camas-capa',
     templateUrl: 'mapa-camas-capa.component.html',
@@ -17,11 +20,11 @@ import 'rxjs/add/observable/of';
 export class MapaCamasCapaComponent implements OnInit {
     organizacion: string;
     fecha = moment().toDate();
-    ambito = 'internacion';
+    ambito: string;
     capa: string;
     camas: Observable<any[]>;
-    snapshot: any;
-    auxSnapshot: any;
+    snapshot: ISnapshot[];
+    auxSnapshot: ISnapshot[];
     unidadesOrganizativas = [];
     sectores = [];
     tiposCama = [];
@@ -33,7 +36,7 @@ export class MapaCamasCapaComponent implements OnInit {
     estadosCama: any;
     estados: any;
     relaciones: any;
-    maquinaEstados: any;
+    maquinaEstados: IMaquinaEstados;
 
     selectedCama: any;
     estadoDestino: any;
@@ -67,7 +70,7 @@ export class MapaCamasCapaComponent implements OnInit {
     }
 
     getMaquinaEstados() {
-        this.mapaCamasService.getMaquinaEstados(this.organizacion).subscribe(maquinaEstados => {
+        this.mapaCamasService.getMaquinaEstados(this.organizacion).subscribe((maquinaEstados: IMaquinaEstados[]) => {
             this.maquinaEstados = maquinaEstados[0];
 
             if (this.maquinaEstados) {
@@ -84,16 +87,15 @@ export class MapaCamasCapaComponent implements OnInit {
             fecha = this.fecha;
         }
 
-        this.mapaCamasService.snapshot(moment(fecha).toDate()).subscribe(snap => {
+        this.mapaCamasService.snapshot(moment(fecha).toDate()).subscribe((snap: ISnapshot[]) => {
             this.snapshot = snap;
             this.auxSnapshot = snap;
             this.camas = Observable.of(snap);
             let index;
             snap.map(s => {
-                s['uo'] = s.unidadOrganizativa.conceptId;
-                index = this.sectores.findIndex(i => i.id === s.sectores[s.sectores.length - 1]._id);
+                index = this.sectores.findIndex(i => i.id === s.sectores[s.sectores.length - 1].nombre);
                 if (index < 0) {
-                    this.sectores.push({ 'id': s.sectores[s.sectores.length - 1]._id, 'nombre': s.sectores[s.sectores.length - 1].nombre });
+                    this.sectores.push({ 'id': s.sectores[s.sectores.length - 1].nombre, 'nombre': s.sectores[s.sectores.length - 1].nombre });
                 }
 
                 index = this.tiposCama.findIndex(i => i.id === s.tipoCama.conceptId);
@@ -113,7 +115,7 @@ export class MapaCamasCapaComponent implements OnInit {
         this.snapshot = this.auxSnapshot;
 
         if (filtros.paciente) {
-            this.snapshot = this.snapshot.filter(snap =>
+            this.snapshot = this.snapshot.filter((snap: ISnapshot) =>
                 (snap.paciente) &&
                 ((snap.paciente.nombre.toLowerCase().includes(filtros.paciente.toLowerCase())) ||
                     (snap.paciente.apellido.toLowerCase().includes(filtros.paciente.toLowerCase())))
@@ -121,22 +123,22 @@ export class MapaCamasCapaComponent implements OnInit {
         }
 
         if (filtros.unidadOrganizativa) {
-            this.snapshot = this.snapshot.filter(snap => snap.unidadOrganizativa.conceptId === filtros.unidadOrganizativa.id);
+            this.snapshot = this.snapshot.filter((snap: ISnapshot) => snap.unidadOrganizativa.conceptId === filtros.unidadOrganizativa.id);
         }
 
         if (filtros.sector) {
-            this.snapshot = this.snapshot.filter(snap => String(snap.sectores[snap.sectores.length - 1]._id) === filtros.sector.id);
+            this.snapshot = this.snapshot.filter((snap: ISnapshot) => String(snap.sectores[snap.sectores.length - 1].nombre) === filtros.sector.id);
         }
 
         if (filtros.tipoCama) {
-            this.snapshot = this.snapshot.filter(snap => snap.tipoCama.conceptId === filtros.tipoCama.id);
+            this.snapshot = this.snapshot.filter((snap: ISnapshot) => snap.tipoCama.conceptId === filtros.tipoCama.id);
         }
 
         if (filtros.censable) {
             if (filtros.censable.id === 0) {
-                this.snapshot = this.snapshot.filter(snap => !snap.esCensable);
+                this.snapshot = this.snapshot.filter((snap: ISnapshot) => !snap.esCensable);
             } else if (filtros.censable.id === 1) {
-                this.snapshot = this.snapshot.filter(snap => snap.esCensable);
+                this.snapshot = this.snapshot.filter((snap: ISnapshot) => snap.esCensable);
             }
         }
 
@@ -174,7 +176,7 @@ export class MapaCamasCapaComponent implements OnInit {
     }
 
     refresh(accion) {
-        let i = this.snapshot.findIndex((snap: any) => snap._id === accion.cama._id);
+        let i = this.snapshot.findIndex((snap: ISnapshot) => snap.idCama === accion.cama._id);
         this.snapshot[i] = accion.cama;
         this.camas = Observable.of(this.snapshot);
         this.volverAResumen();
