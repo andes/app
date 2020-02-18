@@ -3,6 +3,7 @@ import { Router, CanActivate, ActivatedRoute, RouterStateSnapshot, ActivatedRout
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { HUDSService } from './modules/rup/services/huds.service';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable()
@@ -42,18 +43,17 @@ export class RoutingNavBar implements CanActivate {
 export class RoutingHudsGuard implements CanActivate {
     constructor(private router: Router, private hudsService: HUDSService) { }
 
-    canActivate(route: ActivatedRouteSnapshot) {
+    canActivate(route: ActivatedRouteSnapshot): Observable<boolean> | boolean {
         if (route.params.id) {
-            this.hudsService.checkHudsToken(route.params.id).subscribe(resp => {
-                if (resp) {
-                    return true;
-                } else {
-                    this.router.navigate(['inicio']);
+            return this.hudsService.checkHudsToken(route.params.id).pipe(map(resp => {
+                if (!resp) {
+                    this.router.navigate(['/rup']);
                     return false;
                 }
-            });
+                return true;
+            }));
         } else {
-            this.router.navigate(['inicio']);
+            this.router.navigate(['/rup']);
             return false;
         }
     }
