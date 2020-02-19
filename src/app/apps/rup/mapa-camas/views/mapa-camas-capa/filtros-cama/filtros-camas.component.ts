@@ -35,5 +35,6 @@ export class FiltrosCamasComponent implements OnInit {
         this.mapaCamasService.sectorSelected.next(this.filtro.sector);
         this.mapaCamasService.tipoCamaSelected.next(this.filtro.tipoCama);
         this.mapaCamasService.esCensable.next(this.filtro.censable);
+        this.mapaCamasService.pacienteText.next(this.filtro.paciente);
     }
 }

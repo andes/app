@@ -35,7 +35,7 @@ export class MapaCamasService {
     public sectorSelected = new BehaviorSubject<ISectores>(null);
     public tipoCamaSelected = new BehaviorSubject<ISnomedConcept>(null);
     public esCensable = new BehaviorSubject<any>(null);
-    // private pacienteText = new BehaviorSubject<string>(null);
+    public pacienteText = new BehaviorSubject<string>(null);
 
     public unidadOrganizativaList$: Observable<any[]>;
     public sectorList$: Observable<any[]>;
@@ -96,13 +96,14 @@ export class MapaCamasService {
 
         this.snapshotFiltrado$ = combineLatest(
             this.snapshot$,
+            this.pacienteText,
             this.unidadOrganizativaSelected,
             this.sectorSelected,
             this.tipoCamaSelected,
             this.esCensable
         ).pipe(
-            map(([camas, unidadOrganizativa, sector, tipoCama, esCensable]) =>
-                this.filtrarSnapshot(camas, unidadOrganizativa, sector, tipoCama, esCensable))
+            map(([camas, paciente, unidadOrganizativa, sector, tipoCama, esCensable]) =>
+                this.filtrarSnapshot(camas, paciente, unidadOrganizativa, sector, tipoCama, esCensable))
         );
 
     }
@@ -125,8 +126,16 @@ export class MapaCamasService {
         this.fecha2.next(fecha);
     }
 
-    filtrarSnapshot(camas: ISnapshot[], unidadOrganizativa: ISnomedConcept, sector: ISectores, tipoCama: ISnomedConcept, esCensable) {
+    filtrarSnapshot(camas: ISnapshot[], paciente: string, unidadOrganizativa: ISnomedConcept, sector: ISectores, tipoCama: ISnomedConcept, esCensable) {
         let camasFiltradas = camas;
+
+        if (paciente) {
+            camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => snap.estado === 'ocupada');
+            camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
+                (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                    snap.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
+            );
+        }
 
         if (unidadOrganizativa) {
             camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => snap.unidadOrganizativa.conceptId === unidadOrganizativa.conceptId);
