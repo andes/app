@@ -4,7 +4,6 @@ import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { HUDSService } from '../../services/huds.service';
-import { ModalMotivoAccesoHudsComponent as modal } from '../huds/modal-motivo-acceso-huds.component';
 
 @Component({
     selector: 'rup-hudsBusquedaPaciente',
@@ -69,7 +68,13 @@ export class HudsBusquedaPacienteComponent implements OnInit {
     onSelect(paciente: IPaciente): void {
         if (paciente) {
             this.pacienteSelected = paciente;
-            this.showModalMotivo = true;
+            this.hudsService.checkHudsToken(this.pacienteSelected.id).subscribe(tokenValido => {
+                if (tokenValido) {
+                    this.router.navigate(['/rup/huds/paciente/' + this.pacienteSelected.id]);
+                } else {
+                    this.showModalMotivo = true;    // Se muestra modal para seleccionar motivo
+                }
+            });
         }
     }
 
