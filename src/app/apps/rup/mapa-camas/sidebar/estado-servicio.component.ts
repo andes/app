@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
-import { Auth } from '@andes/auth';
+import { MapaCamasService } from '../services/mapa-camas.service';
+import { Observable, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ISnapshot } from '../interfaces/ISnapshot';
 
 @Component({
     selector: 'app-estado-servicio',
@@ -9,30 +11,32 @@ import { Auth } from '@andes/auth';
 })
 
 export class EstadoServicioComponent implements OnInit {
-    @Input() fecha: Date;
-    @Input() camas: any;
-    @Input() estados: any;
-    @Input() relaciones: any;
-    @Output() buscarEstados = new EventEmitter<Date>();
-
+    fecha: Date = moment().toDate();
+    fechaHasta: Date = moment().toDate();
+    total: number;
     camasXEstado: any;
+    camasXEstado$: Observable<any>;
     constructor(
-        public auth: Auth,
-        private router: Router,
+        private mapaCamasService: MapaCamasService,
     ) { }
 
     ngOnInit() {
-        this.camasXEstado = this.groupBy(this.camas, 'estado');
+        this.mapaCamasService.snapshotFiltrado$.pipe(
+            map((snapshot) => {
+                this.total = snapshot.length;
+                this.camasXEstado = this.groupBy(snapshot, 'estado');
+            })
+        ).subscribe();
     }
 
-    groupBy(xs: any[], key: string) {
+    groupBy(xs: ISnapshot[], key: string) {
         return xs.reduce((rv, x) => {
             (rv[x[key]] = rv[x[key]] || []).push(x);
             return rv;
         }, {});
     }
 
-    getEstadosCamas() {
-        this.buscarEstados.emit(this.fecha);
+    setFecha() {
+        this.mapaCamasService.setFecha(this.fecha);
     }
 }
