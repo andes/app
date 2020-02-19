@@ -139,7 +139,7 @@ export class AppComponent {
 
         const token = this.auth.getToken();
         if (token) {
-            this.hotjar.initialize();
+            // this.hotjar.initialize();
             this.ws.setToken(token);
             this.auth.session().subscribe(() => {
                 // Inicializa el menú
