@@ -565,6 +565,7 @@ import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaS
 import { MitosModule } from './apps/mitos';
 import { InternacionListaEsperaComponent } from './apps/rup/mapa-camas/views/lista-espera/lista-espera.component';
 import { MapaCamasHTTP } from './apps/rup/mapa-camas/services/mapa-camas.http';
+import { MPILibModule } from './modules/mpi/mpi-lib.module';
 
 registerLocaleData(localeEs, 'es');
 
@@ -643,9 +644,6 @@ registerLocaleData(localeEs, 'es');
         VistaPrestacionComponent,
         VistaCDAComponent,
         HudsBusquedaPacienteComponent,
-        PacienteBuscarComponent,
-        PacienteListadoComponent,
-        PacientePanelComponent,
 
         // RUP
         ...RUPComponentsArray,
@@ -705,8 +703,6 @@ registerLocaleData(localeEs, 'es');
         BusquedaMpiComponent,
         PacienteCruComponent,
         GeorrefMapComponent,
-        PacienteBuscarComponent,
-        PacienteListadoComponent,
 
         // form Terapeutico
         FormTerapeuticoComponent,
