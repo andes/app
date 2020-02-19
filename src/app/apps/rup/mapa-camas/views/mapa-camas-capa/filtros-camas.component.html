@@ -10,12 +10,14 @@
                          (change)="filtrar()">
             </plex-select>
         </div>
-        <div class="col-md-2" *ngIf="sectores.length > 0">
-            <plex-select label="Sector" [(ngModel)]="filtro.sector" [data]="sectores" (change)="filtrar()">
+        <div class="col-md-2">
+            <plex-select label="Sector" [(ngModel)]="filtro.sector" idField="nombre" labelField="nombre"
+                         [data]="mapaCamasService.sectorList$ | async" (change)="filtrar()">
             </plex-select>
         </div>
-        <div class="col-md-2" *ngIf="tiposCama.length > 0">
-            <plex-select label="Tipo de Cama" [(ngModel)]="filtro.tipoCama" (change)="filtrar()" [data]="tiposCama">
+        <div class="col-md-2">
+            <plex-select label="Tipo de Cama" [(ngModel)]="filtro.tipoCama" idField="conceptId" labelField="term"
+                         (change)="filtrar()" [data]="mapaCamasService.tipoCamaList$ | async">
             </plex-select>
         </div>
         <div class="col-md-2">

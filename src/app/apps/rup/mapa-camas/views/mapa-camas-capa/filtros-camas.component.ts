@@ -31,8 +31,9 @@ export class FiltrosCamasComponent implements OnInit {
     }
 
     filtrar() {
-        // this.filtrarTabla.emit(this.filtro);
-
         this.mapaCamasService.unidadOrganizativaSelected.next(this.filtro.unidadOrganizativa);
+        this.mapaCamasService.sectorSelected.next(this.filtro.sector);
+        this.mapaCamasService.tipoCamaSelected.next(this.filtro.tipoCama);
+        this.mapaCamasService.esCensable.next(this.filtro.censable);
     }
 }

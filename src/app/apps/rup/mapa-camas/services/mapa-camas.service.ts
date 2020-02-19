@@ -6,6 +6,8 @@ import { ICama } from '../interfaces/ICama';
 import { IMaquinaEstados, IMAQRelacion, IMAQEstado } from '../interfaces/IMaquinaEstados';
 import { MapaCamasHTTP, IFiltrosHistorial } from './mapa-camas.http';
 import { switchMap, map, pluck, tap } from 'rxjs/operators';
+import { ISectores } from '../../../../interfaces/IOrganizacion';
+import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concept.interface';
 
 function arrayToSet(array, key, itemFn) {
     const listado = [];
@@ -15,10 +17,6 @@ function arrayToSet(array, key, itemFn) {
         if (index < 0) {
             listado.push(item);
         }
-    });
-    listado.push({
-        conceptId: '1',
-        term: 'sucio truco'
     });
     return listado;
 }
@@ -33,11 +31,11 @@ export class MapaCamasService {
     private organizacion2 = new BehaviorSubject<string>(null);
 
 
-    public unidadOrganizativaSelected = new BehaviorSubject<any>(null);
-    // private sector = new BehaviorSubject<string>(null);
-    // private tipoCama = new BehaviorSubject<string>(null);
+    public unidadOrganizativaSelected = new BehaviorSubject<ISnomedConcept>(null);
+    public sectorSelected = new BehaviorSubject<ISectores>(null);
+    public tipoCamaSelected = new BehaviorSubject<ISnomedConcept>(null);
+    public esCensable = new BehaviorSubject<any>(null);
     // private pacienteText = new BehaviorSubject<string>(null);
-    // private esCensable = new BehaviorSubject<string>(null);
 
     public unidadOrganizativaList$: Observable<any[]>;
     public sectorList$: Observable<any[]>;
@@ -88,20 +86,23 @@ export class MapaCamasService {
             map((camas) => arrayToSet(camas, 'conceptId', (item) => item.unidadOrganizativa))
         ) as any;
 
+        this.sectorList$ = this.snapshot$.pipe(
+            map((camas) => arrayToSet(camas, 'nombre', (item) => item.sectores[0]))
+        ) as any;
+
+        this.tipoCamaList$ = this.snapshot$.pipe(
+            map((camas) => arrayToSet(camas, 'conceptId', (item) => item.tipoCama))
+        ) as any;
 
         this.snapshotFiltrado$ = combineLatest(
             this.snapshot$,
-            this.unidadOrganizativaSelected
+            this.unidadOrganizativaSelected,
+            this.sectorSelected,
+            this.tipoCamaSelected,
+            this.esCensable
         ).pipe(
-            map(([camas, unidadOrganizativa]) => {
-                let camasFiltradas = camas;
-
-                if (unidadOrganizativa) {
-                    camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => snap.unidadOrganizativa.conceptId === unidadOrganizativa.conceptId);
-                }
-
-                return camasFiltradas;
-            })
+            map(([camas, unidadOrganizativa, sector, tipoCama, esCensable]) =>
+                this.filtrarSnapshot(camas, unidadOrganizativa, sector, tipoCama, esCensable))
         );
 
     }
@@ -122,6 +123,32 @@ export class MapaCamasService {
 
     setFecha(fecha: Date) {
         this.fecha2.next(fecha);
+    }
+
+    filtrarSnapshot(camas: ISnapshot[], unidadOrganizativa: ISnomedConcept, sector: ISectores, tipoCama: ISnomedConcept, esCensable) {
+        let camasFiltradas = camas;
+
+        if (unidadOrganizativa) {
+            camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => snap.unidadOrganizativa.conceptId === unidadOrganizativa.conceptId);
+        }
+
+        if (sector) {
+            camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => String(snap.sectores[snap.sectores.length - 1].nombre) === sector.nombre);
+        }
+
+        if (tipoCama) {
+            camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => snap.tipoCama.conceptId === tipoCama.conceptId);
+        }
+
+        if (esCensable) {
+            if (esCensable.id === 0) {
+                camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => !snap.esCensable);
+            } else if (esCensable.id === 1) {
+                camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => snap.esCensable);
+            }
+        }
+
+        return camasFiltradas;
     }
 
     snapshot(fecha, idInternacion = null, ambito: string = null, capa: string = null, estado: string = null): Observable<ISnapshot[]> {
