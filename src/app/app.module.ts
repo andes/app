@@ -764,8 +764,7 @@ registerLocaleData(localeEs, 'es');
         PlantillasService,
         InternacionCacheService,
         WebSocketService,
-        HotjarService
-        MapaCamasService
+        HotjarService,
     ]
 })
 

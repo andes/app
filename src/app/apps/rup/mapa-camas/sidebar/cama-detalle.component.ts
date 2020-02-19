@@ -1,10 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { Router } from '@angular/router';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 import { ElementosRUPService } from '../../../../modules/rup/services/elementosRUP.service';
 import { MapaCamasService } from '../services/mapa-camas.service';
 import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
+import { ISnapshot } from '../interfaces/ISnapshot';
+import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -12,9 +15,10 @@ import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.inter
     templateUrl: 'cama-detalle.component.html'
 })
 export class CamaDetalleComponent implements OnInit {
+    public cama$: Observable<ISnapshot>;
+
     // Eventos
     @Input() fecha: Date;
-    @Input() cama: any;
     @Input() camas: any;
     @Input() estados: any;
     @Input() relaciones: any;
@@ -24,6 +28,7 @@ export class CamaDetalleComponent implements OnInit {
     @Output() refresh = new EventEmitter<any>();
 
     // VARIABLES
+    public cama: ISnapshot;
     public capa: string;
     public prestacion: IPrestacion;
     public estadoCama;
@@ -61,19 +66,20 @@ export class CamaDetalleComponent implements OnInit {
         this.elementoRupService.ready.subscribe(() => {
             this.conceptosInternacion = this.elementoRupService.getConceptosInternacion();
         });
+
+        this.cama$ = this.mapaCamasService.selectedCama;
     }
 
-    // tslint:disable-next-line:use-lifecycle-interface
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes && this.estadoCama) {
-            if (this.cama.idCama !== changes['cama']) {
-                this.getDatosCama();
-                this.getRelacionesPosibles();
-            }
-            this.cambiarTab(0);
-        }
+    // ngOnChanges(changes: SimpleChanges) {
+    //     if (changes && this.estadoCama) {
+    //         if (this.cama.idCama !== changes['cama']) {
+    //             this.getDatosCama();
+    //             this.getRelacionesPosibles();
+    //         }
+    //         this.cambiarTab(0);
+    //     }
 
-    }
+    // }
 
     getDatosCama() {
         this.paciente = null;

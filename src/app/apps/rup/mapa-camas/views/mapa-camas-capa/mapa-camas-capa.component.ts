@@ -102,6 +102,7 @@ export class MapaCamasCapaComponent implements OnInit {
 
     selectCama(cama, relacion) {
         this.selectedCama = cama;
+        this.mapaCamasService.select(cama);
         if (relacion) {
             this.estadoDestino = relacion.destino;
             this.accion = relacion.accion;
@@ -139,7 +140,8 @@ export class MapaCamasCapaComponent implements OnInit {
         this.selectedCama = selectedCama;
     }
 
-    verDetalle(cama) {
+    verDetalle(cama: ISnapshot) {
+        this.mapaCamasService.select(cama);
         if (!this.estadoDestino) {
             if (this.selectedCama && cama.idCama === this.selectedCama.idCama) {
                 this.volverAResumen();

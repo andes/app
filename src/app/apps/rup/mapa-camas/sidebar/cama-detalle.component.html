@@ -1,5 +1,5 @@
 <plex-tabs size="full" [activeIndex]="tabIndex" (change)="cambiarTab($event)">
-    <plex-tab *ngIf="cama" label="CAMA">
+    <plex-tab *ngIf="cama$ | async as cama" label="CAMA">
         <ng-container>
             <plex-title justify titulo="DATOS DE CAMA">
                 <plex-button title="cerrar" icon="close" type="danger" size="sm" (click)="cancelar()">

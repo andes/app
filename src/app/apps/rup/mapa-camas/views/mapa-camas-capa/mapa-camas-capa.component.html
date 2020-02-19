@@ -34,7 +34,7 @@
         </fieldset>
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
-        <app-estado-servicio></app-estado-servicio>
+        <app-estado-servicio *ngIf="!accion"></app-estado-servicio>
         <app-informe-ingreso *ngIf="accion === 'internarPaciente'" [camas]="opcionesCamas" [cama]="selectedCama"
                              (cancel)="volverAResumen()" (cambiarFecha)="getSnapshot($event)"
                              (cambiarCama)="cambiarCama($event)" (refresh)="refresh($event)">
@@ -55,7 +55,7 @@
                                    (cambiarFecha)="getSnapshot($event)" (cambiarCama)="cambiarCama($event)"
                                    (refresh)="refresh($event)">
         </app-cama-destino-generico>
-        <app-cama-detalle *ngIf="accion === 'verDetalle'" [fecha]="fecha" [camas]="opcionesCamas" [cama]="selectedCama"
+        <app-cama-detalle *ngIf="accion === 'verDetallee'" [fecha]="fecha" [camas]="opcionesCamas" [cama]="selectedCama"
                           [estados]="estados" [relaciones]="relaciones" (cancel)="volverAResumen()"
                           (accionCama)="selectCama($event)" (refresh)="refresh($event)">
         </app-cama-detalle>

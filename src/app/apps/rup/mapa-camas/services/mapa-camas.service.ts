@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Server, cache } from '@andes/shared';
+import { cache } from '@andes/shared';
 import { Observable, BehaviorSubject, Subject, combineLatest, of } from 'rxjs';
 import { ISnapshot } from '../interfaces/ISnapshot';
 import { ICama } from '../interfaces/ICama';
@@ -30,7 +30,6 @@ export class MapaCamasService {
     private fecha2 = new BehaviorSubject<Date>(null);
     private organizacion2 = new BehaviorSubject<string>(null);
 
-
     public unidadOrganizativaSelected = new BehaviorSubject<ISnomedConcept>(null);
     public sectorSelected = new BehaviorSubject<ISectores>(null);
     public tipoCamaSelected = new BehaviorSubject<ISnomedConcept>(null);
@@ -41,6 +40,7 @@ export class MapaCamasService {
     public sectorList$: Observable<any[]>;
     public tipoCamaList$: Observable<any[]>;
 
+    public selectedCama = new BehaviorSubject<ISnapshot>(null);
 
     private maquinaDeEstado$: Observable<IMaquinaEstados>;
 
@@ -124,6 +124,10 @@ export class MapaCamasService {
 
     setFecha(fecha: Date) {
         this.fecha2.next(fecha);
+    }
+
+    select(cama: ISnapshot) {
+        this.selectedCama.next(cama);
     }
 
     filtrarSnapshot(camas: ISnapshot[], paciente: string, unidadOrganizativa: ISnomedConcept, sector: ISectores, tipoCama: ISnomedConcept, esCensable) {
