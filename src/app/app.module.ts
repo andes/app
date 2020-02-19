@@ -148,7 +148,7 @@ import { CamasListadoComponent } from './apps/rup/internacion/components/camasLi
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion/tipoPrestacion-create-update.component';
 import { ProcedimientosQuirurgicosService } from './services/procedimientosQuirurgicos.service';
-import { SectoresItemComponent } from './components/organizacion/sectores-item/sectores-item.component';
+
 // ... MPI
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
 import { DashboardComponent } from './components/paciente/dashboard.component';
@@ -687,7 +687,6 @@ registerLocaleData(localeEs, 'es');
         DesocuparCamaComponent,
         OrganizacionSectoresComponent,
         OrganizacionOfertaPrestacionalComponent,
-        SectoresItemComponent,
         PucoComponent,
         ReglasComponent,
         ListaReglasComponent,
