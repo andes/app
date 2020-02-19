@@ -82,21 +82,6 @@ export class MapaCamasCapaComponent implements OnInit {
 
         this.organizacion = this.auth.organizacion.id;
         this.getSnapshot();
-        // this.getMaquinaEstados();
-    }
-
-    // DEAD
-    getMaquinaEstados() {
-        this.mapaCamasService.getMaquinaEstados(this.organizacion).subscribe((maquinaEstados: IMaquinaEstados[]) => {
-            this.maquinaEstados = maquinaEstados[0];
-
-            if (this.maquinaEstados) {
-                this.estados = maquinaEstados[0].estados;
-                this.relaciones = maquinaEstados[0].relaciones;
-            } else {
-                this.plex.info('warning', 'No se han configurado los estados de camas!');
-            }
-        });
     }
 
     getSnapshot(fecha = null) {
@@ -105,63 +90,6 @@ export class MapaCamasCapaComponent implements OnInit {
         }
 
         this.camas = this.mapaCamasService.snapshotFiltrado$;
-
-        // this.mapaCamasService.snapshot(moment(fecha).toDate()).subscribe((snap: ISnapshot[]) => {
-        //     this.snapshot = snap;
-        //     this.auxSnapshot = snap;
-        //     this.camas = Observable.of(snap);
-        //     let index;
-        //     snap.map(s => {
-        //         index = this.sectores.findIndex(i => i.id === s.sectores[s.sectores.length - 1].nombre);
-        //         if (index < 0) {
-        //             this.sectores.push({ 'id': s.sectores[s.sectores.length - 1].nombre, 'nombre': s.sectores[s.sectores.length - 1].nombre });
-        //         }
-
-        //         index = this.tiposCama.findIndex(i => i.id === s.tipoCama.conceptId);
-        //         if (index < 0) {
-        //             this.tiposCama.push({ 'id': s.tipoCama.conceptId, 'nombre': s.tipoCama.term });
-        //         }
-
-        //         index = this.unidadesOrganizativas.findIndex(i => i.conceptId === s.unidadOrganizativa.conceptId);
-        //         if (index < 0) {
-        //             this.unidadesOrganizativas.push({ id: s.unidadOrganizativa.conceptId, nombre: s.unidadOrganizativa.term });
-        //         }
-        //     });
-        // });
-    }
-
-    filtrarTabla(filtros) {
-        this.snapshot = this.auxSnapshot;
-
-        if (filtros.paciente) {
-            this.snapshot = this.snapshot.filter((snap: ISnapshot) =>
-                (snap.paciente) &&
-                ((snap.paciente.nombre.toLowerCase().includes(filtros.paciente.toLowerCase())) ||
-                    (snap.paciente.apellido.toLowerCase().includes(filtros.paciente.toLowerCase())))
-            );
-        }
-
-        if (filtros.unidadOrganizativa) {
-            this.snapshot = this.snapshot.filter((snap: ISnapshot) => snap.unidadOrganizativa.conceptId === filtros.unidadOrganizativa.id);
-        }
-
-        if (filtros.sector) {
-            this.snapshot = this.snapshot.filter((snap: ISnapshot) => String(snap.sectores[snap.sectores.length - 1].nombre) === filtros.sector.id);
-        }
-
-        if (filtros.tipoCama) {
-            this.snapshot = this.snapshot.filter((snap: ISnapshot) => snap.tipoCama.conceptId === filtros.tipoCama.id);
-        }
-
-        if (filtros.censable) {
-            if (filtros.censable.id === 0) {
-                this.snapshot = this.snapshot.filter((snap: ISnapshot) => !snap.esCensable);
-            } else if (filtros.censable.id === 1) {
-                this.snapshot = this.snapshot.filter((snap: ISnapshot) => snap.esCensable);
-            }
-        }
-
-        this.camas = Observable.of(this.snapshot);
     }
 
     agregarCama() {

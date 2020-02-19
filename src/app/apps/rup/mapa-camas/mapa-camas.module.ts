@@ -13,7 +13,7 @@ import { MapaCamasMainComponent } from './mapa-camas-main.component';
 import { MapaCamasCapaComponent } from './views/mapa-camas-capa/mapa-camas-capa.component';
 import { CensosDiariosComponent } from './views/censos/censo-diario/censo-diario.component';
 import { CensosMensualesComponent } from './views/censos/censo-mensual/censo-mensual.component';
-import { FiltrosCamasComponent } from './views/mapa-camas-capa/filtros-camas.component';
+import { FiltrosCamasComponent } from './views/mapa-camas-capa/filtros-cama/filtros-camas.component';
 import { CamaMainComponent } from './views/cama/cama.component';
 import { EstadoServicioComponent } from './sidebar/estado-servicio.component';
 import { ItemCamaComponent } from './views/mapa-camas-capa/item-cama/item-cama.component';
