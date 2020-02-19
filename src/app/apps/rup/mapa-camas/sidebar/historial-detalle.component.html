@@ -29,7 +29,7 @@
                 {{ item.fecha | hora }}
             </td>
             <td *ngIf="item.paciente; else sinPaciente">
-                {{ item.paciente | paciente }}
+                {{ item.paciente | nombre }}
             </td>
             <ng-template #sinPaciente>
                 <td class="text-danger">SIN PACIENTE</td>

@@ -349,53 +349,7 @@ import { OrganizacionSectoresComponent } from './components/organizacion/organiz
 import { OrganizacionOfertaPrestacionalComponent } from './components/organizacion/organizacion-prestaciones.component';
 
 // MAPA CAMAS
-import { MapaCamasMainComponent } from './apps/rup/mapa-camas/mapa-camas-main.component';
-import { MapaCamasCapaComponent } from './apps/rup/mapa-camas/views/mapa-camas-capa/mapa-camas-capa.component';
-import { CensosDiariosComponent } from './apps/rup/mapa-camas/views/censos/censo-diario/censo-diario.component';
-import { FiltrosCamasComponent } from './apps/rup/mapa-camas/views/mapa-camas-capa/filtros-camas.component';
-import { CamaMainComponent } from './apps/rup/mapa-camas/views/cama/cama.component';
-import { ItemCamaComponent } from './apps/rup/mapa-camas/views/mapa-camas-capa/item-cama/item-cama.component';
-import { EstadoServicioComponent } from './apps/rup/mapa-camas/sidebar/estado-servicio.component';
-import { IngresarPacienteComponent } from './apps/rup/mapa-camas/sidebar/ingreso/ingresar-paciente.component';
-import { MapaCamasService } from './apps/rup/mapa-camas/services/mapa-camas.service';
-import { CensosMensualesComponent } from './apps/rup/mapa-camas/views/censos/censo-mensual/censo-mensual.component';
-import { IconoCamitaComponent } from './apps/rup/mapa-camas/sidebar/icono-camita.component';
-import { CamaDestinoGenericoComponent } from './apps/rup/mapa-camas/sidebar/cama-destino-generico.component';
-import { CamaDesocuparComponent } from './apps/rup/mapa-camas/sidebar/desocupar-cama.component';
-import { EgresarPacienteComponent } from './apps/rup/mapa-camas/sidebar/egreso/egresar-paciente.component';
-import { CamaDetalleComponent } from './apps/rup/mapa-camas/sidebar/cama-detalle.component';
-import { InternacionDetalleComponent } from './apps/rup/mapa-camas/sidebar/internacion-detalle.component';
-import { InformeIngresoComponent } from './apps/rup/mapa-camas/sidebar/ingreso/informe-ingreso.component';
-import { HistorialDetalleComponent } from './apps/rup/mapa-camas/sidebar/historial-detalle.component';
-import { MovimientosInternacionComponent } from './apps/rup/mapa-camas/sidebar/movimientos-internacion/movimientos-internacion.component';
-import { CambiarCamaComponent } from './apps/rup/mapa-camas/sidebar/cambiar-cama.component';
-import { InternacionListadoComponent } from './apps/rup/mapa-camas/views/listado-internacion/listado-internacion.component';
-import { InformeEgresoComponent } from './apps/rup/mapa-camas/sidebar/egreso/informe-egreso.component';
 
-let mapaCamasComponents = [
-    MapaCamasMainComponent,
-    MapaCamasCapaComponent,
-    CensosDiariosComponent,
-    CensosMensualesComponent,
-    FiltrosCamasComponent,
-    CamaMainComponent,
-    EstadoServicioComponent,
-    ItemCamaComponent,
-    IngresarPacienteComponent,
-    IconoCamitaComponent,
-    CamaDestinoGenericoComponent,
-    CamaDesocuparComponent,
-    EgresarPacienteComponent,
-    CamaDetalleComponent,
-    InternacionDetalleComponent,
-    InformeIngresoComponent,
-    InformeEgresoComponent,
-    HistorialDetalleComponent,
-    MovimientosInternacionComponent,
-    CambiarCamaComponent,
-    InternacionListadoComponent,
-    InternacionListaEsperaComponent
-];
 
 // Solicitudes
 import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.component';
@@ -563,9 +517,8 @@ import { ListaReglasComponent } from './components/top/reglas/listaReglas.compon
 import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaSolicitudTop';
 
 import { MitosModule } from './apps/mitos';
-import { InternacionListaEsperaComponent } from './apps/rup/mapa-camas/views/lista-espera/lista-espera.component';
-import { MapaCamasHTTP } from './apps/rup/mapa-camas/services/mapa-camas.http';
 import { MPILibModule } from './modules/mpi/mpi-lib.module';
+import { OrganizacionLibModule } from './components/organizacion/organizacion-lib.module';
 
 registerLocaleData(localeEs, 'es');
 
@@ -589,7 +542,8 @@ registerLocaleData(localeEs, 'es');
         }),
         InfiniteScrollModule,
         GestorUsuariosProvidersModule,
-        MPILibModule
+        MPILibModule,
+        OrganizacionLibModule
     ],
     declarations: [
         AppComponent, InicioComponent,
@@ -663,9 +617,6 @@ registerLocaleData(localeEs, 'es');
         VistaDetalleRegistroComponent,
         VistaAccesosHudsComponent,
         ModalMotivoAccesoHudsComponent,
-
-        // MAPA DE CAMAS
-        mapaCamasComponents,
 
         // Solicitudes
         SolicitudesComponent,
@@ -813,8 +764,8 @@ registerLocaleData(localeEs, 'es');
         PlantillasService,
         InternacionCacheService,
         WebSocketService,
-        MapaCamasService
         HotjarService
+        MapaCamasService
     ]
 })
 

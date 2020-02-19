@@ -229,20 +229,7 @@ const appRoutes: Routes = [
   // Turnero
   { path: 'pantallas', loadChildren: './apps/turnero/turnero.module#TurneroModule', canActivate: [RoutingNavBar, RoutingGuard] },
 
-  // { path: 'internacion', loadChildren: './apps/rup/mapa-camas/mapa-camas.module#MapaCamasModule', canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'internacion/mapa-camas/:capa', component: MapaCamasCapaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'internacion/mapa-camas', component: MapaCamasMainComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-
-  // [TODO] Las camas no tienen capa al crearlas.
-  { path: 'internacion/cama/:capa/:id', component: CamaMainComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'internacion/cama/:capa', component: CamaMainComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-
-  { path: 'internacion/censo/diario', component: CensosDiariosComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'internacion/censo/mensual', component: CensosMensualesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-
-  { path: 'internacion/listado-internacion', component: InternacionListadoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-
-  { path: 'internacion/:ambito/:capa/lista-espera', component: InternacionListaEsperaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'internacion', loadChildren: './apps/rup/mapa-camas/mapa-camas.module#MapaCamasModule', canActivate: [RoutingNavBar, RoutingGuard] },
 
   // dejar siempre al último porque no encuentra las url después de esta
   { path: '**', redirectTo: 'inicio' }
