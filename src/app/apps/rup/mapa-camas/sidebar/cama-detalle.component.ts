@@ -136,7 +136,7 @@ export class CamaDetalleComponent implements OnInit {
     }
 
     goTo() {
-        this.router.navigate([`/internacion/cama/${this.capa}/${this.cama._id}`]);
+        this.router.navigate([`/internacion/cama/${this.cama._id}`]);
     }
 
     accion(relacion) {

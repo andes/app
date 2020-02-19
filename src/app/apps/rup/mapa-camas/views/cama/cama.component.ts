@@ -16,7 +16,6 @@ export class CamaMainComponent implements OnInit {
     public expr = SnomedExpression;
 
     public ambito: string;
-    public capa: string;
     public fecha = moment().toDate();
     public organizacion: any;
     public unidadesOrganizativas: any;
@@ -41,7 +40,6 @@ export class CamaMainComponent implements OnInit {
 
     ngOnInit() {
         this.ambito = this.mapaCamasService.ambito;
-        this.capa = this.mapaCamasService.capa;
 
         this.plex.updateTitle([{
             route: '/inicio',
@@ -72,16 +70,11 @@ export class CamaMainComponent implements OnInit {
                     .subscribe(cama => {
                         this.cama = cama;
                         this.camaAux = cama;
-                        this.getEstadosCama(cama);
                     });
             } else {
                 this.cama = {};
             }
         });
-    }
-
-    getEstadosCama(cama) {
-
     }
 
     save() {

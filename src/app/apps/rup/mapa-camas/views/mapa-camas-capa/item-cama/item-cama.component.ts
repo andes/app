@@ -64,8 +64,7 @@ export class ItemCamaComponent implements OnInit {
     }
 
     goTo() {
-        // [TODO] Editar capas
-        this.router.navigate([`/internacion/cama/${this.capa}/${this.cama._id}`]);
+        this.router.navigate([`/internacion/cama/${this.cama._id}`]);
     }
 
     accion(relacion) {
