@@ -107,6 +107,9 @@ import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campania
 import { TurnosPrestacionesComponent } from './components/buscadorTurnosPrestaciones/turnos-prestaciones.component';
 import { NuevaSolicitudComponent } from './components/top/solicitudes/nuevaSolicitud.component';
 import { INTERNACION_ROUTES } from './apps/rup/mapa-camas/mapa-camas.routing';
+import { NovedadesComponent } from './components/novedades/novedades.component';
+import { DetalleNovedadComponent } from './components/novedades/lista-novedades/detalle-novedad/detalle-novedad.component';
+import { ListaNovedadesComponent } from './components/novedades/lista-novedades/lista-novedades.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -223,10 +226,20 @@ const appRoutes: Routes = [
 
   { path: 'internacion', loadChildren: './apps/rup/mapa-camas/mapa-camas.module#MapaCamasModule', canActivate: [RoutingNavBar, RoutingGuard] },
 
-
-
-  // dejar siempre al último porque no encuentra las url después de esta
-  { path: '**', redirectTo: 'inicio' }
+    {
+        path: 'novedades',
+        component: NovedadesComponent,
+        children: [
+            {
+                path: ':id', component: DetalleNovedadComponent
+            },
+        ]
+    },
+    // { path: 'novedades/:id', component: DetalleNovedadComponent },
+    { path: 'novedades/lista', component: ListaNovedadesComponent },
+    // dejar siempre al último porque no encuentra las url después de esta
+    // dejar siempre al último porque no encuentra las url después de esta
+    { path: '**', redirectTo: 'inicio' }
 ];
 
 export const appRoutingProviders: any[] = [];

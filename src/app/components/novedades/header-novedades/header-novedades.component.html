@@ -1,0 +1,14 @@
+<plex-help icon="bell">
+    <div info>
+        <plex-title titulo="Novedades"></plex-title>
+        <plex-list>
+            <plex-item *ngFor="let novedad of novedades$ | async" [routerLink]="['/novedades', novedad.id]">
+                <img src="{{ novedad.imagen[0] }}" alt="">
+                <plex-label titulo="{{ novedad.titulo }}" subtitulo=""></plex-label>
+                <plex-badge size="md" type="info">{{ novedad.fechaPublicacion }}</plex-badge>
+                <plex-badge size="md" type="success">{{ novedad.modulo }}</plex-badge>
+            </plex-item>
+        </plex-list>
+    </div>
+
+</plex-help>

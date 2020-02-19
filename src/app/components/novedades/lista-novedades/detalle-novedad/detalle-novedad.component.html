@@ -1,0 +1,28 @@
+<section class="detalle-novedad">
+    <ng-container *ngIf="novedad$ | async as novedad">
+        <div justify="start">
+            <plex-badge type="info">{{ novedad.fechaPublicacion}}</plex-badge>
+            <plex-badge type="warning">{{ novedad.modulo}}</plex-badge>
+        </div>
+        <div class="jumbotron-text">
+            <h1 class="display-4">{{ novedad.titulo }}</h1>
+            <p class="lead">{{ novedad.bajada }}</p>
+        </div>
+        <section class="overlay">
+            <div class="contenedor-imagen">
+                <img src="{{ novedad.imagen[0] }}" alt="">
+            </div>
+        </section>
+        <section class="contenedor-nota">
+            <div class="contenedor-texto">
+                <article>
+                    <p>{{ novedad.nota }}</p>
+                </article>
+                <!-- Galeria de imagenes -->
+                <div class="galeria-imagenes">
+                    <img *ngFor="let item of novedad.imagen" src="{{ item }}" class="img-thumbnail">
+                </div>
+            </div>
+        </section>
+    </ng-container>
+</section>
