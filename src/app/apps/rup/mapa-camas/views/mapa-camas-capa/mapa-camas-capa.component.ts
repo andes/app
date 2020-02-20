@@ -20,6 +20,7 @@ import { interval } from 'rxjs';
 
 export class MapaCamasCapaComponent implements OnInit {
     capa$: Observable<string>;
+    selectedCama$: Observable<ISnapshot>;
 
 
 
@@ -64,6 +65,8 @@ export class MapaCamasCapaComponent implements OnInit {
     ngOnInit() {
         this.ambito = this.mapaCamasService.ambito;
 
+        this.selectedCama$ = this.mapaCamasService.selectedCama;
+
         this.capa$ = this.route.params.pipe(
             take(1),
             pluck('capa'),
@@ -101,15 +104,14 @@ export class MapaCamasCapaComponent implements OnInit {
     }
 
     selectCama(cama, relacion) {
-        this.selectedCama = cama;
         this.mapaCamasService.select(cama);
         if (relacion) {
-            this.estadoDestino = relacion.destino;
+            // this.estadoDestino = relacion.destino;
             this.accion = relacion.accion;
-            let relacionesConDestino = this.relaciones.filter(rel => rel.destino === relacion.destino);
-            relacionesConDestino.map(rel => {
-                this.opcionesCamas.push(...this.snapshot.filter(snap => snap.estado === rel.origen));
-            });
+            // let relacionesConDestino = this.relaciones.filter(rel => rel.destino === relacion.destino);
+            // relacionesConDestino.map(rel => {
+            //     this.opcionesCamas.push(...this.snapshot.filter(snap => snap.estado === rel.origen));
+            // });
         }
     }
 
@@ -140,17 +142,23 @@ export class MapaCamasCapaComponent implements OnInit {
         this.selectedCama = selectedCama;
     }
 
-    verDetalle(cama: ISnapshot) {
-        this.mapaCamasService.select(cama);
-        if (!this.estadoDestino) {
-            if (this.selectedCama && cama.idCama === this.selectedCama.idCama) {
-                this.volverAResumen();
-            } else {
-                this.selectedCama = cama;
-                this.estadoDestino = null;
-                this.accion = 'verDetalle';
-            }
+    verDetalle(cama: ISnapshot, selectedCama: ISnapshot) {
+        if (!selectedCama.idCama || selectedCama.idCama !== cama.idCama) {
+            this.mapaCamasService.select(cama);
+            this.accion = 'verDetalle';
+        } else {
+            this.accion = null;
+            this.mapaCamasService.select({ idCama: null, _id: null } as any);
         }
+
+        // if (!this.estadoDestino) {
+        //     if (this.selectedCama && cama.idCama === this.selectedCama.idCama) {
+        //         this.volverAResumen();
+        //     } else {
+        //         this.selectedCama = cama;
+        //         this.estadoDestino = null;
+        //     }
+        // }
     }
 
     volver() {

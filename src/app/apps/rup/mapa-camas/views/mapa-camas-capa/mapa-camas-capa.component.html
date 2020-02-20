@@ -26,19 +26,27 @@
                     <th>ESTADO</th>
                     <th>ACCIONES</th>
                 </tr>
-                <tr app-item-cama *ngFor="let cama of camas | async" [cama]="cama"
-                    (accionCama)="selectCama(cama, $event)" (click)="verDetalle(cama)"
-                    [class.invert]="selectedCama && cama._id === selectedCama._id">
-                </tr>
+                <ng-container *ngIf="(selectedCama$ | async) as selectedCama">
+                    <tr app-item-cama *ngFor="let cama of camas | async" [cama]="cama"
+                        (accionCama)="selectCama(cama, $event)" (click)="verDetalle(cama, selectedCama)"
+                        [class.invert]="cama._id === selectedCama._id">
+                    </tr>
+                </ng-container>
             </table>
         </fieldset>
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
         <app-estado-servicio *ngIf="!accion"></app-estado-servicio>
-        <app-informe-ingreso *ngIf="accion === 'internarPaciente'" [camas]="opcionesCamas" [cama]="selectedCama"
+        <!-- <app-informe-ingreso *ngIf="accion === 'internarPaciente'" [camas]="opcionesCamas" [cama]="selectedCama"
                              (cancel)="volverAResumen()" (cambiarFecha)="getSnapshot($event)"
                              (cambiarCama)="cambiarCama($event)" (refresh)="refresh($event)">
-        </app-informe-ingreso>
+        </app-informe-ingreso> -->
+
+        <app-ingresar-paciente *ngIf="accion === 'internarPaciente'" (cancel)="cancelar()"
+                               (cambiarFecha)="cambiarFechaIngreso($event)" (cambiarCama)="cambiarSeleccionCama($event)"
+                               (refresh)="refescar($event)">
+        </app-ingresar-paciente>
+
         <app-desocupar-cama *ngIf="accion === 'desocuparCama'" [fecha]="fecha" [camas]="snapshot" [cama]="selectedCama"
                             (cancel)="volverAResumen()" (cambiarFecha)="getSnapshot($event)"
                             (accionDesocupar)="accionDesocupar($event)">
@@ -55,9 +63,8 @@
                                    (cambiarFecha)="getSnapshot($event)" (cambiarCama)="cambiarCama($event)"
                                    (refresh)="refresh($event)">
         </app-cama-destino-generico>
-        <app-cama-detalle *ngIf="accion === 'verDetallee'" [fecha]="fecha" [camas]="opcionesCamas" [cama]="selectedCama"
-                          [estados]="estados" [relaciones]="relaciones" (cancel)="volverAResumen()"
-                          (accionCama)="selectCama($event)" (refresh)="refresh($event)">
+        <app-cama-detalle *ngIf="accion === 'verDetalle'" (cancel)="volverAResumen()" (accionCama)="selectCama($event)"
+                          (refresh)="refresh($event)">
         </app-cama-detalle>
     </plex-layout-sidebar>
 </plex-layout>

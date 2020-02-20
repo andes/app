@@ -35,7 +35,7 @@
     </td>
     <td>
         <ng-container *ngFor="let relacion of relacionesPosibles$ | async">
-            <plex-button [icon]="relacion.icon" [type]="relacion.color" size="sm" (click)="accion(relacion)">
+            <plex-button [icon]="relacion.icon" [type]="relacion.color" size="sm" (click)="accion(relacion, $event)">
             </plex-button>
         </ng-container>
         <plex-button icon="pencil" type="warning" size="sm" (click)="goTo()">

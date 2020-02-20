@@ -5,9 +5,11 @@ import { ISnapshot } from '../interfaces/ISnapshot';
 import { ICama } from '../interfaces/ICama';
 import { IMaquinaEstados, IMAQRelacion, IMAQEstado } from '../interfaces/IMaquinaEstados';
 import { MapaCamasHTTP, IFiltrosHistorial } from './mapa-camas.http';
-import { switchMap, map, pluck, tap } from 'rxjs/operators';
+import { switchMap, map, pluck, tap, catchError } from 'rxjs/operators';
 import { ISectores } from '../../../../interfaces/IOrganizacion';
 import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concept.interface';
+import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
+import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 
 function arrayToSet(array, key, itemFn) {
     const listado = [];
@@ -25,8 +27,8 @@ function arrayToSet(array, key, itemFn) {
 @Injectable()
 export class MapaCamasService {
 
-    private ambito2 = new BehaviorSubject<string>(null);
-    private capa2 = new BehaviorSubject<string>(null);
+    public ambito2 = new BehaviorSubject<string>(null);
+    public capa2 = new BehaviorSubject<string>(null);
     private fecha2 = new BehaviorSubject<Date>(null);
     private organizacion2 = new BehaviorSubject<string>(null);
 
@@ -40,7 +42,8 @@ export class MapaCamasService {
     public sectorList$: Observable<any[]>;
     public tipoCamaList$: Observable<any[]>;
 
-    public selectedCama = new BehaviorSubject<ISnapshot>(null);
+    public selectedCama = new BehaviorSubject<ISnapshot>({} as any);
+    public prestacion$: Observable<IPrestacion>;
 
     private maquinaDeEstado$: Observable<IMaquinaEstados>;
 
@@ -55,7 +58,8 @@ export class MapaCamasService {
     public capa;
 
     constructor(
-        private camasHTTP: MapaCamasHTTP
+        private camasHTTP: MapaCamasHTTP,
+        private prestacionService: PrestacionesService
     ) {
         this.maquinaDeEstado$ = combineLatest(
             this.ambito2,
@@ -106,6 +110,50 @@ export class MapaCamasService {
                 this.filtrarSnapshot(camas, paciente, unidadOrganizativa, sector, tipoCama, esCensable))
         );
 
+        this.prestacion$ = this.selectedCama.pipe(
+            switchMap((cama) => {
+                if (cama.idInternacion) {
+                    return this.prestacionService.getById(cama.idInternacion, { showError: false }).pipe(
+                        // No todas las capas tienen un ID de internacion real.
+                        catchError(() => of(null))
+                    );
+                } else {
+                    return of(null);
+                }
+            }),
+            cache()
+        ) as any;
+
+    }
+
+    getEstadoCama(cama: ISnapshot) {
+        return this.estado$.pipe(
+            map(estados => {
+                return estados.filter(est => cama.estado === est.key)[0];
+            })
+        );
+    }
+
+    private getEstadosRelacionesCama(cama: ISnapshot, estados: IMAQEstado[], relaciones: IMAQRelacion[]) {
+        const relacionesPosibles = [];
+        const estadoCama = estados.filter(est => cama.estado === est.key)[0];
+
+        estados.map(est => relaciones.map(rel => {
+            if (estadoCama.key === rel.origen) {
+                if (est.key === rel.destino && rel.destino !== 'inactiva') {
+                    relacionesPosibles.push(rel);
+                }
+            }
+        }));
+        return relacionesPosibles;
+    }
+
+    getRelacionesPosibles(cama: ISnapshot) {
+        return combineLatest(this.estado$, this.relaciones$).pipe(
+            map(([estados, relaciones]) => {
+                return this.getEstadosRelacionesCama(cama, estados, relaciones);
+            })
+        );
     }
 
     setAmbito(ambito: string) {
@@ -164,6 +212,9 @@ export class MapaCamasService {
         return camasFiltradas;
     }
 
+
+
+
     snapshot(fecha, idInternacion = null, ambito: string = null, capa: string = null, estado: string = null): Observable<ISnapshot[]> {
         ambito = ambito || this.ambito;
         capa = capa || this.capa;
@@ -171,8 +222,20 @@ export class MapaCamasService {
         return this.camasHTTP.snapshot(ambito, capa, fecha, idInternacion, estado);
     }
 
-    historial(desde: Date, hasta: Date, filtros: IFiltrosHistorial): Observable<ISnapshot[]> {
-        return this.camasHTTP.historial(this.ambito, this.capa, desde, hasta, filtros);
+    historial(type: 'cama' | 'internacion', desde: Date, hasta: Date): Observable<ISnapshot[]> {
+        return combineLatest(
+            this.ambito2,
+            this.capa2,
+            this.selectedCama
+        ).pipe(
+            switchMap(([ambito, capa, cama]) => {
+                if (type === 'cama') {
+                    return this.camasHTTP.historial(ambito, capa, desde, hasta, { idCama: cama.idCama });
+                } else if (type === 'internacion') {
+                    return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: cama.idInternacion });
+                }
+            })
+        );
     }
 
     get(fecha, idCama): Observable<ICama[]> {

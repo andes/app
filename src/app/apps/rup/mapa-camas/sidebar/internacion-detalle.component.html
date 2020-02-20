@@ -1,6 +1,6 @@
 <div class="mt-2">
     <ng-container *ngIf="!editar">
-        <plex-options [items]="items" (activated)="activatedOption($event)"></plex-options>
+        <plex-options [items]="items" (activated)="onActiveOption($event)"></plex-options>
     </ng-container>
 
     <ng-container *ngIf="mostrar === 'ingreso'">
@@ -9,14 +9,16 @@
         </app-informe-ingreso>
     </ng-container>
     <ng-container *ngIf="mostrar === 'movimientos'">
-        <app-movimientos-internacion [prestacion]="prestacion" (cancel)="activatedOption('ingreso')"
+        egreo
+        <!-- <app-movimientos-internacion [prestacion]="prestacion" (cancel)="activatedOption('ingreso')"
                                      (cambioCama)="cambiarCama()">
-        </app-movimientos-internacion>
+        </app-movimientos-internacion> -->
     </ng-container>
     <ng-container *ngIf="mostrar === 'egreso'">
-        <app-informe-egreso [fecha]="fecha" [prestacion]="prestacion" [detalle]="detalleEgreso"
+        egreo dos
+        <!-- <app-informe-egreso [fecha]="fecha" [prestacion]="prestacion" [detalle]="detalleEgreso"
                             (cancel)="activatedOption('egreso')" (toggleEditar)="editarFormulario($event)"
                             (refresh)="refrescar($event)">
-        </app-informe-egreso>
+        </app-informe-egreso> -->
     </ng-container>
 </div>

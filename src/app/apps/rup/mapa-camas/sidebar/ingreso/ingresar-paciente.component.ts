@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ProfesionalService } from '../../../../../services/profesional.service';
 import { OcupacionService } from '../../../../../services/ocupacion/ocupacion.service';
@@ -10,18 +10,19 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 import { snomedIngreso, pacienteAsociado, origenHospitalizacion, nivelesInstruccion, situacionesLaborales } from '../../constantes-internacion';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
+import { combineLatest, Subscription } from 'rxjs';
+import { ObraSocialService } from '../../../../../services/obraSocial.service';
 
 @Component({
     selector: 'app-ingresar-paciente',
     templateUrl: './ingresar-paciente.component.html',
 })
 
-export class IngresarPacienteComponent implements OnInit {
+export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     // EVENTOS
     @Input() cama: ISnapshot;
     @Input() prestacion: IPrestacion;
-    @Input() detalle = false;
     @Input() paciente = null;
 
     @Output() cancel = new EventEmitter<any>();
@@ -35,22 +36,22 @@ export class IngresarPacienteComponent implements OnInit {
     public nivelesInstruccion = nivelesInstruccion;
     public situacionesLaborales = situacionesLaborales;
     public snomedIngreso = snomedIngreso;
-    public items = [
-        { key: 'datosBasicos', label: 'DATOS BÁSICOS' },
-        { key: 'datosInternacion', label: 'DATOS DE INTERNACIÓN' },
-    ];
+    public expr = SnomedExpression;
 
     // VARIABLES
     public ambito: string;
     public capa: string;
 
-    public expr = SnomedExpression;
     public fechaValida = true;
 
     public pacientes = [];
-    public edadPaciente;
-    public obraSocial: any;
-    public origenExterno = false;
+
+    camas = [];
+
+    public get origenExterno() {
+        return this.informeIngreso && this.informeIngreso.origen && this.informeIngreso.origen.id === 'traslado';
+    }
+
     public informeIngreso = {
         fechaIngreso: new Date(),
         horaNacimiento: new Date(),
@@ -69,6 +70,8 @@ export class IngresarPacienteComponent implements OnInit {
         PaseAunidadOrganizativa: null
     };
 
+    private subscription: Subscription;
+
     constructor(
         private plex: Plex,
         private servicioProfesional: ProfesionalService,
@@ -76,25 +79,51 @@ export class IngresarPacienteComponent implements OnInit {
         private organizacionService: OrganizacionService,
         private servicioPrestacion: PrestacionesService,
         private mapaCamasService: MapaCamasService,
+        private obraSocialService: ObraSocialService,
     ) {
+    }
 
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
     }
 
     ngOnInit() {
-        this.ambito = this.mapaCamasService.ambito;
-        this.capa = this.mapaCamasService.capa;
 
-        if (this.paciente) {
-            this.edadPaciente = this.mapaCamasService.calcularEdad(this.paciente.fechaNacimiento, moment().toDate());
-        }
+        this.subscription = combineLatest(
+            this.mapaCamasService.ambito2,
+            this.mapaCamasService.capa2,
+            this.mapaCamasService.selectedCama,
+            this.mapaCamasService.prestacion$
+        ).subscribe(([ambito, capa, cama, prestacion]) => {
+            this.ambito = ambito;
+            this.capa = capa;
+            this.cama = cama;
+            this.prestacion = prestacion;
+            if (this.prestacion) {
+                this.paciente = this.prestacion.paciente;
+                this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
 
-        if (this.prestacion && !this.cama) {
-            let fechaIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
-            this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
-            this.mapaCamasService.snapshot(fechaIngreso, this.prestacion.id).subscribe((cama: ISnapshot[]) => {
-                this.cama = cama[0];
-            });
-        }
+                if (this.paciente.documento) {
+                    // Se busca la obra social del paciente y se le asigna
+                    // this.obraSocialService.get({ dni: this.paciente.documento }).subscribe((os: any) => {
+                    //     if (os && os.length > 0) {
+                    //         this.obraSocial = { nombre: os[0].financiador, codigoFinanciador: os[0].codigoFinanciador };
+                    //         this.informeIngreso.obraSocial = { nombre: os[0].financiador, codigoPuco: os[0].codigoFinanciador };
+                    //     }
+                    // });
+                }
+
+            }
+        });
+
+        // [TODO] Revisar
+        // if (this.prestacion && !this.cama) {
+        //     let fechaIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
+        //     this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
+        //     this.mapaCamasService.snapshot(fechaIngreso, this.prestacion.id).subscribe((cama: ISnapshot[]) => {
+        //         this.cama = cama[0];
+        //     });
+        // }
     }
 
     cancelar() {
@@ -153,16 +182,12 @@ export class IngresarPacienteComponent implements OnInit {
     }
 
     getOcupaciones(event) {
-        let ocupacionesHabituales = [];
         if (event && event.query) {
-            let query = {
+            const query = {
                 nombre: event.query
             };
             this.ocupacionService.getParams(query).subscribe((rta) => {
-                rta.map(dato => { dato.nom = '(' + dato.codigo + ') ' + dato.nombre; });
-
-                ocupacionesHabituales = rta;
-                event.callback(ocupacionesHabituales);
+                return event.callback(rta);
             });
         } else {
             let ocupacionHabitual = [];
@@ -174,13 +199,8 @@ export class IngresarPacienteComponent implements OnInit {
     }
 
     changeOrigenHospitalizacion(event) {
-        if (event.value) {
-            if (event.value.id === 'traslado') {
-                this.origenExterno = true;
-            } else {
-                this.origenExterno = false;
-                this.informeIngreso.organizacionOrigen = null;
-            }
+        if (event.value && event.value.id) {
+            this.informeIngreso.organizacionOrigen = null;
         }
     }
 
@@ -284,12 +304,14 @@ export class IngresarPacienteComponent implements OnInit {
 
     crearPrestacion(paciente) {
         // armamos el elemento data a agregar al array de registros
-        let nuevoRegistro = new IPrestacionRegistro(null, snomedIngreso);
+        const nuevoRegistro = new IPrestacionRegistro(null, snomedIngreso);
 
-        nuevoRegistro.valor = { informeIngreso: this.informeIngreso };
+        nuevoRegistro.valor = {
+            informeIngreso: this.informeIngreso
+        };
 
         // armamos dto con datos principales del profesional
-        let dtoProfesional = {
+        const dtoProfesional = {
             id: this.informeIngreso.profesional.id,
             documento: this.informeIngreso.profesional.documento,
             nombre: this.informeIngreso.profesional.nombre,
@@ -297,13 +319,14 @@ export class IngresarPacienteComponent implements OnInit {
         };
 
         // creamos la prestacion de internacion y agregamos el registro de ingreso
-        let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, PrestacionesService.InternacionPrestacion, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso, null, dtoProfesional);
+        const nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, PrestacionesService.InternacionPrestacion, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso, null, dtoProfesional);
         nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
         nuevaPrestacion.paciente['_id'] = this.paciente.id;
 
-        if (this.obraSocial) {
-            nuevaPrestacion.solicitud.obraSocial = { codigoPuco: this.obraSocial.codigoFinanciador, nombre: this.obraSocial.nombre };
-        }
+        // [TODO] Revisar donde iría. Seguramente va en el paciente.
+        // if (this.informeIngreso.obraSocial) {
+        //     nuevaPrestacion.solicitud.obraSocial = { codigoPuco: this.obraSocial.codigoFinanciador, nombre: this.obraSocial.nombre };
+        // }
 
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
             if (this.cama) {

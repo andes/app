@@ -1,13 +1,14 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
-import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { PacienteService } from '../../../../../core/mpi/services/paciente.service';
 import { Router } from '@angular/router';
-import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
-import { ElementosRUPService } from '../../../../modules/rup/services/elementosRUP.service';
-import { MapaCamasService } from '../services/mapa-camas.service';
-import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
-import { ISnapshot } from '../interfaces/ISnapshot';
-import { tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
+import { ElementosRUPService } from '../../../../../modules/rup/services/elementosRUP.service';
+import { MapaCamasService } from '../../services/mapa-camas.service';
+import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
+import { ISnapshot } from '../../interfaces/ISnapshot';
+import { tap, map, switchMap } from 'rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
+import { IMAQEstado, IMAQRelacion } from '../../interfaces/IMaquinaEstados';
 
 
 @Component({
@@ -16,6 +17,8 @@ import { Observable } from 'rxjs';
 })
 export class CamaDetalleComponent implements OnInit {
     public cama$: Observable<ISnapshot>;
+    public estadoCama$: Observable<IMAQEstado>;
+    public relaciones$: Observable<IMAQRelacion[]>;
 
     // Eventos
     @Input() fecha: Date;
@@ -35,10 +38,8 @@ export class CamaDetalleComponent implements OnInit {
     public genero;
     public censable;
     public paciente;
-    public iconoCama;
     public edadPaciente;
     public relacionesPosibles;
-    public sector;
     public especialidades;
     public validadoColor;
     public conceptosInternacion;
@@ -55,31 +56,28 @@ export class CamaDetalleComponent implements OnInit {
     ) {
     }
 
+    sector(cama: ISnapshot) {
+        return cama.sectores[cama.sectores.length - 1].nombre;
+    }
+
     ngOnInit() {
         this.capa = this.mapaCamasService.capa;
 
-        this.getDatosCama();
-        this.getRelacionesPosibles();
-        this.genero = (this.cama.genero.term === 'género masculino') ? 'Cama Masculina' : 'Cama Femenina';
-        this.censable = (this.cama.esCensable) ? 'Censable' : 'No Censable';
 
         this.elementoRupService.ready.subscribe(() => {
             this.conceptosInternacion = this.elementoRupService.getConceptosInternacion();
         });
 
         this.cama$ = this.mapaCamasService.selectedCama;
+
+
+
+        this.estadoCama$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getEstadoCama(cama)));
+        this.relaciones$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getRelacionesPosibles(cama)));
+
     }
 
-    // ngOnChanges(changes: SimpleChanges) {
-    //     if (changes && this.estadoCama) {
-    //         if (this.cama.idCama !== changes['cama']) {
-    //             this.getDatosCama();
-    //             this.getRelacionesPosibles();
-    //         }
-    //         this.cambiarTab(0);
-    //     }
 
-    // }
 
     getDatosCama() {
         this.paciente = null;
@@ -87,50 +85,13 @@ export class CamaDetalleComponent implements OnInit {
             if (this.capa === 'estadistica') {
                 this.getPrestacion();
             }
-            this.getPaciente();
         }
-
-        this.estadoCama = this.estados.filter(est => this.cama.estado === est.key)[0];
-        this.iconoCama = this.estadoCama.icon.substring(this.estadoCama.icon.indexOf('-') + 1);
-        this.sector = this.cama.sectores[this.cama.sectores.length - 1].nombre;
-
-        this.especialidades = '';
-        for (const especialidad of this.cama.especialidades) {
-            this.especialidades += especialidad.term + ', ';
-        }
-
-        this.titleColor = 'text-' + this.estadoCama.color;
     }
 
     getPrestacion() {
         this.prestacionService.getById(this.cama.idInternacion).subscribe(prestacion => {
             this.prestacion = prestacion;
         });
-    }
-
-    getPaciente() {
-        this.pacienteService.getSearch({ documento: this.cama.paciente.documento }).subscribe(paciente => {
-            this.paciente = paciente[0];
-            if (this.paciente.estado === 'validado') {
-                this.validadoColor = 'success';
-            } else {
-                this.validadoColor = 'warning';
-            }
-            this.edadPaciente = this.mapaCamasService.calcularEdad(this.paciente.fechaNacimiento, moment().toDate());
-        });
-    }
-
-    getRelacionesPosibles() {
-        this.relacionesPosibles = [];
-        this.estados.map(est =>
-            this.relaciones.map(rel => {
-                if (this.estadoCama.key === rel.origen) {
-                    if (est.key === rel.destino && rel.destino !== 'inactiva') {
-                        this.relacionesPosibles.push(rel);
-                    }
-                }
-            })
-        );
     }
 
     cancelar() {
@@ -142,7 +103,7 @@ export class CamaDetalleComponent implements OnInit {
     }
 
     goTo() {
-        this.router.navigate([`/internacion/cama/${this.cama._id}`]);
+        this.router.navigate([`/internacion/cama/${this.cama.idCama}`]);
     }
 
     accion(relacion) {

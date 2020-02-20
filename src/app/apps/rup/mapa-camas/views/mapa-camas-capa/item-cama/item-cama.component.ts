@@ -16,8 +16,6 @@ export class ItemCamaComponent implements OnInit {
     @Output() accionCama = new EventEmitter<any>();
 
     public capa: string;
-    public estadoCama;
-    public relacionesPosibles;
 
     public relacionesPosibles$: Observable<any>;
     public estadoCama$: Observable<any>;
@@ -36,38 +34,19 @@ export class ItemCamaComponent implements OnInit {
     ngOnInit() {
         this.capa = this.mapaCamasService.capa;
 
-        this.estadoCama$ = this.mapaCamasService.estado$.pipe(
-            map(estados => {
-                return estados.filter(est => this.cama.estado === est.key)[0];
-            })
-        );
+        this.estadoCama$ = this.mapaCamasService.getEstadoCama(this.cama);
 
-        this.relacionesPosibles$ = combineLatest(this.mapaCamasService.estado$, this.mapaCamasService.relaciones$).pipe(
-            map(([estados, relaciones]) => {
-                return this.getEstadosRelacionesCama(estados, relaciones);
-            })
-        );
+        this.relacionesPosibles$ = this.mapaCamasService.getRelacionesPosibles(this.cama);
     }
 
-    getEstadosRelacionesCama(estados, relaciones) {
-        const relacionesPosibles = [];
-        this.estadoCama = estados.filter(est => this.cama.estado === est.key)[0];
 
-        estados.map(est => relaciones.map(rel => {
-            if (this.estadoCama.key === rel.origen) {
-                if (est.key === rel.destino && rel.destino !== 'inactiva') {
-                    relacionesPosibles.push(rel);
-                }
-            }
-        }));
-        return relacionesPosibles;
-    }
 
     goTo() {
         this.router.navigate([`/internacion/cama/${this.cama._id}`]);
     }
 
-    accion(relacion) {
+    accion(relacion, $event) {
+        $event.stopPropagation();
         this.accionCama.emit(relacion);
     }
 }

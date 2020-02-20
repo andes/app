@@ -28,6 +28,7 @@
             <ng-container>
                 <fieldset>
                     <fieldset>
+                        <!-- Se va a reemplazar por paciente-detalle -->
                         <plex-detail size="md" direction="row">
                             <plex-icon name="paciente" prefix="adi"></plex-icon>
                             <div title>{{ paciente.apellido }}, {{ paciente.nombre }}</div>
@@ -35,11 +36,11 @@
                             <plex-label titulo="Fecha de Nacimiento"
                                         [subtitulo]="paciente.fechaNacimiento | date: 'dd/MM/yyyy'">
                             </plex-label>
-                            <plex-label titulo="Edad" [subtitulo]="edadPaciente"></plex-label>
                         </plex-detail>
                         <div class="row">
                             <div class="col">
                                 <br>
+                                <!-- [TODO] Agregar funcionlida de carpeta -->
                                 <carpeta-paciente [pacienteSeleccionado]="paciente"
                                                   (guardarCarpetaEmit)="afterComponenteCarpeta($event)"
                                                   (cancelarCarpetaEmit)="afterComponenteCarpeta($event) ">
@@ -163,14 +164,13 @@
                         <plex-title size="sm" justify titulo="COBERTURA SOCIAL"></plex-title>
                         <div class="row">
                             <div class="col-md">
-                                <plex-select *ngIf="!soloValores && !informeIngreso.obraSocial"
-                                             [(ngModel)]="informeIngreso.asociado" name="asociado"
-                                             [data]="pacienteAsociado" placeholder="Seleccione... " label="Cobertura"
-                                             idField="nombre" labelField="nombre">
+                                <plex-select *ngIf="!informeIngreso.obraSocial" [(ngModel)]="informeIngreso.asociado"
+                                             name="asociado" [data]="pacienteAsociado" placeholder="Seleccione... "
+                                             label="Cobertura" idField="nombre" labelField="nombre">
                                 </plex-select>
-                                <plex-text *ngIf="!soloValores && informeIngreso.obraSocial"
-                                           [(ngModel)]="informeIngreso.obraSocial" label="Obra Social" name="obraSocial"
-                                           [readonly]="true"></plex-text>
+                                <plex-text *ngIf="informeIngreso.obraSocial"
+                                           [(ngModel)]="informeIngreso.obraSocial.nombre" label="Obra Social"
+                                           name="obraSocial" [readonly]="true"></plex-text>
                             </div>
                         </div>
                     </fieldset>
@@ -187,7 +187,7 @@
                             <div class="col-6 ">
                                 <plex-select label="Ocupación habitual " [(ngModel)]="informeIngreso.ocupacionHabitual"
                                              name="ocupacionHabitual" (getData)="getOcupaciones($event)"
-                                             placeholder="Seleccione... " labelField="nom">
+                                             placeholder="Seleccione... " labelField="'(' + codigo + ') ' + nombre">
                                 </plex-select>
 
                             </div>

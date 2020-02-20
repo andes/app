@@ -38,7 +38,7 @@
                 {{ item.unidadOrganizativa.term }}
             </td>
             <td>
-                <ng-container *ngIf="getEstado(item) as estadoCama">
+                <ng-container *ngIf="getEstado(item) | async as estadoCama">
                     <plex-badge [type]="estadoCama.color">
                         {{estadoCama.label}}
                     </plex-badge>

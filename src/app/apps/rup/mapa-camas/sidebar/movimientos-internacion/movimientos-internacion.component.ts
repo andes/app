@@ -40,7 +40,7 @@ export class MovimientosInternacionComponent implements OnInit {
     }
 
     getMovimientos() {
-        this.mapaCamasService.historial(this.desde, this.hasta, { idInternacion: this.prestacion.id }).subscribe((movimientos: ISnapshot[]) => {
+        this.mapaCamasService.historial('internacion', this.desde, this.hasta).subscribe((movimientos: ISnapshot[]) => {
             this.movimientos = movimientos;
             this.movimientos.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
         });

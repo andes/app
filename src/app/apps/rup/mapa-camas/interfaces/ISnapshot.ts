@@ -6,7 +6,7 @@ export interface ISnapshot {
     genero: ISnomedConcept;
     estado: String;
     esCensable: Boolean;
-    idInternacion: String;
+    idInternacion: string;
     esMovimiento: Boolean;
     sugierePase?: Boolean;
     fecha: Date;

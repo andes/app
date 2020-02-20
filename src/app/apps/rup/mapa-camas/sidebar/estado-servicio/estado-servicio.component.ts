@@ -1,8 +1,8 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { MapaCamasService } from '../services/mapa-camas.service';
-import { Observable, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { ISnapshot } from '../interfaces/ISnapshot';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { MapaCamasService } from '../../services/mapa-camas.service';
+import { Observable, Subscription } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { ISnapshot } from '../../interfaces/ISnapshot';
 
 @Component({
     selector: 'app-estado-servicio',
@@ -10,24 +10,32 @@ import { ISnapshot } from '../interfaces/ISnapshot';
     styleUrls: ['./estado-servicio.component.scss'],
 })
 
-export class EstadoServicioComponent implements OnInit {
+export class EstadoServicioComponent implements OnInit, OnDestroy {
     fecha: Date = moment().toDate();
     fechaHasta: Date = moment().toDate();
     total: number;
-    camasXEstado: any;
+    camasXEstado: any = {};
     camasXEstado$: Observable<any>;
+
+    private sub: Subscription;
+
     constructor(
         private mapaCamasService: MapaCamasService,
     ) { }
 
     ngOnInit() {
-        this.mapaCamasService.snapshotFiltrado$.pipe(
-            map((snapshot) => {
+        this.sub = this.mapaCamasService.snapshotFiltrado$.pipe(
+            tap((snapshot) => {
                 this.total = snapshot.length;
                 this.camasXEstado = this.groupBy(snapshot, 'estado');
             })
         ).subscribe();
     }
+
+    ngOnDestroy() {
+        this.sub.unsubscribe();
+    }
+
 
     groupBy(xs: ISnapshot[], key: string) {
         return xs.reduce((rv, x) => {

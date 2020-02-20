@@ -1,5 +1,5 @@
 <ng-container *ngIf="detalle">
-    <plex-title justify titulo="INGRESO">
+    <plex-title titulo="INGRESO">
         <plex-button *ngIf="!prestacionValidada" title="editar" icon="pencil" type="warning" size="sm"
                      (click)="onEdit()">
         </plex-button>
@@ -8,8 +8,12 @@
         <fieldset>
             <plex-detail size="md" direction="row" *ngIf="paciente">
                 <plex-icon name="paciente" prefix="adi"></plex-icon>
-                <div title>{{ paciente.apellido }}, {{ paciente.nombre }}</div>
-                <div subtitle>{{ paciente.documento }}</div>
+                <div title>
+                    {{ paciente | nombre }}
+                </div>
+                <div subtitle>
+                    {{ paciente.documento }}
+                </div>
                 <plex-label titulo="Fecha de Nacimiento" [subtitulo]="paciente.fechaNacimiento | date: 'dd/MM/yyyy'">
                 </plex-label>
                 <plex-label titulo="Edad al Ingreso" [subtitulo]="informeIngreso.edadAlIngreso">
@@ -75,9 +79,9 @@
         </fieldset>
     </ng-container>
 </ng-container>
-<ng-container *ngIf="!detalle">
+<!-- <ng-container *ngIf="!detalle">
     <app-ingresar-paciente [cama]="cama" [prestacion]="prestacion" [paciente]="paciente" (cancel)="cancelar()"
                            (cambiarFecha)="cambiarFechaIngreso($event)" (cambiarCama)="cambiarSeleccionCama($event)"
                            (refresh)="refescar($event)">
     </app-ingresar-paciente>
-</ng-container>
+</ng-container> -->
