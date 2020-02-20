@@ -43,9 +43,9 @@
                         </plex-select>
                     </div>
                     <div class="col-3">
-                        <plex-select [(ngModel)]="prestacionDestino" (change)="cargarSolicitudes()"
-                                     (getData)="loadPrestaciones($event)" name="prestacionDestino"
-                                     label="Prestación destino" ngModelOptions="{standalone: true}">
+                        <plex-select [(ngModel)]="prestacionDestino" [required]="true" name="nombrePrestacion" label="Prestación destino"
+                            name="prestacionDestino" tmPrestaciones="solicitudes:tipoPrestacion:?" (change)="cargarSolicitudes()"
+                            [preload]="true">
                         </plex-select>
                     </div>
                     <div class="col-3">

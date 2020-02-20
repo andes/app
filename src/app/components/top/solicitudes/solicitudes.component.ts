@@ -153,12 +153,6 @@ export class SolicitudesComponent implements OnInit {
         }
     }
 
-    loadPrestaciones(event) {
-        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe(data =>
-            event.callback(this.prestacionesPermisos[0] === '*' ? data : data.filter(e => this.prestacionesPermisos.indexOf(e.id) >= 0))
-        );
-    }
-
     cambio(activeTab) {
         this.activeTab = activeTab;
         this.showSidebar = false;
