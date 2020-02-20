@@ -43,7 +43,7 @@ export class SelectOrganizacionComponent implements OnInit {
                 this.plex.updateUserInfo({ usuario: this.auth.usuario });
                 this.appComponent.checkPermissions();
                 this.router.navigate(['inicio']);
-                this.hotjar.initialize();
+                // this.hotjar.initialize();
             });
         }, (err) => {
             this.plex.info('danger', 'Error al seleccionar organización');
