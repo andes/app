@@ -26,11 +26,6 @@ import { ConceptosTurneablesService } from '../../../../services/conceptos-turne
 
 @Component({
     selector: 'rup',
-    styleUrls: [
-        '_rup.scss',
-        // TODO: Crear package NPM con las fonts
-        // '../../assets/font.css'
-    ],
     encapsulation: ViewEncapsulation.None,
     template: '' // Debe quedar vacío, y cada atómo indicar que usa 'rup.html' o su propio template
 })

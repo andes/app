@@ -484,7 +484,8 @@ let RUPComponentsArray = [
     SelectProfesionalComponent,
     SelectPrestacionComponent,
     SelectSnomedComponent,
-    SelectStaticoComponent
+    SelectStaticoComponent,
+    SelectBaseComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -527,7 +528,6 @@ import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaS
 import { SelectOrganizacionDirective } from './directives/organizacion-select.directive';
 import { SelectProfesionalesDirective } from './directives/profesionales-select.directive';
 import { SelectPrestacionesDirective } from './directives/prestaciones-select.directive';
-import { ConceptosTurneablesService } from './services/conceptos-turneables.service';
 import { SelectFinanciadorDirective } from './directives/financiador-select-directive';
 
 import { MPILibModule } from './modules/mpi/mpi-lib.module';
@@ -537,6 +537,7 @@ import { ConceptosTurneablesService } from './services/conceptos-turneables.serv
 import { SelectPrestacionComponent } from './modules/rup/components/elementos/rupers/select-prestacion.component';
 import { SelectSnomedComponent } from './modules/rup/components/elementos/rupers/select-snomed.component';
 import { SelectStaticoComponent } from './modules/rup/components/elementos/rupers/select-statico.component';
+import { SelectBaseComponent } from './modules/rup/components/elementos/rupers/select-base.component';
 
 
 registerLocaleData(localeEs, 'es');

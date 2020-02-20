@@ -14,8 +14,11 @@ import { RupElement } from '..';
  * preload: Carga el plex-select al renderizar el componente.
  *          Ejecuta el request a la API con todos los datos.
  */
-
-export abstract class SelectBaseComponent extends RUPComponent implements OnInit, AfterViewInit {
+@Component({
+    selector: 'rup-select',
+    template: ''
+})
+export class SelectBaseComponent extends RUPComponent implements OnInit, AfterViewInit {
 
     public idField = 'id';
 
@@ -46,7 +49,9 @@ export abstract class SelectBaseComponent extends RUPComponent implements OnInit
         }
     }
 
-    abstract getData(input: string): Observable<any[]>;
+    getData(input: string): Observable<any[]> {
+        return of([]);
+    }
 
     ngOnInit() {
         if (!this.params) {
