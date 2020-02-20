@@ -175,6 +175,9 @@ export class MapaCamasService {
     }
 
     select(cama: ISnapshot) {
+        if (!cama) {
+            return this.selectedCama.next({ idCama: null } as any);
+        }
         this.selectedCama.next(cama);
     }
 

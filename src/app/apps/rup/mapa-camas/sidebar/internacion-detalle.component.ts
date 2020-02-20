@@ -21,24 +21,17 @@ export class InternacionDetalleComponent implements OnInit {
 
     @ViewChild(PlexOptionsComponent, { static: false }) plexOptions: PlexOptionsComponent;
 
+    public editar = false;
     public paciente;
-
     public mostrar;
-
     public items = [
         { key: 'ingreso', label: 'INGRESO' },
         { key: 'movimientos', label: 'MOVIMIENTOS' },
         { key: 'egreso', label: 'EGRESO' }
     ];
 
-
-    public editar = false;
-
-
     constructor(
-        private mapaCamasService: MapaCamasService,
-    ) {
-    }
+    ) { }
 
     ngOnInit() {
         this.mostrar = 'ingreso';
@@ -53,7 +46,7 @@ export class InternacionDetalleComponent implements OnInit {
         this.plexOptions.activate(opcion);
     }
 
-    editarFormulario(editar: boolean) {
+    onEdit(editar: boolean) {
         this.editar = editar;
         this.toggleEditar.emit(editar);
     }
@@ -64,5 +57,9 @@ export class InternacionDetalleComponent implements OnInit {
 
     cambiarCama() {
         this.cambioCama.emit();
+    }
+
+    toggleEdit() {
+        this.editar = !this.editar;
     }
 }

@@ -4,9 +4,14 @@
     </ng-container>
 
     <ng-container *ngIf="mostrar === 'ingreso'">
-        <app-informe-ingreso [fecha]="fecha" [prestacion]="prestacion" [detalle]="true"
-                             (toggleEditar)="editarFormulario($event)" (cancel)="activatedOption('ingreso')">
+        <app-informe-ingreso *ngIf="!editar" (cancel)="activatedOption('ingreso')">
+            <plex-button title="editar" icon="pencil" type="warning" size="sm" (click)="toggleEdit()">
+            </plex-button>
         </app-informe-ingreso>
+        <app-ingresar-paciente *ngIf="editar" (cancel)="toggleEdit()">
+            <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="toggleEdit()">
+            </plex-button>
+        </app-ingresar-paciente>
     </ng-container>
     <ng-container *ngIf="mostrar === 'movimientos'">
         egreo

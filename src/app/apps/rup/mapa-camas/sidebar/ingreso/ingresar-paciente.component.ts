@@ -10,8 +10,9 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 import { snomedIngreso, pacienteAsociado, origenHospitalizacion, nivelesInstruccion, situacionesLaborales } from '../../constantes-internacion';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
-import { combineLatest, Subscription } from 'rxjs';
+import { combineLatest, Subscription, Observable } from 'rxjs';
 import { ObraSocialService } from '../../../../../services/obraSocial.service';
+import { map, tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -19,6 +20,7 @@ import { ObraSocialService } from '../../../../../services/obraSocial.service';
 })
 
 export class IngresarPacienteComponent implements OnInit, OnDestroy {
+    camas$: Observable<ISnapshot[]>;
 
     // EVENTOS
     @Input() cama: ISnapshot;
@@ -26,9 +28,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     @Input() paciente = null;
 
     @Output() cancel = new EventEmitter<any>();
-    @Output() cambiarFecha = new EventEmitter<any>();
-    @Output() cambiarCama = new EventEmitter<any>();
-    @Output() refresh = new EventEmitter<any>();
 
     // CONSTANTES
     public pacienteAsociado = pacienteAsociado;
@@ -37,16 +36,12 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public situacionesLaborales = situacionesLaborales;
     public snomedIngreso = snomedIngreso;
     public expr = SnomedExpression;
+    public fechaMax = moment().toDate();
 
     // VARIABLES
-    public ambito: string;
     public capa: string;
-
     public fechaValida = true;
-
     public pacientes = [];
-
-    camas = [];
 
     public get origenExterno() {
         return this.informeIngreso && this.informeIngreso.origen && this.informeIngreso.origen.id === 'traslado';
@@ -88,14 +83,11 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-
         this.subscription = combineLatest(
-            this.mapaCamasService.ambito2,
             this.mapaCamasService.capa2,
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.prestacion$
-        ).subscribe(([ambito, capa, cama, prestacion]) => {
-            this.ambito = ambito;
+        ).subscribe(([capa, cama, prestacion]) => {
             this.capa = capa;
             this.cama = cama;
             this.prestacion = prestacion;
@@ -116,6 +108,12 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             }
         });
 
+        this.camas$ = this.mapaCamasService.snapshot$.pipe(
+            map((snapshot) => {
+                return snapshot.filter(snap => snap.estado === 'disponible');
+            })
+        );
+
         // [TODO] Revisar
         // if (this.prestacion && !this.cama) {
         //     let fechaIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
@@ -124,6 +122,10 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         //         this.cama = cama[0];
         //     });
         // }
+    }
+
+    selectCama(cama) {
+        this.mapaCamasService.select(cama);
     }
 
     cancelar() {
@@ -207,14 +209,9 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     cambiarFechaIngreso(fecha) {
         if (fecha <= moment().toDate()) {
             this.fechaValida = true;
-            this.cambiarFecha.emit(fecha);
         } else {
             this.fechaValida = false;
         }
-    }
-
-    cambiarSeleccionCama() {
-        this.cambiarCama.emit(this.cama);
     }
 
     guardar(valid) {
@@ -253,7 +250,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
         this.mapaCamasService.save(this.cama, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
             this.plex.info('success', 'Paciente internado');
-            this.refresh.emit({ cama: this.cama, accion: 'internarPaciente' });
+            this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
+            this.cancel.emit();
         }, (err1) => {
             this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
         });
@@ -333,11 +331,15 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 this.ingresoSimplificado('ocupada', paciente, prestacion.id);
             } else if (this.capa === 'estadistica') {
                 this.plex.info('warning', 'Paciente ingresado a lista de espera');
-                this.refresh.emit({ cama: this.cama, accion: 'listaDeEspera' });
             }
 
         }, (err) => {
             this.plex.info('danger', 'ERROR: La prestación no pudo ser registrada');
         });
+    }
+
+    setFecha() {
+        this.mapaCamasService.select(null);
+        this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
     }
 }

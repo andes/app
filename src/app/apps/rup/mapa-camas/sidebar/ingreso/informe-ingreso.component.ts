@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
-import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-informe-ingreso',
@@ -9,76 +10,31 @@ import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.in
 })
 
 export class InformeIngresoComponent implements OnInit {
-    // EVENTOS
-    @Input() fecha: Date;
-    @Input() cama;
-    @Input() camas;
-    @Input() prestacion: IPrestacion;
-    @Input() detalle = false;
-    @Input() edit = false;
+    prestacion$: Observable<IPrestacion>;
+    informeIngreso$: Observable<any>;
+    paciente$: Observable<any>;
 
+    // EVENTOS
     @Output() cancel = new EventEmitter<any>();
     @Output() toggleEditar = new EventEmitter<any>();
-    @Output() cambiarFecha = new EventEmitter<any>();
-    @Output() cambiarCama = new EventEmitter<any>();
-    @Output() refresh = new EventEmitter<any>();
-
-    // VARIABLES
-    public capa: string;
-    public informeIngreso;
-    public paciente;
-    public prestacionValidada = false;
 
     constructor(
         private mapaCamasService: MapaCamasService,
-    ) {
-    }
+    ) { }
 
     ngOnInit() {
-        this.capa = this.mapaCamasService.capa;
-        if (this.prestacion) {
-            this.prestacionValidada = (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada');
-            this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
-            this.paciente = this.prestacion.paciente;
-        }
+        this.prestacion$ = this.mapaCamasService.prestacion$;
 
-        if (this.cama) {
-            this.paciente = this.cama.paciente;
-        }
-    }
+        this.informeIngreso$ = this.prestacion$.pipe(
+            map((prestacion) => {
+                return prestacion.ejecucion.registros[0].valor.informeIngreso;
+            })
+        );
 
-    // tslint:disable-next-line:use-lifecycle-interface
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes && this.prestacion) {
-            this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
-            this.paciente = this.prestacion.paciente;
-            this.prestacionValidada = (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada');
-        }
-
-    }
-
-    onEdit() {
-        this.toggleEditar.emit(true);
-        this.detalle = false;
-        this.edit = true;
-    }
-
-    cambiarSeleccionCama(selectedCama) {
-        this.cambiarCama.emit(selectedCama);
-    }
-
-    refescar(accion) {
-        this.refresh.emit(accion);
-        this.cancelar();
-    }
-
-    cancelar() {
-        if (!this.edit || !this.informeIngreso) {
-            this.cancel.emit();
-        } else {
-            this.edit = false;
-            this.toggleEditar.emit(false);
-            this.detalle = true;
-        }
+        this.paciente$ = this.prestacion$.pipe(
+            map((prestacion) => {
+                return prestacion.paciente;
+            })
+        );
     }
 }

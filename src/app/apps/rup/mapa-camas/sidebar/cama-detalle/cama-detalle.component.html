@@ -61,7 +61,7 @@
         </ng-container>
     </plex-tab>
     <plex-tab *ngIf="capa === 'estadistica' && cama.paciente" label="INTERNACION">
-        <app-internacion-detalle (toggleEditar)="editarFormulario($event)" (refresh)="refrescar($event)">
+        <app-internacion-detalle (toggleEditar)="onEdit($event)" (refresh)="refrescar($event)">
         </app-internacion-detalle>
     </plex-tab>
     <plex-tab label="HISTORIAL">

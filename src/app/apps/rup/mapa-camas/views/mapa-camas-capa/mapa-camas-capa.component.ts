@@ -103,6 +103,10 @@ export class MapaCamasCapaComponent implements OnInit {
         this.router.navigate([`/internacion/listado-internacion`]);
     }
 
+    onEdit(accion) {
+        this.accion = accion;
+    }
+
     selectCama(cama, relacion) {
         this.mapaCamasService.select(cama);
         if (relacion) {
@@ -148,7 +152,7 @@ export class MapaCamasCapaComponent implements OnInit {
             this.accion = 'verDetalle';
         } else {
             this.accion = null;
-            this.mapaCamasService.select({ idCama: null, _id: null } as any);
+            this.mapaCamasService.select(null);
         }
 
         // if (!this.estadoDestino) {

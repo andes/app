@@ -37,14 +37,7 @@
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
         <app-estado-servicio *ngIf="!accion"></app-estado-servicio>
-        <!-- <app-informe-ingreso *ngIf="accion === 'internarPaciente'" [camas]="opcionesCamas" [cama]="selectedCama"
-                             (cancel)="volverAResumen()" (cambiarFecha)="getSnapshot($event)"
-                             (cambiarCama)="cambiarCama($event)" (refresh)="refresh($event)">
-        </app-informe-ingreso> -->
-
-        <app-ingresar-paciente *ngIf="accion === 'internarPaciente'" (cancel)="cancelar()"
-                               (cambiarFecha)="cambiarFechaIngreso($event)" (cambiarCama)="cambiarSeleccionCama($event)"
-                               (refresh)="refescar($event)">
+        <app-ingresar-paciente *ngIf="accion === 'internarPaciente'" (cancel)="volverAResumen()">
         </app-ingresar-paciente>
 
         <app-desocupar-cama *ngIf="accion === 'desocuparCama'" [fecha]="fecha" [camas]="snapshot" [cama]="selectedCama"

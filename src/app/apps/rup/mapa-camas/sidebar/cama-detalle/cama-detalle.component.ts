@@ -129,7 +129,7 @@ export class CamaDetalleComponent implements OnInit {
         });
     }
 
-    editarFormulario(editar: boolean) {
+    onEdit(editar: boolean) {
         this.editar = editar;
     }
 
