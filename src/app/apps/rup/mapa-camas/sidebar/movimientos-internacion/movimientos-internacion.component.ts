@@ -1,8 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import { ISnapshot } from '../../interfaces/ISnapshot';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
+import { Observable, Subject } from 'rxjs';
+import { startWith, map, switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-movimientos-internacion',
@@ -10,43 +11,48 @@ import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.in
 })
 
 export class MovimientosInternacionComponent implements OnInit {
-    // EVENTOS
-    @Input() prestacion: IPrestacion;
 
-    @Output() cambioCama = new EventEmitter<any>();
+    prestacion$: Observable<IPrestacion>;
 
-    // VARIABLES
-    public ambito: string;
-    public capa: string;
-    public movimientos: ISnapshot[];
+    public historial = new Subject();
+
+    public historial$: Observable<any>;
+
     public desde = moment().toDate();
+
     public hasta = moment().toDate();
-    public prestacionValidada = false;
 
     constructor(
-        public auth: Auth,
         private mapaCamasService: MapaCamasService,
     ) { }
 
     ngOnInit() {
-        this.ambito = this.mapaCamasService.ambito;
-        this.capa = this.mapaCamasService.capa;
 
-        this.getMovimientos();
+        this.prestacion$ = this.mapaCamasService.prestacion$;
 
-        if (this.prestacion) {
-            this.prestacionValidada = (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada');
-        }
+        this.historial$ = this.historial.pipe(
+            startWith([]),
+            map((filtros: any) => {
+                return {
+                    desde: moment(filtros.desde).startOf('day').toDate(),
+                    hasta: moment(filtros.hasta).endOf('day').toDate(),
+                };
+            }),
+            switchMap((filtros: any) => {
+                return this.mapaCamasService.historial('internacion', filtros.desde, filtros.hasta);
+            }),
+            map((historial) => {
+                return historial.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+            })
+        );
     }
 
-    getMovimientos() {
-        this.mapaCamasService.historial('internacion', this.desde, this.hasta).subscribe((movimientos: ISnapshot[]) => {
-            this.movimientos = movimientos;
-            this.movimientos.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
-        });
+    onChange() {
+        const filtros = {
+            desde: this.desde,
+            hasta: this.hasta
+        };
+        this.historial.next(filtros);
     }
 
-    cambiarCama() {
-        this.cambioCama.emit();
-    }
 }

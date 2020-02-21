@@ -21,20 +21,12 @@ import { interval } from 'rxjs';
 export class MapaCamasCapaComponent implements OnInit {
     capa$: Observable<string>;
     selectedCama$: Observable<ISnapshot>;
-
-
-
     organizacion: string;
     fecha = moment().toDate();
     ambito: string;
     capa: string;
     camas: Observable<any[]>;
     snapshot: ISnapshot[];
-    auxSnapshot: ISnapshot[];
-    unidadesOrganizativas = [];
-    sectores = [];
-    tiposCama = [];
-    camasXEstado: any;
     itemsDropdown = [
         { label: 'CENSO DIARIO', route: `/internacion/censo/diario` },
         { label: 'CENSO MENSUAL', route: `/internacion/censo/mensual` },
@@ -43,10 +35,6 @@ export class MapaCamasCapaComponent implements OnInit {
     estados: any;
     relaciones: any;
     maquinaEstados: IMaquinaEstados;
-
-    selectedCama: any;
-    estadoDestino: any;
-
     opcionesCamas = [];
     accion = null;
 
@@ -137,13 +125,10 @@ export class MapaCamasCapaComponent implements OnInit {
     }
 
     volverAResumen() {
-        this.selectedCama = null;
-        this.estadoDestino = null;
         this.accion = null;
     }
 
     cambiarCama(selectedCama) {
-        this.selectedCama = selectedCama;
     }
 
     verDetalle(cama: ISnapshot, selectedCama: ISnapshot) {

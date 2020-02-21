@@ -1,23 +1,22 @@
 <fieldset>
     <div class="row">
         <div class="col-md-3">
-            <plex-text type="text" [(ngModel)]="filtro.paciente" (ngModelChange)="filtrar()" label="Paciente">
+            <plex-text type="text" [(ngModel)]="filtro.paciente" (change)="filtrar()" label="Paciente" debounce="400">
             </plex-text>
         </div>
         <div class="col-md-3">
             <plex-select label="Unidad Organizativa" [(ngModel)]="filtro.unidadOrganizativa" idField="conceptId"
-                         labelField="term" [data]="mapaCamasService.unidadOrganizativaList$ | async"
-                         (change)="filtrar()">
+                         labelField="term" [data]="unidadOrganizativaList$ | async" (change)="filtrar()">
             </plex-select>
         </div>
         <div class="col-md-2">
             <plex-select label="Sector" [(ngModel)]="filtro.sector" idField="nombre" labelField="nombre"
-                         [data]="mapaCamasService.sectorList$ | async" (change)="filtrar()">
+                         [data]="sectorList$ | async" (change)="filtrar()">
             </plex-select>
         </div>
         <div class="col-md-2">
             <plex-select label="Tipo de Cama" [(ngModel)]="filtro.tipoCama" idField="conceptId" labelField="term"
-                         (change)="filtrar()" [data]="mapaCamasService.tipoCamaList$ | async">
+                         (change)="filtrar()" [data]="tipoCamaList$ | async">
             </plex-select>
         </div>
         <div class="col-md-2">

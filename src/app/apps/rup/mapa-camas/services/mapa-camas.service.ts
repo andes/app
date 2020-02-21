@@ -11,19 +11,6 @@ import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concep
 import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 
-function arrayToSet(array, key, itemFn) {
-    const listado = [];
-    array.forEach(elem => {
-        const item = itemFn(elem);
-        const index = listado.findIndex(i => i[key] === item[key]);
-        if (index < 0) {
-            listado.push(item);
-        }
-    });
-    return listado;
-}
-
-
 @Injectable()
 export class MapaCamasService {
 
@@ -37,10 +24,6 @@ export class MapaCamasService {
     public tipoCamaSelected = new BehaviorSubject<ISnomedConcept>(null);
     public esCensable = new BehaviorSubject<any>(null);
     public pacienteText = new BehaviorSubject<string>(null);
-
-    public unidadOrganizativaList$: Observable<any[]>;
-    public sectorList$: Observable<any[]>;
-    public tipoCamaList$: Observable<any[]>;
 
     public selectedCama = new BehaviorSubject<ISnapshot>({} as any);
     public prestacion$: Observable<IPrestacion>;
@@ -70,7 +53,7 @@ export class MapaCamasService {
                 return this.camasHTTP.getMaquinaEstados(ambito, capa, organizacion);
             }),
             cache()
-        ) as any;
+        );
 
         this.estado$ = this.maquinaDeEstado$.pipe(pluck('estados'));
         this.relaciones$ = this.maquinaDeEstado$.pipe(pluck('relaciones'));
@@ -84,19 +67,7 @@ export class MapaCamasService {
                 return this.camasHTTP.snapshot(ambito, capa, fecha);
             }),
             cache(),
-        ) as any;
-
-        this.unidadOrganizativaList$ = this.snapshot$.pipe(
-            map((camas) => arrayToSet(camas, 'conceptId', (item) => item.unidadOrganizativa))
-        ) as any;
-
-        this.sectorList$ = this.snapshot$.pipe(
-            map((camas) => arrayToSet(camas, 'nombre', (item) => item.sectores[0]))
-        ) as any;
-
-        this.tipoCamaList$ = this.snapshot$.pipe(
-            map((camas) => arrayToSet(camas, 'conceptId', (item) => item.tipoCama))
-        ) as any;
+        );
 
         this.snapshotFiltrado$ = combineLatest(
             this.snapshot$,
@@ -122,7 +93,7 @@ export class MapaCamasService {
                 }
             }),
             cache()
-        ) as any;
+        );
 
     }
 

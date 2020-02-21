@@ -1,17 +1,18 @@
 <plex-title titulo="Movimientos de Internación"></plex-title>
-<div class="row">
+<!-- [TODO] Evaluar el comportamiento de este boton  -->
+<!-- <div class="row">
     <div class="col">
         <plex-button *ngIf="!prestacionValidada" label="Cambiar cama" type="info" size="sm" (click)="cambiarCama()">
         </plex-button>
     </div>
-</div>
+</div> -->
 <div class="row mb-1">
     <div class="col">
-        <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" (change)="getMovimientos()">
+        <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" (change)="onChange()">
         </plex-datetime>
     </div>
     <div class="col">
-        <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" (change)="getMovimientos()">
+        <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" (change)="onChange()">
         </plex-datetime>
     </div>
 </div>
@@ -25,7 +26,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let movimiento of movimientos">
+        <tr *ngFor="let movimiento of historial$ | async">
             <td>
                 {{ movimiento.fecha | fecha }}
                 {{ movimiento.fecha | hora }}
