@@ -11,12 +11,7 @@
                         </span>
 
                         <div class="float-right mr-2 menu-info">
-                            <plex-button icon="information-outline" type="info" class=""
-                                         title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud"
-                                         (click)="mostrarDatosSolicitud(true)"></plex-button>
-                            <plex-button type="info" icon="information" class="" title="Ver Registros de la Solicitud"
-                                         *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)">
-                            </plex-button>
+                            <help-solicitud [solicitud]='prestacion.solicitud' ></help-solicitud>
                             <rup-acciones-envio-informe [prestacion]="prestacion">
                             </rup-acciones-envio-informe>
                             <!-- <ng-container *ngIf="validada && !prestacion.solicitud.tipoPrestacion.noNominalizada">
@@ -94,23 +89,6 @@
         </header>
         <div class="row no-gutters" *ngIf="prestacion?.ejecucion?.registros && prestacion.ejecucion.registros.length">
             <div class="col titulos" [ngClass]="(prestacion.solicitud.ambitoOrigen == 'ambulatorio' ? 'col-9' : '')">
-                <!-- div de la info de la solicitud -->
-                <div [hidden]="!showDatosSolicitud" id="datosSolicitud" class="mb-2 datos-solicitud">
-                    <div class="row no-gutters">
-                        <div class="col">
-                            <br>
-                            <b>Organización:</b> {{prestacion.solicitud.organizacion.nombre}}
-                            <br>
-                            <b>Fecha:</b> {{prestacion.solicitud.fecha | date}}
-                        </div>
-                    </div>
-                    <div class="row no-gutters">
-                        <div class="col" *ngIf="prestacion.solicitud.prestacionOrigen">
-                            Prestación de origen: {{prestacion.solicitud.prestacionOrigen}}
-                        </div>
-                    </div>
-                </div>
-
                 <ng-container *ngFor="let elemento of registros; let i = index">
 
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['hallazgo', 'situación'])">
