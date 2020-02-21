@@ -782,9 +782,13 @@ export class PacienteCruComponent implements OnInit {
                     //  Se completan datos FALTANTES
                     if (!this.pacienteModel.direccion[0].valor && resultado.paciente.direccion && resultado.paciente.direccion[0].valor) {
                         this.pacienteModel.direccion[0].valor = resultado.paciente.direccion[0].valor;
+                        this.checkDisableGeolocalizar(this.pacienteModel.direccion[0].valor);
                     }
                     if (!this.pacienteModel.direccion[0].codigoPostal && resultado.paciente.cpostal) {
                         this.pacienteModel.direccion[0].codigoPostal = resultado.paciente.cpostal;
+                    }
+                    if (resultado.paciente.direccion[1]) {  // direccion legal
+                        this.pacienteModel.direccion[1] = resultado.paciente.direccion[1];
                     }
                     if (!this.pacienteModel.cuil && resultado.paciente.cuil) {
                         this.pacienteModel.cuil = resultado.paciente.cuil;
@@ -833,10 +837,11 @@ export class PacienteCruComponent implements OnInit {
             this.validado = false;
         }
         this.disableValidar = false;
+        this.pacienteModel.direccion.splice(1);
     }
 
     checkDisableGeolocalizar(direccion) {
-        if (direccion.value) {
+        if (direccion) {
             this.disableGeolocalizar = false;
         } else {
             this.disableGeolocalizar = true;
