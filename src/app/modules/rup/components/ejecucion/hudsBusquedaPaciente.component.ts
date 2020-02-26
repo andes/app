@@ -1,10 +1,11 @@
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { HUDSService } from '../../services/huds.service';
 import { ModalMotivoAccesoHudsComponent as modal } from '../huds/modal-motivo-acceso-huds.component';
+import { filter } from 'rxjs/operators';
 
 @Component({
     selector: 'rup-hudsBusquedaPaciente',
@@ -21,6 +22,7 @@ export class HudsBusquedaPacienteComponent implements OnInit {
     // public motivoAccesoHuds;
     showModalMotivo = false;
     pacienteSelected = null;
+    rutaVolver = null;
 
     constructor(
         public plex: Plex,
@@ -43,10 +45,15 @@ export class HudsBusquedaPacienteComponent implements OnInit {
         if (!this.auth.profesional && this.auth.getPermissions('huds:?').length <= 0) {
             this.router.navigate(['inicio']);
         }
+
+        if (window.location.href.indexOf('rup') > -1) {
+            this.rutaVolver = '/rup';
+        }
+
     }
 
     onCancel() {
-        this.router.navigate(['rup']);
+        this.router.navigate([this.rutaVolver]);
     }
 
     searchStart() {
@@ -79,7 +86,7 @@ export class HudsBusquedaPacienteComponent implements OnInit {
             this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.pacienteSelected, motivoAccesoHuds, this.auth.profesional ? this.auth.profesional : null, null, null).subscribe(hudsToken => {
                 window.sessionStorage.setItem('huds-token', hudsToken.token);
                 window.sessionStorage.removeItem('motivoAccesoHuds');
-                this.router.navigate(['/rup/huds/paciente/' + this.pacienteSelected.id]);
+                this.router.navigate(['/huds/paciente/' + this.pacienteSelected.id]);
             });
         }
         this.showModalMotivo = false;

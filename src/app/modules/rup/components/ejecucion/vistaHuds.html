@@ -53,7 +53,7 @@
                                          [prestacion]="registro.data" [soloValores]="true"></internacion-resumen>
                 </plex-tab>
                 <plex-tab [allowClose]="true" [label]="registro.data.solicitud.tipoPrestacion.term"
-                    [class]="registro.class" *ngIf="registro.tipo === 'solicitud'">
+                          [class]="registro.class" *ngIf="registro.tipo === 'solicitud'">
                     <vista-solicitud-top [registro]="registro.data"></vista-solicitud-top>
                 </plex-tab>
 

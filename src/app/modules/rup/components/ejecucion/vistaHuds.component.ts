@@ -30,7 +30,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     // boton de volver cuando la ejecucion tiene motivo de internacion.
     // Por defecto vuelve al mapa de camas
     public btnVolver = 'VOLVER';
-    public rutaVolver;
+    public rutaVolver = '';
 
     constructor(
         public elementosRUPService: ElementosRUPService,
@@ -77,12 +77,14 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         });
 
         // consultamos desde que pagina se ingreso para poder volver a la misma
-        this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
-            if (resp) {
-                this.btnVolver = resp.nombre;
-                this.rutaVolver = resp.ruta;
-            }
-        });
+        // this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
+        //     if (resp) {
+        //         this.btnVolver = resp.nombre;
+        //         this.rutaVolver = resp.ruta;
+        //     }
+        // });
+
+
         // Limpiar los valores observados al iniciar la ejecución
         // Evita que se autocompleten valores de una consulta anterior
         this.conceptObserverService.destroy();
@@ -133,7 +135,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     */
     volver() {
         // this.location.back();
-        this.router.navigate(['/rup']);
+        this.router.navigate([this.rutaVolver]);
     }
 
     evtCambiaPaciente() {

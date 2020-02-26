@@ -8,7 +8,7 @@
             </div>
         </div>
         <plex-loader *ngIf="loading"></plex-loader>
-        <div class=" row">
+        <div class="row">
             <div class="col-12">
                 <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
                                   [autoselect]="false" (selected)="onSelect($event)">
@@ -24,6 +24,7 @@
         </modal-motivo-acceso-huds>
     </plex-layout-main>
     <plex-layout-footer>
-        <plex-button position="left" label="Cancelar" type="info" (click)='onCancel()'></plex-button>
+        <plex-button position="left" label="Volver" type="info" (click)="onCancel()" *ngIf="rutaVolver">
+        </plex-button>
     </plex-layout-footer>
 </plex-layout>
