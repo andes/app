@@ -138,8 +138,10 @@ const appRoutes: Routes = [
 
   // Turnos
   { path: 'citas', component: PuntoInicioTurnosComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'citas/clonarAgenda', component: ClonarAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'citas/gestor_agendas', component: GestorAgendasComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'citas/nuevaAgenda', component: PlanificarAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'citas/editarAgenda/:idAgenda', component: PlanificarAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'citas/clonarAgenda/:idAgenda', component: ClonarAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'citas/panelEspacio', component: PanelEspacioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'citas/agendas', component: PlanificarAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'citas/agenda', component: PlanificarAgendaComponent, canActivate: [RoutingNavBar, RoutingGuard] },

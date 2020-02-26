@@ -1,6 +1,6 @@
 import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
 import { OrganizacionService } from './../../../../services/organizacion.service';
-import { Component, EventEmitter, Output, OnInit, Input, HostBinding, AfterViewInit } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -12,6 +12,7 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { Subscription } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'planificar-agenda',
@@ -23,15 +24,6 @@ import { Subscription } from 'rxjs';
 export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     hideGuardar: boolean;
     subscriptionID: any;
-
-    private _editarAgenda: any;
-    @Input('editaAgenda')
-    set editaAgenda(value: any) {
-        this._editarAgenda = value;
-    }
-    get editaAgenda(): any {
-        return this._editarAgenda;
-    }
 
     @Output() volverAlGestor = new EventEmitter<boolean>();
 
@@ -53,29 +45,50 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     cupoMaximo: Number;
     setCupo = false;
 
+    editaAgenda: IAgenda;
+
     main = 6;
 
     // ultima request de profesionales que se almacena con el subscribe
     private lastRequest: Subscription;
 
-    constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public organizacionService: OrganizacionService,
-        public serviceAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
+    constructor(
+        public plex: Plex,
+        public servicioProfesional: ProfesionalService,
+        public servicioEspacioFisico: EspacioFisicoService,
+        public organizacionService: OrganizacionService,
+        public serviceAgenda: AgendaService,
+        public servicioTipoPrestacion: TipoPrestacionService,
+        public auth: Auth,
+        private router: Router,
+        private route: ActivatedRoute) { }
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
         this.today.setHours(0, 0, 0, 0);
         // recuperamos datos de la organizacion
         this.loadOrganizationData();
-        if (this.editaAgenda) {
-            this.cargarAgenda(this._editarAgenda);
-            this.bloqueActivo = 0;
-            if (this._editarAgenda.dinamica) { // hay que chequear si existe la prop dinamica porque es nueva en el esquema.
-                this.dinamica = true;
+
+        this.modelo.bloques = [];
+        this.bloqueActivo = -1;
+        this.route.params.subscribe(params => {
+            if (params && params['idAgenda']) {
+                this.serviceAgenda.getById(params['idAgenda']).subscribe(agenda => {
+                    this.editaAgenda = agenda;
+                    if (this.editaAgenda) {
+                        this.cargarAgenda(this.editaAgenda);
+                        this.bloqueActivo = 0;
+                        if (this.editaAgenda.dinamica) { // hay que chequear si existe la prop dinamica porque es nueva en el esquema.
+                            this.dinamica = true;
+                        }
+                    } else {
+                        this.modelo.bloques = [];
+                        this.bloqueActivo = -1;
+                    }
+                });
             }
-        } else {
-            this.modelo.bloques = [];
-            this.bloqueActivo = -1;
-        }
+        });
+
     }
 
     ngAfterViewInit() {
@@ -282,7 +295,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         if (longitud === 0 || (this.modelo.bloques[longitud - 1].horaInicio && this.modelo.bloques[longitud - 1].horaFin)) {
             this.modelo.bloques.push({
                 indice: longitud,
-                // 'descripcion': `Bloque {longitud + 1}°`,
                 'cantidadTurnos': 0,
                 'horaInicio': null,
                 'horaFin': null,
@@ -317,13 +329,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     compararBloques(fecha1, fecha2): number {
-        // let indiceAux: Number;
         if (fecha1.horaInicio && fecha2.horaInicio) {
-            // /* if (fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime() > 0) {
-            //     indiceAux = fecha1.indice;
-            //     fecha1.indice = fecha2.indice;
-            //     fecha2.indice = indiceAux;
-            // } */
             return fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime();
         } else {
             return 0;
@@ -835,14 +841,13 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 this.plex.toast('success', 'La agenda se guardó correctamente');
                 this.modelo.id = resultado.id;
                 if (clonar) {
-                    this.showClonar = true;
-                    this.showAgenda = false;
+                    this.router.navigate(['citas/clonarAgenda', this.modelo.id]);
                 } else {
                     this.modelo = {};
-                    this.showAgenda = false;
-                    this.volverAlGestor.emit(true);
+                    this.router.navigate(['citas/gestor_agendas']);
                 }
                 this.hideGuardar = false;
+
             },
                 (err) => {
                     this.hideGuardar = false;
@@ -859,6 +864,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 this.plex.info('warning', 'Debe completar los datos requeridos');
             }
             this.hideGuardar = false;
+            this.router.navigate(['citas/gestor_agendas']);
         }
     }
 
@@ -894,8 +900,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     cancelar() {
-        this.volverAlGestor.emit(true);
-        this.showAgenda = false;
+        this.router.navigate(['citas/gestor_agendas']);
     }
 
     onReturn(agenda: IAgenda): void {

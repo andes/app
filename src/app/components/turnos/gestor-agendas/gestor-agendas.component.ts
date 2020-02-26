@@ -340,8 +340,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         if (this.lastRequestFecha) {
             this.lastRequestFecha.unsubscribe();
         }
-        this.showGestorAgendas = false;
-        this.showClonar = true;
+        this.router.navigate(['citas/clonarAgenda', this.agendasSeleccionadas[0].id]);
     }
 
     // vuelve al gestor luego de alguna operación y refresca la agenda modificada.
@@ -382,27 +381,23 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     }
 
     insertarAgenda() {
-        this.showInsertarAgenda = true;
-        this.showGestorAgendas = false;
+        this.router.navigate(['citas/nuevaAgenda']);
     }
 
     editarAgenda(agenda) {
         this.editaAgenda = agenda;
         if (this.editaAgenda.estado === 'planificacion' && !this.editaAgenda.dinamica) {
-            this.showEditarAgenda = true;
-            this.showGestorAgendas = false;
-            this.showEditarAgendaPanel = false;
+            this.router.navigate(['citas/editarAgenda', this.editaAgenda.id]);
         } else {
             this.showGestorAgendas = true;
             this.showEditarAgendaPanel = true;
-            this.showEditarAgenda = false;
             this.showTurnos = false;
+            this.showAgregarNotaAgenda = false;
+            this.showRevisionFueraAgenda = false;
+            this.showReasignarTurno = false;
+            this.showListadoTurnos = false;
+            this.showReasignarTurnoAutomatico = false;
         }
-        this.showAgregarNotaAgenda = false;
-        this.showRevisionFueraAgenda = false;
-        this.showReasignarTurno = false;
-        this.showListadoTurnos = false;
-        this.showReasignarTurnoAutomatico = false;
     }
 
     revisionAgenda(agenda) {
