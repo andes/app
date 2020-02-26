@@ -1,18 +1,20 @@
+.novedades-home {
+    min-width: 500px;
+}
 section.detalle-novedad {
-    
+
     .contenedor-imagen {
         padding: 0!important;
         background-color: transparent;
         height: fit-content;
         position: relative;
-        
         img {
             width: 100%;
             object-fit: cover;
             max-height: 400px;
         }
 
-    
+
         .jumbotron-text {
             width: 100%;
             height: fit-content;
@@ -22,7 +24,7 @@ section.detalle-novedad {
             }
         }
     }
-    
+
     section.contenedor-nota {
         margin-top: 1rem;
         hyphens: manual;
@@ -45,7 +47,7 @@ section.detalle-novedad {
             grid-column: 2;
         }
     }
-    
+
     plex-badge {
         margin: 0 .5rem .5rem 0;
     }
@@ -65,5 +67,11 @@ section.detalle-novedad {
     hr.bg-white {
         border: solid 1px white;
     }
-    
+
+}
+
+plex-help[icon=bell] {
+    div.jumbotron.info.open {
+        min-width: 500px;
+    }
 }
