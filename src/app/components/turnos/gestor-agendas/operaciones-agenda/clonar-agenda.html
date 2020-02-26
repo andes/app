@@ -1,6 +1,6 @@
-<plex-layout main="8">
+<plex-layout main="8" *ngIf="agenda">
     <plex-layout-main>
-        <plex-title titulo="Calendario">
+        <plex-title main titulo="Calendario">
             <plex-button type="link" icon="chevron-left" (click)="cambiarMes('-')"></plex-button>
             {{ fecha | date: "MMM yy" | uppercase}}
             <plex-button type="link" icon="chevron-right" (click)="cambiarMes('+')"></plex-button>
@@ -21,8 +21,13 @@
         </table>
     </plex-layout-main>
     <plex-layout-sidebar>
-        <plex-title titulo="Agenda Original" size="sm"></plex-title>
-        <!--<header>Agenda Original</header>-->
+        <plex-title titulo="Agenda Original" size="sm">
+            <plex-button size="sm" type="danger" label="Cancelar" (click)="cancelar()">
+            </plex-button>
+            <plex-button size="sm" type="success" label="Clonar Agenda" (click)="clonar()"
+                         [disabled]="seleccionados.length <= 1">
+            </plex-button>
+        </plex-title>
         <div class="row">
             <div class="col-12">
                 <span>
@@ -51,10 +56,12 @@
         </div>
         <ng-template ngFor let-unBloque="$implicit" [ngForOf]="agenda.bloques" let-i="index">
             <div class="row">
-                <div class="col">{{unBloque.descripcion}}</div>
-                <div class="col">{{unBloque.horaInicio | date: 'HH:mm'}} - {{unBloque.horaFin | date:
-                                'HH:mm'}}</div>
-                <div class="col">{{unBloque.cantidadTurnos}} turnos de {{unBloque.duracionTurno}}'</div>
+                <div class="col">
+                    <small>{{ unBloque.descripcion ? unBloque.descripcion : '(sin descripción)' }}</small>
+                </div>
+                <div class="col">{{ unBloque.horaInicio | date: 'HH:mm' }} - {{ unBloque.horaFin | date:
+                                'HH:mm' }}</div>
+                <div class="col">{{ unBloque.cantidadTurnos }} turnos de {{ unBloque.duracionTurno }}'</div>
             </div>
         </ng-template>
         <div *ngIf="agendasFiltradas.length>0">
@@ -76,11 +83,4 @@
         </div>
     </plex-layout-sidebar>
 
-    <plex-layout-footer>
-        <plex-button position="left" type="danger" label="Cancelar" (click)="cancelar()">
-        </plex-button>
-        <plex-button position="right" type="success" label="Clonar Agenda" (click)="clonar()">
-        </plex-button>
-        <!--<plex-button title="Clonar Agenda" label="Clonar Agenda" type="primary" (click)="clonar()"></plex-button>-->
-    </plex-layout-footer>
 </plex-layout>

@@ -1,14 +1,16 @@
 <div *ngIf="cantidadSeleccionadas > 0">
     <span *ngIf="vistaBotones.editarAgenda">
-        <plex-button icon="mdi mdi-pencil" (click)="editarAgenda()" title="Editar">
+        <plex-button type="info" icon="mdi mdi-pencil" (click)="editarAgenda()" title="Editar">
         </plex-button>
     </span>
     <span *ngIf="vistaBotones.pasarDisponibleAgenda">
-        <plex-button type="success" icon="mdi mdi-arrow-up-bold-circle-outline" (click)="actualizarEstado( 'disponible' )" title="Cambiar a disponible">
+        <plex-button type="success" icon="mdi mdi-arrow-up-bold-circle-outline"
+                     (click)="actualizarEstado( 'disponible' )" title="Cambiar a disponible">
         </plex-button>
     </span>
     <span *ngIf="vistaBotones.publicarAgenda">
-        <plex-button type="success" icon="mdi mdi-arrow-up-bold-circle" (click)="actualizarEstado( 'publicada' )" title="Publicar">
+        <plex-button type="success" icon="mdi mdi-arrow-up-bold-circle" (click)="actualizarEstado( 'publicada' )"
+                     title="Publicar">
         </plex-button>
     </span>
     <span *ngIf="vistaBotones.borrarAgenda">
@@ -26,7 +28,7 @@
     <span *ngIf="vistaBotones.reasignarTurnos">
         <plex-button type="info" icon="mdi mdi-sync-alert" (click)="reasignarTurnos()" title="Reasignación de Turnos">
         </plex-button>
-   </span>
+    </span>
     <span *ngIf="vistaBotones.clonarAgenda">
         <plex-button icon="mdi mdi-content-copy" (click)="clonarAgenda()" title="Clonar">
         </plex-button>
@@ -38,15 +40,15 @@
     <span *ngIf="vistaBotones.agregarNota">
         <plex-button icon="mdi mdi-comment-outline" (click)="agregarNotaAgenda()" title="Agregar una nota">
         </plex-button>
-   </span>
+    </span>
     <span *ngIf="vistaBotones.agregarSobreturno">
         <plex-button icon="mdi mdi-account-plus" (click)="agregarSobreturno()" title="Agregar Sobreturno">
         </plex-button>
-   </span>
+    </span>
     <span *ngIf="vistaBotones.revisionAgenda">
-          <plex-button icon="mdi mdi-format-list-checks" (click)="revisionAgenda()" title="Revisión de Agenda">
-          </plex-button>
-      </span>
+        <plex-button icon="mdi mdi-format-list-checks" (click)="revisionAgenda()" title="Revisión de Agenda">
+        </plex-button>
+    </span>
     <span *ngIf="vistaBotones.listarTurnos">
         <plex-button icon="mdi mdi-printer" (click)="listarTurnos()" title="Imprimir">
         </plex-button>
