@@ -163,14 +163,17 @@ const appRoutes: Routes = [
   { path: 'rup/auditoriaRUP', component: AuditoriaPrestacionPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/llavesTipoPrestacion', component: LlavesTipoPrestacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/vista/:id', component: VistaHudsComponent, canActivate: [RoutingNavBar, RoutingGuard, RoutingHudsGuard] },
-  { path: 'rup/huds/paciente/:id', component: VistaHudsComponent, canActivate: [RoutingNavBar, RoutingGuard, RoutingHudsGuard] },
-  { path: 'rup/huds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/internacion/censo', component: CensoDiarioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/internacion/censo/mensual', component: CensoMensualComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/internacion/listado', component: ListadoInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/internacion/listaEspera', component: ListaEsperaInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/plantillas', component: PlantillasRUPComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
+  // HUDS
+  { path: 'huds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'huds/paciente/:id', component: VistaHudsComponent, canActivate: [RoutingNavBar, RoutingGuard, RoutingHudsGuard] },
+  // Alias desde RUP
+  { path: 'rup/huds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // Configuraciones / ABM
   { path: 'configuracionPrestacion', component: ConfiguracionPrestacionVisualizarComponent, canActivate: [RoutingNavBar, RoutingGuard] },
@@ -207,20 +210,20 @@ const appRoutes: Routes = [
   // TODO: Verificar si estas rutas todavía son válidas, y ubicarlas en los módulos correspondientes
   /* VERIFICAR ==> */ { path: 'tipoprestaciones', component: TipoPrestacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
-    // Principal
-    { path: 'inicio', component: InicioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-    { path: 'auth', loadChildren: './apps/auth/auth.module#AuthAppModule' },
+  // Principal
+  { path: 'inicio', component: InicioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'auth', loadChildren: './apps/auth/auth.module#AuthAppModule' },
 
-    { path: 'estadisticas', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingNavBar, RoutingGuard] },
-    { path: 'dashboard', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingNavBar, RoutingGuard] },
-    { path: 'gestor-usuarios', loadChildren: './apps/gestor-usuarios/gestor-usuarios.module#GestorUsuariosModule', canActivate: [RoutingNavBar, RoutingGuard] },
-    // Campañas Salud
-    { path: 'campaniasSalud', component: CampaniaSaludComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-    // Turnero
-    { path: 'pantallas', loadChildren: './apps/turnero/turnero.module#TurneroModule', canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'estadisticas', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'dashboard', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'gestor-usuarios', loadChildren: './apps/gestor-usuarios/gestor-usuarios.module#GestorUsuariosModule', canActivate: [RoutingNavBar, RoutingGuard] },
+  // Campañas Salud
+  { path: 'campaniasSalud', component: CampaniaSaludComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+  // Turnero
+  { path: 'pantallas', loadChildren: './apps/turnero/turnero.module#TurneroModule', canActivate: [RoutingNavBar, RoutingGuard] },
 
-    // dejar siempre al último porque no encuentra las url después de esta
-    { path: '**', redirectTo: 'inicio' }
+  // dejar siempre al último porque no encuentra las url después de esta
+  { path: '**', redirectTo: 'inicio' }
 ];
 
 export const appRoutingProviders: any[] = [];
