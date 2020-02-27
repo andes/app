@@ -60,6 +60,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public paciente: any;
     public ultimoLlamado: any;
 
+
     public espaciosFisicosTurnero = [];
     // ultima request que se almacena con el subscribe
     private lastRequest: Subscription;
@@ -357,31 +358,46 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     iniciarPrestacion(paciente, snomedConcept, turno) {
+        let horario = new Date();
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
-                const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional, turno.id, snomedConcept._id);
-                const crear = this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno);
-                const res = concat(token, crear);
-                res.subscribe(input => {
-                    if (input.token) {
-                        // se obtuvo token y loguea el acceso a la huds del paciente
-                        window.sessionStorage.setItem('huds-token', input.token);
-                    } else {
-                        if (input.error) {
-                            this.plex.info('info', input.error, 'Aviso');
-                        } else {
-                            this.routeTo('ejecucion', input.id); // prestacion
+                if (this.agendaSeleccionada.horaInicio <= moment().startOf('day').format()) {
+                    this.serviceTurno.get({ id: turno }).subscribe(turnos => {
+                        horario = (turnos[0].bloques[0].turnos[0].horaAsistencia);
+                        if (horario === undefined) { // Se verifica si el turno tiene registrado asistencia
+                            horario = this.agendaSeleccionada.horaInicio;
                         }
-                    }
-                }, (err) => {
-                    if (err === 'ya_iniciada') {
-                        this.plex.info('info', 'La prestación ya fue iniciada por otro profesional', 'Aviso');
-                    } else {
-                        this.plex.info('warning', err, 'Error');
-                    }
-                });
+                        this.creaPrestacion(paciente, snomedConcept, turno, horario);
+                    });
+                } else {
+                    this.creaPrestacion(paciente, snomedConcept, turno, horario);
+                }
             } else {
                 return false;
+            }
+        });
+    }
+
+    creaPrestacion(paciente, snomedConcept, turno, horario) {
+        const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional, turno.id, snomedConcept._id);
+        const crear = this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', horario, turno);
+        const res = concat(token, crear);
+        res.subscribe(input => {
+            if (input.token) {
+                // se obtuvo token y loguea el acceso a la huds del paciente
+                window.sessionStorage.setItem('huds-token', input.token);
+            } else {
+                if (input.error) {
+                    this.plex.info('info', input.error, 'Aviso');
+                } else {
+                    this.routeTo('ejecucion', input.id); // prestacion
+                }
+            }
+        }, (err) => {
+            if (err === 'ya_iniciada') {
+                this.plex.info('info', 'La prestación ya fue iniciada por otro profesional', 'Aviso');
+            } else {
+                this.plex.info('warning', err, 'Error');
             }
         });
     }

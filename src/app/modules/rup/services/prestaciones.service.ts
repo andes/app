@@ -617,7 +617,7 @@ export class PrestacionesService {
         return prestacion;
     }
 
-    crearPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): Observable<any> {
+    crearPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any, turno: any = null): Observable<any> {
         let prestacion = this.inicializarPrestacion(paciente, snomedConcept, momento, 'ambulatorio', fecha, turno);
         return this.post(prestacion);
     }
