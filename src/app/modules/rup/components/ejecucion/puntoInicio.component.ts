@@ -319,7 +319,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         let params = {
             ordenFechaDesc: true,
             estados: ['asignada'],
-            idProfesional: this.auth.profesional.id
+            idProfesional: this.auth.profesional
         };
         return this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
             this.solicitudes = resultado.filter((prest: any) => prest.solicitud.organizacion ? (this.auth.organizacion.id === prest.solicitud.organizacion.id) : false);
@@ -473,7 +473,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     cargarPrestacionesTurnos(agenda) {
         // if (agenda) {
         // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
-
         agenda['cantidadTurnos'] = 0;
         agenda.bloques.forEach(bloques => {
             agenda['cantidadTurnos'] += bloques.turnos.length;

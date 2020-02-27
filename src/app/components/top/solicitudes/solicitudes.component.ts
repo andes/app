@@ -120,7 +120,7 @@ export class SolicitudesComponent implements OnInit {
         this.permisoAnular = this.auth.check('solicitudes:anular');
         this.showCargarSolicitud = false;
         let currentUrl = this.router.url;
-        if (this.router.url === '/asignadas') {
+        if (currentUrl === '/asignadas') {
             this.asignadas = true;
             this.estadosEntrada = [
                 { id: 'asignada', nombre: 'ASIGNADA' }
@@ -212,12 +212,7 @@ export class SolicitudesComponent implements OnInit {
                     estado: { tipo: 'anulada' }
                 };
                 // CAMBIEMOS e  l estado de la prestacion a 'anulada'
-                this.servicioPrestacion.patch(prestacionSolicitud.id, cambioEstado).subscribe(prestacion => {
-                    this.plex.toast('info', 'Prestación cancelada');
-                    this.cargarSolicitudes();
-                }, (err) => {
-                    this.plex.toast('danger', 'ERROR: No es posible iniciar la prestación');
-                });
+                this.servicioPrestacion.patch(prestacionSolicitud.id, cambioEstado).subscribe(prestacion => this.plex.toast('info', 'Prestación cancelada'), (err) => this.plex.toast('danger', 'ERROR: No es posible iniciar la prestación'));
             }
         });
     }
@@ -282,13 +277,11 @@ export class SolicitudesComponent implements OnInit {
     }
 
     cargarSolicitudes() {
-        if (this.fechaDesde && this.fechaHasta) {
-            (this.tipoSolicitud === 'entrada' ? this.prestacionesEntrada : this.prestacionesSalida).length = 0;
-            this.skip = 0;
-            this.scrollEnd = false;
+        (this.tipoSolicitud === 'entrada' ? this.prestacionesEntrada : this.prestacionesSalida).length = 0;
+        this.skip = 0;
+        this.scrollEnd = false;
 
-            this.buscarSolicitudes();
-        }
+        this.buscarSolicitudes();
     }
 
     getParams() {
@@ -297,39 +290,75 @@ export class SolicitudesComponent implements OnInit {
             solicitudHasta: this.fechaHasta,
             ordenFechaDesc: true
         };
-        if (this.estado) {
+        if (this.asignadas && this.tipoSolicitud === 'entrada') {
+            params['idProfesional'] = this.auth.profesional;
+        }
+        if (this.tipoSolicitud === 'entrada') {
+            if (this.estadoEntrada) {
 
-            if (this.estado.id === 'turnoDado') {
-                params['tieneTurno'] = true;
-            } else if (this.estado.id === 'registroHUDS') {
-                params['tieneTurno'] = true;
-                params['estados'] = ['validada'];
-            } else {
-                params['estados'] = [this.estado.id];
-                if (this.estado.id === 'pendiente') {
-                    params['tieneTurno'] = false;
+                if (this.estadoEntrada.id === 'turnoDado') {
+                    params['tieneTurno'] = true;
+                } else if (this.estadoEntrada.id === 'registroHUDS') {
+                    params['tieneTurno'] = true;
+                    params['estados'] = ['validada'];
+                } else {
+                    params['estados'] = [this.estadoEntrada.id];
+                    if (this.estadoEntrada.id === 'pendiente') {
+                        params['tieneTurno'] = false;
+                    }
                 }
+                if (this.prestacionDestino) {
+                    params['prestacionDestino'] = this.prestacionDestino.id;
+                } else {
+                    params['estados'] = [this.estadoEntrada.id];
+                    if (this.estadoEntrada.id === 'pendiente') {
+                        params['tieneTurno'] = false;
+                    }
+                }
+            } else {
+                params['estados'] = [
+                    'auditoria',
+                    'pendiente',
+                    'rechazada',
+                    'validada',
+                    'asignada'
+                ];
             }
-        } else {
-            params['estados'] = [
-                'asignada',
-                'auditoria',
-                'pendiente',
-                'rechazada',
-                'validada',
-                'asignada'
-            ];
+        }
+        if (this.tipoSolicitud === 'salida') {
+            if (this.estadoSalida) {
+
+                if (this.estadoSalida.id === 'turnoDado') {
+                    params['tieneTurno'] = true;
+                } else if (this.estadoSalida.id === 'registroHUDS') {
+                    params['tieneTurno'] = true;
+                    params['estados'] = ['validada'];
+                } else {
+                    params['estados'] = [this.estadoSalida.id];
+                    if (this.estadoSalida.id === 'pendiente') {
+                        params['tieneTurno'] = false;
+                    }
+                }
+                if (this.prestacionDestino) {
+                    params['prestacionDestino'] = this.prestacionDestino.id;
+                } else {
+                    params['estados'] = [this.estadoSalida.id];
+                    if (this.estadoSalida.id === 'pendiente') {
+                        params['tieneTurno'] = false;
+                    }
+                }
+            } else {
+                params['estados'] = [
+                    'auditoria',
+                    'pendiente',
+                    'rechazada',
+                    'validada',
+                    'asignada'
+                ];
+            }
         }
         if (this.organizacion) {
             params['organizacionOrigen'] = this.organizacion.id;
-        }
-        if (this.prestacionDestino) {
-            params['prestacionDestino'] = this.prestacionDestino.id;
-        } else {
-            params['estados'] = [this.estado.id];
-            if (this.estado.id === 'pendiente') {
-                params['tieneTurno'] = false;
-            }
         }
         if (this.prestacionDestino) {
             params['prestacionDestino'] = this.prestacionDestino.id;
@@ -560,10 +589,7 @@ export class SolicitudesComponent implements OnInit {
                 patch.profesional = event.profesional;
             }
             this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
-                respuesta => {
-                    this.cargarSolicitudes();
-                    this.plex.toast(event.status ? 'success' : 'danger', '', event.status ? 'Solicitud Aceptada' : 'Solicitud CONTRARREFERIDA');
-                }
+                respuesta => this.cargarSolicitudes()
             );
         }
     }
@@ -582,10 +608,7 @@ export class SolicitudesComponent implements OnInit {
                     }
                 };
                 this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
-                    respuesta => {
-                        this.cargarSolicitudes();
-                        this.plex.toast('danger', '', 'Solicitud Anulada');
-                    }
+                    respuesta => this.cargarSolicitudes()
                 );
             }
         }
@@ -609,10 +632,7 @@ export class SolicitudesComponent implements OnInit {
                     }
                 };
                 this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
-                    respuesta => {
-                        this.cargarSolicitudes();
-                        this.plex.toast('success', '', 'Solicitud enviada a pendientes');
-                    }
+                    respuesta => this.cargarSolicitudes()
                 );
             }
         }
@@ -637,15 +657,7 @@ export class SolicitudesComponent implements OnInit {
                 window.sessionStorage.setItem('motivoAccesoHuds', motivoAccesoHuds);
                 this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
             } else {
-                this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.accesoHudsPaciente, motivoAccesoHuds, this.auth.profesional, this.accesoHudsTurno, this.accesoHudsPrestacion).subscribe(hudsToken => {
-                    // se obtiene token y loguea el acceso a la huds del paciente
-                    window.sessionStorage.setItem('huds-token', hudsToken.token);
-                    this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
-                    this.routeToParams = [];
-                    this.accesoHudsPaciente = null;
-                    this.accesoHudsTurno = null;
-                    this.accesoHudsPrestacion = null;
-                });
+                this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.accesoHudsPaciente, motivoAccesoHuds, this.auth.profesional, this.accesoHudsTurno, this.accesoHudsPrestacion).subscribe(hudsToken => window.sessionStorage.setItem('huds-token', hudsToken.token));
             }
         }
         this.showModalMotivo = false;
@@ -666,9 +678,7 @@ export class SolicitudesComponent implements OnInit {
             this.plex.confirm('Paciente: <b>' + solicitud.paciente.apellido + ', ' + solicitud.paciente.nombre + '.</b><br>Prestación: <b>' + solicitud.solicitud.tipoPrestacion.term + '</b>', '¿Está seguro de querer iniciar una pestación?').then(confirmacion => {
                 if (confirmacion) {
                     let obraSocialPaciente;
-                    this.osService.getFinanciadorPacienteCache().subscribe((financiador) => {
-                        obraSocialPaciente = financiador;
-                    });
+                    this.osService.getFinanciadorPacienteCache().subscribe((financiador) => obraSocialPaciente = financiador);
                     if (solicitud.solicitud.tipoPrestacion) {
                         let conceptoSnomed = solicitud.solicitud.tipoPrestacion;
                         let nuevaPrestacion;
@@ -717,15 +727,11 @@ export class SolicitudesComponent implements OnInit {
                                             }
                                         };
                                         this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
-                                            () => {
-                                                this.router.navigate(['/rup/ejecucion', input.id]); // prestacion
-                                            }
+                                            () => this.router.navigate(['/rup/ejecucion', input.id])
                                         );
                                     }
                                 }
-                            }, (err) => {
-                                this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err);
-                            });
+                            }, (err) => this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err));
                         } else {
                             this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
                                 if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
@@ -737,14 +743,10 @@ export class SolicitudesComponent implements OnInit {
                                         }
                                     };
                                     this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
-                                        () => {
-                                            this.router.navigate(['/rup/ejecucion', prestacion.id]);
-                                        }
+                                        () => this.router.navigate(['/rup/ejecucion', prestacion.id])
                                     );
                                 }
-                            }, (err) => {
-                                this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err);
-                            });
+                            }, (err) => this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err));
                         }
                     }
                 } else {
