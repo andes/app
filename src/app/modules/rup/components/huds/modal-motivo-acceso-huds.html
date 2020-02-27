@@ -1,4 +1,4 @@
-<plex-modal #modal>
+<plex-modal #modal (closed)="notificarAccion(false)">
     <plex-icon name="alert-circle" type="danger"></plex-icon>
     <plex-modal-title type="danger">Historia Universal Digital de Salud</plex-modal-title>
     <plex-modal-subtitle type="">Por favor, indique el motivo de acceso:</plex-modal-subtitle>
@@ -23,6 +23,4 @@
     <plex-button modal left type="danger" (click)="notificarAccion(false)">
         CANCELAR
     </plex-button>
-
-
 </plex-modal>

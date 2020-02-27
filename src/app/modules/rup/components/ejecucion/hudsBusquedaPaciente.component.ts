@@ -81,6 +81,8 @@ export class HudsBusquedaPacienteComponent implements OnInit {
                 window.sessionStorage.removeItem('motivoAccesoHuds');
                 this.router.navigate(['/rup/huds/paciente/' + this.pacienteSelected.id]);
             });
+        } else {
+            this.pacienteSelected = null;
         }
         this.showModalMotivo = false;
     }
