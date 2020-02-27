@@ -251,10 +251,21 @@
                     <plex-tab label="Resumen del Paciente" *ngIf="paciente && tieneAccesoHUDS">
                         <rup-resumenPaciente-estatico [prestacion]="prestacion" [paciente]="paciente">
                         </rup-resumenPaciente-estatico>
-                        <rup-resumenPaciente-dinamico-nino *ngIf="paciente.edad <= 6" [paciente]="paciente">
-                        </rup-resumenPaciente-dinamico-nino>
-                        <rup-resumenPaciente-dinamico *ngIf="paciente.edad > 6" [paciente]="paciente">
-                        </rup-resumenPaciente-dinamico>
+
+                        <plex-tabs [activeIndex]="activeIndexResumen">
+                            <plex-tab label="Registros del Paciente">
+                                <rup-resumenPaciente-dinamico-nino *ngIf="paciente?.edad <= 6" [paciente]="paciente"
+                                                                   esTab="true">
+                                </rup-resumenPaciente-dinamico-nino>
+                                <rup-resumenPaciente-dinamico *ngIf="paciente?.edad > 6" [paciente]="paciente"
+                                                              esTab="true">
+                                </rup-resumenPaciente-dinamico>
+                            </plex-tab>
+
+                            <plex-tab label="Accesos a la HUDS" [allowClose]="false">
+                                <vista-accesos-huds *ngIf='paciente' [paciente]="paciente"></vista-accesos-huds>
+                            </plex-tab>
+                        </plex-tabs>
                     </plex-tab>
                     <plex-tab label="Autocontroles del paciente" *ngIf="flagSeguimiento">
                         <rup-resumenPaciente-estatico [prestacion]="prestacion" [paciente]="paciente">
