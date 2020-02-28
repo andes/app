@@ -1,0 +1,19 @@
+<form #form="ngForm">
+    <div class="row flex-column">
+        <div class="col-12">
+            <plex-datetime *ngIf="!soloValores" [(ngModel)]="registro.valor" [label]="params.title ? params.title : registro.concepto.term" name="DateFormat" [type]="params.type ? params.type : 'date'"
+                    placeholder="DD/MM/AAAA" (change)="onChange()"  [required]="params.required ? params.required : false" [min]="min" [max]="max">
+            </plex-datetime>
+            <p *ngIf="soloValores && registro.valor" class="readonly">
+                <span>{{registro.concepto.term}}</span> {{DateFormat}}
+            </p>
+            <p *ngIf="soloValores && !registro.valor" class="readonly">
+                <span>{{registro.concepto.term}}</span> sin valor
+            </p>
+            <p *ngIf="alerta">
+                <span>{{this.alerta}} </span>
+            </p>
+        </div>
+    </div>
+
+</form>
