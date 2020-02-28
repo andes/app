@@ -491,7 +491,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     intervalAgendaRefresh() {
         this.stopAgendaRefresh();
         if (this.agendaSeleccionada && this.agendaSeleccionada !== 'fueraAgenda' && moment(this.agendaSeleccionada.horaInicio).isSame(new Date(), 'day')) {
-            const timeOut = 30000; // Lapso de tiempo en que se recargara la agenda seleccionada
+            const timeOut = 300000; // Lapso de tiempo en que se recargara la agenda seleccionada
             this.interval = setInterval(this.reloadAgenda.bind(this), timeOut);
         }
     }
