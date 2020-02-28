@@ -187,7 +187,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 this.cargarTurnos(this.agendas[0]);
             }
 
-           // recorremos agenda seleccionada para ver si tienen planes pendientes y mostrar en la vista..
+            // recorremos agenda seleccionada para ver si tienen planes pendientes y mostrar en la vista..
             if (this.agendaSeleccionada) {
                 this.agendaSeleccionada.bloques.forEach(element => {
                     element.turnos.forEach(turno => {
@@ -421,18 +421,11 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     reloadAgenda() {
         return this.agendaSeleccionada.id ? observableForkJoin(
             this.servicioAgenda.getById(this.agendaSeleccionada.id),
-            this.getPrestaciones(),
-            this.getPrestacionesPendientes()
         ).subscribe(data => {
-                let agenda = data[0];
-                this.prestaciones = data[1];
-                if (data[2]) {
-                    this.prestaciones = [...this.prestaciones, ...data[2]];
-                }
-
-                this.cargarPrestacionesTurnos(agenda);
-                this.agendas[this.agendas.indexOf(this.agendaSeleccionada)] = this.agendaSeleccionada = agenda;
-            }
+            let agenda = data[0];
+            this.cargarPrestacionesTurnos(agenda);
+            this.agendas[this.agendas.indexOf(this.agendaSeleccionada)] = this.agendaSeleccionada = agenda;
+        }
         ) : null;
     }
 
@@ -460,44 +453,45 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
     cargarPrestacionesTurnos(agenda) {
         // if (agenda) {
-            // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
-            agenda['cantidadTurnos'] = 0;
-            agenda.bloques.forEach(bloques => {
-                agenda['cantidadTurnos'] += bloques.turnos.length;
-                // loopeamos los turnos dentro de los bloques
-                bloques.turnos.forEach(turno => {
-                    let indexPrestacion = this.prestaciones.findIndex(prestacion => {
-                        return (prestacion.solicitud.turno && prestacion.solicitud.turno === turno.id);
-                    });
-                    // asignamos la prestacion al turno
-                    turno['prestacion'] = this.prestaciones[indexPrestacion];
-                    if (turno.paciente && turno.paciente.carpetaEfectores) {
-                        (turno.paciente.carpetaEfectores as any) = turno.paciente.carpetaEfectores.filter((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
-                    }
+        // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
 
+        agenda['cantidadTurnos'] = 0;
+        agenda.bloques.forEach(bloques => {
+            agenda['cantidadTurnos'] += bloques.turnos.length;
+            // loopeamos los turnos dentro de los bloques
+            bloques.turnos.forEach(turno => {
+                let indexPrestacion = this.prestaciones.findIndex(prestacion => {
+                    return (prestacion.solicitud.turno && prestacion.solicitud.turno === turno.id);
                 });
+                // asignamos la prestacion al turno
+                turno['prestacion'] = this.prestaciones[indexPrestacion];
+                if (turno.paciente && turno.paciente.carpetaEfectores) {
+                    (turno.paciente.carpetaEfectores as any) = turno.paciente.carpetaEfectores.filter((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
+                }
+
             });
+        });
 
-            // busquemos si hay sobreturnos para vincularlos con la prestacion correspondiente
-            if (agenda.sobreturnos) {
-                agenda.sobreturnos.forEach(sobreturno => {
-                    let indexPrestacion = this.prestaciones.findIndex(prestacion => {
-                        return (prestacion.solicitud.turno && prestacion.solicitud.turno === sobreturno.id);
-                    });
-                    // asignamos la prestacion al turno
-                    sobreturno['prestacion'] = this.prestaciones[indexPrestacion];
-                    if (sobreturno.paciente && sobreturno.paciente.carpetaEfectores) {
-                        (sobreturno.paciente.carpetaEfectores as any) = sobreturno.paciente.carpetaEfectores.filter((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
-                    }
+        // busquemos si hay sobreturnos para vincularlos con la prestacion correspondiente
+        if (agenda.sobreturnos) {
+            agenda.sobreturnos.forEach(sobreturno => {
+                let indexPrestacion = this.prestaciones.findIndex(prestacion => {
+                    return (prestacion.solicitud.turno && prestacion.solicitud.turno === sobreturno.id);
                 });
-            }
+                // asignamos la prestacion al turno
+                sobreturno['prestacion'] = this.prestaciones[indexPrestacion];
+                if (sobreturno.paciente && sobreturno.paciente.carpetaEfectores) {
+                    (sobreturno.paciente.carpetaEfectores as any) = sobreturno.paciente.carpetaEfectores.filter((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
+                }
+            });
+        }
         // }
     }
 
     intervalAgendaRefresh() {
         this.stopAgendaRefresh();
         if (this.agendaSeleccionada && this.agendaSeleccionada !== 'fueraAgenda' && moment(this.agendaSeleccionada.horaInicio).isSame(new Date(), 'day')) {
-            const timeOut = 30000; // Lapso de tiempo en que se recargara la agenda seleccionada
+            const timeOut = 300000; // Lapso de tiempo en que se recargara la agenda seleccionada
             this.interval = setInterval(this.reloadAgenda.bind(this), timeOut);
         }
     }
