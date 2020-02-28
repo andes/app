@@ -310,6 +310,8 @@ import { ValorFechaComponent } from './modules/rup/components/elementos/valorFec
 import { MoleculaBaseComponent } from './modules/rup/components/elementos/moleculaBase.component';
 import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria.component';
 
+import { EtapaPubertadComponent } from './modules/rup/components/elementos/EtapaPubertad.component';
+
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
@@ -479,6 +481,7 @@ let RUPComponentsArray = [
     VistaPrestacionComponent,
     VistaContextoPrestacionComponent,
     ProcedimientoDeEnfermeriaComponent,
+    EtapaPubertadComponent,
     CamaBloquearComponent,
     CamaDesbloquearComponent,
     CamaPrepararComponent,
