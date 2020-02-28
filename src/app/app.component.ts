@@ -152,6 +152,10 @@ export class AppComponent {
         }
     }
 
+    public loggedIn() {
+        return this.auth.getToken() !== undefined;
+    }
+
     public showRibbon() {
         return environment.environmentName === 'demo' || environment.environmentName === 'testing';
     }

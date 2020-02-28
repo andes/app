@@ -8,7 +8,17 @@ import { CommonNovedadesService } from '../common-novedades.service';
 
 @Component({
     selector: 'header-novedades',
-    templateUrl: './header-novedades.component.html'
+    templateUrl: './header-novedades.component.html',
+    styles: [`
+        .item-default-img {
+            align-self: center;
+            border-radius: 50%;
+            -o-object-fit: cover;
+            object-fit: cover;
+            width: 3rem;
+            height: 3rem;
+        }
+    `]
 })
 
 export class HeaderNovedadesComponent implements OnInit {

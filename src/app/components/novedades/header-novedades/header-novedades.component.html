@@ -3,6 +3,8 @@
         <plex-item *ngFor="let novedad of listadoNovedades; let indiceNovedad = index"
                    (click)="onSelectedNovedadChange(novedad)">
             <img *ngIf="novedad.imagenes.length > 0" [src]="getFoto(novedad)" alt="">
+            <!-- Si no hay imagen, mostrar logo de Andes por default -->
+            <div *ngIf="novedad.imagenes.length === 0" class="svg-logo item-default-img" svgLogo></div>
             <plex-label titulo="{{novedad.titulo}}" subtitulo="">
             </plex-label>
             <plex-badge size="md" type="info">{{formatFecha(novedad.fecha)}}</plex-badge>
