@@ -10,9 +10,7 @@
     </div>
 
     <div subtitle>
-        <plex-copy>
-            {{ usuario.documento || 'Sin Documento' }}
-        </plex-copy>
+        <plex-copy *ngIf="usuario.documento" [value]="usuario.documento">{{ usuario.documento | number }}</plex-copy>
     </div>
 
 </plex-detail>

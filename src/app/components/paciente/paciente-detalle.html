@@ -11,8 +11,8 @@
     </div>
 
     <div subtitle>
-        <plex-copy>
-            {{ paciente.documento || 'Sin Documento' }}
+        <plex-copy *ngIf="paciente.documento" [value]="paciente.documento">
+            {{ paciente.documento | number  }}
         </plex-copy>
     </div>
 
