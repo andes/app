@@ -368,7 +368,6 @@ import { DetalleSolicitudComponent } from './components/top/solicitudes/detalleS
 import { AuditarSolicitudComponent } from './components/top/solicitudes/auditarSolicitud.component';
 import { NuevaSolicitudComponent } from './components/top/solicitudes/nuevaSolicitud.component';
 import { AnularSolicitudComponent } from './components/top/solicitudes/anularSolicitud.component';
-import { CitarPacienteComponent } from './components/top/solicitudes/citarPaciente.component';
 import { PrestacionSolicitudComponent } from './components/top/solicitudes/prestacionSolicitud.component';
 
 // Componentes RUP
@@ -633,7 +632,6 @@ registerLocaleData(localeEs, 'es');
         PrestacionSolicitudComponent,
         AuditarSolicitudComponent,
         AnularSolicitudComponent,
-        CitarPacienteComponent,
         NuevaSolicitudComponent,
         PrestamosHcComponent,
         ListarSolicitudesComponent,

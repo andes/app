@@ -24,7 +24,9 @@ export class AuditarSolicitudComponent implements OnInit {
 
 
     @Input() prestacionSeleccionada: any;
+    @Input() showCitar: any;
     @Output() returnAuditoria: EventEmitter<any> = new EventEmitter<any>();
+    @Output() returnCitar: EventEmitter<any> = new EventEmitter<any>();
     // Adjuntos
     fotos: any[] = [];
     fileToken: String = null;
@@ -86,6 +88,10 @@ export class AuditarSolicitudComponent implements OnInit {
         }
     }
 
+    cerrar() {
+        this.returnAuditoria.emit({ status: true });
+    }
+
     cancelar() {
         this.estadoSolicitud = 0;
         this.corfirmarAuditoria = false;
@@ -144,6 +150,14 @@ export class AuditarSolicitudComponent implements OnInit {
         if (imagenSiguiente <= this.fotos.length - 1) {
             this.indice = imagenSiguiente;
         }
+    }
+
+    cancelarCitar() {
+        this.returnCitar.emit({ status: true });
+    }
+
+    confirmarCitar() {
+        this.returnCitar.emit({ status: false, motivo: this.observaciones });
     }
 
 }

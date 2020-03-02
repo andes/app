@@ -49,7 +49,7 @@
                         </plex-select>
                     </div>
                     <div class="col-3">
-                        <plex-select [(ngModel)]="estadoEntrada" (change)="cargarSolicitudes()"
+                        <plex-select [readonly]="asignadas" [(ngModel)]="estadoEntrada" (change)="cargarSolicitudes()"
                                      *ngIf="tipoSolicitud === 'entrada'" [data]="estadosEntrada" name="estado"
                                      label="Estado" ngModelOptions="{standalone: true}" (change)="cargarSolicitudes()">
                         </plex-select>
@@ -302,8 +302,8 @@
             </anular-solicitud>
         </div>
         <div *ngIf="showCitar">
-            <citar-paciente [prestacionSeleccionada]="prestacionSeleccionada" (returnCitar)="returnCitar($event)">
-            </citar-paciente>
+            <auditar-solicitud [prestacionSeleccionada]="prestacionSeleccionada" [showCitar]="true"
+                               (returnCitar)="returnCitar($event)"></auditar-solicitud>
         </div>
         <div *ngIf="showIniciarPrestacion">
             <prestacion-solicitud [prestacionSeleccionada]="prestacionSeleccionada"
