@@ -655,10 +655,21 @@ export class SolicitudesComponent implements OnInit {
             if (!this.accesoHudsPaciente && !this.accesoHudsPrestacion && this.routeToParams && this.routeToParams[0] === 'huds') {
                 // Se esta accediendo a 'HUDS DE UN PACIENTE'
                 window.sessionStorage.setItem('motivoAccesoHuds', motivoAccesoHuds);
-                this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
             } else {
-                this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.accesoHudsPaciente, motivoAccesoHuds, this.auth.profesional, this.accesoHudsTurno, this.accesoHudsPrestacion).subscribe(hudsToken => window.sessionStorage.setItem('huds-token', hudsToken.token));
+                if (this.accesoHudsPaciente) {
+                    this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.accesoHudsPaciente, motivoAccesoHuds, this.auth.profesional, this.accesoHudsTurno, this.accesoHudsPrestacion).subscribe(hudsToken => {
+                        // se obtiene token y loguea el acceso a la huds del paciente
+                        window.sessionStorage.setItem('huds-token', hudsToken.token);
+                        this.routeToParams = [];
+                        this.accesoHudsPaciente = null;
+                        this.accesoHudsTurno = null;
+                        this.accesoHudsPrestacion = null;
+                    });
+                }
+
             }
+            this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
+
         }
         this.showModalMotivo = false;
     }
