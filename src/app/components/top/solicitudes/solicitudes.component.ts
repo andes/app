@@ -113,8 +113,11 @@ export class SolicitudesComponent implements OnInit {
 
         if (!this.auth.getPermissions('solicitudes:?').length) {
             this.router.navigate(['inicio']);
+        } else {
+            if (this.auth.getPermissions('solicitudes:?').length === 1 && this.auth.getPermissions('solicitudes:reglas:?')[0] !== '*' && this.auth.getPermissions('solicitudes:asignadas:?').length) {
+                this.router.navigate(['asignadas']);
+            }
         }
-
         this.permisosReglas = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:reglas:?')[0] === '*' : false;
         this.prestacionesPermisos = this.auth.getPermissions('solicitudes:tipoPrestacion:?');
         this.permisoAnular = this.auth.check('solicitudes:anular');
@@ -290,10 +293,10 @@ export class SolicitudesComponent implements OnInit {
             solicitudHasta: this.fechaHasta,
             ordenFechaDesc: true
         };
-        if (this.asignadas && this.tipoSolicitud === 'entrada') {
-            params['idProfesional'] = this.auth.profesional;
-        }
         if (this.tipoSolicitud === 'entrada') {
+            if (this.asignadas) {
+                params['idProfesional'] = this.auth.profesional;
+            }
             if (this.estadoEntrada) {
 
                 if (this.estadoEntrada.id === 'turnoDado') {
@@ -326,6 +329,9 @@ export class SolicitudesComponent implements OnInit {
             }
         }
         if (this.tipoSolicitud === 'salida') {
+            if (this.asignadas) {
+                params['idProfesionalOrigen'] = this.auth.profesional;
+            }
             if (this.estadoSalida) {
 
                 if (this.estadoSalida.id === 'turnoDado') {
