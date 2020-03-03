@@ -10,6 +10,7 @@ import { Observable } from 'rxjs/Observable';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 import { take, map, pluck, tap, timeInterval, delay } from 'rxjs/operators';
 import { interval } from 'rxjs';
+import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 
 @Component({
     selector: 'app-mapa-camas-capa',
@@ -21,6 +22,7 @@ import { interval } from 'rxjs';
 export class MapaCamasCapaComponent implements OnInit {
     capa$: Observable<string>;
     selectedCama$: Observable<ISnapshot>;
+    selectedPaciente$: Observable<IPaciente>;
     organizacion: string;
     fecha = moment().toDate();
     ambito: string;
@@ -31,6 +33,7 @@ export class MapaCamasCapaComponent implements OnInit {
         { label: 'CENSO DIARIO', route: `/internacion/censo/diario` },
         { label: 'CENSO MENSUAL', route: `/internacion/censo/mensual` },
     ];
+    estadoDestino: any;
     estadosCama: any;
     estados: any;
     relaciones: any;
@@ -51,9 +54,13 @@ export class MapaCamasCapaComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.mapaCamasService.setView('mapa-camas');
+
         this.ambito = this.mapaCamasService.ambito;
 
         this.selectedCama$ = this.mapaCamasService.selectedCama;
+
+        this.selectedPaciente$ = this.mapaCamasService.selectedPaciente;
 
         this.capa$ = this.route.params.pipe(
             take(1),
@@ -97,21 +104,17 @@ export class MapaCamasCapaComponent implements OnInit {
 
     selectCama(cama, relacion) {
         this.mapaCamasService.select(cama);
+        this.mapaCamasService.selectPaciente(cama.paciente);
         if (relacion) {
-            // this.estadoDestino = relacion.destino;
             this.accion = relacion.accion;
-            // let relacionesConDestino = this.relaciones.filter(rel => rel.destino === relacion.destino);
-            // relacionesConDestino.map(rel => {
-            //     this.opcionesCamas.push(...this.snapshot.filter(snap => snap.estado === rel.origen));
-            // });
+            this.estadoDestino = relacion.destino;
         }
     }
 
     accionDesocupar(accion) {
         if (!accion.egresar) {
-            this.accion = 'cambiarCama';
             this.cambiarUO = accion.cambiarUO;
-            this.camasDisponibles = accion.camasDisponibles;
+            this.accion = 'cambiarCama';
         } else {
             this.accion = accion.egresar;
         }
@@ -126,9 +129,11 @@ export class MapaCamasCapaComponent implements OnInit {
 
     volverAResumen() {
         this.accion = null;
+        this.mapaCamasService.select(null);
     }
 
-    cambiarCama(selectedCama) {
+    volverADesocupar() {
+        this.accion = 'desocuparCama';
     }
 
     verDetalle(cama: ISnapshot, selectedCama: ISnapshot) {
@@ -139,15 +144,6 @@ export class MapaCamasCapaComponent implements OnInit {
             this.accion = null;
             this.mapaCamasService.select(null);
         }
-
-        // if (!this.estadoDestino) {
-        //     if (this.selectedCama && cama.idCama === this.selectedCama.idCama) {
-        //         this.volverAResumen();
-        //     } else {
-        //         this.selectedCama = cama;
-        //         this.estadoDestino = null;
-        //     }
-        // }
     }
 
     volver() {

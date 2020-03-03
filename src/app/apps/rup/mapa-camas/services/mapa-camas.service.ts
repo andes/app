@@ -10,6 +10,7 @@ import { ISectores } from '../../../../interfaces/IOrganizacion';
 import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concept.interface';
 import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
+import { Auth } from '@andes/auth';
 
 @Injectable()
 export class MapaCamasService {
@@ -25,8 +26,20 @@ export class MapaCamasService {
     public esCensable = new BehaviorSubject<any>(null);
     public pacienteText = new BehaviorSubject<string>(null);
 
+    public pacienteDocumento = new BehaviorSubject<string>(null);
+    public pacienteApellido = new BehaviorSubject<string>(null);
+    public fechaIngresoDesde = new BehaviorSubject<Date>(moment().subtract(1, 'months').toDate());
+    public fechaIngresoHasta = new BehaviorSubject<Date>(moment().toDate());
+    public estado = new BehaviorSubject<any>(null);
+
+    public selectedPaciente = new BehaviorSubject<any>({} as any);
+
     public selectedCama = new BehaviorSubject<ISnapshot>({} as any);
+
+    public view = new BehaviorSubject<string>('mapa-camas');
+
     public prestacion$: Observable<IPrestacion>;
+    public selectedPrestacion = new BehaviorSubject<IPrestacion>({ id: null } as any);
 
     private maquinaDeEstado$: Observable<IMaquinaEstados>;
 
@@ -36,13 +49,17 @@ export class MapaCamasService {
     public snapshot$: Observable<ISnapshot[]>;
     public snapshotFiltrado$: Observable<ISnapshot[]>;
 
+    public listaInternacion$: Observable<IPrestacion[]>;
+    public listaInternacionFiltrada$: Observable<IPrestacion[]>;
 
     public ambito = 'internacion';
     public capa;
+    public fecha: Date;
 
     constructor(
         private camasHTTP: MapaCamasHTTP,
-        private prestacionService: PrestacionesService
+        private prestacionService: PrestacionesService,
+        private auth: Auth,
     ) {
         this.maquinaDeEstado$ = combineLatest(
             this.ambito2,
@@ -81,20 +98,50 @@ export class MapaCamasService {
                 this.filtrarSnapshot(camas, paciente, unidadOrganizativa, sector, tipoCama, esCensable))
         );
 
-        this.prestacion$ = this.selectedCama.pipe(
-            switchMap((cama) => {
-                if (cama.idInternacion) {
-                    return this.prestacionService.getById(cama.idInternacion, { showError: false }).pipe(
+        this.prestacion$ = combineLatest(
+            this.selectedPrestacion,
+            this.selectedCama,
+            this.view
+        ).pipe(
+            switchMap(([prestacion, cama, view]) => {
+                const idInternacion = (view === 'listado-internacion') ? prestacion.id : cama.idInternacion;
+                if (idInternacion) {
+                    return this.prestacionService.getById(idInternacion, { showError: false }).pipe(
                         // No todas las capas tienen un ID de internacion real.
                         catchError(() => of(null))
                     );
-                } else {
-                    return of(null);
                 }
-            }),
-            cache()
+                return of(null);
+            })
         );
 
+        this.listaInternacion$ = combineLatest(
+            this.fechaIngresoDesde,
+            this.fechaIngresoHasta,
+        ).pipe(
+            switchMap(([fechaIngresoDesde, fechaIngresoHasta]) => {
+                const filtros = {
+                    fechaDesde: fechaIngresoDesde, fechaHasta: fechaIngresoHasta,
+                    organizacion: this.auth.organizacion.id,
+                    conceptId: PrestacionesService.InternacionPrestacion.conceptId,
+                    ordenFecha: true,
+                    estado: ['validada', 'ejecucion']
+                };
+
+                return this.prestacionService.get(filtros);
+            })
+        );
+
+        this.listaInternacionFiltrada$ = combineLatest(
+            this.listaInternacion$,
+            this.pacienteDocumento,
+            this.pacienteApellido,
+            this.estado
+        ).pipe(
+            map(([listaInternacion, documento, apellido, estado]) =>
+                this.filtrarListaInternacion(listaInternacion, documento, apellido, estado)
+            )
+        );
     }
 
     getEstadoCama(cama: ISnapshot) {
@@ -109,13 +156,15 @@ export class MapaCamasService {
         const relacionesPosibles = [];
         const estadoCama = estados.filter(est => cama.estado === est.key)[0];
 
-        estados.map(est => relaciones.map(rel => {
-            if (estadoCama.key === rel.origen) {
-                if (est.key === rel.destino && rel.destino !== 'inactiva') {
-                    relacionesPosibles.push(rel);
+        if (estadoCama) {
+            estados.map(est => relaciones.map(rel => {
+                if (estadoCama.key === rel.origen) {
+                    if (est.key === rel.destino && rel.destino !== 'inactiva') {
+                        relacionesPosibles.push(rel);
+                    }
                 }
-            }
-        }));
+            }));
+        }
         return relacionesPosibles;
     }
 
@@ -123,6 +172,31 @@ export class MapaCamasService {
         return combineLatest(this.estado$, this.relaciones$).pipe(
             map(([estados, relaciones]) => {
                 return this.getEstadosRelacionesCama(cama, estados, relaciones);
+            })
+        );
+    }
+
+    private getCamasDisponiblesCama(camas: ISnapshot[], cama: ISnapshot) {
+        let camasMismaUO = [];
+        let camasDistintaUO = [];
+        camas.map(c => {
+            if (c.estado === 'disponible') {
+                if (c.idCama !== cama.idCama) {
+                    if (c.unidadOrganizativa.conceptId === cama.unidadOrganizativa.conceptId) {
+                        camasMismaUO.push(c);
+                    } else {
+                        camasDistintaUO.push(c);
+                    }
+                }
+            }
+        });
+        return { camasMismaUO, camasDistintaUO };
+    }
+
+    getCamasDisponibles(cama: ISnapshot) {
+        return combineLatest(this.snapshot$).pipe(
+            map(([camas]) => {
+                return this.getCamasDisponiblesCama(camas, cama);
             })
         );
     }
@@ -143,6 +217,15 @@ export class MapaCamasService {
 
     setFecha(fecha: Date) {
         this.fecha2.next(fecha);
+        this.fecha = fecha;
+    }
+
+    setFechaHasta(fecha: Date) {
+        this.fechaIngresoHasta.next(fecha);
+    }
+
+    setView(view: string) {
+        this.view.next(view);
     }
 
     select(cama: ISnapshot) {
@@ -150,6 +233,20 @@ export class MapaCamasService {
             return this.selectedCama.next({ idCama: null } as any);
         }
         this.selectedCama.next(cama);
+    }
+
+    selectPaciente(paciente: any) {
+        if (!paciente) {
+            return this.selectedPaciente.next({ id: null } as any);
+        }
+        this.selectedPaciente.next(paciente);
+    }
+
+    selectPrestacion(prestacion: IPrestacion) {
+        if (!prestacion) {
+            return this.selectedPrestacion.next({ id: null } as any);
+        }
+        this.selectedPrestacion.next(prestacion);
     }
 
     filtrarSnapshot(camas: ISnapshot[], paciente: string, unidadOrganizativa: ISnomedConcept, sector: ISectores, tipoCama: ISnomedConcept, esCensable) {
@@ -186,27 +283,51 @@ export class MapaCamasService {
         return camasFiltradas;
     }
 
+    filtrarListaInternacion(listaInternacion: IPrestacion[], documento: string, apellido: string, estado: string) {
+        let listaInternacionFiltrada = listaInternacion;
 
+        if (documento) {
+            listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) => internacion.paciente.documento.toLowerCase().includes(documento.toLowerCase()));
+        }
 
+        if (apellido) {
+            listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) => internacion.paciente.apellido.toLowerCase().includes(apellido.toLowerCase()));
+        }
+
+        if (estado) {
+            listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) =>
+                internacion.estados[internacion.estados.length - 1].tipo === estado
+            );
+        }
+
+        return listaInternacionFiltrada;
+    }
 
     snapshot(fecha, idInternacion = null, ambito: string = null, capa: string = null, estado: string = null): Observable<ISnapshot[]> {
         ambito = ambito || this.ambito;
         capa = capa || this.capa;
 
-        return this.camasHTTP.snapshot(ambito, capa, fecha, idInternacion, estado);
+        return this.camasHTTP.snapshot(ambito, capa, fecha, idInternacion, estado) as any;
     }
 
     historial(type: 'cama' | 'internacion', desde: Date, hasta: Date): Observable<ISnapshot[]> {
         return combineLatest(
             this.ambito2,
             this.capa2,
-            this.selectedCama
+            this.selectedCama,
+            this.selectedPrestacion,
+            this.view
         ).pipe(
-            switchMap(([ambito, capa, cama]) => {
+            switchMap(([ambito, capa, cama, prestacion, view]) => {
                 if (type === 'cama') {
                     return this.camasHTTP.historial(ambito, capa, desde, hasta, { idCama: cama.idCama });
                 } else if (type === 'internacion') {
-                    return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: cama.idInternacion });
+                    if (view === 'mapa-camas') {
+                        return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: cama.idInternacion });
+                    } else if (view === 'listado-internacion') {
+                        return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: prestacion.id });
+
+                    }
                 }
             })
         );

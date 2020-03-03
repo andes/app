@@ -4,21 +4,16 @@
             <plex-button title="guardar" icon="check" type="success" size="sm" [validateForm]="formEgreso"
                          (click)="guardar($event)">
             </plex-button>
-            <plex-button *ngIf="prestacion" icon="arrow-left" title="volver" type="danger" size="sm"
-                         (click)="cancelar()">
-            </plex-button>
+            <ng-content></ng-content>
         </plex-title>
-        <ng-container *ngIf="!paciente">
+        <ng-container>
             <div class="row ">
                 <div class="col">
                     <plex-datetime label="Fecha y hora de egreso" [(ngModel)]="registro.valor.InformeEgreso.fechaEgreso"
-                                   name="fechaEgreso" required label="Fecha Egreso"
-                                   (change)="verificarFecha($event.value)">
+                                   name="fechaEgreso" required label="Fecha Egreso" [max]="fechaMax" [min]="fechaMin"
+                                   (change)="setFecha()">
                     </plex-datetime>
                 </div>
-            </div>
-            <div class="row">
-                <div *ngIf="!fechaValida" class="alert alert-danger">{{mensajeError}}</div>
             </div>
             <div class="row ">
                 <div class="col">

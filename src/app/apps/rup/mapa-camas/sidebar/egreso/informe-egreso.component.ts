@@ -1,6 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
-import { Auth } from '@andes/auth';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
+import { Observable } from 'rxjs';
+import { MapaCamasService } from '../../services/mapa-camas.service';
+import { notNull } from '@andes/shared';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-informe-egreso',
@@ -8,68 +11,24 @@ import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.in
 })
 
 export class InformeEgresoComponent implements OnInit {
-    // EVENTOS
-    @Input() fecha: Date;
-    @Input() cama;
-    @Input() camas;
-    @Input() prestacion: IPrestacion;
-    @Input() detalle = false;
-    @Input() edit = false;
-
-    @Output() cancel = new EventEmitter<any>();
-    @Output() toggleEditar = new EventEmitter<any>();
-    @Output() refresh = new EventEmitter<any>();
-    @Output() cambiarFecha = new EventEmitter<any>();
+    prestacion$: Observable<IPrestacion>;
+    informeEgreso$: Observable<any>;
 
     // VARIABLES
-    public capa: string;
-    public informeEgreso;
-    public fechaValida;
-    public mensajeError;
     public prestacionValidada = false;
 
     constructor(
-        public auth: Auth,
+        public mapaCamasService: MapaCamasService
     ) { }
 
     ngOnInit() {
-        if (this.prestacion) {
-            this.prestacionValidada = (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada');
-            if (this.prestacion.ejecucion.registros[1]) {
-                this.informeEgreso = this.prestacion.ejecucion.registros[1].valor.InformeEgreso;
-                this.fecha = this.informeEgreso.fechaEgreso;
-            } else {
-                this.fecha = moment().toDate();
-            }
-        }
-    }
+        this.prestacion$ = this.mapaCamasService.prestacion$;
 
-    // tslint:disable-next-line:use-lifecycle-interface
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes && this.prestacion) {
-            this.prestacionValidada = (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada');
-            if (this.prestacion.ejecucion.registros[1]) {
-                this.informeEgreso = this.prestacion.ejecucion.registros[1].valor.InformeEgreso;
-                this.fecha = this.informeEgreso.fechaEgreso;
-            } else {
-                this.fecha = moment().toDate();
-            }
-        }
-
-    }
-
-    onEdit() {
-        this.toggleEditar.emit(true);
-        this.detalle = false;
-        this.edit = true;
-    }
-
-    cancelar() {
-        this.cancel.emit();
-    }
-
-    refescar(accion) {
-        this.refresh.emit(accion);
-        this.cancelar();
+        this.informeEgreso$ = this.prestacion$.pipe(
+            notNull(),
+            map((prestacion) => {
+                return prestacion.ejecucion.registros[1].valor.InformeEgreso;
+            })
+        );
     }
 }

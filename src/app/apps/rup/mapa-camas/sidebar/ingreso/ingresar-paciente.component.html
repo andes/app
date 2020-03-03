@@ -1,20 +1,3 @@
-<ng-container *ngIf="!paciente">
-    <plex-title justify titulo="INGRESAR PACIENTE">
-        <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="cancelar()">
-        </plex-button>
-    </plex-title>
-    <fieldset>
-        <div class="row">
-            <div class="col">
-                <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                 (data)="onPacienteCancel()">
-                </paciente-buscar>
-            </div>
-        </div>
-        <paciente-listado [pacientes]="pacientes" [autoselect]="false" (selected)="onPacienteSelected($event)">
-        </paciente-listado>
-    </fieldset>
-</ng-container>
 <form #formIngreso="ngForm">
     <ng-container *ngIf="paciente && informeIngreso">
         <plex-title justify titulo="INGRESO">
@@ -56,11 +39,6 @@
                                                name="fechaIngreso" [max]="fechaMax" required label="Fecha Ingreso"
                                                (change)="setFecha()">
                                 </plex-datetime>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div *ngIf="!fechaValida" class="alert alert-danger">
-                                La fecha y hora no puede ser mayor a la de hoy.
                             </div>
                         </div>
                         <div class="row">

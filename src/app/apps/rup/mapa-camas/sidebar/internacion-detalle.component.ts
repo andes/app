@@ -1,9 +1,8 @@
-import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter, ViewChild } from '@angular/core';
-import { Auth } from '@andes/auth';
-import { MapaCamasService } from '../services/mapa-camas.service';
-import { Plex, PlexOptionsComponent } from '@andes/plex';
-import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
+import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
+import { PlexOptionsComponent } from '@andes/plex';
 import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
+import { Observable, Subscription, combineLatest } from 'rxjs';
+import { MapaCamasService } from '../services/mapa-camas.service';
 
 @Component({
     selector: 'app-internacion-detalle',
@@ -11,18 +10,14 @@ import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.inter
 })
 
 export class InternacionDetalleComponent implements OnInit {
-    // EVENTOS
-    @Input() fecha: Date;
-    @Input() prestacion: IPrestacion;
+    prestacion$: Observable<IPrestacion>;
+    selectedPrestacion$: Observable<IPrestacion>;
+    view$: Observable<string>;
 
-    @Output() toggleEditar = new EventEmitter<any>();
-    @Output() refresh = new EventEmitter<any>();
-    @Output() cambioCama = new EventEmitter<any>();
-
+    @Output() cambiarCama = new EventEmitter<any>();
     @ViewChild(PlexOptionsComponent, { static: false }) plexOptions: PlexOptionsComponent;
 
     public editar = false;
-    public paciente;
     public mostrar;
     public items = [
         { key: 'ingreso', label: 'INGRESO' },
@@ -31,10 +26,14 @@ export class InternacionDetalleComponent implements OnInit {
     ];
 
     constructor(
+        private mapaCamasService: MapaCamasService
     ) { }
 
     ngOnInit() {
         this.mostrar = 'ingreso';
+        this.prestacion$ = this.mapaCamasService.prestacion$;
+        this.selectedPrestacion$ = this.mapaCamasService.selectedPrestacion;
+        this.view$ = this.mapaCamasService.view;
     }
 
     onActiveOption(opcion) {
@@ -46,17 +45,8 @@ export class InternacionDetalleComponent implements OnInit {
         this.plexOptions.activate(opcion);
     }
 
-    onEdit(editar: boolean) {
-        this.editar = editar;
-        this.toggleEditar.emit(editar);
-    }
-
-    refrescar(accion) {
-        this.refresh.emit(accion);
-    }
-
-    cambiarCama() {
-        this.cambioCama.emit();
+    changeCama() {
+        this.cambiarCama.emit();
     }
 
     toggleEdit() {

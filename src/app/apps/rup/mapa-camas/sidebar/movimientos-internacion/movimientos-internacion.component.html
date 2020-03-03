@@ -1,18 +1,13 @@
-<plex-title titulo="Movimientos de Internación"></plex-title>
-<!-- [TODO] Evaluar el comportamiento de este boton  -->
-<!-- <div class="row">
-    <div class="col">
-        <plex-button *ngIf="!prestacionValidada" label="Cambiar cama" type="info" size="sm" (click)="cambiarCama()">
-        </plex-button>
-    </div>
-</div> -->
+<plex-title titulo="Movimientos de Internación">
+    <ng-content></ng-content>
+</plex-title>
 <div class="row mb-1">
     <div class="col">
-        <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" (change)="onChange()">
+        <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" (change)="onChange()" [max]="hasta">
         </plex-datetime>
     </div>
     <div class="col">
-        <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" (change)="onChange()">
+        <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" (change)="onChange()" [min]="desde">
         </plex-datetime>
     </div>
 </div>

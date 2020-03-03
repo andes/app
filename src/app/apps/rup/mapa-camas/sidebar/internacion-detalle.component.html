@@ -1,27 +1,39 @@
-<div class="mt-2">
-    <ng-container *ngIf="!editar">
-        <plex-options [items]="items" (activated)="onActiveOption($event)"></plex-options>
-    </ng-container>
+<ng-container *ngIf="prestacion$ | async as prestacion">
+    <div class="mt-2">
+        <ng-container *ngIf="!editar || !(prestacion.ejecucion.registros[1])">
+            <plex-options [items]="items" (activated)="onActiveOption($event)"></plex-options>
+        </ng-container>
 
-    <ng-container *ngIf="mostrar === 'ingreso'">
-        <app-informe-ingreso *ngIf="!editar" (cancel)="activatedOption('ingreso')">
-            <plex-button title="editar" icon="pencil" type="warning" size="sm" (click)="toggleEdit()">
-            </plex-button>
-        </app-informe-ingreso>
-        <app-ingresar-paciente *ngIf="editar" (cancel)="toggleEdit()">
-            <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="toggleEdit()">
-            </plex-button>
-        </app-ingresar-paciente>
-    </ng-container>
-    <ng-container *ngIf="mostrar === 'movimientos'">
-        <app-movimientos-internacion>
-        </app-movimientos-internacion>
-    </ng-container>
-    <ng-container *ngIf="mostrar === 'egreso'">
-        egreo dos
-        <!-- <app-informe-egreso [fecha]="fecha" [prestacion]="prestacion" [detalle]="detalleEgreso"
-                            (cancel)="activatedOption('egreso')" (toggleEditar)="editarFormulario($event)"
-                            (refresh)="refrescar($event)">
-        </app-informe-egreso> -->
-    </ng-container>
-</div>
+        <ng-container *ngIf="mostrar === 'ingreso'">
+            <app-informe-ingreso *ngIf="!editar" (cancel)="activatedOption('ingreso')">
+                <plex-button title="editar" icon="pencil" type="warning" size="sm" (click)="toggleEdit()">
+                </plex-button>
+            </app-informe-ingreso>
+            <app-ingresar-paciente *ngIf="editar" (onSave)="toggleEdit()">
+                <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="toggleEdit()">
+                </plex-button>
+            </app-ingresar-paciente>
+        </ng-container>
+        <ng-container *ngIf="mostrar === 'movimientos'">
+            <ng-container *ngIf="selectedPrestacion$ | async as selectedPrestacion">
+                <app-movimientos-internacion *ngIf="view$ | async as view">
+                    <plex-button *ngIf="(view === 'listado-internacion') && (selectedPrestacion.estados[selectedPrestacion.estados.length - 1].tipo !== 'validada')"
+                                 label="Cambiar cama" type="warning" size="sm" (click)="changeCama()">
+                    </plex-button>
+                </app-movimientos-internacion>
+            </ng-container>
+        </ng-container>
+        <ng-container *ngIf="mostrar === 'egreso'">
+            <app-informe-egreso *ngIf="!editar && prestacion.ejecucion.registros[1]"
+                                (cancel)="activatedOption('egreso')">
+                <plex-button title="editar" icon="pencil" type="warning" size="sm" (click)="toggleEdit()">
+                </plex-button>
+            </app-informe-egreso>
+            <app-egresar-paciente *ngIf="editar || !(prestacion.ejecucion.registros[1])" (onSave)="toggleEdit()">
+                <plex-button *ngIf="prestacion.ejecucion.registros[1]" title="volver" icon="arrow-left" type="danger"
+                             size="sm" (click)="toggleEdit();">
+                </plex-button>
+            </app-egresar-paciente>
+        </ng-container>
+    </div>
+</ng-container>

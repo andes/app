@@ -20,7 +20,7 @@ import { ItemCamaComponent } from './views/mapa-camas-capa/item-cama/item-cama.c
 import { IngresarPacienteComponent } from './sidebar/ingreso/ingresar-paciente.component';
 import { IconoCamitaComponent } from './sidebar/estado-servicio/iconito-cama/icono-camita.component';
 import { CamaDestinoGenericoComponent } from './sidebar/cama-destino-generico.component';
-import { CamaDesocuparComponent } from './sidebar/desocupar-cama.component';
+import { CamaDesocuparComponent } from './sidebar/desocupar-cama/desocupar-cama.component';
 import { EgresarPacienteComponent } from './sidebar/egreso/egresar-paciente.component';
 import { CamaDetalleComponent } from './sidebar/cama-detalle/cama-detalle.component';
 import { InternacionDetalleComponent } from './sidebar/internacion-detalle.component';
@@ -28,7 +28,7 @@ import { InformeIngresoComponent } from './sidebar/ingreso/informe-ingreso.compo
 import { InformeEgresoComponent } from './sidebar/egreso/informe-egreso.component';
 import { HistorialDetalleComponent } from './sidebar/cama-detalle/historial-detalle/historial-detalle.component';
 import { MovimientosInternacionComponent } from './sidebar/movimientos-internacion/movimientos-internacion.component';
-import { CambiarCamaComponent } from './sidebar/cambiar-cama.component';
+import { CambiarCamaComponent } from './sidebar/desocupar-cama/cambiar-cama.component';
 import { InternacionListadoComponent } from './views/listado-internacion/listado-internacion.component';
 import { InternacionListaEsperaComponent } from './views/lista-espera/lista-espera.component';
 
@@ -36,6 +36,8 @@ import { MapaCamasService } from './services/mapa-camas.service';
 import { MapaCamasHTTP } from './services/mapa-camas.http';
 import { MitosModule } from '../../mitos';
 import { OrganizacionLibModule } from '../../../components/organizacion/organizacion-lib.module';
+import { ElegirPacienteComponent } from './sidebar/ingreso/elegir-paciente.component';
+import { FiltrosInternacionComponent } from './views/listado-internacion/filtros-internacion/filtros-internacion.component';
 
 
 @NgModule({
@@ -73,7 +75,9 @@ import { OrganizacionLibModule } from '../../../components/organizacion/organiza
         MovimientosInternacionComponent,
         CambiarCamaComponent,
         InternacionListadoComponent,
-        InternacionListaEsperaComponent
+        InternacionListaEsperaComponent,
+        ElegirPacienteComponent,
+        FiltrosInternacionComponent
     ],
     providers: [
         MapaCamasService,

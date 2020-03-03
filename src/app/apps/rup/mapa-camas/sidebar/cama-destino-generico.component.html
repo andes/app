@@ -1,31 +1,24 @@
-<plex-title justify [titulo]="titulo">
-    <plex-button icon="arrow-left" type="danger" size="sm" (click)="cancelar()">
+<plex-title justify titulo="{{ titulo }}">
+    <plex-button icon="check" type="success" size="sm" (click)="guardar()">
     </plex-button>
-    <plex-button icon="check" type="success" size="sm" (click)="guardar($event)" [disabled]="!fechaValida">
-    </plex-button>
+    <ng-content></ng-content>
 </plex-title>
 <fieldset>
     <div class="row">
         <div class="col-md">
-            <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fechaIngreso" label="Fecha Ingreso"
-                           (change)="cambiarFechaIngreso($event.value)">
+            <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" [max]="fechaMax" name="fechaIngreso"
+                           label="Fecha Ingreso" (change)="setFecha()">
             </plex-datetime>
-        </div>
-        <div class="col-md">
-            <plex-datetime type="time" [(ngModel)]="fecha" [required]="true" name="horaIngreso" label="Hora Ingreso"
-                           (change)="cambiarFechaIngreso($event.value)">
-            </plex-datetime>
-        </div>
-        <div *ngIf="!fechaValida" class="alert alert-danger">
-            La fecha y hora no puede ser mayor a la de hoy.
         </div>
     </div>
     <div class="row">
         <div class="col-md">
-            <plex-select [required]="true" [(ngModel)]="selectedCama" name="cama" [data]="camas"
-                         placeholder="Elija cama" label="Cama" idField="nombre" labelField="nombre"
-                         (change)="cambiarSeleccionCama()">
-            </plex-select>
+            <ng-container *ngIf="camas$ | async as camas">
+                <plex-select [required]="true" [(ngModel)]="selectedCama" name="cama" [data]="camas"
+                             placeholder="Elija cama" label="Cama" idField="nombre" labelField="nombre"
+                             (change)="selectCama($event.value)">
+                </plex-select>
+            </ng-container>
         </div>
     </div>
 </fieldset>

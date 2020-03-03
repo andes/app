@@ -107,7 +107,7 @@ export class CamaDetalleComponent implements OnInit {
     }
 
     accion(relacion) {
-        this.accionCama.emit({ cama: this.cama, relacion });
+        this.accionCama.emit(relacion);
     }
 
     /**

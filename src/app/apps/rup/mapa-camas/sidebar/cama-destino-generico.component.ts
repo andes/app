@@ -1,77 +1,79 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
-import { Auth } from '@andes/auth';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MapaCamasService } from '../services/mapa-camas.service';
 import { Plex } from '@andes/plex';
+import { ISnapshot } from '../interfaces/ISnapshot';
+import { Observable, Subscription, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-cama-destino-generico',
     templateUrl: 'cama-destino-generico.component.html',
 })
 
-export class CamaDestinoGenericoComponent implements OnInit {
-    @Input() fecha: Date;
-    @Input() selectedCama: any;
-    @Input() camas: any;
+export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
+    camas$: Observable<ISnapshot[]>;
+    selectedCama$: Observable<ISnapshot>;
+
     @Input() destino: any;
+    @Output() onSave = new EventEmitter<any>();
 
-    @Output() cancel = new EventEmitter<any>();
-    @Output() cambiarFecha = new EventEmitter<any>();
-    @Output() cambiarCama = new EventEmitter<any>();
-    @Output() refresh = new EventEmitter<any>();
-
-    public ambito: string;
-    public capa: string;
+    public fecha: Date = moment().toDate();
+    public fechaMax: Date = moment().toDate();
+    public selectedCama;
+    public capa;
     public titulo: string;
-    public fechaValida = true;
+
+    private subscription: Subscription;
 
     constructor(
-        public auth: Auth,
         private plex: Plex,
-        private router: Router,
         private mapaCamasService: MapaCamasService
     ) {
 
     }
 
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
+    }
+
     ngOnInit() {
-        this.ambito = this.mapaCamasService.ambito;
-        this.capa = this.mapaCamasService.capa;
+        this.subscription = combineLatest(
+            this.mapaCamasService.capa,
+            this.mapaCamasService.selectedCama,
+        ).subscribe(([capa, cama]) => {
+            this.capa = capa;
+            this.selectedCama = cama;
+        });
+
         this.titulo = 'CAMBIAR A ' + this.destino.toUpperCase();
-    }
 
-    cancelar() {
-        this.cancel.emit();
+        this.camas$ = this.mapaCamasService.snapshot$.pipe(
+            map((snapshot) => {
+                return snapshot.filter(snap => snap.estado === 'disponible');
+            })
+        );
     }
-
 
     guardar() {
-        if (this.fechaValida) {
-            if (this.selectedCama) {
-                // Se modifica el estado de la cama
-                this.selectedCama.estado = this.destino;
+        if (this.selectedCama) {
+            // Se modifica el estado de la cama
+            this.selectedCama.estado = this.destino;
 
-                this.mapaCamasService.save(this.selectedCama, this.fecha).subscribe(camaActualizada => {
-                    this.plex.info('success', 'Cama ' + this.destino);
-                    this.refresh.emit({ cama: this.selectedCama });
-                }, (err1) => {
-                    this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
-                });
-            }
+            this.mapaCamasService.save(this.selectedCama, this.fecha).subscribe(camaActualizada => {
+                this.plex.info('success', 'Cama ' + this.destino);
+                this.mapaCamasService.setFecha(this.fecha);
+                this.onSave.emit({ cama: this.selectedCama });
+            }, (err1) => {
+                this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
+            });
         }
     }
 
-    cambiarFechaIngreso(fecha) {
-        let fechaUltimoEstado = moment(this.selectedCama.fecha, 'DD-MM-YYYY HH:mm');
-        if (fecha <= moment().toDate() && fecha < fechaUltimoEstado) {
-            this.fechaValida = true;
-            this.cambiarFecha.emit(fecha);
-        } else {
-            this.fechaValida = false;
-        }
+    setFecha() {
+        this.mapaCamasService.setFecha(this.fecha);
     }
 
-    cambiarSeleccionCama() {
-        this.cambiarCama.emit(this.selectedCama);
+    selectCama(cama: ISnapshot) {
+        this.mapaCamasService.select(cama);
     }
 }

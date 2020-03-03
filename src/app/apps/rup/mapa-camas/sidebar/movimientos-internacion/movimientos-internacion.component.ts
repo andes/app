@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, Subscription, combineLatest } from 'rxjs';
 import { startWith, map, switchMap } from 'rxjs/operators';
 
 @Component({
@@ -11,15 +10,11 @@ import { startWith, map, switchMap } from 'rxjs/operators';
 })
 
 export class MovimientosInternacionComponent implements OnInit {
-
-    prestacion$: Observable<IPrestacion>;
-
     public historial = new Subject();
 
     public historial$: Observable<any>;
 
     public desde = moment().toDate();
-
     public hasta = moment().toDate();
 
     constructor(
@@ -27,8 +22,7 @@ export class MovimientosInternacionComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-
-        this.prestacion$ = this.mapaCamasService.prestacion$;
+        this.onChange();
 
         this.historial$ = this.historial.pipe(
             startWith([]),

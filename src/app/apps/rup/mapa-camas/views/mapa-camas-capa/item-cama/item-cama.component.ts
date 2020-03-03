@@ -12,10 +12,7 @@ import { map } from 'rxjs/operators';
 
 export class ItemCamaComponent implements OnInit {
     @Input() cama: any;
-
     @Output() accionCama = new EventEmitter<any>();
-
-    public capa: string;
 
     public relacionesPosibles$: Observable<any>;
     public estadoCama$: Observable<any>;
@@ -32,14 +29,9 @@ export class ItemCamaComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.capa = this.mapaCamasService.capa;
-
         this.estadoCama$ = this.mapaCamasService.getEstadoCama(this.cama);
-
         this.relacionesPosibles$ = this.mapaCamasService.getRelacionesPosibles(this.cama);
     }
-
-
 
     goTo() {
         this.router.navigate([`/internacion/cama/${this.cama._id}`]);

@@ -4,11 +4,9 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { snomedIngreso, snomedEgreso } from '../../constantes-internacion';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
-import * as enumerados from '../../../../../utils/enumerados';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import { DocumentosService } from '../../../../../services/documentos.service';
-import { saveAs } from 'file-saver';
-import { Slug } from 'ng2-slugify';
+import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-internacion-listado',
@@ -16,24 +14,18 @@ import { Slug } from 'ng2-slugify';
 })
 
 export class InternacionListadoComponent implements OnInit {
-    private slug = new Slug('default'); // para documento csv
+    listaInternacion$: Observable<IPrestacion[]>;
+    selectedPrestacion$: Observable<IPrestacion>;
 
     // VARIABLES
-    public ambito = 'internacion';
-    public capa = 'estadistica';
     public mostrar = 'datosInternacion';
     public listaInternacion;
     public listaInternacionAux;
-    public estadosInternacion;
-    public permisoDescarga = false;
-    public selectedInternacion;
     public cambiarUO = false;
-    public camasDisponibles;
-    public cama;
     public puedeValidar = false;
     public puedeRomper = false;
 
-    public filtros = {
+    private filtros = {
         documento: null,
         apellido: null,
         fechaIngresoDesde: moment().subtract(1, 'months').toDate(),
@@ -44,16 +36,19 @@ export class InternacionListadoComponent implements OnInit {
         ordenFecha: true
     };
 
+    private subscription: Subscription;
+
     constructor(
         private auth: Auth,
         private plex: Plex,
         private location: Location,
         private prestacionService: PrestacionesService,
-        private mapaCamasService: MapaCamasService,
-        private servicioDocumentos: DocumentosService
+        public mapaCamasService: MapaCamasService,
     ) { }
 
     ngOnInit() {
+        this.mapaCamasService.setView('listado-internacion');
+
         this.plex.updateTitle([{
             route: '/inicio',
             name: 'Andes'
@@ -62,41 +57,15 @@ export class InternacionListadoComponent implements OnInit {
         }, {
             name: 'Listado de Internacion'
         }]);
-        this.estadosInternacion = enumerados.getObjEstadoInternacion();
         this.getPrestaciones();
         this.mapaCamasService.setCapa('estadistica');
-        this.permisoDescarga = this.auth.check('internacion:descargarListado');
+
+        this.selectedPrestacion$ = this.mapaCamasService.selectedPrestacion;
     }
 
     getPrestaciones() {
-        if (this.filtros.estados) {
-            this.filtros['estadoString'] = this.filtros.estados.id;
-        } else {
-            this.filtros['estadoString'] = '';
-        }
-        this.prestacionService.get(this.filtros).subscribe(prestaciones => {
-            this.listaInternacion = prestaciones;
-            this.listaInternacionAux = prestaciones;
-            this.filtrar();
-        });
+        this.listaInternacion$ = this.mapaCamasService.listaInternacionFiltrada$;
     }
-
-    filtrar() {
-        this.listaInternacion = this.listaInternacionAux;
-
-        if (this.filtros.documento) {
-            this.listaInternacion = this.listaInternacion.filter(internacion => internacion.paciente.documento.includes(this.filtros.documento));
-        }
-
-        if (this.filtros.apellido) {
-            this.listaInternacion = this.listaInternacion.filter(internacion => internacion.paciente.apellido.toLowerCase().includes(this.filtros.apellido.toLowerCase()));
-        }
-
-        if (this.filtros.estados) {
-            this.listaInternacion = this.listaInternacion.filter(internacion => internacion.estados[internacion.estados.length - 1].tipo.toLowerCase().includes(this.filtros.estados.nombre.toLowerCase()));
-        }
-    }
-
 
     devuelveFecha(internacion, tipo) {
         let informe = this.verRegistro(internacion, tipo);
@@ -123,26 +92,21 @@ export class InternacionListadoComponent implements OnInit {
         return null;
     }
 
-    seleccionarInternacion(internacion) {
+    seleccionarPrestacion(prestacion, selectedPrestacion) {
         if (this.mostrar === 'datosInternacion') {
-            if (this.selectedInternacion && this.selectedInternacion._id === internacion._id) {
-                this.selectedInternacion = null;
+            if (selectedPrestacion._id === prestacion._id) {
+                this.mapaCamasService.selectPrestacion(null);
+                this.mapaCamasService.select(null);
             } else {
-                this.selectedInternacion = Object.assign({}, internacion);
-                this.verificarInternacion();
+                this.mapaCamasService.selectPrestacion(prestacion);
+                this.mapaCamasService.setFecha(prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso);
+                this.verificarPrestacion(prestacion);
             }
         }
     }
 
-    reporteInternaciones() {
-        this.servicioDocumentos.descargarReporteInternaciones({ filtros: this.filtros, organizacion: this.auth.organizacion.id }).subscribe(data => {
-            let blob = new Blob([data], { type: data.type });
-            saveAs(blob, this.slug.slugify('Internaciones' + ' ' + moment().format('DD-MM-YYYY-hmmss')) + '.xlsx');
-        });
-    }
-
     cancelar() {
-        this.selectedInternacion = null;
+        this.mapaCamasService.selectPrestacion(null);
     }
 
     volver() {
@@ -160,39 +124,39 @@ export class InternacionListadoComponent implements OnInit {
     accionDesocupar(accion) {
         this.mostrar = 'cambiarCama';
         this.cambiarUO = accion.cambiarUO;
-        this.camasDisponibles = accion.camasDisponibles;
-        this.cama = accion.cama;
     }
 
-    verificarInternacion() {
+    verificarPrestacion(prestacion: IPrestacion) {
         this.puedeValidar = false;
         this.puedeRomper = false;
-        if (this.selectedInternacion.ejecucion.registros[1]) {
-            if (this.selectedInternacion.estados[this.selectedInternacion.estados.length - 1].tipo !== 'validada') {
-                const informeEgreso = this.selectedInternacion.ejecucion.registros[1].valor.InformeEgreso;
-                if (informeEgreso) {
-                    if (informeEgreso.fechaEgreso && informeEgreso.tipoEgreso && informeEgreso.diagnosticoPrincipal) {
-                        this.puedeValidar = true;
+        if (prestacion.ejecucion) {
+            if (prestacion.ejecucion.registros[1]) {
+                if (prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada') {
+                    const informeEgreso = prestacion.ejecucion.registros[1].valor.InformeEgreso;
+                    if (informeEgreso) {
+                        if (informeEgreso.fechaEgreso && informeEgreso.tipoEgreso && informeEgreso.diagnosticoPrincipal) {
+                            this.puedeValidar = true;
+                        }
                     }
+                } else {
+                    this.puedeRomper = true;
                 }
-            } else {
-                this.puedeRomper = true;
             }
         }
     }
 
-    validar() {
+    validar(selectedPrestacion: IPrestacion, fechaHasta: Date) {
         this.plex.confirm('Luego de validar la prestación ya no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
             if (validar) {
-                if (this.selectedInternacion.ejecucion.registros[1]) {
-                    let egresoExiste = this.selectedInternacion.ejecucion.registros[1].valor;
-                    if (egresoExiste && this.selectedInternacion.estados[this.selectedInternacion.estados.length - 1].tipo !== 'validada') {
+                if (selectedPrestacion.ejecucion.registros[1]) {
+                    let egresoExiste = selectedPrestacion.ejecucion.registros[1].valor;
+                    if (egresoExiste && selectedPrestacion.estados[selectedPrestacion.estados.length - 1].tipo !== 'validada') {
                         if (egresoExiste.InformeEgreso.fechaEgreso && egresoExiste.InformeEgreso.tipoEgreso &&
                             egresoExiste.InformeEgreso.diagnosticoPrincipal) {
-                            this.prestacionService.validarPrestacion(this.selectedInternacion, []).subscribe(prestacion => {
-                                this.selectedInternacion = prestacion;
-                                this.verificarInternacion();
-                                this.refreshTable(prestacion);
+                            this.prestacionService.validarPrestacion(selectedPrestacion, []).subscribe(prestacion => {
+                                this.mapaCamasService.setFechaHasta(fechaHasta);
+                                this.mapaCamasService.selectPrestacion(prestacion);
+                                this.verificarPrestacion(prestacion);
                             }, (err) => {
                                 this.plex.info('danger', 'ERROR: No es posible validar la prestación');
                             });
@@ -207,11 +171,11 @@ export class InternacionListadoComponent implements OnInit {
         });
     }
 
-    romperValidacion() {
+    romperValidacion(selectedPrestacion: IPrestacion, fechaHasta: Date) {
         this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación').then(validar => {
             if (validar) {
                 // guardamos una copia de la prestacion antes de romper la validacion.
-                let prestacionCopia = JSON.parse(JSON.stringify(this.selectedInternacion));
+                let prestacionCopia = JSON.parse(JSON.stringify(selectedPrestacion));
                 // Agregamos el estado de la prestacion copiada.
                 let estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia.id };
                 // Guardamos la prestacion copia
@@ -224,21 +188,15 @@ export class InternacionListadoComponent implements OnInit {
                         desdeInternacion: true
                     };
                     // Vamos a cambiar el estado de la prestación a ejecucion
-                    this.prestacionService.patch(this.selectedInternacion.id, cambioEstado).subscribe(prestacion => {
-                        this.selectedInternacion = prestacion;
-                        this.verificarInternacion();
-                        this.refreshTable(prestacion);
+                    this.prestacionService.patch(selectedPrestacion.id, cambioEstado).subscribe(prestacion => {
+                        this.mapaCamasService.setFechaHasta(fechaHasta);
+                        this.mapaCamasService.selectPrestacion(prestacion);
+                        this.verificarPrestacion(prestacion);
                     }, (err) => {
                         this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
                     });
                 });
             }
         });
-    }
-
-    refreshTable(prestacion) {
-        const index = this.listaInternacionAux.findIndex(internacion => internacion._id === prestacion._id);
-        this.listaInternacionAux[index] = prestacion;
-        this.filtrar();
     }
 }

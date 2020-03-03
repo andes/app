@@ -20,7 +20,7 @@ export class EstadoServicioComponent implements OnInit, OnDestroy {
     private sub: Subscription;
 
     constructor(
-        private mapaCamasService: MapaCamasService,
+        public mapaCamasService: MapaCamasService,
     ) { }
 
     ngOnInit() {
@@ -30,6 +30,8 @@ export class EstadoServicioComponent implements OnInit, OnDestroy {
                 this.camasXEstado = this.groupBy(snapshot, 'estado');
             })
         ).subscribe();
+
+        this.fecha = this.mapaCamasService.fecha;
     }
 
     ngOnDestroy() {
