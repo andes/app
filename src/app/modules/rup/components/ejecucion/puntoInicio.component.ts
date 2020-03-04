@@ -25,7 +25,7 @@ import { WebSocketService } from '../../../../services/websocket.service';
     templateUrl: 'puntoInicio.html'
 })
 export class PuntoInicioComponent implements OnInit, OnDestroy {
-
+    public solicitudes = [];
     // Fecha seleccionada
     public fecha: Date = new Date();
     // Lista de agendas filtradas por fecha, tipos de prestaciones permitidas, ...
@@ -122,6 +122,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.servicioTurnero.get({ 'fields': 'espaciosFisicos.id' }).subscribe((pantallas) => {
             this.espaciosFisicosTurnero = pantallas.reduce((listado, p) => listado.concat(p.espaciosFisicos), []).map((espacio: any) => { return espacio.id; });
         });
+        this.cargarSolicitudes();
     }
 
     redirect(pagina: string) {
@@ -314,6 +315,24 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.router.navigate(['/rup/huds']);
     }
 
+    cargarSolicitudes() {
+        let params = {
+            ordenFechaDesc: true,
+            estados: ['asignada'],
+            idProfesional: this.auth.profesional
+        };
+        return this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
+            this.solicitudes = resultado.filter((prest: any) => prest.solicitud.organizacion ? (this.auth.organizacion.id === prest.solicitud.organizacion.id) : false);
+        }, err => {
+            if (err) {
+            }
+        });
+    }
+
+    irASolicitudes() {
+        this.router.navigate(['/asignadas']);
+    }
+
     iniciarPrestacion(paciente, snomedConcept, turno) {
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
@@ -454,7 +473,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     cargarPrestacionesTurnos(agenda) {
         // if (agenda) {
         // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
-
         agenda['cantidadTurnos'] = 0;
         agenda.bloques.forEach(bloques => {
             agenda['cantidadTurnos'] += bloques.turnos.length;

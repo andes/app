@@ -1,3 +1,9 @@
+<plex-title main [titulo]="showCitar? 'Citar paciente':'Auditar solicitud'">
+    <plex-button size="sm" type="danger" [icon]="'close'" (click)="showCitar? cancelarCitar() : cerrar()">
+    </plex-button>
+
+
+</plex-title>
 <div class="mt-3">
     <div class="row">
         <div class="col-12 text-left">
@@ -13,6 +19,32 @@
         <div class="col-6 text-left">
             <b>Fecha Solicitud</b>
             <br> {{ prestacionSeleccionada?.solicitud.fecha | fecha }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <span *ngIf="prestacionSeleccionada.solicitud.profesionalOrigen" class="text-left">
+                <b>Profesional Origen</b>
+                <br> {{ prestacionSeleccionada.solicitud.profesionalOrigen?.nombre }} {{
+                    prestacionSeleccionada.solicitud.profesionalOrigen?.apellido
+                    }}
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <span *ngIf="prestacionSeleccionada.solicitud.tipoPrestacionOrigen?.term">
+                <b>Tipo de Prestación Origen</b>
+                <br> {{ prestacionSeleccionada.solicitud.tipoPrestacionOrigen?.term }}
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <span *ngIf="prestacionSeleccionada.solicitud.organizacionOrigen?.nombre">
+                <b>Organización Origen</b>
+                <br> {{ prestacionSeleccionada.solicitud.organizacionOrigen?.nombre }}
+            </span>
         </div>
     </div>
     <div class="row"
@@ -80,13 +112,36 @@
     </div>
     <br />
 
-    <div class="row" *ngIf="!showConfirmar && !showPrioridad">
-        <div class="col-12" justify="center">
-            <plex-button type="info" size="sm" (click)="rechazar()">Responder</plex-button>
-            <plex-button type="warning" size="sm" (click)="asignar()">Asignar</plex-button>
-            <plex-button type="success" size="sm" (click)="aceptar()">Aceptar</plex-button>
+    <div class="row" *ngIf="!showConfirmar && !showPrioridad && !showCitar">
+        <div class="col-4">
+            <plex-button type="info btn-block" (click)="rechazar()">Responder</plex-button>
+        </div>
+        <div class="col-4">
+            <plex-button type="warning btn-block" (click)="asignar()">Asignar</plex-button>
+        </div>
+        <div class="col-4">
+            <plex-button type="success btn-block" (click)="aceptar()">Aceptar</plex-button>
         </div>
     </div>
+
+    <span *ngIf="showCitar">
+        <div class="row">
+            <div class="col-12">
+                <plex-text label="Observaciones" multiline="true" name="motivo" [(ngModel)]="observaciones"
+                           [required]="true">
+                </plex-text>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-6 text-left">
+                <plex-button type="danger" (click)="cancelarCitar()">Cancelar</plex-button>
+            </div>
+            <div class="col-6 text-right">
+                <plex-button type="success" (click)="confirmarCitar()">Confirmar</plex-button>
+            </div>
+        </div>
+    </span>
     <!--  BOX MOTIVO Y CONFIRMAR RESPUESTA -->
     <span *ngIf="showConfirmar">
         <div class="row">
