@@ -122,7 +122,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.servicioTurnero.get({ 'fields': 'espaciosFisicos.id' }).subscribe((pantallas) => {
             this.espaciosFisicosTurnero = pantallas.reduce((listado, p) => listado.concat(p.espaciosFisicos), []).map((espacio: any) => { return espacio.id; });
         });
-        this.cargarSolicitudes();
     }
 
     redirect(pagina: string) {
