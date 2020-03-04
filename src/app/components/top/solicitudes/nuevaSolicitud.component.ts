@@ -9,6 +9,7 @@ import { ReglaService } from '../../../services/top/reglas.service';
 import { environment } from '../../../../environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'nueva-solicitud',
@@ -80,19 +81,6 @@ export class NuevaSolicitudComponent implements OnInit {
         prestacionOrigen: null
     };
 
-    private _tipoSolicitud;
-    @Input('tipoSolicitud')
-    set tipoSolicitud(value: any) {
-        this._tipoSolicitud = value;
-        if (this._tipoSolicitud === 'entrada') {
-            this.modelo.solicitud.organizacion = this.auth.organizacion;
-        } else {
-            this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
-        }
-    }
-    get tipoSolicitud() {
-        return this._tipoSolicitud;
-    }
     @Output() newSolicitudEmitter: EventEmitter<any> = new EventEmitter<any>();
     arrayPrestacionesOrigen: { id: any; nombre: any; }[];
     arrayReglasOrigen: { id: any; nombre: any; }[];
@@ -102,6 +90,7 @@ export class NuevaSolicitudComponent implements OnInit {
     dataTipoPrestacionesOrigen = [];
     dataReglasDestino = [];
     dataReglasOrigen: { id: any; nombre: any; }[];
+    tipoSolicitud: any;
 
     constructor(
         private plex: Plex,
@@ -113,10 +102,20 @@ export class NuevaSolicitudComponent implements OnInit {
         private servicioReglas: ReglaService,
         public sanitazer: DomSanitizer,
         public adjuntosService: AdjuntosService,
-
+        private route: ActivatedRoute,
+        private router: Router,
     ) { }
 
     ngOnInit() {
+        this.route.params.subscribe(params => {
+            this.tipoSolicitud = params['tipo'];
+            if (this.tipoSolicitud === 'entrada') {
+                this.modelo.solicitud.organizacion = this.auth.organizacion;
+            } else {
+                this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
+            }
+        });
+
         this.extensions = this.extensions.concat(this.imagenes);
         this.adjuntosService.generateToken().subscribe((data: any) => {
             this.fileToken = data.token;
@@ -250,10 +249,11 @@ export class NuevaSolicitudComponent implements OnInit {
         if (this.tipoSolicitud === 'salida') {
             if (this.modelo.solicitud.organizacion) {
                 this.servicioReglas.get({
-                organizacionOrigen: this.auth.organizacion.id,
-                organizacionDestino: this.modelo.solicitud.organizacion.id,
-                prestacionOrigen: this.modelo.solicitud.tipoPrestacionOrigen.conceptId })
-                .subscribe( res => this.dataReglasDestino = res.map(elem => { return { id: elem.destino.prestacion.conceptId, nombre: elem.destino.prestacion.term }; }));
+                    organizacionOrigen: this.auth.organizacion.id,
+                    organizacionDestino: this.modelo.solicitud.organizacion.id,
+                    prestacionOrigen: this.modelo.solicitud.tipoPrestacionOrigen.conceptId
+                })
+                    .subscribe(res => this.dataReglasDestino = res.map(elem => { return { id: elem.destino.prestacion.conceptId, nombre: elem.destino.prestacion.term }; }));
             } else {
                 if (!this.modelo.solicitud.tipoPrestacionOrigen) {
                     this.dataOrganizacionesDestino = [];
@@ -349,7 +349,7 @@ export class NuevaSolicitudComponent implements OnInit {
             };
             // Se guarda la solicitud 'pendiente' de prestación
             this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
-                this.newSolicitudEmitter.emit();
+                this.router.navigate(['/solicitudes']);
                 this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
             });
 
@@ -359,7 +359,7 @@ export class NuevaSolicitudComponent implements OnInit {
     }
 
     cancelar() {
-        this.newSolicitudEmitter.emit();
+        this.router.navigate(['/solicitudes']);
     }
     loadProfesionales(event) {
         if (event.query) {
@@ -481,5 +481,4 @@ export class NuevaSolicitudComponent implements OnInit {
         clearTimeout(this.timeout);
         this.waiting = false;
     }
-
 }

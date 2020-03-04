@@ -4,7 +4,7 @@
             <form #form="ngForm">
                 <plex-title main titulo="{{asignadas?'Solicitudes asignadas':'Módulo de solicitudes'}}">
                     <plex-button *ngIf="!asignadas" type="success" label="Nueva Solicitud"
-                                 (click)="formularioSolicitud('activeTab')">
+                                 (click)="formularioSolicitud()">
                     </plex-button>
                     <plex-button *ngIf="permisosReglas && !asignadas" type="warning" label="Reglas"
                                  (click)="editarReglas()">
@@ -317,8 +317,8 @@
 <dar-turnos *ngIf="showDarTurnos && solicitudTurno && !showCargarSolicitud" (volverAlGestor)="volverDarTurno($event)"
             (afterDarTurno)="volverDarTurno($event)" [pacienteSeleccionado]="pacienteSeleccionado"
             [solicitudPrestacion]="solicitudTurno"></dar-turnos>
-<nueva-solicitud *ngIf="showCargarSolicitud" [tipoSolicitud]="tipoSolicitud"
+<!-- <nueva-solicitud *ngIf="showCargarSolicitud" [tipoSolicitud]="tipoSolicitud"
                  (newSolicitudEmitter)=afterNewSolicitud($event)>
-</nueva-solicitud>
+</nueva-solicitud> -->
 <modal-motivo-acceso-huds [show]="showModalMotivo" (motivoAccesoHuds)="preAccesoHuds($event)">
 </modal-motivo-acceso-huds>

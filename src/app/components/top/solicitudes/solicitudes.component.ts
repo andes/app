@@ -546,21 +546,9 @@ export class SolicitudesComponent implements OnInit {
     }
 
 
-    formularioSolicitud(tipoSolicitud) {
-
+    formularioSolicitud() {
         this.tipoSolicitud = (this.activeTab === 0) ? 'entrada' : 'salida';
-        this.showCargarSolicitud = true;
-        this.showBotonCargarSolicitud = false;
-    }
-
-
-
-    afterNewSolicitud(event) {
-        this.showCargarSolicitud = false;
-        this.showBotonCargarSolicitud = true;
-        this.showCargarSolicitud = false;
-        this.cargarSolicitudes();
-        this.activeTab = 0;
+        this.router.navigate([`/solicitudes/${this.tipoSolicitud}`]);
     }
 
     afterDetalleSolicitud(event) {
