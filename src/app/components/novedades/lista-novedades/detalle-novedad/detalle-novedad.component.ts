@@ -14,6 +14,7 @@ import { RegistroNovedadesService } from '../../../../services/novedades/registr
 export class DetalleNovedadComponent implements OnInit {
     novedad$: IRegistroNovedades;
     private fileToken;
+    private modulo;
 
     constructor(
         private router: Router,
@@ -24,6 +25,9 @@ export class DetalleNovedadComponent implements OnInit {
         let novedad;
         if (this.router.getCurrentNavigation().extras.state) {
             novedad = this.router.getCurrentNavigation().extras.state.novedad;
+        }
+        if (this.router.getCurrentNavigation().extras.state) {
+            this.modulo = this.router.getCurrentNavigation().extras.state.modulo;
         }
         this.adjuntos.generateToken().subscribe((data: any) => {
             this.fileToken = data.token;
@@ -38,6 +42,9 @@ export class DetalleNovedadComponent implements OnInit {
 
     public loadFirstNovedad() {
         const params: any = {
+        };
+        if (this.modulo) {
+            params.search = this.modulo;
         };
         this.registroNovedades.getAll(params).subscribe(
             registros => {

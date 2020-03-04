@@ -17,6 +17,7 @@ export class ListaNovedadesComponent implements OnInit {
     selectedId: number;
     public listadoNovedades = [];
     public fileToken;
+    private modulo;
 
     constructor(
         private registroNovedades: RegistroNovedadesService,
@@ -28,6 +29,9 @@ export class ListaNovedadesComponent implements OnInit {
         this.adjuntos.generateToken().subscribe((data: any) => {
             this.fileToken = data.token;
         });
+        if (this.router.getCurrentNavigation().extras.state) {
+            this.modulo = this.router.getCurrentNavigation().extras.state.modulo;
+        }
     }
 
     ngOnInit() {
@@ -39,8 +43,11 @@ export class ListaNovedadesComponent implements OnInit {
     }
 
     public loadNovedades() {
-        const params: any = {
+        let params: any = {
         };
+        if (this.modulo) {
+            params.search = this.modulo;
+        }
         this.registroNovedades.getAll(params).subscribe(
             registros => {
                 this.listadoNovedades = registros;

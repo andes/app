@@ -152,4 +152,27 @@ $andes-naranja-claro: #f4a03b;
         }
 
     }
-} 
+}
+
+@keyframes tintin {
+    0% { transform: rotate(0deg);}
+    1% { transform: rotate(20deg);}
+    2% { transform: rotate(-20deg);}
+    3% { transform: rotate(15deg);}
+    4% { transform: rotate(-15deg);}
+    5% { transform: rotate(0deg);}
+}
+.notificacion {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    width: 30px;
+    height: 30px;
+    div {
+        color: white;
+        border: 3px solid white;
+        border-radius: 50%;
+        -webkit-offset-keyword: top center;
+        animation: tintin 7s ease-in-out infinite;
+    }
+}
