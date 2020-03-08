@@ -13,8 +13,8 @@
     <div class="row mb-1">
         <div class="col">
             <span *ngIf="paciente.documento" class="mr-1">{{ paciente.documento }}</span>
-            <span class="badge" [ngClass]="{'badge-success': paciente.estado === 'validado', 'badge-warning': paciente.estado !== 'validado'}">
-                {{ paciente.estado | uppercase }} </span>
+            <plex-badge [type]="(paciente.estado === 'validado' ? 'success' : 'warning')">
+                {{ paciente.estado | uppercase }} </plex-badge>
         </div>
     </div>
     <div class="row mb-1" *ngIf="paciente.fechaNacimiento">

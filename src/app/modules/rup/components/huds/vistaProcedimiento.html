@@ -7,13 +7,12 @@
                         {{ registro.concepto.term[0].toUpperCase() + registro.concepto.term.slice(1) }}
                     </h4>
                     <div>
-                        <small class="badge badge-danger" *ngIf="registro.privacy !== 'public'">
+                        <plex-badge type="danger" *ngIf="registro.privacy !== 'public'">
                             Registro Privado
-                        </small>
-                        <span
-                              class="badge badge-{{ !registro.esSolicitud ? registro.concepto.semanticTag : 'solicitud' }}">
+                        </plex-badge>
+                        <plex-badge type="{{ !registro.esSolicitud ? registro.concepto.semanticTag : 'solicitud' }}">
                             {{ !registro.esSolicitud ? registro.concepto.semanticTag : 'Solicitud' }}
-                        </span>
+                        </plex-badge>
                     </div>
                 </div>
                 <div class="divisor">
@@ -65,9 +64,9 @@
                             <ng-container
                                           *ngFor="let relacion of registro?.evoluciones[indice].relacionadoCon; let r=index">
                                 <ng-container *ngIf="relacion?.concepto?.term">
-                                    <span class="badge badge-{{ relacion?.concepto?.semanticTag }}">
+                                    <plex-badge type="{{ relacion?.concepto?.semanticTag }}">
                                         {{ relacion | relacionRUP }}
-                                    </span>
+                                    </plex-badge>
                                 </ng-container>
                             </ng-container>
                         </div>

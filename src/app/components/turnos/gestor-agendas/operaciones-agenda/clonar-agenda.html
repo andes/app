@@ -32,7 +32,6 @@
                                 <legend>
                                     <div class="clearfix">
                                         <span class="float-left">Agenda Original</span>
-                                        <!--<span class="badge-success float-right">{{ agenda.estado }}</span>-->
                                     </div>
                                 </legend>
                             </fieldset>
@@ -79,7 +78,7 @@
                         <plex-accordion>
                             <ng-template ngFor let-agendaF="$implicit" [ngForOf]="agendasFiltradas" let-i="index">
                                 <plex-panel tituloPrincipal="{{agendaF.horaInicio | date: 'dd/MM/yyyy HH:mm'}} - {{agendaF.horaFin | date: 'HH:mm'}}"
-                                    icon="arrow-down-drop-circle-outline">
+                                            icon="arrow-down-drop-circle-outline">
                                     <li *ngIf="agendaF.conflictoEF">
                                         Conflicto con Espacio Físico
                                     </li>

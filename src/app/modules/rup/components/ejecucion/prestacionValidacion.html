@@ -175,22 +175,23 @@
                                 <div class="float-left" *ngIf="elemento?.relacionadoCon">
                                     <b class="clearfix" *ngIf="elemento?.relacionadoCon?.length > 0">Relacionado con:
                                     </b>
-                                    <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0 && !elementoRUP?.reglas?.requeridos?.relacionesMultiples"
-                                           class="badge badge-info text-uppercase">
+                                    <plex-badge size="sm"
+                                                *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0 && !elementoRUP?.reglas?.requeridos?.relacionesMultiples"
+                                                type="info text-uppercase">
                                         {{ elemento.relacionadoCon[0]?.concepto?.term[0].toUpperCase() +
                                         elemento.relacionadoCon[0]?.concepto?.term.slice(1)}}
-                                    </small>
+                                    </plex-badge>
                                     <ng-container *ngIf="elementoRUP?.reglas?.requeridos?.relacionesMultiples">
                                         <ng-container *ngFor="let relacion of elemento.relacionadoCon; let ir=index">
                                             <ng-container *ngIf="ir < 5">
-                                                <small class="badge badge-info badge-170 mr-1">
+                                                <plex-badge size="sm" type="info mr-1">
                                                     {{ relacion | relacionRUP }}
-                                                </small>
+                                                </plex-badge>
                                             </ng-container>
                                             <ng-container *ngIf="verMasRelaciones[i] && ir >= 5">
-                                                <small class="badge badge-info badge-170 mr-1">
+                                                <plex-badge size="sm" type="info mr-1">
                                                     {{ relacion | relacionRUP }}
-                                                </small>
+                                                </plex-badge>
                                             </ng-container>
                                         </ng-container>
                                         <ng-container *ngIf="elemento.relacionadoCon.length > 5">
@@ -203,10 +204,11 @@
                                 </div>
                             </div>
                             <div class="actions">
-                                <span
-                                      class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{ (elemento.esSolicitud) ? 'solicitud' : elemento.concepto.semanticTag}}</span>
-                                <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento /
-                                    diagnóstico principal</small>
+                                <plex-badge
+                                            type="{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">
+                                    {{elemento.concepto.semanticTag}}</plex-badge>
+                                <plex-badge type="info" size="sm" *ngIf="elemento.esDiagnosticoPrincipal">
+                                    Procedimiento/diagnóstico principal</plex-badge>
                                 <ng-container *ngIf="elemento.esSolicitud && validada && asignarTurno[elemento.id]">
                                     <span class="small text-secondary"
                                           *ngIf="asignarTurno[elemento.id]?.solicitud && asignarTurno[elemento.id]?.solicitud.turno">
@@ -242,10 +244,10 @@
                                 <ng-container *ngIf="enBusquedaGuiada(elemento.concepto)">
                                     <div class="row">
                                         <div class="col-12">
-                                            <span *ngFor="let rf of enBusquedaGuiada(elemento.concepto)"
-                                                  class="badge badge-danger">
+                                            <plex-badge *ngFor="let rf of enBusquedaGuiada(elemento.concepto)"
+                                                        type="danger">
                                                 {{rf.nombre}}
-                                            </span>
+                                            </plex-badge>
                                         </div>
                                     </div>
                                 </ng-container>
@@ -312,9 +314,9 @@
                                     <span
                                           class="type {{ rama.esSolicitud ? 'solicitud' : rama.concepto.semanticTag }} pr-2 mr-1"></span>
                                     <small>{{ rama.nombre }}
-                                        <small class="badge badge-info" *ngIf="rama.esDiagnosticoPrincipal">
+                                        <plex-badge size="sm" type="info" *ngIf="rama.esDiagnosticoPrincipal">
                                             Procedimiento / diagnóstico principal
-                                        </small>
+                                        </plex-badge>
                                     </small>
                                 </div>
                             </li>

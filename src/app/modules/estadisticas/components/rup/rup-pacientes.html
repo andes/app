@@ -1,21 +1,26 @@
-<plex-layout [main]="selectedConcept ? 8 : 12"> 
+<plex-layout [main]="selectedConcept ? 8 : 12">
     <plex-layout-main>
         <ng-container *ngIf="!showData">
             <div class="row">
                 <div class="col-3">
-                    <plex-datetime label="Desde" [max]="hoy" type="date" [(ngModel)]="desde" name="desde"></plex-datetime>
+                    <plex-datetime label="Desde" [max]="hoy" type="date" [(ngModel)]="desde" name="desde">
+                    </plex-datetime>
                 </div>
                 <div class="col-3">
-                    <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta"></plex-datetime>
+                    <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta">
+                    </plex-datetime>
                 </div>
                 <div class="col-4">
-                    <plex-select [data]="prestaciones" idField="conceptId" labelField="term"  label="Prestacion" [(ngModel)]="prestacion" (change)="onPrestacionChange()" ></plex-select>
-                </div>    
-                <div class="col-1">
-                    <plex-bool [(ngModel)]="detallar" type="checkbox" label="Detallar" class="vertical-center"></plex-bool>
+                    <plex-select [data]="prestaciones" idField="conceptId" labelField="term" label="Prestacion"
+                                 [(ngModel)]="prestacion" (change)="onPrestacionChange()"></plex-select>
                 </div>
                 <div class="col-1">
-                    <plex-button type="success" label="Filtrar" (click)="onChange()" class="vertical-center"></plex-button>
+                    <plex-bool [(ngModel)]="detallar" type="checkbox" label="Detallar" class="vertical-center">
+                    </plex-bool>
+                </div>
+                <div class="col-1">
+                    <plex-button type="success" label="Filtrar" (click)="onChange()" class="vertical-center">
+                    </plex-button>
                 </div>
             </div>
             <div *ngIf="detallar && prestacionesHijas.length > 0">
@@ -34,7 +39,7 @@
             </div>
         </ng-container>
         <ng-container *ngIf="showData">
-            <div class="row m-3 alert alert-info" >
+            <div class="row m-3 alert alert-info">
                 <div class="col-3">
                     Desde: {{ desde | date: 'dd/MM/yyyy' }}
                 </div>
@@ -45,7 +50,7 @@
                     Prestación: {{ prestacion.term }}
                 </div>
                 <div class="col-3">
-                    <plex-button type="info" label="Filtrar" (click)="volver()" ></plex-button>
+                    <plex-button type="info" label="Filtrar" (click)="volver()"></plex-button>
                 </div>
             </div>
         </ng-container>
@@ -57,11 +62,21 @@
                         <thead>
                             <tr>
                                 <th> Sexo/Edad </th>
-                                <th>0</th><th>10</th><th>20</th><th>30</th><th>40</th><th>50</th><th>60</th><th>70</th><th>80</th><th>90</th><th>Total</th>
+                                <th>0</th>
+                                <th>10</th>
+                                <th>20</th>
+                                <th>30</th>
+                                <th>40</th>
+                                <th>50</th>
+                                <th>60</th>
+                                <th>70</th>
+                                <th>80</th>
+                                <th>90</th>
+                                <th>Total</th>
                             </tr>
                         </thead>
                         <tr *ngFor="let row of presta.data; let i = index;">
-                            <td scope="row" > {{ i === 0 ?  'Masculino' :  (i === 1 ? 'Femenino' : 'Total')  }} </td>
+                            <td scope="row"> {{ i === 0 ?  'Masculino' :  (i === 1 ? 'Femenino' : 'Total')  }} </td>
                             <td *ngFor="let column of row">
                                 {{ column }}
                             </td>
@@ -83,9 +98,11 @@
                         </tr>
                     </thead>
                     <ng-container *ngFor="let row of registros;let i = index">
-                        <tr class="hover" [ngClass]="{ 'table-info': row.hijos?.length > 0, 'table-success': i === selectIndex  }" (click)="show(row, i)">
-                            <td> 
-                                {{ row.concepto.term  }} 
+                        <tr class="hover"
+                            [ngClass]="{ 'table-info': row.hijos?.length > 0, 'table-success': i === selectIndex  }"
+                            (click)="show(row, i)">
+                            <td>
+                                {{ row.concepto.term  }}
                             </td>
                             <td> {{ row.concepto.semanticTag  }} </td>
                             <td> {{ row.count  }} </td>
@@ -99,7 +116,7 @@
         </plex-tabs>
     </plex-layout-main>
     <plex-layout-sidebar *ngIf="selectedConcept">
-        <div class="page-title text-center text-bold font-weight-bold"> 
+        <div class="page-title text-center text-bold font-weight-bold">
             {{ selectedConcept.concepto.term }}
         </div>
         <plex-tabs size="full">
@@ -107,51 +124,53 @@
                 <fieldset>
                     <legend>Próximos padres</legend>
                 </fieldset>
-                <ul class="list-group" *ngFor="let padre of conceptos[selectedConcept.concepto.conceptId].relationships">
-                    <li class="list-group-item d-flex justify-content-between align-items-center hover" (click)="showChild(padre)"> 
-                        {{ padre.term }} 
-                        <span class="badge badge-primary badge-pill" title="Cantidad de hijos registrados">
+                <ul class="list-group"
+                    *ngFor="let padre of conceptos[selectedConcept.concepto.conceptId].relationships">
+                    <li class="list-group-item d-flex justify-content-between align-items-center hover"
+                        (click)="showChild(padre)">
+                        {{ padre.term }}
+                        <plex-badge type="info badge-pill" title="Cantidad de hijos registrados">
                             {{ getChilds(padre) | sum:'count' }}
-                        </span>
+                        </plex-badge>
                     </li>
                 </ul>
-                <ng-container *ngIf="selectedChilds"> 
+                <ng-container *ngIf="selectedChilds">
                     <fieldset>
                         <legend class="d-flex justify-content-between align-items-center">
                             <span>
                                 Conceptos a agrupar
-                            </span>    
-                            <plex-button size="sm" type="success" (click)="groupBy(selectedConcept, selectedFather)"> 
-                                Agrupar 
+                            </span>
+                            <plex-button size="sm" type="success" (click)="groupBy(selectedConcept, selectedFather)">
+                                Agrupar
                             </plex-button>
                         </legend>
                     </fieldset>
                     <ul class="list-group" *ngFor="let concepto of selectedChilds">
-                        <li class="list-group-item d-flex justify-content-between align-items-center"> 
-                            {{ concepto.concepto.term }}  
-                            <span class="badge badge-primary badge-pill">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ concepto.concepto.term }}
+                            <plex-badge type="info badge-pill">
                                 {{ concepto.count }}
-                            </span>
+                            </plex-badge>
                         </li>
                     </ul>
                 </ng-container>
-                <ng-container *ngIf="!selectedChilds && selectedConcept.hijos && selectedConcept.hijos.length > 0"> 
+                <ng-container *ngIf="!selectedChilds && selectedConcept.hijos && selectedConcept.hijos.length > 0">
                     <fieldset>
                         <legend class="d-flex justify-content-between align-items-center">
                             <span>
                                 Conceptos agrupados
-                            </span>    
+                            </span>
                             <!-- <plex-button size="sm" type="success" (click)="groupBy(selectedConcept, selectedFather)"> 
                                 Agrupar 
                             </plex-button> -->
                         </legend>
                     </fieldset>
                     <ul class="list-group" *ngFor="let concepto of selectedConcept.hijos">
-                        <li class="list-group-item d-flex justify-content-between align-items-center"> 
-                            {{ concepto.concepto.term }}  
-                            <span class="badge badge-primary badge-pill">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ concepto.concepto.term }}
+                            <plex-badge type="info badge-pill">
                                 {{ concepto.count }}
-                            </span>
+                            </plex-badge>
                         </li>
                     </ul>
                 </ng-container>
@@ -202,7 +221,7 @@
                                 {{ item.value }}
                             </td>
                         </tr>
-                        
+
                     </table>
                 </ng-container>
             </plex-tab>

@@ -186,7 +186,7 @@
                             <plex-button type="primary" class="btn-sm" label="Desde mi PC" (click)="upload.click()">
                             </plex-button>
                             <span *ngIf="errorExt">
-                                <span class="badge-danger"> Archivo inválido </span>
+                                <plex-badge type="danger"> Archivo inválido </plex-badge>
                             </span>
                         </span>
                         <span *ngIf="waiting">

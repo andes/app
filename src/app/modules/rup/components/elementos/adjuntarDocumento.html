@@ -10,7 +10,7 @@
                     <plex-button *ngIf="!waiting" class="btn-sm" type="primary" label="Desde mi App móvil"
                                  (click)="fromMobile()"></plex-button>
                     <span *ngIf="errorExt">
-                        <span class="badge-danger"> Archivo inválido </span>
+                        <plex-badge type="danger">Archivo inválido</plex-badge>
                     </span>
                 </span>
                 <span *ngIf="waiting">
@@ -35,11 +35,11 @@
                             <tr *ngFor="let doc of registro.valor.documentos; let i = index">
                                 <td>
                                     <div class="image hover">
-                                            <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
-                                            <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)"
-                                            class="adjunto">
-                                                {{ doc.ext }}
-                                            </a>
+                                        <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
+                                        <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)"
+                                           class="adjunto">
+                                            {{ doc.ext }}
+                                        </a>
                                     </div>
                                     <br>
                                     <p class="text-center small">{{doc.ext}}</p>
@@ -84,7 +84,7 @@
                     <a>
                         <div class="image hover">
                             <a [href]="createUrl(doc)" target="_blank" class="{{!esImagen(doc.ext) ? 'adjunto' : ''}} ">
-                                <ng-container *ngIf="!esImagen(doc.ext)">{{ doc.ext }}</ng-container>  
+                                <ng-container *ngIf="!esImagen(doc.ext)">{{ doc.ext }}</ng-container>
                                 <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
                             </a>
                         </div>

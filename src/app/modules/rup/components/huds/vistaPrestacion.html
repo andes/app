@@ -44,21 +44,21 @@
                                      *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length">
                                     <b class="clearfix">Relacionado con:</b>
                                     <ng-container *ngFor="let relacionado of elemento?.relacionadoCon">
-                                        <small class="badge badge-info badge-170 mr-1">
+                                        <plex-badge size="sm" type="info mr-1">
                                             {{ relacionado | relacionRUP }}
-                                        </small>
+                                        </plex-badge>
                                     </ng-container>
                                 </div>
                             </div>
                             <div class="actions">
-                                <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0"
-                                       class="badge badge-info">
+                                <plex-badge *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0"
+                                            size="sm" type="info">
                                     <b> Relacionado con: </b>
                                     {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
-                                </small>
-                                <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">
+                                </plex-badge>
+                                <plex-badge size="sm" type="info" *ngIf="elemento.esDiagnosticoPrincipal">
                                     Procedimiento / diagnóstico principal
-                                </small>
+                                </plex-badge>
                             </div>
                         </div>
                         <div class="rup-body">

@@ -35,12 +35,12 @@
                             <td>{{profesional.apellido}}</td>
                             <td>{{profesional.nombre}}</td>
                             <td>
-                                <span *ngIf="profesional.profesionalMatriculado" class="badge badge-info">
+                                <plex-badge *ngIf="profesional.profesionalMatriculado" type="info">
                                     Matriculado
-                                </span>
-                                <span *ngIf="!profesional.profesionalMatriculado" class="badge badge-warning">
+                                </plex-badge>
+                                <plex-badge *ngIf="!profesional.profesionalMatriculado" type="warning">
                                     No Matriculado
-                                </span>
+                                </plex-badge>
                             </td>
                         </tr>
                     </tbody>
@@ -72,12 +72,12 @@
                     <span *ngIf="profesionalSelected.documento" class="mr-1">
                         {{ profesionalSelected.documento }}
                     </span>
-                    <span *ngIf='profesionalSelected.profesionalMatriculado' class="badge badge-info">
+                    <plex-badge *ngIf='profesionalSelected.profesionalMatriculado' type="info">
                         Matriculado
-                    </span>
-                    <span *ngIf='!profesionalSelected.profesionalMatriculado' class="badge badge-warning">
+                    </plex-badge>
+                    <plex-badge *ngIf='!profesionalSelected.profesionalMatriculado' type="warning">
                         No Matriculado
-                    </span>
+                    </plex-badge>
                 </div>
             </div>
             <div class="row mb-1" *ngIf="profesionalSelected.fechaNacimiento">

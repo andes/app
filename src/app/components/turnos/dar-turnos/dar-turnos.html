@@ -95,8 +95,8 @@
                                          icon="chevron-left" class="text-lg" title="Agenda anterior"
                                          (click)="verAgenda('izq')"></plex-button>
                             <span>{{ agenda.horaInicio | date: 'EEE d MMM' }}
-                                <div class="badge badge-{{ estadosAgenda[agenda.estado].class }}">
-                                    {{ estadosAgenda[agenda.estado].nombre }}</div>
+                                <plex-badge type="info">
+                                    {{ estadosAgenda[agenda.estado].nombre }}</plex-badge>
                             </span>
                             <span *ngIf="estadoT==='dinamica'">
                                 {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs
@@ -107,7 +107,7 @@
                             <!-- Listado de prestaciones -->
                             <div *ngIf="agenda && agenda.tipoPrestaciones">
                                 <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
-                                    {{ tipoPrestacion.nombre }}
+                                    {{ tipoPrestacion.term }}
                                 </div>
                             </div>
                             <div *ngIf="agenda && agenda.profesionales">
@@ -123,7 +123,6 @@
                             <div *ngFor="let bloque of bloques">
                                 <div *ngIf="bloque.descripcion">
                                     <span>Bloque: {{bloque.descripcion}}</span>
-                                    <!--<span class="h5 badge badge-pill badge-default"> {{bloque.duracionTurno}} '</span>-->
                                 </div>
                                 <!--Tipos de turnos-->
                                 <table class="table table-condensed text-center small"

@@ -132,32 +132,40 @@
                                         | profesional}}</td>
                                             <td *ngIf="prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado"
                                                 (click)="seleccionar(prestacion)">
-                                                <span class="badge badge-danger">AUTOCITADO</span>
+                                                <plex-badge type="danger">AUTOCITADO</plex-badge>
                                             </td>
                                             <td class="text-center estado text-capitalize"
                                                 (click)="seleccionar(prestacion)">
-                                                <span class="badge badge-danger"
-                                                      *ngIf="prestacion.solicitud.registros[0].valor.solicitudPrestacion.prioridad === 'prioritario'">{{prestacion.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}</span>
+                                                <plex-badge type="danger"
+                                                            *ngIf="prestacion.solicitud.registros[0].valor.solicitudPrestacion.prioridad === 'prioritario'">
+                                                    {{prestacion.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}
+                                                </plex-badge>
                                             </td>
                                             <td *ngIf="!prestacion.solicitud.turno" class="text-center estado"
                                                 (click)="seleccionar(prestacion)">
-                                                <span class="badge badge-info"
-                                                      *ngIf="prestacion.estados[prestacion.estados.length-1].tipo !== 'validada' && prestacion.estados[prestacion.estados.length-1].tipo !== 'rechazada' && prestacion.estados[prestacion.estados.length-1].tipo !== 'auditoria'">{{prestacion.estados[prestacion.estados.length-1].tipo}}</span>
-                                                <span class="badge badge-success"
-                                                      *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'validada'">Registro
-                                                    en HUDS</span>
-                                                <span class="badge badge-info"
-                                                      *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'rechazada'">CONTRARREFERIDA</span>
-                                                <span class="badge badge-warning"
-                                                      *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'auditoria'">{{prestacion.estados[prestacion.estados.length-1].tipo}}</span>
+                                                <plex-badge type="info"
+                                                            *ngIf="prestacion.estados[prestacion.estados.length-1].tipo !== 'rechazada' && prestacion.estados[prestacion.estados.length-1].tipo !== 'auditoria'">
+                                                    {{prestacion.estados[prestacion.estados.length-1].tipo}}
+                                                </plex-badge>
+                                                <plex-badge type="success"
+                                                            *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'validada'">
+                                                    Registro
+                                                    en HUDS</plex-badge>
+                                                <plex-badge type="info"
+                                                            *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'rechazada'">
+                                                    CONTRARREFERIDA</plex-badge>
+                                                <plex-badge type="warning"
+                                                            *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'auditoria'">
+                                                    {{prestacion.estados[prestacion.estados.length-1].tipo}}
+                                                </plex-badge>
 
                                             </td>
                                             <td *ngIf="prestacion.solicitud.turno" (click)="seleccionar(prestacion)"
                                                 class="text-center estado">
-                                                <span *ngIf="prestacion.estados[prestacion.estados.length-1].tipo !== 'validada'"
-                                                      class="badge badge-success">Turno dado</span>
-                                                <span *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'validada'"
-                                                      class="badge badge-success">Registro en HUDS</span>
+                                                <plex-badge *ngIf="prestacion.estados[prestacion.estados.length-1].tipo !== 'validada'"
+                                                            type="success">Turno dado</plex-badge>
+                                                <plex-badge *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'validada'"
+                                                            type="success">Registro en HUDS</plex-badge>
                                             </td>
                                             <td class="text-center">
                                                 <span
@@ -252,16 +260,17 @@
                                             <td class="text-center">
                                                 <ng-container
                                                               *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'rechazada'">
-                                                    <span class="badge badge-danger">CONTRARREFERIDA</span>
+                                                    <plex-badge type="info">CONTRARREFERIDA</plex-badge>
                                                 </ng-container>
                                                 <ng-container
                                                               *ngIf="prestacion.estados[prestacion.estados.length-1].tipo !== 'rechazada'">
                                                     <span *ngIf="!prestacion.solicitud.turno">
-                                                        <span
-                                                              class="badge badge-info">{{prestacion.estados[prestacion.estados.length-1].tipo}}</span>
+                                                        <plex-badge type="danger">
+                                                            {{prestacion.estados[prestacion.estados.length-1].tipo}}
+                                                        </plex-badge>
                                                     </span>
                                                     <span *ngIf="visualizarSalida[i]">
-                                                        <span class="badge badge-success">Turno Dado</span>
+                                                        <plex-badge type="success">Turno Dado</plex-badge>
                                                     </span>
                                                 </ng-container>
                                             </td>

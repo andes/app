@@ -92,25 +92,26 @@
                                                             (change)="onSave()" [(ngModel)]='diagnostico.primeraVez'>
                                                         </plex-bool>
                                                         <!-- Muestro primera vez solo para diagnosticos de profesional -->
-                                                        <span class="badge-success"
+                                                        <plex-badge type="success"
                                                             *ngIf="(diagnostico.codificacionProfesional?.snomed?.codigo || diagnostico.codificacionProfesional?.cie10?.codigo) && diagnostico.primeraVez">
                                                             Si
-                                                        </span>
+                                                        </plex-badge>
                                                     </td>
                                                     <td>
-                                                        <span class="badge-success"
+                                                        <plex-badge type="success"
                                                             *ngIf="diagnostico.codificacionAuditoria?.codigo
-                                                                    === diagnostico.codificacionProfesional?.cie10?.codigo">Aprobado</span>
+                                                                    === diagnostico.codificacionProfesional?.cie10?.codigo">Aprobado
+                                                        </plex-badge>
 
-                                                        <span class="badge-warning"
+                                                        <plex-badge type="warning"
                                                             *ngIf="diagnostico.codificacionAuditoria?.codigo && diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.codigo
-                                                                    != diagnostico.codificacionProfesional?.cie10?.codigo">Reparado</span>
+                                                                    != diagnostico.codificacionProfesional?.cie10?.codigo">Reparado
+                                                        </plex-badge>
                                                         <!-- La funcion codificarTurno establece que el diagnóstico principal siempre es el primero -->
-                                                        <span *ngIf="i==0" class="badge-info">Principal</span>
+                                                        <plex-badge *ngIf="i==0" type="info">Principal</plex-badge>
 
-                                                        <span
-                                                            *ngIf="diagnostico.codificacionAuditoria?.c2 || diagnostico.codificacionProfesional?.cie10?.c2"
-                                                            class="badge-danger">C2</span>
+                                                        <plex-badge *ngIf="diagnostico.codificacionAuditoria?.c2 || diagnostico.codificacionProfesional?.cie10?.c2"
+                                                              type="danger">C2</plex-badge>
                                                     </td>
                                                     <td>
                                                         <!-- Mostramos la codificación snomed hecha por profesional -->
@@ -200,24 +201,25 @@
                                                             (change)="onSave()" [(ngModel)]='diagnostico.primeraVez'>
                                                         </plex-bool>
                                                         <!-- Muestro primera vez solo para diagnosticos de profesional -->
-                                                        <span class="badge-success"
+                                                        <plex-badge type="success"
                                                             *ngIf="diagnostico.codificacionProfesional?.cie10?.codigo && diagnostico.primeraVez">
                                                             Si
-                                                        </span>
+                                                        </plex-badge>
                                                     </td>
                                                     <td>
-                                                        <span class="badge-success"
-                                                            *ngIf="diagnostico.codificacionAuditoria?.codigo === diagnostico.codificacionProfesional?.cie10?.codigo">Aprobado</span>
+                                                        <plex-badge type="success"
+                                                                    *ngIf="diagnostico.codificacionAuditoria?.codigo === diagnostico.codificacionProfesional?.cie10?.codigo">
+                                                            Aprobado</plex-badge>
 
-                                                        <span class="badge-warning"
+                                                        <plex-badge type="warning"
                                                             *ngIf="diagnostico.codificacionAuditoria?.codigo && diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.codigo
-                                                                    != diagnostico.codificacionProfesional?.cie10?.codigo">Reparado</span>
+                                                                    != diagnostico.codificacionProfesional?.cie10?.codigo">Reparado
+                                                        </plex-badge>
                                                         <!-- La funcion codificarTurno establece que el diagnóstico principal siempre es el primero -->
-                                                        <span *ngIf="i==0" class="badge-info">Principal</span>
+                                                        <plex-badge *ngIf="i==0" type="info">Principal</plex-badge>
 
-                                                        <span
-                                                            *ngIf="diagnostico.codificacionAuditoria?.c2 || diagnostico.codificacionProfesional?.cie10?.c2"
-                                                            class="badge-danger">C2</span>
+                                                        <plex-badge *ngIf="diagnostico.codificacionAuditoria?.c2 || diagnostico.codificacionProfesional?.cie10?.c2"
+                                                                    type="danger">C2</plex-badge>
                                                     </td>
                                                     <td>
                                                         <div>
