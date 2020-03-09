@@ -158,17 +158,11 @@ import { SectoresItemComponent } from './components/organizacion/sectores-item/s
 // ... MPI
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
 import { DashboardComponent } from './components/paciente/dashboard.component';
-import { PacienteDetalleComponent } from './components/paciente/paciente-detalle';
-
-import { PacienteBuscarComponent } from './modules/mpi/components/paciente-buscar.component';
-import { PacienteListadoComponent } from './modules/mpi/components/paciente-listado.component';
-import { PacientePanelComponent } from './modules/mpi/components/paciente-panel.component';
 import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cru.component';
 import { RelacionesPacientesComponent } from './core/mpi/components/relaciones-pacientes.component';
 import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
 import { PacienteCruComponent } from './core/mpi/components/paciente-cru.component';
 import { GeoreferenciaService } from './core/mpi/services/georeferencia.service';
-import { BotonesRegistroComponent } from './core/mpi/components/mpi-botones-registro.component';
 import { GeorrefMapComponent } from './core/mpi/components/georref-map.component';
 
 
@@ -195,7 +189,6 @@ import { EditEspacioFisicoComponent } from './components/turnos/configuracion/es
 import { FiltrosMapaEspacioFisicoComponent } from './components/turnos/configuracion/mapa-espacio-fisico/filtros-mapa-espacio-fisico.component';
 import { AgregarNotaTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/agregar-nota-turno.component';
 import { DetalleAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/detalle-agenda.component';
-import { CarpetaPacienteComponent } from './components/carpeta-paciente/carpeta-paciente.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
 import { AgregarNotaAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/nota-agenda.component';
 import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/operaciones-agenda/sobreturno.component';
@@ -221,7 +214,6 @@ import { AutocitarTurnoAgendasComponent } from './components/turnos/autocitar/au
 import { DinamicaFormComponent } from './components/turnos/autocitar/dinamica.component';
 import { MapaEspacioFisicoVistaComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico-vista.component';
 import { BuscadorCie10Component } from './components/turnos/gestor-agendas/operaciones-agenda/buscador-cie10.component';
-import { UpdateContactoDireccionComponent } from './components/turnos/dashboard/update-contacto-direccion.component';
 
 
 // ... RUP
@@ -528,6 +520,8 @@ import { AcronimoSvgComponent } from './styles/acronimo.svg';
 import { ListaReglasComponent } from './components/top/reglas/listaReglas.component';
 import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaSolicitudTop';
 
+import { MPILibModule } from './modules/mpi/mpi-lib.module';
+
 registerLocaleData(localeEs, 'es');
 
 // Main module
@@ -548,7 +542,8 @@ registerLocaleData(localeEs, 'es');
             apiKey: environment.MAPS_KEY
         }),
         InfiniteScrollModule,
-        GestorUsuariosProvidersModule
+        GestorUsuariosProvidersModule,
+        MPILibModule
     ],
     declarations: [
         AppComponent, InicioComponent,
@@ -558,7 +553,7 @@ registerLocaleData(localeEs, 'es');
         ProfesionalCreateUpdateComponent,
         UploadFileComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
-        PacienteDetalleComponent, DashboardComponent,
+        DashboardComponent,
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, HoraPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
         FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe, ReplacePipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, DinamicaFormComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
@@ -571,7 +566,6 @@ registerLocaleData(localeEs, 'es');
         RUPComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
         AgregarPacienteComponent,
-        CarpetaPacienteComponent,
         ArancelamientoFormComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
@@ -604,9 +598,6 @@ registerLocaleData(localeEs, 'es');
         VistaPrestacionComponent,
         VistaCDAComponent,
         HudsBusquedaPacienteComponent,
-        PacienteBuscarComponent,
-        PacienteListadoComponent,
-        PacientePanelComponent,
 
         // RUP
         ...RUPComponentsArray,
@@ -655,18 +646,12 @@ registerLocaleData(localeEs, 'es');
         VisualizacionReglasComponent,
         VistaSolicitudTopComponent,
         // MPI
-        PacienteBuscarComponent,
-        PacienteListadoComponent,
-        PacientePanelComponent,
-        PacientePanelComponent,
         BebeCruComponent,
         ExtranjeroNNCruComponent,
         NotaComponent,
         RelacionesPacientesComponent,
         BusquedaMpiComponent,
         PacienteCruComponent,
-        BotonesRegistroComponent,
-        UpdateContactoDireccionComponent,
         GeorrefMapComponent,
 
         // form Terapeutico

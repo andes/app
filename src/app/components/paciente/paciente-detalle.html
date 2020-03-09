@@ -7,7 +7,7 @@
 
     <div class="full-col" *ngIf="_paciente.apellido">
         <label class="block">Apellido y nombre</label>
-        <span>{{_paciente | paciente}}</span>
+        <span>{{_paciente | nombre}}</span>
     </div>
 
     <div *ngIf="_paciente.documento !== ''">

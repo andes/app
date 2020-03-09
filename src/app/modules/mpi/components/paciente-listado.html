@@ -23,7 +23,7 @@
                 <span *ngIf="paciente.estado == 'validado'" class="d-block badge badge-success">Validado</span>
                 <span *ngIf="paciente.estado != 'validado'" class="d-block badge badge-warning">Temporal</span>
             </td>
-            <td>{{paciente | paciente}}</td>
+            <td>{{paciente | nombre}}</td>
             <td>
                 <span *ngIf="paciente.fechaNacimiento !== null">
                     <span class="d-block">{{paciente.fechaNacimiento | fecha:'utc'}}</span>
@@ -47,7 +47,7 @@
                 <span *ngIf="paciente.estado != 'validado'" class="d-block badge badge-warning">Temporal</span>
             </td>
             <td>
-                <div>{{paciente | paciente}}</div>
+                <div>{{paciente | nombre}}</div>
                 <div>
                     <span>{{paciente | sexo}}</span>
                     <span *ngIf="paciente.fechaNacimiento !== null">
