@@ -12,7 +12,8 @@ _____________________________________________
 
 2) Seleccionar el proyecto al que pertenece (CITAS, RUP, MPI, ...)
 3) Asignar revisores que sean miembros del equipo responsable de revisar el pull request
-4) Completar las siguientes secciones:
+4) NO olvidar correr los tests localmente antes de crear el PR.
+5) Completar las siguientes secciones:
 
 -->
 ### Requerimiento
