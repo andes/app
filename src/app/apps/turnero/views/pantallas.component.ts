@@ -37,7 +37,7 @@ export class PantallasComponent implements OnInit, OnDestroy {
         this.plex.updateTitle('Configuración de pantallas interactivas');
         let temp;
         this.ws.connect();
-        this.ws.join(`turnero-${this.auth.organizacion.id}`);
+        this.ws.join(`turnero-${this.auth.organizacion}`);
         this.sub = this.ws.events.subscribe(({ event, data }) => {
             let { pantalla } = data;
             switch (event) {
@@ -98,7 +98,7 @@ export class PantallasComponent implements OnInit, OnDestroy {
         this.pantalla = {
             nombre: '',
             espaciosFisicos: [],
-            organizacion: this.auth.organizacion.id
+            organizacion: this.auth.organizacion
         };
         this.mostrarDetalle = true;
         this.router.navigate(['/pantallas/create']);

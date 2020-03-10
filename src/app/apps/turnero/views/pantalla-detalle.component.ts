@@ -36,7 +36,7 @@ export class PantallaDetalleComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.espacioFisicoService.get({ organizacion: this.auth.organizacion.id }).subscribe(data => this.espaciosFisicos = data);
+        this.espacioFisicoService.get({ organizacion: this.auth.organizacion }).subscribe(data => this.espaciosFisicos = data);
         this.listaTipos = [{ id: 'totem', nombre: 'Totem' }, { id: 'turnero', nombre: 'Turnero' }];
         this.esTurnero = this.pantalla.tipo === 'turnero';
     }
