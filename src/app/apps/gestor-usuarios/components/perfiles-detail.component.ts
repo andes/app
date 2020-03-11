@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnInit, ViewChildren, QueryList, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PerfilesHttp } from '../services/perfiles.http';
 import { Plex } from '@andes/plex';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { ArbolPermisosComponent } from './arbol-permisos/arbol-permisos.componen
 
 @Component({
     selector: 'gestor-usarios-perfiles-detail',
-    templateUrl: 'perfiles-detail.component.html'
+    templateUrl: 'perfiles-detail.html'
 })
 
 export class PerfilDetailComponent implements OnInit {

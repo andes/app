@@ -3,4 +3,5 @@ export interface IUsuario {
     nombre: String;
     apellido: String;
     documento: String;
+    foto: String;
 }

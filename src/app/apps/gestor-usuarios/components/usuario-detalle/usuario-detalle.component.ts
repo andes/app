@@ -10,8 +10,9 @@ function elementAt(index = 0) {
 }
 
 @Component({
-    selector: 'gestor-usarios-usuario-detalle',
-    templateUrl: 'usuario-detalle.component.html'
+    selector: 'gestor-usuarios-usuario-detalle',
+    templateUrl: 'usuario-detalle.html',
+    styleUrls: ['usuario-detalle.scss']
 })
 
 export class UsuarioDetalleComponent implements OnInit, OnChanges {

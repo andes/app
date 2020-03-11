@@ -3,9 +3,7 @@ import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 import { ObraSocialService } from '../../services/obraSocial.service';
 import { IFinanciador } from '../../interfaces/IFinanciador';
 import { ObraSocialCacheService } from '../../services/obraSocialCache.service';
-import { AdjuntosService } from '../../modules/rup/services/adjuntos.service';
 import { Observable } from 'rxjs';
-import { pluck } from 'rxjs/operators';
 
 @Component({
     selector: 'paciente-detalle',
