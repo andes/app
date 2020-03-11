@@ -219,6 +219,10 @@ export class PrestacionesService {
     }
 
     private _cacheRegistros = {};
+    clearConceptosPaciente(idPaciente) {
+        this._cacheRegistros[idPaciente] = null;
+    }
+
     getConceptosByPaciente(idPaciente: string, soloValidados?: boolean): Observable<any[]> {
         if (this._cacheRegistros[idPaciente]) {
             return new Observable(observe => observe.next(this._cacheRegistros[idPaciente]));
