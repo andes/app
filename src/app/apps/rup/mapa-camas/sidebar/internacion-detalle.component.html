@@ -1,6 +1,6 @@
-<ng-container *ngIf="prestacion$ | async as prestacion">
+<ng-container *ngIf="selectedPrestacion">
     <div class="mt-2">
-        <ng-container *ngIf="!editar || !(prestacion.ejecucion.registros[1])">
+        <ng-container *ngIf="!editar || !existeEgreso">
             <plex-options [items]="items" (activated)="onActiveOption($event)"></plex-options>
         </ng-container>
 
@@ -15,23 +15,20 @@
             </app-ingresar-paciente>
         </ng-container>
         <ng-container *ngIf="mostrar === 'movimientos'">
-            <ng-container *ngIf="selectedPrestacion$ | async as selectedPrestacion">
-                <app-movimientos-internacion *ngIf="view$ | async as view">
-                    <plex-button *ngIf="(view === 'listado-internacion') && (selectedPrestacion.estados[selectedPrestacion.estados.length - 1].tipo !== 'validada')"
-                                 label="Cambiar cama" type="warning" size="sm" (click)="changeCama()">
-                    </plex-button>
-                </app-movimientos-internacion>
-            </ng-container>
+            <app-movimientos-internacion>
+                <plex-button *ngIf="(view === 'listado-internacion') && !prestacionValidada" label="Cambiar cama"
+                             type="warning" size="sm" (click)="changeCama()">
+                </plex-button>
+            </app-movimientos-internacion>
         </ng-container>
         <ng-container *ngIf="mostrar === 'egreso'">
-            <app-informe-egreso *ngIf="!editar && prestacion.ejecucion.registros[1]"
-                                (cancel)="activatedOption('egreso')">
+            <app-informe-egreso *ngIf="!editar && existeEgreso" (cancel)="activatedOption('egreso')">
                 <plex-button title="editar" icon="pencil" type="warning" size="sm" (click)="toggleEdit()">
                 </plex-button>
             </app-informe-egreso>
-            <app-egresar-paciente *ngIf="editar || !(prestacion.ejecucion.registros[1])" (onSave)="toggleEdit()">
-                <plex-button *ngIf="prestacion.ejecucion.registros[1]" title="volver" icon="arrow-left" type="danger"
-                             size="sm" (click)="toggleEdit();">
+            <app-egresar-paciente *ngIf="editar || !existeEgreso" (onSave)="toggleEdit()">
+                <plex-button *ngIf="existeEgreso" title="volver" icon="arrow-left" type="danger" size="sm"
+                             (click)="toggleEdit();">
                 </plex-button>
             </app-egresar-paciente>
         </ng-container>

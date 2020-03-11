@@ -14,6 +14,7 @@ import { combineLatest, Subscription, Observable } from 'rxjs';
 import { ObraSocialService } from '../../../../../services/obraSocial.service';
 import { map } from 'rxjs/operators';
 import { ObjectID } from 'bson';
+import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -25,6 +26,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     // EVENTOS
     @Output() onSave = new EventEmitter<any>();
+    @Output() volver = new EventEmitter<any>();
 
     // CONSTANTES
     public pacienteAsociado = pacienteAsociado;
@@ -37,6 +39,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     // VARIABLES
     public cama: ISnapshot;
+    public snapshot: ISnapshot[];
     public prestacion: IPrestacion;
     public capa: string;
     public fechaValida = true;
@@ -88,32 +91,38 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.subscription = combineLatest(
+            this.mapaCamasService.view,
             this.mapaCamasService.capa2,
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.prestacion$,
             this.mapaCamasService.selectedPaciente
-        ).subscribe(([capa, cama, prestacion, paciente]) => {
+        ).subscribe(([view, capa, cama, prestacion, paciente]) => {
             this.capa = capa;
             this.prestacion = prestacion;
             this.paciente = paciente;
+
             if (this.prestacion) {
                 this.paciente = this.prestacion.paciente;
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
             }
 
             // Guarda la obra social en el paciente
-            this.obraSocialService.get({ dni: this.paciente.documento }).subscribe((os: any) => {
-                if (os && os.length > 0) {
-                    this.paciente.obraSocial = { nombre: os[0].financiador, financiador: os[0].financiador, codigoPuco: os[0].codigoFinanciador };
-                }
-            });
+            if (paciente.id) {
+                this.obraSocialService.get({ dni: this.paciente.documento }).subscribe((os: any) => {
+                    if (os && os.length > 0) {
+                        this.paciente.obraSocial = { nombre: os[0].financiador, financiador: os[0].financiador, codigoPuco: os[0].codigoFinanciador };
+                    }
+                });
+            }
 
             if (cama.idCama) {
                 this.cama = cama;
-            } else {
+            } else if (view === 'listado-internacion') {
                 this.subscription2 = this.mapaCamasService.snapshot(this.informeIngreso.fechaIngreso, prestacion.id).subscribe((snapshot) => {
                     this.cama = snapshot[0];
                 });
+            } else {
+                this.cama = null;
             }
         });
 

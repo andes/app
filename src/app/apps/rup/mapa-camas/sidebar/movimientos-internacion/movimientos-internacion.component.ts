@@ -3,6 +3,7 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable, Subject, Subscription, combineLatest } from 'rxjs';
 import { startWith, map, switchMap } from 'rxjs/operators';
+import { ISnapshot } from '../../interfaces/ISnapshot';
 
 @Component({
     selector: 'app-movimientos-internacion',
@@ -35,7 +36,7 @@ export class MovimientosInternacionComponent implements OnInit {
             switchMap((filtros: any) => {
                 return this.mapaCamasService.historial('internacion', filtros.desde, filtros.hasta);
             }),
-            map((historial) => {
+            map((historial: ISnapshot[]) => {
                 return historial.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
             })
         );

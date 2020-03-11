@@ -44,7 +44,7 @@
                 </plex-button>
             </app-elegir-paciente>
             <app-ingresar-paciente *ngIf="(selectedPaciente.id !== null) && (accion === 'internarPaciente')"
-                                   (onSave)="volverAResumen()">
+                                   (onSave)="volverAResumen()" (volver)="mapaCamasService.selectPaciente(null)">
                 <plex-button title="volver" icon="arrow-left" type="danger" size="sm"
                              (click)="mapaCamasService.selectPaciente(null)">
                 </plex-button>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
@@ -9,7 +9,7 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable } from 'rxjs/Observable';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 import { take, map, pluck, tap, timeInterval, delay } from 'rxjs/operators';
-import { interval } from 'rxjs';
+import { interval, Subscription, combineLatest } from 'rxjs';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 
 @Component({
@@ -73,12 +73,11 @@ export class MapaCamasCapaComponent implements OnInit {
             })
         );
         this.capa$.subscribe();
-
         this.mapaCamasService.setFecha(new Date());
-
         this.mapaCamasService.setOrganizacion(this.auth.organizacion.id);
 
         this.organizacion = this.auth.organizacion.id;
+
         this.getSnapshot();
     }
 

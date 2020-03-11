@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Plex } from '@andes/plex';
+import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-elegir-paciente',
@@ -9,16 +11,18 @@ import { Plex } from '@andes/plex';
 
 export class ElegirPacienteComponent implements OnInit {
     public pacientes;
+    public snapshot;
 
     constructor(
         private plex: Plex,
         private mapaCamasService: MapaCamasService
     ) { }
 
-    ngOnInit() { }
+    ngOnInit() {
+    }
 
-    onPacienteSelected(event) {
-        this.mapaCamasService.selectedPaciente.next(event);
+    onPacienteSelected(paciente: IPaciente) {
+        this.mapaCamasService.selectPaciente(paciente);
     }
 
     searchStart() {

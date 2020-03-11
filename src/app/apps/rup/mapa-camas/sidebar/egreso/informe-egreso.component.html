@@ -1,6 +1,8 @@
 <ng-container *ngIf="prestacion$ | async as prestacion">
     <plex-title justify titulo="EGRESO">
-        <ng-content></ng-content>
+        <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'">
+            <ng-content></ng-content>
+        </ng-container>
     </plex-title>
     <ng-container *ngIf="informeEgreso$ | async as informeEgreso">
         <fieldset>

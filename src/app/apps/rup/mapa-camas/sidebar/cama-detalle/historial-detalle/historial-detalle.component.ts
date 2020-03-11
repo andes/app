@@ -40,6 +40,9 @@ export class HistorialDetalleComponent implements OnInit {
             switchMap((filtros: any) => {
                 return this.mapaCamasService.historial('cama', filtros.desde, filtros.hasta);
             }),
+            map((historial: ISnapshot[]) => {
+                return historial.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+            })
         );
     }
 

@@ -11,13 +11,15 @@ import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concep
 import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 import { Auth } from '@andes/auth';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
+import { Plex } from '@andes/plex';
 
 @Injectable()
 export class MapaCamasService {
 
     public ambito2 = new BehaviorSubject<string>(null);
     public capa2 = new BehaviorSubject<string>(null);
-    private fecha2 = new BehaviorSubject<Date>(null);
+    public fecha2 = new BehaviorSubject<Date>(null);
     private organizacion2 = new BehaviorSubject<string>(null);
 
     public unidadOrganizativaSelected = new BehaviorSubject<ISnomedConcept>(null);
@@ -33,6 +35,7 @@ export class MapaCamasService {
     public estado = new BehaviorSubject<any>(null);
 
     public selectedPaciente = new BehaviorSubject<any>({} as any);
+    public pacienteAux = new BehaviorSubject<any>({} as any);
 
     public selectedCama = new BehaviorSubject<ISnapshot>({} as any);
 
@@ -55,10 +58,13 @@ export class MapaCamasService {
     public ambito = 'internacion';
     public capa;
     public fecha: Date;
+    public snap: ISnapshot[];
+    public cama: ISnapshot;
 
     constructor(
         private camasHTTP: MapaCamasHTTP,
         private prestacionService: PrestacionesService,
+        private plex: Plex,
         private auth: Auth,
     ) {
         this.maquinaDeEstado$ = combineLatest(
@@ -94,8 +100,10 @@ export class MapaCamasService {
             this.tipoCamaSelected,
             this.esCensable
         ).pipe(
-            map(([camas, paciente, unidadOrganizativa, sector, tipoCama, esCensable]) =>
-                this.filtrarSnapshot(camas, paciente, unidadOrganizativa, sector, tipoCama, esCensable))
+            map(([camas, paciente, unidadOrganizativa, sector, tipoCama, esCensable]) => {
+                this.snap = camas;
+                return this.filtrarSnapshot(camas, paciente, unidadOrganizativa, sector, tipoCama, esCensable);
+            })
         );
 
         this.prestacion$ = combineLatest(
@@ -229,6 +237,7 @@ export class MapaCamasService {
     }
 
     select(cama: ISnapshot) {
+        this.cama = cama;
         if (!cama) {
             return this.selectedCama.next({ idCama: null } as any);
         }
@@ -236,10 +245,28 @@ export class MapaCamasService {
     }
 
     selectPaciente(paciente: any) {
-        if (!paciente) {
-            return this.selectedPaciente.next({ id: null } as any);
+        if (!paciente || !paciente.id) {
+            this.selectedPaciente.next({ id: null } as any);
+        } else {
+            let cama = null;
+            this.snap.map((snap) => {
+                if (snap.estado === 'ocupada') {
+                    if (snap.id !== this.cama.id) {
+                        if (snap.paciente.id === paciente.id) {
+                            cama = snap;
+                        }
+                    }
+                }
+            });
+            if (!cama) {
+                this.selectedPaciente.next(paciente);
+            } else {
+                this.selectedPaciente.next({ id: null } as any);
+                this.plex.info('warning', `${paciente.nombreCompleto} (${paciente.documento}) se encuentra internado
+                en la cama <strong>${cama.nombre}</strong> en <strong>${cama.sectores[cama.sectores.length - 1].nombre}</strong>
+                de la unidad organizativa <strong>${cama.unidadOrganizativa.term}</strong>.`, 'Paciente ya internado');
+            }
         }
-        this.selectedPaciente.next(paciente);
     }
 
     selectPrestacion(prestacion: IPrestacion) {
@@ -247,6 +274,7 @@ export class MapaCamasService {
             return this.selectedPrestacion.next({ id: null } as any);
         }
         this.selectedPrestacion.next(prestacion);
+
     }
 
     filtrarSnapshot(camas: ISnapshot[], paciente: string, unidadOrganizativa: ISnomedConcept, sector: ISectores, tipoCama: ISnomedConcept, esCensable) {

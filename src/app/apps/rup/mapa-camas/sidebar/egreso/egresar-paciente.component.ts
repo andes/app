@@ -32,6 +32,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     // VARIABLES
     public fechaMax: Date;
     public fechaMin: Date;
+    public view: string;
     public capa: string;
     public cama: ISnapshot;
     public prestacion: IPrestacion;
@@ -106,12 +107,14 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.subscription = combineLatest(
+            this.mapaCamasService.view,
             this.mapaCamasService.capa2,
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.prestacion$
-        ).subscribe(([capa, cama, prestacion]) => {
-            this.registro.valor.InformeEgreso.fechaEgreso = moment().toDate();
+        ).subscribe(([view, capa, cama, prestacion]) => {
+            this.registro.valor.InformeEgreso.fechaEgreso = this.mapaCamasService.fecha;
             this.fechaMax = moment().toDate();
+            this.view = view;
             this.capa = capa;
             this.prestacion = prestacion;
             let fecha = moment().toDate();
@@ -130,7 +133,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 this.subscription2 = this.mapaCamasService.getRelacionesPosibles(cama).subscribe((relacionesPosibles) => {
                     this.estadoDestino = relacionesPosibles[0].destino;
                 });
-            } else {
+            } else if (this.view === 'listado-internacion') {
                 this.subscription3 = this.mapaCamasService.snapshot(fecha, prestacion.id).subscribe((snapshot) => {
                     this.cama = snapshot[0];
                     this.subscription2 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
@@ -275,7 +278,12 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
         this.mapaCamasService.save(this.cama, this.registro.valor.InformeEgreso.fechaEgreso).subscribe(camaActualizada => {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
-            this.mapaCamasService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
+            if (this.view === 'listado-internacion') {
+                this.mapaCamasService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
+            } else if (this.view === 'mapa-camas') {
+                this.mapaCamasService.select(null);
+                this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
+            }
             this.onSave.emit();
         }, (err1) => {
             this.plex.info('danger', err1, 'Error al intentar desocupar la cama');
