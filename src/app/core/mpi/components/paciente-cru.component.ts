@@ -11,7 +11,7 @@ import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { IProvincia } from './../../../interfaces/IProvincia';
 import { Plex } from '@andes/plex';
 import * as moment from 'moment';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { PacienteCacheService } from '../services/pacienteCache.service';
 import { BarrioService } from '../../../services/barrio.service';
 import { GeoreferenciaService } from '../services/georeferencia.service';
@@ -25,7 +25,7 @@ import { HistorialBusquedaService } from '../services/historialBusqueda.service'
     templateUrl: 'paciente-cru.html',
     styleUrls: ['paciente-cru.scss']
 })
-export class PacienteCruComponent implements OnInit {
+export class PacienteCruComponent implements OnInit, AfterViewInit {
     @ViewChild(RelacionesPacientesComponent, { static: true }) relacionesPacientes: RelacionesPacientesComponent;
 
     foto = '';
@@ -163,6 +163,16 @@ export class PacienteCruComponent implements OnInit {
             this.pacienteModel.documento = '';
         }
         this.relacionesBorradas = [];
+
+        this.showCargar = false;
+        this.sexos = enumerados.getObjSexos();
+        this.generos = enumerados.getObjGeneros();
+        this.estadosCiviles = enumerados.getObjEstadoCivil();
+        this.tipoComunicacion = enumerados.getObjTipoComunicacion();
+        this.estados = enumerados.getEstados();
+    }
+
+    ngAfterViewInit() {
         this.organizacionService.getById(this.auth.organizacion.id).subscribe((org: IOrganizacion) => {
             if (org) {
                 this.organizacionActual = org;
@@ -190,13 +200,6 @@ export class PacienteCruComponent implements OnInit {
                 });
             }
         });
-
-        this.showCargar = false;
-        this.sexos = enumerados.getObjSexos();
-        this.generos = enumerados.getObjGeneros();
-        this.estadosCiviles = enumerados.getObjEstadoCivil();
-        this.tipoComunicacion = enumerados.getObjTipoComunicacion();
-        this.estados = enumerados.getEstados();
     }
 
     private loadPaciente() {
@@ -221,6 +224,9 @@ export class PacienteCruComponent implements OnInit {
                     }
                     this.actualizarDatosPaciente();
                     this.loading = false;
+                }, error => {
+                    this.loading = false;
+                    this._router.navigate(['apps/mpi/busqueda']);
                 });
             } else {
                 if (this.escaneado) {
