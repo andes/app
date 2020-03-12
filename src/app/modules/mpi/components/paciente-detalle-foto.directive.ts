@@ -1,7 +1,7 @@
 import { Directive, ElementRef, Input } from '@angular/core';
-import { AdjuntosService } from '../../modules/rup/services/adjuntos.service';
-import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
-import { environment } from '../../../environments/environment';
+import { AdjuntosService } from '../../rup/services/adjuntos.service';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
+import { environment } from '../../../../environments/environment';
 
 // "http://localhost:3002/api/core/mpi/pacientes/{{paciente.id}}/foto?token={{token}}"
 

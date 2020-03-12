@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
-import { ObraSocialService } from '../../services/obraSocial.service';
-import { IFinanciador } from '../../interfaces/IFinanciador';
-import { ObraSocialCacheService } from '../../services/obraSocialCache.service';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
+import { ObraSocialService } from '../../../services/obraSocial.service';
+import { IFinanciador } from '../../../interfaces/IFinanciador';
+import { ObraSocialCacheService } from '../../../services/obraSocialCache.service';
 import { Observable } from 'rxjs';
 
 @Component({
