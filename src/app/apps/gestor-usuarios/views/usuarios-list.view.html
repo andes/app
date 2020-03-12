@@ -61,7 +61,7 @@
     </plex-layout-main>
     <plex-layout-sidebar>
         <ng-container *ngIf="userSelected; else noSelected">
-            <gestor-usarios-usuario-detalle [usuario]="userSelected"></gestor-usarios-usuario-detalle>
+            <gestor-usuarios-usuario-detalle [usuario]="userSelected"></gestor-usuarios-usuario-detalle>
             <ng-container *ngIf="{ 
                             orgList: orgList$ | async, 
                             organizacionesParaAgregar: organizacionesParaAgregar$ | async  

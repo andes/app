@@ -99,13 +99,19 @@
         "directive-selector": [
             true,
             "attribute",
-            "app",
+            [
+                "app",
+                "mpi"
+            ],
             "camelCase"
         ],
         "component-selector": [
             false,
             "element",
-            "app",
+            [
+                "app",
+                "mpi"
+            ],
             "kebab-case"
         ],
         "no-inputs-metadata-property": true,

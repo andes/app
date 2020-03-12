@@ -7,7 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { PacienteBuscarComponent } from './components/paciente-buscar.component';
 import { PacienteListadoComponent } from './components/paciente-listado.component';
-import { PacientePanelComponent } from './components/paciente-panel.component';
+import { FotoDirective } from './components/paciente-detalle-foto.directive';
 
 // Esta componente es parte de la parte SHARED de MPI, habría que moverla a este modulo.
 import { BotonesRegistroComponent } from '../../core/mpi/components/mpi-botones-registro.component';
@@ -16,10 +16,11 @@ import { BotonesRegistroComponent } from '../../core/mpi/components/mpi-botones-
 import { UpdateContactoDireccionComponent } from '../../components/turnos/dashboard/update-contacto-direccion.component';
 
 // Esta componente es parte de la parte SHARED de MPI, habría que moverla a este modulo.
-import { PacienteDetalleComponent } from '../../components/paciente/paciente-detalle';
+import { PacienteDetalleComponent } from './components/paciente-detalle';
 
 // Esta componente es parte de la parte SHARED de MPI, habría que moverla a este modulo.
 import { CarpetaPacienteComponent } from '../../components/carpeta-paciente/carpeta-paciente.component';
+import { PacientePanelComponent } from './components/paciente-panel.component';
 
 @NgModule({
     imports: [
@@ -36,7 +37,8 @@ import { CarpetaPacienteComponent } from '../../components/carpeta-paciente/carp
         BotonesRegistroComponent,
         UpdateContactoDireccionComponent,
         PacienteDetalleComponent,
-        CarpetaPacienteComponent
+        CarpetaPacienteComponent,
+        FotoDirective
     ],
     entryComponents: [
     ],

@@ -1,0 +1,17 @@
+<plex-detail>
+    <img class="img-user" *ngIf="!usuario.foto" />
+    <img *ngIf="usuario.foto" src="{{ usuario.foto }}" />
+
+    <plex-badge type="success" *ngIf="(profesional$ | async) as profesional">
+        Profesional
+    </plex-badge>
+
+    <div title>
+        {{ usuario.nombre }} {{ usuario.apellido }}
+    </div>
+
+    <div subtitle>
+        <plex-copy *ngIf="usuario.documento" [value]="usuario.documento">{{ usuario.documento | number }}</plex-copy>
+    </div>
+
+</plex-detail>

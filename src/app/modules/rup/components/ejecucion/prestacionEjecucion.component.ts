@@ -33,8 +33,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     @HostBinding('class.plex-layout') layout = true;
     @ViewChildren(RUPComponent) rupElements: QueryList<any>;
 
-    public obraSocialPaciente;
-
     // prestacion actual en ejecucion
     public prestacion: IPrestacion;
     public paciente: IPaciente;
@@ -201,11 +199,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                                     this.paciente = paciente;
                                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
-                                    if (this.paciente.documento) {
-                                        this.obraSocialService.get({ dni: this.paciente.documento }).subscribe(os => {
-                                            this.obraSocialPaciente = os;
-                                        });
-                                    }
                                 });
                             }
                             // cambio: this.prestacionSolicitud = prestacion.solicitud;
