@@ -124,20 +124,6 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         }
     }
 
-    imagenPrevia(i) {
-        let imagenPrevia = i - 1;
-        if (imagenPrevia >= 0) {
-            this.indice = imagenPrevia;
-        }
-    }
-
-    imagenSiguiente(i) {
-        let imagenSiguiente = i + 1;
-        if (imagenSiguiente <= this.registro.valor.documentos.length - 1) {
-            this.indice = imagenSiguiente;
-        }
-    }
-
     createUrl(doc) {
         /** Hack momentaneo */
         // let jwt = window.sessionStorage.getItem('jwt');
