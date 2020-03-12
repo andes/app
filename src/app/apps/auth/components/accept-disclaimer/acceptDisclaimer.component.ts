@@ -40,12 +40,12 @@ export class AcceptDisclaimerComponent implements OnInit {
     }
 
     aceptarDisclaimer() {
-        let usuario = this.auth.usuario;
+        let usuario: any = this.auth.usuario;
         if (!usuario.disclaimers) {
             usuario.disclaimers = [];
         }
         this.usuarioService.saveDisclaimer(usuario, this.disclaimer).subscribe(() => {
-            this.router.navigate(['/auth/select-organizacion']);
+            this.router.navigate(['inicio']);
         });
 
     }

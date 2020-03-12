@@ -1,5 +1,3 @@
-import { DisclaimerService } from '../../../../services/disclaimer.service';
-import { UsuarioService } from '../../../../services/usuarios/usuario.service';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
@@ -22,9 +20,7 @@ export class LoginComponent implements OnInit {
         private plex: Plex,
         private auth: Auth,
         private router: Router,
-        public ws: WebSocketService,
-        public us: UsuarioService,
-        public ds: DisclaimerService
+        public ws: WebSocketService
     ) { }
 
     ngOnInit() {
@@ -53,21 +49,7 @@ export class LoginComponent implements OnInit {
             this.auth.login(this.usuario.toString(), this.password)
                 .subscribe((data) => {
                     this.ws.setToken(window.sessionStorage.getItem('jwt'));
-                    this.plex.updateUserInfo({ usuario: this.auth.usuario });
-                    this.ds.get({ activo: true }).subscribe(disclaimers => {
-                        if (disclaimers && disclaimers.length > 0) {
-                            let disclaimer = disclaimers[0];
-                            this.us.getDisclaimers(this.auth.usuario).subscribe((userDisclaimers) => {
-                                if (userDisclaimers.some(item => item.id === disclaimer.id)) {
-                                    this.router.navigate(['/auth/select-organizacion']);
-                                } else {
-                                    this.router.navigate(['/auth/disclaimer']);
-                                }
-                            });
-                        } else {
-                            this.router.navigate(['/auth/select-organizacion']);
-                        }
-                    });
+                    this.router.navigate(['/auth/select-organizacion']);
                 }, (err) => {
                     this.plex.info('danger', 'Usuario o contraseña incorrectos');
                     this.loading = false;
