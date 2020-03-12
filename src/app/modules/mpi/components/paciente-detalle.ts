@@ -57,9 +57,13 @@ export class PacienteDetalleComponent implements OnInit {
     get direccion() {
         if (this.paciente.direccion && this.paciente.direccion.length > 0) {
             const dir = this.paciente.direccion[0];
+            const dirLegal = this.paciente.direccion[1];
             let texto = '';
             if (dir.valor) {
                 texto = this.paciente.direccion[0].valor as string;
+            }
+            if (dirLegal && dirLegal.valor) {
+                texto += '\n' + '(Legal: ' + dirLegal.valor + ')';
             }
             if (dir.ubicacion.localidad) {
                 if (texto.length > 0) {
@@ -120,5 +124,4 @@ export class PacienteDetalleComponent implements OnInit {
             }
         });
     }
-
 }
