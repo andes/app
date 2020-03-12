@@ -16,7 +16,6 @@ export class LoginComponent implements OnInit {
     public loading = false;
     public deshabilitar = false;
     public autoFocus = 1;
-    public versionAPP = environment.version;
     public regionesValidas = ['America/Buenos_Aires', 'America/Catamarca', 'America/Cordoba', 'America/Jujuy', 'America/Argentina/La_Rioja', 'America/Mendoza', 'America/Argentina/Rio_Gallegos', 'America/Argentina/Salta', 'America/Argentina/San_Juan', 'America/Argentina/San_Luis', 'America/Argentina/Tucuman', 'America/Argentina/Ushuaia'];
 
     constructor(
@@ -24,7 +23,9 @@ export class LoginComponent implements OnInit {
         private auth: Auth,
         private router: Router,
         public ws: WebSocketService
-    ) { }
+    ) {
+
+    }
 
     ngOnInit() {
         this.auth.logout();
