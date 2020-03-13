@@ -1,4 +1,4 @@
-import { Component, Output, Input, EventEmitter, OnInit, ViewChildren, QueryList } from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit, ViewChildren, QueryList, ViewChild, ElementRef } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { environment } from '../../../../../environments/environment';
 import { RupElement } from '../elementos';
@@ -14,17 +14,26 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     @Input() permiteCarga: boolean;
     @Input() parametroRegistro;
 
-    @ViewChildren('upload') childsComponents: QueryList<any>;
-    imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
-    extensions = [
-        // Documentos
-        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt',
-        // Audio/Video
-        'mp3', 'mp4', 'm4a', 'mpeg', 'mpg', 'mov', 'flv', 'avi', 'mkv',
-        // Otros
-        'dat'
+    @ViewChildren('uploaded') childComponents: QueryList<any>;
+    @ViewChild('upload', { static: true }) pcUpload: ElementRef;
+    @ViewChild('dropMe', { static: true }) dropMe: QueryList<any>;
+    // @ViewChildren('upload') childComponents: QueryList<any>;
+    image = [
+        'bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw', 'jpeg_large', 'jpeg_small'
+    ];
+    audio = [
+        'wav', 'm4a', 'mp3', 'ogg', 'opus', 'aac', 'aiff'
     ];
 
+    video = [
+        'mp4', 'mpeg', 'mpg', 'mov', 'flv', 'avi', 'mkv', 'ogv'
+    ];
+
+    other = [
+        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt', 'dat'
+    ];
+
+    extensions: any[];
     adjunto: any;
     loading = false;
     waiting = false;
@@ -36,8 +45,18 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     indice;
     fileToken: String = null;
 
+    items = [
+        { label: 'Subir desde PC', handler: (() => { this.pcUpload.nativeElement.click(); return false; }) },
+        { label: 'Subir desde App móvil', handler: (() => { this.fromMobile(); }) }
+    ];
+
+    mime: any;
+
     public descendientesInformeClinico: ISnomedConcept[] = [];
     public hoy = moment(new Date()).endOf('day').toDate();
+
+
+
 
     ngOnInit() {
 
@@ -45,7 +64,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
             this.permiteCarga = true;
         }
 
-        this.extensions = this.extensions.concat(this.imagenes);
+        this.extensions = this.image.concat(this.audio).concat(this.video).concat(this.other);
 
         if (!isUndefined(this.parametroRegistro)) {
             this.registro = this.parametroRegistro;
@@ -63,26 +82,35 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         this.snomedService.getQuery({ expression: '^4681000013102' }).subscribe(result => {
             this.descendientesInformeClinico = result;
         });
+
+    }
+
+    ngAfterContentChecked(): void {
+        //Called after every check of the component's or directive's content.
+        //Add 'implements AfterContentChecked' to the class.
+        (this.pcUpload.nativeElement as HTMLElement).style.display = 'none';
     }
 
     changeListener($event): void {
         this.readThis($event.target);
     }
 
-
     readThis(inputValue: any): void {
         let ext = this.fileExtension(inputValue.value);
         this.errorExt = false;
         if (!this.extensions.find((item) => item === ext.toLowerCase())) {
-            (this.childsComponents.first as any).nativeElement.value = '';
+            (this.childComponents.first as any).nativeElement.value = '';
             this.errorExt = true;
+            if (!this.waiting && !this.soloValores) {
+                this.plex.info('info', 'El formato de archivo no se reconoce y no se puede adjuntar.', 'Tipo de archivo no soportado');
+            }
             return;
         }
         let file: File = inputValue.files[0];
         let myReader: FileReader = new FileReader();
 
         myReader.onloadend = (e) => {
-            (this.childsComponents.first as any).nativeElement.value = '';
+            (this.childComponents.first as any).nativeElement.value = '';
             let metadata = {
                 prestacion: this.prestacion.id,
                 registro: this.registro.id
@@ -108,12 +136,24 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         }
     }
 
-    esImagen(extension) {
-        return this.imagenes.find(x => x === extension.toLowerCase());
+
+    esDeTipo(extension, tipo: 'image' | 'audio' | 'video' | 'other') {
+        return this[String(tipo)].find(x => x === extension.toLowerCase());
     }
 
-    imageRemoved($event) {
-        let index = this.registro.valor.documentos.indexOf($event);
+    confirmarEliminarImagen($event) {
+        this.plex.confirm('¿Eliminar imagen?', 'Confirmación', 'Eliminar', 'Cancelar').then(confirmed => {
+            if (confirmed) {
+                this.eliminarImagen($event);
+                return true;
+            } else {
+                return false;
+            }
+        });
+    }
+
+    eliminarImagen(ev) {
+        let index = this.registro.valor.documentos.indexOf(ev);
         this.registro.valor.documentos.splice(index, 1);
     }
 

@@ -1,3 +1,14 @@
+@import '../variables';
+
+form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 105px;
+    flex-direction: column;
+    height: auto;
+}
+
 .image-container {
     background-color: #fdfdfd;
     padding: 0 10px 0 10px;
@@ -11,6 +22,10 @@
 
 .app-waiting {
     display: inline-block;
+}
+
+.subir-documento {
+    min-height: 105px;
 }
 
 a.adjunto {
@@ -32,6 +47,19 @@ a.adjunto {
     max-width: 200px;
     max-height: 86px;
 }
+
+audio {
+    height: 45px;
+    width: 220px;
+    max-height: 125px;
+}
+
+video {
+    height: auto;
+    width: 220px;
+    max-height: 125px;
+}
+
 
 .x-mark {
     position: absolute;
@@ -138,37 +166,141 @@ a.adjunto {
 }
 
 @-moz-keyframes parpadeo {
-    0% {
-        opacity: 1.0;
-    }
-    50% {
-        opacity: 0.0;
-    }
-    100% {
-        opacity: 1.0;
-    }
+    0% { opacity: 1.0;}
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
 }
 
 @-webkit-keyframes parpadeo {
-    0% {
-        opacity: 1.0;
-    }
-    50% {
-        opacity: 0.0;
-    }
-    100% {
-        opacity: 1.0;
-    }
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0;}
 }
 
 @keyframes parpadeo {
-    0% {
-        opacity: 1.0;
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}
+
+section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-row-gap: 5px;
+
+    .adjunto {
+        display: flex;
+        flex-flow: column;
+        justify-content: flex-start;
+        width: 225px;
+        border: 0;
+        margin-right: 2px;
+        // border: 2px solid #5b5b5b;
+
+        // &:hover {
+        //     border: 2px inset #e2e2e2;
+        //     transition: all ease .25s;
+        // }
+        .img-container {
+            // max-height: 300px;
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+            background: #5b5b5b;
+            justify-content: center;
+            flex-direction: column;
+
+            .miniatura {
+                height: 100%;
+                max-height: 220px;
+            }
+
+            plex-button {
+                position: absolute;
+                top: 3px;
+                right: 3px;
+            }
+        }
+
+        // Meh
+        .blend-overlay {
+            padding: 5px;
+            background: #3f3f3f;
+            position: relative;
+            bottom: 0px;
+            width: 225px;
+            height: 90px;
+
+            .info-container {
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                padding-left: 5px;
+                width: 100%;
+
+                .fecha {
+                    align-self: flex-start;
+                    justify-self: flex-end;
+                    margin-top: 8px;
+                }
+
+                .term {
+                    display: flex;
+                    align-items: flex-end;
+                    height: 45px;
+                    font-size: .7rem;
+                    color: #e2e2e2;
+                    margin-top: 4px;
+                }
+            }
+        }
+
+        .form-container {
+            input {
+                border: 1px solid lightgray;
+            }
+        }
     }
-    50% {
-        opacity: 0.0;
+
+    .agregar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 224px;
+        height: 250px;
+        border: 0;
+        border: 2px dashed $blue;
+        position: relative;
+
+        .dropdown-menu {
+            width: 224px;
+            justify-content: center;
+            display: flex;
+            transition: all ease .25s;
+        }
+
+        .dropdown-toggle::after {
+            display: none;
+        }
+
     }
-    100% {
-        opacity: 1.0;
+
+    .agregar-overlay {
+        position: absolute;
+        // top: 0;
+        width: 224px;
+        height: inherit;
+        z-index: 1;
+        pointer-events: auto;
+
+        // &:hover {
+        //     border: 1px solid #e2e2e2;
+        //     transition: all ease .25s;
+        // }
     }
+}
+
+.font-size-150 i {
+    font-size: 150px;
+    color: #ddd;
 }
