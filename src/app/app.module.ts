@@ -1,3 +1,4 @@
+import { ModulosService } from './services/novedades/modulo.service';
 
 import { AgregarPacienteComponent } from './components/turnos/gestor-agendas/operaciones-agenda/agregar-paciente.component';
 /*
@@ -394,7 +395,7 @@ import { SliderComponent } from './components/novedades/componentes/slider/slide
 import { HeaderNovedadesComponent } from './components/novedades/header-novedades/header-novedades.component';
 import { ListaNovedadesComponent } from './components/novedades/lista-novedades/lista-novedades.component';
 import { DetalleNovedadComponent } from './components/novedades/lista-novedades/detalle-novedad/detalle-novedad.component';
-import { RegistroNovedadesService } from './services/novedades/registro-novedades.service';
+import { NovedadesService } from './services/novedades/novedades.service';
 import { CommonNovedadesService } from './components/novedades/common-novedades.service';
 
 import { ConceptosTurneablesService } from './services/conceptos-turneables.service';
@@ -591,7 +592,8 @@ registerLocaleData(localeEs, 'es');
         Plex,
         Server,
         ExcelService,
-        RegistroNovedadesService,
+        NovedadesService,
+        ModulosService,
         AdjuntosService,
         RoutingGuard,
         RoutingNavBar,

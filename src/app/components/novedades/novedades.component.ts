@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { RegistroNovedadesService } from '../../services/novedades/registro-novedades.service';
+import { NovedadesService } from '../../services/novedades/novedades.service';
 import { AdjuntosService } from '../../modules/rup/services/adjuntos.service';
 import { CommonNovedadesService } from './common-novedades.service';
 import { Router } from '@angular/router';
@@ -15,7 +15,7 @@ export class NovedadesComponent implements OnInit {
     public novedadSeleccionada;
 
     constructor(
-        private registroNovedades: RegistroNovedadesService,
+        private registroNovedades: NovedadesService,
         public adjuntos: AdjuntosService,
         private router: Router,
         private commonNovedadesService: CommonNovedadesService) {
@@ -32,7 +32,7 @@ export class NovedadesComponent implements OnInit {
     public loadNovedades() {
         const params: any = {
         };
-        this.registroNovedades.getAll(params).subscribe(
+        this.registroNovedades.get(params).subscribe(
             registros => {
                 this.listadoNovedades = registros;
             },

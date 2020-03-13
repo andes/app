@@ -2,24 +2,24 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 import { CommonNovedadesService } from '../../common-novedades.service';
-import { IRegistroNovedades } from '../../../../interfaces/novedades/IRegistroNovedades.interface';
+import { INovedad } from '../../../../interfaces/novedades/INovedad.interface';
 import { environment } from '../../../../../environments/environment';
 import { AdjuntosService } from '../../../../modules/rup/services/adjuntos.service';
-import { RegistroNovedadesService } from '../../../../services/novedades/registro-novedades.service';
+import { NovedadesService } from '../../../../services/novedades/novedades.service';
 
 @Component({
     selector: 'detalle-novedad',
     templateUrl: './detalle-novedad.component.html',
 })
 export class DetalleNovedadComponent implements OnInit {
-    novedad$: IRegistroNovedades;
+    novedad$: INovedad;
     private fileToken;
     private modulo;
 
     constructor(
         private router: Router,
         private route: ActivatedRoute,
-        private registroNovedades: RegistroNovedadesService,
+        private registroNovedades: NovedadesService,
         public adjuntos: AdjuntosService,
         private commonNovedadesService: CommonNovedadesService) {
         let novedad;
@@ -46,7 +46,7 @@ export class DetalleNovedadComponent implements OnInit {
         if (this.modulo) {
             params.search = this.modulo;
         };
-        this.registroNovedades.getAll(params).subscribe(
+        this.registroNovedades.get(params).subscribe(
             registros => {
                 this.novedad$ = registros[0];
             },

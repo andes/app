@@ -1,11 +1,10 @@
-import { IModuloAndes } from './IModuloAndes.interface';
-
-export interface IRegistroNovedades {
+import { IModulo } from './IModulo.interface';
+export interface INovedad {
     _id?: string;
     titulo: string;
     fecha: Date;
     descripcion: string;
-    modulo: IModuloAndes;
+    modulo: IModulo;
     imagenes?: File[];
     activa: boolean;
 }
