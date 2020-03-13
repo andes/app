@@ -318,7 +318,6 @@ export class PrestacionValidacionComponent implements OnInit {
             return false;
         }
         this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
-            this.servicioPrestacion.clearConceptosPaciente(this.paciente.id);
             if (!validar) {
                 return false;
             } else {
@@ -355,6 +354,8 @@ export class PrestacionValidacionComponent implements OnInit {
                             this.servicioAgenda.patch(localStorage.idAgenda, dto).subscribe();
                         }
                     } else {
+                        this.servicioPrestacion.clearConceptosPaciente(this.paciente.id);
+
                         // actualizamos las prestaciones de la HUDS
                         this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id, true).subscribe(prestacionesSolicitadas => {
                             if (prestacionesSolicitadas) {
