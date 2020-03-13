@@ -14,8 +14,6 @@ export class LoginComponent implements OnInit {
     public usuario: number;
     public password: string;
     public loading = false;
-    public deshabilitar = false;
-    public autoFocus = 1;
     public regionesValidas = ['America/Buenos_Aires', 'America/Catamarca', 'America/Cordoba', 'America/Jujuy', 'America/Argentina/La_Rioja', 'America/Mendoza', 'America/Argentina/Rio_Gallegos', 'America/Argentina/Salta', 'America/Argentina/San_Juan', 'America/Argentina/San_Luis', 'America/Argentina/Tucuman', 'America/Argentina/Ushuaia'];
 
     constructor(
@@ -40,7 +38,6 @@ export class LoginComponent implements OnInit {
             if (this.regionesValidas.indexOf(timeZone) === -1) {
                 this.plex.info('danger', 'Su computadora está configurada en una región no válida. Por favor, verifique y vuelva a intentar.');
                 this.loading = false;
-                this.deshabilitar = false;
             } else {
                 result = true;
             }
@@ -49,8 +46,7 @@ export class LoginComponent implements OnInit {
     }
 
     login(event) {
-        if (event.formValid && this.husoHorarioCorrecto()) {
-            this.deshabilitar = true;
+        if (event.formValid) {
             this.loading = true;
             this.auth.login(this.usuario.toString(), this.password).subscribe(() => {
                 this.ws.setToken(window.sessionStorage.getItem('jwt'));
@@ -58,7 +54,6 @@ export class LoginComponent implements OnInit {
             }, () => {
                 this.plex.info('danger', 'Usuario o contraseña incorrectos');
                 this.loading = false;
-                this.deshabilitar = false;
             });
         }
     }
