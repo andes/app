@@ -20,6 +20,7 @@ import { OrganizacionService } from '../../../services/organizacion.service';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HistorialBusquedaService } from '../services/historialBusqueda.service';
+import { concat } from 'rxjs';
 @Component({
     selector: 'paciente-cru',
     templateUrl: 'paciente-cru.html',
@@ -123,6 +124,7 @@ export class PacienteCruComponent implements OnInit {
     public nombrePattern: string;
     public showDeshacer = false;
     public patronDocumento = /^[1-9]{1}[0-9]{5,7}$/;
+    private pacienteOld = null;
     // PARA LA APP MOBILE
     public showMobile = false;
     public checkPass = false;
@@ -581,8 +583,18 @@ export class PacienteCruComponent implements OnInit {
                 pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadActual;
             }
 
-            this.pacienteService.save(pacienteGuardar, ignoreCheck, false).subscribe(
-                (resultadoSave: any) => {
+            let guardar;
+            if (this.pacienteOld) {
+                const savePacienteOld = this.pacienteService.post(this.pacienteOld, true);
+                const savePacienteNew = this.pacienteService.save(pacienteGuardar, ignoreCheck, false);
+                guardar = concat(savePacienteNew, savePacienteOld);
+            } else {
+                guardar = this.pacienteService.save(pacienteGuardar, ignoreCheck, false);
+            }
+
+            guardar.subscribe(resultadoSave => {
+                if (resultadoSave.id === pacienteGuardar.id) {
+                    // paciente guardado/revalidado (debe persistir)
                     // Existen sugerencias de pacientes similares?
                     if (resultadoSave.resultadoMatching && resultadoSave.resultadoMatching.length > 0) {
                         this.pacientesSimilares = this.escaneado ? resultadoSave.resultadoMatching.filter(elem => elem.paciente.estado === 'validado') : resultadoSave.resultadoMatching;
@@ -597,21 +609,29 @@ export class PacienteCruComponent implements OnInit {
                         if (this.changeRelaciones) {
                             this.saveRelaciones(resultadoSave);
                         }
-                        if (this.escaneado) {
-                            // Si el paciente fue escaneado se agrega al historial de búsqueda
-                            this.historialBusquedaService.add(resultadoSave);
-                        }
+                        this.historialBusquedaService.add(resultadoSave);
                         this.plex.info('success', 'Los datos se actualizaron correctamente');
-
                         this.redirect(resultadoSave);
                     }
-                },
-                error => {
-                    this.plex.info('warning', 'Error guardando el paciente');
+                } else if (resultadoSave.id) {
+                    // version de paciente antes de la revalidacion (se vincula al revalidado)
+                    this.pacienteOld.activo = false;
+                    let dataLink = {
+                        entidad: 'ANDES',
+                        valor: resultadoSave.id
+                    };
+                    this.pacienteService.postIdentificadores(pacienteGuardar.id, {
+                        'op': 'link',
+                        'dto': dataLink
+                    }).subscribe();
+
                 }
-            );
+            }, error => {
+                this.plex.info('warning', 'Error guardando el paciente');
+            });
         }
     }
+
 
     private redirect(resultadoSave?: any) {
         switch (this.origen) {
@@ -744,10 +764,8 @@ export class PacienteCruComponent implements OnInit {
 
 
     checkDisableValidar() {
-        if (!this.validado || !this.pacienteModel.foto) {
-            let sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-            this.disableValidar = !(parseInt(this.pacienteModel.documento, 0) >= 99999 && sexo !== undefined && sexo !== 'otro');
-        }
+        let sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
+        this.disableValidar = !(parseInt(this.pacienteModel.documento, 0) >= 99999 && sexo !== undefined && sexo !== 'otro');
     }
 
     validarPaciente(event) {
@@ -766,16 +784,16 @@ export class PacienteCruComponent implements OnInit {
         this.pacienteService.validar(this.pacienteModel).subscribe(
             resultado => {
                 this.loading = false;
-                if (resultado.existente) {
-                    // PACIENTE EXISTENTE EN ANDES
-                    if (resultado.paciente.estado === 'validado') {
-                        this.validado = true;
-                    }
-                    this.plex.info('info', 'El paciente que está cargando ya existe en el sistema', 'Atención');
-                    this.pacienteModel = resultado.paciente;
-                } else if (resultado.validado) {
+                if (resultado.existente || resultado.paciente.estado === 'validado') {
                     // VALIDACION MEDIANTE FUENTES AUTENTICAS EXITOSA
                     this.setBackup();
+                    // es paciente validado y sufrio modificaciones desde su ultima validacion?
+                    if (this.pacienteModel.estado === 'validado' && this.cambiosEnRevalidacion(resultado.paciente)) {
+                        // se guarda una copia del paciente antes de la revalidacion para luego vincularlo con el revalidado
+                        this.pacienteOld = Object.assign({}, this.pacienteModel);
+                        this.pacienteOld.id = undefined;
+                        this.pacienteOld._id = undefined;
+                    }
                     this.validado = true;
                     this.showDeshacer = true;
                     this.pacienteModel.nombre = resultado.paciente.nombre;
@@ -811,6 +829,14 @@ export class PacienteCruComponent implements OnInit {
         );
     }
 
+    // Verifica si existen cambios en los datos basicos de un paciente desde la ultima validacion
+    private cambiosEnRevalidacion(recienteValidado) {
+        return recienteValidado.nombre.toUpperCase() !== this.pacienteModel.nombre.toUpperCase() ||
+            recienteValidado.apellido.toUpperCase() !== this.pacienteModel.apellido.toUpperCase() ||
+            recienteValidado.sexo !== this.pacienteModel.sexo ||
+            Math.abs(moment(this.pacienteModel.fechaNacimiento).diff(moment(recienteValidado.fechaNacimiento), 'hours')) > 12;
+    }
+
     private setBackup() {
         this.backUpDatos['nombre'] = this.pacienteModel.nombre;
         this.backUpDatos['apellido'] = this.pacienteModel.apellido;
@@ -842,6 +868,7 @@ export class PacienteCruComponent implements OnInit {
         }
         this.disableValidar = false;
         this.pacienteModel.direccion.splice(1);
+        this.pacienteOld = null;
     }
 
     checkDisableGeolocalizar(direccion) {

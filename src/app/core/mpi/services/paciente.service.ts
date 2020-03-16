@@ -84,8 +84,8 @@ export class PacienteService {
      * Metodo post. Inserta un objeto paciente nuevo.
      * @param {IPaciente} paciente Recibe IPaciente
      */
-    post(paciente: IPaciente): Observable<IPaciente> {
-        return this.server.post(this.pacienteUrl, paciente);
+    post(paciente: IPaciente, ignoreRepetidos: boolean = false): Observable<IPaciente> {
+        return this.server.post(this.pacienteUrl, { paciente, ignoreRepetidos });
     }
     /**
      * Consulta fuentes auténticas para obtener datos del paciente validados.

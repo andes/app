@@ -312,8 +312,8 @@
                      (click)="gestionMobile(false)">
         </plex-button>
         <plex-button label="Cancelar" type="danger" position="left" (click)="cancel()"></plex-button>
-        <plex-button *ngIf="!validado || !pacienteModel.foto" class="pr-1" label="Validar Paciente" type="info"
-                     position="right" [disabled]="disableValidar" (click)="validarPaciente($event)">
+        <plex-button class="pr-1" label="Validar Paciente" type="info" position="right" [disabled]="disableValidar"
+                     (click)="validarPaciente($event)">
         </plex-button>
         <plex-button *ngIf="showDeshacer" class="pr-1" label="Deshacer Validación" type="warning" position="right"
                      (click)="deshacerValidacion()"></plex-button>
