@@ -24,6 +24,12 @@
                         <div class="subtitulo">{{caja.subtitulo}}</div>
                         <div class="detalle">{{caja.descripcion | titlecase}}</div>
                     </div>
+                    <div *ngIf="this.novedades[caja._id]?.length > 0" (click)="irANovedades(caja._id)"
+                         class="notificacion">
+                        <div class="bg-danger">
+                            <plex-icon name="bell"></plex-icon>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

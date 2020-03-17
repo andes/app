@@ -1,3 +1,4 @@
+import { CommonNovedadesService } from './../novedades/common-novedades.service';
 import { ModulosService } from './../../services/novedades/modulo.service';
 import { Plex } from '@andes/plex';
 import { Component, AfterViewInit, HostBinding } from '@angular/core';
@@ -39,37 +40,46 @@ export class InicioComponent implements AfterViewInit {
     public accessList: any = [];
     public provincia = LABELS.provincia;
     public cajasModulos: any = [];
+    public novedades: any[] = [];
 
 
     constructor(public auth: Auth, public appComponent: AppComponent, private plex: Plex,
-        private registroNovedades: NovedadesService,
-        private ModulosService: ModulosService,
+        private commonNovedadesService: CommonNovedadesService,
+        private modulosService: ModulosService,
         private router: Router) { }
 
     ngAfterViewInit() {
-        let params: any = {};
         let paramsModulos: any = {};
         window.setTimeout(() => {
             this.loading = true;
             let permisos = this.auth.getPermissions('?');
             if (this.auth.getPermissions('turnos:planificarAgenda:?').length > 0) {
-                permisos.push("turnos:planificarAgenda");
+                permisos.push('turnos:planificarAgenda');
             }
             if (this.auth.getPermissions('turnos:darTurnos:?').length > 0) {
-                permisos.push("turnos:darTurnos");
+                permisos.push('turnos:darTurnos');
             }
             if (this.auth.getPermissions('internacion:mapaDeCamas:?').length > 0) {
-                permisos.push("internacion:mapaDeCamas");
+                permisos.push('internacion:mapaDeCamas');
             }
             if (this.auth.getPermissions('internacion:inicio:?').length > 0) {
-                permisos.push("internacion:inicio");
+                permisos.push('internacion:inicio');
             }
             paramsModulos.permisos = permisos;
-            this.ModulosService.get(paramsModulos).subscribe(
+            this.modulosService.get(paramsModulos).subscribe(
                 registros => {
                     this.cajasModulos = registros;
                     if (registros.length) {
                         this.denied = false;
+                        let modulos = registros.map(p => {
+                            return p._id;
+                        });
+                        this.commonNovedadesService.setNovedadesSinFiltrar(modulos);
+                        this.commonNovedadesService.getNovedadesSinFiltrar().subscribe(novedades => {
+                            modulos.forEach((modulo) => {
+                                this.novedades[modulo] = novedades.filter(n => n.modulo._id === modulo);
+                            });
+                        });
                     } else {
                         this.denied = true;
                     }
@@ -77,8 +87,7 @@ export class InicioComponent implements AfterViewInit {
                 },
                 (err) => {
                 }
-            );;
-
+            );
         });
     }
 
@@ -88,6 +97,7 @@ export class InicioComponent implements AfterViewInit {
     }
 
     irANovedades(modulo) {
-        this.router.navigate(['novedades'], { state: { modulo: modulo } });
+        this.commonNovedadesService.setNovedades(modulo);
+        this.router.navigate(['novedades']);
     }
 }

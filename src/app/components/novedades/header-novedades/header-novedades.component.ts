@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-// Mock-data
+import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
-import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
-import { NovedadesService } from '../../../services/novedades/novedades.service';
 import { CommonNovedadesService } from '../common-novedades.service';
+import { INovedad } from '../../../interfaces/novedades/INovedad.interface';
 
 @Component({
     selector: 'header-novedades',
@@ -23,37 +21,19 @@ import { CommonNovedadesService } from '../common-novedades.service';
 
 export class HeaderNovedadesComponent implements OnInit {
 
-    public listadoNovedades;
+    public novedades$;
     selectedId: number;
-    public fileToken;
 
     constructor(
-        private route: ActivatedRoute,
-        private registroNovedades: NovedadesService,
-        public adjuntos: AdjuntosService,
         private router: Router,
         private commonNovedadesService: CommonNovedadesService
     ) {
-        this.adjuntos.generateToken().subscribe((data: any) => {
-            this.fileToken = data.token;
-            this.loadNovedades();
-        });
     }
 
     ngOnInit() {
-
-    }
-
-    public loadNovedades() {
-        const params: any = {
-        };
-        this.registroNovedades.get(params).subscribe(
-            registros => {
-                this.listadoNovedades = registros;
-            },
-            (err) => {
-            }
-        );
+        this.commonNovedadesService.getNovedadesSinFiltrar().subscribe((novedades) => {
+            this.novedades$ = novedades;
+        });
     }
 
     public formatFecha(fecha: string) {
@@ -72,12 +52,12 @@ export class HeaderNovedadesComponent implements OnInit {
     createUrl(doc) {
         if (doc.id) {
             let apiUri = environment.API;
-            return 'http:' + apiUri + '/modules/registro-novedades/store/' + doc.id + '?token=' + this.fileToken;
+            return 'http:' + apiUri + '/modules/registro-novedades/store/' + doc.id + '?token=' + this.commonNovedadesService.getToken();
         }
     }
 
-    public onSelectedNovedadChange(novedad) {
-        this.commonNovedadesService.setSelectedNovedad(novedad);
+    public onSelectedNovedadChange(novedad: INovedad) {
+        this.commonNovedadesService.setNovedades('', novedad);
         this.router.navigate(['novedades'], { state: { novedad: novedad } });
     }
 }

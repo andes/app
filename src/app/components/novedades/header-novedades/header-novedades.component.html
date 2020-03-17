@@ -1,6 +1,6 @@
 <div class="novedades-home">
     <plex-list>
-        <plex-item *ngFor="let novedad of listadoNovedades; let indiceNovedad = index"
+        <plex-item *ngFor="let novedad of novedades$; let indiceNovedad = index"
                    (click)="onSelectedNovedadChange(novedad)">
             <img *ngIf="novedad.imagenes.length > 0" [src]="getFoto(novedad)" alt="">
             <!-- Si no hay imagen, mostrar logo de Andes por default -->

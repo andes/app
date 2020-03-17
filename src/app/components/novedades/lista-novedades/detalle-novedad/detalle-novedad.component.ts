@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-
 import { CommonNovedadesService } from '../../common-novedades.service';
 import { INovedad } from '../../../../interfaces/novedades/INovedad.interface';
 import { environment } from '../../../../../environments/environment';
 import { AdjuntosService } from '../../../../modules/rup/services/adjuntos.service';
-import { NovedadesService } from '../../../../services/novedades/novedades.service';
 
 @Component({
     selector: 'detalle-novedad',
@@ -13,46 +10,10 @@ import { NovedadesService } from '../../../../services/novedades/novedades.servi
 })
 export class DetalleNovedadComponent implements OnInit {
     novedad$: INovedad;
-    private fileToken;
-    private modulo;
 
     constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private registroNovedades: NovedadesService,
         public adjuntos: AdjuntosService,
         private commonNovedadesService: CommonNovedadesService) {
-        let novedad;
-        if (this.router.getCurrentNavigation().extras.state) {
-            novedad = this.router.getCurrentNavigation().extras.state.novedad;
-        }
-        if (this.router.getCurrentNavigation().extras.state) {
-            this.modulo = this.router.getCurrentNavigation().extras.state.modulo;
-        }
-        this.adjuntos.generateToken().subscribe((data: any) => {
-            this.fileToken = data.token;
-            if (novedad) {
-                this.novedad$ = novedad;
-            } else {
-                this.loadFirstNovedad();
-            }
-        });
-
-    }
-
-    public loadFirstNovedad() {
-        const params: any = {
-        };
-        if (this.modulo) {
-            params.search = this.modulo;
-        };
-        this.registroNovedades.get(params).subscribe(
-            registros => {
-                this.novedad$ = registros[0];
-            },
-            (err) => {
-            }
-        );
     }
 
     ngOnInit() {
@@ -77,7 +38,7 @@ export class DetalleNovedadComponent implements OnInit {
     createUrl(doc) {
         if (doc.id) {
             let apiUri = environment.API;
-            return 'http:' + apiUri + '/modules/registro-novedades/store/' + doc.id + '?token=' + this.fileToken;
+            return 'http:' + apiUri + '/modules/registro-novedades/store/' + doc.id + '?token=' + this.commonNovedadesService.getToken();
         }
     }
 

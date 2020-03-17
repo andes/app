@@ -15,46 +15,23 @@ import { environment } from '../../../../environments/environment';
 })
 export class ListaNovedadesComponent implements OnInit {
     selectedId: number;
-    public listadoNovedades = [];
-    public fileToken;
-    private modulo;
+    public novedades$ = [];
 
     constructor(
-        private registroNovedades: NovedadesService,
         public adjuntos: AdjuntosService,
-        private route: ActivatedRoute,
         private router: Router,
         private commonNovedadesService: CommonNovedadesService
     ) {
-        this.adjuntos.generateToken().subscribe((data: any) => {
-            this.fileToken = data.token;
-        });
-        if (this.router.getCurrentNavigation().extras.state) {
-            this.modulo = this.router.getCurrentNavigation().extras.state.modulo;
-        }
     }
 
     ngOnInit() {
-        this.loadNovedades();
+        this.commonNovedadesService.getNovedades().subscribe((novedades) => {
+            this.novedades$ = novedades;
+        });
     }
 
     verDetalleNovedad() {
         this.router.navigate(['novedades']);
-    }
-
-    public loadNovedades() {
-        let params: any = {
-        };
-        if (this.modulo) {
-            params.search = this.modulo;
-        }
-        this.registroNovedades.get(params).subscribe(
-            registros => {
-                this.listadoNovedades = registros;
-            },
-            (err) => {
-            }
-        );
     }
 
     public formatFecha(fecha: string) {
@@ -73,7 +50,7 @@ export class ListaNovedadesComponent implements OnInit {
     createUrl(doc) {
         if (doc.id) {
             let apiUri = environment.API;
-            return 'http:' + apiUri + '/modules/registro-novedades/store/' + doc.id + '?token=' + this.fileToken;
+            return 'http:' + apiUri + '/modules/registro-novedades/store/' + doc.id + '?token=' + this.commonNovedadesService.getToken();
         }
     }
 
