@@ -58,8 +58,7 @@ export class MapaCamasService {
     public ambito = 'internacion';
     public capa;
     public fecha: Date;
-    public snap: ISnapshot[];
-    public cama: ISnapshot;
+    public fechaIngresoMax = moment().toDate();
 
     constructor(
         private camasHTTP: MapaCamasHTTP,
@@ -89,6 +88,11 @@ export class MapaCamasService {
             switchMap(([ambito, capa, fecha]) => {
                 return this.camasHTTP.snapshot(ambito, capa, fecha);
             }),
+            map((snapshot: ISnapshot[]) => {
+                return snapshot.sort((a, b) => (a.unidadOrganizativa.term.localeCompare(b.unidadOrganizativa.term)) ||
+                    (a.sectores[a.sectores.length - 1].nombre.localeCompare(b.sectores[b.sectores.length - 1].nombre + '')) ||
+                    (a.nombre.localeCompare('' + b.nombre)));
+            }),
             cache(),
         );
 
@@ -100,10 +104,9 @@ export class MapaCamasService {
             this.tipoCamaSelected,
             this.esCensable
         ).pipe(
-            map(([camas, paciente, unidadOrganizativa, sector, tipoCama, esCensable]) => {
-                this.snap = camas;
-                return this.filtrarSnapshot(camas, paciente, unidadOrganizativa, sector, tipoCama, esCensable);
-            })
+            map(([camas, paciente, unidadOrganizativa, sector, tipoCama, esCensable]) =>
+                this.filtrarSnapshot(camas, paciente, unidadOrganizativa, sector, tipoCama, esCensable)
+            )
         );
 
         this.prestacion$ = combineLatest(
@@ -209,6 +212,26 @@ export class MapaCamasService {
         );
     }
 
+    verificarCamaDesocupar(cama: ISnapshot, prestacion: IPrestacion) {
+        return this.historial('internacion', cama.fecha, moment().toDate(), prestacion).pipe(
+            map((movimientos: ISnapshot[]) => {
+                let puedeDesocupar = 'noPuede';
+                if (!prestacion.ejecucion.registros[1] || !prestacion.ejecucion.registros[1].valor.InformeEgreso) {
+                    if (movimientos.length === 1) {
+                        puedeDesocupar = 'puede';
+                    } else {
+                        let movOrd = movimientos.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+                        if (movOrd[movOrd.length - 1].nombre === cama.nombre) {
+                            puedeDesocupar = 'puede';
+                        }
+                    }
+                }
+
+                return puedeDesocupar;
+            })
+        );
+    }
+
     setAmbito(ambito: string) {
         this.ambito2.next(ambito);
         this.ambito = ambito;
@@ -230,6 +253,7 @@ export class MapaCamasService {
 
     setFechaHasta(fecha: Date) {
         this.fechaIngresoHasta.next(fecha);
+        this.fechaIngresoMax = fecha;
     }
 
     setView(view: string) {
@@ -237,7 +261,6 @@ export class MapaCamasService {
     }
 
     select(cama: ISnapshot) {
-        this.cama = cama;
         if (!cama) {
             return this.selectedCama.next({ idCama: null } as any);
         }
@@ -245,28 +268,10 @@ export class MapaCamasService {
     }
 
     selectPaciente(paciente: any) {
-        if (!paciente || !paciente.id) {
-            this.selectedPaciente.next({ id: null } as any);
-        } else {
-            let cama = null;
-            this.snap.map((snap) => {
-                if (snap.estado === 'ocupada') {
-                    if (snap.id !== this.cama.id) {
-                        if (snap.paciente.id === paciente.id) {
-                            cama = snap;
-                        }
-                    }
-                }
-            });
-            if (!cama) {
-                this.selectedPaciente.next(paciente);
-            } else {
-                this.selectedPaciente.next({ id: null } as any);
-                this.plex.info('warning', `${paciente.nombreCompleto} (${paciente.documento}) se encuentra internado
-                en la cama <strong>${cama.nombre}</strong> en <strong>${cama.sectores[cama.sectores.length - 1].nombre}</strong>
-                de la unidad organizativa <strong>${cama.unidadOrganizativa.term}</strong>.`, 'Paciente ya internado');
-            }
+        if (!paciente) {
+            return this.selectedPaciente.next({ id: null } as any);
         }
+        this.selectedPaciente.next(paciente);
     }
 
     selectPrestacion(prestacion: IPrestacion) {
@@ -274,7 +279,6 @@ export class MapaCamasService {
             return this.selectedPrestacion.next({ id: null } as any);
         }
         this.selectedPrestacion.next(prestacion);
-
     }
 
     filtrarSnapshot(camas: ISnapshot[], paciente: string, unidadOrganizativa: ISnomedConcept, sector: ISectores, tipoCama: ISnomedConcept, esCensable) {
@@ -338,7 +342,7 @@ export class MapaCamasService {
         return this.camasHTTP.snapshot(ambito, capa, fecha, idInternacion, estado) as any;
     }
 
-    historial(type: 'cama' | 'internacion', desde: Date, hasta: Date): Observable<ISnapshot[]> {
+    historial(type: 'cama' | 'internacion', desde: Date, hasta: Date, prestacion = null): Observable<ISnapshot[]> {
         return combineLatest(
             this.ambito2,
             this.capa2,
@@ -346,15 +350,18 @@ export class MapaCamasService {
             this.selectedPrestacion,
             this.view
         ).pipe(
-            switchMap(([ambito, capa, cama, prestacion, view]) => {
+            switchMap(([ambito, capa, selectedCama, selectedPrestacion, view]) => {
                 if (type === 'cama') {
-                    return this.camasHTTP.historial(ambito, capa, desde, hasta, { idCama: cama.idCama });
+                    return this.camasHTTP.historial(ambito, capa, desde, hasta, { idCama: selectedCama.idCama });
                 } else if (type === 'internacion') {
-                    if (view === 'mapa-camas') {
-                        return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: cama.idInternacion });
-                    } else if (view === 'listado-internacion') {
+                    if (prestacion) {
                         return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: prestacion.id });
-
+                    } else {
+                        if (view === 'mapa-camas') {
+                            return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: selectedCama.idInternacion });
+                        } else if (view === 'listado-internacion') {
+                            return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: selectedPrestacion.id });
+                        }
                     }
                 }
             })

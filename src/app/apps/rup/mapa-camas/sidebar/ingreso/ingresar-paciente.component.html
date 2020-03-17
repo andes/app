@@ -43,7 +43,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md">
-                                <ng-container *ngIf="(camas$ | async) as camas">
+                                <ng-container *ngIf="camas$ | async as camas">
                                     <plex-select *ngIf="!prestacion" [required]="true" [(ngModel)]="cama" name="cama"
                                                  [data]="camas" placeholder="Elija cama" label="Cama" idField="nombre"
                                                  labelField="nombre" (change)="selectCama(cama)">

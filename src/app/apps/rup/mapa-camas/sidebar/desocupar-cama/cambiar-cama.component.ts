@@ -20,9 +20,13 @@ export class CambiarCamaComponent implements OnInit, OnDestroy {
 
     // VARIABLES
     public fecha: Date;
+    public fechaMin: Date;
     public cama: ISnapshot;
     public nuevaCama: ISnapshot;
+
     private subscription: Subscription;
+    private subscription2: Subscription;
+    private subscription3: Subscription;
 
     constructor(
         public auth: Auth,
@@ -32,16 +36,37 @@ export class CambiarCamaComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.subscription.unsubscribe();
+        if (this.subscription2) {
+            this.subscription2.unsubscribe();
+        }
+        if (this.subscription3) {
+            this.subscription3.unsubscribe();
+        }
     }
 
     ngOnInit() {
         this.subscription = combineLatest(
             this.mapaCamasService.selectedCama,
-        ).subscribe(([cama]) => {
-            this.cama = cama;
-            this.camasDisponibles$ = this.mapaCamasService.getCamasDisponibles(cama);
+            this.mapaCamasService.prestacion$,
+        ).subscribe(([cama, prestacion]) => {
+            if (!cama.idCama) {
+                const fechaIngreso = prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
+                if (prestacion.ejecucion.registros[1]) {
+                    const fechaLimite = (prestacion.ejecucion.registros[1].valor) ? prestacion.ejecucion.registros[1].valor.InformeEgreso.fechaEgreso : moment().toDate();
+                    this.subscription2 = this.mapaCamasService.historial('internacion', fechaIngreso, fechaLimite, prestacion).subscribe(movimientos => {
+                        this.fechaMin = movimientos[movimientos.length - 1].fecha;
+                        this.mapaCamasService.setFecha(this.fechaMin);
+                        this.subscription3 = this.mapaCamasService.snapshot(this.fechaMin, prestacion.id).subscribe((snap) => {
+                            this.cama = snap[0];
+                            this.camasDisponibles$ = this.mapaCamasService.getCamasDisponibles(this.cama);
+                        });
+                    });
+                }
+            } else {
+                this.cama = cama;
+                this.camasDisponibles$ = this.mapaCamasService.getCamasDisponibles(cama);
+            }
             this.fecha = this.mapaCamasService.fecha;
-
         });
     }
 

@@ -2,8 +2,10 @@ import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChange
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
-import { Observable, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, combineLatest, Subject } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { PrestacionesService } from '../../../../../../modules/rup/services/prestaciones.service';
+import { ISnapshot } from '../../../interfaces/ISnapshot';
 
 @Component({
     selector: 'tr[app-item-cama]',
@@ -16,6 +18,7 @@ export class ItemCamaComponent implements OnInit {
 
     public relacionesPosibles$: Observable<any>;
     public estadoCama$: Observable<any>;
+    public puedeDesocupar$: Observable<string>;
 
     get sectorCama() {
         return this.cama.sectores[this.cama.sectores.length - 1].nombre;
@@ -24,13 +27,20 @@ export class ItemCamaComponent implements OnInit {
     constructor(
         public auth: Auth,
         private router: Router,
-        private mapaCamasService: MapaCamasService
+        private mapaCamasService: MapaCamasService,
+        private prestacionService: PrestacionesService
     ) {
     }
 
     ngOnInit() {
         this.estadoCama$ = this.mapaCamasService.getEstadoCama(this.cama);
         this.relacionesPosibles$ = this.mapaCamasService.getRelacionesPosibles(this.cama);
+
+        if (this.cama.estado === 'ocupada') {
+            this.prestacionService.getById(this.cama.idInternacion).subscribe(prestacion => {
+                this.puedeDesocupar$ = this.mapaCamasService.verificarCamaDesocupar(this.cama, prestacion);
+            });
+        }
     }
 
     goTo() {

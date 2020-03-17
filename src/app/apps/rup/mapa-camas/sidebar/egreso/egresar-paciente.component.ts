@@ -126,19 +126,21 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     this.registro.valor.InformeEgreso = this.prestacion.ejecucion.registros[1].valor.InformeEgreso;
                 }
                 this.setFecha();
+
+                if (this.view === 'listado-internacion') {
+                    this.subscription3 = this.mapaCamasService.snapshot(fecha, prestacion.id).subscribe((snapshot) => {
+                        this.cama = snapshot[0];
+                        this.subscription2 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
+                            this.estadoDestino = relacionesPosibles[0].destino;
+                        });
+                    });
+                }
             }
 
             if (cama.idCama) {
                 this.cama = cama;
                 this.subscription2 = this.mapaCamasService.getRelacionesPosibles(cama).subscribe((relacionesPosibles) => {
                     this.estadoDestino = relacionesPosibles[0].destino;
-                });
-            } else if (this.view === 'listado-internacion') {
-                this.subscription3 = this.mapaCamasService.snapshot(fecha, prestacion.id).subscribe((snapshot) => {
-                    this.cama = snapshot[0];
-                    this.subscription2 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
-                        this.estadoDestino = relacionesPosibles[0].destino;
-                    });
                 });
             }
         });

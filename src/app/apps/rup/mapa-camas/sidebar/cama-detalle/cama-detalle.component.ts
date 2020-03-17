@@ -1,5 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
-import { PacienteService } from '../../../../../core/mpi/services/paciente.service';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { ElementosRUPService } from '../../../../../modules/rup/services/elementosRUP.service';
@@ -7,7 +6,7 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { tap, map, switchMap } from 'rxjs/operators';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, of, Subscription } from 'rxjs';
 import { IMAQEstado, IMAQRelacion } from '../../interfaces/IMaquinaEstados';
 
 
@@ -15,10 +14,11 @@ import { IMAQEstado, IMAQRelacion } from '../../interfaces/IMaquinaEstados';
     selector: 'app-cama-detalle',
     templateUrl: 'cama-detalle.component.html'
 })
-export class CamaDetalleComponent implements OnInit {
+export class CamaDetalleComponent implements OnInit, OnDestroy {
     public cama$: Observable<ISnapshot>;
     public estadoCama$: Observable<IMAQEstado>;
     public relaciones$: Observable<IMAQRelacion[]>;
+    public puedeDesocupar$: Observable<any>;
 
     // Eventos
     @Input() fecha: Date;
@@ -47,22 +47,22 @@ export class CamaDetalleComponent implements OnInit {
     public tabIndex = 0;
     public editar = false;
 
+    private subscription: Subscription;
+
     constructor(
         private router: Router,
-        private pacienteService: PacienteService,
         private prestacionService: PrestacionesService,
         private elementoRupService: ElementosRUPService,
         private mapaCamasService: MapaCamasService
     ) {
     }
 
-    sector(cama: ISnapshot) {
-        return cama.sectores[cama.sectores.length - 1].nombre;
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
     }
 
     ngOnInit() {
         this.capa = this.mapaCamasService.capa;
-
 
         this.elementoRupService.ready.subscribe(() => {
             this.conceptosInternacion = this.elementoRupService.getConceptosInternacion();
@@ -70,28 +70,22 @@ export class CamaDetalleComponent implements OnInit {
 
         this.cama$ = this.mapaCamasService.selectedCama;
 
-
-
         this.estadoCama$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getEstadoCama(cama)));
         this.relaciones$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getRelacionesPosibles(cama)));
 
-    }
-
-
-
-    getDatosCama() {
-        this.paciente = null;
-        if (this.cama.paciente) {
-            if (this.capa === 'estadistica') {
-                this.getPrestacion();
+        this.subscription = combineLatest(
+            this.mapaCamasService.selectedCama
+        ).subscribe(([cama]) => {
+            if (cama.estado === 'ocupada') {
+                this.prestacionService.getById(cama.idInternacion).subscribe(prestacion => {
+                    this.puedeDesocupar$ = this.mapaCamasService.verificarCamaDesocupar(cama, prestacion);
+                });
             }
-        }
+        });
     }
 
-    getPrestacion() {
-        this.prestacionService.getById(this.cama.idInternacion).subscribe(prestacion => {
-            this.prestacion = prestacion;
-        });
+    sector(cama: ISnapshot) {
+        return cama.sectores[cama.sectores.length - 1].nombre;
     }
 
     cancelar() {

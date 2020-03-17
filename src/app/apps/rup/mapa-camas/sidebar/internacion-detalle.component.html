@@ -1,4 +1,4 @@
-<ng-container *ngIf="selectedPrestacion">
+<ng-container>
     <div class="mt-2">
         <ng-container *ngIf="!editar || !existeEgreso">
             <plex-options [items]="items" (activated)="onActiveOption($event)"></plex-options>
@@ -16,8 +16,8 @@
         </ng-container>
         <ng-container *ngIf="mostrar === 'movimientos'">
             <app-movimientos-internacion>
-                <plex-button *ngIf="(view === 'listado-internacion') && !prestacionValidada" label="Cambiar cama"
-                             type="warning" size="sm" (click)="changeCama()">
+                <plex-button *ngIf="(view === 'listado-internacion')" [disabled]="prestacion.ejecucion.registros[1]"
+                             label="Cambiar cama" type="warning" size="sm" (click)="changeCama()">
                 </plex-button>
             </app-movimientos-internacion>
         </ng-container>

@@ -3,6 +3,7 @@ import { PlexOptionsComponent } from '@andes/plex';
 import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable, Subscription, combineLatest } from 'rxjs';
 import { MapaCamasService } from '../services/mapa-camas.service';
+import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 
 @Component({
     selector: 'app-internacion-detalle',
@@ -10,8 +11,8 @@ import { MapaCamasService } from '../services/mapa-camas.service';
 })
 
 export class InternacionDetalleComponent implements OnInit, OnDestroy {
+    puedeDesocupar$: Observable<any>;
     prestacion: IPrestacion;
-    selectedPrestacion: IPrestacion;
     view: string;
 
     @Output() cambiarCama = new EventEmitter<any>();
@@ -30,7 +31,8 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
     private subscription: Subscription;
 
     constructor(
-        private mapaCamasService: MapaCamasService
+        private mapaCamasService: MapaCamasService,
+        private prestacionService: PrestacionesService
     ) { }
 
     ngOnDestroy() {
@@ -41,25 +43,43 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
         this.mostrar = 'ingreso';
         this.subscription = combineLatest(
             this.mapaCamasService.view,
+            this.mapaCamasService.selectedCama,
             this.mapaCamasService.prestacion$,
-            this.mapaCamasService.selectedPrestacion
-        ).subscribe(([view, prestacion, selectedPrestacion]) => {
+        ).subscribe(([view, cama, prestacion]) => {
             this.view = view;
-            this.prestacion = prestacion;
-            this.selectedPrestacion = selectedPrestacion;
 
-            if (selectedPrestacion.id) {
-                if (selectedPrestacion.estados[selectedPrestacion.estados.length - 1].tipo === 'validada') {
+            if (view === 'listado-internacion') {
+                if (prestacion) {
+                    this.prestacion = prestacion;
+                    if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
+                        this.editar = false;
+                        this.prestacionValidada = true;
+                    } else {
+                        this.prestacionValidada = false;
+                    }
+
+                    if (prestacion.ejecucion.registros[1] && prestacion.ejecucion.registros[1].valor && prestacion.ejecucion.registros[1].valor.InformeEgreso) {
+                        this.existeEgreso = true;
+                    } else {
+                        this.existeEgreso = false;
+                    }
+
+                    if (!this.mostrar) {
+                        this.activatedOption('ingreso');
+                    }
+                } else {
                     this.editar = false;
-                    this.prestacionValidada = true;
-                } else {
-                    this.prestacionValidada = false;
+                    this.mostrar = null;
                 }
-
-                if (selectedPrestacion.ejecucion.registros[1] && selectedPrestacion.ejecucion.registros[1].valor && selectedPrestacion.ejecucion.registros[1].valor.InformeEgreso) {
-                    this.existeEgreso = true;
-                } else {
-                    this.existeEgreso = false;
+            } else if (view === 'mapa-camas') {
+                if (cama.estado === 'ocupada') {
+                    this.prestacionService.getById(cama.idInternacion).subscribe(p => {
+                        if (p.ejecucion.registros[1]) {
+                            if (!p.ejecucion.registros[1].valor.InformeEgreso) {
+                                this.puedeDesocupar$ = this.mapaCamasService.verificarCamaDesocupar(cama, p);
+                            }
+                        }
+                    });
                 }
             }
         });

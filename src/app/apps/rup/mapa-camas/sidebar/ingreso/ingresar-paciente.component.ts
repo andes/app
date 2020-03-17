@@ -14,7 +14,6 @@ import { combineLatest, Subscription, Observable } from 'rxjs';
 import { ObraSocialService } from '../../../../../services/obraSocial.service';
 import { map } from 'rxjs/operators';
 import { ObjectID } from 'bson';
-import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -45,6 +44,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public fechaValida = true;
     public pacientes = [];
     public paciente = null;
+    public view;
+    public fechaHasta = moment().toDate();
 
     public get origenExterno() {
         return this.informeIngreso && this.informeIngreso.origen && this.informeIngreso.origen.id === 'traslado';
@@ -90,6 +91,9 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.informeIngreso.fechaIngreso = this.mapaCamasService.fecha;
+        this.fechaHasta = this.mapaCamasService.fechaIngresoHasta;
+
         this.subscription = combineLatest(
             this.mapaCamasService.view,
             this.mapaCamasService.capa2,
@@ -97,6 +101,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.prestacion$,
             this.mapaCamasService.selectedPaciente
         ).subscribe(([view, capa, cama, prestacion, paciente]) => {
+            this.view = view;
             this.capa = capa;
             this.prestacion = prestacion;
             this.paciente = paciente;
@@ -117,9 +122,17 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
             if (cama.idCama) {
                 this.cama = cama;
+                if (cama.estado === 'ocupada') {
+                    this.paciente = cama.paciente;
+                }
+                if (this.informeIngreso.especialidades.length === 0) {
+                    this.informeIngreso.especialidades = this.cama.especialidades;
+                }
             } else if (view === 'listado-internacion') {
                 this.subscription2 = this.mapaCamasService.snapshot(this.informeIngreso.fechaIngreso, prestacion.id).subscribe((snapshot) => {
+                    console.log(snapshot);
                     this.cama = snapshot[0];
+                    this.paciente = this.cama.paciente;
                 });
             } else {
                 this.cama = null;
@@ -128,7 +141,31 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
         this.camas$ = this.mapaCamasService.snapshot$.pipe(
             map((snapshot) => {
-                return snapshot.filter(snap => snap.estado === 'disponible');
+                let camasDisponibles = [];
+                let cama = null;
+
+                snapshot.map(snap => {
+                    if (snap.estado === 'ocupada') {
+                        if (snap.paciente.id === this.paciente.id) {
+                            if (!this.cama) {
+                                cama = snap;
+                            } else if (this.cama.idCama !== snap.idCama) {
+                                cama = snap;
+                            }
+                        }
+                    } else if (snap.estado === 'disponible') {
+                        camasDisponibles.push(snap);
+                    }
+                });
+
+                if (cama && this.view !== 'listado-internacion') {
+                    camasDisponibles = [];
+                    this.plex.info('warning', `${this.paciente.nombreCompleto} (${this.paciente.documento}) se encuentra internado
+                en la cama <strong>${cama.nombre}</strong> en <strong>${cama.sectores[cama.sectores.length - 1].nombre}</strong>
+                de la unidad organizativa <strong>${cama.unidadOrganizativa.term}</strong>.`, 'Paciente ya internado');
+                }
+
+                return camasDisponibles;
             })
         );
     }
@@ -188,14 +225,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     changeOrigenHospitalizacion(event) {
         if (event.value && event.value.id) {
             this.informeIngreso.organizacionOrigen = null;
-        }
-    }
-
-    cambiarFechaIngreso(fecha) {
-        if (fecha <= moment().toDate()) {
-            this.fechaValida = true;
-        } else {
-            this.fechaValida = false;
         }
     }
 
@@ -278,7 +307,13 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         };
         this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe((prestacion: any) => {
             this.informeIngreso = prestacion.ejecucion.registros[0].valor.informeIngreso;
-            this.ingresoSimplificado('ocupada', paciente, prestacion._id);
+            if (this.view === 'listado-internacion') {
+                this.plex.info('success', 'Informe de ingreso actualizado');
+                this.onSave.emit();
+                this.mapaCamasService.setFechaHasta(this.fechaHasta);
+            } else {
+                this.ingresoSimplificado('ocupada', paciente, prestacion._id);
+            }
         }, (err) => {
             this.plex.info('danger', err);
         });
