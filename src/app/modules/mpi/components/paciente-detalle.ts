@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { ObraSocialService } from '../../../services/obraSocial.service';
-import { IFinanciador } from '../../../interfaces/IFinanciador';
+import { IObraSocial } from '../../../interfaces/IObraSocial';
 import { ObraSocialCacheService } from '../../../services/obraSocialCache.service';
 import { Observable } from 'rxjs';
 
@@ -15,7 +15,7 @@ export class PacienteDetalleComponent implements OnInit {
     @Input() paciente: IPaciente;
     @Input() fields: string[] = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado'];
 
-    obraSocial: IFinanciador;
+    obraSocial: IObraSocial;
     token$: Observable<string>;
 
     get showSexo() {
@@ -106,13 +106,8 @@ export class PacienteDetalleComponent implements OnInit {
     }
 
     loadObraSocial() {
-
         if (!this.paciente || !this.paciente.documento) {
             this.obraSocialCacheService.setFinanciadorPacienteCache(null);
-            return;
-        }
-        if (this.paciente.financiador && this.paciente.financiador.length > 0) {
-            this.obraSocial = this.paciente.financiador[0] as any;
             return;
         }
         this.obraSocialService.getObrasSociales(this.paciente.documento).subscribe(resultado => {
