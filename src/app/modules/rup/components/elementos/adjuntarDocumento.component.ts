@@ -54,9 +54,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
 
     public descendientesInformeClinico: ISnomedConcept[] = [];
     public hoy = moment(new Date()).endOf('day').toDate();
-
-
-
+    adjuntos: any;
 
     ngOnInit() {
 
@@ -75,14 +73,21 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         if (!this.registro.valor.documentos) {
             this.registro.valor.documentos = [];
         }
+
         this.adjuntosService.generateToken().subscribe((data: any) => {
             this.fileToken = data.token;
+            this.adjuntos = this.registro.valor.documentos.map(x => ({ url: this.createUrl(x), ext: x.ext }));
         });
 
         this.snomedService.getQuery({ expression: '^4681000013102' }).subscribe(result => {
             this.descendientesInformeClinico = result;
         });
 
+    }
+
+    get adjuntosRUP() {
+        console.log(this.adjuntos);
+        return this.adjuntos;
     }
 
     ngAfterContentChecked(): void {
@@ -155,27 +160,6 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     eliminarImagen(ev) {
         let index = this.registro.valor.documentos.indexOf(ev);
         this.registro.valor.documentos.splice(index, 1);
-    }
-
-    activaLightbox(index) {
-        if (this.registro.valor.documentos[index].ext !== 'pdf') {
-            this.lightbox = true;
-            this.indice = index;
-        }
-    }
-
-    imagenPrevia(i) {
-        let imagenPrevia = i - 1;
-        if (imagenPrevia >= 0) {
-            this.indice = imagenPrevia;
-        }
-    }
-
-    imagenSiguiente(i) {
-        let imagenSiguiente = i + 1;
-        if (imagenSiguiente <= this.registro.valor.documentos.length - 1) {
-            this.indice = imagenSiguiente;
-        }
     }
 
     createUrl(doc) {
