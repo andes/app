@@ -302,6 +302,7 @@ import { ValorNumericoComponent } from './modules/rup/components/elementos/valor
 import { ValorFechaComponent } from './modules/rup/components/elementos/valorFecha.component';
 import { MoleculaBaseComponent } from './modules/rup/components/elementos/moleculaBase.component';
 import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria.component';
+import {  ConsultaAdolescenteSanoComponent } from './modules/rup/components/elementos/consultaAdolescenteSano.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -405,6 +406,7 @@ import { CampaniaFormComponent } from './apps/campaniaSalud/components/campania-
 import { TurneroProvidersModule } from './apps/turnero/turnero.providers';
 
 let RUPComponentsArray = [
+    ConsultaAdolescenteSanoComponent,
     SelectPorRefsetComponent,
     AutocitadoComponent,
     EvolucionProblemaDefaultComponent,
