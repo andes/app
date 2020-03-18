@@ -1,12 +1,12 @@
 <form #form="ngForm">
     <fieldset>
-        <legend>Contacto / Dirección</legend>
+        <legend>Contacto / Dirección actual</legend>
 
         <!-- DATOS CONTACTO: tel fijo / tel celular-->
         <div>
             <div *ngFor="let _unContacto of arrayContactos; let i = index">
                 <div class="row" *ngIf="_unContacto.tipo && (_unContacto.tipo === 'celular' || _unContacto.tipo.id === 'celular' ||
-                      _unContacto.tipo === 'fijo' || _unContacto.tipo.id === 'fijo')">
+                          _unContacto.tipo === 'fijo' || _unContacto.tipo.id === 'fijo')">
                     <div class="col-5">
                         <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}"
                                      [required]="i <= 0" label="Tipo"
@@ -44,7 +44,7 @@
         <!-- DATOS DOMICILIO -->
         <div class="row">
             <div class="col-12">
-                <plex-text label="Dirección" [(ngModel)]="direccion.valor" name="divValor"
+                <plex-text label="Dirección actual" [(ngModel)]="direccion.valor" name="divValor"
                            placeholder="Ej: Avenida Las Flores 1200" (keyup)="disableGuardar = false">
                 </plex-text>
             </div>
