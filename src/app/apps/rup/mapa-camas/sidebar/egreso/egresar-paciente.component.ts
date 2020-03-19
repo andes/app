@@ -147,9 +147,83 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     setFecha() {
-        this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
+        this.mapaCamasService.setFecha(moment(this.registro.valor.InformeEgreso.fechaEgreso).add(-1, 'seconds').toDate());
         this.calcularDiasEstada();
     }
+
+    guardar(valid) {
+        if (valid.formValid) {
+            if (this.capa === 'estadistica') {
+                this.egresoExtendido();
+            } else {
+                this.egresoSimplificado(this.estadoDestino);
+            }
+        } else {
+            this.plex.info('info', 'ERROR: Los datos de egreso no estan completos');
+            return;
+        }
+    }
+
+    egresoSimplificado(estado) {
+        // Se modifica el estado de la cama
+        this.cama.estado = estado;
+        this.cama.idInternacion = null;
+        this.cama.paciente = null;
+
+        this.mapaCamasService.save(this.cama, this.registro.valor.InformeEgreso.fechaEgreso).subscribe(camaActualizada => {
+            this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
+            if (this.view === 'listado-internacion') {
+                this.mapaCamasService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
+            } else if (this.view === 'mapa-camas') {
+                this.mapaCamasService.select(null);
+                this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
+            }
+            this.onSave.emit();
+        }, (err1) => {
+            this.plex.info('danger', err1, 'Error al intentar desocupar la cama');
+        });
+    }
+
+    egresoExtendido() {
+        let registros = this.controlRegistrosGuardar();
+        if (registros) {
+            let params: any = {
+                op: 'registros',
+                registros: registros
+            };
+            this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacion => {
+                this.mapaCamasService.selectPrestacion(prestacion);
+                this.egresoSimplificado(this.estadoDestino);
+            });
+        }
+    }
+
+    controlRegistrosGuardar() {
+        let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
+        if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
+            this.registro.esDiagnosticoPrincipal = true;
+        }
+
+        if (this.registro.valor.InformeEgreso.UnidadOrganizativaDestino) {
+            let datosOrganizacionDestino = {
+                id: this.registro.valor.InformeEgreso.UnidadOrganizativaDestino.id,
+                nombre: this.registro.valor.InformeEgreso.UnidadOrganizativaDestino.nombre
+            };
+            this.registro.valor.InformeEgreso.UnidadOrganizativaDestino = datosOrganizacionDestino;
+        }
+
+        let existeEgreso = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === '58000006');
+
+        if (!existeEgreso) {
+            registros.push(this.registro);
+        } else {
+            let indexRegistro = registros.findIndex(registro => registro.concepto.conceptId === '58000006');
+            registros[indexRegistro] = this.registro;
+        }
+
+        return registros;
+    }
+
 
     calcularDiasEstada() {
         const fecha = this.registro.valor.InformeEgreso.fechaEgreso;
@@ -259,77 +333,62 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         }
     }
 
-    guardar(valid) {
-        if (valid.formValid) {
-            if (this.capa === 'estadistica') {
-                this.egresoExtendido();
-            } else {
-                this.egresoSimplificado(this.estadoDestino);
+    searchComoSeProdujo(event) {
+
+        let desde = 'V00';
+        let hasta = 'Y98';
+        let filtro;
+
+        if (this.registro.valor.InformeEgreso.causaExterna.producidaPor) {
+
+            switch (this.registro.valor.InformeEgreso.causaExterna.producidaPor.id) {
+                case 'Accidente':
+                    filtro = [{ desde: 'V01', hasta: 'X59' }, { desde: 'Y35', hasta: 'Y98' }];
+                    break;
+                case 'lesionAutoinfligida':
+                    filtro = [{ desde: 'X60', hasta: 'X84' }];
+                    break;
+                case 'agresion':
+                    filtro = [{ desde: 'X85', hasta: 'Y09' }];
+                    break;
+                case 'seIgnora': {
+                    filtro = [{ desde: 'Y10', hasta: 'Y34' }];
+                    break;
+                }
             }
-        } else {
-            this.plex.info('info', 'ERROR: Los datos de egreso no estan completos');
-            return;
         }
-    }
-
-    egresoSimplificado(estado) {
-        // Se modifica el estado de la cama
-        this.cama.estado = estado;
-        this.cama.idInternacion = null;
-        this.cama.paciente = null;
-
-        this.mapaCamasService.save(this.cama, this.registro.valor.InformeEgreso.fechaEgreso).subscribe(camaActualizada => {
-            this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
-            if (this.view === 'listado-internacion') {
-                this.mapaCamasService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
-            } else if (this.view === 'mapa-camas') {
-                this.mapaCamasService.select(null);
-                this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
-            }
-            this.onSave.emit();
-        }, (err1) => {
-            this.plex.info('danger', err1, 'Error al intentar desocupar la cama');
-        });
-    }
-
-    egresoExtendido() {
-        let registros = this.controlRegistrosGuardar();
-        if (registros) {
-            let params: any = {
-                op: 'registros',
-                registros: registros
+        if (event && event.query) {
+            let query = {
+                nombre: event.query,
+                filtroRango: JSON.stringify(filtro)
             };
-            this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacion => {
-                this.mapaCamasService.selectPrestacion(prestacion);
-                this.egresoSimplificado(this.estadoDestino);
+            this.cie10Service.get(query).subscribe((datos) => {
+                // mapeamos para mostrar el codigo primero y luego la descripcion
+                datos.map(dato => { dato.nombre = '(' + dato.codigo + ') ' + dato.nombre; });
+                event.callback(datos);
             });
         }
+        if (this.registro.valor.InformeEgreso.causaExterna.comoSeProdujo) {
+            event.callback([this.registro.valor.InformeEgreso.causaExterna.comoSeProdujo]);
+        } else {
+            event.callback([]);
+        }
     }
 
-    controlRegistrosGuardar() {
-        let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
-        if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
-            this.registro.esDiagnosticoPrincipal = true;
+    addNacimiento() {
+        let nuevoNacimiento = Object.assign({}, {
+            pesoAlNacer: null,
+            condicionAlNacer: null,
+            terminacion: null,
+            sexo: null
+        });
+        this.registro.valor.InformeEgreso.nacimientos.push(nuevoNacimiento);
+    }
+
+    removeNacimiento(i) {
+        if (i > 0) {
+            this.registro.valor.InformeEgreso.nacimientos.splice(i, 1);
         }
-
-        if (this.registro.valor.InformeEgreso.UnidadOrganizativaDestino) {
-            let datosOrganizacionDestino = {
-                id: this.registro.valor.InformeEgreso.UnidadOrganizativaDestino.id,
-                nombre: this.registro.valor.InformeEgreso.UnidadOrganizativaDestino.nombre
-            };
-            this.registro.valor.InformeEgreso.UnidadOrganizativaDestino = datosOrganizacionDestino;
-        }
-
-        let existeEgreso = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === '58000006');
-
-        if (!existeEgreso) {
-            registros.push(this.registro);
-        } else {
-            let indexRegistro = registros.findIndex(registro => registro.concepto.conceptId === '58000006');
-            registros[indexRegistro] = this.registro;
-        }
-
-        return registros;
     }
 
     getListaProcedimientosQuirurgicos(event) {
@@ -353,16 +412,14 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     addProcedimientoQuirurgico() {
-        let nuevoProcedimiento = Object.assign({}, {
+        this.registro.valor.InformeEgreso.procedimientosQuirurgicos.push({
+            procedimiento: null,
             fecha: null
         });
-        this.registro.valor.InformeEgreso.procedimientosQuirurgicos.push(nuevoProcedimiento);
     }
 
     removeProcedimiento(i) {
-        if (i > 0) {
-            this.registro.valor.InformeEgreso.procedimientosQuirurgicos.splice(i, 1);
-        }
+        this.registro.valor.InformeEgreso.procedimientosQuirurgicos.splice(i, 1);
     }
 
 }

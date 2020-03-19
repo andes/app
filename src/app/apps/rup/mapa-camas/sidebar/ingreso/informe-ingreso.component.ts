@@ -4,6 +4,7 @@ import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.in
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { notNull } from '@andes/shared';
+import { __core_private_testing_placeholder__ } from '@angular/core/testing';
 
 @Component({
     selector: 'app-informe-ingreso',

@@ -12,6 +12,7 @@ import { map } from 'rxjs/operators';
 
 export class InformeEgresoComponent implements OnInit {
     prestacion$: Observable<IPrestacion>;
+    registro$: Observable<any>;
     informeEgreso$: Observable<any>;
 
     // VARIABLES
@@ -24,11 +25,19 @@ export class InformeEgresoComponent implements OnInit {
     ngOnInit() {
         this.prestacion$ = this.mapaCamasService.prestacion$;
 
-        this.informeEgreso$ = this.prestacion$.pipe(
+        this.registro$ = this.prestacion$.pipe(
             notNull(),
             map((prestacion) => {
-                return prestacion.ejecucion.registros[1].valor.InformeEgreso;
+                return prestacion.ejecucion.registros[1];
             })
         );
+
+        this.informeEgreso$ = this.registro$.pipe(
+            notNull(),
+            map((registro) => {
+                return registro.valor.InformeEgreso;
+            })
+        );
+
     }
 }

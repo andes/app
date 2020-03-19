@@ -130,7 +130,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 }
             } else if (view === 'listado-internacion') {
                 this.subscription2 = this.mapaCamasService.snapshot(this.informeIngreso.fechaIngreso, prestacion.id).subscribe((snapshot) => {
-                    console.log(snapshot);
                     this.cama = snapshot[0];
                     this.paciente = this.cama.paciente;
                 });

@@ -48,39 +48,27 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
         ).subscribe(([view, cama, prestacion]) => {
             this.view = view;
 
-            if (view === 'listado-internacion') {
-                if (prestacion) {
-                    this.prestacion = prestacion;
-                    if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
-                        this.editar = false;
-                        this.prestacionValidada = true;
-                    } else {
-                        this.prestacionValidada = false;
-                    }
-
-                    if (prestacion.ejecucion.registros[1] && prestacion.ejecucion.registros[1].valor && prestacion.ejecucion.registros[1].valor.InformeEgreso) {
-                        this.existeEgreso = true;
-                    } else {
-                        this.existeEgreso = false;
-                    }
-
-                    if (!this.mostrar) {
-                        this.activatedOption('ingreso');
-                    }
-                } else {
+            if (prestacion) {
+                this.prestacion = prestacion;
+                if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
                     this.editar = false;
-                    this.mostrar = null;
+                    this.prestacionValidada = true;
+                } else {
+                    this.prestacionValidada = false;
                 }
-            } else if (view === 'mapa-camas') {
-                if (cama.estado === 'ocupada') {
-                    this.prestacionService.getById(cama.idInternacion).subscribe(p => {
-                        if (p.ejecucion.registros[1]) {
-                            if (!p.ejecucion.registros[1].valor.InformeEgreso) {
-                                this.puedeDesocupar$ = this.mapaCamasService.verificarCamaDesocupar(cama, p);
-                            }
-                        }
-                    });
+
+                if (prestacion.ejecucion.registros[1] && prestacion.ejecucion.registros[1].valor && prestacion.ejecucion.registros[1].valor.InformeEgreso) {
+                    this.existeEgreso = true;
+                } else {
+                    this.existeEgreso = false;
                 }
+
+                if (!this.mostrar) {
+                    this.activatedOption('ingreso');
+                }
+            } else {
+                this.editar = false;
+                this.mostrar = null;
             }
         });
     }
