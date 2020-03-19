@@ -99,6 +99,7 @@ export class DarTurnosComponent implements OnInit {
 
     estadoT: EstadosDarTurnos;
     turnoDoble = false;
+    turnoTelefonico = false;
     desplegarOS = false; // Indica si es se requiere seleccionar OS y numero de Afiliado
     numeroAfiliado;
     telefono = '';
@@ -594,12 +595,12 @@ export class DarTurnosComponent implements OnInit {
 
         // Filtra bloques cuyos tipos prestaciones se correspondan con los permisos del usuario
         if (this.permisos[0] !== '*') {
-            this.bloques = this.bloques.filter( bloque => bloque.tipoPrestaciones.some( p => this.permisos.includes(p.id) ));
+            this.bloques = this.bloques.filter(bloque => bloque.tipoPrestaciones.some(p => this.permisos.includes(p.id)));
         }
 
         // Si existe una selección de filtro tipo de prestación, filtra bloques cuyos tipos prestaciones se correspondan con los filtros seleccionados
         if (this.opciones.tipoPrestacion) {
-            this.bloques = this.bloques.filter( bloque => bloque.tipoPrestaciones.map( e => e.conceptId ).includes(this.opciones.tipoPrestacion.conceptId) );
+            this.bloques = this.bloques.filter(bloque => bloque.tipoPrestaciones.map(e => e.conceptId).includes(this.opciones.tipoPrestacion.conceptId));
         }
 
         if (this.solicitudPrestacion) {
@@ -896,7 +897,8 @@ export class DarTurnosComponent implements OnInit {
                 tipoPrestacion: this.turnoTipoPrestacion,
                 paciente: pacienteSave,
                 idAgenda: this.agenda.id,
-                estadoFacturacion: this.estadoFacturacion
+                estadoFacturacion: this.estadoFacturacion,
+                emitidoPor: (this.turnoTelefonico) ? 'turno telefonico' : null
             };
             this.serviceTurno.saveDinamica(datosTurno).subscribe(
                 resultado => {
@@ -932,7 +934,8 @@ export class DarTurnosComponent implements OnInit {
                 tipoTurno: this.tiposTurnosSelect,
                 nota: this.nota,
                 motivoConsulta: this.motivoConsulta,
-                estadoFacturacion: this.estadoFacturacion
+                estadoFacturacion: this.estadoFacturacion,
+                emitidoPor: (this.turnoTelefonico) ? 'turno telefonico' : null
             };
             this.serviceTurno.save(datosTurno, { showError: false }).subscribe(resultado => {
                 this.showTab = 1;
