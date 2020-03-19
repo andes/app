@@ -14,8 +14,7 @@
                               [required]="true">
                     </plex-int>
                     <plex-text label="Ingrese su contraseña" [(ngModel)]="password" name="password" [password]="true"
-                               [required]="true">
-                        <plex-icon name="dialpad" prefix></plex-icon>
+                               [required]="true" prefix="<i class='mdi mdi-dialpad'></i>">
                     </plex-text>
                     <div class="row">&nbsp;</div>
                     <plex-button type="success" [validateForm]="true" [disabled]="loading" (click)="login($event)">
