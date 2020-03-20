@@ -19,15 +19,12 @@
     height: calc(100% - 220px);
     cdk-virtual-scroll-viewport {
         height: 100%;
+        overflow-x: hidden;
     }
 }
 
 .menu-buscador {
     .container-filtros {
-        // width: 103%;
-        // overflow: scroll;
-        // position: relative;
-        // height: auto;
         padding: 2px 0;
         margin: 5px 0;
     }
