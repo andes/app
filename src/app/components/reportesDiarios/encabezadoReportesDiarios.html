@@ -56,6 +56,14 @@
                         ">
                     </plex-select>
                 </div>
+
+                <div class="col-2">
+                    <!-- Dividir por Turno -->
+                    <plex-bool [(ngModel)]="divirTurnos" (change)="refreshSelection()"
+                        type="slide" label="Dividir por turnos" name="dividir">
+                    </plex-bool>
+                </div>
+
             </div>
 
             <!-- Parametros PlanillaC1 -->
@@ -81,11 +89,16 @@
                 </div>
             </div>
         </header>
-
-        <resumenDiarioMensual *ngIf="showResumenDiarioMensual" [reporte]="reporte"
-            [parametros]="parametros" id="Resumen diario mensual"></resumenDiarioMensual>
-        <planillaC1 *ngIf="showPlanillaC1" [reporte]="reporte" [parametros]="parametros"
-            id="Planilla C1"></planillaC1>
+        <ng-container *ngIf="showResumenDiarioMensual">
+            <resumenDiarioMensual *ngFor="let item of reporte" [reporte]="item.data"
+                [parametros]="parametros" [titulo]="item.tag" [id]="'Resumen diario mensual ' + item.tag"
+                style="height: auto;">
+            </resumenDiarioMensual>
+        </ng-container>
+        <ng-container *ngIf="showPlanillaC1">
+            <planillaC1 [reporte]="reporte" [parametros]="parametros"
+                id="Planilla C1"></planillaC1>
+        </ng-container>
     </plex-layout-main>
 
     <plex-layout-footer>
@@ -94,6 +107,6 @@
             (click)="imprimir(parametros['tipoReportes'])"></plex-button>
 
             <plex-button *ngIf="showBotonExportaXLS" position="right" type="default" label="Exportar a XLS"
-            (click)="toExcel(parametros['tipoReportes'])"></plex-button>
+            (click)="toExcel()"></plex-button>
     </plex-layout-footer>
 </plex-layout>

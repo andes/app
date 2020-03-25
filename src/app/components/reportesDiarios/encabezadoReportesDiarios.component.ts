@@ -8,7 +8,7 @@ import { AgendaService } from '../../services/turnos/agenda.service';
 import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
 import { getObjMeses } from '../../../app/utils/enumerados';
 
-import {ExcelService} from '../../services/xlsx.service';
+import { ExcelService } from '../../services/xlsx.service';
 
 @Component({
     selector: 'encabezadoReportesDiarios',
@@ -37,6 +37,7 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
     public opcionesAnio: { id: number, nombre: string }[] = [];
     public anio;
     public mes;
+    public divirTurnos = false;
 
     // Variables "PlanillaC1"
     public showPlanillaC1 = false;
@@ -192,6 +193,9 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
         } else {
             this.parametros['fecha'] = '';
         }
+
+        // Dividir turno
+        this.parametros['dividir'] = this.divirTurnos;
     }
 
     public generar() {
@@ -251,18 +255,26 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
         WindowPrt.close();
     }
 
-    public toExcel(cmpName) {
+    public toExcel() {
+        let data: Array<{title: string, table: any}>;
 
-        let table: any;
-        table = document.getElementById(cmpName);
         if (this.showResumenDiarioMensual) {
-            this.excelService.exportAsExcelFile(table, `reportesDiarios_${this.prestacion.nombre}_${this.mes.nombre}_${this.anio.nombre}`);
+            data = this.reporte.map(item => {
+                return {
+                    title: item.tag,
+                    table: document.getElementById(`${this.parametros['tipoReportes']} ${item.tag}`),
+                };
+            });
+            this.excelService.exportMultipleTablesAsExcelFile(data, `reportesDiarios_${this.prestacion.nombre}_${this.mes.nombre}_${this.anio.nombre}`);
         } else {
-            let str: any = new Date(this.fecha);
-            str = `${str.getDate()}_${str.getMonth() + 1}_${str.getFullYear()}`;
-            this.excelService.exportAsExcelFile(table, `reportesDiarios_${this.prestacion.nombre}_${str}`);
+            const date = new Date(this.fecha);
+            const dateStr = `${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}`;
+            this.excelService.exportMultipleTablesAsExcelFile([{
+                title: this.parametros['tipoReportes'],
+                table: document.getElementById(this.parametros['tipoReportes']),
+            }],
+            `reportesDiarios_${this.prestacion.nombre}_${dateStr}`);
         }
-
     }
 
 }
