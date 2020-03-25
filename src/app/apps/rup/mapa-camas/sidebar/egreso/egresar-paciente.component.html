@@ -9,9 +9,8 @@
         <ng-container>
             <div class="row ">
                 <div class="col">
-                    <plex-datetime label="Fecha y hora de egreso" [(ngModel)]="registro.valor.InformeEgreso.fechaEgreso"
-                                   name="fechaEgreso" required label="Fecha Egreso" [max]="fechaMax" [min]="fechaMin"
-                                   (change)="setFecha()">
+                    <plex-datetime label="Fecha y hora de egreso" [(ngModel)]="fecha" name="fechaEgreso" required
+                                   label="Fecha Egreso" [max]="fechaMax" [min]="fechaMin" (change)="setFecha()">
                     </plex-datetime>
                 </div>
             </div>

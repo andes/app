@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChange
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
-import { Observable, combineLatest, Subject } from 'rxjs';
+import { Observable, combineLatest, Subject, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { PrestacionesService } from '../../../../../../modules/rup/services/prestaciones.service';
 import { ISnapshot } from '../../../interfaces/ISnapshot';
@@ -16,9 +16,12 @@ export class ItemCamaComponent implements OnInit {
     @Input() cama: any;
     @Output() accionCama = new EventEmitter<any>();
 
+    public capa: string;
     public relacionesPosibles$: Observable<any>;
     public estadoCama$: Observable<any>;
     public puedeDesocupar$: Observable<string>;
+
+    private subscription: Subscription;
 
     get sectorCama() {
         return this.cama.sectores[this.cama.sectores.length - 1].nombre;
@@ -36,11 +39,18 @@ export class ItemCamaComponent implements OnInit {
         this.estadoCama$ = this.mapaCamasService.getEstadoCama(this.cama);
         this.relacionesPosibles$ = this.mapaCamasService.getRelacionesPosibles(this.cama);
 
-        if (this.cama.estado === 'ocupada') {
-            this.prestacionService.getById(this.cama.idInternacion).subscribe(prestacion => {
-                this.puedeDesocupar$ = this.mapaCamasService.verificarCamaDesocupar(this.cama, prestacion);
-            });
-        }
+        this.subscription = combineLatest(
+            this.mapaCamasService.capa2
+        ).subscribe(([capa]) => {
+            this.capa = capa;
+            if (capa === 'estadistica') {
+                if (this.cama.estado === 'ocupada') {
+                    this.prestacionService.getById(this.cama.idInternacion).subscribe(prestacion => {
+                        this.puedeDesocupar$ = this.mapaCamasService.verificarCamaDesocupar(this.cama, prestacion);
+                    });
+                }
+            }
+        });
     }
 
     goTo() {

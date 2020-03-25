@@ -4,15 +4,13 @@ import { Observable, BehaviorSubject, Subject, combineLatest, of } from 'rxjs';
 import { ISnapshot } from '../interfaces/ISnapshot';
 import { ICama } from '../interfaces/ICama';
 import { IMaquinaEstados, IMAQRelacion, IMAQEstado } from '../interfaces/IMaquinaEstados';
-import { MapaCamasHTTP, IFiltrosHistorial } from './mapa-camas.http';
-import { switchMap, map, pluck, tap, catchError } from 'rxjs/operators';
+import { MapaCamasHTTP } from './mapa-camas.http';
+import { switchMap, map, pluck, catchError } from 'rxjs/operators';
 import { ISectores } from '../../../../interfaces/IOrganizacion';
 import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concept.interface';
 import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 import { Auth } from '@andes/auth';
-import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
-import { Plex } from '@andes/plex';
 
 @Injectable()
 export class MapaCamasService {
@@ -63,7 +61,6 @@ export class MapaCamasService {
     constructor(
         private camasHTTP: MapaCamasHTTP,
         private prestacionService: PrestacionesService,
-        private plex: Plex,
         private auth: Auth,
     ) {
         this.maquinaDeEstado$ = combineLatest(
@@ -112,15 +109,18 @@ export class MapaCamasService {
         this.prestacion$ = combineLatest(
             this.selectedPrestacion,
             this.selectedCama,
-            this.view
+            this.view,
+            this.capa2
         ).pipe(
-            switchMap(([prestacion, cama, view]) => {
+            switchMap(([prestacion, cama, view, capa]) => {
                 const idInternacion = (view === 'listado-internacion') ? prestacion.id : cama.idInternacion;
-                if (idInternacion) {
-                    return this.prestacionService.getById(idInternacion, { showError: false }).pipe(
-                        // No todas las capas tienen un ID de internacion real.
-                        catchError(() => of(null))
-                    );
+                if (capa === 'estadistica') {
+                    if (idInternacion) {
+                        return this.prestacionService.getById(idInternacion, { showError: false }).pipe(
+                            // No todas las capas tienen un ID de internacion real.
+                            catchError(() => of(null))
+                        );
+                    }
                 }
                 return of(null);
             })

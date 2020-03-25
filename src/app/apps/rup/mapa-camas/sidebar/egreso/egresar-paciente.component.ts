@@ -30,6 +30,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     public opcionesSexo = opcionesSexo;
 
     // VARIABLES
+    public fecha: Date;
     public fechaMax: Date;
     public fechaMin: Date;
     public view: string;
@@ -106,6 +107,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.fecha = this.mapaCamasService.fecha;
+
         this.subscription = combineLatest(
             this.mapaCamasService.view,
             this.mapaCamasService.capa2,
@@ -116,9 +119,9 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.fechaMax = moment().toDate();
             this.view = view;
             this.capa = capa;
-            this.prestacion = prestacion;
             let fecha = moment().toDate();
-            if (this.prestacion) {
+            if (capa === 'estadistica') {
+                this.prestacion = prestacion;
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
                 this.fechaMin = this.informeIngreso.fechaIngreso;
                 fecha = this.informeIngreso.fechaIngreso;
@@ -128,9 +131,9 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 this.setFecha();
 
                 if (this.view === 'listado-internacion') {
-                    this.subscription3 = this.mapaCamasService.snapshot(fecha, prestacion.id).subscribe((snapshot) => {
+                    this.subscription2 = this.mapaCamasService.snapshot(fecha, prestacion.id).subscribe((snapshot) => {
                         this.cama = snapshot[0];
-                        this.subscription2 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
+                        this.subscription3 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
                             this.estadoDestino = relacionesPosibles[0].destino;
                         });
                     });
@@ -139,7 +142,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
             if (cama.idCama) {
                 this.cama = cama;
-                this.subscription2 = this.mapaCamasService.getRelacionesPosibles(cama).subscribe((relacionesPosibles) => {
+                this.subscription3 = this.mapaCamasService.getRelacionesPosibles(cama).subscribe((relacionesPosibles) => {
                     this.estadoDestino = relacionesPosibles[0].destino;
                 });
             }
@@ -147,8 +150,10 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     setFecha() {
-        this.mapaCamasService.setFecha(moment(this.registro.valor.InformeEgreso.fechaEgreso).add(-1, 'seconds').toDate());
-        this.calcularDiasEstada();
+        this.mapaCamasService.setFecha(this.fecha);
+        if (this.capa === 'estadistica') {
+            this.calcularDiasEstada();
+        }
     }
 
     guardar(valid) {

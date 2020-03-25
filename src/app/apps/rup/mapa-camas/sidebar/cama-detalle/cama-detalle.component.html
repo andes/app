@@ -3,7 +3,7 @@
         <ng-container *ngIf="estadoCama$ | async as estadoCama">
             <plex-title titulo="DATOS DE CAMA">
                 <ng-container *ngFor="let relacion of relaciones$ | async">
-                    <ng-container *ngIf="relacion.origen === 'ocupada'">
+                    <ng-container *ngIf="capa === 'estadistica' && relacion.origen === 'ocupada'">
                         <ng-container *ngIf="puedeDesocupar$ | async as puedeDesocupar">
                             <plex-button [icon]="relacion.icon" [type]="relacion.color" info="No se puede desocupar"
                                          size="sm" [disabled]="puedeDesocupar === 'noPuede'"
@@ -11,7 +11,7 @@
                             </plex-button>
                         </ng-container>
                     </ng-container>
-                    <ng-container *ngIf="relacion.origen !== 'ocupada'">
+                    <ng-container *ngIf="capa !== 'estadistica' || relacion.origen !== 'ocupada'">
                         <plex-button [icon]="relacion.icon" [type]="relacion.color" size="sm"
                                      (click)="accion(relacion, $event)">
                         </plex-button>

@@ -26,6 +26,7 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
     private subscription: Subscription;
     private subscription2: Subscription;
     private subscription3: Subscription;
+    private subscription4: Subscription;
 
     // Constructor
     constructor(
@@ -40,42 +41,51 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
         if (this.subscription3) {
             this.subscription3.unsubscribe();
         }
+        if (this.subscription4) {
+            this.subscription4.unsubscribe();
+        }
     }
 
     ngOnInit() {
         this.subscription = combineLatest(
             this.mapaCamasService.view,
+            this.mapaCamasService.capa2,
             this.mapaCamasService.selectedCama,
-            this.mapaCamasService.prestacion$
-        ).subscribe(([view, cama, prestacion]) => {
+        ).subscribe(([view, capa, cama]) => {
             this.view = view;
             this.cama = cama;
             this.fecha = moment().toDate();
             this.fechaMax = moment().toDate();
-            if (prestacion) {
-                this.fechaMin = prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
-                this.fecha = this.fechaMin;
-                if (prestacion.ejecucion.registros[1] && prestacion.ejecucion.registros[1].valor) {
-                    this.fecha = prestacion.ejecucion.registros[1].valor.InformeEgreso.fechaEgreso;
-                    this.fechaMax = this.fecha;
-                }
+            if (capa === 'estadistica') {
+                this.subscription2 = combineLatest(
+                    this.mapaCamasService.prestacion$
+                ).subscribe(([prestacion]) => {
+                    this.fechaMin = prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
+                    this.fecha = this.fechaMin;
+                    if (prestacion.ejecucion.registros[1] && prestacion.ejecucion.registros[1].valor) {
+                        this.fecha = prestacion.ejecucion.registros[1].valor.InformeEgreso.fechaEgreso;
+                        this.fechaMax = this.fecha;
+                    }
 
-                if (view === 'listado-internacion') {
-                    const fechaIngreso = prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
-                    const fechaLimite = (prestacion.ejecucion.registros[1].valor) ? prestacion.ejecucion.registros[1].valor.InformeEgreso.fechaEgreso : moment().toDate();
-                    this.subscription2 = this.mapaCamasService.historial('internacion', fechaIngreso, fechaLimite, prestacion).subscribe(movimientos => {
-                        this.fechaMin = movimientos[movimientos.length - 1].fecha;
-                        this.mapaCamasService.setFecha(this.fechaMin);
-                        this.subscription3 = this.mapaCamasService.snapshot(this.fechaMin, prestacion.id).subscribe((snap) => {
-                            this.cama = snap[0];
-                            this.camasDisponibles$ = this.mapaCamasService.getCamasDisponibles(this.cama);
+                    if (view === 'listado-internacion') {
+                        const fechaIngreso = prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
+                        const fechaLimite = (prestacion.ejecucion.registros[1].valor) ? prestacion.ejecucion.registros[1].valor.InformeEgreso.fechaEgreso : moment().toDate();
+                        this.subscription3 = this.mapaCamasService.historial('internacion', fechaIngreso, fechaLimite, prestacion).subscribe(movimientos => {
+                            this.fechaMin = movimientos[movimientos.length - 1].fecha;
+                            this.mapaCamasService.setFecha(this.fechaMin);
+                            this.subscription4 = this.mapaCamasService.snapshot(this.fechaMin, prestacion.id).subscribe((snap) => {
+                                this.cama = snap[0];
+                                this.camasDisponibles$ = this.mapaCamasService.getCamasDisponibles(this.cama);
+                            });
                         });
-                    });
-                } else {
-                    this.camasDisponibles$ = this.mapaCamasService.getCamasDisponibles(this.cama);
-                }
-            }
+                    } else {
+                        this.camasDisponibles$ = this.mapaCamasService.getCamasDisponibles(this.cama);
+                    }
+                });
+            } else {
+                this.camasDisponibles$ = this.mapaCamasService.getCamasDisponibles(this.cama);
 
+            }
         });
     }
 
