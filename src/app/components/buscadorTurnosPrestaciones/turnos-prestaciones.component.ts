@@ -34,6 +34,7 @@ export class TurnosPrestacionesComponent implements OnInit {
     prestacion: any;
     router: any;
     public prestaciones: any;
+    public puedeEmitirComprobante: Boolean;
 
     public botonBuscarDisabled: Boolean = false;
 
@@ -69,6 +70,8 @@ export class TurnosPrestacionesComponent implements OnInit {
         this.fechaHasta = new Date();
         this.fechaDesde = moment(this.fechaDesde).startOf('day');
         this.fechaHasta = moment(this.fechaHasta).endOf('day');
+
+        this.puedeEmitirComprobante = this.auth.check('turnosPrestaciones:emitirComprobante');
 
         // Iniciamos la búsqueda
         this.parametros = {
