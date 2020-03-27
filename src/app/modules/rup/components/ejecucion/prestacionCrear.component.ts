@@ -110,6 +110,7 @@ export class PrestacionCrearComponent implements OnInit {
     }
 
     seleccionarTipoPrestacion() {
+        this.paciente = null;
         this.mostrarPaciente = this.tipoPrestacionSeleccionada && !this.tipoPrestacionSeleccionada.noNominalizada;
     }
 
