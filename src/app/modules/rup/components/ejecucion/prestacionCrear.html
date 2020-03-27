@@ -3,9 +3,8 @@
         <plex-title titulo="Crear Prestación">
             <plex-button type="danger" label="CANCELAR" (click)="cancelar()">
             </plex-button>
-            <plex-button label="INICIAR PRESTACIÓN" type="success" (click)="iniciarPrestacion()"
-                         [disabled]="opcion === 'fueraAgenda' && !paciente?.id && !tipoPrestacionSeleccionada?.noNominalizada"
-                         class="ml-1">
+            <plex-button [label]="btnLabel" type="success" (click)="btnClick()"
+                         [disabled]="!paciente?.id && !tipoPrestacionSeleccionada?.noNominalizada" class="ml-1">
             </plex-button>
         </plex-title>
         <div class="row">
