@@ -151,6 +151,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
     setFecha() {
         this.mapaCamasService.setFecha(this.fecha);
+        this.registro.valor.InformeEgreso.fechaEgreso = this.fecha;
         if (this.capa === 'estadistica') {
             this.calcularDiasEstada();
         }
@@ -339,7 +340,6 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     searchComoSeProdujo(event) {
-
         let desde = 'V00';
         let hasta = 'Y98';
         let filtro;

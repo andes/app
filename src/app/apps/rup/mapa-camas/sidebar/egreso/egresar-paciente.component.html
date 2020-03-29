@@ -28,24 +28,14 @@
         <fieldset>
             <plex-title justify size="sm" titulo="Datos Estadisticos"></plex-title>
             <div class="row">
-                <div class="col-4">
+                <div class="col">
                     <plex-int name="diasEstada" label="Días de estada" suffix="Días"
                               [(ngModel)]="registro.valor.InformeEgreso.diasDeEstada" placeholder="" [required]="true"
                               [readonly]="true"></plex-int>
                 </div>
-                <div class="col-4">
-                    <plex-int name="diasDeEstada" label="Otros días de estada" suffix="Días"
-                              [(ngModel)]="registro.valor.InformeEgreso.diasEstadaOtrasCircunstancias" placeholder="">
-                    </plex-int>
-                </div>
-                <div class="col-4">
-                    <plex-int name="diasDePermisoDeSalida" label="Días de permiso de salida" suffix="Días"
-                              [(ngModel)]="registro.valor.InformeEgreso.diasDePermisoDeSalida" placeholder="">
-                    </plex-int>
-                </div>
             </div>
-            <div class="row ">
-                <div class="col ">
+            <div class="row">
+                <div class="col">
                     <plex-select *ngIf="registro.valor.InformeEgreso.tipoEgreso?.nombre === 'Traslado'"
                                  label="Unidad organizativa de destino"
                                  [(ngModel)]="registro.valor.InformeEgreso.UnidadOrganizativaDestino"
@@ -170,7 +160,6 @@
                                     <plex-int suffix="g" name="peso-{{i}}" label="Peso al nacer"
                                               [(ngModel)]="nacimiento.pesoAlNacer" placeholder=""></plex-int>
                                 </div>
-
                                 <div class="col-6">
                                     <plex-radio [(ngModel)]="nacimiento.condicionAlNacer" label="Condición al nacer"
                                                 type="horizontal" [data]="opcionesCondicionAlNacer"
