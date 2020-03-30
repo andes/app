@@ -306,18 +306,10 @@
                                         </small>
                                     </small>
                                 </div>
-                            </li>
-                        </ul>
-                    </ng-container>
-                </plex-box>
-            </div>
-        </div>
-    </plex-box>
-</section>
-<footer *ngIf="prestacion && !showDarTurnos">
-    <div class="row">
-        <div class="col">
-            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'ejecucion'"
+        <!-- Árbol de relaciones -->
+        <rup-relaciones *ngIf="prestacion.solicitud.ambitoOrigen === 'ambulatorio'"
+                        [registrosRelaciones]="huds.armarRelaciones(prestacion)">
+        </rup-relaciones>
                          label="Continuar {{prestacion.solicitud.tipoPrestacion.term}}" (click)="volver()" type="info">
             </plex-button>
             <!-- Inicio de RUP ambulatorio -->

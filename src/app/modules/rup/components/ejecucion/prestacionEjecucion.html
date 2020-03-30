@@ -365,6 +365,15 @@
                                       (_onDragStart)="arrastrandoConcepto(true)"
                                       (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
                 </plex-tab>
+                <plex-tab icon="file-tree">
+                    <div class="pt-2">
+                        <!-- Árbol de relaciones -->
+                        <rup-relaciones *ngIf="prestacion.solicitud.ambitoOrigen === 'ambulatorio'"
+                                        [registrosRelaciones]="huds.armarRelaciones(prestacion)">
+                        </rup-relaciones>
+
+                    </div>
+                </plex-tab>
             </plex-tabs>
         </div>
     </plex-layout-sidebar>
