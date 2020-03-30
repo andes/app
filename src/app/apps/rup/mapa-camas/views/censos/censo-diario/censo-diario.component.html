@@ -12,13 +12,13 @@
                                  [data]="unidadesOranizativas" [required]="true">
                     </plex-select>
                 </div>
-                <div class="col-md-2">
-                    <br>
+                <div class="d-flex align-items-end col-md-2">
                     <plex-button [disabled]="!fecha || !selectedUnidadOranizativa" label="GENERAR CENSO" type="primary"
                                  (click)="generarCensoDiario()">
                     </plex-button>
-                    <plex-button [disabled]="!censo" title="Descargar censo diario" type="warning">
-                        <plex-icon name="download" (click)="descargarCenso()"></plex-icon>
+                    <plex-button [disabled]="!censo" title="Descargar censo diario" type="warning"
+                                 (click)="descargarCenso()">
+                        <plex-icon name="download"></plex-icon>
                     </plex-button>
                 </div>
             </div>

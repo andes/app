@@ -25,7 +25,6 @@ export class CensosDiariosComponent implements OnInit {
 
     constructor(
         public auth: Auth,
-        private router: Router,
         private mapaCamasService: MapaCamasService,
         private servicioDocumentos: DocumentosService,
         private organizacionService: OrganizacionService
@@ -38,7 +37,12 @@ export class CensosDiariosComponent implements OnInit {
             organizacion.unidadesOrganizativas.map(u => {
                 index = this.unidadesOranizativas.findIndex(uo => uo.id === u.conceptId);
                 if (index < 0) {
-                    this.unidadesOranizativas.push({ 'id': u.id, 'nombre': u.term, 'term': u.term });
+                    this.unidadesOranizativas.push({
+                        'id': u.conceptId,
+                        'conceptId': u.conceptId,
+                        'nombre': u.term,
+                        'term': u.term
+                    });
                 }
             });
         });
@@ -48,7 +52,7 @@ export class CensosDiariosComponent implements OnInit {
         this.censoPacientes = [];
         this.censo = {};
 
-        this.mapaCamasService.censoDiario(moment(this.fecha).toDate(), this.selectedUnidadOranizativa.id)
+        this.mapaCamasService.censoDiario(moment(this.fecha).toDate(), this.selectedUnidadOranizativa.conceptId)
             .subscribe((censoDiario: any) => {
                 this.censo = {
                     existencia0: censoDiario.censo.existenciaALas0,
