@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Plex } from '@andes/plex';
-import { SnomedService, SnomedExpression } from '../../../../mitos';
+import { SnomedExpression } from '../../../../mitos';
 import * as moment from 'moment';
 
 @Component({
@@ -34,6 +35,7 @@ export class CamaMainComponent implements OnInit {
         private route: ActivatedRoute,
         private organizacionService: OrganizacionService,
         private mapaCamasService: MapaCamasService,
+        private location: Location,
     ) {
 
     }
@@ -72,13 +74,17 @@ export class CamaMainComponent implements OnInit {
                         this.camaAux = cama;
                     });
             } else {
-                this.cama = {};
+                this.cama = {
+                    esCensable: true
+                };
             }
         });
     }
 
     save() {
+        console.log('CAMA ANTES: ', this.cama)
         this.mapaCamasService.save(this.cama, this.fecha).subscribe(response => {
+            console.log('CAMA: ', response)
             if (response) {
                 this.router.navigate(['/internacion/mapa-camas']);
             } else {
@@ -104,4 +110,7 @@ export class CamaMainComponent implements OnInit {
         });
     }
 
+    volver() {
+        this.location.back();
+    }
 }
