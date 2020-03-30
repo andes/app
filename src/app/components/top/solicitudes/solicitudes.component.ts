@@ -321,10 +321,6 @@ export class SolicitudesComponent implements OnInit {
                 }
                 if (this.prestacionDestino) {
                     params['prestacionDestino'] = this.prestacionDestino.id;
-                } else {
-                    if (this.estadoEntrada.id === 'pendiente') {
-                        params['tieneTurno'] = false;
-                    }
                 }
             }
         }
@@ -348,10 +344,6 @@ export class SolicitudesComponent implements OnInit {
                 }
                 if (this.prestacionDestino) {
                     params['prestacionDestino'] = this.prestacionDestino.id;
-                } else {
-                    if (this.estadoSalida.id === 'pendiente') {
-                        params['tieneTurno'] = false;
-                    }
                 }
             }
         }
