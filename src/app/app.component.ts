@@ -91,7 +91,7 @@ export class AppComponent {
         }
 
         if (this.auth.getPermissions('internacion:?').length > 0) {
-            accessList.push({ label: 'Mapa de Camas', icon: 'mdi mdi-bed-empty', route: '/internacion/camas' });
+            accessList.push({ label: 'Mapa de Camas', icon: 'mdi mdi-bed-empty', route: '/internacion/mapa-camas' });
         }
         if (this.auth.getPermissions('tm:organizacion:?').length > 0) {
             accessList.push({ label: 'Organizaciones', icon: 'cogs', route: '/tm/organizacion' });
