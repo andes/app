@@ -54,6 +54,15 @@ export class MapaCamasCapaComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.plex.updateTitle([{
+            route: '/inicio',
+            name: 'Andes'
+        }, {
+            name: 'Internacion'
+        }, {
+            name: 'Mapa de Camas'
+        }]);
+
         this.mapaCamasService.setView('mapa-camas');
 
         this.ambito = this.mapaCamasService.ambito;
@@ -143,10 +152,6 @@ export class MapaCamasCapaComponent implements OnInit {
             this.accion = null;
             this.mapaCamasService.select(null);
         }
-    }
-
-    volver() {
-        this.location.back();
     }
 
     gotoListaEspera() {
