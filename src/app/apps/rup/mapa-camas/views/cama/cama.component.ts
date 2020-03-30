@@ -82,9 +82,7 @@ export class CamaMainComponent implements OnInit {
     }
 
     save() {
-        console.log('CAMA ANTES: ', this.cama)
         this.mapaCamasService.save(this.cama, this.fecha).subscribe(response => {
-            console.log('CAMA: ', response)
             if (response) {
                 this.router.navigate(['/internacion/mapa-camas']);
             } else {
