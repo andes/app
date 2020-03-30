@@ -216,7 +216,7 @@ export class MapaCamasService {
         return this.historial('internacion', cama.fecha, moment().toDate(), prestacion).pipe(
             map((movimientos: ISnapshot[]) => {
                 let puedeDesocupar = 'noPuede';
-                if (!prestacion.ejecucion.registros[1] || !prestacion.ejecucion.registros[1].valor.InformeEgreso) {
+                        if (!prestacion.ejecucion.registros[1] || !prestacion.ejecucion.registros[1].valor.InformeEgreso) {
                     if (movimientos.length === 1) {
                         puedeDesocupar = 'puede';
                     } else {

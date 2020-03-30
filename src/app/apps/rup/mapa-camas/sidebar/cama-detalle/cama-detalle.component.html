@@ -5,19 +5,20 @@
                 <ng-container *ngFor="let relacion of relaciones$ | async">
                     <ng-container *ngIf="capa === 'estadistica' && relacion.origen === 'ocupada'">
                         <ng-container *ngIf="puedeDesocupar$ | async as puedeDesocupar">
-                            <plex-button [icon]="relacion.icon" [type]="relacion.color" info="No se puede desocupar"
+                            <plex-button title="{{ (puedeDesocupar !== 'noPuede') ? (relacion.accion | lowercase) : null}}" 
+                                        [icon]="relacion.icon" [type]="relacion.color" info="No se puede desocupar"
                                          size="sm" [disabled]="puedeDesocupar === 'noPuede'"
                                          (click)="accion(relacion, $event)">
                             </plex-button>
                         </ng-container>
                     </ng-container>
                     <ng-container *ngIf="capa !== 'estadistica' || relacion.origen !== 'ocupada'">
-                        <plex-button [icon]="relacion.icon" [type]="relacion.color" size="sm"
+                        <plex-button title="{{ relacion.accion | lowercase }}" [icon]="relacion.icon" [type]="relacion.color" size="sm"
                                      (click)="accion(relacion, $event)">
                         </plex-button>
                     </ng-container>
                 </ng-container>
-                <plex-button icon="pencil" type="warning" size="sm" (click)="goTo()">
+                <plex-button title="editar cama" icon="pencil" type="warning" size="sm" (click)="goTo()">
                 </plex-button>
                 <plex-button title="volver" icon="arrow-left" type="info" size="sm" (click)="cancelar()">
                 </plex-button>
@@ -32,8 +33,14 @@
                     <plex-badge type="info">
                         {{ cama.esCensable ? 'Censable' : 'No Censable' }}
                     </plex-badge>
-                    <plex-badge type="info">
-                        {{ cama.genero.term === 'género masculino' ? 'Cama Masculina' : 'Cama Femenina' }}
+                    <plex-badge *ngIf="cama.genero.term === 'género masculino'" type="info">
+                        Cama Masculina
+                    </plex-badge>
+                    <plex-badge *ngIf="cama.genero.term === 'género femenino'" type="info">
+                        Cama Femenina
+                    </plex-badge>
+                    <plex-badge *ngIf="!cama.genero.term" type="info">
+                        Sin Género
                     </plex-badge>
                     <div [class]="'text-' + estadoCama.color" title>
                         {{ cama.nombre }}

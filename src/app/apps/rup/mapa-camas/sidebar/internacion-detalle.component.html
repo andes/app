@@ -6,7 +6,7 @@
 
         <ng-container *ngIf="mostrar === 'ingreso'">
             <app-informe-ingreso *ngIf="!editar" (cancel)="activatedOption('ingreso')">
-                <plex-button title="editar" icon="pencil" type="warning" size="sm" (click)="toggleEdit()">
+                <plex-button title="editar ingreso" icon="pencil" type="warning" size="sm" (click)="toggleEdit()">
                 </plex-button>
             </app-informe-ingreso>
             <app-ingresar-paciente *ngIf="editar" (onSave)="toggleEdit()">
@@ -23,7 +23,7 @@
         </ng-container>
         <ng-container *ngIf="mostrar === 'egreso'">
             <app-informe-egreso *ngIf="!editar && existeEgreso" (cancel)="activatedOption('egreso')">
-                <plex-button title="editar" icon="pencil" type="warning" size="sm" (click)="toggleEdit()">
+                <plex-button title="editar egreso" icon="pencil" type="warning" size="sm" (click)="toggleEdit()">
                 </plex-button>
             </app-informe-egreso>
             <app-egresar-paciente *ngIf="editar || !existeEgreso" (onSave)="toggleEdit()">
