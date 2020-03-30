@@ -53,21 +53,8 @@
                 </plex-button>
             </plex-title>
             <fieldset>
-                <plex-detail size="md" direction="row">
-                    <plex-icon name="paciente" prefix="adi"></plex-icon>
-                    <!-- <plex-badge type="cama.paciente">
-                        {{ cama.paciente.estado }}
-                    </plex-badge> -->
-                    <div title>
-                        {{ cama.paciente | nombre }}
-                    </div>
-                    <div subtitle>
-                        {{ cama.paciente.documento }}
-                    </div>
-                    <plex-label titulo="Fecha de Nacimiento"
-                                [subtitulo]="cama.paciente.fechaNacimiento | date: 'dd/MM/yyyy'">
-                    </plex-label>
-                </plex-detail>
+                <paciente-detalle [paciente]="getPaciente(cama.paciente) | async" orientacion="horizontal">
+                </paciente-detalle>
             </fieldset>
         </ng-container>
     </plex-tab>

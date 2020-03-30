@@ -5,9 +5,10 @@ import { ElementosRUPService } from '../../../../../modules/rup/services/element
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { ISnapshot } from '../../interfaces/ISnapshot';
-import { tap, map, switchMap } from 'rxjs/operators';
+import { tap, map, switchMap, startWith } from 'rxjs/operators';
 import { Observable, combineLatest, of, Subscription } from 'rxjs';
 import { IMAQEstado, IMAQRelacion } from '../../interfaces/IMaquinaEstados';
+import { PacienteService } from '../../../../../core/mpi/services/paciente.service';
 
 
 @Component({
@@ -53,7 +54,8 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
         private router: Router,
         private prestacionService: PrestacionesService,
         private elementoRupService: ElementosRUPService,
-        private mapaCamasService: MapaCamasService
+        private mapaCamasService: MapaCamasService,
+        private pacienteService: PacienteService
     ) {
     }
 
@@ -132,5 +134,15 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
 
     refrescar(accion) {
         this.refresh.emit(accion);
+    }
+
+    private paciente$: any = {};
+    getPaciente(paciente) {
+        if (!this.paciente$[paciente.id]) {
+            this.paciente$[paciente.id] = this.pacienteService.getById(paciente.id).pipe(
+                startWith(paciente)
+            );
+        }
+        return this.paciente$[paciente.id];
     }
 }

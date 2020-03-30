@@ -2,7 +2,7 @@
 
     <img class="img-user" [mpiFotoPaciente]="paciente" />
 
-    <plex-badge [type]="estadoBadgeType">
+    <plex-badge [type]="estadoBadgeType" *ngIf="paciente.estado">
         {{ paciente.estado | uppercase }}
     </plex-badge>
 
