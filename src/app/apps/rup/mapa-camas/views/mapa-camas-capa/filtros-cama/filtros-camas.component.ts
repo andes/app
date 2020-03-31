@@ -37,7 +37,6 @@ export class FiltrosCamasComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-
         this.unidadOrganizativaList$ = this.mapaCamasService.snapshot$.pipe(
             map((camas) => arrayToSet(camas, 'conceptId', (item) => item.unidadOrganizativa))
         );
@@ -50,6 +49,15 @@ export class FiltrosCamasComponent implements OnInit {
             map((camas) => arrayToSet(camas, 'conceptId', (item) => item.tipoCama))
         );
 
+        this.clearFiltros();
+    }
+
+    private clearFiltros() {
+        this.mapaCamasService.pacienteText.next(null);
+        this.mapaCamasService.tipoCamaSelected.next(null);
+        this.mapaCamasService.unidadOrganizativaSelected.next(null);
+        this.mapaCamasService.esCensable.next(null);
+        this.mapaCamasService.sectorSelected.next(null);
     }
 
     filtrar() {
