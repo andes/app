@@ -47,7 +47,15 @@ export class MovimientosInternacionComponent implements OnInit {
             desde: this.desde,
             hasta: this.hasta
         };
-        this.historial.next(filtros);
+
+        if (this.desde && this.hasta) {
+            const fechaDesdeValida = (this.desde <= this.hasta);
+            const fechaHastaValida = (this.hasta <= moment().toDate() && this.hasta >= this.desde);
+
+            if (fechaDesdeValida && fechaHastaValida) {
+                this.historial.next(filtros);
+            }
+        }
     }
 
 }
