@@ -101,8 +101,8 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
         this.tabIndex = index;
     }
 
-    goTo() {
-        this.router.navigate([`/internacion/cama/${this.cama.idCama}`]);
+    goTo(cama) {
+        this.router.navigate([`/internacion/cama/${cama.idCama}`]);
     }
 
     accion(relacion) {
