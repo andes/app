@@ -101,7 +101,7 @@ export class CensosDiariosComponent implements OnInit {
                             }
 
                         }
-                    })
+                    });
                 });
             });
     }
