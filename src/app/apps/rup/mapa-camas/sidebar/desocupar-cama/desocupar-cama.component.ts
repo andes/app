@@ -52,16 +52,15 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
             this.mapaCamasService.capa2,
             this.mapaCamasService.selectedCama,
         ).subscribe(([view, capa, cama]) => {
+            this.fecha = this.mapaCamasService.fecha;
             this.view = view;
             this.cama = cama;
-            this.fecha = moment().toDate();
             this.fechaMax = moment().toDate();
             if (capa === 'estadistica') {
                 this.subscription2 = combineLatest(
                     this.mapaCamasService.prestacion$
                 ).subscribe(([prestacion]) => {
                     this.fechaMin = prestacion.ejecucion.registros[0].valor.informeIngreso.fechaIngreso;
-                    this.fecha = this.fechaMin;
                     if (prestacion.ejecucion.registros[1] && prestacion.ejecucion.registros[1].valor) {
                         this.fecha = prestacion.ejecucion.registros[1].valor.InformeEgreso.fechaEgreso;
                         this.fechaMax = this.fecha;
@@ -72,6 +71,7 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
                         const fechaLimite = (prestacion.ejecucion.registros[1].valor) ? prestacion.ejecucion.registros[1].valor.InformeEgreso.fechaEgreso : moment().toDate();
                         this.subscription3 = this.mapaCamasService.historial('internacion', fechaIngreso, fechaLimite, prestacion).subscribe(movimientos => {
                             this.fechaMin = movimientos[movimientos.length - 1].fecha;
+                            this.fecha = this.fechaMin;
                             this.mapaCamasService.setFecha(this.fechaMin);
                             this.subscription4 = this.mapaCamasService.snapshot(this.fechaMin, prestacion.id).subscribe((snap) => {
                                 this.cama = snap[0];
@@ -84,7 +84,6 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
                 });
             } else {
                 this.camasDisponibles$ = this.mapaCamasService.getCamasDisponibles(this.cama);
-
             }
         });
     }
