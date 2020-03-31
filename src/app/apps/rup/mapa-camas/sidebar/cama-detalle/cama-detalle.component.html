@@ -45,14 +45,15 @@
                     <div [class]="'text-' + estadoCama.color" title>
                         {{ cama.nombre }}
                     </div>
-                    <plex-label titulo="Unidad Organizativa" [subtitulo]="cama.unidadOrganizativa.term">
+                    <plex-label titulo="Unidad Organizativa" subtitulo="{{ cama.unidadOrganizativa.term }}">
                     </plex-label>
                     <plex-label titulo="Especialidades" subtitulo="{{ cama.especialidades | enumerar: ['term'] }}">
                     </plex-label>
-                    <plex-label titulo="Tipo de cama" [subtitulo]="cama.tipoCama.term"></plex-label>
-                    <plex-label titulo="Sector" [subtitulo]="sector(cama)"></plex-label>
+                    <plex-label titulo="Tipo de cama" subtitulo="{{ cama.tipoCama.term }}"></plex-label>
+                    <plex-label titulo="Sector" subtitulo="{{ sector(cama) }}"></plex-label>
                     <plex-label titulo="Equipamiento" subtitulo="{{ cama.equipamiento | enumerar: ['term'] }}">
                     </plex-label>
+                    <plex-label *ngIf="estadoCama.label === 'Bloqueada'" titulo="Motivo bloqueo" subtitulo="{{ cama.observaciones }}"></plex-label>
                 </plex-detail>
             </fieldset>
         </ng-container>

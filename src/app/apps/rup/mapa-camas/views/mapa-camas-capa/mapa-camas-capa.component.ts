@@ -40,7 +40,11 @@ export class MapaCamasCapaComponent implements OnInit {
     maquinaEstados: IMaquinaEstados;
     opcionesCamas = [];
     accion = null;
-
+    listaMotivosBloqueo = [
+        { nombre: 'Reparacion' },
+        { nombre: 'Paciente en aislamiento' },
+        { nombre: 'Falta personal' },
+    ];
     cambiarUO;
     camasDisponibles;
 
@@ -49,7 +53,6 @@ export class MapaCamasCapaComponent implements OnInit {
         private plex: Plex,
         private router: Router,
         private route: ActivatedRoute,
-        private location: Location,
         private mapaCamasService: MapaCamasService,
     ) { }
 
@@ -114,8 +117,13 @@ export class MapaCamasCapaComponent implements OnInit {
         this.mapaCamasService.select(cama);
         this.mapaCamasService.selectPaciente(cama.paciente);
         if (relacion) {
-            this.accion = relacion.accion;
             this.estadoDestino = relacion.destino;
+            if ( (relacion.origen === 'ocupada' && relacion.destino === 'disponible') ||
+                  (relacion.origen === 'disponible' && relacion.destino === 'ocupada')) {
+                this.accion = relacion.accion;
+            } else {
+                this.accion = 'accionGenerica';
+            }
         }
     }
 

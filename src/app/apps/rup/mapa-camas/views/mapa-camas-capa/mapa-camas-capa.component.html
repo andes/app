@@ -65,7 +65,8 @@
             <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="volverADesocupar()">
             </plex-button>
         </app-egresar-paciente>
-        <app-cama-destino-generico *ngIf="accion === 'accionGenerica'" [destino]="estadoDestino"
+        <app-cama-destino-generico *ngIf="accion === 'accionGenerica'" [destino]="estadoDestino" 
+                                    [listaMotivosBloqueo]="listaMotivosBloqueo"
                                    (onSave)="volverAResumen()">
             <plex-button icon="arrow-left" type="danger" size="sm" (click)="volverAResumen()">
             </plex-button>

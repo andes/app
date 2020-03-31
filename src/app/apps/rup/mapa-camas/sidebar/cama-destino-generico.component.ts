@@ -15,13 +15,16 @@ export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
     selectedCama$: Observable<ISnapshot>;
 
     @Input() destino: any;
+    @Input() listaMotivosBloqueo: any[];
+
     @Output() onSave = new EventEmitter<any>();
 
-    public fecha: Date = moment().toDate();
-    public fechaMax: Date = moment().toDate();
+    public fecha;
+    public fechaMax = moment().toDate();
     public selectedCama;
     public capa;
     public titulo: string;
+    public otroMotivo = false;
 
     private subscription: Subscription;
 
@@ -37,6 +40,8 @@ export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.fecha = this.mapaCamasService.fecha;
+
         this.subscription = combineLatest(
             this.mapaCamasService.capa,
             this.mapaCamasService.selectedCama,
@@ -46,26 +51,27 @@ export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
         });
 
         this.titulo = 'CAMBIAR A ' + this.destino.toUpperCase();
-
-        this.camas$ = this.mapaCamasService.snapshot$.pipe(
-            map((snapshot) => {
-                return snapshot.filter(snap => snap.estado === 'disponible');
-            })
-        );
     }
 
-    guardar() {
-        if (this.selectedCama) {
-            // Se modifica el estado de la cama
-            this.selectedCama.estado = this.destino;
+    guardar(form) {
+        if (form.formValid) {
+            if (this.selectedCama) {
+                if (this.selectedCama.estado === 'bloqueada') {
+                    this.selectedCama.observaciones = '';
+                }
 
-            this.mapaCamasService.save(this.selectedCama, this.fecha).subscribe(camaActualizada => {
-                this.plex.info('success', 'Cama ' + this.destino);
-                this.mapaCamasService.setFecha(this.fecha);
-                this.onSave.emit({ cama: this.selectedCama });
-            }, (err1) => {
-                this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
-            });
+                // Se modifica el estado de la cama
+                this.selectedCama.estado = this.destino;
+                this.selectedCama.observaciones = ((typeof this.selectedCama.observaciones === 'string')) ? this.selectedCama.observaciones : (Object(this.selectedCama.observaciones).nombre);
+
+                this.mapaCamasService.save(this.selectedCama, this.fecha).subscribe(camaActualizada => {
+                    this.plex.info('success', 'Cama ' + this.destino);
+                    this.mapaCamasService.setFecha(this.fecha);
+                    this.onSave.emit({ cama: this.selectedCama });
+                }, (err1) => {
+                    this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
+                });
+            }
         }
     }
 
@@ -75,5 +81,9 @@ export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
 
     selectCama(cama: ISnapshot) {
         this.mapaCamasService.select(cama);
+    }
+
+    cambiarMotivo() {
+        this.selectedCama.observaciones = null;
     }
 }
