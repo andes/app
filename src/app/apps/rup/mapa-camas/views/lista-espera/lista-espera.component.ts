@@ -3,6 +3,7 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap, switchMapTo } from 'rxjs/operators';
+import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 
 @Component({
     selector: 'app-internacion-lista-espera',
@@ -20,7 +21,8 @@ export class InternacionListaEsperaComponent implements OnInit {
 
     constructor(
         private mapaCamaService: MapaCamasService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private mapaCamasHTTP: MapaCamasHTTP
     ) { }
 
     ngOnInit() {
@@ -56,10 +58,11 @@ export class InternacionListaEsperaComponent implements OnInit {
             this.camaSelected.estado = 'ocupada';
             this.camaSelected.idInternacion = this.internacionSelected._id;
             this.camaSelected.paciente = this.internacionSelected.paciente;
+            this.camaSelected.esMovimiento = true;
 
             this.route.params.pipe(
                 switchMap((params: any) => {
-                    return this.mapaCamaService.save(this.camaSelected, fecha, params.ambito, params.capa);
+                    return this.mapaCamasHTTP.save(params.ambito, params.capa, fecha, this.camaSelected);
                 })
             ).subscribe(() => {
                 this.camaSelected = null;

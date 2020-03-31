@@ -24,7 +24,6 @@ export class CamaMainComponent implements OnInit {
     public sectores: any[] = [];
     public nuevaCama = true;
     public cama: any;
-    public camaAux: any;
     public estado: any;
 
 
@@ -68,11 +67,9 @@ export class CamaMainComponent implements OnInit {
         this.route.paramMap.subscribe(params => {
             if (params.get('id')) {
                 let idCama = params.get('id');
-                this.mapaCamasService.get(this.fecha, idCama)
-                    .subscribe(cama => {
-                        this.cama = cama;
-                        this.camaAux = cama;
-                    });
+                this.mapaCamasService.get(this.fecha, idCama).subscribe(cama => {
+                    this.cama = cama;
+                });
             } else {
                 this.cama = {
                     esCensable: true
@@ -82,7 +79,8 @@ export class CamaMainComponent implements OnInit {
     }
 
     save() {
-        this.mapaCamasService.save(this.cama, this.fecha).subscribe(response => {
+        const esMovimiento = !this.cama._id;
+        this.mapaCamasService.save(this.cama, this.fecha, esMovimiento).subscribe(response => {
             if (response) {
                 this.router.navigate(['/internacion/mapa-camas']);
             } else {
@@ -93,7 +91,6 @@ export class CamaMainComponent implements OnInit {
 
     darBaja() {
         this.cama.estado = 'inactiva';
-
         this.plex.confirm('¿Dar de baja la cama "' + this.cama.nombre + '"?', '¿Desea dar de baja?').then(confirmacion => {
             if (confirmacion) {
                 this.mapaCamasService.save(this.cama, this.fecha).subscribe(response => {

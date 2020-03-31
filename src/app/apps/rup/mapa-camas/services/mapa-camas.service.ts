@@ -216,8 +216,10 @@ export class MapaCamasService {
         return this.historial('internacion', cama.fecha, moment().toDate(), prestacion).pipe(
             map((movimientos: ISnapshot[]) => {
                 let puedeDesocupar = 'noPuede';
-                        if (!prestacion.ejecucion.registros[1] || !prestacion.ejecucion.registros[1].valor.InformeEgreso) {
+                if (!prestacion.ejecucion.registros[1] || !prestacion.ejecucion.registros[1].valor.InformeEgreso) {
                     if (movimientos.length === 1) {
+                        puedeDesocupar = 'puede';
+                    } else if (movimientos.length === 0) {
                         puedeDesocupar = 'puede';
                     } else {
                         let movOrd = movimientos.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
@@ -355,12 +357,12 @@ export class MapaCamasService {
                     return this.camasHTTP.historial(ambito, capa, desde, hasta, { idCama: selectedCama.idCama });
                 } else if (type === 'internacion') {
                     if (prestacion) {
-                        return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: prestacion.id });
+                        return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: prestacion.id, esMovimiento: true });
                     } else {
                         if (view === 'mapa-camas') {
-                            return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: selectedCama.idInternacion });
+                            return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: selectedCama.idInternacion, esMovimiento: true });
                         } else if (view === 'listado-internacion') {
-                            return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: selectedPrestacion.id });
+                            return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: selectedPrestacion.id, esMovimiento: true });
                         }
                     }
                 }
@@ -372,10 +374,9 @@ export class MapaCamasService {
         return this.camasHTTP.get(this.ambito, this.capa, fecha, idCama);
     }
 
-    save(data, fecha, ambito: string = null, capa: string = null): Observable<ICama> {
-        ambito = ambito || this.ambito;
-        capa = capa || this.capa;
-        return this.camasHTTP.save(ambito, capa, fecha, data);
+    save(data, fecha, esMovimiento = true): Observable<ICama> {
+        data.esMovimiento = esMovimiento;
+        return this.camasHTTP.save(this.ambito, this.capa, fecha, data);
     }
 
     getMaquinaEstados(organizacion): Observable<IMaquinaEstados[]> {
