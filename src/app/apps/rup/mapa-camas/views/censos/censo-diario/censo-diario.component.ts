@@ -66,8 +66,42 @@ export class CensosDiariosComponent implements OnInit {
                     pacientesDia: censoDiario.censo.pacientesDia,
                     disponibles24: censoDiario.censo.disponibles,
                 };
+
                 Object.keys(censoDiario.pacientes).map(p => {
-                    this.censoPacientes.push(censoDiario.pacientes[p]);
+                    let delDiaAnterior = false;
+                    let ingresoAServicio = false;
+                    let censoPaciente = censoDiario.pacientes[p];
+                    censoPaciente.actividad.forEach((actividad: any, index) => {
+                        let movimiento = {
+                            datos: censoPaciente.datos,
+                            ingreso: actividad.ingreso,
+                            paseDe: actividad.paseDe,
+                            egreso: actividad.egreso,
+                            paseA: actividad.paseA
+                        };
+                        if (!movimiento.ingreso && !movimiento.paseDe && !movimiento.egreso && !movimiento.paseA) {
+                            delDiaAnterior = true;
+                            if (censoPaciente.actividad.length === 1) {
+                                this.censoPacientes.push(movimiento);
+                            }
+                        } else {
+                            if (movimiento.paseDe) {
+                                ingresoAServicio = true;
+                                this.censoPacientes.push(movimiento);
+                            } else {
+                                if (movimiento.paseA) {
+                                    if (ingresoAServicio) {
+                                        this.censoPacientes[this.censoPacientes.length - 1].paseA = movimiento.paseA;
+                                    } else {
+                                        this.censoPacientes.push(movimiento);
+                                    }
+                                } else {
+                                    this.censoPacientes.push(movimiento);
+                                }
+                            }
+
+                        }
+                    })
                 });
             });
     }

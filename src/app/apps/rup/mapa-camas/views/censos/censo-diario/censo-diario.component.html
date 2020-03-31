@@ -30,9 +30,9 @@
                         <th>Paciente</th>
                         <th>Cama</th>
                         <th>Ingreso</th>
-                        <th>Pases De</th>
+                        <th>Pase de</th>
                         <th>Egreso</th>
-                        <th>Pases A</th>
+                        <th>Pase a</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,11 +40,12 @@
                         <td>{{censoP.datos.paciente.apellido}}, {{censoP.datos.paciente.nombre}} |
                             {{censoP.datos.paciente.documento}} </td>
                         <td>{{censoP.datos.cama.nombre}},
-                            {{censoP.datos.cama.sectores[censoP.datos.cama.sectores.length -1].nombre}}</td>
-                        <td>{{censoP.actividad[censoP.actividad.length - 1]?.ingreso}}</td>
-                        <td>{{censoP.actividad[censoP.actividad.length - 1]?.paseDe}}</td>
-                        <td>{{censoP.actividad[censoP.actividad.length - 1]?.egreso}}</td>
-                        <td>{{censoP.actividad[censoP.actividad.length - 1]?.paseA}}</td>
+                            {{censoP.datos.cama.sectores[censoP.datos.cama.sectores.length -1].nombre}}
+                        </td>
+                        <td>{{censoP.ingreso}}</td>
+                        <td>{{censoP.paseDe}}</td>
+                        <td>{{censoP.egreso}}</td>
+                        <td>{{censoP.paseA}}</td>
                     </tr>
                 </tbody>
             </table>
