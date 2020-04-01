@@ -149,7 +149,7 @@
                     </td>
                     <!-- Boton para subir HUDS digitalizada -->
                     <td>
-                        <upload-file label="Adjuntar HUDS" [extensiones]="['pdf']"
+                        <upload-file *ngIf="puedeAdjutarHUDS" label="Adjuntar HUDS" [extensiones]="['pdf']"
                             (onUpload)="onUpload($event, carpeta)"></upload-file>
                         <br><br>
                         <span *ngIf="errorExt===i">
