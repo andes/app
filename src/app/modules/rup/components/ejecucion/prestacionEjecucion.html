@@ -337,7 +337,7 @@
     <plex-layout-sidebar *ngIf="prestacion">
         <!-- Panel Buscador SNOMED + HUDS -->
         <div class="tabs-buscador-huds pr-0 h-100">
-            <plex-tabs [activeIndex]="panelIndex" *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada"
+            <plex-tabs [activeIndex]="panelIndex" (change)="tabChange($event)" *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada"
                        size="full">
                 <plex-tab label="Buscador" (click)="panelIndex = 0">
                     <rup-buscador [prestacion]="prestacion" [frecuentesTipoPrestacion]="masFrecuentes"
@@ -350,7 +350,7 @@
                     </rup-buscador>
                 </plex-tab>
                 <plex-tab *ngIf="tieneAccesoHUDS" label="Historia de Salud" (click)="panelIndex = 1">
-                    <rup-hudsBusqueda [paciente]="prestacion?.paciente" [_dragScope]="'registros-rup'"
+                    <rup-hudsBusqueda *ngIf="mostrarHUDS" [paciente]="prestacion?.paciente" [_dragScope]="'registros-rup'"
                                       (evtData)="ejecutarConceptoHuds($event)"
                                       (_onDragStart)="arrastrandoConcepto(true)"
                                       (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
@@ -376,3 +376,6 @@
 
     </plex-layout-footer>
 </plex-layout>
+
+<modal-motivo-acceso-huds [show]="showModalMotivo" (motivoAccesoHuds)="preAccesoHuds($event)">
+</modal-motivo-acceso-huds>

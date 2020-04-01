@@ -35,6 +35,12 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     @HostBinding('class.plex-layout') layout = true;
     @ViewChildren(RUPComponent) rupElements: QueryList<any>;
 
+    public showModalMotivo: Boolean;
+    public accesoHudsPrestacion = null;
+    public accesoHudsPaciente = null;
+    public accesoHudsTurno = null;
+    public mostrarHUDS: Boolean;
+
     // prestacion actual en ejecucion
     public prestacion: IPrestacion;
     public paciente: IPaciente;
@@ -110,7 +116,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     public scopePrivacy = [];
     public registrosHUDS = [];
-    private tieneAccesoHUDS: Boolean;
+    public tieneAccesoHUDS: Boolean;
+    public motivoAccesoHUDSFueraAgendaRegistrado: Boolean;
 
     // Seguimiento Paciente San Juan
     public flagSeguimiento = false;
@@ -1307,6 +1314,49 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                         this.flagSeguimiento = false;
                 }
             });
+    }
+
+    tabChange($event) {
+        // si se accede al tab de HUDS desde fuera de agenda, pide registro de motivo de acceso
+        if ($event === 1) {
+            if (!this.prestacion.solicitud.turno && !this.motivoAccesoHUDSFueraAgendaRegistrado) {
+                this.setAccesoHudsParams(this.paciente, null, this.prestacion.solicitud.tipoPrestacion.id);
+                this.showModalMotivo = false;
+                this.showModalMotivo = true;
+            } else {
+                this.showHUDS();
+            }
+        } else {
+            this.mostrarHUDS = false;
+        }
+    }
+
+    preAccesoHuds(motivoAccesoHuds) {
+        if (motivoAccesoHuds) {
+            this.huds.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.accesoHudsPaciente, motivoAccesoHuds, this.auth.profesional, this.accesoHudsTurno, this.accesoHudsPrestacion).subscribe(hudsToken => {
+                // se obtiene token y loguea el acceso a la huds del paciente
+                window.sessionStorage.setItem('huds-token', hudsToken.token);
+                this.motivoAccesoHUDSFueraAgendaRegistrado = true;
+                this.accesoHudsPaciente = null;
+                this.accesoHudsTurno = null;
+                this.accesoHudsPrestacion = null;
+                this.showHUDS();
+            });
+        }
+
+        this.showModalMotivo = false;
+    }
+
+    showHUDS() {
+        this.panelIndex = 1;
+        this.mostrarHUDS = true;
+    }
+
+    setAccesoHudsParams(paciente, turno, prestacion) {
+        this.accesoHudsPaciente = paciente;
+        this.accesoHudsTurno = turno;
+        this.accesoHudsPrestacion = prestacion;
+        this.showModalMotivo = true;
     }
 
 }
