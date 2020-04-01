@@ -48,7 +48,6 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
     public tabIndex = 0;
     public editar = false;
 
-    private subscription: Subscription;
 
     constructor(
         private router: Router,
@@ -60,7 +59,6 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.subscription.unsubscribe();
     }
 
     ngOnInit() {
@@ -74,19 +72,6 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
 
         this.estadoCama$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getEstadoCama(cama)));
         this.relaciones$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getRelacionesPosibles(cama)));
-
-        this.subscription = combineLatest(
-            this.mapaCamasService.capa2,
-            this.mapaCamasService.selectedCama
-        ).subscribe(([capa, cama]) => {
-            if (capa === 'estadistica') {
-                if (cama.estado === 'ocupada') {
-                    this.prestacionService.getById(cama.idInternacion).subscribe(prestacion => {
-                        this.puedeDesocupar$ = this.mapaCamasService.verificarCamaDesocupar(cama, prestacion);
-                    });
-                }
-            }
-        });
     }
 
     sector(cama: ISnapshot) {

@@ -59,6 +59,7 @@ export class InternacionListadoComponent implements OnInit {
         }]);
         this.getPrestaciones();
         this.mapaCamasService.setCapa('estadistica');
+        this.mapaCamasService.setAmbito('internacion');
 
         this.selectedPrestacion$ = this.mapaCamasService.selectedPrestacion;
     }

@@ -16,7 +16,7 @@ export class ItemCamaComponent implements OnInit {
     @Input() cama: any;
     @Output() accionCama = new EventEmitter<any>();
 
-    public capa: string;
+    // public capa: string;
     public relacionesPosibles$: Observable<any>;
     public estadoCama$: Observable<any>;
     public puedeDesocupar$: Observable<string>;
@@ -37,14 +37,14 @@ export class ItemCamaComponent implements OnInit {
         this.estadoCama$ = this.mapaCamasService.getEstadoCama(this.cama);
         this.relacionesPosibles$ = this.mapaCamasService.getRelacionesPosibles(this.cama);
 
-        this.capa = this.mapaCamasService.capa;
-        if (this.capa === 'estadistica') {
-            if (this.cama.estado === 'ocupada') {
-                this.prestacionService.getById(this.cama.idInternacion).subscribe(prestacion => {
-                    this.puedeDesocupar$ = this.mapaCamasService.verificarCamaDesocupar(this.cama, prestacion);
-                });
-            }
-        }
+        // this.capa = this.mapaCamasService.capa;
+        // if (this.capa === 'estadistica') {
+        //     if (this.cama.estado === 'ocupada') {
+        //         this.prestacionService.getById(this.cama.idInternacion).subscribe(prestacion => {
+        //             this.puedeDesocupar$ = this.mapaCamasService.verificarCamaDesocupar(this.cama, prestacion);
+        //         });
+        //     }
+        // }
     }
 
     goTo() {

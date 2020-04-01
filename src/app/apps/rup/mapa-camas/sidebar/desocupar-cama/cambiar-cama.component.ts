@@ -72,16 +72,20 @@ export class CambiarCamaComponent implements OnInit, OnDestroy {
 
     guardar(valid) {
         if (valid.formValid) {
-            this.nuevaCama.estado = this.cama.estado;
-            this.nuevaCama.idInternacion = this.cama.idInternacion;
-            this.nuevaCama.paciente = this.cama.paciente;
-
-            this.mapaCamasService.save(this.nuevaCama, this.fecha).subscribe(camaActualizada => {
-                this.cama.estado = 'disponible';
-                this.cama.idInternacion = null;
-                this.cama.paciente = null;
-
-                this.mapaCamasService.save(this.cama, this.fecha).subscribe(camaSeleccionada => {
+            const camaDesocupada = {
+                _id: this.cama.idCama,
+                estado: 'disponible',
+                idInternacion: null,
+                paciente: null
+            };
+            const camaOcupada = {
+                _id: this.nuevaCama.idCama,
+                estado: this.cama.estado,
+                idInternacion: this.cama.idInternacion,
+                paciente: this.cama.paciente
+            };
+            this.mapaCamasService.save(camaOcupada, this.fecha).subscribe(camaActualizada => {
+                this.mapaCamasService.save(camaDesocupada, this.fecha).subscribe(camaSeleccionada => {
                     this.plex.info('success', 'Cambio de cama exitoso!');
                     this.mapaCamasService.setFecha(this.fecha);
                     this.onSave.emit();

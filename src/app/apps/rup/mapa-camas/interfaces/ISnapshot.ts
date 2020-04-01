@@ -31,6 +31,11 @@ export interface ISnapshot {
         _id: String,
         nombre: String
     };
+    extras: {
+        ingreso?: boolean,
+        egreso?: boolean,
+        idInternacion?: boolean
+    };
     createdAt?: Date;
     createdBy?: {
         id: String,

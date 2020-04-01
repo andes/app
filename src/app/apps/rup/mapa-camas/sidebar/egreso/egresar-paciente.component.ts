@@ -172,11 +172,21 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
     egresoSimplificado(estado) {
         // Se modifica el estado de la cama
-        this.cama.estado = estado;
-        this.cama.idInternacion = null;
-        this.cama.paciente = null;
+        const estadoPatch = {
+            _id: this.cama.idCama,
+            estado: estado,
+            idInternacion: null,
+            paciente: null,
+            extras: {
+                egreso: true,
+                idInternacion: this.cama.idInternacion
+            }
+        };
+        // this.cama.estado = estado;
+        // this.cama.idInternacion = null;
+        // this.cama.paciente = null;
 
-        this.mapaCamasService.save(this.cama, this.registro.valor.InformeEgreso.fechaEgreso).subscribe(camaActualizada => {
+        this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso).subscribe(camaActualizada => {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
             if (this.view === 'listado-internacion') {
                 this.mapaCamasService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);

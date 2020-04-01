@@ -1,37 +1,50 @@
 <div>
-    <form #formReparada="ngForm">
-        <plex-title justify titulo="Desocupar cama">
-            <ng-content></ng-content>
-        </plex-title>
-        <div class="row">
-            <div class="col">
-                <plex-datetime type="datetime" label="Fecha y hora de cambio de cama" [(ngModel)]="fecha"
-                               [max]="fechaMax" [min]="fechaMin" name="fechaCambio" required
-                               (change)="verificarFecha()">
-                </plex-datetime>
+    <plex-title justify titulo="Desocupar cama">
+        <ng-content></ng-content>
+    </plex-title>
+    <ng-container *ngIf="movimientoEgreso$ | async as movimientoEgreso; else puedeEgresar">
+        <strong>
+            El paciente ya se encuentra egresado el día {{ movimientoEgreso.fecha | fecha }}.
+        </strong>
+    </ng-container>
+    <ng-template #puedeEgresar>
+        <form #formReparada="ngForm">
+            <div class="row">
+                <div class="col">
+                    <plex-datetime type="datetime" label="Fecha y hora de cambio de cama" [(ngModel)]="fecha"
+                                   [max]="fechaMax" [min]="fechaMin$ | async" name="fechaCambio" required
+                                   (change)="verificarFecha()">
+                    </plex-datetime>
+                </div>
             </div>
-        </div>
-        <fieldset>
-            <ng-container *ngIf="camasDisponibles$ | async as camasDisponibles">
-                <plex-button label="Cambiar cama" type="primary" size="block"
-                             [disabled]="!(camasDisponibles.camasMismaUO.length > 0)" (click)="cambiarCama(null)">
-                </plex-button>
-                <ng-container *ngIf="!(camasDisponibles.camasMismaUO.length > 0)">
-                    <strong>No hay camas disponibles en la unidad organizativa actual.</strong>
+            <fieldset>
+                <ng-container *ngIf="camasDisponibles$ | async as camasDisponibles">
+                    <ng-container *ngIf="hayMovimientosAt$ | async as hayMovimientosAt; else puedeEgresarDefinitivo">
+                        Hay movimientos posteriores a la fecha ingresada
+                    </ng-container>
+                    <ng-template #puedeEgresarDefinitivo>
+                        <plex-button label="Cambiar cama" type="primary" size="block"
+                                     [disabled]="!(camasDisponibles.camasMismaUO.length > 0)"
+                                     (click)="cambiarCama(null)">
+                        </plex-button>
+                        <ng-container *ngIf="!(camasDisponibles.camasMismaUO.length > 0)">
+                            <strong>No hay camas disponibles en la unidad organizativa actual.</strong>
+                        </ng-container>
+                        <ng-container *ngIf="(view$ | async) === 'mapa-camas'">
+                            <plex-button label="Egresar paciente" type="warning" size="block"
+                                         (click)="egresarPaciente()">
+                            </plex-button>
+                        </ng-container>
+                        <plex-button label="Cambiar de unidad organizativa" type="secondary" size="block"
+                                     [disabled]="!(camasDisponibles.camasDistintaUO.length > 0)"
+                                     (click)="cambiarCama(true)">
+                        </plex-button>
+                        <ng-container *ngIf="!(camasDisponibles.camasDistintaUO.length > 0)">
+                            <strong> No hay camas disponibles en ninguna unidad organizativa.</strong>
+                        </ng-container>
+                    </ng-template>
                 </ng-container>
-            </ng-container>
-            <ng-container *ngIf="view === 'mapa-camas'">
-                <plex-button label="Egresar paciente" type="warning" size="block" (click)="egresarPaciente()">
-                </plex-button>
-            </ng-container>
-            <ng-container *ngIf="camasDisponibles$ | async as camasDisponibles">
-                <plex-button label="Cambiar de unidad organizativa" type="secondary" size="block"
-                             [disabled]="!(camasDisponibles.camasDistintaUO.length > 0)" (click)="cambiarCama(true)">
-                </plex-button>
-                <ng-container *ngIf="!(camasDisponibles.camasDistintaUO.length > 0)">
-                    <strong> No hay camas disponibles en ninguna unidad organizativa.</strong>
-                </ng-container>
-            </ng-container>
-        </fieldset>
-    </form>
+            </fieldset>
+        </form>
+    </ng-template>
 </div>

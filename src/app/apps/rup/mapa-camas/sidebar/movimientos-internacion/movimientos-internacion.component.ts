@@ -15,7 +15,7 @@ export class MovimientosInternacionComponent implements OnInit {
 
     public historial$: Observable<any>;
 
-    public desde = moment().toDate();
+    public desde = moment().subtract(7, 'd').toDate();
     public hasta = moment().toDate();
 
     constructor(

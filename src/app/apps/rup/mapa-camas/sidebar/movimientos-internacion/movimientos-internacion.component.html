@@ -27,7 +27,13 @@
                 {{ movimiento.fecha | hora }}
             </td>
             <td>
-                {{ movimiento.nombre }}
+                <ng-container *ngIf="!movimiento.idInternacion">
+                    EGRESO
+                </ng-container>
+                <ng-container *ngIf="movimiento.idInternacion">
+                    {{ movimiento.nombre }}
+                </ng-container>
+
             </td>
             <td>
                 {{ movimiento.unidadOrganizativa.term }}

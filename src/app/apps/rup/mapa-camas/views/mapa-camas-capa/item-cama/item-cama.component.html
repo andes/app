@@ -35,18 +35,9 @@
     </td>
     <td>
         <ng-container *ngFor="let relacion of relacionesPosibles$ | async">
-            <ng-container *ngIf="capa === 'estadistica' && cama.estado === 'ocupada'">
-                <ng-container *ngIf="puedeDesocupar$ | async as puedeDesocupar">
-                    <plex-button title="{{ (puedeDesocupar !== 'noPuede') ? (relacion.nombre) : null}}" [icon]="relacion.icon" [type]="relacion.color" info="No se puede desocupar" size="sm"
-                                [disabled]="puedeDesocupar === 'noPuede'" (click)="accion(relacion, $event)">
-                    </plex-button>
-                </ng-container>
-            </ng-container>
-            <ng-container *ngIf="capa !== 'estadistica' || cama.estado !== 'ocupada'">
-                    <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color" size="sm"
-                            (click)="accion(relacion, $event)">
-                </plex-button>
-            </ng-container>
+            <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color" size="sm"
+                         (click)="accion(relacion, $event)">
+            </plex-button>
         </ng-container>
         <plex-button title="Editar Cama" icon="pencil" type="warning" size="sm" (click)="goTo()">
         </plex-button>

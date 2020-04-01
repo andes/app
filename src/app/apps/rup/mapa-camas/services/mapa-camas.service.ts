@@ -37,7 +37,7 @@ export class MapaCamasService {
 
     public selectedCama = new BehaviorSubject<ISnapshot>({} as any);
 
-    public view = new BehaviorSubject<string>('mapa-camas');
+    public view = new BehaviorSubject<'mapa-camas' | 'listado-internacion'>('mapa-camas');
 
     public prestacion$: Observable<IPrestacion>;
     public selectedPrestacion = new BehaviorSubject<IPrestacion>({ id: null } as any);
@@ -205,8 +205,8 @@ export class MapaCamasService {
     }
 
     getCamasDisponibles(cama: ISnapshot) {
-        return combineLatest(this.snapshot$).pipe(
-            map(([camas]) => {
+        return this.snapshot$.pipe(
+            map((camas) => {
                 return this.getCamasDisponiblesCama(camas, cama);
             })
         );
@@ -258,7 +258,7 @@ export class MapaCamasService {
         this.fechaIngresoMax = fecha;
     }
 
-    setView(view: string) {
+    setView(view: 'mapa-camas' | 'listado-internacion') {
         this.view.next(view);
     }
 
