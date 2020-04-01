@@ -46,6 +46,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public paciente = null;
     public view;
     public fechaHasta = moment().toDate();
+    private fechaIngresoOriginal: Date;
 
     public get origenExterno() {
         return this.informeIngreso && this.informeIngreso.origen && this.informeIngreso.origen.id === 'traslado';
@@ -109,6 +110,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             if (this.prestacion) {
                 this.paciente = this.prestacion.paciente;
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
+                this.fechaIngresoOriginal = this.informeIngreso.fechaIngreso;
             }
 
             // Guarda la obra social en el paciente
@@ -259,14 +261,29 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         } else {
             this.cama.idInternacion = new ObjectID().toString();
         }
-
-        this.mapaCamasService.save(this.cama, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
-            this.plex.info('success', 'Paciente internado');
-            this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
-            this.onSave.emit();
-        }, (err1) => {
-            this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
-        });
+        if (this.prestacion) {
+            if (this.informeIngreso.fechaIngreso.getTime() !== this.fechaIngresoOriginal.getTime()) {
+                this.mapaCamasService.changeTime(this.cama, this.fechaIngresoOriginal, this.informeIngreso.fechaIngreso, idInternacion).subscribe(camaActualizada => {
+                    this.plex.info('success', 'Los datos se actualizaron correctamente');
+                    this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
+                    this.onSave.emit();
+                }, (err1) => {
+                    this.plex.info('danger', err1, 'Error al intentar actualizar losa datos');
+                });
+            } else {
+                this.plex.info('success', 'Los datos se actualizaron correctamente');
+                this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
+                this.onSave.emit();
+            }
+        } else {
+            this.mapaCamasService.save(this.cama, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
+                this.plex.info('success', 'Paciente internado');
+                this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
+                this.onSave.emit();
+            }, (err1) => {
+                this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
+            });
+        }
     }
 
     ingresoExtendido(paciente) {
@@ -352,7 +369,9 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     setFecha() {
-        this.mapaCamasService.select(null);
+        if (!this.prestacion) {
+            this.mapaCamasService.select(null);
+        }
         this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
     }
 }

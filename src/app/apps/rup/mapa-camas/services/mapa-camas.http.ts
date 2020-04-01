@@ -61,6 +61,17 @@ export class MapaCamasHTTP {
         }
     }
 
+    changeTime(ambito, capa, cama, idInternacion, fechaOriginal, nuevaFecha) {
+        let params = {
+            ambito: ambito,
+            capa: capa,
+            fechaActualizar: fechaOriginal,
+            nuevaFecha,
+            idInternacion
+        };
+        return this.server.patch(this.url + `/camas/changeTime/${cama._id}`, params);
+    }
+
     getMaquinaEstados(ambito: string, capa: string, organizacion: string): Observable<IMaquinaEstados> {
         return this.server.get(this.url + `/estados`, {
             params: { organizacion, ambito, capa },

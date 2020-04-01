@@ -379,6 +379,12 @@ export class MapaCamasService {
         return this.camasHTTP.save(this.ambito, this.capa, fecha, data);
     }
 
+    changeTime(cama, fechaOriginal, nuevaFecha, idInternacion, ambito: string = null, capa: string = null) {
+        ambito = ambito || this.ambito;
+        capa = capa || this.capa;
+        return this.camasHTTP.changeTime(ambito, capa, cama, idInternacion, fechaOriginal, nuevaFecha);
+    }
+
     getMaquinaEstados(organizacion): Observable<IMaquinaEstados[]> {
         return this.camasHTTP.getMaquinaEstados(this.ambito, this.capa, organizacion) as any; // [TODO] BORRAR
     }
