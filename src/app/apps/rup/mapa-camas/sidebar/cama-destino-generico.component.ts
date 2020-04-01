@@ -3,7 +3,6 @@ import { MapaCamasService } from '../services/mapa-camas.service';
 import { Plex } from '@andes/plex';
 import { ISnapshot } from '../interfaces/ISnapshot';
 import { Observable, Subscription, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-cama-destino-generico',
@@ -14,7 +13,7 @@ export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
     camas$: Observable<ISnapshot[]>;
     selectedCama$: Observable<ISnapshot>;
 
-    @Input() destino: any;
+    @Input() relacion: any;
     @Input() listaMotivosBloqueo: any[];
 
     @Output() onSave = new EventEmitter<any>();
@@ -23,6 +22,7 @@ export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
     public fechaMax = moment().toDate();
     public selectedCama;
     public capa;
+    public destino;
     public titulo: string;
     public otroMotivo = false;
 
@@ -40,6 +40,7 @@ export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.destino = this.relacion.destino;
         this.fecha = this.mapaCamasService.fecha;
 
         this.subscription = combineLatest(

@@ -33,18 +33,13 @@ export class MapaCamasCapaComponent implements OnInit {
         { label: 'CENSO DIARIO', route: `/internacion/censo/diario` },
         { label: 'CENSO MENSUAL', route: `/internacion/censo/mensual` },
     ];
-    estadoDestino: any;
+    estadoRelacion: any;
     estadosCama: any;
     estados: any;
     relaciones: any;
     maquinaEstados: IMaquinaEstados;
     opcionesCamas = [];
     accion = null;
-    listaMotivosBloqueo = [
-        { nombre: 'Reparacion' },
-        { nombre: 'Paciente en aislamiento' },
-        { nombre: 'Falta personal' },
-    ];
     cambiarUO;
     camasDisponibles;
 
@@ -117,13 +112,8 @@ export class MapaCamasCapaComponent implements OnInit {
         this.mapaCamasService.select(cama);
         this.mapaCamasService.selectPaciente(cama.paciente);
         if (relacion) {
-            this.estadoDestino = relacion.destino;
-            if ( (relacion.origen === 'ocupada' && relacion.destino === 'disponible') ||
-                  (relacion.origen === 'disponible' && relacion.destino === 'ocupada')) {
-                this.accion = relacion.accion;
-            } else {
-                this.accion = 'accionGenerica';
-            }
+            this.estadoRelacion = relacion;
+            this.accion = relacion.accion;
         }
     }
 
