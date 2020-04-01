@@ -38,15 +38,15 @@
                                         </ng-container>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <label>Espacio físico</label>
-                                    <span
-                                          *ngIf="agenda.espacioFisico?.nombre || agenda.otroEspacioFisico?.nombre">{{agenda | espacioFisico}}</span>
-                                    <span *ngIf="!agenda.espacioFisico?.nombre && !agenda.otroEspacioFisico?.nombre"
-                                          class="text-danger">Espacio físico no
-                                        asignado</span>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Espacio físico</label>
+                                        <span
+                                              *ngIf="agenda.espacioFisico?.nombre || agenda.otroEspacioFisico?.nombre">{{agenda | espacioFisico}}</span>
+                                        <span *ngIf="!agenda.espacioFisico?.nombre && !agenda.otroEspacioFisico?.nombre"
+                                              class="text-danger">Espacio físico no
+                                            asignado</span>
+                                    </div>
                                 </div>
                                 <div *ngIf="agenda.dinamica" class="row">
                                     <div class="col-12">
