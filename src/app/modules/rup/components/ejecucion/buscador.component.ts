@@ -71,7 +71,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
         trastornos: ['trastorno'],
         procedimientos: ['procedimiento', 'entidad observable', 'régimen/tratamiento'],
         planes: ['procedimiento', 'régimen/tratamiento'],
-        productos: ['producto', 'objeto físico', 'medicamento clínico'],
+        productos: ['producto', 'objeto físico', 'medicamento clínico', 'fármaco de uso clínico'],
         otros: ['elemento de registro']
     };
 

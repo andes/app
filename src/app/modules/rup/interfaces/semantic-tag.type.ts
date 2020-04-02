@@ -15,6 +15,7 @@ export type SemanticTag =
     'escala de estadificación' |
     'elemento de registro' |
     'producto' |
+    'fármaco de uso clínico' |
     'evento' |
     'organismo' |
     'situación';
