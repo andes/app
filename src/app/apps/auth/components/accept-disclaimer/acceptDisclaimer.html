@@ -4,13 +4,12 @@
             <h3>Versión: {{version}}</h3>
         </header>
         <div class="row">
-            <div class="col-12">
-                <p>{{texto}}</p>
-            </div>
+            <div class="col-12" [innerHtml]="texto"></div>
         </div>
         <div class="row">
             <div class="col-12" justify="center">
-                <plex-button label="Acepto" type="success" position="center" (click)="aceptarDisclaimer()"></plex-button>
+                <plex-button label="Acepto" type="success" position="center" (click)="aceptarDisclaimer()">
+                </plex-button>
                 <plex-button label="No Acepto" type="danger" position="center" (click)="logout()"></plex-button>
             </div>
         </div>
