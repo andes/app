@@ -22,7 +22,8 @@
             </div>
             <div class="no-gutters col-4">
                 <plex-select [(ngModel)]="prestacionSeleccion" [required]="true" name="nombrePrestacion"
-                             label="Prestación" [data]="tiposPrestacion" labelField="term" (change)="filtrar()">
+                             label="Prestación" tmPrestaciones="rup:tipoPrestacion:?" (change)="filtrar()"
+                             [preload]="true">
                 </plex-select>
             </div>
             <!-- <div class="pr-0 col-4">
