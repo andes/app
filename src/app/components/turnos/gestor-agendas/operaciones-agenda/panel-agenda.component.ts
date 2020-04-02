@@ -106,22 +106,6 @@ export class PanelAgendaComponent implements OnInit {
         this.editarEspacioFisicoEmit.emit(false);
     }
 
-
-    loadProfesionales(event) {
-        let listaProfesionales = [];
-        if (event.query) {
-            let query = {
-                nombreCompleto: event.query
-            };
-            this.servicioProfesional.get(query).subscribe(resultado => {
-                event.callback(resultado);
-            });
-        } else {
-            event.callback(this.agenda.profesionales || []);
-        }
-    }
-
-
     loadEdificios(event) {
         if (event.query) {
             let query = {

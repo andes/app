@@ -515,6 +515,11 @@ import { LogoSvgComponent } from './styles/logo.svg';
 import { AcronimoSvgComponent } from './styles/acronimo.svg';
 import { ListaReglasComponent } from './components/top/reglas/listaReglas.component';
 import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaSolicitudTop';
+import { SelectOrganizacionDirective } from './directives/organizacion-select.directive';
+import { SelectProfesionalesDirective } from './directives/profesionales-select.directive';
+import { SelectPrestacionesDirective } from './directives/prestaciones-select.directive';
+import { ConceptosTurneablesService } from './services/conceptos-turneables.service';
+import { SelectFinanciadorDirective } from './directives/financiador-select-directive';
 
 import { MitosModule } from './apps/mitos';
 import { MPILibModule } from './modules/mpi/mpi-lib.module';
@@ -674,7 +679,12 @@ registerLocaleData(localeEs, 'es');
 
         PlantillasRUPComponent,
         LogoSvgComponent,
-        AcronimoSvgComponent
+        AcronimoSvgComponent,
+
+        SelectOrganizacionDirective,
+        SelectProfesionalesDirective,
+        SelectPrestacionesDirective,
+        SelectFinanciadorDirective
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
@@ -765,6 +775,7 @@ registerLocaleData(localeEs, 'es');
         InternacionCacheService,
         WebSocketService,
         HotjarService,
+        ConceptosTurneablesService
     ]
 })
 

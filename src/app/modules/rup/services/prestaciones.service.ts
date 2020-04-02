@@ -461,16 +461,16 @@ export class PrestacionesService {
         * @param {String} idPaciente
         * @param conceptId
         */
-    getPrestacionesXtipo(idPaciente: any, conceptId: any): Observable<any[]> {
-        return this.getByPaciente(idPaciente).pipe(map(prestaciones => {
-            let prestacionesXtipo = [];
-            prestaciones.forEach(prestacion => {
-                if (prestacion.solicitud.tipoPrestacion.conceptId === conceptId) {
-                    prestacionesXtipo = [...prestacionesXtipo, prestacion];
-                }
-            });
-            return prestacionesXtipo;
-        }));
+    getPrestacionesXtipo(idPaciente: any, conceptIds: string[] | string): Observable<any[]> {
+        const conceptos = Array.isArray(conceptIds) ? conceptIds : [conceptIds];
+        return this.getByPaciente(idPaciente).pipe(
+            map(prestaciones => {
+                const prestacionesXtipo = prestaciones.filter(prestacion => {
+                    return conceptos.find(id => prestacion.solicitud.tipoPrestacion.conceptId === id);
+                });
+                return prestacionesXtipo;
+            })
+        );
     }
 
 

@@ -60,23 +60,6 @@ export class VisualizacionReglasComponent implements OnInit {
             });
         }
     }
-    /**
-     * Trae las organizaciones con nombre "igual" al texto ingresado.
-     * Si se ingresa "spi dan" trae Hospital Bouquet Roldan
-     *
-     * @param {*} event
-     * @memberof VisualizacionReglasComponent
-     */
-    loadOrganizaciones(event) {
-        if (event.query) {
-            let query = {
-                nombre: event.query
-            };
-            this.servicioOrganizacion.get(query).subscribe(event.callback);
-        } else {
-            event.callback([]);
-        }
-    }
 
     /**
      * Trae las prestaciones con nombre "igual" al texto ingresado.

@@ -110,6 +110,7 @@ export class PrestacionCrearComponent implements OnInit {
     }
 
     seleccionarTipoPrestacion() {
+        this.paciente = null;
         this.mostrarPaciente = this.tipoPrestacionSeleccionada && !this.tipoPrestacionSeleccionada.noNominalizada;
     }
 
@@ -229,7 +230,6 @@ export class PrestacionCrearComponent implements OnInit {
         this.servicioAgenda.get(params).subscribe(agendas => {
             this.agendasAutocitar = agendas;
             this.prestacionAutocitar = this.tipoPrestacionSeleccionada;
-            this.servicioPrestacion.crearPrestacion(this.paciente, this.tipoPrestacionSeleccionada.id, 'solicitud', (new Date()), null);
             this.showAutocitar = true;
         });
     }
