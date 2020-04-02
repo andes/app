@@ -57,6 +57,7 @@ export class MapaCamasService {
     public capa;
     public fecha: Date;
     public fechaIngresoMax = moment().toDate();
+    public permisos: string[];
 
     constructor(
         private camasHTTP: MapaCamasHTTP,

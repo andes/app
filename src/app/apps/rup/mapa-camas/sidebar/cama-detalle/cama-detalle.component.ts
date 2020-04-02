@@ -9,6 +9,7 @@ import { tap, map, switchMap, startWith } from 'rxjs/operators';
 import { Observable, combineLatest, of, Subscription } from 'rxjs';
 import { IMAQEstado, IMAQRelacion } from '../../interfaces/IMaquinaEstados';
 import { PacienteService } from '../../../../../core/mpi/services/paciente.service';
+import { Auth } from '@andes/auth';
 
 
 @Component({
@@ -47,9 +48,10 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
     public titleColor;
     public tabIndex = 0;
     public editar = false;
-
+    public permisoIngreso = false;
 
     constructor(
+        private auth: Auth,
         private router: Router,
         private prestacionService: PrestacionesService,
         private elementoRupService: ElementosRUPService,
@@ -63,6 +65,7 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.capa = this.mapaCamasService.capa;
+        this.permisoIngreso = this.auth.check('internacion:ingreso');
 
         this.elementoRupService.ready.subscribe(() => {
             this.conceptosInternacion = this.elementoRupService.getConceptosInternacion();

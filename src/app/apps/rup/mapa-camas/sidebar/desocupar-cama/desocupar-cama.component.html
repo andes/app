@@ -24,23 +24,27 @@
                     </ng-container>
                     <ng-template #puedeEgresarDefinitivo>
                         <plex-button label="Cambiar cama" type="primary" size="block"
-                                     [disabled]="!(camasDisponibles.camasMismaUO.length > 0)"
-                                     (click)="cambiarCama(null)">
+                                        title="{{ (!permisoMovimiento) ? 'No tiene permisos suficientes' : null }}"
+                                        [disabled]="!permisoMovimiento || !(camasDisponibles.camasMismaUO.length > 0)"
+                                        (click)="cambiarCama(null)">
                         </plex-button>
                         <ng-container *ngIf="!(camasDisponibles.camasMismaUO.length > 0)">
                             <strong>No hay camas disponibles en la unidad organizativa actual.</strong>
                         </ng-container>
-                        <ng-container *ngIf="(view$ | async) === 'mapa-camas'">
-                            <plex-button label="Egresar paciente" type="warning" size="block"
-                                         (click)="egresarPaciente()">
-                            </plex-button>
-                        </ng-container>
                         <plex-button label="Cambiar de unidad organizativa" type="secondary" size="block"
-                                     [disabled]="!(camasDisponibles.camasDistintaUO.length > 0)"
-                                     (click)="cambiarCama(true)">
+                                title="{{ (!permisoMovimiento) ? 'No tiene permisos suficientes' : null }}"
+                                    [disabled]="!permisoMovimiento || !(camasDisponibles.camasDistintaUO.length > 0)"
+                                    (click)="cambiarCama(true)">
                         </plex-button>
                         <ng-container *ngIf="!(camasDisponibles.camasDistintaUO.length > 0)">
                             <strong> No hay camas disponibles en ninguna unidad organizativa.</strong>
+                        </ng-container>
+                        <ng-container *ngIf="(view$ | async) === 'mapa-camas'">
+                                <plex-button label="Egresar paciente" type="warning" size="block"
+                                title="{{ (!permisoEgreso) ? 'No tiene permisos para egresar pacientes' : null }}"
+                                [disabled]="!permisoEgreso"
+                                             (click)="egresarPaciente()">
+                                </plex-button>
                         </ng-container>
                     </ng-template>
                 </ng-container>

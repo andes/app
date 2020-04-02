@@ -6,7 +6,7 @@
 
         <ng-container *ngIf="mostrar === 'ingreso'">
             <app-informe-ingreso *ngIf="!editar" (cancel)="activatedOption('ingreso')">
-                <plex-button title="editar ingreso" icon="pencil" type="warning" size="sm" (click)="toggleEdit()">
+                <plex-button *ngIf="permisoIngreso" title="editar ingreso" icon="pencil" type="warning" size="sm" (click)="toggleEdit()">
                 </plex-button>
             </app-informe-ingreso>
             <app-ingresar-paciente *ngIf="editar" (onSave)="toggleEdit()">
@@ -16,17 +16,17 @@
         </ng-container>
         <ng-container *ngIf="mostrar === 'movimientos'">
             <app-movimientos-internacion>
-                <plex-button *ngIf="(view === 'listado-internacion')" [disabled]="prestacion.ejecucion.registros[1]"
+                <plex-button *ngIf="(view === 'listado-internacion' && permisoMovimiento)" [disabled]="prestacion.ejecucion.registros[1]"
                              label="Cambiar cama" type="warning" size="sm" (click)="changeCama()">
                 </plex-button>
             </app-movimientos-internacion>
         </ng-container>
         <ng-container *ngIf="mostrar === 'egreso'">
             <app-informe-egreso *ngIf="!editar && existeEgreso" (cancel)="activatedOption('egreso')">
-                <plex-button title="editar egreso" icon="pencil" type="warning" size="sm" (click)="toggleEdit()">
+                <plex-button *ngIf="permisoEgreso" title="editar egreso" icon="pencil" type="warning" size="sm" (click)="toggleEdit()">
                 </plex-button>
             </app-informe-egreso>
-            <app-egresar-paciente *ngIf="editar || !existeEgreso" (onSave)="toggleEdit()">
+            <app-egresar-paciente *ngIf="permisoEgreso && (editar || !existeEgreso)" (onSave)="toggleEdit()">
                 <plex-button *ngIf="existeEgreso" title="volver" icon="arrow-left" type="danger" size="sm"
                              (click)="toggleEdit();">
                 </plex-button>

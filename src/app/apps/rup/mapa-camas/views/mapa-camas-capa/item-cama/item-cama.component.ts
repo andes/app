@@ -14,6 +14,7 @@ import { ISnapshot } from '../../../interfaces/ISnapshot';
 
 export class ItemCamaComponent implements OnInit {
     @Input() cama: any;
+    @Input() permisoIngreso: boolean;
     @Output() accionCama = new EventEmitter<any>();
 
     // public capa: string;

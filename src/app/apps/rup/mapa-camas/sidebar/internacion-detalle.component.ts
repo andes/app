@@ -4,6 +4,7 @@ import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.inter
 import { Observable, Subscription, combineLatest } from 'rxjs';
 import { MapaCamasService } from '../services/mapa-camas.service';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'app-internacion-detalle',
@@ -22,17 +23,16 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
     public existeEgreso = false;
     public prestacionValidada = false;
     public mostrar;
-    public items = [
-        { key: 'ingreso', label: 'INGRESO' },
-        { key: 'movimientos', label: 'MOVIMIENTOS' },
-        { key: 'egreso', label: 'EGRESO' }
-    ];
+    public permisoIngreso = false;
+    public permisoMovimiento = false;
+    public permisoEgreso = false;
+    public items;
 
     private subscription: Subscription;
 
     constructor(
-        private mapaCamasService: MapaCamasService,
-        private prestacionService: PrestacionesService
+        private auth: Auth,
+        private mapaCamasService: MapaCamasService
     ) { }
 
     ngOnDestroy() {
@@ -41,12 +41,20 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.mostrar = 'ingreso';
+        this.permisoIngreso = this.auth.check('internacion:ingreso');
+        this.permisoMovimiento = this.auth.check('internacion:movimientos');
+        this.permisoEgreso = this.auth.check('internacion:egreso');
         this.subscription = combineLatest(
             this.mapaCamasService.view,
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.prestacion$,
         ).subscribe(([view, cama, prestacion]) => {
             this.view = view;
+            this.items = [
+                { key: 'ingreso', label: 'INGRESO' },
+                { key: 'movimientos', label: 'MOVIMIENTOS' },
+                { key: 'egreso', label: 'EGRESO' }
+            ];
 
             if (prestacion) {
                 this.prestacion = prestacion;
@@ -61,6 +69,10 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
                     this.existeEgreso = true;
                 } else {
                     this.existeEgreso = false;
+
+                    if (!this.permisoAlta) {
+                        this.items.pop();
+                    }
                 }
 
                 if (!this.mostrar) {

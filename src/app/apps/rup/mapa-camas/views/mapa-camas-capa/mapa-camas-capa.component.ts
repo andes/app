@@ -26,7 +26,7 @@ export class MapaCamasCapaComponent implements OnInit {
     organizacion: string;
     fecha = moment().toDate();
     ambito: string;
-    capa: string;
+    private capa: string;
     camas: Observable<any[]>;
     snapshot: ISnapshot[];
     itemsDropdown = [
@@ -42,6 +42,10 @@ export class MapaCamasCapaComponent implements OnInit {
     accion = null;
     cambiarUO;
     camasDisponibles;
+
+    public permisoIngreso = false;
+    public permisoCenso = false;
+    public permisoCrearCama = false;
 
     constructor(
         public auth: Auth,
@@ -61,6 +65,26 @@ export class MapaCamasCapaComponent implements OnInit {
             name: 'Mapa de Camas'
         }]);
 
+        this.capa$ = this.route.params.pipe(
+            take(1),
+            pluck('capa'),
+            tap((capa) => {
+                const permisosInternacion = this.auth.getPermissions('internacion:rol:?');
+                if (permisosInternacion.length === 1 && permisosInternacion[0] === capa) {
+                    this.capa = capa; // BORRAR
+                    this.mapaCamasService.setAmbito('internacion');
+                    this.mapaCamasService.setCapa(capa);
+                } else {
+                    this.router.navigate(['/inicio']);
+                }
+            })
+        );
+        this.capa$.subscribe();
+
+        this.permisoIngreso = this.auth.check('internacion:ingreso');
+        this.permisoCenso = this.auth.check('internacion:censo');
+        this.permisoCrearCama = this.auth.check('internacion:cama:create');
+
         this.mapaCamasService.setView('mapa-camas');
 
         this.ambito = this.mapaCamasService.ambito;
@@ -69,17 +93,6 @@ export class MapaCamasCapaComponent implements OnInit {
 
         this.selectedPaciente$ = this.mapaCamasService.selectedPaciente;
 
-        this.capa$ = this.route.params.pipe(
-            take(1),
-            pluck('capa'),
-            // [TODO] chequear permisos
-            tap((capa) => {
-                this.capa = capa; // BORRAR
-                this.mapaCamasService.setAmbito('internacion');
-                this.mapaCamasService.setCapa(capa);
-            })
-        );
-        this.capa$.subscribe();
         this.mapaCamasService.setFecha(new Date());
         this.mapaCamasService.setOrganizacion(this.auth.organizacion.id);
 

@@ -25,6 +25,7 @@ export class CamaMainComponent implements OnInit {
     public organizacion: any;
     public sectores: any[] = [];
     public cama: any;
+    public permisoBaja = false;
     public camaSnap: ISnapshot;
     public infoCama = {};
     public capas = [
@@ -34,7 +35,7 @@ export class CamaMainComponent implements OnInit {
     ];
 
     constructor(
-        public authService: Auth,
+        public auth: Auth,
         private plex: Plex,
         private router: Router,
         private route: ActivatedRoute,
@@ -60,20 +61,23 @@ export class CamaMainComponent implements OnInit {
             name: 'Cama'
         }]);
 
+        this.permisoBaja = this.auth.check('internacion:cama:baja');
         this.getOrganizacion();
         this.getCama();
     }
 
     getOrganizacion() {
-        this.organizacionService.getById(this.authService.organizacion.id).subscribe(organizacion => {
+        this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
             this.organizacion = organizacion;
             this.sectores = this.organizacionService.getFlatTree(this.organizacion);
 
-            for (const capa of this.capas) {
-                this.infoCama[capa] = [];
-                this.camasHTTP.getMaquinaEstados(this.ambito, capa, organizacion.id).subscribe(maquinaEstados => {
-                    this.infoCama[capa][0] = maquinaEstados;
-                });
+            if (this.permisoBaja) {
+                for (const capa of this.capas) {
+                    this.infoCama[capa] = [];
+                    this.camasHTTP.getMaquinaEstados(this.ambito, capa, organizacion.id).subscribe(maquinaEstados => {
+                        this.infoCama[capa][0] = maquinaEstados;
+                    });
+                }
             }
         });
     }
@@ -86,17 +90,18 @@ export class CamaMainComponent implements OnInit {
                     this.cama = cama;
                 });
 
-                for (const capa of this.capas) {
-                    this.infoCama[capa] = [];
-                    this.camasHTTP.snapshot(this.ambito, capa, this.fecha, null, null, idCama).subscribe(snap => {
-                        this.infoCama[capa][1] = snap[0];
+                if (this.permisoBaja) {
+                    for (const capa of this.capas) {
+                        this.infoCama[capa] = [];
+                        this.camasHTTP.snapshot(this.ambito, capa, this.fecha, null, null, idCama).subscribe(snap => {
+                            this.infoCama[capa][1] = snap[0];
 
-                        if (this.capa === capa && snap[0].estado === 'disponible') {
-                            this.camaSnap = snap[0];
-                        }
-                    });
+                            if (this.capa === capa && snap[0].estado === 'disponible') {
+                                this.camaSnap = snap[0];
+                            }
+                        });
+                    }
                 }
-
             } else {
                 this.cama = {
                     esCensable: true

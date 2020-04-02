@@ -57,7 +57,7 @@ export class InicioComponent implements AfterViewInit {
                 this.denied = false;
             }
 
-            if (this.auth.check('internacion:rol:estadistica') || this.auth.check('internacion:rol:medica') || this.auth.check('internacion:rol:enfermeria')) {
+            if (this.auth.check('internacion:mapaDeCamas')) {
                 this.internacion = 'internacion';
                 this.denied = false;
             }
