@@ -16,31 +16,41 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>FECHA</th>
-            <th>PACIENTE</th>
-            <th>UNIDAD ORGANIZATIVA</th>
-            <th></th>
+            <th><small class="font-weight-bold">Fecha</small></th>
+            <th><small class="font-weight-bold">Paciente</small></th>
+            <th><small class="font-weight-bold">U. Org.</small></th>
+            <th><small class="font-weight-bold">Estado</small></th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let item of historial$ | async">
             <td>
-                {{ item.fecha | fecha }}
-                {{ item.fecha | hora }}
+                <small>
+                    {{ item.fecha | fecha }}
+                    {{ item.fecha | hora }} hs
+                </small>
             </td>
             <td *ngIf="item.paciente; else sinPaciente">
-                {{ item.paciente | nombre }}
+                <small>
+                    {{ item.paciente | nombre }}
+                </small>
             </td>
             <ng-template #sinPaciente>
-                <td class="text-danger">SIN PACIENTE</td>
+                <td class="text-danger">
+                    <small>
+                        SIN PACIENTE
+                    </small>
+                </td>
             </ng-template>
             <td>
-                {{ item.unidadOrganizativa.term }}
+                <small class="text-capitalize">
+                    {{ item.unidadOrganizativa.term }}
+                </small>
             </td>
             <td>
                 <ng-container *ngIf="getEstado(item) | async as estadoCama">
-                    <plex-badge [type]="estadoCama.color">
-                        {{estadoCama.label}}
+                    <plex-badge [type]="estadoCama.color" size="sm">
+                        {{ estadoCama.label }}
                     </plex-badge>
                 </ng-container>
             </td>
