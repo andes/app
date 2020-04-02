@@ -15,9 +15,16 @@ export interface IMAQEstado {
 }
 
 export interface IMAQRelacion {
+    nombre: String;
     origen: String;
     destino: String;
     color: String;
     icon: String;
     accion: String;
+    parametros?: [{
+        label: String;
+        options?: [{
+            nombre: String;
+        }]
+    }];
 }

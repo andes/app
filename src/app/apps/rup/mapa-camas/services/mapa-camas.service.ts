@@ -385,10 +385,6 @@ export class MapaCamasService {
         return this.camasHTTP.changeTime(ambito, capa, cama, idInternacion, fechaOriginal, nuevaFecha);
     }
 
-    getMaquinaEstados(organizacion): Observable<IMaquinaEstados[]> {
-        return this.camasHTTP.getMaquinaEstados(this.ambito, this.capa, organizacion) as any; // [TODO] BORRAR
-    }
-
     censoDiario(fecha, unidadOrganizativa): Observable<any[]> {
         return this.camasHTTP.censoDiario(fecha, unidadOrganizativa);
     }

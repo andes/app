@@ -16,14 +16,15 @@ export class MapaCamasHTTP {
         private server: Server
     ) { }
 
-    snapshot(ambito: string, capa: string, fecha: Date, idInternacion: string = null, estado: string = null): Observable<ISnapshot[]> {
+    snapshot(ambito: string, capa: string, fecha: Date, idInternacion: string = null, estado: string = null, idCama: string = null): Observable<ISnapshot[]> {
         return this.server.get(this.url + '/camas', {
             params: {
                 ambito,
                 capa,
                 fecha,
                 internacion: idInternacion,
-                estado
+                estado,
+                cama: idCama
             }
         });
     }
