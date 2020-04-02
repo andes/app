@@ -40,6 +40,7 @@ export class CarpetaPacienteComponent implements OnInit {
     paciente: any;
     showEdit = false;
     nroCarpetaSugerido: string;
+    nuevoNroCarpeta: string;
     constructor(public auth: Auth, public plex: Plex, public servicioPaciente: PacienteService) { }
 
     ngOnInit() {
@@ -120,8 +121,8 @@ export class CarpetaPacienteComponent implements OnInit {
 
 
     guardarCarpetaPaciente(nuevaCarpeta = false) {
-        if (this.autorizado && this.carpetaPaciente.nroCarpeta && this.carpetaPaciente.nroCarpeta !== '' && this.carpetaPaciente.nroCarpeta !== this.nroCarpetaOriginal) {
-            this.carpetaPaciente.nroCarpeta = this.carpetaPaciente.nroCarpeta.trim();
+        if (this.autorizado && this.nuevoNroCarpeta) {
+            this.carpetaPaciente.nroCarpeta = this.nuevoNroCarpeta.trim();
             if (this.indiceCarpeta > -1) {
                 this.carpetaEfectores[this.indiceCarpeta] = this.carpetaPaciente;
             } else {
@@ -168,6 +169,7 @@ export class CarpetaPacienteComponent implements OnInit {
     }
 
     editar() {
+        this.nuevoNroCarpeta = this.carpetaPaciente.nroCarpeta;
         this.showEdit = true;
     }
 
