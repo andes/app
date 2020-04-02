@@ -116,32 +116,34 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.prestacion$
         ).subscribe(([view, capa, cama, prestacion]) => {
             this.registro.valor.InformeEgreso.fechaEgreso = this.mapaCamasService.fecha;
-            this.fechaMax = moment().toDate();
+            const fecha = moment().toDate();
+            this.fechaMax = moment().add(1, 's').toDate();
             this.view = view;
             this.capa = capa;
-            let fecha = moment().toDate();
             if (capa === 'estadistica') {
                 this.prestacion = prestacion;
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
-                this.fechaMin = this.informeIngreso.fechaIngreso;
-                fecha = this.informeIngreso.fechaIngreso;
                 if (this.prestacion.ejecucion.registros[1] && this.prestacion.ejecucion.registros[1].valor) {
                     this.registro.valor.InformeEgreso = this.prestacion.ejecucion.registros[1].valor.InformeEgreso;
                 }
-                this.setFecha();
 
                 if (this.view === 'listado-internacion') {
                     this.subscription2 = this.mapaCamasService.snapshot(fecha, prestacion.id).subscribe((snapshot) => {
                         this.cama = snapshot[0];
+                        this.fechaMin = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').toDate();
+                        this.fecha = fecha;
+                        this.setFecha();
                         this.subscription3 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
                             this.estadoDestino = relacionesPosibles[0].destino;
                         });
                     });
                 }
             }
-
             if (cama.idCama) {
                 this.cama = cama;
+                this.fechaMin = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').toDate();
+                this.fecha = fecha;
+                this.setFecha();
                 this.subscription3 = this.mapaCamasService.getRelacionesPosibles(cama).subscribe((relacionesPosibles) => {
                     this.estadoDestino = relacionesPosibles[0].destino;
                 });
@@ -242,21 +244,14 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
 
     calcularDiasEstada() {
-        const fecha = this.registro.valor.InformeEgreso.fechaEgreso;
         if (this.cama) {
-            let fechaUltimoEstado = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').toDate();
-            if (fecha < fechaUltimoEstado) {
-                this.plex.info('danger', 'ERROR: La fecha de egreso no puede ser inferior a ' + fechaUltimoEstado);
-                this.registro.valor.InformeEgreso['diasDeEstada'] = null;
-                return;
-            }
+            /*  Si la fecha de egreso es el mismo día del ingreso -> debe mostrar 1 día de estada
+                Si la fecha de egreso es al otro día del ingreso, no importa la hora -> debe mostrar 1 día de estada
+                Si la fecha de egreso es posterior a los dos casos anteriores -> debe mostrar la diferencia de días */
+            let dateDif = moment(this.registro.valor.InformeEgreso.fechaEgreso).endOf('day').diff(moment(this.informeIngreso.fechaIngreso).startOf('day'), 'days');
+            let diasEstada = dateDif === 0 ? 1 : dateDif;
+            this.registro.valor.InformeEgreso['diasDeEstada'] = diasEstada;
         }
-        /*  Si la fecha de egreso es el mismo día del ingreso -> debe mostrar 1 día de estada
-            Si la fecha de egreso es al otro día del ingreso, no importa la hora -> debe mostrar 1 día de estada
-            Si la fecha de egreso es posterior a los dos casos anteriores -> debe mostrar la diferencia de días */
-        let dateDif = moment(fecha).endOf('day').diff(moment(this.informeIngreso.fechaIngreso).startOf('day'), 'days');
-        let diasEstada = dateDif === 0 ? 1 : dateDif;
-        this.registro.valor.InformeEgreso['diasDeEstada'] = diasEstada;
     }
 
     loadOrganizacion(event) {
