@@ -389,8 +389,6 @@ import { EspacioFisicoPipe } from './pipes/espacioFisico.pipe';
 import { ConceptosTurneablesService } from './services/conceptos-turneables.service';
 import { DisclaimerService } from './services/disclaimer.service';
 import { EjecucionInternacionComponent } from './apps/rup/internacion/components/ejecucionInternacion.component';
-import { INTERNACION_PROVIDERS } from './apps/rup/mapa-camas/mapa-camas.module';
-
 
 registerLocaleData(localeEs, 'es');
 
@@ -654,7 +652,6 @@ registerLocaleData(localeEs, 'es');
         HotjarService,
         ConceptosTurneablesService,
         DisclaimerService,
-        ...INTERNACION_PROVIDERS,
         InstitucionService
     ]
 })
