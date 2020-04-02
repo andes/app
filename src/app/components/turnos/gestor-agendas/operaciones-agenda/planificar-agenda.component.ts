@@ -225,11 +225,13 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             } else {
                 this.noNominalizada = false;
                 this.modelo.nominalizada = true;
+                this.modelo.bloques.length = 0;
+                this.resetBloques();
             }
             // Se activan las prestaciones para la agenda
-            this.modelo.bloques[0].tipoPrestaciones.forEach(unaPrestacion => {
-                unaPrestacion.activo = true;
-            });
+            this.modelo.bloques[0].tipoPrestaciones.forEach(unaPrestacion => unaPrestacion.activo = true);
+            this.modelo.bloques.cantidadTurnos = 0;
+            this.validarTodo();
         }
     }
 
@@ -348,10 +350,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             }
         }
         if (this.modelo.bloques.length === 0) {
-            this.addBloque();
-            this.bloqueActivo = 0;
-            this.elementoActivo.horaInicio = this.modelo.horaInicio;
-            this.elementoActivo.horaFin = this.modelo.horaFin;
+            this.resetBloques();
         } else {
             this.modelo.bloques.forEach((bloque) => {
                 // Si se elimino una prestación, la saco de los bloques
@@ -388,6 +387,13 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 }
             });
         }
+    }
+
+    private resetBloques() {
+        this.addBloque();
+        this.bloqueActivo = 0;
+        this.elementoActivo.horaInicio = this.modelo.horaInicio;
+        this.elementoActivo.horaFin = this.modelo.horaFin;
     }
 
     cambioHoraBloques(texto: String) {
@@ -913,4 +919,3 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         }
     }
 }
-
