@@ -26,7 +26,9 @@ export class MovimientosInternacionComponent implements OnInit {
         this.onChange();
 
         this.historial$ = this.historial.pipe(
-            startWith([]),
+            startWith({
+                desde: this.desde, hasta: this.hasta
+            }),
             map((filtros: any) => {
                 return {
                     desde: moment(filtros.desde).startOf('day').toDate(),

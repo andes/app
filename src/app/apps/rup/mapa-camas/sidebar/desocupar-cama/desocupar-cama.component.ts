@@ -45,7 +45,7 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
     public hayMovimientosAt$: Observable<Boolean>;
     public view$ = this.mapaCamasService.view;
 
-    public camaSelectedSegunView$: Observable<ISnapshot>;
+    public camaSelectedSegunView$: Observable<ISnapshot> = this.mapaCamasService.camaSelectedSegunView$;
 
 
     ngOnInit() {
@@ -72,13 +72,15 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
         this.fechaMin$ = this.historial$.pipe(
             switchMap(movimientos => {
                 if (movimientos.length) {
-                    return of(movimientos[movimientos.length - 1].fecha);
+                    const fechaUltimoMovimiento = movimientos[movimientos.length - 1].fecha;
+                    const fechaMasUnMinuto = moment(fechaUltimoMovimiento).add(1, 'm');
+                    return of(fechaMasUnMinuto);
                 } else {
                     return this.camaSelectedSegunView$.pipe(
-                        map(cama => cama.fecha)
+                        map(cama => moment(cama.fecha).add(1, 'm'))
                     );
                 }
-            })
+            }),
         );
 
         this.hayMovimientosAt$ = combineLatest(
@@ -87,24 +89,6 @@ export class CamaDesocuparComponent implements OnInit, OnDestroy {
         ).pipe(
             map(([fechaElegida, fechaMinima]) => {
                 return moment(fechaElegida).isBefore(moment(fechaMinima));
-            })
-        );
-
-        this.camaSelectedSegunView$ = this.view$.pipe(
-            switchMap((view) => {
-                if (view === 'mapa-camas') {
-                    return this.mapaCamasService.selectedCama;
-                } else {
-                    // Chamuyo para conseguir la cama de la internación!
-                    return combineLatest(
-                        this.mapaCamasService.snapshot$,
-                        this.mapaCamasService.selectedPrestacion
-                    ).pipe(
-                        map(([camas, prestacion]) => {
-                            return camas.find(c => c.idInternacion === prestacion.id);
-                        })
-                    );
-                }
             })
         );
 

@@ -41,6 +41,7 @@ export class MapaCamasService {
 
     public prestacion$: Observable<IPrestacion>;
     public selectedPrestacion = new BehaviorSubject<IPrestacion>({ id: null } as any);
+    public camaSelectedSegunView$: Observable<ISnapshot>;
 
     private maquinaDeEstado$: Observable<IMaquinaEstados>;
 
@@ -154,6 +155,24 @@ export class MapaCamasService {
                 this.filtrarListaInternacion(listaInternacion, documento, apellido, estado)
             )
         );
+
+        this.camaSelectedSegunView$ = this.view.pipe(
+            switchMap((view) => {
+                if (view === 'mapa-camas') {
+                    return this.selectedCama;
+                } else {
+                    // Chamuyo para conseguir la cama de la internación!
+                    return combineLatest(
+                        this.snapshot$,
+                        this.selectedPrestacion
+                    ).pipe(
+                        map(([camas, prestacion]) => {
+                            return camas.find(c => c.idInternacion === prestacion.id);
+                        })
+                    );
+                }
+            })
+        );
     }
 
     getEstadoCama(cama: ISnapshot) {
@@ -191,17 +210,19 @@ export class MapaCamasService {
     private getCamasDisponiblesCama(camas: ISnapshot[], cama: ISnapshot) {
         let camasMismaUO = [];
         let camasDistintaUO = [];
-        camas.map(c => {
-            if (c.estado === 'disponible') {
-                if (c.idCama !== cama.idCama) {
-                    if (c.unidadOrganizativa.conceptId === cama.unidadOrganizativa.conceptId) {
-                        camasMismaUO.push(c);
-                    } else {
-                        camasDistintaUO.push(c);
+        if (cama) {
+            camas.map(c => {
+                if (c.estado === 'disponible') {
+                    if (c.idCama !== cama.idCama) {
+                        if (c.unidadOrganizativa.conceptId === cama.unidadOrganizativa.conceptId) {
+                            camasMismaUO.push(c);
+                        } else {
+                            camasDistintaUO.push(c);
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
         return { camasMismaUO, camasDistintaUO };
     }
 
