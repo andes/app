@@ -28,6 +28,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     public opcionesCondicionAlNacer = opcionesCondicionAlNacer;
     public opcionesTerminacion = opcionesTerminacion;
     public opcionesSexo = opcionesSexo;
+    public fechaEgresoOriginal: Date;
 
     // VARIABLES
     public fecha: Date;
@@ -115,28 +116,36 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.prestacion$
         ).subscribe(([view, capa, cama, prestacion]) => {
-            this.registro.valor.InformeEgreso.fechaEgreso = this.mapaCamasService.fecha;
-            const fecha = moment().toDate();
+            let fecha = this.mapaCamasService.fecha ? this.mapaCamasService.fecha : moment().toDate();
             this.fechaMax = moment().add(1, 's').toDate();
+            this.registro.valor.InformeEgreso.fechaEgreso = fecha;
             this.view = view;
             this.capa = capa;
+
             if (capa === 'estadistica') {
                 this.prestacion = prestacion;
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
                 if (this.prestacion.ejecucion.registros[1] && this.prestacion.ejecucion.registros[1].valor) {
                     this.registro.valor.InformeEgreso = this.prestacion.ejecucion.registros[1].valor.InformeEgreso;
+                    fecha = this.registro.valor.InformeEgreso.fechaEgreso;
+                    this.registro.valor.InformeEgreso.fechaEgreso = this.registro.valor.InformeEgreso.fechaEgreso;
+                    this.fechaEgresoOriginal = this.registro.valor.InformeEgreso.fechaEgreso;
                 }
 
                 if (this.view === 'listado-internacion') {
-                    this.subscription2 = this.mapaCamasService.snapshot(fecha, prestacion.id).subscribe((snapshot) => {
-                        this.cama = snapshot[0];
-                        this.fechaMin = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').toDate();
-                        this.fecha = fecha;
-                        this.setFecha();
-                        this.subscription3 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
-                            this.estadoDestino = relacionesPosibles[0].destino;
+
+                    this.subscription2 = this.mapaCamasService.snapshot(moment(this.registro.valor.InformeEgreso.fechaEgreso).add(-1, 's').toDate(),
+                        prestacion.id).subscribe((snapshot) => {
+                            this.cama = snapshot[0];
+                            if (this.cama) {
+                                this.fechaMin = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').toDate();
+                                this.fecha = fecha;
+                                this.setFecha();
+                            }
+                            this.subscription3 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
+                                this.estadoDestino = relacionesPosibles[0].destino;
+                            });
                         });
-                    });
                 }
             }
             if (cama.idCama) {
@@ -173,33 +182,48 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     egresoSimplificado(estado) {
-        // Se modifica el estado de la cama
-        const estadoPatch = {
-            _id: this.cama.idCama,
-            estado: estado,
-            idInternacion: null,
-            paciente: null,
-            extras: {
-                egreso: true,
-                idInternacion: this.cama.idInternacion
-            }
-        };
-        // this.cama.estado = estado;
-        // this.cama.idInternacion = null;
-        // this.cama.paciente = null;
+        // Se modifica el estado de la
+        if ((this.prestacion && !this.prestacion.ejecucion.registros[1]) || !this.prestacion) {
+            const estadoPatch = {
+                _id: this.cama.idCama,
+                estado: estado,
+                idInternacion: null,
+                paciente: null,
+                extras: {
+                    egreso: true,
+                    idInternacion: this.cama.idInternacion
+                }
+            };
 
-        this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso).subscribe(camaActualizada => {
-            this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
-            if (this.view === 'listado-internacion') {
-                this.mapaCamasService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
-            } else if (this.view === 'mapa-camas') {
-                this.mapaCamasService.select(null);
+            this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso).subscribe(camaActualizada => {
+                this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
+                if (this.view === 'listado-internacion') {
+                    this.mapaCamasService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
+                } else if (this.view === 'mapa-camas') {
+                    this.mapaCamasService.select(null);
+                    this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
+                }
+                this.onSave.emit();
+            }, (err1) => {
+                this.plex.info('danger', err1, 'Error al intentar desocupar la cama');
+            });
+        }
+    }
+
+    cambiarEstado() {
+        if (this.registro.valor.InformeEgreso.fechaEgreso.getTime() !== this.fechaEgresoOriginal.getTime()) {
+            this.mapaCamasService.changeTime(this.cama, this.fechaEgresoOriginal, this.registro.valor.InformeEgreso.fechaEgreso, null).subscribe(camaActualizada => {
+                this.plex.info('success', 'Los datos se actualizaron correctamente');
                 this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
-            }
+                this.onSave.emit();
+            }, (err1) => {
+                this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
+            });
+        } else {
+            this.plex.info('success', 'Los datos se actualizaron correctamente');
+            this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
             this.onSave.emit();
-        }, (err1) => {
-            this.plex.info('danger', err1, 'Error al intentar desocupar la cama');
-        });
+        }
     }
 
     egresoExtendido() {
@@ -212,6 +236,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacion => {
                 this.mapaCamasService.selectPrestacion(prestacion);
                 this.egresoSimplificado(this.estadoDestino);
+                this.cambiarEstado();
             });
         }
     }

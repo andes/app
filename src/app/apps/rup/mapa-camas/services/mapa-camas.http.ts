@@ -68,7 +68,7 @@ export class MapaCamasHTTP {
             capa: capa,
             fechaActualizar: fechaOriginal,
             nuevaFecha,
-            idInternacion
+            idInternacion: idInternacion ? idInternacion : undefined
         };
         return this.server.patch(this.url + `/camas/changeTime/${cama._id}`, params);
     }
