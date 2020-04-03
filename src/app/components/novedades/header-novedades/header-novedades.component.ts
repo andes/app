@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 import { CommonNovedadesService } from '../common-novedades.service';
 import { INovedad } from '../../../interfaces/novedades/INovedad.interface';
@@ -26,7 +26,8 @@ export class HeaderNovedadesComponent implements OnInit {
 
     constructor(
         private router: Router,
-        private commonNovedadesService: CommonNovedadesService
+        private commonNovedadesService: CommonNovedadesService,
+        private route: ActivatedRoute
     ) {
     }
 
@@ -57,7 +58,7 @@ export class HeaderNovedadesComponent implements OnInit {
     }
 
     public onSelectedNovedadChange(novedad: INovedad) {
-        this.commonNovedadesService.setNovedades('', novedad);
-        this.router.navigate(['novedades'], { state: { novedad: novedad } });
+        this.commonNovedadesService.setNovedades(null, novedad);
+        this.router.navigate(['/novedades'], { relativeTo: this.route });
     }
 }

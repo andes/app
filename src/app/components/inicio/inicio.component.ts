@@ -5,7 +5,7 @@ import { Component, AfterViewInit, HostBinding } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { AppComponent } from './../../app.component';
 import { LABELS } from '../../styles/properties';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
     templateUrl: 'inicio.html',
@@ -23,36 +23,39 @@ export class InicioComponent implements AfterViewInit {
     constructor(public auth: Auth, public appComponent: AppComponent, private plex: Plex,
         private commonNovedadesService: CommonNovedadesService,
         private modulosService: ModulosService,
+        private route: ActivatedRoute,
         private router: Router) { }
 
     ngAfterViewInit() {
-        let paramsModulos: any = {};
         window.setTimeout(() => {
             this.loading = true;
             this.modulosService.search({}).subscribe(
                 registros => {
                     registros.forEach((modulo) => {
+                        let tienePermiso = false;
                         modulo.permisos.forEach((permiso) => {
                             if (this.auth.getPermissions(permiso).length > 0) {
-                                this.cajasModulos.push(modulo);
+                                if (!tienePermiso) {
+                                    this.cajasModulos.push(modulo);
+                                    tienePermiso = true;
+                                }
                             }
                         });
-                        if (this.cajasModulos.length) {
-                            this.denied = false;
-                            let modulos = this.cajasModulos.map(p => {
-                                return p._id;
-                            });
-                            this.commonNovedadesService.setNovedadesSinFiltrar(modulos);
-                            this.commonNovedadesService.getNovedadesSinFiltrar().subscribe(novedades => {
-                                modulos.forEach((moduloId) => {
-                                    this.novedades[moduloId] = novedades.filter(n => n.modulo._id === moduloId);
-                                });
-                            });
-                        } else {
-                            this.denied = true;
-                        }
-                        this.loading = false;
                     });
+                    if (this.cajasModulos.length) {
+                        this.denied = false;
+                        let modulos = this.cajasModulos.map(p => {
+                            return p._id;
+                        });
+                        this.commonNovedadesService.getNovedadesSinFiltrar().subscribe(novedades => {
+                            modulos.forEach((moduloId) => {
+                                this.novedades[moduloId] = novedades.filter(n => n.modulo._id === moduloId);
+                            });
+                        });
+                    } else {
+                        this.denied = true;
+                    }
+                    this.loading = false;
                 }, (err) => {
                 }
             );
@@ -74,7 +77,6 @@ export class InicioComponent implements AfterViewInit {
     }
 
     irANovedades(modulo) {
-        this.commonNovedadesService.setNovedades(modulo);
-        this.router.navigate(['novedades']);
+        this.router.navigate(['/novedades', modulo], { relativeTo: this.route });
     }
 }

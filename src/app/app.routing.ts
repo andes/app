@@ -226,18 +226,9 @@ const appRoutes: Routes = [
 
   { path: 'internacion', loadChildren: './apps/rup/mapa-camas/mapa-camas.module#MapaCamasModule', canActivate: [RoutingNavBar, RoutingGuard] },
 
-    {
-        path: 'novedades',
-        component: NovedadesComponent,
-        children: [
-            {
-                path: ':id', component: DetalleNovedadComponent
-            },
-        ]
-    },
-    // { path: 'novedades/:id', component: DetalleNovedadComponent },
-    { path: 'novedades/lista', component: ListaNovedadesComponent },
     // dejar siempre al último porque no encuentra las url después de esta
+    { path: 'novedades/:modulo', component: NovedadesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+    { path: 'novedades', component: NovedadesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
     // dejar siempre al último porque no encuentra las url después de esta
     { path: '**', redirectTo: 'inicio' }
 ];
