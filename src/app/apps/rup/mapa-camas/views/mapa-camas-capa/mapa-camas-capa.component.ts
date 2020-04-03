@@ -26,7 +26,7 @@ export class MapaCamasCapaComponent implements OnInit {
     organizacion: string;
     fecha = moment().toDate();
     ambito: string;
-    private capa: string;
+    capa: string;
     camas: Observable<any[]>;
     snapshot: ISnapshot[];
     itemsDropdown = [
