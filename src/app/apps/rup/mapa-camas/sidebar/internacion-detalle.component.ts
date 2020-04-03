@@ -30,7 +30,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
         { key: 'ingreso', label: 'INGRESO' },
         { key: 'movimientos', label: 'MOVIMIENTOS' },
         { key: 'egreso', label: 'EGRESO' }
-    ]
+    ];
 
     private subscription: Subscription;
 

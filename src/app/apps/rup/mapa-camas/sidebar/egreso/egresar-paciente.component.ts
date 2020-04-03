@@ -150,7 +150,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             }
             if (cama.idCama) {
                 this.cama = cama;
-                this.fechaMin = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').toDate();
+                this.fechaMin = moment(this.cama.fecha).add(1, 'm').toDate();
                 this.fecha = fecha;
                 this.setFecha();
                 this.subscription3 = this.mapaCamasService.getRelacionesPosibles(cama).subscribe((relacionesPosibles) => {
