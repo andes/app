@@ -55,6 +55,7 @@ export class CambiarCamaComponent implements OnInit, OnDestroy {
                 })
             ).subscribe(() => {
                 this.plex.info('success', 'Cambio de cama exitoso!');
+                this.mapaCamasService.setFecha(this.fecha);
                 this.onSave.emit();
             });
         }
