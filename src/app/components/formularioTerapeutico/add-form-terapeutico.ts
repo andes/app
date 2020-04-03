@@ -60,7 +60,7 @@ export class AddformTerapeuticoComponent implements OnInit {
         if (event && event.query) {
             let query = {
                 search: event.query,
-                semanticTag: ['producto']
+                semanticTag: ['producto', 'fármaco de uso clínico']
             };
             this.SNOMED.get(
                 query

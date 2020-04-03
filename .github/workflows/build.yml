@@ -1,0 +1,16 @@
+name: BUILD AND TEST
+on: [push]
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v1
+            - name: Use Node.js
+              uses: actions/setup-node@v1
+              with:
+                  node-version: '10.x'
+            - run: npm ci
+            - run: cp ./src/environments/apiKeyMaps.ts.example ./src/environments/apiKeyMaps.ts  
+            - run: npm run lint
+            - run: rm browserslist && touch browserslist
+            - run: npm run build:prod -- --progress=false

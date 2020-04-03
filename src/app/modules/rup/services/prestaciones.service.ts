@@ -20,7 +20,7 @@ export class PrestacionesService {
         trastorno: ['trastorno'],
         procedimiento: ['procedimiento', 'entidad observable', 'régimen/tratamiento'],
         plan: ['procedimiento', 'régimen/tratamiento'],
-        producto: ['producto', 'objeto físico', 'medicamento clínico'],
+        producto: ['producto', 'objeto físico', 'medicamento clínico', 'fármaco de uso clínico'],
         elementoderegistro: ['elemento de registro']
     };
     public static InternacionPrestacion = {
@@ -810,7 +810,7 @@ export class PrestacionesService {
             clase = 'elementoderegistro';
         } else if (conceptoSNOMED.semanticTag === 'evento') {
             clase = 'hallazgo';
-        } else if (conceptoSNOMED.semanticTag === 'objeto físico' || conceptoSNOMED.semanticTag === 'medicamento clínico') {
+        } else if (conceptoSNOMED.semanticTag === 'objeto físico' || conceptoSNOMED.semanticTag === 'medicamento clínico' || conceptoSNOMED.semanticTag === 'fármaco de uso clínico') {
             clase = 'producto';
         } else if (conceptoSNOMED.semanticTag === 'entidad observable') {
             clase = 'procedimiento';
@@ -857,6 +857,7 @@ export class PrestacionesService {
                 case 'producto':
                 case 'objeto físico':
                 case 'medicamento clínico':
+                case 'fármaco de uso clínico':
                     icon = 'producto';
                     break;
                 case 'elemento de registro':
