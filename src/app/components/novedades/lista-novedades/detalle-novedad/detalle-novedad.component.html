@@ -6,25 +6,20 @@
         </div>
         <div class="jumbotron-text">
             <h1 class="display-4">{{ novedad$.titulo }}</h1>
-            <!-- <p class="lead">{{ novedad.bajada }}</p>-->
         </div>
         <section class="overlay">
             <div class="contenedor-imagen">
-                <img *ngIf="novedad$.imagenes.length > 0" [src]="fotos[0]" alt="">
+                <img *ngIf="novedad$.imagenes.length > 0" [src]="fotos[0].url" alt="">
             </div>
         </section>
         <section class="contenedor-nota">
             <div class="contenedor-texto">
                 <article [innerHTML]=" novedad$.descripcion ">
                 </article>
-                <!-- Galeria de imagenes -->
-                <div class="row">
-                    <plex-visualizador [files]="getFotos()" #visualizador></plex-visualizador>
-                    <ng-container *ngFor="let doc of fotos; let i = index">
-                        <div class="image hover">
-                            <img [src]="doc" (click)="visualizador.open(i)">
-                        </div>
-                    </ng-container>
+                <plex-visualizador [files]="fotos" #visualizador></plex-visualizador>
+                <div class="galeria-imagenes">
+                    <img *ngFor="let item of fotos; let i = index" [src]="item.url" (click)="visualizador.open(i)"
+                         [hidden]="(i===0)" class="img-thumbnail">
                 </div>
             </div>
         </section>

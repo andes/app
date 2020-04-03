@@ -62,67 +62,8 @@ $andes-naranja-claro: #f4a03b;
     .detalle {
         font-weight: 100;
     }
-    // Colores
-    &.color-celeste {
-        background: $color-celeste;
-    }
-    &.color-celeste:hover {
-        background: darken($color-celeste, 20%);
-    }
-    &.color-violeta {
-        background: $color-violeta;
-    }
-    &.color-violeta:hover {
-        background: darken($color-violeta, 20%);
-    }
-    &.color-rosa {
-        background: $color-rosa;
-    }
-    &.color-rosa:hover {
-        background: darken($color-rosa, 10%);
-    }
-    &.color-amarillo {
-        background: $color-amarillo;
-    }
-    &.color-amarillo:hover {
-        background: darken($color-amarillo, 10%);
-    }
-    &.color-salmon {
-        background: $color-salmon;
-    }
-    &.color-salmon:hover {
-        background: darken($color-salmon, 10%);
-    }
-    &.color-verde-claro {
-        background: $andes-verde-claro;
-    }
-    &.color-verde-claro:hover {
-        background: darken($andes-verde-claro, 10%);
-    }
-    &.color-verde {
-        background: $andes-verde;
-    }
-    &.color-verde:hover {
-        background: darken($andes-verde, 10%);
-    }
-    &.andes-naranja-claro {
-        background: $andes-naranja-claro;
-    }
-    &.andes-naranja-claro:hover {
-        background: darken($andes-naranja-claro, 10%);
-    }
-    &.color-verde-oscuro {
-        background: $color-verde-oscuro;
-    }
-    &.color-verde-oscuro:hover {
-        background: darken($color-verde-oscuro, 10%);
-    }
-
-    &.analytics {
-        background: #662482;
-    }
-    &.analytics:hover {
-        background: darken(#662482, 10%);
+    &:hover {
+        box-shadow: inset 0 0 0 1000px rgba(0,0,0,.4);
     }
 }
 

@@ -3,7 +3,7 @@ export interface IModulo {
     nombre: string;
     descripcion: string;
     subtitulo: string;
-    claseCss: string;
+    color: string;
     icono: string;
     linkAcceso: string;
     permisos: [string];

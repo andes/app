@@ -1,11 +1,10 @@
 import { CommonNovedadesService } from './../novedades/common-novedades.service';
-import { ModulosService } from './../../services/novedades/modulo.service';
+import { ModulosService } from '../../services/novedades/modulos.service';
 import { Plex } from '@andes/plex';
 import { Component, AfterViewInit, HostBinding } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { AppComponent } from './../../app.component';
 import { LABELS } from '../../styles/properties';
-import { NovedadesService } from '../../services/novedades/novedades.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -13,35 +12,13 @@ import { Router } from '@angular/router';
     styleUrls: ['inicio.scss']
 })
 export class InicioComponent implements AfterViewInit {
-    @HostBinding('class.plex-layout') layout = true;
-    public turnos = '';
-    public novedadesTurnos = false;
-    public mpi = '';
-    public novedadesMpi = false;
-    public rup = '';
-    public novedadesRup = false;
-    public novedadesHuds = false;
-    public internacion = '';
-    public novedadesInternacion = false;
-    public internacionEpicrisis = '';
-    public novedadesInternacionEpicrisis = false;
-    public solicitudes = '';
-    public novedadesSolicitudes = false;
-    public prestamosHC = '';
-    public novedadesPrestamosHC = false;
-    public dashboard = false;
-    public novedadesDashboard = false;
-    public analytics = '';
-    public novedadesAnalytics = false;
-    public usuarios = '';
-    public novedadesUsuarios = false;
+    @HostBinding('class.plex-layout')
     public denied = false;
     public loading = false;
     public accessList: any = [];
     public provincia = LABELS.provincia;
     public cajasModulos: any = [];
     public novedades: any[] = [];
-
 
     constructor(public auth: Auth, public appComponent: AppComponent, private plex: Plex,
         private commonNovedadesService: CommonNovedadesService,
@@ -66,7 +43,7 @@ export class InicioComponent implements AfterViewInit {
                 permisos.push('internacion:inicio');
             }
             paramsModulos.permisos = permisos;
-            this.modulosService.get(paramsModulos).subscribe(
+            this.modulosService.search(paramsModulos).subscribe(
                 registros => {
                     this.cajasModulos = registros;
                     if (registros.length) {

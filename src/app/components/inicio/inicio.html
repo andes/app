@@ -11,13 +11,14 @@
             <plex-loader *ngIf="loading" type="linear"></plex-loader>
             <div *ngIf="!denied && !loading" class="andes-inicio row">
                 <div *ngFor="let caja of cajasModulos" class="col-xs-12 col-sm-6 col-md-4">
-                    <div class="boton {{caja.claseCss}}" (click)="anlytics()" *ngIf="caja.nombre === 'ANALYTICS'">
+                    <div class="boton" [ngStyle]="{background:caja.color}" (click)="anlytics()"
+                         *ngIf="caja.nombre === 'ANALYTICS'">
                         <i class="icono mdi {{caja.icono}}"></i>
                         <div class="titulo">{{caja.nombre}}</div>
                         <div class="subtitulo">{{caja.subtitulo}}</div>
                         <div class="detalle">{{caja.descripcion | titlecase}}</div>
                     </div>
-                    <div class="boton {{caja.claseCss}}" [routerLink]="caja.linkAcceso"
+                    <div class="boton" [ngStyle]="{background:caja.color}" [routerLink]="caja.linkAcceso"
                          *ngIf="caja.nombre !== 'ANALYTICS'">
                         <i class="icono mdi {{caja.icono}}"></i>
                         <div class="titulo">{{caja.nombre}}</div>

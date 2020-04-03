@@ -1,5 +1,3 @@
-import { ModulosService } from './services/novedades/modulo.service';
-
 import { AgregarPacienteComponent } from './components/turnos/gestor-agendas/operaciones-agenda/agregar-paciente.component';
 /*
 @jgabriel | 04-03-2017
@@ -396,6 +394,8 @@ import { ListaNovedadesComponent } from './components/novedades/lista-novedades/
 import { DetalleNovedadComponent } from './components/novedades/lista-novedades/detalle-novedad/detalle-novedad.component';
 import { NovedadesService } from './services/novedades/novedades.service';
 import { CommonNovedadesService } from './components/novedades/common-novedades.service';
+import { ModulosService } from './services/novedades/modulos.service';
+
 
 import { ConceptosTurneablesService } from './services/conceptos-turneables.service';
 import { DisclaimerService } from './services/disclaimer.service';
