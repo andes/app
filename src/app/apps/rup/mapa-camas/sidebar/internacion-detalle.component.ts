@@ -70,7 +70,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
                 } else {
                     this.existeEgreso = false;
 
-                    if (!this.permisoAlta) {
+                    if (!this.permisoIngreso) {
                         this.items.pop();
                     }
                 }
