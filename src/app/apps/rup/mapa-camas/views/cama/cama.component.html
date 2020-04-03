@@ -4,7 +4,7 @@
             <plex-title titulo="DATOS DE CAMA">
                 <plex-button label="GUARDAR" type="success" [disabled]="!cama.nombre || !cama.unidadOrganizativa || !cama.tipoCama || 
                 !cama.especialidades || !cama.sectores" (click)="save()"></plex-button>
-                <plex-button *ngIf="permisoBaja" title="{{ (disableBaja) ? 'Cama utilizada' : null }}" [disabled]="disableBaja" label="DAR DE BAJA" type="warning" (click)="darBaja()"></plex-button>
+                <plex-button *ngIf="permisoBaja" title="{{ (camaSnap?.idCama) ? null : 'Cama utilizada' }}" [disabled]="!camaSnap" label="DAR DE BAJA" type="warning" (click)="darBaja()"></plex-button>
                 <plex-button label="CANCELAR" type="danger" (click)="volver()"></plex-button>
             </plex-title>
             <fieldset>
