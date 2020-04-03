@@ -29,43 +29,43 @@ export class InicioComponent implements AfterViewInit {
         let paramsModulos: any = {};
         window.setTimeout(() => {
             this.loading = true;
-            let permisos = this.auth.getPermissions('?');
-            if (this.auth.getPermissions('turnos:planificarAgenda:?').length > 0) {
-                permisos.push('turnos:planificarAgenda');
-            }
-            if (this.auth.getPermissions('turnos:darTurnos:?').length > 0) {
-                permisos.push('turnos:darTurnos');
-            }
-            if (this.auth.getPermissions('internacion:mapaDeCamas:?').length > 0) {
-                permisos.push('internacion:mapaDeCamas');
-            }
-            if (this.auth.getPermissions('internacion:inicio:?').length > 0) {
-                permisos.push('internacion:inicio');
-            }
-            paramsModulos.permisos = permisos;
-            this.modulosService.search(paramsModulos).subscribe(
+            this.modulosService.search({}).subscribe(
                 registros => {
-                    this.cajasModulos = registros;
-                    if (registros.length) {
-                        this.denied = false;
-                        let modulos = registros.map(p => {
-                            return p._id;
+                    registros.forEach((modulo) => {
+                        modulo.permisos.forEach((permiso) => {
+                            if (this.auth.getPermissions(permiso).length > 0) {
+                                this.cajasModulos.push(modulo);
+                            }
                         });
-                        this.commonNovedadesService.setNovedadesSinFiltrar(modulos);
-                        this.commonNovedadesService.getNovedadesSinFiltrar().subscribe(novedades => {
-                            modulos.forEach((modulo) => {
-                                this.novedades[modulo] = novedades.filter(n => n.modulo._id === modulo);
+                        if (this.cajasModulos.length) {
+                            this.denied = false;
+                            let modulos = this.cajasModulos.map(p => {
+                                return p._id;
                             });
-                        });
-                    } else {
-                        this.denied = true;
-                    }
-                    this.loading = false;
-                },
-                (err) => {
+                            this.commonNovedadesService.setNovedadesSinFiltrar(modulos);
+                            this.commonNovedadesService.getNovedadesSinFiltrar().subscribe(novedades => {
+                                modulos.forEach((moduloId) => {
+                                    this.novedades[moduloId] = novedades.filter(n => n.modulo._id === moduloId);
+                                });
+                            });
+                        } else {
+                            this.denied = true;
+                        }
+                        this.loading = false;
+                    });
+                }, (err) => {
                 }
             );
         });
+    }
+
+    redirect(caja) {
+        if (caja.nombre === 'ANALITYCS') {
+            const token = this.auth.getToken();
+            window.location.assign(`https://analytics.andes.gob.ar/auth/login?token=${token}`);
+        } else {
+            this.router.navigate([caja.linkAcceso]);
+        }
     }
 
     anlytics() {
