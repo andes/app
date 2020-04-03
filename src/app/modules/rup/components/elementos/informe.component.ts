@@ -25,5 +25,15 @@ export class InformesComponent extends RUPComponent implements OnInit, AfterView
         if (!this.registro.valor || this.registro.valor.length === 0) {
             this.afterInit = true;
         }
+
+        if (!this.soloValores) {
+            this.conceptObserverService.observe(this.registro).subscribe((data) => {
+                // No soy yo mismo
+                if (this.registro !== data && this.registro.valor !== data.valor) {
+                    this.registro.valor = data.valor;
+                    this.emitChange(false);
+                }
+            });
+        }
     }
 }
