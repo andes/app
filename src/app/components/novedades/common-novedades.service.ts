@@ -51,6 +51,7 @@ export class CommonNovedadesService {
     setNovedadesSinFiltrar(modulos: string[], novedad?: INovedad) {
         let paramsNovedades: any = {};
         paramsNovedades.modulos = modulos;
+        paramsNovedades.activa = true;
         this.registroNovedades.search(paramsNovedades).subscribe(
             registros => {
                 this.novedadesSinFiltrar.next(registros);

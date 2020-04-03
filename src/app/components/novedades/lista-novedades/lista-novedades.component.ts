@@ -1,11 +1,6 @@
 import { CommonNovedadesService } from './../common-novedades.service';
 import { Component, OnInit } from '@angular/core';
-import { switchMap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-// Mock-data
-import { NovedadesService } from '../../../services/novedades/novedades.service';
-import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
 import { environment } from '../../../../environments/environment';
 
 
@@ -18,7 +13,6 @@ export class ListaNovedadesComponent implements OnInit {
     public novedades$ = [];
 
     constructor(
-        public adjuntos: AdjuntosService,
         private router: Router,
         private commonNovedadesService: CommonNovedadesService
     ) {

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonNovedadesService } from '../../common-novedades.service';
 import { INovedad } from '../../../../interfaces/novedades/INovedad.interface';
 import { environment } from '../../../../../environments/environment';
-import { AdjuntosService } from '../../../../modules/rup/services/adjuntos.service';
 
 @Component({
     selector: 'detalle-novedad',
@@ -13,7 +12,6 @@ export class DetalleNovedadComponent implements OnInit {
     fotos: any[];
 
     constructor(
-        public adjuntos: AdjuntosService,
         private commonNovedadesService: CommonNovedadesService) {
     }
 

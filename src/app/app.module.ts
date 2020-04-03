@@ -592,7 +592,6 @@ registerLocaleData(localeEs, 'es');
         ExcelService,
         NovedadesService,
         ModulosService,
-        AdjuntosService,
         RoutingGuard,
         RoutingNavBar,
         RoutingHudsGuard,
