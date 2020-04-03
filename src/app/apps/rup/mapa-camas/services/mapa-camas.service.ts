@@ -210,7 +210,7 @@ export class MapaCamasService {
     private getCamasDisponiblesCama(camas: ISnapshot[], cama: ISnapshot) {
         let camasMismaUO = [];
         let camasDistintaUO = [];
-        if (cama) {
+        if (cama.idCama) {
             camas.map(c => {
                 if (c.estado === 'disponible') {
                     if (c.idCama !== cama.idCama) {

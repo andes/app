@@ -51,6 +51,7 @@ export class CambiarCamaComponent implements OnInit, OnDestroy {
             ).pipe(
                 take(1),
                 switchMap(([fechaCambio, camaActual]) => {
+                    this.fecha = fechaCambio;
                     return this.cambiarCama(camaActual, this.nuevaCama, fechaCambio);
                 })
             ).subscribe(() => {
