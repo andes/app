@@ -391,7 +391,6 @@ import { SelectPrestacionesDirective } from './directives/prestaciones-select.di
 import { SelectFinanciadorDirective } from './directives/financiador-select-directive';
 import { EspacioFisicoPipe } from './pipes/espacioFisico.pipe';
 import { NovedadesComponent } from './components/novedades/novedades.component';
-import { SliderComponent } from './components/novedades/componentes/slider/slider.component';
 import { HeaderNovedadesComponent } from './components/novedades/header-novedades/header-novedades.component';
 import { ListaNovedadesComponent } from './components/novedades/lista-novedades/lista-novedades.component';
 import { DetalleNovedadComponent } from './components/novedades/lista-novedades/detalle-novedad/detalle-novedad.component';
@@ -525,7 +524,6 @@ registerLocaleData(localeEs, 'es');
         PrestarHcComponent,
         DevolverHcComponent,
         NovedadesComponent,
-        SliderComponent,
         HeaderNovedadesComponent,
         ListaNovedadesComponent,
         DetalleNovedadComponent,

@@ -10,7 +10,7 @@
         </div>
         <section class="overlay">
             <div class="contenedor-imagen">
-                <img *ngIf="novedad$.imagenes.length > 0" [src]="getFoto(novedad$)" alt="">
+                <img *ngIf="novedad$.imagenes.length > 0" [src]="fotos[0]" alt="">
             </div>
         </section>
         <section class="contenedor-nota">
@@ -18,8 +18,13 @@
                 <article [innerHTML]=" novedad$.descripcion ">
                 </article>
                 <!-- Galeria de imagenes -->
-                <div class="galeria-imagenes">
-                    <img *ngFor="let item of novedad$.imagenes" [src]="createUrl(item)" class="img-thumbnail">
+                <div class="row">
+                    <plex-visualizador [files]="getFotos()" #visualizador></plex-visualizador>
+                    <ng-container *ngFor="let doc of fotos; let i = index">
+                        <div class="image hover">
+                            <img [src]="doc" (click)="visualizador.open(i)">
+                        </div>
+                    </ng-container>
                 </div>
             </div>
         </section>

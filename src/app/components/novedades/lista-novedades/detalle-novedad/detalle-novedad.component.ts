@@ -10,6 +10,7 @@ import { AdjuntosService } from '../../../../modules/rup/services/adjuntos.servi
 })
 export class DetalleNovedadComponent implements OnInit {
     novedad$: INovedad;
+    fotos: any[];
 
     constructor(
         public adjuntos: AdjuntosService,
@@ -19,6 +20,7 @@ export class DetalleNovedadComponent implements OnInit {
     ngOnInit() {
         this.commonNovedadesService.getSelectedNovedad().subscribe((nuevaNovedad) => {
             this.novedad$ = nuevaNovedad;
+            this.fotos = this.getFotos(this.novedad$);
         });
     }
 
@@ -26,12 +28,14 @@ export class DetalleNovedadComponent implements OnInit {
         return moment(fecha).format('DD/mm/YYYY');
     }
 
-    public getFoto(novedad: any) {
-        let imagenes = novedad.imagenes ? novedad.imagenes : [];
-        if (imagenes.length > 0) {
-            return this.createUrl(imagenes[0]);
+    getFotos(novedad: any) {
+        if (novedad && novedad.imagenes) {
+            return novedad.imagenes.map((doc: any) => {
+                doc.url = this.createUrl(doc);
+                return doc;
+            });
         } else {
-            return null;
+            return [];
         }
     }
 
