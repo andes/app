@@ -23,7 +23,7 @@ import { CamaDestinoGenericoComponent } from './sidebar/cama-destino-generico.co
 import { CamaDesocuparComponent } from './sidebar/desocupar-cama/desocupar-cama.component';
 import { EgresarPacienteComponent } from './sidebar/egreso/egresar-paciente.component';
 import { CamaDetalleComponent } from './sidebar/cama-detalle/cama-detalle.component';
-import { InternacionDetalleComponent } from './sidebar/internacion-detalle.component';
+import { InternacionDetalleComponent } from './sidebar/cama-detalle/internacion-detalle/internacion-detalle.component';
 import { InformeIngresoComponent } from './sidebar/ingreso/informe-ingreso.component';
 import { InformeEgresoComponent } from './sidebar/egreso/informe-egreso.component';
 import { HistorialDetalleComponent } from './sidebar/cama-detalle/historial-detalle/historial-detalle.component';
@@ -38,6 +38,7 @@ import { MitosModule } from '../../mitos';
 import { OrganizacionLibModule } from '../../../components/organizacion/organizacion-lib.module';
 import { ElegirPacienteComponent } from './sidebar/ingreso/elegir-paciente.component';
 import { FiltrosInternacionComponent } from './views/listado-internacion/filtros-internacion/filtros-internacion.component';
+import { NuevoRegistroSaludComponent } from './sidebar/nuevo-registro-salud/nuevo-registro-salud.component';
 
 
 @NgModule({
@@ -77,7 +78,8 @@ import { FiltrosInternacionComponent } from './views/listado-internacion/filtros
         InternacionListadoComponent,
         InternacionListaEsperaComponent,
         ElegirPacienteComponent,
-        FiltrosInternacionComponent
+        FiltrosInternacionComponent,
+        NuevoRegistroSaludComponent
     ],
     providers: [
         MapaCamasService,

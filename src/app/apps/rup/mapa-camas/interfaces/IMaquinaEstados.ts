@@ -1,3 +1,5 @@
+import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concept.interface';
+
 export interface IMaquinaEstados {
     id: String;
     organizacion: String;
@@ -12,6 +14,13 @@ export interface IMAQEstado {
     label: String;
     color: String;
     icon: String;
+    acciones: {
+        label: String,
+        tipo: String,
+        parametros: {
+            concepto?: ISnomedConcept
+        }
+    }[];
 }
 
 export interface IMAQRelacion {

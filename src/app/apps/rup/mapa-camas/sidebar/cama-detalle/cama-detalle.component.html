@@ -3,9 +3,10 @@
         <ng-container *ngIf="estadoCama$ | async as estadoCama">
             <plex-title titulo="DATOS DE CAMA">
                 <ng-container *ngFor="let relacion of relaciones$ | async">
-                    <ng-container *ngIf="(relacion.accion !== 'internarPaciente') || (relacion.accion === 'internarPaciente' && permisoIngreso)">
-                        <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color" size="sm"
-                                     (click)="accion(relacion, $event)">
+                    <ng-container
+                                  *ngIf="(relacion.accion !== 'internarPaciente') || (relacion.accion === 'internarPaciente' && permisoIngreso)">
+                        <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color"
+                                     size="sm" (click)="accion(relacion)">
                         </plex-button>
                     </ng-container>
                 </ng-container>
@@ -44,15 +45,16 @@
                     <plex-label titulo="Sector" subtitulo="{{ sector(cama) }}"></plex-label>
                     <plex-label titulo="Equipamiento" subtitulo="{{ cama.equipamiento | enumerar: ['term'] }}">
                     </plex-label>
-                    <plex-label *ngIf="estadoCama.label === 'Bloqueada'" titulo="Motivo bloqueo"
+                    <plex-label *ngIf="estadoCama.key === 'bloqueada'" titulo="Motivo bloqueo"
                                 subtitulo="{{ cama.observaciones }}"></plex-label>
                 </plex-detail>
             </fieldset>
         </ng-container>
         <ng-container *ngIf="cama.paciente">
             <plex-title size="sm" justify titulo="DATOS DE PACIENTE">
-                <plex-button label="VER EPICRISIS" type="success" size="sm" (click)="verEpicrisis()">
-                </plex-button>
+                <ng-container *ngIf="(accionesEstado$ | async)?.length > 0">
+                    <plex-button size="sm" type="info" (click)="onNuevoRegistrio()"> NUEVO REGISTRO </plex-button>
+                </ng-container>
             </plex-title>
             <fieldset>
                 <paciente-detalle [paciente]="getPaciente(cama.paciente) | async" orientacion="horizontal">

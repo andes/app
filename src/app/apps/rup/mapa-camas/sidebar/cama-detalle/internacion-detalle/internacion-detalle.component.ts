@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
 import { PlexOptionsComponent } from '@andes/plex';
-import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
+import { IPrestacion } from '../../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable, Subscription, combineLatest } from 'rxjs';
-import { MapaCamasService } from '../services/mapa-camas.service';
-import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
+import { MapaCamasService } from '../../../services/mapa-camas.service';
+import { PrestacionesService } from '../../../../../../modules/rup/services/prestaciones.service';
 import { Auth } from '@andes/auth';
 
 @Component({

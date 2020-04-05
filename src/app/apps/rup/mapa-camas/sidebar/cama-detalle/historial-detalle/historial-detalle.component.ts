@@ -13,8 +13,8 @@ export class HistorialDetalleComponent implements OnInit {
     public cama$: Observable<ISnapshot>;
     public estados$: Observable<IMAQEstado[]>;
 
-    public desde: Date = new Date();
-    public hasta: Date = new Date();
+    public desde = moment().subtract(7, 'd').toDate();
+    public hasta = moment().toDate();
 
     public historial = new Subject();
 
@@ -30,7 +30,9 @@ export class HistorialDetalleComponent implements OnInit {
     ngOnInit() {
 
         this.historial$ = this.historial.pipe(
-            startWith([]),
+            startWith({
+                desde: this.desde, hasta: this.hasta
+            }),
             map((filtros: any) => {
                 return {
                     desde: moment(filtros.desde).startOf('day').toDate(),

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
-import { MapaCamasService } from './services/mapa-camas.service';
 
 @Component({
     selector: 'app-mapa-camas-main',

@@ -5,7 +5,7 @@ import { ElementosRUPService } from '../../../../../modules/rup/services/element
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { ISnapshot } from '../../interfaces/ISnapshot';
-import { tap, map, switchMap, startWith } from 'rxjs/operators';
+import { tap, map, switchMap, startWith, pluck } from 'rxjs/operators';
 import { Observable, combineLatest, of, Subscription } from 'rxjs';
 import { IMAQEstado, IMAQRelacion } from '../../interfaces/IMaquinaEstados';
 import { PacienteService } from '../../../../../core/mpi/services/paciente.service';
@@ -21,6 +21,9 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
     public estadoCama$: Observable<IMAQEstado>;
     public relaciones$: Observable<IMAQRelacion[]>;
     public puedeDesocupar$: Observable<any>;
+
+    public accionesEstado$: Observable<any>;
+
 
     // Eventos
     @Input() fecha: Date;
@@ -75,6 +78,11 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
 
         this.estadoCama$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getEstadoCama(cama)));
         this.relaciones$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getRelacionesPosibles(cama)));
+
+        this.accionesEstado$ = this.estadoCama$.pipe(
+            pluck('acciones'),
+            map(acciones => acciones.filter(acc => acc.tipo === 'nuevo-registro'))
+        );
     }
 
     sector(cama: ISnapshot) {
@@ -97,25 +105,6 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
         this.accionCama.emit(relacion);
     }
 
-    /**
-       * Crea la prestacion de epicrisis, si existe recupera la epicrisis
-       * creada anteriormente.
-       * Nos rutea a la ejecucion de RUP.
-       */
-    generaEpicrisis() {
-        this.prestacionService.get({ idPrestacionOrigen: this.cama.idInternacion }).subscribe(prestacionExiste => {
-            if (prestacionExiste.length === 0) {
-                let nuevaPrestacion = this.prestacionService.inicializarPrestacion(this.paciente, this.conceptosInternacion.epicrisis, 'ejecucion', 'internacion');
-                nuevaPrestacion.solicitud.prestacionOrigen = this.cama.idInternacion;
-                this.prestacionService.post(nuevaPrestacion).subscribe(prestacion => {
-                    this.router.navigate(['rup/ejecucion', prestacion.id]);
-                });
-            } else {
-                this.router.navigate(['rup/ejecucion', prestacionExiste[0].id]);
-            }
-        });
-    }
-
     onEdit(editar: boolean) {
         this.editar = editar;
     }
@@ -132,5 +121,9 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
             );
         }
         return this.paciente$[paciente.id];
+    }
+
+    onNuevoRegistrio() {
+        this.accionCama.emit({ accion: 'nuevo-registro' });
     }
 }
