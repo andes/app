@@ -87,6 +87,12 @@
             </li>
         </ul>
     </div>
+    <div class="row" *ngIf="filtroActual === 'planes'">
+        <div class="col">
+            <plex-options (activated)='setAmbitoOrigen($event)' [items]="filtrosAmbitos">
+            </plex-options>
+        </div>
+    </div>
     <div class="row">
         <div class="col-10">
             <small class="pr-1" *ngIf="getSemanticTagFiltros()">Filtros:</small>

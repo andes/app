@@ -97,8 +97,12 @@ export class HudsBusquedaComponent implements AfterContentInit {
     public hallazgosNoActivos: any = [];
     public fechaInicio;
     public fechaFin;
+    public ambitoOrigen;
     public showFiltros = false;
-
+    public filtrosAmbitos = [
+        { key: 'ambulatorio', label: 'Ambulatorio' },
+        { key: 'internacion', label: 'Internación' }
+    ];
     public conceptos = {
         hallazgo: ['hallazgo', 'situación', 'evento'],
         trastorno: ['trastorno'],
@@ -251,7 +255,8 @@ export class HudsBusquedaComponent implements AfterContentInit {
                     estado: lastState.tipo
                 };
             });
-            this.prestacionesCopia = this.prestaciones;
+            this.prestacionesCopia = this.prestaciones.slice();
+            this.setAmbitoOrigen('ambulatorio');
             this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
             this.buscarCDAPacientes(this.huds.getHudsToken());
         });
@@ -341,7 +346,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
             });
             // Filtramos por CDA para poder recargar los estudiosc
             this.prestaciones = [...this.prestaciones.filter(e => e.tipo !== 'cda'), ...filtro];
-            this.prestacionesCopia = this.prestaciones;
             this.tiposPrestacion = this._prestaciones.map(p => p.prestacion);
         });
     }
@@ -371,6 +375,9 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
     filtroBuscador(key: any) {
         this.filtroActual = key;
+        if (key === 'planes') {
+            this.setAmbitoOrigen('ambulatorio');
+        }
     }
 
     getSemanticTagFiltros() {
@@ -396,11 +403,10 @@ export class HudsBusquedaComponent implements AfterContentInit {
     }
 
     filtrar() {
-        if (this.prestacionSeleccionada.length > 0) {
+        this.prestaciones = this.prestacionesCopia.slice();
+        if (this.prestacionSeleccionada && this.prestacionSeleccionada.length > 0) {
             const prestacionesTemp = this.prestacionSeleccionada.map(e => e.conceptId);
-            this.prestaciones = this.prestacionesCopia.filter(p => prestacionesTemp.find(e => e === p.prestacion.conceptId));
-        } else {
-            this.prestaciones = this.prestacionesCopia;
+            this.prestaciones = this.prestaciones.filter(p => prestacionesTemp.find(e => e === p.prestacion.conceptId));
         }
         if (this.fechaInicio || this.fechaFin) {
             this.fechaInicio = this.fechaInicio ? this.fechaInicio : new Date();
@@ -408,6 +414,14 @@ export class HudsBusquedaComponent implements AfterContentInit {
             this.prestaciones = this.prestaciones.filter(p => p.fecha >= moment(this.fechaInicio).startOf('day').toDate() &&
                 p.fecha <= moment(this.fechaFin).endOf('day').toDate());
         }
+        if (this.ambitoOrigen) {
+            this.prestaciones = this.prestaciones.filter(p => p.data.solicitud.ambitoOrigen === this.ambitoOrigen);
+        }
+    }
+
+    setAmbitoOrigen(ambitoOrigen) {
+        this.ambitoOrigen = ambitoOrigen;
+        this.filtrar();
     }
 
     clickSolicitud(registro) {
