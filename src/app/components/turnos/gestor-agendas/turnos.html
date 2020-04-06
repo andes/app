@@ -164,8 +164,8 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="container mt-2 mb-2">
-                                        <div class="row" justify>
-                                            <div class="col">
+                                        <div class="row">
+                                            <div class="col d-flex align-items-start px-2">
                                                 <span>
                                                     <h2 class="text-info">
                                                         {{bloque.accesoDirectoDelDia ? bloque.accesoDirectoDelDia : 0}}
@@ -173,15 +173,18 @@
                                                     <span class="small">Turnos <br><b>del día</b></span>
                                                 </span>
                                             </div>
-                                            <div class="col">
+                                            <div class="col d-flex align-items-start px-2">
                                                 <span>
                                                     <h2 class="text-info">
                                                         {{bloque.accesoDirectoProgramado ? bloque.accesoDirectoProgramado : 0}}
                                                     </h2>
                                                     <span class="small">Turnos <br><b>programados</b></span>
+                                                    <small *ngIf="bloque.cupoMobile"><br>
+                                                        &nbsp;({{bloque.cupoMobile}} virtuales)
+                                                    </small>
                                                 </span>
                                             </div>
-                                            <div class="col">
+                                            <div class="col d-flex align-items-start px-2">
                                                 <span>
                                                     <h2 class="text-info">
                                                         {{bloque.reservadoProfesional ? bloque.reservadoProfesional : 0}}
@@ -189,7 +192,7 @@
                                                     <span class="small">Turnos <br><b>profesional</b></span>
                                                 </span>
                                             </div>
-                                            <div class="col">
+                                            <div class="col d-flex align-items-start px-2">
                                                 <span>
                                                     <h2 class="text-info">
                                                         {{bloque.reservadoGestion ? bloque.reservadoGestion : 0}}</h2>
