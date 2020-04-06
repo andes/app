@@ -47,21 +47,22 @@ export class SelectOrganizacionComponent implements OnInit {
                 this.plex.updateUserInfo({ usuario: this.auth.usuario });
                 this.appComponent.checkPermissions();
                 // this.hotjar.initialize();
+                this.ds.get({ activo: true }).subscribe(disclaimers => {
+                    if (disclaimers && disclaimers.length > 0) {
+                        let disclaimer = disclaimers[0];
+                        this.us.getDisclaimers(this.auth.usuario).subscribe((userDisclaimers) => {
+                            if (userDisclaimers.some(item => item.id === disclaimer.id)) {
+                                this.router.navigate(['inicio']);
+                            } else {
+                                this.router.navigate(['/auth/disclaimer']);
+                            }
+                        });
+                    } else {
+                        this.router.navigate(['inicio']);
+                    }
+                });
             });
-            this.ds.get({ activo: true }).subscribe(disclaimers => {
-                if (disclaimers && disclaimers.length > 0) {
-                    let disclaimer = disclaimers[0];
-                    this.us.getDisclaimers(this.auth.usuario).subscribe((userDisclaimers) => {
-                        if (userDisclaimers.some(item => item.id === disclaimer.id)) {
-                            this.router.navigate(['inicio']);
-                        } else {
-                            this.router.navigate(['/auth/disclaimer']);
-                        }
-                    });
-                } else {
-                    this.router.navigate(['inicio']);
-                }
-            });
+
         }, (err) => {
             this.plex.info('danger', 'Error al seleccionar organización');
         });
