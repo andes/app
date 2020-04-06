@@ -1,20 +1,20 @@
 <section class="detalle-novedad">
-    <ng-container *ngIf="novedad$">
+    <ng-container *ngIf="novedad">
         <div justify="start">
-            <plex-badge type="info">{{ formatFecha(novedad$.fecha)}}</plex-badge>
-            <plex-badge type="warning">{{ novedad$.modulo.nombre}}</plex-badge>
+            <plex-badge type="info">{{ formatFecha(novedad.fecha)}}</plex-badge>
+            <plex-badge type="warning">{{ novedad.modulo.nombre}}</plex-badge>
         </div>
         <div class="jumbotron-text">
-            <h1 class="display-4">{{ novedad$.titulo }}</h1>
+            <h1 class="display-4">{{ novedad.titulo }}</h1>
         </div>
         <section class="overlay">
             <div class="contenedor-imagen">
-                <img *ngIf="novedad$.imagenes.length > 0" [src]="fotos[0].url" alt="">
+                <img *ngIf="novedad.imagenes.length > 0" [src]="fotos[0].url" alt="">
             </div>
         </section>
         <section class="contenedor-nota">
             <div class="contenedor-texto">
-                <article [innerHTML]=" novedad$.descripcion ">
+                <article [innerHTML]=" novedad.descripcion ">
                 </article>
                 <plex-visualizador [files]="fotos" #visualizador></plex-visualizador>
                 <div class="galeria-imagenes">

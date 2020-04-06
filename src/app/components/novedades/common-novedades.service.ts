@@ -5,7 +5,6 @@ import { INovedad } from '../../interfaces/novedades/INovedad.interface';
 
 @Injectable()
 export class CommonNovedadesService {
-    private selectedNovedad: BehaviorSubject<INovedad> = new BehaviorSubject(null);
     private token = new BehaviorSubject('');
     private novedades: BehaviorSubject<any[]> = new BehaviorSubject([]);
     private novedadesSinFiltrar: BehaviorSubject<INovedad[]> = new BehaviorSubject([]);
@@ -13,14 +12,6 @@ export class CommonNovedadesService {
     constructor(
         private registroNovedades: NovedadesService
     ) {
-    }
-
-    setSelectedNovedad(value: any) {
-        this.selectedNovedad.next(value);
-    }
-
-    getSelectedNovedad(): Observable<any> {
-        return this.selectedNovedad.asObservable();
     }
 
     setToken(value: any) {
@@ -35,17 +26,8 @@ export class CommonNovedadesService {
         return this.novedades.asObservable();
     }
 
-    setNovedades(modulo?: string, novedad?: INovedad) {
-        if (modulo) {
-            this.novedades.next(this.novedadesSinFiltrar.value.filter(n => n.modulo._id === modulo));
-        } else {
-            this.novedades.next(this.novedadesSinFiltrar.value);
-        }
-        if (novedad) {
-            this.setSelectedNovedad(novedad);
-        } else {
-            this.setSelectedNovedad(this.novedades.value[0]);
-        }
+    setNovedades(novedades?: INovedad[]) {
+        this.novedades.next(novedades);
     }
 
     setNovedadesSinFiltrar(modulos: string[], novedad?: INovedad) {
@@ -55,11 +37,6 @@ export class CommonNovedadesService {
         this.registroNovedades.search(paramsNovedades).subscribe(
             registros => {
                 this.novedadesSinFiltrar.next(registros);
-                if (novedad) {
-                    this.setSelectedNovedad(novedad);
-                } else {
-                    this.setSelectedNovedad(registros[0]);
-                }
             },
             (err) => {
             }

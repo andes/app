@@ -11,14 +11,19 @@ import { environment } from '../../../../environments/environment';
 export class ListaNovedadesComponent implements OnInit {
     selectedId: number;
     public novedades$ = [];
+    public modulo;
 
     constructor(
         private router: Router,
+        private route: ActivatedRoute,
         private commonNovedadesService: CommonNovedadesService
     ) {
     }
 
     ngOnInit() {
+        this.route.params.subscribe(params => {
+            this.modulo = params['modulo'];
+        });
         this.commonNovedadesService.getNovedades().subscribe((novedades) => {
             this.novedades$ = novedades;
         });
@@ -49,7 +54,11 @@ export class ListaNovedadesComponent implements OnInit {
     }
 
     public onSelectedNovedadChange(novedad) {
-        this.commonNovedadesService.setSelectedNovedad(novedad);
+        if (this.modulo) {
+            this.router.navigate(['/novedades', this.modulo, 'ver', novedad._id], { relativeTo: this.route });
+        } else {
+            this.router.navigate(['/novedades/ver', novedad._id], { relativeTo: this.route });
+        }
     }
 
 }

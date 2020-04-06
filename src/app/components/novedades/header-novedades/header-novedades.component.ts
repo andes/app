@@ -58,7 +58,6 @@ export class HeaderNovedadesComponent implements OnInit {
     }
 
     public onSelectedNovedadChange(novedad: INovedad) {
-        this.commonNovedadesService.setNovedades(null, novedad);
-        this.router.navigate(['/novedades'], { relativeTo: this.route });
+        this.router.navigate(['/novedades/ver', novedad._id], { relativeTo: this.route });
     }
 }
