@@ -1,7 +1,8 @@
 export interface IUsuario {
-    id: String;
-    nombre: String;
-    apellido: String;
-    documento: String;
-    foto: String;
+    id: string;
+    nombre: string;
+    apellido: string;
+    documento: string;
+    foto: string;
+    disclaimers?: any[];
 }

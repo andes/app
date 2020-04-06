@@ -538,7 +538,7 @@ import { SelectPrestacionComponent } from './modules/rup/components/elementos/ru
 import { SelectSnomedComponent } from './modules/rup/components/elementos/rupers/select-snomed.component';
 import { SelectStaticoComponent } from './modules/rup/components/elementos/rupers/select-statico.component';
 import { SelectBaseComponent } from './modules/rup/components/elementos/rupers/select-base.component';
-
+import { DisclaimerService } from './services/disclaimer.service';
 
 registerLocaleData(localeEs, 'es');
 
@@ -790,7 +790,8 @@ registerLocaleData(localeEs, 'es');
         InternacionCacheService,
         WebSocketService,
         HotjarService,
-        ConceptosTurneablesService
+        ConceptosTurneablesService,
+        DisclaimerService
     ]
 })
 
