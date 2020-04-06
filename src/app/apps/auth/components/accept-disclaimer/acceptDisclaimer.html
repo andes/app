@@ -1,16 +1,21 @@
 <plex-layout>
     <plex-layout-main>
-        <header>
-            <h3>Versión: {{version}}</h3>
-        </header>
-        <div class="row">
-            <div class="col-12" [innerHtml]="texto"></div>
-        </div>
-        <div class="row">
+        <plex-title [titulo]="'Versión ' + version ">
+        </plex-title>
+        <div class="row mt-3">
             <div class="col-12" justify="center">
-                <plex-button label="Acepto" type="success" position="center" (click)="aceptarDisclaimer()">
-                </plex-button>
-                <plex-button label="No Acepto" type="danger" position="center" (click)="logout()"></plex-button>
+                <div class="w-50" justify="between">
+                    <p [innerHtml]="texto"></p>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2 mb-3">
+            <div class="col-12" justify="center">
+                <div class="w-50" justify="between">
+                    <plex-button label="No Acepto" type="danger" position="center" (click)="logout()"></plex-button>
+                    <plex-button label="Acepto" type="success" position="center" (click)="aceptarDisclaimer()">
+                    </plex-button>
+                </div>
             </div>
         </div>
     </plex-layout-main>

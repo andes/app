@@ -538,8 +538,6 @@ import { SelectPrestacionComponent } from './modules/rup/components/elementos/ru
 import { SelectSnomedComponent } from './modules/rup/components/elementos/rupers/select-snomed.component';
 import { SelectStaticoComponent } from './modules/rup/components/elementos/rupers/select-statico.component';
 import { SelectBaseComponent } from './modules/rup/components/elementos/rupers/select-base.component';
-
-import { AcceptDisclaimerComponent } from './apps/auth/components/accept-disclaimer/acceptDisclaimer.component';
 import { DisclaimerService } from './services/disclaimer.service';
 
 registerLocaleData(localeEs, 'es');
@@ -566,7 +564,7 @@ registerLocaleData(localeEs, 'es');
         MPILibModule
     ],
     declarations: [
-        AppComponent, InicioComponent, AcceptDisclaimerComponent,
+        AppComponent, InicioComponent,
         OrganizacionComponent, OrganizacionCreateUpdateComponent,
         CamaCreateUpdateComponent, CamasListadoComponent,
         ProfesionalComponent, ProfesionalCreateUpdateComponent,
