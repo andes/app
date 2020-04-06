@@ -4,7 +4,7 @@ import { apiKeys, hotjar } from './apiKeyMaps';
 export const environment = {
   production: false,
   environmentName: 'development',
-  API: 'https://demo.andes.gob.ar/api',
+  API: '//localhost:3002/api',
   WS: '//localhost:3002',
   APIStatusCheck: false,
   version: _package.version,
