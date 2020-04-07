@@ -55,11 +55,11 @@
             </app-ingresar-paciente>
         </ng-container>
         <app-desocupar-cama *ngIf="accion === 'desocuparCama'" (accionDesocupar)="accionDesocupar($event)">
-            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverAResumen()">
+            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
             </plex-button>
         </app-desocupar-cama>
         <app-cambiar-cama *ngIf="accion === 'cambiarCama'" cambiarUO="{{ cambiarUO }}" (onSave)="volverAResumen()">
-            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverAResumen()">
+            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
             </plex-button>
         </app-cambiar-cama>
         <app-egresar-paciente *ngIf="accion === 'egresarPaciente'" (onSave)="volverAResumen()"

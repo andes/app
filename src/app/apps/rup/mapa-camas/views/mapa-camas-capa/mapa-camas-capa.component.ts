@@ -151,6 +151,10 @@ export class MapaCamasCapaComponent implements OnInit {
         this.mapaCamasService.select(null);
     }
 
+    volverADetalle() {
+        this.accion = 'verDetalle';
+    }
+
     volverADesocupar() {
         this.accion = 'desocuparCama';
     }
