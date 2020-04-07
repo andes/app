@@ -481,7 +481,9 @@ let RUPComponentsArray = [
     SelectPrestacionComponent,
     SelectSnomedComponent,
     SelectStaticoComponent,
-    SelectBaseComponent
+    SelectBaseComponent,
+    SeccionadoComponent,
+    SeccionComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -536,7 +538,13 @@ import { SelectPrestacionComponent } from './modules/rup/components/elementos/ru
 import { SelectSnomedComponent } from './modules/rup/components/elementos/rupers/select-snomed.component';
 import { SelectStaticoComponent } from './modules/rup/components/elementos/rupers/select-statico.component';
 import { SelectBaseComponent } from './modules/rup/components/elementos/rupers/select-base.component';
+<<<<<<< HEAD
 import { DisclaimerService } from './services/disclaimer.service';
+=======
+import { SeccionComponent } from './modules/rup/components/elementos/rupers/seccionado/seccion.component';
+import { SeccionadoComponent } from './modules/rup/components/elementos/rupers/seccionado/seccionado.component';
+
+>>>>>>> 24e0e94e9... feat(rup): generaliza el uso de secciones
 
 registerLocaleData(localeEs, 'es');
 

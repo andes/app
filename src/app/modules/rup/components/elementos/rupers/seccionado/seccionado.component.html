@@ -1,0 +1,66 @@
+<ng-container *ngIf="!soloValores && elementoRUP.requeridos && elementoRUP.requeridos.length">
+    <div justify="end" class="mb-2">
+
+        <plex-button [label]="btnToogleLabel" type="primary" size="sm" (click)="desplegarAccordions()">
+        </plex-button>
+
+    </div>
+    <plex-accordion>
+        <ng-container *ngFor="let item of requeridos; let i = index">
+            <plex-panel [class.alerta-campo]="!rupInstance.isValid" [active]="isActive(i)"
+                        (toggle)="accordionSeleccionado(i, item.concepto)" class="hover">
+                <div plex-accordion-title justify>
+                    <span class="contenedor-icono">
+                        <plex-icon [prefix]="iconPrefix(item.params.icon)" [name]="iconName(item.params.icon)">
+                        </plex-icon>
+                    </span>
+                    <span class="titulo mr-auto ml-2 text-bold">
+                        {{ item.concepto.term }}
+                    </span>
+
+                    <plex-badge *ngIf="!rupInstance.isValid" type="danger" class="mr-4">
+                        Hay registros incompletos
+                    </plex-badge>
+
+                    <plex-badge *ngIf="showNoConcept(i, rupInstance)" type="warning" class="mr-4">
+                        No hay conceptos registrados
+                    </plex-badge>
+
+                    <plex-badge *ngIf="showCountConcept(i, rupInstance)" type="info" class="mr-4">
+                        {{ registro.registros[i].registros.length }} Conceptos registrados
+                    </plex-badge>
+
+                    <plex-button [icon]="isActive(i) ? 'chevron-left' : 'chevron-down'" type="primary" size="sm"
+                                 class="mr-1">
+                    </plex-button>
+                </div>
+                <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
+                     [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="soloValores"
+                     (change)="emitChange()" #rupInstance>
+                </rup>
+            </plex-panel>
+        </ng-container>
+    </plex-accordion>
+</ng-container>
+<ng-container *ngIf="soloValores">
+    <div class="grid-container">
+        <ng-container *ngFor="let item of requeridos; let i = index">
+            <div class="grid-item-{{i+1}}">
+                <div
+                     class="rup-card rup-clear {{ (item.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(item.concepto) }}">
+                    <div class="titulo d-flex align-items-start">
+                        <i class="icon {{ item.params.icon }} mr-2"></i>
+                        <strong> {{ item.params.titulo }}</strong>
+                    </div>
+                    <div class="contenedor-conceptos ml-3 pl-3">
+                        <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
+                             [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="soloValores"
+                             (change)="emitChange()">
+                        </rup>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</ng-container>

@@ -221,7 +221,7 @@ export class RUPComponent implements OnInit, AfterViewInit {
     * Si existe un formulario en el elementoRIP, lo valida automaticamente, y si la misma tiene más elementosRUP
     * adentro ejecuta el validate en cada uno de sus hijos.
     *
-    * Cada elementoRUP puede sobreescribir esta funcionalidad, implementando el metodo 'validate'.
+    * Cada elementoRUP puede sobreescribir el metodo OnValidate para agregar validaciones especiales.
     *
     * @protected
     * @memberof RUPComponent
@@ -229,7 +229,12 @@ export class RUPComponent implements OnInit, AfterViewInit {
     public validate() {
         const validChild = this.validateChild();
         const validForm = this.validateForm();
-        return validChild && validForm;
+        const validateMain = this.onValidate();
+        return validChild && validForm && validateMain;
+    }
+
+    public onValidate() {
+        return true;
     }
 
     /**
