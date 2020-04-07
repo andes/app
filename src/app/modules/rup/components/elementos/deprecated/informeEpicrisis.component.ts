@@ -1,7 +1,12 @@
-import { IPrestacion } from './../../interfaces/prestacion.interface';
+import { IPrestacion } from '../../../interfaces/prestacion.interface';
 import { Component, OnInit, ViewEncapsulation, EventEmitter, Output } from '@angular/core';
-import { RUPComponent } from './../core/rup.component';
-import { RupElement } from '.';
+import { RUPComponent } from '../../core/rup.component';
+import { RupElement } from '..';
+
+/**
+ * DEPRECADO
+ * Se deja para mantener la epicrisis. No debe ser usada en nuevas componentes.
+ */
 
 @Component({
     selector: 'rup-InformeEpicrisisComponent',

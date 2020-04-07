@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { RUPComponent } from './../core/rup.component';
-import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
-import { RupElement } from '.';
+import { RUPComponent } from '../../core/rup.component';
+import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.interface';
+import { RupElement } from '..';
+
+/**
+ * DEPRECADO
+ * Este elemento se remplaza por SeccionComponent. No usar mas en futuros conceptos.
+ */
+
 @Component({
     selector: 'rup-ElementoDeRegistroComponent',
     templateUrl: 'elementoDeRegistro.html',

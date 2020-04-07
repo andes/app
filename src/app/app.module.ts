@@ -265,8 +265,8 @@ import { OcuparCamaComponent } from './apps/rup/internacion/components/cama-ocup
 import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
 import { CensoDiarioComponent } from './apps/rup/internacion/components/censoDiario.component';
 import { CensoMensualComponent } from './apps/rup/internacion/components/censoMensual.component';
-import { ElementoDeRegistroComponent } from './modules/rup/components/elementos/elementoDeRegistro.component';
-import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeEpicrisis.component';
+import { ElementoDeRegistroComponent } from './modules/rup/components/elementos/deprecated/elementoDeRegistro.component';
+import { InformeEpicrisisComponent } from './modules/rup/components/elementos/deprecated/informeEpicrisis.component';
 import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/odontologiaDefault.component';
 import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
 import { InformeActividadNoNominalizadaComponent } from './modules/rup/components/elementos/informeActividadNoNominalizada.component';
@@ -538,13 +538,10 @@ import { SelectPrestacionComponent } from './modules/rup/components/elementos/ru
 import { SelectSnomedComponent } from './modules/rup/components/elementos/rupers/select-snomed.component';
 import { SelectStaticoComponent } from './modules/rup/components/elementos/rupers/select-statico.component';
 import { SelectBaseComponent } from './modules/rup/components/elementos/rupers/select-base.component';
-<<<<<<< HEAD
 import { DisclaimerService } from './services/disclaimer.service';
-=======
 import { SeccionComponent } from './modules/rup/components/elementos/rupers/seccionado/seccion.component';
 import { SeccionadoComponent } from './modules/rup/components/elementos/rupers/seccionado/seccionado.component';
 
->>>>>>> 24e0e94e9... feat(rup): generaliza el uso de secciones
 
 registerLocaleData(localeEs, 'es');
 
