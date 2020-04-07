@@ -536,7 +536,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
         this.elementosRUPService.coleccionRetsetId[String(snomedConcept.conceptId)] = elementoRUP.params;
 
-        if (snomedConcept.semanticTag === 'procedimiento') {
+        if (snomedConcept.semanticTag === 'procedimiento' || snomedConcept.semanticTag === 'elemento de registro') {
             this.ps.get(snomedConcept.conceptId).subscribe(() => { });
         }
 
@@ -1299,6 +1299,12 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     }
     toggleVerMasRelaciones(item) {
         this.verMasRelaciones[item] = !this.verMasRelaciones[item];
+    }
+
+    checkPlantilla(registro) {
+        const checkSemtag = registro.concepto.semanticTag === 'procedimiento' || registro.concepto.semanticTag === 'elemento de registro';
+        const noEsSolicitud = !registro.esSolicitud;
+        return checkSemtag && noEsSolicitud;
     }
 
 }

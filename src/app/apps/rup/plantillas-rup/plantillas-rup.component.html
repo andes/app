@@ -94,10 +94,10 @@
     </plex-layout-main>
     <plex-layout-sidebar>
         <header>
-            <div class="page-title">Buscar Procedimiento</div>
+            <div class="page-title">Buscar Concepto</div>
         </header>
         <plex-text [(ngModel)]="searchTerm" name="searchTerm" [debounce]="600" (change)="buscarProcedimiento()"
-                   placeholder="Buscar un procedimiento..." autoFocus="true"></plex-text>
+                   placeholder="Buscar un concepto..." autoFocus="true"></plex-text>
         <plex-loader *ngIf="loading" type="linear"></plex-loader>
         <plex-list *ngIf="procedimientos" [striped]="true">
             <plex-heading>
