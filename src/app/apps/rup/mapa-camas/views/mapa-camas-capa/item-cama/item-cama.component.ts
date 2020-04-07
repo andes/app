@@ -14,6 +14,7 @@ import { ISnapshot } from '../../../interfaces/ISnapshot';
 
 export class ItemCamaComponent implements OnInit {
     @Input() cama: any;
+    @Input() capa: any;
     @Input() permisoIngreso: boolean;
     @Output() accionCama = new EventEmitter<any>();
 
@@ -49,7 +50,7 @@ export class ItemCamaComponent implements OnInit {
     }
 
     goTo() {
-        this.router.navigate([`/internacion/cama/${this.cama._id}`]);
+        this.router.navigate([`/internacion/cama/${this.capa}/${this.cama._id}`]);
     }
 
     accion(relacion, $event) {

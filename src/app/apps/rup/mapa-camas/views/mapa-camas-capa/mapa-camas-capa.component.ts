@@ -110,7 +110,7 @@ export class MapaCamasCapaComponent implements OnInit {
     }
 
     agregarCama() {
-        this.router.navigate([`/internacion/cama`]);
+        this.router.navigate([`/internacion/cama/${this.capa}`]);
     }
 
     verListadoInternacion() {

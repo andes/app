@@ -13,9 +13,9 @@ const routes = [
 
     { path: 'mapa-camas/:capa', component: MapaCamasCapaComponent },
 
-    { path: 'cama/:id', component: CamaMainComponent },
+    { path: 'cama/:capa/:id', component: CamaMainComponent },
 
-    { path: 'cama', component: CamaMainComponent },
+    { path: 'cama/:capa', component: CamaMainComponent },
 
     { path: 'censo/diario', component: CensosDiariosComponent },
 
