@@ -151,7 +151,6 @@ import { ProcedimientosQuirurgicosService } from './services/procedimientosQuiru
 
 // ... MPI
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
-import { DashboardComponent } from './components/paciente/dashboard.component';
 import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cru.component';
 import { RelacionesPacientesComponent } from './core/mpi/components/relaciones-pacientes.component';
 import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
@@ -579,7 +578,6 @@ registerLocaleData(localeEs, 'es');
         ProfesionalCreateUpdateComponent,
         UploadFileComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
-        DashboardComponent,
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, HoraPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
         FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe, ReplacePipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, DinamicaFormComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,

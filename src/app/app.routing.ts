@@ -43,7 +43,6 @@ import { RevisionAgendaComponent } from './components/turnos/gestor-agendas/oper
 import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/operaciones-agenda/sobreturno.component';
 
 // ... MPI
-import { DashboardComponent } from './components/paciente/dashboard.component';
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cru.component';
 import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
