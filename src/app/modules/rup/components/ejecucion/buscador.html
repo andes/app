@@ -37,9 +37,11 @@
             <div class="container-filtros">
                 <ul class="botones-filtros">
                     <li>
-                        <plex-badge size="sm" *ngIf="getCantidadResultados('todos')" type="todos ml-1 float-right"
+                        <!-- <plex-badge size="sm" *ngIf="getCantidadResultados('todos')" type="todos ml-1 float-right"
                                     [ngClass]="{'active': filtroActual === 'todos'}">{{ getCantidadResultados('todos')}}
-                        </plex-badge>
+                        </plex-badge> -->
+                        <small *ngIf="getCantidadResultados('todos')" class="contador badge-todos ml-1 float-right"
+                               [ngClass]="{'active': filtroActual === 'todos'}">{{ getCantidadResultados('todos')}}</small>
 
                         <button (click)="filtroBuscadorSnomed('todos')" [ngClass]="{'active': filtroActual === 'todos'}"
                                 [disabled]="!wizardActivo && getCantidadResultados('todos') === 0"
@@ -49,11 +51,16 @@
                         </button>
                     </li>
                     <li>
-                        <plex-badge size="sm" *ngIf="getCantidadResultados('hallazgos')"
+                        <!-- <plex-badge size="sm" *ngIf="getCantidadResultados('hallazgos')"
                                     type="hallazgo ml-1 float-right"
                                     [ngClass]="{'active': filtroActual === 'hallazgos'}">{{
                             getCantidadResultados('hallazgos')}}
-                        </plex-badge>
+                        </plex-badge> -->
+                        <small *ngIf="getCantidadResultados('hallazgos')"
+                               class="contador badge-hallazgo ml-1 float-right"
+                               [ngClass]="{'active': filtroActual === 'hallazgos'}">{{
+                            getCantidadResultados('hallazgos')}}
+                        </small>
 
                         <button (click)="filtroBuscadorSnomed('hallazgos')"
                                 [ngClass]="{'active': filtroActual === 'hallazgos'}"
@@ -65,11 +72,16 @@
                     </li>
 
                     <li>
-                        <plex-badge size="sm" *ngIf="getCantidadResultados('trastornos')"
+                        <!-- <plex-badge size="sm" *ngIf="getCantidadResultados('trastornos')"
                                     type="trastorno ml-1 float-right"
                                     [ngClass]="{'active': filtroActual === 'trastornos'}">{{
                             getCantidadResultados('trastornos')}}
-                        </plex-badge>
+                        </plex-badge> -->
+                        <small *ngIf="getCantidadResultados('trastornos')"
+                               class="contador badge-trastorno ml-1 float-right"
+                               [ngClass]="{'active': filtroActual === 'trastornos'}">{{
+                            getCantidadResultados('trastornos')}}
+                        </small>
 
                         <button (click)="filtroBuscadorSnomed('trastornos')"
                                 [ngClass]="{'active': filtroActual === 'trastornos'}"
@@ -81,11 +93,16 @@
                     </li>
 
                     <li>
-                        <plex-badge size="sm" *ngIf="getCantidadResultados('procedimientos')"
+                        <!-- <plex-badge size="sm" *ngIf="getCantidadResultados('procedimientos')"
                                     type="procedimiento ml-1 float-right"
                                     [ngClass]="{'active': filtroActual === 'procedimientos'}">{{
                             getCantidadResultados('procedimientos')}}
-                        </plex-badge>
+                        </plex-badge> -->
+                        <small *ngIf="getCantidadResultados('procedimientos')"
+                               class="contador badge-procedimiento ml-1 float-right"
+                               [ngClass]="{'active': filtroActual === 'procedimientos'}">{{
+                            getCantidadResultados('procedimientos')}}
+                        </small>
 
                         <button (click)="filtroBuscadorSnomed('procedimientos')"
                                 [ngClass]="{'active': filtroActual === 'procedimientos'}"
@@ -96,9 +113,11 @@
                         </button>
                     </li>
                     <li>
-                        <plex-badge size="sm" *ngIf="getCantidadResultados('planes')" type="solicitud ml-1 float-right"
+                        <!-- <plex-badge size="sm" *ngIf="getCantidadResultados('planes')" type="solicitud ml-1 float-right"
                                     [ngClass]="{'active': filtroActual === 'planes'}">
-                            {{ getCantidadResultados('planes')}}</plex-badge>
+                            {{ getCantidadResultados('planes')}}</plex-badge> -->
+                        <small *ngIf="getCantidadResultados('planes')" class="contador badge-solicitud ml-1 float-right"
+                               [ngClass]="{'active': filtroActual === 'planes'}">{{ getCantidadResultados('planes')}}</small>
 
                         <button (click)="filtroBuscadorSnomed('planes')" class="btn btn-block btn-solicitud"
                                 [ngClass]="{'active': filtroActual === 'planes'}"
@@ -109,11 +128,16 @@
                     </li>
 
                     <li>
-                        <plex-badge size="sm" *ngIf="getCantidadResultados('productos')"
+                        <!-- <plex-badge size="sm" *ngIf="getCantidadResultados('productos')"
                                     type="producto ml-1 float-right"
                                     [ngClass]="{'active': filtroActual === 'productos'}">{{
                             getCantidadResultados('productos')}}
-                        </plex-badge>
+                        </plex-badge> -->
+                        <small *ngIf="getCantidadResultados('productos')"
+                               class="contador badge-producto ml-1 float-right"
+                               [ngClass]="{'active': filtroActual === 'productos'}">{{
+                            getCantidadResultados('productos')}}
+                        </small>
 
                         <button (click)="filtroBuscadorSnomed('productos')"
                                 [ngClass]="{'active': filtroActual === 'productos'}"
@@ -189,15 +213,14 @@
                             </div>
                         </div>
                         <div class="col-6 p-0 m-0">
-                            <div class="p-0 pt-1 pr-1 float-right">
+                            <div class="d-flex justify-content-end">
                                 <plex-badge size="sm"
                                             type="{{ servicioPrestacion.getCssClass(item, filtroActual === 'planes') }}">
                                     {{ (item.plan || filtroActual === 'planes' || esTurneable(item)) ? 'solicitud' :
                                     item.semanticTag }}
-                                    <plex-button size="sm" type="info btn-icon-rup p-0" icon="plus"
-                                                 (click)="seleccionarConcepto(item)">
-                                    </plex-button>
                                 </plex-badge>
+                                <plex-button type="info" size="sm" icon="plus" (click)="seleccionarConcepto(item)">
+                                </plex-button>
                             </div>
                         </div>
                     </div>
@@ -267,17 +290,16 @@
                                             </div>
 
                                             <div class="col-6 p-0 m-0">
-                                                <div class="p-0 pt-1 pr-1 float-right">
+                                                <div justify="end">
 
                                                     <plex-badge size="sm"
-                                                                type="{{ (items.nombre === 'planes') ? 'solicitud' : servicioPrestacion.getCssClass(item, filtroActual) }} text-default  pl-1 pr-1">
+                                                                type="{{ (items.nombre === 'planes') ? 'solicitud' : servicioPrestacion.getCssClass(item, filtroActual) }}">
                                                         {{ (item.plan || items.nombre === 'planes' ||
                                                         esTurneable(item)) ? 'plan' : item.semanticTag }}
                                                     </plex-badge>
-                                                    <button (click)="seleccionarConcepto(item)"
-                                                            class="btn btn-sm btn-primary btn-icon-rup p-0">
-                                                        <i class="mdi mdi-plus"></i>
-                                                    </button>
+                                                    <plex-button type="info" size="sm" icon="plus"
+                                                                 (click)="seleccionarConcepto(item)">
+                                                    </plex-button>
                                                 </div>
                                             </div>
                                         </div>
