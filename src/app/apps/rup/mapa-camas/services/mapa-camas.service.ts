@@ -26,6 +26,9 @@ export class MapaCamasService {
     public tipoCamaSelected = new BehaviorSubject<ISnomedConcept>(null);
     public esCensable = new BehaviorSubject<any>(null);
     public pacienteText = new BehaviorSubject<string>(null);
+    public estadoSelected = new BehaviorSubject<string>(null);
+    public equipamientoSelected = new BehaviorSubject<ISnomedConcept[]>(null);
+
 
     public pacienteDocumento = new BehaviorSubject<string>(null);
     public pacienteApellido = new BehaviorSubject<string>(null);
@@ -103,10 +106,12 @@ export class MapaCamasService {
             this.unidadOrganizativaSelected,
             this.sectorSelected,
             this.tipoCamaSelected,
-            this.esCensable
+            this.esCensable,
+            this.estadoSelected,
+            this.equipamientoSelected
         ).pipe(
-            map(([camas, paciente, unidadOrganizativa, sector, tipoCama, esCensable]) =>
-                this.filtrarSnapshot(camas, paciente, unidadOrganizativa, sector, tipoCama, esCensable)
+            map(([camas, paciente, unidadOrganizativa, sector, tipoCama, esCensable, estado, equipamiento]) =>
+                this.filtrarSnapshot(camas, paciente, unidadOrganizativa, sector, tipoCama, esCensable, estado, equipamiento)
             )
         );
 
@@ -307,7 +312,7 @@ export class MapaCamasService {
         this.selectedPrestacion.next(prestacion);
     }
 
-    filtrarSnapshot(camas: ISnapshot[], paciente: string, unidadOrganizativa: ISnomedConcept, sector: ISectores, tipoCama: ISnomedConcept, esCensable) {
+    filtrarSnapshot(camas: ISnapshot[], paciente: string, unidadOrganizativa: ISnomedConcept, sector: ISectores, tipoCama: ISnomedConcept, esCensable, estado: string, equipamiento: ISnomedConcept[]) {
         let camasFiltradas = camas;
 
         if (paciente) {
@@ -328,6 +333,18 @@ export class MapaCamasService {
 
         if (tipoCama) {
             camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => snap.tipoCama.conceptId === tipoCama.conceptId);
+        }
+
+        if (estado) {
+            camasFiltradas = camasFiltradas.filter(snap => snap.estado === estado);
+        }
+
+        if (equipamiento && equipamiento.length > 0) {
+            camasFiltradas = camasFiltradas.filter(snap => {
+                return equipamiento.every(equip => {
+                    return snap.equipamiento.some(e => e.conceptId === equip.conceptId);
+                });
+            });
         }
 
         if (esCensable) {

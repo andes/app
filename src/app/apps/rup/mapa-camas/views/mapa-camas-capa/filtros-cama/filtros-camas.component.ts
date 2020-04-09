@@ -1,15 +1,24 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 function arrayToSet(array, key, itemFn) {
     const listado = [];
     array.forEach(elem => {
         const item = itemFn(elem);
-        const index = listado.findIndex(i => i[key] === item[key]);
-        if (index < 0) {
-            listado.push(item);
+        if (Array.isArray(item)) {
+            item.forEach(inside => {
+                const index = listado.findIndex(i => i[key] === inside[key]);
+                if (index < 0) {
+                    listado.push(inside);
+                }
+            });
+        } else {
+            const index = listado.findIndex(i => i[key] === item[key]);
+            if (index < 0) {
+                listado.push(item);
+            }
         }
     });
     return listado;
@@ -25,6 +34,8 @@ export class FiltrosCamasComponent implements OnInit {
     public unidadOrganizativaList$: Observable<any[]>;
     public sectorList$: Observable<any[]>;
     public tipoCamaList$: Observable<any[]>;
+    public equipamientoList$: Observable<any[]>;
+    public estadoList$: Observable<any[]>;
 
     filtro: any = {};
     censables = [
@@ -49,6 +60,15 @@ export class FiltrosCamasComponent implements OnInit {
             map((camas) => arrayToSet(camas, 'conceptId', (item) => item.tipoCama))
         );
 
+        this.equipamientoList$ = this.mapaCamasService.snapshot$.pipe(
+            map((camas) => arrayToSet(camas, 'conceptId', (item) => item.equipamiento)),
+        );
+
+        this.estadoList$ = this.mapaCamasService.snapshot$.pipe(
+            map((camas) => arrayToSet(camas, 'estado', (item) => item))
+        );
+
+
         this.clearFiltros();
     }
 
@@ -58,6 +78,8 @@ export class FiltrosCamasComponent implements OnInit {
         this.mapaCamasService.unidadOrganizativaSelected.next(null);
         this.mapaCamasService.esCensable.next(null);
         this.mapaCamasService.sectorSelected.next(null);
+        this.mapaCamasService.equipamientoSelected.next(null);
+        this.mapaCamasService.estadoSelected.next(null);
     }
 
     filtrar() {
@@ -66,5 +88,9 @@ export class FiltrosCamasComponent implements OnInit {
         this.mapaCamasService.tipoCamaSelected.next(this.filtro.tipoCama);
         this.mapaCamasService.esCensable.next(this.filtro.censable);
         this.mapaCamasService.pacienteText.next(this.filtro.paciente);
+
+        this.mapaCamasService.equipamientoSelected.next(this.filtro.equipamiento);
+        this.mapaCamasService.estadoSelected.next(this.filtro.estado);
+
     }
 }
