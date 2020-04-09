@@ -13,6 +13,7 @@ export interface ISnapshot {
     unidadOrganizativa: ISnomedConcept;
     especialidades: ISnomedConcept[];
     ambito: String;
+    capa: String;
     unidadOrganizativaOriginal: ISnomedConcept;
     sectores: ISectores[];
     nombre: String;

@@ -49,16 +49,16 @@ export class MapaCamasHTTP {
 
     // [TODO] ver interfaz e ID
     save(ambito: string, capa: string, fecha: Date, data): Observable<ICama> {
-        let params = {
-            ...data,
-            ambito: ambito,
-            capa: capa,
-            fecha
-        };
         if (data._id) {
+            const params = {
+                ...data,
+                ambito: ambito,
+                capa: capa,
+                fecha
+            };
             return this.server.patch(`${this.url}/camas/${data._id}`, params);
         } else {
-            return this.server.post(`${this.url}/camas`, { ...data, ambito, capa, fecha });
+            return this.server.post(`${this.url}/camas`, { ...data, ambito, fecha });
         }
     }
 

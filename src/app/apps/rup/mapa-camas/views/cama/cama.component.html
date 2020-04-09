@@ -2,8 +2,12 @@
     <plex-layout-main>
         <form #formCama="ngForm">
             <plex-title titulo="DATOS DE CAMA">
-                <plex-button label="GUARDAR" type="success" [validateForm]="formCama" (click)="save($event)"></plex-button>
-                <plex-button *ngIf="permisoBaja && cama?.idCama" title="{{ (!disableBaja) ? null : 'Cama utilizada' }}" [disabled]="disableBaja" label="DAR DE BAJA" type="warning" (click)="darBaja()"></plex-button>
+                <plex-button label="GUARDAR" type="success" [validateForm]="formCama" (click)="save($event)">
+                </plex-button>
+                <plex-button *ngIf="permisoBaja && cama?.idCama"
+                             title="{{ (verificarBaja()) ? null : 'Cama utilizada' }}" [disabled]="!verificarBaja()"
+                             label="INACTIVAR CAMA" type="warning" (click)="darBaja()">
+                </plex-button>
                 <plex-button label="CANCELAR" type="danger" (click)="volver()"></plex-button>
             </plex-title>
             <fieldset>
@@ -21,9 +25,9 @@
                 </div>
                 <div class="row">
                     <div class="col-4">
-                        <plex-select [(ngModel)]="camaEditada.unidadOrganizativa" name="unidadOrganizativa" [required]="true"
-                                     [data]="organizacion?.unidadesOrganizativas" idField="term" labelField="term"
-                                     label="Unidad organizativa">
+                        <plex-select [(ngModel)]="camaEditada.unidadOrganizativa" name="unidadOrganizativa"
+                                     [required]="true" [data]="unidadesOrganizativas$ | async" idField="term"
+                                     labelField="term" label="Unidad organizativa">
                         </plex-select>
                     </div>
                     <div class="col-4">
@@ -32,7 +36,8 @@
                         </plex-select>
                     </div>
                     <div class="col-4">
-                        <plex-bool type="slide" [(ngModel)]="camaEditada.esCensable" label="Es censable" name="censable">
+                        <plex-bool type="slide" [(ngModel)]="camaEditada.esCensable" label="Es censable"
+                                   name="censable">
                         </plex-bool>
                     </div>
                 </div>
@@ -54,9 +59,9 @@
                         </plex-select>
                     </div>
                 </div>
-                <div class="row" *ngIf="sectores">
+                <div class="row">
                     <div class="col-12">
-                        <plex-select name="sectores" [data]="sectores" label="Ubicación" idField="_id"
+                        <plex-select name="sectores" [data]="sectores$ | async" label="Ubicación" idField="_id"
                                      labelField="nombre" [required]="true" [(ngModel)]="camaEditada.sectores">
                         </plex-select>
                     </div>
@@ -67,8 +72,8 @@
     <plex-layout-sidebar>
         <plex-title titulo="MAPA DE ORGANIZACION">
         </plex-title>
-        <div *ngIf="organizacion">
-            <sectores-item *ngFor="let unidad of organizacion.mapaSectores" [root]="unidad" [actions]="false">
+        <div>
+            <sectores-item *ngFor="let unidad of mapaSectores$ | async" [root]="unidad" [actions]="false">
             </sectores-item>
         </div>
     </plex-layout-sidebar>
