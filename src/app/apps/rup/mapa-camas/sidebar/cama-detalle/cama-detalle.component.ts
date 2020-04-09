@@ -10,6 +10,7 @@ import { Observable, combineLatest, of, Subscription } from 'rxjs';
 import { IMAQEstado, IMAQRelacion } from '../../interfaces/IMaquinaEstados';
 import { PacienteService } from '../../../../../core/mpi/services/paciente.service';
 import { Auth } from '@andes/auth';
+import { notNull } from '@andes/shared';
 
 
 @Component({
@@ -80,6 +81,7 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
         this.relaciones$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getRelacionesPosibles(cama)));
 
         this.accionesEstado$ = this.estadoCama$.pipe(
+            notNull(),
             pluck('acciones'),
             map(acciones => acciones.filter(acc => acc.tipo === 'nuevo-registro'))
         );

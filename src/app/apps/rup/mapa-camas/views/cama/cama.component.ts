@@ -130,7 +130,7 @@ export class CamaMainComponent implements OnInit {
         if (valid.formValid) {
             let idCama = null;
             let fecha = this.fecha;
-            let capas = [ this.capa ];
+            let capas = [this.capa];
 
             if (this.cama) {
                 idCama = this.cama.idCama;
@@ -142,7 +142,6 @@ export class CamaMainComponent implements OnInit {
 
             const datosCama = {
                 _id: idCama,
-                estado: null,
                 nombre: this.camaEditada.nombre,
                 unidadOrganizativa: this.camaEditada.unidadOrganizativa,
                 fecha: this.camaEditada.fecha,
@@ -155,7 +154,7 @@ export class CamaMainComponent implements OnInit {
                 esMovimiento
             };
 
-            concat( ...capas.map(capa => this.guardarCambios(datosCama, capa, fecha))).subscribe(
+            concat(...capas.map(capa => this.guardarCambios(datosCama, capa, fecha))).subscribe(
                 () => null,
                 (err) => {
                     this.plex.info('warning', 'ERROR: Ocurrio un problema al guardar la cama');
@@ -180,7 +179,7 @@ export class CamaMainComponent implements OnInit {
                         estado: 'inactiva'
                     };
 
-                    concat( ...this.capas.map(capa => this.guardarCambios(datosCama, capa, moment().toDate()))).subscribe(
+                    concat(...this.capas.map(capa => this.guardarCambios(datosCama, capa, moment().toDate()))).subscribe(
                         () => null,
                         (err) => {
                             this.plex.info('warning', 'ERROR: Ocurrio un problema al guardar la cama');
@@ -215,9 +214,6 @@ export class CamaMainComponent implements OnInit {
     }
 
     guardarCambios(datosCama, capa, fecha) {
-        if (this.cama && datosCama.estado !== 'inactiva' && this.infoCama[capa][1].estado) {
-            datosCama.estado = this.infoCama[capa][1].estado;
-        }
         return this.camasHTTP.save(this.ambito, capa, fecha, datosCama);
     }
 

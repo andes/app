@@ -1,22 +1,22 @@
 import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concept.interface';
 
 export interface IMaquinaEstados {
-    id: String;
-    organizacion: String;
-    ambito: String;
-    capa: String;
+    id: string;
+    organizacion: string;
+    ambito: string;
+    capa: string;
     estados: IMAQEstado[];
     relaciones: IMAQRelacion[];
 }
 
 export interface IMAQEstado {
-    key: String;
-    label: String;
-    color: String;
-    icon: String;
+    key: string;
+    label: string;
+    color: string;
+    icon: string;
     acciones: {
-        label: String,
-        tipo: String,
+        label: string,
+        tipo: string,
         parametros: {
             concepto?: ISnomedConcept
         }
@@ -24,16 +24,16 @@ export interface IMAQEstado {
 }
 
 export interface IMAQRelacion {
-    nombre: String;
-    origen: String;
-    destino: String;
-    color: String;
-    icon: String;
-    accion: String;
+    nombre: string;
+    origen: string;
+    destino: string;
+    color: string;
+    icon: string;
+    accion: string;
     parametros?: [{
-        label: String;
+        label: string;
         options?: [{
-            nombre: String;
+            nombre: string;
         }]
     }];
 }

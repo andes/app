@@ -25,13 +25,13 @@
                     <plex-badge type="info">
                         {{ cama.esCensable ? 'Censable' : 'No Censable' }}
                     </plex-badge>
-                    <plex-badge *ngIf="cama.genero.term === 'género masculino'" type="info">
+                    <plex-badge *ngIf="cama.genero?.term === 'género masculino'" type="info">
                         Cama Masculina
                     </plex-badge>
-                    <plex-badge *ngIf="cama.genero.term === 'género femenino'" type="info">
+                    <plex-badge *ngIf="cama.genero?.term === 'género femenino'" type="info">
                         Cama Femenina
                     </plex-badge>
-                    <plex-badge *ngIf="!cama.genero.term" type="info">
+                    <plex-badge *ngIf="!cama.genero?.term" type="info">
                         Sin Género
                     </plex-badge>
                     <div [class]="'text-' + estadoCama.color" title>
@@ -43,7 +43,8 @@
                     </plex-label>
                     <plex-label titulo="Tipo de cama" subtitulo="{{ cama.tipoCama.term }}"></plex-label>
                     <plex-label titulo="Sector" subtitulo="{{ sector(cama) }}"></plex-label>
-                    <plex-label titulo="Equipamiento" subtitulo="{{ cama.equipamiento | enumerar: ['term'] }}">
+                    <plex-label titulo="Equipamiento" subtitulo="{{ cama.equipamiento | enumerar: ['term'] }}"
+                                *ngIf="cama.equipamiento">
                     </plex-label>
                     <plex-label *ngIf="estadoCama.key === 'bloqueada'" titulo="Motivo bloqueo"
                                 subtitulo="{{ cama.observaciones }}"></plex-label>
