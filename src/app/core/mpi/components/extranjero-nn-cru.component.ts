@@ -412,10 +412,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
             this.plex.info('warning', 'Debe completar los datos obligatorios');
             return;
         }
-        if (this.disableGuardar) {
-            this.plex.info('warning', 'Guardando datos del paciente');
-            return;
-        }
+
         let faltaParentezco = null;
         if (this.pacienteModel.relaciones && this.pacienteModel.relaciones.length) {
             // Buscamos relaciones declaradas sin especificar tipo de relación
