@@ -363,6 +363,10 @@ export class BebeCruComponent implements AfterViewInit {
             this.plex.info('warning', 'Debe completar los datos obligatorios');
             return;
         }
+        if (this.disableGuardar) {
+            this.plex.info('warning', 'Guardando datos del paciente');
+            return;
+        }
         this.disableGuardar = true;
         let bebeGuardar: any = Object.assign({}, this.bebeModel);
         bebeGuardar.tipoIdentificacion = ((typeof this.bebeModel.tipoIdentificacion === 'string')) ? this.bebeModel.tipoIdentificacion : (Object(this.bebeModel.tipoIdentificacion).id);

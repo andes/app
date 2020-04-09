@@ -550,7 +550,7 @@ export class PacienteCruComponent implements OnInit {
             this.plex.info('warning', 'Debe completar los datos obligatorios');
             return;
         }
-        if (this.disableGuardar) {
+        if (this.disableGuardar || !ignoreCheck) {
             this.plex.info('warning', 'Guardando datos del paciente');
             return;
         }
