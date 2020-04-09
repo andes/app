@@ -17,7 +17,7 @@ export class MapaCamasHTTP {
     ) { }
 
     snapshot(ambito: string, capa: string, fecha: Date, idInternacion: string = null, estado: string = null, idCama: string = null): Observable<ISnapshot[]> {
-        return this.server.get(this.url + '/camas', {
+        return this.server.get(`${this.url}/camas`, {
             params: {
                 ambito,
                 capa,
@@ -41,7 +41,7 @@ export class MapaCamasHTTP {
     }
 
     get(ambito: string, capa: string, fecha: Date, idCama: string): Observable<ICama[]> {
-        return this.server.get(this.url + `/camas/${idCama}`, {
+        return this.server.get(`${this.url}/camas/${idCama}`, {
             params: { ambito, capa, fecha },
             showError: true
         });
@@ -56,13 +56,13 @@ export class MapaCamasHTTP {
             fecha
         };
         if (data._id) {
-            return this.server.patch(this.url + `/camas/${data._id}`, params);
+            return this.server.patch(`${this.url}/camas/${data._id}`, params);
         } else {
-            return this.server.post(this.url + `/camas`, { ...data, ambito, capa, fecha });
+            return this.server.post(`${this.url}/camas`, { ...data, ambito, capa, fecha });
         }
     }
 
-    changeTime(ambito, capa, cama, idInternacion, fechaOriginal, nuevaFecha) {
+    changeTime(ambito: string, capa: string, cama, idInternacion, fechaOriginal, nuevaFecha) {
         let params = {
             ambito: ambito,
             capa: capa,
@@ -70,25 +70,11 @@ export class MapaCamasHTTP {
             nuevaFecha,
             idInternacion: idInternacion ? idInternacion : undefined
         };
-        return this.server.patch(this.url + `/camas/changeTime/${cama._id}`, params);
-    }
-
-    getMaquinaEstados(ambito: string, capa: string, organizacion: string): Observable<IMaquinaEstados> {
-        return this.server.get(this.url + `/estados`, {
-            params: { organizacion, ambito, capa },
-            showError: true
-        }).pipe(
-            map(maquinaEstados => {
-                if (maquinaEstados && maquinaEstados.length > 0) {
-                    return maquinaEstados[0];
-                }
-                throwError('NO HAY MAQUINA DE ESTADO');
-            })
-        );
+        return this.server.patch(`${this.url}/camas/changeTime/${cama._id}`, params);
     }
 
     censoDiario(fecha: Date, unidadOrganizativa: string): Observable<any[]> {
-        return this.server.get(this.url + '/censoDiario', {
+        return this.server.get(`${this.url}/censoDiario`, {
             params: { fecha, unidadOrganizativa },
             showError: true
         });
@@ -99,7 +85,7 @@ export class MapaCamasHTTP {
     }
 
     censoMensual(fechaDesde: Date, fechaHasta: Date, unidadOrganizativa: string): Observable<any[]> {
-        return this.server.get(this.url + '/censoMensual', {
+        return this.server.get(`${this.url}/censoMensual`, {
             params: { fechaDesde, fechaHasta, unidadOrganizativa },
             showError: true
         });

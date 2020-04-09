@@ -39,6 +39,7 @@ import { OrganizacionLibModule } from '../../../components/organizacion/organiza
 import { ElegirPacienteComponent } from './sidebar/ingreso/elegir-paciente.component';
 import { FiltrosInternacionComponent } from './views/listado-internacion/filtros-internacion/filtros-internacion.component';
 import { NuevoRegistroSaludComponent } from './sidebar/nuevo-registro-salud/nuevo-registro-salud.component';
+import { MaquinaEstadosHTTP } from './services/maquina-estados.http';
 
 
 @NgModule({
@@ -83,7 +84,8 @@ import { NuevoRegistroSaludComponent } from './sidebar/nuevo-registro-salud/nuev
     ],
     providers: [
         MapaCamasService,
-        MapaCamasHTTP
+        MapaCamasHTTP,
+        MaquinaEstadosHTTP
     ],
     exports: [],
 })

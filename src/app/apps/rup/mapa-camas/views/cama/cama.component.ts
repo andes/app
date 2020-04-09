@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 import { Observable, combineLatest, Subscription, forkJoin, concat } from 'rxjs';
 import { ISnapshot } from '../../interfaces/ISnapshot';
+import { MaquinaEstadosHTTP } from '../../services/maquina-estados.http';
 
 @Component({
     selector: 'app-cama',
@@ -53,6 +54,7 @@ export class CamaMainComponent implements OnInit {
         private organizacionService: OrganizacionService,
         private mapaCamasService: MapaCamasService,
         private camasHTTP: MapaCamasHTTP,
+        private maquinaEstadosHTTP: MaquinaEstadosHTTP,
         private location: Location,
     ) {
 
@@ -84,7 +86,7 @@ export class CamaMainComponent implements OnInit {
             if (this.permisoBaja) {
                 for (const capa of this.capas) {
                     this.infoCama[capa] = [];
-                    this.camasHTTP.getMaquinaEstados(this.ambito, capa, organizacion.id).subscribe(maquinaEstados => {
+                    this.maquinaEstadosHTTP.getOne(this.ambito, capa, organizacion.id).subscribe(maquinaEstados => {
                         this.infoCama[capa][0] = maquinaEstados;
                     });
                 }

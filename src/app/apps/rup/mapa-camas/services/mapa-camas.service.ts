@@ -11,6 +11,7 @@ import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concep
 import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 import { Auth } from '@andes/auth';
+import { MaquinaEstadosHTTP } from './maquina-estados.http';
 
 @Injectable()
 export class MapaCamasService {
@@ -64,6 +65,7 @@ export class MapaCamasService {
         private camasHTTP: MapaCamasHTTP,
         private prestacionService: PrestacionesService,
         private auth: Auth,
+        private maquinaEstadosHTTP: MaquinaEstadosHTTP
     ) {
         this.maquinaDeEstado$ = combineLatest(
             this.ambito2,
@@ -71,7 +73,7 @@ export class MapaCamasService {
             this.organizacion2
         ).pipe(
             switchMap(([ambito, capa, organizacion]) => {
-                return this.camasHTTP.getMaquinaEstados(ambito, capa, organizacion);
+                return this.maquinaEstadosHTTP.getOne(ambito, capa, organizacion);
             }),
             cache()
         );
