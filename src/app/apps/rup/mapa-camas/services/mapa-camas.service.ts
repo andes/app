@@ -134,34 +134,6 @@ export class MapaCamasService {
             })
         );
 
-        // this.listaInternacion$ = combineLatest(
-        //     this.fechaIngresoDesde,
-        //     this.fechaIngresoHasta,
-        // ).pipe(
-        //     switchMap(([fechaIngresoDesde, fechaIngresoHasta]) => {
-        //         const filtros = {
-        //             fechaDesde: fechaIngresoDesde, fechaHasta: fechaIngresoHasta,
-        //             organizacion: this.auth.organizacion.id,
-        //             conceptId: PrestacionesService.InternacionPrestacion.conceptId,
-        //             ordenFecha: true,
-        //             estado: ['validada', 'ejecucion']
-        //         };
-
-        //         return this.prestacionService.get(filtros);
-        //     })
-        // );
-
-        // this.listaInternacionFiltrada$ = combineLatest(
-        //     this.listaInternacion$,
-        //     this.pacienteDocumento,
-        //     this.pacienteApellido,
-        //     this.estado
-        // ).pipe(
-        //     map(([listaInternacion, documento, apellido, estado]) =>
-        //         this.filtrarListaInternacion(listaInternacion, documento, apellido, estado)
-        //     )
-        // );
-
         this.camaSelectedSegunView$ = this.view.pipe(
             switchMap((view) => {
                 if (view === 'mapa-camas') {

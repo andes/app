@@ -118,6 +118,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.prestacion$
         ).subscribe(([view, capa, cama, prestacion]) => {
+            if (!prestacion) { return; }
             let fecha = this.mapaCamasService.fecha ? this.mapaCamasService.fecha : moment().toDate();
             this.fechaMax = moment().add(1, 's').toDate();
             this.registro.valor.InformeEgreso.fechaEgreso = fecha;

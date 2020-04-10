@@ -268,13 +268,16 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 this.mapaCamasService.changeTime(this.cama, this.fechaIngresoOriginal, this.informeIngreso.fechaIngreso, idInternacion).subscribe(camaActualizada => {
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
                     this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
+                    this.listadoInternacionService.setFechaHasta(this.informeIngreso.fechaIngreso);
                     this.onSave.emit();
                 }, (err1) => {
-                    this.plex.info('danger', err1, 'Error al intentar actualizar losa datos');
+                    this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
                 });
             } else {
                 this.plex.info('success', 'Los datos se actualizaron correctamente');
                 this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
+                this.listadoInternacionService.setFechaHasta(this.informeIngreso.fechaIngreso);
+
                 this.onSave.emit();
             }
         } else {
@@ -326,13 +329,13 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         };
         this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe((prestacion: any) => {
             this.informeIngreso = prestacion.ejecucion.registros[0].valor.informeIngreso;
-            if (this.view === 'listado-internacion') {
-                this.plex.info('success', 'Informe de ingreso actualizado');
-                this.onSave.emit();
-                this.listadoInternacionService.setFechaHasta(this.fechaHasta);
-            } else {
-                this.ingresoSimplificado('ocupada', paciente, prestacion._id);
-            }
+            // if (this.view === 'listado-internacion') {
+            //     this.plex.info('success', 'Informe de ingreso actualizado');
+            //     this.onSave.emit();
+            //     this.listadoInternacionService.setFechaHasta(this.fechaHasta);
+            // } else {
+            this.ingresoSimplificado('ocupada', paciente, prestacion._id);
+            // }
         }, (err) => {
             this.plex.info('danger', err);
         });
