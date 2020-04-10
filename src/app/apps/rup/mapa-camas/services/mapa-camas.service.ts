@@ -5,13 +5,14 @@ import { ISnapshot } from '../interfaces/ISnapshot';
 import { ICama } from '../interfaces/ICama';
 import { IMaquinaEstados, IMAQRelacion, IMAQEstado } from '../interfaces/IMaquinaEstados';
 import { MapaCamasHTTP } from './mapa-camas.http';
-import { switchMap, map, pluck, catchError } from 'rxjs/operators';
+import { switchMap, map, pluck, catchError, startWith } from 'rxjs/operators';
 import { ISectores } from '../../../../interfaces/IOrganizacion';
 import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concept.interface';
 import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 import { Auth } from '@andes/auth';
 import { MaquinaEstadosHTTP } from './maquina-estados.http';
+import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 
 @Injectable()
 export class MapaCamasService {
@@ -66,7 +67,7 @@ export class MapaCamasService {
     constructor(
         private camasHTTP: MapaCamasHTTP,
         private prestacionService: PrestacionesService,
-        private auth: Auth,
+        private pacienteService: PacienteService,
         private maquinaEstadosHTTP: MaquinaEstadosHTTP
     ) {
         this.maquinaDeEstado$ = combineLatest(
@@ -131,7 +132,8 @@ export class MapaCamasService {
                     }
                 }
                 return of(null);
-            })
+            }),
+            cache()
         );
 
         this.camaSelectedSegunView$ = this.view.pipe(
@@ -457,5 +459,16 @@ export class MapaCamasService {
         }
 
         return (String(edad.valor) + ' ' + edad.unidad);
+    }
+
+    private paciente$: any = {};
+    getPaciente(paciente) {
+        if (!this.paciente$[paciente.id]) {
+            this.paciente$[paciente.id] = this.pacienteService.getById(paciente.id).pipe(
+                cache(),
+                startWith(paciente)
+            );
+        }
+        return this.paciente$[paciente.id];
     }
 }

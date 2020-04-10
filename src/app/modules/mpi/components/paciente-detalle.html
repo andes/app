@@ -35,4 +35,5 @@
 
     <plex-label *ngIf="showTelefono" titulo="Teléfono" [subtitulo]="contacto"></plex-label>
 
+    <ng-content select="plex-label" ngProjectAs="plex-label"></ng-content>
 </plex-detail>

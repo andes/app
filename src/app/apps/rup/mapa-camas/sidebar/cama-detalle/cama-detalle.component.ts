@@ -5,7 +5,7 @@ import { ElementosRUPService } from '../../../../../modules/rup/services/element
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { ISnapshot } from '../../interfaces/ISnapshot';
-import { tap, map, switchMap, startWith, pluck } from 'rxjs/operators';
+import { tap, map, switchMap, startWith, pluck, filter } from 'rxjs/operators';
 import { Observable, combineLatest, of, Subscription } from 'rxjs';
 import { IMAQEstado, IMAQRelacion } from '../../interfaces/IMaquinaEstados';
 import { PacienteService } from '../../../../../core/mpi/services/paciente.service';
@@ -24,7 +24,7 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
     public puedeDesocupar$: Observable<any>;
 
     public accionesEstado$: Observable<any>;
-
+    public paciente$: Observable<any>;
 
     // Eventos
     @Input() fecha: Date;
@@ -57,10 +57,8 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
     constructor(
         private auth: Auth,
         private router: Router,
-        private prestacionService: PrestacionesService,
         private elementoRupService: ElementosRUPService,
-        private mapaCamasService: MapaCamasService,
-        private pacienteService: PacienteService
+        private mapaCamasService: MapaCamasService
     ) {
     }
 
@@ -76,6 +74,12 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
         });
 
         this.cama$ = this.mapaCamasService.selectedCama;
+        this.paciente$ = this.cama$.pipe(
+            filter(cama => !!cama.paciente),
+            switchMap(cama => {
+                return this.mapaCamasService.getPaciente(cama.paciente);
+            })
+        );
 
         this.estadoCama$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getEstadoCama(cama)));
         this.relaciones$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getRelacionesPosibles(cama)));
@@ -115,15 +119,7 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
         this.refresh.emit(accion);
     }
 
-    private paciente$: any = {};
-    getPaciente(paciente) {
-        if (!this.paciente$[paciente.id]) {
-            this.paciente$[paciente.id] = this.pacienteService.getById(paciente.id).pipe(
-                startWith(paciente)
-            );
-        }
-        return this.paciente$[paciente.id];
-    }
+
 
     onNuevoRegistrio() {
         this.accionCama.emit({ accion: 'nuevo-registro' });

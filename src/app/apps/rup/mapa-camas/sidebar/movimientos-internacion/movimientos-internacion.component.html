@@ -15,28 +15,45 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>FECHA</th>
-            <th>CAMA</th>
-            <th>UNIDAD ORGANIZATIVA</th>
+            <th>
+                <small class="font-weight-bold">
+                    FECHA
+                </small>
+            </th>
+            <th>
+                <small class="font-weight-bold">
+                    CAMA
+                </small>
+            </th>
+            <th>
+                <small class="font-weight-bold">
+                    UNIDAD ORGANIZATIVA
+                </small>
+            </th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let movimiento of historial$ | async">
             <td>
-                {{ movimiento.fecha | fecha }}
-                {{ movimiento.fecha | hora }}
+                <small>
+                    {{ movimiento.fecha | fecha }}
+                    {{ movimiento.fecha | hora }}
+                </small>
             </td>
             <td>
-                <ng-container *ngIf="!movimiento.idInternacion">
-                    EGRESO
-                </ng-container>
-                <ng-container *ngIf="movimiento.idInternacion">
-                    {{ movimiento.nombre }}
-                </ng-container>
-
+                <small>
+                    <ng-container *ngIf="!movimiento.idInternacion">
+                        EGRESO
+                    </ng-container>
+                    <ng-container *ngIf="movimiento.idInternacion">
+                        {{ movimiento.nombre }}
+                    </ng-container>
+                </small>
             </td>
             <td>
-                {{ movimiento.unidadOrganizativa.term }}
+                <small>
+                    {{ movimiento.unidadOrganizativa.term }}
+                </small>
             </td>
         </tr>
     </tbody>

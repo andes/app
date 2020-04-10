@@ -5,28 +5,17 @@
         </ng-container>
     </plex-title>
     <ng-container *ngIf="informeIngreso$ | async as informeIngreso">
-        <fieldset>
-            <plex-detail size="md" direction="row" *ngIf="paciente$ | async as paciente">
-                <plex-icon name="paciente" prefix="adi"></plex-icon>
-                <div title>
-                    {{ paciente | nombre }}
-                </div>
-                <div subtitle>
-                    {{ paciente.documento }}
-                </div>
-                <plex-label titulo="Fecha de Nacimiento" [subtitulo]="paciente.fechaNacimiento | date: 'dd/MM/yyyy'">
-                </plex-label>
-                <plex-label *ngIf="informeIngreso.situacionLaboral" titulo="Situacion Laboral"
-                            [subtitulo]="informeIngreso.situacionLaboral">
-                </plex-label>
-                <plex-label *ngIf="informeIngreso.nivelInstruccion" titulo="Nivel de Instruccion"
-                            [subtitulo]="informeIngreso.nivelInstruccion">
-                </plex-label>
-                <plex-label *ngIf="informeIngreso.ocupacionHabitual" titulo="Ocupacion Habitual"
-                            [subtitulo]="informeIngreso.ocupacionHabitual?.nombre">
-                </plex-label>
-            </plex-detail>
-        </fieldset>
+        <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal">
+            <plex-label *ngIf="informeIngreso.situacionLaboral" titulo="Situacion Laboral"
+                        [subtitulo]="informeIngreso.situacionLaboral">
+            </plex-label>
+            <plex-label *ngIf="informeIngreso.nivelInstruccion" titulo="Nivel de Instruccion"
+                        [subtitulo]="informeIngreso.nivelInstruccion">
+            </plex-label>
+            <plex-label *ngIf="informeIngreso.ocupacionHabitual" titulo="Ocupacion Habitual"
+                        [subtitulo]="informeIngreso.ocupacionHabitual?.nombre">
+            </plex-label>
+        </paciente-detalle>
         <fieldset>
             <plex-title size="sm" titulo="DATOS DE INTERNACION">
             </plex-title>

@@ -10,15 +10,16 @@
             <ng-container>
                 <fieldset>
                     <fieldset>
+                        <paciente-detalle [paciente]="paciente" orientacion="horizontal"></paciente-detalle>
                         <!-- Se va a reemplazar por paciente-detalle -->
-                        <plex-detail size="md" direction="row">
+                        <!-- <plex-detail size="md" direction="row">
                             <plex-icon name="paciente" prefix="adi"></plex-icon>
                             <div title>{{ paciente.apellido }}, {{ paciente.nombre }}</div>
                             <div subtitle>{{ paciente.documento }}</div>
                             <plex-label titulo="Fecha de Nacimiento"
                                         [subtitulo]="paciente.fechaNacimiento | date: 'dd/MM/yyyy'">
                             </plex-label>
-                        </plex-detail>
+                        </plex-detail> -->
                         <div class="row">
                             <div class="col">
                                 <br>

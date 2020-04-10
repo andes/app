@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { notNull } from '@andes/shared';
 
 @Component({
@@ -35,9 +35,7 @@ export class InformeIngresoComponent implements OnInit {
 
         this.paciente$ = this.prestacion$.pipe(
             notNull(),
-            map((prestacion) => {
-                return prestacion.paciente;
-            })
+            switchMap(prestacion => this.mapaCamasService.getPaciente(prestacion.paciente))
         );
     }
 }
