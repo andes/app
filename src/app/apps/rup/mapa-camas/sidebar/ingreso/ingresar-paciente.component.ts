@@ -372,7 +372,22 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     setFecha() {
         if (!this.prestacion) {
             this.mapaCamasService.select(null);
+        } else {
+            this.checkEstadoCama();
         }
         this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
+    }
+
+
+    checkEstadoCama() {
+        if (this.view !== 'listado-internacion') {
+            this.mapaCamasService.get(this.informeIngreso.fechaIngreso, this.cama.idCama).subscribe((cama) => {
+                if (cama && cama.estado !== 'disponible') {
+                    this.informeIngreso.fechaIngreso = this.fechaIngresoOriginal;
+                    this.plex.info('warning', `No es posible realizar el cambio de fecha porque la cama ${this.cama.nombre} no se encuentra disponible`,
+                        'Cama no dosponible');
+                }
+            });
+        }
     }
 }

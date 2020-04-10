@@ -411,7 +411,7 @@ export class MapaCamasService {
         );
     }
 
-    get(fecha, idCama): Observable<ICama[]> {
+    get(fecha, idCama): Observable<ISnapshot> {
         return this.camasHTTP.get(this.ambito, this.capa, fecha, idCama);
     }
 
