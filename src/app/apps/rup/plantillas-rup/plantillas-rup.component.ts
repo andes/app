@@ -94,7 +94,7 @@ export class PlantillasRUPComponent implements OnInit {
 
         let query = {
             search: this.searchTerm,
-            semanticTag: ['procedimiento']
+            semanticTag: ['procedimiento', 'elemento de registro']
         };
 
         this.snomedService.get(query).subscribe((resultado: ISnomedConcept[]) => {

@@ -22,20 +22,16 @@ import { OrganizacionService } from '../../../../services/organizacion.service';
 import { ElementosRUPRegister } from '../elementos';
 import { ActivatedRoute } from '@angular/router';
 import { ReglaService } from '../../../../services/top/reglas.service';
+import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
 
 @Component({
     selector: 'rup',
-    styleUrls: [
-        '_rup.scss',
-        // TODO: Crear package NPM con las fonts
-        // '../../assets/font.css'
-    ],
     encapsulation: ViewEncapsulation.None,
     template: '' // Debe quedar vacío, y cada atómo indicar que usa 'rup.html' o su propio template
 })
 export class RUPComponent implements OnInit, AfterViewInit {
     @ViewChildren(RUPComponent) rupElements: QueryList<RUPComponent>;
-    @ViewChild('form', { static: true }) formulario: any;
+    @ViewChild('form', { static: false }) formulario: any;
     public rupInstance: any;
 
     // Propiedades
@@ -115,7 +111,8 @@ export class RUPComponent implements OnInit, AfterViewInit {
         public elementosRUPService: ElementosRUPService,
         public prestacionesService: PrestacionesService,
         public servicioTipoPrestacion: TipoPrestacionService,
-        public auth: Auth, public ocupacionService: OcupacionService,
+        public auth: Auth,
+        public ocupacionService: OcupacionService,
         public financiadorService: FinanciadorService,
         public serviceProfesional: ProfesionalService,
         public adjuntosService: AdjuntosService,
@@ -128,8 +125,10 @@ export class RUPComponent implements OnInit, AfterViewInit {
         public route: ActivatedRoute,
         public agendaService: AgendaService,
         public organizacionservice: OrganizacionService,
-        public servicioReglas: ReglaService
-    ) { }
+        public servicioReglas: ReglaService,
+        public conceptosTurneablesService: ConceptosTurneablesService
+    ) {
+    }
 
     ngOnInit() {
         this.loadComponent();

@@ -918,4 +918,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             return (arrayTP.length === 1);
         }
     }
+
+    onVentanillaVirtualChange($event) {
+        if (!$event.value) {
+            this.elementoActivo.cupoMobile = 0;
+        }
+    }
 }

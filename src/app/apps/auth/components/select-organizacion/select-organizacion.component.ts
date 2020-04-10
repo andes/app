@@ -5,6 +5,8 @@ import { Auth } from '@andes/auth';
 import { AppComponent } from '../../../../app.component';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { HotjarService } from '../../../../shared/services/hotJar.service';
+import { UsuarioService } from '../../../../services/usuarios/usuario.service';
+import { DisclaimerService } from '../../../../services/disclaimer.service';
 
 @Component({
     templateUrl: 'select-organizacion.html',
@@ -19,7 +21,9 @@ export class SelectOrganizacionComponent implements OnInit {
         private router: Router,
         public appComponent: AppComponent,
         public organizacionService: OrganizacionService,
-        private hotjar: HotjarService
+        private hotjar: HotjarService,
+        public us: UsuarioService,
+        public ds: DisclaimerService
     ) { }
 
     ngOnInit() {
@@ -42,9 +46,23 @@ export class SelectOrganizacionComponent implements OnInit {
                 this.organizacionService.configuracion(this.auth.organizacion.id).subscribe(() => { });
                 this.plex.updateUserInfo({ usuario: this.auth.usuario });
                 this.appComponent.checkPermissions();
-                this.router.navigate(['inicio']);
                 // this.hotjar.initialize();
+                this.ds.get({ activo: true }).subscribe(disclaimers => {
+                    if (disclaimers && disclaimers.length > 0) {
+                        let disclaimer = disclaimers[0];
+                        this.us.getDisclaimers(this.auth.usuario).subscribe((userDisclaimers) => {
+                            if (userDisclaimers.some(item => item.id === disclaimer.id)) {
+                                this.router.navigate(['inicio']);
+                            } else {
+                                this.router.navigate(['/auth/disclaimer']);
+                            }
+                        });
+                    } else {
+                        this.router.navigate(['inicio']);
+                    }
+                });
             });
+
         }, (err) => {
             this.plex.info('danger', 'Error al seleccionar organización');
         });

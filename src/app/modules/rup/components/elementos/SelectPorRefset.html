@@ -11,11 +11,11 @@
         <ng-container *ngFor="let concepto of conceptos, let i = index">
 
             <label class="custom-control custom-radio">
-                <ng-container *ngIf="registro.valor && registro.valor.concepto.conceptId === concepto.conceptId">
+                <ng-container *ngIf="registro?.valor?.concepto?.conceptId === concepto.conceptId">
                     <input class="custom-control-input" name="radioConceptos-{{unique}}" (change)="selectRadio(concepto)"
                         value="{{concepto.conceptId}}" type="radio" checked>
                 </ng-container>
-                <ng-container *ngIf="registro.valor?.concepto.conceptId !== concepto.conceptId">
+                <ng-container *ngIf="registro?.valor?.concepto?.conceptId !== concepto.conceptId">
                     <input class="custom-control-input" name="radioConceptos-{{unique}}" (change)="selectRadio(concepto)"
                         value="{{concepto.conceptId}}" type="radio">
                 </ng-container>
