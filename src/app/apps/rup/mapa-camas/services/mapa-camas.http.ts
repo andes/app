@@ -40,7 +40,7 @@ export class MapaCamasHTTP {
         return this.server.get(`${this.url}/camas/historial`, { params });
     }
 
-    get(ambito: string, capa: string, fecha: Date, idCama: string): Observable<ICama[]> {
+    get(ambito: string, capa: string, fecha: Date, idCama: string): Observable<ISnapshot> {
         return this.server.get(`${this.url}/camas/${idCama}`, {
             params: { ambito, capa, fecha },
             showError: true

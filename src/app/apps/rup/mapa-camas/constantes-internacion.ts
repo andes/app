@@ -63,9 +63,9 @@ export const nivelesInstruccion = [
 ];
 
 export const situacionesLaborales = [
-    { id: 1, nombre: 'Trabaja o está de licencia' },
-    { id: 2, nombre: 'No trabaja y busca trabajo' },
-    { id: 3, nombre: 'No trabaja y no busca trabajo' }
+    { id: 'Trabaja o está de licencia', nombre: 'Trabaja o está de licencia' },
+    { id: 'No trabaja y busca trabajo', nombre: 'No trabaja y busca trabajo' },
+    { id: 'No trabaja y no busca trabajo', nombre: 'No trabaja y no busca trabajo' }
 ];
 
 export const modelRegistroInternacion = {
