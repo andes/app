@@ -23,7 +23,15 @@ export class CensosMensualesComponent implements OnInit {
     selectedUnidadOranizativa;
 
     censo = [];
-    datosCensoTotal = {};
+    datosCensoTotal = {
+        diasF: '0',
+        promDis: '0',
+        pacDia: '0',
+        mortHosp: '0',
+        promPer: '0',
+        giroCama: '0',
+        promDiasEstada: '0'
+    };
     totales = {
         existencia0: 0,
         ingresos: 0,
@@ -35,6 +43,7 @@ export class CensosMensualesComponent implements OnInit {
         ingresoEgresoDia: 0,
         pacientesDia: 0,
         disponibles24: 0,
+        diasEstada: 0
     };
 
     constructor(
@@ -52,14 +61,15 @@ export class CensosMensualesComponent implements OnInit {
             organizacion.unidadesOrganizativas.map(u => {
                 index = this.unidadesOranizativas.findIndex(uo => uo.id === u.conceptId);
                 if (index < 0) {
-                    this.unidadesOranizativas.push({ 'id': u.conceptId, 'nombre': u.term, 'term': u.term });
+                    this.unidadesOranizativas.push(u);
                 }
             });
         });
     }
 
     generarCensoMensual() {
-        this.mapaCamasService.censoMensual(moment(this.fechaDesde).toDate(), moment(this.fechaHasta).toDate(), this.selectedUnidadOranizativa.id)
+        this.censo = [];
+        this.mapaCamasService.censoMensual(moment(this.fechaDesde).toDate(), moment(this.fechaHasta).toDate(), this.selectedUnidadOranizativa.conceptId)
             .subscribe((censoMensual: any) => {
                 censoMensual.map(c => {
                     this.totales['existencia0'] += c.censo.existenciaALas0;
@@ -72,6 +82,7 @@ export class CensosMensualesComponent implements OnInit {
                     this.totales['ingresoEgresoDia'] += c.censo.ingresosYEgresos;
                     this.totales['pacientesDia'] += c.censo.pacientesDia;
                     this.totales['disponibles24'] += c.censo.disponibles;
+                    this.totales['diasEstada'] += c.censo.diasEstada;
 
                     this.censo.push({
                         censo: {
@@ -85,6 +96,7 @@ export class CensosMensualesComponent implements OnInit {
                             ingresoEgresoDia: c.censo.ingresosYEgresos,
                             pacientesDia: c.censo.pacientesDia,
                             disponibles24: c.censo.disponibles,
+                            diasEstada: c.censo.diasEstada
                         },
                         fecha: c.fecha
                     });
@@ -123,26 +135,31 @@ export class CensosMensualesComponent implements OnInit {
     }
 
     resetCenso() {
-        this.censo = null;
+        this.censo = [];
     }
 
     calcularDatosCensoTotal() {
         this.datosCensoTotal['diasF'] = this.censo.length.toFixed(2);
 
-        let promDis: any = (this.censo.length > 0) ? (this.totales.disponibles24 / this.censo.length).toFixed(2) : 0;
+        let promDis: any = (this.censo.length > 0) ? (this.totales.disponibles24 / this.censo.length).toFixed(2) : '0';
         this.datosCensoTotal['promDis'] = promDis;
 
-        let pacienteDia = (this.censo.length > 0) ? Math.round(this.totales.pacientesDia / this.censo.length).toFixed(2) : 0;
+        let pacienteDia = (this.censo.length > 0) ? Math.round(this.totales.pacientesDia / this.censo.length).toFixed(2) : '0';
         this.datosCensoTotal['pacDia'] = pacienteDia;
 
         let totalEgresos = this.totales.pasesA + this.totales.egresosAlta + this.totales.egresosDefuncion;
-        let mortalidadHospitalaria = (totalEgresos > 0) ? (this.totales.egresosDefuncion / totalEgresos).toFixed(2) : 0;
+        let mortalidadHospitalaria = (totalEgresos > 0) ? (this.totales.egresosDefuncion / totalEgresos).toFixed(2) : '0';
         this.datosCensoTotal['mortHosp'] = mortalidadHospitalaria;
 
-        let promedioPermanencia = (totalEgresos > 0) ? (this.totales.pacientesDia / totalEgresos).toFixed(2) : 0;
+        let promedioPermanencia = (totalEgresos > 0) ? (this.totales.pacientesDia / totalEgresos).toFixed(2) : '0';
         this.datosCensoTotal['promPer'] = promedioPermanencia;
 
-        let giroCama = (promDis > 0) ? (totalEgresos / promDis).toFixed(2) : 0;
+        let giroCama = (promDis > 0) ? (totalEgresos / promDis).toFixed(2) : '0';
         this.datosCensoTotal['giroCama'] = giroCama;
+
+        let totalEgreso = this.totales.egresosAlta + this.totales.egresosDefuncion;
+        this.datosCensoTotal['promDiasEstada'] = totalEgreso === 0 ? '0' : (this.totales.diasEstada / totalEgreso).toFixed(2);
+
     }
+
 }

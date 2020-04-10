@@ -15,7 +15,7 @@
                 </div>
                 <div class="col-md-3" *ngIf="unidadesOranizativas.length > 0">
                     <plex-select label="Unidad Organizativa" [(ngModel)]="selectedUnidadOranizativa" name="sectores"
-                                 [data]="unidadesOranizativas" [required]="true">
+                                 [data]="unidadesOranizativas" [required]="true" idField="conceptId" labelField="term">
                     </plex-select>
                 </div>
                 <div class="col-md-2">
@@ -101,6 +101,10 @@
                 <tr>
                     <td>Giro Cama</td>
                     <td>{{ datosCensoTotal.giroCama }}</td>
+                </tr>
+                <tr>
+                    <td>Promedio días de estada</td>
+                    <td>{{ datosCensoTotal.promDiasEstada }}</td>
                 </tr>
             </table>
         </fieldset>

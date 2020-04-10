@@ -146,6 +146,7 @@ export class CensoMensualComponent implements OnInit {
             giroCama: this.giroV,
             promDiasEstada: this.promedioDiasEstadaV
         };
+        debugger;
         let params = {
             usuario: this.auth.usuario.nombreCompleto,
             listadoCenso: this.resumenCensoTotal,

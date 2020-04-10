@@ -74,7 +74,7 @@ export class MapaCamasHTTP {
     }
 
     censoDiario(fecha: Date, unidadOrganizativa: string): Observable<any[]> {
-        return this.server.get(`${this.url}/censoDiario`, {
+        return this.server.get(`${this.url}/censo-diario`, {
             params: { fecha, unidadOrganizativa },
             showError: true
         });
@@ -85,7 +85,7 @@ export class MapaCamasHTTP {
     }
 
     censoMensual(fechaDesde: Date, fechaHasta: Date, unidadOrganizativa: string): Observable<any[]> {
-        return this.server.get(`${this.url}/censoMensual`, {
+        return this.server.get(`${this.url}/censo-mensual`, {
             params: { fechaDesde, fechaHasta, unidadOrganizativa },
             showError: true
         });
