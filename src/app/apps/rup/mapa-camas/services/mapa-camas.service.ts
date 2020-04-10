@@ -282,7 +282,7 @@ export class MapaCamasService {
         this.selectedPrestacion.next(prestacion);
     }
 
-    filtrarSnapshot(camas: ISnapshot[], paciente: string, unidadOrganizativa: ISnomedConcept, sector: ISectores, tipoCama: ISnomedConcept, esCensable, estado: string, equipamiento: ISnomedConcept[]) {
+    filtrarSnapshot(camas: ISnapshot[], paciente: string, unidadOrganizativa: ISnomedConcept, sector: ISectores, tipoCama: ISnomedConcept, esCensable, estado, equipamiento: ISnomedConcept[]) {
         let camasFiltradas = camas;
 
         if (paciente) {
@@ -306,7 +306,7 @@ export class MapaCamasService {
         }
 
         if (estado) {
-            camasFiltradas = camasFiltradas.filter(snap => snap.estado === estado);
+            camasFiltradas = camasFiltradas.filter(snap => snap.estado === estado.estado);
         }
 
         if (equipamiento && equipamiento.length > 0) {

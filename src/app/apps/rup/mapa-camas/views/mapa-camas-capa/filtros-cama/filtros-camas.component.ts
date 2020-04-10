@@ -65,7 +65,8 @@ export class FiltrosCamasComponent implements OnInit {
         );
 
         this.estadoList$ = this.mapaCamasService.snapshot$.pipe(
-            map((camas) => arrayToSet(camas, 'estado', (item) => item))
+            map((camas) => arrayToSet(camas, 'estado', (item) => item)),
+            map(estados => estados.map(e => ({ estado: e.estado })))
         );
 
 
