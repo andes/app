@@ -14,6 +14,7 @@ import { combineLatest, Subscription, Observable } from 'rxjs';
 import { ObraSocialService } from '../../../../../services/obraSocial.service';
 import { map } from 'rxjs/operators';
 import { ObjectID } from 'bson';
+import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -81,6 +82,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         private servicioPrestacion: PrestacionesService,
         private mapaCamasService: MapaCamasService,
         private obraSocialService: ObraSocialService,
+        private listadoInternacionService: ListadoInternacionService
     ) {
     }
 
@@ -93,7 +95,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.informeIngreso.fechaIngreso = this.mapaCamasService.fecha;
-        this.fechaHasta = this.mapaCamasService.fechaIngresoHasta;
+        this.fechaHasta = this.listadoInternacionService.fechaIngresoHasta;
 
         this.subscription = combineLatest(
             this.mapaCamasService.view,
@@ -327,7 +329,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             if (this.view === 'listado-internacion') {
                 this.plex.info('success', 'Informe de ingreso actualizado');
                 this.onSave.emit();
-                this.mapaCamasService.setFechaHasta(this.fechaHasta);
+                this.listadoInternacionService.setFechaHasta(this.fechaHasta);
             } else {
                 this.ingresoSimplificado('ocupada', paciente, prestacion._id);
             }

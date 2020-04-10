@@ -11,6 +11,7 @@ import { ISnapshot } from '../../interfaces/ISnapshot';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { combineLatest, Subscription, Observable } from 'rxjs';
+import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
 
 @Component({
     selector: 'app-egresar-paciente',
@@ -94,6 +95,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         private servicioPrestacion: PrestacionesService,
         private mapaCamasService: MapaCamasService,
         public procedimientosQuirurgicosService: ProcedimientosQuirurgicosService,
+        private listadoInternacionService: ListadoInternacionService
     ) {
 
     }
@@ -198,7 +200,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.save(estadoPatch, this.registro.valor.InformeEgreso.fechaEgreso).subscribe(camaActualizada => {
                 this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
                 if (this.view === 'listado-internacion') {
-                    this.mapaCamasService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
+                    this.listadoInternacionService.setFechaHasta(this.registro.valor.InformeEgreso.fechaEgreso);
                 } else if (this.view === 'mapa-camas') {
                     this.mapaCamasService.select(null);
                     this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);

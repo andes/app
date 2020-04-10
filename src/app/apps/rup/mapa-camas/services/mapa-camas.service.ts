@@ -30,11 +30,11 @@ export class MapaCamasService {
     public equipamientoSelected = new BehaviorSubject<ISnomedConcept[]>(null);
 
 
-    public pacienteDocumento = new BehaviorSubject<string>(null);
-    public pacienteApellido = new BehaviorSubject<string>(null);
-    public fechaIngresoDesde = new BehaviorSubject<Date>(moment().subtract(1, 'months').toDate());
-    public fechaIngresoHasta = new BehaviorSubject<Date>(moment().toDate());
-    public estado = new BehaviorSubject<any>(null);
+    // public pacienteDocumento = new BehaviorSubject<string>(null);
+    // public pacienteApellido = new BehaviorSubject<string>(null);
+    // public fechaIngresoDesde = new BehaviorSubject<Date>(moment().subtract(1, 'months').toDate());
+    // public fechaIngresoHasta = new BehaviorSubject<Date>(moment().toDate());
+    // public estado = new BehaviorSubject<any>(null);
 
     public selectedPaciente = new BehaviorSubject<any>({} as any);
     public pacienteAux = new BehaviorSubject<any>({} as any);
@@ -55,13 +55,12 @@ export class MapaCamasService {
     public snapshot$: Observable<ISnapshot[]>;
     public snapshotFiltrado$: Observable<ISnapshot[]>;
 
-    public listaInternacion$: Observable<IPrestacion[]>;
-    public listaInternacionFiltrada$: Observable<IPrestacion[]>;
+    // public listaInternacion$: Observable<IPrestacion[]>;
+    // public listaInternacionFiltrada$: Observable<IPrestacion[]>;
 
     public ambito = 'internacion';
     public capa;
     public fecha: Date;
-    public fechaIngresoMax = moment().toDate();
     public permisos: string[];
 
     constructor(
@@ -135,33 +134,33 @@ export class MapaCamasService {
             })
         );
 
-        this.listaInternacion$ = combineLatest(
-            this.fechaIngresoDesde,
-            this.fechaIngresoHasta,
-        ).pipe(
-            switchMap(([fechaIngresoDesde, fechaIngresoHasta]) => {
-                const filtros = {
-                    fechaDesde: fechaIngresoDesde, fechaHasta: fechaIngresoHasta,
-                    organizacion: this.auth.organizacion.id,
-                    conceptId: PrestacionesService.InternacionPrestacion.conceptId,
-                    ordenFecha: true,
-                    estado: ['validada', 'ejecucion']
-                };
+        // this.listaInternacion$ = combineLatest(
+        //     this.fechaIngresoDesde,
+        //     this.fechaIngresoHasta,
+        // ).pipe(
+        //     switchMap(([fechaIngresoDesde, fechaIngresoHasta]) => {
+        //         const filtros = {
+        //             fechaDesde: fechaIngresoDesde, fechaHasta: fechaIngresoHasta,
+        //             organizacion: this.auth.organizacion.id,
+        //             conceptId: PrestacionesService.InternacionPrestacion.conceptId,
+        //             ordenFecha: true,
+        //             estado: ['validada', 'ejecucion']
+        //         };
 
-                return this.prestacionService.get(filtros);
-            })
-        );
+        //         return this.prestacionService.get(filtros);
+        //     })
+        // );
 
-        this.listaInternacionFiltrada$ = combineLatest(
-            this.listaInternacion$,
-            this.pacienteDocumento,
-            this.pacienteApellido,
-            this.estado
-        ).pipe(
-            map(([listaInternacion, documento, apellido, estado]) =>
-                this.filtrarListaInternacion(listaInternacion, documento, apellido, estado)
-            )
-        );
+        // this.listaInternacionFiltrada$ = combineLatest(
+        //     this.listaInternacion$,
+        //     this.pacienteDocumento,
+        //     this.pacienteApellido,
+        //     this.estado
+        // ).pipe(
+        //     map(([listaInternacion, documento, apellido, estado]) =>
+        //         this.filtrarListaInternacion(listaInternacion, documento, apellido, estado)
+        //     )
+        // );
 
         this.camaSelectedSegunView$ = this.view.pipe(
             switchMap((view) => {
@@ -282,10 +281,9 @@ export class MapaCamasService {
         this.fecha = fecha;
     }
 
-    setFechaHasta(fecha: Date) {
-        this.fechaIngresoHasta.next(fecha);
-        this.fechaIngresoMax = fecha;
-    }
+    // setFechaHasta(fecha: Date) {
+    //     this.fechaIngresoHasta.next(fecha);
+    // }
 
     setView(view: 'mapa-camas' | 'listado-internacion') {
         this.view.next(view);

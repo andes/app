@@ -40,6 +40,7 @@ import { ElegirPacienteComponent } from './sidebar/ingreso/elegir-paciente.compo
 import { FiltrosInternacionComponent } from './views/listado-internacion/filtros-internacion/filtros-internacion.component';
 import { NuevoRegistroSaludComponent } from './sidebar/nuevo-registro-salud/nuevo-registro-salud.component';
 import { MaquinaEstadosHTTP } from './services/maquina-estados.http';
+import { ListadoInternacionService } from './views/listado-internacion/listado-internacion.service';
 
 
 @NgModule({
@@ -85,7 +86,8 @@ import { MaquinaEstadosHTTP } from './services/maquina-estados.http';
     providers: [
         MapaCamasService,
         MapaCamasHTTP,
-        MaquinaEstadosHTTP
+        MaquinaEstadosHTTP,
+        ListadoInternacionService
     ],
     exports: [],
 })

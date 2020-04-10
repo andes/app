@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { MapaCamasService } from '../../../services/mapa-camas.service';
 import * as enumerados from '../../../../../../utils/enumerados';
 import { Auth } from '@andes/auth';
 import { DocumentosService } from '../../../../../../services/documentos.service';
 import { saveAs } from 'file-saver';
 import { Slug } from 'ng2-slugify';
+import { ListadoInternacionService } from '../listado-internacion.service';
 
 @Component({
     selector: 'app-filtros-internacion',
@@ -23,7 +23,7 @@ export class FiltrosInternacionComponent implements OnInit {
 
     constructor(
         private auth: Auth,
-        private mapaCamasService: MapaCamasService,
+        private listadoInternacionService: ListadoInternacionService,
         private servicioDocumentos: DocumentosService
     ) { }
 
@@ -33,16 +33,16 @@ export class FiltrosInternacionComponent implements OnInit {
     }
 
     filtrar() {
-        this.mapaCamasService.pacienteDocumento.next(this.filtros.documento);
-        this.mapaCamasService.pacienteApellido.next(this.filtros.apellido);
+        this.listadoInternacionService.pacienteDocumento.next(this.filtros.documento);
+        this.listadoInternacionService.pacienteApellido.next(this.filtros.apellido);
         if (this.filtros.estado) {
-            this.mapaCamasService.estado.next(this.filtros.estado.id);
+            this.listadoInternacionService.estado.next(this.filtros.estado.id);
         }
     }
 
     filtrarFecha() {
-        this.mapaCamasService.fechaIngresoDesde.next(this.filtros.fechaIngresoDesde);
-        this.mapaCamasService.fechaIngresoHasta.next(this.filtros.fechaIngresoHasta);
+        this.listadoInternacionService.fechaIngresoDesde.next(this.filtros.fechaIngresoDesde);
+        this.listadoInternacionService.fechaIngresoHasta.next(this.filtros.fechaIngresoHasta);
     }
 
     reporteInternaciones() {

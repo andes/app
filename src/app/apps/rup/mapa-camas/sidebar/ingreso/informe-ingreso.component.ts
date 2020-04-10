@@ -1,10 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { notNull } from '@andes/shared';
-import { __core_private_testing_placeholder__ } from '@angular/core/testing';
 
 @Component({
     selector: 'app-informe-ingreso',

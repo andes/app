@@ -52,7 +52,7 @@ export class MapaCamasCapaComponent implements OnInit {
         private plex: Plex,
         private router: Router,
         private route: ActivatedRoute,
-        private mapaCamasService: MapaCamasService,
+        public mapaCamasService: MapaCamasService,
     ) { }
 
     ngOnInit() {

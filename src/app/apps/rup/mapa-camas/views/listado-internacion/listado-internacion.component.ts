@@ -7,6 +7,7 @@ import { PrestacionesService } from '../../../../../modules/rup/services/prestac
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable, Subscription } from 'rxjs';
+import { ListadoInternacionService } from './listado-internacion.service';
 
 @Component({
     selector: 'app-internacion-listado',
@@ -16,6 +17,7 @@ import { Observable, Subscription } from 'rxjs';
 export class InternacionListadoComponent implements OnInit {
     listaInternacion$: Observable<IPrestacion[]>;
     selectedPrestacion$: Observable<IPrestacion>;
+    fechaIngresoHasta$ = this.listadoInternacionService.fechaIngresoHasta;
 
     // VARIABLES
     public mostrar = 'datosInternacion';
@@ -25,29 +27,18 @@ export class InternacionListadoComponent implements OnInit {
     public puedeValidar = false;
     public puedeRomper = false;
 
-    private filtros = {
-        documento: null,
-        apellido: null,
-        fechaIngresoDesde: moment().subtract(1, 'months').toDate(),
-        fechaIngresoHasta: moment().toDate(),
-        estados: null,
-        organizacion: this.auth.organizacion.id,
-        conceptId: PrestacionesService.InternacionPrestacion.conceptId,
-        ordenFecha: true
-    };
-
-    private subscription: Subscription;
-
     constructor(
-        private auth: Auth,
         private plex: Plex,
         private location: Location,
         private prestacionService: PrestacionesService,
-        public mapaCamasService: MapaCamasService,
+        private mapaCamasService: MapaCamasService,
+        private listadoInternacionService: ListadoInternacionService
     ) { }
 
     ngOnInit() {
         this.mapaCamasService.setView('listado-internacion');
+        this.mapaCamasService.setCapa('estadistica');
+        this.mapaCamasService.setAmbito('internacion');
 
         this.plex.updateTitle([{
             route: '/inicio',
@@ -57,19 +48,13 @@ export class InternacionListadoComponent implements OnInit {
         }, {
             name: 'Listado de Internacion'
         }]);
-        this.getPrestaciones();
-        this.mapaCamasService.setCapa('estadistica');
-        this.mapaCamasService.setAmbito('internacion');
 
         this.selectedPrestacion$ = this.mapaCamasService.selectedPrestacion;
-    }
-
-    getPrestaciones() {
-        this.listaInternacion$ = this.mapaCamasService.listaInternacionFiltrada$;
+        this.listaInternacion$ = this.listadoInternacionService.listaInternacionFiltrada$;
     }
 
     devuelveFecha(internacion, tipo) {
-        let informe = this.verRegistro(internacion, tipo);
+        const informe = this.verRegistro(internacion, tipo);
         if (tipo === 'ingreso') {
             return informe.informeIngreso.fechaIngreso;
         } else {
@@ -155,7 +140,7 @@ export class InternacionListadoComponent implements OnInit {
                         if (egresoExiste.InformeEgreso.fechaEgreso && egresoExiste.InformeEgreso.tipoEgreso &&
                             egresoExiste.InformeEgreso.diagnosticoPrincipal) {
                             this.prestacionService.validarPrestacion(selectedPrestacion, []).subscribe(prestacion => {
-                                this.mapaCamasService.setFechaHasta(fechaHasta);
+                                this.listadoInternacionService.setFechaHasta(fechaHasta);
                                 this.mapaCamasService.selectPrestacion(prestacion);
                                 this.verificarPrestacion(prestacion);
                             }, (err) => {
@@ -190,7 +175,7 @@ export class InternacionListadoComponent implements OnInit {
                     };
                     // Vamos a cambiar el estado de la prestación a ejecucion
                     this.prestacionService.patch(selectedPrestacion.id, cambioEstado).subscribe(prestacion => {
-                        this.mapaCamasService.setFechaHasta(fechaHasta);
+                        this.listadoInternacionService.setFechaHasta(fechaHasta);
                         this.mapaCamasService.selectPrestacion(prestacion);
                         this.verificarPrestacion(prestacion);
                     }, (err) => {
