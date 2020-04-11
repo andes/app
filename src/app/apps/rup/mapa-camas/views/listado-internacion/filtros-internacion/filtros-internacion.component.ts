@@ -46,7 +46,12 @@ export class FiltrosInternacionComponent implements OnInit {
     }
 
     reporteInternaciones() {
-        this.servicioDocumentos.descargarReporteInternaciones({ filtros: this.filtros, organizacion: this.auth.organizacion.id }).subscribe(data => {
+        const params = {
+            desde: moment(this.filtros.fechaIngresoDesde).startOf('d').format(),
+            hasta: moment(this.filtros.fechaIngresoHasta).endOf('d').format(),
+            organizacion: this.auth.organizacion.id
+        };
+        this.servicioDocumentos.descargarReporteInternaciones(params).subscribe(data => {
             let blob = new Blob([data], { type: data.type });
             saveAs(blob, this.slug.slugify('Internaciones' + ' ' + moment().format('DD-MM-YYYY-hmmss')) + '.xlsx');
         });

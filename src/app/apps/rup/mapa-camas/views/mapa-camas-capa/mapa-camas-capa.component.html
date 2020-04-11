@@ -18,7 +18,7 @@
             <plex-title titulo="LISTADO DE CAMAS" size="sm">
                 <plex-button *ngIf="permisoCrearCama" label="AGREGAR CAMA" type="success" size="sm"
                              (click)="agregarCama()"></plex-button>
-                <plex-button title="forma de lista" icon="format-list-bulleted" type="primary" size="sm"></plex-button>
+                <!-- <plex-button title="forma de lista" icon="format-list-bulleted" type="primary" size="sm"></plex-button> -->
             </plex-title>
 
         </header>
@@ -32,9 +32,9 @@
                     <th>ACCIONES</th>
                 </tr>
                 <ng-container *ngIf="(selectedCama$ | async) as selectedCama">
-                    <tr app-item-cama *ngFor="let cama of camas | async" [cama]="cama" [capa]="capa" [permisoIngreso]="permisoIngreso"
-                        (accionCama)="selectCama(cama, $event)" (click)="verDetalle(cama, selectedCama)"
-                        [class.invert]="cama._id === selectedCama._id">
+                    <tr app-item-cama *ngFor="let cama of camas | async" [cama]="cama" [capa]="capa"
+                        [permisoIngreso]="permisoIngreso" (accionCama)="selectCama(cama, $event)"
+                        (click)="verDetalle(cama, selectedCama)" [class.invert]="cama._id === selectedCama._id">
                     </tr>
                 </ng-container>
             </table>
