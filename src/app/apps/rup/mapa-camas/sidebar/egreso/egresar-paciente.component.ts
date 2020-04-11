@@ -124,7 +124,6 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.registro.valor.InformeEgreso.fechaEgreso = fecha;
             this.view = view;
             this.capa = capa;
-
             if (capa === 'estadistica') {
                 this.prestacion = prestacion;
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
@@ -135,10 +134,10 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     this.fechaEgresoOriginal = this.registro.valor.InformeEgreso.fechaEgreso;
                 }
 
-                if (this.view === 'listado-internacion') {
 
+                if (this.view === 'listado-internacion') {
                     this.subscription2 = this.mapaCamasService.snapshot(moment(this.registro.valor.InformeEgreso.fechaEgreso).add(-1, 's').toDate(),
-                        prestacion.id).subscribe((snapshot) => {
+                        this.prestacion.id).subscribe((snapshot) => {
                             this.cama = snapshot[0];
                             if (this.cama) {
                                 this.fechaMin = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').toDate();
@@ -169,6 +168,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         if (this.capa === 'estadistica') {
             this.calcularDiasEstada();
         }
+        this.checkEstadoCama();
     }
 
     guardar(valid) {
@@ -214,17 +214,20 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     cambiarEstado() {
-        if (this.registro.valor.InformeEgreso.fechaEgreso.getTime() !== this.fechaEgresoOriginal.getTime()) {
-            this.mapaCamasService.changeTime(this.cama, this.fechaEgresoOriginal, this.registro.valor.InformeEgreso.fechaEgreso, null).subscribe(camaActualizada => {
-                this.plex.info('success', 'Los datos se actualizaron correctamente');
-                this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
-                this.onSave.emit();
-            }, (err1) => {
-                this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
-            });
+        if (this.fechaEgresoOriginal && this.registro.valor.InformeEgreso.fechaEgreso.getTime() !== this.fechaEgresoOriginal.getTime()) {
+            this.mapaCamasService.snapshot(moment(this.fechaEgresoOriginal).add(-1, 's').toDate(),
+                this.prestacion.id).subscribe((snapshot) => {
+                    const ultimaCama = snapshot[0];
+                    this.mapaCamasService.changeTime(ultimaCama, this.fechaEgresoOriginal, this.registro.valor.InformeEgreso.fechaEgreso, null).subscribe(camaActualizada => {
+                        this.plex.info('success', 'Los datos se actualizaron correctamente');
+                        this.listadoInternacionService.setFechaHasta(moment().toDate());
+                        this.onSave.emit();
+                    });
+                }, (err1) => {
+                    this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
+                });
         } else {
             this.plex.info('success', 'Los datos se actualizaron correctamente');
-            this.mapaCamasService.setFecha(this.registro.valor.InformeEgreso.fechaEgreso);
             this.onSave.emit();
         }
     }
@@ -237,7 +240,6 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 registros: registros
             };
             this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacion => {
-                this.mapaCamasService.selectPrestacion(prestacion);
                 this.egresoSimplificado(this.estadoDestino);
                 this.cambiarEstado();
             });
@@ -272,14 +274,12 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
 
     calcularDiasEstada() {
-        if (this.cama) {
-            /*  Si la fecha de egreso es el mismo día del ingreso -> debe mostrar 1 día de estada
-                Si la fecha de egreso es al otro día del ingreso, no importa la hora -> debe mostrar 1 día de estada
-                Si la fecha de egreso es posterior a los dos casos anteriores -> debe mostrar la diferencia de días */
-            let dateDif = moment(this.registro.valor.InformeEgreso.fechaEgreso).endOf('day').diff(moment(this.informeIngreso.fechaIngreso).startOf('day'), 'days');
-            let diasEstada = dateDif === 0 ? 1 : dateDif;
-            this.registro.valor.InformeEgreso['diasDeEstada'] = diasEstada;
-        }
+        /*  Si la fecha de egreso es el mismo día del ingreso -> debe mostrar 1 día de estada
+            Si la fecha de egreso es al otro día del ingreso, no importa la hora -> debe mostrar 1 día de estada
+            Si la fecha de egreso es posterior a los dos casos anteriores -> debe mostrar la diferencia de días */
+        let dateDif = moment(this.registro.valor.InformeEgreso.fechaEgreso).endOf('day').diff(moment(this.informeIngreso.fechaIngreso).startOf('day'), 'days');
+        let diasEstada = dateDif === 0 ? 1 : dateDif;
+        this.registro.valor.InformeEgreso['diasDeEstada'] = diasEstada;
     }
 
     loadOrganizacion(event) {
@@ -458,6 +458,42 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
     removeProcedimiento(i) {
         this.registro.valor.InformeEgreso.procedimientosQuirurgicos.splice(i, 1);
+    }
+
+    // Se debe controlar que:
+    // La cama este disponible en la fecha que la quiero usar,
+    // Y que no puede ser una fecha anterior al ultimo movimiento de la internacion
+
+    checkMovimientos() {
+        this.mapaCamasService.historial('internacion', this.informeIngreso.fechaIngreso, this.fechaEgresoOriginal).subscribe(h => {
+            const movimientoEncontrado = h.filter((s: ISnapshot) => {
+                if (s.fecha.getTime() > this.registro.valor.InformeEgreso.fechaEgreso && s.fecha.getTime() < this.fechaEgresoOriginal.getTime()) {
+                    return s;
+                }
+            });
+            if (movimientoEncontrado && movimientoEncontrado.length) {
+                this.registro.valor.InformeEgreso.fechaEgreso = this.fechaEgresoOriginal;
+                this.fecha = this.fechaEgresoOriginal;
+                this.plex.info('warning', `No es posible realizar el cambio de fecha porque la internacion tiene movimientos posteriores a la fecha ingresada`);
+            }
+        });
+    }
+
+
+    checkEstadoCama() {
+        this.checkMovimientos();
+        this.mapaCamasService.get(this.registro.valor.InformeEgreso.fechaEgreso, this.cama.idCama).subscribe((cama) => {
+            if (cama && cama.estado !== 'disponible') {
+                if (!cama.idInternacion || (cama.idInternacion && cama.idInternacion !== this.prestacion.id)) {
+                    this.registro.valor.InformeEgreso.fechaEgreso = this.fechaEgresoOriginal;
+                    this.fecha = this.fechaEgresoOriginal;
+                    this.plex.info('warning', `No es posible realizar el cambio de fecha porque la cama ${this.cama.nombre} no se encuentra disponible`,
+                        'Cama no dosponible');
+                }
+
+            }
+        });
+
     }
 
 }

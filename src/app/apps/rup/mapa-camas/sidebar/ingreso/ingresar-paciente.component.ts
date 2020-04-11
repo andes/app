@@ -265,13 +265,17 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         }
         if (this.prestacion) {
             if (this.informeIngreso.fechaIngreso.getTime() !== this.fechaIngresoOriginal.getTime()) {
-                this.mapaCamasService.changeTime(this.cama, this.fechaIngresoOriginal, this.informeIngreso.fechaIngreso, idInternacion).subscribe(camaActualizada => {
-                    this.plex.info('success', 'Los datos se actualizaron correctamente');
-                    this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
-                    this.listadoInternacionService.setFechaHasta(this.informeIngreso.fechaIngreso);
-                    this.onSave.emit();
-                }, (err1) => {
-                    this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
+                // recuperamos snapshot inicial, por si hay un cambio de cama
+                this.mapaCamasService.snapshot(this.fechaIngresoOriginal, this.prestacion.id).subscribe((snapshot) => {
+                    const primeraCama = snapshot[0];
+                    this.mapaCamasService.changeTime(primeraCama, this.fechaIngresoOriginal, this.informeIngreso.fechaIngreso, idInternacion).subscribe(camaActualizada => {
+                        this.plex.info('success', 'Los datos se actualizaron correctamente');
+                        this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
+                        this.listadoInternacionService.setFechaHasta(this.informeIngreso.fechaIngreso);
+                        this.onSave.emit();
+                    }, (err1) => {
+                        this.plex.info('danger', err1, 'Error al intentar actualizar los datos');
+                    });
                 });
             } else {
                 this.plex.info('success', 'Los datos se actualizaron correctamente');
@@ -379,20 +383,43 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.select(null);
         } else {
             this.checkEstadoCama();
+            this.checkMovimientos();
         }
         this.mapaCamasService.setFecha(this.informeIngreso.fechaIngreso);
     }
 
+    // Se debe controlar que:
+    // La cama este disponible en la fecha que la quiero usar,
+    // Y que no puede ser una fecha posterior al siguiente movimiento
+
+    checkMovimientos() {
+        const HOY = moment().toDate();
+        this.mapaCamasService.historial('internacion', this.fechaIngresoOriginal, HOY).subscribe(h => {
+            const movimientoEncontrado = h.filter((s: ISnapshot) => {
+                if (s.fecha.getTime() > this.fechaIngresoOriginal.getTime() && s.fecha.getTime() < this.informeIngreso.fechaIngreso.getTime()) {
+                    return s;
+                }
+            });
+            if (movimientoEncontrado && movimientoEncontrado.length) {
+                this.informeIngreso.fechaIngreso = this.fechaIngresoOriginal;
+                this.plex.info('warning', `No es posible realizar el cambio de fecha porque la internacion tiene movimientos previos a la fecha ingresada`);
+            }
+        });
+    }
+
 
     checkEstadoCama() {
-        if (this.view !== 'listado-internacion') {
-            this.mapaCamasService.get(this.informeIngreso.fechaIngreso, this.cama.idCama).subscribe((cama) => {
-                if (cama && cama.estado !== 'disponible') {
+        this.checkMovimientos();
+        this.mapaCamasService.get(this.informeIngreso.fechaIngreso, this.cama.idCama).subscribe((cama) => {
+            if (cama && cama.estado !== 'disponible') {
+                if (!cama.idInternacion || (cama.idInternacion && cama.idInternacion !== this.prestacion.id)) {
                     this.informeIngreso.fechaIngreso = this.fechaIngresoOriginal;
                     this.plex.info('warning', `No es posible realizar el cambio de fecha porque la cama ${this.cama.nombre} no se encuentra disponible`,
                         'Cama no dosponible');
                 }
-            });
-        }
+
+            }
+        });
+
     }
 }
