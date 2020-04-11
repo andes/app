@@ -1,10 +1,11 @@
-import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter, ViewChild, OnDestroy, ContentChild, AfterContentInit, AfterViewInit } from '@angular/core';
 import { PlexOptionsComponent } from '@andes/plex';
 import { IPrestacion } from '../../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable, Subscription, combineLatest } from 'rxjs';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { PrestacionesService } from '../../../../../../modules/rup/services/prestaciones.service';
 import { Auth } from '@andes/auth';
+import { notNull } from '@andes/shared';
 
 @Component({
     selector: 'app-internacion-detalle',
@@ -19,7 +20,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
     @Output() cambiarCama = new EventEmitter<any>();
     @Output() accion = new EventEmitter<any>();
 
-    @ViewChild(PlexOptionsComponent, { static: true }) plexOptions: PlexOptionsComponent;
+    @ContentChild(PlexOptionsComponent, { static: true }) plexOptions: PlexOptionsComponent;
 
     public editar = false;
     public existeEgreso = false;
@@ -29,9 +30,9 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
     public permisoMovimiento = false;
     public permisoEgreso = false;
     public items = [
-        // { key: 'ingreso', label: 'INGRESO' },
-        // { key: 'movimientos', label: 'MOVIMIENTOS' },
-        // { key: 'egreso', label: 'EGRESO' }
+        { key: 'ingreso', label: 'INGRESO' },
+        { key: 'movimientos', label: 'MOVIMIENTOS' },
+        { key: 'egreso', label: 'EGRESO' }
     ];
 
     private subscription: Subscription;
@@ -45,6 +46,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
         this.subscription.unsubscribe();
     }
 
+
     ngOnInit() {
         this.mostrar = 'ingreso';
         this.permisoIngreso = this.auth.check('internacion:ingreso');
@@ -52,7 +54,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
         this.permisoEgreso = this.auth.check('internacion:egreso');
         this.subscription = combineLatest(
             this.mapaCamasService.capa2,
-            this.mapaCamasService.prestacion$,
+            this.mapaCamasService.prestacion$.pipe(notNull()),
         ).subscribe(([capa, prestacion]) => {
             if (capa !== 'estadistica') {
                 this.items = [
@@ -60,7 +62,6 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
                     { key: 'registros', label: 'REGISTROS' }
                 ];
                 this.mostrar = 'movimientos';
-
                 return;
             }
             this.items = [
@@ -69,31 +70,13 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
                 { key: 'egreso', label: 'EGRESO' }
             ];
 
-            if (prestacion) {
-                this.prestacion = prestacion;
-                if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
-                    this.editar = false;
-                    this.prestacionValidada = true;
-                } else {
-                    this.prestacionValidada = false;
-                }
 
-                if (prestacion.ejecucion.registros[1] && prestacion.ejecucion.registros[1].valor && prestacion.ejecucion.registros[1].valor.InformeEgreso) {
-                    this.existeEgreso = true;
-                } else {
-                    this.existeEgreso = false;
-
-                    if (!this.permisoIngreso) {
-                        this.items.pop();
-                    }
-                }
-
-                if (!this.mostrar) {
-                    this.activatedOption('ingreso');
-                }
-            } else {
+            this.prestacion = prestacion;
+            if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
                 this.editar = false;
-                this.mostrar = null;
+                this.prestacionValidada = true;
+            } else {
+                this.prestacionValidada = false;
             }
         });
     }
