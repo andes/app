@@ -20,7 +20,7 @@
                                         [subtitulo]="paciente.fechaNacimiento | date: 'dd/MM/yyyy'">
                             </plex-label>
                         </plex-detail> -->
-                        <div class="row">
+                        <div class="row" *ngIf="capa === 'estadistica'">
                             <div class="col">
                                 <br>
                                 <!-- [TODO] Agregar funcionlida de carpeta -->

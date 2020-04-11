@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { MapaCamasService } from '../services/mapa-camas.service';
+import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Plex } from '@andes/plex';
-import { ISnapshot } from '../interfaces/ISnapshot';
+import { ISnapshot } from '../../interfaces/ISnapshot';
 import { Observable, Subscription, combineLatest } from 'rxjs';
 
 @Component({

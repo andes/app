@@ -17,8 +17,8 @@
 
             <plex-title titulo="LISTADO DE CAMAS" size="sm">
                 <plex-button *ngIf="permisoCrearCama" label="AGREGAR CAMA" type="success" size="sm"
-                             (click)="agregarCama()"></plex-button>
-                <!-- <plex-button title="forma de lista" icon="format-list-bulleted" type="primary" size="sm"></plex-button> -->
+                             (click)="agregarCama()">
+                </plex-button>
             </plex-title>
 
         </header>
@@ -78,7 +78,7 @@
             </app-cama-detalle>
         </ng-container>
         <app-nuevo-registro-salud *ngIf="accion === 'nuevo-registro'">
-            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverAResumen()">
+            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
             </plex-button>
         </app-nuevo-registro-salud>
     </plex-layout-sidebar>

@@ -38,7 +38,6 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
 
     // VARIABLES
     public cama: ISnapshot;
-    public capa: string;
     public prestacion: IPrestacion;
     public estadoCama;
     public genero;
@@ -66,7 +65,6 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.capa = this.mapaCamasService.capa;
         this.permisoIngreso = this.auth.check('internacion:ingreso');
 
         this.elementoRupService.ready.subscribe(() => {
@@ -119,6 +117,14 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
         this.refresh.emit(accion);
     }
 
+    // [TODO] Revisar el tema bubble up
+    onAccion($event) {
+        if ($event) {
+            if ($event.accion === 'nuevo-registro') {
+                this.onNuevoRegistrio();
+            }
+        }
+    }
 
 
     onNuevoRegistrio() {

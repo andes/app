@@ -9,7 +9,7 @@
     </ng-container>
     <ng-template #puedeEgresar>
         <form #formReparada="ngForm">
-            <div class="row">
+            <div class="row mb-2">
                 <div class="col">
                     <plex-datetime type="datetime" label="Fecha y hora de cambio de cama" [(ngModel)]="fecha"
                                    [max]="fechaMax" [min]="fechaMin$ | async" name="fechaCambio" required
@@ -26,7 +26,7 @@
                         <plex-button label="Cambiar de cama" type="primary" size="block"
                                      title="{{ (!permisoMovimiento) ? 'No tiene permisos suficientes' : null }}"
                                      [disabled]="!permisoMovimiento || !(camasDisponibles.camasMismaUO.length > 0)"
-                                     (click)="cambiarCama(null)" [validateForm]="formReparada">
+                                     (click)="cambiarCama(null)" [validateForm]="formReparada" class="mb-2">
                         </plex-button>
                         <ng-container *ngIf="!(camasDisponibles.camasMismaUO.length > 0)">
                             <strong>No hay camas disponibles en la unidad organizativa actual.</strong>
@@ -34,7 +34,7 @@
                         <plex-button label="Cambiar de unidad organizativa" type="secondary" size="block"
                                      title="{{ (!permisoMovimiento) ? 'No tiene permisos suficientes' : null }}"
                                      [disabled]="!permisoMovimiento || !(camasDisponibles.camasDistintaUO.length > 0)"
-                                     (click)="cambiarCama(true)" [validateForm]="formReparada">
+                                     (click)="cambiarCama(true)" [validateForm]="formReparada" class="mb-2">
                         </plex-button>
                         <ng-container *ngIf="!(camasDisponibles.camasDistintaUO.length > 0)">
                             <strong> No hay camas disponibles en otra unidad organizativa.</strong>

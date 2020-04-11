@@ -19,7 +19,7 @@ import { EstadoServicioComponent } from './sidebar/estado-servicio/estado-servic
 import { ItemCamaComponent } from './views/mapa-camas-capa/item-cama/item-cama.component';
 import { IngresarPacienteComponent } from './sidebar/ingreso/ingresar-paciente.component';
 import { IconoCamitaComponent } from './sidebar/estado-servicio/iconito-cama/icono-camita.component';
-import { CamaDestinoGenericoComponent } from './sidebar/cama-destino-generico.component';
+import { CamaDestinoGenericoComponent } from './sidebar/cama-destino-generico/cama-destino-generico.component';
 import { CamaDesocuparComponent } from './sidebar/desocupar-cama/desocupar-cama.component';
 import { EgresarPacienteComponent } from './sidebar/egreso/egresar-paciente.component';
 import { CamaDetalleComponent } from './sidebar/cama-detalle/cama-detalle.component';
@@ -41,6 +41,7 @@ import { FiltrosInternacionComponent } from './views/listado-internacion/filtros
 import { NuevoRegistroSaludComponent } from './sidebar/nuevo-registro-salud/nuevo-registro-salud.component';
 import { MaquinaEstadosHTTP } from './services/maquina-estados.http';
 import { ListadoInternacionService } from './views/listado-internacion/listado-internacion.service';
+import { RegistrosHudsDetalleComponent } from './sidebar/registros-huds-detalle/registros-huds-detalle.component';
 
 
 @NgModule({
@@ -81,7 +82,8 @@ import { ListadoInternacionService } from './views/listado-internacion/listado-i
         InternacionListaEsperaComponent,
         ElegirPacienteComponent,
         FiltrosInternacionComponent,
-        NuevoRegistroSaludComponent
+        NuevoRegistroSaludComponent,
+        RegistrosHudsDetalleComponent
     ],
     providers: [
         MapaCamasService,

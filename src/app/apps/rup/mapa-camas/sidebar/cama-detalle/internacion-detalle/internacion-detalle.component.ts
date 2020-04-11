@@ -14,10 +14,12 @@ import { Auth } from '@andes/auth';
 export class InternacionDetalleComponent implements OnInit, OnDestroy {
     puedeDesocupar$: Observable<any>;
     prestacion: IPrestacion;
-    view: string;
+    view$ = this.mapaCamasService.view;
 
     @Output() cambiarCama = new EventEmitter<any>();
-    @ViewChild(PlexOptionsComponent, { static: false }) plexOptions: PlexOptionsComponent;
+    @Output() accion = new EventEmitter<any>();
+
+    @ViewChild(PlexOptionsComponent, { static: true }) plexOptions: PlexOptionsComponent;
 
     public editar = false;
     public existeEgreso = false;
@@ -27,9 +29,9 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
     public permisoMovimiento = false;
     public permisoEgreso = false;
     public items = [
-        { key: 'ingreso', label: 'INGRESO' },
-        { key: 'movimientos', label: 'MOVIMIENTOS' },
-        { key: 'egreso', label: 'EGRESO' }
+        // { key: 'ingreso', label: 'INGRESO' },
+        // { key: 'movimientos', label: 'MOVIMIENTOS' },
+        // { key: 'egreso', label: 'EGRESO' }
     ];
 
     private subscription: Subscription;
@@ -49,11 +51,18 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
         this.permisoMovimiento = this.auth.check('internacion:movimientos');
         this.permisoEgreso = this.auth.check('internacion:egreso');
         this.subscription = combineLatest(
-            this.mapaCamasService.view,
-            this.mapaCamasService.selectedCama,
+            this.mapaCamasService.capa2,
             this.mapaCamasService.prestacion$,
-        ).subscribe(([view, cama, prestacion]) => {
-            this.view = view;
+        ).subscribe(([capa, prestacion]) => {
+            if (capa !== 'estadistica') {
+                this.items = [
+                    { key: 'movimientos', label: 'MOVIMIENTOS' },
+                    { key: 'registros', label: 'REGISTROS' }
+                ];
+                this.mostrar = 'movimientos';
+
+                return;
+            }
             this.items = [
                 { key: 'ingreso', label: 'INGRESO' },
                 { key: 'movimientos', label: 'MOVIMIENTOS' },
@@ -100,6 +109,10 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
 
     changeCama() {
         this.cambiarCama.emit();
+    }
+
+    onAccion($event) {
+        this.accion.emit($event);
     }
 
     toggleEdit() {
