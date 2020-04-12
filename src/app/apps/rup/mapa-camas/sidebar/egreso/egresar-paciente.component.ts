@@ -465,15 +465,16 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     // Y que no puede ser una fecha anterior al ultimo movimiento de la internacion
 
     checkMovimientos() {
-        this.mapaCamasService.historial('internacion', this.informeIngreso.fechaIngreso, this.fechaEgresoOriginal).subscribe(h => {
+        const fechaFin = this.fechaEgresoOriginal ? this.fechaEgresoOriginal : moment().toDate();
+        this.mapaCamasService.historial('internacion', this.informeIngreso.fechaIngreso, fechaFin).subscribe(h => {
             const movimientoEncontrado = h.filter((s: ISnapshot) => {
-                if (s.fecha.getTime() > this.registro.valor.InformeEgreso.fechaEgreso && s.fecha.getTime() < this.fechaEgresoOriginal.getTime()) {
+                if (s.fecha.getTime() > this.registro.valor.InformeEgreso.fechaEgreso && s.fecha.getTime() < fechaFin.getTime()) {
                     return s;
                 }
             });
             if (movimientoEncontrado && movimientoEncontrado.length) {
                 this.registro.valor.InformeEgreso.fechaEgreso = this.fechaEgresoOriginal;
-                this.fecha = this.fechaEgresoOriginal;
+                this.fecha = fechaFin;
                 this.plex.info('warning', `No es posible realizar el cambio de fecha porque la internacion tiene movimientos posteriores a la fecha ingresada`);
             }
         });
@@ -482,7 +483,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
     checkEstadoCama() {
         this.checkMovimientos();
-        this.mapaCamasService.get(this.registro.valor.InformeEgreso.fechaEgreso, this.cama.idCama).subscribe((cama) => {
+        this.mapaCamasService.get(this.fecha, this.cama.idCama).subscribe((cama) => {
             if (cama && cama.estado !== 'disponible') {
                 if (!cama.idInternacion || (cama.idInternacion && cama.idInternacion !== this.prestacion.id)) {
                     this.registro.valor.InformeEgreso.fechaEgreso = this.fechaEgresoOriginal;
@@ -493,7 +494,6 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
             }
         });
-
     }
 
 }

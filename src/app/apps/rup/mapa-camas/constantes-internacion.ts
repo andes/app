@@ -142,7 +142,7 @@ export const opcionesTerminacion = [
 ];
 
 export const opcionesSexo = [
-    { id: 'Femenino', label: 'Femenino' },
-    { id: 'Masculino', label: 'Masculino' },
-    { id: 'Indeterminado', label: 'Indeterminado' }
+    { id: 'femenino', label: 'femenino' },
+    { id: 'masculino', label: 'masculino' },
+    { id: 'indeterminado', label: 'indeterminado' }
 ];

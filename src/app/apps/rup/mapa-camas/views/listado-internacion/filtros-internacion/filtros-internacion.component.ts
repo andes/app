@@ -53,7 +53,7 @@ export class FiltrosInternacionComponent implements OnInit {
         };
         this.servicioDocumentos.descargarReporteInternaciones(params).subscribe(data => {
             let blob = new Blob([data], { type: data.type });
-            saveAs(blob, this.slug.slugify('Internaciones' + ' ' + moment().format('DD-MM-YYYY-hmmss')) + '.xlsx');
+            saveAs(blob, this.slug.slugify('Internaciones' + ' ' + moment().format('DD-MM-YYYY-hmmss')) + '.csv');
         });
     }
 }
