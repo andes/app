@@ -44,6 +44,10 @@ $plex-tabs-color-extend: (problema: $problema,
     height: 50px;
     padding: 7px;
 }
+nav .actions {
+    position: absolute;
+    right: 0;
+}
 
 @import 'app/modules/rup/assets/font.css';
 

@@ -67,10 +67,11 @@
         <div class="col-4">
             <plex-box>
                 <!--<editar-auditoria-prestacionPaciente *ngIf="showVistaAuditoriasPP" [auditoriaPPSeleccionada]="auditoriaPPSeleccionada" (saveAuditoriaPP)="saveAuditoriaPP($event)" (cancelaEditarAuditoriaPP)="cancelaEditarAuditoriaPP($event)"></editar-auditoria-prestacionPaciente>-->
-                <editar-auditoria-prestacionPaciente
-                    *ngIf="showVistaAuditoriasPP || auditoriasPPSeleccionadas.length == 1"
-                    [auditoriaPPSeleccionada]="auditoriaPPSeleccionada" (saveAuditoriaPP)="saveAuditoriaPP($event)"
-                    (cancelaEditarAuditoriaPP)="cancelaEditarAuditoriaPP($event)"></editar-auditoria-prestacionPaciente>
+                <editar-auditoria-prestacionPaciente *ngIf="showVistaAuditoriasPP || auditoriasPPSeleccionadas.length == 1"
+                                                     [auditoriaPPSeleccionada]="auditoriaPPSeleccionada"
+                                                     (saveAuditoriaPP)="saveAuditoriaPP($event)"
+                                                     (cancelaEditarAuditoriaPP)="cancelaEditarAuditoriaPP($event)">
+                </editar-auditoria-prestacionPaciente>
             </plex-box>
         </div>
     </div>
