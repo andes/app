@@ -11,22 +11,11 @@
                 <fieldset>
                     <fieldset>
                         <paciente-detalle [paciente]="paciente" orientacion="horizontal"></paciente-detalle>
-                        <!-- Se va a reemplazar por paciente-detalle -->
-                        <!-- <plex-detail size="md" direction="row">
-                            <plex-icon name="paciente" prefix="adi"></plex-icon>
-                            <div title>{{ paciente.apellido }}, {{ paciente.nombre }}</div>
-                            <div subtitle>{{ paciente.documento }}</div>
-                            <plex-label titulo="Fecha de Nacimiento"
-                                        [subtitulo]="paciente.fechaNacimiento | date: 'dd/MM/yyyy'">
-                            </plex-label>
-                        </plex-detail> -->
                         <div class="row" *ngIf="capa === 'estadistica'">
                             <div class="col">
                                 <br>
-                                <!-- [TODO] Agregar funcionlida de carpeta -->
-                                <carpeta-paciente [pacienteSeleccionado]="paciente"
-                                                  (guardarCarpetaEmit)="afterComponenteCarpeta($event)"
-                                                  (cancelarCarpetaEmit)="afterComponenteCarpeta($event) ">
+                                <carpeta-paciente [pacienteSeleccionado]=" paciente" [emitOnNew]="true"
+                                                  (guardarCarpetaEmit)="afterComponenteCarpeta($event)">
                                 </carpeta-paciente>
                                 <br>
                             </div>
@@ -37,8 +26,8 @@
                         <div class="row">
                             <div class="col-md">
                                 <plex-datetime label="Fecha y hora de ingreso" [(ngModel)]="informeIngreso.fechaIngreso"
-                                               name=" fechaIngreso" [max]="mapaCamasService.fechaActual$ | async" required label="Fecha Ingreso"
-                                               [debounce]="400" (change)="setFecha()">
+                                               name=" fechaIngreso" [max]="mapaCamasService.fechaActual$ | async"
+                                               required label="Fecha Ingreso" [debounce]="400" (change)="setFecha()">
                                 </plex-datetime>
                             </div>
                         </div>

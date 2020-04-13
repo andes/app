@@ -15,6 +15,7 @@ import { ObraSocialService } from '../../../../../services/obraSocial.service';
 import { map } from 'rxjs/operators';
 import { ObjectID } from 'bson';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -82,7 +83,8 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         private servicioPrestacion: PrestacionesService,
         private mapaCamasService: MapaCamasService,
         private obraSocialService: ObraSocialService,
-        private listadoInternacionService: ListadoInternacionService
+        private listadoInternacionService: ListadoInternacionService,
+        private auth: Auth
     ) {
     }
 
@@ -122,6 +124,13 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                         this.paciente.obraSocial = { nombre: os[0].financiador, financiador: os[0].financiador, codigoPuco: os[0].codigoFinanciador };
                     }
                 });
+                let indiceCarpeta = -1;
+                if (paciente.carpetaEfectores && paciente.carpetaEfectores.length > 0) {
+                    indiceCarpeta = paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
+                    if (indiceCarpeta > -1) {
+                        this.informeIngreso.nroCarpeta = this.paciente.carpetaEfectores[indiceCarpeta].nroCarpeta;
+                    }
+                }
             }
 
             if (cama.idCama) {
@@ -175,6 +184,13 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     selectCama(cama) {
         this.mapaCamasService.select(cama);
+    }
+
+    afterComponenteCarpeta($event) {
+        if ($event) {
+            const carpeta = $event[0];
+            this.informeIngreso.nroCarpeta = carpeta.nroCarpeta;
+        }
     }
 
     loadProfesionales(event) {

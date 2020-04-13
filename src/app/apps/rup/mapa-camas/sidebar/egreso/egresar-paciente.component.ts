@@ -118,13 +118,13 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.prestacion$
         ).subscribe(([view, capa, cama, prestacion]) => {
-            if (!prestacion) { return; }
             let fecha = this.mapaCamasService.fecha ? this.mapaCamasService.fecha : moment().toDate();
             this.fechaMax = moment().add(1, 's').toDate();
             this.registro.valor.InformeEgreso.fechaEgreso = fecha;
             this.view = view;
             this.capa = capa;
             if (capa === 'estadistica') {
+                if (!prestacion) { return; }
                 this.prestacion = prestacion;
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
                 if (this.prestacion.ejecucion.registros[1] && this.prestacion.ejecucion.registros[1].valor) {
@@ -167,8 +167,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         this.registro.valor.InformeEgreso.fechaEgreso = this.fecha;
         if (this.capa === 'estadistica') {
             this.calcularDiasEstada();
+            this.checkEstadoCama();
         }
-        this.checkEstadoCama();
     }
 
     guardar(valid) {

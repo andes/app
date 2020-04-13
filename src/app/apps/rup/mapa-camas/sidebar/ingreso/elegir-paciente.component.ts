@@ -3,6 +3,7 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Plex } from '@andes/plex';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { Subscription, combineLatest } from 'rxjs';
+import { PacienteService } from '../../../../../core/mpi/services/paciente.service';
 
 @Component({
     selector: 'app-elegir-paciente',
@@ -18,7 +19,8 @@ export class ElegirPacienteComponent implements OnInit, OnDestroy {
 
     constructor(
         private plex: Plex,
-        private mapaCamasService: MapaCamasService
+        private mapaCamasService: MapaCamasService,
+        private pacienteService: PacienteService
     ) { }
 
     ngOnDestroy() {
@@ -43,7 +45,9 @@ export class ElegirPacienteComponent implements OnInit, OnDestroy {
                 en la cama <strong>${cama.nombre}</strong> en <strong>${cama.sectores[cama.sectores.length - 1].nombre}</strong>
                 de la unidad organizativa <strong>${cama.unidadOrganizativa.term}</strong>.`, 'Paciente ya internado');
         } else {
-            this.mapaCamasService.selectPaciente(paciente);
+            this.pacienteService.getById(paciente.id).subscribe((pac) => {
+                this.mapaCamasService.selectPaciente(pac);
+            });
         }
     }
 
