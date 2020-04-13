@@ -12,7 +12,7 @@
             <div class="row mb-2">
                 <div class="col">
                     <plex-datetime type="datetime" label="Fecha y hora de cambio de cama" [(ngModel)]="fecha"
-                                   [max]="fechaMax" [min]="fechaMin$ | async" name="fechaCambio" required
+                                   [max]="mapaCamasService.fechaActual$ | async" [min]="fechaMin$ | async" name="fechaCambio" required
                                    (change)="verificarFecha()" [debounce]="400">
                     </plex-datetime>
                 </div>

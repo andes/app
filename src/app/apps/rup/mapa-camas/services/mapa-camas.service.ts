@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { cache } from '@andes/shared';
-import { Observable, BehaviorSubject, Subject, combineLatest, of } from 'rxjs';
+import { Observable, BehaviorSubject, Subject, combineLatest, of, timer } from 'rxjs';
 import { ISnapshot } from '../interfaces/ISnapshot';
 import { ICama } from '../interfaces/ICama';
 import { IMaquinaEstados, IMAQRelacion, IMAQEstado } from '../interfaces/IMaquinaEstados';
 import { MapaCamasHTTP } from './mapa-camas.http';
-import { switchMap, map, pluck, catchError, startWith } from 'rxjs/operators';
+import { switchMap, map, pluck, catchError, startWith, mapTo } from 'rxjs/operators';
 import { ISectores } from '../../../../interfaces/IOrganizacion';
 import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concept.interface';
 import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
@@ -16,6 +16,8 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
 
 @Injectable()
 export class MapaCamasService {
+    public timer$;
+    public fechaMax$;
 
     public ambito2 = new BehaviorSubject<string>(null);
     public capa2 = new BehaviorSubject<string>(null);
@@ -58,6 +60,7 @@ export class MapaCamasService {
 
     // public listaInternacion$: Observable<IPrestacion[]>;
     // public listaInternacionFiltrada$: Observable<IPrestacion[]>;
+    public fechaActual$: Observable<Date>;
 
     public ambito = 'internacion';
     public capa;
@@ -152,6 +155,12 @@ export class MapaCamasService {
                     );
                 }
             })
+        );
+
+        const proximoMinuto = moment().add(1, 'minute').startOf('minute');
+        const segundosAPoxMin = proximoMinuto.diff(moment());
+        this.fechaActual$ = timer(segundosAPoxMin, 60000).pipe(
+            map(() => moment().toDate())
         );
     }
 

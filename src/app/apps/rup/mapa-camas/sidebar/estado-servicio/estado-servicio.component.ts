@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import { Observable, Subscription } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Observable, Subscription, timer, of } from 'rxjs';
+import { map, tap, defaultIfEmpty, startWith } from 'rxjs/operators';
 import { ISnapshot } from '../../interfaces/ISnapshot';
 
 @Component({
@@ -11,8 +11,8 @@ import { ISnapshot } from '../../interfaces/ISnapshot';
 })
 
 export class EstadoServicioComponent implements OnInit, OnDestroy {
-    fecha: Date = moment().toDate();
-    fechaHasta: Date = moment().toDate();
+    fechaActual$: Observable<Date>;
+    fecha$: Observable<Date>;
     total: number;
     camasXEstado: any = {};
     camasXEstado$: Observable<any>;
@@ -24,14 +24,18 @@ export class EstadoServicioComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit() {
+        this.fecha$ = this.mapaCamasService.fecha2;
+
+        this.fechaActual$ = this.mapaCamasService.fechaActual$.pipe(
+            startWith(moment().toDate())
+        );
+
         this.sub = this.mapaCamasService.snapshotFiltrado$.pipe(
             tap((snapshot) => {
                 this.total = snapshot.length;
                 this.camasXEstado = this.groupBy(snapshot, 'estado');
             })
         ).subscribe();
-
-        this.fecha = this.mapaCamasService.fecha;
     }
 
     ngOnDestroy() {
@@ -46,7 +50,7 @@ export class EstadoServicioComponent implements OnInit, OnDestroy {
         }, {});
     }
 
-    setFecha() {
-        this.mapaCamasService.setFecha(this.fecha);
+    setFecha(fecha: Date) {
+        this.mapaCamasService.setFecha(fecha);
     }
 }

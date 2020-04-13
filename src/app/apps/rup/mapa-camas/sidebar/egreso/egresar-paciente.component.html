@@ -10,7 +10,7 @@
             <div class="row ">
                 <div class="col">
                     <plex-datetime label="Fecha y hora de egreso" [(ngModel)]="fecha" name="fechaEgreso" required
-                                   label="Fecha Egreso" [max]="fechaMax" [min]="fechaMin" (change)="setFecha()">
+                                   label="Fecha Egreso" [max]="mapaCamasService.fechaActual$ | async" [min]="fechaMin" (change)="setFecha()">
                     </plex-datetime>
                 </div>
             </div>

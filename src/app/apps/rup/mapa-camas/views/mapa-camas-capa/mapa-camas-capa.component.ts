@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -8,9 +7,9 @@ import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable } from 'rxjs/Observable';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
-import { take, map, pluck, tap, timeInterval, delay } from 'rxjs/operators';
-import { interval, Subscription, combineLatest } from 'rxjs';
+import { take, pluck, tap, map } from 'rxjs/operators';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
+import { timer, Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-mapa-camas-capa',

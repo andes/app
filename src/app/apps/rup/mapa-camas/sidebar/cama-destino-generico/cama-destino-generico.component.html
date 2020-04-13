@@ -14,7 +14,7 @@
         </div>
         <div class="row">
             <div class="col-md">
-                <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" [max]="fechaMax"
+                <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" [max]="mapaCamasService.fechaActual$ | async"
                                name="fechaIngreso" label="Fecha" (change)="setFecha()">
                 </plex-datetime>
             </div>

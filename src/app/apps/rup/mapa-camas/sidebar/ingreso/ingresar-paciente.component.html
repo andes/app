@@ -37,7 +37,7 @@
                         <div class="row">
                             <div class="col-md">
                                 <plex-datetime label="Fecha y hora de ingreso" [(ngModel)]="informeIngreso.fechaIngreso"
-                                               name=" fechaIngreso" [max]="fechaMax" required label="Fecha Ingreso"
+                                               name=" fechaIngreso" [max]="mapaCamasService.fechaActual$ | async" required label="Fecha Ingreso"
                                                [debounce]="400" (change)="setFecha()">
                                 </plex-datetime>
                             </div>
