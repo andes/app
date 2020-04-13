@@ -45,6 +45,8 @@ $plex-tabs-color-extend: (problema: $problema,
     padding: 7px;
 }
 
+@import 'app/modules/rup/assets/font.css';
+
 $adi-font-path: '~@andes/icons/fonts/';
 @import '~@andes/icons/scss/andes-icons';
 // Plex
