@@ -93,7 +93,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         public cie10Service: Cie10Service,
         private organizacionService: OrganizacionService,
         private servicioPrestacion: PrestacionesService,
-        private mapaCamasService: MapaCamasService,
+        public mapaCamasService: MapaCamasService,
         public procedimientosQuirurgicosService: ProcedimientosQuirurgicosService,
         private listadoInternacionService: ListadoInternacionService
     ) {

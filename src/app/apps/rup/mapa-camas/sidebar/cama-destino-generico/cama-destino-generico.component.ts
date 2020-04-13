@@ -30,7 +30,7 @@ export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
 
     constructor(
         private plex: Plex,
-        private mapaCamasService: MapaCamasService
+        public mapaCamasService: MapaCamasService
     ) {
 
     }
