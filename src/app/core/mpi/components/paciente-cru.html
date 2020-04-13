@@ -319,8 +319,9 @@
                      (click)="deshacerValidacion()"></plex-button>
         <plex-button [disabled]="disableGuardar" class="pr-1" label="Guardar" type="success" position="right"
                      [validateForm]="formulario" (click)="save($event,false)"></plex-button>
-        <plex-button *ngIf="enableIgnorarGuardar" label="Ignorar y Guardar" type="warning" position="right"
-                     [validateForm]="formulario" (click)="save($event,true)"></plex-button>
+        <plex-button [disabled]="!enableIgnorarGuardar" *ngIf="enableIgnorarGuardar" label="Ignorar y Guardar"
+                     type="warning" position="right" [validateForm]="formulario" (click)="save($event,true)">
+        </plex-button>
 
     </plex-layout-footer>
 

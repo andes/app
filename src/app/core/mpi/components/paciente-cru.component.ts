@@ -560,6 +560,10 @@ export class PacienteCruComponent implements OnInit {
             this.plex.info('warning', 'Existen relaciones sin parentezco. Completelas antes de guardar', 'Atención');
         } else {
             this.disableGuardar = true;
+            if (ignoreCheck) {
+                this.enableIgnorarGuardar = false;
+            }
+
             let pacienteGuardar: any = Object.assign({}, this.pacienteModel);
             pacienteGuardar.ignoreCheck = ignoreCheck;
             pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
