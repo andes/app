@@ -119,13 +119,13 @@ export class PrestacionValidacionComponent implements OnInit {
     ngOnInit() {
         // consultamos desde que pagina se ingreso para poder volver a la misma
         this.btnVolver = 'Volver';
-        this.rutaVolver =
-            this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
-                if (resp) {
-                    this.btnVolver = resp.nombre;
-                    this.rutaVolver = resp.ruta;
-                }
-            });
+
+        this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
+            if (resp) {
+                this.btnVolver = resp.nombre;
+                this.rutaVolver = resp.ruta;
+            }
+        });
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
         if (this.auth.getPermissions('rup:?').length <= 0) {
             this.redirect('inicio');
@@ -454,6 +454,7 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     volverInicio(ambito = 'ambulatorio', ruta = null) {
+        debugger;
         let mensaje = ambito === 'ambulatorio' ? 'Punto de Inicio' : 'Mapa de Camas';
         let ruteo;
         if (ambito === 'ambulatorio') {
@@ -463,7 +464,7 @@ export class PrestacionValidacionComponent implements OnInit {
             if (ruta) {
                 ruteo = ruta;
             } else {
-                ruteo = '/internacion/camas';
+                ruteo = '/internacion/mapa-camas';
             }
         }
         this.router.navigate([ruteo]);

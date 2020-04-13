@@ -54,7 +54,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
         this.permisoEgreso = this.auth.check('internacion:egreso');
         this.subscription = combineLatest(
             this.mapaCamasService.capa2,
-            this.mapaCamasService.prestacion$.pipe(notNull()),
+            this.mapaCamasService.prestacion$,
         ).subscribe(([capa, prestacion]) => {
             if (capa !== 'estadistica') {
                 this.items = [
@@ -64,6 +64,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
                 this.mostrar = 'movimientos';
                 return;
             }
+            if (!prestacion) { return; }
             this.items = [
                 { key: 'ingreso', label: 'INGRESO' },
                 { key: 'movimientos', label: 'MOVIMIENTOS' },

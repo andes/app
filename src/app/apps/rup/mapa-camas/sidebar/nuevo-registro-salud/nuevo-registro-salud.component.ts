@@ -53,7 +53,7 @@ export class NuevoRegistroSaludComponent implements OnInit {
                     );
                 })
             ).subscribe((prestacion) => {
-                this.prestacionService.notificaRuta({ nombre: 'Mapa de Camas', ruta: 'internacion/mapa-camas' });
+                this.prestacionService.notificaRuta({ nombre: 'Mapa de Camas', ruta: '/internacion/mapa-camas' });
                 this.router.navigate(['rup/ejecucion', prestacion.id]);
             });
         }
