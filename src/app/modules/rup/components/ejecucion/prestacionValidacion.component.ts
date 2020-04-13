@@ -454,7 +454,6 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     volverInicio(ambito = 'ambulatorio', ruta = null) {
-        debugger;
         let mensaje = ambito === 'ambulatorio' ? 'Punto de Inicio' : 'Mapa de Camas';
         let ruteo;
         if (ambito === 'ambulatorio') {

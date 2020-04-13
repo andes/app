@@ -5,7 +5,6 @@ import * as moment from 'moment';
 // pure: false - Info: https://stackoverflow.com/questions/34456430/ngfor-doesnt-update-data-with-pipe-in-angular2
 export class EdadPipe implements PipeTransform {
     transform(value: any, args: string[]): any {
-        // debugger;
         let edad: any;
         let fechaNac: any;
         let fechaActual: Date = new Date();
