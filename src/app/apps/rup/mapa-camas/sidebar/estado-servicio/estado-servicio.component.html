@@ -1,13 +1,15 @@
-<plex-title justify titulo="ESTADO DEL SERVICIO">
+<plex-title justify titulo="ESTADO">
     <ng-container *ngIf="fechaActual$ | async as fechaActual">
         <ng-container *ngIf="fecha$ | async as fecha">
             <plex-badge type="info" size="sm">{{fecha | date: 'dd/MM/yyyy'}} | {{fecha | date: 'HH:mm'}}
+                <plex-datetime title="Cambiar Fecha" titlePosition="left" btnOnly="true" size="sm" type="datetime"
+                               [(ngModel)]="fecha" (change)="setFecha(fecha)" name="fecha" class="d-inline-block"
+                               [max]="fechaActual">
+                </plex-datetime>
             </plex-badge>
-            <plex-datetime title="Cambiar Fecha" btnOnly="true" size="sm" type="datetime" [(ngModel)]="fecha" (change)="setFecha(fecha)" name="fecha"
-                        class="d-inline-block" [max]="fechaActual">
-            </plex-datetime>
-            <plex-button class="ml-1" title="{{ (fechaActual === fecha) ? 'Está en el presente' : 'Saltar al presente' }}" icon="skip-forward" type="warning" 
-                        size="sm" (click)="setFecha(fechaActual)" [disabled]="(fechaActual === fecha)">
+            <plex-button class="ml-1" title="{{ (fechaActual === fecha) ? null : 'Saltar al presente' }}"
+                         titlePosition="left" icon="skip-forward" type="warning" size="sm"
+                         (click)="setFecha(fechaActual)" [disabled]="(fechaActual === fecha)">
             </plex-button>
         </ng-container>
     </ng-container>
