@@ -2,11 +2,13 @@
     <plex-layout-main>
         <form #formCama="ngForm">
             <plex-title titulo="DATOS DE CAMA">
-                <plex-button label="GUARDAR" type="success" [validateForm]="formCama" (click)="save($event)">
+                <plex-button label="GUARDAR" type="success" [validateForm]="formCama" (click)="save($event)"
+                             [disabled]="disabled">
                 </plex-button>
                 <plex-button *ngIf="permisoBaja && cama?.idCama"
-                             title="{{ (verificarBaja()) ? null : 'Cama utilizada' }}" [disabled]="!verificarBaja()"
-                             label="INACTIVAR CAMA" type="warning" (click)="darBaja()">
+                             title="{{ (verificarBaja()) ? null : 'Cama utilizada' }}"
+                             [disabled]="!verificarBaja() || disabled" label="INACTIVAR CAMA" type="warning"
+                             (click)="darBaja()">
                 </plex-button>
                 <plex-button label="CANCELAR" type="danger" (click)="volver()"></plex-button>
             </plex-title>

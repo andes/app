@@ -20,6 +20,8 @@ import { cache } from '@andes/shared';
 })
 
 export class CamaMainComponent implements OnInit {
+    public disabled = false;
+
     public expr = SnomedExpression;
 
     public fecha;
@@ -145,7 +147,9 @@ export class CamaMainComponent implements OnInit {
     save(valid) {
         if (!valid.formValid) {
             this.plex.info('danger', 'Reviso los datos ingresados');
+            return;
         }
+        this.disabled = true;
         if (this.cama) {
             const fecha = moment().toDate();
             const datosCama = {
@@ -159,9 +163,11 @@ export class CamaMainComponent implements OnInit {
             ).subscribe(
                 () => null,
                 (err) => {
+                    this.disabled = false;
                     this.plex.info('warning', 'ERROR: Ocurrio un problema al guardar la cama');
                 },
                 () => {
+                    this.disabled = false;
                     this.plex.info('success', 'La cama fue guardada', 'Cama guardada!');
                     this.router.navigate(['/internacion/mapa-camas']);
                 }
@@ -172,8 +178,12 @@ export class CamaMainComponent implements OnInit {
                 esMovimiento: true
             };
             this.guardarCambios(dtoCama, null, this.fecha).subscribe(() => {
+                this.disabled = false;
                 this.plex.info('success', 'La cama fue guardada', 'Cama guardada!');
                 this.router.navigate(['/internacion/mapa-camas']);
+            }, () => {
+                this.plex.info('warning', 'ERROR: Ocurrio un problema al guardar la cama');
+                this.disabled = false;
             });
         }
 
@@ -187,6 +197,7 @@ export class CamaMainComponent implements OnInit {
         const tituloModal = '¿Desea dar de baja?';
         this.plex.confirm(textoModal, tituloModal).then(confirmacion => {
             if (confirmacion) {
+                this.disabled = true;
                 const datosCama = {
                     _id: this.cama.idCama,
                     estado: 'inactiva',
@@ -199,9 +210,11 @@ export class CamaMainComponent implements OnInit {
                 ).subscribe(
                     () => null,
                     (err) => {
+                        this.disabled = false;
                         this.plex.info('warning', 'ERROR: Ocurrio un problema al guardar la cama');
                     },
                     () => {
+                        this.disabled = false;
                         this.plex.info('success', 'La cama fue dada de baja', 'Baja exitosa!');
                         this.router.navigate(['/internacion/mapa-camas']);
                     }
