@@ -4,7 +4,7 @@
         <ul class="list-group">
             <ng-container *ngFor="let carpeta of carpetaEfectores">
                 <li *ngIf="carpeta.nroCarpeta && carpeta.nroCarpeta!=''" [ngClass]="{ 'fondoNegro' : idOrganizacion === carpeta.organizacion._id }"
-                    class="list-group-item">
+                    class="list-group-item" style="background: transparent !important;">
                     <div class="row">
                         <div class="col-11">
                             {{carpeta.organizacion.nombre}} | {{carpeta.nroCarpeta}}
