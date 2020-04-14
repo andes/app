@@ -60,7 +60,6 @@ export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
                 if (this.selectedCama.estado === 'bloqueada') {
                     this.selectedCama.observaciones = '';
                 }
-
                 // Se modifica el estado de la cama
                 this.selectedCama.estado = this.destino;
                 this.selectedCama.observaciones = ((typeof this.selectedCama.observaciones === 'string')) ? this.selectedCama.observaciones : (Object(this.selectedCama.observaciones).nombre);

@@ -53,7 +53,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
     public get origenExterno() {
         return this.informeIngreso && this.informeIngreso.origen && this.informeIngreso.origen.id === 'traslado';
     }
-
+    public check = false;
     public informeIngreso = {
         fechaIngreso: new Date(),
         horaNacimiento: new Date(),
@@ -93,6 +93,15 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         if (this.subscription2) {
             this.subscription2.unsubscribe();
         }
+    }
+
+    onchange(event) {
+        if (event.value) {
+            this.informeIngreso.organizacionOrigen = null;
+        } else {
+            this.check = false;
+        }
+
     }
 
     ngOnInit() {

@@ -101,31 +101,6 @@
                                 </plex-select>
                             </div>
                         </div>
-                        <div class="row" *ngIf="workflowC && !camaSelected">
-                            <div class="col-md">
-                                <plex-select name="unidadOrganizativa" [data]="listaUnidadesOrganizativas"
-                                             idField="term" labelField="term"
-                                             [(ngModel)]="informeIngreso.PaseAunidadOrganizativa"
-                                             label="Unidad organizativa"
-                                             (change)="selectCamasDisponibles(informeIngreso.PaseAunidadOrganizativa, fecha, hora)">
-                                </plex-select>
-                            </div>
-                        </div>
-                        <div class="row" *ngIf="workflowC && !camaSelected && informeIngreso.PaseAunidadOrganizativa">
-                            <div class="col-md" *ngIf="listadoCamas && listadoCamas.length > 0">
-                                <plex-select name="camasDisponibles" [data]="listadoCamas" idField="nombre"
-                                             labelField="nombre" [(ngModel)]="cama" label="Camas">
-                                </plex-select>
-                            </div>
-                            <div class="col-md" *ngIf="listadoCamas && listadoCamas.length  === 0">
-                                <h6>
-                                    <strong>
-                                        No hay camas disponibles para esta unidad organizativa. El paciente
-                                        ingresará a
-                                        lista de espera. </strong>
-                                </h6>
-                            </div>
-                        </div>
                     </ng-container>
                 </fieldset>
                 <ng-container *ngIf="capa === 'estadistica'">
