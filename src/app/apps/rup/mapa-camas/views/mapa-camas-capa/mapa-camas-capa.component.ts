@@ -105,7 +105,9 @@ export class MapaCamasCapaComponent implements OnInit {
             fecha = this.fecha;
         }
 
-        this.camas = this.mapaCamasService.snapshotFiltrado$;
+        this.camas = this.mapaCamasService.snapshotFiltrado$.pipe(
+            map(snapshots => snapshots.filter(snap => snap.estado !== 'inactiva'))
+        );
     }
 
     agregarCama() {
