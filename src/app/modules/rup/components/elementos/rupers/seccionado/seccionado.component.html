@@ -10,7 +10,7 @@
             <plex-panel [class.alerta-campo]="!rupInstance.isValid" [active]="isActive(i)"
                         (toggle)="accordionSeleccionado(i, item.concepto)" class="hover">
                 <div plex-accordion-title justify>
-                    <span class="contenedor-icono">
+                    <span class="contenedor-icono" *ngIf="item.params.icon">
                         <plex-icon [prefix]="iconPrefix(item.params.icon)" [name]="iconName(item.params.icon)">
                         </plex-icon>
                     </span>
@@ -49,8 +49,11 @@
                 <div
                      class="rup-card rup-clear {{ (item.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(item.concepto) }}">
                     <div class="titulo d-flex align-items-start">
-                        <i class="icon {{ item.params.icon }} mr-2"></i>
-                        <strong> {{ item.params.titulo }}</strong>
+                        <ng-container *ngIf="item.params.icon">
+                            <plex-icon [prefix]="iconPrefix(item.params.icon)" [name]="iconName(item.params.icon)">
+                            </plex-icon>
+                        </ng-container>
+                        <strong> {{ item.concepto.term }}</strong>
                     </div>
                     <div class="contenedor-conceptos ml-3 pl-3">
                         <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
