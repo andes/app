@@ -221,6 +221,8 @@ const appRoutes: Routes = [
     // Turnero
     { path: 'pantallas', loadChildren: './apps/turnero/turnero.module#TurneroModule', canActivate: [RoutingNavBar, RoutingGuard] },
 
+    { path: 'internacion', loadChildren: './apps/rup/mapa-camas/mapa-camas.module#MapaCamasModule', canActivate: [RoutingNavBar, RoutingGuard] },
+
     // dejar siempre al último porque no encuentra las url después de esta
     { path: '**', redirectTo: 'inicio' }
 ];

@@ -13,7 +13,7 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { ObraSocialService } from './../../../../services/obraSocial.service';
-import { SnomedService } from '../../../../services/term/snomed.service';
+import { SnomedService } from '../../../../apps/mitos';
 import { RUPComponent } from '../core/rup.component';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { SnomedBuscarService } from '../../../../components/snomed/snomed-buscar.service';
@@ -977,7 +977,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                     ruteo = ruta;
                 } else {
                     mensaje = 'Mapa de Camas';
-                    ruteo = '/internacion/camas';
+                    ruteo = '/internacion/mapa-camas';
                 }
                 break;
             default:

@@ -1,0 +1,36 @@
+<form #formGenerico="ngForm">
+    <plex-title [titulo]="titulo">
+        <plex-button title="Guardar" icon="check" type="success" size="sm" [validateForm]="formGenerico"
+                     (click)="guardar($event)">
+        </plex-button>
+        <ng-content></ng-content>
+    </plex-title>
+    <fieldset>
+        <div class="row">
+            <div class="col-md">
+                <label><strong>Cama:</strong></label>
+                <p>{{ selectedCama.nombre }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md">
+                <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" [min]="selectedCama.fecha"
+                               [max]="mapaCamasService.fechaActual$ | async" name="fechaIngreso" label="Fecha"
+                               (change)="setFecha()" [debounce]="600">
+                </plex-datetime>
+            </div>
+        </div>
+        <ng-container *ngFor="let param of relacion.parametros">
+            <div class="row">
+                <div class="col-md">
+                    <plex-select *ngIf="param.options" name="opcionGenerica" [required]="true" [data]="param.options"
+                                 idField='nombre' labelField="nombre" [(ngModel)]="selectedCama.observaciones"
+                                 label="{{ param.label }}">
+                    </plex-select>
+                    <plex-text *ngIf="!param.options" label="{{ param.label }}" name="accionGenerica"
+                               [(ngModel)]="selectedCama.observaciones" [required]="true"></plex-text>
+                </div>
+            </div>
+        </ng-container>
+    </fieldset>
+</form>

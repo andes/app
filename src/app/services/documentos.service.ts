@@ -78,7 +78,7 @@ export class DocumentosService {
             'Authorization': window.sessionStorage.getItem('jwt') ? 'JWT ' + window.sessionStorage.getItem('jwt') : null
         });
 
-        let options: any = { headers: headers, responseType: 'blob' };
-        return this.http.post(this.pdfURL + '/internaciones/Csv', params, options);
+        let options: any = { headers: headers, responseType: 'blob', params };
+        return this.http.get(`${environment.API}/bi/queries/listado-internacion/csv`, options);
     }
 }

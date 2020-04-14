@@ -7,7 +7,7 @@ import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
 import { IPrestacionGetParams } from '../interfaces/prestacionGetParams.interface';
-import { SnomedService } from '../../../services/term/snomed.service';
+import { SnomedService } from '../../../apps/mitos';
 import { ReglaService } from '../../../services/top/reglas.service';
 import { HUDSService } from '../services/huds.service';
 

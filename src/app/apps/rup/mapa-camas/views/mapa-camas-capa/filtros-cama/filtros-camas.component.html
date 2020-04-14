@@ -1,0 +1,26 @@
+<plex-wrapper>
+    <plex-text type="text" [(ngModel)]="filtro.paciente" (change)="filtrar()" label="Paciente" debounce="400">
+    </plex-text>
+    <plex-select label="Unidad Organizativa" [(ngModel)]="filtro.unidadOrganizativa" idField="conceptId"
+                 labelField="term" [data]="unidadOrganizativaList$ | async" (change)="filtrar()">
+    </plex-select>
+
+    <plex-select label="Sector" [(ngModel)]="filtro.sector" idField="nombre" labelField="nombre"
+                 [data]="sectorList$ | async" (change)="filtrar()">
+    </plex-select>
+
+    <plex-select label="Estado" [(ngModel)]="filtro.estado" idField="estado" labelField="estado"
+                 [data]="estadoList$ | async" (change)="filtrar()">
+    </plex-select>
+
+    <div collapse>
+        <plex-select label="Tipo de Cama" [(ngModel)]="filtro.tipoCama" idField="conceptId" labelField="term"
+                     (change)="filtrar()" [data]="tipoCamaList$ | async">
+        </plex-select>
+        <plex-select label="Censable" [(ngModel)]="filtro.censable" (change)="filtrar()" [data]="censables">
+        </plex-select>
+        <plex-select label="Equipamiento" [(ngModel)]="filtro.equipamiento" idField="conceptId" labelField="term"
+                     (change)="filtrar()" [data]="equipamientoList$ | async" multiple="true" grow="3">
+        </plex-select>
+    </div>
+</plex-wrapper>

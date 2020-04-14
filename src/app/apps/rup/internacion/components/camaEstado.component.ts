@@ -2,7 +2,7 @@ import { HostBinding, Component, OnInit, Input } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CamasService } from '../services/camas.service';
-import { SnomedService } from '../../../../services/term/snomed.service';
+import { SnomedService } from '../../../mitos';
 
 @Component({
     selector: 'cama-estado',

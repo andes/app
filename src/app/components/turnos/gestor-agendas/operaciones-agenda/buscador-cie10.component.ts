@@ -6,7 +6,7 @@ import {
 import { Subscription } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Cie10Service } from '../../../../services/term/cie10.service';
+import { Cie10Service } from '../../../../apps/mitos';
 
 @Component({
     selector: 'buscador-cie10',

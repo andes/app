@@ -8,7 +8,7 @@ import { PrestacionesService } from '../../../../modules/rup/services/prestacion
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { ObraSocialService } from '../../../../services/obraSocial.service';
 import { OcupacionService } from '../../../../services/ocupacion/ocupacion.service';
-import { SnomedService } from '../../../../services/term/snomed.service';
+import { SnomedService } from '../../../mitos';
 import { ProfesionalService } from '../../../../services/profesional.service';
 import { InternacionService } from '../services/internacion.service';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';

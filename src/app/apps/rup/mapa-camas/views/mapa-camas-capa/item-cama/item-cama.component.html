@@ -1,0 +1,47 @@
+<ng-container *ngIf="cama">
+    <td>
+        <span class="d-block">
+            <strong>
+                {{cama.nombre}}
+            </strong>
+        </span>
+        <span class="d-block">
+            {{ sectorCama }}
+        </span>
+    </td>
+    <td>
+        <span *ngIf="!cama.paciente" class="d-block">
+            Sin paciente
+        </span>
+        <span *ngIf="cama.paciente" class="d-block">
+            {{cama.paciente.apellido}},
+            {{cama.paciente.nombre}}
+        </span>
+        <span class="d-block"></span>
+    </td>
+    <td>
+        <span *ngIf="cama.unidadOrganizativa" class="d-block">
+            {{cama.unidadOrganizativa.term}}
+        </span>
+        <span class="d-block"></span>
+    </td>
+    <td justify>
+        <ng-container *ngIf="estadoCama$ | async as estadoCama">
+            <plex-badge [type]="estadoCama.color">
+                {{estadoCama.label}}
+            </plex-badge>
+            <span class="d-block"></span>
+        </ng-container>
+    </td>
+    <td>
+        <ng-container *ngFor="let relacion of relacionesPosibles$ | async">
+            <ng-container *ngIf="(relacion.accion !== 'internarPaciente') || (relacion.accion === 'internarPaciente' && permisoIngreso)">
+                <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color" size="sm"
+                             (click)="accion(relacion, $event)">
+                </plex-button>
+            </ng-container>
+        </ng-container>
+        <plex-button title="Editar Cama" icon="pencil" type="warning" size="sm" (click)="goTo()">
+        </plex-button>
+    </td>
+</ng-container>

@@ -1,0 +1,16 @@
+<form #formCambiarCama="ngForm">
+    <plex-title justify titulo="{{ (cambiarUO) ? 'Cambiar Unidad Organizativa' : 'Cambiar cama' }}">
+        <plex-button title="guardar" icon="check" type="success" size="sm" [validateForm]="formCambiarCama"
+                     (click)="guardar($event)">
+        </plex-button>
+        <ng-content></ng-content>
+    </plex-title>
+    <fieldset>
+        <ng-container *ngIf="camasDisponibles$ | async as camasDisponibles">
+            <plex-select [required]="true" [(ngModel)]="nuevaCama" name="cama"
+                         [data]="(cambiarUO) ? camasDisponibles.camasDistintaUO : camasDisponibles.camasMismaUO"
+                         placeholder="Elija cama" label="Cama" idField="idCama" labelField="nombre">
+            </plex-select>
+        </ng-container>
+    </fieldset>
+</form>

@@ -108,12 +108,6 @@ import { SIISAService } from './services/siisa.service';
 // ... Usuarios
 import { UsuarioService } from './services/usuarios/usuario.service';
 
-// ... term
-import { Cie10Service } from './services/term/cie10.service';
-
-// SNOMED
-import { SnomedService } from './services/term/snomed.service';
-
 // ... Llaves
 import { LlavesTipoPrestacionService } from './services/llaves/llavesTipoPrestacion.service';
 
@@ -154,7 +148,7 @@ import { CamasListadoComponent } from './apps/rup/internacion/components/camasLi
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion/tipoPrestacion-create-update.component';
 import { ProcedimientosQuirurgicosService } from './services/procedimientosQuirurgicos.service';
-import { SectoresItemComponent } from './components/organizacion/sectores-item/sectores-item.component';
+
 // ... MPI
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
 import { DashboardComponent } from './components/paciente/dashboard.component';
@@ -354,6 +348,8 @@ import { CamaEstadoComponent } from './apps/rup/internacion/components/camaEstad
 import { OrganizacionSectoresComponent } from './components/organizacion/organizacion-sectores.component';
 import { OrganizacionOfertaPrestacionalComponent } from './components/organizacion/organizacion-prestaciones.component';
 
+// MAPA CAMAS
+
 
 // Solicitudes
 import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.component';
@@ -530,7 +526,9 @@ import { SelectProfesionalesDirective } from './directives/profesionales-select.
 import { SelectPrestacionesDirective } from './directives/prestaciones-select.directive';
 import { SelectFinanciadorDirective } from './directives/financiador-select-directive';
 
+import { MitosModule } from './apps/mitos';
 import { MPILibModule } from './modules/mpi/mpi-lib.module';
+import { OrganizacionLibModule } from './components/organizacion/organizacion-lib.module';
 import { SelectProfesionalComponent } from './modules/rup/components/elementos/rupers/select-profesional.component';
 import { SelectOrganizacionComponent } from './modules/rup/components/elementos/rupers/select-organizacion.component';
 import { ConceptosTurneablesService } from './services/conceptos-turneables.service';
@@ -555,13 +553,15 @@ registerLocaleData(localeEs, 'es');
         TurneroProvidersModule,
         NgDragDropModule.forRoot(),
         ChartsModule,
+        MitosModule.forRoot(),
         routing,
         AgmCoreModule.forRoot({
             apiKey: environment.MAPS_KEY
         }),
         InfiniteScrollModule,
         GestorUsuariosProvidersModule,
-        MPILibModule
+        MPILibModule,
+        OrganizacionLibModule
     ],
     declarations: [
         AppComponent, InicioComponent,
@@ -656,13 +656,13 @@ registerLocaleData(localeEs, 'es');
         DesocuparCamaComponent,
         OrganizacionSectoresComponent,
         OrganizacionOfertaPrestacionalComponent,
-        SectoresItemComponent,
         PucoComponent,
         ReglasComponent,
         ListaReglasComponent,
         VisualizacionReglasTopComponent,
         VisualizacionReglasComponent,
         VistaSolicitudTopComponent,
+
         // MPI
         BebeCruComponent,
         ExtranjeroNNCruComponent,
@@ -750,8 +750,6 @@ registerLocaleData(localeEs, 'es');
         AuditoriaPorBloqueService,
         AuditoriaService,
         AuditoriaPrestacionPacienteService,
-        SnomedService,
-        Cie10Service,
         SisaService,
         SintysService,
         AnsesService,

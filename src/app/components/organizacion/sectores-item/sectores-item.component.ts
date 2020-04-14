@@ -1,4 +1,4 @@
-import { SnomedService } from '../../../services/term/snomed.service';
+import { SnomedService } from '../../../apps/mitos';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import { ISectores } from '../../../interfaces/IOrganizacion';
@@ -35,7 +35,7 @@ export class SectoresItemComponent implements OnInit {
      * Devuelve el conjunto de clases a aplicar a la card. Según el tipo de elemento seleccionado.
      */
     getClass() {
-        let c =  {
+        let c = {
             selected: this.selected === this.root,
         };
         c[this.root.tipoSector.term.replace(' ', '-').replace('ó', 'o').toLocaleLowerCase()] = true;
@@ -43,7 +43,6 @@ export class SectoresItemComponent implements OnInit {
     }
 
     ngOnInit() {
-
     }
 
     /**
@@ -100,7 +99,7 @@ export class SectoresItemComponent implements OnInit {
      * @param
      */
 
-    onRemoveClick () {
+    onRemoveClick() {
         this.onRemove.emit(this.root);
     }
 
@@ -109,7 +108,7 @@ export class SectoresItemComponent implements OnInit {
      * @param
      */
 
-    onEditClick () {
+    onEditClick() {
         this.onEdit.emit(this.root);
     }
 
@@ -118,7 +117,7 @@ export class SectoresItemComponent implements OnInit {
      * @param
      */
 
-    onCollapseClick () {
+    onCollapseClick() {
         this.hidden = !this.hidden;
     }
 
@@ -127,7 +126,7 @@ export class SectoresItemComponent implements OnInit {
 
     }
 
-    onUnidadChange () {
+    onUnidadChange() {
     }
 
     /**

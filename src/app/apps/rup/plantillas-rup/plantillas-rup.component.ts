@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { PlantillasService } from '../../../modules/rup/services/plantillas.service';
 import { ISnomedConcept } from '../../../modules/rup/interfaces/snomed-concept.interface';
-import { SnomedService } from '../../../services/term/snomed.service';
+import { SnomedService } from '../../mitos';
 import { Unsubscribe } from '@andes/shared';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';

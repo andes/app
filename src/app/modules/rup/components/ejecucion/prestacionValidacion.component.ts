@@ -1,5 +1,5 @@
 import { AgendaService } from './../../../../services/turnos/agenda.service';
-import { SnomedService } from './../../../../services/term/snomed.service';
+import { SnomedService } from '../../../../apps/mitos';
 import { Component, OnInit, Output, EventEmitter, HostBinding, ViewEncapsulation } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
@@ -119,13 +119,13 @@ export class PrestacionValidacionComponent implements OnInit {
     ngOnInit() {
         // consultamos desde que pagina se ingreso para poder volver a la misma
         this.btnVolver = 'Volver';
-        this.rutaVolver =
-            this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
-                if (resp) {
-                    this.btnVolver = resp.nombre;
-                    this.rutaVolver = resp.ruta;
-                }
-            });
+
+        this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
+            if (resp) {
+                this.btnVolver = resp.nombre;
+                this.rutaVolver = resp.ruta;
+            }
+        });
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
         if (this.auth.getPermissions('rup:?').length <= 0) {
             this.redirect('inicio');
@@ -463,7 +463,7 @@ export class PrestacionValidacionComponent implements OnInit {
             if (ruta) {
                 ruteo = ruta;
             } else {
-                ruteo = '/internacion/camas';
+                ruteo = '/internacion/mapa-camas';
             }
         }
         this.router.navigate([ruteo]);

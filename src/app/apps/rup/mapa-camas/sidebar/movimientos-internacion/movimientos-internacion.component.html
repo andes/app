@@ -1,0 +1,62 @@
+<plex-title titulo="Movimientos de Internación">
+    <ng-content></ng-content>
+</plex-title>
+<div class="row mb-1">
+    <div class="col">
+        <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" (change)="onChange()" [max]="hasta"
+                       [debounce]="600">
+        </plex-datetime>
+    </div>
+    <div class="col">
+        <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" (change)="onChange()" [min]="desde"
+                       [debounce]="600">
+        </plex-datetime>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                <small class="font-weight-bold">
+                    FECHA
+                </small>
+            </th>
+            <th>
+                <small class="font-weight-bold">
+                    CAMA
+                </small>
+            </th>
+            <th>
+                <small class="font-weight-bold">
+                    UNIDAD ORGANIZATIVA
+                </small>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let movimiento of historial$ | async">
+            <td>
+                <small>
+                    {{ movimiento.fecha | fecha }}
+                    {{ movimiento.fecha | hora }}
+                </small>
+            </td>
+            <td>
+                <small>
+                    <ng-container *ngIf="!movimiento.idInternacion">
+                        EGRESO
+                    </ng-container>
+                    <ng-container *ngIf="movimiento.idInternacion">
+                        {{ movimiento.nombre }}
+                    </ng-container>
+                </small>
+            </td>
+            <td>
+                <small>
+                    {{ movimiento.unidadOrganizativa.term }}
+                </small>
+            </td>
+        </tr>
+    </tbody>
+</table>

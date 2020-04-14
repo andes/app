@@ -12,6 +12,13 @@ import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 })
 
 export class CarpetaPacienteComponent implements OnInit {
+
+    /**
+     * Este flag esta agregado para mantener compatibilidad con todos
+     * PERO debería desaparecer cuando las componentes que usan <carpeta-paciente> se adapten.
+     */
+    @Input() emitOnNew = false;
+
     @Input() turnoSeleccionado: ITurno;
     @Input() pacienteSeleccionado: IPaciente;
     @Output() guardarCarpetaEmit = new EventEmitter<any>();
@@ -88,6 +95,11 @@ export class CarpetaPacienteComponent implements OnInit {
                         this.nroCarpetaOriginal = this.carpetaPaciente.nroCarpeta;
                         this.carpetaEfectores.push(this.carpetaPaciente);
                         this.indiceCarpeta = this.carpetaEfectores.length - 1;
+                        // Cuando se encontro una carpeta de la coleccion y no se inpacto en el paciente notifico como si fuese un cambio
+                        if (this.emitOnNew) {
+                            // Debería Guardar la carpeta en paciente. Queda para revisar.
+                            this.guardarCarpetaEmit.emit([carpetaE]);
+                        }
                     }
                     if (!this.carpetaPaciente || this.carpetaPaciente.nroCarpeta === '') {
                         this.showNuevaCarpeta = true;

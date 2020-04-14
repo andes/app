@@ -1,0 +1,59 @@
+<plex-title titulo="Historial de movimientos"></plex-title>
+
+<div class="row mb-1">
+    <div class="col">
+        <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" [debounce]="600"
+                       (change)="onChange($event)">
+        </plex-datetime>
+    </div>
+    <div class="col">
+        <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" [debounce]="600"
+                       (change)="onChange($event)">
+        </plex-datetime>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th><small class="font-weight-bold">Fecha</small></th>
+            <th><small class="font-weight-bold">Paciente</small></th>
+            <th><small class="font-weight-bold">U. Org.</small></th>
+            <th><small class="font-weight-bold">Estado</small></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of historial$ | async">
+            <td>
+                <small>
+                    {{ item.fecha | fecha }}
+                    {{ item.fecha | hora }} hs
+                </small>
+            </td>
+            <td *ngIf="item.paciente; else sinPaciente">
+                <small>
+                    {{ item.paciente | nombre }}
+                </small>
+            </td>
+            <ng-template #sinPaciente>
+                <td class="text-danger">
+                    <small>
+                        SIN PACIENTE
+                    </small>
+                </td>
+            </ng-template>
+            <td>
+                <small class="text-capitalize">
+                    {{ item.unidadOrganizativa.term }}
+                </small>
+            </td>
+            <td>
+                <ng-container *ngIf="getEstado(item) | async as estadoCama">
+                    <plex-badge [type]="estadoCama.color" size="sm">
+                        {{ estadoCama.label }}
+                    </plex-badge>
+                </ng-container>
+            </td>
+        </tr>
+    </tbody>
+</table>

@@ -1,0 +1,57 @@
+$total: #5DBCD2;
+$disponible: #8AC73C;
+$ocupada: #FF8D22;
+$bloqueada: rgb(148, 148, 148);
+$inactiva: #DD524D;
+$reparacion: white;
+
+.subcontainer-resumen {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    &.total {
+        color: $total;
+    }
+
+    &.ocupada {
+        color: $ocupada;
+    }
+
+    &.disponible {
+        color: $disponible;
+    }
+
+    &.bloqueada {
+        color: $bloqueada;
+    }
+
+    &.inactiva {
+        color: $inactiva;
+    }
+
+    &.reparacion {
+        color: rgb(204, 204, 204);
+    }
+
+    i {
+        font-size: 95px !important;
+    }
+
+    .texto-resumen {
+        width: 100px;
+        margin-top: 2%;
+
+        p.numero {
+            font-size: 50px;
+            font-weight: bold;
+            margin: 0px !important;
+        }
+
+        p.texto {
+            color: rgb(204, 204, 204);
+            font-size: 14px;
+            padding-right: 30%;
+        }
+    }
+}

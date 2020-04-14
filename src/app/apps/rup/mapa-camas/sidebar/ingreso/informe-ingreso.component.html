@@ -1,0 +1,68 @@
+<ng-container *ngIf="prestacion$ | async as prestacion">
+    <plex-title titulo="INGRESO">
+        <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'">
+            <ng-content></ng-content>
+        </ng-container>
+    </plex-title>
+    <ng-container *ngIf="informeIngreso$ | async as informeIngreso">
+        <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal">
+            <plex-label *ngIf="informeIngreso.situacionLaboral" titulo="Situacion Laboral"
+                        [subtitulo]="informeIngreso.situacionLaboral">
+            </plex-label>
+            <plex-label *ngIf="informeIngreso.nivelInstruccion" titulo="Nivel de Instruccion"
+                        [subtitulo]="informeIngreso.nivelInstruccion">
+            </plex-label>
+            <plex-label *ngIf="informeIngreso.ocupacionHabitual" titulo="Ocupacion Habitual"
+                        [subtitulo]="informeIngreso.ocupacionHabitual?.nombre">
+            </plex-label>
+        </paciente-detalle>
+        <fieldset>
+            <plex-title size="sm" titulo="DATOS DE INTERNACION">
+            </plex-title>
+            <div class="row">
+                <div class="col-6">
+                    <plex-label titulo="Fecha ingreso"
+                                [subtitulo]="informeIngreso.fechaIngreso | date: 'dd/MM/yyyy HH:mm'">
+                    </plex-label>
+                </div>
+                <div class="col-6">
+                    <plex-label titulo="Motivo" [subtitulo]="informeIngreso.motivo">
+                    </plex-label>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-6">
+                    <plex-label titulo="Origen" [subtitulo]="informeIngreso.origen">
+                    </plex-label>
+                </div>
+                <div class="col-6">
+                    <plex-label titulo="Especialidad/es"
+                                subtitulo="{{ informeIngreso.especialidades | enumerar: ['term'] }}">
+                    </plex-label>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-6">
+                    <plex-label titulo="Profesional responsable" subtitulo="{{ informeIngreso.profesional | nombre }}">
+                    </plex-label>
+                </div>
+                <div class="col-6">
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <plex-title size="sm" titulo="COBERTURA">
+            </plex-title>
+            <div class="row">
+                <div class="col-6">
+                    <plex-label titulo="Cobertura" [subtitulo]="informeIngreso.asociado">
+                    </plex-label>
+                </div>
+                <div class="col-6">
+                    <plex-label titulo="Obra social" [subtitulo]="informeIngreso.obraSocial">
+                    </plex-label>
+                </div>
+            </div>
+        </fieldset>
+    </ng-container>
+</ng-container>
