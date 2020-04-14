@@ -219,8 +219,6 @@ export class CamaMainComponent implements OnInit {
                         this.router.navigate(['/internacion/mapa-camas']);
                     }
                 );
-            } else {
-                this.plex.info('warning', 'No se puede dar de baja la cama ya que está siendo utilizada otra capa.', 'Atención!');
             }
         });
     }
