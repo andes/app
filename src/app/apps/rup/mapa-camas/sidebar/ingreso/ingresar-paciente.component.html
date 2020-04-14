@@ -27,7 +27,7 @@
                             <div class="col-md">
                                 <plex-datetime label="Fecha y hora de ingreso" [(ngModel)]="informeIngreso.fechaIngreso"
                                                name=" fechaIngreso" [max]="mapaCamasService.fechaActual$ | async"
-                                               required label="Fecha Ingreso" [debounce]="400" (change)="setFecha()">
+                                               required label="Fecha Ingreso" [debounce]="600" (change)="setFecha()">
                                 </plex-datetime>
                             </div>
                         </div>

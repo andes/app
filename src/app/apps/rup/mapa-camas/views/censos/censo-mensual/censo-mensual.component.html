@@ -5,12 +5,12 @@
             <div class="row">
                 <div class="col-md-3">
                     <plex-datetime type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Desde"
-                                   (change)="resetCenso()">
+                                   (change)="resetCenso()" [debounce]="600">
                     </plex-datetime>
                 </div>
                 <div class="col-md-3">
                     <plex-datetime type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta"
-                                   (change)="resetCenso()">
+                                   (change)="resetCenso()" [debounce]="600">
                     </plex-datetime>
                 </div>
                 <div class="col-md-3" *ngIf="unidadesOranizativas.length > 0">

@@ -11,13 +11,14 @@
 
         <div class="col-2">
             <plex-datetime type="date" (change)="filtrarFecha()" [(ngModel)]="filtros.fechaIngresoDesde"
-                           name="fechaIngresoDesde" label="Desde" [required]="true" [max]="filtros.fechaIngresoHasta">
+                           name="fechaIngresoDesde" label="Desde" [required]="true" [max]="filtros.fechaIngresoHasta"
+                           [debounce]="600">
             </plex-datetime>
         </div>
 
         <div class="col-2">
             <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoHasta" name='fechaIngresoHasta' label="Hasta"
-                           (change)="filtrarFecha()" [min]="filtros.fechaIngresoDesde"></plex-datetime>
+                           (change)="filtrarFecha()" [min]="filtros.fechaIngresoDesde" [debounce]="600"></plex-datetime>
         </div>
         <div class="col-3">
             <plex-select [(ngModel)]="filtros.estado" [data]='estadosInternacion' label="Estado" (change)="filtrar()">

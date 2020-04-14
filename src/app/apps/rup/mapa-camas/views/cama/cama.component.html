@@ -21,7 +21,7 @@
                     </div>
                     <div class="col-4" *ngIf="!cama">
                         <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fechaDisponible"
-                                       label="Disponible desde:">
+                                       label="Disponible desde:" [debounce]="600">
                         </plex-datetime>
                     </div>
                 </div>

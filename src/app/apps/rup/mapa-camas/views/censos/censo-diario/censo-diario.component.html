@@ -4,7 +4,8 @@
         <fieldset>
             <div class="row">
                 <div class="col-md-3">
-                    <plex-datetime type="date" [(ngModel)]="fecha" name="fecha" label="Fecha" (change)="resetCenso()">
+                    <plex-datetime type="date" [(ngModel)]="fecha" name="fecha" label="Fecha" (change)="resetCenso()"
+                                   [debounce]="600">
                     </plex-datetime>
                 </div>
                 <div class="col-md-3" *ngIf="unidadesOranizativas.length > 0">

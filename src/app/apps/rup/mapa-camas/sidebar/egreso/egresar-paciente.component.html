@@ -10,7 +10,8 @@
             <div class="row ">
                 <div class="col">
                     <plex-datetime label="Fecha y hora de egreso" [(ngModel)]="fecha" name="fechaEgreso" required
-                                   label="Fecha Egreso" [max]="mapaCamasService.fechaActual$ | async" [min]="fechaMin" (change)="setFecha()">
+                                   label="Fecha Egreso" [max]="mapaCamasService.fechaActual$ | async" [min]="fechaMin"
+                                   (change)="setFecha()" [debounce]="600">
                     </plex-datetime>
                 </div>
             </div>
@@ -132,7 +133,7 @@
                             <div class="col-6">
                                 <plex-datetime name="fechaTerminacion" label="Fecha terminación" type="date"
                                                [(ngModel)]="registro.valor.InformeEgreso.terminacionEmbarazo"
-                                               [required]="procedimientosObstetricos">
+                                               [required]="procedimientosObstetricos" [debounce]="600">
                                 </plex-datetime>
                             </div>
                             <div class="col-6">
@@ -214,7 +215,7 @@
                     <div class="col-6">
                         <plex-datetime name="fecha-procedimientoQuirurgico-{{i}}" label="Fecha" type="date"
                                        [max]="registro.valor.InformeEgreso.fechaEgreso"
-                                       [(ngModel)]="procedimiento.fecha">
+                                       [(ngModel)]="procedimiento.fecha" [debounce]="600">
                         </plex-datetime>
                     </div>
                 </div>

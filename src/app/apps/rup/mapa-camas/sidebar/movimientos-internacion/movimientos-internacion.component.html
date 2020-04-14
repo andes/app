@@ -3,11 +3,13 @@
 </plex-title>
 <div class="row mb-1">
     <div class="col">
-        <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" (change)="onChange()" [max]="hasta">
+        <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" (change)="onChange()" [max]="hasta"
+                       [debounce]="600">
         </plex-datetime>
     </div>
     <div class="col">
-        <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" (change)="onChange()" [min]="desde">
+        <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" (change)="onChange()" [min]="desde"
+                       [debounce]="600">
         </plex-datetime>
     </div>
 </div>
