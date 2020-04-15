@@ -30,6 +30,15 @@ export class DocumentosService {
         );
     }
 
+    send(url, data): Observable<any> {
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('jwt') ? 'JWT ' + window.sessionStorage.getItem('jwt') : ''
+        });
+        let options: any = { headers: headers };
+        return this.http.post(this.pdfURL + '/send/' + url, data, options);
+    }
+
 
     descargar(data): Observable<any> {
         return this.download('censoMensual', data);
@@ -52,6 +61,10 @@ export class DocumentosService {
                 window.print();
             }
         }));
+    }
+
+    enviarArchivo(datos): Observable<any> {
+        return this.send('pdf', datos);
     }
 
     private handleError(error: any) {

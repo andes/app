@@ -16,9 +16,15 @@
                                          *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)">
                             </plex-button>
                             <ng-container *ngIf="validada && !prestacion.solicitud.tipoPrestacion.noNominalizada">
-                                <plex-button type="warning" icon="download mdi-14px" class="float-right ml-1"
+                                <plex-button type="warning" icon="download mdi-14px" class="ml-1"
                                              title="Descargar Resúmen PDF" titlePosition="top"
                                              (click)="descargarResumen()" [disabled]="!descargaCerrada">
+                                </plex-button>
+                            </ng-container>
+                            <ng-container *ngIf="validada && !prestacion.solicitud.tipoPrestacion.noNominalizada">
+                                <plex-button type="info" icon="email mdi-14px" class="float-right ml-1"
+                                             title="Enviar Resúmen PDF" titlePosition="top" (click)="openModalEmails()"
+                                             [disabled]="!envioCerrado">
                                 </plex-button>
                             </ng-container>
                             <ng-container *ngIf="!validada && !prestacion.solicitud.tipoPrestacion.noNominalizada">
@@ -354,3 +360,5 @@
 <!-- Calendario para dar turnos autocitados -->
 <dar-turnos *ngIf="showDarTurnos && solicitudTurno" (volverValidacion)="turnoDado($event)"
             [pacienteSeleccionado]="paciente" [solicitudPrestacion]="solicitudTurno"></dar-turnos>
+<modal-seleccion-email [show]="showModalEmails" (email)="enviarCorreo($event)">
+</modal-seleccion-email>

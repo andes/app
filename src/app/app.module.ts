@@ -509,6 +509,7 @@ import { VistaDetalleRegistroComponent } from './modules/rup/components/huds/vis
 import { PasesListadoInternacionComponent } from './apps/rup/internacion/components/pasesListadoInternacion.component';
 import { VistaAccesosHudsComponent } from './modules/rup/components/huds/vista-accesos-huds.component';
 import { ModalMotivoAccesoHudsComponent } from './modules/rup/components/huds/modal-motivo-acceso-huds.component';
+import { ModalSeleccionEmailComponent } from './modules/rup/components/ejecucion/modal-seleccion-email.component';
 
 import { HotjarService } from './shared/services/hotJar.service';
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
@@ -641,6 +642,7 @@ registerLocaleData(localeEs, 'es');
         VistaDetalleRegistroComponent,
         VistaAccesosHudsComponent,
         ModalMotivoAccesoHudsComponent,
+        ModalSeleccionEmailComponent,
 
         // Solicitudes
         SolicitudesComponent,

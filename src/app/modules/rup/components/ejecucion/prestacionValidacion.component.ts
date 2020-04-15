@@ -33,6 +33,7 @@ export class PrestacionValidacionComponent implements OnInit {
     // Tiene permisos para descargar?
     public puedeDescargarPDF = false;
     descargaCerrada: any = true;
+    envioCerrado: any = true;
 
     // Id de la Agenda desde localStorage (revisar si aun hace falta)
     public idAgenda: any;
@@ -48,13 +49,12 @@ export class PrestacionValidacionComponent implements OnInit {
 
     // Paciente MPI
     public paciente;
-
     // Array de elementos RUP que se pueden ejecutar
     public elementosRUP: any[];
-
     // Indica si muestra el calendario para dar turno autocitado
     public showDarTurnos = false;
-
+    // Indica si muestra el modal de selección de correo
+    public showModalEmails = false;
     // Mostrar datos de la Solicitud "padre"?
     public showDatosSolicitud = false;
 
@@ -684,6 +684,36 @@ export class PrestacionValidacionComponent implements OnInit {
             });
 
         });
+    }
+
+    openModalEmails() {
+        this.showModalEmails = true;
+    }
+
+    enviarCorreo(email) {
+        this.showModalEmails = false;
+        this.enviarResumen(email);
+    }
+
+    enviarResumen(email) {
+        if (email) {
+            this.envioCerrado = false;
+            setTimeout(async () => {
+                let datos = {
+                    idPrestacion: this.prestacion.id,
+                    email: email,
+                    idOrganizacion: this.auth.organizacion.id
+                };
+                this.servicioDocumentos.enviarArchivo(datos).subscribe(result => {
+                    if (result.mensaje === 'Ok') {
+                        this.plex.info('success', 'El resumen ha sido enviado al servicio seleccionado', 'Envío exitoso!');
+                    } else {
+                        this.plex.info('danger', result.mensaje, 'Error');
+                    }
+                    this.envioCerrado = true;
+                });
+            });
+        }
     }
 
     async descargarRegistro(idRegistro, term) {
