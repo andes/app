@@ -8,7 +8,11 @@ import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 @Component({
     selector: 'carpeta-paciente',
     templateUrl: 'carpeta-paciente.html',
-    styles: [' .fondoNegro { background-color: #002738 !important; color: white;} .btnEdit {margin-top: 0.5em; margin-left: 0.5em; margin-right: 0.5em;}']
+    styles: [`
+        .invert .default {background: transparent !important; color: white;}
+        .fondoNegro { background-color: #002738 !important; color: white;}
+        .btnEdit {margin-top: 0.5em; margin-left: 0.5em; margin-right: 0.5em;}
+    `]
 })
 
 export class CarpetaPacienteComponent implements OnInit {
