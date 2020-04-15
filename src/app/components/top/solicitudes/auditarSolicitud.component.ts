@@ -35,7 +35,7 @@ export class AuditarSolicitudComponent implements OnInit {
     showConfirmar = false;
     showPrioridad = false;
     prioridad;
-    profesional;
+    profesional = null;
     profesionales = [];
     prioridades = [
         { id: 'prioritario', nombre: 'PRIORITARIO' }
@@ -69,6 +69,7 @@ export class AuditarSolicitudComponent implements OnInit {
     }
 
     asignar() {
+        this.profesional = this.prestacionSeleccionada.solicitud.profesional ? this.prestacionSeleccionada.solicitud.profesional : null;
         this.corfirmarAuditoria = true;
         this.solicitudAsignada = true;
         this.estadoSolicitud = 2;
@@ -83,7 +84,7 @@ export class AuditarSolicitudComponent implements OnInit {
 
     confirmar() {
         if (this.corfirmarAuditoria) {
-            this.returnAuditoria.emit({ status: this.estadoSolicitud, observaciones: this.observaciones, prioridad: this.prioridad ? this.prioridad.id : null, profesional: this.profesional ? this.profesional : null });
+            this.returnAuditoria.emit({ status: this.estadoSolicitud, observaciones: this.observaciones, prioridad: this.prioridad ? this.prioridad.id : null, profesional: this.profesional});
             this.showPrioridad = false;
         }
     }
@@ -93,6 +94,7 @@ export class AuditarSolicitudComponent implements OnInit {
     }
 
     cancelar() {
+        this.profesional = null;
         this.estadoSolicitud = 0;
         this.corfirmarAuditoria = false;
         this.showConfirmar = false;
