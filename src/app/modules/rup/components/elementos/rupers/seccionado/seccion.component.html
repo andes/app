@@ -59,39 +59,52 @@
                                         <plex-badge type="info">
                                             {{registro.relacionadoCon[0].concepto.term }}
                                         </plex-badge>
-                                        <a href="javascript:void(0);"
-                                           (click)="desvincular(registro, registro.relacionadoCon[0])"
-                                           class="desvincular"
-                                           *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
-                                           title="Desvincular" class="btn btn-sm btn-primary">
+                                        <button (click)="desvincular(registro, registro.relacionadoCon[0])"
+                                                class="desvincular"
+                                                *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen && !soloValoresfact"
+                                                title="Desvincular" class="btn btn-sm btn-primary">
                                             <i class="mdi mdi-link-variant-off"></i>
-                                        </a>
+                                        </button>
+
 
                                     </div>
                                 </div>
                                 <div class="actions"
                                      *ngIf="!confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i) )">
-                                    <span
-                                          class="badge badge-{{ (registro.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(registro.concepto) }}">
+                                    <ng-container *ngIf="registro?.privacy?.scope !== 'public'">
+                                        <plex-badge type="info">
+                                            Registro Privado
+                                        </plex-badge>
+                                    </ng-container>
+                                    <plex-badge
+                                                [type]="(registro.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(registro.concepto)">
                                         {{!registro.esSolicitud ? registro.concepto.semanticTag : 'solicitud'}}
-                                    </span>
-                                    <span class="badge badge-info ml-1"
-                                          *ngIf='registro.esPrimeraVez && prestacion.estados[prestacion.estados.length - 1].tipo === "validada"'>
+                                    </plex-badge>
+                                    <plex-badge type="info"
+                                                *ngIf='registro.esPrimeraVez && prestacion.estados[prestacion.estados.length - 1].tipo === "validada"'>
                                         Es primera vez
+                                    </plex-badge>
 
-                                    </span>
-                                    <a *ngIf="!soloValores" href="javascript:void(0);" title="Quitar de la consulta"
-                                       (click)="confirmarEliminarRegistro(registro, 'card')"
-                                       class="btn btn-sm btn-danger eliminar">
-                                        <i class="mdi mdi-delete"></i>
-                                        <i class="mdi mdi-delete-empty"></i>
-                                    </a>
-                                    <a *ngIf="!soloValores" href="javascript:void(0);"
-                                       (click)="cambiaValorCollapse(registro.id)"
-                                       class="btn btn-sm btn-primary collapse-card">
-                                        <i class="mdi mdi-chevron-down"
-                                           [ngClass]="{'spin-in' : !itemsRegistros[registro.id]?.collapse, 'spin-out' : itemsRegistros[registro.id]?.collapse}"></i>
-                                    </a>
+                                    <ng-container *ngIf="checkPlantilla(registro) && !soloValores">
+                                        <ng-container
+                                                      *ngIf="(plantillasService.plantillas(registro.concepto.conceptId) | async) as plantillas">
+                                            <plex-dropdown type="primary" class="dropdown-inline" [right]="true"
+                                                           icon="playlist-plus" [items]="plantillas"
+                                                           title="Seleccionar plantilla" titlePosition="left"
+                                                           *ngIf="plantillas.length > 0">
+                                            </plex-dropdown>
+                                        </ng-container>
+                                    </ng-container>
+
+                                    <plex-button *ngIf="!soloValores" type="primary" size="sm"
+                                                 icon="{{ itemsRegistros[registro.id]?.collapse ? 'chevron-down' : 'chevron-up'}}"
+                                                 title="{{ itemsRegistros[registro.id]?.collapse ? 'Expandir' : 'Colapsar'}}"
+                                                 titlePosition="left" (click)="cambiaValorCollapse(registro.id)">
+                                    </plex-button>
+                                    <plex-button size="sm" type="danger" icon="delete" *ngIf="!soloValores"
+                                                 title="Quitar de la consulta" titlePosition="left"
+                                                 (click)="confirmarEliminarRegistro(registro, 'card')">
+                                    </plex-button>
                                 </div>
                             </div>
                             <div class="rup-body"

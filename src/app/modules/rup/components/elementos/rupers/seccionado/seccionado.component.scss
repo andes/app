@@ -130,27 +130,27 @@
     }
 
    
-    .grid-item-1 {
-        grid-column: 1 / 3;
-        grid-auto-rows: 100px;
+    // .grid-item-1 {
+    //     grid-column: 1 / 3;
+    //     grid-auto-rows: 100px;
 
-        .titulo,
-        .contenido {
-            padding: 5px 0;
-            margin: 0;
-            border-bottom: 1px solid black;
-        }
-    }
+    //     .titulo,
+    //     .contenido {
+    //         padding: 5px 0;
+    //         margin: 0;
+    //         border-bottom: 1px solid black;
+    //     }
+    // }
 
-    .grid-item-0 {
-        grid-auto-rows: 100px;
-        .titulo,
-        .contenido {
-            padding: 5px 0;
-            margin: 0;
-            border-bottom: 1px solid black;
-        }
-    }
+    // .grid-item-0 {
+    //     grid-auto-rows: 100px;
+    //     .titulo,
+    //     .contenido {
+    //         padding: 5px 0;
+    //         margin: 0;
+    //         border-bottom: 1px solid black;
+    //     }
+    // }
 
 
 }

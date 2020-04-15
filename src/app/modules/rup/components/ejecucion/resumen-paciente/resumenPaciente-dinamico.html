@@ -1,4 +1,4 @@
-<!-- <ng-container *ngIf="graficos.length">
+<ng-container *ngIf="graficos.length">
     <div class="row mt-3" *ngFor="let grafico of graficos">
         <div class="col-12">
             <h4 class="text-capitalize mt-2">
@@ -19,11 +19,12 @@
                 </plex-badge>
             </span>
             <ng-container *ngIf="registros[i]; else mensaje">
-                <rup [elementoRUP]="item" [paciente]="paciente" [registro]="registros[i].registro" [soloValores]="true"></rup>
+                <rup [elementoRUP]="item" [paciente]="paciente" [registro]="registros[i].registro" [soloValores]="true">
+                </rup>
             </ng-container>
             <ng-template #mensaje>
                 No se ha registrado ningún valor de {{item.conceptos | enumerar:['term']}}
             </ng-template>
         </div>
     </div>
-</ng-container> -->
+</ng-container>

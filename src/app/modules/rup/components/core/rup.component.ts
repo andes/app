@@ -23,6 +23,7 @@ import { ElementosRUPRegister } from '../elementos';
 import { ActivatedRoute } from '@angular/router';
 import { ReglaService } from '../../../../services/top/reglas.service';
 import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
+import { PlantillasService } from '../../services/plantillas.service';
 
 @Component({
     selector: 'rup',
@@ -126,7 +127,8 @@ export class RUPComponent implements OnInit, AfterViewInit {
         public agendaService: AgendaService,
         public organizacionservice: OrganizacionService,
         public servicioReglas: ReglaService,
-        public conceptosTurneablesService: ConceptosTurneablesService
+        public conceptosTurneablesService: ConceptosTurneablesService,
+        public plantillasService: PlantillasService
     ) {
     }
 

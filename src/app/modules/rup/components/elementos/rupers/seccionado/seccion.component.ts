@@ -231,6 +231,9 @@ export class SeccionComponent extends RUPComponent implements OnInit {
         const existeRegistro = this.registroRepetido(nuevoRegistro);
 
         if (existeRegistro) {
+            if (snomedConcept.semanticTag === 'procedimiento' || snomedConcept.semanticTag === 'elemento de registro') {
+                this.plantillasService.get(snomedConcept.conceptId).subscribe(() => { });
+            }
             this.registro.registros.push(nuevoRegistro);
         }
         this.prestacionesService.clearData();
@@ -421,5 +424,11 @@ export class SeccionComponent extends RUPComponent implements OnInit {
             return false;
         }
         return true;
+    }
+
+    checkPlantilla(registro) {
+        const checkSemtag = registro.concepto.semanticTag === 'procedimiento' || registro.concepto.semanticTag === 'elemento de registro';
+        const noEsSolicitud = !registro.esSolicitud;
+        return checkSemtag && noEsSolicitud;
     }
 }
