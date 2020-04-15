@@ -233,7 +233,7 @@ export class PrestacionesService {
                     prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
                 }
                 prestaciones.forEach((prestacion: any) => {
-                    registros.forEach(registro => {
+                    prestacion.ejecucion.registros.forEach(registro => {
                         if (registro.hasSections) { // COLONO O EPICRISIS
                             registro.registros.forEach(seccion => {
                                 if (seccion.isSection && !seccion.noIndex) {
