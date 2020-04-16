@@ -230,8 +230,8 @@
                                                  (click)="descargarRegistro(elemento.id, elemento.concepto.term)">
                                         <plex-badge type="info" size="sm">PDF</plex-badge>
                                     </plex-button>
-                                    <plex-button type="info" size="sm mdi-14px" icon="email"
-                                                 [disabled]="!descargaCerrada" (click)="openModalEmails(elemento.id)">
+                                    <plex-button type="info" size="sm mdi-14px" icon="email" [disabled]="!envioCerrado"
+                                                 (click)="openModalEmails(elemento.id)">
                                     </plex-button>
                                 </ng-container>
                             </div>
