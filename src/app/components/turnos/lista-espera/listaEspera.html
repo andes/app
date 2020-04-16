@@ -5,17 +5,21 @@
             <form [formGroup]="searchForm">
                 <div class="row">
                     <div class="col-md-4">
-                        <plex-int formControlName="documento" label="Documento" placeholder="Filtrar por documento..."></plex-int>
+                        <plex-int formControlName="documento" label="Documento" placeholder="Filtrar por documento...">
+                        </plex-int>
                     </div>
                     <div class="col-md-4">
-                        <plex-text formControlName="apellido" label="Apellido" placeholder="Filtrar por apellido..."></plex-text>
+                        <plex-text formControlName="apellido" label="Apellido" placeholder="Filtrar por apellido...">
+                        </plex-text>
                     </div>
                     <div class="col-md-4">
-                        <plex-text formControlName="nombre" label="Nombre" placeholder="Filtrar por nombre..."></plex-text>
+                        <plex-text formControlName="nombre" label="Nombre" placeholder="Filtrar por nombre...">
+                        </plex-text>
                     </div>
                 </div>
             </form>
-            <plex-button type="primary" label="Agregar Paciente" title="Agregar Paciente" (click)="showcreate = !showcreate"></plex-button>
+            <plex-button type="info" label="Agregar Paciente" title="Agregar Paciente"
+                         (click)="showcreate = !showcreate"></plex-button>
         </plex-box>
 
         <plex-box type="success">
@@ -36,7 +40,8 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let listaEspera of datos">
-                            <td nowrap *ngIf="listaEspera.paciente.documento !== ''">{{listaEspera.paciente.documento}}</td>
+                            <td nowrap *ngIf="listaEspera.paciente.documento !== ''">{{listaEspera.paciente.documento}}
+                            </td>
                             <td nowrap *ngIf="listaEspera.paciente.documento === ''">Sin documento</td>
                             <td>{{listaEspera.paciente | paciente}}</td>
                             <td>{{listaEspera.prestacion.nombre}}</td>
@@ -46,10 +51,11 @@
                             <td>{{listaEspera.estado}}</td>
                             <td nowrap>{{listaEspera.fecha | date:"dd-MM-yy" }}</td>
                             <td>
-                                <plex-button type="primary" icon="magnify" label="Ver más"></plex-button>
+                                <plex-button type="info" icon="magnify" label="Ver más"></plex-button>
                             </td>
                             <td>
-                                <plex-button type="primary" icon="account-card-details" label="Datos Paciente"></plex-button>
+                                <plex-button type="info" label="Datos Paciente">
+                                </plex-button>
                             </td>
                             <td>
                                 <plex-button type="success" icon="calendar-clock" label="Asignar Turno"></plex-button>

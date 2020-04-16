@@ -5,7 +5,7 @@
             <plex-box>
                 <h5>Datos del Paciente</h5>
                 <div>
-                    <i class="mdi mdi-account-card-details mdi-36px"></i>
+                    <i class="mdi mdi-card-account-details mdi-36px"></i>
                 </div>
                 <div>
                     <strong>Nombre: </strong>{{ auditoriaPP.paciente.nombre + ' ' + auditoriaPP.paciente.apellido }}
@@ -67,10 +67,11 @@
         <div class="col-4">
             <plex-box>
                 <!--<editar-auditoria-prestacionPaciente *ngIf="showVistaAuditoriasPP" [auditoriaPPSeleccionada]="auditoriaPPSeleccionada" (saveAuditoriaPP)="saveAuditoriaPP($event)" (cancelaEditarAuditoriaPP)="cancelaEditarAuditoriaPP($event)"></editar-auditoria-prestacionPaciente>-->
-                <editar-auditoria-prestacionPaciente
-                    *ngIf="showVistaAuditoriasPP || auditoriasPPSeleccionadas.length == 1"
-                    [auditoriaPPSeleccionada]="auditoriaPPSeleccionada" (saveAuditoriaPP)="saveAuditoriaPP($event)"
-                    (cancelaEditarAuditoriaPP)="cancelaEditarAuditoriaPP($event)"></editar-auditoria-prestacionPaciente>
+                <editar-auditoria-prestacionPaciente *ngIf="showVistaAuditoriasPP || auditoriasPPSeleccionadas.length == 1"
+                                                     [auditoriaPPSeleccionada]="auditoriaPPSeleccionada"
+                                                     (saveAuditoriaPP)="saveAuditoriaPP($event)"
+                                                     (cancelaEditarAuditoriaPP)="cancelaEditarAuditoriaPP($event)">
+                </editar-auditoria-prestacionPaciente>
             </plex-box>
         </div>
     </div>
