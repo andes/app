@@ -224,11 +224,14 @@
                                     </span>
                                 </ng-container>
                                 <ng-container
-                                              *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && servicioPrestacion.getIcon(elemento.concepto, false) === 'procedimiento' && !elemento.esSolicitud">
+                                              *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && (servicioPrestacion.getIcon(elemento.concepto, false) === 'procedimiento' || elemento.esSolicitud)">
                                     <plex-button type="info" size="sm mdi-14px" icon="download"
                                                  [disabled]="!descargaCerrada"
                                                  (click)="descargarRegistro(elemento.id, elemento.concepto.term)">
                                         <plex-badge type="info" size="sm">PDF</plex-badge>
+                                    </plex-button>
+                                    <plex-button type="info" size="sm mdi-14px" icon="email"
+                                                 [disabled]="!descargaCerrada" (click)="openModalEmails(elemento.id)">
                                     </plex-button>
                                 </ng-container>
                             </div>

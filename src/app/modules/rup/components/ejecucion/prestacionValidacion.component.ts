@@ -1,3 +1,4 @@
+import { IDireccion } from './../../../../core/mpi/interfaces/IDireccion';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { SnomedService } from '../../../../apps/mitos';
 import { Component, OnInit, Output, EventEmitter, HostBinding, ViewEncapsulation } from '@angular/core';
@@ -44,6 +45,11 @@ export class PrestacionValidacionComponent implements OnInit {
 
     // Prestación actual en Ejecución
     public prestacion: any;
+
+    // Registro actual a enviar
+    public registro: any;
+    public envioRegistro = false;
+
 
     public registrosOriginales: any;
 
@@ -686,31 +692,47 @@ export class PrestacionValidacionComponent implements OnInit {
         });
     }
 
-    openModalEmails() {
+    openModalEmails(idRegistro?) {
         this.showModalEmails = true;
+        if (idRegistro) {
+            this.registro = idRegistro;
+            this.envioRegistro = true;
+        }
     }
 
     enviarCorreo(email) {
         this.showModalEmails = false;
-        this.enviarResumen(email);
+        this.enviarPDF(email);
     }
 
-    enviarResumen(email) {
+    enviarPDF(email) {
         if (email) {
             this.envioCerrado = false;
             setTimeout(async () => {
-                let datos = {
-                    idPrestacion: this.prestacion.id,
-                    email: email,
-                    idOrganizacion: this.auth.organizacion.id
-                };
+                let datos;
+                if (this.envioRegistro) {
+                    datos = {
+                        idPrestacion: this.prestacion.id,
+                        email: email,
+                        idOrganizacion: this.auth.organizacion.id,
+                        idRegistro: this.registro
+                    };
+                } else {
+                    datos = {
+                        idPrestacion: this.prestacion.id,
+                        email: email,
+                        idOrganizacion: this.auth.organizacion.id
+                    };
+                }
                 this.servicioDocumentos.enviarArchivo(datos).subscribe(result => {
                     if (result.mensaje === 'Ok') {
-                        this.plex.info('success', 'El resumen ha sido enviado al servicio seleccionado', 'Envío exitoso!');
+                        this.plex.info('success', 'El pdf ha sido enviado al servicio seleccionado', 'Envío exitoso!');
                     } else {
                         this.plex.info('danger', result.mensaje, 'Error');
                     }
                     this.envioCerrado = true;
+                    this.envioRegistro = false;
+                    this.registro = null;
                 });
             });
         }
