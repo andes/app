@@ -85,6 +85,7 @@ export class SolicitudesComponent implements OnInit {
         { id: 'registroHUDS', nombre: 'REGISTRO EN HUDS' },
         { id: 'anulada', nombre: 'ANULADA' }
     ];
+
     public prioridad;
     public prioridades = [
         { id: 'prioritario', nombre: 'PRIORITARIO' },
@@ -291,7 +292,14 @@ export class SolicitudesComponent implements OnInit {
         let params = {
             solicitudDesde: this.fechaDesde,
             solicitudHasta: this.fechaHasta,
-            ordenFechaDesc: true
+            ordenFechaDesc: true,
+            estados: [
+                'auditoria',
+                'pendiente',
+                'rechazada',
+                'validada',
+                'asignada'
+            ]
         };
         if (this.tipoSolicitud === 'entrada') {
             if (this.asignadas) {
@@ -301,6 +309,7 @@ export class SolicitudesComponent implements OnInit {
 
                 if (this.estadoEntrada.id === 'turnoDado') {
                     params['tieneTurno'] = true;
+                    params.estados = params.estados.filter(e => e !== 'validada');
                 } else if (this.estadoEntrada.id === 'registroHUDS') {
                     params['tieneTurno'] = true;
                     params['estados'] = ['validada'];
@@ -313,19 +322,10 @@ export class SolicitudesComponent implements OnInit {
                 if (this.prestacionDestino) {
                     params['prestacionDestino'] = this.prestacionDestino.id;
                 } else {
-                    params['estados'] = [this.estadoEntrada.id];
                     if (this.estadoEntrada.id === 'pendiente') {
                         params['tieneTurno'] = false;
                     }
                 }
-            } else {
-                params['estados'] = [
-                    'auditoria',
-                    'pendiente',
-                    'rechazada',
-                    'validada',
-                    'asignada'
-                ];
             }
         }
         if (this.tipoSolicitud === 'salida') {
@@ -336,6 +336,7 @@ export class SolicitudesComponent implements OnInit {
 
                 if (this.estadoSalida.id === 'turnoDado') {
                     params['tieneTurno'] = true;
+                    params.estados = params.estados.filter(e => e !== 'validada');
                 } else if (this.estadoSalida.id === 'registroHUDS') {
                     params['tieneTurno'] = true;
                     params['estados'] = ['validada'];
@@ -348,19 +349,10 @@ export class SolicitudesComponent implements OnInit {
                 if (this.prestacionDestino) {
                     params['prestacionDestino'] = this.prestacionDestino.id;
                 } else {
-                    params['estados'] = [this.estadoSalida.id];
                     if (this.estadoSalida.id === 'pendiente') {
                         params['tieneTurno'] = false;
                     }
                 }
-            } else {
-                params['estados'] = [
-                    'auditoria',
-                    'pendiente',
-                    'rechazada',
-                    'validada',
-                    'asignada'
-                ];
             }
         }
         if (this.organizacion) {
