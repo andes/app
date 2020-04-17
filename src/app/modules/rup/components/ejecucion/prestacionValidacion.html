@@ -228,7 +228,6 @@
                                     <plex-button type="info" size="sm mdi-14px" icon="download"
                                                  [disabled]="!descargaCerrada"
                                                  (click)="descargarRegistro(elemento.id, elemento.concepto.term)">
-                                        <plex-badge type="info" size="sm">PDF</plex-badge>
                                     </plex-button>
                                     <plex-button type="info" size="sm mdi-14px" icon="email" [disabled]="!envioCerrado"
                                                  (click)="openModalEmails(elemento.id)">
@@ -363,5 +362,5 @@
 <!-- Calendario para dar turnos autocitados -->
 <dar-turnos *ngIf="showDarTurnos && solicitudTurno" (volverValidacion)="turnoDado($event)"
             [pacienteSeleccionado]="paciente" [solicitudPrestacion]="solicitudTurno"></dar-turnos>
-<modal-seleccion-email [show]="showModalEmails" (email)="enviarCorreo($event)">
+<modal-seleccion-email *ngIf="showModalEmails" (email)="enviarCorreo($event)">
 </modal-seleccion-email>

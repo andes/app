@@ -1,4 +1,4 @@
-import { Component, Output, ViewChild, Input, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, ViewChild, Input, EventEmitter, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../../services/organizacion.service';
@@ -8,16 +8,16 @@ import { OrganizacionService } from '../../../../services/organizacion.service';
     templateUrl: 'modal-seleccion-email.html'
 })
 
-export class ModalSeleccionEmailComponent implements OnInit {
+export class ModalSeleccionEmailComponent implements OnInit, AfterViewInit {
 
     @ViewChild('modal', { static: true }) modal: PlexModalComponent;
 
-    @Input()
-    set show(value) {
-        if (value) {
-            this.modal.show();
-            this.emailSelected = null;
-        }
+    ngAfterViewInit() {
+        // Estaría bueno una opcion de plex para que el modal se visualice solo al renderizarlo
+        // [PLEX-76]
+        this.modal.show();
+        // Hasta que no este [PLEX-76] se debe aplicar un detectChanges
+        this.cd.detectChanges();
     }
 
     @Output() email = new EventEmitter<any>();
@@ -29,7 +29,9 @@ export class ModalSeleccionEmailComponent implements OnInit {
     // Constructor
     constructor(
         private auth: Auth,
-        public organizacionService: OrganizacionService) {
+        public organizacionService: OrganizacionService,
+        private cd: ChangeDetectorRef
+    ) {
     }
 
     ngOnInit() {
@@ -56,6 +58,5 @@ export class ModalSeleccionEmailComponent implements OnInit {
         } else {
             this.email.emit(null);
         }
-        this.modal.close();
     }
 }

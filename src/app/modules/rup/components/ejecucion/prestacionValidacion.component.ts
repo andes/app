@@ -701,6 +701,7 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     enviarCorreo(email) {
+        debugger;
         this.showModalEmails = false;
         this.enviarPDF(email);
     }
