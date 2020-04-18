@@ -119,6 +119,10 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.prestacion$
         ).subscribe(([view, capa, cama, prestacion]) => {
             let fecha = this.mapaCamasService.fecha ? this.mapaCamasService.fecha : moment().toDate();
+            if (view === 'listado-internacion') {
+                // DESDE EL LISTADO FECHA VIENE CON LA DEL INGRESO. PUES NO!
+                fecha = moment().toDate();
+            }
             this.fechaMax = moment().add(1, 's').toDate();
             this.registro.valor.InformeEgreso.fechaEgreso = fecha;
             this.view = view;
@@ -134,20 +138,27 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     this.fechaEgresoOriginal = this.registro.valor.InformeEgreso.fechaEgreso;
                 }
 
-
                 if (this.view === 'listado-internacion') {
-                    this.subscription2 = this.mapaCamasService.snapshot(moment(this.registro.valor.InformeEgreso.fechaEgreso).add(-1, 's').toDate(),
-                        this.prestacion.id).subscribe((snapshot) => {
-                            this.cama = snapshot[0];
-                            if (this.cama) {
-                                this.fechaMin = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').toDate();
-                                this.fecha = fecha;
-                                this.setFecha();
-                            }
-                            this.subscription3 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
-                                this.estadoDestino = relacionesPosibles[0].destino;
-                            });
+                    if (this.subscription2) {
+                        this.subscription2.unsubscribe();
+                    }
+                    this.subscription2 = this.mapaCamasService.snapshot(
+                        moment(this.registro.valor.InformeEgreso.fechaEgreso).add(1, 's').toDate(),
+                        this.prestacion.id
+                    ).subscribe((snapshot) => {
+                        this.cama = snapshot[0];
+                        if (this.cama) {
+                            this.fechaMin = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').toDate();
+                            this.fecha = fecha;
+                            this.setFecha();
+                        }
+                        if (this.subscription3) {
+                            this.subscription3.unsubscribe();
+                        }
+                        this.subscription3 = this.mapaCamasService.getRelacionesPosibles(this.cama).subscribe((relacionesPosibles) => {
+                            this.estadoDestino = relacionesPosibles[0].destino;
                         });
+                    });
                 }
             }
             if (cama.idCama) {
@@ -155,6 +166,9 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 this.fechaMin = moment(this.cama.fecha).add(1, 'm').toDate();
                 this.fecha = fecha;
                 this.setFecha();
+                if (this.subscription3) {
+                    this.subscription3.unsubscribe();
+                }
                 this.subscription3 = this.mapaCamasService.getRelacionesPosibles(cama).subscribe((relacionesPosibles) => {
                     this.estadoDestino = relacionesPosibles[0].destino;
                 });
@@ -185,7 +199,6 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     }
 
     egresoSimplificado(estado) {
-        // Se modifica el estado de la
         if ((this.prestacion && !this.prestacion.ejecucion.registros[1]) || !this.prestacion) {
             const estadoPatch = {
                 _id: this.cama.idCama,
