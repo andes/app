@@ -160,7 +160,8 @@ export class MapaCamasService {
         const proximoMinuto = moment().add(1, 'minute').startOf('minute');
         const segundosAPoxMin = proximoMinuto.diff(moment());
         this.fechaActual$ = timer(segundosAPoxMin, 60000).pipe(
-            map(() => moment().toDate())
+            map(() => moment().toDate()),
+            startWith(new Date())
         );
     }
 
