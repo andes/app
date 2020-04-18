@@ -131,7 +131,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 if (!prestacion) { return; }
                 this.prestacion = prestacion;
                 this.informeIngreso = this.prestacion.ejecucion.registros[0].valor.informeIngreso;
-                if (this.prestacion.ejecucion.registros[1] && this.prestacion.ejecucion.registros[1].valor) {
+                if (this.hayEgreso) {
                     this.registro.valor.InformeEgreso = this.prestacion.ejecucion.registros[1].valor.InformeEgreso;
                     fecha = this.registro.valor.InformeEgreso.fechaEgreso;
                     this.registro.valor.InformeEgreso.fechaEgreso = this.registro.valor.InformeEgreso.fechaEgreso;
@@ -142,8 +142,12 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     if (this.subscription2) {
                         this.subscription2.unsubscribe();
                     }
+                    let fechaABuscar = moment(this.registro.valor.InformeEgreso.fechaEgreso).add(1, 's');
+                    if (this.hayEgreso) {
+                        fechaABuscar = fechaABuscar.add(-10, 's');
+                    }
                     this.subscription2 = this.mapaCamasService.snapshot(
-                        moment(this.registro.valor.InformeEgreso.fechaEgreso).add(1, 's').toDate(),
+                        fechaABuscar.toDate(),
                         this.prestacion.id
                     ).subscribe((snapshot) => {
                         this.cama = snapshot[0];
@@ -174,6 +178,10 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 });
             }
         });
+    }
+
+    get hayEgreso() {
+        return this.prestacion && this.prestacion.ejecucion.registros[1] && this.prestacion.ejecucion.registros[1].valor;
     }
 
     setFecha() {
