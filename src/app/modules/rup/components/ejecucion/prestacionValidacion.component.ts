@@ -701,7 +701,6 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     enviarCorreo(email) {
-        debugger;
         this.showModalEmails = false;
         this.enviarPDF(email);
     }
@@ -709,33 +708,26 @@ export class PrestacionValidacionComponent implements OnInit {
     enviarPDF(email) {
         if (email) {
             this.envioCerrado = false;
-            setTimeout(async () => {
-                let datos;
-                if (this.envioRegistro) {
-                    datos = {
-                        idPrestacion: this.prestacion.id,
-                        email: email,
-                        idOrganizacion: this.auth.organizacion.id,
-                        idRegistro: this.registro
-                    };
+            // setTimeout(async () => {
+            const datos: any = {
+                idPrestacion: this.prestacion.id,
+                email: email,
+                idOrganizacion: this.auth.organizacion.id,
+            };
+            if (this.envioRegistro) {
+                datos.idRegistro = this.registro;
+            }
+            this.servicioDocumentos.enviarArchivo(datos).subscribe(result => {
+                if (result.mensaje === 'Ok') {
+                    this.plex.info('success', 'El pdf ha sido enviado al servicio seleccionado', 'Envío exitoso!');
                 } else {
-                    datos = {
-                        idPrestacion: this.prestacion.id,
-                        email: email,
-                        idOrganizacion: this.auth.organizacion.id
-                    };
+                    this.plex.info('danger', result.mensaje, 'Error');
                 }
-                this.servicioDocumentos.enviarArchivo(datos).subscribe(result => {
-                    if (result.mensaje === 'Ok') {
-                        this.plex.info('success', 'El pdf ha sido enviado al servicio seleccionado', 'Envío exitoso!');
-                    } else {
-                        this.plex.info('danger', result.mensaje, 'Error');
-                    }
-                    this.envioCerrado = true;
-                    this.envioRegistro = false;
-                    this.registro = null;
-                });
+                this.envioCerrado = true;
+                this.envioRegistro = false;
+                this.registro = null;
             });
+            // });
         }
     }
 
