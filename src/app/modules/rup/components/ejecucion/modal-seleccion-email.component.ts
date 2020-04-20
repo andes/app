@@ -39,10 +39,9 @@ export class ModalSeleccionEmailComponent implements OnInit, AfterViewInit {
     }
 
     getEmails() {
-        this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
-            let org = organizacion;
-            if (org.configuraciones && org.configuraciones.emails) {
-                this.emails = org.configuraciones.emails;
+        this.organizacionService.configuracion(this.auth.organizacion.id).subscribe(configuracion => {
+            if (configuracion && configuracion.emails) {
+                this.emails = configuracion.emails;
             }
         });
     }
