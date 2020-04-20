@@ -14,6 +14,7 @@ import { HeaderPacienteComponent } from '../../../../components/paciente/headerP
 import { ReglaService } from '../../../../services/top/reglas.service';
 import { forkJoin, of, merge } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { OrganizacionService } from '../../../../services/organizacion.service';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -35,6 +36,7 @@ export class PrestacionValidacionComponent implements OnInit {
     public puedeDescargarPDF = false;
     descargaCerrada: any = true;
     envioCerrado: any = true;
+    public tieneEmails = false;
 
     // Id de la Agenda desde localStorage (revisar si aun hace falta)
     public idAgenda: any;
@@ -114,7 +116,8 @@ export class PrestacionValidacionComponent implements OnInit {
         private route: ActivatedRoute,
         private servicioDocumentos: DocumentosService,
         private codificacionService: CodificacionService,
-        public servicioReglas: ReglaService
+        public servicioReglas: ReglaService,
+        public organizacionService: OrganizacionService
     ) {
     }
 
@@ -150,6 +153,7 @@ export class PrestacionValidacionComponent implements OnInit {
             });
 
         });
+        this.obtenerMails();
     }
 
     redirect(pagina: string) {
@@ -289,6 +293,14 @@ export class PrestacionValidacionComponent implements OnInit {
             this.registrosOrdenados = this.prestacion.ejecucion.registros;
             this.armarRelaciones();
 
+        });
+    }
+
+    obtenerMails() {
+        this.organizacionService.configuracion(this.auth.organizacion.id).subscribe(configuracion => {
+            if (configuracion && configuracion.emails) {
+                this.tieneEmails = configuracion.emails.length > 0;
+            }
         });
     }
 
@@ -708,7 +720,6 @@ export class PrestacionValidacionComponent implements OnInit {
     enviarPDF(email) {
         if (email) {
             this.envioCerrado = false;
-            // setTimeout(async () => {
             const datos: any = {
                 idPrestacion: this.prestacion.id,
                 email: email,
@@ -718,7 +729,7 @@ export class PrestacionValidacionComponent implements OnInit {
                 datos.idRegistro = this.registro;
             }
             this.servicioDocumentos.enviarArchivo(datos).subscribe(result => {
-                if (result.mensaje === 'Ok') {
+                if (result.status === 'OK') {
                     this.plex.info('success', 'El pdf ha sido enviado al servicio seleccionado', 'Envío exitoso!');
                 } else {
                     this.plex.info('danger', result.mensaje, 'Error');
@@ -727,7 +738,6 @@ export class PrestacionValidacionComponent implements OnInit {
                 this.envioRegistro = false;
                 this.registro = null;
             });
-            // });
         }
     }
 

@@ -6,7 +6,7 @@ import { catchError } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import { Slug } from 'ng2-slugify';
 import { tap } from 'rxjs/internal/operators/tap';
-
+import { Server } from '@andes/shared';
 
 @Injectable()
 export class DocumentosService {
@@ -16,7 +16,7 @@ export class DocumentosService {
     // Usa el keymap 'default'
     private slug = new Slug('default');
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private server: Server) { }
 
     download(url, data): Observable<any> {
         let headers = new HttpHeaders({
@@ -31,12 +31,7 @@ export class DocumentosService {
     }
 
     send(url, data): Observable<any> {
-        let headers = new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Authorization': window.sessionStorage.getItem('jwt') ? 'JWT ' + window.sessionStorage.getItem('jwt') : ''
-        });
-        let options: any = { headers: headers };
-        return this.http.post(this.pdfURL + '/send/' + url, data, options);
+        return this.server.post('/modules/descargas/send/' + url, data);
     }
 
 

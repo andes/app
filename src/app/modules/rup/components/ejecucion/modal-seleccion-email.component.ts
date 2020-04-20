@@ -52,8 +52,7 @@ export class ModalSeleccionEmailComponent implements OnInit, AfterViewInit {
 
     notificarAccion(flag: boolean) {
         if (flag) {
-            const item = this.emails.find((elem) => elem.email === this.emailSelected.email);
-            this.email.emit(item.email);
+            this.email.emit(this.emailSelected.email);
         } else {
             this.email.emit(null);
         }

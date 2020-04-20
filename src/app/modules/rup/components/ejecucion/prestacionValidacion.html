@@ -22,7 +22,7 @@
                                 </plex-button>
                             </ng-container>
                             <ng-container *ngIf="validada && !prestacion.solicitud.tipoPrestacion.noNominalizada">
-                                <plex-button type="info" icon="email mdi-14px" class="float-right ml-1"
+                                <plex-button type="info" icon="email mdi-14px" class="float-right ml-1" *ngIf="tieneEmails"
                                              title="Enviar Resúmen PDF" titlePosition="top" (click)="openModalEmails()"
                                              [disabled]="!envioCerrado">
                                 </plex-button>
@@ -225,11 +225,11 @@
                                 </ng-container>
                                 <ng-container
                                               *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && (servicioPrestacion.getIcon(elemento.concepto, false) === 'procedimiento' || elemento.esSolicitud)">
-                                    <plex-button type="info" size="sm mdi-14px" icon="download"
+                                    <plex-button type="info" size="sm mdi-14px" icon="download" title="Descargar PDF" titlePosition="bottom"
                                                  [disabled]="!descargaCerrada"
                                                  (click)="descargarRegistro(elemento.id, elemento.concepto.term)">
                                     </plex-button>
-                                    <plex-button type="info" size="sm mdi-14px" icon="email" [disabled]="!envioCerrado"
+                                    <plex-button type="info" size="sm mdi-14px" icon="email" [disabled]="!envioCerrado" *ngIf="tieneEmails" title="Enviar PDF" titlePosition="bottom"
                                                  (click)="openModalEmails(elemento.id)">
                                     </plex-button>
                                 </ng-container>
