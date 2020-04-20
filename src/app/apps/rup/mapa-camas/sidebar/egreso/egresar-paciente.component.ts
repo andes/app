@@ -483,27 +483,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
     // Se debe controlar que:
     // La cama este disponible en la fecha que la quiero usar,
-    // Y que no puede ser una fecha anterior al ultimo movimiento de la internacion
-
-    checkMovimientos() {
-        const fechaFin = this.fechaEgresoOriginal ? this.fechaEgresoOriginal : moment().toDate();
-        this.mapaCamasService.historial('internacion', this.informeIngreso.fechaIngreso, fechaFin).subscribe(h => {
-            const movimientoEncontrado = h.filter((s: ISnapshot) => {
-                if (s.fecha.getTime() > this.registro.valor.InformeEgreso.fechaEgreso && s.fecha.getTime() < fechaFin.getTime()) {
-                    return s;
-                }
-            });
-            if (movimientoEncontrado && movimientoEncontrado.length) {
-                this.registro.valor.InformeEgreso.fechaEgreso = this.fechaEgresoOriginal;
-                this.fecha = fechaFin;
-                this.plex.info('warning', `No es posible realizar el cambio de fecha porque la internacion tiene movimientos posteriores a la fecha ingresada`);
-            }
-        });
-    }
-
 
     checkEstadoCama() {
-        this.checkMovimientos();
         this.mapaCamasService.get(this.fecha, this.cama.idCama).subscribe((cama) => {
             if (cama && cama.estado !== 'disponible') {
                 if (!cama.idInternacion || (cama.idInternacion && cama.idInternacion !== this.prestacion.id)) {
