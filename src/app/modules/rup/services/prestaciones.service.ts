@@ -1,7 +1,7 @@
 
 import { map, switchMap } from 'rxjs/operators';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
-import { Injectable, Output, EventEmitter } from '@angular/core';
+import { Injectable, Output, EventEmitter, DebugElement } from '@angular/core';
 import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
@@ -233,22 +233,15 @@ export class PrestacionesService {
                     prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
                 }
                 prestaciones.forEach((prestacion: any) => {
-                    // Fix momentaneo hasta reestructurar las busquedas en las HUDS.
-                    // Epicrisis y Colonoscopia tienen secciones.
-                    if (['73761001', '2341000013106'].indexOf(prestacion.solicitud.tipoPrestacion.conceptId) >= 0) {
-                        let regs = [];
-                        prestacion.ejecucion.registros[0].registros.forEach(r => {
-                            // Excluimos Pautas de Alarmas. Porque son hallazgos de alarmas y no presentes.
-                            if (r.concepto.conceptId !== '900000000000003001') {
-                                regs = [...regs, ...r.registros];
-                            }
-                        });
-                        regs.forEach(r => {
-                            r.createdAt = prestacion.ejecucion.registros[0].createdAt;
-                            r.createdBy = prestacion.ejecucion.registros[0].createdBy;
-                        });
-                        prestacion.ejecucion.registros = regs;
-                    }
+                    prestacion.ejecucion.registros.forEach(registro => {
+                        if (registro.hasSections) { // COLONO O EPICRISIS
+                            registro.registros.forEach(seccion => {
+                                if (seccion.isSection && !seccion.noIndex) {
+                                    prestacion.ejecucion.registros = [...prestacion.ejecucion.registros, ...seccion.registros];
+                                }
+                            });
+                        }
+                    });
 
                     if (prestacion.ejecucion) {
                         const conceptos = prestacion.ejecucion.registros
