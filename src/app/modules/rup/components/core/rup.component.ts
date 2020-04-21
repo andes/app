@@ -23,6 +23,7 @@ import { ElementosRUPRegister } from '../elementos';
 import { ActivatedRoute } from '@angular/router';
 import { ReglaService } from '../../../../services/top/reglas.service';
 import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
+import { PlantillasService } from '../../services/plantillas.service';
 
 @Component({
     selector: 'rup',
@@ -126,7 +127,8 @@ export class RUPComponent implements OnInit, AfterViewInit {
         public agendaService: AgendaService,
         public organizacionservice: OrganizacionService,
         public servicioReglas: ReglaService,
-        public conceptosTurneablesService: ConceptosTurneablesService
+        public conceptosTurneablesService: ConceptosTurneablesService,
+        public plantillasService: PlantillasService
     ) {
     }
 
@@ -221,7 +223,7 @@ export class RUPComponent implements OnInit, AfterViewInit {
     * Si existe un formulario en el elementoRIP, lo valida automaticamente, y si la misma tiene más elementosRUP
     * adentro ejecuta el validate en cada uno de sus hijos.
     *
-    * Cada elementoRUP puede sobreescribir esta funcionalidad, implementando el metodo 'validate'.
+    * Cada elementoRUP puede sobreescribir el metodo OnValidate para agregar validaciones especiales.
     *
     * @protected
     * @memberof RUPComponent
@@ -229,7 +231,12 @@ export class RUPComponent implements OnInit, AfterViewInit {
     public validate() {
         const validChild = this.validateChild();
         const validForm = this.validateForm();
-        return validChild && validForm;
+        const validateMain = this.onValidate();
+        return validChild && validForm && validateMain;
+    }
+
+    public onValidate() {
+        return true;
     }
 
     /**

@@ -19,7 +19,8 @@
                 </plex-badge>
             </span>
             <ng-container *ngIf="registros[i]; else mensaje">
-                <rup [elementoRUP]="item" [paciente]="paciente" [registro]="registros[i].registro" [soloValores]="true"></rup>
+                <rup [elementoRUP]="item" [paciente]="paciente" [registro]="registros[i].registro" [soloValores]="true">
+                </rup>
             </ng-container>
             <ng-template #mensaje>
                 No se ha registrado ningún valor de {{item.conceptos | enumerar:['term']}}
