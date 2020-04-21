@@ -1,79 +1,36 @@
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { saveAs } from 'file-saver';
+import { saveAs as saveAsFileSaver } from 'file-saver';
 import { Slug } from 'ng2-slugify';
-import { tap } from 'rxjs/internal/operators/tap';
 import { Server } from '@andes/shared';
+import { tap } from 'rxjs/operators';
 
 @Injectable()
 export class DocumentosService {
+    private pdfURL = '/modules/descargas';
 
-    // URL to web api
-    private pdfURL = environment.API + '/modules/descargas';
-    // Usa el keymap 'default'
-    private slug = new Slug('default');
-
-    constructor(private http: HttpClient, private server: Server) { }
+    constructor(private server: Server) { }
 
     download(url, data): Observable<any> {
-        let headers = new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Authorization': window.sessionStorage.getItem('jwt') ? 'JWT ' + window.sessionStorage.getItem('jwt') : ''
-        });
+        return this.server.post(this.pdfURL + '/' + url, data, { responseType: 'blob' } as any);
+    }
 
-        let options: any = { headers: headers, responseType: 'blob' };
-        return this.http.post(this.pdfURL + '/' + url, data, options).pipe(
-            catchError(this.handleError)
+    descargarInformeRUP(informe, nombreArchivo: string): Observable<any> {
+        return this.download('pdf', informe).pipe(
+            saveAs(nombreArchivo, 'pdf')
         );
     }
 
-    send(url, data): Observable<any> {
-        return this.server.post('/modules/descargas/send/' + url, data);
-    }
-
-
-    descargar(data): Observable<any> {
-        return this.download('censoMensual', data);
-    }
-
-
-    descargarV2(data): Observable<any> {
-        return this.download('pdf', data);
-    }
-
-    descargarArchivo(informe, nombreArchivo: string, headers: any): Observable<any> {
-        return this.descargarV2(informe).pipe(tap(data => {
-            if (data) {
-                // Generar descarga como PDF
-                let blob = new Blob([data], headers);
-                saveAs(blob, this.slug.slugify(`${nombreArchivo} - ${moment().format('DD-MM-YYYY-hmmss')}.pdf`));
-
-            } else {
-                // Fallback a impresión normal desde el navegador
-                window.print();
-            }
-        }));
-    }
-
-    enviarArchivo(datos): Observable<any> {
-        return this.send('pdf', datos);
-    }
-
-    private handleError(error: any) {
-        let errMsg = (error.message) ? error.message :
-            error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-        return Observable.throw(errMsg);
-    }
-
-    protected extractData(res: any) {
-        return res.blob();
+    enviarInformeRUP(datos): Observable<any> {
+        return this.server.post('/modules/descargas/send/pdf', datos);
     }
 
     descargarConstanciaPuco(params): Observable<any> {
         return this.download('constanciaPuco/pdf', params);
+    }
+
+    descargarCensoMensual(data): Observable<any> {
+        return this.download('censoMensual', data);
     }
 
     descargarCenso(data): Observable<any> {
@@ -81,12 +38,31 @@ export class DocumentosService {
     }
 
     descargarReporteInternaciones(params): Observable<any> {
-        let headers = new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Authorization': window.sessionStorage.getItem('jwt') ? 'JWT ' + window.sessionStorage.getItem('jwt') : null
-        });
-
-        let options: any = { headers: headers, responseType: 'blob', params };
-        return this.http.get(`${environment.API}/bi/queries/listado-internacion/csv`, options);
+        return this.server.post('/bi/queries/listado-internacion/csv', params, { responseType: 'blob' } as any);
     }
+}
+
+export type Extensiones = 'pdf' | 'csv';
+
+function getHeaders(type: Extensiones) {
+    if (type === 'pdf') {
+        return { type: 'application/pdf' };
+    } else if (type === 'csv') {
+        return { type: 'text/csv' };
+    }
+}
+
+export function saveAs(fileName: string, type: Extensiones, timestamp = true) {
+    return tap((blobData: any) => {
+        const slug = new Slug('default');
+        const headers = getHeaders(type);
+        if (blobData) {
+            const blob = new Blob([blobData], headers);
+            const timestampText = timestamp ? ` - ${moment().format('DD-MM-YYYY-hmmss')}` : '';
+            const file = slug.slugify(`${fileName}${timestampText}.${type}`);
+            saveAsFileSaver(blob, file);
+        } else {
+            window.print();
+        }
+    });
 }

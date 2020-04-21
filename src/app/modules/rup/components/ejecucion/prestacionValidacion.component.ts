@@ -697,7 +697,7 @@ export class PrestacionValidacionComponent implements OnInit {
                 idPrestacion: this.prestacion.id
             };
 
-            this.servicioDocumentos.descargarArchivo(informe, this.prestacion.solicitud.tipoPrestacion.term, { type: 'application/pdf' }).subscribe(result => {
+            this.servicioDocumentos.descargarInformeRUP(informe, this.prestacion.solicitud.tipoPrestacion.term).subscribe(result => {
                 this.descargaCerrada = true;
             });
 
@@ -728,7 +728,7 @@ export class PrestacionValidacionComponent implements OnInit {
             if (this.envioRegistro) {
                 datos.idRegistro = this.registro;
             }
-            this.servicioDocumentos.enviarArchivo(datos).subscribe(result => {
+            this.servicioDocumentos.enviarInformeRUP(datos).subscribe(result => {
                 if (result.status === 'OK') {
                     this.plex.info('success', 'El pdf ha sido enviado al servicio seleccionado', 'Envío exitoso!');
                 } else {
@@ -750,7 +750,7 @@ export class PrestacionValidacionComponent implements OnInit {
             idRegistro
         };
 
-        this.servicioDocumentos.descargarArchivo(informe, term, { type: 'application/pdf' }).subscribe(result => {
+        this.servicioDocumentos.descargarInformeRUP(informe, term).subscribe(result => {
             this.descargaCerrada = true;
         });
 
