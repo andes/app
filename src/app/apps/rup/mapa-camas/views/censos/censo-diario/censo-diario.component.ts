@@ -90,7 +90,8 @@ export class CensosDiariosComponent implements OnInit {
                                 this.censoPacientes.push(movimiento);
                             } else {
                                 if (movimiento.paseA) {
-                                    if (this.censoPacientes.length > 0) {
+                                    if (this.censoPacientes.length > 0 &&
+                                        this.censoPacientes[this.censoPacientes.length - 1].datos.paciente.id === movimiento.datos.paciente.id) {
                                         this.censoPacientes[this.censoPacientes.length - 1].paseA = movimiento.paseA;
                                     } else {
                                         this.censoPacientes.push(movimiento);
