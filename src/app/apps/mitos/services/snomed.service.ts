@@ -15,8 +15,8 @@ export class SnomedService {
         return this.server.get(this.snomedURL, { params: params, showError: true });
     }
 
-    getCie10(params: any): Observable<any> {
-        return this.server.get(this.snomedURL + '/map', { params: params, showError: false });
+    getCie10(body): Observable<any> {
+        return this.server.post(this.snomedURL + '/map', body);
     }
 
     getQuery(params: any): Observable<any[]> {
