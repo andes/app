@@ -1,6 +1,6 @@
 <plex-detail size="lg" direction="{{ orientacion === 'vertical' ? 'column' : 'row' }}">
 
-    <img class="img-user" [mpiFotoPaciente]="paciente" />
+    <img [mpiFotoPaciente]="paciente" />
 
     <plex-badge [type]="estadoBadgeType" *ngIf="paciente.estado">
         {{ paciente.estado | uppercase }}

@@ -49,7 +49,8 @@ import { PacientePanelComponent } from './components/paciente-panel.component';
         BotonesRegistroComponent,
         UpdateContactoDireccionComponent,
         PacienteDetalleComponent,
-        CarpetaPacienteComponent
+        CarpetaPacienteComponent,
+        FotoDirective
     ],
 })
 export class MPILibModule {
