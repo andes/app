@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'profesionales',
@@ -32,7 +33,11 @@ export class ProfesionalComponent implements OnInit {
     nuevoProfesional = false;
     // cantidad: IProfesional[];
 
-    constructor(private formBuilder: FormBuilder, private profesionalService: ProfesionalService, public sanitizer: DomSanitizer, private router: Router) { }
+    constructor(private formBuilder: FormBuilder,
+        private profesionalService: ProfesionalService,
+        public sanitizer: DomSanitizer,
+        private router: Router,
+        private auth: Auth, ) { }
 
     ngOnInit() {
         this.searchForm = this.formBuilder.group({
@@ -40,13 +45,16 @@ export class ProfesionalComponent implements OnInit {
             nombre: [''],
             documento: ['']
         });
-
-        this.searchForm.valueChanges.pipe(debounceTime(1000)).subscribe((value) => {
-            this.value = value;
-            this.skip = 0;
-            this.loadDatos(false);
-        });
-        this.loadDatos();
+        if (this.auth.getPermissions('matriculaciones:profesionales:?').length < 1) {
+            this.router.navigate(['inicio']);
+        } else {
+            this.searchForm.valueChanges.pipe(debounceTime(1000)).subscribe((value) => {
+                this.value = value;
+                this.skip = 0;
+                this.loadDatos(false);
+            });
+            this.loadDatos();
+        }
 
     }
 
