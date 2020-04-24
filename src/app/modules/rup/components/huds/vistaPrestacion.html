@@ -1,6 +1,9 @@
-<div class="prestaciones mt-3 ml-3">
+<div class="prestaciones mt-3 ml-3" *ngIf="ready$ | async">
     <ng-container *ngIf="prestacion">
-        <h4 class="text-capitalize">{{ prestacion.solicitud.tipoPrestacion.term }}</h4>
+        <h4 class="text-capitalize" justify>
+            {{ prestacion.solicitud.tipoPrestacion.term }}
+            <ng-content></ng-content>
+        </h4>
         <div class="row">
             <div class="col-6">
                 <b> Fecha: </b>
@@ -65,12 +68,12 @@
                                 </span>
                             </div>
                             <div class="content">
-                                <div class="row" *ngIf="paciente">
+                                <div class="row" *ngIf="prestacion.paciente">
                                     <div class="col-12">
                                         <rup [elementoRUP]="elementosRUPService.elementoRegistro(elemento)"
                                              [params]="elementosRUPService.getParams(elemento)"
-                                             [prestacion]="prestacion" [registro]="elemento" [paciente]="paciente"
-                                             [soloValores]="true" [vistaHUDS]="false">
+                                             [prestacion]="prestacion" [registro]="elemento"
+                                             [paciente]="prestacion.paciente" [soloValores]="true" [vistaHUDS]="false">
                                         </rup>
                                     </div>
                                 </div>

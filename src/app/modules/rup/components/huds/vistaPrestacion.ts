@@ -10,6 +10,7 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
 @Component({
     selector: 'vista-prestacion',
     templateUrl: 'vistaPrestacion.html',
+    styleUrls: ['../core/_rup.scss'],
     encapsulation: ViewEncapsulation.None,
 })
 
@@ -21,6 +22,8 @@ export class VistaPrestacionComponent {
     @Input() evolucionActual: any;
     @Input() indice = 0;
 
+    public ready$ = this.elementosRUPService.ready;
+
     constructor(
         public servicioPrestacion: PrestacionesService,
         private servicioPaciente: PacienteService,
@@ -31,16 +34,13 @@ export class VistaPrestacionComponent {
     @Input()
     set idPrestacion(value: any) {
         this.paciente = null;
+        this.prestacion = null;
         this._idPrestacion = value;
-        this.elementosRUPService.ready.subscribe((resultado) => {
-            if (resultado) {
-                this.servicioPrestacion.getById(this.idPrestacion).subscribe(prestacion => {
-                    this.prestacion = prestacion;
-                    this.servicioPaciente.getById(this.prestacion.paciente.id).subscribe(paciente => {
-                        this.paciente = paciente;
-                    });
-                });
-            }
+        this.servicioPrestacion.getById(this.idPrestacion).subscribe(prestacion => {
+            this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
+                this.prestacion = prestacion;
+                this.paciente = paciente;
+            });
         });
     }
     get idPrestacion(): any {
