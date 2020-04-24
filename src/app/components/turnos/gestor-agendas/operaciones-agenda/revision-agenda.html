@@ -61,10 +61,10 @@
                 <div class="col-6">
                     <br>
                     <label>Prestación: </label>
-                    <plex-select *ngIf="!turnoTipoPrestacion" [(ngModel)]="turnoTipoPrestacion"
+                    <plex-select *ngIf="bloqueSeleccionado.tipoPrestaciones.length > 1" [(ngModel)]="turnoTipoPrestacion"
                                  name="tipoPrestacionTurno" [data]="bloqueSeleccionado.tipoPrestaciones">
                     </plex-select>
-                    <div *ngIf="turnoTipoPrestacion">{{turnoTipoPrestacion.nombre}}</div>
+                    <div *ngIf="bloqueSeleccionado.tipoPrestaciones.length === 1">{{turnoTipoPrestacion.nombre}}</div>
                 </div>
             </div>
             <div *ngIf="turnoSeleccionado && (turnoSeleccionado.paciente?.id || paciente?.id) && !pacientesSearch">
