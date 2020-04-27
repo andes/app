@@ -32,7 +32,7 @@
                     <th>ACCIONES</th>
                 </tr>
                 <ng-container *ngIf="(selectedCama$ | async) as selectedCama">
-                    <tr app-item-cama *ngFor="let cama of camas | async; trackBy: trackByFn" [cama]="cama" [capa]="capa"
+                    <tr app-item-cama *ngFor="let cama of camas | async" [cama]="cama" [capa]="capa"
                         [permisoIngreso]="permisoIngreso" (accionCama)="selectCama(cama, $event)"
                         (click)="verDetalle(cama, selectedCama)" [class.invert]="cama._id === selectedCama._id">
                     </tr>

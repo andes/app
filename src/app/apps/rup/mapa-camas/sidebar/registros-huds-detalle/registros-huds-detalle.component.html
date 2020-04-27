@@ -42,7 +42,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let prestacion of historialFiltrado$ | async; trackBy: trackById">
+        <tr *ngFor="let prestacion of historialFiltrado$ | async">
             <td>
                 <small>
                     {{ prestacion.solicitud.fecha | fecha }}
