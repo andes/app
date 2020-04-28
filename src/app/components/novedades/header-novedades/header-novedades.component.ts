@@ -37,10 +37,6 @@ export class HeaderNovedadesComponent implements OnInit {
         });
     }
 
-    public formatFecha(fecha: string) {
-        return moment(fecha).format('DD/mm/YYYY');
-    }
-
     public getFoto(novedad: any) {
         let imagenes = novedad.imagenes ? novedad.imagenes : [];
         if (imagenes.length > 0) {

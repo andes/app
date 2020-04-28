@@ -32,10 +32,6 @@ export class DetalleNovedadComponent implements OnInit {
         });
     }
 
-    public formatFecha(fecha: string) {
-        return moment(fecha).format('DD/mm/YYYY');
-    }
-
     getFotos(novedad: any) {
         if (novedad && novedad.imagenes) {
             return novedad.imagenes.map((doc: any) => {

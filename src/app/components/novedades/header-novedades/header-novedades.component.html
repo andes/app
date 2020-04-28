@@ -7,7 +7,7 @@
             <div *ngIf="novedad.imagenes.length === 0" class="svg-logo item-default-img" svgLogo></div>
             <plex-label titulo="{{novedad.titulo}}" subtitulo="">
             </plex-label>
-            <plex-badge size="md" type="info">{{formatFecha(novedad.fecha)}}</plex-badge>
+            <plex-badge size="md" type="info">{{novedad.fecha | date: 'dd/MM/yyyy'}}</plex-badge>
             <plex-badge size="md" type="success"> {{novedad.modulo.nombre}} </plex-badge>
         </plex-item>
     </plex-list>
