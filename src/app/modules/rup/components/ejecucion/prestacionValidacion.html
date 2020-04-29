@@ -4,9 +4,11 @@
             <div class="row">
                 <div [ngClass]="{'col-9': prestacion.solicitud.ambitoOrigen === 'ambulatorio', 'col-12': prestacion.solicitud.ambitoOrigen === 'internacion'}"
                      *ngIf="prestacion?.solicitud">
-                    <div class="page-title titulo-consulta" id="pageHeader">
-                        <span class="consulta">Resumen | </span> {{prestacion.solicitud.tipoPrestacion.term}} -
-                        <span class="fecha">{{prestacion.solicitud.fecha | date: 'EEE dd/MM/yyyy'}}</span>
+                    <div>
+                        <span class="page-title titulo-consulta">
+                            <span class="consulta">Resumen | </span> {{prestacion.solicitud.tipoPrestacion.term}} -
+                            <span class="fecha">{{prestacion.solicitud.fecha | date: 'EEE dd/MM/yyyy'}}</span>
+                        </span>
 
                         <div class="float-right mr-2 menu-info">
                             <plex-button icon="information-outline" type="info" class=""
@@ -15,16 +17,18 @@
                             <plex-button type="info" icon="information" class="" title="Ver Registros de la Solicitud"
                                          *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)">
                             </plex-button>
-                            <ng-container *ngIf="validada && !prestacion.solicitud.tipoPrestacion.noNominalizada">
+                            <rup-acciones-envio-informe [prestacion]="prestacion">
+                            </rup-acciones-envio-informe>
+                            <!-- <ng-container *ngIf="validada && !prestacion.solicitud.tipoPrestacion.noNominalizada">
                                 <plex-button type="warning" icon="download mdi-14px" class="ml-1"
                                              title="Descargar Resúmen PDF" titlePosition="top"
                                              (click)="descargarResumen()" [disabled]="!descargaCerrada">
                                 </plex-button>
                             </ng-container>
                             <ng-container *ngIf="validada && !prestacion.solicitud.tipoPrestacion.noNominalizada">
-                                <plex-button type="info" icon="email mdi-14px" class="float-right ml-1" *ngIf="tieneEmails"
-                                             title="Enviar Resúmen PDF" titlePosition="top" (click)="openModalEmails()"
-                                             [disabled]="!envioCerrado">
+                                <plex-button type="info" icon="email mdi-14px" class="float-right ml-1"
+                                             *ngIf="tieneEmails" title="Enviar Resúmen PDF" titlePosition="top"
+                                             (click)="openModalEmails()" [disabled]="!envioCerrado">
                                 </plex-button>
                             </ng-container>
                             <ng-container *ngIf="!validada && !prestacion.solicitud.tipoPrestacion.noNominalizada">
@@ -32,7 +36,7 @@
                                              title="Previsualizar Resúmen PDF" titlePosition="top"
                                              (click)="descargarResumen()" [disabled]="!descargaCerrada">
                                 </plex-button>
-                            </ng-container>
+                            </ng-container> -->
                         </div>
                     </div>
                 </div>
@@ -223,16 +227,8 @@
                                         </span>
                                     </span>
                                 </ng-container>
-                                <ng-container
-                                              *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && (servicioPrestacion.getIcon(elemento.concepto, false) === 'procedimiento' || elemento.esSolicitud)">
-                                    <plex-button type="info" size="sm mdi-14px" icon="download" title="Descargar PDF" titlePosition="bottom"
-                                                 [disabled]="!descargaCerrada"
-                                                 (click)="descargarRegistro(elemento.id, elemento.concepto.term)">
-                                    </plex-button>
-                                    <plex-button type="info" size="sm mdi-14px" icon="email" [disabled]="!envioCerrado" *ngIf="tieneEmails" title="Enviar PDF" titlePosition="bottom"
-                                                 (click)="openModalEmails(elemento.id)">
-                                    </plex-button>
-                                </ng-container>
+                                <rup-acciones-envio-informe [prestacion]="prestacion" [registro]="elemento">
+                                </rup-acciones-envio-informe>
                             </div>
                         </div>
 

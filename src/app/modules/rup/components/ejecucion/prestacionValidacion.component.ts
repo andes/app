@@ -33,10 +33,7 @@ export class PrestacionValidacionComponent implements OnInit {
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
     // Tiene permisos para descargar?
-    public puedeDescargarPDF = false;
-    descargaCerrada: any = true;
-    envioCerrado: any = true;
-    public tieneEmails = false;
+
 
     // Id de la Agenda desde localStorage (revisar si aun hace falta)
     public idAgenda: any;
@@ -47,11 +44,6 @@ export class PrestacionValidacionComponent implements OnInit {
 
     // Prestación actual en Ejecución
     public prestacion: any;
-
-    // Registro actual a enviar
-    public registro: any;
-    public envioRegistro = false;
-
 
     public registrosOriginales: any;
 
@@ -142,7 +134,6 @@ export class PrestacionValidacionComponent implements OnInit {
         if (!this.auth.profesional) {
             this.redirect('inicio');
         }
-        this.puedeDescargarPDF = this.auth.getPermissions('descargas:?').length > 0;
         this.route.params.subscribe(params => {
             let id = params['id'];
             this.idAgenda = localStorage.getItem('agenda');
@@ -153,7 +144,6 @@ export class PrestacionValidacionComponent implements OnInit {
             });
 
         });
-        this.obtenerMails();
     }
 
     redirect(pagina: string) {
@@ -296,13 +286,6 @@ export class PrestacionValidacionComponent implements OnInit {
         });
     }
 
-    obtenerMails() {
-        this.organizacionService.configuracion(this.auth.organizacion.id).subscribe(configuracion => {
-            if (configuracion && configuracion.emails) {
-                this.tieneEmails = configuracion.emails.length > 0;
-            }
-        });
-    }
 
     /**
      * Confirmamos validacion y guardamos
@@ -312,20 +295,20 @@ export class PrestacionValidacionComponent implements OnInit {
         let existeDiagnostico = this.registros.find(p => p.esDiagnosticoPrincipal === true);
         let diagnosticoRepetido = this.registros.filter(p => p.esDiagnosticoPrincipal === true).length > 1;
 
-        // let existeC2 = this.registros.find(p => (p.esPrimeraVez === undefined && this.codigosCie10[p.id] && this.codigosCie10[p.id].c2));
-        // if (existeC2) {
-        //     this.plex.toast('info', existeC2.concepto.term.toUpperCase() + '. Debe indicar si es primera vez.');
-        //     return false;
-        // }
+        let existeC2 = this.registros.find(p => (p.esPrimeraVez === undefined && this.codigosCie10[p.id] && this.codigosCie10[p.id].c2));
+        if (existeC2) {
+            this.plex.toast('info', existeC2.concepto.term.toUpperCase() + '. Debe indicar si es primera vez.');
+            return false;
+        }
 
-        // if (!existeDiagnostico && this.prestacion.solicitud.ambitoOrigen !== 'internacion' && !this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
-        //     this.plex.toast('info', 'Debe seleccionar un procedimiento / diagnóstico principal', 'procedimiento / diagóstico principal', 1000);
-        //     return false;
-        // }
-        // if (diagnosticoRepetido) {
-        //     this.plex.toast('info', 'No puede seleccionar más de un procedimiento / diagnóstico principal');
-        //     return false;
-        // }
+        if (!existeDiagnostico && this.prestacion.solicitud.ambitoOrigen !== 'internacion' && !this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+            this.plex.toast('info', 'Debe seleccionar un procedimiento / diagnóstico principal', 'procedimiento / diagóstico principal', 1000);
+            return false;
+        }
+        if (diagnosticoRepetido) {
+            this.plex.toast('info', 'No puede seleccionar más de un procedimiento / diagnóstico principal');
+            return false;
+        }
 
         this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
             if (!validar) {
@@ -682,78 +665,6 @@ export class PrestacionValidacionComponent implements OnInit {
 
     compareArrays(arr1: any[], arr2: any[]) {
         return arr1.join('') === arr2.join('');
-    }
-
-    descargarResumen() {
-
-        this.descargaCerrada = false;
-
-        this.prestacion.ejecucion.registros.forEach(x => {
-            x.icon = 'down';
-        });
-
-        setTimeout(async () => {
-            let informe = {
-                idPrestacion: this.prestacion.id
-            };
-
-            this.servicioDocumentos.descargarInformeRUP(informe, this.prestacion.solicitud.tipoPrestacion.term).subscribe(result => {
-                this.descargaCerrada = true;
-            });
-
-        });
-    }
-
-    openModalEmails(idRegistro?) {
-        this.showModalEmails = true;
-        if (idRegistro) {
-            this.registro = idRegistro;
-            this.envioRegistro = true;
-        }
-    }
-
-    enviarCorreo(email) {
-        this.showModalEmails = false;
-        this.enviarPDF(email);
-    }
-
-    enviarPDF(email) {
-        if (email) {
-            this.envioCerrado = false;
-            const datos: any = {
-                idPrestacion: this.prestacion.id,
-                email: email,
-                idOrganizacion: this.auth.organizacion.id,
-            };
-            if (this.envioRegistro) {
-                datos.idRegistro = this.registro;
-            }
-            this.servicioDocumentos.enviarInformeRUP(datos).subscribe(result => {
-                if (result.status === 'OK') {
-                    this.plex.info('success', 'El pdf ha sido enviado al servicio seleccionado', 'Envío exitoso!');
-                } else {
-                    this.plex.info('danger', result.mensaje, 'Error');
-                }
-                this.envioCerrado = true;
-                this.envioRegistro = false;
-                this.registro = null;
-            });
-        }
-    }
-
-    async descargarRegistro(idRegistro, term) {
-
-        this.descargaCerrada = false;
-
-        let informe = {
-            idPrestacion: this.prestacion.id,
-            idRegistro
-        };
-
-        this.servicioDocumentos.descargarInformeRUP(informe, term).subscribe(result => {
-            this.descargaCerrada = true;
-        });
-
     }
 
     /**

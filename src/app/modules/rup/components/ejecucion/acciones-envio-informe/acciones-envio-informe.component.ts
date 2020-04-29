@@ -9,6 +9,16 @@ import { Plex } from '@andes/plex';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import { map } from 'rxjs/operators';
 
+/**
+ * Cualquier cambio en esta componente implica testear en:
+ *   1. prestacion no validada (previsualizar PDF).
+ *   2. prestacion validada enviar email y decargar pdf completo.
+ *   3. registro procedimiento y solicitud muestras los botones de descarga y envio.
+ *   4. verificar epicrisis.
+ *   5. verificar en secciones.
+ *   6. Si la organzacion no tiene emails configurado no debe mostrar el icono de enviar por emails
+ */
+
 @Component({
     selector: 'rup-acciones-envio-informe',
     templateUrl: 'acciones-envio-informe.component.html'
