@@ -28,7 +28,7 @@
     "@andes/auth": "^6.0.3",
     "@andes/icons": "^0.6.1",
     "@andes/match": "^1.1.12",
-    "@andes/plex": "^6.0.0",
+    "@andes/plex": "^6.0.3",
     "@andes/shared": "^5.1.1",
     "@angular/animations": "8.1.0",
     "@angular/cdk": "^7.0.1",
