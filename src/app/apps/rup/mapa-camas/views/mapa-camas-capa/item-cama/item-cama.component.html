@@ -25,12 +25,16 @@
         </span>
         <span class="d-block"></span>
     </td>
-    <td justify>
+    <td class="d-flex align-items-center">
         <ng-container *ngIf="estadoCama$ | async as estadoCama">
-            <plex-badge [type]="estadoCama.color">
-                {{estadoCama.label}}
-            </plex-badge>
-            <span class="d-block"></span>
+                <plex-badge [type]="estadoCama.color">
+                    {{estadoCama.label}}
+                </plex-badge>
+            <ng-container *ngIf="tieneOxigeno">
+                <plex-badge size="md" type="info">
+                    <plex-icon name="air-horn"></plex-icon>
+                 </plex-badge>
+            </ng-container>
         </ng-container>
     </td>
     <td>

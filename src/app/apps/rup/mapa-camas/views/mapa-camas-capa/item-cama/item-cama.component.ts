@@ -1,11 +1,8 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
-import { Observable, combineLatest, Subject, Subscription } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import { PrestacionesService } from '../../../../../../modules/rup/services/prestaciones.service';
-import { ISnapshot } from '../../../interfaces/ISnapshot';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'tr[app-item-cama]',
@@ -18,7 +15,7 @@ export class ItemCamaComponent implements OnInit {
     @Input() permisoIngreso: boolean;
     @Output() accionCama = new EventEmitter<any>();
 
-    // public capa: string;
+    public tieneOxigeno: boolean;
     public relacionesPosibles$: Observable<any>;
     public estadoCama$: Observable<any>;
     public puedeDesocupar$: Observable<string>;
@@ -31,7 +28,6 @@ export class ItemCamaComponent implements OnInit {
         public auth: Auth,
         private router: Router,
         private mapaCamasService: MapaCamasService,
-        private prestacionService: PrestacionesService
     ) {
     }
 
@@ -39,14 +35,12 @@ export class ItemCamaComponent implements OnInit {
         this.estadoCama$ = this.mapaCamasService.getEstadoCama(this.cama);
         this.relacionesPosibles$ = this.mapaCamasService.getRelacionesPosibles(this.cama);
 
-        // this.capa = this.mapaCamasService.capa;
-        // if (this.capa === 'estadistica') {
-        //     if (this.cama.estado === 'ocupada') {
-        //         this.prestacionService.getById(this.cama.idInternacion).subscribe(prestacion => {
-        //             this.puedeDesocupar$ = this.mapaCamasService.verificarCamaDesocupar(this.cama, prestacion);
-        //         });
-        //     }
-        // }
+        this.tieneOxigeno = false;
+        this.cama.equipamiento.map(equip => {
+            if (equip.term === 'aporte central de oxígeno') {
+                this.tieneOxigeno = true;
+            }
+        });
     }
 
     goTo() {
