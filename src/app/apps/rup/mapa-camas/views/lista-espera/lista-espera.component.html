@@ -12,7 +12,7 @@
                     <b button></b>
                 </plex-heading>
                 <plex-item *ngFor="let item of listaEspera">
-                    <plex-label [tituloBold]="false" titulo="{{ item.paciente | nombre  }}"></plex-label>
+                    <plex-label [tituloBold]="false" titulo="{{ item.paciente | paciente  }}"></plex-label>
                     <plex-label [tituloBold]="false" titulo="{{ item.paciente.documento }}"></plex-label>
                     <plex-label [tituloBold]="false" titulo="{{ item.paciente | sexo }}"></plex-label>
                     <plex-label [tituloBold]="false" titulo="{{ item.paciente.fechaNacimiento | fecha }}"></plex-label>

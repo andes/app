@@ -541,6 +541,7 @@ import { SelectBaseComponent } from './modules/rup/components/elementos/rupers/s
 import { DisclaimerService } from './services/disclaimer.service';
 import { SeccionComponent } from './modules/rup/components/elementos/rupers/seccionado/seccion.component';
 import { SeccionadoComponent } from './modules/rup/components/elementos/rupers/seccionado/seccionado.component';
+import { INTERNACION_COMPONENTS, INTERNACION_PROVIDERS } from './apps/rup/mapa-camas/mapa-camas.module';
 
 
 registerLocaleData(localeEs, 'es');
@@ -702,7 +703,9 @@ registerLocaleData(localeEs, 'es');
         SelectOrganizacionDirective,
         SelectProfesionalesDirective,
         SelectPrestacionesDirective,
-        SelectFinanciadorDirective
+        SelectFinanciadorDirective,
+
+        ...INTERNACION_COMPONENTS
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
@@ -794,7 +797,8 @@ registerLocaleData(localeEs, 'es');
         WebSocketService,
         HotjarService,
         ConceptosTurneablesService,
-        DisclaimerService
+        DisclaimerService,
+        ...INTERNACION_PROVIDERS
     ]
 })
 

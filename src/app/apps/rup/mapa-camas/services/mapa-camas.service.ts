@@ -62,6 +62,8 @@ export class MapaCamasService {
     // public listaInternacionFiltrada$: Observable<IPrestacion[]>;
     public fechaActual$: Observable<Date>;
 
+    public mainView = new BehaviorSubject<any>('mapa-camas');
+
     public ambito = 'internacion';
     public capa;
     public fecha: Date;
@@ -163,6 +165,10 @@ export class MapaCamasService {
             map(() => moment().toDate()),
             startWith(new Date())
         );
+    }
+
+    resetView() {
+        this.mainView.next('mapa-camas');
     }
 
     getEstadoCama(cama: ISnapshot) {

@@ -43,56 +43,63 @@ import { MaquinaEstadosHTTP } from './services/maquina-estados.http';
 import { ListadoInternacionService } from './views/listado-internacion/listado-internacion.service';
 import { RegistrosHudsDetalleComponent } from './sidebar/registros-huds-detalle/registros-huds-detalle.component';
 
+export const INTERNACION_COMPONENTS = [
+    MapaCamasMainComponent,
+    MapaCamasCapaComponent,
+    CensosDiariosComponent,
+    CensosMensualesComponent,
+    FiltrosCamasComponent,
+    CamaMainComponent,
+    EstadoServicioComponent,
+    ItemCamaComponent,
+    IngresarPacienteComponent,
+    IconoCamitaComponent,
+    CamaDestinoGenericoComponent,
+    CamaDesocuparComponent,
+    EgresarPacienteComponent,
+    CamaDetalleComponent,
+    InternacionDetalleComponent,
+    InformeIngresoComponent,
+    InformeEgresoComponent,
+    HistorialDetalleComponent,
+    MovimientosInternacionComponent,
+    CambiarCamaComponent,
+    InternacionListadoComponent,
+    InternacionListaEsperaComponent,
+    ElegirPacienteComponent,
+    FiltrosInternacionComponent,
+    NuevoRegistroSaludComponent,
+    RegistrosHudsDetalleComponent
+];
 
-@NgModule({
-    imports: [
-        CommonModule,
-        PlexModule,
-        FormsModule,
-        RouterModule,
-        HttpClientModule,
-        MapaCamasRouting,
-        SharedModule,
-        MPILibModule,
-        MitosModule,
-        OrganizacionLibModule
-    ],
-    declarations: [
-        MapaCamasMainComponent,
-        MapaCamasCapaComponent,
-        CensosDiariosComponent,
-        CensosMensualesComponent,
-        FiltrosCamasComponent,
-        CamaMainComponent,
-        EstadoServicioComponent,
-        ItemCamaComponent,
-        IngresarPacienteComponent,
-        IconoCamitaComponent,
-        CamaDestinoGenericoComponent,
-        CamaDesocuparComponent,
-        EgresarPacienteComponent,
-        CamaDetalleComponent,
-        InternacionDetalleComponent,
-        InformeIngresoComponent,
-        InformeEgresoComponent,
-        HistorialDetalleComponent,
-        MovimientosInternacionComponent,
-        CambiarCamaComponent,
-        InternacionListadoComponent,
-        InternacionListaEsperaComponent,
-        ElegirPacienteComponent,
-        FiltrosInternacionComponent,
-        NuevoRegistroSaludComponent,
-        RegistrosHudsDetalleComponent
-    ],
-    providers: [
-        MapaCamasService,
-        MapaCamasHTTP,
-        MaquinaEstadosHTTP,
-        ListadoInternacionService
-    ],
-    exports: [],
-})
-export class MapaCamasModule {
+export const INTERNACION_PROVIDERS = [
+    MapaCamasService,
+    MapaCamasHTTP,
+    MaquinaEstadosHTTP,
+    ListadoInternacionService
+];
 
-}
+// @NgModule({
+//     imports: [
+//         CommonModule,
+//         PlexModule,
+//         FormsModule,
+//         RouterModule,
+//         HttpClientModule,
+//         MapaCamasRouting,
+//         SharedModule,
+//         MPILibModule,
+//         MitosModule,
+//         OrganizacionLibModule
+//     ],
+//     declarations: [
+//         ...INTERNACION_COMPONENTS
+//     ],
+//     providers: [
+//         ...INTERNACION_PROVIDERS
+//     ],
+//     exports: [],
+// })
+// export class MapaCamasModule {
+
+// }

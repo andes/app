@@ -32,7 +32,7 @@
             </td>
             <td *ngIf="item.paciente; else sinPaciente">
                 <small>
-                    {{ item.paciente | nombre }}
+                    {{ item.paciente | paciente }}
                 </small>
             </td>
             <ng-template #sinPaciente>

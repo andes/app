@@ -29,6 +29,8 @@ export class RegistrosHudsDetalleComponent implements OnInit {
 
     @Output() accion = new EventEmitter();
 
+    public esProfesional = this.auth.profesional;
+
     constructor(
         private mapaCamasService: MapaCamasService,
         private prestacionService: PrestacionesService,
@@ -51,8 +53,13 @@ export class RegistrosHudsDetalleComponent implements OnInit {
             map(prestaciones => {
                 return prestaciones.filter(p => p.solicitud.ambitoOrigen === 'internacion');
             }),
+            map(prestaciones => {
+                return prestaciones.filter(p => this.validadaCreadasPorMi(p));
+            }),
             cache()
         );
+
+
 
         this.historialFiltrado$ = combineLatest(
             this.historial$,
@@ -66,6 +73,19 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                 });
             })
         );
+    }
+
+    validadaCreadasPorMi(prestacion) {
+        const estadoPrestacion = prestacion.estados[prestacion.estados.length - 1];
+        const esValidada = estadoPrestacion.tipo === 'validada';
+        const createdByMe = estadoPrestacion.createdBy.id === this.auth.profesional;
+        return esValidada || createdByMe;
+    }
+
+    esEjecucion(prestacion) {
+        const estadoPrestacion = prestacion.estados[prestacion.estados.length - 1];
+        const esEjecucion = estadoPrestacion.tipo === 'ejecucion';
+        return esEjecucion;
     }
 
     verHuds() {
@@ -89,5 +109,17 @@ export class RegistrosHudsDetalleComponent implements OnInit {
 
     onNuevoRegistrio() {
         this.accion.emit({ accion: 'nuevo-registro' });
+    }
+
+    onViewRegistro(prestacion) {
+        this.mapaCamasService.mainView.next(prestacion);
+    }
+
+    trackById(item) {
+        return item.id;
+    }
+
+    ejecutar(prestacion) {
+        this.router.navigate(['rup', 'ejecucion', prestacion.id]);
     }
 }

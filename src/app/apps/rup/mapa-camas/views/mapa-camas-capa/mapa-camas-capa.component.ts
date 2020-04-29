@@ -7,7 +7,7 @@ import { ISnapshot } from '../../interfaces/ISnapshot';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable } from 'rxjs/Observable';
 import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
-import { take, pluck, tap, map } from 'rxjs/operators';
+import { take, pluck, tap, map, distinctUntilChanged } from 'rxjs/operators';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { timer, Subscription } from 'rxjs';
 
@@ -18,7 +18,7 @@ import { timer, Subscription } from 'rxjs';
 
 })
 
-export class MapaCamasCapaComponent implements OnInit {
+export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     capa$: Observable<string>;
     selectedCama$: Observable<ISnapshot>;
     selectedPaciente$: Observable<IPaciente>;
@@ -42,6 +42,10 @@ export class MapaCamasCapaComponent implements OnInit {
     cambiarUO;
     camasDisponibles;
 
+    mainView;
+    subscription: Subscription;
+
+
     public permisoIngreso = false;
     public permisoCenso = false;
     public permisoCrearCama = false;
@@ -54,7 +58,13 @@ export class MapaCamasCapaComponent implements OnInit {
         public mapaCamasService: MapaCamasService,
     ) { }
 
+
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
+    }
+
     ngOnInit() {
+        this.mapaCamasService.resetView();
         this.plex.updateTitle([{
             route: '/inicio',
             name: 'Andes'
@@ -63,6 +73,14 @@ export class MapaCamasCapaComponent implements OnInit {
         }, {
             name: 'Mapa de Camas'
         }]);
+
+
+        // CROTADA: si uso ngIf en el layout se rompen los tooltips
+        // tengo que averiguar
+        this.subscription = this.mapaCamasService.mainView.subscribe((v) => {
+            this.mainView = v;
+        });
+        ////////////////////////////////////////////////////////////////////
 
         this.capa$ = this.route.params.pipe(
             take(1),
@@ -123,6 +141,7 @@ export class MapaCamasCapaComponent implements OnInit {
     }
 
     selectCama(cama, relacion) {
+        this.mapaCamasService.resetView();
         this.mapaCamasService.select(cama);
         this.mapaCamasService.selectPaciente(cama.paciente);
         if (relacion) {
@@ -172,5 +191,9 @@ export class MapaCamasCapaComponent implements OnInit {
 
     gotoListaEspera() {
         this.router.navigate([`/internacion/${this.ambito}/${this.capa}/lista-espera`]);
+    }
+
+    trackByFn(item: ISnapshot) {
+        return item.idCama;
     }
 }
