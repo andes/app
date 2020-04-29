@@ -231,6 +231,7 @@ import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucio
 import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
 import { ResumenPacienteDinamicoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
 import { ResumenPacienteDinamicoNinoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico-nino.component';
+import { RUPAccionesEnvioInformeComponent } from './modules/rup/components/ejecucion/acciones-envio-informe/acciones-envio-informe.component';
 
 
 // Legacy para RUP
@@ -623,6 +624,7 @@ registerLocaleData(localeEs, 'es');
         VistaPrestacionComponent,
         VistaCDAComponent,
         HudsBusquedaPacienteComponent,
+        RUPAccionesEnvioInformeComponent,
 
         // RUP
         ...RUPComponentsArray,

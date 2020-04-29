@@ -1,0 +1,17 @@
+<ng-container *ngIf="showPrevisualizacion">
+    <plex-button type="warning" icon="download" class="float-right ml-1" title="Previsualizar Resúmen PDF"
+                 titlePosition="top" (click)="descargarInforme()" [disabled]="requestInProgress">
+    </plex-button>
+</ng-container>
+
+<ng-container *ngIf="showEnviosBtn">
+    <plex-button type="info" [size]="btnSize" icon="download" title="Descargar PDF" titlePosition="bottom"
+                 [disabled]="requestInProgress" (click)="descargarInforme()">
+    </plex-button>
+    <plex-button type="info" [size]="btnSize" icon="email" [disabled]="requestInProgress" *ngIf="hasEmails$ | async"
+                 title="Enviar PDF" titlePosition="bottom" (click)="openModalEmails()">
+    </plex-button>
+</ng-container>
+
+<modal-seleccion-email *ngIf="showModalEmails" (email)="enviarPDF($event)">
+</modal-seleccion-email>

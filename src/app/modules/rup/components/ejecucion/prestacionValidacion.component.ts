@@ -312,20 +312,20 @@ export class PrestacionValidacionComponent implements OnInit {
         let existeDiagnostico = this.registros.find(p => p.esDiagnosticoPrincipal === true);
         let diagnosticoRepetido = this.registros.filter(p => p.esDiagnosticoPrincipal === true).length > 1;
 
-        let existeC2 = this.registros.find(p => (p.esPrimeraVez === undefined && this.codigosCie10[p.id] && this.codigosCie10[p.id].c2));
-        if (existeC2) {
-            this.plex.toast('info', existeC2.concepto.term.toUpperCase() + '. Debe indicar si es primera vez.');
-            return false;
-        }
+        // let existeC2 = this.registros.find(p => (p.esPrimeraVez === undefined && this.codigosCie10[p.id] && this.codigosCie10[p.id].c2));
+        // if (existeC2) {
+        //     this.plex.toast('info', existeC2.concepto.term.toUpperCase() + '. Debe indicar si es primera vez.');
+        //     return false;
+        // }
 
-        if (!existeDiagnostico && this.prestacion.solicitud.ambitoOrigen !== 'internacion' && !this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
-            this.plex.toast('info', 'Debe seleccionar un procedimiento / diagnóstico principal', 'procedimiento / diagóstico principal', 1000);
-            return false;
-        }
-        if (diagnosticoRepetido) {
-            this.plex.toast('info', 'No puede seleccionar más de un procedimiento / diagnóstico principal');
-            return false;
-        }
+        // if (!existeDiagnostico && this.prestacion.solicitud.ambitoOrigen !== 'internacion' && !this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+        //     this.plex.toast('info', 'Debe seleccionar un procedimiento / diagnóstico principal', 'procedimiento / diagóstico principal', 1000);
+        //     return false;
+        // }
+        // if (diagnosticoRepetido) {
+        //     this.plex.toast('info', 'No puede seleccionar más de un procedimiento / diagnóstico principal');
+        //     return false;
+        // }
 
         this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
             if (!validar) {
