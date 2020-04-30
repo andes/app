@@ -4,9 +4,11 @@
             <div class="row">
                 <div [ngClass]="{'col-9': prestacion.solicitud.ambitoOrigen === 'ambulatorio', 'col-12': prestacion.solicitud.ambitoOrigen === 'internacion'}"
                      *ngIf="prestacion?.solicitud">
-                    <div class="page-title titulo-consulta" id="pageHeader">
-                        <span class="consulta">Resumen | </span> {{prestacion.solicitud.tipoPrestacion.term}} -
-                        <span class="fecha">{{prestacion.solicitud.fecha | date: 'EEE dd/MM/yyyy'}}</span>
+                    <div>
+                        <span class="page-title titulo-consulta">
+                            <span class="consulta">Resumen | </span> {{prestacion.solicitud.tipoPrestacion.term}} -
+                            <span class="fecha">{{prestacion.solicitud.fecha | date: 'EEE dd/MM/yyyy'}}</span>
+                        </span>
 
                         <div class="float-right mr-2 menu-info">
                             <plex-button icon="information-outline" type="info" class=""
@@ -15,10 +17,18 @@
                             <plex-button type="info" icon="information" class="" title="Ver Registros de la Solicitud"
                                          *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)">
                             </plex-button>
-                            <ng-container *ngIf="validada && !prestacion.solicitud.tipoPrestacion.noNominalizada">
-                                <plex-button type="warning" icon="download mdi-14px" class="float-right ml-1"
+                            <rup-acciones-envio-informe [prestacion]="prestacion">
+                            </rup-acciones-envio-informe>
+                            <!-- <ng-container *ngIf="validada && !prestacion.solicitud.tipoPrestacion.noNominalizada">
+                                <plex-button type="warning" icon="download mdi-14px" class="ml-1"
                                              title="Descargar Resúmen PDF" titlePosition="top"
                                              (click)="descargarResumen()" [disabled]="!descargaCerrada">
+                                </plex-button>
+                            </ng-container>
+                            <ng-container *ngIf="validada && !prestacion.solicitud.tipoPrestacion.noNominalizada">
+                                <plex-button type="info" icon="email mdi-14px" class="float-right ml-1"
+                                             *ngIf="tieneEmails" title="Enviar Resúmen PDF" titlePosition="top"
+                                             (click)="openModalEmails()" [disabled]="!envioCerrado">
                                 </plex-button>
                             </ng-container>
                             <ng-container *ngIf="!validada && !prestacion.solicitud.tipoPrestacion.noNominalizada">
@@ -26,65 +36,61 @@
                                              title="Previsualizar Resúmen PDF" titlePosition="top"
                                              (click)="descargarResumen()" [disabled]="!descargaCerrada">
                                 </plex-button>
-                            </ng-container>
+                            </ng-container> -->
                         </div>
                     </div>
                 </div>
             </div>
             <div *ngIf=" prestacion?.solicitud?.ambitoOrigen==='ambulatorio'" class=" row no-gutters
                                              menu-ordenamiento">
-                                    <div class="col-1 mr-0 pr-0">
-                                        <small>Organizar</small>
-                                        <br>
-                                        <div class="btn-group">
-                                            <button (click)="ordenarPorFecha('down')"
-                                                    class="btn btn-sm btn-orden bg-info text-white p-1 pt-0 pb-0 mr-1"
-                                                    [ngClass]="{'bg-invert': ordenRegistros === 'down'}">
-                                                <i class="mdi mdi-24px mdi-menu-down"></i>
-                                            </button>
-                                            <button (click)="ordenarPorFecha('up')"
-                                                    class="btn btn-sm bg-info btn-orden text-white p-1 pt-0 pb-0"
-                                                    [ngClass]="{'bg-invert': ordenRegistros === 'up'}">
-                                                <i class="mdi mdi-24px mdi-menu-up"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="col-11 ml-0 pl-0">
-                                        <small>Ordenar por</small>
-                                        <br>
-                                        <div class="btn-group" role="group">
-                                            <button *ngIf="hayRegistros(['hallazgo', 'situación'])"
-                                                    class="btn btn-sm btn-hallazgo text-uppercase mr-1 "
-                                                    (click)="ordenarPorTipo(['hallazgo', 'situación'])"
-                                                    [ngClass]="{'active': ordenSeleccionado === reemplazar(['hallazgo', 'situación'], ',')}">Hallazgos</button>
-                                            <button *ngIf="hayRegistros(['trastorno'])"
-                                                    class="btn btn-sm btn-trastorno text-uppercase mr-1"
-                                                    (click)="ordenarPorTipo(['trastorno'])"
-                                                    [ngClass]="{'active': ordenSeleccionado === reemplazar(['trastorno'], ',')}">Trastornos</button>
-                                            <button *ngIf="hayRegistros(['procedimiento', 'entidad observable', 'régimen/tratamiento'])"
-                                                    class="btn btn-sm btn-procedimiento text-uppercase mr-1"
-                                                    (click)="ordenarPorTipo(['procedimiento', 'entidad observable', 'régimen/tratamiento'])"
-                                                    [ngClass]="{'active': ordenSeleccionado === reemplazar(['procedimiento', 'entidad observable', 'régimen/tratamiento'], ',')}">Procedimientos</button>
-                                            <button *ngIf="hayRegistros(['procedimiento', 'régimen/tratamiento'], 'planes')"
-                                                    class="btn btn-sm btn-plan text-uppercase mr-1"
-                                                    (click)="ordenarPorTipo(['planes'])"
-                                                    [ngClass]="{'active': ordenSeleccionado === 'planes'}">Solicitudes</button>
-                                            <button *ngIf="hayRegistros(['producto'])"
-                                                    class="btn btn-sm btn-producto text-uppercase mr-1"
-                                                    (click)="ordenarPorTipo(['producto'])"
-                                                    [ngClass]="{'active': ordenSeleccionado === reemplazar(['producto'], ',')}">Insumos</button>
-                                            <button *ngIf="hayRegistros(['elemento de registro'])"
-                                                    class="btn btn-sm btn-adjunto text-uppercase mr-1"
-                                                    (click)="ordenarPorTipo(['elemento de registro'])"
-                                                    [ngClass]="{'active': ordenSeleccionado === reemplazar(['elemento de registro'], ',')}">Adjuntos</button>
-                                            <button *ngIf="tipoOrden"
-                                                    class="btn btn-sm btn-default text-uppercase mr-1 bg-info text-white"
-                                                    (click)="limpiarOrden()">
-                                                <i class="mdi mdi-close"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                        </div>
+                <div class="col-1 mr-0 pr-0">
+                    <small>Organizar</small>
+                    <br>
+                    <div class="btn-group">
+                        <button (click)="ordenarPorFecha('down')"
+                                class="btn btn-sm btn-orden bg-info text-white p-1 pt-0 pb-0 mr-1"
+                                [ngClass]="{'bg-invert': ordenRegistros === 'down'}">
+                            <i class="mdi mdi-24px mdi-menu-down"></i>
+                        </button>
+                        <button (click)="ordenarPorFecha('up')"
+                                class="btn btn-sm bg-info btn-orden text-white p-1 pt-0 pb-0"
+                                [ngClass]="{'bg-invert': ordenRegistros === 'up'}">
+                            <i class="mdi mdi-24px mdi-menu-up"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-11 ml-0 pl-0">
+                    <small>Ordenar por</small>
+                    <br>
+                    <div class="btn-group" role="group">
+                        <button *ngIf="hayRegistros(['hallazgo', 'situación'])"
+                                class="btn btn-sm btn-hallazgo text-uppercase mr-1 "
+                                (click)="ordenarPorTipo(['hallazgo', 'situación'])"
+                                [ngClass]="{'active': ordenSeleccionado === reemplazar(['hallazgo', 'situación'], ',')}">Hallazgos</button>
+                        <button *ngIf="hayRegistros(['trastorno'])" class="btn btn-sm btn-trastorno text-uppercase mr-1"
+                                (click)="ordenarPorTipo(['trastorno'])"
+                                [ngClass]="{'active': ordenSeleccionado === reemplazar(['trastorno'], ',')}">Trastornos</button>
+                        <button *ngIf="hayRegistros(['procedimiento', 'entidad observable', 'régimen/tratamiento'])"
+                                class="btn btn-sm btn-procedimiento text-uppercase mr-1"
+                                (click)="ordenarPorTipo(['procedimiento', 'entidad observable', 'régimen/tratamiento'])"
+                                [ngClass]="{'active': ordenSeleccionado === reemplazar(['procedimiento', 'entidad observable', 'régimen/tratamiento'], ',')}">Procedimientos</button>
+                        <button *ngIf="hayRegistros(['procedimiento', 'régimen/tratamiento'], 'planes')"
+                                class="btn btn-sm btn-plan text-uppercase mr-1" (click)="ordenarPorTipo(['planes'])"
+                                [ngClass]="{'active': ordenSeleccionado === 'planes'}">Solicitudes</button>
+                        <button *ngIf="hayRegistros(['producto'])" class="btn btn-sm btn-producto text-uppercase mr-1"
+                                (click)="ordenarPorTipo(['producto'])"
+                                [ngClass]="{'active': ordenSeleccionado === reemplazar(['producto'], ',')}">Insumos</button>
+                        <button *ngIf="hayRegistros(['elemento de registro'])"
+                                class="btn btn-sm btn-adjunto text-uppercase mr-1"
+                                (click)="ordenarPorTipo(['elemento de registro'])"
+                                [ngClass]="{'active': ordenSeleccionado === reemplazar(['elemento de registro'], ',')}">Adjuntos</button>
+                        <button *ngIf="tipoOrden" class="btn btn-sm btn-default text-uppercase mr-1 bg-info text-white"
+                                (click)="limpiarOrden()">
+                            <i class="mdi mdi-close"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </header>
         <div class="row no-gutters" *ngIf="prestacion?.ejecucion?.registros && prestacion.ejecucion.registros.length">
             <div class="col titulos" [ngClass]="(prestacion.solicitud.ambitoOrigen == 'ambulatorio' ? 'col-9' : '')">
@@ -198,7 +204,7 @@
                             </div>
                             <div class="actions">
                                 <span
-                                      class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
+                                      class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{ (elemento.esSolicitud) ? 'solicitud' : elemento.concepto.semanticTag}}</span>
                                 <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento /
                                     diagnóstico principal</small>
                                 <ng-container *ngIf="elemento.esSolicitud && validada && asignarTurno[elemento.id]">
@@ -221,14 +227,8 @@
                                         </span>
                                     </span>
                                 </ng-container>
-                                <ng-container
-                                              *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && servicioPrestacion.getIcon(elemento.concepto, false) === 'procedimiento' && !elemento.esSolicitud">
-                                    <plex-button type="info" size="sm mdi-14px" icon="download"
-                                                 [disabled]="!descargaCerrada"
-                                                 (click)="descargarRegistro(elemento.id, elemento.concepto.term)">
-                                        <plex-badge type="info" size="sm">PDF</plex-badge>
-                                    </plex-button>
-                                </ng-container>
+                                <rup-acciones-envio-informe [prestacion]="prestacion" [registro]="elemento">
+                                </rup-acciones-envio-informe>
                             </div>
                         </div>
 
@@ -358,3 +358,5 @@
 <!-- Calendario para dar turnos autocitados -->
 <dar-turnos *ngIf="showDarTurnos && solicitudTurno" (volverValidacion)="turnoDado($event)"
             [pacienteSeleccionado]="paciente" [solicitudPrestacion]="solicitudTurno"></dar-turnos>
+<modal-seleccion-email *ngIf="showModalEmails" (email)="enviarCorreo($event)">
+</modal-seleccion-email>

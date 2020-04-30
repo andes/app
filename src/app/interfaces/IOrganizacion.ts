@@ -42,6 +42,7 @@ export interface IOrganizacion {
     servicios: [ISnomedConcept];
     mapaSectores: ISectores[];
     unidadesOrganizativas: [ISnomedConcept];
+    configuraciones: any;
     /**
      * "prestaciones" traidas de sisa. Se muestran en la app mobile
      * @type {[{ idSisa: number, nombre: string }]}

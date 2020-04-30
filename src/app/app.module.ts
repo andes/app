@@ -231,6 +231,7 @@ import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucio
 import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
 import { ResumenPacienteDinamicoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
 import { ResumenPacienteDinamicoNinoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico-nino.component';
+import { RUPAccionesEnvioInformeComponent } from './modules/rup/components/ejecucion/acciones-envio-informe/acciones-envio-informe.component';
 
 
 // Legacy para RUP
@@ -509,6 +510,7 @@ import { VistaDetalleRegistroComponent } from './modules/rup/components/huds/vis
 import { PasesListadoInternacionComponent } from './apps/rup/internacion/components/pasesListadoInternacion.component';
 import { VistaAccesosHudsComponent } from './modules/rup/components/huds/vista-accesos-huds.component';
 import { ModalMotivoAccesoHudsComponent } from './modules/rup/components/huds/modal-motivo-acceso-huds.component';
+import { ModalSeleccionEmailComponent } from './modules/rup/components/ejecucion/modal-seleccion-email.component';
 
 import { HotjarService } from './shared/services/hotJar.service';
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
@@ -622,6 +624,7 @@ registerLocaleData(localeEs, 'es');
         VistaPrestacionComponent,
         VistaCDAComponent,
         HudsBusquedaPacienteComponent,
+        RUPAccionesEnvioInformeComponent,
 
         // RUP
         ...RUPComponentsArray,
@@ -641,6 +644,7 @@ registerLocaleData(localeEs, 'es');
         VistaDetalleRegistroComponent,
         VistaAccesosHudsComponent,
         ModalMotivoAccesoHudsComponent,
+        ModalSeleccionEmailComponent,
 
         // Solicitudes
         SolicitudesComponent,

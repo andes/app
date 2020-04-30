@@ -105,6 +105,9 @@
                                                  title="Quitar de la consulta" titlePosition="left"
                                                  (click)="confirmarEliminarRegistro(registro, 'card')">
                                     </plex-button>
+
+                                    <rup-acciones-envio-informe [prestacion]="prestacion" [registro]="registro">
+                                    </rup-acciones-envio-informe>
                                 </div>
                             </div>
                             <div class="rup-body"
