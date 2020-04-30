@@ -95,7 +95,7 @@
                                          icon="chevron-left" class="text-lg" title="Agenda anterior"
                                          (click)="verAgenda('izq')"></plex-button>
                             <span>{{ agenda.horaInicio | date: 'EEE d MMM' }}
-                                <plex-badge type="info">
+                                <plex-badge type="{{ estadosAgenda[agenda.estado].class }}">
                                     {{ estadosAgenda[agenda.estado].nombre }}</plex-badge>
                             </span>
                             <span *ngIf="estadoT==='dinamica'">
