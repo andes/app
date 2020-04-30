@@ -277,22 +277,15 @@
                                         size="sm" type="danger" title="No asistió" titlePosition="left">
                                 <plex-icon name="account-remove"></plex-icon>
                             </plex-badge>
-                            <plex-badge *ngIf="turno?.paciente?.id && turno.confirmedAt" title="Confirmó asistencia"
-                                        <<<<<<< HEAD class="float-right">
-                                =======
-                                class="float-right">
-                                >>>>>>> d06a398fd... refactor(plex-badge) se aplican badges de plex
+                            <plex-badge *ngIf="turno?.paciente?.id && turno.confirmedAt" title="Confirmó asistencia">
                                 <plex-icon name="emoticon-happy"></plex-icon>
                             </plex-badge>
                             <plex-badge *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && !turno.reasignado?.siguiente"
                                         size="sm" type="danger" title="Aun no reasignado" titlePosition="left">
                                 <plex-icon name="account-alert"></plex-icon>
                             </plex-badge>
-                            <plex-badge *ngIf="turno?.nota" size="sm" type="warning" title="{{turno.nota}}" <<<<<<< HEAD
+                            <plex-badge *ngIf="turno?.nota" size="sm" type="warning" title="{{turno.nota}}"
                                         titlePosition="left">
-                                =======
-                                titlePosition="left">
-                                >>>>>>> d06a398fd... refactor(plex-badge) se aplican badges de plex
                                 <plex-icon name="message"></plex-icon>
                             </plex-badge>
                             <plex-badge *ngIf="turno?.estado !== 'disponible' && turno?.estado !== 'turnoDoble'"
