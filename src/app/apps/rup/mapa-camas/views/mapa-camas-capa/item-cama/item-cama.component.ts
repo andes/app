@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { Observable } from 'rxjs';
+import { aporteOxigeno } from '../../../constantes-internacion';
 
 @Component({
     selector: 'tr[app-item-cama]',
@@ -37,7 +38,7 @@ export class ItemCamaComponent implements OnInit {
 
         this.tieneOxigeno = false;
         this.cama.equipamiento.map(equip => {
-            if (equip.term === 'aporte central de oxígeno') {
+            if (equip.conceptId === aporteOxigeno.conceptId) {
                 this.tieneOxigeno = true;
             }
         });

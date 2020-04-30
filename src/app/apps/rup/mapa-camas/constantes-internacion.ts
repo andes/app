@@ -146,3 +146,5 @@ export const opcionesSexo = [
     { id: 'masculino', label: 'masculino' },
     { id: 'indeterminado', label: 'indeterminado' }
 ];
+
+export const aporteOxigeno = { conceptId: '261746005' };
