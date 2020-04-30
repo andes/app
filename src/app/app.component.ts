@@ -9,8 +9,6 @@ import { PROPERTIES } from './styles/properties';
 import { WebSocketService } from './services/websocket.service';
 import { HotjarService } from './shared/services/hotJar.service';
 
-// import { RxSocket } from 'rx-socket.io-client';
-
 @Component({
     selector: 'app',
     templateUrl: './app.component.html',
@@ -137,15 +135,17 @@ export class AppComponent {
             document.documentElement.style.setProperty(`--${key}`, PROPERTIES[key]);
         });
 
-        const token = this.auth.getToken();
-        if (token) {
-            // this.hotjar.initialize();
-            this.ws.setToken(token);
-            this.auth.session().subscribe(() => {
-                // Inicializa el menú
+        this.auth.session().subscribe((sesion) => {
+            if (sesion.permisos) {
                 this.checkPermissions();
                 this.loading = false;
-            });
+            }
+        });
+
+        const token = this.auth.getToken();
+        if (token) {
+            this.ws.setToken(token);
+            this.auth.setToken(token);
         } else {
             this.loading = true;
         }
