@@ -304,7 +304,7 @@
                         <div class="row">
                             <div class="col">
                                 <label>Paciente</label>
-                                <div *ngIf="paciente" class="text-ellipsis">{{this.paciente | paciente}}</div>
+                                <div *ngIf="paciente" class="text-ellipsis">{{this.paciente | nombre }}</div>
                                 <!-- <div *ngIf="paciente.documento !== ''">{{this.paciente.documento | number}}</div> -->
                                 <label>Turno</label>
                                 <div>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}} a las {{turno.horaInicio |

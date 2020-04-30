@@ -29,7 +29,7 @@
 
                                 <br>
                                 <span>
-                                    <b>Paciente: </b> {{ agendaReasignar?.turno.paciente | paciente }} |
+                                    <b>Paciente: </b> {{ agendaReasignar?.turno.paciente | nombre }} |
                                     <small *ngIf="agendaReasignar?.turno.paciente.documento !== ''">DNI
                                         {{ agendaReasignar?.turno.paciente.documento }}</small>
                                     <small *ngIf="agendaReasignar?.turno.paciente.documento === ''">Sin documento

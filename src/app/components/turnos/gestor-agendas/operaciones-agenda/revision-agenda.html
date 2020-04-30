@@ -61,8 +61,9 @@
                 <div class="col-6">
                     <br>
                     <label>Prestación: </label>
-                    <plex-select *ngIf="bloqueSeleccionado.tipoPrestaciones.length > 1" [(ngModel)]="turnoTipoPrestacion"
-                                 name="tipoPrestacionTurno" [data]="bloqueSeleccionado.tipoPrestaciones">
+                    <plex-select *ngIf="bloqueSeleccionado.tipoPrestaciones.length > 1"
+                                 [(ngModel)]="turnoTipoPrestacion" name="tipoPrestacionTurno"
+                                 [data]="bloqueSeleccionado.tipoPrestaciones">
                     </plex-select>
                     <div *ngIf="bloqueSeleccionado.tipoPrestaciones.length === 1">{{turnoTipoPrestacion.nombre}}</div>
                 </div>
@@ -437,7 +438,7 @@
                                     <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
                                 </td>
                                 <td (click)="seleccionarTurno(bloque.turnos[i], bloque)">
-                                    <span *ngIf="turno.paciente && turno.paciente.id">{{ turno.paciente | paciente }}
+                                    <span *ngIf="turno.paciente && turno.paciente.id">{{ turno.paciente | nombre }}
                                     </span>
                                     <small
                                            *ngIf="turno.paciente && turno.paciente.id && turno.paciente.documento !== ''">
@@ -504,7 +505,7 @@
                                 </td>
                                 <td (click)="seleccionarTurno(agenda.sobreturnos[i], -1)">
                                     <span *ngIf="sobreturno.paciente && sobreturno.paciente.id">{{ sobreturno.paciente |
-                                        paciente }} </span>
+                                        nombre }} </span>
                                     <small>
                                         <span
                                               *ngIf="sobreturno.paciente && sobreturno.paciente.id && sobreturno.paciente.documento !== ''">|

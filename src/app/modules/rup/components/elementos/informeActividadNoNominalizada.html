@@ -71,7 +71,7 @@
                     </thead>
                     <tbody *ngIf="registro.valor.informe?.pacientes && registro.valor.informe.pacientes.length > 0">
                         <tr *ngFor="let paciente of registro.valor.informe.pacientes; let i=index;">
-                            <td>{{paciente | nombre}}</td>
+                            <td>{{ paciente | nombre }}</td>
                             <td>
                                 <plex-button icon="delete" class="btn btn-sm" type="danger" (click)="deletePaciente(i)">
                                 </plex-button>
@@ -155,7 +155,7 @@
                 </thead>
                 <tbody *ngIf="registro.valor.informe?.pacientes && registro.valor.informe.pacientes.length > 0">
                     <tr *ngFor="let paciente of registro.valor.informe.pacientes; let i=index;">
-                        <td>{{paciente | nombre}}</td>
+                        <td>{{ paciente | nombre }}</td>
                         <td>&nbsp;</td>
                     </tr>
                 </tbody>

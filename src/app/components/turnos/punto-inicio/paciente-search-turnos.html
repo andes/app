@@ -27,7 +27,7 @@
                                 <plex-badge *ngIf="paciente.estado != 'validado'" type="warning"
                                             title="Los pacientes temporales sin validar se inactivan luego de un tiempo">
                                     Temporal</plex-badge>
-                                {{ paciente | paciente }}
+                                {{ paciente | nombre }}
                                 <br> |
                                 <b>Documento: </b>
                                 <span *ngIf="paciente.documento !== ''">{{ paciente.documento }}</span>

@@ -8,7 +8,7 @@
                 <div *ngIf="paciente?.id" class="row">
                     <div class="col">
                         <label>Paciente</label>
-                        <div>{{paciente | paciente}}</div>
+                        <div>{{paciente | nombre}}</div>
                     </div>
                     <div class="col" *ngIf="modelo.obraSocial !== 'SUMAR'">
                         <plex-radio [data]="obraSocialPaciente" [(ngModel)]="modelo.obraSocial" name="os"

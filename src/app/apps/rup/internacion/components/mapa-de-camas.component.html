@@ -333,7 +333,7 @@
                                     {{movimiento.unidadOrganizativa}}
                                 </td>
                                 <td *ngIf="movimiento.estado === 'ocupada'">
-                                    {{movimiento.paciente | paciente }}
+                                    {{movimiento.paciente | nombre }}
 
                                 </td>
                                 <td *ngIf="movimiento.estado !== 'ocupada'">

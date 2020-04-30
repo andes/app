@@ -64,7 +64,7 @@
                                                 <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
                                             </td>
                                             <td (click)="seleccionarTurno(turno, bloque, false)">
-                                                <span *ngIf="turno && turno.paciente">{{ turno.paciente | paciente }}
+                                                <span *ngIf="turno && turno.paciente">{{ turno.paciente | nombre }}
                                                 </span>
                                                 <small>
                                                     <span
@@ -89,7 +89,7 @@
                                                 <br *ngIf="turno?.paciente && bloque.tipoPrestaciones.length>1">
                                                 <small>
                                                     <span
-                                                          *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length>1">{{ turno.tipoPrestacion.term }}</span>
+                                                          *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length>1">{{turno.tipoPrestacion.nombre}}</span>
                                                 </small>
                                                 <span *ngIf="turno?.estado === 'disponible'">Disponible</span>
                                                 <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}"
@@ -115,7 +115,7 @@
                                                 <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
                                             </td>
                                             <td (click)="seleccionarTurno(turno, bloque, false)">
-                                                <span *ngIf="turno && turno.paciente">{{ turno.paciente | paciente }}
+                                                <span *ngIf="turno && turno.paciente">{{ turno.paciente | nombre }}
                                                 </span>
                                                 <small>
                                                     <span
