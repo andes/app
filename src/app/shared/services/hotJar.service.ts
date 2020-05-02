@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Auth } from '@andes/auth';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class HotjarService {
     private ready = false;
     constructor(private auth: Auth) {
@@ -36,66 +36,3 @@ export class HotjarService {
     }
 
 }
-
-/**
-
- <!-- Global site tag (gtag.js) - Google Analytics -->
- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145168802-2"></script>
- <script>
-   window.dataLayer = window.dataLayer || [];
-   function gtag(){dataLayer.push(arguments);}
-   gtag('js', new Date());
-
-   gtag('config', 'UA-145168802-2');
- </script>
-
-
-https://github.com/mzuccaroli/angular-google-tag-manager/blob/master/projects/angular-google-tag-manager/src/lib/angular-google-tag-manager.service.ts
-
-
-setInterval(() => {
-            (window as any).gtag('event', 'sign_up', {
-                'event_category': 'login',
-                'event_label': '',
-                'value': 10
-            });
-        },
-            1000);
-
-
-        setInterval(() => {
-            (window as any).gtag('event', 'iniciar-prestacion', {
-                'event_category': 'rup',
-                'event_label': 'gato',
-                'value': 2
-            });
-        },
-            5000);
-
-this.router.events.subscribe(event => {
-
-            if (event instanceof NavigationEnd) {
-                if (window !== undefined) {
-                    (window as any).gtag('config', 'UA-145168802-2', {
-                        'page_title': 'homepage',
-                        'page_path': event.urlAfterRedirects
-                    });
-                    // (window as any).gtag('set', 'page', event.urlAfterRedirects);
-                    // (window as any).ga('send', 'pageview');
-                }
-
-            }
-
-        });
-
-            <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145168802-2"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-145168802-2');
-    </script>
-
- */

@@ -368,7 +368,6 @@ import { PasesListadoInternacionComponent } from './apps/rup/internacion/compone
 import { VistaAccesosHudsComponent } from './modules/rup/components/huds/vista-accesos-huds.component';
 import { ModalMotivoAccesoHudsComponent } from './modules/rup/components/huds/modal-motivo-acceso-huds.component';
 
-import { HotjarService } from './shared/services/hotJar.service';
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
 import { HUDSService } from './modules/rup/services/huds.service';
 import { GestorUsuariosProvidersModule } from './apps/gestor-usuarios/gestor-usuarios.providers';
@@ -649,7 +648,6 @@ registerLocaleData(localeEs, 'es');
         PlantillasService,
         InternacionCacheService,
         WebSocketService,
-        HotjarService,
         ConceptosTurneablesService,
         DisclaimerService,
         InstitucionService

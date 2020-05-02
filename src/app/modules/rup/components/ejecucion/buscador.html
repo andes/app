@@ -191,7 +191,7 @@
 <div *ngIf="filtroActual && results && results[busquedaActual][filtroActual]  && results[busquedaActual][filtroActual].length > 0"
      class="buscador-resultados">
     <cdk-virtual-scroll-viewport [itemSize]="55">
-        <div *cdkVirtualFor="let item of results[busquedaActual][filtroActual]" class="rup-card mini"
+        <div *cdkVirtualFor="let item of results[busquedaActual][filtroActual]; let i = index" class="rup-card mini"
              [ngClass]="servicioPrestacion.getCssClass(item, filtroActual === 'planes')">
             <div class="rup-header">
                 <div class="icon-rup drag-handle p-0 pt-1" draggable
@@ -217,7 +217,7 @@
                                     {{ (item.plan || filtroActual === 'planes' || esTurneable(item)) ? 'solicitud' :
                                     item.semanticTag }}
                                 </plex-badge>
-                                <plex-button type="info" size="sm" icon="plus" (click)="seleccionarConcepto(item)">
+                                <plex-button type="info" size="sm" icon="plus" (click)="seleccionarConcepto(item, i)">
                                 </plex-button>
                             </div>
                         </div>
