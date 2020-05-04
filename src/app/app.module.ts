@@ -32,9 +32,16 @@ import { Server } from '@andes/shared';
 import { AuthModule } from '@andes/auth';
 import { RoutingGuard, RoutingNavBar, RoutingHudsGuard } from './app.routings-guard.class';
 import { AgmCoreModule } from '@agm/core';
+import { ElementosRUPModule } from './modules/rup/elementos-rup.module';
+import { MitosModule } from './apps/mitos';
+import { MPILibModule } from './modules/mpi/mpi-lib.module';
+import { OrganizacionLibModule } from './components/organizacion/organizacion-lib.module';
+import { NgDragDropModule } from 'ng-drag-drop';
+
+
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
-import { NgDragDropModule } from 'ng-drag-drop';
+
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { DocumentosService } from './services/documentos.service';
 
@@ -210,7 +217,6 @@ import { BuscadorCie10Component } from './components/turnos/gestor-agendas/opera
 
 
 // ... RUP
-import { RUPComponent } from './modules/rup/components/core/rup.component';
 import { ElementosRUPService } from './modules/rup/services/elementosRUP.service';
 import { BuscadorComponent } from './modules/rup/components/ejecucion/buscador.component';
 import { HudsBusquedaComponent } from './modules/rup/components/ejecucion/hudsBusqueda.component';
@@ -230,72 +236,12 @@ import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucio
 import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
 import { ResumenPacienteDinamicoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
 import { ResumenPacienteDinamicoNinoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico-nino.component';
-import { RUPAccionesEnvioInformeComponent } from './modules/rup/components/ejecucion/acciones-envio-informe/acciones-envio-informe.component';
 
-
-// Legacy para RUP
-// TODO: ver con JGabriel!!!
-import { SelectPorRefsetComponent } from './modules/rup/components/elementos/SelectPorRefset.component';
-import { TensionSistolicaComponent } from './modules/rup/components/elementos/tensionSistolica.component';
-import { TensionDiastolicaComponent } from './modules/rup/components/elementos/tensionDiastolica.component';
-import { TensionArterialComponent } from './modules/rup/components/elementos/tensionArterial.component';
-import { TemperaturaComponent } from './modules/rup/components/elementos/temperatura.component';
-import { SolicitudPrestacionDefaultComponent } from './modules/rup/components/elementos/solicitudPrestacionDefault.component';
-import { SignosVitalesComponent } from './modules/rup/components/elementos/signosVitales.component';
-import { SaturacionOxigenoComponent } from './modules/rup/components/elementos/saturacionOxigeno.component';
-import { FrecuenciaCardiacaComponent } from './modules/rup/components/elementos/frecuenciaCardiaca.component';
-import { FrecuenciaRespiratoriaComponent } from './modules/rup/components/elementos/frecuenciaRespiratoria.component';
-import { ObservacionesComponent } from './modules/rup/components/elementos/observaciones.component';
-import { NuevaEvolucionProblemaComponent } from './modules/rup/components/elementos/nuevaEvolucionProblema.component';
-import { EvolucionProblemaDefaultComponent } from './modules/rup/components/elementos/evolucionProblemaDefault.component';
-import { AutocitadoComponent } from './modules/rup/components/elementos/autocitado.component';
-import { ObesidadComponent } from './modules/rup/components/elementos/obesidad.component';
-import { HipertensionArterialComponent } from './modules/rup/components/elementos/hipertensionArterial.component';
-import { FiltradoGlomerularComponent } from './modules/rup/components/elementos/filtradoGlomerular.component';
-import { AdjuntarDocumentoComponent } from './modules/rup/components/elementos/adjuntarDocumento.component';
-import { RegistrarMedicamentoDefaultComponent } from './modules/rup/components/elementos/registrarMedicamentoDefault.component';
-import { InformesComponent } from './modules/rup/components/elementos/informe.component';
-import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
-import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoDerecho.component';
-import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
-import { OdontogramaRefsetComponent } from './modules/rup/components/elementos/OdontogramaRefset.component';
-import { LactanciaComponent } from './modules/rup/components/elementos/lactancia.component';
 import { IniciarInternacionComponent } from './apps/rup/internacion/components/iniciarInternacion.component';
 import { OcuparCamaComponent } from './apps/rup/internacion/components/cama-ocupar.component';
-import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
 import { CensoDiarioComponent } from './apps/rup/internacion/components/censoDiario.component';
 import { CensoMensualComponent } from './apps/rup/internacion/components/censoMensual.component';
-import { ElementoDeRegistroComponent } from './modules/rup/components/elementos/deprecated/elementoDeRegistro.component';
-import { InformeEpicrisisComponent } from './modules/rup/components/elementos/deprecated/informeEpicrisis.component';
-import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/odontologiaDefault.component';
-import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
-import { InformeActividadNoNominalizadaComponent } from './modules/rup/components/elementos/informeActividadNoNominalizada.component';
 
-import { GraficoLinealComponent } from './modules/rup/components/elementos/graficoLineal.component';
-import { PesoComponent } from './modules/rup/components/elementos/peso.component';
-import { PercentiloPesoComponent } from './modules/rup/components/elementos/percentiloPeso.component';
-import { TallaComponent } from './modules/rup/components/elementos/talla.component';
-import { PercentiloTallaComponent } from './modules/rup/components/elementos/percentiloTalla.component';
-import { PerimetroCefalicoComponent } from './modules/rup/components/elementos/perimetroCefalico.component';
-import { IndiceDeMasaCorporalComponent } from './modules/rup/components/elementos/indiceDeMasaCorporal.component';
-import { PercentiloDeMasaCorporalComponent } from './modules/rup/components/elementos/percentiloDeMasaCorporal.component';
-import { PercentiloPerimetroCefalicoComponent } from './modules/rup/components/elementos/percentiloPerimetroCefalico.component';
-import { TensionArterialPediatricaComponent } from './modules/rup/components/elementos/tensionArterialPediatrica.component';
-import { PercentiloDeTensionArterialComponent } from './modules/rup/components/elementos/percentiloDeTensionArterial.component';
-import { ConsultaDeNinoSanoM2AComponent } from './modules/rup/components/elementos/consultaDeNinoSanoM2A.component';
-import { ConsultaDeNinoSanoE2Y3AComponent } from './modules/rup/components/elementos/consultaDeNinoSanoE2Y3A.component';
-import { ConsultaDeNinoSanoE3Y6AComponent } from './modules/rup/components/elementos/consultaDeNinoSanoE3Y6A.component';
-import { DesarrolloPsicomotorComponent } from './modules/rup/components/elementos/desarrolloPsicomotor.component';
-import { RegistrarMedidasAntropometricasNinoE3Y6AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE3Y6A.component';
-import { RegistrarMedidasAntropometricasNinoM2AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoM2A.component';
-import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE2Y3A.component';
-import { ResumenHistoriaClinicaComponent } from './modules/rup/components/elementos/resumenHistoriaClinica.component';
-import { CalculoDeBostonComponent } from './modules/rup/components/elementos/calculoDeBoston.component';
-import { SeleccionBinariaComponent } from './modules/rup/components/elementos/seleccionBinaria.component';
-import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico.component';
-import { ValorFechaComponent } from './modules/rup/components/elementos/valorFecha.component';
-import { MoleculaBaseComponent } from './modules/rup/components/elementos/moleculaBase.component';
-import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -339,7 +285,6 @@ import { ChartsModule } from 'ng2-charts';
 // INTERNACION
 
 import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
-import { EjecucionInternacionComponent } from './apps/rup/internacion/components/ejecucionInternacion.component';
 
 // Mapa de camas
 import { MapaDeCamasComponent } from './apps/rup/internacion/components/mapa-de-camas.component';
@@ -392,99 +337,12 @@ import { ListadoInternacionComponent } from './apps/rup/internacion/components/l
 
 import { RiesgoCardiovascularService } from './modules/rup/components/formulas/riesgoCardiovascular.service';
 import { FormulaBaseService } from './modules/rup/components/formulas';
-import { FormulaBaseComponent } from './modules/rup/components/elementos/FormulaBase.component';
 // Campañas Salud
 import { CampaniaSaludService } from './apps/campaniaSalud/services/campaniaSalud.service';
 import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campaniaSalud.component';
 import { CampaniaVisualizacionComponent } from './apps/campaniaSalud/components/campaniaVisualizacion.component';
 import { CampaniaFormComponent } from './apps/campaniaSalud/components/campania-create-update.component';
 import { TurneroProvidersModule } from './apps/turnero/turnero.providers';
-
-let RUPComponentsArray = [
-    SelectPorRefsetComponent,
-    AutocitadoComponent,
-    EvolucionProblemaDefaultComponent,
-    FiltradoGlomerularComponent,
-    FrecuenciaCardiacaComponent,
-    FrecuenciaRespiratoriaComponent,
-    HipertensionArterialComponent,
-    IndiceDeMasaCorporalComponent,
-    InformesComponent,
-    NuevaEvolucionProblemaComponent,
-    ObesidadComponent,
-    ObservacionesComponent,
-    PesoComponent,
-    PercentiloPerimetroCefalicoComponent,
-    PerimetroCefalicoComponent,
-    RegistrarMedicamentoDefaultComponent,
-    SaturacionOxigenoComponent,
-    GraficoLinealComponent,
-    SignosVitalesComponent,
-    SolicitudPrestacionDefaultComponent,
-    TallaComponent,
-    TemperaturaComponent,
-    TensionArterialComponent,
-    TensionDiastolicaComponent,
-    TensionSistolicaComponent,
-    AdjuntarDocumentoComponent,
-    IngresoInternacionComponent,
-    OtoemisionAcusticaDeOidoDerechoComponent,
-    OtoemisionAcusticaDeOidoIzquierdoComponent,
-    OdontogramaRefsetComponent,
-    LactanciaComponent,
-    IniciarInternacionComponent,
-    PasesCamaComponent,
-    CensoDiarioComponent,
-    CensoMensualComponent,
-    InformeEpicrisisComponent,
-    ElementoDeRegistroComponent,
-    OdontologiaDefaultComponent,
-    CircunferenciaCinturaComponent,
-    ResumenPacienteEstaticoComponent,
-    ResumenPacienteDinamicoComponent,
-    ResumenPacienteDinamicoNinoComponent,
-    InformeActividadNoNominalizadaComponent,
-    PercentiloPesoComponent,
-    PercentiloTallaComponent,
-    PercentiloDeMasaCorporalComponent,
-    TensionArterialPediatricaComponent,
-    PercentiloDeTensionArterialComponent,
-    ConsultaDeNinoSanoM2AComponent,
-    ConsultaDeNinoSanoE2Y3AComponent,
-    ConsultaDeNinoSanoE3Y6AComponent,
-    DesarrolloPsicomotorComponent,
-    RegistrarMedidasAntropometricasNinoM2AComponent,
-    RegistrarMedidasAntropometricasNinoE2Y3AComponent,
-    RegistrarMedidasAntropometricasNinoE3Y6AComponent,
-    ResumenHistoriaClinicaComponent,
-    FormulaBaseComponent,
-    CalculoDeBostonComponent,
-    SeleccionBinariaComponent,
-    ValorNumericoComponent,
-    ValorFechaComponent,
-    MoleculaBaseComponent,
-    HeaderPacienteComponent,
-    VistaRegistroComponent,
-    VistaProcedimientoComponent,
-    VistaPrestacionComponent,
-    VistaContextoPrestacionComponent,
-    ProcedimientoDeEnfermeriaComponent,
-    CamaBloquearComponent,
-    CamaDesbloquearComponent,
-    CamaPrepararComponent,
-    OcuparCamaComponent,
-    EjecucionInternacionComponent,
-    EgresoInternacionComponent,
-    LugarDeNacimientoComponent,
-    SelectOrganizacionComponent,
-    SelectProfesionalComponent,
-    SelectPrestacionComponent,
-    SelectSnomedComponent,
-    SelectStaticoComponent,
-    SelectBaseComponent,
-    SeccionadoComponent,
-    SeccionComponent
-];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
@@ -509,7 +367,6 @@ import { VistaDetalleRegistroComponent } from './modules/rup/components/huds/vis
 import { PasesListadoInternacionComponent } from './apps/rup/internacion/components/pasesListadoInternacion.component';
 import { VistaAccesosHudsComponent } from './modules/rup/components/huds/vista-accesos-huds.component';
 import { ModalMotivoAccesoHudsComponent } from './modules/rup/components/huds/modal-motivo-acceso-huds.component';
-import { ModalSeleccionEmailComponent } from './modules/rup/components/ejecucion/modal-seleccion-email.component';
 
 import { HotjarService } from './shared/services/hotJar.service';
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
@@ -518,7 +375,6 @@ import { GestorUsuariosProvidersModule } from './apps/gestor-usuarios/gestor-usu
 
 /** Configuraciones de entorno */
 import { environment } from '../environments/environment';
-import { LugarDeNacimientoComponent } from './modules/rup/components/elementos/lugarDeNacimiento.component';
 import { PlantillasRUPComponent } from './apps/rup/plantillas-rup/plantillas-rup.component';
 import { LogoSvgComponent } from './styles/logo.svg';
 import { AcronimoSvgComponent } from './styles/acronimo.svg';
@@ -529,20 +385,10 @@ import { SelectProfesionalesDirective } from './directives/profesionales-select.
 import { SelectPrestacionesDirective } from './directives/prestaciones-select.directive';
 import { SelectFinanciadorDirective } from './directives/financiador-select-directive';
 
-import { MitosModule } from './apps/mitos';
-import { MPILibModule } from './modules/mpi/mpi-lib.module';
-import { OrganizacionLibModule } from './components/organizacion/organizacion-lib.module';
-import { SelectProfesionalComponent } from './modules/rup/components/elementos/rupers/select-profesional.component';
-import { SelectOrganizacionComponent } from './modules/rup/components/elementos/rupers/select-organizacion.component';
 import { ConceptosTurneablesService } from './services/conceptos-turneables.service';
-import { SelectPrestacionComponent } from './modules/rup/components/elementos/rupers/select-prestacion.component';
-import { SelectSnomedComponent } from './modules/rup/components/elementos/rupers/select-snomed.component';
-import { SelectStaticoComponent } from './modules/rup/components/elementos/rupers/select-statico.component';
-import { SelectBaseComponent } from './modules/rup/components/elementos/rupers/select-base.component';
 import { DisclaimerService } from './services/disclaimer.service';
-import { SeccionComponent } from './modules/rup/components/elementos/rupers/seccionado/seccion.component';
-import { SeccionadoComponent } from './modules/rup/components/elementos/rupers/seccionado/seccionado.component';
 import { INTERNACION_COMPONENTS, INTERNACION_PROVIDERS } from './apps/rup/mapa-camas/mapa-camas.module';
+import { EjecucionInternacionComponent } from './apps/rup/internacion/components/ejecucionInternacion.component';
 
 
 registerLocaleData(localeEs, 'es');
@@ -568,7 +414,8 @@ registerLocaleData(localeEs, 'es');
         InfiniteScrollModule,
         GestorUsuariosProvidersModule,
         MPILibModule,
-        OrganizacionLibModule
+        OrganizacionLibModule,
+        ElementosRUPModule
     ],
     declarations: [
         AppComponent, InicioComponent,
@@ -587,7 +434,7 @@ registerLocaleData(localeEs, 'es');
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
         TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
         ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, RevisionFueraAgendaComponent, PopoverAuditComponent,
-        RUPComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
+        LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
         AgregarPacienteComponent,
         ArancelamientoFormComponent,
@@ -622,12 +469,23 @@ registerLocaleData(localeEs, 'es');
         VistaPrestacionComponent,
         VistaCDAComponent,
         HudsBusquedaPacienteComponent,
-        RUPAccionesEnvioInformeComponent,
 
         // RUP
-        ...RUPComponentsArray,
+        // ...RUPComponentsArray,
+        EjecucionInternacionComponent,
+        ResumenPacienteEstaticoComponent,
+        ResumenPacienteDinamicoComponent,
+        ResumenPacienteDinamicoNinoComponent,
+        IniciarInternacionComponent,
         MapaDeCamasComponent,
+        CensoDiarioComponent,
+        CensoMensualComponent,
         CamaComponent,
+        CamaBloquearComponent,
+        CamaDesbloquearComponent,
+        CamaPrepararComponent,
+        EgresoInternacionComponent,
+        OcuparCamaComponent,
         ListadoInternacionComponent,
         PasesListadoInternacionComponent,
         PuntoInicioInternacionComponent,
@@ -642,7 +500,6 @@ registerLocaleData(localeEs, 'es');
         VistaDetalleRegistroComponent,
         VistaAccesosHudsComponent,
         ModalMotivoAccesoHudsComponent,
-        ModalSeleccionEmailComponent,
 
         // Solicitudes
         SolicitudesComponent,
@@ -709,13 +566,14 @@ registerLocaleData(localeEs, 'es');
 
         ...INTERNACION_COMPONENTS
     ],
-    entryComponents: RUPComponentsArray,
-    bootstrap: [AppComponent],
+    entryComponents: [
+        HeaderPacienteComponent
+    ],
+    bootstrap: [
+        AppComponent
+    ],
     providers: [
-        {
-            provide: LOCALE_ID,
-            useValue: 'es-AR'
-        },
+        { provide: LOCALE_ID, useValue: 'es-AR' },
         HttpClient,
         Plex,
         Server,
@@ -788,9 +646,7 @@ registerLocaleData(localeEs, 'es');
         VacunasService,
         RiesgoCardiovascularService,
         FormulaBaseService,
-        SeleccionBinariaComponent,
         CampaniaSaludService,
-        SeleccionBinariaComponent,
         SnomedBuscarService,
         HUDSService,
         TurnosPrestacionesService,
