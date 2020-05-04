@@ -36,8 +36,8 @@ export class SolicitudesComponent implements OnInit {
     public showBotonCargarSolicitud = true;
     public prestaciones = [];
     public showIniciarPrestacion = false;
-    public fechaDesde: Date = moment().startOf('day');
-    public fechaHasta: Date = moment().startOf('day');
+    public fechaDesde: Date = moment().startOf('day').toDate();
+    public fechaHasta: Date = moment().startOf('day').toDate();
     public darTurnoArraySalida = [];
     public darTurnoArrayEntrada = [];
     public auditarArraySalida = [];
