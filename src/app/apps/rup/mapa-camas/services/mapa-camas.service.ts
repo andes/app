@@ -328,7 +328,7 @@ export class MapaCamasService {
         }
 
         if (equipamiento && equipamiento.length > 0) {
-            camasFiltradas = camasFiltradas.filter(snap => {
+            camasFiltradas = camasFiltradas.filter(snap => !!snap.equipamiento).filter(snap => {
                 return equipamiento.every(equip => {
                     return snap.equipamiento.some(e => e.conceptId === equip.conceptId);
                 });
