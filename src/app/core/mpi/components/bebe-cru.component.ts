@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { IPaciente } from '../interfaces/IPaciente';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 import { PacienteBuscarResultado } from '../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
@@ -25,7 +25,7 @@ import { Router, ActivatedRoute } from '@angular/router';
     selector: 'apps/mpi/bebe',
     templateUrl: 'bebe-cru.html'
 })
-export class BebeCruComponent implements AfterViewInit {
+export class BebeCruComponent implements OnInit, AfterViewInit {
 
     direccion: IDireccion = {
         valor: '',
@@ -146,10 +146,12 @@ export class BebeCruComponent implements AfterViewInit {
         }]);
     }
 
-
-    ngAfterViewInit() {
+    ngOnInit() {
         this.opcionesSexo = enumerados.getObjSexos();
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
+    }
+
+    ngAfterViewInit() {
         this.route.params.subscribe(params => {
             this.origen = params['origen'];
         });
