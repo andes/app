@@ -128,11 +128,13 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
             // Guarda la obra social en el paciente
             if (paciente.id) {
-                this.obraSocialService.get({ dni: this.paciente.documento }).subscribe((os: any) => {
-                    if (os && os.length > 0) {
-                        this.paciente.obraSocial = { nombre: os[0].financiador, financiador: os[0].financiador, codigoPuco: os[0].codigoFinanciador };
-                    }
-                });
+                if (paciente.documento) {
+                    this.obraSocialService.get({ dni: this.paciente.documento }).subscribe((os: any) => {
+                        if (os && os.length > 0) {
+                            this.paciente.obraSocial = { nombre: os[0].financiador, financiador: os[0].financiador, codigoPuco: os[0].codigoFinanciador };
+                        }
+                    });
+                }
                 let indiceCarpeta = -1;
                 if (paciente.carpetaEfectores && paciente.carpetaEfectores.length > 0) {
                     indiceCarpeta = paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
