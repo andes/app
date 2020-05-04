@@ -81,7 +81,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         private ocupacionService: OcupacionService,
         private organizacionService: OrganizacionService,
         private servicioPrestacion: PrestacionesService,
-        private mapaCamasService: MapaCamasService,
+        public mapaCamasService: MapaCamasService,
         private obraSocialService: ObraSocialService,
         private listadoInternacionService: ListadoInternacionService,
         private auth: Auth
