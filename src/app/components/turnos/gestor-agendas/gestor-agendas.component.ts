@@ -57,8 +57,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     public mostrarMasOpciones = false;
     public estadosAgenda = enumerado.EstadosAgenda;
     public estadosAgendaArray = enumToArray(enumerado.EstadosAgenda);
-    public fechaDesde: any;
-    public fechaHasta: any;
+    public fechaDesde: any = moment().startOf('day');
+    public fechaHasta: any = moment().endOf('day');
     public prestaciones: any = [];
     public profesionales: any = [];
     public espacioFisico: any = [];
