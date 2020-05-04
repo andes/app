@@ -5,7 +5,7 @@ import { ISnapshot } from '../interfaces/ISnapshot';
 import { ICama } from '../interfaces/ICama';
 import { IMaquinaEstados, IMAQRelacion, IMAQEstado } from '../interfaces/IMaquinaEstados';
 import { MapaCamasHTTP } from './mapa-camas.http';
-import { switchMap, map, pluck, catchError, startWith, mapTo } from 'rxjs/operators';
+import { switchMap, map, pluck, catchError, startWith, mapTo, tap } from 'rxjs/operators';
 import { ISectores } from '../../../../interfaces/IOrganizacion';
 import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concept.interface';
 import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
@@ -162,8 +162,8 @@ export class MapaCamasService {
         const proximoMinuto = moment().add(1, 'minute').startOf('minute');
         const segundosAPoxMin = proximoMinuto.diff(moment());
         this.fechaActual$ = timer(segundosAPoxMin, 60000).pipe(
-            map(() => moment().toDate()),
-            startWith(new Date())
+            startWith(0),
+            map(() => moment().endOf('minute').toDate()),
         );
     }
 
@@ -328,7 +328,7 @@ export class MapaCamasService {
         }
 
         if (equipamiento && equipamiento.length > 0) {
-            camasFiltradas = camasFiltradas.filter(snap => {
+            camasFiltradas = camasFiltradas.filter(snap => !!snap.equipamiento).filter(snap => {
                 return equipamiento.every(equip => {
                     return snap.equipamiento.some(e => e.conceptId === equip.conceptId);
                 });
