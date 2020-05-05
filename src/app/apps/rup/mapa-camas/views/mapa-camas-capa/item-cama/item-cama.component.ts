@@ -49,7 +49,7 @@ export class ItemCamaComponent implements OnInit {
                 if (equip.conceptId === respirador.conceptId) {
                     this.equipos.respirador = true;
                 }
-                
+
                 if ((equip.conceptId === monitorTelemetrico.conceptId) || (equip.conceptId === monitorFisiologico.conceptId)) {
                     this.equipos.monitorParamedico = true;
                 }

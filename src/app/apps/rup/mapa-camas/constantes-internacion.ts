@@ -148,6 +148,6 @@ export const opcionesSexo = [
 ];
 
 export const aporteOxigeno = { conceptId: '261746005' };
-export const respirador = { conceptId: "706172005" };
+export const respirador = { conceptId: '706172005' };
 export const monitorTelemetrico = { conceptId: '706636004' };
-export const monitorFisiologico = { conceptId: '5159002'}
+export const monitorFisiologico = { conceptId: '5159002' };
