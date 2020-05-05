@@ -82,6 +82,8 @@ import { RUPComponent } from './components/core/rup.component';
 import { RUPAccionesEnvioInformeComponent } from './components/ejecucion/acciones-envio-informe/acciones-envio-informe.component';
 import { MPILibModule } from '../mpi/mpi-lib.module';
 import { ModalSeleccionEmailComponent } from './components/ejecucion/modal-seleccion-email.component';
+import { VistaPrestacionComponent } from './components/huds/vistaPrestacion';
+import { RelacionRUPPipe } from '../../pipes/relacionRUP.pipe';
 
 const RUPComponentsArray = [
     RUPComponent,
@@ -168,7 +170,9 @@ const RUPComponentsArray = [
     declarations: [
         ...RUPComponentsArray,
         RUPAccionesEnvioInformeComponent,
-        ModalSeleccionEmailComponent
+        ModalSeleccionEmailComponent,
+        VistaPrestacionComponent,
+        RelacionRUPPipe
     ],
     entryComponents: [
         ...RUPComponentsArray
@@ -178,7 +182,10 @@ const RUPComponentsArray = [
     exports: [
         ...RUPComponentsArray,
         RUPAccionesEnvioInformeComponent,
-        ModalSeleccionEmailComponent
+        ModalSeleccionEmailComponent,
+        // Por el momento en este modulo. Hay que armar un modulo HUDS.
+        VistaPrestacionComponent,
+        RelacionRUPPipe
     ],
 })
 export class ElementosRUPModule {

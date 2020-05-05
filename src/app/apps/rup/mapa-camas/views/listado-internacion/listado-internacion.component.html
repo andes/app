@@ -28,7 +28,7 @@
                                     [class.text-white]="selectedPrestacion._id === internacion._id"
                                     (click)="seleccionarPrestacion(internacion, selectedPrestacion)">
                                     <td>
-                                        {{internacion.paciente | paciente }}
+                                        {{internacion.paciente | nombre }}
                                     </td>
                                     <td>
                                         {{internacion.paciente.documento}}

@@ -61,7 +61,6 @@ import { EnumerarPipe } from './pipes/enumerar.pipe';
 import { PluralizarPipe } from './pipes/pluralizar.pipe';
 import { ReplacePipe } from './pipes/replace.pipe';
 import { IconoCamaPipe } from './pipes/iconoCama.pipe';
-import { RelacionRUPPipe } from './pipes/relacionRUP.pipe';
 import { Html2TextPipe } from './pipes/html2text.pipe';
 
 // Servicios
@@ -230,7 +229,6 @@ import { PrestacionValidacionComponent } from './modules/rup/components//ejecuci
 import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
 import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
-import { VistaPrestacionComponent } from './modules/rup/components/huds/vistaPrestacion';
 import { VistaCDAComponent } from './modules/rup/components/huds/vistaCDA.component';
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
@@ -387,7 +385,6 @@ import { SelectFinanciadorDirective } from './directives/financiador-select-dire
 
 import { ConceptosTurneablesService } from './services/conceptos-turneables.service';
 import { DisclaimerService } from './services/disclaimer.service';
-import { INTERNACION_COMPONENTS, INTERNACION_PROVIDERS } from './apps/rup/mapa-camas/mapa-camas.module';
 import { EjecucionInternacionComponent } from './apps/rup/internacion/components/ejecucionInternacion.component';
 
 
@@ -428,7 +425,7 @@ registerLocaleData(localeEs, 'es');
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, HoraPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
         FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe, ReplacePipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, DinamicaFormComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
-        Html2TextPipe, RelacionRUPPipe,
+        Html2TextPipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
@@ -466,7 +463,6 @@ registerLocaleData(localeEs, 'es');
         HudsBusquedaComponent,
         BuscadorComponent,
         VistaHudsComponent,
-        VistaPrestacionComponent,
         VistaCDAComponent,
         HudsBusquedaPacienteComponent,
 
@@ -495,7 +491,6 @@ registerLocaleData(localeEs, 'es');
         ListaEsperaInternacionComponent,
         VistaRegistroComponent,
         VistaProcedimientoComponent,
-        VistaPrestacionComponent,
         VistaContextoPrestacionComponent,
         VistaDetalleRegistroComponent,
         VistaAccesosHudsComponent,
@@ -562,9 +557,7 @@ registerLocaleData(localeEs, 'es');
         SelectOrganizacionDirective,
         SelectProfesionalesDirective,
         SelectPrestacionesDirective,
-        SelectFinanciadorDirective,
-
-        ...INTERNACION_COMPONENTS
+        SelectFinanciadorDirective
     ],
     entryComponents: [
         HeaderPacienteComponent
@@ -655,8 +648,7 @@ registerLocaleData(localeEs, 'es');
         WebSocketService,
         HotjarService,
         ConceptosTurneablesService,
-        DisclaimerService,
-        ...INTERNACION_PROVIDERS
+        DisclaimerService
     ]
 })
 

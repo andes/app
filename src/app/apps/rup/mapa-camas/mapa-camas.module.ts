@@ -42,6 +42,7 @@ import { NuevoRegistroSaludComponent } from './sidebar/nuevo-registro-salud/nuev
 import { MaquinaEstadosHTTP } from './services/maquina-estados.http';
 import { ListadoInternacionService } from './views/listado-internacion/listado-internacion.service';
 import { RegistrosHudsDetalleComponent } from './sidebar/registros-huds-detalle/registros-huds-detalle.component';
+import { ElementosRUPModule } from '../../../modules/rup/elementos-rup.module';
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
@@ -79,27 +80,28 @@ export const INTERNACION_PROVIDERS = [
     ListadoInternacionService
 ];
 
-// @NgModule({
-//     imports: [
-//         CommonModule,
-//         PlexModule,
-//         FormsModule,
-//         RouterModule,
-//         HttpClientModule,
-//         MapaCamasRouting,
-//         SharedModule,
-//         MPILibModule,
-//         MitosModule,
-//         OrganizacionLibModule
-//     ],
-//     declarations: [
-//         ...INTERNACION_COMPONENTS
-//     ],
-//     providers: [
-//         ...INTERNACION_PROVIDERS
-//     ],
-//     exports: [],
-// })
-// export class MapaCamasModule {
+@NgModule({
+    imports: [
+        CommonModule,
+        PlexModule,
+        FormsModule,
+        RouterModule,
+        HttpClientModule,
+        MapaCamasRouting,
+        SharedModule,
+        MPILibModule,
+        MitosModule,
+        OrganizacionLibModule,
+        ElementosRUPModule
+    ],
+    declarations: [
+        ...INTERNACION_COMPONENTS
+    ],
+    providers: [
+        ...INTERNACION_PROVIDERS
+    ],
+    exports: [],
+})
+export class MapaCamasModule {
 
-// }
+}
