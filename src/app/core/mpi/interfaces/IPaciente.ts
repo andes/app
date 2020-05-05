@@ -62,4 +62,5 @@ export interface IPaciente {
         nota: string,
         destacada: Boolean
     }];
+    vinculos: string[];
 }

@@ -8,7 +8,11 @@ export class HistorialBusquedaService {
     private limite = 8;
 
     add(paciente: IPaciente) {
-        this.historial = this.historial.filter(pac => pac.id !== paciente.id);
+        if (paciente.vinculos) {
+            this.historial = this.historial.filter(pac => !paciente.vinculos.includes(pac.id));
+        } else {
+            this.historial = this.historial.filter(pac => pac.id !== paciente.id);
+        }
         this.historial.unshift(paciente);
 
         if (this.historial.length > this.limite) {

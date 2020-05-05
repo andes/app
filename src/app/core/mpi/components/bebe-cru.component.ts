@@ -91,7 +91,8 @@ export class BebeCruComponent implements AfterViewInit {
         claveBlocking: null,
         scan: null,
         reportarError: false,
-        notaError: ''
+        notaError: '',
+        vinculos: []
     };
 
     opcionesSexo: any[] = [{ id: 'femenino', label: 'Femenino' }, { id: 'masculino', label: 'Masculino' }];

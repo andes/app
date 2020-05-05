@@ -110,7 +110,8 @@ export class ExtranjeroNNCruComponent implements OnInit {
         claveBlocking: null,
         scan: null,
         reportarError: false,
-        notaError: ''
+        notaError: '',
+        vinculos: []
     };
 
     public pacientes: IPacienteMatch[] | IPaciente[];

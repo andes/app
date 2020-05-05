@@ -117,7 +117,8 @@ export class PacienteCruComponent implements OnInit {
         entidadesValidadoras: [this.entidadValidadora],
         scan: null,
         reportarError: false,
-        notaError: ''
+        notaError: '',
+        vinculos: []
     };
     public temporalParaVinculacion = null;
     public disableValidar = true;
@@ -596,10 +597,7 @@ export class PacienteCruComponent implements OnInit {
                             if (this.changeRelaciones) {
                                 this.saveRelaciones(pacienteBase);
                             }
-                            if (this.escaneado) {
-                                // Si el paciente fue escaneado se agrega al historial de búsqueda
-                                this.historialBusquedaService.add(pacienteBase);
-                            }
+                            this.historialBusquedaService.add(pacienteBase);
                             this.plex.info('success', 'Los datos se actualizaron correctamente');
                             this.plex.toast('success', 'Se vincularon pacientes existentes.', 'Información', 3000);
                             this.redirect(pacienteBase);
@@ -619,10 +617,7 @@ export class PacienteCruComponent implements OnInit {
                             if (this.changeRelaciones) {
                                 this.saveRelaciones(resultadoSave);
                             }
-                            if (this.escaneado) {
-                                // Si el paciente fue escaneado se agrega al historial de búsqueda
-                                this.historialBusquedaService.add(resultadoSave);
-                            }
+                            this.historialBusquedaService.add(resultadoSave);
                             this.plex.info('success', 'Los datos se actualizaron correctamente');
                             this.redirect(resultadoSave);
                         }
