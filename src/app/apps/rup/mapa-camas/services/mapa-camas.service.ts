@@ -316,7 +316,7 @@ export class MapaCamasService {
         }
 
         if (sector) {
-            camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => snap.sectores.filter(sect => sect.nombre === sector.nombre).length > 0);
+            camasFiltradas = camasFiltradas.filter((snap: ISnapshot) => snap.sectores.some(sect => sect.nombre === sector.nombre));
         }
 
         if (tipoCama) {
