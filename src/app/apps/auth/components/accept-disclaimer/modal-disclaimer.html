@@ -1,0 +1,14 @@
+<plex-modal #modal>
+    <plex-modal-title type="info" class="mt-5">Nuevo Disclaimer</plex-modal-title>
+    <plex-modal-subtitle type="">Versión {{version}}</plex-modal-subtitle>
+    <main>
+        <div class="w-75 overflow" [innerHtml]="texto">
+        </div>
+    </main>
+    <plex-button modal right type="success" (click)="aceptarDisclaimer()">
+        ACEPTO
+    </plex-button>
+    <plex-button modal left type="danger" (click)="cancelar()">
+        NO ACEPTO
+    </plex-button>
+</plex-modal>

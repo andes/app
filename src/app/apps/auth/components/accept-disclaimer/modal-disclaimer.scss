@@ -1,0 +1,10 @@
+.overflow {
+    display: block;
+    height: calc(100vh - 362px);
+    overflow-y: scroll
+}
+::ng-deep {
+    .plex-modal-content{
+        width: 50% !important;
+    }
+}
