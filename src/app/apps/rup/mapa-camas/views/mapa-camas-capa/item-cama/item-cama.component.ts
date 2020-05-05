@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { Observable } from 'rxjs';
-import { aporteOxigeno } from '../../../constantes-internacion';
+import { aporteOxigeno, respirador, monitorTelemetrico, monitorFisiologico } from '../../../constantes-internacion';
 
 @Component({
     selector: 'tr[app-item-cama]',
@@ -16,7 +16,11 @@ export class ItemCamaComponent implements OnInit {
     @Input() permisoIngreso: boolean;
     @Output() accionCama = new EventEmitter<any>();
 
-    public tieneOxigeno: boolean;
+    public equipos = {
+        aporteOxigeno: false,
+        respirador: false,
+        monitorParamedico: false,
+    };
     public relacionesPosibles$: Observable<any>;
     public estadoCama$: Observable<any>;
     public puedeDesocupar$: Observable<string>;
@@ -36,12 +40,21 @@ export class ItemCamaComponent implements OnInit {
         this.estadoCama$ = this.mapaCamasService.getEstadoCama(this.cama);
         this.relacionesPosibles$ = this.mapaCamasService.getRelacionesPosibles(this.cama);
 
-        this.tieneOxigeno = false;
-        this.cama.equipamiento.map(equip => {
-            if (equip.conceptId === aporteOxigeno.conceptId) {
-                this.tieneOxigeno = true;
-            }
-        });
+        if (this.cama.equipamiento) {
+            this.cama.equipamiento.map(equip => {
+                if (equip.conceptId === aporteOxigeno.conceptId) {
+                    this.equipos.aporteOxigeno = true;
+                }
+
+                if (equip.conceptId === respirador.conceptId) {
+                    this.equipos.respirador = true;
+                }
+                
+                if ((equip.conceptId === monitorTelemetrico.conceptId) || (equip.conceptId === monitorFisiologico.conceptId)) {
+                    this.equipos.monitorParamedico = true;
+                }
+            });
+        }
     }
 
     goTo() {
