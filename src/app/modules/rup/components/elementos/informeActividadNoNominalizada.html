@@ -40,7 +40,7 @@
                 </plex-select>
             </div>
         </div>
-        <div class="row" *ngIf="elegirOtraActividad">
+        <div class="row" *ngIf="registro.valor.informe.tematica === 'Otra'">
             <div class="col-12">
                 <plex-text label="Otra temática" name="otraTematica" [(ngModel)]="registro.valor.informe.otraTematica">
                 </plex-text>

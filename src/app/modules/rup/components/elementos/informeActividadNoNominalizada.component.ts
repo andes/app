@@ -18,20 +18,25 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
         { id: 'Adicciones', nombre: 'Adicciones' },
         { id: 'Adolescencia', nombre: 'Adolescencia' },
         { id: 'Adulto mayor', nombre: 'Adulto mayor' },
-        { id: 'Alimentación', nombre: 'Alimentación' },
         { id: 'Crianza', nombre: 'Crianza' },
         { id: 'Embarazo, parto y puerperio', nombre: 'Embarazo, parto y puerperio' },
-        { id: 'Emergencias / Urgencias', nombre: 'Emergencias / Urgencias' },
         { id: 'Enfermedades crónicas no transmisibles', nombre: 'Enfermedades crónicas no transmisibles' },
         { id: 'Enfermedades infecciosas', nombre: 'Enfermedades infecciosas' },
         { id: 'Epidemiología / Estadística', nombre: 'Epidemiología / Estadística' },
-        { id: 'Hábitos saludables', nombre: 'Hábitos saludables' },
+        { id: 'Hábitos saludables / Alimentación', nombre: 'Hábitos saludables / Alimentación' },
+        { id: 'Niñez sana', nombre: 'Niñez sana' },
         { id: 'Lactancia', nombre: 'Lactancia' },
+        { id: 'Organización tarea', nombre: 'Organización tarea' },
+        { id: 'Otra', nombre: 'Otra' },
+        { id: 'Salud ambiental', nombre: 'Salud ambiental' },
         { id: 'Salud escolar', nombre: 'Salud escolar' },
         { id: 'Salud mental', nombre: 'Salud mental' },
+        { id: 'Salud laboral', nombre: 'Salud laboral' },
         { id: 'Salud sexual y reproductiva', nombre: 'Salud sexual y reproductiva' },
-        { id: 'Violencia', nombre: 'Violencia' },
-        { id: 'Otra', nombre: 'Otra' }];
+        { id: 'Urgencias / Emergencias', nombre: 'Urgencias / Emergencias' },
+        { id: 'Violencia', nombre: 'Violencia' }
+    ];
+
     public pacientes: IPacienteMatch[] | IPaciente[];
     public pacienteActivo: IPaciente;
     private turno;
@@ -79,8 +84,9 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
     mostrarOtraTematica() {
         if (this.registro.valor.informe.tematica) {
             this.registro.valor.informe.tematica = ((typeof this.registro.valor.informe.tematica === 'string')) ? this.registro.valor.informe.tematica : (Object(this.registro.valor.informe.tematica).id);
-            this.elegirOtraActividad = this.registro.valor.informe.tematica === 'Otra';
         }
+
+        this.registro.valor.informe.otraTematica = this.registro.valor.informe.tematica === 'Otra' ? this.registro.valor.informe.otraTematica : '';
     }
 
     searchStart() {
