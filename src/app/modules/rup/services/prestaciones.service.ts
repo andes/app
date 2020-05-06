@@ -910,7 +910,6 @@ export class PrestacionesService {
     /**
 * Devuelve el listado de internacion por organizacion
 *
-
 * @returns  {array} Listado Organizacion
 * @memberof PrestacionesService
 */

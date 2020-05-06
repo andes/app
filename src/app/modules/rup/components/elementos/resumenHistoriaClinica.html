@@ -1,4 +1,5 @@
-<form #form="ngForm">
+ 
+ <form #form="ngForm">
     <ng-container *ngIf="!soloValores">
         <plex-text label="Resumen" [(ngModel)]="registro.valor" id="resumen" name="resumen" [html]="true" [required]="true" [readonly]="false"
             placeholder="Ingrese una evolución">
@@ -12,6 +13,7 @@
     <p *ngIf="soloValores && registro.valor" class="readonly">
         <span>Resumen</span>
         <ng-container>
+            HOLA
             <span [innerHTML]="registro.valor"></span>
         </ng-container>
     </p>

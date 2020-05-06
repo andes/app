@@ -4,6 +4,7 @@ import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { ISnomedConcept } from '../../../interfaces/snomed-concept.interface';
 import { ElementosRUPService } from '../../../services/elementosRUP.service';
 import { PrestacionesService } from '../../../services/prestaciones.service';
+import { SeguimientoPacientesService } from '../../../services/seguimientoPacientes.service';
 
 @Component({
     selector: 'rup-resumenPaciente-dinamico',
@@ -14,8 +15,11 @@ export class ResumenPacienteDinamicoComponent implements OnInit {
     @Input() paciente: IPaciente;
 
     public registros: any[] = [];
+    public autoregistros: any[] = [];
     public graficos: any[] = [];
     public elementos: any[] = [];
+    public elementosAutoregistro: any[] = [];
+
     public conceptosGrafico: ISnomedConcept[] = [
         {
             conceptId: '307818003',
@@ -53,10 +57,34 @@ export class ResumenPacienteDinamicoComponent implements OnInit {
         }
     ];
 
+    // autodiagnosticos
+
+    conceptosAutoregistro: ISnomedConcept[] = [
+        {
+            conceptId: '408403008',
+            term: 'registro llevado por el paciente',
+            fsn: 'registro llevado por el paciente (elemento de registro)',
+            semanticTag: 'elemento de registro'
+        } /*,
+        {
+            conceptId: '413153004',
+            term: 'tensión arterial registrada por el paciente en su hogar',
+            fsn: 'tensión arterial registrada por el paciente en su hogar (procedimiento)',
+            semanticTag: 'procedimiento'
+        },
+        {
+            conceptId: '103228002',
+            term: 'saturación de oxígeno en sangre',
+            fsn: 'saturación de hemoglobina con oxígeno (entidad observable)',
+            semanticTag: 'entidad observable'
+        }*/
+    ]
+
     constructor(
         public elementosRUPService: ElementosRUPService,
         public auth: Auth,
         public prestacionesService: PrestacionesService,
+        public seguimientoPacientesService: SeguimientoPacientesService
     ) { }
 
     ngOnInit() {
@@ -73,5 +101,19 @@ export class ResumenPacienteDinamicoComponent implements OnInit {
             });
 
         }
+        var item;
+        //agregamos los autoregistros
+        for (let conceptoAutoregistro of this.conceptosAutoregistro) {
+            this.elementosAutoregistro = [...this.elementosAutoregistro, this.elementosRUPService.buscarElemento(conceptoAutoregistro, false)];
+            this.seguimientoPacientesService.getRegistros({'params.paciente': this.paciente.documento, 'params.sexo': this.paciente.sexo}).subscribe(registrosPaciente => {
+                if (registrosPaciente.length) {
+                    item = registrosPaciente.length;
+                    for (let registroPaciente of registrosPaciente)
+                    this.autoregistros[item - 1] = [...this.autoregistros, registroPaciente];
+                }
+            });
+        }
+
+
     }
 }

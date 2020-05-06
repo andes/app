@@ -28,3 +28,23 @@
         </div>
     </div>
 </ng-container>
+
+<ng-container *ngIf="elementosAutoregistro.length">
+    <div class="row mt-3" *ngFor="let item of elementosAutoregistro, let i = index">
+        <div class="col-12">
+            <span class="d-flex justify-content-between">
+                <p class="h4 text-capitalize">{{ item.conceptos | enumerar:['term'] }}</p>
+                <plex-badge type="info" *ngIf="autoregistros[i] && autoregistros[i].registro.updatedAt">
+                    {{ autoregistros[i].registro.updatedAt | fecha }}
+                </plex-badge>
+            </span>
+            <ng-container *ngIf="autoregistros[i]; else mensaje">
+                <rup [elementoRUP]="item" [paciente]="paciente" [registro]="autoregistros[i].registro" [soloValores]="true">
+                </rup>
+            </ng-container>
+            <ng-template #mensaje>
+                No se ha registrado ningún valor de {{item.conceptos | enumerar:['term']}}
+            </ng-template>
+        </div>
+    </div>
+</ng-container>

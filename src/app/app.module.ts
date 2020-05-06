@@ -218,6 +218,9 @@ import { HudsBusquedaComponent } from './modules/rup/components/ejecucion/hudsBu
 import { PrestacionesService } from './modules/rup/services/prestaciones.service';
 import { AdjuntosService } from './modules/rup/services/adjuntos.service';
 
+// Seguimiento Pacientes SJ
+import { SeguimientoPacientesService } from './modules/rup/services/seguimientoPacientes.service';
+
 import { ConceptObserverService } from './modules/rup/services/conceptObserver.service';
 import { PrestacionCrearComponent } from './modules/rup/components/ejecucion/prestacionCrear.component';
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
@@ -794,7 +797,8 @@ registerLocaleData(localeEs, 'es');
         WebSocketService,
         HotjarService,
         ConceptosTurneablesService,
-        DisclaimerService
+        DisclaimerService,
+        SeguimientoPacientesService
     ]
 })
 
