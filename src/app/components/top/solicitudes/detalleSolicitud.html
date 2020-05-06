@@ -1,173 +1,159 @@
-<div class="mt-3">
-    <div class="row"
-         *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
-        <div class="col">
-            <!-- Cuando la solicitud fue rechazada muestra los datos del rechazo -->
-            <b>Observaciones</b>
-            <br>
-
-            <span class="text-left"
-                  *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones">
-                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones}}
-            </span>
-
-            <span class="text-left"
-                  *ngIf="!prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones && prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo">
-                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo}}
-            </span>
-
-            <br>
-            <b>Usuario que responde</b>
-            <br>
-            <span class="text-left"
-                  *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones || prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo">
-                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdBy | profesional}}</span>
-            <br>
-        </div>
-    </div>
-    <div class="row" *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'anulada'">
-        <div class="col">
-            <!-- Cuando la solicitud fue contrarreferida muestra los datos de la anulación -->
-            <b>Motivo de Anulación</b>
-            <br>
-            <span *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones"
-                  class="text-left">
-                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones}}</span>
-            <br>
-            <span *ngIf="!prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones"
-                  class="text-left">
-                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo}}</span>
-            <br>
-            <b>Usuario que anula</b>
-            <br>
-            <span class="text-left">
-                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdBy | profesional}}</span>
-            <br>
-            <b>Fecha de Anulación</b>
-            <br>
-            <span class="text-left">
-                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdAt | date:
-                'dd/MM/yyyy'}}</span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <b>Paciente</b>
-            <br>
-            <span class="blue">
-                {{prestacionSeleccionada?.paciente?.nombre}}
-                {{prestacionSeleccionada?.paciente?.apellido}}
-            </span>
-        </div>
-    </div>
-    <div class="row">
-        <div *ngIf="turnoSeleccionado" class="col-12">
-            <span class="text-left">
-                <b>Fecha Turno</b>
-                <br>{{ turnoSeleccionado.horaInicio | fecha }} - {{ turnoSeleccionado.horaInicio | date: 'HH:mm' }}
-            </span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <span *ngIf="prestacionSeleccionada.solicitud.profesionalOrigen" class="text-left">
-                <b>Profesional Origen</b>
-                <br> {{ prestacionSeleccionada.solicitud.profesionalOrigen?.nombre }} {{
-                prestacionSeleccionada.solicitud.profesionalOrigen?.apellido
-                }}
-            </span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <span *ngIf="prestacionSeleccionada.solicitud.tipoPrestacionOrigen?.term">
-                <b>Tipo de Prestación Origen</b>
-                <br> {{ prestacionSeleccionada.solicitud.tipoPrestacionOrigen?.term }}
-            </span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <span *ngIf="prestacionSeleccionada.solicitud.organizacionOrigen?.nombre">
-                <b>Organización Origen</b>
-                <br> {{ prestacionSeleccionada.solicitud.organizacionOrigen?.nombre }}
-            </span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <span *ngIf="prestacionSeleccionada.solicitud.profesional">
-                <b>Profesional Destino</b>
-                <br> {{ prestacionSeleccionada.solicitud.profesional?.nombre }} {{
-                prestacionSeleccionada.solicitud.profesional?.apellido}}
-            </span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <b>Tipo de Prestación Destino</b>
-            <br> {{ prestacionSeleccionada.solicitud.tipoPrestacion?.term }}
-            <span *ngIf="prestacionSeleccionada.solicitud.organizacion">
+    <div class="mt-3">
+        <div class="row"
+            *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
+            <div class="col">
+                <!-- Cuando la solicitud fue rechazada muestra los datos del rechazo -->
+                <b>Observaciones</b>
                 <br>
-                <b>Organización Destino</b>
-                <br> {{ prestacionSeleccionada.solicitud.organizacion?.nombre }}
-            </span>
-        </div>
-    </div>
-    <div class="row" *ngIf="prestacionSeleccionada.solicitud.registros[0]?.valor?.solicitudPrestacion">
-        <div class="col">
-            <hr>
-            <b>Prioridad</b>
-            <br>
-            <span
-                  class='text-capitalize'>{{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}</span>
-            <br>
-            <b>Motivo de Solicitud</b>
-            <br>
-            <span>{{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.motivo}}</span>
-        </div>
-    </div>
-    <div class="row" *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.documentos?.length">
-        <div class="col-12">
-            <b>Archivos Adjuntos</b>
-            <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
-                <ng-container
-                              *ngFor="let doc of this.prestacionSeleccionada.solicitud.registros[0].valor.documentos; let i = index">
-                    <a (click)="activaLightbox(i)">
-                        <div class="image hover">
-                            <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
-                            <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto">
-                                {{ doc.ext }}
-                            </a>
-                        </div>
-                    </a>
-                    <div (click)="lightbox = false" *ngIf="i === indice && lightbox"
-                         [ngClass]="{'lightbox': i === indice && lightbox }" class="hover">
-                        <i (click)=imagenPrevia(i) class="mdi mdi-chevron-double-left previous parpadeo"></i>
-                        <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
-                        <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto m-1 p-2">
-                            {{ doc.ext }}
-                        </a>
-                        <i (click)=imagenSiguiente(i) class="mdi mdi-chevron-double-right next parpadeo"></i>
-                    </div>
-                </ng-container>
+
+                <span class="text-left"
+                    *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones">
+                    {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones}}
+                </span>
+
+                <span class="text-left"
+                    *ngIf="!prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones && prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo">
+                    {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo}}
+                </span>
+
+                <br>
+                <b>Usuario que responde</b>
+                <br>
+                <span class="text-left"
+                    *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones || prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo">
+                    {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdBy | profesional}}</span>
+                <br>
             </div>
         </div>
-    </div>
+        <div class="row" *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'anulada'">
+            <div class="col">
+                <!-- Cuando la solicitud fue contrarreferida muestra los datos de la anulación -->
+                <b>Motivo de Anulación</b>
+                <br>
+                <span *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones"
+                    class="text-left">
+                    {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones}}</span>
+                <br>
+                <span *ngIf="!prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones"
+                    class="text-left">
+                    {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo}}</span>
+                <br>
+                <b>Usuario que anula</b>
+                <br>
+                <span class="text-left">
+                    {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdBy | profesional}}</span>
+                <br>
+                <b>Fecha de Anulación</b>
+                <br>
+                <span class="text-left">
+                    {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdAt | date:
+                    'dd/MM/yyyy'}}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <b>Paciente</b>
+                <br>
+                <span class="blue">
+                    {{prestacionSeleccionada?.paciente?.nombre}}
+                    {{prestacionSeleccionada?.paciente?.apellido}}
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div *ngIf="turnoSeleccionado" class="col-12">
+                <span class="text-left">
+                    <b>Fecha Turno</b>
+                    <br>{{ turnoSeleccionado.horaInicio | fecha }} - {{ turnoSeleccionado.horaInicio | date: 'HH:mm' }}
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <span *ngIf="prestacionSeleccionada.solicitud.profesionalOrigen" class="text-left">
+                    <b>Profesional Origen</b>
+                    <br> {{ prestacionSeleccionada.solicitud.profesionalOrigen?.nombre }} {{
+                    prestacionSeleccionada.solicitud.profesionalOrigen?.apellido
+                    }}
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <span *ngIf="prestacionSeleccionada.solicitud.tipoPrestacionOrigen?.term">
+                    <b>Tipo de Prestación Origen</b>
+                    <br> {{ prestacionSeleccionada.solicitud.tipoPrestacionOrigen?.term }}
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <span *ngIf="prestacionSeleccionada.solicitud.organizacionOrigen?.nombre">
+                    <b>Organización Origen</b>
+                    <br> {{ prestacionSeleccionada.solicitud.organizacionOrigen?.nombre }}
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <span *ngIf="prestacionSeleccionada.solicitud.profesional">
+                    <b>Profesional Destino</b>
+                    <br> {{ prestacionSeleccionada.solicitud.profesional?.nombre }} {{
+                    prestacionSeleccionada.solicitud.profesional?.apellido}}
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <b>Tipo de Prestación Destino</b>
+                <br> {{ prestacionSeleccionada.solicitud.tipoPrestacion?.term }}
+                <span *ngIf="prestacionSeleccionada.solicitud.organizacion">
+                    <br>
+                    <b>Organización Destino</b>
+                    <br> {{ prestacionSeleccionada.solicitud.organizacion?.nombre }}
+                </span>
+            </div>
+        </div>
+        <div class="row" *ngIf="prestacionSeleccionada.solicitud.registros[0]?.valor?.solicitudPrestacion">
+            <div class="col">
+                <hr>
+                <b>Prioridad</b>
+                <br>
+                <span
+                    class='text-capitalize'>{{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}</span>
+                <br>
+                <b>Motivo de Solicitud</b>
+                <br>
+                <span>{{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.motivo}}</span>
+            </div>
+        </div>
+        <div class="row" *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.documentos?.length">
+            <div class="col-12">
+                <b>Archivos Adjuntos</b>
+                <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
+                    <ng-container
+                                *ngFor="let doc of this.prestacionSeleccionada.solicitud.registros[0].valor.documentos; let i = index">
+                        <a (click)="activaLightbox(i)">
+                            <div class="image hover">
+                                <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
+                                <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto">
+                                    {{ doc.ext }}
+                                </a>
+                            </div>
+                        </a>
+                        <div (click)="lightbox = false" *ngIf="i === indice && lightbox"
+                            [ngClass]="{'lightbox': i === indice && lightbox }" class="hover">
+                            <i (click)=imagenPrevia(i) class="mdi mdi-chevron-double-left previous parpadeo"></i>
+                            <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
+                            <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto m-1 p-2">
+                                {{ doc.ext }}
+                            </a>
+                            <i (click)=imagenSiguiente(i) class="mdi mdi-chevron-double-right next parpadeo"></i>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
 
-    <div class="row">
-        <div class="col">
-            <hr>
-            <b>Creado por</b>
-            <br>
-            <span>{{prestacionSeleccionada.createdBy.nombreCompleto}}</span>
-        </div>
+        <historial-solicitud [prestacion]="prestacionSeleccionada" [turno]='turnoSeleccionado' ></historial-solicitud>
     </div>
-    <div class="row">
-        <div class="col">
-            <b>Fecha de Creación</b>
-            <br>
-            <span>{{prestacionSeleccionada.createdAt | date: "dd/MM/yyyy 'a las' HH:mm " }}</span>
-        </div>
-    </div>
-</div>

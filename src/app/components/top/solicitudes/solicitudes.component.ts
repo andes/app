@@ -190,10 +190,17 @@ export class SolicitudesComponent implements OnInit {
         this.prestacionSeleccionada = prestacion;
         this.pacienteSolicitud = prestacion.paciente;
         if (prestacion.solicitud && prestacion.solicitud.turno) {
-            this.servicioTurnos.getTurnos({ id: prestacion.solicitud.turno }).subscribe(turnos => this.turnoSeleccionado = turnos[0].bloques[0].turnos[0]);
+            this.servicioTurnos.getTurnos({ id: prestacion.solicitud.turno }).subscribe(turnos => {
+                this.turnoSeleccionado = turnos[0].bloques[0].turnos[0];
+                this.setShowDetallesFlags();
+            });
         } else {
             this.turnoSeleccionado = null;
+            this.setShowDetallesFlags();
         }
+    }
+
+    private setShowDetallesFlags() {
         this.showDetalle = true;
         this.showSidebar = true;
         this.showAnular = false;

@@ -297,6 +297,7 @@ import { OrganizacionOfertaPrestacionalComponent } from './components/organizaci
 // Solicitudes
 import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.component';
 import { DetalleSolicitudComponent } from './components/top/solicitudes/detalleSolicitud.component';
+import { HistorialSolicitudComponent } from './components/top/solicitudes/historialSolicitud.component';
 import { AuditarSolicitudComponent } from './components/top/solicitudes/auditarSolicitud.component';
 import { NuevaSolicitudComponent } from './components/top/solicitudes/nuevaSolicitud.component';
 import { AnularSolicitudComponent } from './components/top/solicitudes/anularSolicitud.component';
@@ -499,6 +500,7 @@ registerLocaleData(localeEs, 'es');
         // Solicitudes
         SolicitudesComponent,
         DetalleSolicitudComponent,
+        HistorialSolicitudComponent,
         PrestacionSolicitudComponent,
         AuditarSolicitudComponent,
         AnularSolicitudComponent,
