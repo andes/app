@@ -56,9 +56,9 @@
                                     <div class="vinculadoCon"
                                          *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))">
 
-                                        <span class="badge badge-info">
+                                        <plex-badge type="info">
                                             {{registro.relacionadoCon[0].concepto.term }}
-                                        </span>
+                                        </plex-badge>
                                         <a href="javascript:void(0);"
                                            (click)="desvincular(registro, registro.relacionadoCon[0])"
                                            class="desvincular"
@@ -71,15 +71,14 @@
                                 </div>
                                 <div class="actions"
                                      *ngIf="!confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i) )">
-                                    <span
-                                          class="badge badge-{{ (registro.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(registro.concepto) }}">
+                                    <plex-badge
+                                                type="{{ (registro.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(registro.concepto) }}">
                                         {{!registro.esSolicitud ? registro.concepto.semanticTag : 'solicitud'}}
-                                    </span>
-                                    <span class="badge badge-info ml-1"
-                                          *ngIf='registro.esPrimeraVez && prestacion.estados[prestacion.estados.length - 1].tipo === "validada"'>
+                                    </plex-badge>
+                                    <plex-badge type="info ml-1"
+                                                *ngIf='registro.esPrimeraVez && prestacion.estados[prestacion.estados.length - 1].tipo === "validada"'>
                                         Es primera vez
-
-                                    </span>
+                                    </plex-badge>
                                     <a *ngIf="!soloValores" href="javascript:void(0);" title="Quitar de la consulta"
                                        (click)="confirmarEliminarRegistro(registro, 'card')"
                                        class="btn btn-sm btn-danger eliminar">
@@ -100,11 +99,6 @@
                                  [hidden]="itemsRegistros[registro.id]?.collapse || confirmarEliminar || confirmarDesvincular[registro.id]">
                                 <!-- ... Body -->
                                 <div class="content">
-                                    <!-- <div *ngIf="registro && !registro.valido">
-                                        <span class="badge badge-danger">
-                                            Debe completar los datos
-                                        </span>
-                                    </div> -->
                                     <rup [elementoRUP]="elementosRUPService.elementoRegistro(registro)"
                                          [prestacion]="prestacion" [paciente]="paciente" [registro]="registro"
                                          [soloValores]="soloValores" [params]="elementosRUPService.getParams(registro)">

@@ -142,8 +142,9 @@
 
                         <!-- Badge que indica si el turno está reasignado a otra agenda -->
                         <td>
-                            <small class="badge-info float-right"
-                                   *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente">Reasignado</small>
+                            <plex-badge type="info float-right"
+                                        *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente">
+                                Reasignado</plex-badge>
                         </td>
                     </tr>
                 </tbody>
@@ -200,8 +201,9 @@
 
                         <!-- Badge que indica si el turno está reasignado a otra agenda -->
                         <td>
-                            <small class="badge-info float-right"
-                                   *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente">Reasignado</small>
+                            <plex-badge type="info float-right"
+                                        *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente">
+                                Reasignado</plex-badge>
                         </td>
                     </tr>
                 </tbody>

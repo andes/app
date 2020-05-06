@@ -2,30 +2,32 @@
     <div class="row align-items-center m-0 p-0">
         <div class="col-4">
             <form #form="ngForm">
-                <plex-select [(ngModel)]="registro.valor.unidadOrganizativa" name="servicio" [data]="unidadesOrganizativas"
-                    idField="conceptId" labelField="term" label="Unidad Organizativa" [required]="true"></plex-select>
+                <plex-select [(ngModel)]="registro.valor.unidadOrganizativa" name="servicio"
+                             [data]="unidadesOrganizativas" idField="conceptId" labelField="term"
+                             label="Unidad Organizativa" [required]="true"></plex-select>
             </form>
         </div>
         <div class="col-3">
-            <plex-datetime type="date" [(ngModel)]="registro.valor.fechaDesde" name="fechaEpicrisis" label="Ingreso" title="fecha de inicio de internación"
-                [required]="true">
+            <plex-datetime type="date" [(ngModel)]="registro.valor.fechaDesde" name="fechaEpicrisis" label="Ingreso"
+                           title="fecha de inicio de internación" [required]="true">
             </plex-datetime>
         </div>
         <div class="col-3">
-            <plex-datetime type="date" [(ngModel)]="registro.valor.fechaHasta" name="fechaEpicrisis" label="Egreso" title="fecha en la que desocupo la cama"
-                [required]="true">
+            <plex-datetime type="date" [(ngModel)]="registro.valor.fechaHasta" name="fechaEpicrisis" label="Egreso"
+                           title="fecha en la que desocupo la cama" [required]="true">
             </plex-datetime>
         </div>
         <div class="col-2 mt-4">
-            <plex-button label="{{ mensajeAccionAccordion }} Todos" type="primary btn-sm" (click)="desplegarAccordions()"></plex-button>
+            <plex-button label="{{ mensajeAccionAccordion }} Todos" type="primary btn-sm"
+                         (click)="desplegarAccordions()"></plex-button>
             <!-- <plex-button label="Árbol de relaciones" type="primary btn-sm" (click)="VerArbolRelaciones()"></plex-button> -->
         </div>
     </div>
     <plex-accordion>
         <ng-container *ngFor="let item of requeridos; let i = index">
             <plex-panel [ngClass]="{'alerta-campo' : !rupInstance.isValid}" icon="arrow-down-drop-circle-outline"
-                [active]="accordionActive === i || desplegarTodo" (toggle)="accordionSeleccionado(i, item.concepto)"
-                class="hover">
+                        [active]="accordionActive === i || desplegarTodo"
+                        (toggle)="accordionSeleccionado(i, item.concepto)" class="hover">
                 <div plex-accordion-title class="d-flex justify-content-between">
                     <span class="contenedor-icono">
                         <i class="icon {{ item.params.icon }}"></i>
@@ -34,23 +36,24 @@
                         {{ item.concepto.term }}
                     </span>
 
-                    <span *ngIf="!rupInstance.isValid" class="badge badge-danger mr-4 align-self-center">
+                    <plex-badge *ngIf="!rupInstance.isValid" type="danger mr-4 align-self-center">
                         Hay registros incompletos
-                    </span>
-                    <span *ngIf="!registro.registros[i].registros.length && i > 0 && rupInstance.isValid" class="badge badge-warning mr-4 align-self-center">
+                    </plex-badge>
+                    <plex-badge *ngIf="!registro.registros[i].registros.length && i > 0 && rupInstance.isValid"
+                                type="warning mr-4 align-self-center">
                         No hay conceptos registrados
-                    </span>
-                    <span *ngIf="registro.registros[i].registros.length && rupInstance.isValid" class="badge badge-info mr-4 align-self-center">
+                    </plex-badge>
+                    <plex-badge *ngIf="registro.registros[i].registros.length && rupInstance.isValid"
+                                type="info mr-4 align-self-center">
                         {{ registro.registros[i].registros.length }} Conceptos registrados
-                    </span>
-                    <plex-button
-                        [icon]=" accordionActive === i || desplegarTodo ? 'chevron-left' : 'chevron-down' "
-                        type="primary btn-sm btn-collapse">
+                    </plex-badge>
+                    <plex-button [icon]=" accordionActive === i || desplegarTodo ? 'chevron-left' : 'chevron-down' "
+                                 type="primary btn-sm btn-collapse">
                     </plex-button>
                 </div>
-                <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
-                    [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()"
-                    #rupInstance>
+                <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
+                     [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="soloValores"
+                     (change)="emitChange()" #rupInstance>
                 </rup>
             </plex-panel>
         </ng-container>
@@ -90,14 +93,16 @@
     <div class="grid-container">
         <ng-container *ngFor="let item of requeridos; let i = index">
             <div class="grid-item-{{i+1}}">
-                <div class="rup-card rup-clear {{ (item.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(item.concepto) }}">
+                <div
+                     class="rup-card rup-clear {{ (item.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(item.concepto) }}">
                     <div class="titulo d-flex align-items-start">
                         <i class="icon {{ item.params.icon }} mr-2"></i>
                         <strong> {{ item.params.titulo }}</strong>
                     </div>
                     <div class="contenedor-conceptos ml-3 pl-3">
-                        <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
-                            [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()">
+                        <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
+                             [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="soloValores"
+                             (change)="emitChange()">
                         </rup>
                     </div>
                     <hr>

@@ -31,7 +31,7 @@
             </div>
             <div class="col-8 mt-3">
                 <span *ngIf="errorFormato">
-                    <span class="badge-danger"> Archivo inválido </span>
+                    <plex-badge type="danger"> Archivo inválido </plex-badge>
                 </span>
                 <div *ngIf="!errorFormato" [innerHtml]="imagenSegura"></div>
             </div>

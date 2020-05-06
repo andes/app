@@ -107,7 +107,7 @@
             <ng-container *ngFor="let pr of procedimientos">
                 <plex-item class="hover" [botonera]="false" (click)="cargarPlantillas(pr)">
                     <plex-label class="text-capitalize">{{ pr.term }}</plex-label>
-                    <span class="badge badge-procedimiento">{{ pr.semanticTag }}</span>
+                    <plex-badge type="default">{{ pr.semanticTag }}</plex-badge>
                 </plex-item>
             </ng-container>
         </plex-list>

@@ -188,12 +188,12 @@
 
                 <div *ngIf="prestacion.paciente.estado">
                     <label class="block">Estado</label>
-                    <span *ngIf="prestacion.paciente.estado === 'validado'" class="badge badge-success">
+                    <plex-badge *ngIf="prestacion.paciente.estado === 'validado'" type="success">
                         {{ prestacion.paciente.estado | uppercase }}
-                    </span>
-                    <span *ngIf="_paciente.estado !== 'validado'" class="badge-warning">
+                    </plex-badge>
+                    <plex-badge *ngIf="_paciente.estado !== 'validado'" type="warning">
                         {{ prestacion.paciente.estado | uppercase }}
-                    </span>
+                    </plex-badge>
                 </div>
             </div>
         </div>

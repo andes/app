@@ -190,10 +190,10 @@
                                 {{camaSeleccionada.nombre}}</h2>
                             <hr class="blanco xs">
 
-                            <span class="badge badge-{{camaSeleccionada.ultimoEstado.estado}}"
-                                  [ngClass]="{ 'badge-success': camaSeleccionada.ultimoEstado.estado === 'desocupada'}">
+                            <plex-badge
+                                        type="{{ camaSeleccionada.ultimoEstado.estado === 'desocupada' ? 'success' : camaSeleccionada.ultimoEstado.estado}}">
                                 {{camaSeleccionada.ultimoEstado.estado}}
-                            </span>
+                            </plex-badge>
                             <span class='texto-{{camaSeleccionada.ultimoEstado.estado}}'
                                   *ngIf='camaSeleccionada.ultimoEstado.estado === "bloqueada" && camaSeleccionada.ultimoEstado.observaciones'>|
                                 {{camaSeleccionada.ultimoEstado.observaciones}}</span>

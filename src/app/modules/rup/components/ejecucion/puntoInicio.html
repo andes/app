@@ -95,20 +95,20 @@
                                     </ng-container>
                                 </div>
                             </td>
-                            <td>
+                            <td class="text-right">
                                 <ng-container
                                               *ngIf="agenda.estado !== 'disponible' && !agenda.tipoPrestaciones[0].noNominalizada">
-                                    <span class="badge-info float-right">
+                                    <plex-badge type="info">
                                         pacientes {{getCantidadPacientes(agenda)}}
                                         <ng-container *ngIf="!agenda.dinamica">
                                             / {{agenda.cantidadTurnos}}
                                         </ng-container>
-                                    </span>
+                                    </plex-badge>
                                 </ng-container>
                                 <ng-container *ngIf="agenda.tipoPrestaciones[0].noNominalizada">
-                                    <span class="badge-info float-right">
+                                    <plex-badge type="info">
                                         No nominalizada
-                                    </span>
+                                    </plex-badge>
                                 </ng-container>
                             </td>
                         </tr>
@@ -120,15 +120,15 @@
                     <td>
                         Fuera de agenda
                     </td>
-                    <td colspan="2">
-                        <span class="badge-info float-right">
+                    <td colspan="2" class="text-right">
+                        <plex-badge type="info">
                             <ng-container *ngIf="fueraDeAgenda.length === 1">
                                 1 paciente
                             </ng-container>
                             <ng-container *ngIf="fueraDeAgenda.length > 1">
                                 {{fueraDeAgenda.length}} pacientes
                             </ng-container>
-                        </span>
+                        </plex-badge>
                     </td>
                 </tr>
             </tbody>
@@ -153,9 +153,9 @@
                                     {{ agendaSeleccionada.horaInicio | fecha}},
                                     {{ agendaSeleccionada.horaInicio | date: 'HH:mm'}} a
                                     {{ agendaSeleccionada.horaFin | date: 'HH:mm'}} hs
-                                    <span class="badge-info" *ngIf="agendaSeleccionada.dinamica">
+                                    <plex-badge type="info" *ngIf="agendaSeleccionada.dinamica">
                                         Dinámica
-                                    </span>
+                                    </plex-badge>
                                     <div *ngFor="let tipoPrestacion of agendaSeleccionada.tipoPrestaciones">
                                         {{tipoPrestacion.nombre}}
                                     </div>
@@ -191,24 +191,21 @@
 
                                             <div *ngIf="turno.prestacion && turno?.prestacion?.estados">
                                                 <br />
-                                                <span *ngIf="turno.asistencia !== 'noAsistio'" class="badge" [ngClass]="{
-                                                          'badge-success':
-                                                                turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo==='validada',
-                                                          'badge-warning':
-                                                                turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo==='ejecucion'
-                                                        }">
+                                                <plex-badge *ngIf="turno.asistencia !== 'noAsistio'" class="badge" type="{{ 
+                                                    turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo==='validada' ? 'success': 'warning'
+                                                        }}">
                                                     {{turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo}}
-                                                </span>
+                                                </plex-badge>
 
                                             </div>
                                             <div
                                                  *ngIf="turno && turno.paciente && turno.asistencia && turno.estado !== 'suspendido'">
 
-                                                <span class="badge "
-                                                      [ngClass]="{ 'badge-success': turno.asistencia === 'asistio', 'badge-danger': turno.asistencia === 'noAsistio'} ">
+                                                <plex-badge
+                                                            type="{{ turno.asistencia === 'asistio' ? 'success' : (turno.asistencia === 'noAsistio' ? 'danger': 'info') }}">
                                                     {{turno.asistencia}} <ng-container *ngIf="turno.horaAsistencia">
                                                         {{ turno.horaAsistencia | hora }} hs </ng-container>
-                                                </span>
+                                                </plex-badge>
                                                 <br />
 
                                                 <span *ngIf="turno.asistencia === 'noAsistio'">
@@ -266,8 +263,8 @@
                                                   *ngIf="turno && turno.estado === 'turnoDoble'">
                                                 Turno Doble
                                             </span>
-                                            <span class="badge badge-danger"
-                                                  *ngIf="turno && turno.estado === 'suspendido'">Suspendido</span>
+                                            <plex-badge type="danger" *ngIf="turno && turno.estado === 'suspendido'">
+                                                Suspendido</plex-badge>
                                             <span *ngIf="turno && turno.nota">
                                                 <i title="{{turno.nota}}"
                                                    class="text-warning warning mdi mdi-message"></i>
@@ -275,17 +272,17 @@
 
                                             <div *ngIf="turno && turno.confirmatedAt">
                                                 <br />
-                                                <span class="badge badge-default"
-                                                      title="{{turno.confirmatedAt | date: 'medium'}}">
+                                                <plex-badge type="default"
+                                                            title="{{turno.confirmatedAt | date: 'medium'}}">
                                                     Confirmado
-                                                </span>
+                                                </plex-badge>
                                             </div>
                                         </td>
                                         <td>
-                                            <span *ngIf="turno.prestacion?.turnosPedientes"
-                                                  title="Turno autocitado sin asignar" class="badge badge-warning">
-                                                <i class="mdi mdi-message-alert"></i>
-                                            </span>
+                                            <plex-badge *ngIf="turno.prestacion?.turnosPedientes"
+                                                        title="Turno autocitado sin asignar" type="warning">
+                                                <plex-icon name="message-alert"></plex-icon>
+                                            </plex-badge>
                                         </td>
                                         <td>
                                             <ng-container *ngIf="turno.tipoPrestacion && turno.paciente?.id">
@@ -396,21 +393,19 @@
                                                 <strong>{{ sobreturno.horaInicio | date: 'HH:mm' }}</strong>
                                                 <div
                                                      *ngIf="sobreturno && sobreturno.prestacion && sobreturno?.prestacion?.estados">
-                                                    <span *ngIf="sobreturno.asistencia !== 'noAsistio'" class="badge"
-                                                          [ngClass]="{'badge-success': sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'validada',
-                                                        'badge-warning': sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'ejecucion'}">
-                                                        {{sobreturno.prestacion.estados[sobreturno.prestacion.estados.length
-                                                    - 1].tipo}}
-                                                    </span>
+                                                    <plex-badge *ngIf="sobreturno.asistencia !== 'noAsistio'"
+                                                                type="{{ sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'validada' ? 'success' : 'warning' }}">
+                                                        {{sobreturno.prestacion.estados[sobreturno.prestacion.estados.length-1].tipo}}
+                                                    </plex-badge>
                                                     <br />
                                                 </div>
                                                 <div
                                                      *ngIf="sobreturno && sobreturno.paciente && sobreturno.asistencia && sobreturno.estado !== 'suspendido'">
 
-                                                    <span class="badge"
-                                                          [ngClass]="{ 'badge-warning': sobreturno.asistencia === 'asistio', 'badge-danger': sobreturno.asistencia === 'noAsistio'}">
+                                                    <plex-badge
+                                                                type="{{ sobreturno.asistencia === 'asistio' ? 'warning' : (sobreturno.asistencia === 'noAsistio' ? 'danger' : 'info')}}">
                                                         {{sobreturno.asistencia}}
-                                                    </span>
+                                                    </plex-badge>
                                                     <span *ngIf="sobreturno.asistencia === 'noAsistio'">
                                                         <plex-button type="danger btn-sm" icon="mdi mdi-backup-restore"
                                                                      (click)="registrarInasistencia(sobreturno.paciente,agendaSeleccionada, sobreturno.id, 'sacarAsistencia')"
@@ -459,8 +454,9 @@
                                                     </small>
                                                 </ng-container>
 
-                                                <span class="badge badge-danger"
-                                                      *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</span>
+                                                <plex-badge type="danger"
+                                                            *ngIf="sobreturno && sobreturno.estado === 'suspendido'">
+                                                    Suspendido</plex-badge>
                                                 <span *ngIf="sobreturno && sobreturno.nota">
                                                     <i title="{{sobreturno.nota}}"
                                                        class="text-warning warning mdi mdi-message"></i>
@@ -468,17 +464,17 @@
 
                                                 <div *ngIf="sobreturno && sobreturno.confirmatedAt">
                                                     <br />
-                                                    <span class="badge badge-default"
-                                                          title="{{sobreturno.confirmatedAt | date: 'medium'}}">
+                                                    <plex-badge type="default"
+                                                                title="{{sobreturno.confirmatedAt | date: 'medium'}}">
                                                         Confirmado
-                                                    </span>
+                                                    </plex-badge>
                                                 </div>
                                             </td>
                                             <td>
-                                                <span *ngIf="sobreturno.prestacion?.turnosPedientes"
-                                                      title="Turno autocitado sin asignar" class="badge badge-warning">
-                                                    <i class="mdi mdi-message-alert"></i>
-                                                </span>
+                                                <plex-badge *ngIf="sobreturno.prestacion?.turnosPedientes"
+                                                            title="Turno autocitado sin asignar" type="warning">
+                                                    <plex-icon name="message-alert"></plex-icon>
+                                                </plex-badge>
                                             </td>
 
                                             <td>
@@ -537,11 +533,11 @@
                                         <strong
                                                 *ngIf="prestacion">{{ prestacion.solicitud.fecha | date: 'HH:mm' }}</strong>
                                         <br>
-                                        <span class="badge"
-                                              [ngClass]="{'badge-success': prestacion.estados[prestacion.estados.length - 1].tipo === 'validada',
-                                                    'badge-warning': prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'}">
+                                        <plex-badge
+                                                    type="{{ prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' ? 'success' : (
+                                                    prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion' ? 'warning' : 'info')}}">
                                             {{prestacion.estados[prestacion.estados.length - 1].tipo}}
-                                        </span>
+                                        </plex-badge>
 
                                     </td>
                                     <td>
@@ -573,10 +569,10 @@
 
                                     </td>
                                     <td>
-                                        <span *ngIf="prestacion.turnosPedientes" title="Turno autocitado sin asignar"
-                                              class="badge badge-warning">
-                                            <i class="mdi mdi-message-alert"></i>
-                                        </span>
+                                        <plex-badge *ngIf="prestacion.turnosPedientes"
+                                                    title="Turno autocitado sin asignar" type="warning">
+                                            <plex-icon name="message-alert"></plex-icon>
+                                        </plex-badge>
                                     </td>
                                     <td>
                                         <plex-button size="block"

@@ -7,12 +7,15 @@
     </div>
 </header>
 <div class="badgeContainer">
-    <span class="badge badge-info" *ngIf="medicamento?.concepto?.term.split(', ').length >= 2">{{ medicamento?.concepto?.term.split(', ')[1] }}</span>
-    <span class="badge badge-success" *ngIf="medicamento?.concepto?.term.split(', ').length >= 3">{{ medicamento?.concepto?.term.split(', ')[2] }}</span>
+    <plex-badge type="info" *ngIf="medicamento?.concepto?.term.split(', ').length >= 2">
+        {{ medicamento?.concepto?.term.split(', ')[1] }}</plex-badge>
+    <plex-badge type="success" *ngIf="medicamento?.concepto?.term.split(', ').length >= 3">
+        {{ medicamento?.concepto?.term.split(', ')[2] }}</plex-badge>
 </div>
 <div>
     <div class="titulo-prefix">Medicamento</div>
-    <div class="titulo-principal md" *ngIf="medicamento?.concepto?.term.split(', ').length >= 1">{{ medicamento?.concepto?.term.split(', ')[0] }}</div>
+    <div class="titulo-principal md" *ngIf="medicamento?.concepto?.term.split(', ').length >= 1">
+        {{ medicamento?.concepto?.term.split(', ')[0] }}</div>
     <div class="titulo-secundario" *ngIf="medicamento?.especialidades.length >= 0">{{medicamento?.especialidades}}</div>
 </div>
 <div>

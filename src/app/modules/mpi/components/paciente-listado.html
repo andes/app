@@ -20,8 +20,8 @@
             <td class="text-center">
                 <span *ngIf="paciente?.documento !== ''" class="d-block">{{paciente.documento}}</span>
                 <span *ngIf="paciente?.documento === ''" class="d-block">N/D</span>
-                <span *ngIf="paciente.estado == 'validado'" class="d-block badge badge-success">Validado</span>
-                <span *ngIf="paciente.estado != 'validado'" class="d-block badge badge-warning">Temporal</span>
+                <plex-badge *ngIf="paciente.estado == 'validado'" type="success">Validado</plex-badge>
+                <plex-badge *ngIf="paciente.estado != 'validado'" type="warning">Temporal</plex-badge>
             </td>
             <td>{{paciente | nombre}}</td>
             <td>
@@ -43,8 +43,8 @@
             <td class="text-center">
                 <span *ngIf="paciente?.documento !== ''" class="d-block">{{paciente.documento}}</span>
                 <span *ngIf="paciente?.documento === ''" class="d-block">N/D</span>
-                <span *ngIf="paciente.estado == 'validado'" class="d-block badge badge-success">Validado</span>
-                <span *ngIf="paciente.estado != 'validado'" class="d-block badge badge-warning">Temporal</span>
+                <plex-badge *ngIf="paciente.estado == 'validado'" type="success">Validado</plex-badge>
+                <plex-badge *ngIf="paciente.estado != 'validado'" type="warning">Temporal</plex-badge>
             </td>
             <td>
                 <div>{{paciente | nombre}}</div>

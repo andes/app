@@ -1,9 +1,9 @@
 <ng-container *ngIf="referenceSet.length > 0">
     <div class="row">
         <div class="col-12">
-            <span *ngFor="let rf of referenceSet" class="badge badge-danger">
+            <plex-badge *ngFor="let rf of referenceSet" type="danger">
                 {{ rf }}
-            </span>
+            </plex-badge>
         </div>
     </div>
 </ng-container>
