@@ -112,24 +112,20 @@
             </li>
         </ul>
     </div>
-    <div class="row" *ngIf="filtroActual === 'planes'">
-        <div class="col">
-            <plex-options (activated)='setAmbitoOrigen($event)' [items]="filtrosAmbitos">
-            </plex-options>
+    <div class="grow" *ngIf="filtroActual === 'planes'">
+        <plex-options (activated)='setAmbitoOrigen($event)' [items]="filtrosAmbitos">
+        </plex-options>
+        <div class="ml-1">
+            <plex-button type="info" size="sm" [icon]="showFiltros ? 'mdi mdi-chevron-up' : 'mdi mdi-chevron-down'"
+                         [title]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" class="float-right"
+                         (click)="toogleFiltros()">
+            </plex-button>
         </div>
     </div>
     <div class="row">
-        <div class="col-10">
+        <div class="col">
             <small class="pr-1" *ngIf="getSemanticTagFiltros()">Filtros:</small>
             <i class="text-secondary ml-1">{{ getSemanticTagFiltros() }}</i>
-        </div>
-        <div class="col-2">
-            <ng-container *ngIf="filtroActual === 'planes'">
-                <plex-button [icon]="showFiltros ? 'mdi mdi-close' : 'mdi mdi-magnify'" size="sm" type="info"
-                             [title]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" class="float-right"
-                             (click)="toogleFiltros()">
-                </plex-button>
-            </ng-container>
         </div>
     </div>
 </div>
