@@ -191,7 +191,7 @@
 
                                             <div *ngIf="turno.prestacion && turno?.prestacion?.estados">
                                                 <br />
-                                                <plex-badge *ngIf="turno.asistencia !== 'noAsistio'" class="badge" type="{{ 
+                                                <plex-badge *ngIf="turno.asistencia !== 'noAsistio'" type="{{ 
                                                     turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo==='validada' ? 'success': 'warning'
                                                         }}">
                                                     {{turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo}}
