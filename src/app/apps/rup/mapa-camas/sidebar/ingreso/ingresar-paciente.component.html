@@ -35,8 +35,9 @@
                             <div class="col-md">
                                 <ng-container *ngIf="camas$ | async as camas">
                                     <plex-select *ngIf="!prestacion" [required]="true" [(ngModel)]="cama" name="cama"
-                                                 [data]="camas" placeholder="Elija cama" label="Cama" idField="nombre"
-                                                 labelField="nombre" (change)="selectCama(cama)">
+                                                 [data]="camas" placeholder="Elija cama" label="Cama" idField="idCama"
+                                                 labelField="nombre + '(' + sectorName + ')'"
+                                                 (change)="selectCama(cama)">
                                     </plex-select>
                                 </ng-container>
                                 <plex-text *ngIf="prestacion && cama" [required]="true" [disabled]="true" label="Cama"

@@ -315,6 +315,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 this.onSave.emit();
             }
         } else {
+            delete this.cama['sectorName'];
             this.cama.extras = { ingreso: true };
             this.mapaCamasService.save(this.cama, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
                 this.plex.info('success', 'Paciente internado');
