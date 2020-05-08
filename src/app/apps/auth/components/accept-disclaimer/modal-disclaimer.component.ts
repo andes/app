@@ -12,7 +12,7 @@ import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
     styleUrls: ['modal-disclaimer.scss']
 })
 
-export class ModalDisclaimerComponent implements OnInit, AfterViewInit {
+export class ModalDisclaimerComponent implements OnInit {
     @ViewChild('modal', { static: true }) modal: PlexModalComponent;
 
     public disclaimer: IDisclaimer = null;
@@ -33,10 +33,6 @@ export class ModalDisclaimerComponent implements OnInit, AfterViewInit {
         public usuarioService: UsuarioService,
         private cd: ChangeDetectorRef
     ) { }
-
-    ngAfterViewInit() {
-        this.cd.detectChanges();
-    }
 
     ngOnInit() {
         this.disclaimerService.get({ activo: true }).subscribe(data => {
