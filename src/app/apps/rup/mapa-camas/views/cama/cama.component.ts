@@ -48,7 +48,7 @@ export class CamaMainComponent implements OnInit {
     public capas = [
         'estadistica',
         'medica',
-        'enfermeria'
+        // 'enfermeria'
     ];
 
     constructor(
