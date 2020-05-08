@@ -241,6 +241,10 @@ export class CamaMainComponent implements OnInit {
         return (contador === this.capas.length);
     }
 
+    onSectorSelect($event, organizacion) {
+        this.camaEditada.sectores = this.organizacionService.getRuta(organizacion, $event.value);
+    }
+
     guardarCambios(datosCama, capa, fecha) {
         return this.camasHTTP.save(this.ambito, capa, fecha, datosCama);
     }
