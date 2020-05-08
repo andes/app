@@ -55,7 +55,7 @@
                             <span *ngFor="let prestacion of agenda.tipoPrestaciones">{{prestacion.nombre}} - </span>
                             <br />
                             <b>Espacio Físico: </b>
-                            <span>{{agenda.espacioFisico?agenda.espacioFisico.nombre:''}}</span>
+                            <span>{{(agenda | espacioFisico) }}</span>
                         </div>
                     </div>
                     <div class="row">

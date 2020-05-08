@@ -40,10 +40,10 @@
                             <div class="row">
                                 <div class="col-12">
                                     <label>Espacio físico</label>
-                                    <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
-                                    <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico
-                                        no
-                                        asignado</span>
+                                    <span
+                                          *ngIf="agenda.espacioFisico?.nombre || agenda.otroEspacioFisico?.nombre">{{agenda | espacioFisico}}</span>
+                                    <span *ngIf="!agenda.espacioFisico?.nombre && !agenda.otroEspacioFisico?.nombre"
+                                          class="text-danger">Espacio físico no asignado</span>
                                 </div>
                             </div>
                             <div *ngIf="agenda.dinamica" class="row">
@@ -142,9 +142,8 @@
 
                         <!-- Badge que indica si el turno está reasignado a otra agenda -->
                         <td>
-                            <plex-badge type="info float-right"
-                                        *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente">
-                                Reasignado</plex-badge>
+                            <small class="badge-info float-right"
+                                   *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente">Reasignado</small>
                         </td>
                     </tr>
                 </tbody>
@@ -201,9 +200,8 @@
 
                         <!-- Badge que indica si el turno está reasignado a otra agenda -->
                         <td>
-                            <plex-badge type="info float-right"
-                                        *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente">
-                                Reasignado</plex-badge>
+                            <small class="badge-info float-right"
+                                   *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente">Reasignado</small>
                         </td>
                     </tr>
                 </tbody>

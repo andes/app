@@ -88,6 +88,7 @@ import { RenaperService } from './services/fuentesAutenticas/servicioRenaper.ser
 import { ConfiguracionPrestacionService } from './services/term/configuracionPrestacion.service';
 import { PrestacionLegacyService } from './services/prestacionLegacy.service';
 import { WebSocketService } from './services/websocket.service';
+import { InstitucionService } from './services/turnos/institucion.service';
 
 // ... Turnos
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
@@ -383,11 +384,11 @@ import { SelectOrganizacionDirective } from './directives/organizacion-select.di
 import { SelectProfesionalesDirective } from './directives/profesionales-select.directive';
 import { SelectPrestacionesDirective } from './directives/prestaciones-select.directive';
 import { SelectFinanciadorDirective } from './directives/financiador-select-directive';
+import { EspacioFisicoPipe } from './pipes/espacioFisico.pipe';
 
 import { ConceptosTurneablesService } from './services/conceptos-turneables.service';
 import { DisclaimerService } from './services/disclaimer.service';
 import { EjecucionInternacionComponent } from './apps/rup/internacion/components/ejecucionInternacion.component';
-
 
 registerLocaleData(localeEs, 'es');
 
@@ -424,7 +425,7 @@ registerLocaleData(localeEs, 'es');
         UploadFileComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, HoraPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
-        FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe, ReplacePipe,
+        FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe, ReplacePipe, EspacioFisicoPipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, DinamicaFormComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         Html2TextPipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
@@ -650,7 +651,8 @@ registerLocaleData(localeEs, 'es');
         WebSocketService,
         HotjarService,
         ConceptosTurneablesService,
-        DisclaimerService
+        DisclaimerService,
+        InstitucionService
     ]
 })
 

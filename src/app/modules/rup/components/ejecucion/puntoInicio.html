@@ -74,10 +74,11 @@
                                     </span>
                                 </div>
                                 <div>
-                                    <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
-                                    <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">
-                                        Espacio físico no asignado
-                                    </span>
+                                    <span
+                                          *ngIf="agenda.espacioFisico?.nombre || agenda.otroEspacioFisico?.nombre">{{agenda | espacioFisico}}</span>
+                                    <span *ngIf="!agenda.espacioFisico?.nombre && !agenda.otroEspacioFisico?.nombre"
+                                          class="text-danger">Espacio físico no
+                                        asignado</span>
                                 </div>
                             </td>
                             <td>

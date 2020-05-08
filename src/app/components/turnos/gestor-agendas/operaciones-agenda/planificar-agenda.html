@@ -80,11 +80,10 @@
                             </div>
                             <div class="row" *ngIf="!espacioFisicoPropios">
                                 <div class="col">
-                                    <plex-select [(ngModel)]="modelo.espacioFisico" name="otrosEspacios"
+                                    <plex-select [(ngModel)]="modelo.otroEspacioFisico" name="otrosEspacios"
                                                  (getData)="loadEspaciosFisicos($event)"
                                                  label="Seleccione un espacio físico"
-                                                 placeholder="Seleccione un espacio físico" labelField="nombre"
-                                                 (change)="validarTodo()">
+                                                 placeholder="Seleccione un espacio físico" labelField="nombre">
                                     </plex-select>
                                 </div>
                             </div>
