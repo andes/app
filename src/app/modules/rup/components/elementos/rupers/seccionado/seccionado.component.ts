@@ -17,12 +17,13 @@ import { RUPComponent } from '../../../core/rup.component';
 @RupElement('SeccionadoComponent')
 export class SeccionadoComponent extends RUPComponent implements OnInit {
 
-    public accordionActive = 0;
+    public accordionActive = -1;
     public desplegarTodo = false;
 
 
     ngOnInit() {
         this.registro.hasSections = true;
+        this.accordionSeleccionado(0, this.registro.registros[0].concepto);
     }
 
     get requeridos() {
