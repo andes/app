@@ -36,7 +36,7 @@
                 </ng-container>
             </ng-container>
             <ng-container *ngIf="!params.multiple">
-                {{ displayName(registro.valor) }}
+                {{ otherEnabled ? registro.valor.nombre : displayName(registro.valor) }}
             </ng-container>
         </ng-container>
     </p>
