@@ -98,6 +98,12 @@ export class MapaCamasService {
                 return this.camasHTTP.snapshot(ambito, capa, fecha);
             }),
             map((snapshot: ISnapshot[]) => {
+                snapshot.forEach((snap) => {
+                    const sectores = snap.sectores || [];
+                    const sectorName = [...sectores].reverse().map(s => s.nombre).join(', ');
+                    (snap as any).sectorName = sectorName;
+                });
+
                 return snapshot.sort((a, b) => (a.unidadOrganizativa.term.localeCompare(b.unidadOrganizativa.term)) ||
                     (a.sectores[a.sectores.length - 1].nombre.localeCompare(b.sectores[b.sectores.length - 1].nombre + '')) ||
                     (a.nombre.localeCompare('' + b.nombre)));
