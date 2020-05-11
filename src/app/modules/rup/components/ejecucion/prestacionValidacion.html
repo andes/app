@@ -241,16 +241,6 @@
                                 </span>
                             </div>
                             <div class="content">
-                                <ng-container *ngIf="enBusquedaGuiada(elemento.concepto)">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <plex-badge *ngFor="let rf of enBusquedaGuiada(elemento.concepto)"
-                                                        type="danger">
-                                                {{rf.nombre}}
-                                            </plex-badge>
-                                        </div>
-                                    </div>
-                                </ng-container>
                                 <div class="row">
                                     <div class="col-12"
                                          *ngIf="paciente || prestacion.solicitud.tipoPrestacion?.noNominalizada">
