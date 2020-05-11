@@ -666,8 +666,17 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showListadoTurnos = false;
         this.showAgregarNotaAgenda = false;
         if (agenda) {
-            this.getAgendas();
+            this.actualizarAgenda(agenda);
+            this.verAgenda(agenda, false, null);
         }
+    }
+
+    actualizarAgenda(agenda) {
+        const res = this.agendas.filter(function (element) {
+            return (element.id === agenda.id);
+        });
+        let indice = this.agendas.indexOf(res[0]);
+        this.agendas[indice] = agenda;
     }
 
     auditarFueraAgenda() {
