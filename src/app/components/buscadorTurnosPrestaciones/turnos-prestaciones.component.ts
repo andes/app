@@ -10,6 +10,7 @@ import { FacturacionAutomaticaService } from './../../services/facturacionAutoma
 
 import { Plex } from '@andes/plex';
 import { HUDSService } from '../../modules/rup/services/huds.service';
+import { Router } from '@angular/router';
 @Component({
     selector: 'turnos-prestaciones',
     templateUrl: 'turnos-prestaciones.html',
@@ -32,7 +33,6 @@ export class TurnosPrestacionesComponent implements OnInit {
     public arrayEstadosFacturacion;
     public documento;
     prestacion: any;
-    router: any;
     public prestaciones: any;
     public puedeEmitirComprobante: Boolean;
 
@@ -43,7 +43,8 @@ export class TurnosPrestacionesComponent implements OnInit {
     constructor(
         private auth: Auth, private plex: Plex,
         private turnosPrestacionesService: TurnosPrestacionesService, public servicioPrestacion: TipoPrestacionService, public serviceProfesional: ProfesionalService,
-        private servicioOS: ObraSocialService, private facturacionAutomaticaService: FacturacionAutomaticaService, private hudsService: HUDSService
+        private servicioOS: ObraSocialService, private facturacionAutomaticaService: FacturacionAutomaticaService, private hudsService: HUDSService, private router: Router
+
     ) { }
     ngOnInit() {
         this.arrayEstados = [{ id: 'Sin registro de asistencia', nombre: 'Sin registro de asistencia' }, { id: 'Ausente', nombre: 'Ausente' }, { id: 'Presente con registro del profesional', nombre: 'Presente con registro del profesional' }, { id: 'Presente sin registro del profesional', nombre: 'Presente sin registro del profesional' }];
@@ -110,17 +111,25 @@ export class TurnosPrestacionesComponent implements OnInit {
             estado: '',
             estadoFacturacion: '',
         };
-
+        let permisos = this.auth.getPermissions('turnosPrestaciones:*').length;
         if (this.auth.profesional) {
-            this.serviceProfesional.get({ id: this.auth.profesional }).subscribe(rta => {
-                this.profesional = rta[0];
-                params.idProfesional = this.profesional.id;
-                this.parametros['idProfesional'] = this.profesional.id;
-                this.selectProfesional = true;
+            if (permisos === 0) {
+                this.serviceProfesional.get({ id: this.auth.profesional }).subscribe(rta => {
+                    this.profesional = rta[0];
+                    params.idProfesional = this.profesional.id;
+                    this.parametros['idProfesional'] = this.profesional.id;
+                    this.selectProfesional = true;
+                    this.busquedaPrestaciones(params);
+                });
+            } else {
                 this.busquedaPrestaciones(params);
-            });
+            }
         } else {
-            this.busquedaPrestaciones(params);
+            if (permisos === 0) {
+                this.router.navigate(['inicio']);
+            } else {
+                this.busquedaPrestaciones(params);
+            }
         }
     }
 
