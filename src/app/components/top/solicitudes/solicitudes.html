@@ -43,10 +43,8 @@
                         </plex-select>
                     </div>
                     <div class="col-3">
-                        <plex-select [(ngModel)]="prestacionDestino" [required]="true" name="nombrePrestacion" label="Prestación destino"
-                            name="prestacionDestino" tmPrestaciones="solicitudes:tipoPrestacion:?" (change)="cargarSolicitudes()"
-                            [preload]="true">
-                        </plex-select>
+                        <plex-select [(ngModel)]="prestacionDestino" (change)="cargarSolicitudes()" [data]="prestaciones"
+                            name="prestacionDestino" label="Prestación destino" ngModelOptions="{standalone: true}"></plex-select>
                     </div>
                     <div class="col-3">
                         <plex-select [readonly]="asignadas" [(ngModel)]="estadoEntrada" (change)="cargarSolicitudes()"

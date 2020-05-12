@@ -133,6 +133,7 @@ export class SolicitudesComponent implements OnInit {
             this.fechaHasta = null;
             this.estadoEntrada = { id: 'asignada', nombre: 'ASIGNADA' };
         }
+        this.loadPrestaciones();
         this.cargarSolicitudes();
     }
 
@@ -151,6 +152,12 @@ export class SolicitudesComponent implements OnInit {
         if (!this.paciente || this.paciente.length >= 3) {
             this.cargarSolicitudes();
         }
+    }
+
+    loadPrestaciones() {
+        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe(data =>
+            this.prestaciones = this.prestacionesPermisos[0] === '*' ? data : data.filter(e => this.prestacionesPermisos.indexOf(e.id) >= 0)
+        );
     }
 
     cambio(activeTab) {
