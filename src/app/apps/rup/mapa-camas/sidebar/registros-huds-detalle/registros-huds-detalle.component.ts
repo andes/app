@@ -78,7 +78,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     validadaCreadasPorMi(prestacion) {
         const estadoPrestacion = prestacion.estados[prestacion.estados.length - 1];
         const esValidada = estadoPrestacion.tipo === 'validada';
-        const createdByMe = estadoPrestacion.createdBy.id === this.auth.profesional;
+        const createdByMe = estadoPrestacion.createdBy.id === this.auth.usuario.id;
         return esValidada || createdByMe;
     }
 
