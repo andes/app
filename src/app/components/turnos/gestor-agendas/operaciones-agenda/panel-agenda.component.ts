@@ -153,7 +153,7 @@ export class PanelAgendaComponent implements OnInit {
                     event.callback(listaEspaciosFisicos);
                 });
             } else {
-                this.serviceInstitucion.get(query['nombre']).subscribe(resultado => {
+                this.serviceInstitucion.get({ search: '^' + query['nombre'] }).subscribe(resultado => {
                     listaEspaciosFisicos = resultado;
                     event.callback(listaEspaciosFisicos);
                 });
