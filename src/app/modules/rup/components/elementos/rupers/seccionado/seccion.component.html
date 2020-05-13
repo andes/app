@@ -96,11 +96,6 @@
                                         </ng-container>
                                     </ng-container>
 
-                                    <plex-button *ngIf="!soloValores" type="primary" size="sm"
-                                                 icon="{{ itemsRegistros[registro.id]?.collapse ? 'chevron-down' : 'chevron-up'}}"
-                                                 title="{{ itemsRegistros[registro.id]?.collapse ? 'Expandir' : 'Colapsar'}}"
-                                                 titlePosition="left" (click)="cambiaValorCollapse(registro.id)">
-                                    </plex-button>
                                     <plex-button size="sm" type="danger" icon="delete" *ngIf="!soloValores"
                                                  title="Quitar de la consulta" titlePosition="left"
                                                  (click)="confirmarEliminarRegistro(registro, 'card')">
@@ -108,6 +103,11 @@
 
                                     <rup-acciones-envio-informe [prestacion]="prestacion" [registro]="registro">
                                     </rup-acciones-envio-informe>
+                                    <plex-button type="primary" size="sm"
+                                                 icon="{{ itemsRegistros[registro.id]?.collapse ? 'chevron-down' : 'chevron-up'}}"
+                                                 title="{{ itemsRegistros[registro.id]?.collapse ? 'Expandir' : 'Colapsar'}}"
+                                                 titlePosition="left" (click)="cambiaValorCollapse(registro.id)">
+                                    </plex-button>
                                 </div>
                             </div>
                             <div class="rup-body"
