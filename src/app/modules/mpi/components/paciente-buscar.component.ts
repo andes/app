@@ -149,9 +149,11 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                         sexo: pacienteEscaneado.sexo,
                         escaneado: true
                     }).subscribe(resultado => {
+                        resultado = resultado.filter((elto: any) => elto.paciente.activo);
                         if (resultado.length) {
                             // 1.2. Si encuentra el paciente (un matcheo al 100%) finaliza la búsqueda
-                            return this.searchEnd.emit({ escaneado: true, pacientes: resultado, err: null });
+                            const resPacientes = [resultado[0].paciente];
+                            return this.searchEnd.emit({ escaneado: true, pacientes: resPacientes, err: null });
                         } else {
                             // 1.3. Si no encontró el paciente escaneado, busca uno similar
                             this.pacienteService.getMatch({

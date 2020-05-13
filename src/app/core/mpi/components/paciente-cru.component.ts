@@ -212,6 +212,8 @@ export class PacienteCruComponent implements OnInit {
         if (this.paciente) {
 
             if (this.paciente.id) {
+                /* El paciente se agrega al historial de búsqueda sólo si ya existía */
+                this.historialBusquedaService.add(this.paciente);
                 // Busco el paciente en mongodb
                 this.pacienteService.getById(this.paciente.id).subscribe(resultado => {
 
@@ -708,11 +710,6 @@ export class PacienteCruComponent implements OnInit {
     }
 
     cancel() {
-        if (this.escaneado && this.paciente.id) {
-            /* El paciente escaneado se agrega al historial de búsqueda sólo si ya existía.
-            De lo contrario se estaría agregando un paciente que no se terminó de registrar. */
-            this.historialBusquedaService.add(this.paciente);
-        }
         if (this.subscripcionValidar) {
             this.subscripcionValidar.unsubscribe();
         }
