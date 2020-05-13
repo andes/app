@@ -52,6 +52,9 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
     public tabIndex = 0;
     public editar = false;
     public permisoIngreso = false;
+    canEdit = this.auth.check('internacion:cama:create');
+    canMovimientos = this.auth.check('internacion:movimientos');
+
 
     constructor(
         private auth: Auth,

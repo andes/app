@@ -16,6 +16,9 @@ export class ItemCamaComponent implements OnInit {
     @Input() permisoIngreso: boolean;
     @Output() accionCama = new EventEmitter<any>();
 
+    canEdit = this.auth.check('internacion:cama:create');
+    canMovimientos = this.auth.check('internacion:movimientos');
+
     public equipos = {
         aporteOxigeno: false,
         respirador: false,

@@ -42,15 +42,17 @@
         </ng-container>
     </td>
     <td>
-        <ng-container *ngFor="let relacion of relacionesPosibles$ | async">
-            <ng-container
-                          *ngIf="(relacion.accion !== 'internarPaciente') || (relacion.accion === 'internarPaciente' && permisoIngreso)">
-                <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color" size="sm"
-                             (click)="accion(relacion, $event)">
-                </plex-button>
+        <ng-container *ngIf="canMovimientos">
+            <ng-container *ngFor="let relacion of relacionesPosibles$ | async">
+                <ng-container
+                              *ngIf="(relacion.accion !== 'internarPaciente') || (relacion.accion === 'internarPaciente' && permisoIngreso)">
+                    <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color" size="sm"
+                                 (click)="accion(relacion, $event)">
+                    </plex-button>
+                </ng-container>
             </ng-container>
         </ng-container>
-        <plex-button title="Editar Cama" icon="pencil" type="warning" size="sm" (click)="goTo()">
+        <plex-button title="Editar Cama" icon="pencil" type="warning" size="sm" (click)="goTo()" *ngIf="canEdit">
         </plex-button>
     </td>
 </ng-container>
