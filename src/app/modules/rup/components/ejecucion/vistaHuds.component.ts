@@ -11,6 +11,9 @@ import { ConceptObserverService } from './../../services/conceptObserver.service
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { HUDSService } from '../../services/huds.service';
 import { Location } from '@angular/common';
+
+import { SeguimientoPacientesService } from '../../services/seguimientoPacientes.service';
+
 @Component({
     selector: 'rup-vistaHuds',
     templateUrl: 'vistaHuds.html',
@@ -32,6 +35,9 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     public btnVolver = 'VOLVER';
     public rutaVolver;
 
+    // Seguimiento Paciente San Juan
+    public flagSeguimiento = false;
+
     constructor(
         public elementosRUPService: ElementosRUPService,
         public plex: Plex,
@@ -43,7 +49,8 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         private logService: LogService,
         private servicioPrestacion: PrestacionesService,
         private conceptObserverService: ConceptObserverService,
-        public huds: HUDSService
+        public huds: HUDSService,
+        public seguimientoPacientesService: SeguimientoPacientesService
     ) { }
 
     /**
@@ -94,9 +101,15 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                 this.servicioPaciente.getById(id).subscribe(paciente => {
                     this.paciente = paciente;
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
+                    if (paciente) {
+                        this.registroSeguimiento();
+                    }
                 });
             });
         } else {
+            if (this.paciente) {
+                this.registroSeguimiento();
+            }
             // Loggeo de lo que ve el profesional
             this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
             this.logService.post('rup', 'hudsPantalla', {
@@ -138,6 +151,17 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
 
     evtCambiaPaciente() {
         this.cambiarPaciente.emit(true);
+    }
+
+    registroSeguimiento() {
+        // Se evalúa si hay registros de seguimiento
+            this.seguimientoPacientesService.getRegistros({idPaciente: this.paciente.id}).subscribe(seguimientoPacientes => {
+                if (seguimientoPacientes.length) {
+                        this.flagSeguimiento = true;
+                } else {
+                        this.flagSeguimiento = false;
+                }
+            });
     }
 
 

@@ -2,9 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { ISnomedConcept } from '../../../interfaces/snomed-concept.interface';
+import { ISeguimientoPaciente } from '../../../interfaces/seguimientoPaciente.interface';
 import { ElementosRUPService } from '../../../services/elementosRUP.service';
 import { PrestacionesService } from '../../../services/prestaciones.service';
 import { SeguimientoPacientesService } from '../../../services/seguimientoPacientes.service';
+import { subscribeOn } from 'rxjs/operators';
 
 @Component({
     selector: 'rup-resumenPaciente-dinamico',
@@ -15,10 +17,11 @@ export class ResumenPacienteDinamicoComponent implements OnInit {
     @Input() paciente: IPaciente;
 
     public registros: any[] = [];
-    public autoregistros: any[] = [];
     public graficos: any[] = [];
     public elementos: any[] = [];
-    public elementosAutoregistro: any[] = [];
+
+    public registrosSeguimiento: ISeguimientoPaciente[] = [];
+    public elementoSeguimiento: any[] = [];
 
     public conceptosGrafico: ISnomedConcept[] = [
         {
@@ -57,15 +60,14 @@ export class ResumenPacienteDinamicoComponent implements OnInit {
         }
     ];
 
-    // autodiagnosticos
+    // Seguimiento paciente San Juan
 
-    conceptosAutoregistro: ISnomedConcept[] = [
-        {
+    conceptoSeguimientoPaciente: ISnomedConcept[] = [{
             conceptId: '408403008',
             term: 'registro llevado por el paciente',
             fsn: 'registro llevado por el paciente (elemento de registro)',
             semanticTag: 'elemento de registro'
-        } /*,
+        },
         {
             conceptId: '413153004',
             term: 'tensión arterial registrada por el paciente en su hogar',
@@ -77,8 +79,10 @@ export class ResumenPacienteDinamicoComponent implements OnInit {
             term: 'saturación de oxígeno en sangre',
             fsn: 'saturación de hemoglobina con oxígeno (entidad observable)',
             semanticTag: 'entidad observable'
-        }*/
-    ]
+        }
+    ] ;
+
+
 
     constructor(
         public elementosRUPService: ElementosRUPService,
@@ -97,22 +101,25 @@ export class ResumenPacienteDinamicoComponent implements OnInit {
             this.prestacionesService.getRegistrosHuds(this.paciente.id, '<<' + concepto.conceptId).subscribe(prestaciones => {
                 if (prestaciones.length) {
                     this.registros = [...this.registros, prestaciones[prestaciones.length - 1]];
+
                 }
             });
 
         }
-        var item;
-        //agregamos los autoregistros
-        for (let conceptoAutoregistro of this.conceptosAutoregistro) {
-            this.elementosAutoregistro = [...this.elementosAutoregistro, this.elementosRUPService.buscarElemento(conceptoAutoregistro, false)];
-            this.seguimientoPacientesService.getRegistros({'params.paciente': this.paciente.documento, 'params.sexo': this.paciente.sexo}).subscribe(registrosPaciente => {
-                if (registrosPaciente.length) {
-                    item = registrosPaciente.length;
-                    for (let registroPaciente of registrosPaciente)
-                    this.autoregistros[item - 1] = [...this.autoregistros, registroPaciente];
-                }
-            });
+
+        // Seguimiento paciente San Juan
+        for (let concepto of this.conceptoSeguimientoPaciente) {
+            this.elementoSeguimiento =  [...this.elementoSeguimiento, this.elementosRUPService.buscarElemento(concepto, false)];
         }
+
+        this.seguimientoPacientesService.getRegistros({idPaciente: this.paciente.id}).subscribe(seguimientoPacientes => {
+               if (seguimientoPacientes.length) {
+                   for (let seguimientoPaciente of seguimientoPacientes) {
+                        this.registrosSeguimiento = [...this.registrosSeguimiento, seguimientoPaciente];
+                   }
+               }
+        });
+
 
 
     }

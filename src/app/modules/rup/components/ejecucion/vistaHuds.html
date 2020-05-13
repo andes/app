@@ -14,6 +14,10 @@
                         <rup-resumenPaciente-dinamico *ngIf="paciente?.edad > 6" [paciente]="paciente" esTab="true">
                         </rup-resumenPaciente-dinamico>
                     </plex-tab>
+                    <plex-tab label="Seguimiento COVID19" *ngIf="flagSeguimiento">
+                        <rup-seguimientoPaciente  [paciente]="paciente">
+                        </rup-seguimientoPaciente>
+                    </plex-tab>
 
                     <plex-tab label="Accesos a la HUDS" [allowClose]="false">
                         <vista-accesos-huds [paciente]="paciente"></vista-accesos-huds>

@@ -220,6 +220,7 @@ import { AdjuntosService } from './modules/rup/services/adjuntos.service';
 
 // Seguimiento Pacientes SJ
 import { SeguimientoPacientesService } from './modules/rup/services/seguimientoPacientes.service';
+import { SeguimientoPacienteComponent } from './modules/rup/components/ejecucion/seguimiento-paciente/seguimientoPaciente.component';
 
 import { ConceptObserverService } from './modules/rup/services/conceptObserver.service';
 import { PrestacionCrearComponent } from './modules/rup/components/ejecucion/prestacionCrear.component';
@@ -234,6 +235,7 @@ import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucio
 import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
 import { ResumenPacienteDinamicoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
 import { ResumenPacienteDinamicoNinoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico-nino.component';
+
 
 
 // Legacy para RUP
@@ -486,7 +488,8 @@ let RUPComponentsArray = [
     SelectStaticoComponent,
     SelectBaseComponent,
     SeccionadoComponent,
-    SeccionComponent
+    SeccionComponent,
+    SeguimientoPacienteComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
