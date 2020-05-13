@@ -479,7 +479,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
                 event.callback(listaEspaciosFisicos);
             });
             // Para que el filtro muestre las instituciones
-            this.serviceInstitucion.get(query.nombre).subscribe(resultado => {
+            this.serviceInstitucion.get({ search: '^' + query.nombre }).subscribe(resultado => {
                 if (this.modelo.espacioFisico) {
                     listaEspaciosFisicos = resultado ? this.modelo.espacioFisico.concat(resultado) : this.modelo.espacioFisico;
                 } else {

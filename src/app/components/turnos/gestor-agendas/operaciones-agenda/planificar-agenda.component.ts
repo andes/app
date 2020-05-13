@@ -174,7 +174,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             };
             let listaEspaciosFisicos = [];
             if (!this.espacioFisicoPropios) {
-                this.servicioInstitucion.get(event.query).subscribe(resultado => {
+                this.servicioInstitucion.get({ search: '^' + event.query }).subscribe(resultado => {
                     listaEspaciosFisicos = resultado;
                     event.callback(listaEspaciosFisicos);
                 });
