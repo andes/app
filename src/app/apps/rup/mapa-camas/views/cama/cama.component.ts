@@ -48,7 +48,7 @@ export class CamaMainComponent implements OnInit {
     public capas = [
         'estadistica',
         'medica',
-        'enfermeria'
+        // 'enfermeria'
     ];
 
     constructor(
@@ -239,6 +239,10 @@ export class CamaMainComponent implements OnInit {
         }
 
         return (contador === this.capas.length);
+    }
+
+    onSectorSelect($event, organizacion) {
+        this.camaEditada.sectores = this.organizacionService.getRuta(organizacion, $event.value);
     }
 
     guardarCambios(datosCama, capa, fecha) {

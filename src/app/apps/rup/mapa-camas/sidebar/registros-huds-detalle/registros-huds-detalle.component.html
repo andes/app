@@ -1,10 +1,12 @@
 <plex-title titulo="Registros">
-    <plex-button type="info" size="sm" (click)="verHuds()">
-        HUDS
-    </plex-button>
-    <plex-button size="sm" type="info" (click)="onNuevoRegistrio()">
-        NUEVO
-    </plex-button>
+    <ng-container *ngIf="esProfesional">
+        <plex-button type="info" size="sm" (click)="verHuds()">
+            HUDS
+        </plex-button>
+        <plex-button size="sm" type="info" (click)="onNuevoRegistrio()" class="ml-1">
+            NUEVO
+        </plex-button>
+    </ng-container>
     <ng-content></ng-content>
 </plex-title>
 <div class="row mb-1">
@@ -36,6 +38,7 @@
                     PROFESIONAL
                 </small>
             </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -55,6 +58,13 @@
                 <small>
                     {{ prestacion.solicitud.profesional | nombre }}
                 </small>
+            </td>
+            <td>
+                <plex-button size="sm" icon="eye" type="info" (click)="onViewRegistro(prestacion)" title="Ver"
+                             titlePosition="left" *ngIf="!esEjecucion(prestacion)"></plex-button>
+                <plex-button size="sm" label="Continuar" (click)="ejecutar(prestacion)" type="info" title="Continuar"
+                             titlePosition="left" *ngIf="esEjecucion(prestacion)">
+                </plex-button>
             </td>
         </tr>
     </tbody>

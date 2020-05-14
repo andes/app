@@ -22,8 +22,12 @@ export class AuditarSolicitudComponent implements OnInit {
         'dat'
     ];
 
-
-    @Input() prestacionSeleccionada: any;
+    prestacionSeleccionada: any;
+    @Input('prestacionSeleccionada')
+    set _prestacionSeleccionada(value) {
+        this.prestacionSeleccionada = value;
+        this.resetAuditoria();
+    }
     @Input() showCitar: any;
     @Output() returnAuditoria: EventEmitter<any> = new EventEmitter<any>();
     @Output() returnCitar: EventEmitter<any> = new EventEmitter<any>();
@@ -60,8 +64,16 @@ export class AuditarSolicitudComponent implements OnInit {
         });
     }
 
+    resetAuditoria() {
+        this.solicitudAsignada = false;
+        this.corfirmarAuditoria = false;
+        this.showPrioridad = false;
+        this.showConfirmar = false;
+        this.observaciones = '';
+    }
 
     aceptar() {
+        this.prioridad = null;
         this.corfirmarAuditoria = true;
         this.showPrioridad = true;
         this.estadoSolicitud = 1;
@@ -100,6 +112,7 @@ export class AuditarSolicitudComponent implements OnInit {
         this.showConfirmar = false;
         this.showPrioridad = false;
         this.solicitudAsignada = false;
+        this.observaciones = '';
     }
 
     cancelarAceptar() {

@@ -7,6 +7,7 @@ import { OrganizacionService } from './../../../../services/organizacion.service
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { Router } from '@angular/router';
+import { InstitucionService } from '../../../../services/turnos/institucion.service';
 @Component({
     selector: 'panel-agenda',
     templateUrl: 'panel-agenda.html'
@@ -22,6 +23,11 @@ export class PanelAgendaComponent implements OnInit {
     set editaAgendaPanel(value: any) {
         this._editarAgendaPanel = value;
         this.agenda = value;
+        if (value.otroEspacioFisico) {
+            this.espacioFisicoPropio = false;
+        } else {
+            this.espacioFisicoPropio = true;
+        }
     }
     get editaAgendaPanel(): any {
         return this._editarAgendaPanel;
@@ -42,12 +48,17 @@ export class PanelAgendaComponent implements OnInit {
 
     public espaciosList = [];
 
+    textoEspacio = 'Espacios físicos de la organización';
+
+    espacioFisicoPropio = true;
+
     constructor(
         public plex: Plex,
         public serviceAgenda: AgendaService,
         public servicioProfesional: ProfesionalService,
         public servicioEspacioFisico: EspacioFisicoService,
         public organizacionService: OrganizacionService,
+        public serviceInstitucion: InstitucionService,
         public router: Router,
         public auth: Auth) {
     }
@@ -77,26 +88,37 @@ export class PanelAgendaComponent implements OnInit {
                 if (this.agenda.profesionales) {
                     profesional = this.agenda.profesionales;
                 }
-                let espacioFisico = this.agenda.espacioFisico;
-                if (this.agenda.espacioFisico) {
-                    delete espacioFisico.$order;
+                let espacioFisico;
+                let otroEspacioFisico;
+                // Para asegurar que guarde una de las dos opciones, espacioFisico u otroEspaciofisico
+                if (this.espacioFisicoPropio) {
+                    espacioFisico = this.agenda.espacioFisico;
+                    otroEspacioFisico = null;
                 } else {
                     espacioFisico = null;
+                    otroEspacioFisico = this.agenda.otroEspacioFisico;
                 }
 
                 let patch = {
                     'op': 'editarAgenda',
                     'profesional': profesional,
-                    'espacioFisico': espacioFisico
+                    'espacioFisico': espacioFisico,
+                    'otroEspacioFisico': otroEspacioFisico
                 };
 
-                this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+                this.serviceAgenda.patch(agenda.id, patch).subscribe((resultado: any) => {
                     this.agenda = resultado;
                     this.plex.toast('success', 'Información', 'La agenda se guardó correctamente ');
                     this.actualizarEstadoEmit.emit(true);
+                }, err => {
+                    if (err) {
+                        this.plex.info('warning', 'Otro usuario ha modificado el estado de la agenda seleccionada, su gestor se ha actualizado', err);
+                        this.actualizarEstadoEmit.emit(true);
+                    }
                 });
             }
         }
+
     }
 
 
@@ -126,17 +148,22 @@ export class PanelAgendaComponent implements OnInit {
             query['nombre'] = event.query;
             query['organizacion'] = this.auth.organizacion.id;
             query['activo'] = true;
-
-            this.servicioEspacioFisico.get(query).subscribe(resultado => {
-                if (this.agenda.espacioFisico && this.agenda.espacioFisico.id) {
-                    listaEspaciosFisicos = this.agenda.espacioFisico ? [this.agenda.espacioFisico].concat(resultado) : resultado;
-                } else {
+            if (this.espacioFisicoPropio) {
+                this.servicioEspacioFisico.get(query).subscribe(resultado => {
+                    if (this.agenda.espacioFisico && this.agenda.espacioFisico.id) {
+                        listaEspaciosFisicos = this.agenda.espacioFisico ? [this.agenda.espacioFisico].concat(resultado) : resultado;
+                    } else {
+                        listaEspaciosFisicos = resultado;
+                    }
+                    this.espaciosList = listaEspaciosFisicos;
+                    event.callback(listaEspaciosFisicos);
+                });
+            } else {
+                this.serviceInstitucion.get({ search: '^' + query['nombre'] }).subscribe(resultado => {
                     listaEspaciosFisicos = resultado;
-                }
-                this.espaciosList = listaEspaciosFisicos;
-                event.callback(listaEspaciosFisicos);
-            });
-
+                    event.callback(listaEspaciosFisicos);
+                });
+            }
         } else {
             if (this.agenda.espacio) {
                 event.callback([this.agenda.espacioFisico]);
@@ -157,6 +184,11 @@ export class PanelAgendaComponent implements OnInit {
 
         if (agenda.espacioFisico) {
             let nombre = agenda.espacioFisico;
+            query.nombre = nombre;
+        }
+
+        if (agenda.otroEspacioFisico) {
+            let nombre = agenda.otroEspacioFisico;
             query.nombre = nombre;
         }
 
@@ -246,5 +278,12 @@ export class PanelAgendaComponent implements OnInit {
             }
         }
     }
-}
 
+    filtrarEspacioFisico() {
+        if (!this.espacioFisicoPropio) {
+            this.textoEspacio = 'Otros Espacios Físicos';
+        } else {
+            this.textoEspacio = 'Espacios físicos de la organización';
+        }
+    }
+}

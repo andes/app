@@ -98,6 +98,7 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
     }
 
     cambiarTab(index) {
+        this.mapaCamasService.resetView();
         this.tabIndex = index;
     }
 

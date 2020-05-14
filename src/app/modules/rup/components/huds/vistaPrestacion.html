@@ -1,6 +1,9 @@
-<div class="prestaciones mt-3 ml-3">
+<div class="prestaciones mt-3 ml-3" *ngIf="ready$ | async">
     <ng-container *ngIf="prestacion">
-        <h4 class="text-capitalize">{{ prestacion.solicitud.tipoPrestacion.term }}</h4>
+        <h4 class="text-capitalize" justify>
+            {{ prestacion.solicitud.tipoPrestacion.term }}
+            <ng-content></ng-content>
+        </h4>
         <div class="row">
             <div class="col-6">
                 <b> Fecha: </b>
@@ -13,7 +16,7 @@
             </div>
             <div class="col-12">
                 <b> Solicitada por el profesional: </b>
-                {{ prestacion.solicitud.profesional | profesional }}
+                {{ prestacion.solicitud.profesional | nombre }}
             </div>
             <div class="col-12">
                 <b> Desde la Organización: </b>
@@ -41,21 +44,21 @@
                                      *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length">
                                     <b class="clearfix">Relacionado con:</b>
                                     <ng-container *ngFor="let relacionado of elemento?.relacionadoCon">
-                                        <small class="badge badge-info badge-170 mr-1">
+                                        <plex-badge size="sm" type="info mr-1">
                                             {{ relacionado | relacionRUP }}
-                                        </small>
+                                        </plex-badge>
                                     </ng-container>
                                 </div>
                             </div>
                             <div class="actions">
-                                <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0"
-                                       class="badge badge-info">
+                                <plex-badge *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0"
+                                            size="sm" type="info">
                                     <b> Relacionado con: </b>
                                     {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
-                                </small>
-                                <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">
+                                </plex-badge>
+                                <plex-badge size="sm" type="info" *ngIf="elemento.esDiagnosticoPrincipal">
                                     Procedimiento / diagnóstico principal
-                                </small>
+                                </plex-badge>
                             </div>
                         </div>
                         <div class="rup-body">
@@ -65,12 +68,12 @@
                                 </span>
                             </div>
                             <div class="content">
-                                <div class="row" *ngIf="paciente">
+                                <div class="row" *ngIf="prestacion.paciente">
                                     <div class="col-12">
                                         <rup [elementoRUP]="elementosRUPService.elementoRegistro(elemento)"
                                              [params]="elementosRUPService.getParams(elemento)"
-                                             [prestacion]="prestacion" [registro]="elemento" [paciente]="paciente"
-                                             [soloValores]="true" [vistaHUDS]="false">
+                                             [prestacion]="prestacion" [registro]="elemento"
+                                             [paciente]="prestacion.paciente" [soloValores]="true" [vistaHUDS]="false">
                                         </rup>
                                     </div>
                                 </div>

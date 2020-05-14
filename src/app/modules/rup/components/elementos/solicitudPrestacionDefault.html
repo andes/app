@@ -22,8 +22,6 @@
 </ng-container>
 <div class="row" *ngIf="soloValores">
     <div class="col-12 readonly">
-        <!-- <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">Motivo de consulta principal</small>
-        <br> -->
         <div>
             <span>Motivo</span>
             {{ registro.valor.solicitudPrestacion.motivo || '(no definido)' }}

@@ -48,7 +48,7 @@
                     <plex-select [(ngModel)]="profesionales" (change)="refreshSelection($event, 'profesionales')"
                                  (getData)="loadEquipoSalud($event)" label="Equipo de salud"
                                  placeholder="Buscar por equipo de salud" labelField="apellido+' '+nombre"
-                                 ngModelOptions="{standalone: true}">
+                                 ngModelOptions="{standalone: true}" [readonly]="selectProfesional">
                     </plex-select>
                 </div>
                 <div class="col-3">
@@ -125,7 +125,7 @@
                 </div>
                 <div class="col d-flex justify-content-end">
                     <plex-button label="Cerrar" type="danger" (click)="onClose()"></plex-button>
-                    <plex-button *ngIf="puedeEmitirComprobante && (prestacion.financiador?.financiador === 'SUMAR' || prestacion.financiador === 'SUMAR') && ((!prestacion.estadoFacturacion) || prestacion.estadoFacturacion?.estado!=='Comprobante con prestacion')"
+                    <plex-button *ngIf="puedeEmitirComprobante && (!this.auth.profesional) && (prestacion.financiador?.financiador === 'SUMAR' || prestacion.financiador === 'SUMAR') && ((!prestacion.estadoFacturacion) || prestacion.estadoFacturacion?.estado!=='Comprobante con prestacion')"
                                  label="Comprobante" type="success" (click)="recupero()"></plex-button>
                 </div>
             </div>
@@ -188,12 +188,12 @@
 
                 <div *ngIf="prestacion.paciente.estado">
                     <label class="block">Estado</label>
-                    <span *ngIf="prestacion.paciente.estado === 'validado'" class="badge badge-success">
+                    <plex-badge *ngIf="prestacion.paciente.estado === 'validado'" type="success">
                         {{ prestacion.paciente.estado | uppercase }}
-                    </span>
-                    <span *ngIf="_paciente.estado !== 'validado'" class="badge-warning">
+                    </plex-badge>
+                    <plex-badge *ngIf="_paciente.estado !== 'validado'" type="warning">
                         {{ prestacion.paciente.estado | uppercase }}
-                    </span>
+                    </plex-badge>
                 </div>
             </div>
         </div>

@@ -70,9 +70,9 @@
                                                         <ng-container
                                                                       *ngFor="let relacion of registro.relacionadoCon; let r=index">
                                                             <ng-container *ngIf="verMasRelaciones[i] || r <= 5">
-                                                                <small class="badge badge-info">
+                                                                <plex-badge type="info">
                                                                     {{ registro.relacionadoCon[r] | relacionRUP }}
-                                                                </small>
+                                                                </plex-badge>
                                                                 <button (click)="desvincular(registro, registro.relacionadoCon[r])"
                                                                         class="desvincular"
                                                                         *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
@@ -98,9 +98,7 @@
                                              *ngIf="!confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i) )">
 
                                             <ng-container *ngIf="registro?.privacy?.scope !== 'public'">
-                                                <span class="badge-info float-left">
-                                                    Registro Privado
-                                                </span>
+                                                <plex-badge type="info">Registro Privado</plex-badge>
                                             </ng-container>
 
                                             <ng-container
@@ -158,18 +156,16 @@
                                             <ng-container *ngIf="matchBusquedaGuiada(registro.concepto)">
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <span *ngFor="let rf of matchBusquedaGuiada(registro.concepto)"
-                                                              class="badge badge-danger">
+                                                        <plex-badge *ngFor="let rf of matchBusquedaGuiada(registro.concepto)"
+                                                                    type="danger">
                                                             {{ rf.nombre }}
-                                                        </span>
+                                                        </plex-badge>
                                                     </div>
                                                 </div>
                                             </ng-container>
 
                                             <div *ngIf="mostrarMensajes && !registro.valido">
-                                                <span class="badge badge-danger">
-                                                    Debe completar los datos
-                                                </span>
+                                                <plex-badge type="danger">Debe completar los datos</plex-badge>
                                             </div>
                                             <!-- RUP Loader -->
                                             <rup [elementoRUP]="elementosRUPService.elementoRegistro(registro)"
@@ -342,9 +338,9 @@
             </div>
 
             <div class="col">
-                <span *ngIf="!flagValid" class="badge badge-danger float-right">
+                <plex-badge *ngIf="!flagValid" type="danger float-right">
                     Hay registros incompletos
-                </span>
+                </plex-badge>
             </div>
         </div>
     </plex-layout-main>

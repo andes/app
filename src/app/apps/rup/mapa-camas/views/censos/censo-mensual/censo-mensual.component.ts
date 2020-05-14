@@ -117,7 +117,7 @@ export class CensosMensualesComponent implements OnInit {
             unidad: this.selectedUnidadOranizativa
         };
 
-        this.servicioDocumentos.descargar(params).subscribe(data => {
+        this.servicioDocumentos.descargarCensoMensual(params).subscribe(data => {
             if (data) {
                 // Generar descarga como PDF
                 this.descargarArchivo(data, { type: 'application/pdf' });

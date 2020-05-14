@@ -23,9 +23,10 @@
                     <tbody>
                         <tr class="hover" *ngFor="let paciente of resultado" (click)="seleccionar(paciente)">
                             <td>
-                                <span *ngIf="paciente.estado == 'validado'" class="badge badge-success">Validado</span>
-                                <span *ngIf="paciente.estado != 'validado'" class="badge badge-warning"
-                                      title="Los pacientes temporales sin validar se inactivan luego de un tiempo">Temporal</span>
+                                <plex-badge *ngIf="paciente.estado == 'validado'" type="success">Validado</plex-badge>
+                                <plex-badge *ngIf="paciente.estado != 'validado'" type="warning"
+                                            title="Los pacientes temporales sin validar se inactivan luego de un tiempo">
+                                    Temporal</plex-badge>
                                 {{ paciente | paciente }}
                                 <br> |
                                 <b>Documento: </b>

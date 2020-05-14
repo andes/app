@@ -52,7 +52,8 @@ export class PacienteCruComponent implements OnInit {
     noPoseeContacto = false;
     contactosCache = [];
     disableGuardar = false;
-    enableIgnorarGuardar = false;
+    visualizarIgnorarGuardar = false;
+    disableIgnorarGuardar = false;
     sugerenciaAceptada = false;
     entidadValidadora = '';
     viveLocActual = false;
@@ -261,7 +262,7 @@ export class PacienteCruComponent implements OnInit {
         this.paciente = Object.assign({}, paciente);
         this.actualizarDatosPaciente();
         this.disableGuardar = false;
-        this.enableIgnorarGuardar = false;
+        this.visualizarIgnorarGuardar = false;
         this.sugerenciaAceptada = true;
         this.pacientesSimilares = [];
     }
@@ -559,11 +560,8 @@ export class PacienteCruComponent implements OnInit {
         if (faltaParentezco) {
             this.plex.info('warning', 'Existen relaciones sin parentezco. Completelas antes de guardar', 'Atención');
         } else {
+            this.disableIgnorarGuardar = ignoreCheck;
             this.disableGuardar = true;
-            if (ignoreCheck) {
-                this.enableIgnorarGuardar = false;
-            }
-
             let pacienteGuardar: any = Object.assign({}, this.pacienteModel);
             pacienteGuardar.ignoreCheck = ignoreCheck;
             pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
@@ -587,8 +585,8 @@ export class PacienteCruComponent implements OnInit {
                     if (resultadoSave.resultadoMatching && resultadoSave.resultadoMatching.length > 0) {
                         this.pacientesSimilares = this.escaneado ? resultadoSave.resultadoMatching.filter(elem => elem.paciente.estado === 'validado') : resultadoSave.resultadoMatching;
                         // Si el matcheo es alto o el dni-sexo está repetido no podemos ignorar las sugerencias
-                        this.enableIgnorarGuardar = !resultadoSave.macheoAlto && !resultadoSave.dniRepetido;
-                        if (!this.enableIgnorarGuardar) {
+                        this.visualizarIgnorarGuardar = !resultadoSave.macheoAlto && !resultadoSave.dniRepetido;
+                        if (!this.visualizarIgnorarGuardar) {
                             this.plex.info('danger', 'El paciente ya existe, verifique las sugerencias');
                         } else {
                             this.plex.info('warning', 'Existen pacientes similares, verifique las sugerencias');

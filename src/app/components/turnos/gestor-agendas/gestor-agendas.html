@@ -121,7 +121,10 @@
                                                 ?' - ' + agenda.espacioFisico.servicio.nombre : '') +
                                                 (agenda.espacioFisico.edificio?.descripcion
                                                 ? ' (' + agenda.espacioFisico.edificio.descripcion + ')' : '') }}</small>
-                                        <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico
+                                        <small
+                                               *ngIf="agenda.otroEspacioFisico?.nombre">{{agenda.otroEspacioFisico.nombre}}</small>
+                                        <span *ngIf="!agenda.espacioFisico?.nombre && !agenda.otroEspacioFisico?.nombre"
+                                              class="text-danger">Espacio físico
                                             no asignado</span>
                                     </div>
                                 </td>
@@ -140,20 +143,20 @@
                                 </td>
                                 <td (click)="verAgenda(agenda, false, $event)"
                                     class="text-right align-middle estado medium">
-                                    <span class="badge-info float-right" *ngIf="agenda.dinamica">Dinámica</span>
-                                    <span class="badge-danger float-right" *ngIf="!agenda.nominalizada">No
-                                        Nominalizada</span>
-                                    <span
-                                          class="badge-{{estadosAgenda[agenda.estado]?.class}} float-right">{{estadosAgenda[agenda.estado]?.nombre}}</span>
-                                    <span class="badge-danger bg-danger float-right"
+                                    <plex-badge type="info" *ngIf="agenda.dinamica">Dinámica</plex-badge>
+                                    <plex-badge type="info" *ngIf="!agenda.nominalizada">No Nominalizada</plex-badge>
+                                    <plex-badge type="{{estadosAgenda[agenda.estado]?.class}}">
+                                        {{estadosAgenda[agenda.estado]?.nombre}}</plex-badge>
+                                    <plex-badge type="danger bg-danger"
                                           *ngIf=" turnosSuspendidos && turnosSuspendidos[i].count > 0"
                                           title="Hay {{ turnosSuspendidos[i].count | pluralizar:['turno','turnos'] }} a reasignar">
                                         <span class="text-white">
                                             <strong>{{ turnosSuspendidos[i].count }}</strong>
                                         </span>
-                                    </span>
-                                    <span class="badge-warning float-right" *ngIf="suspensionAvisada(agenda)">Solicitud
-                                        de suspensión</span>
+                                    </plex-badge>
+                                    <plex-badge type="warning" *ngIf="suspensionAvisada(agenda)">
+                                        Solicitud de suspensión
+                                    </plex-badge>
                                 </td>
                             </tr>
                         </tbody>

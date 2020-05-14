@@ -47,7 +47,7 @@
             <br>
             <span class="text-left">
                 {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdAt | date:
-                'dd/MM/yyyy'}}</span>
+                    'dd/MM/yyyy'}}</span>
         </div>
     </div>
     <div class="row">
@@ -73,8 +73,8 @@
             <span *ngIf="prestacionSeleccionada.solicitud.profesionalOrigen" class="text-left">
                 <b>Profesional Origen</b>
                 <br> {{ prestacionSeleccionada.solicitud.profesionalOrigen?.nombre }} {{
-                prestacionSeleccionada.solicitud.profesionalOrigen?.apellido
-                }}
+                    prestacionSeleccionada.solicitud.profesionalOrigen?.apellido
+                    }}
             </span>
         </div>
     </div>
@@ -99,7 +99,7 @@
             <span *ngIf="prestacionSeleccionada.solicitud.profesional">
                 <b>Profesional Destino</b>
                 <br> {{ prestacionSeleccionada.solicitud.profesional?.nombre }} {{
-                prestacionSeleccionada.solicitud.profesional?.apellido}}
+                    prestacionSeleccionada.solicitud.profesional?.apellido}}
             </span>
         </div>
     </div>
@@ -133,41 +133,19 @@
             <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
                 <ng-container
                               *ngFor="let doc of this.prestacionSeleccionada.solicitud.registros[0].valor.documentos; let i = index">
-                    <a (click)="activaLightbox(i)">
-                        <div class="image hover">
-                            <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
-                            <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto">
-                                {{ doc.ext }}
-                            </a>
-                        </div>
-                    </a>
-                    <div (click)="lightbox = false" *ngIf="i === indice && lightbox"
-                         [ngClass]="{'lightbox': i === indice && lightbox }" class="hover">
-                        <i (click)=imagenPrevia(i) class="mdi mdi-chevron-double-left previous parpadeo"></i>
-                        <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
-                        <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto m-1 p-2">
+                    <plex-visualizador [files]="documentos" #visualizador></plex-visualizador>
+                    <div class="image hover">
+                        <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)" (click)="visualizador.open(i)">
+                        <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto"
+                           (click)="visualizador.open(i)">
                             {{ doc.ext }}
                         </a>
-                        <i (click)=imagenSiguiente(i) class="mdi mdi-chevron-double-right next parpadeo"></i>
                     </div>
                 </ng-container>
             </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col">
-            <hr>
-            <b>Creado por</b>
-            <br>
-            <span>{{prestacionSeleccionada.createdBy.nombreCompleto}}</span>
-        </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <b>Fecha de Creación</b>
-            <br>
-            <span>{{prestacionSeleccionada.createdAt | date: "dd/MM/yyyy 'a las' HH:mm " }}</span>
-        </div>
-    </div>
+    <historial-solicitud [prestacion]="prestacionSeleccionada" [turno]='turnoSeleccionado'>
+    </historial-solicitud>
 </div>

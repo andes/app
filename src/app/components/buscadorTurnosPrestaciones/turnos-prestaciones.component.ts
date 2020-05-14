@@ -36,6 +36,8 @@ export class TurnosPrestacionesComponent implements OnInit {
     public prestaciones: any;
     public puedeEmitirComprobante: Boolean;
 
+    public selectProfesional: Boolean = false;
+    public profesional: any;
     public botonBuscarDisabled: Boolean = false;
 
     constructor(
@@ -88,7 +90,6 @@ export class TurnosPrestacionesComponent implements OnInit {
         }]);
     }
 
-
     initialize() {
         let fecha = moment().format();
 
@@ -109,11 +110,25 @@ export class TurnosPrestacionesComponent implements OnInit {
             estado: '',
             estadoFacturacion: '',
         };
+
+        if (this.auth.profesional) {
+            this.serviceProfesional.get({ id: this.auth.profesional }).subscribe(rta => {
+                this.profesional = rta[0];
+                params.idProfesional = this.profesional.id;
+                this.parametros['idProfesional'] = this.profesional.id;
+                this.selectProfesional = true;
+                this.busquedaPrestaciones(params);
+            });
+        } else {
+            this.busquedaPrestaciones(params);
+        }
+    }
+
+    private busquedaPrestaciones(params) {
         this.turnosPrestacionesService.get(params).subscribe((data) => {
             this.busquedas = this.ordenarPorFecha(data);
             this.loading = false;
         });
-
     }
 
     @Unsubscribe()
@@ -130,7 +145,6 @@ export class TurnosPrestacionesComponent implements OnInit {
     }
 
     refreshSelection(value, tipo) {
-
         let fechaDesde = this.fechaDesde ? moment(this.fechaDesde).startOf('day') : null;
         let fechaHasta = this.fechaHasta ? moment(this.fechaHasta).endOf('day') : null;
 

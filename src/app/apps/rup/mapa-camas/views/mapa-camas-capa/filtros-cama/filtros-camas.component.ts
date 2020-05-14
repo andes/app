@@ -53,7 +53,7 @@ export class FiltrosCamasComponent implements OnInit {
         );
 
         this.sectorList$ = this.mapaCamasService.snapshot$.pipe(
-            map((camas) => arrayToSet(camas, 'nombre', (item) => item.sectores[0]))
+            map((camas) => arrayToSet(camas, 'nombre', (item) => item.sectores))
         );
 
         this.tipoCamaList$ = this.mapaCamasService.snapshot$.pipe(
@@ -61,7 +61,7 @@ export class FiltrosCamasComponent implements OnInit {
         );
 
         this.equipamientoList$ = this.mapaCamasService.snapshot$.pipe(
-            map((camas) => arrayToSet(camas, 'conceptId', (item) => item.equipamiento)),
+            map((camas) => arrayToSet(camas, 'conceptId', ((item) => item.equipamiento ? item.equipamiento : []))),
         );
 
         this.estadoList$ = this.mapaCamasService.snapshot$.pipe(
