@@ -1,11 +1,9 @@
 import { AgregarPacienteComponent } from './components/turnos/gestor-agendas/operaciones-agenda/agregar-paciente.component';
 /*
 @jgabriel | 04-03-2017
-
 ¡ATENCION EQUIPO!
 Siguiendo las guías de estilo de Angular (https://angular.io/styleguide) dejemos ordenados los imports
 de la siguiente manera:
-
 1) Módulos principales de Angular
 2) Módulos globales
 3) Pipes
@@ -135,7 +133,8 @@ import { ResumenPacienteDinamicoService } from './modules/rup/services/resumenPa
 import { VacunasService } from './services/vacunas.service';
 import { PlantillasService } from './modules/rup/services/plantillas.service';
 
-
+// Seguimiento Pacientes SJ
+import { SeguimientoPacientesService } from './modules/rup/services/seguimientoPacientes.service';
 
 // Componentes
 import { InicioComponent } from './components/inicio/inicio.component';
@@ -223,10 +222,6 @@ import { HudsBusquedaComponent } from './modules/rup/components/ejecucion/hudsBu
 import { PrestacionesService } from './modules/rup/services/prestaciones.service';
 import { AdjuntosService } from './modules/rup/services/adjuntos.service';
 
-// Seguimiento Pacientes SJ
-import { SeguimientoPacientesService } from './modules/rup/services/seguimientoPacientes.service';
-import { SeguimientoPacienteComponent } from './modules/rup/components/ejecucion/seguimiento-paciente/seguimientoPaciente.component';
-
 import { ConceptObserverService } from './modules/rup/services/conceptObserver.service';
 import { PrestacionCrearComponent } from './modules/rup/components/ejecucion/prestacionCrear.component';
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
@@ -240,35 +235,9 @@ import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecu
 import { ResumenPacienteDinamicoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
 import { ResumenPacienteDinamicoNinoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico-nino.component';
 
+// Seguimiento Pacientes SJ
+import { SeguimientoPacienteComponent } from './modules/rup/components/ejecucion/seguimiento-paciente/seguimientoPaciente.component';
 
-
-// Legacy para RUP
-// TODO: ver con JGabriel!!!
-import { SelectPorRefsetComponent } from './modules/rup/components/elementos/SelectPorRefset.component';
-import { TensionSistolicaComponent } from './modules/rup/components/elementos/tensionSistolica.component';
-import { TensionDiastolicaComponent } from './modules/rup/components/elementos/tensionDiastolica.component';
-import { TensionArterialComponent } from './modules/rup/components/elementos/tensionArterial.component';
-import { TemperaturaComponent } from './modules/rup/components/elementos/temperatura.component';
-import { SolicitudPrestacionDefaultComponent } from './modules/rup/components/elementos/solicitudPrestacionDefault.component';
-import { SignosVitalesComponent } from './modules/rup/components/elementos/signosVitales.component';
-import { SaturacionOxigenoComponent } from './modules/rup/components/elementos/saturacionOxigeno.component';
-import { FrecuenciaCardiacaComponent } from './modules/rup/components/elementos/frecuenciaCardiaca.component';
-import { FrecuenciaRespiratoriaComponent } from './modules/rup/components/elementos/frecuenciaRespiratoria.component';
-import { ObservacionesComponent } from './modules/rup/components/elementos/observaciones.component';
-import { NuevaEvolucionProblemaComponent } from './modules/rup/components/elementos/nuevaEvolucionProblema.component';
-import { EvolucionProblemaDefaultComponent } from './modules/rup/components/elementos/evolucionProblemaDefault.component';
-import { AutocitadoComponent } from './modules/rup/components/elementos/autocitado.component';
-import { ObesidadComponent } from './modules/rup/components/elementos/obesidad.component';
-import { HipertensionArterialComponent } from './modules/rup/components/elementos/hipertensionArterial.component';
-import { FiltradoGlomerularComponent } from './modules/rup/components/elementos/filtradoGlomerular.component';
-import { AdjuntarDocumentoComponent } from './modules/rup/components/elementos/adjuntarDocumento.component';
-import { RegistrarMedicamentoDefaultComponent } from './modules/rup/components/elementos/registrarMedicamentoDefault.component';
-import { InformesComponent } from './modules/rup/components/elementos/informe.component';
-import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
-import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoDerecho.component';
-import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
-import { OdontogramaRefsetComponent } from './modules/rup/components/elementos/OdontogramaRefset.component';
-import { LactanciaComponent } from './modules/rup/components/elementos/lactancia.component';
 import { IniciarInternacionComponent } from './apps/rup/internacion/components/iniciarInternacion.component';
 import { OcuparCamaComponent } from './apps/rup/internacion/components/cama-ocupar.component';
 import { CensoDiarioComponent } from './apps/rup/internacion/components/censoDiario.component';
@@ -376,93 +345,6 @@ import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campania
 import { CampaniaVisualizacionComponent } from './apps/campaniaSalud/components/campaniaVisualizacion.component';
 import { CampaniaFormComponent } from './apps/campaniaSalud/components/campania-create-update.component';
 import { TurneroProvidersModule } from './apps/turnero/turnero.providers';
-
-let RUPComponentsArray = [
-    SelectPorRefsetComponent,
-    AutocitadoComponent,
-    EvolucionProblemaDefaultComponent,
-    FiltradoGlomerularComponent,
-    FrecuenciaCardiacaComponent,
-    FrecuenciaRespiratoriaComponent,
-    HipertensionArterialComponent,
-    IndiceDeMasaCorporalComponent,
-    InformesComponent,
-    NuevaEvolucionProblemaComponent,
-    ObesidadComponent,
-    ObservacionesComponent,
-    PesoComponent,
-    PercentiloPerimetroCefalicoComponent,
-    PerimetroCefalicoComponent,
-    RegistrarMedicamentoDefaultComponent,
-    SaturacionOxigenoComponent,
-    GraficoLinealComponent,
-    SignosVitalesComponent,
-    SolicitudPrestacionDefaultComponent,
-    TallaComponent,
-    TemperaturaComponent,
-    TensionArterialComponent,
-    TensionDiastolicaComponent,
-    TensionSistolicaComponent,
-    AdjuntarDocumentoComponent,
-    IngresoInternacionComponent,
-    OtoemisionAcusticaDeOidoDerechoComponent,
-    OtoemisionAcusticaDeOidoIzquierdoComponent,
-    OdontogramaRefsetComponent,
-    LactanciaComponent,
-    IniciarInternacionComponent,
-    PasesCamaComponent,
-    CensoDiarioComponent,
-    CensoMensualComponent,
-    InformeEpicrisisComponent,
-    ElementoDeRegistroComponent,
-    OdontologiaDefaultComponent,
-    CircunferenciaCinturaComponent,
-    ResumenPacienteEstaticoComponent,
-    ResumenPacienteDinamicoComponent,
-    ResumenPacienteDinamicoNinoComponent,
-    InformeActividadNoNominalizadaComponent,
-    PercentiloPesoComponent,
-    PercentiloTallaComponent,
-    PercentiloDeMasaCorporalComponent,
-    TensionArterialPediatricaComponent,
-    PercentiloDeTensionArterialComponent,
-    ConsultaDeNinoSanoM2AComponent,
-    ConsultaDeNinoSanoE2Y3AComponent,
-    ConsultaDeNinoSanoE3Y6AComponent,
-    DesarrolloPsicomotorComponent,
-    RegistrarMedidasAntropometricasNinoM2AComponent,
-    RegistrarMedidasAntropometricasNinoE2Y3AComponent,
-    RegistrarMedidasAntropometricasNinoE3Y6AComponent,
-    ResumenHistoriaClinicaComponent,
-    FormulaBaseComponent,
-    CalculoDeBostonComponent,
-    SeleccionBinariaComponent,
-    ValorNumericoComponent,
-    ValorFechaComponent,
-    MoleculaBaseComponent,
-    HeaderPacienteComponent,
-    VistaRegistroComponent,
-    VistaProcedimientoComponent,
-    VistaPrestacionComponent,
-    VistaContextoPrestacionComponent,
-    ProcedimientoDeEnfermeriaComponent,
-    CamaBloquearComponent,
-    CamaDesbloquearComponent,
-    CamaPrepararComponent,
-    OcuparCamaComponent,
-    EjecucionInternacionComponent,
-    EgresoInternacionComponent,
-    LugarDeNacimientoComponent,
-    SelectOrganizacionComponent,
-    SelectProfesionalComponent,
-    SelectPrestacionComponent,
-    SelectSnomedComponent,
-    SelectStaticoComponent,
-    SelectBaseComponent,
-    SeccionadoComponent,
-    SeccionComponent,
-    SeguimientoPacienteComponent
-];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
@@ -594,6 +476,7 @@ registerLocaleData(localeEs, 'es');
         ResumenPacienteEstaticoComponent,
         ResumenPacienteDinamicoComponent,
         ResumenPacienteDinamicoNinoComponent,
+        SeguimientoPacienteComponent,
         IniciarInternacionComponent,
         MapaDeCamasComponent,
         CensoDiarioComponent,
@@ -759,6 +642,7 @@ registerLocaleData(localeEs, 'es');
         HistorialBusquedaService,
         CodificacionService,
         ResumenPacienteDinamicoService,
+        SeguimientoPacientesService,
         VacunasService,
         RiesgoCardiovascularService,
         FormulaBaseService,
@@ -772,7 +656,6 @@ registerLocaleData(localeEs, 'es');
         HotjarService,
         ConceptosTurneablesService,
         DisclaimerService,
-        SeguimientoPacientesService
         InstitucionService
     ]
 })
