@@ -169,40 +169,42 @@
                                                             type="success">Registro en HUDS</plex-badge>
                                             </td>
                                             <td class="text-center">
-                                                <span
-                                                      *ngIf="darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno && prestacion.estados[prestacion.estados.length-1].tipo !== 'anulada'">
-                                                    <plex-button icon="calendar-plus" type="success"
-                                                                 (click)="darTurno(prestacion)" title="Dar Turno">
-                                                    </plex-button>
-                                                </span>
-                                                <span *ngIf="auditarArrayEntrada[i]">
-                                                    <plex-button icon="mdi mdi-lock-alert" type="info"
-                                                                 (click)="auditar(prestacion)"
-                                                                 title="Auditar Solicitud">
-                                                    </plex-button>
-                                                </span>
-                                                <span *ngIf="visualizarEntrada[i]">
-                                                </span>
-                                                <span
-                                                      *ngIf="prestacion.paciente && prestacion.estados[prestacion.estados.length-1].tipo === 'asignada' && prestacion.solicitud.profesional?.id === auth.profesional">
-                                                    <plex-button icon="contacts" type="primary"
-                                                                 (click)="setRouteToParams(['vista', prestacion.paciente.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id)"
-                                                                 title="Ver Huds">
-                                                    </plex-button>
-                                                    <plex-button icon="check" type="success"
-                                                                 (click)="iniciarPrestacion(prestacion)"
-                                                                 title="Iniciar prestación">
-                                                    </plex-button>
-                                                    <plex-button icon="calendar" type="warning"
-                                                                 (click)="citar(prestacion)" title="Citar paciente">
-                                                    </plex-button>
-                                                </span>
-                                                <span
-                                                      *ngIf="permisoAnular && darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno && prestacion.estados[prestacion.estados.length-1].tipo !== 'anulada'">
-                                                    <plex-button type="danger" icon="delete"
-                                                                 (click)="anular(prestacion)" title="Anular">
-                                                    </plex-button>
-                                                </span>
+                                                <ng-container *ngIf="prestacion.solicitud.organizacion.id === auth.organizacion.id">
+                                                    <span
+                                                        *ngIf="darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno && prestacion.estados[prestacion.estados.length-1].tipo !== 'anulada'">
+                                                        <plex-button icon="calendar-plus" type="success" (click)="darTurno(prestacion)" title="Dar Turno">
+                                                        </plex-button>
+                                                    </span>
+                                                    <span *ngIf="auditarArrayEntrada[i]">
+                                                        <plex-button icon="mdi mdi-lock-alert" type="info" (click)="auditar(prestacion)" title="Auditar Solicitud">
+                                                        </plex-button>
+                                                    </span>
+                                                    <span *ngIf="visualizarEntrada[i]">
+                                                    </span>
+                                                    <span
+                                                        *ngIf="prestacion.paciente && prestacion.estados[prestacion.estados.length-1].tipo === 'asignada' && prestacion.solicitud.profesional?.id === auth.profesional">
+                                                        <plex-button icon="contacts" type="primary"
+                                                                    (click)="setRouteToParams(['vista', prestacion.paciente.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id)"
+                                                                    title="Ver Huds">
+                                                        </plex-button>
+                                                        <plex-button icon="check" type="success"
+                                                                    (click)="iniciarPrestacion(prestacion)"
+                                                                    title="Iniciar prestación">
+                                                        </plex-button>
+                                                        <plex-button icon="calendar" type="warning"
+                                                                    (click)="citar(prestacion)" title="Citar paciente">
+                                                        </plex-button>
+                                                    </span>
+                                                    <span
+                                                        *ngIf="permisoAnular && darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno && prestacion.estados[prestacion.estados.length-1].tipo !== 'anulada'">
+                                                        <plex-button type="danger" icon="delete"
+                                                                    (click)="anular(prestacion)" title="Anular">
+                                                        </plex-button>
+                                                    </span>
+                                               </ng-container>
+
+                                               <plex-badge *ngIf="prestacion.solicitud.organizacion.id !== auth.organizacion.id" type="warning">REEMITIDA
+                                                </plex-badge>
                                             </td>
                                         </tr>
                                     </tbody>
