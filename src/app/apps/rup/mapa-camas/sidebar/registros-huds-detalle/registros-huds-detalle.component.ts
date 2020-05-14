@@ -1,18 +1,19 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import { Observable, Subject, BehaviorSubject, combineLatest } from 'rxjs';
-import { startWith, map, switchMap, take, tap } from 'rxjs/operators';
+import { Observable, Subject, combineLatest } from 'rxjs';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { HUDSService } from '../../../../../modules/rup/services/huds.service';
 import { Auth } from '@andes/auth';
 import { cache, Observe } from '@andes/shared';
 import { Router } from '@angular/router';
+import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
+import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-item.component';
 
 @Component({
     selector: 'app-registros-huds-detalle',
-    templateUrl: './registros-huds-detalle.component.html',
+    templateUrl: './registros-huds-detalle.component.html'
 })
-
 export class RegistrosHudsDetalleComponent implements OnInit {
     public historial = new Subject();
 
@@ -78,7 +79,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     validadaCreadasPorMi(prestacion) {
         const estadoPrestacion = prestacion.estados[prestacion.estados.length - 1];
         const esValidada = estadoPrestacion.tipo === 'validada';
-        const createdByMe = estadoPrestacion.createdBy.id === this.auth.profesional;
+        const createdByMe = estadoPrestacion.createdBy.id === this.auth.usuario.id;
         return esValidada || createdByMe;
     }
 
@@ -119,7 +120,24 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         return item.id;
     }
 
-    ejecutar(prestacion) {
+    ejecutar(prestacion: IPrestacion) {
         this.router.navigate(['rup', 'ejecucion', prestacion.id]);
+    }
+
+
+    onItemAccion(prestacion: IPrestacion, accion: RegistroHUDSItemAccion) {
+        switch (accion) {
+            case 'ver':
+                this.onViewRegistro(prestacion);
+                break;
+            case 'continuar':
+                this.ejecutar(prestacion);
+                break;
+            case 'romper-validacion':
+                this.prestacionService.romperValidacion(prestacion).subscribe(() => {
+                    this.ejecutar(prestacion);
+                });
+                break;
+        }
     }
 }

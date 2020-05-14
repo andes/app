@@ -43,6 +43,7 @@ import { MaquinaEstadosHTTP } from './services/maquina-estados.http';
 import { ListadoInternacionService } from './views/listado-internacion/listado-internacion.service';
 import { RegistrosHudsDetalleComponent } from './sidebar/registros-huds-detalle/registros-huds-detalle.component';
 import { ElementosRUPModule } from '../../../modules/rup/elementos-rup.module';
+import { RegistroHUDSItemComponent } from './sidebar/registros-huds-detalle/registros-huds-item/registros-huds-item.component';
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
@@ -70,7 +71,8 @@ export const INTERNACION_COMPONENTS = [
     ElegirPacienteComponent,
     FiltrosInternacionComponent,
     NuevoRegistroSaludComponent,
-    RegistrosHudsDetalleComponent
+    RegistrosHudsDetalleComponent,
+    RegistroHUDSItemComponent
 ];
 
 export const INTERNACION_PROVIDERS = [

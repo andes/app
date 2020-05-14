@@ -2,15 +2,18 @@
     <plex-tab label="CAMA">
         <ng-container *ngIf="estadoCama$ | async as estadoCama">
             <plex-title titulo="DATOS DE CAMA">
-                <ng-container *ngFor="let relacion of relaciones$ | async">
-                    <ng-container
-                                  *ngIf="(relacion.accion !== 'internarPaciente') || (relacion.accion === 'internarPaciente' && permisoIngreso)">
-                        <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color"
-                                     size="sm" (click)="accion(relacion)">
-                        </plex-button>
+                <ng-container *ngIf="canMovimientos">
+                    <ng-container *ngFor="let relacion of relaciones$ | async">
+                        <ng-container
+                                      *ngIf="(relacion.accion !== 'internarPaciente') || (relacion.accion === 'internarPaciente' && permisoIngreso)">
+                            <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color"
+                                         size="sm" (click)="accion(relacion)">
+                            </plex-button>
+                        </ng-container>
                     </ng-container>
                 </ng-container>
-                <plex-button title="Editar Cama" icon="pencil" type="warning" size="sm" (click)="goTo(cama)">
+                <plex-button title="Editar Cama" icon="pencil" type="warning" size="sm" (click)="goTo(cama)"
+                             *ngIf="canEdit">
                 </plex-button>
                 <plex-button title="Volver" icon="arrow-left" type="info" size="sm" (click)="cancelar()">
                 </plex-button>

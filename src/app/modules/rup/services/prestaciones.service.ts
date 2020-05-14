@@ -10,6 +10,7 @@ import { IPrestacionGetParams } from '../interfaces/prestacionGetParams.interfac
 import { SnomedService } from '../../../apps/mitos';
 import { ReglaService } from '../../../services/top/reglas.service';
 import { HUDSService } from '../services/huds.service';
+import { Plex } from '@andes/plex';
 
 
 @Injectable()
@@ -105,7 +106,15 @@ export class PrestacionesService {
 
     public conceptosTurneables: any[];
 
-    constructor(private server: Server, public auth: Auth, private servicioTipoPrestacion: TipoPrestacionService, public snomed: SnomedService, private servicioReglas: ReglaService, private hudsService: HUDSService) {
+    constructor(
+        private server: Server,
+        public auth: Auth,
+        private servicioTipoPrestacion: TipoPrestacionService,
+        public snomed: SnomedService,
+        private servicioReglas: ReglaService,
+        private hudsService: HUDSService,
+        private plex: Plex
+    ) {
 
         this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
             this.conceptosTurneables = conceptosTurneables;
@@ -953,6 +962,45 @@ export class PrestacionesService {
 
         return nombre;
 
+    }
+
+
+    romperValidacion(prestacion: IPrestacion) {
+        return new Observable((observer) => {
+            this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación').then(validar => {
+                if (!validar) {
+                    observer.error();
+                    observer.complete();
+                    return false;
+                } else {
+                    const prestacionCopia = JSON.parse(JSON.stringify(prestacion));
+                    const estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia._id };
+
+                    // Guardamos la prestacion copia
+                    this.clonar(prestacionCopia, estado).subscribe(prestacionClonada => {
+                        const prestacionModificada = prestacionClonada;
+
+                        // hacemos el patch y luego creamos los planes
+                        let cambioEstado: any = {
+                            op: 'romperValidacion',
+                            estado: { tipo: 'ejecucion', idOrigenModifica: prestacionModificada.id }
+                        };
+
+                        // Vamos a cambiar el estado de la prestación a ejecucion
+                        this.patch(prestacion.id, cambioEstado).subscribe(() => {
+                            observer.next();
+                            observer.complete();
+                        }, (err) => {
+                            this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
+                            observer.error();
+                            observer.complete();
+                        });
+                    });
+                }
+
+            });
+
+        });
     }
 
 }

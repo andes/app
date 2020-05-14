@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RupElement } from '../..';
 import { RUPComponent } from '../../../core/rup.component';
 import { IPrestacionRegistro } from '../../../../interfaces/prestacion.registro.interface';
+import { Subscription } from 'rxjs';
 
 
 /**
@@ -25,7 +26,7 @@ import { IPrestacionRegistro } from '../../../../interfaces/prestacion.registro.
     styleUrls: ['seccion.component.scss']
 })
 @RupElement('SeccionComponent')
-export class SeccionComponent extends RUPComponent implements OnInit {
+export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy {
 
 
     // Variable para mostrar el div dropable en el momento que se hace el drag
@@ -50,9 +51,13 @@ export class SeccionComponent extends RUPComponent implements OnInit {
     public collapse = true;
     public ocultarPanel = false;
     public conceptosTurneables: any[];
-    suscriptionBuscador: any;
+    suscriptionBuscador: Subscription;
     seleccionado: any;
     conceptoSeleccionado: any;
+
+    ngOnDestroy() {
+        this.suscriptionBuscador.unsubscribe();
+    }
 
     ngOnInit() {
         this.registro.isSection = true;

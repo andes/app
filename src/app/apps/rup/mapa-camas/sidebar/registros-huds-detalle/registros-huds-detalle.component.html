@@ -42,30 +42,8 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let prestacion of historialFiltrado$ | async">
-            <td>
-                <small>
-                    {{ prestacion.solicitud.fecha | fecha }}
-                    {{ prestacion.solicitud.fecha | hora }}
-                </small>
-            </td>
-            <td>
-                <small>
-                    {{ prestacion.solicitud.tipoPrestacion.term }}
-                </small>
-            </td>
-            <td>
-                <small>
-                    {{ prestacion.solicitud.profesional | nombre }}
-                </small>
-            </td>
-            <td>
-                <plex-button size="sm" icon="eye" type="info" (click)="onViewRegistro(prestacion)" title="Ver"
-                             titlePosition="left" *ngIf="!esEjecucion(prestacion)"></plex-button>
-                <plex-button size="sm" label="Continuar" (click)="ejecutar(prestacion)" type="info" title="Continuar"
-                             titlePosition="left" *ngIf="esEjecucion(prestacion)">
-                </plex-button>
-            </td>
+        <tr registro-huds-item [prestacion]="prestacion" (accion)="onItemAccion(prestacion, $event)"
+            *ngFor="let prestacion of historialFiltrado$ | async">
         </tr>
     </tbody>
 </table>
