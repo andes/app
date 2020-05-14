@@ -42,9 +42,9 @@
                                     <div class="col-12">
                                         <label>Espacio físico</label>
                                         <span
-                                              *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
-                                        <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico
-                                            no
+                                              *ngIf="agenda.espacioFisico?.nombre || agenda.otroEspacioFisico?.nombre">{{agenda | espacioFisico}}</span>
+                                        <span *ngIf="!agenda.espacioFisico?.nombre && !agenda.otroEspacioFisico?.nombre"
+                                              class="text-danger">Espacio físico no
                                             asignado</span>
                                     </div>
                                 </div>
@@ -154,9 +154,9 @@
                     <td *ngIf="agenda.nominalizada && !bloque.descripcion"><b>Detalle de bloque</b>
                     </td>
                     <td justify="end">
-                        <plex-badge *ngIf="bloque.pacienteSimultaneos" type="info"> {{bloque.cantidadSimultaneos}}
-                            PACIENTES
-                            SIMULTÁNEOS </plex-badge>
+                        <plex-badge *ngIf="bloque.pacienteSimultaneos" type="info">
+                            {{bloque.cantidadSimultaneos}} PACIENTES SIMULTÁNEOS
+                        </plex-badge>
 
                         <plex-badge *ngIf="bloque.citarPorBloque" type="info"> {{bloque.cantidadBloque}} PACIENTES POR
                             BLOQUE </plex-badge>
@@ -265,35 +265,33 @@
                                 suspendido (sin paciente)</small>
                         </td>
                         <td>
-                            <small *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente"
-                                   class="badge badge-info float-right" title="Ya reasignado" titlePosition="left">
-                                <i class="mdi mdi-account-check"></i>
-                            </small>
-                            <small *ngIf="turno?.paciente?.id && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'"
-                                   class="badge badge-success float-right" title="Asistió" titlePosition="left">
-                                <i class="mdi mdi-account-check"></i>
-                            </small>
-                            <small *ngIf="turno?.paciente?.id && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'"
-                                   class="badge badge-danger float-right" title="No asistió" titlePosition="left">
-                                <i class="mdi mdi-account-remove"></i>
-                            </small>
-                            <small *ngIf="turno?.paciente?.id && turno.confirmedAt" title="Confirmó asistencia"
-                                   class="float-right">
-                                <i class="text-success mdi mdi-emoticon-happy"></i>
-                            </small>
-                            <small *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && !turno.reasignado?.siguiente"
-                                   class="badge badge-danger float-right" title="Aun no reasignado"
-                                   titlePosition="left">
-                                <i class="mdi mdi-account-alert"></i>
-                            </small>
-                            <small *ngIf="turno?.nota" class="badge badge-warning float-right" title="{{turno.nota}}"
-                                   titlePosition="left">
-                                <i class="text-warning warning mdi mdi-message"></i>
-                            </small>
-                            <small *ngIf="turno?.estado !== 'disponible' && turno?.estado !== 'turnoDoble'"
-                                   class="badge badge-default float-right">
+                            <plex-badge *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente"
+                                        size="sm" type="info" title="Ya reasignado" titlePosition="left">
+                                <plex-icon name="account-check"></plex-icon>
+                            </plex-badge>
+                            <plex-badge *ngIf="turno?.paciente?.id && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'"
+                                        size="sm" type="success" title="Asistió" titlePosition="left">
+                                <plex-icon name="account-check"></plex-icon>
+                            </plex-badge>
+                            <plex-badge *ngIf="turno?.paciente?.id && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'"
+                                        size="sm" type="danger" title="No asistió" titlePosition="left">
+                                <plex-icon name="account-remove"></plex-icon>
+                            </plex-badge>
+                            <plex-badge *ngIf="turno?.paciente?.id && turno.confirmedAt" title="Confirmó asistencia">
+                                <plex-icon name="emoticon-happy"></plex-icon>
+                            </plex-badge>
+                            <plex-badge *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && !turno.reasignado?.siguiente"
+                                        size="sm" type="danger" title="Aun no reasignado" titlePosition="left">
+                                <plex-icon name="account-alert"></plex-icon>
+                            </plex-badge>
+                            <plex-badge *ngIf="turno?.nota" size="sm" type="warning" title="{{turno.nota}}"
+                                        titlePosition="left">
+                                <plex-icon name="message"></plex-icon>
+                            </plex-badge>
+                            <plex-badge *ngIf="turno?.estado !== 'disponible' && turno?.estado !== 'turnoDoble'"
+                                        size="sm" type="default">
                                 <popover-audit placement="left" [data]="turno" [showUpdate]="true"></popover-audit>
-                            </small>
+                            </plex-badge>
                         </td>
                     </tr>
                 </tbody>
@@ -349,22 +347,22 @@
                               *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</span>
                     </td>
                     <td>
-                        <small *ngIf="sobreturno?.paciente?.id && sobreturno.asistencia === 'asistio' && sobreturno.estado !== 'suspendido'"
-                               class="badge badge-success float-right" title="Asistió" titlePosition="left">
-                            <i class="mdi mdi-account-check"></i>
-                        </small>
-                        <small *ngIf="sobreturno?.paciente?.id && sobreturno.asistencia === 'noAsistio' && sobreturno.estado !== 'suspendido'"
-                               class="badge badge-danger float-right" title="No asistió" titlePosition="left">
-                            <i class="mdi mdi-account-remove"></i>
-                        </small>
-                        <small *ngIf="sobreturno?.nota" class="badge badge-warning float-right"
-                               title="{{sobreturno.nota}}" titlePosition="left">
-                            <i class="text-warning warning mdi mdi-message"></i>
-                        </small>
-                        <small *ngIf="sobreturno?.estado !== 'disponible' && sobreturno?.estado !== 'turnoDoble'"
-                               class="badge badge-default float-right">
+                        <plex-badge *ngIf="sobreturno?.paciente?.id && sobreturno.asistencia === 'asistio' && sobreturno.estado !== 'suspendido'"
+                                    size="sm" type="success" title="Asistió" titlePosition="left">
+                            <plex-icon name="account-check"></plex-icon>
+                        </plex-badge>
+                        <plex-badge *ngIf="sobreturno?.paciente?.id && sobreturno.asistencia === 'noAsistio' && sobreturno.estado !== 'suspendido'"
+                                    size="sm" type="danger" title="No asistió" titlePosition="left">
+                            <plex-icon name="account-remove"></plex-icon>
+                        </plex-badge>
+                        <plex-badge *ngIf="sobreturno?.nota" size="sm" type="warning" title="{{sobreturno.nota}}"
+                                    titlePosition="left">
+                            <plex-icon name="message"></plex-icon>
+                        </plex-badge>
+                        <plex-badge *ngIf="sobreturno?.estado !== 'disponible' && sobreturno?.estado !== 'turnoDoble'"
+                                    size="sm" type="default">
                             <popover-audit placement="left" [data]="sobreturno" [showUpdate]="true"></popover-audit>
-                        </small>
+                        </plex-badge>
                     </td>
                 </tr>
             </tbody>

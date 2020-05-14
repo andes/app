@@ -11,8 +11,10 @@
                                     <tbody>
                                         <tr class="hover" *ngFor="let item of listaCandidatos; let i=index">
                                             <td>
-                                                <span *ngIf="item.paciente.estado == 'validado'" class="badge badge-success">Validado</span>
-                                                <span *ngIf="item.paciente.estado != 'validado'" class="badge badge-warning">Temporal</span>
+                                                <plex-badge *ngIf="item.paciente.estado == 'validado'" type="success">
+                                                    Validado</plex-badge>
+                                                <plex-badge *ngIf="item.paciente.estado != 'validado'" type="warning">
+                                                    Temporal</plex-badge>
                                                 {{ item.paciente | paciente }}
                                                 <b>Documento: </b>
                                                 <span *ngIf="item.paciente.documento">{{ item.paciente.documento
@@ -32,11 +34,13 @@
                                                     number}} %</span>
                                             </td>
                                             <td>
-                                                <span *ngIf="item.paciente.activo" class="badge badge-success">Activo</span>
-                                                <span *ngIf="!item.paciente.activo" class="badge badge-danger">Inactivo</span>
+                                                <plex-badge *ngIf="item.paciente.activo" type="success">Activo
+                                                </plex-badge>
+                                                <plex-badge *ngIf="!item.paciente.activo" type="danger">Inactivo
+                                                </plex-badge>
                                             </td>
                                             <td>
-                                                <span *ngIf="item.vinculado" class="badge badge-warning">VINCULADO</span>
+                                                <plex-badge *ngIf="item.vinculado" type="warning">VINCULADO</plex-badge>
                                             </td>
                                             <td>
                                                 <plex-button *ngIf="!item.vinculado" type='info' label="Vincular"

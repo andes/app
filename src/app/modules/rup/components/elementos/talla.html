@@ -1,7 +1,7 @@
 <form #form="ngForm">
     <plex-float autoFocus=1 *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 240"
-        [(ngModel)]="registro.valor" (change)="emitChange()" name="talla" label="{{ registro.concepto.term }}"
-        suffix="cm" [required]="esRequerido" min="1" max="240">
+                [(ngModel)]="registro.valor" (change)="emitChange()" name="talla" label="{{ registro.concepto.term }}"
+                suffix="cm" [required]="esRequerido" min="1" max="240">
     </plex-float>
 
     <p *ngIf="soloValores && registro?.evoluciones?.length" class="readonly">
@@ -17,8 +17,8 @@
     </p>
 
     <p *ngIf="mensaje && mensaje.texto">
-        <span class="badge-{{mensaje.class}}">
+        <plex-badge type="{{mensaje.class}}">
             {{mensaje.texto}}
-        </span>
+        </plex-badge>
     </p>
 </form>

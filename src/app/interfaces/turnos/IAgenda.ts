@@ -1,6 +1,7 @@
 import { ITurno } from './ITurno';
 import { ITipoPrestacion } from './../ITipoPrestacion';
 import { IBloque } from './IBloque';
+import { IEspacioFisico } from './IEspacioFisico';
 
 // Recordar actualizar Schema!
 
@@ -29,6 +30,7 @@ export interface IAgenda {
             nombre: String
         };
     };
+    otroEspacioFisico: IEspacioFisico;
     horaInicio: Date;
     horaFin: Date;
     intercalar: Boolean;

@@ -8,7 +8,7 @@ import { CensosMensualesComponent } from './views/censos/censo-mensual/censo-men
 import { InternacionListadoComponent } from './views/listado-internacion/listado-internacion.component';
 import { InternacionListaEsperaComponent } from './views/lista-espera/lista-espera.component';
 
-const routes = [
+export const INTERNACION_ROUTES = [
     { path: 'mapa-camas', component: MapaCamasMainComponent },
 
     { path: 'mapa-camas/:capa', component: MapaCamasCapaComponent },
@@ -30,7 +30,7 @@ const routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
+    imports: [RouterModule.forChild(INTERNACION_ROUTES)],
     providers: []
 })
 export class MapaCamasRouting { }

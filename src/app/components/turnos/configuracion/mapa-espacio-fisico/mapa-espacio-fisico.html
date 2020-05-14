@@ -16,7 +16,7 @@
                 </small>
                 <br>
                 <small *ngIf="espacio.sector">{{espacio._value.sector.nombre}}</small>
-                <span *ngFor="let eq of espacio._value.equipamiento" class="badge badge-info">{{eq.term}}</span>
+                <plex-badge *ngFor="let eq of espacio._value.equipamiento" type="info">{{eq.term}}</plex-badge>
             </td>
 
             <td *ngFor="let agenda of espacio._items" (mouseenter)="showInfo(agenda?.id)" (mouseleave)="showInfo(false)"

@@ -83,6 +83,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
     }
 
     onActiveOption(opcion) {
+        this.mapaCamasService.resetView();
         this.mostrar = opcion;
     }
 

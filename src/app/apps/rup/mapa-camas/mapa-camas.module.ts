@@ -42,7 +42,43 @@ import { NuevoRegistroSaludComponent } from './sidebar/nuevo-registro-salud/nuev
 import { MaquinaEstadosHTTP } from './services/maquina-estados.http';
 import { ListadoInternacionService } from './views/listado-internacion/listado-internacion.service';
 import { RegistrosHudsDetalleComponent } from './sidebar/registros-huds-detalle/registros-huds-detalle.component';
+import { ElementosRUPModule } from '../../../modules/rup/elementos-rup.module';
 
+export const INTERNACION_COMPONENTS = [
+    MapaCamasMainComponent,
+    MapaCamasCapaComponent,
+    CensosDiariosComponent,
+    CensosMensualesComponent,
+    FiltrosCamasComponent,
+    CamaMainComponent,
+    EstadoServicioComponent,
+    ItemCamaComponent,
+    IngresarPacienteComponent,
+    IconoCamitaComponent,
+    CamaDestinoGenericoComponent,
+    CamaDesocuparComponent,
+    EgresarPacienteComponent,
+    CamaDetalleComponent,
+    InternacionDetalleComponent,
+    InformeIngresoComponent,
+    InformeEgresoComponent,
+    HistorialDetalleComponent,
+    MovimientosInternacionComponent,
+    CambiarCamaComponent,
+    InternacionListadoComponent,
+    InternacionListaEsperaComponent,
+    ElegirPacienteComponent,
+    FiltrosInternacionComponent,
+    NuevoRegistroSaludComponent,
+    RegistrosHudsDetalleComponent
+];
+
+export const INTERNACION_PROVIDERS = [
+    MapaCamasService,
+    MapaCamasHTTP,
+    MaquinaEstadosHTTP,
+    ListadoInternacionService
+];
 
 @NgModule({
     imports: [
@@ -55,41 +91,14 @@ import { RegistrosHudsDetalleComponent } from './sidebar/registros-huds-detalle/
         SharedModule,
         MPILibModule,
         MitosModule,
-        OrganizacionLibModule
+        OrganizacionLibModule,
+        ElementosRUPModule
     ],
     declarations: [
-        MapaCamasMainComponent,
-        MapaCamasCapaComponent,
-        CensosDiariosComponent,
-        CensosMensualesComponent,
-        FiltrosCamasComponent,
-        CamaMainComponent,
-        EstadoServicioComponent,
-        ItemCamaComponent,
-        IngresarPacienteComponent,
-        IconoCamitaComponent,
-        CamaDestinoGenericoComponent,
-        CamaDesocuparComponent,
-        EgresarPacienteComponent,
-        CamaDetalleComponent,
-        InternacionDetalleComponent,
-        InformeIngresoComponent,
-        InformeEgresoComponent,
-        HistorialDetalleComponent,
-        MovimientosInternacionComponent,
-        CambiarCamaComponent,
-        InternacionListadoComponent,
-        InternacionListaEsperaComponent,
-        ElegirPacienteComponent,
-        FiltrosInternacionComponent,
-        NuevoRegistroSaludComponent,
-        RegistrosHudsDetalleComponent
+        ...INTERNACION_COMPONENTS
     ],
     providers: [
-        MapaCamasService,
-        MapaCamasHTTP,
-        MaquinaEstadosHTTP,
-        ListadoInternacionService
+        ...INTERNACION_PROVIDERS
     ],
     exports: [],
 })

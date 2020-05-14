@@ -28,7 +28,7 @@ import { PlantillasService } from '../../services/plantillas.service';
 @Component({
     selector: 'rup',
     encapsulation: ViewEncapsulation.None,
-    template: '' // Debe quedar vacío, y cada atómo indicar que usa 'rup.html' o su propio template
+    template: ''
 })
 export class RUPComponent implements OnInit, AfterViewInit {
     @ViewChildren(RUPComponent) rupElements: QueryList<RUPComponent>;

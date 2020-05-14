@@ -81,7 +81,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         private ocupacionService: OcupacionService,
         private organizacionService: OrganizacionService,
         private servicioPrestacion: PrestacionesService,
-        private mapaCamasService: MapaCamasService,
+        public mapaCamasService: MapaCamasService,
         private obraSocialService: ObraSocialService,
         private listadoInternacionService: ListadoInternacionService,
         private auth: Auth
@@ -128,11 +128,13 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
             // Guarda la obra social en el paciente
             if (paciente.id) {
-                this.obraSocialService.get({ dni: this.paciente.documento }).subscribe((os: any) => {
-                    if (os && os.length > 0) {
-                        this.paciente.obraSocial = { nombre: os[0].financiador, financiador: os[0].financiador, codigoPuco: os[0].codigoFinanciador };
-                    }
-                });
+                if (paciente.documento) {
+                    this.obraSocialService.get({ dni: this.paciente.documento }).subscribe((os: any) => {
+                        if (os && os.length > 0) {
+                            this.paciente.obraSocial = { nombre: os[0].financiador, financiador: os[0].financiador, codigoPuco: os[0].codigoFinanciador };
+                        }
+                    });
+                }
                 let indiceCarpeta = -1;
                 if (paciente.carpetaEfectores && paciente.carpetaEfectores.length > 0) {
                     indiceCarpeta = paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
@@ -313,6 +315,7 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
                 this.onSave.emit();
             }
         } else {
+            delete this.cama['sectorName'];
             this.cama.extras = { ingreso: true };
             this.mapaCamasService.save(this.cama, this.informeIngreso.fechaIngreso).subscribe(camaActualizada => {
                 this.plex.info('success', 'Paciente internado');

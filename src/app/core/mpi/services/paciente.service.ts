@@ -64,10 +64,6 @@ export class PacienteService {
         return this.server.get(`${this.pacienteUrl}/auditoria/vinculados/`, { params: params, showError: true });
     }
 
-    getDashboard(): Observable<IPaciente[]> {
-        return this.server.get(`${this.pacienteUrl}/dashboard/`, null);
-    }
-
     getTemporales(): Observable<IPaciente[]> {
         return this.server.get(`${this.pacienteUrl}/temporales/`, null);
     }

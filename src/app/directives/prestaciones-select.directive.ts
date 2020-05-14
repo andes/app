@@ -33,7 +33,7 @@ export class SelectPrestacionesDirective implements OnInit, OnDestroy {
         if (this.preload) {
             plexSelect.data = [];
             const permisos = this.tmPrestaciones;
-            this.conceptosTurneables.search({ permisos }).subscribe(result => {
+            this.conceptosTurneables.getByPermisos(permisos).subscribe(result => {
                 plexSelect.data = result;
             });
         } else {

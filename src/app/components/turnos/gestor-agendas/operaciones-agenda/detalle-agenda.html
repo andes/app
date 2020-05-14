@@ -8,10 +8,10 @@
                 {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
             </div>
             <div class="col-2">
-                <span class="badge-info float-right" *ngIf="agenda.dinamica">Dinámica</span>
-                <span class="badge-danger float-right" *ngIf="!agenda.nominalizada">No Nominalizada</span>
-                <span class="badge-{{estadosAgenda[agenda.estado]?.class}} float-right">
-                    {{estadosAgenda[agenda.estado]?.nombre}}</span>
+                <plex-badge type="info" *ngIf="agenda.dinamica">Dinámica</plex-badge>
+                <plex-badge type="danger" *ngIf="!agenda.nominalizada">No Nominalizada</plex-badge>
+                <plex-badge type="{{estadosAgenda[agenda.estado]?.class}}">
+                    {{estadosAgenda[agenda.estado]?.nombre}}</plex-badge>
 
             </div>
         </div>

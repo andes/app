@@ -1,3 +1,4 @@
+import { IDireccion } from './../../../../core/mpi/interfaces/IDireccion';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { SnomedService } from '../../../../apps/mitos';
 import { Component, OnInit, Output, EventEmitter, HostBinding, ViewEncapsulation } from '@angular/core';
@@ -13,6 +14,7 @@ import { HeaderPacienteComponent } from '../../../../components/paciente/headerP
 import { ReglaService } from '../../../../services/top/reglas.service';
 import { forkJoin, of, merge } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { OrganizacionService } from '../../../../services/organizacion.service';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -31,8 +33,7 @@ export class PrestacionValidacionComponent implements OnInit {
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
     // Tiene permisos para descargar?
-    public puedeDescargarPDF = false;
-    descargaCerrada: any = true;
+
 
     // Id de la Agenda desde localStorage (revisar si aun hace falta)
     public idAgenda: any;
@@ -48,13 +49,12 @@ export class PrestacionValidacionComponent implements OnInit {
 
     // Paciente MPI
     public paciente;
-
     // Array de elementos RUP que se pueden ejecutar
     public elementosRUP: any[];
-
     // Indica si muestra el calendario para dar turno autocitado
     public showDarTurnos = false;
-
+    // Indica si muestra el modal de selección de correo
+    public showModalEmails = false;
     // Mostrar datos de la Solicitud "padre"?
     public showDatosSolicitud = false;
 
@@ -108,7 +108,8 @@ export class PrestacionValidacionComponent implements OnInit {
         private route: ActivatedRoute,
         private servicioDocumentos: DocumentosService,
         private codificacionService: CodificacionService,
-        public servicioReglas: ReglaService
+        public servicioReglas: ReglaService,
+        public organizacionService: OrganizacionService
     ) {
     }
 
@@ -133,7 +134,6 @@ export class PrestacionValidacionComponent implements OnInit {
         if (!this.auth.profesional) {
             this.redirect('inicio');
         }
-        this.puedeDescargarPDF = this.auth.getPermissions('descargas:?').length > 0;
         this.route.params.subscribe(params => {
             let id = params['id'];
             this.idAgenda = localStorage.getItem('agenda');
@@ -285,6 +285,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
         });
     }
+
 
     /**
      * Confirmamos validacion y guardamos
@@ -664,41 +665,6 @@ export class PrestacionValidacionComponent implements OnInit {
 
     compareArrays(arr1: any[], arr2: any[]) {
         return arr1.join('') === arr2.join('');
-    }
-
-    descargarResumen() {
-
-        this.descargaCerrada = false;
-
-        this.prestacion.ejecucion.registros.forEach(x => {
-            x.icon = 'down';
-        });
-
-        setTimeout(async () => {
-            let informe = {
-                idPrestacion: this.prestacion.id
-            };
-
-            this.servicioDocumentos.descargarArchivo(informe, this.prestacion.solicitud.tipoPrestacion.term, { type: 'application/pdf' }).subscribe(result => {
-                this.descargaCerrada = true;
-            });
-
-        });
-    }
-
-    async descargarRegistro(idRegistro, term) {
-
-        this.descargaCerrada = false;
-
-        let informe = {
-            idPrestacion: this.prestacion.id,
-            idRegistro
-        };
-
-        this.servicioDocumentos.descargarArchivo(informe, term, { type: 'application/pdf' }).subscribe(result => {
-            this.descargaCerrada = true;
-        });
-
     }
 
     /**

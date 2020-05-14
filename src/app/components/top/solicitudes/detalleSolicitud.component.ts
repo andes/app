@@ -1,5 +1,5 @@
 import { Plex } from '@andes/plex';
-import { Input, Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Input, Component, OnInit } from '@angular/core';
 import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
 import { environment } from '../../../../environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -50,8 +50,6 @@ export class DetalleSolicitudComponent implements OnInit {
     }
 
     createUrl(doc) {
-        /** Hack momentaneo */
-        // let jwt = window.sessionStorage.getItem('jwt');
         if (doc.id) {
             let apiUri = environment.API;
             return apiUri + '/modules/rup/store/' + doc.id + '?token=' + this.fileToken;
@@ -61,25 +59,15 @@ export class DetalleSolicitudComponent implements OnInit {
         }
     }
 
-    activaLightbox(index) {
-        if (this.prestacionSeleccionada.solicitud.registros[0].valor.documentos[index].ext !== 'pdf') {
-            this.lightbox = true;
-            this.indice = index;
+    get documentos() {
+        let solicitudRegistros = this.prestacionSeleccionada.solicitud.registros;
+        if (solicitudRegistros.some(reg => reg.valor.documentos)) {
+            return solicitudRegistros[0].valor.documentos.map((doc) => {
+                doc.url = this.createUrl(doc);
+                return doc;
+            });
+        } else {
+            return [];
         }
     }
-
-    imagenPrevia(i) {
-        let imagenPrevia = i - 1;
-        if (imagenPrevia >= 0) {
-            this.indice = imagenPrevia;
-        }
-    }
-
-    imagenSiguiente(i) {
-        let imagenSiguiente = i + 1;
-        if (imagenSiguiente <= this.fotos.length - 1) {
-            this.indice = imagenSiguiente;
-        }
-    }
-
 }

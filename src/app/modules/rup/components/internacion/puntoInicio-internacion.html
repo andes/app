@@ -71,10 +71,11 @@
                         <tbody>
                             <tr *ngIf="!epicrisisPaciente.length">
                                 <td colspan="3">
-                                    <div *ngIf="!epicrisisPaciente.length && !showLoader"
-                                         class="row badge-internacion warning">
+                                    <div *ngIf="!epicrisisPaciente.length && !showLoader" class="row">
                                         <div class="col-12 text-center">
-                                            No hay registros del paciente
+                                            <plex-badge type="warning internacion">No hay registros del paciente
+                                            </plex-badge>
+
                                         </div>
                                     </div>
                                 </td>

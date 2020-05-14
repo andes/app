@@ -86,7 +86,7 @@ export class UsuariosListComponent implements OnInit {
                 if (query.search) {
                     query.search = '^' + query.search;
                 }
-                return this.usuariosHttp.find({ ...query, fields: '-password -permisosGlobales' });
+                return this.usuariosHttp.find({ ...query, fields: '-password -permisosGlobales', limit: 50 });
             }),
             tap(() => this.userSelected = null),
             cache()

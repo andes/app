@@ -1,4 +1,4 @@
-@import '../variables';
+@import '../core/rup';
 .header {
     align-items: center;
 }
@@ -20,6 +20,15 @@
     cdk-virtual-scroll-viewport {
         height: 100%;
         overflow-x: hidden;
+
+        plex-button[type=info] {
+            .btn {
+                width: 20px;
+                justify-content: center;
+                display: flex;
+                height: 26px;
+            }
+        }
     }
 }
 
@@ -72,7 +81,7 @@
                     }
                 }
             }
-            .badge {
+            .contador {
                 display: inline-block;
                 top: 0;
                 right: 0;
