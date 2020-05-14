@@ -125,7 +125,7 @@
                 </div>
                 <div class="col d-flex justify-content-end">
                     <plex-button label="Cerrar" type="danger" (click)="onClose()"></plex-button>
-                    <plex-button *ngIf="puedeEmitirComprobante && (!this.auth.profesional) && (prestacion.financiador?.financiador === 'SUMAR' || prestacion.financiador === 'SUMAR') && ((!prestacion.estadoFacturacion) || prestacion.estadoFacturacion?.estado!=='Comprobante con prestacion')"
+                    <plex-button *ngIf="puedeEmitirComprobante && (permisos!==0) && (prestacion.financiador?.financiador === 'SUMAR' || prestacion.financiador === 'SUMAR') && ((!prestacion.estadoFacturacion) || prestacion.estadoFacturacion?.estado!=='Comprobante con prestacion')"
                                  label="Comprobante" type="success" (click)="recupero()"></plex-button>
                 </div>
             </div>
