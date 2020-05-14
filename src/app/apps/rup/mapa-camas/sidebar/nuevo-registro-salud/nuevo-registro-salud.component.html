@@ -8,6 +8,6 @@
     <plex-select label="Tipo de registro" name="tipo" [(ngModel)]="registro" [data]="accionesEstado$ | async"
                  labelField="label" idField="label" required>
     </plex-select>
-    <plex-button class="mt-4 float-right" type="success" label="Iniciar prestación" title="Iniciar prestación" (click)="onIniciar($event)"
+    <plex-button class="mt-4 float-right" type="success" label="Iniciar prestación" (click)="onIniciar($event)"
     [validateForm]="formulario"> </plex-button>
 </form>
