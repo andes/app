@@ -106,7 +106,12 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
         this.ambito = this.mapaCamasService.ambito;
 
-        this.selectedCama$ = this.mapaCamasService.selectedCama;
+        this.selectedCama$ = this.mapaCamasService.selectedCama.map((cama) => {
+            if (cama.idCama) {
+                this.accion = 'verDetalle';
+            }
+            return cama;
+        });
 
         this.selectedPaciente$ = this.mapaCamasService.selectedPaciente;
 
