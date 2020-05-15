@@ -97,8 +97,6 @@ export class PlantillasRUPComponent implements OnInit {
         let query = {
             search: this.searchTerm,
             semanticTag: ['procedimiento', 'elemento de registro']
-            // para poder hacer mas template de diferentes conceptos
-            // semanticTag: ['procedimiento', 'elemento de registro' , 'hallazgo','solicitud','regimen','producto']
 
         };
 
@@ -111,7 +109,7 @@ export class PlantillasRUPComponent implements OnInit {
     cargarPlantillas(procedimiento) {
         this.procedimiento = procedimiento;
         this.subject.next([]);
-        this.sp.get(procedimiento.conceptId).subscribe(plantillas => {
+        this.sp.get(procedimiento.conceptId, true).subscribe(plantillas => {
 
             if (plantillas) {
                 plantillas.forEach(x => {
@@ -132,6 +130,7 @@ export class PlantillasRUPComponent implements OnInit {
         if (typeof plantilla.id !== 'undefined') {
             plantilla['expression'] = expression;
             body = { plantilla, ...{ expression } }.plantilla;
+
             this.sp.patch(plantilla.id, body).subscribe(result => {
                 if (result.id) {
                     this.cargarPlantillas(this.procedimiento);
@@ -182,7 +181,11 @@ export class PlantillasRUPComponent implements OnInit {
                 if (confirmar) {
                     if (plantilla.id) {
                         this.sp.delete(plantilla.id).subscribe(result => {
-                            this.subject.next(result);
+                            const listado = this.subject.getValue();
+
+                            listado.splice(idx, 1);
+
+                            this.subject.next(listado);
                             this.plex.toast('success', 'Título: ' + plantilla.title, 'Plantilla Eliminada');
                         });
                     } else {

@@ -15,12 +15,12 @@ export class PlantillasService {
     // savedText: any;
     constructor(private server: Server, public auth: Auth, public cos: ConceptObserverService) { }
 
-    get(conceptId): Observable<any> {
+    get(conceptId, force = false): Observable<any> {
 
         if (!this.cache[conceptId]) {
             this.cache[conceptId] = new BehaviorSubject(null);
         }
-        if (this.cache[conceptId].getValue()) {
+        if (this.cache[conceptId].getValue() && !force) {
             return this.cache[conceptId];
         } else {
             const params = {
