@@ -506,6 +506,17 @@ export class SolicitudesComponent implements OnInit {
                         this.visualizarEntrada[i] = false;
                     }
                     break;
+                case 'rechazada':
+
+                        // Se puede dar turno?
+                        this.darTurnoArrayEntrada[i] = false;
+
+                        // Se puede visualizar?
+                        this.visualizarEntrada[i] = true;
+
+                        // Se puede auditar?
+                        this.auditarArrayEntrada[i] = true;
+                        break;
                 case 'validada':
 
                     // Hay turno?
