@@ -101,13 +101,13 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
                 this.servicioPaciente.getById(id).subscribe(paciente => {
                     this.paciente = paciente;
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
-                    if(paciente){
+                    if (paciente) {
                         this.registroSeguimiento();
                     }
                 });
             });
         } else {
-            if(this.paciente){
+            if (this.paciente) {
                 this.registroSeguimiento();
             }
             // Loggeo de lo que ve el profesional

@@ -113,7 +113,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     // Seguimiento Paciente San Juan
     public flagSeguimiento = false;
-    
+
     // Historial HUDS de registros relacionados a un concepto
     detalleConceptoHUDS: any;
     detalleRegistrosHUDS: any;
