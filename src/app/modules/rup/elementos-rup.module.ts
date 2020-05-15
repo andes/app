@@ -35,7 +35,6 @@ import { TensionArterialComponent } from './components/elementos/tensionArterial
 import { TensionDiastolicaComponent } from './components/elementos/tensionDiastolica.component';
 import { TensionSistolicaComponent } from './components/elementos/tensionSistolica.component';
 import { AdjuntarDocumentoComponent } from './components/elementos/adjuntarDocumento.component';
-import { IngresoInternacionComponent } from './components/elementos/ingresoInternacion.component';
 import { OtoemisionAcusticaDeOidoDerechoComponent } from './components/elementos/otoemisionAcusticaDeOidoDerecho.component';
 import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
 import { OdontogramaRefsetComponent } from './components/elementos/OdontogramaRefset.component';
@@ -45,6 +44,8 @@ import { InformeEpicrisisComponent } from './components/elementos/deprecated/inf
 import { ElementoDeRegistroComponent } from './components/elementos/deprecated/elementoDeRegistro.component';
 import { OdontologiaDefaultComponent } from './components/elementos/odontologiaDefault.component';
 import { CircunferenciaCinturaComponent } from './components/elementos/circunferenciaCintura.component';
+import { InternacionEgresoComponent } from './components/elementos/internacionEgreso.component';
+import { InternacionIngresoComponent } from './components/elementos/internacionIngreso.component';
 
 import { InformeActividadNoNominalizadaComponent } from './components/elementos/informeActividadNoNominalizada.component';
 import { PercentiloPesoComponent } from './components/elementos/percentiloPeso.component';
@@ -113,7 +114,6 @@ const RUPComponentsArray = [
     TensionDiastolicaComponent,
     TensionSistolicaComponent,
     AdjuntarDocumentoComponent,
-    IngresoInternacionComponent,
     OtoemisionAcusticaDeOidoDerechoComponent,
     OtoemisionAcusticaDeOidoIzquierdoComponent,
     OdontogramaRefsetComponent,
@@ -152,7 +152,9 @@ const RUPComponentsArray = [
     SelectStaticoComponent,
     SelectBaseComponent,
     SeccionadoComponent,
-    SeccionComponent
+    SeccionComponent,
+    InternacionEgresoComponent,
+    InternacionIngresoComponent,
 ];
 
 @NgModule({

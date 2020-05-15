@@ -213,9 +213,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
                 }
                 break;
             case 'rup':
-                if (registro.prestacion.conceptId === PrestacionesService.InternacionPrestacion.conceptId) {
-                    tipo = 'internacion';
-                }
                 registro = registro.data;
                 if (registro.ejecucion.registros) {
                     registro.ejecucion.registros.forEach(reg => {
