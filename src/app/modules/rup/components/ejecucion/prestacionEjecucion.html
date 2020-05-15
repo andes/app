@@ -271,7 +271,7 @@
                         <rup-resumenPaciente-dinamico *ngIf="paciente.edad > 6" [paciente]="paciente">
                         </rup-resumenPaciente-dinamico>
                     </plex-tab>
-                    <plex-tab label="Seguimiento COVID19" *ngIf="flagSeguimiento">
+                    <plex-tab label="Autocontroles del paciente" *ngIf="flagSeguimiento">
                         <rup-resumenPaciente-estatico [prestacion]="prestacion" [paciente]="paciente">
                         </rup-resumenPaciente-estatico>
                         <rup-seguimientoPaciente  [paciente]="paciente">
