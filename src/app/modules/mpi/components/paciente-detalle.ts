@@ -110,14 +110,11 @@ export class PacienteDetalleComponent implements OnInit {
             this.obraSocialCacheService.setFinanciadorPacienteCache(null);
             return;
         }
-<<<<<<< HEAD
         if (this.paciente.financiador && this.paciente.financiador.length > 0) {
             this.obraSocial = this.paciente.financiador[0] as any;
             this.obraSocialCacheService.setFinanciadorPacienteCache(this.obraSocial);
             return;
         }
-=======
->>>>>>> ref (obra-social): reemplaza interface financiador por obra social
         this.obraSocialService.getObrasSociales(this.paciente.documento).subscribe(resultado => {
             if (resultado.length > 0) {
                 this.obraSocial = resultado[0];
