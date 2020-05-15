@@ -21,6 +21,8 @@ import { HUDSService } from '../../services/huds.service';
 
 import { PlantillasService } from '../../services/plantillas.service';
 
+import { SeguimientoPacienteService } from '../../services/seguimientoPaciente.service';
+
 @Component({
     selector: 'rup-prestacionEjecucion',
     templateUrl: 'prestacionEjecucion.html',
@@ -109,6 +111,9 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     public scopePrivacy = [];
     public registrosHUDS = [];
 
+    // Seguimiento Paciente San Juan
+    public flagSeguimiento = false;
+    
     // Historial HUDS de registros relacionados a un concepto
     detalleConceptoHUDS: any;
     detalleRegistrosHUDS: any;
@@ -126,7 +131,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         private servicioSnomed: SnomedService,
         private buscadorService: SnomedBuscarService,
         public huds: HUDSService,
-        public ps: PlantillasService
+        public ps: PlantillasService,
+        public seguimientoPacienteService: SeguimientoPacienteService
     ) {
     }
 
@@ -196,6 +202,9 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                                     this.paciente = paciente;
                                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
+                                    if (paciente) {
+                                        this.registroSeguimiento();
+                                    }
                                 });
                             }
                             // cambio: this.prestacionSolicitud = prestacion.solicitud;
@@ -1285,6 +1294,17 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         const checkSemtag = registro.concepto.semanticTag === 'procedimiento' || registro.concepto.semanticTag === 'elemento de registro';
         const noEsSolicitud = !registro.esSolicitud;
         return checkSemtag && noEsSolicitud;
+    }
+
+    registroSeguimiento() {
+        // Se evalúa si hay registros de seguimiento
+            this.seguimientoPacienteService.getRegistros({idPaciente: this.paciente.id}).subscribe(seguimientoPaciente => {
+                if (seguimientoPaciente.length) {
+                        this.flagSeguimiento = true;
+                } else {
+                        this.flagSeguimiento = false;
+                }
+            });
     }
 
 }

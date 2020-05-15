@@ -135,7 +135,8 @@ import { ResumenPacienteDinamicoService } from './modules/rup/services/resumenPa
 import { VacunasService } from './services/vacunas.service';
 import { PlantillasService } from './modules/rup/services/plantillas.service';
 
-
+// Seguimiento Pacientes SJ
+import { SeguimientoPacienteService } from './modules/rup/services/seguimientoPaciente.service';
 
 // Componentes
 import { InicioComponent } from './components/inicio/inicio.component';
@@ -235,6 +236,9 @@ import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucio
 import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
 import { ResumenPacienteDinamicoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
 import { ResumenPacienteDinamicoNinoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico-nino.component';
+
+// Seguimiento Pacientes SJ
+import { SeguimientoPacienteComponent } from './modules/rup/components/ejecucion/seguimiento-paciente/seguimientoPaciente.component';
 
 import { IniciarInternacionComponent } from './apps/rup/internacion/components/iniciarInternacion.component';
 import { OcuparCamaComponent } from './apps/rup/internacion/components/cama-ocupar.component';
@@ -473,6 +477,7 @@ registerLocaleData(localeEs, 'es');
         ResumenPacienteEstaticoComponent,
         ResumenPacienteDinamicoComponent,
         ResumenPacienteDinamicoNinoComponent,
+        SeguimientoPacienteComponent,
         IniciarInternacionComponent,
         MapaDeCamasComponent,
         CensoDiarioComponent,
@@ -638,6 +643,7 @@ registerLocaleData(localeEs, 'es');
         HistorialBusquedaService,
         CodificacionService,
         ResumenPacienteDinamicoService,
+        SeguimientoPacienteService,
         VacunasService,
         RiesgoCardiovascularService,
         FormulaBaseService,
