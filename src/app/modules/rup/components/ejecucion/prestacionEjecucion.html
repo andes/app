@@ -153,17 +153,6 @@
                                         <div class="content"
                                              *ngIf="paciente || (prestacion.solicitud.tipoPrestacion.noNominalizada)">
 
-                                            <ng-container *ngIf="matchBusquedaGuiada(registro.concepto)">
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <plex-badge *ngFor="let rf of matchBusquedaGuiada(registro.concepto)"
-                                                                    type="danger">
-                                                            {{ rf.nombre }}
-                                                        </plex-badge>
-                                                    </div>
-                                                </div>
-                                            </ng-container>
-
                                             <div *ngIf="mostrarMensajes && !registro.valido">
                                                 <plex-badge type="danger">Debe completar los datos</plex-badge>
                                             </div>

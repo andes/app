@@ -52,8 +52,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     public elementRef;
     public arrayPorRefsets = [];
-    // boolean que se utiliza para expandir o contraer los contenidos de la busqueda guiada
-    public desplegarConceptos;
 
     // Arra de salida para los mas frecuentes del profesional
     public arrayFrecuentes: any[] = [];
@@ -77,17 +75,14 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     public busquedaPorConcepto = false;
 
-    // Listados de grupos de la busqueda guiada
-    public gruposGuiada: any[] = [];
-
     // posibles valores para el filtro actual: 'hallazgos', 'trastornos', 'procedimientos', 'planes', 'productos'
     public filtroActual: 'hallazgos' | 'trastornos' | 'procedimientos' | 'planes' | 'productos' | 'todos';
 
-    // posibles valores para la búsqueda actual: 'todos', 'misFrecuentes', 'sugeridos', 'busquedaGuiada', 'buscadorBasico'
+    // posibles valores para la búsqueda actual: 'todos', 'misFrecuentes', 'sugeridos', 'buscadorBasico'
     public busquedaActual: any;
 
     // objeto de resultados
-    public results: ISnomedSearchResult = { todos: [], misFrecuentes: [], sugeridos: [], busquedaGuiada: [], buscadorBasico: [], frecuentesTP: [] };
+    public results: ISnomedSearchResult = { todos: [], misFrecuentes: [], sugeridos: [], buscadorBasico: [], frecuentesTP: [] };
     public resultsAux: any;
 
     // public totalesTodos: Number = 0;
@@ -134,16 +129,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
         // Se inicializa el buscador básico, principal
         await this.inicializarBuscadorBasico();
 
-        // Se inicializa el buscador guiado, secundario
-        this.gruposGuiada = await this.inicializarBusquedaGuiada();
-
-        this.filtrarResultadosBusquedaGuiada();
-    }
-
-    inicializarBusquedaGuiada() {
-        // Se traen los Conceptos Turneables para poder quitarlos de la lista de
-        // Procedimientos
-        return this.elementoRUP.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).toPromise();
     }
 
     inicializarBuscadorBasico() {
@@ -333,16 +318,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
         if (this.busquedaActual !== busquedaActual) {
             this.busquedaActual = busquedaActual;
             // creamos una copia del filtro
-            /**
-             * Si vamos a la busqueda guiada seteamos el filtro en todos, en caso contrario
-             * lo dejamos como estaba al principio
-             */
-            if (busquedaActual === 'busquedaGuiada') {
-                this.copiaFiltroActual = this.filtroActual;
-                this.filtroActual = 'todos';
-            } else {
-                this.filtroActual = this.copiaFiltroActual ? this.copiaFiltroActual : this.filtroActual;
-            }
+            this.filtroActual = this.copiaFiltroActual ? this.copiaFiltroActual : this.filtroActual;
+
             if ((busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes' || busquedaActual === 'frecuentesTP') && this.search) {
                 this.buscar();
             } else {
@@ -391,7 +368,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
         this.search = resultadosSnomed.term;
         if (resultadosSnomed.items.length) {
             this.results.buscadorBasico['todos'] = resultadosSnomed.items;
-            // this.results.busquedaGuiada[this.filtroActual] = resultadosSnomed.items;
             // this.results.buscadorBasico[this.filtroActual] = resultadosSnomed;
 
             // llamamos a la funcion que ordena mis frecuentes, poniendolo al prinicpio de los resultados
@@ -401,10 +377,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
             // evitando tener que volver a buscar
             // this.filtrarResultados(this.busquedaActual);
             this.filtrarResultados('buscadorBasico');
-
-            // filtramos los resultados para la busqueda guiada y que quede armado
-            // con el formato para los desplegables
-            //  this.filtrarResultadosBusquedaGuiada();
 
             // Filtra los resultado por referentSet
 
@@ -417,7 +389,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
             // asignamos a una variable auxiliar para luego restaurar los valores
             // en caso de buscar o filtrar
             this.resultsAux['buscadorBasico'] = this.results['buscadorBasico'];
-            // this.resultsAux['busquedaGuiada'] = this.results['busquedaGuiada'];
 
         }
 
@@ -428,9 +399,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
             this.results['frecuentesTP'] = this.resultsAux.frecuentesTP;
 
             this.results['buscadorBasico'] = [];
-
-            // Llamamos a la función de la búsqueda guiada para que limpie los campos.
-            this.filtrarResultadosBusquedaGuiada();
         }
     }
 
@@ -482,41 +450,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
         }
     }
 
-    /**
-     * Resuelve los filtros sobre los conceptos que se visualizan en la busqueda guiada.
-     * POR AHORA NO ESTA EN FUNCIONAMIENTO.
-    */
-    public filtrarResultadosBusquedaGuiada() {
-        // this.results.busquedaGuiada = [];
-
-        // this.grupos_guida.forEach(data => {
-        //     if (this.results.buscadorBasico['todos']) {
-        //         this.results.busquedaGuiada.push({
-        //             nombre: data.nombre,
-        //             valor: this.results.buscadorBasico['todos'].filter(x => data.conceptIds.indexOf(x.conceptId) >= 0)
-        //         });
-        //     } else {
-        //         this.results.busquedaGuiada.push({
-        //             nombre: data.nombre,
-        //             valor: []
-        //         });
-        //     }
-        // });
-
-        // Object.keys(this.conceptos).forEach(concepto => {
-        //     if (this.results.buscadorBasico['todos']) {
-        //         this.results.busquedaGuiada.push({
-        //             nombre: concepto,
-        //             valor: this.results.buscadorBasico[concepto].filter(x => this.conceptos[concepto].find(y => y === x.semanticTag))
-        //         });
-        //     } else {
-        //         this.results.busquedaGuiada.push({
-        //             nombre: concepto,
-        //             valor: []
-        //         });
-        //     }
-        // });
-    }
 
 
     /**
@@ -621,17 +554,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
             this.servicioPrestacion.setEsSolicitud(true);
         }
         return filtro;
-    }
-
-    /**
-     *
-     * @param nombre Se le pasa el nombre del objeto de la posicion i
-     * La funcion despliega los desplegables de la busqueda guiada.
-     * Al abrir uno automaticamente cierra el que anteriormente se abrio.
-     */
-    public desplegar(nombre) {
-        // this.opcionDesplegada = nombre;
-        this.opcionDesplegada = (this.opcionDesplegada === nombre) ? null : nombre;
     }
 
     /**

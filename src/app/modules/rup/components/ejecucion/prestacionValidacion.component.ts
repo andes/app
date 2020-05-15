@@ -82,9 +82,6 @@ export class PrestacionValidacionComponent implements OnInit {
     // Orden de los registros en pantalla
     public ordenRegistros: any = '';
 
-    // Array que guarda los grupos de conceptos en la Búsqueda Guiada
-    public gruposGuiada: any[] = [];
-
     // Array con opciones para indicar si es primera vez
     public opcionDiagnosticoPrincipal = [
         { id: true, label: 'Si' },
@@ -195,9 +192,6 @@ export class PrestacionValidacionComponent implements OnInit {
                 }
             }
 
-            this.elementosRUPService.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).subscribe((grupos) => {
-                this.gruposGuiada = grupos;
-            });
             if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
                 // Carga la información completa del paciente
                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
@@ -668,24 +662,8 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     /**
-     * Busca los grupos de la búsqueda guiada a los que pertenece un concepto
-     * @param {IConcept} concept
-     */
-    enBusquedaGuiada(concept) {
-        let results = [];
-        this.gruposGuiada.forEach(data => {
-            if (data.conceptIds.indexOf(concept.conceptId) >= 0) {
-                results.push(data);
-            }
-        });
-        return results;
-    }
-
-
-    /**
      * Determina si muestra el label motivo de consulta.
      */
-
     showMotivo(elemento) {
         if (this.elementoRUP.motivoConsultaOpcional) {
             return false;

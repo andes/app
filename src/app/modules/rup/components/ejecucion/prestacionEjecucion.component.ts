@@ -94,9 +94,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     public conceptosTurneables: any[];
 
-    // Listado de grupos de la busqueda guiada
-    public grupos_guida: any[] = [];
-
     // boleean para verificar si estan todos los conceptos colapsados
     public collapse = true;
     filtroRefset: any;
@@ -234,9 +231,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                                 }
                             }
                         }
-                        this.elementosRUPService.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).subscribe((grupos) => {
-                            this.grupos_guida = grupos;
-                        });
 
                     }, (err) => {
                         if (err) {
@@ -1267,20 +1261,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                 this.collapse = !this.collapse;
             }
         });
-    }
-
-    /**
-     * busca los grupos de la busqueda guiada a los que pertenece un concepto
-     * @param {IConcept} concept
-     */
-    matchBusquedaGuiada(concept) {
-        let results = [];
-        this.grupos_guida.forEach(data => {
-            if (data.conceptIds.indexOf(concept.conceptId) >= 0) {
-                results.push(data);
-            }
-        });
-        return results;
     }
 
     onChangePrivacy(registro) {
