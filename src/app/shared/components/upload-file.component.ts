@@ -40,7 +40,7 @@ export class UploadFileComponent {
 
     }
 
-    public get btnLabel () {
+    public get btnLabel() {
         if (this.disabled) {
             return this.progress + '%';
         } else {
@@ -56,7 +56,8 @@ export class UploadFileComponent {
         }
     }
 
-    public onChange ($event) {
+    public onChange($event) {
+        $event.stopPropagation();
         this.disabled = true;
         const selectedFile = $event.target.files;
         this.currentFileUpload = selectedFile.item(0);
