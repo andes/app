@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { PlantillasService } from '../../../modules/rup/services/plantillas.service';
 import { ISnomedConcept } from '../../../modules/rup/interfaces/snomed-concept.interface';
@@ -6,14 +6,15 @@ import { SnomedService } from '../../mitos';
 import { Unsubscribe } from '@andes/shared';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-
+import { PrestacionesService } from '../../../../app/modules/rup/services/prestaciones.service';
 @Component({
     selector: 'app-plantillas-rup',
     templateUrl: './plantillas-rup.component.html',
     styleUrls: [
         './plantillas-rup.component.scss',
         '../../../modules/rup/components/core/_rup.scss'
-    ]
+    ],
+    encapsulation: ViewEncapsulation.None
 })
 export class PlantillasRUPComponent implements OnInit {
 
@@ -33,7 +34,8 @@ export class PlantillasRUPComponent implements OnInit {
     constructor(
         public plex: Plex,
         private sp: PlantillasService,
-        private snomedService: SnomedService) { }
+        private snomedService: SnomedService,
+        public servicioPrestacion: PrestacionesService) { }
 
     ngOnInit() {
         this.plex.updateTitle([{
@@ -95,6 +97,9 @@ export class PlantillasRUPComponent implements OnInit {
         let query = {
             search: this.searchTerm,
             semanticTag: ['procedimiento', 'elemento de registro']
+            // para poder hacer mas template de diferentes conceptos
+            // semanticTag: ['procedimiento', 'elemento de registro' , 'hallazgo','solicitud','regimen','producto']
+
         };
 
         this.snomedService.get(query).subscribe((resultado: ISnomedConcept[]) => {
