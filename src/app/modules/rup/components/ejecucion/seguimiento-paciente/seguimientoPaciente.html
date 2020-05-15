@@ -3,16 +3,16 @@
         <div class="col-12">
             <span class="row">
                 <div class="col-2">
-                    <plex-badge type="info" *ngIf="registrosSeguimiento[i] && registrosSeguimiento[i].fechaDiagnostico">
-                        {{ registrosSeguimiento[i].fechaDiagnostico | fecha }}
+                    <plex-badge type="info" *ngIf="item && item.fechaDiagnostico">
+                        {{ item.fechaDiagnostico | fecha }}
                     </plex-badge>
                 </div>
                 <div class="col-10">
-                    <div *ngFor="let reg of registrosSeguimiento[i].registro, let r = index">    
-                        <span class="h4 text-capitalize">{{registrosSeguimiento[i].registro[r].nombre}}</span>
+                    <div *ngFor="let reg of registrosSeguimiento[i].registro">    
+                        <span class="h4 text-capitalize">{{reg.nombre}}</span>
                         <div *ngFor="let elemento of elementoSeguimiento let e = index">
-                            <ng-container *ngIf="conceptoSeguimientoPaciente[e].conceptId == registrosSeguimiento[i].registro[r].concepto.conceptId">
-                                <rup [elementoRUP]="elementoSeguimiento[e]" [paciente]="paciente" [registro]="registrosSeguimiento[i].registro[r]" [soloValores]="true">
+                            <ng-container *ngIf="conceptoSeguimientoPaciente[e].conceptId == reg.concepto.conceptId">
+                                <rup [elementoRUP]="elementoSeguimiento[e]" [paciente]="paciente" [registro]="reg" [soloValores]="true">
                                 </rup>
                             </ng-container>
                         </div>

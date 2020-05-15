@@ -4,7 +4,6 @@ import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 import { ISnomedConcept } from '../../../interfaces/snomed-concept.interface';
 import { ElementosRUPService } from '../../../services/elementosRUP.service';
 import { PrestacionesService } from '../../../services/prestaciones.service';
-import { subscribeOn } from 'rxjs/operators';
 
 @Component({
     selector: 'rup-resumenPaciente-dinamico',

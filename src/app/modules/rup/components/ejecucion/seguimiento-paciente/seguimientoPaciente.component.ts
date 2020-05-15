@@ -44,15 +44,11 @@ export class SeguimientoPacienteComponent implements OnInit {
     ngOnInit() {
 
         // Seguimiento paciente San Juan
-        for (let concepto of this.conceptoSeguimientoPaciente) {
-            this.elementoSeguimiento =  [...this.elementoSeguimiento, this.elementosRUPService.buscarElemento(concepto, false)];
-        }
+        this.elementoSeguimiento = this.conceptoSeguimientoPaciente.map(concepto => this.elementosRUPService.buscarElemento(concepto, false));
 
         this.seguimientoPacientesService.getRegistros({idPaciente: this.paciente.id}).subscribe(seguimientoPacientes => {
                if (seguimientoPacientes.length) {
-                   for (let seguimientoPaciente of seguimientoPacientes) {
-                        this.registrosSeguimiento = [...this.registrosSeguimiento, seguimientoPaciente];
-                   }
+                    this.registrosSeguimiento = seguimientoPacientes;
                }
         });
 
