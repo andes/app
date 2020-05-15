@@ -274,61 +274,59 @@ export class PrestacionesService {
                             }
                         }
                     });
-                    if (registro.valor) {
-                        if (!registroEncontrado) {
-                            let dato = {
+                    if (!registroEncontrado) {
+                        let dato = {
+                            idPrestacion: registro.idPrestacion,
+                            idRegistro: registro.id,
+                            fechaEjecucion: prestaciones.find(p => p.id === registro.idPrestacion).ejecucion.fecha,
+                            concepto: registro.concepto,
+                            prestaciones: [registro.idPrestacion],
+                            esSolicitud: registro.esSolicitud,
+                            elementoRUP: registro.elementoRUP,
+                            evoluciones: [{
                                 idPrestacion: registro.idPrestacion,
                                 idRegistro: registro.id,
-                                fechaEjecucion: prestaciones.find(p => p.id === registro.idPrestacion).ejecucion.fecha,
-                                concepto: registro.concepto,
-                                prestaciones: [registro.idPrestacion],
-                                esSolicitud: registro.esSolicitud,
-                                elementoRUP: registro.elementoRUP,
-                                evoluciones: [{
-                                    idPrestacion: registro.idPrestacion,
-                                    idRegistro: registro.id,
-                                    fechaCarga: registro.createdAt,
-                                    profesional: registro.createdBy.nombreCompleto,
-                                    fechaInicio: registro.valor.fechaInicio ? registro.valor.fechaInicio : null,
-                                    estado: registro.valor.estado ? registro.valor.estado : '',
-                                    evolucion: registro.valor.evolucion ? registro.valor.evolucion : '',
-                                    idRegistroOrigen: registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : null,
-                                    idRegistroTransformado: registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : null,
-                                    origen: registro.valor.origen ? registro.valor.origen : null,
-                                    idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : null,
-                                    informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
-                                    relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : [],
-                                    valor: registro.valor
-                                }],
-                                registros: [registro],
-                                privacy: (registro.privacy && registro.privacy.scope) ? registro.privacy.scope : 'public'
-                            };
-                            registroSalida.push(dato);
-                        } else {
-                            let ultimaEvolucion = registroEncontrado.evoluciones[registroEncontrado.evoluciones.length - 1];
-                            let nuevaEvolucion = {
-                                idPrestacion: registro.idPrestacion,
                                 fechaCarga: registro.createdAt,
-                                idRegistro: registro.id,
                                 profesional: registro.createdBy.nombreCompleto,
-                                fechaInicio: registro.valor.fechaInicio ? registro.valor.fechaInicio : ultimaEvolucion.fechaInicio,
-                                estado: registro.valor.estado ? registro.valor.estado : ultimaEvolucion.estado,
-                                evolucion: registro.valor.evolucion ? registro.valor.evolucion : '',
-                                idRegistroOrigen: registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : ultimaEvolucion.idRegistroOrigen,
-                                idRegistroTransformado: registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : ultimaEvolucion.idRegistroTransformado,
-                                origen: registro.valor.origen ? registro.valor.origen : ultimaEvolucion.origen,
-                                idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : ultimaEvolucion.idRegistroGenerado,
+                                fechaInicio: registro.valor && registro.valor.fechaInicio ? registro.valor.fechaInicio : null,
+                                estado: registro.valor && registro.valor.estado ? registro.valor.estado : '',
+                                evolucion: registro.valor && registro.valor.evolucion ? registro.valor.evolucion : '',
+                                idRegistroOrigen: registro.valor && registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : null,
+                                idRegistroTransformado: registro.valor && registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : null,
+                                origen: registro.valor && registro.valor.origen ? registro.valor.origen : null,
+                                idRegistroGenerado: registro.valor && registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : null,
                                 informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
                                 relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : [],
                                 valor: registro.valor
-                            };
-                            registroEncontrado.prestaciones.push(registro.idPrestacion);
-                            registroEncontrado.evoluciones.push(nuevaEvolucion);
-                            registroEncontrado.registros.push(registro);
-                            // ordenamos las evoluciones para que la primero del array sea la ultima registrada
-                            registroEncontrado.evoluciones = registroEncontrado.evoluciones.sort((a, b) => b.fechaCarga - a.fechaCarga);
-                            registroEncontrado.privacy = (registro.privacy && registro.privacy.scope) ? registro.privacy.scope : 'public';
-                        }
+                            }],
+                            registros: [registro],
+                            privacy: (registro.privacy && registro.privacy.scope) ? registro.privacy.scope : 'public'
+                        };
+                        registroSalida.push(dato);
+                    } else {
+                        let ultimaEvolucion = registroEncontrado.evoluciones[registroEncontrado.evoluciones.length - 1];
+                        let nuevaEvolucion = {
+                            idPrestacion: registro.idPrestacion,
+                            fechaCarga: registro.createdAt,
+                            idRegistro: registro.id,
+                            profesional: registro.createdBy.nombreCompleto,
+                            fechaInicio: registro.valor && registro.valor.fechaInicio ? registro.valor.fechaInicio : ultimaEvolucion.fechaInicio,
+                            estado: registro.valor && registro.valor.estado ? registro.valor.estado : ultimaEvolucion.estado,
+                            evolucion: registro.valor && registro.valor.evolucion ? registro.valor.evolucion : '',
+                            idRegistroOrigen: registro.valor && registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : ultimaEvolucion.idRegistroOrigen,
+                            idRegistroTransformado: registro.valor && registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : ultimaEvolucion.idRegistroTransformado,
+                            origen: registro.valor && registro.valor.origen ? registro.valor.origen : ultimaEvolucion.origen,
+                            idRegistroGenerado: registro.valor && registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : ultimaEvolucion.idRegistroGenerado,
+                            informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
+                            relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : [],
+                            valor: registro.valor
+                        };
+                        registroEncontrado.prestaciones.push(registro.idPrestacion);
+                        registroEncontrado.evoluciones.push(nuevaEvolucion);
+                        registroEncontrado.registros.push(registro);
+                        // ordenamos las evoluciones para que la primero del array sea la ultima registrada
+                        registroEncontrado.evoluciones = registroEncontrado.evoluciones.sort((a, b) => b.fechaCarga - a.fechaCarga);
+                        registroEncontrado.privacy = (registro.privacy && registro.privacy.scope) ? registro.privacy.scope : 'public';
                     }
                 });
                 registroSalida = registroSalida.sort((a, b) => {
