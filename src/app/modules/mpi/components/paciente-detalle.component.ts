@@ -4,6 +4,7 @@ import { ObraSocialService } from '../../../services/obraSocial.service';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
 import { ObraSocialCacheService } from '../../../services/obraSocialCache.service';
 import { Observable } from 'rxjs';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 
 @Component({
     selector: 'paciente-detalle',
@@ -14,6 +15,7 @@ export class PacienteDetalleComponent implements OnInit {
     @Input() orientacion: 'vertical' | 'horizontal' = 'vertical';
     @Input() paciente: IPaciente;
     @Input() fields: string[] = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado'];
+    @Input() reload: Boolean = false;
 
     obraSocial: IObraSocial;
     token$: Observable<string>;
@@ -97,7 +99,8 @@ export class PacienteDetalleComponent implements OnInit {
 
     constructor(
         private obraSocialService: ObraSocialService,
-        private obraSocialCacheService: ObraSocialCacheService
+        private obraSocialCacheService: ObraSocialCacheService,
+        private pacienteService: PacienteService
     ) {
     }
 
@@ -107,6 +110,11 @@ export class PacienteDetalleComponent implements OnInit {
     // tslint:disable-next-line: use-lifecycle-interface
     ngOnChanges() {
         this.loadObraSocial();
+        if (this.reload) {
+            this.pacienteService.getById(this.paciente.id).subscribe(result => {
+                this.paciente = result;
+            });
+        }
     }
 
     // TODO: Eliminar este metodo y utilizar el financiador que viene en el paciente (una vez que se agregue en el multimatch)
