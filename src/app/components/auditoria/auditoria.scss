@@ -1,3 +1,11 @@
 img {
     height: 60px;
 }
+
+span.error-paciente {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100px !important;
+    display: inline-block;
+}

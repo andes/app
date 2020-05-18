@@ -100,6 +100,7 @@
                                                 <th>Apellido y Nombre</th>
                                                 <th>Nacimiento</th>
                                                 <th>Sexo</th>
+                                                <th>Error</th>
                                                 <th>Acción</th>
                                             </tr>
                                         </thead>
@@ -151,6 +152,7 @@
                                                     <span *ngIf="paciente.fechaNacimiento === null">N/D</span>
                                                 </td>
                                                 <td>{{paciente | sexo}}</td>
+                                                <td><span class="error-paciente" title="{{paciente.notaError}}">{{paciente.notaError}}</span></td>
                                                 <td>
                                                     <span *ngIf="corregirPaciente !== i">
                                                         <plex-button label="Corregir" type="info" (click)="onSelectCorregir(i, paciente)"></plex-button>

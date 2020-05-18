@@ -191,7 +191,8 @@ export class AuditoriaComponent implements OnInit {
         this.enableValidar = false;
         this.enableVinculados = true;
       });
-    }}
+    }
+  }
 
 
   verDuplicados() {
