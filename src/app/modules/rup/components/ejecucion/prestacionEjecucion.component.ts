@@ -1298,7 +1298,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     registroSeguimiento() {
         // Se evalúa si hay registros de seguimiento
-            this.seguimientoPacienteService.getRegistros({idPaciente: this.paciente.id}).subscribe(seguimientoPaciente => {
+            this.seguimientoPacienteService.getRegistros({paciente: this.paciente.id}).subscribe(seguimientoPaciente => {
                 if (seguimientoPaciente.length) {
                         this.flagSeguimiento = true;
                 } else {

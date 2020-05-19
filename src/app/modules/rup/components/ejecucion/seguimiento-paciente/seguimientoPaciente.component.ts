@@ -46,13 +46,10 @@ export class SeguimientoPacienteComponent implements OnInit {
         // Seguimiento paciente San Juan
         this.elementoSeguimiento = this.conceptoSeguimientoPaciente.map(concepto => this.elementosRUPService.buscarElemento(concepto, false));
 
-        this.seguimientoPacienteService.getRegistros({idPaciente: this.paciente.id}).subscribe(seguimientoPaciente => {
+        this.seguimientoPacienteService.getRegistros({paciente: this.paciente.id}).subscribe(seguimientoPaciente => {
                if (seguimientoPaciente.length) {
                     this.registrosSeguimiento = seguimientoPaciente;
                }
         });
-
-
-
     }
 }
