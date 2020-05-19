@@ -39,7 +39,6 @@ import { OtoemisionAcusticaDeOidoDerechoComponent } from './components/elementos
 import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
 import { OdontogramaRefsetComponent } from './components/elementos/OdontogramaRefset.component';
 import { LactanciaComponent } from './components/elementos/lactancia.component';
-import { PasesCamaComponent } from './components/elementos/pasesCama.component';
 import { InformeEpicrisisComponent } from './components/elementos/deprecated/informeEpicrisis.component';
 import { ElementoDeRegistroComponent } from './components/elementos/deprecated/elementoDeRegistro.component';
 import { OdontologiaDefaultComponent } from './components/elementos/odontologiaDefault.component';
@@ -118,7 +117,6 @@ const RUPComponentsArray = [
     OtoemisionAcusticaDeOidoIzquierdoComponent,
     OdontogramaRefsetComponent,
     LactanciaComponent,
-    PasesCamaComponent,
     InformeEpicrisisComponent,
     ElementoDeRegistroComponent,
     OdontologiaDefaultComponent,

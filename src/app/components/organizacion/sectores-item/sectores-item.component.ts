@@ -2,7 +2,6 @@ import { SnomedService } from '../../../apps/mitos';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import { ISectores } from '../../../interfaces/IOrganizacion';
-import { CamasService } from '../../../apps/rup/internacion/services/camas.service';
 
 @Component({
     selector: 'sectores-item',
@@ -27,8 +26,7 @@ export class SectoresItemComponent implements OnInit {
     public idOrganizacion: String;
     constructor(
         public plex: Plex,
-        public snomed: SnomedService,
-        public camaService: CamasService
+        public snomed: SnomedService
     ) { }
 
     /**
@@ -134,16 +132,10 @@ export class SectoresItemComponent implements OnInit {
      * @param child
      */
     removeChild(child) {
-        this.camaService.camaXsector(child.id).subscribe(camas => {
-            if (camas.length <= 0) {
-                this.plex.confirm('¿Desea eliminarlo?', 'Eliminar Sector').then((confirmar) => {
-                    let index = this.root.hijos.findIndex((item) => item === child);
-                    if (index >= 0) {
-                        this.root.hijos.splice(index, 1);
-                    }
-                });
-            } else {
-                this.plex.info('warning', 'El sector contiene camas', 'No se puede borrar');
+        this.plex.confirm('¿Desea eliminarlo?', 'Eliminar Sector').then((confirmar) => {
+            let index = this.root.hijos.findIndex((item) => item === child);
+            if (index >= 0) {
+                this.root.hijos.splice(index, 1);
             }
         });
     }

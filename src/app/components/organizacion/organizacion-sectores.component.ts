@@ -6,7 +6,6 @@ import { OrganizacionService } from './../../services/organizacion.service';
 import { IOrganizacion, ISectores } from './../../interfaces/IOrganizacion';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ISnomedConcept } from '../../modules/rup/interfaces/snomed-concept.interface';
-import { CamasService } from '../../apps/rup/internacion/services/camas.service';
 
 @Component({
     selector: 'organizacion-sectores',
@@ -36,7 +35,6 @@ export class OrganizacionSectoresComponent implements OnInit {
         public plex: Plex,
         public snomed: SnomedService,
         private router: Router,
-        public CamaService: CamasService,
         private route: ActivatedRoute,
         private auth: Auth
     ) { }
@@ -141,16 +139,10 @@ export class OrganizacionSectoresComponent implements OnInit {
 
     removeItem($event) {
         if ($event.id) {
-            this.CamaService.camaXsector($event.id).subscribe(camas => {
-                if (camas.length <= 0) {
-                    this.plex.confirm('¿Desea eliminarlo?', 'Eliminar Sector').then((confirmar) => {
-                        let index = this.organizacion.mapaSectores.findIndex((item) => item === $event);
-                        if (confirmar && index >= 0) {
-                            this.organizacion.mapaSectores.splice(index, 1);
-                        }
-                    });
-                } else {
-                    this.plex.info('warning', 'El sector contiene camas', 'No se puede borrar');
+            this.plex.confirm('¿Desea eliminarlo?', 'Eliminar Sector').then((confirmar) => {
+                let index = this.organizacion.mapaSectores.findIndex((item) => item === $event);
+                if (confirmar && index >= 0) {
+                    this.organizacion.mapaSectores.splice(index, 1);
                 }
             });
         } else {
