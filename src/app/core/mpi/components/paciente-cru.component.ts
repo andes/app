@@ -558,7 +558,7 @@ export class PacienteCruComponent implements OnInit {
         }
         // Existen relaciones sin especificar el tipo?
         if (faltaParentezco) {
-            this.plex.info('warning', 'Existen relaciones sin parentezco. Completelas antes de guardar', 'Atención');
+            this.plex.info('warning', 'Existen relaciones sin parentezco. Debe completarlas antes de guardar', 'Atención');
         } else {
             this.disableIgnorarGuardar = ignoreCheck;
             this.disableGuardar = true;

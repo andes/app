@@ -10,7 +10,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class FotoDirective {
     @Input() set mpiFotoPaciente(paciente: IPaciente) {
-        if (paciente) {
+        if (paciente && paciente.id) {
             this.fileService.token$.subscribe((data: any) => {
                 const { token } = data;
                 const url = `${environment.API}/core/mpi/pacientes/${paciente.id}/foto?token=${token}`;

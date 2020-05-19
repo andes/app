@@ -25,6 +25,7 @@ export class RelacionesPacientesComponent implements OnInit {
         // Se guarda estado de las relaciones al comenzar la edición
         if (valor.relaciones) {
             this.relacionesIniciales = valor.relaciones.slice(0, valor.relaciones.length);
+            this.idPacientesRelacionados = this.relacionesIniciales.map(rel => { return { id: rel.referencia }; });
         }
     }
     get paciente(): IPaciente {
@@ -41,9 +42,9 @@ export class RelacionesPacientesComponent implements OnInit {
     disableGuardar = false;
     enableIgnorarGuardar = false;
     buscarPacRel = '';
-    PacientesRel = null;
+    idPacientesRelacionados = []; // para foto-directive
     loading = false;
-    searchClear = true;    // True si el campo de búsqueda se encuentra vacío
+    searchClear = true;    // true si el campo de búsqueda se encuentra vacío
 
     public nombrePattern: string;
 
@@ -132,6 +133,7 @@ export class RelacionesPacientesComponent implements OnInit {
                 }
                 // notificamos cambios
                 this.actualizar.emit({ relaciones: this.paciente.relaciones, relacionesBorradas: this.relacionesBorradas });
+                this.idPacientesRelacionados.push({ id: unaRelacion.referencia });
 
                 // Si esta relación fue borrada anteriormente en esta edición, se quita del arreglo 'relacionesBorradas'
                 index = this.relacionesBorradas.findIndex(rel => rel.documento === unaRelacion.documento);
@@ -168,6 +170,7 @@ export class RelacionesPacientesComponent implements OnInit {
                 this.relacionesBorradas.push(this.paciente.relaciones[i]);
             }
             this.paciente.relaciones.splice(i, 1);
+            this.idPacientesRelacionados = this.paciente.relaciones.map(rel => { return { id: rel.referencia }; });
             // notificamos cambios
             this.actualizar.emit({ relaciones: this.paciente.relaciones, relacionesBorradas: this.relacionesBorradas });
         }
