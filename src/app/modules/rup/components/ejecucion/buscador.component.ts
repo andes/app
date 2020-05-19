@@ -8,6 +8,7 @@ import { IPrestacion } from './../../interfaces/prestacion.interface';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
 import { ISnomedSearchResult } from './../../interfaces/snomedSearchResult.interface';
 import { SnomedBuscarService } from '../../../../components/snomed/snomed-buscar.service';
+import { gtag } from '../../../../shared/services/analytics.service';
 
 @Component({
     selector: 'rup-buscador',
@@ -524,8 +525,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @param {any} concepto Concepto SNOMED
      * @memberof BuscadorComponent
      */
-    public seleccionarConcepto(concepto) {
-
+    public seleccionarConcepto(concepto, index) {
+        gtag('add-concept', this.busquedaActual, this.search, index);
         let filtro;
 
         if (concepto.plan) {

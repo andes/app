@@ -7,6 +7,7 @@ import { OrganizacionService } from '../../../../services/organizacion.service';
 import { HotjarService } from '../../../../shared/services/hotJar.service';
 import { UsuarioService } from '../../../../services/usuarios/usuario.service';
 import { DisclaimerService } from '../../../../services/disclaimer.service';
+import { take } from 'rxjs/operators';
 
 @Component({
     templateUrl: 'select-organizacion.html',
@@ -42,11 +43,7 @@ export class SelectOrganizacionComponent implements OnInit {
 
     seleccionar(organizacion) {
         this.auth.setOrganizacion(organizacion).subscribe(() => {
-            this.auth.session(true).subscribe(() => {
-                this.organizacionService.configuracion(this.auth.organizacion.id).subscribe(() => { });
-                this.plex.updateUserInfo({ usuario: this.auth.usuario });
-                this.appComponent.checkPermissions();
-                // this.hotjar.initialize();
+            this.auth.session().pipe(take(1)).subscribe(() => {
                 this.ds.get({ activo: true }).subscribe(disclaimers => {
                     if (disclaimers && disclaimers.length > 0) {
                         let disclaimer = disclaimers[0];

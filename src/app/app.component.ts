@@ -8,8 +8,7 @@ import { Auth } from '@andes/auth';
 import { PROPERTIES } from './styles/properties';
 import { WebSocketService } from './services/websocket.service';
 import { HotjarService } from './shared/services/hotJar.service';
-
-// import { RxSocket } from 'rx-socket.io-client';
+import { GoogleTagManagerService } from './shared/services/analytics.service';
 
 @Component({
     selector: 'app',
@@ -122,7 +121,8 @@ export class AppComponent {
         public server: Server,
         public auth: Auth,
         public ws: WebSocketService,
-        private hotjar: HotjarService
+        public hotjar: HotjarService,
+        public analyticsService: GoogleTagManagerService
     ) {
         // Configura server. Debería hacerse desde un provider (http://stackoverflow.com/questions/39033835/angularjs2-preload-server-configuration-before-the-application-starts)
         server.setBaseURL(environment.API);
@@ -137,15 +137,17 @@ export class AppComponent {
             document.documentElement.style.setProperty(`--${key}`, PROPERTIES[key]);
         });
 
-        const token = this.auth.getToken();
-        if (token) {
-            // this.hotjar.initialize();
-            this.ws.setToken(token);
-            this.auth.session().subscribe(() => {
-                // Inicializa el menú
+        this.auth.session().subscribe((sesion) => {
+            if (sesion.permisos) {
                 this.checkPermissions();
                 this.loading = false;
-            });
+            }
+        });
+
+        const token = this.auth.getToken();
+        if (token) {
+            this.ws.setToken(token);
+            this.auth.setToken(token);
         } else {
             this.loading = true;
         }

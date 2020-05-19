@@ -8,3 +8,7 @@ export const mapCenter = [];
 export const hotjar = {
     key: 'XXXX'
 };
+
+export const analytics = {
+    key: 'XXXX'
+};

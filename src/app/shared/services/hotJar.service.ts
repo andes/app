@@ -1,25 +1,23 @@
 
 import { Injectable } from '@angular/core';
-import { UsuariosHttp } from '../../apps/gestor-usuarios/services/usuarios.http';
 import { environment } from '../../../environments/environment';
+import { Auth } from '@andes/auth';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class HotjarService {
+    private ready = false;
+    constructor(private auth: Auth) {
+        this.auth.session().subscribe((sesion) => {
+            if (sesion && sesion.feature && sesion.feature.hotjar) {
+                this.hotjar();
+            }
+        });
 
-    constructor(private userService: UsuariosHttp) { }
-
-    initialize() {
-        this.userService.me().subscribe(
-            (user) => {
-                if (user.configuracion && user.configuracion.hotjar) {
-                    this.hotjar();
-                }
-            },
-            () => { }
-        );
     }
 
     private hotjar() {
+        if (this.ready) { return; }
+        this.ready = true;
         (function (h: any, o: any, t: any, j: any, a?: any, r?: any) {
             h.hj = h.hj || function () {
                 (h.hj.q = h.hj.q || []).push(arguments);
