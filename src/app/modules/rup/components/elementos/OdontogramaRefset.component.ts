@@ -229,7 +229,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     }
 
     // (click)
-    showDetail(diente, cara, huds = false, index = -1, nuevoRegistro = false) {
+    showDetail(diente, cara, huds = false) {
 
         this.popOverText = {};
 
@@ -467,9 +467,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             } else {
                 this.piezasSeleccionadas = [...this.piezasSeleccionadas, dienteSel];
             }
-
-            // let piezas = (this.registro.valor && this.registro.valor.piezas) ? this.registro.valor.piezas : [];
-
 
             this.prestacion.ejecucion.registros[0].valor = {
                 odontograma: this.odontograma
