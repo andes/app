@@ -423,9 +423,9 @@ export class BuscadorComponent implements OnInit, OnChanges {
         if (this.results && this.results[busquedaActual]) {
 
             // quitamos de this.filtroActual aquellos que son turneables, no es correcto que aparezcan
-            this.results[busquedaActual]['todos'] = this.results[busquedaActual]['todos'].filter(x => !this.esTurneable(x));
+            this.results[busquedaActual]['todos'] = this.results[busquedaActual]['todos'];
             // quitamos de los 'procedimientos' aquellos que son turneables, no es correcto que aparezcan
-            this.results[busquedaActual]['procedimientos'] = this.results[busquedaActual]['procedimientos'] ? this.results[busquedaActual]['procedimientos'].filter(x => !this.esTurneable(x)) : [];
+            this.results[busquedaActual]['procedimientos'] = this.results[busquedaActual]['procedimientos'] ? this.results[busquedaActual]['procedimientos'] : [];
             if (busquedaActual !== 'buscadorBasico') {
                 // quitamos de los 'planes' aquellos que son no son solicitudes, no es correcto que aparezcan
                 this.results[busquedaActual]['planes'] = this.results[busquedaActual]['planes'] ? this.results[busquedaActual]['planes'].filter(x => this.esSolicitud(x)) : [];
@@ -532,7 +532,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
         if (concepto.plan) {
             filtro = ['planes'];
         } else {
-            filtro = this.esTurneable(concepto) ? ['planes'] : this.getFiltroSeleccionado();
+            filtro = this.getFiltroSeleccionado();
         }
 
         if (!this.secciones) {
@@ -555,23 +555,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
             this.servicioPrestacion.setEsSolicitud(true);
         }
         return filtro;
-    }
-
-    /**
-     * Devuelve si un concepto es turneable o no.
-     * Se fija en la variable conceptosTurneables inicializada en OnInit
-     *
-     * @param {any} concepto Concepto SNOMED a verificar si esta en el array de conceptosTurneables
-     * @returns  boolean TRUE/FALSE si es turneable o no
-     * @memberof BuscadorComponent
-     */
-    public esTurneable(concepto: any) {
-        if (!this.conceptosTurneables) {
-            return false;
-        }
-        return this.conceptosTurneables.find(x => {
-            return x.conceptId === concepto.conceptId;
-        });
     }
 
     public esSolicitud(concepto: any) {
