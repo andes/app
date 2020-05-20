@@ -69,7 +69,7 @@
                                                             con: </b>
                                                         <ng-container
                                                                       *ngFor="let relacion of registro.relacionadoCon; let r=index">
-                                                            <ng-container *ngIf="verMasRelaciones[i] || r <= 5">
+                                                            <ng-container *ngIf="verMasRelaciones[i] || r < 6">
                                                                 <plex-badge type="info">
                                                                     {{ registro.relacionadoCon[r] | relacionRUP }}
                                                                 </plex-badge>
@@ -83,9 +83,9 @@
                                                             </ng-container>
 
                                                         </ng-container>
-                                                        <ng-container *ngIf="registro.relacionadoCon.length > 5">
+                                                        <ng-container *ngIf="registro.relacionadoCon.length > 6">
                                                             <plex-button type="primary btn-icon-relacion" size="sm"
-                                                                         label="{{ !verMasRelaciones[i] ? ('+' + (registro.relacionadoCon.length - 5) + ' ...') : '' }}"
+                                                                         label="{{ !verMasRelaciones[i] ? ('+' + (registro.relacionadoCon.length - 6) + ' ...') : '' }}"
                                                                          icon="{{ !verMasRelaciones[i] ? '' : 'close' }}"
                                                                          (click)="toggleVerMasRelaciones(i)">
                                                             </plex-button>
