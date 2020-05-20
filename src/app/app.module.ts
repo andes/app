@@ -388,6 +388,14 @@ import { SelectProfesionalesDirective } from './directives/profesionales-select.
 import { SelectPrestacionesDirective } from './directives/prestaciones-select.directive';
 import { SelectFinanciadorDirective } from './directives/financiador-select-directive';
 import { EspacioFisicoPipe } from './pipes/espacioFisico.pipe';
+import { NovedadesComponent } from './components/novedades/novedades.component';
+import { HeaderNovedadesComponent } from './components/novedades/header-novedades/header-novedades.component';
+import { ListaNovedadesComponent } from './components/novedades/lista-novedades/lista-novedades.component';
+import { DetalleNovedadComponent } from './components/novedades/lista-novedades/detalle-novedad/detalle-novedad.component';
+import { NovedadesService } from './services/novedades/novedades.service';
+import { CommonNovedadesService } from './components/novedades/common-novedades.service';
+import { ModulosService } from './services/novedades/modulos.service';
+
 
 import { ConceptosTurneablesService } from './services/conceptos-turneables.service';
 import { DisclaimerService } from './services/disclaimer.service';
@@ -515,6 +523,10 @@ registerLocaleData(localeEs, 'es');
         ListarPrestamosComponent,
         PrestarHcComponent,
         DevolverHcComponent,
+        NovedadesComponent,
+        HeaderNovedadesComponent,
+        ListaNovedadesComponent,
+        DetalleNovedadComponent,
         HistorialCarpetasComponent,
         ImprimirSolicitudesComponent,
         SolicitudManualComponent,
@@ -578,6 +590,8 @@ registerLocaleData(localeEs, 'es');
         Plex,
         Server,
         ExcelService,
+        NovedadesService,
+        ModulosService,
         RoutingGuard,
         RoutingNavBar,
         RoutingHudsGuard,
@@ -656,7 +670,8 @@ registerLocaleData(localeEs, 'es');
         WebSocketService,
         ConceptosTurneablesService,
         DisclaimerService,
-        InstitucionService
+        InstitucionService,
+        CommonNovedadesService
     ]
 })
 

@@ -8,117 +8,34 @@
                     <h5 class="suffix-provincia">{{ provincia }} </h5>
                 </div>
             </section>
-            <div *ngIf="!denied" class="andes-inicio row">
-                <div *ngIf="mpi" class="col-xs-12 col-sm-6 col-md-4">
-                    <div class="boton color-celeste" routerLink="/apps/mpi/busqueda">
-                        <i class="icono mdi mdi-account-multiple-outline"></i>
-                        <div class="titulo">MPI</div>
-                        <div class="subtitulo">Índice Maestro
-                            <br>de Pacientes</div>
-                        <div class="detalle">Optimiza el proceso de
-                            <br>identificación del paciente</div>
+            <plex-loader *ngIf="loading" type="linear"></plex-loader>
+            <div *ngIf="!denied && !loading" class="andes-inicio row">
+                <div *ngFor="let caja of cajasModulos" class="col-xs-12 col-sm-6 col-md-4">
+                    <div class="boton" [ngStyle]="{background:caja.color}" (click)="redirect(caja)"
+                         *ngIf="caja.nombre !== 'ANALYTICS'">
+                        <i class="icono mdi {{caja.icono}}"></i>
+                        <div class="titulo">{{caja.nombre}}</div>
+                        <div class="subtitulo">{{caja.subtitulo}}</div>
+                        <div class="detalle">{{caja.descripcion | titlecase}}</div>
                     </div>
-                </div>
-                <div *ngIf="turnos==='gestor'" class="col-xs-12 col-sm-6 col-md-4">
-                    <div class="boton color-violeta" routerLink="/citas/gestor_agendas">
-                        <i class="icono mdi mdi-calendar"></i>
-                        <div class="titulo">CITAS</div>
-                        <div class="subtitulo">Centro Inteligente
-                            <br>de Agendas &amp; Turnos</div>
-                        <div class="detalle">Mejora la accesibilidad de
-                            <br>pacientes a las prestaciones</div>
-                    </div>
-                </div>
-                <div *ngIf="turnos==='inicioTurnos'" class="col-xs-12 col-sm-6 col-md-4">
-                    <div class="boton color-violeta" routerLink="/citas/punto-inicio">
-                        <i class="icono mdi mdi-calendar"></i>
-                        <div class="titulo">CITAS</div>
-                        <div class="subtitulo">Centro Inteligente
-                            <br>de Agendas &amp; Turnos</div>
-                        <div class="detalle">Mejora la accesibilidad de
-                            <br>pacientes a las prestaciones</div>
-                    </div>
-                </div>
-                <div *ngIf="rup" class="col-xs-12 col-sm-6 col-md-4">
-                    <div class="boton color-rosa" routerLink="/rup">
-                        <i class="icono mdi mdi-contacts"></i>
-                        <div class="titulo">HUDS</div>
-                        <div class="subtitulo">Historia Digital
-                            <br>de Salud</div>
-                        <div class="detalle">Registro universal
-                            <br>de prestaciones de pacientes</div>
-                    </div>
-                </div>
-
-                <div *ngIf="prestamosHC" class="col-xs-12 col-sm-6 col-md-4">
-                    <div class="boton color-amarillo" routerLink="/prestamosHC">
-                        <i class="icono mdi mdi-folder"></i>
-                        <div class="titulo">PRÉSTAMOS DE CARPETAS</div>
-                        <div class="subtitulo">SOLICITUDES MANUALES
-                            <br> Y AUTOMÁTICAS</div>
-                        <div class="detalle">Mejora la administración
-                            <br>de las carpetas de Historias Clínicas de los pacientes</div>
-                    </div>
-                </div>
-
-                <div *ngIf="internacion" class="col-xs-12 col-sm-6 col-md-4">
-                    <div class="boton color-salmon" routerLink="/internacion/mapa-camas">
-                        <i class="icono mdi mdi-bed"></i>
-                        <div class="titulo">Internación</div>
-                        <div class="subtitulo">Mapa de camas</div>
-                        <div class="detalle">Vea el estado del mapa de camas
-                            <br />de los distintos servicios de la organización</div>
-                    </div>
-                </div>
-
-                <div *ngIf="internacionEpicrisis" class="col-xs-12 col-sm-6 col-md-4">
-                    <div class="boton color-verde" routerLink="/internacion/inicio">
-                        <i class="icono mdi mdi-bed"></i>
-                        <div class="titulo">Internación</div>
-                        <div class="subtitulo">Punto de inicio</div>
-                        <div class="detalle">Registrar epicrisis de una internación<br>&nbsp;</div>
-                    </div>
-                </div>
-
-                <div *ngIf="usuarios" class="col-xs-12 col-sm-6 col-md-4">
-                    <div class="boton color-verde-oscuro" routerLink="/gestor-usuarios/usuarios">
-                        <i class="icono mdi mdi-account-key"></i>
-                        <div class="titulo">Gestor Usuarios</div>
-                        <div class="subtitulo">Asignacion de permisos</div>
-                        <div class="detalle">Permite asignar permisos a organizaciones y/o módulos<br>&nbsp;</div>
-                    </div>
-                </div>
-                <div *ngIf="dashboard" class="col-xs-12 col-sm-6 col-md-4">
-                    <div class="boton andes-naranja-claro" routerLink="/dashboard">
-                        <i class="icono mdi mdi-chart-line"></i>
-                        <div class="titulo">Dashboard</div>
-                        <div class="subtitulo">Panel de Estadísticas<br>&nbsp;</div>
-                        <div class="detalle">Visualice datos estadísticos<br>en gráficos y tablas</div>
-                    </div>
-                </div>
-                <div *ngIf="analytics" class="col-xs-12 col-sm-6 col-md-4">
-                    <div class="boton analytics" (click)="anlytics()">
-                        <i class="icono mdi mdi-poll"></i>
-                        <div class="titulo">Analytics</div>
-                        <div class="subtitulo">Navegador HUDS<br>&nbsp;</div>
-                        <div class="detalle">Permite la búsqueda, visualización y refinamiento<br>de datos de salud
-                            registrados en ANDES</div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div *ngIf="denied" class="row">
-                <div class="col">
-                    <div class="boton color-amarillo">
-                        <i class="icono mdi mdi-alert"></i>
-                        <div class="titulo">ATENCIÓN</div>
-                        <div class="subtitulo">PERMISOS DE APLICACIONES</div>
-                        <div class="detalle">Ud. no posee permisos para ningún módulo de ANDES</div>
+                    <div *ngIf="this.novedades[caja._id]?.length > 0" (click)="irANovedades(caja._id)"
+                         class="notificacion">
+                        <div class="bg-danger">
+                            <plex-icon name="bell"></plex-icon>
+                        </div>
                     </div>
                 </div>
             </div>
-
+        </div>
+        <div *ngIf="denied && !loading" class="row">
+            <div class="col">
+                <div class="boton color-amarillo">
+                    <i class="icono mdi mdi-alert"></i>
+                    <div class="titulo">ATENCIÓN</div>
+                    <div class="subtitulo">PERMISOS DE APLICACIONES</div>
+                    <div class="detalle">Ud. no posee permisos para ningún módulo de ANDES</div>
+                </div>
+            </div>
         </div>
     </plex-box>
 </section>

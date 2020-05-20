@@ -1,92 +1,82 @@
+import { CommonNovedadesService } from './../novedades/common-novedades.service';
+import { ModulosService } from '../../services/novedades/modulos.service';
 import { Plex } from '@andes/plex';
 import { Component, AfterViewInit, HostBinding } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { AppComponent } from './../../app.component';
 import { LABELS } from '../../styles/properties';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
     templateUrl: 'inicio.html',
     styleUrls: ['inicio.scss']
 })
 export class InicioComponent implements AfterViewInit {
-    @HostBinding('class.plex-layout') layout = true;
-    public turnos = '';
-    public mpi = '';
-    public rup = '';
-    public internacion = '';
-    public internacionEpicrisis = '';
-    public solicitudes = '';
-    public prestamosHC = '';
-    public dashboard = false;
-    public analytics = '';
-    public usuarios = '';
+    @HostBinding('class.plex-layout')
     public denied = false;
+    public loading = false;
     public accessList: any = [];
     public provincia = LABELS.provincia;
+    public cajasModulos: any = [];
+    public novedades: any[] = [];
 
-
-    constructor(public auth: Auth, public appComponent: AppComponent, private plex: Plex) { }
+    constructor(public auth: Auth, public appComponent: AppComponent, private plex: Plex,
+        private commonNovedadesService: CommonNovedadesService,
+        private modulosService: ModulosService,
+        private route: ActivatedRoute,
+        private router: Router) { }
 
     ngAfterViewInit() {
         window.setTimeout(() => {
-            this.denied = true;
-            if (this.auth.getPermissions('turnos:?').length > 0) {
-                if (this.auth.getPermissions('turnos:planificarAgenda:?').length > 0) {
-                    this.turnos = 'gestor';
-                } else {
-                    if (this.auth.getPermissions('turnos:darTurnos:?').length > 0) {
-                        this.turnos = 'inicioTurnos';
+            this.loading = true;
+            this.modulosService.search({}).subscribe(
+                registros => {
+                    registros.forEach((modulo) => {
+                        let tienePermiso = false;
+                        modulo.permisos.forEach((permiso) => {
+                            if (this.auth.getPermissions(permiso).length > 0) {
+                                if (!tienePermiso) {
+                                    this.cajasModulos.push(modulo);
+                                    tienePermiso = true;
+                                }
+                            }
+                        });
+                    });
+                    if (this.cajasModulos.length) {
+                        this.denied = false;
+                        let modulos = this.cajasModulos.map(p => {
+                            return p._id;
+                        });
+                        this.commonNovedadesService.getNovedadesSinFiltrar().subscribe(novedades => {
+                            modulos.forEach((moduloId) => {
+                                this.novedades[moduloId] = novedades.filter(n => n.modulo._id === moduloId);
+                            });
+                        });
+                    } else {
+                        this.denied = true;
                     }
+                    this.loading = false;
+                }, (err) => {
                 }
-                // this.turnos = 'turnos';
-                this.denied = false;
-            }
-
-            if (this.auth.getPermissions('mpi:?').length > 0) {
-                this.mpi = 'mpi';
-                this.denied = false;
-            }
-
-            if (this.auth.getPermissions('analytics:?').length > 0) {
-                this.analytics = 'analytics';
-                this.denied = false;
-            }
-
-            if (this.auth.getPermissions('rup:?').length > 0) {
-                this.rup = 'rup';
-                this.denied = false;
-            }
-
-            if (this.auth.check('internacion:mapaDeCamas')) {
-                this.internacion = 'internacion';
-                this.denied = false;
-            }
-            if (this.auth.check('internacion:inicio')) {
-                this.internacionEpicrisis = 'internacionEpicrisis';
-                this.denied = false;
-            }
-
-            if (this.auth.getPermissions('solicitudes:?').length > 0) {
-                this.solicitudes = 'solicitudes';
-            }
-
-            if (this.auth.check('prestamos:?')) {
-                this.prestamosHC = 'prestamosHC';
-                this.denied = false;
-            }
-
-            if (this.auth.check('dashboard:citas:ver') || this.auth.check('dashboard:top:ver')) {
-                this.dashboard = true;
-            }
-            if (this.auth.getPermissions('usuarios:?').length > 0) {
-                this.usuarios = 'usuarios';
-                this.denied = false;
-            }
+            );
         });
+    }
+
+    redirect(caja) {
+        if (caja.nombre === 'ANALITYCS') {
+            const token = this.auth.getToken();
+            window.location.assign(`https://analytics.andes.gob.ar/auth/login?token=${token}`);
+        } else {
+            this.router.navigate([caja.linkAcceso]);
+        }
     }
 
     anlytics() {
         const token = this.auth.getToken();
         window.location.assign(`https://analytics.andes.gob.ar/auth/login?token=${token}`);
+    }
+
+    irANovedades(modulo) {
+        this.router.navigate(['/novedades', modulo], { relativeTo: this.route });
     }
 }
