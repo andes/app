@@ -1,0 +1,24 @@
+<ng-container *ngIf="registrosSeguimiento.length">
+    <div class="row mt-3" *ngFor="let item of registrosSeguimiento, let i = index">
+        <div class="col-12">
+            <span class="row">
+                <div class="col-2">
+                    <plex-badge type="info" *ngIf="item && item.fechaDiagnostico">
+                        {{ item.fechaDiagnostico | fecha }}
+                    </plex-badge>
+                </div>
+                <div class="col-10">
+                    <div *ngFor="let reg of registrosSeguimiento[i].registro">    
+                        <span class="h4 text-capitalize">{{reg.nombre}}</span>
+                        <div *ngFor="let elemento of elementoSeguimiento let e = index">
+                            <ng-container *ngIf="conceptoSeguimientoPaciente[e].conceptId == reg.concepto.conceptId">
+                                <rup [elementoRUP]="elementoSeguimiento[e]" [paciente]="paciente" [registro]="reg" [soloValores]="true">
+                                </rup>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </span>
+        </div>
+    </div>
+</ng-container>  
