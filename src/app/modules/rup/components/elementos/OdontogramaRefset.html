@@ -277,7 +277,7 @@
                                     <ng-container
                                                   *ngFor="let relMesial of getRegistrosEjecucion(diente,(esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal')); let m=index">
                                         <path (click)="seleccionarDiente(diente,(esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal')); showTooltip(diente,(esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal'), false, m, true)"
-                                              [ngClass]="{'seleccionada': estaSeleccionada(diente,(esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal'))}"
+                                              [ngClass]="{'seleccionada': estaSeleccionada(diente, (esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal'))}"
                                               d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
                                               class="diente mesial {{ 'diente-' + relMesial.concepto.semanticTag }}"
                                               title="(esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal')" />
@@ -296,7 +296,7 @@
                                     <ng-container
                                                   *ngFor="let relpalatina of getRegistrosEjecucion(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular')); let p=index">
                                         <path (click)="seleccionarDiente(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular')); showTooltip(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular'), false, p, true)"
-                                              [ngClass]="{'seleccionada': estaSeleccionada(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'palatina'))}"
+                                              [ngClass]="{'seleccionada': estaSeleccionada(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular'))}"
                                               d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z"
                                               class="diente palatina {{ 'diente-' + relpalatina.concepto.semanticTag }}"
                                               title="(esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular')" />
@@ -305,7 +305,7 @@
 
                                 <!-- OCLUSAL -->
                                 <path (click)="seleccionarDiente(diente, 'oclusal'); showTooltip(diente, 'oclusal', false, 0, true)"
-                                      [ngClass]="{'seleccionada': estaSeleccionada(diente, 'oclusal')}"
+                                      [ngClass]="{'seleccionada': estaSeleccionada(diente, 'oclusal'),  'registrada': caraValor(diente, 'oclusal') !==- 1}"
                                       d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z"
                                       class="diente oclusal {{ 'diente-' + getClassRegistro(diente, 'oclusal')?.concepto.semanticTag }}"
                                       title="oclusal" />
@@ -313,7 +313,7 @@
                                     <ng-container
                                                   *ngFor="let reloclusal of getRegistrosEjecucion(diente, 'oclusal'); let o=index">
                                         <path (click)="seleccionarDiente(diente, 'oclusal'); showTooltip(diente, 'oclusal', false, o, true)"
-                                              [ngClass]="{ 'registrada': caraValor(diente, 'oclusal') !==- 1}"
+                                              [ngClass]="{'seleccionada': estaSeleccionada(diente, 'oclusal'), 'registrada': caraValor(diente, 'oclusal') !==- 1}"
                                               d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z "
                                               class="diente oclusal {{ 'diente-' + reloclusal.concepto.semanticTag }} "
                                               title="oclusal" />
