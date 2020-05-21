@@ -116,9 +116,6 @@ export class AppComponent {
                     this.plex.updateMenu(this.menuList);
                 }
             });
-            this.adjuntos.generateToken().subscribe((data: any) => {
-                this.commonNovedadesService.setToken(data.token);
-            });
         }
 
         this.modulosService.search({}).subscribe(registros => {

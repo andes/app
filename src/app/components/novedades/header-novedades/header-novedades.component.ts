@@ -49,7 +49,7 @@ export class HeaderNovedadesComponent implements OnInit {
     createUrl(doc) {
         if (doc.id) {
             let apiUri = environment.API;
-            return 'http:' + apiUri + '/modules/registro-novedades/store/' + doc.id + '?token=' + this.commonNovedadesService.getToken();
+            return apiUri + '/modules/registro-novedades/store/' + doc.id;
         }
     }
 
