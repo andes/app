@@ -58,7 +58,6 @@ import { PrestacionEjecucionComponent } from './modules/rup/components/ejecucion
 import { PrestacionValidacionComponent } from './modules/rup/components/ejecucion/prestacionValidacion.component';
 import { PrestacionCrearComponent } from './modules/rup/components/ejecucion/prestacionCrear.component';
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
-import { AuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/auditoria-prestacionPaciente.component';
 import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 
@@ -164,7 +163,6 @@ const appRoutes: Routes = [
   { path: 'rup/internacion/ocuparCama/:idCama/:idInternacion', component: OcuparCamaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/validacion/:id', component: PrestacionValidacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/auditoriaRUP', component: AuditoriaPrestacionPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/llavesTipoPrestacion', component: LlavesTipoPrestacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/vista/:id', component: VistaHudsComponent, canActivate: [RoutingNavBar, RoutingGuard, RoutingHudsGuard] },
   { path: 'rup/huds/paciente/:id', component: VistaHudsComponent, canActivate: [RoutingNavBar, RoutingGuard, RoutingHudsGuard] },

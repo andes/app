@@ -118,12 +118,7 @@ import { UsuarioService } from './services/usuarios/usuario.service';
 // ... Llaves
 import { LlavesTipoPrestacionService } from './services/llaves/llavesTipoPrestacion.service';
 
-// AUDITORIA
-import { AuditoriaPorBloqueService } from './services/auditoria/auditoriaPorBloque.service';
-import { AuditoriaService } from './services/auditoria/auditoria.service';
-
 // Auditoría
-import { AuditoriaPrestacionPacienteService } from './services/auditoria/auditoriaPrestacionPaciente.service';
 import { SisaService } from './services/fuentesAutenticas/servicioSisa.service';
 import { SintysService } from './services/fuentesAutenticas/servicioSintys.service';
 import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service';
@@ -250,15 +245,10 @@ import { CensoMensualComponent } from './apps/rup/internacion/components/censoMe
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
 
-// ... Auditoría RUP (prestacionPaciente)
-import { AuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/auditoria-prestacionPaciente.component';
-import { EditarAuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/editar-auditoria-prestacionPaciente.component';
-
 
 // AUDITORIA
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { VincularPacientesComponent } from './components/auditoria/vincular-pacientes.component';
-// import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
 
 
 // REPORTES
@@ -451,11 +441,9 @@ registerLocaleData(localeEs, 'es');
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
         PermisosComponent,
-        // AuditoriaPorBloqueComponent,
         PuntoInicioComponent,
         VincularPacientesComponent,
         LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
-        AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
         HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
         TurnosPacienteComponent,
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
@@ -629,9 +617,6 @@ registerLocaleData(localeEs, 'es');
         ConceptObserverService,
         LlavesTipoPrestacionService,
         LogService,
-        AuditoriaPorBloqueService,
-        AuditoriaService,
-        AuditoriaPrestacionPacienteService,
         SisaService,
         SintysService,
         AnsesService,
