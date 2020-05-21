@@ -44,6 +44,7 @@
                                         </thead>
                                         <tbody>
                                             <tr class="hover" *ngFor="let paciente of pacVinculados"
+                                                [ngClass]="{'bg-inverse text-white': paciente.id == pacienteSelected?.id}"
                                                 (click)="onSelectVinculados(paciente)">
                                                 <td>
                                                     <plex-badge *ngIf="paciente.estado == 'validado'" type="success">
@@ -56,7 +57,7 @@
                                                     <span *ngIf="!paciente?.documento" class="text-danger">Sin
                                                         documento</span>
                                                 </td>
-                                                <td>{{paciente | paciente}}</td>
+                                                <td>{{paciente | nombre}}</td>
                                                 <td>
                                                     <span *ngIf="paciente.fechaNacimiento">
                                                         {{paciente.fechaNacimiento | fecha}}
@@ -122,7 +123,7 @@
                                                           type="warning">Temporal</span>
                                                 </td>
                                                 <td>
-                                                    <span *ngIf="corregirPaciente !== i">{{paciente | paciente}}</span>
+                                                    <span *ngIf="corregirPaciente !== i">{{paciente | nombre}}</span>
                                                     <span *ngIf="corregirPaciente === i">
                                                         <div class="row">
                                                             <div class="col">

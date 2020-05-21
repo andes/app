@@ -9,7 +9,7 @@
                     [ngClass]="{'bg-inverse text-white': paciente.id == pacienteSeleccionado?.id}"
                     (click)="onPacienteSelected(paciente)">
                     <td>
-                        {{paciente | paciente}}<br>
+                        {{ paciente | nombre }}<br>
                         <span *ngIf="paciente?.documento !== ''"><b>DNI: </b> {{paciente.documento}}</span>
                         <span *ngIf="paciente?.documento === ''"><b>DNI: </b>N/D</span>
                         <span *ngIf="paciente.fechaNacimiento !== null">

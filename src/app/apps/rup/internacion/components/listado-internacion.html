@@ -52,7 +52,7 @@
                             [ngClass]="{'bg-inverse text-white': (this.internacionSelected && this.internacionSelected.id === internacion.id)}"
                             (click)='seleccionarInternacion(internacion)'>
                             <td>
-                                {{internacion.paciente | paciente }}
+                                {{internacion.paciente | nombre }}
                             </td>
                             <td>
                                 {{internacion.paciente.documento}}

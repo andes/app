@@ -222,7 +222,7 @@
 
                             <small *ngIf="turno?.paciente?.id"
                                    [ngClass]="{'text-danger' : turno?.estado === 'suspendido'}">{{
-                                turno.paciente | paciente }}
+                                turno.paciente | nombre }}
                                 <span class="text-danger" *ngIf="turno?.estado === 'suspendido'">(suspendido)</span>
                             </small>
                             <small>
@@ -318,7 +318,7 @@
                     <td (click)="seleccionarTurno(agenda.sobreturnos[i], false, true)">
                         <small *ngIf="sobreturno?.paciente?.id"
                                [ngClass]="{'text-danger' : sobreturno?.estado === 'suspendido'}">{{
-                            sobreturno.paciente | paciente }}
+                            sobreturno.paciente | nombre }}
                             <span class="text-danger" *ngIf="sobreturno?.estado === 'suspendido'">(suspendido)</span>
                         </small>
                         <small>
@@ -402,7 +402,7 @@
         </div>
         <div class=" col-12 ">
             <span>
-                {{turnosSeleccionados[0].paciente | paciente }}
+                {{turnosSeleccionados[0].paciente | nombre }}
             </span>
         </div>
     </fieldset>

@@ -47,7 +47,7 @@
 
                         <tr *ngFor="let censo of listadoCenso, let indice = index">
                             <td>
-                                {{censo.dataCenso.ultimoEstado.paciente | paciente }} |
+                                {{censo.dataCenso.ultimoEstado.paciente | nombre }} |
                                 {{censo.dataCenso.ultimoEstado.paciente.documento}}
                             </td>
                             <td>

@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-md">
                     <label>Paciente</label>
-                    <p>{{ paciente | paciente}}</p>
+                    <p>{{ paciente | nombre }}</p>
                 </div>
                 <div class="col-md">
                     <label>Documento</label>
@@ -36,26 +36,27 @@
             <div class="row">
                 <div class="col-md">
                     <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha"
-                        (change)="disponibles.next()">
+                                   (change)="disponibles.next()">
                     </plex-datetime>
                 </div>
                 <div class="col-md">
                     <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="Hora   "
-                        (change)="disponibles.next()">
+                                   (change)="disponibles.next()">
                     </plex-datetime>
                 </div>
             </div>
             <div class="row" *ngIf="elegirUO">
                 <div class="col-md">
                     <plex-select name="unidadOrganizativa" [data]="listaUnidadesOrganizativas" idField="term"
-                        labelField="term" [(ngModel)]="paseAunidadOrganizativa" label="Unidad organizativa" (change)="disponibles.next()">
+                                 labelField="term" [(ngModel)]="paseAunidadOrganizativa" label="Unidad organizativa"
+                                 (change)="disponibles.next()">
                     </plex-select>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md" *ngIf="listadoCamas && listadoCamas.length > 0">
                     <plex-select name="camasDisponibles" [required]="true" [data]="listadoCamas" idField="nombre"
-                        labelField="nombre" [(ngModel)]="camaSeleccionPase" label="Camas">
+                                 labelField="nombre" [(ngModel)]="camaSeleccionPase" label="Camas">
                     </plex-select>
                 </div>
                 <div class="col-md" *ngIf="listadoCamas && listadoCamas.length  === 0">
@@ -73,7 +74,8 @@
                     </plex-button>
                 </div>
                 <div class="col-md text-right">
-                    <plex-button label="Guardar" type="success" icon="check" [validateForm]="formReparada" (click)="ocuparCama($event, cama)">
+                    <plex-button label="Guardar" type="success" icon="check" [validateForm]="formReparada"
+                                 (click)="ocuparCama($event, cama)">
                     </plex-button>
 
                 </div>

@@ -15,7 +15,7 @@
                             <!-- Hay turno? -->
                             <div class="row">
                                 <div class="col">
-                                    Paciente: {{paciente | paciente }}
+                                    Paciente: {{paciente | nombre }}
                                     <small>
                                         <span *ngIf="paciente.documento !== ''">| DNI
                                             {{paciente.documento}}</span>
@@ -34,7 +34,7 @@
                             <div class="row flex-row">
                                 <!-- Hay agendas similares? -->
                                 <div class="col"
-                                    *ngIf="(!agendasAutocitar || agendasAutocitar?.length === 0) && prestacionAutocitar">
+                                     *ngIf="(!agendasAutocitar || agendasAutocitar?.length === 0) && prestacionAutocitar">
                                     <i class="mdi mdi-emoticon-sad"></i> No hay agendas con turnos disponibles para la
                                     autocitación
                                 </div>
@@ -52,29 +52,29 @@
                                                     }}
                                                 </p>
                                                 <p class="card-text text-danger"
-                                                    *ngIf="agenda.profesionales?.length === 0">Sin Equipo de Salud
+                                                   *ngIf="agenda.profesionales?.length === 0">Sin Equipo de Salud
                                                     asignado</p>
                                                 <br>
                                                 <button class="btn btn-sm btn-primary"
-                                                    (click)="toggleExpandir(indiceAgenda)">Ver horarios
+                                                        (click)="toggleExpandir(indiceAgenda)">Ver horarios
                                                 </button>
                                                 <div *ngFor="let bloque of agenda.bloques; let indiceBloque = index"
-                                                    [ngClass]="{'d-none': !agendasExpandidas[indiceAgenda]}">
+                                                     [ngClass]="{'d-none': !agendasExpandidas[indiceAgenda]}">
                                                     <div>
                                                         <div
-                                                            *ngFor="let turno of bloque.turnos; let indiceTurno = index">
+                                                             *ngFor="let turno of bloque.turnos; let indiceTurno = index">
                                                             <div *ngIf="bloque.descripcion && indiceTurno === 0">
                                                                 Bloque
                                                                 <span>{{bloque.descripcion}}</span>
                                                             </div>
                                                             <ng-container
-                                                                *ngIf="turno.horaInicio && (getFecha(hoy) === getFecha(agenda.horaInicio) && getHora(turno.horaInicio) > getHora(hoy)) || (getFecha(hoy) !== getFecha(agenda.horaInicio))">
+                                                                          *ngIf="turno.horaInicio && (getFecha(hoy) === getFecha(agenda.horaInicio) && getHora(turno.horaInicio) > getHora(hoy)) || (getFecha(hoy) !== getFecha(agenda.horaInicio))">
                                                                 <div class="m-0 p-0"
-                                                                    *ngIf="!bloque.pacienteSimultaneos">
+                                                                     *ngIf="!bloque.pacienteSimultaneos">
                                                                     <div *ngIf="turno.estado === 'disponible'"
-                                                                        class="text-center p-0 mb-1 hover outline-dashed-default"
-                                                                        [appHover]="'text-info outline-info'"
-                                                                        (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
+                                                                         class="text-center p-0 mb-1 hover outline-dashed-default"
+                                                                         [appHover]="'text-info outline-info'"
+                                                                         (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
                                                                         {{turno.horaInicio | date: 'HH:mm'}}
                                                                     </div>
                                                                 </div>

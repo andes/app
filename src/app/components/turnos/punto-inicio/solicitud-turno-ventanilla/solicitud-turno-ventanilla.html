@@ -5,7 +5,7 @@
 
         <div class="row" *ngIf="modelo?.paciente?.id">
             <div class="col-12">
-                <label>Paciente</label> {{ modelo.paciente | paciente }}
+                <label>Paciente</label> {{ modelo.paciente | nombre }}
                 <span>Documento:
                     <span *ngIf="modelo.paciente.documento !== ''">{{ modelo.paciente.documento }}</span>
                     <span *ngIf="modelo.paciente.documento === ''" class="text-danger">Sin documento</span>

@@ -96,7 +96,7 @@
                     [ngClass]="{'bg-inverse text-white': busqueda.seleccionada}">
                     <td>{{busqueda.fecha | date: "dd/MM/yyyy HH:mm " }}</td>
                     <td>{{busqueda.paciente.documento}}</td>
-                    <td>{{busqueda.paciente | paciente}}</td>
+                    <td>{{busqueda.paciente | nombre}}</td>
                     <td>{{busqueda.prestacion?.term}}</td>
                     <div class="nombres-profesionales">
                         <span *ngIf="busqueda.profesionales?.length == 0" class="text-danger">Profesional
@@ -138,7 +138,7 @@
 
                 <div *ngIf="prestacion.paciente.apellido">
                     <label class="block">Apellido y nombre</label>
-                    <span>{{prestacion.paciente | paciente}}</span>
+                    <span>{{prestacion.paciente | nombre}}</span>
                 </div>
             </div>
 

@@ -5,13 +5,14 @@
             </plex-button>
             <div class="row">
                 <div class="col-md-4">
-                    <plex-select [(ngModel)]="opciones.prestacion" (getData)="loadPrestaciones($event)" label="Prestaciones">
+                    <plex-select [(ngModel)]="opciones.prestacion" (getData)="loadPrestaciones($event)"
+                                 label="Prestaciones">
                     </plex-select>
                 </div>
 
                 <div class="col-md-4">
-                    <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" label="Equipo de Salud"
-                        labelField="nombre + ' ' + apellido">
+                    <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)"
+                                 label="Equipo de Salud" labelField="nombre + ' ' + apellido">
                     </plex-select>
                 </div>
 
@@ -23,7 +24,8 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <plex-text [(ngModel)]="opciones.observaciones" label="Observaciones" placeholder="Ingrese observaciones..."></plex-text>
+                    <plex-text [(ngModel)]="opciones.observaciones" label="Observaciones"
+                               placeholder="Ingrese observaciones..."></plex-text>
                 </div>
                 <div class="col-md-4">
                     <plex-phone [(ngModel)]="opciones.telefono" label="Teléfono" placeholder="Ingrese un teléfono...">
@@ -50,7 +52,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <h4>
-                            <strong>{{paciente | paciente}}</strong>
+                            <strong>{{paciente | nombre }}</strong>
                         </h4>
                     </div>
                 </div>

@@ -15,7 +15,7 @@
                                                     Validado</plex-badge>
                                                 <plex-badge *ngIf="item.paciente.estado != 'validado'" type="warning">
                                                     Temporal</plex-badge>
-                                                {{ item.paciente | paciente }}
+                                                {{ item.paciente | nombre }}
                                                 <b>Documento: </b>
                                                 <span *ngIf="item.paciente.documento">{{ item.paciente.documento
                                                     |
@@ -44,17 +44,18 @@
                                             </td>
                                             <td>
                                                 <plex-button *ngIf="!item.vinculado" type='info' label="Vincular"
-                                                    (click)="vincular(item.paciente,i)"></plex-button>
+                                                             (click)="vincular(item.paciente,i)"></plex-button>
                                                 <plex-button *ngIf="item.vinculado" type='danger' label="Desvincular"
-                                                    (click)="desvincular(item.paciente,i)"></plex-button>
+                                                             (click)="desvincular(item.paciente,i)"></plex-button>
                                             </td>
                                             <td>
-                                                <plex-button *ngIf="item.vinculado && item.paciente.activo" (click)="desactivar(item.paciente,i)"
-                                                    type='warning' label="Desactivar"></plex-button>
-                                                <plex-button *ngIf="item.vinculado && !item.paciente.activo" (click)="activar(item.paciente,i)"
-                                                    type='info' label="Activar"></plex-button>
+                                                <plex-button *ngIf="item.vinculado && item.paciente.activo"
+                                                             (click)="desactivar(item.paciente,i)" type='warning'
+                                                             label="Desactivar"></plex-button>
+                                                <plex-button *ngIf="item.vinculado && !item.paciente.activo"
+                                                             (click)="activar(item.paciente,i)" type='info'
+                                                             label="Activar"></plex-button>
                                             </td>
-
                                         </tr>
                                     </tbody>
                                 </table>
@@ -63,17 +64,18 @@
                     </div>
                     <div class="row">
                         <div class="col-1" *ngIf="!showBuscador">
-                            <plex-button type='info' icon="mdi mdi-account-plus" (click)='showBuscador = true'></plex-button>
+                            <plex-button type='info' icon="mdi mdi-account-plus" (click)='showBuscador = true'>
+                            </plex-button>
                         </div>
                         <div *ngIf='showBuscador' class="col">
                             <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                (searchClear)="searchClear()"></paciente-buscar>
+                                             (searchClear)="searchClear()"></paciente-buscar>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
                             <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
-                                [autoselect]="false" (selected)="addCandidato($event)"></paciente-listado>
+                                              [autoselect]="false" (selected)="addCandidato($event)"></paciente-listado>
                             <div *ngIf="pacientes && !pacientes.length" class="alert alert-default"> ¡No se encontró
                                 ningún
                                 paciente! </div>

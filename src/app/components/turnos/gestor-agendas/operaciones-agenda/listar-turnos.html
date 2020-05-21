@@ -20,12 +20,14 @@
                                 </div>
                                 <div class="col">
                                     <label>Tipos de prestación</label>
-                                    <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
+                                    <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
+                                        {{tipoPrestacion.nombre}}</div>
                                 </div>
 
                                 <div class="col">
                                     <label>Equipo de Salud</label>
-                                    <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Equipo de Salud no
+                                    <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Equipo de Salud
+                                        no
                                         asignado</span>
                                     <ng-container *ngIf="agenda.profesionales">
                                         <div>{{agenda.profesionales | enumerar:['apellido','nombre']}}</div>
@@ -48,7 +50,7 @@
                             <tr>
                                 <th>Hora Turno</th>
                                 <th>DNI | Nro. Carpeta</th>
-                                <th >Obra Social</th>
+                                <th>Obra Social</th>
                                 <th>Apellidos y Nombres</th>
                                 <th>Fecha Nac</th>
                                 <th>Sexo</th>
@@ -73,26 +75,34 @@
                                         <small>
                                             <span *ngIf="turno.paciente.documento !== ''">{{ turno.paciente.documento |
                                                 number }}</span>
-                                            <span *ngIf="turno.paciente.documento === ''">Sin documento (temporal)</span>
+                                            <span *ngIf="turno.paciente.documento === ''">Sin documento
+                                                (temporal)</span>
                                         </small>
                                     </span>
                                     <span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0">
                                         <small> | </small>
                                         <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">
-                                            <small *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null">{{carpeta.nroCarpeta}}
+                                            <small
+                                                   *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null">{{carpeta.nroCarpeta}}
                                             </small>
                                         </span>
-                                        <small *ngIf="turno.tipoTurno === 'profesional'" class="text-danger">(autocitado)</small>
+                                        <small *ngIf="turno.tipoTurno === 'profesional'"
+                                               class="text-danger">(autocitado)</small>
                                     </span>
                                 </td>
                                 <!-- OBRA SOCIAL -->
-                                <td><span *ngIf="turno?.paciente?.obraSocial?.financiador"><small>{{turno.paciente.obraSocial.financiador}}</small></span>
-                                    <br><span *ngIf="turno?.paciente?.obraSocial?.numeroAfiliado">{{turno.paciente.obraSocial.numeroAfiliado}}</span></td>
+                                <td><span
+                                          *ngIf="turno?.paciente?.obraSocial?.financiador"><small>{{turno.paciente.obraSocial.financiador}}</small></span>
+                                    <br><span
+                                          *ngIf="turno?.paciente?.obraSocial?.numeroAfiliado">{{turno.paciente.obraSocial.numeroAfiliado}}</span>
+                                </td>
                                 <td>
-                                    <small *ngIf="turno?.paciente?.id">{{ turno.paciente | paciente }}</small>
-                                    <small [ngClass]="{'text-+danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno
+                                    <small *ngIf="turno?.paciente?.id">{{ turno.paciente | nombre }}</small>
+                                    <small [ngClass]="{'text-+danger': turno.estado === 'turnoDoble'}"
+                                           *ngIf="turno && turno.estado === 'turnoDoble'">Turno
                                         Doble</small>
-                                    <small [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</small>
+                                    <small [ngClass]="{'text-danger': turno.estado === 'suspendido'}"
+                                           *ngIf="turno && turno.estado === 'suspendido'">Suspendido</small>
                                 </td>
                                 <td>
                                     <small
@@ -120,7 +130,7 @@
                             <tr>
                                 <th>Hora Turno</th>
                                 <th>DNI | Nro. Carpeta</th>
-                                <th >Obra Social</th>
+                                <th>Obra Social</th>
                                 <th>Apellidos y Nombres</th>
                                 <th>Fecha Nacimiento</th>
                                 <th>Sexo</th>
@@ -143,24 +153,29 @@
                                         <small>
                                             <span *ngIf="sobreturno.paciente.documento !== ''">{{
                                                 sobreturno.paciente.documento }}</span>
-                                            <span *ngIf="sobreturno.paciente.documento === ''">Sin documento (temporal)</span>
+                                            <span *ngIf="sobreturno.paciente.documento === ''">Sin documento
+                                                (temporal)</span>
                                         </small>
                                     </span>
-                                    <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.carpetaEfectores?.length > 0">
+                                    <span
+                                          *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.carpetaEfectores?.length > 0">
                                         <small> | </small>
                                         <span *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores">
-                                            <small *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null">{{carpeta.nroCarpeta}}
+                                            <small
+                                                   *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null">{{carpeta.nroCarpeta}}
                                             </small>
                                         </span>
-                                        <small *ngIf="sobreturno.tipoTurno === 'profesional'" class="text-danger">(autocitado)</small>
+                                        <small *ngIf="sobreturno.tipoTurno === 'profesional'"
+                                               class="text-danger">(autocitado)</small>
                                     </span>
                                 </td>
                                 <!-- OBRA SOCIAL -->
-                                <td><small>{{sobreturno?.paciente?.obraSocial?.financiador}}</small>  </td>
+                                <td><small>{{sobreturno?.paciente?.obraSocial?.financiador}}</small> </td>
 
                                 <td>
-                                    <small *ngIf="sobreturno?.paciente?.id">{{ sobreturno.paciente | paciente }}</small>
-                                    <small [ngClass]="{'text-danger': sobreturno.estado === 'suspendido'}" *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</small>
+                                    <small *ngIf="sobreturno?.paciente?.id">{{ sobreturno.paciente | nombre }}</small>
+                                    <small [ngClass]="{'text-danger': sobreturno.estado === 'suspendido'}"
+                                           *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</small>
                                 </td>
                                 <td>
                                     <small

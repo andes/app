@@ -42,7 +42,7 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let prestacion of prestacionesPendientes; let i = index">
-                            <td> {{prestacion.prestacion.paciente | paciente}}</td>
+                            <td> {{prestacion.prestacion.paciente | nombre}}</td>
                             <td>{{prestacion.prestacion.paciente.documento }}</td>
                             <td>{{prestacion.prestacion.paciente.fechaNacimiento | fecha }}</td>
                             <td>{{prestacion.prestacion.paciente.sexo }}</td>

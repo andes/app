@@ -117,7 +117,7 @@
                         <!-- Teléfono del paciente, si tiene -->
                         <td>
                             <small *ngIf="turno?.paciente?.id"
-                                   [ngClass]="{'text-danger' : turno?.estado === 'suspendido'}">{{ turno.paciente | paciente }}
+                                   [ngClass]="{'text-danger' : turno?.estado === 'suspendido'}">{{ turno.paciente | nombre }}
                             </small>
                             <small *ngIf="turno?.paciente?.id">
                                 <span *ngIf="turno.paciente.telefono !== '' ; else noTelefono">
@@ -175,7 +175,7 @@
                         <!-- Teléfono del paciente, si tiene -->
                         <td>
                             <small *ngIf="turno?.paciente?.id"
-                                   [ngClass]="{'text-danger' : turno?.estado === 'suspendido'}">{{ turno.paciente | paciente }}
+                                   [ngClass]="{'text-danger' : turno?.estado === 'suspendido'}">{{ turno.paciente | nombre }}
                             </small>
                             <small *ngIf="turno?.paciente?.id">
                                 <span *ngIf="turno.paciente.telefono !== '' ; else noTelefono">

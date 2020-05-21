@@ -115,7 +115,7 @@
 
                                             </td>
                                             <td (click)="seleccionar(prestacion)">{{prestacion.paciente
-                                        | paciente}}<br>DNI {{prestacion.paciente.documento}}</td>
+                                        | nombre }}<br>DNI {{prestacion.paciente.documento}}</td>
                                             <td *ngIf="prestacion.solicitud.organizacionOrigen && !showSidebar"
                                                 (click)="seleccionar(prestacion)">
                                                 {{prestacion.solicitud.organizacionOrigen.nombre}}</td>
@@ -248,7 +248,7 @@
                                             <td>
                                                 {{prestacion.solicitud.fecha | fecha}}</td>
                                             <td>
-                                                {{prestacion.paciente | paciente}}<br>DNI
+                                                {{prestacion.paciente | nombre }}<br>DNI
                                                 {{prestacion.paciente.documento}}</td>
                                             <td *ngIf="!prestacion.solicitud.organizacionOrigen && !showSidebar">
                                             </td>

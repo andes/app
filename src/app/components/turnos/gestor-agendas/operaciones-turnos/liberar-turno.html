@@ -13,13 +13,14 @@
             {{turnosSeleccionados[0].horaInicio | date: 'H:mm'}} hs
         </div>
         <div class="col-8">
-            <span *ngIf="turnosSeleccionados[0].paciente?.id">{{turnosSeleccionados[0].paciente | paciente }}</span>
+            <span *ngIf="turnosSeleccionados[0].paciente?.id">{{turnosSeleccionados[0].paciente | nombre }}</span>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
-            <plex-select [(ngModel)]="motivoLiberacionSelect.select" name="motivoLiberacion" [data]="motivoLiberacion" label="Motivos de Liberación"
-                placeholder="Seleccione un motivo de liberación" [required]="true">
+            <plex-select [(ngModel)]="motivoLiberacionSelect.select" name="motivoLiberacion" [data]="motivoLiberacion"
+                         label="Motivos de Liberación" placeholder="Seleccione un motivo de liberación"
+                         [required]="true">
             </plex-select>
         </div>
     </div>

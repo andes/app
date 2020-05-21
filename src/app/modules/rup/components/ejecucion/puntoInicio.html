@@ -226,7 +226,7 @@
                                             </ng-container>
                                         </td>
                                         <td>
-                                            <span *ngIf="turno.paciente?.id">{{ turno.paciente | paciente }} </span>
+                                            <span *ngIf="turno.paciente?.id">{{ turno.paciente | nombre }} </span>
                                             <small>
                                                 <span *ngIf="turno.paciente?.id">
                                                     <br>
@@ -418,8 +418,7 @@
 
                                             </td>
                                             <td>
-                                                <span
-                                                      *ngIf="sobreturno.paciente?.id">{{ sobreturno.paciente | paciente }}
+                                                <span *ngIf="sobreturno.paciente?.id">{{ sobreturno.paciente | nombre }}
                                                 </span>
 
                                                 <small>
@@ -542,7 +541,7 @@
 
                                     </td>
                                     <td>
-                                        <span *ngIf="prestacion && prestacion.paciente">{{ prestacion.paciente | paciente
+                                        <span *ngIf="prestacion && prestacion.paciente">{{ prestacion.paciente | nombre
                                         }} </span>
                                         <span
                                               *ngIf="prestacion && prestacion.solicitud.tipoPrestacion.noNominalizada">{{prestacion.solicitud.tipoPrestacion.term}}</span>
