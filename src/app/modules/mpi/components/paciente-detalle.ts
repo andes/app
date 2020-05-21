@@ -113,6 +113,7 @@ export class PacienteDetalleComponent implements OnInit {
         }
         if (this.paciente.financiador && this.paciente.financiador.length > 0) {
             this.obraSocial = this.paciente.financiador[0] as any;
+            this.obraSocialCacheService.setFinanciadorPacienteCache(this.obraSocial);
             return;
         }
         this.obraSocialService.getObrasSociales(this.paciente.documento).subscribe(resultado => {
