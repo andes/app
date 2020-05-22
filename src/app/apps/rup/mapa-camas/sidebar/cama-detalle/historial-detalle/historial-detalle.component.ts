@@ -43,7 +43,11 @@ export class HistorialDetalleComponent implements OnInit {
                 return this.mapaCamasService.historial('cama', filtros.desde, filtros.hasta);
             }),
             map((historial: ISnapshot[]) => {
-                return historial.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+                return historial.filter(snap => snap.esMovimiento).sort((a, b) => {
+                    const timeA = new Date(a.fecha).getTime();
+                    const timeB = new Date(b.fecha).getTime();
+                    return (timeB - timeA) !== 0 ? (timeB - timeA) : (new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+                });
             })
         );
     }
