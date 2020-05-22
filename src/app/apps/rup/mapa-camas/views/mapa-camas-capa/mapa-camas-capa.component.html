@@ -49,7 +49,7 @@
         <app-estado-servicio *ngIf="!accion"></app-estado-servicio>
         <ng-container *ngIf="selectedPaciente$ | async as selectedPaciente">
             <app-elegir-paciente *ngIf="(selectedPaciente.id === null) && (accion === 'internarPaciente')">
-                <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverAResumen()">
+                <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
                 </plex-button>
             </app-elegir-paciente>
             <app-ingresar-paciente *ngIf="(selectedPaciente.id !== null) && (accion === 'internarPaciente')"
@@ -74,7 +74,7 @@
         </app-egresar-paciente>
         <app-cama-destino-generico *ngIf="accion === 'accionGenerica'" [relacion]="estadoRelacion"
                                    (onSave)="volverAResumen()">
-            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverAResumen()">
+            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
             </plex-button>
         </app-cama-destino-generico>
         <ng-container *ngIf="(selectedCama$ | async) as selectedCama">
