@@ -146,8 +146,6 @@ import { EspecialidadComponent } from './components/especialidad/especialidad.co
 import { EspecialidadCreateUpdateComponent } from './components/especialidad/especialidad-create-update.component';
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
-import { CamaCreateUpdateComponent } from './apps/rup/internacion/components/cama-create-update.component';
-import { CamasListadoComponent } from './apps/rup/internacion/components/camasListado.component';
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion/tipoPrestacion-create-update.component';
 import { ProcedimientosQuirurgicosService } from './services/procedimientosQuirurgicos.service';
@@ -235,11 +233,6 @@ import { ResumenPacienteDinamicoNinoComponent } from './modules/rup/components/e
 // Seguimiento Pacientes SJ
 import { SeguimientoPacienteComponent } from './modules/rup/components/ejecucion/seguimiento-paciente/seguimientoPaciente.component';
 
-import { IniciarInternacionComponent } from './apps/rup/internacion/components/iniciarInternacion.component';
-import { OcuparCamaComponent } from './apps/rup/internacion/components/cama-ocupar.component';
-import { CensoDiarioComponent } from './apps/rup/internacion/components/censoDiario.component';
-import { CensoMensualComponent } from './apps/rup/internacion/components/censoMensual.component';
-
 
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -280,9 +273,6 @@ import { ChartsModule } from 'ng2-charts';
 import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
 
 // Mapa de camas
-import { MapaDeCamasComponent } from './apps/rup/internacion/components/mapa-de-camas.component';
-import { CamaComponent } from './apps/rup/internacion/components/cama.component';
-import { CamaEstadoComponent } from './apps/rup/internacion/components/camaEstado.component';
 import { OrganizacionSectoresComponent } from './components/organizacion/organizacion-sectores.component';
 import { OrganizacionOfertaPrestacionalComponent } from './components/organizacion/organizacion-prestaciones.component';
 
@@ -316,18 +306,6 @@ import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 // Configuracion prestaciones
 import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
 import { ConfiguracionPrestacionCrearComponent } from './components/configuracionPrestacion/configuracion-prestacion-crear.component';
-import { CamasService } from './apps/rup/internacion/services/camas.service';
-import { InternacionService } from './apps/rup/internacion/services/internacion.service';
-import { InternacionCacheService } from './apps/rup/internacion/services/internacion-cache.service';
-import { DesocuparCamaComponent } from './apps/rup/internacion/components/cama-desocupar.component';
-import { ListaEsperaInternacionComponent } from './apps/rup/internacion/components/lista-espera-internacion.component';
-import { EgresoInternacionComponent } from './apps/rup/internacion/components/egresoInternacion.component';
-import { ResumenInternacionComponent } from './apps/rup/internacion/components/resumenInternacion.component';
-import { CamaBloquearComponent } from './apps/rup/internacion/components/cama-bloquear.component';
-import { CamaDesbloquearComponent } from './apps/rup/internacion/components/cama-desbloquear.component';
-import { CamaPrepararComponent } from './apps/rup/internacion/components/cama-preparar.component';
-import { ListadoInternacionComponent } from './apps/rup/internacion/components/listado-internacion.component';
-
 
 import { RiesgoCardiovascularService } from './modules/rup/components/formulas/riesgoCardiovascular.service';
 import { FormulaBaseService } from './modules/rup/components/formulas';
@@ -358,7 +336,6 @@ import { VistaRegistroComponent } from './modules/rup/components/huds/vistaRegis
 import { VistaProcedimientoComponent } from './modules/rup/components/huds/vistaProcedimiento';
 import { VistaContextoPrestacionComponent } from './modules/rup/components/huds/vistaContextoPrestacion';
 import { VistaDetalleRegistroComponent } from './modules/rup/components/huds/vistaDetalleRegistro';
-import { PasesListadoInternacionComponent } from './apps/rup/internacion/components/pasesListadoInternacion.component';
 import { VistaAccesosHudsComponent } from './modules/rup/components/huds/vista-accesos-huds.component';
 import { ModalMotivoAccesoHudsComponent } from './modules/rup/components/huds/modal-motivo-acceso-huds.component';
 
@@ -389,7 +366,6 @@ import { ModulosService } from './services/novedades/modulos.service';
 
 import { ConceptosTurneablesService } from './services/conceptos-turneables.service';
 import { DisclaimerService } from './services/disclaimer.service';
-import { EjecucionInternacionComponent } from './apps/rup/internacion/components/ejecucionInternacion.component';
 
 registerLocaleData(localeEs, 'es');
 
@@ -421,7 +397,6 @@ registerLocaleData(localeEs, 'es');
     declarations: [
         AppComponent, InicioComponent,
         OrganizacionComponent, OrganizacionCreateUpdateComponent,
-        CamaCreateUpdateComponent, CamasListadoComponent,
         ProfesionalComponent, ProfesionalCreateUpdateComponent,
         ProfesionalCreateUpdateComponent,
         UploadFileComponent,
@@ -469,28 +444,13 @@ registerLocaleData(localeEs, 'es');
 
         // RUP
         // ...RUPComponentsArray,
-        EjecucionInternacionComponent,
         ResumenPacienteEstaticoComponent,
         ResumenPacienteDinamicoComponent,
         ResumenPacienteDinamicoNinoComponent,
         SeguimientoPacienteComponent,
-        IniciarInternacionComponent,
-        MapaDeCamasComponent,
-        CensoDiarioComponent,
-        CensoMensualComponent,
-        CamaComponent,
-        CamaBloquearComponent,
-        CamaDesbloquearComponent,
-        CamaPrepararComponent,
-        EgresoInternacionComponent,
-        OcuparCamaComponent,
-        ListadoInternacionComponent,
-        PasesListadoInternacionComponent,
         PuntoInicioInternacionComponent,
         ChartComponent,
         OrganizacionSectoresComponent,
-        ResumenInternacionComponent,
-        ListaEsperaInternacionComponent,
         VistaRegistroComponent,
         VistaProcedimientoComponent,
         VistaContextoPrestacionComponent,
@@ -518,9 +478,6 @@ registerLocaleData(localeEs, 'es');
         HistorialCarpetasComponent,
         ImprimirSolicitudesComponent,
         SolicitudManualComponent,
-        CamaEstadoComponent,
-        OcuparCamaComponent,
-        DesocuparCamaComponent,
         OrganizacionSectoresComponent,
         OrganizacionOfertaPrestacionalComponent,
         PucoComponent,
@@ -625,9 +582,7 @@ registerLocaleData(localeEs, 'es');
         UsuarioService,
         FrecuentesProfesionalService,
         DocumentosService,
-        CamasService,
         ProcedimientosQuirurgicosService,
-        InternacionService,
         PrestamosService,
         ProcedimientosQuirurgicosService,
         FormTerapeuticoService,
@@ -651,7 +606,6 @@ registerLocaleData(localeEs, 'es');
         HUDSService,
         TurnosPrestacionesService,
         PlantillasService,
-        InternacionCacheService,
         WebSocketService,
         ConceptosTurneablesService,
         DisclaimerService,

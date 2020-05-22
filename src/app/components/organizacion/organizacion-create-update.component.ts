@@ -19,7 +19,6 @@ import { IContacto } from './../../interfaces/IContacto';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { ITipoEstablecimiento } from './../../interfaces/ITipoEstablecimiento';
 import { Router } from '@angular/router';
-import { CamasService } from '../../apps/rup/internacion/services/camas.service';
 @Component({
     selector: 'organizacion-create-update',
     templateUrl: 'organizacion-create-update.html',
@@ -146,8 +145,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         private tipoEstablecimientoService: TipoEstablecimientoService,
         public plex: Plex,
         public snomed: SnomedService,
-
-        public CamaService: CamasService,
         private auth: Auth,
         private router: Router
     ) { }
@@ -351,16 +348,10 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     }
     deleteUO($event) {
         if ($event.conceptId) {
-            this.CamaService.UOxCama(this.seleccion.id, $event.conceptId).subscribe(camas => {
-                if (camas.length <= 0) {
-                    this.plex.confirm('¿Desea eliminar?', 'Eliminar unidad organizativa').then((confirmar) => {
-                        let index = this.organizacionModel.unidadesOrganizativas.findIndex((item) => item === $event);
-                        if (confirmar && index >= 0) {
-                            this.organizacionModel.unidadesOrganizativas.splice(index, 1);
-                        }
-                    });
-                } else {
-                    this.plex.info('warning', 'El sector contiene camas', 'No se puede borrar');
+            this.plex.confirm('¿Desea eliminar?', 'Eliminar unidad organizativa').then((confirmar) => {
+                let index = this.organizacionModel.unidadesOrganizativas.findIndex((item) => item === $event);
+                if (confirmar && index >= 0) {
+                    this.organizacionModel.unidadesOrganizativas.splice(index, 1);
                 }
             });
         }

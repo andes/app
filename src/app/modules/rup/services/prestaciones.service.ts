@@ -16,6 +16,7 @@ import { Plex } from '@andes/plex';
 @Injectable()
 export class PrestacionesService {
     public static InformeDelEncuentro = '371531000';
+
     public static SemanticTags = {
         hallazgo: ['hallazgo', 'situación', 'evento'],
         trastorno: ['trastorno'],
@@ -24,6 +25,7 @@ export class PrestacionesService {
         producto: ['producto', 'objeto físico', 'medicamento clínico', 'fármaco de uso clínico'],
         elementoderegistro: ['elemento de registro']
     };
+
     public static InternacionPrestacion = {
         fsn: 'admisión hospitalaria (procedimiento)',
         semanticTag: 'procedimiento',
@@ -893,61 +895,6 @@ export class PrestacionesService {
             }
         }
         return salida;
-    }
-
-
-    /*******
-     * INTERNACION
-     */
-
-    /**
-    * Devuelve el la ultima internacion del paciente y la cama ocupada en caso que corresponda
-    *
-    * @param {any} paciente id del paciente en internacion
-    * @param {any} estado estado de la internacion
-    * @param {any} organizacion organizacion en la que se ejecuta la internacion (puede ser null)
-    * @returns  {array} Ultima Internacion del paciente en el estado que ingresa por parametro
-    * @memberof PrestacionesService
-    */
-    public internacionesXPaciente(paciente, estado, organizacion) {
-        let opt = { params: { estado: estado, ambitoOrigen: 'internacion', organizacion: organizacion }, options: {} };
-        return this.server.get('/modules/rup/internaciones/ultima/' + (paciente.id ? paciente.id : paciente._id), opt);
-    }
-
-    /**
-* Devuelve el listado de internacion por organizacion
-*
-
-* @returns  {array} Listado Organizacion
-* @memberof PrestacionesService
-*/
-    public listadoInternacion(filtros?) {
-        return this.server.get('/modules/rup/internaciones/listadoInternacion/', { params: filtros, showError: true });
-    }
-
-
-    /**
-   * Devuelve el listado de estados de la/s camas por las que paso la internación
-   *
-   * @param {any} idInternacion id de la intenacion
-   * @returns  {array} lista de camas-estados por los que paso la internación
-   * @memberof PrestacionesService
-   */
-    public getPasesInternacion(idInternacion) {
-        return this.server.get('/modules/rup/internaciones/pases/' + idInternacion, null);
-    }
-
-    /**
-     * Método get. Trae lista de objetos prestacion.
-     *
-     * @param {*} idOrganizacion Opciones de búsqueda
-     * @param {*} [options={}] Options a pasar a la API
-     * @returns {Observable<IPrestacion[]>}
-     *
-     * @memberof PrestacionesService
-     */
-    getInternacionesPendientes(params: any = {}): Observable<IPrestacion[]> {
-        return this.server.get(this.prestacionesUrl + '/sincama', { params: params, showError: true });
     }
 
     getFriendlyName(registro) {

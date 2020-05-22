@@ -74,19 +74,11 @@ import { ConfiguracionPrestacionVisualizarComponent } from './components/configu
 import { PlantillasRUPComponent } from './apps/rup/plantillas-rup/plantillas-rup.component';
 
 // Internacion
-import { MapaDeCamasComponent } from './apps/rup/internacion/components/mapa-de-camas.component';
-import { ListadoInternacionComponent } from './apps/rup/internacion/components/listado-internacion.component';
-import { ListaEsperaInternacionComponent } from './apps/rup/internacion/components/lista-espera-internacion.component';
+import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
 
 // Solicitudes
-import { CensoDiarioComponent } from './apps/rup/internacion/components/censoDiario.component';
-import { CensoMensualComponent } from './apps/rup/internacion/components/censoMensual.component';
-import { CamaCreateUpdateComponent } from './apps/rup/internacion/components/cama-create-update.component';
-import { IniciarInternacionComponent } from './apps/rup/internacion/components/iniciarInternacion.component';
-import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
-// Solicitudes
 import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.component';
-import { OcuparCamaComponent } from './apps/rup/internacion/components/cama-ocupar.component';
+
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 import { ReglasComponent } from './components/top/reglas/reglas.component';
@@ -115,8 +107,6 @@ const appRoutes: Routes = [
   { path: 'tm/organizacion', component: OrganizacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'tm/organizacion/:id/sectores', component: OrganizacionSectoresComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'tm/organizacion/:id/ofertas_prestacionales', component: OrganizacionOfertaPrestacionalComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'tm/organizacion/cama/:idCama', component: CamaCreateUpdateComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'tm/organizacion/cama', component: CamaCreateUpdateComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'tm/profesional', component: ProfesionalComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'tm/profesional/create', component: ProfesionalCreateUpdateComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'tm/profesional/create/:id', component: ProfesionalCreateUpdateComponent, canActivate: [RoutingNavBar, RoutingGuard] },
@@ -158,26 +148,18 @@ const appRoutes: Routes = [
   // RUP
   { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/crear/:opcion', component: PrestacionCrearComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/internacion/crear', component: IniciarInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/internacion/crear/:id', component: IniciarInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/internacion/ocuparCama/:idCama/:idInternacion', component: OcuparCamaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/validacion/:id', component: PrestacionValidacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/llavesTipoPrestacion', component: LlavesTipoPrestacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/vista/:id', component: VistaHudsComponent, canActivate: [RoutingNavBar, RoutingGuard, RoutingHudsGuard] },
   { path: 'rup/huds/paciente/:id', component: VistaHudsComponent, canActivate: [RoutingNavBar, RoutingGuard, RoutingHudsGuard] },
   { path: 'rup/huds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/internacion/censo', component: CensoDiarioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/internacion/censo/mensual', component: CensoMensualComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/internacion/listado', component: ListadoInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/internacion/listaEspera', component: ListaEsperaInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'rup/plantillas', component: PlantillasRUPComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // Configuraciones / ABM
   { path: 'configuracionPrestacion', component: ConfiguracionPrestacionVisualizarComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // Mapa de camas
-  { path: 'internacion/camas', component: MapaDeCamasComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'internacion/inicio', component: PuntoInicioInternacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // Préstamos HC

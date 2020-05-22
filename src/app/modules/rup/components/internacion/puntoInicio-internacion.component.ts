@@ -18,7 +18,6 @@ export class PuntoInicioInternacionComponent implements OnInit {
     public pacienteSeleccionado;
     public epicrisisPaciente = [];
     public showLoader = false;
-    public showInternacionEjecucion = false;
     public internacionEjecucion;
     public conceptosInternacion;
 
@@ -73,19 +72,7 @@ export class PuntoInicioInternacionComponent implements OnInit {
         this.pacienteSeleccionado = paciente;
         this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, this.conceptosInternacion.epicrisis.term, this.auth.profesional, null, null).subscribe(hudsToken => {
             window.sessionStorage.setItem('huds-token', hudsToken.token);
-            this.servicioPrestacion.internacionesXPaciente(paciente, 'ejecucion', this.auth.organizacion.id).subscribe(resultado => {
-                // Si el paciente ya tiene una internacion en ejecucion
-                if (resultado && resultado.length) {
-                    this.servicioPrestacion.get({ idPrestacionOrigen: resultado.ultimaInternacion.id }).subscribe(prestacionExiste => {
-                        if (prestacionExiste.length) {
-                            this.internacionEjecucion = prestacionExiste[0];
-                            this.showInternacionEjecucion = true;
-                        }
-                    });
-                } else {
-                    this.showInternacionEjecucion = false;
-                }
-            });
+
             this.tipoPrestaciones = [
                 this.conceptosInternacion.valoracionInicial.conceptId,
                 this.conceptosInternacion.indicaciones.conceptId,
