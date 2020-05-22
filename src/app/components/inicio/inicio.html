@@ -11,8 +11,7 @@
             <plex-loader *ngIf="loading" type="linear"></plex-loader>
             <div *ngIf="!denied && !loading" class="andes-inicio row">
                 <div *ngFor="let caja of cajasModulos" class="col-xs-12 col-sm-6 col-md-4">
-                    <div class="boton" [ngStyle]="{background:caja.color}" (click)="redirect(caja)"
-                         *ngIf="caja.nombre !== 'ANALYTICS'">
+                    <div class="boton" [ngStyle]="{background:caja.color}" (click)="redirect(caja)">
                         <i class="icono mdi {{caja.icono}}"></i>
                         <div class="titulo">{{caja.nombre}}</div>
                         <div class="subtitulo">{{caja.subtitulo}}</div>
