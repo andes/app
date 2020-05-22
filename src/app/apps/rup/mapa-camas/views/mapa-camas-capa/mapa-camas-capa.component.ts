@@ -107,7 +107,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
         this.ambito = this.mapaCamasService.ambito;
 
         this.selectedCama$ = this.mapaCamasService.selectedCama.map((cama) => {
-            if (cama.idCama) {
+            if (cama.idCama && !this.accion) {
                 this.accion = 'verDetalle';
             }
             return cama;
