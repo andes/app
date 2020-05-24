@@ -63,7 +63,7 @@ export class InicioComponent implements AfterViewInit {
     }
 
     redirect(caja) {
-        if (caja.nombre === 'ANALITYCS') {
+        if (caja.nombre === 'ANALYTICS') {
             const token = this.auth.getToken();
             window.location.assign(`https://analytics.andes.gob.ar/auth/login?token=${token}`);
         } else {
