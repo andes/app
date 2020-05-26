@@ -68,6 +68,7 @@ import { ValorNumericoComponent } from './components/elementos/valorNumerico.com
 import { ValorFechaComponent } from './components/elementos/valorFecha.component';
 import { MoleculaBaseComponent } from './components/elementos/moleculaBase.component';
 import { ProcedimientoDeEnfermeriaComponent } from './components/elementos/procedimientoDeEnfermeria.component';
+import { EtapaPubertadComponent } from './components/elementos/EtapaPubertad.component';
 
 import { LugarDeNacimientoComponent } from './components/elementos/lugarDeNacimiento.component';
 import { SelectOrganizacionComponent } from './components/elementos/rupers/select-organizacion.component';
@@ -144,6 +145,7 @@ const RUPComponentsArray = [
     ValorFechaComponent,
     MoleculaBaseComponent,
     ProcedimientoDeEnfermeriaComponent,
+    EtapaPubertadComponent,
     LugarDeNacimientoComponent,
     SelectOrganizacionComponent,
     SelectProfesionalComponent,
