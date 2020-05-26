@@ -125,7 +125,9 @@ export class PrestacionValidacionComponent implements OnInit {
             }
         });
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
-        if (this.auth.getPermissions('rup:?').length <= 0) {
+        const permisosAmbulatorio = this.auth.getPermissions('rup:?').length > 0;
+        const permisosInternacion = this.auth.getPermissions('internacion:rol:?').length > 0;
+        if (!(permisosAmbulatorio || permisosInternacion)) {
             this.redirect('inicio');
         }
         if (!this.auth.profesional) {
