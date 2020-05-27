@@ -102,6 +102,10 @@ export class PacienteDetalleComponent implements OnInit {
     }
 
     ngOnInit() {
+    }
+
+    // tslint:disable-next-line: use-lifecycle-interface
+    ngOnChanges() {
         this.loadObraSocial();
     }
 
@@ -121,6 +125,7 @@ export class PacienteDetalleComponent implements OnInit {
                 this.obraSocial = resultado[0];
                 this.obraSocialCacheService.setFinanciadorPacienteCache(this.obraSocial);
             } else {
+                this.obraSocial = null;
                 this.obraSocialCacheService.setFinanciadorPacienteCache(null);
             }
         });
