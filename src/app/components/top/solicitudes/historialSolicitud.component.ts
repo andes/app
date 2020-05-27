@@ -38,7 +38,7 @@ export class HistorialSolicitudComponent {
             });
         }
         this.itemsHistorial = [...this.prestacion.estados, ...historial, ...dacionTurno]
-            .sort( (a, b) => moment(a.createdAt).diff(moment(b.createdAt)))
+            .sort( (a, b) => moment(b.createdAt).diff(moment(a.createdAt)))
             .map( (e) => ({
                 descripcion: e.tipo ? e.tipo : e.accion,
                 observaciones: e.observaciones,
