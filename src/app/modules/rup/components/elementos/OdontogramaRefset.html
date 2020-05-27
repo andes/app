@@ -122,11 +122,11 @@
                                                   d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
                                                   class="diente mesial {{ 'diente-' + relMesial.concepto.semanticTag }}"
                                                   title="(esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal')" />
+                                            <text (click)="emitEjecutarAccion($event, [diente, cuadrante, odontogramasHUDS])"
+                                                  fill="#FFFFFF" x="37" y="32"
+                                                  font-size="14">{{ getRegistrosRelAnterior(diente, (esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal')).length }}</text>
                                         </ng-container>
                                     </ng-container>
-                                    <text (click)="emitEjecutarAccion($event, [diente, cuadrante, odontogramasHUDS])"
-                                          fill="#FFFFFF" x="37" y="32"
-                                          font-size="14">{{ getRegistrosRelAnterior(diente, (esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal')).length }}</text>
                                     <!-- PALATINA/VESTIBULAR -->
                                     <path (click)="emitEjecutarAccion($event, [diente, cuadrante, odontogramasHUDS])"
                                           (mouseenter)="showTooltip(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular'), true, 0)"
@@ -144,11 +144,11 @@
                                                   d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z"
                                                   class="diente palatina {{ 'diente-' + relpalatina.concepto.semanticTag }}"
                                                   title="(esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular')" />
+                                            <text (click)="emitEjecutarAccion($event, [diente, cuadrante, odontogramasHUDS])"
+                                                  fill="#FFFFFF" x="22" y="46"
+                                                  font-size="14">{{ getRegistrosRelAnterior(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular')).length }}</text>
                                         </ng-container>
                                     </ng-container>
-                                    <text (click)="emitEjecutarAccion($event, [diente, cuadrante, odontogramasHUDS])"
-                                          fill="#FFFFFF" x="22" y="46"
-                                          font-size="14">{{ getRegistrosRelAnterior(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular')).length }}</text>
                                     <path (click)="emitEjecutarAccion($event, [diente, cuadrante, odontogramasHUDS])"
                                           (mouseenter)="showTooltip(diente, 'oclusal', true, 0)"
                                           d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z"
@@ -164,11 +164,11 @@
                                                   d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z "
                                                   class="diente oclusal {{ 'diente-' + reloclusal.concepto.semanticTag }}"
                                                   title="oclusal" />
+                                            <text (click)="emitEjecutarAccion($event, [diente, cuadrante, odontogramasHUDS])"
+                                                  fill="#FFFFFF" x="22" y="32"
+                                                  font-size="14">{{ getRegistrosRelAnterior(diente, 'oclusal').length }}</text>
                                         </ng-container>
                                     </ng-container>
-                                    <text (click)="emitEjecutarAccion($event, [diente, cuadrante, odontogramasHUDS])"
-                                          fill="#FFFFFF" x="22" y="32"
-                                          font-size="14">{{ getRegistrosRelAnterior(diente, 'oclusal').length }}</text>
                                     <ng-container
                                                   *ngFor="let relClass of getRegistrosRelAnterior(diente, 'pieza'); let a=index">
                                         <g class="pieza" title="pieza completa">
@@ -240,7 +240,7 @@
                                         <path (click)="seleccionarDiente(diente, (esCuadranteIzquierdo(cuadrante) ? 'distal' : 'mesial')); showTooltip(diente, (esCuadranteIzquierdo(cuadrante) ? 'distal' : 'mesial'), false, d, true)"
                                               [ngClass]="{'seleccionada': estaSeleccionada(diente, (esCuadranteIzquierdo(cuadrante) ? 'distal' : 'mesial'))}"
                                               d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
-                                              class="diente distal {{ 'diente-' + reldistal.concepto.semanticTag }} diente-offset-{{d}}"
+                                              class="diente distal {{ 'diente-' + reldistal.concepto.semanticTag }}"
                                               title="(esCuadranteIzquierdo(cuadrante) ? 'distal' : 'mesial')" />
                                     </ng-container>
                                 </ng-container>
@@ -259,7 +259,7 @@
                                         <path (click)="seleccionarDiente(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual')); showTooltip(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual'), false, v, true)"
                                               [ngClass]="{'seleccionada': estaSeleccionada(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual'))}"
                                               d="M26,19.542c2.197,0,4.187,0.891,5.627,2.331l9.34-9.339c-3.831-3.831-9.122-6.2-14.967-6.2c-5.845,0-11.137,2.369-14.967,6.2l9.339,9.339C21.813,20.433,23.802,19.542,26,19.542z"
-                                              class="diente vestibular {{ 'diente-' + relvestibular.concepto.semanticTag }} diente-offset-{{v}}"
+                                              class="diente vestibular {{ 'diente-' + relvestibular.concepto.semanticTag }}"
                                               title="(esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual')" />
                                     </ng-container>
                                 </ng-container>
@@ -277,9 +277,9 @@
                                     <ng-container
                                                   *ngFor="let relMesial of getRegistrosEjecucion(diente,(esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal')); let m=index">
                                         <path (click)="seleccionarDiente(diente,(esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal')); showTooltip(diente,(esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal'), false, m, true)"
-                                              [ngClass]="{'seleccionada': estaSeleccionada(diente,(esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal'))}"
+                                              [ngClass]="{'seleccionada': estaSeleccionada(diente, (esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal'))}"
                                               d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
-                                              class="diente mesial {{ 'diente-' + relMesial.concepto.semanticTag }} diente-offset-{{m}}"
+                                              class="diente mesial {{ 'diente-' + relMesial.concepto.semanticTag }}"
                                               title="(esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal')" />
                                     </ng-container>
                                 </ng-container>
@@ -296,16 +296,16 @@
                                     <ng-container
                                                   *ngFor="let relpalatina of getRegistrosEjecucion(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular')); let p=index">
                                         <path (click)="seleccionarDiente(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular')); showTooltip(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular'), false, p, true)"
-                                              [ngClass]="{'seleccionada': estaSeleccionada(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'palatina'))}"
+                                              [ngClass]="{'seleccionada': estaSeleccionada(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular'))}"
                                               d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z"
-                                              class="diente palatina {{ 'diente-' + relpalatina.concepto.semanticTag }} diente-offset-{{p}}"
+                                              class="diente palatina {{ 'diente-' + relpalatina.concepto.semanticTag }}"
                                               title="(esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular')" />
                                     </ng-container>
                                 </ng-container>
 
                                 <!-- OCLUSAL -->
                                 <path (click)="seleccionarDiente(diente, 'oclusal'); showTooltip(diente, 'oclusal', false, 0, true)"
-                                      [ngClass]="{'seleccionada': estaSeleccionada(diente, 'oclusal')}"
+                                      [ngClass]="{'seleccionada': estaSeleccionada(diente, 'oclusal'),  'registrada': caraValor(diente, 'oclusal') !==- 1}"
                                       d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z"
                                       class="diente oclusal {{ 'diente-' + getClassRegistro(diente, 'oclusal')?.concepto.semanticTag }}"
                                       title="oclusal" />
@@ -313,9 +313,9 @@
                                     <ng-container
                                                   *ngFor="let reloclusal of getRegistrosEjecucion(diente, 'oclusal'); let o=index">
                                         <path (click)="seleccionarDiente(diente, 'oclusal'); showTooltip(diente, 'oclusal', false, o, true)"
-                                              [ngClass]="{ 'registrada': caraValor(diente, 'oclusal') !==- 1}"
+                                              [ngClass]="{'seleccionada': estaSeleccionada(diente, 'oclusal'), 'registrada': caraValor(diente, 'oclusal') !==- 1}"
                                               d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z "
-                                              class="diente oclusal {{ 'diente-' + reloclusal.concepto.semanticTag }} diente-offset-{{o}} "
+                                              class="diente oclusal {{ 'diente-' + reloclusal.concepto.semanticTag }} "
                                               title="oclusal" />
                                     </ng-container>
                                 </ng-container>
@@ -427,8 +427,7 @@
 
             <ng-container *ngFor="let cuadrante of cuadrantes">
                 <div class="col-6 no-gutters {{ cuadrante }}">
-                    <ng-container
-                                  *ngFor="let diente of prestacion.ejecucion.registros[0].valor.odontograma[cuadrante]; let i = index">
+                    <ng-container *ngFor="let diente of odontograma[cuadrante]; let i = index">
                         <div class="diente-container text-center">
                             <span class="text-diente"> {{ diente.concepto.term }}</span>
                             <svg *ngIf="!piezaAnulada(diente.concepto.conceptId)" xmlns="http://www.w3.org/2000/svg"
@@ -442,14 +441,17 @@
                                       class="diente distal {{ 'diente-' + getClassRegistro(diente, (esCuadranteIzquierdo(cuadrante) ? 'distal' : 'mesial'))?.concepto.semanticTag }}"
                                       title="(esCuadranteIzquierdo(cuadrante)" />
                                 <ng-container
-                                              *ngIf="getRegistrosRel(diente, (esCuadranteIzquierdo(cuadrante) ? 'distal' : 'mesial'))?.length">
+                                              *ngIf="getRegistrosEjecucion(diente, (esCuadranteIzquierdo(cuadrante) ? 'distal' : 'mesial'))?.length">
                                     <ng-container
-                                                  *ngFor="let reldistal of getRegistrosRel(diente, (esCuadranteIzquierdo(cuadrante) ? 'distal' : 'mesial')); let d=index">
+                                                  *ngFor="let reldistal of getRegistrosEjecucion(diente, (esCuadranteIzquierdo(cuadrante) ? 'distal' : 'mesial')); let d=index">
                                         <path (click)="jumpToId(getClassRegistro(diente,(esCuadranteIzquierdo(cuadrante) ? 'distal' : 'mesial'))?.concepto.conceptId); showTooltip(diente, (esCuadranteIzquierdo(cuadrante) ? 'distal' : 'mesial'), false, d);"
                                               [ngClass]="{'registrada': caraValor(diente, (esCuadranteIzquierdo(cuadrante) ? 'distal' : 'mesial')) !== -1}"
                                               d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
-                                              class="diente distal {{ 'diente-' + reldistal.concepto.semanticTag }} diente-offset-{{d}}"
+                                              class="diente distal {{ 'diente-' + reldistal.concepto.semanticTag }}"
                                               title="(esCuadranteIzquierdo(cuadrante)" />
+                                        <text *ngIf="getRegistrosEjecucion(diente, (esCuadranteIzquierdo(cuadrante) ? 'distal' : 'mesial')).length > 0"
+                                              fill="#FFFFFF" x="8" y="31"
+                                              font-size="14">{{ getRegistrosEjecucion(diente, (esCuadranteIzquierdo(cuadrante) ? 'distal' : 'mesial')).length }}</text>
                                     </ng-container>
                                 </ng-container>
                                 <!-- VESTIBULAR/LINGUAL -->
@@ -459,14 +461,17 @@
                                       class="diente vestibular {{ 'diente-' + getClassRegistro(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual'))?.concepto.semanticTag }}"
                                       title="(esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual')" />
                                 <ng-container
-                                              *ngIf="getRegistrosRel(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual'))?.length">
+                                              *ngIf="getRegistrosEjecucion(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual'))?.length">
                                     <ng-container
-                                                  *ngFor="let relvestibular of getRegistrosRel(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual')); let v=index">
+                                                  *ngFor="let relvestibular of getRegistrosEjecucion(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual')); let v=index">
                                         <path (click)="jumpToId(getClassRegistro(diente,(esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual'))?.concepto.conceptId); showTooltip(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual'), false, v)"
                                               [ngClass]="{'registrada': caraValor(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual')) !== -1}"
                                               d="M26,19.542c2.197,0,4.187,0.891,5.627,2.331l9.34-9.339c-3.831-3.831-9.122-6.2-14.967-6.2c-5.845,0-11.137,2.369-14.967,6.2l9.339,9.339C21.813,20.433,23.802,19.542,26,19.542z"
-                                              class="diente vestibular {{ 'diente-' + relvestibular.concepto.semanticTag }} diente-offset-{{v}}"
+                                              class="diente vestibular {{ 'diente-' + relvestibular.concepto.semanticTag }}"
                                               title="(esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual')" />
+                                        <text *ngIf="getRegistrosEjecucion(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual')).length > 0"
+                                              fill="#FFFFFF" x="21" y="17"
+                                              font-size="14">{{ getRegistrosEjecucion(diente, (esCuadranteInferior(cuadrante) ? 'vestibular' : 'lingual')).length }}</text>
                                     </ng-container>
                                 </ng-container>
                                 <!-- MESIAL/DISTAL -->
@@ -476,14 +481,17 @@
                                       class="diente mesial {{ 'diente-' + getClassRegistro(diente, (esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal'))?.concepto.semanticTag }}"
                                       title="(esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal')" />
                                 <ng-container
-                                              *ngIf="getRegistrosRel(diente, (esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal'))?.length">
+                                              *ngIf="getRegistrosEjecucion(diente, (esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal'))?.length">
                                     <ng-container
-                                                  *ngFor="let relMesial of getRegistrosRel(diente, (esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal')); let m=index">
+                                                  *ngFor="let relMesial of getRegistrosEjecucion(diente, (esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal')); let m=index">
                                         <path (click)="jumpToId(getClassRegistro(diente,(esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal'))?.concepto.conceptId); showTooltip(diente, (esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal'), false, m)"
                                               [ngClass]="{'registrada': caraValor(diente, (esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal')) !== -1}"
                                               d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
-                                              class="diente mesial {{ 'diente-' + relMesial.concepto.semanticTag }} diente-offset-{{m}}"
+                                              class="diente mesial {{ 'diente-' + relMesial.concepto.semanticTag }}"
                                               title="(esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal')" />
+                                        <text *ngIf="getRegistrosEjecucion(diente, (esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal')).length > 0"
+                                              fill="#FFFFFF" x="37" y="32"
+                                              font-size="14">{{ getRegistrosEjecucion(diente, (esCuadranteIzquierdo(cuadrante) ? 'mesial' : 'distal')).length }}</text>
                                     </ng-container>
                                 </ng-container>
                                 <!-- PALATINA/VESTIBULAR -->
@@ -493,14 +501,17 @@
                                       class="diente palatina {{ caraValor(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular')) !==- 1 ? 'diente-' + getClassRegistro(diente,(esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular'))?.concepto.semanticTag : '' }}"
                                       title="(esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular')" />
                                 <ng-container
-                                              *ngIf="getRegistrosRel(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular'))?.length">
+                                              *ngIf="getRegistrosEjecucion(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular'))?.length">
                                     <ng-container
-                                                  *ngFor="let relpalatina of getRegistrosRel(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular')); let p=index">
+                                                  *ngFor="let relpalatina of getRegistrosEjecucion(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular')); let p=index">
                                         <path (click)="jumpToId(getClassRegistro(diente,(esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular'))?.concepto.conceptId); showTooltip(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular'), false, p)"
                                               [ngClass]="{ 'registrada': caraValor(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular')) !==- 1}"
                                               d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z "
-                                              class="diente palatina {{ 'diente-' + relpalatina.concepto.semanticTag }} diente-offset-{{p}} "
+                                              class="diente palatina {{ 'diente-' + relpalatina.concepto.semanticTag }} "
                                               title="(esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular')" />
+                                        <text *ngIf="getRegistrosEjecucion(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular')).length > 0"
+                                              fill="#FFFFFF" x="22" y="46"
+                                              font-size="14">{{ getRegistrosEjecucion(diente, (esCuadranteInferior(cuadrante) ? 'palatina' : 'vestibular')).length }}</text>
                                     </ng-container>
                                 </ng-container>
                                 <!-- OCLUSAL -->
@@ -509,14 +520,17 @@
                                       d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z "
                                       class="diente oclusal {{ 'diente-' + getClassRegistro(diente, 'oclusal')?.concepto.semanticTag }} "
                                       title="oclusal" />
-                                <ng-container *ngIf="getRegistrosRel(diente, 'oclusal')?.length">
+                                <ng-container *ngIf="getRegistrosEjecucion(diente, 'oclusal')?.length">
                                     <ng-container
-                                                  *ngFor="let reloclusal of getRegistrosRel(diente, 'oclusal'); let o=index">
+                                                  *ngFor="let reloclusal of getRegistrosEjecucion(diente, 'oclusal'); let o=index">
                                         <path (click)="jumpToId(getClassRegistro(diente,'oclusal')?.concepto.conceptId); showTooltip(diente, 'oclusal', false, o)"
                                               [ngClass]="{ 'registrada': caraValor(diente, 'oclusal') !==- 1}"
                                               d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z "
-                                              class="diente oclusal {{ 'diente-' + reloclusal.concepto.semanticTag }} diente-offset-{{o}} "
+                                              class="diente oclusal {{ 'diente-' + reloclusal.concepto.semanticTag }} "
                                               title="oclusal" />
+                                        <text *ngIf="getRegistrosEjecucion(diente, 'oclusal').length > 0" fill="#FFFFFF"
+                                              x="22" y="32"
+                                              font-size="14">{{ getRegistrosEjecucion(diente, 'oclusal').length }}</text>
                                     </ng-container>
                                 </ng-container>
 
@@ -531,9 +545,9 @@
                                     <path [ngClass]="piezaCompletaValor(diente, 'pieza') !== -1 ? 'diente-' + getClassRegistro(diente, 'pieza')?.concepto.semanticTag + '-outline' : '' "
                                           d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z " />
                                 </g>
-                                <ng-container *ngIf="getRegistrosRel(diente, 'pieza')?.length">
+                                <ng-container *ngIf="getRegistrosEjecucion(diente, 'pieza')?.length">
                                     <ng-container
-                                                  *ngFor="let relClass of getRegistrosRel(diente, 'pieza'); let a=index">
+                                                  *ngFor="let relClass of getRegistrosEjecucion(diente, 'pieza'); let a=index">
                                         <g (click)="showTooltip(diente, 'pieza', false, a)" class="pieza"
                                            title="pieza completa">
                                             <!-- Círculo MINI -->
@@ -542,6 +556,9 @@
                                                     [ngClass]="'diente-' + relClass.concepto.semanticTag + ' rotate-'+ a" />
                                             <path [ngClass]="'diente-' + getClassRegistro(diente,'pieza')?.concepto.semanticTag"
                                                   d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z " />
+                                            <text *ngIf="getRegistrosEjecucion(diente, 'pieza').length > 0"
+                                                  fill="#FFFFFF" x="43" y="12"
+                                                  font-size="14">{{ getRegistrosEjecucion(diente, 'pieza').length }}</text>
                                         </g>
                                         <!-- Círculo GRANDE -->
                                         <circle cx="26" cy="27.5" r="22.246"
