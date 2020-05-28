@@ -104,7 +104,7 @@ export class AuditarSolicitudComponent implements OnInit {
         this.doShowConfirmar();
     }
 
-    remitir() {
+    referir() {
         this.servicioReglas.get({
             organizacionOrigen: this.auth.organizacion.id,
             prestacionOrigen: this.prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId })

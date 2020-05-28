@@ -59,7 +59,7 @@ export class HistorialSolicitudComponent {
             liberacionTurno: 'Turno Liberado',
             rechazada: 'Contrarreferida',
             anulada: 'Anulada',
-            remisionSolicitud: 'Remitida'
+            referencia: 'Referida'
         };
 
         this.itemsHistorial.forEach(e => e.descripcion = salidaEstados[e.descripcion]);

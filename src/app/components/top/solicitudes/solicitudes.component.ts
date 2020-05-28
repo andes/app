@@ -303,11 +303,11 @@ export class SolicitudesComponent implements OnInit {
             ]
         };
         if (this.tipoSolicitud === 'entrada') {
-            params.remitidas = true;
+            params.referidas = true;
+
             if (this.asignadas) {
                 params['idProfesional'] = this.auth.profesional;
             }
-            params.remitidas = true;
 
             if (this.estadoEntrada) {
 
@@ -562,7 +562,7 @@ export class SolicitudesComponent implements OnInit {
     returnAuditoria(event) {
         this.showAuditar = false;
         this.showSidebar = false;
-        const statuses = ['pendiente', 'asignada', 'rechazada', 'remitida'];
+        const statuses = ['pendiente', 'asignada', 'rechazada', 'referida'];
         if (event.status !== this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length) {
             let patch: any;
 
@@ -585,7 +585,7 @@ export class SolicitudesComponent implements OnInit {
 
             } else {
                 patch = {
-                    op: 'remitir',
+                    op: 'referir',
                     estado: event.estado,
                     observaciones: event.observaciones,
                     organizacion: event.organizacion,
