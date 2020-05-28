@@ -9,8 +9,6 @@ import { RupElement } from '.';
 @RupElement('TensionArterialPediatricaComponent')
 export class TensionArterialPediatricaComponent extends RUPComponent implements OnInit {
     ngOnInit() {
-        this.registro.valor = {
-            valido: true
-        };
+
     }
 }

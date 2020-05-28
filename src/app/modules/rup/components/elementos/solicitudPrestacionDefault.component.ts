@@ -30,6 +30,11 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
         }
     }
 
+    isEmpty() {
+        const value = this.registro.valor.solicitudPrestacion;
+        return !value.motivo && !value.indicaciones && !value.organizacionDestino && !value.profesionalesDestino;
+    }
+
     loadProfesionales(event) {
         if (event && event.query) {
             let query = {

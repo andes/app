@@ -29,6 +29,8 @@ export class IPrestacionRegistro {
 
     esDiagnosticoPrincipal: Boolean;
 
+    isEmpty: Boolean;
+
     privacy: IRegistroPrivacy;
 
     solicitud: any;

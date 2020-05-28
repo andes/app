@@ -827,6 +827,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             this.plex.info('warning', 'Debe agregar al menos un registro en la consulta', 'Error');
             return false;
         }
+        return true;
 
     }
 
@@ -840,6 +841,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         this.flagValid = true;
         this.rupElements.forEach((item) => {
             let instance = item.rupInstance;
+            instance.checkEmpty();
             this.flagValid = this.flagValid && (instance.soloValores || instance.validate());
         });
         // validamos antes de guardar
