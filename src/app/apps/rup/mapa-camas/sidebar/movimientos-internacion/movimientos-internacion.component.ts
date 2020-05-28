@@ -15,8 +15,8 @@ export class MovimientosInternacionComponent implements OnInit {
 
     public historial$: Observable<any>;
 
-    public desde = moment().subtract(7, 'd').toDate();
-    public hasta = moment().toDate();
+    public desde = moment(this.mapaCamasService.fecha).subtract(7, 'd').toDate();
+    public hasta = this.mapaCamasService.fecha;
 
     constructor(
         private mapaCamasService: MapaCamasService,
