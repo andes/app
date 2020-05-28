@@ -114,11 +114,6 @@
                                  [hidden]="itemsRegistros[registro.id]?.collapse || confirmarEliminar || confirmarDesvincular[registro.id]">
                                 <!-- ... Body -->
                                 <div class="content">
-                                    <!-- <div *ngIf="registro && !registro.valido">
-                                        <span class="badge badge-danger">
-                                            Debe completar los datos
-                                        </span>
-                                    </div> -->
                                     <rup [elementoRUP]="elementosRUPService.elementoRegistro(registro)"
                                          [prestacion]="prestacion" [paciente]="paciente" [registro]="registro"
                                          [soloValores]="soloValores" [params]="elementosRUPService.getParams(registro)">

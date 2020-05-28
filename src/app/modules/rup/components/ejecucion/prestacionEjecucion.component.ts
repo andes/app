@@ -816,35 +816,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     }
     /* fin ordenamiento de los elementos */
 
-
-    /**
-     * Validamos si los registros de la consulta tienen valores almacenados
-     *
-     * @memberof PrestacionEjecucionComponent
-     */
-    private controlValido(registro) {
-        return true;
-        // if (registro.registros.length <= 0) {
-        //     registro.valido = (registro.valor !== null) ? true : false;
-        //     if (registro.concepto && !registro.valido) {
-        //         this.plex.toast('danger', 'Registro incompleto: ' + registro.concepto.term, 'Error', 3000);
-        //         this.colapsarPrestaciones('expand');
-        //     }
-        // } else {
-
-        //     let total = registro.registros.length;
-        //     let contadorValiddos = 0;
-        //     registro.registros.forEach(r => {
-        //         let res = this.controlValido(r);
-        //         if (res) {
-        //             contadorValiddos++;
-        //         }
-        //     });
-        //     registro.valido = (contadorValiddos === total) ? true : false;
-        // }
-        // return registro.valido;
-    }
-
     /**
      * Validamos si se puede guardar o no la prestacion
      *
@@ -852,27 +823,11 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
      * @memberof PrestacionEjecucionComponent
      */
     beforeSave() {
-
-        let resultado = true;
-
         if (!this.prestacion.ejecucion.registros.length || (this.prestacion.ejecucion.registros.length === 1 && this.prestacion.ejecucion.registros[0].concepto.conceptId === '721145008')) {
             this.plex.info('warning', 'Debe agregar al menos un registro en la consulta', 'Error');
             return false;
-        } else {
-            this.prestacion.ejecucion.registros.forEach(r => {
-                if (!this.controlValido(r)) {
+        }
 
-                    this.prestacionValida = false;
-                    this.mostrarMensajes = true;
-                    resultado = false;
-                }
-            });
-        }
-        if (!resultado) {
-            this.plex.toast('danger', 'Hay registros incompletos', 'Error', 3000);
-            this.colapsarPrestaciones('expand');
-        }
-        return resultado;
     }
 
     /**
@@ -882,11 +837,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
      * @memberof PrestacionEjecucionComponent
      */
     guardarPrestacion() {
-        // validamos antes de guardar
-
         this.flagValid = true;
         this.rupElements.forEach((item) => {
-
             let instance = item.rupInstance;
             this.flagValid = this.flagValid && (instance.soloValores || instance.validate());
         });
@@ -1300,13 +1252,13 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     registroSeguimiento() {
         // Se evalúa si hay registros de seguimiento
-            this.seguimientoPacienteService.getRegistros({paciente: this.paciente.id}).subscribe(seguimientoPaciente => {
-                if (seguimientoPaciente.length) {
-                        this.flagSeguimiento = true;
-                } else {
-                        this.flagSeguimiento = false;
-                }
-            });
+        this.seguimientoPacienteService.getRegistros({ paciente: this.paciente.id }).subscribe(seguimientoPaciente => {
+            if (seguimientoPaciente.length) {
+                this.flagSeguimiento = true;
+            } else {
+                this.flagSeguimiento = false;
+            }
+        });
     }
 
 }

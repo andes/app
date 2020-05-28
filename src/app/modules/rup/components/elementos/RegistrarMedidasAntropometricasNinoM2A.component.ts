@@ -11,7 +11,7 @@ export class RegistrarMedidasAntropometricasNinoM2AComponent extends RUPComponen
 
 
     ngOnInit() {
-        this.registro.valido = true;
+
     }
 
 }
