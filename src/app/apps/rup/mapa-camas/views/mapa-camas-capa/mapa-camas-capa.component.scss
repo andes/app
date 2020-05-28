@@ -9,8 +9,16 @@ table tr th.sortable:hover {
     cursor: pointer;
 }
 
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+fieldset {
+  height: 100%;
+}
+
 cdk-virtual-scroll-viewport {
-    height: 450px;
+    height: 100%;
 
     table {
         height: 100%;
