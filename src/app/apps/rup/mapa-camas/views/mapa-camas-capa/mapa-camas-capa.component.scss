@@ -3,7 +3,30 @@
     background-color: #002738 !important;
 }
 
+
 table tr th.sortable:hover {
     text-decoration: underline !important;
     cursor: pointer;
+}
+
+cdk-virtual-scroll-viewport {
+    height: 450px;
+
+    table {
+        height: 100%;
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        color: #000000;
+
+        thead tr th {
+            height: 59px;
+            border-bottom: 1px solid #d0d0d0;
+            padding: 7px 20px 7px 7px;
+            position: sticky;
+            background-color: #ffffff;
+            font-weight: bold;
+            z-index: 1;
+        }
+    }
 }

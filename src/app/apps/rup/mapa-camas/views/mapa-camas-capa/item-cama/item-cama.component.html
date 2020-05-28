@@ -27,7 +27,6 @@
         <span class="d-block"></span>
     </td>
     <td class="d-flex align-items-center">
-        <ng-container *ngIf="estadoCama$ | async as estadoCama">
             <plex-badge [type]="estadoCama.color">
                 {{estadoCama.label}}
             </plex-badge>
@@ -40,11 +39,10 @@
             <plex-badge *ngIf="equipos.monitorParamedico" size="sm" type="info" class="ml-1" title="Monitor paramédico">
                 M
             </plex-badge>
-        </ng-container>
     </td>
     <td>
         <ng-container *ngIf="canMovimientos">
-            <ng-container *ngFor="let relacion of relacionesPosibles$ | async">
+            <ng-container *ngFor="let relacion of relacionesPosibles">
                 <ng-container
                               *ngIf="(relacion.accion !== 'internarPaciente') || (relacion.accion === 'internarPaciente' && permisoIngreso)">
                     <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color" size="sm"

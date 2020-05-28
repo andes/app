@@ -14,6 +14,8 @@ export class ItemCamaComponent implements OnInit {
     @Input() cama: any;
     @Input() capa: any;
     @Input() permisoIngreso: boolean;
+    @Input() relacionesPosibles: any;
+    @Input() estadoCama: any;
     @Output() accionCama = new EventEmitter<any>();
 
     canEdit = this.auth.check('internacion:cama:edit');
@@ -24,9 +26,6 @@ export class ItemCamaComponent implements OnInit {
         respirador: false,
         monitorParamedico: false,
     };
-    public relacionesPosibles$: Observable<any>;
-    public estadoCama$: Observable<any>;
-    public puedeDesocupar$: Observable<string>;
 
     get sectorCama() {
         return this.cama.sectores[this.cama.sectores.length - 1].nombre;
@@ -40,9 +39,6 @@ export class ItemCamaComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.estadoCama$ = this.mapaCamasService.getEstadoCama(this.cama);
-        this.relacionesPosibles$ = this.mapaCamasService.getRelacionesPosibles(this.cama);
-
         if (this.cama.equipamiento) {
             this.cama.equipamiento.map(equip => {
                 if (equip.conceptId === aporteOxigeno.conceptId) {
