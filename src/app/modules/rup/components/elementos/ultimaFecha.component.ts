@@ -19,6 +19,10 @@ export class UltimaFechaComponent extends RUPComponent implements OnInit {
     ngOnInit() {
 
         this.min = this.paciente.fechaNacimiento;
+        const year = this.prestacion.ejecucion.fecha.getUTCFullYear();
+        const month = this.prestacion.ejecucion.fecha.getUTCMonth();
+        const day = this.prestacion.ejecucion.fecha.getUTCDate();
+        this.max = new Date(year, month, day, 23, 59, 59);
 
         if (!this.soloValores) {
             // Observa cuando cambia la propiedad en otro elemento RUP
@@ -49,7 +53,7 @@ export class UltimaFechaComponent extends RUPComponent implements OnInit {
 
         // Nos aseguramos que NO estamos en la pantalla de Validación/Resumen
 
-        if (!this.validacion && !this.soloValores) {
+        if (!this.validacion && !this.soloValores && !this.registro.valor) {
 
             // Se busca en la HUDS si hay prestaciones con valores ya cargados
             this.prestacionesService.get(params).subscribe(consultasPaciente => {
@@ -69,7 +73,7 @@ export class UltimaFechaComponent extends RUPComponent implements OnInit {
                     }
 
                     // Si se encontro consulta se guardan registros
-                    if (this.ultimaConsulta) {
+                    if (this.ultimaConsulta ) {
                         this.registro.valor = this.ultimaConsulta.valor;
                         this.calculaTiempo();
                         this.min = this.registro.valor;
@@ -83,25 +87,34 @@ export class UltimaFechaComponent extends RUPComponent implements OnInit {
 
     calculaTiempo() {
         if (!isNullOrUndefined(this.registro.valor)) {
-            const tiempo = new Date(new Date().getTime() - this.registro.valor.getTime());
+            const tiempo = new Date(this.max.getTime() - this.registro.valor.getTime());
             const dateStrArray = [];
+            let bandera = false;
 
             const anios = tiempo.getUTCFullYear() - 1970;
             if (anios > 0) {
                 dateStrArray.push(`${anios} año${anios > 1 ? 's' : ''}`);
+                bandera = true;
             }
 
             const meses = tiempo.getUTCMonth();
             if (meses > 0) {
                 dateStrArray.push(`${meses} mes${meses > 1 ? 'es' : ''}`);
+                bandera = true;
             }
 
-            const dias = tiempo.getUTCDate();
-            if (dias) {
+            const dias = tiempo.getUTCDate() - 1;
+            if (dias > 0) {
                 dateStrArray.push(`${dias} dia${dias > 1 ? 's' : ''}`);
+                bandera = true;
             }
             // Reemplaza la ultima coma por un "y"
-            this.alerta = `Han pasado ${dateStrArray.join(', ').replace(/(\b, \b)(?!.*\1)/, ' y ')}`;
+            if (bandera) {
+                this.alerta = `Han pasado ${dateStrArray.join(', ').replace(/(\b, \b)(?!.*\1)/, ' y ')}`;
+                bandera = false;
+            } else {
+                this.alerta = '';
+            }
         }
     }
 
