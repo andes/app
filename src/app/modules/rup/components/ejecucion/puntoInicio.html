@@ -26,14 +26,6 @@
                              [preload]="true">
                 </plex-select>
             </div>
-            <!-- <div class="pr-0 col-4">
-                <label class="form-control-label">Agendas</label>
-                <div class="d-flex align-items-end h-50">
-                    <plex-radio class="form-check form-check-inline" [(ngModel)]="filtroAgendas.radio" [data]="opciones"
-                                name="agendas" type="vertical" (change)="filtrar();">
-                    </plex-radio>
-                </div>
-            </div> -->
         </div>
         <br>
 
@@ -280,12 +272,6 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <plex-badge *ngIf="turno.prestacion?.turnosPedientes"
-                                                        title="Turno autocitado sin asignar" type="warning">
-                                                <plex-icon name="message-alert"></plex-icon>
-                                            </plex-badge>
-                                        </td>
-                                        <td>
                                             <ng-container *ngIf="turno.tipoPrestacion && turno.paciente?.id">
                                                 <plex-button size="block"
                                                              (click)="setRouteToParams(['vista', turno.paciente.id]); setAccesoHudsParams(turno.paciente, turno.id, turno.tipoPrestacion.id)"
@@ -295,7 +281,7 @@
                                                 <plex-button size="block"
                                                              *ngIf="!esFutura(agendaSeleccionada) && turno.paciente && turno.estado !== 'suspendido'  && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente' && tienePermisos(turno) && verificarAsistencia(turno)"
                                                              label="INICIAR PRESTACIÓN" type="success btn-sm"
-                                                             (click)="ejecutarPrestacionPendiente(turno.prestacion, turno.paciente, turno.tipoPrestacion, turno)">
+                                                             (click)="ejecutarPrestacionPendiente(turno)">
                                                 </plex-button>
 
                                                 <!--Una agenda futura muestra en boton deshabilitado -->
@@ -309,7 +295,7 @@
                                                 <plex-button size="block"
                                                              *ngIf="!esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && turno.paciente && !turno.prestacion && tienePermisos(turno) && verificarAsistencia(turno)"
                                                              label="INICIAR PRESTACIÓN" type="success btn-sm"
-                                                             (click)="iniciarPrestacion(turno.paciente, turno.tipoPrestacion, turno.id)">
+                                                             (click)="iniciarPrestacion(turno)">
                                                 </plex-button>
 
                                                 <plex-button size="block"
@@ -471,13 +457,6 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <plex-badge *ngIf="sobreturno.prestacion?.turnosPedientes"
-                                                            title="Turno autocitado sin asignar" type="warning">
-                                                    <plex-icon name="message-alert"></plex-icon>
-                                                </plex-badge>
-                                            </td>
-
-                                            <td>
                                                 <ng-container
                                                               *ngIf="sobreturno.tipoPrestacion && sobreturno.paciente?.id">
                                                     <plex-button size="block"
@@ -487,7 +466,7 @@
                                                     <plex-button size="block"
                                                                  *ngIf="!esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && sobreturno.estado !== 'suspendido' && sobreturno.paciente && !sobreturno.prestacion && tienePermisos(sobreturno) && verificarAsistencia(sobreturno)"
                                                                  label="INICIAR PRESTACIÓN" type="success btn-sm"
-                                                                 (click)="iniciarPrestacion(sobreturno.paciente, sobreturno.tipoPrestacion, sobreturno.id)">
+                                                                 (click)="iniciarPrestacion(sobreturno)">
                                                     </plex-button>
 
                                                     <plex-button size="block"
@@ -566,15 +545,6 @@
                                         </ng-container>
                                     </td>
                                     <td>
-
-                                    </td>
-                                    <td>
-                                        <plex-badge *ngIf="prestacion.turnosPedientes"
-                                                    title="Turno autocitado sin asignar" type="warning">
-                                            <plex-icon name="message-alert"></plex-icon>
-                                        </plex-badge>
-                                    </td>
-                                    <td>
                                         <plex-button size="block"
                                                      *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada"
                                                      (click)="setRouteToParams(['vista', prestacion.paciente.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id)"
@@ -606,7 +576,6 @@
         </div>
     </plex-layout-sidebar>
     <plex-layout-footer *ngIf="!buscandoPaciente">
-        <!-- <plex-dropdown type="primary" label="Paciente" [items]="dropdownPaciente"></plex-dropdown> -->
         <plex-button position="right" label="HUDS DE UN PACIENTE" type="primary" (click)="verHuds()" class="mr-1">
         </plex-button>
         <plex-button position="right" label="PACIENTE FUERA DE AGENDA" type="primary"
