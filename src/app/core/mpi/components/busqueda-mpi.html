@@ -5,7 +5,7 @@
 
                 <paciente-buscar (searchStart)="onSearchStart()"
                                  (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado, $event.busqueda)"
-                                 (searchClear)="onSearchClear()"></paciente-buscar>
+                                 (searchClear)="onSearchClear()" [returnScannedPatient]="true"></paciente-buscar>
 
                 <mpi-botones-registro [hostComponent]="'mpi'" [disabled]="disableNuevoPaciente">
                 </mpi-botones-registro>

@@ -5,7 +5,7 @@
             <div class="col-9 pr-0">
                 <paciente-buscar (searchStart)="onSearchStart()"
                                  (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
-                                 (searchClear)="onSearchClear()">
+                                 (searchClear)="onSearchClear()" [returnScannedPatient]="true">
                 </paciente-buscar>
             </div>
             <div class="col-3">
