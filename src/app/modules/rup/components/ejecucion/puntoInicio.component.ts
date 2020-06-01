@@ -74,6 +74,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public accesoHudsPaciente = null;
     public accesoHudsTurno = null;
     public tieneAccesoHUDS: Boolean;
+    public matchPaciente: Boolean = true;
 
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
@@ -225,6 +226,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
         // por tipo de prestación
         if (this.prestacionSeleccion) {
+            this.agendas = this.agendas.filter(agenda => (agenda.tipoPrestaciones.find(tipoPrestacion => tipoPrestacion.conceptId === this.prestacionSeleccion.conceptId)));
             let agendasLength = this.agendas.length;
             if (agendasLength) {
 
@@ -251,7 +253,11 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                 this.fueraDeAgenda = _turnos;
             }
         }
+
+        this.matchPaciente = true;
         if (typeof this.paciente !== 'undefined' && this.paciente) {
+            this.matchPaciente = false;
+
             let search = this.paciente.toLowerCase();
 
             // buscamos el paciente en los turnos de la agenda
@@ -275,6 +281,8 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                                     || t.paciente.documento.toLowerCase().indexOf(search) >= 0)
                             );
                         });
+
+                        this.matchPaciente = this.matchPaciente || _turnos.length;
 
                         this.agendas[indexAgenda].bloques[indexBloque].turnos = _turnos;
                     }
