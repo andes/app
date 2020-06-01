@@ -3,7 +3,7 @@ import { finalize } from 'rxjs/operators';
 import { environment } from './../environments/environment';
 import { Component } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { Server } from '@andes/shared';
+import { Server, cache } from '@andes/shared';
 import { Auth } from '@andes/auth';
 import { PROPERTIES } from './styles/properties';
 import { WebSocketService } from './services/websocket.service';
@@ -11,6 +11,7 @@ import { HotjarService } from './shared/services/hotJar.service';
 import { GoogleTagManagerService } from './shared/services/analytics.service';
 import { AdjuntosService } from './modules/rup/services/adjuntos.service';
 import { ModulosService } from './services/novedades/modulos.service';
+import { Observable } from 'rxjs';
 
 // import { RxSocket } from 'rx-socket.io-client';
 
@@ -36,8 +37,10 @@ export class AppComponent {
     }
 
     private menuList = [];
+    private modulos$: Observable<any[]>;
 
     public loading = true;
+    public tieneNovedades = false;
 
     constructor(
         public plex: Plex,
@@ -117,24 +120,27 @@ export class AppComponent {
                 }
             });
         }
-
-        this.modulosService.search({}).subscribe(registros => {
-            let cajasModulos = [];
+        this.modulos$ = this.modulosService.search({ activo: true }).pipe(cache());
+        this.modulos$.subscribe(registros => {
+            let cajas = [];
             registros.forEach((modulo) => {
                 modulo.permisos.forEach((permiso) => {
                     if (this.auth.getPermissions(permiso).length > 0) {
-                        cajasModulos.push(modulo);
+                        cajas.push(modulo);
                     }
                 });
             });
-            if (cajasModulos.length) {
-                let modulos = cajasModulos.map(p => {
+            if (cajas.length) {
+                let modulos = cajas.map(p => {
                     return p._id;
                 });
                 this.commonNovedadesService.setNovedadesSinFiltrar(modulos);
+                this.commonNovedadesService.getNovedadesSinFiltrar().subscribe((novedades) => {
+                    this.tieneNovedades = novedades.length > 0;
+                });
             }
-        }, (err) => {
         });
+
         // Cargo el array de permisos
         if (this.auth.getPermissions('turnos:planificarAgenda:?').length > 0) {
             accessList.push({ label: 'CITAS: Gestor de Agendas y Turnos', icon: 'calendar', route: '/citas/gestor_agendas' });
@@ -204,5 +210,7 @@ export class AppComponent {
         return accessList;
     }
 
-
+    public getModulos() {
+        return this.modulos$;
+    }
 }
