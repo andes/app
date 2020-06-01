@@ -1,12 +1,12 @@
 <form #form="ngForm">
     <ng-container *ngIf="!soloValores">
-        <plex-text label="Observaciones" [html]="true" [(ngModel)]="registro.valor" name="observaciones"
-                   placeholder="Ingrese una observación" (change)="emitChange()" [required]="params?.required"
+        <plex-text [label]="params.titulo" [html]="true" [(ngModel)]="registro.valor" name="observaciones"
+                   [placeholder]="params.placeholder" (change)="emitChange()" [required]="params?.required"
                    *ngIf="afterInit"></plex-text>
     </ng-container>
     <p *ngIf="soloValores" class="readonly">
         <label for="observaciones" *ngIf="!params">
-            Observaciones
+            {{ params.titulo }}
         </label>
         <ng-container *ngIf="registro?.evoluciones?.length">
             <span [innerHTML]="registro?.evoluciones[0].valor"></span>

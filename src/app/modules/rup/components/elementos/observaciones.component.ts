@@ -28,11 +28,14 @@ export class ObservacionesComponent extends RUPComponent implements OnInit, Afte
             this.params = {};
         }
         this.params.required = this.params && this.params.required ? this.params.required : false;
+        this.params.titulo = this.params.titulo || 'Observaciones';
+        this.params.placeholder = this.params.placeholder || 'Ingrese una observación';
+
         this.registro.valido = true;
         if (!this.registro.valor || this.registro.valor.length === 0) {
             this.afterInit = true;
         }
-        // Observa cuando cambia la propiedad 'Sistolica' en otro elemento RUP
+
         if (!this.soloValores) {
             this.conceptObserverService.observe(this.registro).subscribe((data) => {
                 // No soy yo mismo
