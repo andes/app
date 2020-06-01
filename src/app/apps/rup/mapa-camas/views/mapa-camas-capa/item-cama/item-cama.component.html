@@ -27,8 +27,8 @@
         <span class="d-block"></span>
     </td>
     <td class="d-flex align-items-center">
-            <plex-badge [type]="estadoCama.color">
-                {{estadoCama.label}}
+            <plex-badge [type]="estadoCama?.color">
+                {{estadoCama?.label}}
             </plex-badge>
             <plex-badge *ngIf="equipos.aporteOxigeno" size="sm" type="info" class="ml-1" title="Oxígeno">
                 O<sub>2</sub>
