@@ -27,6 +27,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     public hasta$: Observable<Date>;
 
     public cama$ = this.mapaCamasService.selectedCama;
+    public capa$ = this.mapaCamasService.capa2;
 
     @Output() accion = new EventEmitter();
 

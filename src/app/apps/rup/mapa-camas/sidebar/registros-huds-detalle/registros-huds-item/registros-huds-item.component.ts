@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, HostBinding, HostListener } from '@angular/core';
 import { IPrestacion } from '../../../../../../modules/rup/interfaces/prestacion.interface';
 import { Auth } from '@andes/auth';
+import { MapaCamasService } from '../../../services/mapa-camas.service';
 
 export type RegistroHUDSItemAccion = 'ver' | 'continuar' | 'romper-validacion';
 
@@ -10,6 +11,8 @@ export type RegistroHUDSItemAccion = 'ver' | 'continuar' | 'romper-validacion';
     templateUrl: 'registros-huds-item.component.html'
 })
 export class RegistroHUDSItemComponent {
+
+    capa$ = this.mapaCamasService.capa2;
 
     items = [
         {
@@ -33,7 +36,8 @@ export class RegistroHUDSItemComponent {
     }
 
     constructor(
-        private auth: Auth
+        private auth: Auth,
+        private mapaCamasService: MapaCamasService,
     ) { }
 
     get esEjecucion() {

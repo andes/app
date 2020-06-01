@@ -1,20 +1,21 @@
+<ng-container *ngIf="capa$ | async as capa">
 <plex-title titulo="Registros">
-    <ng-container *ngIf="esProfesional">
-        <plex-button type="info" size="sm" (click)="verHuds()">
-            HUDS
-        </plex-button>
-        <plex-button size="sm" type="info" (click)="onNuevoRegistrio()" class="ml-1">
-            NUEVO
-        </plex-button>
-    </ng-container>
-    <ng-content></ng-content>
-</plex-title>
-<div class="row mb-1">
-    <div class="col">
-        <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" [max]="hasta" [debounce]="600">
-        </plex-datetime>
-    </div>
-    <div class="col">
+        <ng-container *ngIf="capa !== 'estadistica' && esProfesional">
+            <plex-button type="info" size="sm" (click)="verHuds()">
+                HUDS
+            </plex-button>
+            <plex-button size="sm" type="info" (click)="onNuevoRegistrio()" class="ml-1">
+                NUEVO
+            </plex-button>
+        </ng-container>
+        <ng-content></ng-content>
+    </plex-title>
+    <div class="row mb-1">
+        <div class="col">
+            <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" [max]="hasta" [debounce]="600">
+            </plex-datetime>
+        </div>
+        <div class="col">
         <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" [min]="desde" [debounce]="600">
         </plex-datetime>
     </div>
@@ -38,12 +39,13 @@
                     PROFESIONAL
                 </small>
             </th>
-            <th></th>
+            <th *ngIf="capa !== 'estadistica'"></th>
         </tr>
     </thead>
     <tbody>
         <tr registro-huds-item [prestacion]="prestacion" (accion)="onItemAccion(prestacion, $event)"
-            *ngFor="let prestacion of historialFiltrado$ | async">
-        </tr>
-    </tbody>
+        *ngFor="let prestacion of historialFiltrado$ | async">
+    </tr>
+</tbody>
 </table>
+</ng-container>
