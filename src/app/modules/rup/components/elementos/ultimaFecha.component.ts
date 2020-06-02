@@ -19,10 +19,7 @@ export class UltimaFechaComponent extends RUPComponent implements OnInit {
     ngOnInit() {
 
         this.min = this.paciente.fechaNacimiento;
-        const year = this.prestacion.ejecucion.fecha.getUTCFullYear();
-        const month = this.prestacion.ejecucion.fecha.getUTCMonth();
-        const day = this.prestacion.ejecucion.fecha.getUTCDate();
-        this.max = new Date(year, month, day, 23, 59, 59);
+        this.max = moment(this.prestacion.ejecucion.fecha).endOf('day').toDate();
 
         if (!this.soloValores) {
             // Observa cuando cambia la propiedad en otro elemento RUP
@@ -36,11 +33,7 @@ export class UltimaFechaComponent extends RUPComponent implements OnInit {
         }
         this.route.url.subscribe(urlParts => {
             if (urlParts.length > 1) {
-                if (urlParts[1].path === 'validacion') {
-                    this.validacion = true;
-                }
-            } else {
-                this.validacion = false;
+                this.validacion = urlParts[1].path === 'validacion';
             }
         });
         this.registro.valido = true;
@@ -86,7 +79,7 @@ export class UltimaFechaComponent extends RUPComponent implements OnInit {
     }
 
     calculaTiempo() {
-        if (!isNullOrUndefined(this.registro.valor)) {
+        if (this.registro.valor) {
             const tiempo = new Date(this.max.getTime() - this.registro.valor.getTime());
             const dateStrArray = [];
             let bandera = false;
