@@ -10,7 +10,7 @@ export class CommonNovedadesService {
     private novedadesSinFiltrar: BehaviorSubject<INovedad[]> = new BehaviorSubject([]);
 
     constructor(
-        private registroNovedades: NovedadesService
+        private novedadesService: NovedadesService
     ) {
     }
 
@@ -30,13 +30,11 @@ export class CommonNovedadesService {
         this.novedades.next(novedades);
     }
 
-    setNovedadesSinFiltrar(modulos: string[], novedad?: INovedad) {
-        let paramsNovedades: any = {};
-        paramsNovedades.modulos = modulos;
-        paramsNovedades.activa = true;
-        this.registroNovedades.search(paramsNovedades).subscribe(
-            registros => {
-                this.novedadesSinFiltrar.next(registros);
+    setNovedadesSinFiltrar(modulos: string[]) {
+        this.novedadesService.search({ activa: true }).subscribe(
+            novedades => {
+                novedades = novedades.filter(novedad => (novedad.modulo ? modulos.includes(novedad.modulo._id) : true));
+                this.novedadesSinFiltrar.next(novedades);
             },
             (err) => {
             }
