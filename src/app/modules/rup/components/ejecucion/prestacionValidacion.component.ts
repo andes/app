@@ -192,6 +192,8 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
             // Busca el elementoRUP que implementa esta prestación
             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
+            // Si el elemento no indica si requiere diagnostico principal, lo setea en true por defecto
+            this.elementoRUP.requiereDiagnosticoPrincipal = typeof this.elementoRUP.requiereDiagnosticoPrincipal === 'undefined' ? true : this.elementoRUP.requiereDiagnosticoPrincipal;
 
             // Una vez que esta la prestacion llamamos a la funcion cargaPlan que muestra para cargar turnos si tienen permisos
             if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
@@ -314,7 +316,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        if (!existeDiagnostico && this.prestacion.solicitud.ambitoOrigen !== 'internacion' && !this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+        if (this.elementoRUP.requiereDiagnosticoPrincipal && !existeDiagnostico && this.prestacion.solicitud.ambitoOrigen !== 'internacion' && !this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
             this.plex.toast('info', 'Debe seleccionar un procedimiento / diagnóstico principal', 'procedimiento / diagóstico principal', 1000);
             return false;
         }
