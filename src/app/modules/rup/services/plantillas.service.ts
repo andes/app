@@ -12,27 +12,27 @@ export class PlantillasService {
 
     private url = '/modules/rup/plantillas';  // URL to web api
     private cache = {};
+    private cacheSolicitud = {};
     // savedText: any;
     constructor(private server: Server, public auth: Auth, public cos: ConceptObserverService) { }
 
-    get(conceptId, force = false): Observable<any> {
+    get(conceptId: string, esSolicitud: Boolean, force = false): Observable<any> {
 
-        if (!this.cache[conceptId]) {
-            this.cache[conceptId] = new BehaviorSubject(null);
-        }
-        if (this.cache[conceptId].getValue() && !force) {
-            return this.cache[conceptId];
+        const cache = this.getCache(conceptId, esSolicitud);
+        if (cache.getValue() && !force) {
+            return cache;
         } else {
             const params = {
                 conceptId,
                 organizacion: this.auth.organizacion.id,
-                profesional: this.auth.profesional
+                profesional: this.auth.profesional,
+                esSolicitud
             };
             return this.server.get(this.url, { params }).pipe(map(plantillas => {
                 if (plantillas.length > 0) {
                     plantillas = [...plantillas,
                     { title: 'Limpiar', handler: this.limpiarTextoPlantilla(conceptId), descripcion: '' }];
-                    this.cache[conceptId].next(plantillas.map(p => {
+                    cache.next(plantillas.map(p => {
                         return {
                             ...p,
                             label: p.title,
@@ -48,6 +48,19 @@ export class PlantillasService {
 
     }
 
+    getCache(conceptId: string, esSolicitud: Boolean) {
+
+        if (esSolicitud && !this.cacheSolicitud[conceptId]) {
+            this.cacheSolicitud[conceptId] = new BehaviorSubject(null);
+
+        } else {
+            if (!esSolicitud && !this.cache[conceptId]) {
+                this.cache[conceptId] = new BehaviorSubject(null);
+
+            }
+        }
+        return esSolicitud ? this.cacheSolicitud[conceptId] : this.cache[conceptId];
+    }
     post(data): Observable<any> {
         return this.server.post(`${this.url}`, data);
     }
@@ -68,11 +81,9 @@ export class PlantillasService {
     }
 
 
-    plantillas(conceptId) {
-        if (!this.cache[conceptId]) {
-            this.cache[conceptId] = new BehaviorSubject(null);
-        }
-        return this.cache[conceptId];
+    plantillas(conceptId: string, esSolicitud: boolean) {
+
+        return this.getCache(conceptId, esSolicitud);
     }
 
     limpiarTextoPlantilla(conceptId) {
