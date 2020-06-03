@@ -1,18 +1,16 @@
 <plex-layout main="7" *ngIf="!showCreateUpdate && showDashboard && !showDarTurnos">
     <plex-layout-main>
         <!-- BOTONES DE REGISTRO MPI -->
-        <div class="row">
-            <div class="col-9 pr-0">
-                <paciente-buscar (searchStart)="onSearchStart()"
-                                 (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
-                                 (searchClear)="onSearchClear()">
-                </paciente-buscar>
-            </div>
-            <div class="col-3">
+
+        <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
+                         (searchClear)="onSearchClear()" [hostComponent]="'puntoInicio'" [create]="true">
+        </paciente-buscar>
+
+        <!-- <div class="col-3">
                 <mpi-botones-registro [hostComponent]="'puntoInicio'" [disabled]="disableNuevoPaciente">
                 </mpi-botones-registro>
-            </div>
-        </div>
+            </div> -->
+
 
         <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 

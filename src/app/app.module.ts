@@ -134,6 +134,7 @@ import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.compone
 import { PacienteCruComponent } from './core/mpi/components/paciente-cru.component';
 import { GeoreferenciaService } from './core/mpi/services/georeferencia.service';
 import { GeorrefMapComponent } from './core/mpi/components/georref-map.component';
+import { PacienteComponent } from './core/mpi/components/paciente.component';
 
 
 // PUCO/ObraSocial
@@ -465,6 +466,7 @@ registerLocaleData(localeEs, 'es');
         BusquedaMpiComponent,
         PacienteCruComponent,
         GeorrefMapComponent,
+        PacienteComponent,
 
         // form Terapeutico
         FormTerapeuticoComponent,

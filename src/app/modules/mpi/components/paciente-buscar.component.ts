@@ -25,20 +25,36 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
     private timeoutHandle: number;
     public textoLibre: string = null;
     public autoFocus = 0;
+    private pacienteRoute = '/apps/mpi/paciente';
+    public routes;
+    get disabled() {
+        return !this.textoLibre || this.textoLibre.length === 0;
+    }
+
+    @Input() hostComponent = '';
+    @Input() create = false;
+    @Input() returnScannedPatient = false;  // Indica si queremos retornar el objeto del paciente escaneado
 
     // Eventos
     @Output() searchStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() searchEnd: EventEmitter<PacienteBuscarResultado> = new EventEmitter<PacienteBuscarResultado>();
     @Output() searchClear: EventEmitter<any> = new EventEmitter<any>();
 
-    // Flag indica filtrar inactivos
-    @Input() filtrarInactivos = true;
 
-    constructor(private plex: Plex, private pacienteService: PacienteService, private logService: LogService) {
+    constructor(
+        private plex: Plex,
+        private pacienteService: PacienteService,
+        private logService: LogService) {
     }
 
     public ngOnInit() {
         this.autoFocus = this.autoFocus + 1;
+        this.routes = [
+            { label: 'BEBÉ', route: `${this.pacienteRoute}/bebe/${this.hostComponent}` },
+            { label: 'EXTRANJERO', route: `${this.pacienteRoute}/extranjero/${this.hostComponent}` },
+            { label: 'CON DNI ARGENTINO', route: `${this.pacienteRoute}/con-dni/${this.hostComponent}` },
+            { label: 'SIN DNI ARGENTINO', route: `${this.pacienteRoute}/sin-dni/${this.hostComponent}` },
+        ];
     }
 
     ngOnDestroy(): void {
@@ -151,7 +167,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                     }).subscribe(resultado => {
                         if (resultado.length) {
                             // 1.2. Si encuentra el paciente (un matcheo al 100%) finaliza la búsqueda
-                            return this.searchEnd.emit({ escaneado: true, pacientes: resultado, err: null });
+                            return this.searchEnd.emit({ escaneado: true, pacientes: [resultado[0].paciente], err: null });
                         } else {
                             // 1.3. Si no encontró el paciente escaneado, busca uno similar
                             this.pacienteService.getMatch({
@@ -168,7 +184,11 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
 
                                 // 1.3.1. Si no encontró ninguno, ingresa a registro de pacientes ya que es escaneado
                                 if (!resultadoSuggest.length) {
-                                    return this.searchEnd.emit({ pacientes: [pacienteEscaneado], escaneado: true, scan: textoLibre, err: null });
+                                    if (this.returnScannedPatient) {
+                                        return this.searchEnd.emit({ pacientes: [pacienteEscaneado], escaneado: true, scan: textoLibre, err: null });
+                                    } else {
+                                        return this.searchEnd.emit({ pacientes: [], err: null });
+                                    }
                                 }
                                 // 1.3.2. Busca a uno con el mismo código de barras
                                 let match = resultadoSuggest.find(i => i.paciente.scan && i.paciente.scan === textoLibre);
@@ -193,7 +213,11 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                                             return this.searchEnd.emit({ escaneado: true, pacientes: [pacienteActualizado], err: null });
                                         }
                                     } else {
-                                        return this.searchEnd.emit({ pacientes: [pacienteEscaneado], escaneado: true, scan: textoLibre, err: null });
+                                        if (this.returnScannedPatient) {
+                                            return this.searchEnd.emit({ pacientes: [pacienteEscaneado], escaneado: true, scan: textoLibre, err: null });
+                                        } else {
+                                            return this.searchEnd.emit({ pacientes: [], err: null });
+                                        }
                                     }
                                 }
                             });
