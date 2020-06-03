@@ -108,10 +108,11 @@ export class AppComponent {
     }
 
 
-    public checkPermissions(): any {
-        let accessList = [];
+    public checkPermissions() {
+        let modulos = [];
         this.menuList = [];
-
+        this.menuList.push({ label: 'Página Principal', icon: 'home', route: '/inicio' });
+        this.menuList.push({ label: 'Padrones', icon: 'magnify', route: '/puco' });
         if (this.auth.loggedIn()) {
             this.auth.organizaciones().subscribe(data => {
                 if (data.length > 1) {
@@ -122,92 +123,27 @@ export class AppComponent {
         }
         this.modulos$ = this.modulosService.search({ activo: true }).pipe(cache());
         this.modulos$.subscribe(registros => {
-            let cajas = [];
             registros.forEach((modulo) => {
                 modulo.permisos.forEach((permiso) => {
                     if (this.auth.getPermissions(permiso).length > 0) {
-                        cajas.push(modulo);
+                        if (modulos.indexOf(modulo._id) === -1) {
+                            modulos.push(modulo._id);
+                            const menuOption = { label: `${modulo.nombre}: ${modulo.subtitulo}`, icon: `mdi ${modulo.icono}`, route: modulo.linkAcceso };
+                            this.menuList.push(menuOption);
+                        }
                     }
                 });
             });
-            if (cajas.length) {
-                let modulos = cajas.map(p => {
-                    return p._id;
-                });
+            if (modulos.length) {
                 this.commonNovedadesService.setNovedadesSinFiltrar(modulos);
                 this.commonNovedadesService.getNovedadesSinFiltrar().subscribe((novedades) => {
                     this.tieneNovedades = novedades.length > 0;
                 });
             }
+            this.menuList.push({ divider: true });
+            this.menuList.push({ label: 'Cerrar Sesión', icon: 'logout', route: '/auth/logout' });
+            this.plex.updateMenu(this.menuList);
         });
-
-        // Cargo el array de permisos
-        if (this.auth.getPermissions('turnos:planificarAgenda:?').length > 0) {
-            accessList.push({ label: 'CITAS: Gestor de Agendas y Turnos', icon: 'calendar', route: '/citas/gestor_agendas' });
-        }
-        if (this.auth.getPermissions('turnos:puntoInicio:?').length > 0) {
-            accessList.push({ label: 'CITAS: Punto de Inicio', icon: 'calendar', route: '/citas/punto-inicio' });
-        }
-
-        if (this.auth.getPermissions('espaciosFisicos:?').length > 0) {
-            accessList.push({ label: 'CITAS: Espacios Físicos', icon: 'cogs', route: 'tm/mapa_espacio_fisico' });
-        }
-
-        if (this.auth.getPermissions('mpi:?').length > 0) {
-            accessList.push({ label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: '/apps/mpi/busqueda' });
-        }
-        if (this.auth.getPermissions('auditoriaPacientes:?').length > 0) {
-            accessList.push({ label: 'Auditoría MPI', icon: 'account-search', route: 'apps/mpi/auditoria' });
-        }
-
-        if (this.auth.getPermissions('rup:?').length > 0) {
-            accessList.push({ label: 'RUP: Registro Universal de Prestaciones', icon: 'contacts', route: '/rup' });
-        }
-
-        if (this.auth.getPermissions('huds:?').length) {
-            accessList.push({ label: 'HUDS: Visualizar por paciente', icon: 'file-tree', route: '/rup/huds' });
-        }
-
-        if (this.auth.getPermissions('reportes:?').length > 0) {
-            accessList.push({ label: 'Reportes', icon: 'file-chart', route: '/reportes' });
-        }
-
-        if (this.auth.getPermissions('solicitudes:?').length > 0) {
-            accessList.push({ label: 'Solicitudes', icon: 'mdi mdi-open-in-app', route: '/solicitudes' });
-        }
-        if (this.auth.getPermissions('usuarios:?').length > 0) {
-            accessList.push({ label: 'Gestión de usuarios', icon: 'mdi mdi-account-key', route: '/gestor-usuarios/usuarios' });
-        }
-        if (this.auth.check('turnosPrestaciones:buscar')) {
-            accessList.push({ label: 'Buscador de Turnos y Prestaciones', icon: 'table-search', route: '/buscador' });
-        }
-
-        if (this.auth.getPermissions('internacion:?').length > 0) {
-            accessList.push({ label: 'Mapa de Camas', icon: 'mdi mdi-bed-empty', route: '/internacion/mapa-camas' });
-        }
-        if (this.auth.getPermissions('tm:organizacion:?').length > 0) {
-            accessList.push({ label: 'Organizaciones', icon: 'cogs', route: '/tm/organizacion' });
-        }
-        if (this.auth.getPermissions('campania:?').length > 0) {
-            accessList.push({ label: 'Campañas de Salud', icon: 'mdi mdi-radio-tower', route: '/campaniasSalud' });
-        }
-        // faltan permisos
-        if (this.auth.getPermissions('formularioTerapeutico:?').length > 0) {
-            accessList.push({ label: 'Formulario Terapéutico', icon: 'mdi mdi-needle', route: '/formularioTerapeutico' });
-        }
-
-        this.menuList.push({ label: 'Página Principal', icon: 'home', route: '/inicio' });
-        this.menuList.push({ label: 'Padrones', icon: 'magnify', route: '/puco' });
-        accessList.forEach((permiso) => {
-            this.menuList.push(permiso);
-        });
-        this.menuList.push({ divider: true });
-        this.menuList.push({ label: 'Cerrar Sesión', icon: 'logout', route: '/auth/logout' });
-
-        // Actualizamos la lista de menú
-        this.plex.updateMenu(this.menuList);
-
-        return accessList;
     }
 
     public getModulos() {
