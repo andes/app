@@ -252,7 +252,7 @@
                         </div>
                     </plex-tab>
 
-                    <plex-tab label="Resumen del Paciente" *ngIf="paciente">
+                    <plex-tab label="Resumen del Paciente" *ngIf="paciente && tieneAccesoHUDS">
                         <rup-resumenPaciente-estatico [prestacion]="prestacion" [paciente]="paciente">
                         </rup-resumenPaciente-estatico>
                         <rup-resumenPaciente-dinamico-nino *ngIf="paciente.edad <= 6" [paciente]="paciente">
@@ -349,7 +349,7 @@
                                   (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)">
                     </rup-buscador>
                 </plex-tab>
-                <plex-tab label="Historia de Salud" (click)="panelIndex = 1">
+                <plex-tab *ngIf="tieneAccesoHUDS" label="Historia de Salud" (click)="panelIndex = 1">
                     <rup-hudsBusqueda [paciente]="prestacion?.paciente" [_dragScope]="'registros-rup'"
                                       (evtData)="ejecutarConceptoHuds($event)"
                                       (_onDragStart)="arrastrandoConcepto(true)"

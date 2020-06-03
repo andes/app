@@ -287,7 +287,7 @@
                                         </td>
                                         <td>
                                             <ng-container *ngIf="turno.tipoPrestacion && turno.paciente?.id">
-                                                <plex-button size="block"
+                                                <plex-button size="block" *ngIf='tieneAccesoHUDS'
                                                              (click)="setRouteToParams(['vista', turno.paciente.id]); setAccesoHudsParams(turno.paciente, turno.id, turno.tipoPrestacion.id)"
                                                              label="VER HUDS" type="primary btn-sm">
                                                 </plex-button>
@@ -478,9 +478,8 @@
                                             </td>
 
                                             <td>
-                                                <ng-container
-                                                              *ngIf="sobreturno.tipoPrestacion && sobreturno.paciente?.id">
-                                                    <plex-button size="block"
+                                                <ng-container *ngIf="sobreturno.tipoPrestacion && sobreturno.paciente?.id">
+                                                    <plex-button size="block" *ngIf='tieneAccesoHUDS'
                                                                  (click)="setRouteToParams(['vista', sobreturno.paciente.id]); setAccesoHudsParams(sobreturno.paciente, sobreturno.id, sobreturno.tipoPrestacion.id)"
                                                                  label="VER HUDS" type="primary btn-sm">
                                                     </plex-button>
@@ -576,7 +575,7 @@
                                     </td>
                                     <td>
                                         <plex-button size="block"
-                                                     *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada"
+                                                     *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada && tieneAccesoHUDS"
                                                      (click)="setRouteToParams(['vista', prestacion.paciente.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id)"
                                                      label="VER HUDS" type="primary btn-sm">
                                         </plex-button>
@@ -607,7 +606,7 @@
     </plex-layout-sidebar>
     <plex-layout-footer *ngIf="!buscandoPaciente">
         <!-- <plex-dropdown type="primary" label="Paciente" [items]="dropdownPaciente"></plex-dropdown> -->
-        <plex-button position="right" label="HUDS DE UN PACIENTE" type="primary" (click)="verHuds()" class="mr-1">
+        <plex-button *ngIf='tieneAccesoHUDS' position="right" label="HUDS DE UN PACIENTE" type="primary" (click)="verHuds()" class="mr-1">
         </plex-button>
         <plex-button position="right" label="PACIENTE FUERA DE AGENDA" type="primary"
                      (click)="crearPrestacion('fueraAgenda')" class="mr-1">

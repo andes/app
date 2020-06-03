@@ -110,6 +110,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     public scopePrivacy = [];
     public registrosHUDS = [];
+    private tieneAccesoHUDS: Boolean;
 
     // Seguimiento Paciente San Juan
     public flagSeguimiento = false;
@@ -145,6 +146,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
      * @memberof PrestacionEjecucionComponent
      */
     ngOnInit() {
+        this.tieneAccesoHUDS = this.auth.check('huds:visualizacionHuds');
         this.buscadorService.search('');
         // consultamos desde que pagina se ingreso para poder volver a la misma
         this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {

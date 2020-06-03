@@ -72,6 +72,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     public accesoHudsPrestacion = null;
     public accesoHudsPaciente = null;
     public accesoHudsTurno = null;
+    public tieneAccesoHUDS: Boolean;
 
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
@@ -100,7 +101,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         if (!this.auth.profesional) {
             this.redirect('inicio');
         } else {
-
+            this.tieneAccesoHUDS = this.auth.check('huds:visualizacionHuds');
             this.plex.updateTitle([{
                 route: '/',
                 name: 'ANDES'
@@ -335,9 +336,12 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     iniciarPrestacion(paciente, snomedConcept, turno) {
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
-                const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional, turno.id, snomedConcept._id);
-                const crear = this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno);
-                const res = concat(token, crear);
+                let res = this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno);
+                if (this.tieneAccesoHUDS) {
+                    const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional, turno.id, snomedConcept._id);
+                    res = concat(token, res);
+                }
+
                 res.subscribe(input => {
                     if (input.token) {
                         // se obtuvo token y loguea el acceso a la huds del paciente
@@ -627,18 +631,23 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
 
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Iniciar Prestación?').then(confirmacion => {
             if (confirmacion) {
-                const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional, turno, prestacion.id);
-                const patch = this.servicioPrestacion.patch(prestacion.id, params);
-                const res = concat(token, patch);
-                res.subscribe(input => {
-                    if (input.token) {
-                        // se obtuvo token y loguea el acceso a la huds del paciente
-                        window.sessionStorage.setItem('huds-token', input.token);
-                    } else {
-                        // prestacion
+                let res = this.servicioPrestacion.patch(prestacion.id, params);
+                if (this.tieneAccesoHUDS) {
+                    const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, snomedConcept.term, this.auth.profesional, turno, prestacion.id);
+                    concat(token, res).subscribe(input => {
+                        if (input.token) {
+                            // se obtuvo token y loguea el acceso a la huds del paciente
+                            window.sessionStorage.setItem('huds-token', input.token);
+                        } else {
+                            // prestacion
+                            this.router.navigate(['/rup/ejecucion', prestacion.id]);
+                        }
+                    });
+                } else {
+                    res.subscribe(() => {
                         this.router.navigate(['/rup/ejecucion', prestacion.id]);
-                    }
-                });
+                    });
+                }
             }
         });
     }
@@ -717,25 +726,26 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     }
 
     preAccesoHuds(motivoAccesoHuds) {
-        if (motivoAccesoHuds) {
+        const doRoute = () => this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
+
+        if (this.tieneAccesoHUDS && motivoAccesoHuds) {
             if (!this.accesoHudsPaciente && !this.accesoHudsPrestacion && this.routeToParams && this.routeToParams[0] === 'huds') {
                 // Se esta accediendo a 'HUDS DE UN PACIENTE'
                 window.sessionStorage.setItem('motivoAccesoHuds', motivoAccesoHuds);
-            } else {
-                if (this.accesoHudsPaciente) {
-                    this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.accesoHudsPaciente, motivoAccesoHuds, this.auth.profesional, this.accesoHudsTurno, this.accesoHudsPrestacion).subscribe(hudsToken => {
-                        // se obtiene token y loguea el acceso a la huds del paciente
-                        window.sessionStorage.setItem('huds-token', hudsToken.token);
-                        this.routeToParams = [];
-                        this.accesoHudsPaciente = null;
-                        this.accesoHudsTurno = null;
-                        this.accesoHudsPrestacion = null;
-                    });
-                }
-
+                doRoute();
+            } else if (this.accesoHudsPaciente) {
+                this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.accesoHudsPaciente, motivoAccesoHuds, this.auth.profesional, this.accesoHudsTurno, this.accesoHudsPrestacion).subscribe(hudsToken => {
+                    // se obtiene token y loguea el acceso a la huds del paciente
+                    window.sessionStorage.setItem('huds-token', hudsToken.token);
+                    doRoute();
+                    this.routeToParams = [];
+                    this.accesoHudsPaciente = null;
+                    this.accesoHudsTurno = null;
+                    this.accesoHudsPrestacion = null;
+                });
             }
-            this.routeTo(this.routeToParams[0], (this.routeToParams[1]) ? this.routeToParams[1] : null);
-
+        } else {
+            doRoute();
         }
         this.showModalMotivo = false;
     }

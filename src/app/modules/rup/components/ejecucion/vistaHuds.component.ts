@@ -28,7 +28,6 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     public activeIndexPrestacion = 0;
     public activeIndexResumen = 0;
 
-    public mostrarCambiaPaciente = false;
     public registros = [];
     // boton de volver cuando la ejecucion tiene motivo de internacion.
     // Por defecto vuelve al mapa de camas
@@ -66,12 +65,8 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
             name: 'Historia Única De Salud'
         }]);
 
-        if (!this.auth.profesional && this.auth.getPermissions('huds:?').length <= 0) {
+        if (!this.auth.profesional || !this.auth.check('huds:visualizacionHuds')) {
             this.redirect('inicio');
-        }
-
-        if (!this.auth.profesional && this.auth.getPermissions('huds:?').length > 0) {
-            this.mostrarCambiaPaciente = true;
         }
 
         this.huds.registrosHUDS.subscribe((datos) => {
