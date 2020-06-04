@@ -20,6 +20,7 @@ import { OrganizacionService } from '../../../services/organizacion.service';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HistorialBusquedaService } from '../services/historialBusqueda.service';
+import { Subscription } from 'rxjs';
 @Component({
     selector: 'paciente-cru',
     templateUrl: 'paciente-cru.html',
@@ -124,6 +125,7 @@ export class PacienteCruComponent implements OnInit {
     public nombrePattern: string;
     public showDeshacer = false;
     public patronDocumento = /^[1-9]{1}[0-9]{5,7}$/;
+    private subscripcionValidar: Subscription = null;
     // PARA LA APP MOBILE
     public showMobile = false;
     public checkPass = false;
@@ -714,6 +716,9 @@ export class PacienteCruComponent implements OnInit {
             De lo contrario se estaría agregando un paciente que no se terminó de registrar. */
             this.historialBusquedaService.add(this.paciente);
         }
+        if (this.subscripcionValidar) {
+            this.subscripcionValidar.unsubscribe();
+        }
         this.showMobile = false;
         this.redirect();
     }
@@ -761,7 +766,11 @@ export class PacienteCruComponent implements OnInit {
         }
         this.disableValidar = true;
         this.loading = true;
-        this.pacienteService.validar(this.pacienteModel).subscribe(
+
+        if (this.subscripcionValidar) {
+            this.subscripcionValidar.unsubscribe();
+        }
+        this.subscripcionValidar = this.pacienteService.validar(this.pacienteModel).subscribe(
             resultado => {
                 this.loading = false;
                 if (resultado.existente) {
