@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { PerfilesHttp } from '../services/perfiles.http';
 import { Plex } from '@andes/plex';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'gestor-usarios-perfiles-list',
@@ -16,12 +17,16 @@ export class PerfilListComponent implements OnInit {
         public plex: Plex,
         private location: Location,
         private router: Router,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private auth: Auth
     ) {
 
     }
 
     ngOnInit() {
+        if (!(this.auth.check('usuarios:perfiles:write') || this.auth.check('global:usuarios:perfiles:write'))) {
+            this.router.navigate(['inicio']);
+        }
         this.plex.updateTitle([{
             route: '/inicio',
             name: 'Andes'
@@ -30,7 +35,6 @@ export class PerfilListComponent implements OnInit {
         }, {
             name: 'Perfiles'
         }]);
-
         this.perfilesHttp.search({});
     }
 

@@ -25,7 +25,7 @@ export class UsuariosListComponent implements OnInit {
     ) {
     }
 
-    public verPerfiles = this.auth.check('usuarios:perfiles:?') || this.auth.check('global:usuarios:perfiles:?');
+    public verPerfiles = this.auth.check('usuarios:perfiles:write') || this.auth.check('global:usuarios:perfiles:write');
     public readOnly = !this.auth.check('usuarios:write');
 
     refresh = new BehaviorSubject({});

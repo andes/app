@@ -3,7 +3,7 @@
         <header>
             <plex-title titulo="Gestor de Usuarios">
                 <plex-button type="info" (click)="toPerfiles()" *ngIf="verPerfiles">
-                    VER PERFILES
+                    PERFILES
                 </plex-button>
             </plex-title>
             <div class="row">
@@ -62,9 +62,9 @@
     <plex-layout-sidebar>
         <ng-container *ngIf="userSelected; else noSelected">
             <gestor-usuarios-usuario-detalle [usuario]="userSelected"></gestor-usuarios-usuario-detalle>
-            <ng-container *ngIf="{ 
-                            orgList: orgList$ | async, 
-                            organizacionesParaAgregar: organizacionesParaAgregar$ | async  
+            <ng-container *ngIf="{
+                            orgList: orgList$ | async,
+                            organizacionesParaAgregar: organizacionesParaAgregar$ | async
                         } as data">
                 <plex-title titulo="Organizaciones">
                     <ng-container *ngIf="data.organizacionesParaAgregar?.length > 0 && !readOnly">
