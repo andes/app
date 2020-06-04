@@ -114,7 +114,7 @@ export class PlantillasRUPComponent implements OnInit {
 
         this.procedimiento = procedimiento;
         this.subject.next([]);
-        this.sp.get(procedimiento.conceptId, procedimiento.esSolicitud).subscribe(plantillas => {
+        this.sp.get(procedimiento.conceptId, procedimiento.esSolicitud, true).subscribe(plantillas => {
 
             if (plantillas) {
                 plantillas.forEach(x => {
