@@ -3,9 +3,11 @@
 </plex-title>
 <form #formulario="ngForm">
     <plex-wrapper>
-        <plex-datetime label="Fecha del registro" type="date" name="fecha" [(ngModel)]="fecha" required [debounce]="600" placeholder="01/01/2020">
+        <plex-datetime label="Fecha del registro" type="date" name="fecha" [(ngModel)]="fecha" required
+                       placeholder="01/01/2020" [skipBy]="'day'">
         </plex-datetime>
-        <plex-datetime label="Hora del registro" type="time" name="hora" [(ngModel)]="hora" required [debounce]="600" placeholder="00:00">
+        <plex-datetime label="Hora del registro" type="time" name="hora" [(ngModel)]="hora" required
+                       placeholder="00:00">
         </plex-datetime>
     </plex-wrapper>
 
@@ -13,5 +15,5 @@
                  labelField="label" idField="label" required>
     </plex-select>
     <plex-button class="mt-4 float-right" type="success" label="Iniciar prestación" (click)="onIniciar($event)"
-    [validateForm]="formulario"> </plex-button>
+                 [validateForm]="formulario"> </plex-button>
 </form>

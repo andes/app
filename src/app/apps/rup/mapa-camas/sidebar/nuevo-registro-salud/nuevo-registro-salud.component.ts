@@ -16,7 +16,7 @@ export class NuevoRegistroSaludComponent implements OnInit {
     public paciente$: Observable<any>;
 
     // Dejo la fecha en blanco para que el Profesional escriba una fecha cuente a conciencia.
-    public fecha: Date;
+    public fecha: Date = new Date();
     public hora: Date;
     public registro: any;
 
