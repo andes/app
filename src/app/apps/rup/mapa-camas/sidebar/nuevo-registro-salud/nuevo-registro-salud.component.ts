@@ -16,7 +16,8 @@ export class NuevoRegistroSaludComponent implements OnInit {
     public paciente$: Observable<any>;
 
     // Dejo la fecha en blanco para que el Profesional escriba una fecha cuente a conciencia.
-    public fecha: Date;
+    public fecha: Date = new Date();
+    public hora: Date;
     public registro: any;
 
     constructor(
@@ -41,11 +42,12 @@ export class NuevoRegistroSaludComponent implements OnInit {
 
     onIniciar($event) {
         if ($event.formValid) {
+            const dateTime = moment(moment(this.fecha).format('MM/DD/YYYY') + ' ' + moment(this.hora).format('HH:mm')).toDate();
             const concepto = this.registro.parametros.concepto;
             this.paciente$.pipe(
                 take(1),
                 switchMap(paciente => {
-                    return this.crearPrestacion(paciente, concepto, this.fecha);
+                    return this.crearPrestacion(paciente, concepto, dateTime);
                 }),
                 switchMap(prestacion => {
                     return this.generarToken(prestacion.paciente, concepto, prestacion).pipe(
