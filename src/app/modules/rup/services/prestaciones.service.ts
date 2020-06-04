@@ -617,7 +617,7 @@ export class PrestacionesService {
                     // verificamos si existe la prestacion creada anteriormente. Para no duplicar.
                     let existePrestacion = null;
                     if (this.cache[prestacion.paciente.id]) {
-                        existePrestacion = this.cache[prestacion.paciente.id].find(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === prestacion.id && p.solicitud.registros[0]._id === plan.id);
+                        existePrestacion = this.cache[prestacion.paciente.id].find(p => (p.estados[p.estados.length - 1].tipo === 'pendiente' || p.estados[p.estados.length - 1].tipo === 'auditoria') && p.solicitud.prestacionOrigen === prestacion.id && p.solicitud.registros[0]._id === plan.id);
                     }
                     if (!existePrestacion && plan.valor && (plan.valor.solicitudPrestacion.organizacionDestino || plan.valor.solicitudPrestacion.autocitado)) {
                         if (!plan.valor.solicitudPrestacion.organizacionDestino) {
