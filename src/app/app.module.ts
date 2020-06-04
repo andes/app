@@ -107,8 +107,6 @@ import { VisualizacionReglasTopComponent } from './components/top/reglas/visuali
 import { VisualizacionReglasComponent } from './components/top/reglas/visualizacionReglas.component';
 import { ReglaService } from './services/top/reglas.service';
 import { FacturacionAutomaticaService } from './services/facturacionAutomatica.service';
-import { PeriodoPadronesPucoService } from './services/periodoPadronesPuco.service';
-import { PeriodoPadronesProfeService } from './services/periodoPadronesProfe.service';
 import { SIISAService } from './services/siisa.service';
 
 // TOP
@@ -567,8 +565,6 @@ registerLocaleData(localeEs, 'es');
         ObraSocialService,
         ObraSocialCacheService,
         ProfeService,
-        PeriodoPadronesPucoService,
-        PeriodoPadronesProfeService,
         SIISAService,
         ElementosRUPService,
         ConceptObserverService,

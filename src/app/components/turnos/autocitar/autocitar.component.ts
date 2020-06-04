@@ -9,7 +9,7 @@ import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { TurnoService } from '../../../services/turnos/turno.service';
 import * as moment from 'moment';
 import { ObraSocialService } from '../../../services/obraSocial.service';
-import { IFinanciador } from '../../../interfaces/IFinanciador';
+import { IObraSocial } from '../../../interfaces/IObraSocial';
 
 @Component({
     selector: 'autocitar-turno',
@@ -30,7 +30,7 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
     public showListaAgendas: boolean;
     public agendaSeleccionada: IAgenda;
     public turnoSeleccionado: ITurno;
-    public obraSocialPaciente: IFinanciador;
+    public obraSocialPaciente: IObraSocial;
     // Autorizado?
     public autorizado = false;
 
@@ -75,7 +75,7 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
         this.obraSocialPaciente = null;
         if (this.paciente && this.paciente.documento) {
             this.obraSocialService.getObrasSociales(this.paciente.documento).subscribe(
-                (resultado: IFinanciador[]) => {
+                (resultado: IObraSocial[]) => {
                     if (resultado.length > 0) {
                         this.obraSocialPaciente = resultado[0];
                     }
