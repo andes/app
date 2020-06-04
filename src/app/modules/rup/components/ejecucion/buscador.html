@@ -214,7 +214,7 @@
                             <div class="d-flex justify-content-end">
                                 <plex-badge size="sm"
                                             type="{{ servicioPrestacion.getCssClass(item, filtroActual === 'planes') }}">
-                                    {{ (item.plan || filtroActual === 'planes' || esTurneable(item)) ? 'solicitud' :
+                                    {{ (item.plan || filtroActual === 'planes') ? 'solicitud' :
                                     item.semanticTag }}
                                 </plex-badge>
                                 <plex-button type="info" size="sm" icon="plus" (click)="seleccionarConcepto(item, i)">

@@ -764,24 +764,6 @@ export class PrestacionesService {
     }
 
     /**
-     * Devuelve si un concepto es turneable o no.
-     * Se fija en la variable conceptosTurneables inicializada en OnInit
-     *
-     * @param {any} concepto Concepto SNOMED a verificar si esta en el array de conceptosTurneables
-     * @returns  boolean TRUE/FALSE si es turneable o no
-     * @memberof BuscadorComponent
-     */
-    public esTurneable(concepto) {
-        if (!this.conceptosTurneables) {
-            return false;
-        }
-
-        return this.conceptosTurneables.find(x => {
-            return x.conceptId === concepto.conceptId;
-        });
-    }
-
-    /**
      * Devuelve true si se cargo en la prestación algun concepto que representa la ausencia del paciente
      *
      * @param {any} prestacion prestación en ejecución
@@ -804,7 +786,7 @@ export class PrestacionesService {
     public getCssClass(conceptoSNOMED, esSolicitud) {
         let clase = conceptoSNOMED.semanticTag;
 
-        if (conceptoSNOMED.plan || this.esTurneable(conceptoSNOMED) || (typeof esSolicitud !== 'undefined' && esSolicitud)) {
+        if (conceptoSNOMED.plan || (typeof esSolicitud !== 'undefined' && esSolicitud)) {
             clase = 'solicitud';
         } else if (conceptoSNOMED.semanticTag === 'régimen/tratamiento') {
             clase = 'regimen';
@@ -832,7 +814,7 @@ export class PrestacionesService {
     public getIcon(conceptoSNOMED, esSolicitud) {
         let icon = conceptoSNOMED.semanticTag;
 
-        if (conceptoSNOMED.plan || this.esTurneable(conceptoSNOMED) || (typeof esSolicitud !== 'undefined' && esSolicitud)) {
+        if (conceptoSNOMED.plan || (typeof esSolicitud !== 'undefined' && esSolicitud)) {
             icon = 'plan';
         } else {
             switch (conceptoSNOMED.semanticTag) {
