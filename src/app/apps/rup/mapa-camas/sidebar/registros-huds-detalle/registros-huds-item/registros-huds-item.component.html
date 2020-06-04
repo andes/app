@@ -14,8 +14,7 @@
         {{ prestacion.solicitud.profesional | nombre }}
     </small>
 </td>
-<ng-container *ngIf="capa$ | async as capa">
-    <td *ngIf="capa !== 'estadistica'" justify="end">
+    <td justify="end">
         <plex-button size="sm" icon="eye" type="info" (click)="emit('ver', $event)" title="Ver" titlePosition="left"
                      *ngIf="!esEjecucion"></plex-button>
     
@@ -27,4 +26,3 @@
                      title="Continua registro" titlePosition="left" *ngIf="esEjecucion">
         </plex-button>
     </td>
-</ng-container>

@@ -1,14 +1,15 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable, Subject, combineLatest } from 'rxjs';
-import { map, switchMap, take, tap } from 'rxjs/operators';
+import { map, switchMap, take, tap, pluck } from 'rxjs/operators';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { HUDSService } from '../../../../../modules/rup/services/huds.service';
 import { Auth } from '@andes/auth';
-import { cache, Observe } from '@andes/shared';
+import { cache, Observe, notNull } from '@andes/shared';
 import { Router } from '@angular/router';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-item.component';
+import { IMAQEstado } from '../../interfaces/IMaquinaEstados';
 
 @Component({
     selector: 'app-registros-huds-detalle',
@@ -27,12 +28,13 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     public hasta$: Observable<Date>;
 
     public cama$ = this.mapaCamasService.selectedCama;
-    public capa$ = this.mapaCamasService.capa2;
+    public estadoCama$: Observable<IMAQEstado>;
+    public accionesEstado$: Observable<any>;
 
     @Output() accion = new EventEmitter();
 
     public esProfesional = this.auth.profesional;
-
+    public puedeVerHuds = false;
     constructor(
         private mapaCamasService: MapaCamasService,
         private prestacionService: PrestacionesService,
@@ -44,6 +46,8 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     ngOnInit() {
         this.desde = moment().subtract(7, 'd');
         this.hasta = moment();
+
+        this.puedeVerHuds = this.auth.check('huds:visualizacionHuds');
 
         this.historial$ = this.cama$.pipe(
             switchMap(cama => {
@@ -74,6 +78,13 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                     return fecha.isSameOrBefore(hasta, 'd') && fecha.isSameOrAfter(desde, 'd');
                 });
             })
+        );
+
+        this.estadoCama$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getEstadoCama(cama)));
+        this.accionesEstado$ = this.estadoCama$.pipe(
+            notNull(),
+            pluck('acciones'),
+            map(acciones => acciones.filter(acc => acc.tipo === 'nuevo-registro'))
         );
     }
 
