@@ -2,15 +2,15 @@
 <div class="solo-valores-grid hallazgos">
     <ng-container *ngIf="registro?.evoluciones">
         <div class="columna">
-            <div class="concepto prestacion-offset">
-                <h4 *ngIf="registro?.concepto">
-                    {{ registro.concepto.term[0].toUpperCase() + registro.concepto.term.slice(1) }}
-                </h4>
+            <div class="concepto prestacion-offset titulo-concepto">
                 <div>
                     <plex-badge type="{{ registro.concepto.semanticTag }}">
                         {{ registro.concepto.semanticTag }}
                     </plex-badge>
                 </div>
+                <h4 *ngIf="registro?.concepto">
+                    {{ registro.concepto.term[0].toUpperCase() + registro.concepto.term.slice(1) }}
+                </h4>
             </div>
             <div class="divisor">
                 <div class="datos-prestacion">
@@ -83,7 +83,7 @@
                     </plex-badge>
                 </div>
                 <div class="columna-completa">
-                    <b>Profesionales: </b><br>
+                    <b>Profesionales: </b>
                     <span>
                         {{ registro?.evoluciones[indice].profesional }}
                     </span>
