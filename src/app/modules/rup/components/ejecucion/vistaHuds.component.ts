@@ -10,7 +10,6 @@ import { PrestacionesService } from '../../services/prestaciones.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { HUDSService } from '../../services/huds.service';
-import { Location } from '@angular/common';
 
 import { SeguimientoPacienteService } from '../../services/seguimientoPaciente.service';
 
@@ -43,7 +42,6 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
         public auth: Auth,
         private router: Router,
         private route: ActivatedRoute,
-        private location: Location,
         private servicioPaciente: PacienteService,
         private logService: LogService,
         private servicioPrestacion: PrestacionesService,
@@ -141,7 +139,11 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
     */
     volver() {
         // this.location.back();
-        this.router.navigate(['/rup']);
+        if (this.rutaVolver) {
+            this.router.navigate([this.rutaVolver]);
+        } else {
+            this.router.navigate(['/rup']);
+        }
     }
 
     evtCambiaPaciente() {
