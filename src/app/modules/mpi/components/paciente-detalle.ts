@@ -111,6 +111,17 @@ export class PacienteDetalleComponent implements OnInit {
 
     // TODO: Eliminar este metodo y utilizar el financiador que viene en el paciente (una vez que se agregue en el multimatch)
     loadObraSocial() {
+        this.obraSocial = {
+            id: '',
+            tipoDocumento: '',
+            dni: 0,
+            transmite: '',
+            nombre: '',
+            codigoFinanciador: 0,
+            financiador: ' ',
+            version: new Date(),
+            numeroAfiliado: '',
+        };
         if (!this.paciente || !this.paciente.documento) {
             this.obraSocialCacheService.setFinanciadorPacienteCache(null);
             return;
