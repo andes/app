@@ -597,12 +597,8 @@ export class PacienteCruComponent implements OnInit {
                         if (this.changeRelaciones) {
                             this.saveRelaciones(resultadoSave);
                         }
-                        if (this.escaneado) {
-                            // Si el paciente fue escaneado se agrega al historial de búsqueda
-                            this.historialBusquedaService.add(resultadoSave);
-                        }
+                        this.historialBusquedaService.add(resultadoSave);
                         this.plex.info('success', 'Los datos se actualizaron correctamente');
-
                         this.redirect(resultadoSave);
                     }
                 },
