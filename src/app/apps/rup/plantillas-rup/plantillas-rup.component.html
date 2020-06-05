@@ -106,7 +106,7 @@
                 <b badge>Tipo</b>
             </plex-heading>
             <ng-container *ngFor="let pr of procedimientos">
-                <plex-item class="hover" [botonera]="false" (click)="cargarPlantillas(pr)">
+                <plex-item class="hover" (click)="cargarPlantillas(pr)">
                     <plex-label class="text-capitalize">{{ pr.term }}</plex-label>
                     <plex-badge type="{{servicioPrestacion.getCssClass(pr)}}">
                         {{pr.semanticTag}}</plex-badge>
