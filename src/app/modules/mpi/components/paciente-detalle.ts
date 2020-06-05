@@ -102,11 +102,26 @@ export class PacienteDetalleComponent implements OnInit {
     }
 
     ngOnInit() {
+    }
+
+    // tslint:disable-next-line: use-lifecycle-interface
+    ngOnChanges() {
         this.loadObraSocial();
     }
 
     // TODO: Eliminar este metodo y utilizar el financiador que viene en el paciente (una vez que se agregue en el multimatch)
     loadObraSocial() {
+        this.obraSocial = {
+            id: '',
+            tipoDocumento: '',
+            dni: 0,
+            transmite: '',
+            nombre: '',
+            codigoFinanciador: 0,
+            financiador: ' ',
+            version: new Date(),
+            numeroAfiliado: '',
+        };
         if (!this.paciente || !this.paciente.documento) {
             this.obraSocialCacheService.setFinanciadorPacienteCache(null);
             return;
@@ -121,6 +136,7 @@ export class PacienteDetalleComponent implements OnInit {
                 this.obraSocial = resultado[0];
                 this.obraSocialCacheService.setFinanciadorPacienteCache(this.obraSocial);
             } else {
+                this.obraSocial = null;
                 this.obraSocialCacheService.setFinanciadorPacienteCache(null);
             }
         });
