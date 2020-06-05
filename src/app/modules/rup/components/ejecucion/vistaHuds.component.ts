@@ -65,7 +65,7 @@ export class VistaHudsComponent implements OnInit, OnDestroy {
             name: 'Historia Única De Salud'
         }]);
 
-        if (!this.auth.profesional || !this.auth.check('huds:visualizacionHuds')) {
+        if (!this.auth.check('huds:visualizacionHuds')) {
             this.redirect('inicio');
         }
 
