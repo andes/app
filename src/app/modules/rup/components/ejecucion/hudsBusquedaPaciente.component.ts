@@ -40,7 +40,7 @@ export class HudsBusquedaPacienteComponent implements OnInit {
             name: 'BUSCAR PACIENTE'
         }]);
 
-        if (!this.auth.profesional || !this.auth.check('huds:visualizacionHuds')) {
+        if (!this.auth.check('huds:visualizacionHuds')) {
             this.router.navigate(['inicio']);
         }
     }
