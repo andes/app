@@ -1,6 +1,6 @@
 import { Plex } from '@andes/plex';
 import { Component, OnInit, Output } from '@angular/core';
-import { PacienteService } from '../../core/mpi/services/paciente.service';
+import { AuditoriaService } from './auditoria.service';
 import { AgendaService } from './../../services/turnos/agenda.service';
 import { SisaService } from '../../services/fuentesAutenticas/servicioSisa.service';
 import { RenaperService } from '../../services/fuentesAutenticas/servicioRenaper.service';
@@ -47,7 +47,7 @@ export class AuditoriaComponent implements OnInit {
 
   constructor(
     public auth: Auth,
-    private pacienteService: PacienteService,
+    private pacienteService: AuditoriaService,
     private servicioSisa: SisaService,
     private servicioRenaper: RenaperService,
     private agendaService: AgendaService,
@@ -75,16 +75,16 @@ export class AuditoriaComponent implements OnInit {
   }
 
   getVinculados() {
-    this.pacienteService.getAuditoriaVinculados(
-      // { activo: true }
-      {}).subscribe(resultado => {
-        if (resultado) {
-          this.pacVinculados = resultado;
-        }
-      });
+    const params = { identificadores: 'ANDES' };
+    this.pacienteService.get(params).subscribe(resultado => {
+      if (resultado) {
+        this.pacVinculados = resultado;
+      }
+    });
   }
   getInactivos() {
-    this.pacienteService.getInactivos().subscribe(
+    const params = { activo: false };
+    this.pacienteService.get(params).subscribe(
       resultado => {
         this.pacientesInactivos = resultado;
       });
@@ -92,7 +92,8 @@ export class AuditoriaComponent implements OnInit {
 
   // Aquellos pacientes que reportaron errores en sus datos personales
   getReportados() {
-    this.pacienteService.getSearch({ reportarError: true }).subscribe(resultado => {
+    const params = { reportarError: true, activo: true };
+    this.pacienteService.get(params).subscribe(resultado => {
       if (resultado) {
         this.pacientesReportados = resultado;
         this.corregirPaciente = null;
@@ -143,7 +144,7 @@ export class AuditoriaComponent implements OnInit {
       this.enableVincular = paciente.activo;
       this.enableActivar = !paciente.activo;
       if (paciente && paciente.id) {
-        this.pacienteService.getById(paciente.id).subscribe(pac => {
+        this.pacienteService.findById(paciente.id).subscribe(pac => {
           this.pacienteSelected = pac;
 
           this.showDetallePaciente = true;
@@ -185,7 +186,7 @@ export class AuditoriaComponent implements OnInit {
   }
   onSelectVinculados(paciente: any): void {
     if (paciente.id) {
-      this.pacienteService.getById(paciente.id).subscribe(pac => {
+      this.pacienteService.findById(paciente.id).subscribe(pac => {
         this.pacienteSelected = pac;
         this.showDetallePaciente = true;
         this.enableValidar = false;
@@ -361,7 +362,7 @@ export class AuditoriaComponent implements OnInit {
 
   activar(pac: IPaciente, index: number) {
     if (this.permisoVincular) {
-      this.pacienteService.enable(pac).subscribe(res => {
+      this.pacienteService.setActivo(pac, true).subscribe(res => {
         this.plex.toast('success', 'Paciente Activado');
         this.getInactivos();
       });
@@ -373,7 +374,7 @@ export class AuditoriaComponent implements OnInit {
       if (pac.identificadores && pac.identificadores.filter(identificador => identificador.entidad === 'ANDES').length > 0) {
         this.plex.info('warning', 'Existen otros pacientes vinculados a este paciente', 'No Permitido');
       } else {
-        this.pacienteService.disable(pac).subscribe(res => {
+        this.pacienteService.setActivo(pac, false).subscribe(res => {
           this.pacientes.splice(index, 1);
           this.pacienteSelected = null;
           this.plex.toast('info', 'Paciente Desactivado');

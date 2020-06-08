@@ -1,9 +1,10 @@
 import { OnInit, Component, EventEmitter, Output } from '@angular/core';
-import { PacienteService } from '../../core/mpi/services/paciente.service';
+import { AuditoriaService } from './auditoria.service';
 import { Plex } from '@andes/plex';
 import { PacienteBuscarResultado } from '../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
+import { PacienteSearch } from '../../interfaces/pacienteSearch.interface';
 
 @Component({
     selector: 'vincular-pacientes',
@@ -18,7 +19,7 @@ export class VincularPacientesComponent implements OnInit {
     listaCandidatos = [];
     showBuscador = true;
     constructor(
-        private pacienteService: PacienteService,
+        private pacienteService: AuditoriaService,
         private plex: Plex,
         private router: Router,
         private route: ActivatedRoute,
@@ -27,10 +28,11 @@ export class VincularPacientesComponent implements OnInit {
     ngOnInit(): void {
         this.route.params.subscribe(params => {
             let id = params['idPaciente'];
-            this.pacienteService.getById(id).subscribe(
+            this.pacienteService.findById(id).subscribe(
                 paciente => {
                     this.pacienteBase = paciente;
-                    this.buscarCandidatos();
+                    // this.buscarCandidatos();
+                    this.loadPacientesVinculados();
                 },
                 error => {
                     this.plex.info('warning', 'Intente nuevamente', 'Error de conexión');
@@ -88,7 +90,7 @@ export class VincularPacientesComponent implements OnInit {
         if (idsPacientesVinculados) {
             idsPacientesVinculados.forEach(identificador => {
                 if (identificador.entidad === 'ANDES') {
-                    this.pacienteService.getById(identificador.valor).subscribe(pac => {
+                    this.pacienteService.findById(identificador.valor).subscribe(pac => {
                         this.listaCandidatos.unshift({ paciente: pac, vinculado: true, activo: pac.activo });
                         this.verificarListado();
                     });
@@ -109,18 +111,19 @@ export class VincularPacientesComponent implements OnInit {
         this.plex.confirm(' Vinculando los registros del paciente seleccionado a: ' + this.pacienteBase.apellido + ' ' + this.pacienteBase.nombre + ' ¿seguro desea continuar?').then((resultado) => {
             let rta = resultado;
             if (rta) {
-                let dataLink = {
-                    entidad: 'ANDES',
-                    valor: pac.id
-                };
-                this.pacienteService.postIdentificadores(this.pacienteBase.id, {
-                    'op': 'link',
-                    'dto': dataLink
-                }).subscribe(() => {
-                    this.listaCandidatos[index].vinculado = true;
-                    this.listaCandidatos[index].activo = false;
+                this.pacienteService.linkPatient(this.pacienteBase, pac).subscribe((paciente) => {
+                    if (paciente) {
+                        this.pacienteBase = paciente;
+                        this.listaCandidatos[index].vinculado = true;
+                        this.pacienteService.setActivo(pac, false).subscribe(resPaciente => {
+                            if (resPaciente) {
+                                pac = resPaciente;
+                            }
+                        });
+                    }
                     this.plex.toast('success', 'La vinculación ha sido realizada correctamente', 'Información', 3000);
                 });
+                // ver luego de vicular o desvincular si hay que recargar el listado que se ve
             }
         });
     }
@@ -129,16 +132,12 @@ export class VincularPacientesComponent implements OnInit {
         this.plex.confirm('¿Está seguro que desea desvincular a este paciente?').then((resultado) => {
             let rta = resultado;
             if (rta) {
-                let dataLink = {
-                    entidad: 'ANDES',
-                    valor: pac.id
-                };
-                this.pacienteService.postIdentificadores(this.pacienteBase.id, {
-                    'op': 'unlink',
-                    'dto': dataLink
-                }).subscribe(resultado1 => {
-                    this.listaCandidatos[index].vinculado = false;
-                    this.listaCandidatos[index].activo = true;
+                this.pacienteService.unlinkPatient(this.pacienteBase, pac).subscribe(paciente => {
+                    if (paciente) {
+                        this.pacienteBase = paciente;
+                        this.listaCandidatos[index].vinculado = false;
+                        this.activar(pac, index);
+                    }
                     this.plex.toast('success', 'La desvinculación ha sido realizada correctamente', 'Información', 3000);
                 });
             }
@@ -147,8 +146,8 @@ export class VincularPacientesComponent implements OnInit {
     }
 
     activar(pac: IPaciente, index: number) {
-        this.pacienteService.enable(pac).subscribe(res => {
-            this.listaCandidatos[index].activo = true;
+        this.pacienteService.setActivo(pac, true).subscribe(paciente => {
+            pac = paciente;
         });
     }
     desactivar(pac: IPaciente, index: number) {
@@ -158,7 +157,7 @@ export class VincularPacientesComponent implements OnInit {
                 () => { return null; }
             );
         } else {
-            this.pacienteService.disable(pac).subscribe(res => {
+            this.pacienteService.setActivo(pac, false).subscribe(res => {
                 this.listaCandidatos[index].activo = false;
             });
         }
@@ -176,6 +175,7 @@ export class VincularPacientesComponent implements OnInit {
             // anidamiento de linkeos
             this.pacientes = this.pacienteBase ? resultado.pacientes.filter((pac: any) => (
                 (this.pacienteBase.id !== pac.id) && (!pac.identificadores || pac.identificadores.filter(identificador => identificador.entidad === 'ANDES').length < 1))) : resultado.pacientes;
+            // si en pacienteBase es un temporal, quita de la lista pacientes que sean validados
             if (this.pacienteBase.estado === 'temporal') {
                 this.pacientes = this.pacientes.filter(pac => pac.estado === 'temporal');
             }
