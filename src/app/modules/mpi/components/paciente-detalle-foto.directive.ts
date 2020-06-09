@@ -13,7 +13,7 @@ export class FotoDirective {
         if (paciente && paciente.id) {
             this.fileService.token$.subscribe((data: any) => {
                 const { token } = data;
-                const url = `${environment.API}/core/mpi/pacientes/${paciente.id}/foto?token=${token}`;
+                const url = `${environment.API}/core-v2/mpi/paciente/${paciente.id}/foto?token=${token}`;
                 this.el.nativeElement.src = url;
             });
         }
