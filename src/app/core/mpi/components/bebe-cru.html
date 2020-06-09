@@ -218,6 +218,13 @@
                                         </table-->
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col mt-3">
+                                        <plex-button [disabled]="disableGeolocalizar" label="Geolocalizar"
+                                                     type="success" (click)="geoReferenciar()">
+                                        </plex-button>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- MAPA -->
@@ -225,9 +232,6 @@
                                 <georref-map *ngIf="geoReferenciaAux.length" [latLong]="geoReferenciaAux"
                                              (changeCoordinates)="changeCoordenadas($event)">
                                 </georref-map>
-
-                                <plex-button class="float-right" label="Geolocalizar" position="right" type="success"
-                                             (click)="actualizarMapa()"></plex-button>
                             </div>
                         </div>
                     </fieldset>
