@@ -29,15 +29,16 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
             });
         }
 
+        if (!this.soloValores) {
+            this.conceptObserverService.observe(this.registro).subscribe((data) => {
 
-        this.conceptObserverService.observe(this.registro).subscribe((data) => {
-            if (this.registro !== data && this.registro.valor !== data.valor) {
-                this.registro.valor.solicitudPrestacion.indicaciones = data.valor;
-                this.emitChange(false);
-            }
-        });
+                if (this.registro !== data && this.registro.valor !== data.valor) {
+                    this.registro.valor.solicitudPrestacion.indicaciones = data.valor;
+                    this.emitChange(false);
+                }
+            });
 
-
+        }
     }
 
     isEmpty() {
