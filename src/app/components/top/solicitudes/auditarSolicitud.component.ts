@@ -35,8 +35,6 @@ export class AuditarSolicitudComponent implements OnInit {
     // Adjuntos
     fotos: any[] = [];
     fileToken: String = null;
-    lightbox = false;
-    indice;
     showConfirmar = false;
     showPrioridad = false;
     prioridad;
@@ -196,13 +194,6 @@ export class AuditarSolicitudComponent implements OnInit {
         }
     }
 
-    activaLightbox(index) {
-        if (this.prestacionSeleccionada.solicitud.registros[0].valor.documentos[index].ext !== 'pdf') {
-            this.lightbox = true;
-            this.indice = index;
-        }
-    }
-
     loadProfesionales(event) {
         return event.query ? this.servicioProfesional.get({ nombreCompleto: event.query }).subscribe(event.callback) : event.callback([]);
     }
@@ -225,26 +216,24 @@ export class AuditarSolicitudComponent implements OnInit {
         }
     }
 
-    imagenPrevia(i) {
-        let imagenPrevia = i - 1;
-        if (imagenPrevia >= 0) {
-            this.indice = imagenPrevia;
-        }
-    }
-
-    imagenSiguiente(i) {
-        let imagenSiguiente = i + 1;
-        if (imagenSiguiente <= this.fotos.length - 1) {
-            this.indice = imagenSiguiente;
-        }
-    }
-
     cancelarCitar() {
         this.returnCitar.emit({ status: true });
     }
 
     confirmarCitar() {
         this.returnCitar.emit({ status: false, motivo: this.observaciones });
+    }
+
+    get documentos() {
+        let solicitudRegistros = this.prestacionSeleccionada.solicitud.registros;
+        if (solicitudRegistros.some(reg => reg.valor.documentos)) {
+            return solicitudRegistros[0].valor.documentos.map((doc) => {
+                doc.url = this.createUrl(doc);
+                return doc;
+            });
+        } else {
+            return [];
+        }
     }
 
 }
