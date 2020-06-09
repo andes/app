@@ -8,7 +8,7 @@
     <plex-button type="info" [size]="btnSize" icon="download" title="Descargar PDF" class="ml-1"
                  [disabled]="requestInProgress" (click)="descargarInforme()" titlePosition="left">
     </plex-button>
-    <plex-button type="info" [size]="btnSize" icon="email" [disabled]="requestInProgress" *ngIf="hasEmails$ | async"
+    <plex-button type="info" [size]="btnSize" icon="email" [disabled]="requestInProgress" *ngIf="getHasEmail() | async"
                  title="Enviar PDF" (click)="openModalEmails()" class="ml-1" titlePosition="left">
     </plex-button>
 </ng-container>
