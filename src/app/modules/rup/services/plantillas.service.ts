@@ -53,10 +53,10 @@ export class PlantillasService {
         if (esSolicitud && !this.cacheSolicitud[conceptId]) {
             this.cacheSolicitud[conceptId] = new BehaviorSubject(null);
 
+
         } else {
             if (!esSolicitud && !this.cache[conceptId]) {
                 this.cache[conceptId] = new BehaviorSubject(null);
-
             }
         }
         return esSolicitud ? this.cacheSolicitud[conceptId] : this.cache[conceptId];

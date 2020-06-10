@@ -541,7 +541,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
         this.elementosRUPService.coleccionRetsetId[String(snomedConcept.conceptId)] = elementoRUP.params;
 
-        if (snomedConcept.semanticTag === 'procedimiento' || snomedConcept.semanticTag === 'elemento de registro' || snomedConcept.semanticTag === 'regimen/tratamiento') {
+        if (snomedConcept.semanticTag === 'procedimiento' || snomedConcept.semanticTag === 'elemento de registro' || snomedConcept.semanticTag === 'régimen/tratamiento') {
             this.ps.get(snomedConcept.conceptId, esSolicitud).subscribe(() => { });
         }
 
@@ -1247,7 +1247,9 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     }
 
     checkPlantilla(registro) {
-        const checkSemtag = registro.concepto.semanticTag === 'procedimiento' || registro.concepto.semanticTag === 'elemento de registro' || registro.concepto.semanticTag === 'regimen/tratamiento';
+
+        const checkSemtag = registro.concepto.semanticTag === 'procedimiento' || registro.concepto.semanticTag === 'elemento de registro' || registro.concepto.semanticTag === 'régimen/tratamiento';
+
         return checkSemtag;
     }
 
