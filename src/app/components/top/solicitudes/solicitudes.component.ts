@@ -290,7 +290,7 @@ export class SolicitudesComponent implements OnInit {
     }
 
     getParams() {
-        let params = {
+        let params: any = {
             solicitudDesde: this.fechaDesde,
             solicitudHasta: this.fechaHasta,
             ordenFechaDesc: true,
@@ -303,9 +303,12 @@ export class SolicitudesComponent implements OnInit {
             ]
         };
         if (this.tipoSolicitud === 'entrada') {
+            params.referidas = true;
+
             if (this.asignadas) {
                 params['idProfesional'] = this.auth.profesional;
             }
+
             if (this.estadoEntrada) {
 
                 if (this.estadoEntrada.id === 'turnoDado') {
@@ -559,25 +562,38 @@ export class SolicitudesComponent implements OnInit {
     returnAuditoria(event) {
         this.showAuditar = false;
         this.showSidebar = false;
-        if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length) {
-            let patch: any = {
-                op: 'estadoPush',
-                estado: {
-                    tipo: event.status === 1 ? 'pendiente' : (event.status === 2 ? 'asignada' : 'rechazada'),
-                    observaciones: event.observaciones
-                }
-            };
+        const statuses = ['pendiente', 'asignada', 'rechazada', 'referida'];
+        if (event.status !== this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length) {
+            let patch: any;
 
-            // DEPRECADO
-            if (!event.status) {
-                patch.motivoRechazo = event.observaciones;
+            if (event.status !== 3) {
+                patch = {
+                    op: 'estadoPush',
+                    estado: { tipo: statuses[event.status], observaciones: event.observaciones }
+                };
+
+                // DEPRECADO
+                if (!event.status) {
+                    patch.motivoRechazo = event.observaciones;
+                }
+                if (event.prioridad) {
+                    patch.prioridad = event.prioridad;
+                }
+                if (event.profesional) {
+                    patch.profesional = event.profesional;
+                }
+
+            } else {
+                patch = {
+                    op: 'referir',
+                    estado: event.estado,
+                    observaciones: event.observaciones,
+                    organizacion: event.organizacion,
+                    profesional: event.profesional,
+                    tipoPrestacion: event.prestacion
+                };
             }
-            if (event.prioridad) {
-                patch.prioridad = event.prioridad;
-            }
-            if (event.profesional) {
-                patch.profesional = event.profesional;
-            }
+
             this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
                 respuesta => this.cargarSolicitudes()
             );
