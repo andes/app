@@ -3,11 +3,12 @@ import { Router } from '@angular/router';
 import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
+import { Subscription } from 'rxjs';
 import { OrganizacionService } from '../../services/organizacion.service';
 import { AgendaService } from '../../services/turnos/agenda.service';
 import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
 import { getObjMeses } from '../../../app/utils/enumerados';
-
+import { ProfesionalService } from '../../services/profesional.service';
 import { ExcelService } from '../../services/xlsx.service';
 
 @Component({
@@ -42,6 +43,8 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
     // Variables "PlanillaC1"
     public showPlanillaC1 = false;
     public fecha: any;
+    public profesional: any;
+    private lastRequestProfesional: Subscription;
 
     // Eventos
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
@@ -54,6 +57,7 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
         private auth: Auth,
         private servicioOrganizacion: OrganizacionService,
         private servicioPrestacion: TipoPrestacionService,
+        private profesionalService: ProfesionalService,
         private excelService: ExcelService
     ) {
 
@@ -127,6 +131,30 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
         });
     }
 
+    loadProfesionales(event) {
+        if (this.profesional) {
+            event.callback(this.profesional);
+        }
+        if (event.query && event.query !== '' && event.query.length > 2) {
+            // cancelamos ultimo request
+            if (this.lastRequestProfesional) {
+                this.lastRequestProfesional.unsubscribe();
+            }
+            const query = {
+                nombreCompleto: event.query
+            };
+            this.profesionalService.get(query).subscribe(resultado => {
+                event.callback(resultado);
+            });
+        } else {
+            // cancelamos ultimo request
+            if (this.lastRequestProfesional) {
+                this.lastRequestProfesional.unsubscribe();
+            }
+            event.callback([]);
+        }
+    }
+
     refreshSelection() {
         this.showPlanillaC1 = false;
         this.showResumenDiarioMensual = false;
@@ -196,10 +224,16 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
 
         // Dividir turno
         this.parametros['dividir'] = this.divirTurnos;
+
+        // Profesional
+        if (this.profesional) {
+            this.parametros['profesional'] = this.profesional.id;
+        } else {
+            this.parametros['profesional'] = '';
+        }
     }
 
     public generar() {
-
         this.getParams();
 
         if (this.parametros['prestacion'] && this.parametros['organizacion'] && this.parametros['tipoReportes'] && this.parametros['mes'] && this.parametros['anio'] && this.parametros['tipoReportes'] === 'Resumen diario mensual') {
