@@ -122,9 +122,15 @@
             <span
                   class='text-capitalize'>{{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}</span>
             <br>
-            <b>Motivo de Solicitud</b>
-            <br>
-            <span>{{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.motivo}}</span>
+            <plex-title titulo="Motivo de Solicitud" size="sm">
+                <ng-container *ngIf='prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.indicaciones'>
+                    <plex-help type="help" titulo="Indicaciones" tituloBoton="Ver Indicaciones">
+                        <p class="m-2"
+                            [innerHTML]="prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.indicaciones"> </p>
+                    </plex-help>
+                </ng-container>
+            </plex-title>
+            <p>{{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.motivo}}</p>
         </div>
     </div>
     <div class="row" *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.documentos?.length">
