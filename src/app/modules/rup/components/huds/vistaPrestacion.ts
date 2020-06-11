@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, Input, HostBinding } from '@angular/core';
+import { Component, ViewEncapsulation, Input, HostBinding, OnInit } from '@angular/core';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
@@ -6,6 +6,7 @@ import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { DocumentosService } from '../../../../services/documentos.service';
 
 @Component({
     selector: 'vista-prestacion',
@@ -14,7 +15,7 @@ import { PacienteService } from '../../../../core/mpi/services/paciente.service'
     encapsulation: ViewEncapsulation.None,
 })
 
-export class VistaPrestacionComponent {
+export class VistaPrestacionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
 
     @Input() paciente: IPaciente;
@@ -23,11 +24,18 @@ export class VistaPrestacionComponent {
     @Input() indice = 0;
 
     public ready$ = this.elementosRUPService.ready;
-
+    public puedeDescargarInforme: boolean;
+    private requestInProgress: boolean;
     constructor(
+        private auth: Auth,
+        private servicioDocumentos: DocumentosService,
         public servicioPrestacion: PrestacionesService,
         private servicioPaciente: PacienteService,
         public elementosRUPService: ElementosRUPService) {
+    }
+
+    ngOnInit() {
+        this.puedeDescargarInforme = this.auth.check('huds:impresion');
     }
 
     private _idPrestacion;
@@ -51,5 +59,16 @@ export class VistaPrestacionComponent {
         return fecha.getTime();
     }
 
+
+    descargarInforme() {
+        this.requestInProgress = true;
+        const term = this.prestacion.solicitud.tipoPrestacion.term;
+        const informe = { idPrestacion: this.prestacion.id };
+
+        this.servicioDocumentos.descargarInformeRUP(informe, term).subscribe(
+            () => this.requestInProgress = false,
+            () => this.requestInProgress = false
+        );
+    }
 
 }
