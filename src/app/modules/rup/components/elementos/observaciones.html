@@ -2,7 +2,7 @@
     <ng-container *ngIf="!soloValores">
         <plex-text [label]="params.titulo" [html]="true" [(ngModel)]="registro.valor" name="observaciones"
                    [placeholder]="params.placeholder" (change)="emitChange()" [required]="params?.required"
-                   *ngIf="afterInit"></plex-text>
+                   *ngIf="afterInit" rup-text-modal> </plex-text>
     </ng-container>
     <p *ngIf="soloValores" class="readonly">
         <label for="observaciones" *ngIf="!params">
@@ -16,3 +16,11 @@
         </ng-container>
     </p>
 </form>
+<plex-modal *ngIf="fullscreen" [startOpen]="true" (closed)="onClose()" [allowClose]="true">
+    <plex-modal-title type="info"> {{ registro.concepto.term }} </plex-modal-title>
+    <main>
+        <plex-text label="Observaciones" [html]="true" [(ngModel)]="registro.valor" name="observaciones"
+                   placeholder="Ingrese una observación" (change)="emitChange()" [required]="params?.required"
+                   *ngIf="afterInit" [height]="500"></plex-text>
+    </main>
+</plex-modal>

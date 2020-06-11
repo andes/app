@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { RupElement } from '.';
+import { PlexTextToolBar } from '@andes/plex';
 
 @Component({
     selector: 'rup-observaciones',
@@ -16,6 +17,18 @@ export class ObservacionesComponent extends RUPComponent implements OnInit, Afte
     // Se usa por un bug en el quill-editor al ser cargado dinamicamente.
     afterInit = false;
 
+    fullscreen = false;
+
+    public qlToolbar: PlexTextToolBar[] = [{
+        name: 'fullscreen',
+        handler: () => {
+            this.fullscreen = true;
+        }
+    }];
+
+    onClose() {
+        this.fullscreen = false;
+    }
 
     ngAfterViewInit() {
         setTimeout(() => {
