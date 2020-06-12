@@ -13,8 +13,8 @@ export class HistorialDetalleComponent implements OnInit {
     public cama$: Observable<ISnapshot>;
     public estados$: Observable<IMAQEstado[]>;
 
-    public desde = moment().subtract(7, 'd').toDate();
-    public hasta = moment().toDate();
+    public desde = moment(this.mapaCamasService.fecha).subtract(7, 'd').toDate();
+    public hasta = this.mapaCamasService.fecha;
 
     public historial = new Subject();
 
