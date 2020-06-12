@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 /**
  * Cualquier cambio en esta componente implica testear en:
@@ -33,9 +34,7 @@ export class RUPAccionesEnvioInformeComponent {
 
     public requestInProgress = false;
 
-    public hasEmails$ = this.organizacionService.configuracion(this.auth.organizacion.id).pipe(
-        map(configuracion => configuracion && configuracion.emails && configuracion.emails.length > 0)
-    );
+    public hasEmails$: Observable<boolean>;
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -147,6 +146,14 @@ export class RUPAccionesEnvioInformeComponent {
             },
             () => this.requestInProgress = false
         );
+    }
 
+    getHasEmail() {
+        if (!this.hasEmails$) {
+            this.hasEmails$ = this.organizacionService.configuracion(this.auth.organizacion.id).pipe(
+                map(configuracion => configuracion && configuracion.emails && configuracion.emails.length > 0)
+            );
+        }
+        return this.hasEmails$;
     }
 }
