@@ -66,8 +66,12 @@
                                     </ng-container>
                                 </div>
                                 <div class="actions">
-                                    <plex-bool type="slide" label="es solicitud" [(ngModel)]="plantilla.esSolicitud">
-                                    </plex-bool>
+                                    <ng-container
+                                                  *ngIf="procedimiento.semanticTag === 'procedimiento' || procedimiento.semanticTag === 'régimen/tratamiento'">
+                                        <plex-bool type="slide" label="es solicitud"
+                                                   [(ngModel)]="plantilla.esSolicitud">
+                                        </plex-bool>
+                                    </ng-container>
                                     <plex-button icon="check" type="success" size="sm"
                                                  (click)="guardarPlantilla(plantilla, procedimiento.conceptId)">
                                     </plex-button>
