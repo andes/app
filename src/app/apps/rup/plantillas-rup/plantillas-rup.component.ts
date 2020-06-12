@@ -25,6 +25,7 @@ export class PlantillasRUPComponent implements OnInit {
 
     procedimiento: ISnomedConcept;
     incluyeDescendientes = false;
+
     descendientes: ISnomedConcept[] = [];
 
     subject: BehaviorSubject<any[]> = new BehaviorSubject<any>([]);
@@ -59,6 +60,7 @@ export class PlantillasRUPComponent implements OnInit {
                     conceptos: [this.procedimiento],
                     descripcion: '',
                     title: '',
+                    esSolicitud: false,
                     expression: `${this.procedimiento.conceptId}`,
                 };
             } else {
@@ -66,6 +68,7 @@ export class PlantillasRUPComponent implements OnInit {
             }
 
             const newArr = [plantilla, ...val];
+
             this.subject.next(newArr);
         });
     }
@@ -96,9 +99,10 @@ export class PlantillasRUPComponent implements OnInit {
 
         let query = {
             search: this.searchTerm,
-            semanticTag: ['procedimiento', 'elemento de registro']
+            semanticTag: ['procedimiento', 'elemento de registro', 'régimen/tratamiento']
 
         };
+
 
         this.snomedService.get(query).subscribe((resultado: ISnomedConcept[]) => {
             this.procedimientos = resultado;
@@ -107,9 +111,10 @@ export class PlantillasRUPComponent implements OnInit {
 
 
     cargarPlantillas(procedimiento) {
+
         this.procedimiento = procedimiento;
         this.subject.next([]);
-        this.sp.get(procedimiento.conceptId, true).subscribe(plantillas => {
+        this.sp.get(procedimiento.conceptId, procedimiento.esSolicitud, true).subscribe(plantillas => {
 
             if (plantillas) {
                 plantillas.forEach(x => {
@@ -205,6 +210,7 @@ export class PlantillasRUPComponent implements OnInit {
             conceptos: [procedimiento],
             descripcion: '',
             title: '',
+            esSolicitud: false,
             expression: `${procedimiento.conceptId}`
         };
 

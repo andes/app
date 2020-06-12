@@ -111,7 +111,7 @@
 
                                             <ng-container *ngIf="checkPlantilla(registro)">
                                                 <ng-container
-                                                              *ngIf="(ps.plantillas(registro.concepto.conceptId) | async) as plantillas">
+                                                              *ngIf="(ps.plantillas(registro.concepto.conceptId,registro.esSolicitud) | async) as plantillas">
                                                     <plex-dropdown type="primary" class="dropdown-inline" [right]="true"
                                                                    icon="playlist-plus" [items]="plantillas"
                                                                    title="Seleccionar plantilla" titlePosition="left"

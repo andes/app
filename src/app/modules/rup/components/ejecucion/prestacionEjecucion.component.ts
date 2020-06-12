@@ -226,7 +226,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                             this.mostrarDatosEnEjecucion();
 
                             this.prestacion.ejecucion.registros.map(x => {
-                                this.ps.get(x.concepto.conceptId).subscribe(() => { });
+                                this.ps.get(x.concepto.conceptId, x.esSolicitud).subscribe(() => { });
                             });
 
                             if (this.elementoRUP.requeridos.length > 0) {
@@ -541,8 +541,8 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
         this.elementosRUPService.coleccionRetsetId[String(snomedConcept.conceptId)] = elementoRUP.params;
 
-        if (snomedConcept.semanticTag === 'procedimiento' || snomedConcept.semanticTag === 'elemento de registro') {
-            this.ps.get(snomedConcept.conceptId).subscribe(() => { });
+        if (snomedConcept.semanticTag === 'procedimiento' || snomedConcept.semanticTag === 'elemento de registro' || snomedConcept.semanticTag === 'régimen/tratamiento') {
+            this.ps.get(snomedConcept.conceptId, esSolicitud).subscribe(() => { });
         }
 
         // armamos el elemento data a agregar al array de registros
@@ -1247,9 +1247,10 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     }
 
     checkPlantilla(registro) {
-        const checkSemtag = registro.concepto.semanticTag === 'procedimiento' || registro.concepto.semanticTag === 'elemento de registro';
-        const noEsSolicitud = !registro.esSolicitud;
-        return checkSemtag && noEsSolicitud;
+
+        const checkSemtag = registro.concepto.semanticTag === 'procedimiento' || registro.concepto.semanticTag === 'elemento de registro' || registro.concepto.semanticTag === 'régimen/tratamiento';
+
+        return checkSemtag;
     }
 
     registroSeguimiento() {
