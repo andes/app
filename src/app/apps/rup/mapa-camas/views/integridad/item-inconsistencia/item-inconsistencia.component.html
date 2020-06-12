@@ -1,0 +1,32 @@
+<ng-container *ngIf="inconsistencia">
+    <td>
+        <span class="d-block">
+            <strong>{{ inconsistencia.source.nombre }}</strong>
+        </span>
+        <span class="d-block">
+            {{ inconsistencia.source.sectores[inconsistencia.source.sectores.length - 1].nombre }}
+        </span>
+    </td>
+    <td>
+        <span class="d-block">
+            <strong>Estado: </strong>{{ inconsistencia.source.estado }}
+        </span>
+        <span class="d-block">
+            <strong>Fecha: </strong>{{ inconsistencia.source.fecha | fecha }}
+        </span>
+        <span class="d-block" *ngIf="inconsistencia.source.estado === 'ocupada'">
+            <strong>Paciente: </strong>{{ inconsistencia.source.paciente.documento | number }}
+        </span>
+    </td>
+    <td>
+        <span class="d-block">
+            <strong>Estado: </strong>{{ inconsistencia.target.estado }}
+        </span>
+        <span class="d-block">
+            <strong>Fecha: </strong>{{ inconsistencia.target.fecha | fecha }}
+        </span>
+        <span class="d-block" *ngIf="inconsistencia.target.estado === 'ocupada'">
+            <strong>Paciente: </strong>{{ inconsistencia.target.paciente.documento | number }}
+        </span>
+    </td>
+</ng-container>

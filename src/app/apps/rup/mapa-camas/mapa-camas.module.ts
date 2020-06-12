@@ -49,6 +49,11 @@ import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
 import { SalaComunService } from './views/sala-comun/sala-comun.service';
 import { NgDragDropModule } from 'ng-drag-drop';
 import { RUPLibModule } from '../../../modules/rup/rup-lib.module';
+import { IntegridadCamasComponent } from './views/integridad/integridad-camas.component';
+import { ItemInconsistenciaComponent } from './views/integridad/item-inconsistencia/item-inconsistencia.component';
+import { IntegridadService } from './views/integridad/integridad.service';
+import { DetalleIntegridadComponent } from './views/integridad/detalle/detalle-integridad.component';
+import { FiltrosInconsistenciasComponent } from './views/integridad/filtros-inconsistencia/filtros-inconsistencias.component';
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
@@ -80,6 +85,10 @@ export const INTERNACION_COMPONENTS = [
     RegistroHUDSItemComponent,
     IngresoPacienteWorkflowComponent,
     SalaComunComponent,
+    IntegridadCamasComponent,
+    ItemInconsistenciaComponent,
+    DetalleIntegridadComponent,
+    FiltrosInconsistenciasComponent,
 ];
 
 export const INTERNACION_PROVIDERS = [
@@ -88,6 +97,7 @@ export const INTERNACION_PROVIDERS = [
     ListadoInternacionService,
     SalaComunService,
     ScrollDispatcher,
+    IntegridadService
 ];
 
 @NgModule({
