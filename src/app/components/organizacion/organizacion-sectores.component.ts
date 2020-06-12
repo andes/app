@@ -74,6 +74,7 @@ export class OrganizacionSectoresComponent implements OnInit {
      * Grabar los cambios de la organización
      */
     onSave() {
+        this.checkUnidadesOrganizativasPorSector();
         this.organizacionService.save(this.organizacion).subscribe(() => {
             this.router.navigate(['/tm/organizacion']);
         });
@@ -255,4 +256,24 @@ export class OrganizacionSectoresComponent implements OnInit {
 
     }
 
+    checkUnidadesOrganizativasPorSector() {
+        for (const sector of this.organizacion.mapaSectores) {
+            this.searchSector(sector);
+        }
+    }
+
+    searchSector(sector) {
+        if (sector.unidadConcept) {
+            if (!this.organizacion.unidadesOrganizativas.some(uo => uo.conceptId === sector.unidadConcept.conceptId)) {
+                this.organizacion.unidadesOrganizativas.push(sector.unidadConcept);
+            }
+        }
+        if (sector.hijos.length !== 0) {
+            for (const hijo of sector.hijos) {
+                this.searchSector(hijo);
+            }
+        } else {
+            return null;
+        }
+    }
 }
