@@ -152,10 +152,6 @@
                                         <!-- ... Body -->
                                         <div class="content"
                                              *ngIf="paciente || (prestacion.solicitud.tipoPrestacion.noNominalizada)">
-
-                                            <div *ngIf="mostrarMensajes && !registro.valido">
-                                                <plex-badge type="danger">Debe completar los datos</plex-badge>
-                                            </div>
                                             <!-- RUP Loader -->
                                             <rup [elementoRUP]="elementosRUPService.elementoRegistro(registro)"
                                                  [prestacion]="prestacion" [paciente]="paciente" [registro]="registro"
@@ -263,7 +259,7 @@
                     <plex-tab label="Autocontroles del paciente" *ngIf="flagSeguimiento">
                         <rup-resumenPaciente-estatico [prestacion]="prestacion" [paciente]="paciente">
                         </rup-resumenPaciente-estatico>
-                        <rup-seguimientoPaciente  [paciente]="paciente">
+                        <rup-seguimientoPaciente [paciente]="paciente">
                         </rup-seguimientoPaciente>
                     </plex-tab>
                     <ng-container *ngFor="let registro of registrosHUDS">

@@ -9,8 +9,6 @@ import { RupElement } from '.';
 @RupElement('RegistrarMedidasAntropometricasNinoE3Y6AComponent')
 export class RegistrarMedidasAntropometricasNinoE3Y6AComponent extends RUPComponent implements OnInit {
     ngOnInit() {
-        this.registro.valor = {
-            valido: true
-        };
+
     }
 }

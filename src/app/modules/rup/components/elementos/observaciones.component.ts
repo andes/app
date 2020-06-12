@@ -31,7 +31,6 @@ export class ObservacionesComponent extends RUPComponent implements OnInit, Afte
         this.params.titulo = this.params.titulo || 'Observaciones';
         this.params.placeholder = this.params.placeholder || 'Ingrese una observación';
 
-        this.registro.valido = true;
         if (!this.registro.valor || this.registro.valor.length === 0) {
             this.afterInit = true;
         }

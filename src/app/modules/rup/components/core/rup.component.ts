@@ -276,4 +276,22 @@ export class RUPComponent implements OnInit, AfterViewInit {
         return true;
     }
 
+    checkEmpty() {
+        const isEmptyValue = this.isEmpty();
+        const isEmptyChild = this.rupElements.toArray().every((item) => {
+            const instance = item.rupInstance;
+            return instance.checkEmpty();
+            // return (instance.registro as IPrestacionRegistro).isEmpty as boolean;
+        });
+        this.registro.isEmpty = isEmptyValue && isEmptyChild;
+        return this.registro.isEmpty;
+    }
+
+    /**
+     * Esta función puede ser override por el elementoRUP
+     */
+    isEmpty() {
+        const hasValue = !!this.registro.valor;
+        return !hasValue;
+    }
 }

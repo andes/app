@@ -10,7 +10,6 @@ import { RupElement } from '.';
 export class ResumenHistoriaClinicaComponent extends RUPComponent implements OnInit {
     public referentSet = [];
     ngOnInit() {
-        this.registro.valido = true;
         // Observa cuando cambia la propiedad 'Sistolica' en otro elemento RUP
         if (!this.soloValores && !this.registro.valor) {
             this.prestacionesService.getRegistrosHuds(this.paciente.id, '6035001').subscribe(prestaciones => {

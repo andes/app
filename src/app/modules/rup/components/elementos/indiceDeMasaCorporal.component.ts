@@ -25,7 +25,6 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
     termCapitalizado: string;
 
     ngOnInit() {
-        this.registro.valido = true;
 
         if (!this.soloValores) {
             // Observa cuando cambia la propiedad 'percentiloPeso' en otro elemento RUP

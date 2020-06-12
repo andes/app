@@ -29,6 +29,11 @@ export class CalculoDeBostonComponent extends RUPComponent implements OnInit {
         }
     }
 
+    isEmpty() {
+        const valor = this.registro.valor;
+        return !valor.ci && !valor.ct && !valor.cd;
+    }
+
     changeNumber() {
         this.registro.valor.total = this.registro.valor.ci + this.registro.valor.ct + this.registro.valor.cd;
         this.valorBoston = `${this.registro.valor.total} / 9`;
