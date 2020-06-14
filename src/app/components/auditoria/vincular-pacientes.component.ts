@@ -4,7 +4,6 @@ import { Plex } from '@andes/plex';
 import { PacienteBuscarResultado } from '../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
-import { PacienteSearch } from '../../interfaces/pacienteSearch.interface';
 
 @Component({
     selector: 'vincular-pacientes',
@@ -111,19 +110,14 @@ export class VincularPacientesComponent implements OnInit {
         this.plex.confirm(' Vinculando los registros del paciente seleccionado a: ' + this.pacienteBase.apellido + ' ' + this.pacienteBase.nombre + ' ¿seguro desea continuar?').then((resultado) => {
             let rta = resultado;
             if (rta) {
-                this.pacienteService.linkPatient(this.pacienteBase, pac).subscribe((paciente) => {
-                    if (paciente) {
-                        this.pacienteBase = paciente;
+                this.pacienteService.linkPatient(this.pacienteBase, pac).subscribe((pacientes) => {
+                    if (pacientes.length) {
+                        this.pacienteBase = pacientes[0];
                         this.listaCandidatos[index].vinculado = true;
-                        this.pacienteService.setActivo(pac, false).subscribe(resPaciente => {
-                            if (resPaciente) {
-                                pac = resPaciente;
-                            }
-                        });
+                        pac = pacientes[1];
                     }
                     this.plex.toast('success', 'La vinculación ha sido realizada correctamente', 'Información', 3000);
                 });
-                // ver luego de vicular o desvincular si hay que recargar el listado que se ve
             }
         });
     }
@@ -132,11 +126,11 @@ export class VincularPacientesComponent implements OnInit {
         this.plex.confirm('¿Está seguro que desea desvincular a este paciente?').then((resultado) => {
             let rta = resultado;
             if (rta) {
-                this.pacienteService.unlinkPatient(this.pacienteBase, pac).subscribe(paciente => {
-                    if (paciente) {
-                        this.pacienteBase = paciente;
+                this.pacienteService.unlinkPatient(this.pacienteBase, pac).subscribe(pacientes => {
+                    if (pacientes) {
+                        this.pacienteBase = pacientes[0];
                         this.listaCandidatos[index].vinculado = false;
-                        this.activar(pac, index);
+                        pac = pacientes[1];
                     }
                     this.plex.toast('success', 'La desvinculación ha sido realizada correctamente', 'Información', 3000);
                 });

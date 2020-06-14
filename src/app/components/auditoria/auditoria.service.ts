@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
@@ -25,7 +25,7 @@ export class AuditoriaService {
      * Metodo get: Trae los objetos IPaciente que se encuentran en la búsqueda
      * @param params parámetros para filtrar en la búsqueda de pacientes
      */
-    get(params: any) {
+    get(params: any): Observable<IPaciente[]> {
         if (params) {
             return this.server.get(this.pacienteUrlV2, { params, showError: true });
         } else {
@@ -38,9 +38,9 @@ export class AuditoriaService {
      * @param {IPaciente} paciente
      * @param {boolean} activo
      */
-    setActivo(paciente: IPaciente, activo: boolean): Observable<IPaciente> {
+    setActivo(paciente: IPaciente, activo: boolean) {
         paciente.activo = activo;
-        return this.update(paciente);
+        return this.server.patch(`${this.pacienteUrlV2}/${paciente.id}`, paciente);
     }
 
     /**
@@ -48,7 +48,7 @@ export class AuditoriaService {
      * @param pacienteBase paciente que va a contener el vinculo de otro paciente
      * @param pacienteLink paciente a ser vinculado
      */
-    linkPatient(pacienteBase: IPaciente, pacienteLink: IPaciente) {
+    linkPatient(pacienteBase: IPaciente, pacienteLink: IPaciente): Observable<IPaciente[]> {
         if (pacienteBase && pacienteBase.id && pacienteLink && pacienteLink.id) {
             const dataLink = {
                 entidad: 'ANDES',
@@ -59,7 +59,7 @@ export class AuditoriaService {
             } else {
                 pacienteBase.identificadores = [dataLink]; // Primer elemento del array
             }
-            return this.update(pacienteBase);
+            return combineLatest(this.update(pacienteBase), this.setActivo(pacienteLink, false));
         }
         return;
     }
@@ -74,7 +74,7 @@ export class AuditoriaService {
             if (pacienteBase.identificadores) {
                 pacienteBase.identificadores = (pacienteBase.identificadores.filter((x) => x.valor !== pacienteLink.id));
             }
-            return this.server.patch(`${this.pacienteUrlV2}/${pacienteBase.id}`, pacienteBase);
+            return combineLatest(this.update(pacienteBase), this.setActivo(pacienteLink, true));
         }
         return;
     }

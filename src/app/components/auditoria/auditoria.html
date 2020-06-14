@@ -31,8 +31,8 @@
                                   icon="account-multiple-plus">
                             <plex-loader *ngIf="loading"></plex-loader>
                             <div class="row">
-                                <div class="col-12">
-                                    <table *ngIf="pacVinculados" class="table table-striped">
+                                <div class="col-12" *ngIf="pacVinculados$ | async as pacVinculados">
+                                    <table *ngIf="pacVinculados.length" class="table table-striped">
                                         <thead>
                                             <tr>
                                                 <th>Estado</th>
@@ -76,13 +76,12 @@
                                   icon="account-off">
                             <plex-loader *ngIf="loading"></plex-loader>
                             <div class="row">
-                                <div class="col-12">
-                                    <paciente-listado *ngIf="pacientesInactivos && pacientesInactivos.length"
-                                                      [pacientes]="pacientesInactivos" [autoselect]="false"
-                                                      (selected)="onSelect($event)"></paciente-listado>
+                                <div class="col-12" *ngIf="pacientesInactivos$ | async as inactivos">
+                                    <paciente-listado *ngIf="inactivos && inactivos.length" [pacientes]="inactivos"
+                                                      [autoselect]="false" (selected)="onSelect($event)">
+                                    </paciente-listado>
 
-                                    <div *ngIf="pacientesInactivos && !pacientesInactivos.length"
-                                         class="alert alert-default">
+                                    <div *ngIf="inactivos && !inactivos.length" class="alert alert-default">
                                         ¡No se encontró ningún paciente!
                                     </div>
                                 </div>
@@ -133,27 +132,27 @@
                                                                            [(ngModel)]="paciente.apellido"
                                                                            [required]="true"></plex-text>
                                                             </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col">
-                                                                <plex-text label="Nombre" [(ngModel)]="paciente.nombre"
-                                                                           [required]="true"></plex-text>
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <plex-text label="Nombre"
+                                                                               [(ngModel)]="paciente.nombre"
+                                                                               [required]="true"></plex-text>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="row pt-2">
-                                                            <div class="col">
-                                                                <plex-button *ngIf="showBotonesReporte"
-                                                                             class="float-left" label="Cancelar"
-                                                                             type="danger"
-                                                                             (click)="corregirPaciente = null; showBotonesReporte = false">
-                                                                </plex-button>
-                                                                <plex-button *ngIf="showBotonesReporte"
-                                                                             class="float-right" label="Guardar"
-                                                                             type="success"
-                                                                             (click)="guardarCorreccion()">
-                                                                </plex-button>
+                                                            <div class="row pt-2">
+                                                                <div class="col">
+                                                                    <plex-button *ngIf="showBotonesReporte"
+                                                                                 class="float-left" label="Cancelar"
+                                                                                 type="danger"
+                                                                                 (click)="corregirPaciente = null; showBotonesReporte = false">
+                                                                    </plex-button>
+                                                                    <plex-button *ngIf="showBotonesReporte"
+                                                                                 class="float-right" label="Guardar"
+                                                                                 type="success"
+                                                                                 (click)="guardarCorreccion()">
+                                                                    </plex-button>
+                                                                </div>
                                                             </div>
-                                                        </div>
                                                     </span>
                                                 </td>
                                                 <td>
@@ -177,11 +176,16 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <div *ngIf="!(reportados.length>0)" class="alert alert-default">
+                                        ¡No se encontraron pacientes reportados!
+                                    </div>
                                 </div>
+
                             </div>
-                        </plex-tab>
-                    </plex-tabs>
                 </div>
+                </plex-tab>
+                </plex-tabs>
+            </div>
             </div>
         </fieldset>
     </plex-layout-main>
