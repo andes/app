@@ -8,6 +8,7 @@ import { PacienteBuscarResultado } from '../../modules/mpi/interfaces/PacienteBu
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'auditoria',
@@ -28,18 +29,18 @@ export class AuditoriaComponent implements OnInit {
   enableVinculados = false;
   loading = false;
   showAuditoria = true;
-  pacVinculados = [];
   public panelIndex = 0;
   private datosFA: any;
+  pacVinculados$: Observable<IPaciente[]> = of([]);
   pacientes: any;
-  pacientesInactivos: any;
+  pacientesInactivos$: Observable<IPaciente[]> = of([]);
+  pacientesReportados$: Observable<IPaciente[]> = of([]);
   pacienteActivo: any;
   showVincular = false;
   showCandidatos = false;
   enableVincular = false;
   showBuscador = false;
   showMensaje = false;
-  pacientesReportados: IPaciente[] = [];
   corregirPaciente: Number = null;  // posicion delnpaciente a modificar (reporte de errores)
   showBotonesReporte = false;
   permisoEdicion: Boolean;
@@ -76,29 +77,18 @@ export class AuditoriaComponent implements OnInit {
 
   getVinculados() {
     const params = { identificadores: 'ANDES' };
-    this.pacienteService.get(params).subscribe(resultado => {
-      if (resultado) {
-        this.pacVinculados = resultado;
-      }
-    });
+    this.pacVinculados$ = this.pacienteService.get(params);
   }
   getInactivos() {
     const params = { activo: false };
-    this.pacienteService.get(params).subscribe(
-      resultado => {
-        this.pacientesInactivos = resultado;
-      });
+    this.pacientesInactivos$ = this.pacienteService.get(params);
   }
 
   // Aquellos pacientes que reportaron errores en sus datos personales
   getReportados() {
     const params = { reportarError: true, activo: true };
-    this.pacienteService.get(params).subscribe(resultado => {
-      if (resultado) {
-        this.pacientesReportados = resultado;
-        this.corregirPaciente = null;
-      }
-    });
+    this.pacientesReportados$ = this.pacienteService.get(params);
+    this.corregirPaciente = null;
   }
 
   onSelectReportados(paciente: any): void {
