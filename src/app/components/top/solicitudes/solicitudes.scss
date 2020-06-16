@@ -9,7 +9,14 @@
             min-width: 200px !important;
         }
     }
-    thead,
+    thead {
+        display: table;
+        width: calc(100% - 10px);
+        table-layout: fixed;
+        &:last-child{
+            margin-bottom: 2rem;
+        }
+    }
     tbody tr {
         display: table;
         width: 100%;

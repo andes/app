@@ -135,14 +135,14 @@
                                                 (click)="seleccionar(prestacion)">
                                                 <plex-badge type="danger">AUTOCITADO</plex-badge>
                                             </td>
-                                            <td class="text-center estado text-capitalize"
+                                            <td class="estado text-capitalize"
                                                 (click)="seleccionar(prestacion)">
                                                 <plex-badge type="danger"
                                                             *ngIf="prestacion.solicitud.registros[0].valor.solicitudPrestacion.prioridad === 'prioritario'">
                                                     {{prestacion.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}
                                                 </plex-badge>
                                             </td>
-                                            <td *ngIf="!prestacion.solicitud.turno" class="text-center estado"
+                                            <td *ngIf="!prestacion.solicitud.turno" class="estado"
                                                 (click)="seleccionar(prestacion)">
                                                 <plex-badge type="info"
                                                             *ngIf="prestacion.estados[prestacion.estados.length-1].tipo !== 'rechazada' && prestacion.estados[prestacion.estados.length-1].tipo !== 'auditoria'">
@@ -162,13 +162,13 @@
 
                                             </td>
                                             <td *ngIf="prestacion.solicitud.turno" (click)="seleccionar(prestacion)"
-                                                class="text-center estado">
+                                                class="estado">
                                                 <plex-badge *ngIf="prestacion.estados[prestacion.estados.length-1].tipo !== 'validada'"
                                                             type="success">Turno dado</plex-badge>
                                                 <plex-badge *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'validada'"
                                                             type="success">Registro en HUDS</plex-badge>
                                             </td>
-                                            <td class="text-center">
+                                            <td>
                                                 <ng-container *ngIf="prestacion.solicitud.organizacion.id === auth.organizacion.id">
                                                     <span
                                                         *ngIf="darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno && prestacion.estados[prestacion.estados.length-1].tipo !== 'anulada'">
@@ -260,7 +260,7 @@
                                             </td>
                                             <td>{{prestacion.solicitud.tipoPrestacion.term}}</td>
                                             <td>{{prestacion.solicitud.profesional | profesional}}</td>
-                                            <td class="text-center">
+                                            <td>
                                                 <ng-container
                                                               *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'rechazada'">
                                                     <plex-badge type="info">CONTRARREFERIDA</plex-badge>
@@ -277,7 +277,7 @@
                                                     </span>
                                                 </ng-container>
                                             </td>
-                                            <td class="text-center">
+                                            <td>
                                                 <span
                                                       *ngIf=" prestacion.estados[prestacion.estados.length-1].tipo == 'pendiente' && !visualizarSalida[i]">
                                                     <plex-button type="danger" icon="delete"
