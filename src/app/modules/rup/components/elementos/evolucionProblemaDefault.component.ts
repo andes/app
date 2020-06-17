@@ -11,16 +11,14 @@ import { RupElement } from '.';
 @RupElement('EvolucionProblemaDefaultComponent')
 export class EvolucionProblemaDefaultComponent extends RUPComponent implements OnInit {
     public fechaInicio: Date;
-    public estado: String; // activo / inactivo / resuleto
-    public esCronico: Boolean = false; //
+    public estado: String;
+    public esCronico: Boolean = false;
     public esEnmienda: Boolean = false;
-    public evolucion: String; //
-    public hallazgoHudsCompleto: any; //
-    public hallazgoOrigen: any; //
+    public evolucion: String;
+    public hallazgoHudsCompleto: any;
     public evolucionActual;
     public indice = 0;
     public evoluciones;
-    public referenceSet = [];
 
     // estadoActual: any = { id: 'activo', nombre: 'Activo' };
     inicioEstimadoUnidad: any = null;
@@ -34,17 +32,6 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
      * entonces inicializamos data como un objeto
      */
     ngOnInit() {
-        // buscamos si el hallazgo pertenece a algún referenceSet
-        if (this.registro.concepto && this.registro.concepto.refsetIds) {
-            this.registro.concepto.refsetIds.forEach(refSet => {
-                Object.keys(this.prestacionesService.refsetsIds).forEach(k => {
-                    if (this.prestacionesService.refsetsIds[k] === refSet) {
-                        let referencia = k.replace(/_/g, ' ');
-                        this.referenceSet.push(referencia);
-                    }
-                });
-            });
-        }
         if (!this.registro.valor) {
 
             this.registro.valor = { estado: 'activo' };
@@ -58,25 +45,13 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
             if (this.registro.valor.idRegistroOrigen) {
                 this.getHallazgo(this.registro.valor.idRegistroOrigen);
             }
-
-            // Si ademas el problema se origino con la transformación de un problema tambien lo mostramos
-            if (this.registro.valor.estado !== 'transformado') {
-                if (this.registro.valor.idRegistroOrigen || this.registro.valor.idRegistroTransformado) {
-                    if (this.registro.valor.origen === 'transformación') {
-                        this.origenTransformacion(this.registro.valor.idRegistroTransformado);
-                    }
-                } else {
-                    // this.registro.valor.estado = 'activo';
-                    this.friendlyDate(this.registro.valor.fechaInicio);
-                }
-            }
+            this.friendlyDate(this.registro.valor.fechaInicio);
         }
 
         if (this.soloValores) {
 
             if (this.registro.evoluciones && this.registro.evoluciones.length) {
                 this.evolucionActual = this.registro.evoluciones[0];
-                let idPrestacion = this.evolucionActual.informeRequerido ? this.evolucionActual.informeRequerido.idPrestacion : this.evolucionActual.idPrestacion;
 
                 // RELACIONES
                 this.prestacionesService.getById(this.evolucionActual.idPrestacion).subscribe(prestacion => {
@@ -100,11 +75,6 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
                     this.hallazgoHudsCompleto = hallazgo;
                     this.evoluciones = JSON.parse(JSON.stringify(this.hallazgoHudsCompleto.evoluciones));
 
-                    if (this.evoluciones[0].origen === 'transformación') {
-                        this.origenTransformacion(this.evoluciones[0].idRegistroTransformado);
-                    }
-
-                    this.evoluciones = JSON.parse(JSON.stringify(this.hallazgoHudsCompleto.evoluciones));
                     if (this.registro.valor.evolucion) {
                         this.evoluciones.shift();
                     }
@@ -214,18 +184,6 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
                     }
                 });
             });
-        }
-    }
-
-    origenTransformacion(idOrigen) {
-        this.hallazgoOrigen = this.prestacion.ejecucion.registros.find(r => r.id === idOrigen);
-        if (!this.hallazgoOrigen) {
-            this.prestacionesService.getRegistroById(this.prestacion.paciente.id, idOrigen).
-                subscribe(r => {
-                    if (r) {
-                        this.hallazgoOrigen = r;
-                    }
-                });
         }
     }
 }

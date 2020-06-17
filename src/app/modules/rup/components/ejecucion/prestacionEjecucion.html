@@ -24,16 +24,16 @@
                         </div>
 
                         <!-- Area droppable de la consulta -->
-                        <div *ngIf="!transformarProblema" droppable [dropScope]="'registros-rup'"
-                             [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)"
-                             class="droppable drop-area" [hidden]="!isDraggingConcepto">
+                        <div droppable [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'"
+                             (onDrop)="onConceptoDrop($event)" class="droppable drop-area"
+                             [hidden]="!isDraggingConcepto">
                             <p>
                                 Arrastre aquí para vincularlos a esta consulta
                             </p>
                         </div>
                         <!-- Registros de la prestación -->
                         <div
-                             *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length && !showDatosSolicitud && itemsRegistros && !transformarProblema">
+                             *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length && !showDatosSolicitud && itemsRegistros">
                             <ng-container *ngFor="let registro of prestacion.ejecucion.registros; let i = index">
                                 <!-- Drop area -->
                                 <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(i, $event)"
@@ -216,34 +216,6 @@
                                  class="drop-posicion"
                                  *ngIf="prestacion.ejecucion.registros && prestacion.ejecucion.registros.length && prestacion.ejecucion.registros.length !== posicionOnDrag">
                                 Mover a esta posición
-                            </div>
-                        </div>
-
-                        <div *ngIf="transformarProblema">
-                            <div class="rup-card">
-                                <div class="rup-content">
-                                    <!-- ... Header -->
-                                    <div class="header">
-                                        <div class="title">
-                                            Transformar problema: {{ registroATransformar.nombre }}
-                                        </div>
-                                    </div>
-                                    <div class="rup-body">
-                                        <div droppable [dropScope]="'registros-rup'"
-                                             [dragOverClass]="'drag-target-border'"
-                                             (onDrop)="confirmaTransformar($event)" class="droppable drop-area">
-                                            <p>
-                                                Arrastre aquí el nuevo Hallazgo
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="rup-footer">
-                                        <a href="javascript:void(0);" (click)="cancelarTransformacion()"
-                                           class="confirm btn btn-danger">
-                                            Cancelar
-                                        </a>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </plex-tab>

@@ -69,7 +69,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     public showCambioPaciente = false;
     public showDatosSolicitud = false;
     public showPrestacion = false;
-    public transformarProblema = false;
     public elementoOnDrag: any;
     public posicionOnDrag;
     // Copia del registro actual para volver todo a la normalidad luego de hacer el drop.
@@ -110,7 +109,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
     public scopePrivacy = [];
     public registrosHUDS = [];
-    private tieneAccesoHUDS: Boolean;
+    public tieneAccesoHUDS: Boolean;
 
     // Seguimiento Paciente San Juan
     public flagSeguimiento = false;
@@ -478,21 +477,9 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                     if (indexRel !== -1) {
                         registro.relacionadoCon.slice(indexRel, 1);
                     }
-                    // if (registro.relacionadoCon[0] === _registro.concepto.conceptId) {
-                    //     registro.relacionadoCon = [];
-                    // }
                 }
             });
 
-            // Si exite el campo idRegistroTransformado significa que el registro a elimininar nace de una transformación
-            // y por lo tanto hay qye volver el registro orige a su estado original
-            if (_registro.valor && _registro.valor.idRegistroTransformado) {
-                let registroOriginal = registros.find(r => r.id === _registro.valor.idRegistroTransformado);
-                if (registroOriginal) {
-                    registroOriginal.valor.estado = 'activo';
-                    delete registroOriginal.valor.idRegistroGenerado;
-                }
-            }
             // eliminamos el registro del array
             registros.splice(this.indexEliminar, 1);
 
@@ -616,142 +603,107 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         // El concepto ya aparece en los registros?
         let registoExiste = registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
 
-        // si estamos cargando un concepto para una transformación de hall
-        if (this.transformarProblema && this.registroATransformar) {
 
-            if (snomedConcept.semanticTag !== 'hallazgo' && snomedConcept.semanticTag !== 'trastorno') {
-                this.plex.toast('danger', 'El elemento seleccionado debe ser un hallazgo');
-                return false;
-            }
+        if (registoExiste) {
+            this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
+            return false;
+        }
 
-            if (registoExiste) {
-                this.plex.confirm('El concepto seleccionado ya se ha registrado en la consulta ¿Desea continuar con la transformación?', 'Transformar Problema').then(validar => {
-                    if (validar) {
-                        // Si el concepto ya esta registrado en la consulta los vinculamos
-                        registoExiste.valor['idRegistroTransformado'] = this.registroATransformar.id;
-                        registoExiste.valor['origen'] = 'transformación';
-                        registoExiste.relacionadoCon = [...registoExiste.relacionadoCon, this.registroATransformar];
-                        this.transformarProblema = false;
-                        this.registroATransformar.valor.estado = 'transformado';
-                        this.registroATransformar.valor['idRegistroGenerado'] = registoExiste.id;
-                        return registoExiste;
-                    }
-                });
-            } else {
-                // this.registroATransformar.valor.estado = 'transformado';
-                valor = { idRegistroTransformado: this.registroATransformar.id, origen: 'transformación' };
-                window.setTimeout(() => {
-                    let nuevoRegistro = this.cargarNuevoRegistro(snomedConcept, valor);
-                    nuevoRegistro.relacionadoCon = [...registoExiste.relacionadoCon, this.registroATransformar];
-                    this.transformarProblema = false;
-                    this.registroATransformar.valor.estado = 'transformado';
-                    this.registroATransformar.valor['idRegistroGenerado'] = nuevoRegistro.id;
-                    return nuevoRegistro;
-                });
-
-            }
-        } else {
-            if (registoExiste) {
-                this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
-                return false;
-            }
-
-            // Buscar si es hallazgo o trastorno buscar primero si ya existe en Huds
-            if ((snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación') && (!this.elementoRUP.reglas || !this.elementoRUP.reglas.requeridos || !this.elementoRUP.reglas.requeridos.relacionesMultiples)) {
-                this.servicioPrestacion.getUnTrastornoPaciente(this.paciente.id, snomedConcept)
-                    .subscribe(dato => {
-                        if (dato) {
-                            // buscamos si es cronico
-                            let cronico = dato.concepto.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds.cronico);
-                            if (cronico) {
-                                valor = {
-                                    idRegistroOrigen: dato.evoluciones[0].idRegistro
-                                };
-                                resultado = this.cargarNuevoRegistro(snomedConcept, valor);
-                                if (resultado && this.tipoBusqueda) {
-
-                                    if (registroDestino) {
-                                        registroDestino.relacionadoCon = [...registroDestino.relacionadoCon, resultado];
-                                    }
-                                } else {
-                                    if (registroDestino) {
-                                        registroDestino.relacionadoCon = [resultado];
-                                    }
-                                }
-                            } else {
-
-                                // verificamos si no es cronico pero esta activo
-                                if (dato.evoluciones[0].estado === 'activo') {
-                                    this.plex.confirm('¿Desea evolucionar el mismo?', 'El problema ya se encuentra registrado').then((confirmar) => {
-                                        if (confirmar) {
-
-                                            valor = {
-                                                idRegistroOrigen: dato.evoluciones[0].idRegistro
-                                            };
-
-                                            resultado = this.cargarNuevoRegistro(snomedConcept, valor);
-
-                                            if (this.tipoBusqueda) {
-                                                // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).find)) === -1) {
-                                                resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
-                                                // }
-                                            } else {
-                                                if (registroDestino) {
-                                                    registroDestino.relacionadoCon = [resultado];
-                                                }
-                                            }
-
-                                        } else {
-
-                                            resultado = this.cargarNuevoRegistro(snomedConcept);
-                                            if (resultado && this.tipoBusqueda) {
-
-                                                // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).conceptId)) === -1) {
-                                                resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
-                                                // }
-                                            } else {
-                                                if (registroDestino) {
-                                                    registroDestino.relacionadoCon = [resultado];
-                                                }
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-
-
-                        } else {
-                            resultado = this.cargarNuevoRegistro(snomedConcept);
+        // Buscar si es hallazgo o trastorno buscar primero si ya existe en Huds
+        if ((snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación') && (!this.elementoRUP.reglas || !this.elementoRUP.reglas.requeridos || !this.elementoRUP.reglas.requeridos.relacionesMultiples)) {
+            this.servicioPrestacion.getUnTrastornoPaciente(this.paciente.id, snomedConcept)
+                .subscribe(dato => {
+                    if (dato) {
+                        // buscamos si es cronico
+                        let cronico = dato.concepto.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds.cronico);
+                        if (cronico) {
+                            valor = {
+                                idRegistroOrigen: dato.evoluciones[0].idRegistro
+                            };
+                            resultado = this.cargarNuevoRegistro(snomedConcept, valor);
                             if (resultado && this.tipoBusqueda) {
-                                resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
+
+                                if (registroDestino) {
+                                    registroDestino.relacionadoCon = [...registroDestino.relacionadoCon, resultado];
+                                }
                             } else {
                                 if (registroDestino) {
                                     registroDestino.relacionadoCon = [resultado];
                                 }
+                            }
+                        } else {
 
+                            // verificamos si no es cronico pero esta activo
+                            if (dato.evoluciones[0].estado === 'activo') {
+                                this.plex.confirm('¿Desea evolucionar el mismo?', 'El problema ya se encuentra registrado').then((confirmar) => {
+                                    if (confirmar) {
+
+                                        valor = {
+                                            idRegistroOrigen: dato.evoluciones[0].idRegistro
+                                        };
+
+                                        resultado = this.cargarNuevoRegistro(snomedConcept, valor);
+
+                                        if (this.tipoBusqueda) {
+                                            // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).find)) === -1) {
+                                            resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
+                                            // }
+                                        } else {
+                                            if (registroDestino) {
+                                                registroDestino.relacionadoCon = [resultado];
+                                            }
+                                        }
+
+                                    } else {
+
+                                        resultado = this.cargarNuevoRegistro(snomedConcept);
+                                        if (resultado && this.tipoBusqueda) {
+
+                                            // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).conceptId)) === -1) {
+                                            resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
+                                            // }
+                                        } else {
+                                            if (registroDestino) {
+                                                registroDestino.relacionadoCon = [resultado];
+                                            }
+                                        }
+                                    }
+                                });
                             }
                         }
-                    });
-            } else {
-                resultado = this.cargarNuevoRegistro(snomedConcept);
-                if (registroDestino && (!this.elementoRUP.reglas || !this.elementoRUP.reglas.requeridos || !this.elementoRUP.reglas.requeridos.relacionesMultiples)) {
-                    registroDestino.relacionadoCon = [resultado];
-                } else {
 
-                    if (this.tipoBusqueda && this.tipoBusqueda.conceptos) {
-                        // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.conceptId === (this.tipoBusqueda as any).conceptId)) === -1) {
-                        resultado.relacionadoCon = this.tipoBusqueda && this.tipoBusqueda.conceptos ? this.tipoBusqueda.conceptos : this.tipoBusqueda;
 
-                        // }
                     } else {
-                        this.tipoBusqueda = this.filtroRefset ? this.filtroRefset : this.tipoBusqueda;
-                        // resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? (this.tipoBusqueda && this.tipoBusqueda[1] && this.tipoBusqueda[1].conceptos) : [];
-                        resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : (this.tipoBusqueda && this.tipoBusqueda.conceptos ? this.tipoBusqueda.conceptos : []);
+                        resultado = this.cargarNuevoRegistro(snomedConcept);
+                        if (resultado && this.tipoBusqueda) {
+                            resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
+                        } else {
+                            if (registroDestino) {
+                                registroDestino.relacionadoCon = [resultado];
+                            }
 
+                        }
                     }
-                }
+                });
+        } else {
+            resultado = this.cargarNuevoRegistro(snomedConcept);
+            if (registroDestino && (!this.elementoRUP.reglas || !this.elementoRUP.reglas.requeridos || !this.elementoRUP.reglas.requeridos.relacionesMultiples)) {
+                registroDestino.relacionadoCon = [resultado];
+            } else {
 
+                if (this.tipoBusqueda && this.tipoBusqueda.conceptos) {
+                    // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.conceptId === (this.tipoBusqueda as any).conceptId)) === -1) {
+                    resultado.relacionadoCon = this.tipoBusqueda && this.tipoBusqueda.conceptos ? this.tipoBusqueda.conceptos : this.tipoBusqueda;
+
+                    // }
+                } else {
+                    this.tipoBusqueda = this.filtroRefset ? this.filtroRefset : this.tipoBusqueda;
+                    // resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? (this.tipoBusqueda && this.tipoBusqueda[1] && this.tipoBusqueda[1].conceptos) : [];
+                    resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : (this.tipoBusqueda && this.tipoBusqueda.conceptos ? this.tipoBusqueda.conceptos : []);
+
+                }
             }
+
         }
     }
 
@@ -781,26 +733,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             }
         }
     }
-
-    cancelarTransformacion() {
-        this.transformarProblema = false;
-    }
-
-    iniciaTransformarProblema(registro) {
-        this.registroATransformar = registro;
-        this.transformarProblema = true;
-    }
-
-    confirmaTransformar(nuevoHallazgo) {
-        // si proviene del drag and drop
-        this.isDraggingConcepto = false;
-        if (nuevoHallazgo.dragData) {
-            nuevoHallazgo = nuevoHallazgo.dragData;
-        }
-        this.ejecutarConcepto(nuevoHallazgo, this.registroATransformar);
-
-    }
-
 
     /* ordenamiento de los elementos */
     /**

@@ -1,19 +1,5 @@
 <form #form="ngForm" *ngIf="paciente">
-
-    <ng-container
-                  *ngIf="!soloValores && referenceSet.length > 0 && registro.valor.estado !== 'transformado' && !vistaHUDS">
-        <div class="row">
-            <div class="col-12">
-                <plex-badge *ngIf="hallazgoOrigen" type="info">
-                    Originado con la transformación de:
-                    <strong>{{ hallazgoOrigen.nombre }}</strong>
-                </plex-badge>
-            </div>
-        </div>
-        <div class="row">&nbsp;</div>
-    </ng-container>
-
-    <div *ngIf="!soloValores && registro.valor.estado !== 'transformado'">
+    <div *ngIf="!soloValores">
         <div *ngIf="elementoRUP && registro">
             <div class="row"
                  *ngIf="hallazgoHudsCompleto && hallazgoHudsCompleto.evoluciones && registro.concepto.semanticTag === 'trastorno'">
@@ -70,7 +56,7 @@
     </div>
 
     <!-- SÓLO VALORES -->
-    <ng-container *ngIf="registro && (soloValores || registro.valor.estado === 'transformado')">
+    <ng-container *ngIf="registro && soloValores">
         <div class="row">
             <div class="col-12">
                 <div class="row no-gutters">
@@ -86,15 +72,6 @@
                             <ng-container *ngIf="!hallazgoHudsCompleto && registro.evoluciones">
                                 {{ registro.evoluciones[0].estado }}
                             </ng-container>
-                        </plex-badge>
-                        <plex-badge *ngIf="hallazgoOrigen" type="info">
-                            Originado con la transformación de:
-                            <strong>{{ hallazgoOrigen.nombre }}</strong>
-                        </plex-badge>
-                        <plex-badge *ngIf="registro.transformado" type="info">
-                            Transformado en:
-                            <strong>{{ registro.transformado.concepto.term ? registro.transformado.concepto.term : '' }}
-                            </strong>
                         </plex-badge>
                     </div>
                 </div>

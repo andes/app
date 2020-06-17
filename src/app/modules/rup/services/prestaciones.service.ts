@@ -294,9 +294,6 @@ export class PrestacionesService {
                                 estado: registro.valor && registro.valor.estado ? registro.valor.estado : '',
                                 evolucion: registro.valor && registro.valor.evolucion ? registro.valor.evolucion : '',
                                 idRegistroOrigen: registro.valor && registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : null,
-                                idRegistroTransformado: registro.valor && registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : null,
-                                origen: registro.valor && registro.valor.origen ? registro.valor.origen : null,
-                                idRegistroGenerado: registro.valor && registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : null,
                                 informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
                                 relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : [],
                                 valor: registro.valor
@@ -316,9 +313,6 @@ export class PrestacionesService {
                             estado: registro.valor && registro.valor.estado ? registro.valor.estado : ultimaEvolucion.estado,
                             evolucion: registro.valor && registro.valor.evolucion ? registro.valor.evolucion : '',
                             idRegistroOrigen: registro.valor && registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : ultimaEvolucion.idRegistroOrigen,
-                            idRegistroTransformado: registro.valor && registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : ultimaEvolucion.idRegistroTransformado,
-                            origen: registro.valor && registro.valor.origen ? registro.valor.origen : ultimaEvolucion.origen,
-                            idRegistroGenerado: registro.valor && registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : ultimaEvolucion.idRegistroGenerado,
                             informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
                             relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : [],
                             valor: registro.valor
