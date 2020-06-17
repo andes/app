@@ -140,7 +140,7 @@
                     <li>
                         <div class="rup-card mini procedimiento"
                              [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': true}"
-                             (click)="clickSolicitud(registro)">
+                             (click)="clickSolicitud(registro, iPrestacion)">
 
                             <div class="rup-header">
                                 <div class="rup-border rup-border-procedimiento"
@@ -206,11 +206,11 @@
         <!-- Vista: HALLAZGOS -->
         <ng-container *ngIf="filtroActual === 'hallazgo'">
             <ul *ngIf="hallazgos" class="hover conceptos list-unstyled">
-                <ng-container *ngFor="let registro of hallazgos">
+                <ng-container *ngFor="let registro of hallazgos; let iConcepto = index">
                     <li>
                         <div class="rup-card mini hallazgo"
                              [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
-                             (click)="emitTabs(registro, 'concepto')">
+                             (click)="emitTabs(registro, 'concepto', iConcepto)">
                             <div class="rup-header">
                                 <div class="rup-border rup-border-hallazgo"
                                      [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
@@ -258,11 +258,11 @@
         <!-- Vista: HALLAZGOS -->
         <ng-container *ngIf="filtroActual === 'trastorno'">
             <ul *ngIf="trastornos" class="hover conceptos list-unstyled">
-                <ng-container *ngFor="let registro of trastornos">
+                <ng-container *ngFor="let registro of trastornos; let iConcepto = index">
                     <li>
                         <div class="rup-card mini trastorno"
                              [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
-                             (click)="emitTabs(registro, 'concepto')">
+                             (click)="emitTabs(registro, 'concepto', iConcepto)">
                             <div class="rup-header">
                                 <div class="rup-border rup-border-trastorno"
                                      [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
@@ -321,7 +321,7 @@
                     <li>
                         <div class="rup-card mini procedimiento"
                              [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
-                             (click)="emitTabs(registro, 'concepto')">
+                             (click)="emitTabs(registro, 'concepto', iPrestacion)">
                             <div class="rup-header">
                                 <div class="rup-border rup-border-procedimiento"
                                      [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'rup-border-plan': registro.esSolicitud}">
@@ -391,11 +391,11 @@
             </ng-container>
 
             <ul *ngIf="prestaciones" class="hover conceptos list-unstyled">
-                <ng-container *ngFor="let prestacion of prestaciones">
+                <ng-container *ngFor="let prestacion of prestaciones; let iPrestacion = index">
                     <li>
                         <div class="rup-card mini solicitud"
                              [ngClass]="{'active': huds.isOpen(prestacion.data, prestacion.tipo)}"
-                             (click)="emitTabs(prestacion, prestacion.tipo)">
+                             (click)="emitTabs(prestacion, prestacion.tipo, iPrestacion)">
                             <div class="rup-header">
                                 <div class="rup-border rup-border-solicitud"
                                      [ngClass]="{'active': huds.isOpen(prestacion.data, prestacion.tipo)}">
@@ -471,7 +471,7 @@
                                                     </div>
                                                 </ng-container>
                                                 <div class="col p-0 pl-2 float-left"
-                                                     (click)="emitTabs(registro, 'concepto')">
+                                                     (click)="emitTabs(registro, 'concepto',iCronico)">
                                                     {{ registro.concepto.term }}
                                                     <div class="row p-0 m-0">
                                                         <div class="col-10 p-0 m-0">
@@ -515,7 +515,7 @@
         <ng-container *ngIf="filtroActual === 'laboratorios'">
             <div *ngIf="laboratorios && laboratorios.length > 0" class="conceptos hover list-unstyled">
                 <ul class="conceptos list-unstyled">
-                    <ng-container *ngFor="let laboratorio of laboratorios">
+                    <ng-container *ngFor="let laboratorio of laboratorios; let iLaboratorio = index">
                         <li>
                             <div class="rup-card mini laboratorio"
                                  [ngClass]="{'active': huds.isOpen(laboratorio.data, 'cda')}">
@@ -539,7 +539,7 @@
                                                         </div>
                                                     </ng-container>
                                                     <div class="col p-0 pl-2 float-left"
-                                                         (click)="emitTabs(laboratorio, 'cda')">
+                                                         (click)="emitTabs(laboratorio, 'cda', iLaboratorio)">
                                                         {{ laboratorio?.prestacion.term }}
                                                         <div class="row p-0 m-0">
                                                             <div class="col-10 p-0 m-0">
@@ -599,7 +599,7 @@
                                                         </div>
                                                     </ng-container>
                                                     <div class="col p-0 pl-2 float-left"
-                                                         (click)="emitTabs(unaVacuna, 'cda')">
+                                                         (click)="emitTabs(unaVacuna, 'cda', iVacuna)">
                                                         {{ unaVacuna?.prestacion.term }}
                                                         <div class="row p-0 m-0">
                                                             <div class="col-10 p-0 m-0">

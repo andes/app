@@ -106,3 +106,16 @@ export function gtag(action: string, category: string, label: string, value: num
         'value': value
     });
 }
+
+/**
+ * En google analytics la dimension profesional es la numero 1
+ */
+const dimensionesAlias = {
+    profesional: 'dimension1'
+};
+
+export function setDimension(dimension: 'profesional', value: string) {
+    const windowRef = (window as any);
+    if (!windowRef.gtag) { return; }
+    windowRef.gtag('set', dimensionesAlias[dimension], value);
+}
