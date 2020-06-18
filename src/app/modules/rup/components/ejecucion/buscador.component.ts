@@ -93,30 +93,18 @@ export class BuscadorComponent implements OnInit, OnChanges {
     private opcionDesplegada: String = null;
 
     public search; // buscador de sugeridos y mis frecuentes
-    private ultimoTipoBusqueda: any;
     refSet: any;
 
-    /**
-     * Permite reusar los textos en los textos en el wizard y los tooltips
-     *
-     * @memberof BuscadorComponent
-     */
-    public tooltips = {
-        hallazgos: 'Incluyen signos, síntomas, antecedentes tanto positivos como negativos.<br><br>Ejemplos: antecedente de asma, no fuma, vivienda adecuada.',
-        trastornos: 'Incluye enfermedades y situaciones siempre anómalas.<br><br>Ejemplos: cardiopatía, diabetes mellitus tipo I, asma, aclorhidria.',
-        procedimientos: 'Incluye todos los procedimientos/prácticas que se realizan durante una prestación.<br><br>Ejemplos: Medir tensión arteria, registrar signos vitales',
-        planes: 'Incluye todos los procedimientos/prácticas que se solicitan o planifican a futuro.<br><br>Ejemplos: Consulta de Neurología, Resonancia Magnética, Placa de torax',
-        productos: 'Incluye medicamentos e insumos<br><br>Ejemplos: Amoxicilina 500 mg en capsulas, Acido Clavulánico, etc.',
-    };
     secciones: any;
 
-    constructor(public servicioTipoPrestacion: TipoPrestacionService,
+    constructor(
+        public servicioTipoPrestacion: TipoPrestacionService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
-        private auth: Auth, private elementoRUP: ElementosRUPService,
+        private auth: Auth,
         public servicioPrestacion: PrestacionesService,
         private buscadorService: SnomedBuscarService,
-        public renderer: Renderer2,
-        private plex: Plex) {
+        public renderer: Renderer2
+    ) {
     }
 
 
@@ -126,7 +114,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
         this.resultsAux = Object.assign({}, this.results);
         // inicializamos el filtro actual para los hallazgos
         this.filtroActual = 'todos';
-        this.ultimoTipoBusqueda = this.busquedaActual;
         // Se inicializa el buscador básico, principal
         await this.inicializarBuscadorBasico();
 
@@ -242,7 +229,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
 
         if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
-            this.ultimoTipoBusqueda = 'porRefset';
             this.autofocus = false;
             this.setTipoBusqueda(this.busquedaActual);
             this.busquedaPorConcepto = true;
@@ -355,7 +341,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
         this.busquedaRefSet = this.servicioPrestacion.getRefSetData();
         setTimeout(() => {
             if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
-                this.ultimoTipoBusqueda = 'porRefset';
                 this.autofocus = false;
                 this.setTipoBusqueda(this.busquedaActual);
                 this.busquedaPorConcepto = true;
@@ -502,21 +487,12 @@ export class BuscadorComponent implements OnInit, OnChanges {
     }
 
     /**
-     *
-     * @param filtro Le pasamos el o los semanticTags a filtrar
-     * @param tipo le pasamos el tipo de busqueda por ejemplo Plan.
-     * @param arrayAFiltrar Le podemos pasar un array de conceptos a filtrar
-     * Por defecto la funcion trabaja con el array de resultados pero si le pasamos un array
-     * disitinte de conceptos nos retorna el resultado.
+     * Setea filtro por semantic tags
      */
 
-    // filtroBuscadorSnomed(filtro: any[], tipo = null) {
     public filtroBuscadorSnomed(key) {
-        if (!this.busquedaPorConcepto) {
-            this.filtroActual = key;
-        } else {
-            this.filtroActual = key;
-        }
+
+        this.filtroActual = key;
     }
 
     /**
