@@ -8,7 +8,6 @@ import { IBloque } from './../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { TurnoService } from '../../../services/turnos/turno.service';
 import * as moment from 'moment';
-import { ObraSocialService } from '../../../services/obraSocial.service';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
 
 @Component({
@@ -38,7 +37,7 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
     public agendasExpandidas: any[] = [];
 
     constructor(public router: Router, public auth: Auth, public plex: Plex, public servicioTurno: TurnoService,
-        private obraSocialService: ObraSocialService) {
+    ) {
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
     }
 
@@ -73,17 +72,9 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
         // Agenda con el turno que necesitamos
         this.agendaSeleccionada = this.agendasAutocitar[indiceAgenda];
         this.obraSocialPaciente = null;
-        if (this.paciente && this.paciente.documento) {
-            this.obraSocialService.getObrasSociales(this.paciente.documento).subscribe(
-                (resultado: IObraSocial[]) => {
-                    if (resultado.length > 0) {
-                        this.obraSocialPaciente = resultado[0];
-                    }
-                    this.confirmarTurno(bloque, turno);
-                },
-                () => {
-                    this.confirmarTurno(bloque, turno);
-                });
+        if (this.paciente && this.paciente.financiador) {
+            this.obraSocialPaciente = this.paciente.financiador;
+            this.confirmarTurno(bloque, turno);
         } else {
             this.confirmarTurno(bloque, turno);
         }

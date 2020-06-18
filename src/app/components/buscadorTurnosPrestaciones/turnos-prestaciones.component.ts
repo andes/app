@@ -5,7 +5,6 @@ import { Auth } from '@andes/auth';
 import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
 import { Subscription } from 'rxjs';
 import { ProfesionalService } from '../../services/profesional.service';
-import { ObraSocialService } from '../../services/obraSocial.service';
 import { FacturacionAutomaticaService } from './../../services/facturacionAutomatica.service';
 
 import { Plex } from '@andes/plex';
@@ -43,7 +42,7 @@ export class TurnosPrestacionesComponent implements OnInit {
     constructor(
         private auth: Auth, private plex: Plex,
         private turnosPrestacionesService: TurnosPrestacionesService, public servicioPrestacion: TipoPrestacionService, public serviceProfesional: ProfesionalService,
-        private servicioOS: ObraSocialService, private facturacionAutomaticaService: FacturacionAutomaticaService, private hudsService: HUDSService, private router: Router
+        private facturacionAutomaticaService: FacturacionAutomaticaService, private hudsService: HUDSService, private router: Router
 
     ) { }
     ngOnInit() {
