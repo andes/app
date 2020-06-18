@@ -89,16 +89,6 @@ export class PrestacionesService {
         this.datosRefSet.next(null);
     }
 
-
-    public refsetsIds = {
-        cronico: '1641000013105',
-        Antecedentes_Familiares: '1621000013103',
-        Antecedentes_Personales_procedimientos: '1911000013100',
-        Antecedentes_Personales_hallazgos: '1901000013103',
-        Antecedentes_Para_Estudios_Otoemision: '2121000013101',
-        situacionLaboral: '200000000',
-        nivelEstudios: '3'
-    };
     public elementosRegistros = {
         odontograma: '3561000013109'
     };

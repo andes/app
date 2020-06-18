@@ -93,8 +93,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     // el concepto que seleccionamos para eliminar lo guradamos aca.
     public conceptoAEliminar: any;
 
-    public conceptosTurneables: any[];
-
     // boleean para verificar si estan todos los conceptos colapsados
     public collapse = true;
     filtroRefset: any;
@@ -122,7 +120,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     public activeIndexResumen = 0;
 
     constructor(
-        private obraSocialService: ObraSocialService,
         public servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
         public plex: Plex, public auth: Auth,
@@ -131,7 +128,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         private servicioPaciente: PacienteService,
         private servicioAgenda: AgendaService,
         private conceptObserverService: ConceptObserverService,
-        private servicioSnomed: SnomedService,
         private buscadorService: SnomedBuscarService,
         public huds: HUDSService,
         public ps: PlantillasService,
@@ -252,11 +248,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                         }
                     });
                 }
-            });
-
-            // Se traen los Conceptos Turneables para poder quitarlos de la lista de procedimientos
-            this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
-                this.conceptosTurneables = conceptosTurneables;
             });
         });
     }
@@ -614,65 +605,43 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             this.servicioPrestacion.getUnTrastornoPaciente(this.paciente.id, snomedConcept)
                 .subscribe(dato => {
                     if (dato) {
-                        // buscamos si es cronico
-                        let cronico = dato.concepto.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds.cronico);
-                        if (cronico) {
-                            valor = {
-                                idRegistroOrigen: dato.evoluciones[0].idRegistro
-                            };
-                            resultado = this.cargarNuevoRegistro(snomedConcept, valor);
-                            if (resultado && this.tipoBusqueda) {
+                        // verificamos si no es cronico pero esta activo
+                        if (dato.evoluciones[0].estado === 'activo') {
+                            this.plex.confirm('¿Desea evolucionar el mismo?', 'El problema ya se encuentra registrado').then((confirmar) => {
+                                if (confirmar) {
 
-                                if (registroDestino) {
-                                    registroDestino.relacionadoCon = [...registroDestino.relacionadoCon, resultado];
-                                }
-                            } else {
-                                if (registroDestino) {
-                                    registroDestino.relacionadoCon = [resultado];
-                                }
-                            }
-                        } else {
+                                    valor = {
+                                        idRegistroOrigen: dato.evoluciones[0].idRegistro
+                                    };
 
-                            // verificamos si no es cronico pero esta activo
-                            if (dato.evoluciones[0].estado === 'activo') {
-                                this.plex.confirm('¿Desea evolucionar el mismo?', 'El problema ya se encuentra registrado').then((confirmar) => {
-                                    if (confirmar) {
+                                    resultado = this.cargarNuevoRegistro(snomedConcept, valor);
 
-                                        valor = {
-                                            idRegistroOrigen: dato.evoluciones[0].idRegistro
-                                        };
-
-                                        resultado = this.cargarNuevoRegistro(snomedConcept, valor);
-
-                                        if (this.tipoBusqueda) {
-                                            // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).find)) === -1) {
-                                            resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
-                                            // }
-                                        } else {
-                                            if (registroDestino) {
-                                                registroDestino.relacionadoCon = [resultado];
-                                            }
-                                        }
-
+                                    if (this.tipoBusqueda) {
+                                        // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).find)) === -1) {
+                                        resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
+                                        // }
                                     } else {
-
-                                        resultado = this.cargarNuevoRegistro(snomedConcept);
-                                        if (resultado && this.tipoBusqueda) {
-
-                                            // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).conceptId)) === -1) {
-                                            resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
-                                            // }
-                                        } else {
-                                            if (registroDestino) {
-                                                registroDestino.relacionadoCon = [resultado];
-                                            }
+                                        if (registroDestino) {
+                                            registroDestino.relacionadoCon = [resultado];
                                         }
                                     }
-                                });
-                            }
+
+                                } else {
+
+                                    resultado = this.cargarNuevoRegistro(snomedConcept);
+                                    if (resultado && this.tipoBusqueda) {
+
+                                        // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).conceptId)) === -1) {
+                                        resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
+                                        // }
+                                    } else {
+                                        if (registroDestino) {
+                                            registroDestino.relacionadoCon = [resultado];
+                                        }
+                                    }
+                                }
+                            });
                         }
-
-
                     } else {
                         resultado = this.cargarNuevoRegistro(snomedConcept);
                         if (resultado && this.tipoBusqueda) {
@@ -1132,26 +1101,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
             }
         }
         return false;
-    }
-
-
-
-    /**
-     * Devuelve si un concepto es turneable o no.
-     * Se fija en la variable conceptosTurneables inicializada en OnInit
-     *
-     * @param {any} concepto Concepto SNOMED a verificar si esta en el array de conceptosTurneables
-     * @returns  boolean TRUE/FALSE si es turneable o no
-     * @memberof BuscadorComponent
-     */
-    public esTurneable(concepto) {
-        if (!this.conceptosTurneables) {
-            return false;
-        }
-
-        return this.conceptosTurneables.find(x => {
-            return x.conceptId === concepto.conceptId;
-        });
     }
 
     registrosColapsados() {
