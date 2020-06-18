@@ -155,9 +155,7 @@
                                             <!-- RUP Loader -->
                                             <rup [elementoRUP]="elementosRUPService.elementoRegistro(registro)"
                                                  [prestacion]="prestacion" [paciente]="paciente" [registro]="registro"
-                                                 [soloValores]="false"
-                                                 (ejecutarConcepto)="ejecutarConcepto($event, registro)"
-                                                 (ejecutarAccion)="recibirAccion($event, 'tab')"
+                                                 [soloValores]="false" (ejecutarAccion)="recibirAccion($event, 'tab')"
                                                  [params]="elementosRUPService.getParams(registro)">
                                             </rup>
                                         </div>
