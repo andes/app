@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 import { Observable, of } from 'rxjs';
 
+const sidebarDetalle = 4;
+const sidebarVincular = 4;
 @Component({
   selector: 'auditoria',
   templateUrl: 'auditoria.html',
@@ -46,6 +48,15 @@ export class AuditoriaComponent implements OnInit {
   permisoEdicion: Boolean;
   permisoVincular: Boolean;
 
+  pacienteFields = ['sexo', 'fechaNacimiento'];
+  showLinkear = false;
+  main = 12;
+  title = 'Auditoría de Pacientes';
+  detallesSidebar = {
+    cantReportados: 0,
+    cantVinculados: 0,
+    cantInactivos: 0
+  }
   constructor(
     public auth: Auth,
     private pacienteService: AuditoriaService,
@@ -62,6 +73,7 @@ export class AuditoriaComponent implements OnInit {
       this.router.navigate(['./inicio']);
       return;
     }
+    this.updateTitle(this.title);
     this.permisoEdicion = this.auth.check('auditoriaPacientes:edicion');
     this.permisoVincular = this.auth.check('auditoriaPacientes:vincular');
     if (this.permisoEdicion && !this.permisoVincular) {
@@ -69,15 +81,28 @@ export class AuditoriaComponent implements OnInit {
     }
     this.onLoadData();
   }
+  private updateTitle(nombre: string) {
+    this.plex.updateTitle('MPI / ' + nombre);
+    this.plex.updateTitle([{
+      route: 'inicio',
+      name: 'INICIO'
+    }, {
+      name: nombre
+    }]);
+  }
 
   onLoadData() {
     this.showDetallePaciente = false;
     this.enableVinculados = false;
+    this.getInactivos();
+    this.getVinculados();
+
   }
 
   getVinculados() {
     const params = { identificadores: 'ANDES' };
     this.pacVinculados$ = this.pacienteService.get(params);
+    this.detallesSidebar.cantVinculados = this.pacVinculados$.toArray.length;
   }
   getInactivos() {
     const params = { activo: false };
@@ -131,6 +156,44 @@ export class AuditoriaComponent implements OnInit {
       this.pacienteActivo = this.patient = paciente;
       this.showCandidatos = false;
       // Vinculamos solo pacientes activos.
+      this.enableVincular = paciente.activo; // tal vez haa que sacarlo de acá
+      this.enableActivar = !paciente.activo;
+      if (paciente && paciente.id) {
+
+        this.pacienteService.findById(paciente.id).subscribe(pac => {
+          this.pacienteSelected = pac;
+          this.showDetallePaciente = true;
+          this.showPanel();
+          if (this.pacienteSelected.estado !== 'validado') {
+            this.enableValidar = false;
+            this.enableDuplicados = false;
+          } else {
+            this.enableValidar = false;
+            if (paciente.identificadores) {
+              let identificadoresAndes = paciente.identificadores.filter(identificador => {
+                return identificador.entidad === 'ANDES';
+              });
+              this.enableDuplicados = (identificadoresAndes.length > 0);
+            }
+          }
+        });
+      }
+    } else {
+      this.pacienteSelected = null;
+      // this.showDetallePaciente = false;
+      this.showPanel();
+    }
+  }
+  /**
+   * Se observan vinculaciones y se puede vincular al paciente
+   * @param paciente
+   */
+  onLinked(paciente) {
+    if (paciente) {
+      this.showVincular = true;
+      this.showPanel();
+      this.pacienteActivo = this.patient = paciente;
+      // Vinculamos solo pacientes activos.
       this.enableVincular = paciente.activo;
       this.enableActivar = !paciente.activo;
       if (paciente && paciente.id) {
@@ -154,7 +217,16 @@ export class AuditoriaComponent implements OnInit {
       }
     } else {
       this.pacienteSelected = null;
+      this.showVincular = false;
+      this.showPanel();
+
     }
+  }
+  /**
+   * Establece el tamaño del panel principal en base al tamaño del sidebar
+   */
+  showPanel() {
+    this.main = (this.showVincular) ? 12 - sidebarVincular : (this.showDetallePaciente) ? 12 - sidebarDetalle : 12;
   }
 
   checkPanel(panelIndex) {
@@ -350,7 +422,17 @@ export class AuditoriaComponent implements OnInit {
 
   }
 
-  activar(pac: IPaciente, index: number) {
+  changeActived(event: { paciente: IPaciente; posicion: number; }) {
+    if (event && event.paciente) {
+      if (event.paciente.activo) {
+        this.desactivar(event.paciente, event.posicion);
+      } else {
+        this.activar(event.paciente);
+      }
+    }
+  }
+
+  activar(pac: IPaciente) {
     if (this.permisoVincular) {
       this.pacienteService.setActivo(pac, true).subscribe(res => {
         this.plex.toast('success', 'Paciente Activado');
