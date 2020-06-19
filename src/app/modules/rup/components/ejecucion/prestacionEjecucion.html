@@ -1,7 +1,7 @@
 <plex-layout main="8">
     <!-- Sección principal -->
     <plex-layout-main *ngIf="!showCambioPaciente && prestacion && showPrestacion">
-        <form #form="ngForm" *ngIf="!showCambioPaciente">
+        <form #form="ngForm" *ngIf="!showCambioPaciente" class="h-100">
             <div class="w-100 h-100">
                 <plex-tabs [hidden]="showDatosSolicitud" [activeIndex]="activeIndex" (close)="onCloseTab($event)">
                     <plex-tab label="Registros de esta consulta">
