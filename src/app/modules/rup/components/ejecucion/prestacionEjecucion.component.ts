@@ -119,6 +119,9 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     detalleConceptoHUDS: any;
     detalleRegistrosHUDS: any;
     verMasRelaciones: any[] = [];
+
+    public activeIndexResumen = 0;
+
     constructor(
         private obraSocialService: ObraSocialService,
         public servicioPrestacion: PrestacionesService,
