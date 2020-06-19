@@ -1,9 +1,10 @@
-<plex-layout main="9">
+<plex-layout main="{{main}}">
     <plex-layout-main>
         <fieldset>
-            <legend>Auditoría de Pacientes</legend>
+            <plex-title size="lg" titulo="{{title}}"></plex-title>
             <div class="row">
                 <div class="col-12">
+                    <br>
                     <plex-tabs [activeIndex]="panelIndex" (change)="checkPanel($event)">
                         <plex-tab *ngIf="permisoVincular" label="Búsqueda de Pacientes" (click)="panelIndex = 0"
                                   icon="account-search">
@@ -16,9 +17,10 @@
                             <plex-loader *ngIf="loading"></plex-loader>
                             <div class="row">
                                 <div class="col-12">
-                                    <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
-                                                      [autoselect]="false" (selected)="onSelect($event)">
-                                    </paciente-listado>
+                                    <auditoria-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
+                                                       [autoselect]="false" (selected)="onSelect($event)"
+                                                       (linked)="onLinked($event)" (actived)="changeActived($event)">
+                                    </auditoria-listado>
 
                                     <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
                                         ¡No se encontró ningún paciente!
@@ -190,19 +192,42 @@
             </div>
         </fieldset>
     </plex-layout-main>
-    <plex-layout-sidebar>
-        <paciente-panel [paciente]="pacienteSelected" [permitirseleccionarRelacion]="false"> </paciente-panel>
+    <plex-layout-sidebar type="invert" *ngIf="pacienteSelected">
+        <plex-title titulo="Paciente" size="md">
+        </plex-title>
+
+        <paciente-detalle *ngIf="pacienteSelected" [paciente]="pacienteSelected" orientacion="horizontal"
+                          [fields]="pacienteFields"></paciente-detalle>
+        <div *ngIf="pacienteSelected">
+            <plex-title titulo="Relaciones" size="sm"></plex-title>
+            <!-- <div *ngIf="!pacienteSelected.relaciones || !pacienteSelected.relaciones.length">
+                No hay ninguna relación registrada
+            </div> -->
+            <div *ngIf="pacienteSelected?.relaciones && pacienteSelected.relaciones.length">
+                <plex-list [striped]="true">
+                    <ng-container *ngFor=" let relacion of pacienteSelected.relaciones">
+                        <plex-item [botonera]="false">
+                            <plex-label> <img class="img-thumbnail" [mpiFotoPaciente]="{id:relacion.referencia}" />
+                            </plex-label>
+                            <plex-label size="md" titulo="{{relacion | nombre}}"
+                                        subtitulo="DNI: {{relacion.documento}}">
+                            </plex-label>
+                            <plex-badge type="info">{{relacion.relacion.nombre}}</plex-badge>
+                        </plex-item>
+                    </ng-container>
+                </plex-list>
+            </div>
+        </div>
     </plex-layout-sidebar>
+
     <plex-layout-footer
                         *ngIf="showCandidatos || (enableVincular && !showCandidatos) || enableVinculados || enableActivar">
         <plex-button position="left" *ngIf="showCandidatos" label="Cancelar" type="danger" (click)="cancelar()">
         </plex-button>
-        <plex-button *ngIf="enableVincular && !showCandidatos && pacienteSelected?.activo" class="pr-2" position="right"
-                     label="Desactivar" type="danger" (click)="desactivar(pacienteSelected)"></plex-button>
+
         <plex-button *ngIf="enableActivar && !showCandidatos" position="right" label="Activar" type="success"
                      (click)="activar(pacienteSelected)"></plex-button>
-        <plex-button *ngIf="enableVincular && !showCandidatos" position="right" label="Vincular" type="warning"
-                     (click)="vincular(pacienteSelected);pacientes=null"></plex-button>
+
         <plex-button *ngIf="enableVinculados" position="right" label="Ver Vinculados" type="primary"
                      (click)="vincular(pacienteSelected)"></plex-button>
     </plex-layout-footer>
