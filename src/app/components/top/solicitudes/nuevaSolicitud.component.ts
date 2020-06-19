@@ -217,9 +217,9 @@ export class NuevaSolicitudComponent implements OnInit {
                 let regla: any = this.arrayReglasOrigen.find((rule: any) => { return rule.prestacion.conceptId === this.prestacionOrigen.id; });
 
                 if (regla.auditable) {
-                    this.modelo.estados.push({ tipo: 'auditoria' });
+                    this.modelo.estados = [{ tipo: 'auditoria' }];
                 } else {
-                    this.modelo.estados.push({ tipo: 'pendiente' });
+                    this.modelo.estados = [{ tipo: 'pendiente' }];
                 }
                 this.modelo.solicitud.tipoPrestacionOrigen = regla.prestacion;
             } else {
@@ -290,9 +290,9 @@ export class NuevaSolicitudComponent implements OnInit {
             this.modelo.solicitud.tipoPrestacion = regla.destino.prestacion;
             let regla2 = regla.origen.prestaciones.find(rule => { return rule.prestacion.conceptId === this.modelo.solicitud.tipoPrestacionOrigen.conceptId; });
             if (regla2.auditable) {
-                this.modelo.estados.push({ tipo: 'auditoria' });
+                this.modelo.estados = [{ tipo: 'auditoria' }];
             } else {
-                this.modelo.estados.push({ tipo: 'pendiente' });
+                this.modelo.estados = [{ tipo: 'pendiente' }];
             }
         } else if (!this.modelo.solicitud.organizacion) {
             this.dataReglasDestino = [];
@@ -322,7 +322,7 @@ export class NuevaSolicitudComponent implements OnInit {
                     this.modelo.solicitud.organizacionOrigen = this.modelo.solicitud.organizacion;
                     this.modelo.solicitud.tipoPrestacionOrigen = this.modelo.solicitud.tipoPrestacion;
                     // solicitudes autocitadas
-                    this.modelo.estados.push({ tipo: 'pendiente' });
+                    this.modelo.estados = [{ tipo: 'pendiente' }];
                 }
             } else {
                 this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
