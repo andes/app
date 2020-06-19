@@ -4,7 +4,6 @@ import { RUPComponent } from '../../../core/rup.component';
 import { IPrestacionRegistro } from '../../../../interfaces/prestacion.registro.interface';
 import { Subscription } from 'rxjs';
 
-
 /**
  * Parametros:
  * showText: muestra el textarea para escribir texto libre
@@ -236,8 +235,8 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy 
         const existeRegistro = this.registroRepetido(nuevoRegistro);
 
         if (existeRegistro) {
-            if (snomedConcept.semanticTag === 'procedimiento' || snomedConcept.semanticTag === 'elemento de registro') {
-                this.plantillasService.get(snomedConcept.conceptId, esSolicitud).subscribe(() => { });
+            if (snomedConcept.semanticTag === 'procedimiento' || snomedConcept.semanticTag === 'elemento de registro' || snomedConcept.semanticTag === 'régimen/tratamiento') {
+                this.plantillasService.get(snomedConcept.conceptId, esSolicitud, true).subscribe(() => { });
             }
             this.registro.registros.push(nuevoRegistro);
         }
@@ -431,9 +430,12 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy 
         return true;
     }
 
+
+
     checkPlantilla(registro) {
-        const checkSemtag = registro.concepto.semanticTag === 'procedimiento' || registro.concepto.semanticTag === 'elemento de registro';
-        const noEsSolicitud = !registro.esSolicitud;
-        return checkSemtag && noEsSolicitud;
+
+        const checkSemtag = registro.concepto.semanticTag === 'procedimiento' || registro.concepto.semanticTag === 'elemento de registro' || registro.concepto.semanticTag === 'régimen/tratamiento';
+
+        return checkSemtag;
     }
 }

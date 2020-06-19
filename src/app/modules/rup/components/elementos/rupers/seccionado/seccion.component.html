@@ -78,7 +78,7 @@
                                     </ng-container>
                                     <plex-badge
                                                 [type]="(registro.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(registro.concepto)">
-                                        {{!registro.esSolicitud ? registro.concepto.semanticTag : 'solicitud'}}
+                                        {{registro.esSolicitud ?'solicitud':registro.concepto.semanticTag}}
                                     </plex-badge>
                                     <plex-badge type="info"
                                                 *ngIf='registro.esPrimeraVez && prestacion.estados[prestacion.estados.length - 1].tipo === "validada"'>
@@ -87,7 +87,7 @@
 
                                     <ng-container *ngIf="checkPlantilla(registro) && !soloValores">
                                         <ng-container
-                                                      *ngIf="(plantillasService.plantillas(registro.concepto.conceptId) | async) as plantillas">
+                                                      *ngIf="(plantillasService.plantillas(registro.concepto.conceptId,registro.esSolicitud) | async) as plantillas">
                                             <plex-dropdown type="primary" class="dropdown-inline" [right]="true"
                                                            icon="playlist-plus" [items]="plantillas"
                                                            title="Seleccionar plantilla" titlePosition="left"
