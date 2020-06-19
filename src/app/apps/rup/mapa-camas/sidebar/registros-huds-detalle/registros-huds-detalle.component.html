@@ -9,14 +9,22 @@
     </ng-container>
     <ng-content></ng-content>
 </plex-title>
-<div class="row mb-1">
-    <div class="col">
+
+<div class="row">
+    <div class="col-6">
         <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" [max]="hasta" [debounce]="600">
         </plex-datetime>
     </div>
-    <div class="col">
+    <div class="col-6">
         <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" [min]="desde" [debounce]="600">
         </plex-datetime>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <plex-select label="Prestacion" name="tipoPrestacion" [(ngModel)]="tipoPrestacion" idField="conceptId" labelField="term"
+                     [data]="prestacionesList$ | async">
+        </plex-select>
     </div>
 </div>
 

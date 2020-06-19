@@ -1,14 +1,36 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable, Subject, combineLatest } from 'rxjs';
-import { map, switchMap, take, tap } from 'rxjs/operators';
+import { map, switchMap, take, tap, pluck } from 'rxjs/operators';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { HUDSService } from '../../../../../modules/rup/services/huds.service';
 import { Auth } from '@andes/auth';
-import { cache, Observe } from '@andes/shared';
+import { cache, Observe, notNull } from '@andes/shared';
 import { Router } from '@angular/router';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-item.component';
+import { IMAQEstado } from '../../interfaces/IMaquinaEstados';
+
+function arrayToSet(array, key, itemFn) {
+    const listado = [];
+    array.forEach(elem => {
+        const item = itemFn(elem);
+        if (Array.isArray(item)) {
+            item.forEach(inside => {
+                const index = listado.findIndex(i => i[key] === inside[key]);
+                if (index < 0) {
+                    listado.push(inside);
+                }
+            });
+        } else {
+            const index = listado.findIndex(i => i[key] === item[key]);
+            if (index < 0) {
+                listado.push(item);
+            }
+        }
+    });
+    return listado;
+}
 
 @Component({
     selector: 'app-registros-huds-detalle',
@@ -22,11 +44,16 @@ export class RegistrosHudsDetalleComponent implements OnInit {
 
     @Observe() public desde: Date;
     @Observe() public hasta: Date;
+    @Observe() public tipoPrestacion;
 
     public desde$: Observable<Date>;
     public hasta$: Observable<Date>;
+    public tipoPrestacion$: Observable<any>;
 
     public cama$ = this.mapaCamasService.selectedCama;
+    public estadoCama$: Observable<IMAQEstado>;
+    public accionesEstado$: Observable<any>;
+    public prestacionesList$: Observable<any>;
 
     @Output() accion = new EventEmitter();
 
@@ -60,19 +87,32 @@ export class RegistrosHudsDetalleComponent implements OnInit {
             cache()
         );
 
-
-
         this.historialFiltrado$ = combineLatest(
             this.historial$,
             this.desde$,
-            this.hasta$
+            this.hasta$,
+            this.tipoPrestacion$
         ).pipe(
-            map(([prestaciones, desde, hasta]) => {
+            map(([prestaciones, desde, hasta, tipoPrestacion]) => {
                 return prestaciones.filter((prestacion) => {
                     const fecha = moment(prestacion.ejecucion.fecha);
+                    if (tipoPrestacion) {
+                        return fecha.isSameOrBefore(hasta, 'd') && fecha.isSameOrAfter(desde, 'd') && tipoPrestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId;
+                    }
                     return fecha.isSameOrBefore(hasta, 'd') && fecha.isSameOrAfter(desde, 'd');
                 });
             })
+        );
+
+        this.estadoCama$ = this.cama$.pipe(switchMap(cama => this.mapaCamasService.getEstadoCama(cama)));
+        this.accionesEstado$ = this.estadoCama$.pipe(
+            notNull(),
+            pluck('acciones'),
+            map(acciones => acciones.filter(acc => acc.tipo === 'nuevo-registro'))
+        );
+
+        this.prestacionesList$ = this.historial$.pipe(
+            map((prestaciones) => arrayToSet(prestaciones, 'conceptId', (item) => item.solicitud.tipoPrestacion))
         );
     }
 
