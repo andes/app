@@ -21,7 +21,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
     @Input() _draggable: Boolean = false; // TODO Ver si lo sacamos.
     // Son los mas frecuentes del elemento rup.(tipo de prestación)
     @Input() frecuentesTipoPrestacion;
-    @Input() showFrecuentesTipoPrestacion;
     @Input() conceptoFrecuente;
     @Input() prestacion: IPrestacion;
     @Input() busquedaRefSet: any = {};
@@ -32,33 +31,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
     // Outputs de los eventos drag start y drag end
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
-    // Emito cuando tengo un resultado de la busqueda.
-    @Output() tengoResultado: EventEmitter<any> = new EventEmitter<any>();
-
-    // TODOO Ver el tag con ele tipo de busqueda
-
-    @Output() _tipoDeBusqueda: EventEmitter<any> = new EventEmitter<any>();
-    @Output() tagBusqueda: EventEmitter<any> = new EventEmitter<any>();
-    @Output() filtroRefSet: EventEmitter<any> = new EventEmitter<any>();
-    // Lista de planes.
-    public listaPlanes: any[] = [];
-    // concepto snomed seleccionado del buscador a ejecutar
-    public conceptoSnomedSeleccionado: any;
-
-    // array de resultados a guardar devueltos por RUP
-    public data: any[] = [];
-
-    // ocultar lista cuando no hay resultados
-    public hideLista: Boolean = false;
-
-    public elementRef;
-    public arrayPorRefsets = [];
-
-    // Arra de salida para los mas frecuentes del profesional
-    public arrayFrecuentes: any[] = [];
-    // Boolean para mostrar lo mas fecuentes
-    public showFrecuentes = false;
-
 
     // TODO Ver si lo dejamos asi
     public _dragScope = ['registros-rup', 'vincular-registros-rup'];
@@ -324,11 +296,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     dragEnd(e) {
         this._onDragEnd.emit(e);
-
-        let filtro = this.getFiltroSeleccionado();
-
-        // devolvemos los tipos de filtros
-        this.tagBusqueda.emit(filtro);
     }
 
     /**
@@ -364,14 +331,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
             // this.filtrarResultados(this.busquedaActual);
             this.filtrarResultados('buscadorBasico');
 
-            // Filtra los resultado por referentSet
-
-            // if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
-            //     this.results.buscadorBasico['todos'] = this.results.buscadorBasico['todos'].filter(x => {
-            //         return x.refsetIds.includes(this.busquedaRefSet.refsetId);
-            //     });
-            // }
-
             // asignamos a una variable auxiliar para luego restaurar los valores
             // en caso de buscar o filtrar
             this.resultsAux['buscadorBasico'] = this.results['buscadorBasico'];
@@ -395,13 +354,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
         if (this.conceptos && resultados) {
             Object.keys(this.conceptos).forEach(concepto => {
                 this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => y === x.semanticTag));
-
-
-                // if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
-                //     this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => {
-                //         return y === x.semanticTag && x.refsetIds.includes(this.busquedaRefSet.refsetId);
-                //     }));
-                // }
             });
         }
 
@@ -447,13 +399,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
      */
     public getCantidadResultados(semanticTag) {
         if (this.results && this.busquedaActual && this.results[this.busquedaActual] && this.results[this.busquedaActual][semanticTag]) {
-
-            // if (this.busquedaRefSet && this.busquedaRefSet.conceptos && this.results.buscadorBasico[this.filtroActual]) {
-            //     this.results.buscadorBasico[this.filtroActual] = this.results.buscadorBasico[this.filtroActual].filter(x => {
-            //         return x.refsetIds.includes(this.busquedaRefSet.refsetId);
-            //     });
-            // }
-
             return this.results[this.busquedaActual][semanticTag].length;
         }
         return 0;
@@ -483,7 +428,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
             // Se le asignan los resultados ordenados con los mas frecuentes.
             // this.results.buscadorBasico = this.resultsAux = this.results.buscadorBasico;
         }
-        this.tengoResultado.emit(true);
     }
 
     /**

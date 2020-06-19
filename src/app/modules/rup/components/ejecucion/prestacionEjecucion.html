@@ -318,11 +318,7 @@
                        size="full">
                 <plex-tab label="Buscador" (click)="panelIndex = 0">
                     <rup-buscador [prestacion]="prestacion" [frecuentesTipoPrestacion]="masFrecuentes"
-                                  [conceptoFrecuente]="conceptoFrecuente"
-                                  [showFrecuentesTipoPrestacion]="tengoResultado"
-                                  (tagBusqueda)="getTipoBusqueda($event)"
-                                  (tengoResultado)="recibeSitengoResultado($event)"
-                                  (evtData)="ejecutarConcepto($event, tipoBusqueda)"
+                                  [conceptoFrecuente]="conceptoFrecuente" (evtData)="ejecutarConcepto($event)"
                                   (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)">
                     </rup-buscador>
                 </plex-tab>
