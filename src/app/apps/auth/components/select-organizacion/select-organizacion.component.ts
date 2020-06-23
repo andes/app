@@ -30,13 +30,11 @@ export class SelectOrganizacionComponent implements OnInit {
     ngOnInit() {
         this.plex.updateTitle('Seleccione una organización');
         this.auth.organizaciones().subscribe(data => {
-            if (data) {
+            if (data.length) {
                 this.organizaciones = data;
                 if (this.organizaciones.length === 1) {
                     this.seleccionar(this.organizaciones[0]);
                 }
-            } else {
-                this.plex.info('danger', 'El usuario no tiene ningún permiso asignado');
             }
         });
     }

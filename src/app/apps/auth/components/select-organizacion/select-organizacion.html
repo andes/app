@@ -2,8 +2,14 @@
     <plex-layout-main>
         <ul class="list-group">
             <li class="list-group-item boton color-rosa" *ngFor="let org of organizaciones" (click)=seleccionar(org)>
-                {{org.nombre}} 
+                {{org.nombre}}
             </li>
         </ul>
+        <div class="label">
+            <plex-label *ngIf="!organizaciones" icon="information-variant" type="default" size="xl" direction="column"
+                        titulo="Usted no tiene permisos para acceder a ninguna organización."
+                        subtitulo="Por favor pongase en contacto con el informático local o coordinador de área">
+            </plex-label>
+        </div>
     </plex-layout-main>
 </plex-layout>
