@@ -39,7 +39,7 @@ export class UsuariosListComponent implements OnInit {
 
     public organizaciones = [];
     public usuarios$;
-
+    public organizacionesConPermisos = [];
 
     ngOnInit() {
         this.plex.updateTitle([{
@@ -109,9 +109,10 @@ export class UsuariosListComponent implements OnInit {
         this.orgList$ = this.userSelected$.pipe(
             map((user: any) => {
                 if (user) {
-                    return user.organizaciones.filter(org => {
+                    this.organizacionesConPermisos = user.organizaciones.filter(org => {
                         return this.organizaciones.find(o => o.id === org.id);
                     });
+                    return user.organizaciones;
                 } else {
                     return of([]);
                 }
