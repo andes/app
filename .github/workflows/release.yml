@@ -1,7 +1,7 @@
 name: RELEASE
 on:
     schedule:
-        - cron: '0 2 * * SUN'
+        - cron: '0 14 * * 3'
 jobs:
     release:
         runs-on: ubuntu-latest
@@ -14,5 +14,5 @@ jobs:
             - run: npm ci
             - name: Release 
               env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
               run: npx semantic-release
