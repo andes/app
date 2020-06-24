@@ -41,6 +41,9 @@
         <tr class="hover" *ngFor="let paciente of listado"
             [ngClass]="{'bg-inverse text-white': paciente.id == seleccionado?.id}" (click)="seleccionar(paciente)"
             (mouseenter)="hoverPaciente(paciente)">
+            <td>
+                <img class="img-thumbnail" [mpiFotoPaciente]="paciente" />
+            </td>
             <td class="text-center">
                 <span *ngIf="paciente?.documento !== ''" class="d-block">{{paciente.documento}}</span>
                 <span *ngIf="paciente?.documento === ''" class="d-block">N/D</span>
