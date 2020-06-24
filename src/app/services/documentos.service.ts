@@ -26,12 +26,16 @@ export class DocumentosService {
         return this.download('constanciaPuco/pdf', params);
     }
 
-    descargarCensoMensual(data): Observable<any> {
-        return this.download('censoMensual', data);
+    descargarCensoMensual(data, nombreArchivo: string): Observable<any> {
+        return this.download('censoMensual', data).pipe(
+            saveAs(nombreArchivo, 'pdf')
+        );
     }
 
-    descargarCenso(data): Observable<any> {
-        return this.download('censo', data);
+    descargarCenso(data, nombreArchivo: string): Observable<any> {
+        return this.download('censo', data).pipe(
+            saveAs(nombreArchivo, 'pdf')
+        );
     }
 
     descargarReporteInternaciones(params): Observable<any> {

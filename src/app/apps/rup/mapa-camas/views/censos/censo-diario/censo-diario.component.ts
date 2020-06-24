@@ -4,8 +4,6 @@ import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { DocumentosService } from '../../../../../../services/documentos.service';
-import { Slug } from 'ng2-slugify';
-import { saveAs } from 'file-saver';
 
 @Component({
     selector: 'app-censo-diario',
@@ -13,12 +11,12 @@ import { saveAs } from 'file-saver';
 })
 
 export class CensosDiariosComponent implements OnInit {
-    private slug = new Slug('default');
     fecha = moment().toDate();
 
     organizacion;
     unidadesOranizativas = [];
     selectedUnidadOranizativa;
+    public requestInProgress: boolean;
 
     censo;
     censoPacientes = [];
@@ -117,22 +115,12 @@ export class CensosDiariosComponent implements OnInit {
             fecha: moment(this.fecha).endOf('day'),
             unidad: this.selectedUnidadOranizativa
         };
-
-        this.servicioDocumentos.descargarCenso(params).subscribe(data => {
-            if (data) {
-                this.descargarArchivo(data, { type: 'application/pdf' });
-            } else {
-                window.print();
-            }
-        });
+        this.requestInProgress = true;
+        this.servicioDocumentos.descargarCenso(params, 'CENSODIARIO').subscribe(
+            () => this.requestInProgress = false,
+            () => this.requestInProgress = false
+        );
     }
-
-    private descargarArchivo(data: any, headers: any): void {
-        let blob = new Blob([data], headers);
-        let nombreArchivo = this.slug.slugify('CENSODIARIO' + '-' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf';
-        saveAs(blob, nombreArchivo);
-    }
-
 
     resetCenso() {
         this.censo = null;

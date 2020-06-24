@@ -3,9 +3,7 @@ import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
-import { Slug } from 'ng2-slugify';
 import { DocumentosService } from '../../../../../../services/documentos.service';
-import { saveAs } from 'file-saver';
 
 @Component({
     selector: 'app-censo-mensual',
@@ -13,7 +11,6 @@ import { saveAs } from 'file-saver';
 })
 
 export class CensosMensualesComponent implements OnInit {
-    private slug = new Slug('default');
 
     fechaDesde = moment().subtract(1, 'months').toDate();
     fechaHasta = moment().toDate();
@@ -21,6 +18,7 @@ export class CensosMensualesComponent implements OnInit {
     organizacion;
     unidadesOranizativas = [];
     selectedUnidadOranizativa;
+    public requestInProgress: boolean;
 
     censo = [];
     datosCensoTotal = {
@@ -117,21 +115,11 @@ export class CensosMensualesComponent implements OnInit {
             unidad: this.selectedUnidadOranizativa
         };
 
-        this.servicioDocumentos.descargarCensoMensual(params).subscribe(data => {
-            if (data) {
-                // Generar descarga como PDF
-                this.descargarArchivo(data, { type: 'application/pdf' });
-            } else {
-                // Fallback a impresión normal desde el navegador
-                window.print();
-            }
-        });
-    }
-
-    private descargarArchivo(data: any, headers: any): void {
-        let blob = new Blob([data], headers);
-        let nombreArchivo = this.slug.slugify('CENSOMENSUAL' + '-' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf';
-        saveAs(blob, nombreArchivo);
+        this.requestInProgress = true;
+        this.servicioDocumentos.descargarCensoMensual(params, 'CENSOMENSUAL').subscribe(
+            () => this.requestInProgress = false,
+            () => this.requestInProgress = false
+        );
     }
 
     resetCenso() {
