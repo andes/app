@@ -22,8 +22,10 @@ export class DocumentosService {
         return this.server.post('/modules/descargas/send/pdf', datos);
     }
 
-    descargarConstanciaPuco(params): Observable<any> {
-        return this.download('constanciaPuco/pdf', params);
+    descargarConstanciaPuco(params, nombreArchivo: string): Observable<any> {
+        return this.download('constanciaPuco/pdf', params).pipe(
+            saveAs(nombreArchivo, 'pdf')
+        );
     }
 
     descargarCensoMensual(data, nombreArchivo: string): Observable<any> {

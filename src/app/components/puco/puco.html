@@ -53,7 +53,8 @@
                         Fecha de alta: {{usuario.fechaAlta | fecha}}
                     </td>
                     <td>
-                        <plex-button label="Imprimir" type="success" (click)="imprimirConstatacion(usuario)">
+                        <plex-button label="Imprimir" type="success" [disabled]="requestInProgress"
+                                     (click)="imprimirConstatacion(usuario)">
                         </plex-button>
                     </td>
                     <ng-template #sinDatos>
