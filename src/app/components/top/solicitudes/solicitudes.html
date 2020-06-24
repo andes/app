@@ -36,23 +36,24 @@
                     </div>
                 </div>
                 <div class="row mb-2" *ngIf="mostrarMasOpciones">
-                    <div class="col-3" *ngIf="tipoSolicitud === 'entrada'" >
-                        <plex-select [(ngModel)]="organizacionesOrigen" name="organizacion" (getData)="loadOrganizacion($event)"
-                                     label="Organización origen" placeholder="Seleccione la organización"
-                                     labelField="nombre" [multiple]="true" (change)="cargarSolicitudes()">
+                    <div class="col-3" *ngIf="tipoSolicitud === 'entrada'">
+                        <plex-select [(ngModel)]="organizacionesOrigen" name="organizacion"
+                                     (getData)="loadOrganizacion($event)" label="Organización origen"
+                                     placeholder="Seleccione la organización" labelField="nombre" [multiple]="true"
+                                     (change)="cargarSolicitudes()">
                         </plex-select>
                     </div>
-                    <div class="col-3" *ngIf="tipoSolicitud === 'salida'" >
-                        <plex-select [(ngModel)]="organizacionesDestino" name="organizacion" (getData)="loadOrganizacion($event)"
-                                     label="Organización destino" placeholder="Seleccione la organización"
-                                     labelField="nombre" [multiple]="true" (change)="cargarSolicitudes()">
+                    <div class="col-3" *ngIf="tipoSolicitud === 'salida'">
+                        <plex-select [(ngModel)]="organizacionesDestino" name="organizacion"
+                                     (getData)="loadOrganizacion($event)" label="Organización destino"
+                                     placeholder="Seleccione la organización" labelField="nombre" [multiple]="true"
+                                     (change)="cargarSolicitudes()">
                         </plex-select>
                     </div>
                     <div class="col-3">
-                        <plex-select [(ngModel)]="prestacionDestino" name="nombrePrestacion"
-                                     label="Prestación destino" name="prestacionDestino"
-                                     tmPrestaciones="solicitudes:tipoPrestacion:?" (change)="cargarSolicitudes()"
-                                     [preload]="true">
+                        <plex-select [(ngModel)]="prestacionDestino" name="nombrePrestacion" label="Prestación destino"
+                                     name="prestacionDestino" tmPrestaciones="solicitudes:tipoPrestacion:?"
+                                     (change)="cargarSolicitudes()" [preload]="true">
                         </plex-select>
                     </div>
                     <div class="col-3">
@@ -129,20 +130,19 @@
                                                 (click)="seleccionar(prestacion)"></td>
                                             <td *ngIf="prestacion.solicitud.profesionalOrigen && !showSidebar"
                                                 (click)="seleccionar(prestacion)">{{prestacion.solicitud.profesionalOrigen
-                                        | profesional}}</td>
+                                        | nombre}}</td>
                                             <td *ngIf="!prestacion.solicitud.profesionalOrigen && !showSidebar"
                                                 (click)="seleccionar(prestacion)"></td>
                                             <td (click)="seleccionar(prestacion)">
                                                 {{prestacion.solicitud.tipoPrestacion.term}}</td>
                                             <td *ngIf="!prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado"
                                                 (click)="seleccionar(prestacion)">{{prestacion.solicitud.profesional
-                                        | profesional}}</td>
+                                        | nombre}}</td>
                                             <td *ngIf="prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado"
                                                 (click)="seleccionar(prestacion)">
                                                 <plex-badge type="danger">AUTOCITADO</plex-badge>
                                             </td>
-                                            <td class="estado text-capitalize"
-                                                (click)="seleccionar(prestacion)">
+                                            <td class="estado text-capitalize" (click)="seleccionar(prestacion)">
                                                 <plex-badge type="danger"
                                                             *ngIf="prestacion.solicitud.registros[0].valor.solicitudPrestacion.prioridad === 'prioritario'">
                                                     {{prestacion.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}
@@ -175,41 +175,46 @@
                                                             type="success">Registro en HUDS</plex-badge>
                                             </td>
                                             <td>
-                                                <ng-container *ngIf="prestacion.solicitud.organizacion.id === auth.organizacion.id">
+                                                <ng-container
+                                                              *ngIf="prestacion.solicitud.organizacion.id === auth.organizacion.id">
                                                     <span
-                                                        *ngIf="darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno && prestacion.estados[prestacion.estados.length-1].tipo !== 'anulada'">
-                                                        <plex-button icon="calendar-plus" type="success" (click)="darTurno(prestacion)" title="Dar Turno">
+                                                          *ngIf="darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno && prestacion.estados[prestacion.estados.length-1].tipo !== 'anulada'">
+                                                        <plex-button icon="calendar-plus" type="success"
+                                                                     (click)="darTurno(prestacion)" title="Dar Turno">
                                                         </plex-button>
                                                     </span>
                                                     <span *ngIf="auditarArrayEntrada[i]">
-                                                        <plex-button icon="mdi mdi-lock-alert" type="info" (click)="auditar(prestacion)" title="Auditar Solicitud">
+                                                        <plex-button icon="mdi mdi-lock-alert" type="info"
+                                                                     (click)="auditar(prestacion)"
+                                                                     title="Auditar Solicitud">
                                                         </plex-button>
                                                     </span>
                                                     <span *ngIf="visualizarEntrada[i]">
                                                     </span>
                                                     <span
-                                                        *ngIf="prestacion.paciente && prestacion.estados[prestacion.estados.length-1].tipo === 'asignada' && prestacion.solicitud.profesional?.id === auth.profesional">
+                                                          *ngIf="prestacion.paciente && prestacion.estados[prestacion.estados.length-1].tipo === 'asignada' && prestacion.solicitud.profesional?.id === auth.profesional">
                                                         <plex-button icon="contacts" type="primary"
-                                                                    (click)="setRouteToParams(['vista', prestacion.paciente.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id)"
-                                                                    title="Ver Huds">
+                                                                     (click)="setRouteToParams(['vista', prestacion.paciente.id]); setAccesoHudsParams(prestacion.paciente, null, prestacion.solicitud.tipoPrestacion.id)"
+                                                                     title="Ver Huds">
                                                         </plex-button>
                                                         <plex-button icon="check" type="success"
-                                                                    (click)="onIniciarPrestacionClick(prestacion)"
-                                                                    title="Iniciar prestación">
+                                                                     (click)="onIniciarPrestacionClick(prestacion)"
+                                                                     title="Iniciar prestación">
                                                         </plex-button>
                                                         <plex-button icon="calendar" type="warning"
-                                                                    (click)="citar(prestacion)" title="Citar paciente">
+                                                                     (click)="citar(prestacion)" title="Citar paciente">
                                                         </plex-button>
                                                     </span>
                                                     <span
-                                                        *ngIf="permisoAnular && darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno && prestacion.estados[prestacion.estados.length-1].tipo !== 'anulada'">
+                                                          *ngIf="permisoAnular && darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno && prestacion.estados[prestacion.estados.length-1].tipo !== 'anulada'">
                                                         <plex-button type="danger" icon="delete"
-                                                                    (click)="anular(prestacion)" title="Anular">
+                                                                     (click)="anular(prestacion)" title="Anular">
                                                         </plex-button>
                                                     </span>
-                                               </ng-container>
+                                                </ng-container>
 
-                                               <plex-badge *ngIf="prestacion.solicitud.organizacion.id !== auth.organizacion.id" type="warning">REFERIDA
+                                                <plex-badge *ngIf="prestacion.solicitud.organizacion.id !== auth.organizacion.id"
+                                                            type="warning">REFERIDA
                                                 </plex-badge>
                                             </td>
                                         </tr>
@@ -266,11 +271,11 @@
                                             <td *ngIf="!prestacion.solicitud.organizacionOrigen && !showSidebar">
                                             </td>
                                             <td *ngIf="prestacion.solicitud.profesionalOrigen && !showSidebar">{{prestacion.solicitud.profesionalOrigen
-                                        | profesional}}</td>
+                                        | nombre}}</td>
                                             <td *ngIf="!prestacion.solicitud.profesionalOrigen && !showSidebar">
                                             </td>
                                             <td>{{prestacion.solicitud.tipoPrestacion.term}}</td>
-                                            <td>{{prestacion.solicitud.profesional | profesional}}</td>
+                                            <td>{{prestacion.solicitud.profesional | nombre}}</td>
                                             <td>
                                                 <ng-container
                                                               *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'rechazada'">

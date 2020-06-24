@@ -48,7 +48,6 @@ import { DocumentosService } from './services/documentos.service';
 
 // Pipes
 import { EdadPipe } from './pipes/edad.pipe';
-import { ProfesionalPipe } from './pipes/profesional.pipe';
 import { FromNowPipe } from './pipes/fromNow.pipe';
 import { FechaPipe } from './shared/pipes/fecha.pipe';
 import { HoraPipe } from './shared/pipes/hora.pipe';
@@ -391,7 +390,7 @@ registerLocaleData(localeEs, 'es');
         UploadFileComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe, ReplacePipe, EspacioFisicoPipe,
-        MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, HoraPipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
+        MapsComponent, EdadPipe, FromNowPipe, FechaPipe, HoraPipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, DinamicaFormComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         Html2TextPipe,
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,

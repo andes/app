@@ -21,7 +21,7 @@
             <br>
             <span class="text-left"
                   *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].observaciones || prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo">
-                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdBy | profesional}}</span>
+                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdBy | nombre}}</span>
             <br>
         </div>
     </div>
@@ -41,7 +41,7 @@
             <b>Usuario que anula</b>
             <br>
             <span class="text-left">
-                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdBy | profesional}}</span>
+                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdBy | nombre}}</span>
             <br>
             <b>Fecha de Anulación</b>
             <br>
@@ -123,10 +123,12 @@
                   class='text-capitalize'>{{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.prioridad}}</span>
             <br>
             <plex-title titulo="Motivo de Solicitud" size="sm">
-                <ng-container *ngIf='prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.indicaciones'>
+                <ng-container
+                              *ngIf='prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.indicaciones'>
                     <plex-help type="help" titulo="Indicaciones" tituloBoton="Ver Indicaciones">
                         <p class="m-2"
-                            [innerHTML]="prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.indicaciones"> </p>
+                           [innerHTML]="prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.indicaciones">
+                        </p>
                     </plex-help>
                 </ng-container>
             </plex-title>

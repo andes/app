@@ -46,7 +46,7 @@
                             <td>{{listaEspera.paciente | nombre }}</td>
                             <td>{{listaEspera.prestacion.nombre}}</td>
                             <td>
-                                <span *ngIf="listaEspera.profesional">{{listaEspera.profesional | profesional}}</span>
+                                <span *ngIf="listaEspera.profesional">{{listaEspera.profesional | nombre}}</span>
                             </td>
                             <td>{{listaEspera.estado}}</td>
                             <td nowrap>{{listaEspera.fecha | date:"dd-MM-yy" }}</td>

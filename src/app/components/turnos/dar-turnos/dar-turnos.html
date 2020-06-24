@@ -81,7 +81,7 @@
                                         {{busqueda.tipoPrestacion.term}}
                                     </div>
                                     <div *ngIf="busqueda.profesional">
-                                        {{busqueda.profesional | profesional}}
+                                        {{busqueda.profesional | nombre}}
                                     </div>
                                 </div>
                             </li>
@@ -116,7 +116,7 @@
                             <div *ngIf="agenda && agenda.profesionales">
                                 <!-- Listado de Equipo de Salud -->
                                 <div *ngFor="let profesional of agenda.profesionales let i = index">
-                                    {{profesional | profesional}}
+                                    {{profesional | nombre}}
                                 </div>
                             </div>
                         </div>
@@ -320,7 +320,7 @@
                                 <div *ngIf="agenda.profesionales">
                                     <label>Equipo de Salud</label>
                                     <div *ngFor="let profesional of agenda.profesionales let i = index">{{profesional |
-                                        profesional}}
+                                        nombre}}
                                     </div>
                                 </div>
                             </div>
