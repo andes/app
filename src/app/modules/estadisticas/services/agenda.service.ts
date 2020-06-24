@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Auth } from '@andes/auth';
-import { Server } from '@andes/shared';
+import { Server, saveAs } from '@andes/shared';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class EstAgendasService {
@@ -14,16 +15,22 @@ export class EstAgendasService {
      * @param params Filtros de busqueda
      */
 
-    post (params) {
+    post(params) {
         return this.server.post(this.baseURL + '/dashboard', params);
     }
 
-    postFiltroPorCiudad (params) {
+    postFiltroPorCiudad(params) {
         return this.server.post(this.baseURL + '/dashboard/localidades', params);
     }
 
-    descargarCSV (data) {
-        return this.server.post(this.baseURL + '/dashboard/descargarCsv', data, {responseType: 'blob'});
+    download(data): Observable<any> {
+        return this.server.post(this.baseURL + '/dashboard/descargarCsv', data, { responseType: 'blob' } as any);
+    }
+
+    descargarCSV(data, nombreArchivo: string): Observable<any> {
+        return this.download(data).pipe(
+            saveAs(nombreArchivo, 'csv')
+        );
     }
 
 }

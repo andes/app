@@ -1,6 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Slug } from 'ng2-slugify';
-import { saveAs } from 'file-saver';
 import { EstAgendasService } from '../../services/agenda.service';
 
 
@@ -36,7 +34,7 @@ export class GraficosComponent implements OnInit {
     public dataGraph = [];
     public labelsGraph = [];
     public dataTableTotal = 0;
-
+    public requestInProgress: boolean;
     public barOptions = {
         legend: { display: false },
         scales: {
@@ -81,23 +79,16 @@ export class GraficosComponent implements OnInit {
     ngOnInit() {
     }
 
-    private slug = new Slug('default');
-
     descargar(value) {
         if (this.filtros && this.filtros.tipoDeFiltro === 'turnos') {
             // Se agregan datos de filtrados en el primer elemendo del array para visualizar en csv
             Object.keys(this.filtros).map(filtro => value[0][filtro] = this.filtros[filtro] ? this.filtros[filtro] : '');
-            this.estService.descargarCSV(value).subscribe((data: any) => {
-                this.descargarArchivo(data, { type: 'text/csv' });
-            });
+            this.requestInProgress = true;
+            this.estService.descargarCSV(value, this.dashboard + '-' + this.titulo).subscribe(
+                () => this.requestInProgress = false,
+                () => this.requestInProgress = false
+            );
         }
-    }
-
-    private descargarArchivo(data: any, headers: any): void {
-        let blob = new Blob([data], headers);
-        // TODO Definir nombre del csv y como mostrar los filtros utilizados
-        let nombreArchivo = this.slug.slugify(this.dashboard + '-' + this.titulo + '-' + moment().format('DD-MM-YYYY')) + '.csv';
-        saveAs(blob, nombreArchivo);
     }
 
     limpiarData() {
