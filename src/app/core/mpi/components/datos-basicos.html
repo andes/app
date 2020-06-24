@@ -1,0 +1,194 @@
+<section class="mt-2">
+    <ng-container [ngSwitch]="tipoPaciente">
+        <div *ngSwitchCase="'bebe'">
+            <plex-title size="sm" titulo="Registro de bebé"></plex-title>
+
+            <plex-wrapper>
+                <plex-text label="Apellido" [(ngModel)]="paciente.apellido" name="apellidoBebe" [required]="true"
+                           grow="4">
+                </plex-text>
+
+                <plex-text label="Nombre" [(ngModel)]="paciente.nombre" name="nombreBebe" [required]="true" grow="4">
+                </plex-text>
+
+                <plex-select [(ngModel)]="paciente.sexo" label="Seleccione sexo" [data]="sexos" name="sexoBebe"
+                             [required]="true" placeholder="Seleccione.." grow="4">
+                </plex-select>
+
+                <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date"
+                               [readonly]="paciente.estado === 'validado'" [(ngModel)]="paciente.fechaNacimiento"
+                               name="fechaNacimientoBebe" [required]="true" grow="4">
+                </plex-datetime>
+            </plex-wrapper>
+
+
+            <!-- DATOS DEL PROGENITOR PARA EL BEBE-->
+            <div class="mt-4">
+                <plex-title size="sm" titulo="Datos de Progenitor/a o tutor/a"></plex-title>
+
+                <div *ngIf="showBuscador; else showRelacion" class="mt-2">
+
+                    <paciente-buscar label="Buscar" (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event)"
+                                     (searchClear)="onSearchClear()">
+                    </paciente-buscar>
+
+                    <paciente-listado *ngIf="busquedaTutor?.length" [pacientes]="busquedaTutor" [autoselect]="false"
+                                      (selected)="onPacienteSelected($event)">
+                    </paciente-listado>
+                    <div *ngIf="!busquedaTutor?.length && !searchClear" class="alert alert-danger">
+                        <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
+                    </div>
+                </div>
+            </div>
+
+            <ng-template #showRelacion>
+                <plex-wrapper>
+                    <plex-text label="Documento" [(ngModel)]="relacionBebe.documento" name="documentoRelacion"
+                               [readonly]="true">
+                    </plex-text>
+
+                    <plex-text label="Apellido" [(ngModel)]="relacionBebe.apellido" name="apellidoRelacion"
+                               [readonly]="true">
+                    </plex-text>
+
+                    <plex-text label="Nombre" [(ngModel)]="relacionBebe.nombre" name="nombreRelacion" [readonly]="true">
+                    </plex-text>
+                </plex-wrapper>
+
+                <plex-wrapper>
+                    <plex-select [(ngModel)]="relacionBebe.sexo" label="Seleccione sexo" [data]="sexos"
+                                 name="sexoRelacion" type="horizontal" [readonly]="true" grow="3">
+                    </plex-select>
+
+                    <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="true"
+                                   [(ngModel)]="relacionBebe.fechaNacimiento" name="fechaNacimientoRelacion" grow="3">
+                    </plex-datetime>
+
+                    <plex-select [(ngModel)]="relacionBebe.relacion" name="tipoRelacion" label="Relación"
+                                 [data]="parentescoModel" [required]="true" placeholder="Seleccione..." grow="3">
+                    </plex-select>
+                </plex-wrapper>
+
+                <div class="row mt-4">
+                    <div class="col-4">
+                        <plex-button label="Cambiar" type="info" (click)="cambiarRelacion()">
+                        </plex-button>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+
+        <div *ngSwitchCase="'extranjero'">
+            <plex-title size="sm" titulo="Registro de paciente extranjero"></plex-title>
+
+            <plex-wrapper>
+                <plex-text label="Apellido" [(ngModel)]="paciente.apellido" name="apellidoExt" required="true">
+                </plex-text>
+
+                <plex-text label="Nombre" [(ngModel)]="paciente.nombre" name="nombreExt" required="true">
+                </plex-text>
+
+                <plex-select [(ngModel)]="paciente.sexo" label="Seleccione sexo" [data]="sexos" name="sexoExt"
+                             required="true" placeholder="Seleccione.." (change)="completarGenero();">
+                </plex-select>
+            </plex-wrapper>
+
+            <plex-wrapper>
+                <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date"
+                               [(ngModel)]="paciente.fechaNacimiento" name="fechaNacimientoExt" required="true"
+                               grow="3">
+                </plex-datetime>
+
+                <plex-select label="Tipo de identificación" [(ngModel)]="paciente.tipoIdentificacion"
+                             [data]="tipoIdentificacion" name="tipoIdentificacion" placeholder="Seleccione.." grow="3">
+                </plex-select>
+
+                <plex-text label="Número de identificación" [(ngModel)]="paciente.numeroIdentificacion"
+                           name="numeroIdentificacion" pattern="[0-9]+" grow="3">
+                </plex-text>
+            </plex-wrapper>
+        </div>
+
+        <div *ngSwitchDefault>
+            <plex-title size="sm" titulo="Registro de paciente">
+                <plex-bool *ngIf="!validado" [(ngModel)]="noPoseeDNI" label="No posee DNI ARGENTINO" type="slide"
+                           name="noPoseDNI" (change)="limpiarDocumento()"></plex-bool>
+            </plex-title>
+
+            <plex-wrapper>
+                <plex-int class="mr-3" label="Número de DNI ARGENTINO" [(ngModel)]="paciente.documento"
+                          (change)="emitChanges()" [readonly]=" validado || noPoseeDNI " [pattern]="patronDocumento"
+                          name="documento" [required]="!noPoseeDNI" grow="3">
+                </plex-int>
+
+                <plex-select [(ngModel)]="paciente.sexo" label="Seleccione sexo" [data]="sexos" name="sexo"
+                             required="true" placeholder="Seleccione.." [readonly]="validado"
+                             (change)="completarGenero();emitChanges()" grow="3">
+                </plex-select>
+
+                <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="validado"
+                               [(ngModel)]="paciente.fechaNacimiento" name="fechaNacimiento" [required]="!noPoseeDNI"
+                               grow="3">
+                </plex-datetime>
+            </plex-wrapper>
+
+            <plex-wrapper>
+                <plex-text label="Apellido" [(ngModel)]="paciente.apellido" name="apellido" required="true"
+                           [readonly]="validado">
+                </plex-text>
+
+                <plex-text label="Nombre" [(ngModel)]="paciente.nombre" name="nombre" required="true"
+                           [readonly]="validado">
+                </plex-text>
+
+                <plex-select [(ngModel)]="paciente.estadoCivil" name="estadoCivil" [data]="estadosCiviles"
+                             label="Seleccione estado Civil">
+                </plex-select>
+            </plex-wrapper>
+        </div>
+    </ng-container>
+
+
+    <!-- IDENTIDAD AUTOPERCIBIDA -->
+    <ng-container *ngIf="tipoPaciente !== 'bebe'">
+        <plex-title titulo="identidad autopercibida" size="sm" class="mt-2"></plex-title>
+        <plex-wrapper>
+            <plex-text label="Nombre" [(ngModel)]="paciente.alias" name="nombreAutopercibido"></plex-text>
+
+            <plex-select label="Seleccione género" [(ngModel)]="paciente.genero" [data]="generos" name="genero">
+            </plex-select>
+        </plex-wrapper>
+    </ng-container>
+
+    <!-- Reporte de error en datos -->
+    <ng-container *ngIf="validado">
+        <plex-bool [(ngModel)]="paciente.reportarError" name="reportarError" type="slide"
+                   label="Considero que los datos son incorrectos y quiero reportar el error">
+        </plex-bool>
+
+        <plex-text *ngIf="paciente.reportarError" placeholder="Ingrese una descripción del error"
+                   [(ngModel)]="paciente.notaError" name="notaError"> </plex-text>
+    </ng-container>
+
+</section>
+<!-- DATOS PARA APP MOBILE DE ANDES -->
+<!-- <fieldset *ngIf="validado && activarApp">
+    <legend>Datos para App Mobile de ANDES</legend>
+    <div class="row">
+        <div class="col-4">
+            <plex-text label="Usuario Andes (E-Mail)" [(ngModel)]="emailAndes" [readonly]="!checkPass"
+                       name="usuarioAndes" placeholder="e-mail" (focusout)="onFocusout('email', emailAndes)">
+            </plex-text>
+        </div>
+        <div class="col-4">
+            <plex-phone label="Celular para app de Andes" [(ngModel)]="celularAndes" placeholder="Ej: 2990000000"
+                        name="celularAndes" (focusout)="onFocusout('celular', celularAndes)"></plex-phone>
+        </div>
+        <div class="col-4">
+            <span class="text-danger" *ngIf="emailAndes && messageApp.length > 0">
+                <i class="mdi mdi-alert-circle-outline"></i>
+                {{messageApp}}
+            </span>
+        </div>
+    </div>
+</fieldset> -->
