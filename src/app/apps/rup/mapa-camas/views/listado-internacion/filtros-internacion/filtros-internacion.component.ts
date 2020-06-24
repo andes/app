@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import * as enumerados from '../../../../../../utils/enumerados';
 import { Auth } from '@andes/auth';
 import { DocumentosService } from '../../../../../../services/documentos.service';
-import { saveAs } from 'file-saver';
-import { Slug } from 'ng2-slugify';
 import { ListadoInternacionService } from '../listado-internacion.service';
 
 @Component({
@@ -20,8 +18,7 @@ export class FiltrosInternacionComponent implements OnInit {
     };
     estadosInternacion;
     permisoDescarga;
-
-    private slug = new Slug('default'); // para documento csv
+    requestInProgress: boolean;
 
     constructor(
         private auth: Auth,
@@ -64,9 +61,10 @@ export class FiltrosInternacionComponent implements OnInit {
             egresoHasta: moment(this.filtros.fechaEgresoHasta).endOf('d').format(),
             organizacion: this.auth.organizacion.id
         };
-        this.servicioDocumentos.descargarReporteInternaciones(params).subscribe(data => {
-            let blob = new Blob([data], { type: data.type });
-            saveAs(blob, this.slug.slugify('Internaciones' + ' ' + moment().format('DD-MM-YYYY-hmmss')) + '.csv');
-        });
+        this.requestInProgress = true;
+        this.servicioDocumentos.descargarReporteInternaciones(params, 'Internaciones').subscribe(
+            () => this.requestInProgress = false,
+            () => this.requestInProgress = false
+        );
     }
 }

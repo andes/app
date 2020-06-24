@@ -40,7 +40,9 @@ export class DocumentosService {
         );
     }
 
-    descargarReporteInternaciones(params): Observable<any> {
-        return this.server.post('/bi/queries/listado-internacion/csv', { params }, { responseType: 'blob' } as any);
+    descargarReporteInternaciones(params, nombreArchivo: string): Observable<any> {
+        return this.server.post('/bi/queries/listado-internacion/csv', { params }, { responseType: 'blob' } as any).pipe(
+            saveAs(nombreArchivo, 'csv')
+        );
     }
 }
