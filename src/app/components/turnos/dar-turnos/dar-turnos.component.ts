@@ -199,7 +199,7 @@ export class DarTurnosComponent implements OnInit {
             });
         }
         this.desplegarOS = this.desplegarObraSocial();
-        this.actualizar('');
+        this.actualizar();
     }
 
     actualizarDatosPaciente(idPaciente) {
@@ -227,7 +227,7 @@ export class DarTurnosComponent implements OnInit {
             }
             event.callback(dataF);
             if (this._solicitudPrestacion) {
-                this.actualizar('');
+                this.actualizar();
             }
         });
     }
@@ -332,13 +332,10 @@ export class DarTurnosComponent implements OnInit {
                 localStorage.setItem('busquedas', JSON.stringify(this.cacheBusquedas));
             }
         }
-        this.actualizar('');
+        this.actualizar();
     }
 
-    /**
-     * @param etiqueta: define qué filtros usar para traer todas las Agendas
-     */
-    actualizar(etiqueta) {
+    actualizar() {
         if (this._solicitudPrestacion) {
             this.opciones.tipoPrestacion = this._solicitudPrestacion.solicitud.tipoPrestacion;
             if (this._solicitudPrestacion.solicitud && this._solicitudPrestacion.solicitud.profesional) {
@@ -369,13 +366,11 @@ export class DarTurnosComponent implements OnInit {
                 organizacion: this.auth.organizacion.id,
                 nominalizada: true
             };
-            if (this.opciones.profesional && this.autocitado) {
+
+            if (this.opciones.profesional) {
                 params['idProfesional'] = this.opciones.profesional.id;
-            } else {
-                if (this.opciones.profesional && !this.autocitado) {
-                    params['idProfesional'] = this.opciones.profesional.id;
-                }
             }
+
             if (!this.opciones.tipoPrestacion) {
                 params['tipoPrestaciones'] = (this.permisos[0] === '*') ? [] : this.permisos;
 
@@ -661,7 +656,7 @@ export class DarTurnosComponent implements OnInit {
         this.opciones.tipoPrestacion = turno.tipoPrestacion;
         let actualizarProfesional = (this.opciones.profesional === turno.profesionales);
         this.opciones.profesional = turno.profesionales[0];
-        this.actualizar('');
+        this.actualizar();
     }
 
     seleccionarAlternativa(indice: number) {
@@ -694,7 +689,7 @@ export class DarTurnosComponent implements OnInit {
         } else {
             this.opciones.fecha = moment(this.opciones.fecha).subtract(1, 'M').toDate();
         }
-        this.actualizar('');
+        this.actualizar();
     }
 
     cambiarTelefono() {
@@ -843,7 +838,7 @@ export class DarTurnosComponent implements OnInit {
             this.serviceAgenda.getById(this.agenda.id).subscribe(agd => {
                 if (agd.estado !== 'disponible' && agd.estado !== 'publicada') {
                     this.plex.info('warning', 'Esta agenda ya no está disponible.');
-                    this.actualizar('');
+                    this.actualizar();
                     return false;
                 } else {
                     if (this.changeCarpeta && this.carpetaEfector.nroCarpeta && this.carpetaEfector.nroCarpeta !== '' && this.carpetaEfector.nroCarpeta !== this.nroCarpetaOriginal) {
@@ -906,7 +901,7 @@ export class DarTurnosComponent implements OnInit {
                 },
                 error => {
                     this.agenda = null;
-                    this.actualizar('');
+                    this.actualizar();
                     this.plex.toast('danger', 'Turno no asignado');
                     this.hideDarTurno = false;
                     this.volverAlGestor.emit(this.agenda); // devuelve la agenda al gestor, para que éste la refresque
@@ -954,7 +949,7 @@ export class DarTurnosComponent implements OnInit {
                             this.darTurno();
                         } else {
                             this.plex.confirm('No se emitió el turno, por favor verifique los turnos disponibles', 'Turno no asignado');
-                            this.actualizar('');
+                            this.actualizar();
                         }
                     }
                 }
@@ -974,7 +969,7 @@ export class DarTurnosComponent implements OnInit {
         }
         let agendaid = this.agenda.id;
         this.agenda = null;
-        this.actualizar('');
+        this.actualizar();
         this.plex.toast('info', 'El turno se asignó correctamente');
         this.hideDarTurno = false;
         this.plex.clearNavbar();
