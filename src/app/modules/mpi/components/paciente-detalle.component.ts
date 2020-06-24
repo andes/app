@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { ObraSocialService } from '../../../services/obraSocial.service';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
@@ -16,9 +16,14 @@ export class PacienteDetalleComponent implements OnInit {
     @Input() paciente: IPaciente;
     @Input() fields: string[] = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado'];
     @Input() reload: Boolean = false;
+    @Input() showRelaciones = false;
 
     obraSocial: IObraSocial;
     token$: Observable<string>;
+
+    get justificado() {
+        return this.orientacion === 'vertical' ? 'center' : 'start';
+    }
 
     get showSexo() {
         return this.fields.findIndex(i => i === 'sexo') >= 0;
@@ -95,6 +100,22 @@ export class PacienteDetalleComponent implements OnInit {
             return 'Financiador';
         }
         return 'Obra Social';
+    }
+
+    get relaciones() {
+        let relaciones = [];
+        if (this.paciente.relaciones && this.paciente.relaciones.length) {
+            relaciones = this.paciente.relaciones.map(rel => {
+                return {
+                    id: rel.referencia,
+                    apellido: rel.apellido,
+                    nombre: rel.nombre,
+                    documento: rel.documento,
+                    parentesco: rel.relacion.nombre
+                };
+            });
+        }
+        return relaciones;
     }
 
     constructor(

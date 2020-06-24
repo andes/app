@@ -1,64 +1,34 @@
-<!-- type = default -->
-<table *ngIf="type == 'default' && listado && listado.length" class="table table-striped table-hover">
-    <thead>
-        <tr>
-            <th></th>
-            <th class="text-center">Documento</th>
-            <th>Apellido y Nombre</th>
-            <th>Nacimiento</th>
-            <th>Sexo</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr class="hover" *ngFor="let paciente of listado"
-            [ngClass]="{'bg-inverse text-white': paciente.id == seleccionado?.id}" (click)="seleccionar(paciente)"
-            (mouseenter)="hoverPaciente(paciente)">
-            <td>
-                <img class="img-thumbnail" [mpiFotoPaciente]="paciente" />
-            </td>
-            <td class="text-center">
-                <span *ngIf="paciente?.documento !== ''" class="d-block">{{paciente.documento}}</span>
-                <span *ngIf="paciente?.documento === ''" class="d-block">N/D</span>
-                <plex-badge *ngIf="paciente.estado == 'validado'" type="success">Validado</plex-badge>
-                <plex-badge *ngIf="paciente.estado != 'validado'" type="warning">Temporal</plex-badge>
-            </td>
-            <td>{{paciente | nombre}}</td>
-            <td>
-                <span *ngIf="paciente.fechaNacimiento !== null">
-                    <span class="d-block">{{paciente.fechaNacimiento | fecha:'utc'}}</span>
-                    <span class="d-block">{{paciente | edad}}</span>
-                </span>
-                <span *ngIf="paciente.fechaNacimiento === null">N/D</span>
-            </td>
-            <td>{{paciente | sexo}}</td>
-        </tr>
-    </tbody>
-</table>
+<plex-list height="80%" (scrolled)="onScroll()">
+    <plex-item *ngFor="let paciente of listado" class=""
+               [class.pacienteFallecido]="paciente.fechaFallecimiento && paciente.fechaFallecimiento !== null"
+               [selected]="pacienteSeleccionado?.id === paciente.id" (click)="seleccionar(paciente)">
 
-<!-- type = small (sm) -->
-<table *ngIf="type == 'sm' && listado && listado.length" class="table table-striped table-sm table-hover">
-    <tbody>
-        <tr class="hover" *ngFor="let paciente of listado"
-            [ngClass]="{'bg-inverse text-white': paciente.id == seleccionado?.id}" (click)="seleccionar(paciente)"
-            (mouseenter)="hoverPaciente(paciente)">
-            <td class="text-center">
-                <span *ngIf="paciente?.documento !== ''" class="d-block">{{paciente.documento}}</span>
-                <span *ngIf="paciente?.documento === ''" class="d-block">N/D</span>
-                <plex-badge *ngIf="paciente.estado == 'validado'" type="success">Validado</plex-badge>
-                <plex-badge *ngIf="paciente.estado != 'validado'" type="warning">Temporal</plex-badge>
-            </td>
-            <td>
-                <div>{{paciente | nombre}}</div>
-                <div>
-                    <span>{{paciente | sexo}}</span>
-                    <span *ngIf="paciente.fechaNacimiento !== null">
-                        <span class="text-muted">|</span>
-                        <span>{{paciente.fechaNacimiento | fecha:'utc'}}</span>
-                        <span class="text-muted">|</span>
-                        <span>{{paciente | edad}}</span>
-                    </span>
-                </div>
-            </td>
-        </tr>
-    </tbody>
-</table>
+        <img [mpiFotoPaciente]="paciente" />
+
+        <plex-label *ngIf="!paciente.numeroIdentificacion" titulo="{{ paciente | nombre }}"
+                    subtitulo="{{ (paciente.documento | number) || 'Sin DNI' }}">
+        </plex-label>
+
+        <plex-label *ngIf="paciente.numeroIdentificacion" titulo="{{ paciente | nombre }}"
+                    subtitulo="{{ paciente.numeroIdentificacion }}"></plex-label>
+
+        <plex-label titulo="{{ paciente | edad }}" subtitulo="{{ paciente.fechaNacimiento | fecha:'utc' }}">
+        </plex-label>
+
+        <plex-badge type="info">{{ paciente | sexo }}
+        </plex-badge>
+
+        <plex-badge type="" class=""
+                    [ngClass]="{'text-success' : paciente.estado === 'validado' , 'text-warning' : paciente.estado === 'temporal'} ">
+            {{ paciente.estado }}
+        </plex-badge>
+
+        <plex-badge *ngIf="paciente.fechaFallecimiento" type="danger">Fallecido:
+            {{ paciente.fechaFallecimiento | fecha:'utc'}}
+        </plex-badge>
+
+        <plex-button *ngIf="editing" type="warning" size="sm" icon="pencil" title="Editar paciente"
+                     (click)="editar(paciente)">
+        </plex-button>
+    </plex-item>
+</plex-list>

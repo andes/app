@@ -37,7 +37,7 @@ export class PacienteService {
      * @returns {Observable<IPacienteMatch[]>}
      * @memberof PacienteService
      */
-    getMatch(params: PacienteSearch): Observable<IPacienteMatch[]> {
+    getMatch(params: any): Observable<IPacienteMatch[]> {
         return this.server.get(this.pacienteUrl, { params: params, showError: true }).pipe(map((value) => {
             if (params.type === 'simplequery') {
                 return value.map((i) => ({ paciente: i, id: i.id, match: 100 }));

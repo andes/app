@@ -1,4 +1,4 @@
-<div *ngIf="paciente">
+<!-- <div *ngIf="paciente">
     <div class="row mb-1">
         <div *ngIf="!paciente.foto" class="col">
             <img class="img-thumbnail" [mpiFotoPaciente]="paciente" />
@@ -35,16 +35,6 @@
             <span>{{ paciente.cuil }}</span>
         </div>
     </div>
-    <!-- <div class="row mb-1">
-        <div class="col">
-            <label>Cobertura social</label>
-            <plex-loader *ngIf="coberturaSocial.loading" type="linear"></plex-loader>
-            <div *ngIf="!coberturaSocial.loading">
-                <span *ngIf="!coberturaSocial.error">{{ coberturaSocial.data }}</span>
-                <span *ngIf="coberturaSocial.error" class="text-warning">No disponible en este momento</span>
-            </div>
-        </div>
-    </div> -->
     <div class="row mb-1">
         <div class="col">
             <label>Relaciones</label>
@@ -55,9 +45,6 @@
                 <table *ngIf="relaciones.data && relaciones.data.length" class="table table-sm"
                        [ngClass]="{'table-hover': permitirseleccionarRelacion}">
                     <tbody>
-                        <!-- COMENTADO HASTA TERMINAR FUNCIONALIDAD
-                        <tr [ngClass]="{'hover': permitirseleccionarRelacion}" *ngFor="let relacion of relaciones.data"
-                            (click)="permitirseleccionarRelacion && seleccionarRelacionado(relacion)"> -->
                         <tr *ngFor="let relacion of relaciones.data">
                             <td
                                 *ngIf="relacion?.apellido && relacion?.documento && relacion?.nombre && relacion?.relacion?.nombre">
@@ -71,4 +58,63 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
+
+<plex-title titulo="Detalle" size="sm">
+</plex-title>
+<plex-detail *ngIf="paciente" direction="{{ direction }}" size="sm" justify="{{ justificado }}">
+    <img *ngIf="!paciente.foto" [mpiFotoPaciente]="paciente" alt="">
+
+    <img *ngIf="paciente.foto" src="{{ paciente.foto }}">
+
+    <plex-badge [type]="estadoBadgeType" *ngIf="paciente.estado">
+        {{ paciente.estado | uppercase }}
+    </plex-badge>
+
+    <div title>{{ paciente | nombre }}</div>
+
+    <div subtitle>{{ paciente.documento }}</div>
+
+    <plex-label *ngIf="paciente.fechaNacimiento" titulo="Fecha de Nacimiento"
+                subtitulo="{{ paciente.fechaNacimiento | fecha:'utc' }}" justify="{{ justificado }}"></plex-label>
+
+    <plex-label *ngIf="paciente.fechaFallecimiento" titulo="Fecha de Fallecimiento"
+                subtitulo="{{ paciente.fechaFallecimiento | fecha:'utc' }}" justify="{{ justificado }}">
+    </plex-label>
+
+    <plex-label *ngIf="paciente.cuil" titulo="CUIL" subtitulo="{{ paciente.cuil}}" justify="{{ justificado }}">
+    </plex-label>
+
+    <plex-label *ngIf="paciente.edad" titulo="Edad" subtitulo="{{ paciente | edad }}" justify="{{ justificado }}">
+    </plex-label>
+
+    <plex-label *ngIf="paciente.sexo" titulo="Sexo" subtitulo="{{ paciente | sexo }}" justify="{{ justificado }}">
+    </plex-label>
+
+    <plex-label *ngIf="paciente.genero" titulo="Género" subtitulo="{{ paciente.genero }}" justify="{{ justificado }}">
+    </plex-label>
+</plex-detail>
+
+<!-- Pacientes relacionados -->
+<ng-container *ngIf="showRelaciones">
+    <plex-title titulo="Relaciones" size="sm"></plex-title>
+    <plex-list>
+        <plex-label *ngIf="!relaciones?.length" titulo="No hay ninguna relación registrada" subtitulo=""></plex-label>
+
+        <plex-item *ngFor="let relacionado of relaciones; let i = index" class="">
+            <img [mpiFotoPaciente]="idPacientesRelacionados[i]" />
+
+            <plex-label titulo="{{ relacionado | nombre }}" subtitulo="{{ relacionado.documento | number}}">
+            </plex-label>
+
+            <plex-badge type="info">{{ relacionado.relacion.nombre }}
+            </plex-badge>
+
+            <plex-button type="warning" size="sm" icon="pencil" (click)="editRelacion(relacionado)">
+            </plex-button>
+
+            <plex-button type="danger" size="sm" icon="close" (click)="removeRelacion(relacionado)">
+            </plex-button>
+        </plex-item>
+    </plex-list>
+</ng-container>

@@ -1,4 +1,4 @@
-import { OnInit, Component, Input, Output, EventEmitter } from '@angular/core';
+import { OnInit, Component, Input, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
 import { IPaciente } from '../interfaces/IPaciente';
 import { PacienteHttpService } from '../services/pacienteHttp.service';
 import * as enumerados from '../../../utils/enumerados';
@@ -7,17 +7,23 @@ import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.i
 import { ParentescoService } from '../../../services/parentesco.service';
 import { PacienteBuscarResultado } from '../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
+import { NgForm } from '@angular/forms';
+import { Subscription, fromEvent } from 'rxjs';
+import { PacienteService } from '../services/paciente.service';
 
 @Component({
     selector: 'datos-basicos',
     templateUrl: 'datos-basicos.html',
     styleUrls: []
 })
-export class DatosBasicosComponent implements OnInit {
+
+export class DatosBasicosComponent implements OnInit, OnDestroy {
 
     @Input() paciente: IPaciente;
     @Input() tipoPaciente = 'con-dni';
     @Output() changes: EventEmitter<any> = new EventEmitter<any>();
+    @ViewChild('form', null) ngForm: NgForm;
+    formChangesSubscription: Subscription;
 
     foto = '';
     estados = [];
@@ -66,12 +72,15 @@ export class DatosBasicosComponent implements OnInit {
         foto: ''
     };
 
+
     constructor(
         private plex: Plex,
-        private pacienteHttpService: PacienteHttpService,
+        // private pacienteHttpService: PacienteHttpService,
+        private pacienteService: PacienteService,
         private parentescoService: ParentescoService
     ) {
-        this.nombrePattern = pacienteHttpService.nombreRegEx.source;
+        // this.nombrePattern = pacienteHttpService.nombreRegEx.source;
+        this.nombrePattern = pacienteService.nombreRegEx.source;
     }
 
     ngOnInit() {
@@ -86,6 +95,16 @@ export class DatosBasicosComponent implements OnInit {
         this.estados = enumerados.getEstados();
         // this.checkDisableValidar();
         this.parentescoService.get().subscribe(resultado => { this.parentescoModel = resultado; });
+
+        this.formChangesSubscription = this.ngForm.form.valueChanges
+            .debounceTime(300)
+            .subscribe(formValues => {
+                this.changes.emit({ values: formValues, isValid: this.ngForm.valid });
+            });
+    }
+
+    ngOnDestroy() {
+        this.formChangesSubscription.unsubscribe();
     }
 
     get validado() {
@@ -95,20 +114,14 @@ export class DatosBasicosComponent implements OnInit {
     limpiarDocumento() {
         if (this.noPoseeDNI) {
             this.paciente.documento = '';
-            this.emitChanges(); // ver de agregar un output para notificar a componente padre
             this.plex.info('warning', 'Recuerde que al guardar un paciente sin el número de documento será imposible realizar validaciones contra fuentes auténticas.');
         }
     }
-
 
     completarGenero() {
         this.paciente.genero = ((typeof this.paciente.sexo === 'string')) ? this.paciente.sexo : (Object(this.paciente.sexo).id);
     }
 
-
-    emitChanges() {
-        this.changes.emit();
-    }
 
     // --------------  PARA REGISTRO DE BEBES -----------------
 
@@ -129,7 +142,7 @@ export class DatosBasicosComponent implements OnInit {
                 pacienteScaneado.genero = pacienteScaneado.sexo;
                 this.plex.showLoader();
                 this.changes.emit({ disableValidar: true });
-                this.pacienteHttpService.save(pacienteScaneado).subscribe(
+                this.pacienteService.save(pacienteScaneado).subscribe(
                     pacGuardado => {
                         this.onPacienteSelected(pacGuardado);
                         this.plex.hideLoader();
@@ -157,7 +170,8 @@ export class DatosBasicosComponent implements OnInit {
     onPacienteSelected(pacienteSelected: IPaciente) {
         this.searchClear = true;
         if (pacienteSelected) {
-            this.pacienteHttpService.findById(pacienteSelected.id, { activo: true }).subscribe(paciente => {
+            // this.pacienteHttpService.findById(pacienteSelected.id, { activo: true }).subscribe(paciente => {
+            this.pacienteService.getById(pacienteSelected.id).subscribe(paciente => {
                 // Relacionamos al bebe con su progenitor/a
                 this.relacionBebe.apellido = paciente.apellido;
                 this.relacionBebe.nombre = paciente.nombre;

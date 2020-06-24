@@ -1,4 +1,32 @@
-<ul class="list-group">
+<section class="mt-2">
+    <plex-title titulo="notas" size="sm">
+        <plex-button type="info" size="sm" (click)="showAgregarNota = true">agregar nota</plex-button>
+    </plex-title>
+
+    <plex-wrapper justify *ngIf="showAgregarNota">
+        <plex-text columns="4" label="" placeholder="Ingrese una nota..." [(ngModel)]="nuevaNota.titulo" name="titulo">
+        </plex-text>
+        <plex-text columns="6" label="" placeholder="Contenido de la nota" [(ngModel)]="nuevaNota.nota" name="nota"
+                   multiline=true>
+        </plex-text>
+        <plex-button type="success" icon="plus" size="md" justify="end" multiline="true"
+                     [disabled]="!nuevaNota.nota.length" (click)="addNota()"></plex-button>
+    </plex-wrapper>
+    <plex-list>
+        <plex-item *ngFor="let nota of notas; let i = index" class="">
+            <plex-icon name="file-document"></plex-icon>
+            <plex-label titulo="{{ nota.titulo || 'Sin título'}}" subtitulo="{{ nota.nota }}"></plex-label>
+            <plex-badge type="info">{{ nota.fecha | fecha: 'utc'}}</plex-badge>
+            <plex-button *ngIf="nota.destacada" type="info" size="sm" (click)="destacarNota(i)" icon="star">
+            </plex-button>
+            <plex-button *ngIf="!nota.destacada" type="info" size="sm" (click)="destacarNota(i)" icon="star-outline">
+            </plex-button>
+            <!-- <plex-button *ngIf="!nota.destacada" icon="mdi-star-outline" (click)="destacarNota(i)"></plex-button> -->
+            <plex-button type="danger" size="sm" icon="delete" (click)="removeNota(i)"></plex-button>
+        </plex-item>
+    </plex-list>
+</section>
+<!-- <ul class="list-group">
     <li class="list-group-item" *ngFor="let _unaNota of notas; let l = index">
         <div class="row">
             <div class="col-8">{{_unaNota.nota}}
@@ -26,4 +54,4 @@
     <div class="col-2">
         <plex-button title="Agregar Nota" label="Agregar Nota" type="primary" (click)="addNota()"></plex-button>
     </div>
-</div>
+</div> -->

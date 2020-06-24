@@ -50,13 +50,13 @@ export class PacienteHttpService {
      */
 
     match(data) {
-        return this.server.post(`${this.baseURL}/match`, data).pipe(map((value) => {
+        return this.server.post(`${this.baseURL}/match`, data)/*.pipe(map((value) => {
             if (data.type === 'simplequery') {
                 return value.map((i) => ({ paciente: i, id: i.id, match: 100 }));
             } else {
                 return value;
             }
-        }));
+        }))*/;
     }
 
     /**

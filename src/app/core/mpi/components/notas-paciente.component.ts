@@ -11,8 +11,11 @@ export class NotaComponent implements OnInit {
     @Input() notas = [];
     @Output() notasNew: EventEmitter<any[]> = new EventEmitter<any[]>();
 
-    nuevaNota = '';
-    notaError: '';
+    nuevaNota: any = {
+        titulo: '',
+        nota: ''
+    };
+    showAgregarNota = false;
 
     constructor(
         private plex: Plex
@@ -42,26 +45,22 @@ export class NotaComponent implements OnInit {
     }
 
     addNota() {
-        let nuevaNota = {
-            'fecha': new Date(),
-            'nota': '',
-            'destacada': false
-        };
-        if (this.nuevaNota) {
-            nuevaNota.nota = this.nuevaNota;
-            if (this.notas) {
-                this.notas.push(nuevaNota);
-            } else {
-                this.notas = [nuevaNota];
-            }
-            if (this.notas.length > 1) {
-                this.notas.sort((a, b) => {
-                    return (a.fecha.getDate() > b.fecha.getDate() ? 1 : (b.fecha.getDate() > a.fecha.getDate() ? -1 : 0));
-                });
-            }
+        this.nuevaNota.fecha = new Date();
+        this.nuevaNota.destacada = false;
+        (this.notas) ? this.notas.push(this.nuevaNota) : (this.notas = [this.nuevaNota]);
+
+        if (this.notas.length > 1) {
+            this.notas.sort((a, b) => {
+                return (a.fecha.getDate() > b.fecha.getDate() ? 1 : (b.fecha.getDate() > a.fecha.getDate() ? -1 : 0));
+            });
         }
         this.notasNew.emit(this.notas);
         this.nuevaNota = '';
+        this.showAgregarNota = false;
+        this.nuevaNota = {
+            titulo: '',
+            nota: ''
+        };
     }
 
     destacarNota(indice: any) {

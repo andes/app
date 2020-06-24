@@ -1,4 +1,4 @@
-<plex-detail size="lg" justify="center" direction="{{ orientacion === 'vertical' ? 'column' : 'row' }}">
+<!-- <plex-detail size="lg" direction="{{ orientacion === 'vertical' ? 'column' : 'row' }}">
 
     <img [mpiFotoPaciente]="paciente" />
 
@@ -38,5 +38,75 @@
 
     <plex-label justify="center" *ngIf="showTelefono" titulo="Teléfono" [subtitulo]="contacto"></plex-label>
 
-    <ng-content justify="center" select="plex-label" ngProjectAs="plex-label"></ng-content>
-</plex-detail>
+    <ng-content select="plex-label" ngProjectAs="plex-label"></ng-content>
+</plex-detail> -->
+
+<ng-container>
+    <plex-detail direction="{{ orientacion === 'vertical' ? 'column' : 'row' }}" size="lg" justify="{{ justificado }}">
+        <img [mpiFotoPaciente]=" paciente" />
+
+        <plex-badge [type]="estadoBadgeType" *ngIf="paciente.estado">
+            {{ paciente.estado | uppercase }}
+        </plex-badge>
+
+        <plex-badge *ngIf="paciente.fechaFallecimiento" type="danger">Fallecido:
+            {{ paciente.fechaFallecimiento | fecha:'utc'}}
+        </plex-badge>
+
+        <div title>{{ paciente | nombre }}</div>
+
+        <div subtitle>
+            <plex-copy *ngIf="paciente.documento" [value]="paciente.documento">
+                {{ (paciente.documento | number) || 'Sin DNI' }}
+            </plex-copy>
+        </div>
+
+        <plex-label *ngIf="showSexo" titulo="Sexo / Género" subtitulo="{{paciente | sexo}}" justify="{{ justificado }}">
+        </plex-label>
+
+        <plex-label *ngIf="showFechaNacimiento" titulo="Fecha de Nacimiento"
+                    subtitulo="{{ (paciente.fechaNacimiento | fecha:'utc') || 'Desconocida' }}"
+                    justify="{{ justificado }}"></plex-label>
+
+        <plex-label *ngIf="showEdad" titulo="Edad" subtitulo="{{ (paciente | edad) || 'Desconocida' }}"
+                    justify="{{ justificado }}"></plex-label>
+
+        <plex-label *ngIf="showCuil" titulo="CUIL" subtitulo="{{ paciente.cuil || 'Sin cuil' }}"
+                    justify="{{ justificado }}"></plex-label>
+
+        <plex-label *ngIf="showFinanciador" [titulo]="financiadorLabel"
+                    subtitulo="{{ obraSocial?.financiador || 'Sin obra social' }}" justify="{{ justificado }}">
+        </plex-label>
+
+        <plex-label *ngIf="showNumeroAfiliado && numeroAfiliado" titulo="Número de Afiliado"
+                    [subtitulo]="numeroAfiliado" justify="{{ justificado }}">
+        </plex-label>
+
+        <plex-label *ngIf="showDireccion" titulo="Dirección" [subtitulo]="direccion" justify="{{ justificado }}">
+        </plex-label>
+
+        <plex-label *ngIf="showTelefono" titulo="Teléfono" [subtitulo]="contacto" justify="{{ justificado }}">
+        </plex-label>
+    </plex-detail>
+</ng-container>
+
+<!-- Propuesta para mostrar otros datos preliminares -->
+<ng-container *ngIf="showRelaciones">
+    <plex-title titulo="Relaciones" size="sm"></plex-title>
+    <plex-list>
+        <plex-label *ngIf="!relaciones?.length" titulo="No hay ninguna relación registrada" subtitulo=""></plex-label>
+
+        <plex-item *ngFor="let relacionado of relaciones" class="">
+            <img [mpiFotoPaciente]="relacionado" />
+
+            <plex-label titulo="{{ relacionado | nombre }}"
+                        subtitulo="{{ (relacionado.documento | number) || 'Sin DNI'}}">
+            </plex-label>
+
+            <plex-badge type="info">{{ relacionado.parentesco }}
+            </plex-badge>
+
+        </plex-item>
+
+    </plex-list>
+</ng-container>

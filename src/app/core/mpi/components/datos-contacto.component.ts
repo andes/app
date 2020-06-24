@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { IPaciente } from '../interfaces/IPaciente';
 import { IContacto } from '../../../interfaces/IContacto';
 import { IProvincia } from '../../../interfaces/IProvincia';
@@ -16,6 +16,7 @@ import { Auth } from '@andes/auth';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import * as enumerados from '../../../utils/enumerados';
 import { Subscription } from 'rxjs';
+import { NgForm } from '@angular/forms';
 
 @Component({
     selector: 'datos-contacto',
@@ -23,23 +24,13 @@ import { Subscription } from 'rxjs';
     styleUrls: []
 })
 
-export class DatosContactoComponent implements OnInit {
+export class DatosContactoComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    @Input('paciente')
-    set paciente(value: IPaciente) {
-        if (value) {
-            this._paciente = value;
-            this.refreshData();
-        }
-    }
-    get paciente() {
-        return this._paciente;
-    }
-    _paciente: IPaciente;
-    // @Input() paciente: IPaciente;
-    @Input() formulario;
+    @Input() paciente: IPaciente;
+    @Output() changes: EventEmitter<any> = new EventEmitter<any>();
+    @ViewChild('form', null) ngForm: NgForm;
+    formChangesSubscription: Subscription;
 
-    _form;
     // Contacto
     contacto: IContacto = {
         tipo: 'celular',
@@ -83,36 +74,6 @@ export class DatosContactoComponent implements OnInit {
     geoReferenciaAux = []; // Coordenadas para la vista del mapa.
     infoMarcador: String = null;
 
-    // _paciente: IPaciente; = {
-    //     id: null,
-    //     documento: '',
-    //     cuil: null,
-    //     activo: true,
-    //     estado: 'temporal',
-    //     nombre: '',
-    //     apellido: '',
-    //     nombreCompleto: '',
-    //     alias: '',
-    //     contacto: [this.contacto],
-    //     sexo: undefined,
-    //     genero: undefined,
-    //     fechaNacimiento: null, // Fecha Nacimiento
-    //     tipoIdentificacion: '',
-    //     numeroIdentificacion: '',
-    //     edad: null,
-    //     edadReal: null,
-    //     fechaFallecimiento: null,
-    //     direccion: [this.direccion],
-    //     estadoCivil: undefined,
-    //     foto: null,
-    //     relaciones: null,
-    //     financiador: null,
-    //     identificadores: null,
-    //     claveBlocking: null,
-    //     scan: null,
-    //     reportarError: false,
-    //     notaError: ''
-    // };
 
     constructor(
         private auth: Auth,
@@ -125,8 +86,18 @@ export class DatosContactoComponent implements OnInit {
         private barriosService: BarrioService,
     ) { }
 
+
     ngOnInit() {
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
+
+        this.formChangesSubscription = this.ngForm.form.valueChanges
+            .debounceTime(300)
+            .subscribe(formValues => {
+                this.changes.emit({ values: formValues, isValid: this.ngForm.valid });
+            });
+    }
+
+    ngAfterViewInit() {
         // actualiza datos de ubicacion
         this.organizacionService.getById(this.auth.organizacion.id).subscribe((org: IOrganizacion) => {
             if (org) {
@@ -143,12 +114,16 @@ export class DatosContactoComponent implements OnInit {
                 this.provinciaService.get({}).subscribe(rta => {
                     this.provincias = rta;
                 });
-                // this.inicializarMapaDefault();
+                this.loadPaciente();
             }
         });
     }
 
-    refreshData() {
+    ngOnDestroy() {
+        this.formChangesSubscription.unsubscribe();
+    }
+
+    loadPaciente() {
         if (this.paciente) {
             // actualiza contactos
             if (!this.paciente.contacto || !this.paciente.contacto.length) {
@@ -221,16 +196,16 @@ export class DatosContactoComponent implements OnInit {
 
     verificarCorreoValido(indice, mail) {
         let formato = /^[a-zA-Z0-9_.+-]+\@[a-zA-Z0-9-]+(\.[a-z]{2,4})+$/;
-        // this.formulario.form.controls['valor-' + indice].setErrors(null);  // con cada caracter nuevo 'limpia' el error y reevalúa
-        // window.setTimeout(() => {
-        //     if (mail) {
-        //         if (formato.test(mail)) {
-        //             this.formulario.form.controls['valor-' + indice].setErrors(null);
-        //         } else {
-        //             this.formulario.form.controls['valor-' + indice].setErrors({ invalid: true, pattern: { requiredPattern: formato } });
-        //         }
-        //     }
-        // }, 500);
+        this.ngForm.form.controls['valor-' + indice].setErrors({});  // con cada caracter nuevo 'limpia' el error y reevalúa
+        window.setTimeout(() => {
+            if (mail) {
+                if (formato.test(mail)) {
+                    this.ngForm.form.controls['valor-0'].setErrors({});
+                } else {
+                    this.ngForm.form.controls['valor-0'].setErrors({ invalid: true, pattern: { requiredPattern: formato } });
+                }
+            }
+        }, 500);
     }
 
     onFocusout(type, value) {
@@ -293,11 +268,12 @@ export class DatosContactoComponent implements OnInit {
      * @param {any} event
      */
     changeProvActual(event) {
-        if (event.value) {
+        this.viveProvActual = event.value;
+        if (this.viveProvActual) {
             this.paciente.direccion[0].ubicacion.provincia = this.provinciaActual;
             this.loadLocalidades(this.provinciaActual);
         } else {
-            this.viveLocActual = false;
+            this.changeLocalidadActual({ value: false });
             this.localidades = [];
             this.paciente.direccion[0].ubicacion.provincia = null;
             this.paciente.direccion[0].ubicacion.localidad = null;
@@ -313,7 +289,8 @@ export class DatosContactoComponent implements OnInit {
      * @memberOf PacienteCreateUpdateComponent
      */
     changeLocalidadActual(event) {
-        if (event.value) {
+        this.viveLocActual = event.value;
+        if (this.viveLocActual) {
             this.paciente.direccion[0].ubicacion.localidad = this.localidadActual;
             this.loadBarrios(this.localidadActual);
         } else {

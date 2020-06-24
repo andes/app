@@ -1,10 +1,11 @@
 import { Plex } from '@andes/plex';
-import { IPacienteRelacion } from './../interfaces/IPacienteRelacion.inteface';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { ObraSocialService } from '../../../services/obraSocial.service';
 import { ProfeService } from '../../../services/profe.service';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';
+import { ɵangular_packages_core_testing_testing_a } from '@angular/core/testing';
+import { RelacionesPacientesComponent } from '../../../core/mpi/components/relaciones-pacientes.component';
 
 @Component({
     selector: 'paciente-panel',
@@ -12,7 +13,6 @@ import { PacienteService } from '../../../core/mpi/services/paciente.service';
     styleUrls: ['paciente-panel.scss']
 })
 export class PacientePanelComponent {
-    private _paciente: IPaciente;
 
     // Propiedades públicas
     public coberturaSocial: {
@@ -20,12 +20,14 @@ export class PacientePanelComponent {
         loading: boolean;
         error: boolean;
     };
+    public idPacientesRelacionados = [];
 
-    public relaciones: {
-        data: IPacienteRelacion[];
-        loading: boolean;
-        error: boolean;
-    };
+    @Input() showRelaciones = false;
+
+    /**
+     * Setea atributo 'direction' de plex-detail
+     */
+    @Input() direction: 'column' | 'row' = 'row';
 
     /**
      * Indica si permite seleccionar un paciente relacionado
@@ -39,21 +41,7 @@ export class PacientePanelComponent {
     *
     * @memberof PacientePanelComponent
     */
-    @Input()
-    get paciente(): IPaciente {
-        return this._paciente;
-    }
-    set paciente(value: IPaciente) {
-        this._paciente = value;
-        if (this._paciente) {
-            // Obtiene cobertura social más reciente
-            this.actualizarCoberturaSocial();
-            // Obtiene relaciones
-            if (this._paciente.id) {
-                this.pacienteService.getById(this._paciente.id).subscribe((data) => this.relaciones.data = data.relaciones || []);
-            }
-        }
-    }
+    @Input() paciente: IPaciente;
     /**
      * Evento que se emite cuando se selecciona un paciente
      *
@@ -62,40 +50,35 @@ export class PacientePanelComponent {
      */
     @Output() selected: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
-    constructor(private plex: Plex, private pacienteService: PacienteService, private obraSocialService: ObraSocialService, private profeService: ProfeService) {
+    @Output() changeRelacion: EventEmitter<any> = new EventEmitter<any>();
+
+    constructor(private plex: Plex,
+        private obraSocialService: ObraSocialService,
+        private profeService: ProfeService) {
         this.coberturaSocial = { data: null, loading: false, error: false };
-        this.relaciones = { data: null, loading: false, error: false };
     }
 
-    actualizarCoberturaSocial() {
-        // @jfgabriel | Deshabilitado momentáneamente hasta que se integren los nuevos servicios Obras Sociales
-        // if (this.request) {
-        //     this.request.unsubscribe();
-        // }
-        // this.coberturaSocial.data = null;
-        // this.coberturaSocial.loading = true;
-        // this.coberturaSocial.error = false;
-
-        // // Llama a la API
-        // if (this.paciente && this.paciente.documento) {
-        //     this.request = Observable.forkJoin([
-        //         this.obraSocialService.get({ dni: this.paciente.documento }, false),
-        //         this.profeService.get({ dni: this.paciente.documento }, false)]).subscribe(t => {
-        //             this.coberturaSocial.loading = false;
-        //             this.coberturaSocial.data = '*** SIN IMPLEMENTAR ***';
-        //         }, (err) => {
-        //             this.coberturaSocial.error = true;
-        //             this.coberturaSocial.loading = false;
-        //         });
-        // }
+    get justificado() {
+        return this.direction === 'column' ? 'center' : 'start';
     }
 
-    seleccionarRelacionado(relacionado: IPacienteRelacion) {
-        if (relacionado.referencia) {
-            this.plex.toast('info', 'Recuperando información del paciente', 'Información', 2000);
-            this.pacienteService.getById(relacionado.referencia).subscribe((data) => this.selected.emit(data));
-        } else {
-            this.plex.info('warning', 'Este paciente no está registrado en MPI (índice de pacientes) y no puede seleccionarse');
+    get relaciones() {
+        this.idPacientesRelacionados = [];
+        if (this.paciente.relaciones) {
+            this.paciente.relaciones.map(rel => this.idPacientesRelacionados.push({ id: rel.referencia }));
         }
+        return this.paciente.relaciones;
+    }
+
+    get estadoBadgeType() {
+        return this.paciente.estado === 'validado' ? 'success' : 'warning';
+    }
+
+    public editRelacion(relacion: any) {
+        this.changeRelacion.emit({ operacion: 'edit', idRelacionado: relacion.referencia });
+    }
+
+    public removeRelacion(relacion: any) {
+        this.changeRelacion.emit({ operacion: 'remove', idRelacionado: relacion.referencia });
     }
 }
