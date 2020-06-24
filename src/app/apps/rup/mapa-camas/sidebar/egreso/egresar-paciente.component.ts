@@ -21,6 +21,7 @@ import { ListadoInternacionService } from '../../views/listado-internacion/lista
 export class EgresarPacienteComponent implements OnInit, OnDestroy {
     // EVENTOS
     @Output() onSave = new EventEmitter<any>();
+    @Output() validacion = new EventEmitter<any>();
 
     // CONSTANTES
     public listaTipoEgreso = listaTipoEgreso;
@@ -261,6 +262,11 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 registros: registros
             };
             this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacion => {
+                if (this.registro.valor.InformeEgreso.fechaEgreso && this.registro.valor.InformeEgreso.tipoEgreso && this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
+                    this.validacion.emit(true);
+                } else {
+                    this.validacion.emit(false);
+                }
                 this.egresoSimplificado(this.estadoDestino);
                 this.cambiarEstado();
             });

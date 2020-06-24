@@ -29,7 +29,7 @@
                              (click)="toggleEdit()">
                 </plex-button>
             </app-informe-egreso>
-            <app-egresar-paciente *ngIf="permisoEgreso && (editar || !existeEgreso)">
+            <app-egresar-paciente *ngIf="permisoEgreso && (editar || !existeEgreso)" (validacion)="updateValidacion($event)">
                 <plex-button *ngIf="existeEgreso" title="volver" icon="arrow-left" type="danger" size="sm"
                              (click)="toggleEdit();">
                 </plex-button>

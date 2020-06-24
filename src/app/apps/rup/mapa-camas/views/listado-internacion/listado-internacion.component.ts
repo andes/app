@@ -185,4 +185,8 @@ export class InternacionListadoComponent implements OnInit {
             }
         });
     }
+
+    updateValidacion(event) {
+        this.puedeValidar = event;
+    }
 }
