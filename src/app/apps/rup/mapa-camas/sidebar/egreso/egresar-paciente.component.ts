@@ -21,7 +21,6 @@ import { ListadoInternacionService } from '../../views/listado-internacion/lista
 export class EgresarPacienteComponent implements OnInit, OnDestroy {
     // EVENTOS
     @Output() onSave = new EventEmitter<any>();
-    @Output() validacion = new EventEmitter<any>();
 
     // CONSTANTES
     public listaTipoEgreso = listaTipoEgreso;
@@ -82,6 +81,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     public procedimientosObstetricosNoReq = false;
     public existeCausaExterna = false;
     public listaProcedimientosQuirurgicos: any[];
+    public prestacionValidada = false;
 
     private subscription: Subscription;
     private subscription2: Subscription;
@@ -122,6 +122,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             if (view === 'listado-internacion') {
                 // DESDE EL LISTADO FECHA VIENE CON LA DEL INGRESO. PUES NO!
                 fecha = moment().toDate();
+                this.prestacionValidada = prestacion.estados[prestacion.estados.length - 1].tipo === 'validada';
             }
             this.fechaMax = moment().add(1, 's').toDate();
             this.registro.valor.InformeEgreso.fechaEgreso = fecha;
@@ -262,10 +263,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 registros: registros
             };
             this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacion => {
-                if (this.registro.valor.InformeEgreso.fechaEgreso && this.registro.valor.InformeEgreso.tipoEgreso && this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
-                    this.validacion.emit(true);
-                } else {
-                    this.validacion.emit(false);
+                if (this.view === 'listado-internacion') {
+                    this.mapaCamasService.selectPrestacion(prestacion);
                 }
                 this.egresoSimplificado(this.estadoDestino);
                 this.cambiarEstado();

@@ -17,7 +17,6 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
 
     @Output() cambiarCama = new EventEmitter<any>();
     @Output() accion = new EventEmitter<any>();
-    @Output() validacion = new EventEmitter<any>();
 
     @ContentChild(PlexOptionsComponent, { static: true }) plexOptions: PlexOptionsComponent;
 
@@ -102,9 +101,5 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
 
     toggleEdit() {
         this.editar = !this.editar;
-    }
-
-    updateValidacion(event) {
-        this.validacion.emit(event);
     }
 }

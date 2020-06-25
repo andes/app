@@ -8,6 +8,7 @@ import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable, Subscription } from 'rxjs';
 import { ListadoInternacionService } from './listado-internacion.service';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-internacion-listado',
@@ -49,7 +50,17 @@ export class InternacionListadoComponent implements OnInit {
             name: 'Listado de Internacion'
         }]);
 
-        this.selectedPrestacion$ = this.mapaCamasService.selectedPrestacion;
+        this.selectedPrestacion$ = this.mapaCamasService.selectedPrestacion.pipe(
+            map((prestacion) => {
+                this.puedeValidar = (prestacion.ejecucion && prestacion.ejecucion.registros[1] &&
+                prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' &&
+                prestacion.ejecucion.registros[1].valor.InformeEgreso.fechaEgreso &&
+                prestacion.ejecucion.registros[1].valor.InformeEgreso.tipoEgreso &&
+                prestacion.ejecucion.registros[1].valor.InformeEgreso.diagnosticoPrincipal);
+                this.puedeRomper = (prestacion.ejecucion && prestacion.ejecucion.registros[1] && prestacion.estados[prestacion.estados.length - 1].tipo === 'validada');
+                return prestacion;
+            })
+        );
         this.listaInternacion$ = this.listadoInternacionService.listaInternacionFiltrada$;
     }
 
@@ -147,7 +158,7 @@ export class InternacionListadoComponent implements OnInit {
                                 this.plex.info('danger', 'ERROR: No es posible validar la prestación');
                             });
                         } else {
-                            this.plex.info('danger', 'ERROR: Debe completar los datos mínimos de egreso para validar la internación');
+                            this.plex.info('danger', 'ERROR: Faltan datos');
                         }
                     } else {
                         this.plex.info('danger', 'ERROR: Debe completar los datos mínimos de egreso para validar la internación');
@@ -184,9 +195,5 @@ export class InternacionListadoComponent implements OnInit {
                 });
             }
         });
-    }
-
-    updateValidacion(event) {
-        this.puedeValidar = event;
     }
 }

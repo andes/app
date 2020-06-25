@@ -1,78 +1,78 @@
 <ng-container *ngIf="fechaIngresoHasta$ | async as fechaHasta">
     <ng-container *ngIf="selectedPrestacion$ | async as selectedPrestacion">
-        <plex-layout main="{{selectedPrestacion.id !== null ? 8 : 12}}">
-            <plex-layout-main>
-                <header>
-                    <plex-title titulo="LISTADO DE INTERNACION">
-                        <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
-                    </plex-title>
-
-                    <app-filtros-internacion></app-filtros-internacion>
-
-                </header>
-                <div class='row'>
-                    <div class='col-12'>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th rowspan="2">Apellido y nombre</th>
-                                    <th rowspan="2">Dni</th>
-                                    <th rowspan="2">Fecha de ingreso</th>
-                                    <th rowspan="2">Fecha de egreso</th>
-                                    <th rowspan="2">Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let internacion of listaInternacion$ | async"
-                                    [class.bg-inverse]="selectedPrestacion._id === internacion._id"
-                                    [class.text-white]="selectedPrestacion._id === internacion._id"
-                                    (click)="seleccionarPrestacion(internacion, selectedPrestacion)">
-                                    <td>
-                                        {{internacion.paciente | nombre }}
-                                    </td>
-                                    <td>
-                                        {{internacion.paciente.documento}}
-                                    </td>
-                                    <td>
-                                        {{devuelveFecha(internacion,"ingreso") | fecha}} {{devuelveFecha(internacion,"ingreso")
-                                        | hora}}
-                                    </td>
-                                    <td>
-                                        <span *ngIf='devuelveFecha(internacion,"egreso")'>
-                                            {{devuelveFecha(internacion,"egreso") | fecha}}
-                                            {{devuelveFecha(internacion,"egreso") | hora}}</span>
-                                    </td>
-                                    <td>
-                                        <span> {{internacion.estados[internacion.estados.length - 1].tipo}}</span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+            <plex-layout main="{{selectedPrestacion.id !== null ? 8 : 12}}">
+                <plex-layout-main>
+                    <header>
+                        <plex-title titulo="LISTADO DE INTERNACION">
+                            <plex-button label="VOLVER" type="danger" (click)="volver()"></plex-button>
+                        </plex-title>
+    
+                        <app-filtros-internacion></app-filtros-internacion>
+    
+                    </header>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2">Apellido y nombre</th>
+                                        <th rowspan="2">Dni</th>
+                                        <th rowspan="2">Fecha de ingreso</th>
+                                        <th rowspan="2">Fecha de egreso</th>
+                                        <th rowspan="2">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let internacion of listaInternacion$ | async"
+                                        [class.bg-inverse]="selectedPrestacion._id === internacion._id"
+                                        [class.text-white]="selectedPrestacion._id === internacion._id"
+                                        (click)="seleccionarPrestacion(internacion, selectedPrestacion)">
+                                        <td>
+                                            {{internacion.paciente | nombre }}
+                                        </td>
+                                        <td>
+                                            {{internacion.paciente.documento}}
+                                        </td>
+                                        <td>
+                                            {{devuelveFecha(internacion,"ingreso") | fecha}} {{devuelveFecha(internacion,"ingreso")
+                                            | hora}}
+                                        </td>
+                                        <td>
+                                            <span *ngIf='devuelveFecha(internacion,"egreso")'>
+                                                {{devuelveFecha(internacion,"egreso") | fecha}}
+                                                {{devuelveFecha(internacion,"egreso") | hora}}</span>
+                                        </td>
+                                        <td>
+                                            <span> {{internacion.estados[internacion.estados.length - 1].tipo}}</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-            </plex-layout-main>
-            <plex-layout-sidebar type="invert">
-                <plex-title *ngIf="mostrar !== 'desocuparCama'" titulo="DETALLES">
-                    <plex-button *ngIf="!puedeRomper" label="VALIDAR" type="success" size="sm"
-                                 [disabled]="!puedeValidar" (click)="validar(selectedPrestacion, fechaHasta)">
-                    </plex-button>
-                    <plex-button *ngIf="puedeRomper" label="ROMPER VALIDACION" type="warning" size="sm"
-                                 (click)="romperValidacion(selectedPrestacion, fechaHasta)">
-                    </plex-button>
-                    <plex-button title="cerrar" icon="close" type="danger" size="sm" (click)="cancelar()">
-                    </plex-button>
-                </plex-title>
-                <app-internacion-detalle *ngIf="mostrar === 'datosInternacion'" (cambiarCama)="cambiarCama()" (validacion)="updateValidacion($event)">
-                </app-internacion-detalle>
-                <app-desocupar-cama *ngIf="mostrar === 'desocuparCama'" (cancel)="volverADetalle()"
-                                    (accionDesocupar)="accionDesocupar($event)">
-                    <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
-                    </plex-button>
-                </app-desocupar-cama>
-                <app-cambiar-cama *ngIf="mostrar === 'cambiarCama'" cambiarUO="{{ cambiarUO }}"
-                                  (cancel)="volverADetalle()">
-                </app-cambiar-cama>
-            </plex-layout-sidebar>
-        </plex-layout>
+                </plex-layout-main>
+                <plex-layout-sidebar type="invert">
+                    <plex-title *ngIf="mostrar !== 'desocuparCama'" titulo="DETALLES">
+                        <plex-button *ngIf="!puedeRomper" label="VALIDAR" type="success" size="sm"
+                                     [disabled]="!puedeValidar" (click)="validar(selectedPrestacion, fechaHasta)">
+                        </plex-button>
+                        <plex-button *ngIf="puedeRomper" label="ROMPER VALIDACION" type="warning" size="sm"
+                                     (click)="romperValidacion(selectedPrestacion, fechaHasta)">
+                        </plex-button>
+                        <plex-button title="cerrar" icon="close" type="danger" size="sm" (click)="cancelar()">
+                        </plex-button>
+                    </plex-title>
+                    <app-internacion-detalle *ngIf="mostrar === 'datosInternacion'" (cambiarCama)="cambiarCama()">
+                    </app-internacion-detalle>
+                    <app-desocupar-cama *ngIf="mostrar === 'desocuparCama'" (cancel)="volverADetalle()"
+                                        (accionDesocupar)="accionDesocupar($event)">
+                        <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
+                        </plex-button>
+                    </app-desocupar-cama>
+                    <app-cambiar-cama *ngIf="mostrar === 'cambiarCama'" cambiarUO="{{ cambiarUO }}"
+                                      (cancel)="volverADetalle()">
+                    </app-cambiar-cama>
+                </plex-layout-sidebar>
+            </plex-layout>
     </ng-container>
 </ng-container>
