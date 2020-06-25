@@ -17,8 +17,8 @@ export interface IElementoRUP {
 
     privacy: String;
 
-    // Indica si no muestra el motivo de consulta al validar
-    motivoConsultaOpcional: Boolean;
+    // Indica si requiere indicar diagnostico principal
+    requiereDiagnosticoPrincipal: Boolean;
 
     // Indica los parámetros para instanciar el componente
     params: any;

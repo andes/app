@@ -316,7 +316,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        if (this.elementoRUP.requiereDiagnosticoPrincipal && !existeDiagnostico && this.prestacion.solicitud.ambitoOrigen !== 'internacion' && !this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+        if (this.elementoRUP.requiereDiagnosticoPrincipal && !existeDiagnostico) {
             this.plex.toast('info', 'Debe seleccionar un procedimiento / diagnóstico principal', 'procedimiento / diagóstico principal', 1000);
             return false;
         }
@@ -701,18 +701,6 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
     compareArrays(arr1: any[], arr2: any[]) {
         return arr1.join('') === arr2.join('');
-    }
-
-    /**
-     * Determina si muestra el label motivo de consulta.
-     */
-    showMotivo(elemento) {
-        if (this.elementoRUP.motivoConsultaOpcional) {
-            return false;
-        }
-        let last = this.prestacion.estados.length - 1;
-        return this.prestacion.estados[last].tipo !== 'validada' && elemento.valor && elemento.valor.estado !== 'transformado' && this.prestacion.solicitud.ambitoOrigen !== 'internacion';
-
     }
 
     toggleVerMasRelaciones(item) {
