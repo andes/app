@@ -1,31 +1,40 @@
 import { UsuarioService } from '../../../../services/usuarios/usuario.service';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { AppComponent } from '../../../../app.component';
 import { DisclaimerService } from '../../../../services/disclaimer.service';
 import { IDisclaimer } from '../../../../interfaces/IDisclaimer';
+import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 
 @Component({
-    templateUrl: 'acceptDisclaimer.html',
-    styleUrls: ['acceptDisclaimer.scss']
+    selector: 'modal-disclaimer',
+    templateUrl: 'modal-disclaimer.html',
+    styleUrls: ['modal-disclaimer.scss']
 })
-export class AcceptDisclaimerComponent implements OnInit {
+
+export class ModalDisclaimerComponent implements OnInit {
+    @ViewChild('modal', { static: true }) modal: PlexModalComponent;
+
     public disclaimer: IDisclaimer = null;
     public version: String = null;
     public texto: String = null;
+
+    @Input()
+    set show(value) {
+        if (value) {
+            this.modal.show();
+        }
+    }
+
     constructor(
-        private plex: Plex,
         private auth: Auth,
         private router: Router,
-        public appComponent: AppComponent,
         public disclaimerService: DisclaimerService,
-        public usuarioService: UsuarioService
+        public usuarioService: UsuarioService,
+        private cd: ChangeDetectorRef
     ) { }
 
     ngOnInit() {
-        this.plex.updateTitle('Nuevo disclaimer');
         this.disclaimerService.get({ activo: true }).subscribe(data => {
             if (data) {
                 this.disclaimer = data[0];
@@ -35,8 +44,8 @@ export class AcceptDisclaimerComponent implements OnInit {
         });
     }
 
-    logout() {
-        this.router.navigate(['/auth/logout']);
+    cancelar() {
+        this.router.navigate(['/auth/login']);
     }
 
     aceptarDisclaimer() {
@@ -47,7 +56,6 @@ export class AcceptDisclaimerComponent implements OnInit {
         this.usuarioService.saveDisclaimer(usuario, this.disclaimer).subscribe(() => {
             this.router.navigate(['inicio']);
         });
-
     }
 
 

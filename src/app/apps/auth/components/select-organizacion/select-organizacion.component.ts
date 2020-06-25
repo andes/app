@@ -16,6 +16,7 @@ import { take } from 'rxjs/operators';
 export class SelectOrganizacionComponent implements OnInit {
     public organizaciones = null;
     public organizacionElegida;
+    public showModalDisclaimer = false;
     constructor(
         private plex: Plex,
         private auth: Auth,
@@ -51,7 +52,7 @@ export class SelectOrganizacionComponent implements OnInit {
                             if (userDisclaimers.some(item => item.id === disclaimer.id)) {
                                 this.router.navigate(['inicio']);
                             } else {
-                                this.router.navigate(['/auth/disclaimer']);
+                                this.showModalDisclaimer = true;
                             }
                         });
                     } else {
@@ -63,6 +64,14 @@ export class SelectOrganizacionComponent implements OnInit {
         }, (err) => {
             this.plex.info('danger', 'Error al seleccionar organización');
         });
+    }
+
+    respuestaDisclaimer(respuesta) {
+        if (respuesta) {
+
+        } else {
+            this.showModalDisclaimer = false;
+        }
     }
 
 }

@@ -2,8 +2,11 @@
     <plex-layout-main>
         <ul class="list-group">
             <li class="list-group-item boton color-rosa" *ngFor="let org of organizaciones" (click)=seleccionar(org)>
-                {{org.nombre}} 
+                {{org.nombre}}
             </li>
         </ul>
     </plex-layout-main>
 </plex-layout>
+
+<modal-disclaimer [show]="showModalDisclaimer" (response)="respuestaDisclaimer($event)">
+</modal-disclaimer>
