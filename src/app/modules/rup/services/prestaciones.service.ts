@@ -643,19 +643,22 @@ export class PrestacionesService {
                     if (this.cache[prestacion.paciente.id]) {
                         existePrestacion = this.cache[prestacion.paciente.id].find(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === prestacion.id && p.solicitud.registros[0]._id === plan.id);
                     }
-                    if (!existePrestacion && plan.valor && plan.valor.solicitudPrestacion.organizacionDestino) {
+                    if (!existePrestacion && plan.valor && (plan.valor.solicitudPrestacion.organizacionDestino || plan.valor.solicitudPrestacion.autocitado)) {
+                        if (!plan.valor.solicitudPrestacion.organizacionDestino) {
+                            plan.valor.solicitudPrestacion.organizacionDestino = this.auth.organizacion;
+                        }
                         planesAux.push(plan);
                     }
                 }
             });
-
             planesAux.forEach(plan => {
-                postRequest.push(this.servicioReglas.get({
+                let reglas = this.servicioReglas.get({
                     organizacionOrigen: this.auth.organizacion.id,
                     prestacionOrigen: prestacion.solicitud.tipoPrestacion.conceptId,
                     prestacionDestino: plan.valor.solicitudPrestacion.prestacionSolicitada.conceptId,
                     organizacionDestino: plan.valor.solicitudPrestacion.organizacionDestino.id
-                }));
+                });
+                postRequest.push(reglas);
             });
         }
         if (postRequest && postRequest.length) {
@@ -663,8 +666,15 @@ export class PrestacionesService {
                 switchMap((reglas: any) => {
                     for (let i = 0; i < reglas.length; i++) {
                         const regla = reglas[i][0];
-                        const prestacionOrigen = regla.origen.prestaciones.find(p => p.prestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId);
-                        const prestacionDestino = regla.destino.prestacion; // para utilizar los datos de la regla y no un sinonimo
+                        let prestacionOrigen;
+                        let prestacionDestino;
+                        if (regla) {
+                            prestacionOrigen = regla.origen.prestaciones.find(p => p.prestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId);
+                            prestacionDestino = regla.destino.prestacion; // para utilizar los datos de la regla y no un sinonimo
+                        } else {
+                            prestacionOrigen = prestacion.solicitud.tipoPrestacion;
+                            prestacionDestino = planesAux[i].valor.solicitudPrestacion.prestacionSolicitada; // para utilizar los datos de la regla y no un sinonimo
+                        }
                         // creamos objeto de prestacion
                         let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, prestacionDestino, 'validacion', 'ambulatorio');
                         // asignamos el tipoPrestacionOrigen a la solicitud
@@ -721,7 +731,7 @@ export class PrestacionesService {
             estado: { tipo: 'validada' },
             ...(planesCrear && planesCrear.length) && { planes: planesCrear },
             registros: prestacion.ejecucion.registros,
-            registrarFrecuentes: true
+            registrarFrecuentes: false
         };
         return this.patch(prestacion.id, dto);
 
