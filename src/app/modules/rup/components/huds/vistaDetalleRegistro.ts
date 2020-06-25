@@ -78,8 +78,7 @@ export class VistaDetalleRegistroComponent implements OnChanges {
             term: this.relaciones[idx].term,
             fsn: this.relaciones[idx].fsn,
             conceptId: this.relaciones[idx].conceptId,
-            semanticTag: this.relaciones[idx].semanticTag,
-            refsetIds: this.relaciones[idx].term
+            semanticTag: this.relaciones[idx].semanticTag
         };
         this.detalleConcepto['createdAt'] = this.relaciones[idx].createdAt;
         this.detalleConcepto['updatedAt'] = this.relaciones[idx].updatedAt;
