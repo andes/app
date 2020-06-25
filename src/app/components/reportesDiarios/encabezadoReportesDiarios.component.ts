@@ -254,8 +254,7 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
                 this.reporte = reporte;
                 this.showResumenDiarioMensual = false;
                 this.showPlanillaC1 = true;
-                this.showBotonImprimir = true;
-                this.showBotonExportaXLS = true;
+                this.showBotonExportaXLS = this.showBotonImprimir = reporte && reporte.length > 0;
             });
         }
     }
