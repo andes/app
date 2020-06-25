@@ -278,7 +278,7 @@
                                             <span *ngIf="unidadOrganizativa?.term">{{unidadOrganizativa.term}}</span>
                                         </div>
                                         <plex-button icon="delete" type="danger" (click)="deleteUO(unidadOrganizativa)"
-                                                     *ngIf="puedeEditarCompleto">
+                                                     *ngIf="puedeEditarCompleto" [disabled]="checkUnidadOrganizativaCama(unidadOrganizativa)">
                                         </plex-button>
                                     </div>
                                 </div>
