@@ -1,9 +1,5 @@
 import { Plex } from '@andes/plex';
-import { Router } from '@angular/router';
 import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
-import { Server } from '@andes/shared';
-import { Auth } from '@andes/auth';
-import { Subscription } from 'rxjs';
 import { OrganizacionService } from '../../services/organizacion.service';
 import { AgendaService } from '../../services/turnos/agenda.service';
 import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
@@ -44,17 +40,13 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
     public showPlanillaC1 = false;
     public fecha: any;
     public profesional: any;
-    private lastRequestProfesional: Subscription;
 
     // Eventos
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
         private plex: Plex,
-        private router: Router,
-        private server: Server,
         private agendaService: AgendaService,
-        private auth: Auth,
         private servicioOrganizacion: OrganizacionService,
         private servicioPrestacion: TipoPrestacionService,
         private profesionalService: ProfesionalService,
@@ -135,11 +127,7 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
         if (this.profesional) {
             event.callback(this.profesional);
         }
-        if (event.query && event.query !== '' && event.query.length > 2) {
-            // cancelamos ultimo request
-            if (this.lastRequestProfesional) {
-                this.lastRequestProfesional.unsubscribe();
-            }
+        if (event.query && event.query.length > 2) {
             const query = {
                 nombreCompleto: event.query
             };
@@ -147,10 +135,6 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
                 event.callback(resultado);
             });
         } else {
-            // cancelamos ultimo request
-            if (this.lastRequestProfesional) {
-                this.lastRequestProfesional.unsubscribe();
-            }
             event.callback([]);
         }
     }
