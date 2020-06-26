@@ -19,6 +19,7 @@ import { Subscription, concat } from 'rxjs';
 import { HUDSService } from '../../services/huds.service';
 import { TurneroService } from '../../../../apps/turnero/services/turnero.service';
 import { WebSocketService } from '../../../../services/websocket.service';
+import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
 
 @Component({
     selector: 'rup-puntoInicio',
@@ -82,9 +83,9 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         public servicePaciente: PacienteService,
         public serviceTurno: TurnoService,
         public snomed: SnomedService,
-        public servicioTipoPrestacion: TipoPrestacionService,
         public servicioTurnero: TurneroService,
-        public ws: WebSocketService
+        public ws: WebSocketService,
+        private conceptosTurneablesService: ConceptosTurneablesService
     ) { }
 
     ngOnDestroy() {
@@ -108,8 +109,7 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             }, {
                 name: 'RUP'
             }]);
-
-            this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
+            this.conceptosTurneablesService.getByPermisos('rup:tipoPrestacion:?').subscribe(data => {
                 if (data && data.length <= 0) {
                     this.redirect('inicio');
                 }

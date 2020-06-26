@@ -1,7 +1,7 @@
 import { IDireccion } from './../../../../core/mpi/interfaces/IDireccion';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { SnomedService } from '../../../../apps/mitos';
-import { Component, OnInit, Output, EventEmitter, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, HostBinding, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -12,9 +12,11 @@ import { DocumentosService } from './../../../../services/documentos.service';
 import { CodificacionService } from '../../services/codificacion.service';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { ReglaService } from '../../../../services/top/reglas.service';
-import { forkJoin, of, merge } from 'rxjs';
+import { forkJoin, of, merge, combineLatest, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { OrganizacionService } from '../../../../services/organizacion.service';
+import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
+import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -26,7 +28,7 @@ import { OrganizacionService } from '../../../../services/organizacion.service';
     // Use to disable CSS Encapsulation for this component
     encapsulation: ViewEncapsulation.None
 })
-export class PrestacionValidacionComponent implements OnInit {
+export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
     elementoRUP: any;
     @HostBinding('class.plex-layout') layout = true;
@@ -96,6 +98,7 @@ export class PrestacionValidacionComponent implements OnInit {
     public btnVolver;
     public rutaVolver;
     verMasRelaciones: any = [];
+    conceptosTurneables: ITipoPrestacion[] = [];
 
     constructor(public servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -106,12 +109,17 @@ export class PrestacionValidacionComponent implements OnInit {
         private servicioDocumentos: DocumentosService,
         private codificacionService: CodificacionService,
         public servicioReglas: ReglaService,
-        public organizacionService: OrganizacionService
+        public organizacionService: OrganizacionService,
+        private conceptosTurneablesService: ConceptosTurneablesService
     ) {
     }
 
     get validada() {
         return this.prestacion && this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada';
+    }
+
+    ngOnDestroy() {
+        this.prestacionSubscription.unsubscribe();
     }
 
     ngOnInit() {
@@ -133,6 +141,7 @@ export class PrestacionValidacionComponent implements OnInit {
         if (!this.auth.profesional) {
             this.redirect('inicio');
         }
+
         this.route.params.subscribe(params => {
             let id = params['id'];
             this.idAgenda = localStorage.getItem('agenda');
@@ -153,11 +162,19 @@ export class PrestacionValidacionComponent implements OnInit {
     get registros() {
         return [...this.prestacion.ejecucion.registros, ...this.c2Array];
     }
+
     public c2Array = [];
+
+    private prestacionSubscription: Subscription;
+
     inicializar(id) {
 
         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
-        this.servicioPrestacion.getById(id).subscribe(prestacion => {
+        this.prestacionSubscription = combineLatest(
+            this.conceptosTurneablesService.getAll(),
+            this.servicioPrestacion.getById(id)
+        ).subscribe(([conceptosTurneables, prestacion]) => {
+            this.conceptosTurneables = conceptosTurneables;
             this.prestacion = prestacion;
 
             this.registrosOriginales = prestacion.ejecucion.registros;
@@ -494,7 +511,7 @@ export class PrestacionValidacionComponent implements OnInit {
     cargaPlan(prestacionesSolicitadas) {
         prestacionesSolicitadas = prestacionesSolicitadas.filter(ps => ps.solicitud.registros[0].valor.solicitudPrestacion.autocitado);
         let tiposPrestaciones = prestacionesSolicitadas.map(ps => {
-            return this.servicioPrestacion.conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId);
+            return this.conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId);
         });
 
         prestacionesSolicitadas.forEach(ps => {

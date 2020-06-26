@@ -96,23 +96,15 @@ export class PrestacionesService {
     // Ids de conceptos que refieren que un paciente no concurrió a la consulta
     // Se usan para hacer un PATCH en el turno, quedando turno.asistencia = 'noAsistio'
 
-    public conceptosTurneables: any[];
-
     constructor(
         private server: Server,
         public auth: Auth,
-        private servicioTipoPrestacion: TipoPrestacionService,
         public snomed: SnomedService,
         private servicioReglas: ReglaService,
         private hudsService: HUDSService,
         private plex: Plex
     ) {
-
-        this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
-            this.conceptosTurneables = conceptosTurneables;
-        });
     }
-    // ------ TODO----- Ver en que servicio dejar esta funcionalidad
 
     /**
      * Le pasamos por parametro un objeto con el nombre y la ruta

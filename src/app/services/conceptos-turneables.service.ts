@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ResourceBaseHttp, Server, Cache } from '@andes/shared';
 import { ITipoPrestacion } from '../interfaces/ITipoPrestacion';
 
+
 @Injectable()
 export class ConceptosTurneablesService extends ResourceBaseHttp<ITipoPrestacion> {
     protected url = '/core/tm/conceptos-turneables';
@@ -12,8 +13,13 @@ export class ConceptosTurneablesService extends ResourceBaseHttp<ITipoPrestacion
 
     @Cache({ key: true })
     getByPermisos(permisos?: string) {
-        // para evitar que se envie por la red si es null
         permisos = permisos || undefined;
         return this.search({ permisos });
     }
+
+    @Cache({ key: false })
+    getAll() {
+        return this.search({});
+    }
+
 }
