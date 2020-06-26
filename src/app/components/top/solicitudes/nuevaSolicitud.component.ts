@@ -245,22 +245,20 @@ export class NuevaSolicitudComponent implements OnInit {
     }
 
     onSelectOrganizacionDestino() {
-        if (this.tipoSolicitud === 'salida') {
-            if (this.modelo.solicitud.organizacion) {
-                this.servicioReglas.get({
-                    organizacionOrigen: this.auth.organizacion.id,
-                    organizacionDestino: this.modelo.solicitud.organizacion.id,
-                    prestacionOrigen: this.modelo.solicitud.tipoPrestacionOrigen.conceptId
-                })
-                    .subscribe(res => this.dataReglasDestino = res.map(elem => { return { id: elem.destino.prestacion.conceptId, nombre: elem.destino.prestacion.term }; }));
-            } else {
-                if (!this.modelo.solicitud.tipoPrestacionOrigen) {
-                    this.dataOrganizacionesDestino = [];
-                    this.modelo.solicitud.organizacion = null;
-                }
-                this.dataReglasDestino = [];
-                this.prestacionDestino = null;
+        this.prestacionDestino = null;
+        if (this.modelo.solicitud.organizacion) {
+            this.servicioReglas.get({
+                organizacionOrigen: this.auth.organizacion.id,
+                organizacionDestino: this.modelo.solicitud.organizacion.id,
+                prestacionOrigen: this.modelo.solicitud.tipoPrestacionOrigen.conceptId
+            })
+                .subscribe(res => this.dataReglasDestino = res.map(elem => { return { id: elem.destino.prestacion.conceptId, nombre: elem.destino.prestacion.term }; }));
+        } else {
+            if (!this.modelo.solicitud.tipoPrestacionOrigen) {
+                this.dataOrganizacionesDestino = [];
+                this.modelo.solicitud.organizacion = null;
             }
+            this.dataReglasDestino = [];
         }
     }
 
