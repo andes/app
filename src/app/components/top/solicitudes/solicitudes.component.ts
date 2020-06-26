@@ -631,7 +631,7 @@ export class SolicitudesComponent implements OnInit {
         if (event.status === false) {
             if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
                 let patch = {
-                    op: 'estadoPush',
+                    op: 'citar',
                     estado: {
                         tipo: 'pendiente',
                         observaciones: event.motivo
