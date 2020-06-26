@@ -70,17 +70,16 @@ export class FiltrosCamasComponent implements OnInit {
         );
 
 
-        this.clearFiltros();
+        this.resetFiltros();
     }
 
-    private clearFiltros() {
-        this.mapaCamasService.pacienteText.next(null);
-        this.mapaCamasService.tipoCamaSelected.next(null);
-        this.mapaCamasService.unidadOrganizativaSelected.next(null);
-        this.mapaCamasService.esCensable.next(null);
-        this.mapaCamasService.sectorSelected.next(null);
-        this.mapaCamasService.equipamientoSelected.next(null);
-        this.mapaCamasService.estadoSelected.next(null);
+    private resetFiltros() {
+        const filtrosAplicados = window.sessionStorage.getItem('filtrosMapaCamas');
+        if (filtrosAplicados && filtrosAplicados !== '"[object Object]"') {
+            this.filtro = JSON.parse(filtrosAplicados);
+        } else {
+            this.filtro = {};
+        }
     }
 
     filtrar() {
@@ -93,5 +92,6 @@ export class FiltrosCamasComponent implements OnInit {
         this.mapaCamasService.equipamientoSelected.next(this.filtro.equipamiento);
         this.mapaCamasService.estadoSelected.next(this.filtro.estado);
 
+        window.sessionStorage.setItem('filtrosMapaCamas', JSON.stringify(this.filtro));
     }
 }

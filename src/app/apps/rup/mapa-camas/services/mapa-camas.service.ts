@@ -5,12 +5,11 @@ import { ISnapshot } from '../interfaces/ISnapshot';
 import { ICama } from '../interfaces/ICama';
 import { IMaquinaEstados, IMAQRelacion, IMAQEstado } from '../interfaces/IMaquinaEstados';
 import { MapaCamasHTTP } from './mapa-camas.http';
-import { switchMap, map, pluck, catchError, startWith, mapTo, tap } from 'rxjs/operators';
+import { switchMap, map, pluck, catchError, startWith } from 'rxjs/operators';
 import { ISectores } from '../../../../interfaces/IOrganizacion';
 import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concept.interface';
 import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
-import { Auth } from '@andes/auth';
 import { MaquinaEstadosHTTP } from './maquina-estados.http';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 
@@ -31,13 +30,6 @@ export class MapaCamasService {
     public pacienteText = new BehaviorSubject<string>(null);
     public estadoSelected = new BehaviorSubject<string>(null);
     public equipamientoSelected = new BehaviorSubject<ISnomedConcept[]>(null);
-
-
-    // public pacienteDocumento = new BehaviorSubject<string>(null);
-    // public pacienteApellido = new BehaviorSubject<string>(null);
-    // public fechaIngresoDesde = new BehaviorSubject<Date>(moment().subtract(1, 'months').toDate());
-    // public fechaIngresoHasta = new BehaviorSubject<Date>(moment().toDate());
-    // public estado = new BehaviorSubject<any>(null);
 
     public selectedPaciente = new BehaviorSubject<any>({} as any);
     public pacienteAux = new BehaviorSubject<any>({} as any);
