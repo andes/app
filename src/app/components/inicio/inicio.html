@@ -27,7 +27,7 @@
                     <div class="modulo" *ngIf="modulo?.submodulos?.length">
                         <div class="principal {{ modulo.class }}">
                             <!-- <i class="icono mdi {{modulo.icono}}"></i> -->
-                            <!-- <plex-icon prefix="adi" name="{{modulo.icono}}"></plex-icon> -->
+                            <!-- <plex-icon name="{{modulo.icono}}"></plex-icon> -->
                             <b class="titulo">{{ modulo.nombre }}</b>
                             <div class="descripcion">{{modulo.descripcion}}</div>
                         </div>
@@ -35,7 +35,7 @@
                             <ng-container *ngFor="let submodulo of modulo.submodulos">
                                 <div class="submodulo {{submodulo.class}} hover" (click)="redirect(modulo)">
                                     <!-- <i class="icono mdi mdi-account"></i> -->
-                                    <plex-icon prefix="adi" [name]="submodulo.icono" size="md"></plex-icon>
+                                    <plex-icon [name]="submodulo.icono" size="lg"></plex-icon>
 
                                     <div class="titulo" [innerHTML]="submodulo.nombre"></div>
                                 </div>
@@ -44,9 +44,11 @@
 
                     </div>
 
+                    <div class="divisor"></div>
+
                     <div class="seccion" *ngIf="!modulo?.submodulos?.length">
                         <div class="principal {{ modulo.class }} hover" (click)="redirect(modulo)">
-                            <plex-icon [name]="modulo.icono"></plex-icon>
+                            <plex-icon [name]="modulo.icono" size="lg"></plex-icon>
                         </div>
                         <div class="titulo ml-2" [innerHTML]="modulo.nombre"></div>
                     </div>
