@@ -1,8 +1,8 @@
 import { Component, Input, ChangeDetectorRef, ElementRef } from '@angular/core';
 
 @Component({
-    selector: '[svgLogo]',
-    template: `
+  selector: '[svgLogo]',
+  template: `
   <svg version="1.1" class="logo" xmlns="http://www.w3.org/2000/svg" fill="url(#my-gradient)" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
     width="100%" height="100%"  viewBox="0 0 283.4 133.2" enable-background="new 0 0 283.4 133.2" xml:space="preserve">
 

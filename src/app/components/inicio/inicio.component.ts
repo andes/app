@@ -18,7 +18,7 @@ export class InicioComponent implements AfterViewInit {
     public loading = false;
     public accessList: any = [];
     public provincia = LABELS.provincia;
-    public cajasModulos: any = [];
+    public modulos: any = [];
     public novedades: any[] = [];
 
     constructor(
@@ -45,16 +45,16 @@ export class InicioComponent implements AfterViewInit {
                         modulo.permisos.forEach((permiso) => {
                             if (this.auth.getPermissions(permiso).length > 0) {
                                 if (!tienePermiso) {
-                                    this.cajasModulos.push(modulo);
+                                    this.modulos.push(modulo);
                                     tienePermiso = true;
                                 }
                             }
                         });
                     });
-                    if (this.cajasModulos.length) {
-                        this.cajasModulos = this.cajasModulos.sort((a, b) => a.orden - b.orden);
+                    this.modulos.sort((a, b) => a.orden - b.orden);
+                    if (this.modulos.length) {
                         this.denied = false;
-                        let modulos = this.cajasModulos.map(p => {
+                        let modulos = this.modulos.map(p => {
                             return p._id;
                         });
                         this.commonNovedadesService.getNovedadesSinFiltrar().subscribe(novedades => {

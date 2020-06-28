@@ -1,40 +1,68 @@
 <plex-layout>
     <plex-layout-main>
-        <div class="text-center">
-            <section class="contenedor-marca-h">
+        <header class="logo-container mt-3" justify>
+            <div justify="start">
                 <div svgLogo></div>
-                <div class="bloque-texto">
-                    <div svgAcronimo></div>
-                    <h5 class="suffix-provincia">{{ provincia }} </h5>
+                <div svgAcronimo></div>
+                <!-- <h5>{{ provincia }} </h5> -->
+            </div>
+            <div class="bienvenida mr-4">
+                <div class="hola">
+                    Hola <b>{{ auth.usuario.nombre }}</b>
                 </div>
-            </section>
+                <div class="mensaje">
+                    ¿En qué vas a trabajar hoy?
+                </div>
+            </div>
+        </header>
+        <main>
             <plex-loader *ngIf="loading" type="linear"></plex-loader>
-            <div *ngIf="!denied && !loading" class="andes-inicio row">
-                <div *ngFor="let caja of cajasModulos" class="col-xs-12 col-sm-6 col-md-4">
-                    <div class="boton" [ngStyle]="{background:caja.color}" (click)="redirect(caja)">
-                        <i class="icono mdi {{caja.icono}}"></i>
-                        <div class="titulo">{{caja.nombre}}</div>
-                        <div class="subtitulo">{{caja.subtitulo}}</div>
-                        <div class="detalle">{{caja.descripcion | titlecase}}</div>
-                    </div>
-                    <div *ngIf="this.novedades[caja._id]?.length > 0" (click)="irANovedades(caja._id)"
-                         class="notificacion">
-                        <div class="bg-danger">
+            <div *ngIf="!denied && !loading" class="andes-inicio" justify>
+                <div *ngFor="let modulo of modulos">
+                    <!-- <div *ngIf="this.novedades[modulo._id]?.length > 0" (click)="irANovedades(modulo._id)">
+                        <div>
                             <plex-icon name="bell"></plex-icon>
                         </div>
+                    </div> -->
+                    <div class="modulo" *ngIf="modulo?.submodulos?.length">
+                        <div class="principal {{ modulo.class }}">
+                            <!-- <i class="icono mdi {{modulo.icono}}"></i> -->
+                            <!-- <plex-icon prefix="adi" name="{{modulo.icono}}"></plex-icon> -->
+                            <b class="titulo">{{ modulo.nombre }}</b>
+                            <div class="descripcion">{{modulo.descripcion}}</div>
+                        </div>
+                        <div class="submodulos d-flex align-items-start">
+                            <ng-container *ngFor="let submodulo of modulo.submodulos">
+                                <div class="submodulo {{submodulo.class}} hover" (click)="redirect(modulo)">
+                                    <!-- <i class="icono mdi mdi-account"></i> -->
+                                    <plex-icon prefix="adi" [name]="submodulo.icono" size="md"></plex-icon>
+
+                                    <div class="titulo" [innerHTML]="submodulo.nombre"></div>
+                                </div>
+                            </ng-container>
+                        </div>
+
+                    </div>
+
+                    <div class="seccion" *ngIf="!modulo?.submodulos?.length">
+                        <div class="principal {{ modulo.class }} hover" (click)="redirect(modulo)">
+                            <plex-icon [name]="modulo.icono"></plex-icon>
+                        </div>
+                        <div class="titulo ml-2" [innerHTML]="modulo.nombre"></div>
+                    </div>
+
+                </div>
+            </div>
+            <div *ngIf="denied && !loading">
+                <div>
+                    <div class="boton color-amarillo">
+                        <i class="icono mdi mdi-alert"></i>
+                        <div>ATENCIÓN</div>
+                        <div>PERMISOS DE APLICACIONES</div>
+                        <div>Ud. no posee permisos para ningún módulo de ANDES</div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div *ngIf="denied && !loading" class="row">
-            <div class="col">
-                <div class="boton color-amarillo">
-                    <i class="icono mdi mdi-alert"></i>
-                    <div class="titulo">ATENCIÓN</div>
-                    <div class="subtitulo">PERMISOS DE APLICACIONES</div>
-                    <div class="detalle">Ud. no posee permisos para ningún módulo de ANDES</div>
-                </div>
-            </div>
-        </div>
+        </main>
     </plex-layout-main>
 </plex-layout>

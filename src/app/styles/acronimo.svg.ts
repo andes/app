@@ -4,7 +4,7 @@ import { Component, Input, ChangeDetectorRef, ElementRef } from '@angular/core';
     selector: '[svgAcronimo]',
     template: `
     <svg version="1.1" class="acronimo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-    width="480.5px" height="60.5px" viewBox="0 0 480.5 60.5" enable-background="new 0 0 480.5 60.5" xml:space="preserve">
+    width="100%" height="100%" viewBox="0 0 480.5 60.5" enable-background="new 0 0 480.5 60.5" xml:space="preserve">
         <path d="M48.2,59.7c-0.7,0-1.4-0.2-2-0.5c-0.6-0.4-1.1-1-1.4-1.7L38,41.3L25.9,13.4L6.7,57.6c-0.5,1.3-1.7,2.1-3.1,2.1
             c-0.9,0-1.7-0.3-2.4-0.8c-0.6-0.5-1-1.2-1.1-2c-0.1-0.4-0.1-1,0.2-1.6L22.6,2.7C23,2,23.4,1.4,24.1,1c0.5-0.3,1.1-0.4,1.8-0.4
             c1.6,0,2.8,0.8,3.3,2.1l22.4,52.3c0.2,0.5,0.2,0.9,0.2,1.3c0,1-0.4,1.9-1.2,2.5C49.9,59.4,49.2,59.7,48.2,59.7z"/>

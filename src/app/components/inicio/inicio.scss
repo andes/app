@@ -1,16 +1,16 @@
 //
 // Variables
 $color-celeste: #039ac6;
-$color-violeta: #9B2A79;
-$color-rosa: #002B3A;
+$color-violeta: #9b2a79;
+$color-rosa: #002b3a;
 $color-amarillo: #666600;
-$color-salmon: #E2917F;
+$color-salmon: #e2917f;
 $color-coral: #ce803e;
 $color-verde-oscuro: #257300;
 
 $andes-azul-oscuro: #002838;
 $andes-azul: #0070cc;
-$andes-azul-claro: #00A8E0;
+$andes-azul-claro: #00a8e0;
 $andes-celeste: #84cef0;
 $andes-violeta: #982f98;
 $andes-magenta: #e3007e;
@@ -19,27 +19,283 @@ $andes-verde-claro: #63c7b7;
 $andes-naranja: #ff4a1a;
 $andes-naranja-claro: #f4a03b;
 
+:root {
+    // Módulos
+    // 1. MPI
+    --mpi: #00afa0;
+    --mpi-inicio: #00afa0;
+    --mpi-auditoria: #009599;
 
+    // 2. CITAS
+    --citas: #00a5d1;
+    --citas-gestor: #00a5d1;
+    --citas-vantanilla: #396999;
+
+    // 3. RUP
+    --rup: #967da0;
+    --rup-inicio: #967da0;
+    --rup-analytics: #967da0;
+
+    // 4. INT
+    --int: #7f8899;
+    --int-inicio: #7f8899;
+    --int-camas: #6e6187;
+
+    // 5. HUDS
+    --huds: #bc5485;
+    --huds-inicio: #bc5485;
+    --huds-carpetas: #e2677b;
+    --huds-analytics: #ce876b;
+
+    // 6. Dashboards
+    --dasbboard: #ce876b;
+    --dasbboard-citas: #396999;
+    --dasbboard-huds: #bc5485;
+    --dasbboard-solicitudes: #a486ae;
+}
+
+header {
+    border: 0;
+}
+header,
+main {
+    margin-left: 20px;
+}
 //
 // Clases
-.logo {
-    background-image: url('../../assets/img/logo-wide.svg');
-    background-size: contain;
-    background-repeat: no-repeat;
-    width: 60%;
-    max-width: 600px;
-    min-height: 100px;
-    display: inline-block;
-    margin-top: 3em;
-    margin-bottom: 3em;
+.logo-container {
+    div[svgLogo] {
+        width: 117px;
+        height: 55px;
+        margin-right: 27px;
+    }
+    div[svgAcronimo] {
+        width: 332px;
+        height: 42px;
+        fill: $andes-azul-oscuro;
+    }
+}
+
+.andes-inicio {
+    flex-wrap: wrap;
+}
+
+.bienvenida {
+    text-align: center;
+    .hola {
+        font-size: 38px;
+        color: $andes-azul-oscuro;
+    }
+    .mensaje {
+        font-size: 28px;
+        color: $andes-azul;
+    }
+}
+
+.modulo {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+
+    margin: 20px 20px 45px 0;
+
+    box-sizing: border-box;
+    width: 190px;
+    &:not(:last-child) {
+        border-right: 1px solid #54c3ef;
+    }
+
+    .principal {
+        width: 100%;
+        height: 120px;
+
+        .titulo {
+            font-size: 31px;
+        }
+        .descripcion {
+            font-size: 17px;
+        }
+        &.mpi {
+            color: #00afa0;
+        }
+        &.citas {
+            color: #00a5d1;
+        }
+        &.rup {
+            color: #967da0;
+        }
+        &.int {
+            color: #7f8899;
+        }
+        &.huds {
+            color: #bc5485;
+        }
+        &.dashboards {
+            color: #ce876b;
+        }
+    }
+
+    .submodulos {
+        height: 160px;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    .submodulo {
+        width: 70px;
+        height: 70px;
+        border-radius: 4px;
+        color: white;
+
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-direction: column;
+
+        text-align: center;
+        font-size: 0.75rem;
+
+        box-shadow: 4px 2px 6px #aaa;
+
+        &:hover {
+            mix-blend-mode: luminosity;
+        }
+
+        .titulo {
+            font-size: 11px;
+            line-height: normal;
+        }
+
+        .adi {
+            font-size: 327px !important;
+        }
+
+        &.mpi {
+            &.inicio {
+                background-color: #027a8a;
+            }
+            &.auditoria {
+                background-color: #009599;
+            }
+        }
+
+        &.citas {
+            &.gestor {
+                background-color: #396999;
+            }
+            &.ventanilla {
+                background-color: #396999;
+            }
+        }
+
+        &.rup {
+            &.inicio {
+                background-color: #86529b;
+            }
+            &.analytics {
+                background-color: #967da0;
+            }
+        }
+
+        &.int {
+            &.inicio {
+                background-color: #5d7093;
+            }
+            &.camas {
+                background-color: #6e6187;
+            }
+        }
+
+        &.huds {
+            &.inicio {
+                background-color: #bc5485;
+            }
+            &.carpetas {
+                background-color: #e2677b;
+            }
+            &.analytics {
+                background-color: #ce876b;
+            }
+        }
+
+        &.dashboard {
+            &.citas {
+                background-color: #396999;
+            }
+            &.huds {
+                background-color: #bc5485;
+            }
+            &.solicitudes {
+                background-color: #a486ae;
+            }
+        }
+
+        &:nth-child(even) {
+            margin-left: 15px;
+        }
+    }
+}
+.seccion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .principal {
+        width: 61px;
+        height: 49px;
+        border-radius: 4px;
+        color: white;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
+        text-align: center;
+        font-size: 11px;
+        line-height: 11px;
+
+        box-shadow: 4px 2px 6px #aaa;
+
+        &:hover {
+            mix-blend-mode: luminosity;
+        }
+
+        .icono {
+            font-size: 1.25rem;
+            color: white;
+        }
+        &.usuarios {
+            background-color: #d9a21b;
+        }
+        &.novedades {
+            background-color: #879357;
+        }
+        &.solicitudes {
+            background-color: #a486ae;
+        }
+        &.reportes {
+            background-color: #ad5555;
+        }
+        &.analytics {
+            background-color: #ce876b;
+        }
+        &.organizaciones {
+            background-color: #a0956e;
+        }
+    }
+    .titulo {
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
 }
 
 .boton {
     min-height: 266px;
-    padding: .5em;
+    padding: 0.5em;
     color: white;
     cursor: pointer;
-    transition: all .5s;
+    transition: all 0.5s;
     margin-top: 15px;
     // Contenido
     .icono {
@@ -49,7 +305,7 @@ $andes-naranja-claro: #f4a03b;
         text-transform: uppercase;
         font-size: 2em;
         font-weight: 400;
-        line-height: .8em;
+        line-height: 0.8em;
         padding-bottom: 1em;
     }
     .subtitulo {
@@ -63,7 +319,7 @@ $andes-naranja-claro: #f4a03b;
         font-weight: 100;
     }
     &:hover {
-        box-shadow: inset 0 0 0 1000px rgba(0,0,0,.4);
+        box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4);
     }
 }
 
@@ -91,39 +347,42 @@ $andes-naranja-claro: #f4a03b;
             margin-right: -0.9rem;
             color: var(--nav-bar-color);
         }
-
     }
 }
 @keyframes tintin {
-    0%
-
-    { transform: rotate(0deg); }
-    1%
-
-    { transform: rotate(20deg); }
-    2%
-
-    { transform: rotate(-20deg); }
-    3%
-
-    { transform: rotate(15deg); }
-    4%
-
-    { transform: rotate(-15deg); }
-    5%
-
-    { transform: rotate(0deg); }
-    50%
-
-    { transform: rotate(0deg); }
+    0% {
+        transform: rotate(0deg);
     }
-    .notificacion {
+    1% {
+        transform: rotate(20deg);
+    }
+    2% {
+        transform: rotate(-20deg);
+    }
+    3% {
+        transform: rotate(15deg);
+    }
+    4% {
+        transform: rotate(-15deg);
+    }
+    5% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(0deg);
+    }
+}
+.notificacion {
     position: absolute;
     top: 3px;
     right: 20px;
     width: 27px;
     height: 30px;
-    div
-
-    { color: white; border: 3pxsolidwhite; border-radius: 50%; -webkit-offset-keyword: topcenter; animation: tintin 7sease-in-outinfinite; }
+    div {
+        color: white;
+        border: 3pxsolidwhite;
+        border-radius: 50%;
+        -webkit-offset-keyword: topcenter;
+        animation: tintin 7sease-in-outinfinite;
     }
+}
