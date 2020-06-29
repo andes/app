@@ -56,6 +56,33 @@ $andes-naranja-claro: #f4a03b;
 
 header {
     border: 0;
+    &.size-sm,
+    &.size-md {
+        flex-direction: column;
+        div {
+            width: 100%;
+        }
+        .bienvenida {
+            width: 100%;
+        }
+        .neuquen {
+            top: 0;
+        }
+        .hola {
+            font-size: 1.5rem;
+        }
+        .mensaje {
+            font-size: 1rem;
+        }
+    }
+    .neuquen {
+        color: $andes-azul-claro;
+        font-size: 1rem;
+        text-transform: uppercase;
+        position: relative;
+        top: 12px;
+        left: 10px;
+    }
 }
 header,
 main {
@@ -76,10 +103,6 @@ main {
     }
 }
 
-.andes-inicio {
-    flex-wrap: wrap;
-}
-
 .bienvenida {
     text-align: center;
     .hola {
@@ -92,154 +115,167 @@ main {
     }
 }
 
-.modulo {
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    flex-direction: column;
+.modulos {
+    flex-wrap: wrap;
 
-    margin: 20px 20px 45px 0;
-
-    box-sizing: border-box;
-    width: 190px;
-    &:not(:last-child) {
-        border-right: 1px solid $andes-azul-claro;
-    }
-
-    .principal {
-        width: 100%;
-        height: 120px;
-
-        .titulo {
-            font-size: 31px;
-        }
-        .descripcion {
-            font-size: 17px;
-        }
-        &.mpi {
-            color: #00afa0;
-        }
-        &.citas {
-            color: #00a5d1;
-        }
-        &.rup {
-            color: #967da0;
-        }
-        &.int {
-            color: #7f8899;
-        }
-        &.huds {
-            color: #bc5485;
-        }
-        &.dashboards {
-            color: #ce876b;
-        }
-    }
-
-    .divisor {
-        width: 100%;
-        height: 1px;
-        background-color: $andes-azul-claro;
-    }
-
-    .submodulos {
-        height: 160px;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-    }
-
-    .submodulo {
-        width: 70px;
-        height: 70px;
-        border-radius: 4px;
-        color: white;
-
+    .modulo {
         display: flex;
-        justify-content: center;
-        align-items: center;
+        justify-content: flex-start;
+        align-items: flex-start;
         flex-direction: column;
 
-        text-align: center;
-        font-size: 0.75rem;
+        margin: 20px 20px 0 0;
 
-        box-shadow: 4px 2px 6px #aaa;
+        box-sizing: border-box;
+        width: 190px;
 
-        &:hover {
-            mix-blend-mode: luminosity;
+        &:not(:last-child) {
+            border-right: 1px solid $andes-azul-claro;
         }
 
-        .titulo {
-            font-size: 11px;
-            line-height: normal;
-        }
+        .principal {
+            width: 100%;
+            height: 120px;
 
-        .adi {
-            font-size: 327px !important;
-        }
-
-        &.mpi {
-            &.inicio {
-                background-color: #027a8a;
+            .titulo {
+                font-size: 31px;
             }
-            &.auditoria {
-                background-color: #009599;
+            .descripcion {
+                font-size: 17px;
             }
-        }
-
-        &.citas {
-            &.gestor {
-                background-color: #396999;
+            &.mpi {
+                color: #00afa0;
             }
-            &.ventanilla {
-                background-color: #396999;
-            }
-        }
-
-        &.rup {
-            &.inicio {
-                background-color: #86529b;
-            }
-            &.analytics {
-                background-color: #967da0;
-            }
-        }
-
-        &.int {
-            &.inicio {
-                background-color: #5d7093;
-            }
-            &.camas {
-                background-color: #6e6187;
-            }
-        }
-
-        &.huds {
-            &.inicio {
-                background-color: #bc5485;
-            }
-            &.carpetas {
-                background-color: #e2677b;
-            }
-            &.analytics {
-                background-color: #ce876b;
-            }
-        }
-
-        &.dashboard {
             &.citas {
-                background-color: #396999;
+                color: #00a5d1;
+            }
+            &.rup {
+                color: #967da0;
+            }
+            &.int {
+                color: #7f8899;
             }
             &.huds {
-                background-color: #bc5485;
+                color: #bc5485;
             }
-            &.solicitudes {
-                background-color: #a486ae;
+            &.dashboards {
+                color: #ce876b;
             }
         }
 
-        &:nth-child(even) {
-            margin-left: 15px;
+        .submodulos {
+            height: 160px;
+            flex-wrap: wrap;
+            justify-content: flex-start;
         }
+
+        .submodulo {
+            width: 70px;
+            height: 70px;
+            border-radius: 4px;
+            color: white;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+
+            text-align: center;
+            font-size: 0.75rem;
+
+            box-shadow: 4px 2px 6px #aaa;
+
+            &:hover {
+                mix-blend-mode: luminosity;
+            }
+
+            .titulo {
+                font-size: 11px;
+                line-height: normal;
+            }
+
+            .adi {
+                font-size: 327px !important;
+            }
+
+            &.mpi {
+                &.inicio {
+                    background-color: #027a8a;
+                }
+                &.auditoria {
+                    background-color: #009599;
+                }
+            }
+
+            &.citas {
+                &.gestor {
+                    background-color: #396999;
+                }
+                &.ventanilla {
+                    background-color: #396999;
+                }
+            }
+
+            &.rup {
+                &.inicio {
+                    background-color: #86529b;
+                }
+                &.analytics {
+                    background-color: #967da0;
+                }
+            }
+
+            &.int {
+                &.inicio {
+                    background-color: #5d7093;
+                }
+                &.camas {
+                    background-color: #6e6187;
+                }
+            }
+
+            &.huds {
+                &.inicio {
+                    background-color: #bc5485;
+                }
+                &.carpetas {
+                    background-color: #e2677b;
+                }
+                &.analytics {
+                    background-color: #ce876b;
+                }
+            }
+
+            &.dashboard {
+                &.citas {
+                    background-color: #396999;
+                }
+                &.huds {
+                    background-color: #bc5485;
+                }
+                &.solicitudes {
+                    background-color: #a486ae;
+                }
+            }
+
+            &:nth-child(even) {
+                margin-left: 15px;
+            }
+        }
+    }
+}
+
+.divisor {
+    box-sizing: content-box;
+    width: 100%;
+    height: 1px;
+    background-color: $andes-azul-claro;
+    margin: 30px 0 40px;
+}
+
+.secciones {
+    &:not(:last-child) {
+        border-right: 1px solid $andes-azul-claro;
     }
 }
 .seccion {
@@ -247,7 +283,11 @@ main {
     justify-content: space-between;
     align-items: center;
 
-    border-right: 3px solid $andes-azul-claro;
+    padding-right: 40px;
+
+    &:hover {
+        mix-blend-mode: luminosity;
+    }
 
     .principal {
         width: 61px;
@@ -256,9 +296,9 @@ main {
         color: white;
 
         display: flex;
-        justify-content: center;
         align-items: center;
-        flex-direction: column;
+        flex-direction: row;
+        justify-content: space-evenly;
 
         text-align: center;
         font-size: 11px;
@@ -266,8 +306,11 @@ main {
 
         box-shadow: 4px 2px 6px #aaa;
 
-        &:hover {
-            mix-blend-mode: luminosity;
+        .band {
+            width: 4px;
+            height: 50px;
+            margin-left: -8px;
+            background-color: white;
         }
 
         .icono {

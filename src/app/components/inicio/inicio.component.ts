@@ -18,7 +18,9 @@ export class InicioComponent implements AfterViewInit {
     public loading = false;
     public accessList: any = [];
     public provincia = LABELS.provincia;
+    public provinciaClass = LABELS.provinciaClass;
     public modulos: any = [];
+    public secciones: any = [];
     public novedades: any[] = [];
 
     constructor(
@@ -66,6 +68,10 @@ export class InicioComponent implements AfterViewInit {
                         this.denied = true;
                     }
                     this.loading = false;
+
+                    this.secciones = this.modulos.filter(x => !x.submodulos);
+                    this.modulos = this.modulos.filter(x => x.submodulos && x.submodulos.length > 0);
+
                 }, (err) => {
                 }
             );

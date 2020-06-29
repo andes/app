@@ -11,5 +11,6 @@ export const PROPERTIES = {
 };
 
 export const LABELS = {
-    provincia: 'Neuquén'
+    provincia: 'Neuquén',
+    provinciaClass: 'neuquen'
 };

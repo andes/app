@@ -1,10 +1,10 @@
 <plex-layout>
     <plex-layout-main>
-        <header class="logo-container mt-3" justify>
+        <header class="logo-container mt-3" justify responsive>
             <div justify="start">
                 <div svgLogo></div>
                 <div svgAcronimo></div>
-                <!-- <h5>{{ provincia }} </h5> -->
+                <div [class]="provinciaClass">{{ provincia }}</div>
             </div>
             <div class="bienvenida mr-4">
                 <div class="hola">
@@ -17,42 +17,40 @@
         </header>
         <main>
             <plex-loader *ngIf="loading" type="linear"></plex-loader>
-            <div *ngIf="!denied && !loading" class="andes-inicio" justify>
+            <div *ngIf="!denied && !loading" class="modulos" justify>
                 <div *ngFor="let modulo of modulos">
-                    <!-- <div *ngIf="this.novedades[modulo._id]?.length > 0" (click)="irANovedades(modulo._id)">
-                        <div>
-                            <plex-icon name="bell"></plex-icon>
-                        </div>
-                    </div> -->
-                    <div class="modulo" *ngIf="modulo?.submodulos?.length">
+
+                    <div class="modulo">
                         <div class="principal {{ modulo.class }}">
-                            <!-- <i class="icono mdi {{modulo.icono}}"></i> -->
-                            <!-- <plex-icon name="{{modulo.icono}}"></plex-icon> -->
                             <b class="titulo">{{ modulo.nombre }}</b>
                             <div class="descripcion">{{modulo.descripcion}}</div>
                         </div>
                         <div class="submodulos d-flex align-items-start">
                             <ng-container *ngFor="let submodulo of modulo.submodulos">
                                 <div class="submodulo {{submodulo.class}} hover" (click)="redirect(modulo)">
-                                    <!-- <i class="icono mdi mdi-account"></i> -->
                                     <plex-icon [name]="submodulo.icono" size="lg"></plex-icon>
-
                                     <div class="titulo" [innerHTML]="submodulo.nombre"></div>
+                                    <ng-container *ngIf="this.novedades[modulo._id]?.length > 0">
+                                        <div (click)="irANovedades(modulo._id)">
+                                            <plex-icon name="bell"></plex-icon>
+                                        </div>
+                                    </ng-container>
                                 </div>
                             </ng-container>
                         </div>
-
                     </div>
+                </div>
 
-                    <div class="divisor"></div>
+                <div class="divisor"></div>
 
-                    <div class="seccion" *ngIf="!modulo?.submodulos?.length">
-                        <div class="principal {{ modulo.class }} hover" (click)="redirect(modulo)">
-                            <plex-icon [name]="modulo.icono" size="lg"></plex-icon>
+                <div *ngFor="let seccion of secciones" class="secciones">
+                    <div class="seccion hover" (click)="redirect(seccion)">
+                        <div class="principal {{ seccion.class }}">
+                            <div class="band"></div>
+                            <plex-icon [name]="seccion.icono" size="lg"></plex-icon>
                         </div>
-                        <div class="titulo ml-2" [innerHTML]="modulo.nombre"></div>
+                        <div class="titulo ml-2" [innerHTML]="seccion.nombre"></div>
                     </div>
-
                 </div>
             </div>
             <div *ngIf="denied && !loading">
