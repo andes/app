@@ -14,7 +14,9 @@ import { ListadoInternacionService } from '../listado-internacion.service';
 export class FiltrosInternacionComponent implements OnInit {
     filtros: any = {
         fechaIngresoDesde: moment().subtract(1, 'months').toDate(),
-        fechaIngresoHasta: moment().toDate()
+        fechaIngresoHasta: moment().toDate(),
+        fechaEgresoDesde: moment().subtract(1, 'months').toDate(),
+        fechaEgresoHasta: moment().toDate()
     };
     estadosInternacion;
     permisoDescarga;
@@ -33,22 +35,27 @@ export class FiltrosInternacionComponent implements OnInit {
     }
 
     filtrar() {
-        this.listadoInternacionService.pacienteDocumento.next(this.filtros.documento);
-        this.listadoInternacionService.pacienteApellido.next(this.filtros.apellido);
+        this.listadoInternacionService.pacienteText.next(this.filtros.paciente);
         if (this.filtros.estado) {
             this.listadoInternacionService.estado.next(this.filtros.estado.id);
+        } else {
+            this.listadoInternacionService.estado.next(null);
         }
     }
 
     filtrarFecha() {
         this.listadoInternacionService.fechaIngresoDesde.next(this.filtros.fechaIngresoDesde);
         this.listadoInternacionService.fechaIngresoHasta.next(this.filtros.fechaIngresoHasta);
+        this.listadoInternacionService.fechaEgresoDesde.next(this.filtros.fechaEgresoDesde);
+        this.listadoInternacionService.fechaEgresoHasta.next(this.filtros.fechaEgresoHasta);
     }
 
     reporteInternaciones() {
         const params = {
-            desde: moment(this.filtros.fechaIngresoDesde).startOf('d').format(),
-            hasta: moment(this.filtros.fechaIngresoHasta).endOf('d').format(),
+            ingresoDesde: moment(this.filtros.fechaIngresoDesde).startOf('d').format(),
+            egresoDesde: moment(this.filtros.fechaEgresoDesde).startOf('d').format(),
+            ingresoHasta: moment(this.filtros.fechaIngresoHasta).endOf('d').format(),
+            egresoHasta: moment(this.filtros.fechaEgresoHasta).endOf('d').format(),
             organizacion: this.auth.organizacion.id
         };
         this.servicioDocumentos.descargarReporteInternaciones(params).subscribe(data => {

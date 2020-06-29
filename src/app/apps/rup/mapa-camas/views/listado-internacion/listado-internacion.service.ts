@@ -11,10 +11,12 @@ export class ListadoInternacionService {
     public listaInternacion$: Observable<IPrestacion[]>;
     public listaInternacionFiltrada$: Observable<IPrestacion[]>;
 
-    public pacienteDocumento = new BehaviorSubject<string>(null);
-    public pacienteApellido = new BehaviorSubject<string>(null);
+    public pacienteText = new BehaviorSubject<string>(null);
     public fechaIngresoDesde = new BehaviorSubject<Date>(moment().subtract(1, 'months').toDate());
     public fechaIngresoHasta = new BehaviorSubject<Date>(moment().toDate());
+    public fechaEgresoDesde = new BehaviorSubject<Date>(moment().subtract(1, 'months').toDate());
+    public fechaEgresoHasta = new BehaviorSubject<Date>(moment().toDate());
+
     public estado = new BehaviorSubject<any>(null);
 
     constructor(
@@ -24,10 +26,13 @@ export class ListadoInternacionService {
         this.listaInternacion$ = combineLatest(
             this.fechaIngresoDesde,
             this.fechaIngresoHasta,
-        ).pipe(
-            switchMap(([fechaIngresoDesde, fechaIngresoHasta]) => {
+            this.fechaEgresoDesde,
+            this.fechaEgresoHasta,
+            ).pipe(
+            switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta]) => {
                 const filtros = {
-                    fechaDesde: fechaIngresoDesde, fechaHasta: fechaIngresoHasta,
+                    fechaIngresoDesde, fechaIngresoHasta,
+                    fechaEgresoDesde, fechaEgresoHasta,
                     organizacion: this.auth.organizacion.id,
                     conceptId: PrestacionesService.InternacionPrestacion.conceptId,
                     ordenFecha: true,
@@ -40,26 +45,29 @@ export class ListadoInternacionService {
 
         this.listaInternacionFiltrada$ = combineLatest(
             this.listaInternacion$,
-            this.pacienteDocumento,
-            this.pacienteApellido,
+            this.pacienteText,
             this.estado
         ).pipe(
-            map(([listaInternacion, documento, apellido, estado]) =>
-                this.filtrarListaInternacion(listaInternacion, documento, apellido, estado)
+            map(([listaInternacion, paciente, estado]) =>
+                this.filtrarListaInternacion(listaInternacion, paciente, estado)
             )
         );
 
     }
 
-    filtrarListaInternacion(listaInternacion: IPrestacion[], documento: string, apellido: string, estado: string) {
+    filtrarListaInternacion(listaInternacion: IPrestacion[], paciente: string, estado: string) {
         let listaInternacionFiltrada = listaInternacion;
 
-        if (documento) {
-            listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) => internacion.paciente.documento.toLowerCase().includes(documento.toLowerCase()));
-        }
-
-        if (apellido) {
-            listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) => internacion.paciente.apellido.toLowerCase().includes(apellido.toLowerCase()));
+        if (paciente) {
+            const esNumero = Number.isInteger(Number(paciente));
+            if (esNumero) {
+                listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) => internacion.paciente.documento.includes(paciente));
+            } else {
+                listaInternacionFiltrada = listaInternacionFiltrada.filter((internacion: IPrestacion) =>
+                    (internacion.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
+                    internacion.paciente.apellido.toLowerCase().includes(paciente.toLowerCase()))
+                );
+            }
         }
 
         if (estado) {
