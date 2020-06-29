@@ -19,6 +19,7 @@ import { IContacto } from './../../interfaces/IContacto';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { ITipoEstablecimiento } from './../../interfaces/ITipoEstablecimiento';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 @Component({
     selector: 'organizacion-create-update',
     templateUrl: 'organizacion-create-update.html',
@@ -31,10 +32,10 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     @Output() data: EventEmitter<IOrganizacion> = new EventEmitter<IOrganizacion>();
 
     // definición de arreglos
-    tiposEstablecimiento: ITipoEstablecimiento[];
+    tiposEstablecimiento$: Observable<ITipoEstablecimiento[]>;
     tipoComunicacion: any[];
     todasLocalidades: ILocalidad[];
-    localidadesNeuquen: any[];
+    localidadesNeuquen$: Observable<ILocalidad[]>;
     servicio;
     private paisArgentina = null;
     private provinciaNeuquen = null;
@@ -159,9 +160,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         }
 
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
-        this.tipoEstablecimientoService.get().subscribe(resultado => {
-            this.tiposEstablecimiento = resultado;
-        });
+        this.tiposEstablecimiento$ = this.tipoEstablecimientoService.get();
 
         this.cargarOrganizacionModel(this.seleccion);
 
@@ -176,7 +175,9 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
             nombre: 'Neuquén'
         }).subscribe(Prov => {
             this.provinciaNeuquen = Prov[0];
-            this.loadLocalidades(this.provinciaNeuquen);
+            this.localidadesNeuquen$ = this.localidadService.get({
+                'provincia': this.provinciaNeuquen.id
+            });
         });
     }
     private cargarOrganizacionModel(org: IOrganizacion) {
@@ -324,15 +325,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         }
         if (!this.organizacionModel.edificio.length) {
             this.noPoseeEdificio = true;
-        }
-    }
-    loadLocalidades(provincia) {
-        if (provincia && provincia.id) {
-            this.localidadService.get({
-                'provincia': provincia.id
-            }).subscribe(result => {
-                this.localidadesNeuquen = [...result];
-            });
         }
     }
 
