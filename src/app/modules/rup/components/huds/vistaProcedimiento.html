@@ -1,20 +1,21 @@
-<ng-container>
+<section class="grid-envolvente">
+    <div class=" concepto prestacion-offset">
+        <div>
+            <plex-badge type="danger" *ngIf="registro.privacy.scope !== 'public'">
+                Registro Privado
+            </plex-badge>
+            <plex-badge type="{{ !registro.esSolicitud ? registro.concepto.semanticTag : 'solicitud' }}">
+                {{ !registro.esSolicitud ? registro.concepto.semanticTag : 'Solicitud' }}
+            </plex-badge>
+        </div>
+        <h4 *ngIf="registro?.concepto">
+            {{ registro.concepto.term[0].toUpperCase() + registro.concepto.term.slice(1) }}
+        </h4>
+    </div>
     <div class="solo-valores-grid procedimientos" [ngClass]="{'odontograma': registro.concepto.term === 'odontograma'}">
         <ng-container *ngIf="registro?.evoluciones">
             <div class="columna">
-                <div class="concepto prestacion-offset">
-                    <h4 *ngIf="registro?.concepto">
-                        {{ registro.concepto.term[0].toUpperCase() + registro.concepto.term.slice(1) }}
-                    </h4>
-                    <div>
-                        <plex-badge type="danger" *ngIf="registro.privacy !== 'public'">
-                            Registro Privado
-                        </plex-badge>
-                        <plex-badge type="{{ !registro.esSolicitud ? registro.concepto.semanticTag : 'solicitud' }}">
-                            {{ !registro.esSolicitud ? registro.concepto.semanticTag : 'Solicitud' }}
-                        </plex-badge>
-                    </div>
-                </div>
+
                 <div class="divisor">
                     <div class="datos-prestacion">
                         <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
@@ -22,10 +23,10 @@
                              viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve">
                             <path fill="#10A6E0"
                                   d="M0,9.461c0,5.219,4.246,9.464,9.464,9.464c5.216,0,9.462-4.245,9.462-9.464C18.926,4.244,14.68,0,9.464,0
-                                            c-1.907,0-3.764,0.582-5.33,1.648L2.681,0.194L1.512,4.679L6,3.51L4.981,2.492c1.332-0.855,2.886-1.323,4.483-1.323
-                                            c4.574,0,8.295,3.718,8.295,8.292c0,4.573-3.721,8.295-8.295,8.295s-8.295-3.722-8.295-8.295H0z" />
+                                        c-1.907,0-3.764,0.582-5.33,1.648L2.681,0.194L1.512,4.679L6,3.51L4.981,2.492c1.332-0.855,2.886-1.323,4.483-1.323
+                                        c4.574,0,8.295,3.718,8.295,8.292c0,4.573-3.721,8.295-8.295,8.295s-8.295-3.722-8.295-8.295H0z" />
                             <polygon fill="#10A6E0" points="13.306,8.31 10.616,8.31 10.616,5.62 8.31,5.62 8.31,8.31 5.62,8.31 5.62,10.616 8.31,10.616 
-                                            8.31,13.306 10.616,13.306 10.616,10.616 13.306,10.616" />
+                                        8.31,13.306 10.616,13.306 10.616,10.616 13.306,10.616" />
                         </svg>
                         <h5 class="ml-1 text-primary evoluciones">Registros</h5>
                     </div>
@@ -78,4 +79,4 @@
             <vista-contexto-prestacion [prestacion]="prestacion" [registro]="registro"></vista-contexto-prestacion>
         </ng-container>
     </div>
-</ng-container>
+</section>

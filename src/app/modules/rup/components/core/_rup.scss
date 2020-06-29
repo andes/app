@@ -447,6 +447,7 @@ $color in $rup_colors {
         text-transform: uppercase;
         color: $color;
         border: 1px solid $color;
+        margin-bottom: .5rem;
 
         &:focus {
             outline: 0;
@@ -541,13 +542,27 @@ $color in $rup_colors {
 
 
 // VISTA HUDS
+.grid-envolvente {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    >.prestacion-offset {
+        padding: 10px;
+
+        h4 {
+            white-space: pre-line;
+            width: 50%;
+        }
+    }
+}
 
 @mixin grid-columnas($cols: (1fr 1fr)) {
     display: grid;
     grid-template-columns: $cols;
     grid-column-gap: 40px;
+    grid-row: 2;
 
     .concepto {
+        grid-row: 1 / -1;
         display: grid;
         grid-template-columns: .5fr;
         font-size: 1.75rem;
@@ -568,7 +583,6 @@ $color in $rup_colors {
 }
 
 @mixin grid-columna {
-
     .prestacion-offset {
         display: flex;
         justify-content: space-between;

@@ -1,112 +1,117 @@
 <!-- Listado de evoluciones al visualizar el hallazgo independiente de una prestacion -->
-<div class="solo-valores-grid hallazgos">
-    <ng-container *ngIf="registro?.evoluciones">
-        <div class="columna">
-            <div class="concepto prestacion-offset titulo-concepto">
-                <div>
-                    <plex-badge type="{{ registro.concepto.semanticTag }}">
-                        {{ registro.concepto.semanticTag }}
-                    </plex-badge>
-                </div>
-                <h4 *ngIf="registro?.concepto">
-                    {{ registro.concepto.term[0].toUpperCase() + registro.concepto.term.slice(1) }}
-                </h4>
-            </div>
-            <div class="divisor">
-                <div class="datos-prestacion">
-                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                         xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30px" height="30px"
-                         viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve">
-                        <path fill="#10A6E0"
-                              d="M0,9.461c0,5.219,4.246,9.464,9.464,9.464c5.216,0,9.462-4.245,9.462-9.464C18.926,4.244,14.68,0,9.464,0
+<section class="grid-envolvente">
+    <div class="concepto prestacion-offset titulo-concepto">
+        <div>
+            <plex-badge type="{{ registro.concepto.semanticTag }}">
+                {{ registro.concepto.semanticTag }}
+            </plex-badge>
+        </div>
+        <h4 *ngIf="registro?.concepto">
+            {{ registro.concepto.term[0].toUpperCase() + registro.concepto.term.slice(1) }}
+        </h4>
+    </div>
+    <div class="solo-valores-grid hallazgos">
+        <ng-container *ngIf="registro?.evoluciones">
+            <div class="columna">
+                <div class="divisor">
+                    <div class="datos-prestacion">
+                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                             xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30px" height="30px"
+                             viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve">
+                            <path fill="#10A6E0"
+                                  d="M0,9.461c0,5.219,4.246,9.464,9.464,9.464c5.216,0,9.462-4.245,9.462-9.464C18.926,4.244,14.68,0,9.464,0
                                         c-1.907,0-3.764,0.582-5.33,1.648L2.681,0.194L1.512,4.679L6,3.51L4.981,2.492c1.332-0.855,2.886-1.323,4.483-1.323
                                         c4.574,0,8.295,3.718,8.295,8.292c0,4.573-3.721,8.295-8.295,8.295s-8.295-3.722-8.295-8.295H0z" />
-                        <polygon fill="#10A6E0" points="13.306,8.31 10.616,8.31 10.616,5.62 8.31,5.62 8.31,8.31 5.62,8.31 5.62,10.616 8.31,10.616 
+                            <polygon fill="#10A6E0" points="13.306,8.31 10.616,8.31 10.616,5.62 8.31,5.62 8.31,8.31 5.62,8.31 5.62,10.616 8.31,10.616 
                                         8.31,13.306 10.616,13.306 10.616,10.616 13.306,10.616" />
-                    </svg>
-                    <h5 class="ml-1 text-primary evoluciones">Evoluciones</h5>
-                </div>
-                <div class="d-inline-flex justify-content-end nav-fecha">
-                    <div [ngClass]="{'text-black-50': indice === registro.evoluciones.length - 1, 'hover': indice < registro.evoluciones.length - 1}"
-                         class="menu-left mr-2 semantic-text-{{ registro.concepto.semanticTag }}"
-                         (click)="cambiarEvolucion('+')"></div>
-                    <!--{{ (registro.evoluciones[indice]?.fechaInicio ? registro.evoluciones[indice].fechaInicio :
+                        </svg>
+                        <h5 class="ml-1 text-primary evoluciones">Evoluciones</h5>
+                    </div>
+                    <div class="d-inline-flex justify-content-end nav-fecha">
+                        <div [ngClass]="{'text-black-50': indice === registro.evoluciones.length - 1, 'hover': indice < registro.evoluciones.length - 1}"
+                             class="menu-left mr-2 semantic-text-{{ registro.concepto.semanticTag }}"
+                             (click)="cambiarEvolucion('+')"></div>
+                        <!--{{ (registro.evoluciones[indice]?.fechaInicio ? registro.evoluciones[indice].fechaInicio :
                     registro.evoluciones[indice].fechaCarga) | fecha }}-->
-                    {{ registro.evoluciones[indice]?.fechaCarga | fecha }}
+                        {{ registro.evoluciones[indice]?.fechaCarga | fecha }}
 
-                    <div [ngClass]="{'text-black-50': indice === 0, 'hover': indice > 0}"
-                         class="menu-right ml-2 semantic-text-{{ registro.concepto.semanticTag }}"
-                         (click)="cambiarEvolucion('-')"></div>
-                    <!-- fechaCarga es registro.createdAt -->
-                </div>
-            </div>
-
-            <div class="borde-datos ml-3 pl-2 pt-1">
-                <div class="mp-2 mb-2">
-                    <ng-container *ngIf="registro?.evoluciones[indice]?.evolucion">
-                        <b>Evolución: </b>
-                        <span [innerHTML]="registro.evoluciones[indice].evolucion"></span><br>
-                    </ng-container>
-                    <span
-                          [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente, registro, registro.concepto)"></span>
-                </div>
-                <div class="columna-completa align">
-                    <b>Estado:</b>
-                    <div>
-                        <plex-badge *ngIf="registro?.valor?.estado !== ''" type="success">
-                            <ng-container *ngIf="!hallazgoHudsCompleto && !registro.evoluciones">
-                                {{ registro.valor.estado }}
-                            </ng-container>
-                            <ng-container *ngIf="!hallazgoHudsCompleto && registro.evoluciones">
-                                {{ registro.evoluciones[indice].estado }}
-                            </ng-container>
-                        </plex-badge>
-                        <small *ngIf="registro?.evoluciones?.length">
-                            ({{ (registro.evoluciones[indice]?.fechaInicio ? registro.evoluciones[indice].fechaInicio :
-                            registro.evoluciones[indice].fechaCarga) | fromNow }})
-                        </small>
-                        <small *ngIf="registro?.valor?.fechaInicio">
-                            ({{ registro.valor.fechaInicio | fromNow }})
-                        </small>
-                        <small *ngIf="!registro?.evoluciones?.length && !registro?.valor.fechaInicio">
-                            (Sin registro)
-                        </small>
+                        <div [ngClass]="{'text-black-50': indice === 0, 'hover': indice > 0}"
+                             class="menu-right ml-2 semantic-text-{{ registro.concepto.semanticTag }}"
+                             (click)="cambiarEvolucion('-')"></div>
+                        <!-- fechaCarga es registro.createdAt -->
                     </div>
                 </div>
-                <div class="d-flex" *ngIf="registro.esPrimeraVez">
-                    <plex-badge type="info">Primera vez</plex-badge>
-                </div>
-                <div class="d-flex">
-                    <plex-badge *ngIf="registro.transformado" type="info">
-                        Transformado en: {{ registro.transformado.concepto.term ?
-                        registro.transformado.concepto.term : ''}}
-                    </plex-badge>
-                </div>
-                <div class="columna-completa">
-                    <b>Profesionales: </b>
-                    <span>
-                        {{ registro?.evoluciones[indice].profesional }}
-                    </span>
-                </div>
 
-                <div class="columna-completa">
-                    <!-- VER QUE FUNCIONEN LAS RELACIONES -->
-                    <b class="relaciones" *ngIf="registro?.evoluciones[indice]?.relacionadoCon?.length > 0">Relacionado
-                        con:</b>
-                    <div>
-                        <ng-container
-                                      *ngFor="let relacion of registro?.evoluciones[indice].relacionadoCon; let r=index">
-                            <ng-container *ngIf="relacion?.concepto?.term">
-                                <plex-badge type="{{ relacion?.concepto?.semanticTag }}">
-                                    {{ relacion | relacionRUP }}
-                                </plex-badge>
-                            </ng-container>
+                <div class="borde-datos ml-3 pl-2 pt-1">
+                    <div class="mp-2 mb-2">
+                        <ng-container *ngIf="registro?.evoluciones[indice]?.evolucion">
+                            <b>Evolución: </b>
+                            <span [innerHTML]="registro.evoluciones[indice].evolucion"></span><br>
                         </ng-container>
+                        <span
+                              [innerHTML]="prestacionesService.mostrarInformeRelacionado(paciente, registro, registro.concepto)"></span>
+                    </div>
+                    <div class="columna-completa align">
+                        <b>Estado:</b>
+                        <div>
+                            <plex-badge *ngIf="registro?.valor?.estado !== ''" type="success">
+                                <ng-container *ngIf="!hallazgoHudsCompleto && !registro.evoluciones">
+                                    {{ registro.valor.estado }}
+                                </ng-container>
+                                <ng-container *ngIf="!hallazgoHudsCompleto && registro.evoluciones">
+                                    {{ registro.evoluciones[indice].estado }}
+                                </ng-container>
+                            </plex-badge>
+                            <small *ngIf="registro?.evoluciones?.length">
+                                ({{ (registro.evoluciones[indice]?.fechaInicio ? registro.evoluciones[indice].fechaInicio :
+                            registro.evoluciones[indice].fechaCarga) | fromNow }})
+                            </small>
+                            <small *ngIf="registro?.valor?.fechaInicio">
+                                ({{ registro.valor.fechaInicio | fromNow }})
+                            </small>
+                            <small *ngIf="!registro?.evoluciones?.length && !registro?.valor.fechaInicio">
+                                (Sin registro)
+                            </small>
+                        </div>
+                    </div>
+                    <div class="d-flex" *ngIf="registro.esPrimeraVez">
+                        <plex-badge type="info">Primera vez</plex-badge>
+                    </div>
+                    <div class="d-flex">
+                        <plex-badge *ngIf="registro.transformado" type="info">
+                            Transformado en: {{ registro.transformado.concepto.term ?
+                        registro.transformado.concepto.term : ''}}
+                        </plex-badge>
+                    </div>
+                    <div class="columna-completa">
+                        <b>Profesionales: </b>
+                        <span>
+                            {{ registro?.evoluciones[indice].profesional }}
+                        </span>
+                    </div>
+
+                    <div class="columna-completa">
+                        <!-- VER QUE FUNCIONEN LAS RELACIONES -->
+                        <b class="relaciones"
+                           *ngIf="registro?.evoluciones[indice]?.relacionadoCon?.length > 0">Relacionado
+                            con:</b>
+                        <div>
+                            <ng-container
+                                          *ngFor="let relacion of registro?.evoluciones[indice].relacionadoCon; let r=index">
+                                <ng-container *ngIf="relacion?.concepto?.term">
+                                    <plex-badge type="{{ relacion?.concepto?.semanticTag }}">
+                                        {{ relacion | relacionRUP }}
+                                    </plex-badge>
+                                </ng-container>
+                            </ng-container>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-        </div>
-        <vista-contexto-prestacion [prestacion]="contextoEvolutivo" [registro]="registro"></vista-contexto-prestacion>
-    </ng-container>
-</div>
+            </div>
+            <vista-contexto-prestacion [prestacion]="contextoEvolutivo" [registro]="registro">
+            </vista-contexto-prestacion>
+        </ng-container>
+    </div>
+
+</section>
