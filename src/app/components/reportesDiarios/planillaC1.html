@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col">
         <plex-box type="primary">
-            <table *ngIf="reporte.length>0" class="table table-striped table-bordered" style="font-size: 15px">
+            <table  *ngIf="reporte.length > 0; else reporteVacio" class="table table-striped table-bordered" style="font-size: 15px">
 
                 <thead style="background-color: darkgray;">
                     <tr>
@@ -36,7 +36,7 @@
                 </thead>
 
                 <tbody>
-                    <tr *ngFor="let linea of reporte; let i=index" class="hover" [ngStyle]="{'font-weight': normal}">
+                    <tr *ngFor="let linea of reporte; let i=index" class="hover">
                         <td>
                             {{ i+1 }}
                         </td>
@@ -59,7 +59,7 @@
                             {{ linea.pacienteSexo}}
                         </td>
                         <td style="text-align:left">
-                            {{ linea.pacienteObraSocial}}
+                            {{ linea.pacienteObraSocial || 'No posee'}}
                         </td>
                         <td style="text-align:left">
                             {{ linea.prestacionConceptoPrincipal}}
@@ -75,6 +75,9 @@
 
                 </tbody>
             </table>
+            <ng-template #reporteVacio>
+                <span>Sin datos para mostrar</span>
+            </ng-template>
         </plex-box>
     </div>
 </div>
