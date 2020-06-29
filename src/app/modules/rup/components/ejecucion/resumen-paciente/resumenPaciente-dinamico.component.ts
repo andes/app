@@ -41,6 +41,12 @@ export class ResumenPacienteDinamicoComponent implements OnInit {
             fsn: 'medición de depuración renal (procedimiento)',
             semanticTag: 'procedimiento',
             term: 'medición de depuración renal'
+        },
+        {
+            conceptId: '386053000',
+            fsn: 'seguimiento de la temperatura (procedimiento)',
+            semanticTag: 'procedimiento',
+            term: 'procedimiento de evaluacion'
         }
     ];
 
