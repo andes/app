@@ -82,7 +82,7 @@ export class CensosMensualesComponent implements OnInit {
                     this.totales['ingresoEgresoDia'] += c.censo.ingresosYEgresos;
                     this.totales['pacientesDia'] += c.censo.pacientesDia;
                     this.totales['disponibles24'] += c.censo.disponibles;
-                    this.totales['diasEstada'] += c.censo.diasEstada;
+                    this.totales['diasEstada'] = (this.totales['diasEstada'] < c.censo.diasEstada) ? c.censo.diasEstada : this.totales['diasEstada'];
 
                     this.censo.push({
                         censo: {
@@ -158,7 +158,7 @@ export class CensosMensualesComponent implements OnInit {
         this.datosCensoTotal['giroCama'] = giroCama;
 
         let totalEgreso = this.totales.egresosAlta + this.totales.egresosDefuncion;
-        this.datosCensoTotal['promDiasEstada'] = totalEgreso === 0 ? '0' : (this.totales.diasEstada / totalEgreso).toFixed(2);
+        this.datosCensoTotal['promDiasEstada'] = (totalEgreso === 0) ? '0' : (this.totales.diasEstada / totalEgreso).toFixed(2);
 
     }
 
