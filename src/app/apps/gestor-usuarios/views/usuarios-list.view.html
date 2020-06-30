@@ -80,7 +80,7 @@
                 <div class="list-group mt-2" *ngIf="!showNewOrgView">
                     <div justify class="list-group-item" *ngFor="let org of data.orgList">
                         {{ org.nombre }}
-                        <span>
+                        <span *ngIf="organizacionesConPermisos.includes(org)">
                             <ng-container *ngIf="org.activo && !readOnly">
                                 <plex-button type="danger" size="sm" title="Desactivar" titlePosition="left"
                                              (click)="toogleActivo(org)">
