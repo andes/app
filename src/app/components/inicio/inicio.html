@@ -22,7 +22,11 @@
 
                     <div class="modulo">
                         <div class="principal {{ modulo.class }}">
-                            <b class="titulo">{{ modulo.nombre }}</b>
+                            <b class="titulo">{{ modulo.nombre }}
+                                <span class="hover" *ngIf="novedades[modulo._id]?.length > 0"
+                                      hint="Novedades del módulo {{ modulo.nombre }}" detach="true" icon="bell"
+                                      (click)="irANovedades(modulo._id)"></span>
+                            </b>
                             <div class="descripcion">{{modulo.descripcion}}</div>
                         </div>
                         <div class="submodulos d-flex align-items-start">
@@ -30,11 +34,6 @@
                                 <div class="submodulo {{submodulo.class}} hover" (click)="redirect(modulo)">
                                     <plex-icon [name]="submodulo.icono" size="lg"></plex-icon>
                                     <div class="titulo" [innerHTML]="submodulo.nombre"></div>
-                                    <ng-container *ngIf="this.novedades[modulo._id]?.length > 0">
-                                        <div (click)="irANovedades(modulo._id)">
-                                            <plex-icon name="bell"></plex-icon>
-                                        </div>
-                                    </ng-container>
                                 </div>
                             </ng-container>
                         </div>
