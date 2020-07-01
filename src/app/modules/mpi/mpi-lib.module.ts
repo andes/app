@@ -16,7 +16,7 @@ import { BotonesRegistroComponent } from '../../core/mpi/components/mpi-botones-
 import { UpdateContactoDireccionComponent } from '../../components/turnos/dashboard/update-contacto-direccion.component';
 
 // Esta componente es parte de la parte SHARED de MPI, habría que moverla a este modulo.
-import { PacienteDetalleComponent } from './components/paciente-detalle';
+import { PacienteDetalleComponent } from './components/paciente-detalle.component';
 
 // Esta componente es parte de la parte SHARED de MPI, habría que moverla a este modulo.
 import { CarpetaPacienteComponent } from '../../components/carpeta-paciente/carpeta-paciente.component';
