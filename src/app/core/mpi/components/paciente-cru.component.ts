@@ -238,6 +238,7 @@ export class PacienteCruComponent implements OnInit {
                     this.pacienteModel.sexo = this.paciente.sexo;
                     this.pacienteModel.documento = this.paciente.documento;
                     this.pacienteModel.estado = 'validado';
+                    this.pacienteModel.scan = this.paciente.scan;
                     this.paciente = Object.assign({}, this.pacienteModel);
                     this.actualizarDatosPaciente();
                 }
