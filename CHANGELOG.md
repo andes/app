@@ -1,3 +1,24 @@
+# [5.2.0](https://github.com/andes/app/compare/v5.1.0...v5.2.0) (2020-07-01)
+
+
+### Bug Fixes
+
+* **mpi:** asigna scan al paciente ([c2e413f](https://github.com/andes/app/commit/c2e413faac2abb5ad02e6d2d139fd2b2a96685cb))
+* **mpi:** validacion email y celular activacion appMobile ([793b8ae](https://github.com/andes/app/commit/793b8ae47b7f46dffa197c084d90ca68c514b830))
+* **RUP:** control de seleccion de ternas de reglas ([fdbeaeb](https://github.com/andes/app/commit/fdbeaeb33e1f409a1fad72ebcc9da458197bd9d1))
+* **TOP:** Corrige filtros segun reglas de solicitudes ([f07b9a2](https://github.com/andes/app/commit/f07b9a2b5a431be5e658bc2d665c4038cd9e745a))
+
+
+### Features
+
+* **auth:** nuevo componente modal para mostrar el disclaimer al seleccionar la organización ([547c1d2](https://github.com/andes/app/commit/547c1d282d889cf43586f93b69f951354b6a3101))
+* nueva versión de plex ([b290117](https://github.com/andes/app/commit/b290117cc718dfcfd936999d362776d3544055cd))
+* **gdu:** visualizacion de organizaciones sin permisos ([15f3623](https://github.com/andes/app/commit/15f3623571ee047ffc24eb1cb3a2e49cc6832287))
+* **mpi:** agrega carga de un paciente ([d9a0493](https://github.com/andes/app/commit/d9a04938aa10c221b5b609a628ba1fd02310e41e))
+* **rup:** guardar prestación si es una solicitud autocitada y no tiene organización destino ([08af83b](https://github.com/andes/app/commit/08af83ba1c7ac2ac17e3746fe4b32afd5a6285c8))
+* **TOP:** cambia a operacion citar en PATCH de solicitud ([19af200](https://github.com/andes/app/commit/19af200ba721f6be90753c6bdb1455edc6e89a0e))
+* **TOP:** limpia prestacion destino al cambiar de organizacion ([ff4665a](https://github.com/andes/app/commit/ff4665ab023f4516d17ebec20f3c29a45fc6c79a))
+
 # [5.1.0](https://github.com/andes/app/compare/v5.0.0...v5.1.0) (2020-06-24)
 
 
