@@ -60,24 +60,25 @@
 
 
                     <plex-wrapper>
-                        <plex-select [disabled]="viveProvActual" label="Provincia"
-                                     [(ngModel)]="paciente.direccion[0].ubicacion.provincia"
-                                     [required]="!viveProvActual" name="provincia" [data]="provincias"
-                                     labelField="nombre"
-                                     (change)="loadLocalidades(paciente.direccion[0].ubicacion.provincia)" grow="2">
+                        <plex-select [disabled]="viveProvActual" [(ngModel)]="paciente.direccion[0].ubicacion.provincia"
+                                     name="provincia" [required]="!viveProvActual" [data]="provincias$ | async"
+                                     idField="nombre" labelField="nombre" label="Provincia"
+                                     (change)="loadLocalidades(paciente.direccion[0].ubicacion.provincia)">
                         </plex-select>
 
                         <plex-select [disabled]="viveLocActual" label="Localidad" [required]="!viveLocActual"
                                      [(ngModel)]="paciente.direccion[0].ubicacion.localidad" name="localidad"
-                                     [data]="localidades" labelField="nombre"
+                                     [data]="localidades$ | async" labelField="nombre"
                                      (change)="loadBarrios(paciente.direccion[0].ubicacion.localidad)" grow="2">
                         </plex-select>
 
                         <!-- barrios solo para NQN capital-->
-                        <plex-select *ngIf="barrios?.length" label="Barrio"
-                                     [(ngModel)]="paciente.direccion[0].ubicacion.barrio" name="barrio" [data]="barrios"
-                                     labelField="nombre" grow="1">
-                        </plex-select>
+                        <ng-container *ngIf="barrios$ | async as barrios">
+                            <plex-select *ngIf="barrios?.length" label="Barrio"
+                                         [(ngModel)]="paciente.direccion[0].ubicacion.barrio" name="barrio"
+                                         [data]="barrios" labelField="nombre" grow="1">
+                            </plex-select>
+                        </ng-container>
                     </plex-wrapper>
 
                     <plex-wrapper>
@@ -95,9 +96,11 @@
             </div>
             <div class="col-6">
                 <!-- MAPA -->
-                <georref-map *ngIf="geoReferenciaAux.length" [latLong]="geoReferenciaAux"
-                             (changeCoordinates)="changeCoordenadas($event)">
-                </georref-map>
+                <ng-container *ngIf="georeferencia$ | async as georef">
+                    <georref-map *ngIf="georef.length" [latLong]="georef"
+                                 (changeCoordinates)="changeCoordenadas($event)">
+                    </georref-map>
+                </ng-container>
             </div>
         </div>
     </form>

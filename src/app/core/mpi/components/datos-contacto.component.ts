@@ -13,10 +13,12 @@ import { ProvinciaService } from '../../../services/provincia.service';
 import { BarrioService } from '../../../services/barrio.service';
 import { LocalidadService } from '../../../services/localidad.service';
 import { Auth } from '@andes/auth';
-import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import * as enumerados from '../../../utils/enumerados';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { NgForm } from '@angular/forms';
+import { cache } from '@andes/shared';
+import { switchMap, map } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
 
 @Component({
     selector: 'datos-contacto',
@@ -42,6 +44,13 @@ export class DatosContactoComponent implements OnInit, AfterViewInit, OnDestroy 
     noPoseeContacto = false;
     contactosCache = [];
     tipoComunicacion: any[];
+    public organizacion$: Observable<any>;
+    public paises$: Observable<any>;
+    public provincias$: Observable<any>;
+    public localidades$: Observable<any>;
+    public barrios$: Observable<any>;
+    public ubicacion$: Observable<any>;
+    public georeferencia$: Observable<any>;
 
     // Domicilio
     public direccion: IDireccion = {
@@ -61,7 +70,7 @@ export class DatosContactoComponent implements OnInit, AfterViewInit, OnDestroy 
     viveLocActual = false;
     viveProvActual = false;
     provincias: IProvincia[] = [];
-    barrios: IBarrio[] = [];
+    // barrios: IBarrio[] = [];
     localidades: ILocalidad[] = [];
     disableGeolocalizar = true;
     paisArgentina = null;
@@ -89,6 +98,38 @@ export class DatosContactoComponent implements OnInit, AfterViewInit, OnDestroy 
 
     ngOnInit() {
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
+        this.organizacion$ = this.organizacionService.getById(this.auth.organizacion.id).pipe(
+            cache()
+        );
+        this.paises$ = this.paisService.get({ nombre: 'Argentina' }).pipe(
+            cache()
+        );
+        this.provincias$ = this.provinciaService.get({}).pipe(
+            cache()
+        );
+
+        this.georeferencia$ = combineLatest(
+            this.organizacion$,
+            this.paises$,
+            this.provincias$
+        ).pipe(
+            switchMap(([org, pais, provincias]) => {
+                this.organizacionActual = org;
+                this.paisArgentina = pais;
+                this.provinciaActual = org.direccion.ubicacion.provincia;
+                this.localidadActual = org.direccion.ubicacion.localidad;
+                const prov = this.paciente.direccion[0].ubicacion.provincia || this.provinciaActual;
+                let direccionCompleta = (this.organizacionActual.direccion.valor || '') + ', ' + (this.localidadActual.nombre || '') + ', ' + (this.provinciaActual.nombre || '');
+                return this.georeferenciaService.getGeoreferencia({ direccion: direccionCompleta });
+            }),
+            map((point) => {
+                if (this.organizacionActual.direccion.geoReferencia) {
+                    return this.organizacionActual.direccion.geoReferencia;
+                }
+                return [point.lat, point.lng];
+            }),
+            cache());
+
 
         this.formChangesSubscription = this.ngForm.form.valueChanges
             .debounceTime(300)
@@ -99,24 +140,27 @@ export class DatosContactoComponent implements OnInit, AfterViewInit, OnDestroy 
 
     ngAfterViewInit() {
         // actualiza datos de ubicacion
-        this.organizacionService.getById(this.auth.organizacion.id).subscribe((org: IOrganizacion) => {
-            if (org) {
-                this.organizacionActual = org;
-                this.provinciaActual = org.direccion.ubicacion.provincia;
-                this.localidadActual = org.direccion.ubicacion.localidad;
-                // Set País Argentina
-                this.paisService.get({
-                    nombre: 'Argentina'
-                }).subscribe(arg => {
-                    this.paisArgentina = arg[0];
-                });
-                // Cargamos todas las provincias
-                this.provinciaService.get({}).subscribe(rta => {
-                    this.provincias = rta;
-                });
-                this.loadPaciente();
-            }
-        });
+
+
+        /*
+                this.organizacionService.getById(this.auth.organizacion.id).subscribe((org: IOrganizacion) => {
+                    if (org) {
+                        this.organizacionActual = org;
+                        this.provinciaActual = org.direccion.ubicacion.provincia;
+                        this.localidadActual = org.direccion.ubicacion.localidad;
+                        // Set País Argentina
+                        this.paisService.get({
+                            nombre: 'Argentina'
+                        }).subscribe(arg => {
+                            this.paisArgentina = arg[0];
+                        });
+                        // Cargamos todas las provincias
+                        this.provinciaService.get({}).subscribe(rta => {
+                            this.provincias = rta;
+                        });
+                        // this.loadPaciente();
+                    }
+                }); */
     }
 
     ngOnDestroy() {
@@ -126,9 +170,9 @@ export class DatosContactoComponent implements OnInit, AfterViewInit, OnDestroy 
     loadPaciente() {
         if (this.paciente) {
             // actualiza contactos
-            if (!this.paciente.contacto || !this.paciente.contacto.length) {
-                this.paciente.contacto = [this.contacto];
-            }
+            /*             if (!this.paciente.contacto || !this.paciente.contacto.length) {
+                            this.paciente.contacto = [this.contacto];
+                        } */
             // actualiza domicilio
             if (!this.paciente.direccion || !this.paciente.direccion.length) {
                 this.paciente.direccion = [this.direccion];
@@ -142,7 +186,7 @@ export class DatosContactoComponent implements OnInit, AfterViewInit, OnDestroy 
                     }
                     if (this.paciente.direccion[0].ubicacion.localidad) {
                         if (this.localidadActual) {
-                            (this.paciente.direccion[0].ubicacion.localidad.nombre === this.localidadActual.nombre) ? this.viveLocActual = true : (this.viveLocActual = false, this.barrios = null);
+                            (this.paciente.direccion[0].ubicacion.localidad.nombre === this.localidadActual.nombre) ? this.viveLocActual = true : (this.viveLocActual = false);
                         }
                         this.loadBarrios(this.paciente.direccion[0].ubicacion.localidad);
                     }
@@ -227,27 +271,20 @@ export class DatosContactoComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     // -------------------- DOMICILIO -------------------
-
-    loadProvincias(event, pais) {
-        if (pais && pais.id) {
-            this.provinciaService.get({
-                pais: pais.id
-            }).subscribe(event.callback);
-        }
+    loadProvincia() {
+        this.provincias$ = this.provinciaService.get({}).pipe(
+            cache()
+        );
     }
 
     loadLocalidades(provincia) {
         this.localidadRequerida = false;
         if (provincia && provincia.id) {
-            if (provincia.id === this.provinciaActual.id) {
-                this.viveProvActual = true;
-            }
-            this.localidadService.getXProvincia(provincia.id).subscribe(result => {
-                this.localidades = result;
-                if (this.localidades && this.localidades.length) {
-                    this.localidadRequerida = true;
-                }
-            });
+            this.viveProvActual = (provincia.id === this.provinciaActual.id);
+            this.localidades$ = this.localidadService.getXProvincia(provincia.id).pipe(
+                cache()
+            );
+            this.localidadRequerida = true;
         }
     }
 
@@ -256,9 +293,9 @@ export class DatosContactoComponent implements OnInit, AfterViewInit, OnDestroy 
             if (localidad.id === this.localidadActual.id) {
                 this.viveLocActual = true;
             }
-            this.barriosService.getXLocalidad(localidad.id).subscribe(result => {
-                this.barrios = result;
-            });
+            this.barrios$ = this.barriosService.getXLocalidad(localidad.id).pipe(
+                cache()
+            );
         }
     }
 
@@ -296,7 +333,6 @@ export class DatosContactoComponent implements OnInit, AfterViewInit, OnDestroy 
         } else {
             this.paciente.direccion[0].ubicacion.localidad = null;
             this.paciente.direccion[0].ubicacion.barrio = null;
-            this.barrios = [];
         }
     }
 
