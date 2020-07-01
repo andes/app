@@ -28,7 +28,6 @@ export interface IEspacioFisico {
         term: String;
         fsn: String;
         semanticTag: String;
-        refsetIds: [String];
     }];
     activo: Boolean;
     estado: string;

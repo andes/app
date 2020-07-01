@@ -53,7 +53,6 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         concepto: {
             fsn: 'alta del paciente (procedimiento)',
             semanticTag: 'procedimiento',
-            refsetIds: ['900000000000497000'],
             conceptId: '58000006',
             term: 'alta del paciente'
         },

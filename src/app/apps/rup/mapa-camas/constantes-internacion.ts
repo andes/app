@@ -19,7 +19,6 @@ export const modelInformeIngreso = {
 export const snomedIngreso = {
     fsn: 'documento de solicitud de admisión (elemento de registro)',
     semanticTag: 'elemento de registro',
-    refsetIds: ['900000000000497000'],
     conceptId: '721915006',
     term: 'documento de solicitud de admisión'
 };
@@ -27,7 +26,6 @@ export const snomedIngreso = {
 export const snomedEgreso = {
     fsn: 'alta del paciente (procedimiento)',
     semanticTag: 'procedimiento',
-    refsetIds: ['900000000000497000'],
     conceptId: '58000006',
     term: 'alta del paciente'
 };
@@ -78,7 +76,6 @@ export const modelRegistroInternacion = {
     concepto: {
         fsn: 'alta del paciente (procedimiento)',
         semanticTag: 'procedimiento',
-        refsetIds: ['900000000000497000'],
         conceptId: '58000006',
         term: 'alta del paciente'
     },

@@ -48,7 +48,7 @@ export class RUPComponent implements OnInit, AfterViewInit {
 
     // Eventos
     @Output() change: EventEmitter<any> = new EventEmitter<any>();
-    @Output() ejecutarConcepto: EventEmitter<any> = new EventEmitter<any>();
+
     @Output() ejecutarAccion: EventEmitter<any> = new EventEmitter<any>();
 
     /**
@@ -87,10 +87,7 @@ export class RUPComponent implements OnInit, AfterViewInit {
         componentReference.instance['change'].subscribe(value => {
             this.emitChange(false);
         });
-        // Event bubbling
-        componentReference.instance['ejecutarConcepto'].subscribe(value => {
-            this.emitEjecutarConcepto(value);
-        });
+
         // Event bubbling
         componentReference.instance['ejecutarAccion'].subscribe((value, datos) => {
             this.emitEjecutarAccion(value, datos);
@@ -172,13 +169,6 @@ export class RUPComponent implements OnInit, AfterViewInit {
 
         // Notifica al componente padre del cambio
         this.change.emit(this.registro);
-    }
-
-    public emitEjecutarConcepto(concepto) {
-        this.prepareEmit();
-
-        // Notifica al componente padre del cambio
-        this.ejecutarConcepto.emit(concepto);
     }
 
     public emitEjecutarAccion(evento, datos) {
