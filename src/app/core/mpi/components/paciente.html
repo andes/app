@@ -1,27 +1,30 @@
 <plex-layout main="{{ mainSize }}">
     <plex-layout-main>
         <header>
-            <plex-title size="lg" titulo="Alta de pacientes">
-                <plex-button class="pr-1" label="Volver" type="danger" position="left" (click)="cancel()"></plex-button>
+            <plex-title titulo="Alta de pacientes">
+
+                <plex-button label="Volver" type="danger" position="left" (click)="cancel()">
+                </plex-button>
                 <plex-button *ngIf="pacienteModel.id && pacienteModel.estado === 'validado' && !showMobile"
-                             label="Gestión de App Mobile" type="info" position="right" (click)="gestionMobile(true)"
-                             class="pr-1">
+                             label="Gestión de App Mobile" type="info" position="right" (click)="gestionMobile(true)">
                 </plex-button>
-                <plex-button *ngIf="showMobile" class="pr-1" label="Volver a detalles paciente" type="info"
-                             position="right" (click)="gestionMobile(false)">
+                <plex-button *ngIf="showMobile" label="Volver a detalles paciente" type="info" position="right"
+                             (click)="gestionMobile(false)">
                 </plex-button>
-                <plex-button *ngIf="(tipoPaciente === '' || tipoPaciente === 'con-dni') && !showDeshacer" class="pr-1"
+                <plex-button *ngIf="(tipoPaciente === '' || tipoPaciente === 'con-dni') && !showDeshacer"
                              label="Validar Paciente" type="info" position="right" [disabled]="disableValidar"
                              (click)="validarPaciente()">
                 </plex-button>
-                <plex-button *ngIf="showDeshacer" class="pr-1" label="Deshacer Validación" type="warning"
-                             position="right" (click)="deshacerValidacion()"></plex-button>
-                <plex-button *ngIf="visualizarIgnorarGuardar" class="pr-1" [disabled]="disableIgnorarGuardar"
+                <plex-button *ngIf="showDeshacer" label="Deshacer Validación" type="warning" position="right"
+                             (click)="deshacerValidacion()"></plex-button>
+                <plex-button *ngIf="visualizarIgnorarGuardar" [disabled]="disableIgnorarGuardar"
                              label="Ignorar y Guardar" type="warning" position="right" [validateForm]="formulario"
                              (click)="save($event,true)">
                 </plex-button>
-                <plex-button [disabled]="disableGuardar" class="pr-1" label="Guardar" type="success" position="right"
-                             [validateForm]="formulario" (click)="save($event,false)"></plex-button>
+                <plex-button [disabled]="disableGuardar" label="Guardar" type="success" position="right"
+                             [validateForm]="formulario" (click)="save($event,false)">
+                </plex-button>
+
             </plex-title>
         </header>
         <!-- loader -->

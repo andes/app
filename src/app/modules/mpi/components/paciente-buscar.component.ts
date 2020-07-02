@@ -18,7 +18,7 @@ interface PacienteEscaneado {
 @Component({
     selector: 'paciente-buscar',
     templateUrl: 'paciente-buscar.html',
-    styleUrls: ['paciente-buscar.scss']
+    styleUrls: []
 })
 export class PacienteBuscarComponent implements OnInit, OnDestroy {
     private timeoutHandle: number;
