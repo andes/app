@@ -10,9 +10,6 @@ import { PacienteListadoComponent } from './components/paciente-listado.componen
 import { FotoDirective } from './components/paciente-detalle-foto.directive';
 
 // Esta componente es parte de la parte SHARED de MPI, habría que moverla a este modulo.
-import { BotonesRegistroComponent } from '../../core/mpi/components/mpi-botones-registro.component';
-
-// Esta componente es parte de la parte SHARED de MPI, habría que moverla a este modulo.
 import { UpdateContactoDireccionComponent } from '../../components/turnos/dashboard/update-contacto-direccion.component';
 
 // Esta componente es parte de la parte SHARED de MPI, habría que moverla a este modulo.
@@ -34,7 +31,6 @@ import { PacientePanelComponent } from './components/paciente-panel.component';
         PacienteBuscarComponent,
         PacienteListadoComponent,
         PacientePanelComponent,
-        BotonesRegistroComponent,
         UpdateContactoDireccionComponent,
         PacienteDetalleComponent,
         CarpetaPacienteComponent,
@@ -46,7 +42,6 @@ import { PacientePanelComponent } from './components/paciente-panel.component';
         PacienteBuscarComponent,
         PacienteListadoComponent,
         PacientePanelComponent,
-        BotonesRegistroComponent,
         UpdateContactoDireccionComponent,
         PacienteDetalleComponent,
         CarpetaPacienteComponent,

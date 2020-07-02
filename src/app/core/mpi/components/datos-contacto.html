@@ -1,7 +1,7 @@
 <section class="mt-2">
     <form #form="ngForm">
-        <div class="row">
-            <div class="col-6">
+        <plex-grid type="full" cols="2" responsive>
+            <div class="columna">
                 <plex-title titulo=" datos de contacto" size="sm">
                     <plex-bool [(ngModel)]="noPoseeContacto" label="Sin datos de contacto" name="noPoseeContacto"
                                type="slide" (change)="limpiarContacto()"></plex-bool>
@@ -50,12 +50,12 @@
 
                     <plex-bool class="mr-3" *ngIf="provinciaActual" [(ngModel)]="viveProvActual"
                                label="¿Vive en la Provincia de {{provinciaActual.nombre}}?" name="viveProvActual"
-                               (change)="changeProvActual($event)">
+                               (change)="changeProvActual()">
                     </plex-bool>
 
                     <plex-bool *ngIf="viveProvActual && localidadActual" [(ngModel)]="viveLocActual"
                                label="¿Vive en la Localidad {{localidadActual.nombre}}?" name="viveLocActual"
-                               (change)="changeLocalidadActual($event)">
+                               (change)="changeLocalidadActual()">
                     </plex-bool>
 
 
@@ -66,42 +66,35 @@
                                      (change)="loadLocalidades(paciente.direccion[0].ubicacion.provincia)">
                         </plex-select>
 
-                        <plex-select [disabled]="viveLocActual" label="Localidad" [required]="!viveLocActual"
+                        <plex-select [disabled]="viveLocActual" label="Localidad" [required]="viveProvActual"
                                      [(ngModel)]="paciente.direccion[0].ubicacion.localidad" name="localidad"
                                      [data]="localidades$ | async" labelField="nombre"
                                      (change)="loadBarrios(paciente.direccion[0].ubicacion.localidad)" grow="2">
                         </plex-select>
 
                         <!-- barrios solo para NQN capital-->
-                        <ng-container *ngIf="barrios$ | async as barrios">
-                            <plex-select *ngIf="barrios?.length" label="Barrio"
-                                         [(ngModel)]="paciente.direccion[0].ubicacion.barrio" name="barrio"
-                                         [data]="barrios" labelField="nombre" grow="1">
-                            </plex-select>
-                        </ng-container>
+                        <plex-select label="Barrio" [disabled]="!viveLocActual"
+                                     [(ngModel)]="paciente.direccion[0].ubicacion.barrio" name="barrio"
+                                     [data]="barrios$ | async" labelField="nombre" grow="1">
+                        </plex-select>
                     </plex-wrapper>
 
                     <plex-wrapper>
-                        <plex-text label="Dirección" [(ngModel)]="paciente.direccion[0].valor"
-                                   (change)="checkDisableGeolocalizar($event.value)" name="direccion"
+                        <plex-text label="Dirección" [(ngModel)]="paciente.direccion[0].valor" name="direccion"
                                    placeholder="Ej: Avenida las Flores 1200">
                         </plex-text>
 
-                        <plex-button [disabled]="disableGeolocalizar" type="info" size="md" icon="map-marker"
+                        <plex-button [disabled]="disableGeoreferenciar" type="info" size="md" icon="map-marker"
                                      (click)="geoReferenciar()">
                         </plex-button>
                     </plex-wrapper>
+                </ng-container>
+            </div>
 
-                </ng-container>
-            </div>
-            <div class="col-6">
-                <!-- MAPA -->
-                <ng-container *ngIf="georeferencia$ | async as georef">
-                    <georref-map *ngIf="georef.length" [latLong]="georef"
-                                 (changeCoordinates)="changeCoordenadas($event)">
-                    </georref-map>
-                </ng-container>
-            </div>
-        </div>
+            <!-- MAPA -->
+            <georref-map class="columna" #mapa [latLong]="georeferencia$ | async"
+                         (changeCoordinates)="changeCoordenadas($event)">
+            </georref-map>
+        </plex-grid>
     </form>
 </section>

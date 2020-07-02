@@ -26,32 +26,3 @@
         </plex-item>
     </plex-list>
 </section>
-<!-- <ul class="list-group">
-    <li class="list-group-item" *ngFor="let _unaNota of notas; let l = index">
-        <div class="row">
-            <div class="col-8">{{_unaNota.nota}}
-                <small class="text-muted">({{_unaNota.fecha | fecha }})</small>
-            </div>
-            <div class="col-2 text-right">
-                <h2 class="text-warning">
-                    <i *ngIf="_unaNota.destacada" (click)="destacarNota(l)" class="mdi mdi-star"></i>
-                    <i *ngIf="!_unaNota.destacada" (click)="destacarNota(l)" class="mdi mdi-star-outline"></i>
-                </h2>
-            </div>
-            <div class="col-2 text-right">
-                <plex-button label="" type="danger btn-sm" icon="delete" (click)="removeNota(l)"></plex-button>
-            </div>
-        </div>
-    </li>
-</ul>
-<div class="row">&nbsp;</div>
-<div class="row">
-    <div class="col">
-        <plex-text [(ngModel)]="nuevaNota" name="nuevaNota" prefix="<i class='mdi mdi-message-bulleted'></i>"
-            placeholder="Ingrese Nota...">
-        </plex-text>
-    </div>
-    <div class="col-2">
-        <plex-button title="Agregar Nota" label="Agregar Nota" type="primary" (click)="addNota()"></plex-button>
-    </div>
-</div> -->

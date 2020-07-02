@@ -11,10 +11,10 @@ import { PacienteCacheService } from '../services/pacienteCache.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HistorialBusquedaService } from '../services/historialBusqueda.service';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
-import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
 import { Subscription } from 'rxjs';
 import { PacienteHttpService } from '../services/pacienteHttp.service';
 import { RelacionesPacientesComponent } from './relaciones-pacientes.component';
+import { DatosContactoComponent } from './datos-contacto.component';
 
 @Component({
     selector: 'paciente',
@@ -24,6 +24,7 @@ import { RelacionesPacientesComponent } from './relaciones-pacientes.component';
 export class PacienteComponent implements OnInit {
 
     @ViewChild('relaciones', null) relaciones: RelacionesPacientesComponent;
+    @ViewChild('datosContacto', null) datosContacto: DatosContactoComponent;
 
     mainSize = 10;  // tamaño de layout-main
     detailDirection = 'column'; // estilo de paciente-panel
@@ -104,23 +105,7 @@ export class PacienteComponent implements OnInit {
         vinculos: [null]
     };
 
-    public relacion: IPacienteRelacion = {
-        relacion: {
-            id: '',
-            nombre: '',
-            opuesto: ''
-        },
-        referencia: '',
-        nombre: '',
-        apellido: '',
-        documento: '',
-        fechaNacimiento: null,
-        sexo: '',
-        foto: ''
-    };
-
     public pacientes: IPacienteMatch[] | IPaciente[];
-    public showBuscador = true;
     public disableValidar = true;
     public escaneado = false;
     public paciente: IPaciente;
@@ -150,7 +135,6 @@ export class PacienteComponent implements OnInit {
         private _router: Router,
         public plex: Plex,
         private route: ActivatedRoute) {
-        // this.nombrePattern = pacienteService.nombreRegEx.source;
     }
 
     ngOnInit() {
@@ -158,23 +142,12 @@ export class PacienteComponent implements OnInit {
         this.route.params.subscribe(params => {
             this.origen = params['origen'];
             this.tipoPaciente = params['opcion'] ? params['opcion'] : '';
-
-            // if (this.opcion === 'sin-dni') {
-            //     this.noPoseeDNI = true;
-            //     this.pacienteModel.documento = '';
-            // }
         });
         this.paciente = this.pacienteCache.getPacienteValor();
         this.escaneado = this.pacienteCache.getScanState();
         this.pacienteCache.clearPaciente();
         this.pacienteCache.clearScanState();
         this.relacionesBorradas = [];
-        // this.sexos = enumerados.getObjSexos();
-        // this.tipoIdentificacion = enumerados.getObjTipoIdentificacion();
-        // this.generos = enumerados.getObjGeneros();
-        // this.estadosCiviles = enumerados.getObjEstadoCivil();
-        // this.tipoComunicacion = enumerados.getObjTipoComunicacion();
-        // this.estados = enumerados.getEstados();
         this.parentescoService.get().subscribe(resultado => {
             this.parentescoModel = resultado;
         });
@@ -276,13 +249,15 @@ export class PacienteComponent implements OnInit {
                 this.validado = true;
             }
         }
-
+        if (!this.paciente.contacto || !this.paciente.contacto.length) {
+            this.paciente.contacto = [this.contacto];
+        }
         this.pacienteModel = Object.assign({}, this.paciente);
+
         if (this.pacienteModel.fechaNacimiento) {
             this.pacienteModel.fechaNacimiento = moment(this.pacienteModel.fechaNacimiento).add(3, 'h').toDate(); // mers alert
         }
         this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
-        // this.inicializarMapaDefault();
         this.checkDisableValidar();
 
         // Se piden los datos para app mobile en la 1er carga del paciente
@@ -293,84 +268,49 @@ export class PacienteComponent implements OnInit {
     }
 
 
-    // ------------------ DATOS BASICOS -------------------------
-
-    // limpiarDocumento() {
-    //     if (this.noPoseeDNI) {
-    //         this.pacienteModel.documento = '';
-    //         this.checkDisableValidar();
-    //         this.plex.info('warning', 'Recuerde que al guardar un paciente sin el número de documento será imposible realizar validaciones contra fuentes auténticas.');
-    //     }
-    // }
-
-    // completarGenero() {
-    //     this.pacienteModel.genero = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-    // }
-
-
-    // ------------------------------------------------------------------
-
-
     save(event, ignoreCheck = false) {
         if (!event.formValid) {
             this.plex.info('warning', 'Debe completar los datos obligatorios');
             return;
         }
-        let faltaParentezco = null;
-        if (this.pacienteModel.relaciones && this.pacienteModel.relaciones.length) {
-            // Buscamos relaciones declaradas sin especificar tipo de relación
-            faltaParentezco = this.pacienteModel.relaciones.find(unaRelacion => unaRelacion.relacion === null);
-        }
-        // Existen relaciones sin especificar el tipo?
-        if (faltaParentezco) {
-            this.plex.info('warning', 'Existen relaciones sin parentezco. Debe completarlas antes de guardar', 'Atención');
-        } else {
-            this.disableIgnorarGuardar = ignoreCheck;
-            this.disableGuardar = true;
-            let pacienteGuardar: any = Object.assign({}, this.pacienteModel);
-            pacienteGuardar.ignoreCheck = ignoreCheck;
-            pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-            pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : null;
-            pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : pacienteGuardar.sexo;
-            pacienteGuardar.contacto.map(elem => {
-                elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
-                return elem;
-            });
-            // pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
-            // if (this.viveProvActual) {
-            //     pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaActual;
-            // }
-            // if (this.viveLocActual) {
-            //     pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadActual;
-            // }
+        this.disableIgnorarGuardar = ignoreCheck;
+        this.disableGuardar = true;
+        let pacienteGuardar: any = Object.assign({}, this.pacienteModel);
+        pacienteGuardar.ignoreCheck = ignoreCheck;
+        pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
+        pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : null;
+        pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : pacienteGuardar.sexo;
+        pacienteGuardar.contacto.map(elem => {
+            elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
+            return elem;
+        });
 
-            this.pacienteService.save(pacienteGuardar, ignoreCheck = false).subscribe(
-                (resultadoSave: any) => {
-                    // Existen sugerencias de pacientes similares?
-                    if (resultadoSave.resultadoMatching && resultadoSave.resultadoMatching.length > 0) {
-                        this.pacientesSimilares = this.escaneado ? resultadoSave.resultadoMatching.filter(elem => elem.paciente.estado === 'validado') : resultadoSave.resultadoMatching;
-                        // Si el matcheo es alto o el dni-sexo está repetido no podemos ignorar las sugerencias
-                        this.visualizarIgnorarGuardar = !resultadoSave.macheoAlto && !resultadoSave.dniRepetido;
-                        if (!this.visualizarIgnorarGuardar) {
-                            this.plex.info('danger', 'El paciente ya existe, verifique las sugerencias');
-                        } else {
-                            this.plex.info('warning', 'Existen pacientes similares, verifique las sugerencias');
-                        }
+        this.pacienteService.save(pacienteGuardar, ignoreCheck = false).subscribe(
+            (resultadoSave: any) => {
+                // Existen sugerencias de pacientes similares?
+                if (resultadoSave.resultadoMatching && resultadoSave.resultadoMatching.length > 0) {
+                    this.pacientesSimilares = this.escaneado ? resultadoSave.resultadoMatching.filter(elem => elem.paciente.estado === 'validado') : resultadoSave.resultadoMatching;
+                    // Si el matcheo es alto o el dni-sexo está repetido no podemos ignorar las sugerencias
+                    this.visualizarIgnorarGuardar = !resultadoSave.macheoAlto && !resultadoSave.dniRepetido;
+                    if (!this.visualizarIgnorarGuardar) {
+                        this.plex.info('danger', 'El paciente ya existe, verifique las sugerencias');
                     } else {
-                        if (this.changeRelaciones) {
-                            this.saveRelaciones(resultadoSave);
-                        }
-                        this.historialBusquedaService.add(resultadoSave);
-                        this.plex.info('success', 'Los datos se actualizaron correctamente');
-
-                        this.redirect(resultadoSave);
+                        this.plex.info('warning', 'Existen pacientes similares, verifique las sugerencias');
                     }
-                },
-                error => {
-                    this.plex.info('warning', 'Error guardando el paciente');
+                } else {
+                    if (this.changeRelaciones) {
+                        this.saveRelaciones(resultadoSave);
+                    }
+                    this.historialBusquedaService.add(resultadoSave);
+                    this.plex.info('success', 'Los datos se actualizaron correctamente');
+
+                    this.redirect(resultadoSave);
                 }
-            );
-        }
+            },
+            error => {
+                this.plex.info('warning', 'Error guardando el paciente');
+            }
+        );
     }
 
     private redirect(resultadoSave?: any) {
@@ -479,7 +419,9 @@ export class PacienteComponent implements OnInit {
     }
 
     checkTabs(tabIndex) {
-        this.mainSize = (tabIndex === 2) ? 8 : 10;
+        if (tabIndex === 1) {
+            this.datosContacto.refreshMap();
+        }
         if (tabIndex === 2) {
             // tab relaciones
             this.mainSize = 8;
@@ -494,14 +436,18 @@ export class PacienteComponent implements OnInit {
 
     // ---------------- NOTIFICACIONES --------------------
 
-    datosBasicosForm(form) {
-        this.datosBasicosValid = form.isValid;
+    datosBasicosForm(data) {
+        this.datosBasicosValid = data.isValid;  // formulario valido
         this.disableGuardar = !(this.datosContactosValid && this.datosBasicosValid);
         this.checkDisableValidar();
+
+        if (data.refreshData) {
+            this.datosContacto.refreshVars();
+        }
     }
 
-    datosContactoForm(form) {
-        this.datosContactosValid = form.isValid;
+    datosContactoForm(data) {
+        this.datosContactosValid = data.isValid;    // formulario valido
         this.disableGuardar = !(this.datosContactosValid && this.datosBasicosValid);
     }
 
@@ -530,7 +476,7 @@ export class PacienteComponent implements OnInit {
 
     // ---------------------------------------------------
 
-    validarPaciente(event) {
+    validarPaciente() {
         if (!this.pacienteModel.documento && this.pacienteModel.sexo) {
             this.plex.info('warning', 'La validación requiere ingresar documento y sexo..');
             return;
@@ -570,7 +516,6 @@ export class PacienteComponent implements OnInit {
                     //  Se completan datos FALTANTES
                     if (!this.pacienteModel.direccion[0].valor && resultado.paciente.direccion && resultado.paciente.direccion[0].valor) {
                         this.pacienteModel.direccion[0].valor = resultado.paciente.direccion[0].valor;
-                        //  this.checkDisableGeolocalizar(this.pacienteModel.direccion[0].valor);
                     }
                     if (!this.pacienteModel.direccion[0].codigoPostal && resultado.paciente.cpostal) {
                         this.pacienteModel.direccion[0].codigoPostal = resultado.paciente.cpostal;

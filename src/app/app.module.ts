@@ -130,10 +130,8 @@ import { ProcedimientosQuirurgicosService } from './services/procedimientosQuiru
 
 // ... MPI
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
-import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cru.component';
 import { RelacionesPacientesComponent } from './core/mpi/components/relaciones-pacientes.component';
 import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
-import { PacienteCruComponent } from './core/mpi/components/paciente-cru.component';
 import { GeoreferenciaService } from './core/mpi/services/georeferencia.service';
 import { GeorrefMapComponent } from './core/mpi/components/georref-map.component';
 import { PacienteComponent } from './core/mpi/components/paciente.component';
@@ -298,7 +296,6 @@ import { FormTerapeuticoService } from './services/formTerapeutico/formTerapeuti
 import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem.component';
 import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
-import { BebeCruComponent } from './core/mpi/components/bebe-cru.component';
 import { NotaComponent } from './core/mpi/components/notas-paciente.component';
 import { PacienteCacheService } from './core/mpi/services/pacienteCache.service';
 import { HistorialBusquedaService } from './core/mpi/services/historialBusqueda.service';
@@ -463,12 +460,9 @@ registerLocaleData(localeEs, 'es');
         VistaSolicitudTopComponent,
 
         // MPI
-        BebeCruComponent,
-        ExtranjeroNNCruComponent,
         NotaComponent,
         RelacionesPacientesComponent,
         BusquedaMpiComponent,
-        PacienteCruComponent,
         GeorrefMapComponent,
         PacienteComponent,
         DatosBasicosComponent,

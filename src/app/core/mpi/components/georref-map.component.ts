@@ -9,7 +9,7 @@ import OlStyle from 'ol/style/Style';
 import OlIcon from 'ol/style/Icon';
 import OlSourceVector from 'ol/source/Vector';
 import OlLayerVector from 'ol/layer/Vector';
-import { Component, Output, EventEmitter, Input, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, Output, EventEmitter, Input, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { defaults as defaultInteractions } from 'ol/interaction.js';
 import { mapCenter } from '../../../../environments/apiKeyMaps';
 
@@ -19,7 +19,7 @@ import { mapCenter } from '../../../../environments/apiKeyMaps';
     templateUrl: 'georref-map.html',
     styleUrls: ['georref-map.scss'],
 })
-export class GeorrefMapComponent implements AfterViewInit {
+export class GeorrefMapComponent implements OnInit {
     @Input()
     set latLong(value: number[]) { // ingresan como latitud-longitud
         if (value && value.length) {
@@ -46,7 +46,7 @@ export class GeorrefMapComponent implements AfterViewInit {
 
     constructor() { }
 
-    ngAfterViewInit() {
+    ngOnInit() {
         this.source = new OlXYZ({
             url: 'http://tile.osm.org/{z}/{x}/{y}.png'
         });
@@ -57,7 +57,7 @@ export class GeorrefMapComponent implements AfterViewInit {
 
         this.view = new OlView({
             center: mapCenter,
-            zoom: 16,
+            zoom: 17,
             projection: 'EPSG:4326',
             rotation: 0
         });
@@ -126,7 +126,13 @@ export class GeorrefMapComponent implements AfterViewInit {
             // Agregamos el nuevo marcador a la fuente
             this.markerSource.addFeature(marker);
         }
-        this.view.animate({ zoom: 18, center: lonLat, duration: 500 });
+        this.view.animate({ zoom: 17, center: lonLat, duration: 500 });
         this.map.updateSize();
+    }
+
+    refresh() {
+        setTimeout(() => {
+            this.map.updateSize();
+        }, 100);
     }
 }

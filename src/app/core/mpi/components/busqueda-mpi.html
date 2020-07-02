@@ -1,37 +1,3 @@
-<!-- <plex-layout main="8">
-    <plex-layout-main>
-        <fieldset>
-            <div class="grow">
-                <paciente-buscar (searchStart)="onSearchStart()"
-                                 (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado, $event.busqueda)"
-                                 (searchClear)="onSearchClear()" [hostComponent]="'mpi'" [create]="true"
-                                 [returnScannedPatient]="true">
-                </paciente-buscar>
-            </div>
-            <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
-
-            <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
-                              [autoselect]="false" (selected)="onPacienteSelected($event)">
-            </paciente-listado>
-            <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length && !searchClear" class="alert alert-danger">
-                <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
-            </div>
-        </fieldset>
-    </plex-layout-main>
-
-    <plex-layout-sidebar>
-        <fieldset>
-            <legend>Búsquedas recientes</legend>
-            <div class="row">
-                <div class="col">
-                    <paciente-listado type="sm" [pacientes]="historialSeleccionados" [autoselect]="false"
-                                      (selected)="onPacienteSelected($event)"></paciente-listado>
-                </div>
-            </div>
-        </fieldset>
-    </plex-layout-sidebar>
-</plex-layout> -->
-
 <plex-layout main="{{ sidebar }}">
     <plex-layout-main>
         <paciente-buscar #buscador (searchStart)="onSearchStart()"

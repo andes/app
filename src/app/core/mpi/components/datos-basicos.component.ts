@@ -8,7 +8,7 @@ import { ParentescoService } from '../../../services/parentesco.service';
 import { PacienteBuscarResultado } from '../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
 import { NgForm } from '@angular/forms';
-import { Subscription, fromEvent } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { PacienteService } from '../services/paciente.service';
 
 @Component({
@@ -25,30 +25,16 @@ export class DatosBasicosComponent implements OnInit, OnDestroy {
     @ViewChild('form', null) ngForm: NgForm;
     formChangesSubscription: Subscription;
 
-    foto = '';
     estados = [];
     sexos: any[];
     generos: any[];
     estadosCiviles: any[];
     tipoIdentificacion: any[];
     noPoseeDNI = false;
-    // disableGuardar = false;
-    // visualizarIgnorarGuardar = false;
-    // disableIgnorarGuardar = false;
-    // sugerenciaAceptada = false;
-    // entidadValidadora = '';
 
     public nombrePattern: string;
     public patronDocumento = /^[1-9]{1}[0-9]{5,7}$/;
     hoy = moment().endOf('day').toDate();
-
-    // PARA LA APP MOBILE
-    // public showMobile = false;
-    // public checkPass = false;
-    // public emailAndes: String = '';
-    // public messageApp: String = '';
-    // public celularAndes: String = '';
-    // public activarApp = false;
 
     // para registro de bebes
     busquedaTutor: IPacienteMatch[] | IPaciente[] = [];
@@ -141,17 +127,17 @@ export class DatosBasicosComponent implements OnInit, OnDestroy {
                 pacienteScaneado.estado = 'validado'; // este paciente fue scaneado
                 pacienteScaneado.genero = pacienteScaneado.sexo;
                 this.plex.showLoader();
-                this.changes.emit({ disableValidar: true });
+                // this.changes.emit({ disableValidar: true });
                 this.pacienteService.save(pacienteScaneado).subscribe(
                     pacGuardado => {
                         this.onPacienteSelected(pacGuardado);
                         this.plex.hideLoader();
-                        this.changes.emit({ disableValidar: false });
+                        // this.changes.emit({ disableValidar: false });
                     },
                     () => {
                         this.plex.toast('warning', 'Paciente no guardado', 'Error');
                         this.plex.hideLoader();
-                        this.changes.emit({ disableValidar: false });
+                        // this.changes.emit({ disableValidar: false });
                     });
             } else {
                 this.onPacienteSelected(pacienteScaneado);
@@ -194,6 +180,7 @@ export class DatosBasicosComponent implements OnInit, OnDestroy {
                 this.copiarContacto(paciente);
                 this.busquedaTutor = [];
                 this.showBuscador = false;
+                this.changes.emit({ refreshData: true });
             });
         } else {
             this.plex.info('warning', 'Imposible obtener el paciente seleccionado', 'Error');
@@ -251,6 +238,7 @@ export class DatosBasicosComponent implements OnInit, OnDestroy {
             this.paciente.contacto[0].tipo = 'celular';
             this.contactoImportado = false;
         }
+        this.changes.emit({ refreshData: true });
         // this.viveLocActual = false;
         // this.viveProvActual = false;
     }

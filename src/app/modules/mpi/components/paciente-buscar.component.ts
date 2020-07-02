@@ -1,10 +1,7 @@
 import { Component, Output, EventEmitter, OnInit, OnDestroy, Input } from '@angular/core';
-import * as moment from 'moment';
-import { DocumentoEscaneado, DocumentoEscaneados } from './../../../components/paciente/documento-escaneado.const';
 import { Plex } from '@andes/plex';
 import { PacienteBuscarResultado } from '../interfaces/PacienteBuscarResultado.inteface';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
-import { PacienteHttpService } from '../../../core/mpi/services/pacienteHttp.service';
 import { PacienteBuscarService } from '../../../core/mpi/services/paciente-buscar.service';
 import { Subscription } from 'rxjs';
 import { PacienteService } from '../../../core/mpi/services/paciente.service';

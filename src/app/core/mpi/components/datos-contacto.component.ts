@@ -2,7 +2,6 @@ import { Component, Input, OnInit, Output, EventEmitter, ViewChild, OnDestroy, A
 import { IPaciente } from '../interfaces/IPaciente';
 import { IContacto } from '../../../interfaces/IContacto';
 import { IProvincia } from '../../../interfaces/IProvincia';
-import { IBarrio } from '../../../interfaces/IBarrio';
 import { ILocalidad } from '../../../interfaces/ILocalidad';
 import { Plex } from '@andes/plex';
 import { GeoreferenciaService } from '../services/georeferencia.service';
@@ -19,18 +18,21 @@ import { NgForm } from '@angular/forms';
 import { cache } from '@andes/shared';
 import { switchMap, map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
+import { GeorrefMapComponent } from './georref-map.component';
 
 @Component({
     selector: 'datos-contacto',
     templateUrl: 'datos-contacto.html',
-    styleUrls: []
+    styleUrls: ['datos-contacto.scss']
 })
 
-export class DatosContactoComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DatosContactoComponent implements OnInit, OnDestroy {
 
     @Input() paciente: IPaciente;
     @Output() changes: EventEmitter<any> = new EventEmitter<any>();
     @ViewChild('form', null) ngForm: NgForm;
+    @ViewChild('mapa', null) mapa: GeorrefMapComponent;
+
     formChangesSubscription: Subscription;
 
     // Contacto
@@ -70,18 +72,11 @@ export class DatosContactoComponent implements OnInit, AfterViewInit, OnDestroy 
     viveLocActual = false;
     viveProvActual = false;
     provincias: IProvincia[] = [];
-    // barrios: IBarrio[] = [];
     localidades: ILocalidad[] = [];
-    disableGeolocalizar = true;
     paisArgentina = null;
     provinciaActual = null;
     localidadActual = null;
-    localidadRequerida = true;
     organizacionActual = null;
-
-    // Mapa
-    geoReferenciaAux = []; // Coordenadas para la vista del mapa.
-    infoMarcador: String = null;
 
 
     constructor(
@@ -118,18 +113,29 @@ export class DatosContactoComponent implements OnInit, AfterViewInit, OnDestroy 
                 this.paisArgentina = pais;
                 this.provinciaActual = org.direccion.ubicacion.provincia;
                 this.localidadActual = org.direccion.ubicacion.localidad;
-                const prov = this.paciente.direccion[0].ubicacion.provincia || this.provinciaActual;
-                let direccionCompleta = (this.organizacionActual.direccion.valor || '') + ', ' + (this.localidadActual.nombre || '') + ', ' + (this.provinciaActual.nombre || '');
+                const ubicacion = this.paciente.direccion[0].ubicacion;
+                this.viveProvActual = ubicacion.provincia && ubicacion.provincia.id === this.provinciaActual.id;
+                this.viveLocActual = ubicacion.localidad && ubicacion.localidad.id === this.localidadActual.id;
+                let direccionCompleta;
+
+                if (this.paciente.direccion[0].valor && this.paciente.direccion[0].ubicacion.provincia && this.paciente.direccion[0].ubicacion.localidad) {
+                    direccionCompleta = this.paciente.direccion[0].valor + ', ' + this.paciente.direccion[0].ubicacion.localidad.nombre
+                        + ', ' + this.paciente.direccion[0].ubicacion.provincia.nombre;
+                } else {
+                    direccionCompleta = (this.organizacionActual.direccion.valor || '') + ', ' + (this.localidadActual.nombre || '') + ', ' + (this.provinciaActual.nombre || '');
+                }
                 return this.georeferenciaService.getGeoreferencia({ direccion: direccionCompleta });
             }),
-            map((point) => {
+            map(point => {
+                if (this.paciente.direccion[0].geoReferencia) {
+                    return this.paciente.direccion[0].geoReferencia;
+                }
                 if (this.organizacionActual.direccion.geoReferencia) {
                     return this.organizacionActual.direccion.geoReferencia;
                 }
                 return [point.lat, point.lng];
             }),
             cache());
-
 
         this.formChangesSubscription = this.ngForm.form.valueChanges
             .debounceTime(300)
@@ -138,66 +144,16 @@ export class DatosContactoComponent implements OnInit, AfterViewInit, OnDestroy 
             });
     }
 
-    ngAfterViewInit() {
-        // actualiza datos de ubicacion
-
-
-        /*
-                this.organizacionService.getById(this.auth.organizacion.id).subscribe((org: IOrganizacion) => {
-                    if (org) {
-                        this.organizacionActual = org;
-                        this.provinciaActual = org.direccion.ubicacion.provincia;
-                        this.localidadActual = org.direccion.ubicacion.localidad;
-                        // Set País Argentina
-                        this.paisService.get({
-                            nombre: 'Argentina'
-                        }).subscribe(arg => {
-                            this.paisArgentina = arg[0];
-                        });
-                        // Cargamos todas las provincias
-                        this.provinciaService.get({}).subscribe(rta => {
-                            this.provincias = rta;
-                        });
-                        // this.loadPaciente();
-                    }
-                }); */
-    }
-
     ngOnDestroy() {
         this.formChangesSubscription.unsubscribe();
     }
 
-    loadPaciente() {
-        if (this.paciente) {
-            // actualiza contactos
-            /*             if (!this.paciente.contacto || !this.paciente.contacto.length) {
-                            this.paciente.contacto = [this.contacto];
-                        } */
-            // actualiza domicilio
-            if (!this.paciente.direccion || !this.paciente.direccion.length) {
-                this.paciente.direccion = [this.direccion];
-            } else {
-                if (this.paciente.direccion[0].ubicacion && this.organizacionActual) {
-                    if (this.paciente.direccion[0].ubicacion.provincia) {
-                        if (this.provinciaActual) {
-                            (this.paciente.direccion[0].ubicacion.provincia.nombre === this.provinciaActual.nombre) ? this.viveProvActual = true : this.viveProvActual = false;
-                        }
-                        this.loadLocalidades(this.paciente.direccion[0].ubicacion.provincia);
-                    }
-                    if (this.paciente.direccion[0].ubicacion.localidad) {
-                        if (this.localidadActual) {
-                            (this.paciente.direccion[0].ubicacion.localidad.nombre === this.localidadActual.nombre) ? this.viveLocActual = true : (this.viveLocActual = false);
-                        }
-                        this.loadBarrios(this.paciente.direccion[0].ubicacion.localidad);
-                    }
-                }
-            }
-            if (!this.paciente.reportarError) {
-                this.paciente.reportarError = false;
-            }
-            this.inicializarMapaDefault();
-        } else {
-            this.inicializarMapaDefault();
+    public refreshVars() {
+        const ubicacion = this.paciente.direccion[0].ubicacion;
+        this.viveProvActual = (ubicacion.provincia && ubicacion.provincia.id === this.provinciaActual.id) ? true : false;
+        this.viveLocActual = (ubicacion.localidad && ubicacion.localidad.id === this.localidadActual.id ? true : false);
+        if (!this.disableGeoreferenciar) {
+            this.geoReferenciar();
         }
     }
 
@@ -271,6 +227,7 @@ export class DatosContactoComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     // -------------------- DOMICILIO -------------------
+
     loadProvincia() {
         this.provincias$ = this.provinciaService.get({}).pipe(
             cache()
@@ -278,15 +235,14 @@ export class DatosContactoComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     loadLocalidades(provincia) {
-        this.localidadRequerida = false;
         if (provincia && provincia.id) {
             this.viveProvActual = (provincia.id === this.provinciaActual.id);
             this.localidades$ = this.localidadService.getXProvincia(provincia.id).pipe(
                 cache()
             );
-            this.localidadRequerida = true;
         }
     }
+
 
     loadBarrios(localidad) {
         if (localidad && localidad.id) {
@@ -300,33 +256,28 @@ export class DatosContactoComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     /**
-     * Cambia el estado del plex-bool viveProvActual
      * carga las localidades correspondientes a la provincia del actual
      * @param {any} event
      */
-    changeProvActual(event) {
-        this.viveProvActual = event.value;
+    changeProvActual() {
         if (this.viveProvActual) {
             this.paciente.direccion[0].ubicacion.provincia = this.provinciaActual;
             this.loadLocalidades(this.provinciaActual);
         } else {
-            this.changeLocalidadActual({ value: false });
+            this.viveLocActual = false;
+            this.changeLocalidadActual();
             this.localidades = [];
             this.paciente.direccion[0].ubicacion.provincia = null;
-            this.paciente.direccion[0].ubicacion.localidad = null;
-            this.paciente.direccion[0].ubicacion.barrio = null;
         }
     }
 
     /**
-     * Cambia el estado del plex-bool viveLocActual
      * carga los barrios de la provincia del actual
      * @param {any} event
      *
      * @memberOf PacienteCreateUpdateComponent
      */
-    changeLocalidadActual(event) {
-        this.viveLocActual = event.value;
+    changeLocalidadActual() {
         if (this.viveLocActual) {
             this.paciente.direccion[0].ubicacion.localidad = this.localidadActual;
             this.loadBarrios(this.localidadActual);
@@ -336,59 +287,36 @@ export class DatosContactoComponent implements OnInit, AfterViewInit, OnDestroy 
         }
     }
 
-    // ---------------------- MAPA -------------------
 
-    checkDisableGeolocalizar(direccion: String) {
-        if (direccion) {
-            this.disableGeolocalizar = false;
-        } else {
-            this.disableGeolocalizar = true;
-        }
+    // ------------------------ MAPA ------------------------
+
+    get disableGeoreferenciar() {
+        return !(this.paciente.direccion[0].valor && this.paciente.direccion[0].ubicacion.provincia && this.paciente.direccion[0].ubicacion.localidad);
+    }
+
+    refreshMap() {
+        this.mapa.refresh();
     }
 
     changeCoordenadas(coordenadas) {
-        this.geoReferenciaAux = coordenadas;    // Se actualiza vista del mapa
-        this.paciente.direccion[0].geoReferencia = coordenadas;    // Se asigna nueva georeferencia al paciente
+        this.paciente.direccion[0].geoReferencia = coordenadas;
     }
 
     geoReferenciar() {
-        // campos de direccion completos?
-        if (this.paciente.direccion[0].valor && this.paciente.direccion[0].ubicacion.provincia && this.paciente.direccion[0].ubicacion.localidad) {
-            let direccionCompleta = this.paciente.direccion[0].valor + ', ' + this.paciente.direccion[0].ubicacion.localidad.nombre
-                + ', ' + this.paciente.direccion[0].ubicacion.provincia.nombre;
-            // se calcula nueva georeferencia
-            this.georeferenciaService.getGeoreferencia({ direccion: direccionCompleta }).subscribe(point => {
-                if (point && Object.keys(point).length) {
-                    this.geoReferenciaAux = [point.lat, point.lng]; // se actualiza vista de mapa
-                    this.paciente.direccion[0].geoReferencia = [point.lat, point.lng]; // Se asigna nueva georeferencia al paciente
-                    this.infoMarcador = '';
-                } else {
-                    this.plex.toast('warning', 'Dirección no encontrada. Señale manualmente en el mapa.');
-                }
-            });
-        } else {
-            this.plex.toast('info', 'Debe completar datos del domicilio.');
-        }
-    }
-
-    inicializarMapaDefault() {
-        // ubicacion inicial mapa de google
-        if (this.paciente.direccion[0].geoReferencia) {
-            this.geoReferenciaAux = this.paciente.direccion[0].geoReferencia;
-            this.infoMarcador = null;
-        } else {
-            if (this.organizacionActual) {
-                if (this.organizacionActual.direccion.geoReferencia) {
-                    this.geoReferenciaAux = this.organizacionActual.direccion.geoReferencia;
-                } else {
-                    let direccionCompleta = this.organizacionActual.direccion.valor + ', ' + this.localidadActual.nombre + ', ' + this.provinciaActual.nombre;
-                    this.georeferenciaService.getGeoreferencia({ direccion: direccionCompleta }).subscribe(point => {
-                        if (point && Object.keys(point).length) {
-                            this.geoReferenciaAux = [point.lat, point.lng];
-                        }
-                    });
-                }
-            }
-        }
+        let direccionCompleta = this.paciente.direccion[0].valor + ', ' + this.paciente.direccion[0].ubicacion.localidad.nombre
+            + ', ' + this.paciente.direccion[0].ubicacion.provincia.nombre;
+        // se calcula nueva georeferencia
+        this.georeferencia$ = this.georeferenciaService.getGeoreferencia({ direccion: direccionCompleta })
+            .pipe(
+                map(point => {
+                    if (point && Object.keys(point).length) {
+                        this.paciente.direccion[0].geoReferencia = [point.lat, point.lng]; // Se asigna nueva georeferencia al paciente
+                        return [point.lat, point.lng];
+                    } else {
+                        this.plex.toast('warning', 'Dirección no encontrada. Señale manualmente en el mapa.');
+                    }
+                    return this.georeferencia$;
+                }),
+                cache());
     }
 }
