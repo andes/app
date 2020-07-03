@@ -8,7 +8,7 @@
             <plex-label titulo="{{novedad.titulo}}" subtitulo="">
             </plex-label>
             <plex-badge size="md" type="info">{{novedad.fecha | date: 'dd/MM/yyyy'}}</plex-badge>
-            <plex-badge size="md" type="success"> {{novedad.modulo.nombre}} </plex-badge>
+            <plex-badge size="md" type="success"> {{novedad.modulo? novedad.modulo.nombre : 'general'}} </plex-badge>
         </plex-item>
     </plex-list>
 </div>

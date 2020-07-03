@@ -2,7 +2,7 @@
     <ng-container *ngIf="novedad">
         <div justify="start">
             <plex-badge type="info">{{novedad.fecha | date: 'dd/MM/yyyy'}}</plex-badge>
-            <plex-badge type="warning">{{ novedad.modulo.nombre}}</plex-badge>
+            <plex-badge type="warning">{{novedad.modulo? novedad.modulo.nombre : 'general'}}</plex-badge>
         </div>
         <div class="jumbotron-text">
             <h1 class="display-4">{{ novedad.titulo }}</h1>

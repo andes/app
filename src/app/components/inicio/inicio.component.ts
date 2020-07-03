@@ -50,7 +50,7 @@ export class InicioComponent implements AfterViewInit {
                         });
                         this.commonNovedadesService.getNovedadesSinFiltrar().subscribe(novedades => {
                             modulos.forEach((moduloId) => {
-                                this.novedades[moduloId] = novedades.filter(n => n.modulo._id === moduloId);
+                                this.novedades[moduloId] = novedades.filter(n => n.modulo && n.modulo._id === moduloId);
                             });
                         });
                     } else {
