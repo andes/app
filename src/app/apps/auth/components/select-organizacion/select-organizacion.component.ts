@@ -15,6 +15,7 @@ import { take } from 'rxjs/operators';
 })
 export class SelectOrganizacionComponent implements OnInit {
     public organizaciones = null;
+    public tieneOrg = true;
     public organizacionElegida;
     public showModalDisclaimer = false;
     constructor(
@@ -36,6 +37,8 @@ export class SelectOrganizacionComponent implements OnInit {
                 if (this.organizaciones.length === 1) {
                     this.seleccionar(this.organizaciones[0]);
                 }
+            } else {
+                this.tieneOrg = false;
             }
         });
     }
