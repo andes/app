@@ -19,6 +19,10 @@ import { IContacto } from './../../interfaces/IContacto';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { ITipoEstablecimiento } from './../../interfaces/ITipoEstablecimiento';
 import { Router } from '@angular/router';
+import { Observable, Subject, of } from 'rxjs';
+import { switchMap, startWith } from 'rxjs/operators';
+import { cache } from '@andes/shared';
+
 @Component({
     selector: 'organizacion-create-update',
     templateUrl: 'organizacion-create-update.html',
@@ -34,10 +38,11 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     tiposEstablecimiento: ITipoEstablecimiento[];
     tipoComunicacion: any[];
     todasLocalidades: ILocalidad[];
-    localidadesNeuquen: any[];
+    provincias$: Observable<any[]>;
+    private localidades = new Subject();
+    localidades$: Observable<any[]>;
     servicio;
     private paisArgentina = null;
-    private provinciaNeuquen = null;
     // con esta query de snomed trae todos los servicios.
     private expression = '<<284548004';
 
@@ -171,14 +176,25 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         }).subscribe(arg => {
             this.paisArgentina = arg[0];
         });
-        // Set provincia Neuquen
-        this.provinciaService.get({
-            nombre: 'Neuquén'
-        }).subscribe(Prov => {
-            this.provinciaNeuquen = Prov[0];
-            this.loadLocalidades(this.provinciaNeuquen);
-        });
+
+        this.provincias$ = this.provinciaService.get({});
+        const provincia = this.organizacionModel.direccion.ubicacion.provincia;
+        const provinciaId = provincia ? provincia.id : null;
+        this.localidades$ = this.localidades.pipe(
+            startWith(provinciaId),
+            switchMap((_provincia: any) => _provincia ? this.localidadService.get({ 'provincia': _provincia }) : of([])),
+            cache()
+        );
     }
+
+    onSelectProvincia() {
+        this.organizacionModel.direccion.ubicacion.localidad = null;
+        this.organizacionModel.edificio.forEach(e => e.direccion.ubicacion.localidad = null);
+        const provincia = this.organizacionModel.direccion.ubicacion.provincia;
+        const provinciaId = provincia ? provincia.id : null;
+        this.localidades.next(provinciaId);
+    }
+
     private cargarOrganizacionModel(org: IOrganizacion) {
         if (org && org.id) {
             this.updateTitle('Editar organización');
@@ -195,8 +211,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
             }
         } else {
             this.updateTitle('Nueva organización');
-            this.addContacto();
-            this.addEdificio();
         }
     }
     loadListadoUO(event) {
@@ -221,12 +235,11 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                         e.contacto.tipo = ((typeof e.contacto.tipo === 'string') ? e.contacto.tipo : (Object(e.contacto.tipo).id));
                     }
                     e.direccion.ubicacion.pais = this.paisArgentina;
-                    e.direccion.ubicacion.provincia = this.provinciaNeuquen;
+                    e.direccion.ubicacion.provincia = organizacionGuardar.direccion.ubicacion.provincia;
                     e.direccion.ubicacion.barrio = null;
                 });
             }
             organizacionGuardar.direccion.ubicacion.pais = this.paisArgentina;
-            organizacionGuardar.direccion.ubicacion.provincia = this.provinciaNeuquen;
             organizacionGuardar.direccion.ubicacion.barrio = null;
 
             let operacion = this.organizacionService.save(organizacionGuardar);
@@ -324,15 +337,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         }
         if (!this.organizacionModel.edificio.length) {
             this.noPoseeEdificio = true;
-        }
-    }
-    loadLocalidades(provincia) {
-        if (provincia && provincia.id) {
-            this.localidadService.get({
-                'provincia': provincia.id
-            }).subscribe(result => {
-                this.localidadesNeuquen = [...result];
-            });
         }
     }
 
