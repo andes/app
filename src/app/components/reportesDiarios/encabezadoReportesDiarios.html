@@ -87,6 +87,14 @@
                         [readonly]="organizacion === null">
                     </plex-select>
                 </div>
+
+                <div class="col-4">
+                    <!-- Select Profesional -->
+                    <plex-select [(ngModel)]="profesional" label="Profesional"
+                        name="profesional" (getData)="loadProfesionales($event)"
+                        labelField="apellido + ' ' + nombre" (change)="refreshSelection()">
+                    </plex-select>
+                </div>
             </div>
         </header>
         <ng-container *ngIf="showResumenDiarioMensual">
