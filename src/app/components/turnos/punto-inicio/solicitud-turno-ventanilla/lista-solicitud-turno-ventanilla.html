@@ -38,7 +38,7 @@
                             <td class="text-center">
                                 <plex-badge *ngIf="prestacion.solicitud?.turno" type="success">Turno Dado</plex-badge>
                                 <span
-                                      *ngIf="!prestacion.solicitud?.turno && (auth.organizacion.id !== prestacion?.solicitud?.organizacion?.id)">
+                                      *ngIf="!prestacion.solicitud?.turno && (auth.organizacion !== prestacion?.solicitud?.organizacion?.id)">
                                     <plex-badge type="info">
                                         {{prestacion.estados[prestacion.estados.length-1]?.tipo}}
                                     </plex-badge>
