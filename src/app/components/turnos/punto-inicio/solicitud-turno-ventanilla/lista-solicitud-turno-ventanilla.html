@@ -36,12 +36,9 @@
                                       *ngIf="prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado === true">(autocitado)</span>
                             </td>
                             <td class="text-center">
-                                <plex-button *ngIf="!prestacion.solicitud?.turno && (auth.organizacion.id === prestacion?.solicitud?.organizacion?.id)"
-                                             type="success" (click)="solicitudPrestacionDarTurno(prestacion)"
-                                             title="Dar Turno" icon="calendar-plus"></plex-button>
                                 <plex-badge *ngIf="prestacion.solicitud?.turno" type="success">Turno Dado</plex-badge>
                                 <span
-                                      *ngIf="!prestacion.solicitud?.turno && (auth.organizacion.id !== prestacion?.solicitud?.organizacion?.id)">
+                                      *ngIf="!prestacion.solicitud?.turno && (auth.organizacion !== prestacion?.solicitud?.organizacion?.id)">
                                     <plex-badge type="info">
                                         {{prestacion.estados[prestacion.estados.length-1]?.tipo}}
                                     </plex-badge>
