@@ -35,7 +35,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     @Output() data: EventEmitter<IOrganizacion> = new EventEmitter<IOrganizacion>();
 
     // definición de arreglos
-    tiposEstablecimiento: ITipoEstablecimiento[];
+    tiposEstablecimiento$: Observable<ITipoEstablecimiento[]>;
     tipoComunicacion: any[];
     todasLocalidades: ILocalidad[];
     provincias$: Observable<any[]>;
@@ -54,22 +54,10 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     };
 
     ubicacion: IUbicacion = {
-        barrio: {
-            id: '',
-            nombre: ''
-        },
-        localidad: {
-            id: '',
-            nombre: ''
-        },
-        provincia: {
-            id: '',
-            nombre: ''
-        },
-        pais: {
-            id: '',
-            nombre: ''
-        }
+        barrio: null,
+        localidad: null,
+        provincia: null,
+        pais: null
     };
 
     contacto: IContacto = {
@@ -164,9 +152,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         }
 
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
-        this.tipoEstablecimientoService.get().subscribe(resultado => {
-            this.tiposEstablecimiento = resultado;
-        });
+        this.tiposEstablecimiento$ = this.tipoEstablecimientoService.get();
 
         this.cargarOrganizacionModel(this.seleccion);
 

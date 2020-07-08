@@ -14,7 +14,7 @@
                                            [autoFocus]="!seleccion?.id" [readonly]="!puedeEditarCompleto"></plex-text>
                             </div>
                             <div class="col-4">
-                                <plex-select name="tipoEstablecimiento" [data]="tiposEstablecimiento"
+                                <plex-select name="tipoEstablecimiento" [data]="tiposEstablecimiento$ | async"
                                              [(ngModel)]="organizacionModel.tipoEstablecimiento"
                                              label="Tipo de Establecimiento" [readonly]="!puedeEditarCompleto">
                                 </plex-select>
