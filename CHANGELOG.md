@@ -1,3 +1,27 @@
+# [5.3.0](https://github.com/andes/app/compare/v5.2.0...v5.3.0) (2020-07-08)
+
+
+### Bug Fixes
+
+* **citas:** quitar botón de dar turno desde solicitudes punto de inicio ([5e2bf35](https://github.com/andes/app/commit/5e2bf35832cc717252436a54d7ac6996c41ed7fe))
+* se agrega package-lock ([1cc24d4](https://github.com/andes/app/commit/1cc24d4401ca6cab721f30294edfc4fda3085fb6))
+* **huds:** fecha ultima evolución ([#1758](https://github.com/andes/app/issues/1758)) ([410d75b](https://github.com/andes/app/commit/410d75bc77781159d685cfe01680dce987ae26e8))
+* **rup:** plantillas de solicitudes en secciónes ([#1756](https://github.com/andes/app/issues/1756)) ([0fc68fd](https://github.com/andes/app/commit/0fc68fd91dcdbc76251bea3bda9a3d8712c65517))
+* **select-organizacion:** para conexion lenta ([7725417](https://github.com/andes/app/commit/7725417f161d5dee1208ba74e42731e50ada3455))
+
+
+### Features
+
+* **gdu:** mensaje para usuario sin permisos en organizaciones ([9640fa2](https://github.com/andes/app/commit/9640fa28295eb1243e10c9c04ad4418600a4228b))
+* **mapa-camas:** registros medicos en capa estadistica ([#1718](https://github.com/andes/app/issues/1718)) ([df65036](https://github.com/andes/app/commit/df65036b0f6d7144d42d3cb19bae39472f8ab8ff))
+* **novedades:** mostrar novedades sin módulo asignado ([75da37c](https://github.com/andes/app/commit/75da37cb6eff977fe06870e641d161d19c5e9cd8))
+* **PlanillaC1:** Filtrar por profesional ([f6a6fd4](https://github.com/andes/app/commit/f6a6fd4b0617b0117647767f4eab04ddff676b04))
+
+
+### Performance Improvements
+
+* **rup:** remueve request duplicados ([#1742](https://github.com/andes/app/issues/1742)) ([97f1665](https://github.com/andes/app/commit/97f1665775d79d56ae86968ed9b1009f08e8534e))
+
 # [5.2.0](https://github.com/andes/app/compare/v5.1.0...v5.2.0) (2020-07-01)
 
 
