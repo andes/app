@@ -68,6 +68,7 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
             this.items = [
                 { key: 'ingreso', label: 'INGRESO' },
                 { key: 'movimientos', label: 'MOVIMIENTOS' },
+                { key: 'registros', label: 'REGISTROS' },
                 { key: 'egreso', label: 'EGRESO' }
             ];
 

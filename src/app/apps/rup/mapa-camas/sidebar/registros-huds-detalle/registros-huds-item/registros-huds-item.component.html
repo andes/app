@@ -14,15 +14,15 @@
         {{ prestacion.solicitud.profesional | nombre }}
     </small>
 </td>
-<td justify="end">
-    <plex-button size="sm" icon="eye" type="info" (click)="emit('ver', $event)" title="Ver" titlePosition="left"
-                 *ngIf="!esEjecucion"></plex-button>
-
-    <plex-dropdown *ngIf="!esEjecucion && esMiPrestacion" right="true" size="sm" icon="dots-vertical" [items]="items">
-    </plex-dropdown>
-
-
-    <plex-button size="sm" label="Continuar" (click)="emit('continuar', $event)" type="success"
-                 title="Continua registro" titlePosition="left" *ngIf="esEjecucion">
-    </plex-button>
-</td>
+    <td justify="end">
+        <plex-button size="sm" icon="eye" type="info" (click)="emit('ver', $event)" title="Ver" titlePosition="left"
+                     *ngIf="!esEjecucion"></plex-button>
+    
+        <plex-dropdown *ngIf="!esEjecucion && esMiPrestacion" right="true" size="sm" icon="dots-vertical" [items]="items">
+        </plex-dropdown>
+    
+    
+        <plex-button size="sm" label="Continuar" (click)="emit('continuar', $event)" type="success"
+                     title="Continua registro" titlePosition="left" *ngIf="esEjecucion">
+        </plex-button>
+    </td>

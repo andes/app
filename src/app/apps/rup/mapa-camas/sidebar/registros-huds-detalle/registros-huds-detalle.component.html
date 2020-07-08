@@ -1,11 +1,13 @@
 <plex-title titulo="Registros">
     <ng-container *ngIf="esProfesional">
-        <plex-button type="info" size="sm" (click)="verHuds()">
+        <plex-button *ngIf="puedeVerHuds" type="info" size="sm" (click)="verHuds()">
             HUDS
         </plex-button>
-        <plex-button size="sm" type="info" (click)="onNuevoRegistrio()" class="ml-1">
-            NUEVO
-        </plex-button>
+        <ng-container *ngIf="(accionesEstado$ | async)?.length > 0">
+            <plex-button size="sm" type="info" (click)="onNuevoRegistrio()" class="ml-1">
+                NUEVO
+            </plex-button>
+        </ng-container>
     </ng-container>
     <ng-content></ng-content>
 </plex-title>

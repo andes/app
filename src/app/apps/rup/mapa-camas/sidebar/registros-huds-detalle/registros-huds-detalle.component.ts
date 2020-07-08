@@ -58,7 +58,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     @Output() accion = new EventEmitter();
 
     public esProfesional = this.auth.profesional;
-
+    public puedeVerHuds = false;
     constructor(
         private mapaCamasService: MapaCamasService,
         private prestacionService: PrestacionesService,
@@ -70,6 +70,8 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     ngOnInit() {
         this.desde = moment().subtract(7, 'd');
         this.hasta = moment();
+
+        this.puedeVerHuds = this.auth.check('huds:visualizacionHuds');
 
         this.historial$ = this.cama$.pipe(
             switchMap(cama => {
