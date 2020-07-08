@@ -3,7 +3,7 @@
         <!-- Box header -->
         <plex-title main titulo="Punto de inicio">
             <plex-help type="info" titulo="Reglas Solicitudes" tituloBoton="Reglas Solicitudes">
-                <visualizacion-reglas info [esParametrizado]="true"></visualizacion-reglas>
+                <visualizacion-reglas info [esParametrizado]="true" *plHelp></visualizacion-reglas>
             </plex-help>
             <plex-button type="warning" size="sm" (click)="irASolicitudes()"> Mis
                 solicitudes</plex-button>
@@ -478,7 +478,8 @@
                                             </td>
 
                                             <td>
-                                                <ng-container *ngIf="sobreturno.tipoPrestacion && sobreturno.paciente?.id">
+                                                <ng-container
+                                                              *ngIf="sobreturno.tipoPrestacion && sobreturno.paciente?.id">
                                                     <plex-button size="block" *ngIf='tieneAccesoHUDS'
                                                                  (click)="setRouteToParams(['vista', sobreturno.paciente.id]); setAccesoHudsParams(sobreturno.paciente, sobreturno.id, sobreturno.tipoPrestacion.id)"
                                                                  label="VER HUDS" type="primary btn-sm">
@@ -606,7 +607,8 @@
     </plex-layout-sidebar>
     <plex-layout-footer *ngIf="!buscandoPaciente">
         <!-- <plex-dropdown type="primary" label="Paciente" [items]="dropdownPaciente"></plex-dropdown> -->
-        <plex-button *ngIf='tieneAccesoHUDS' position="right" label="HUDS DE UN PACIENTE" type="primary" (click)="verHuds()" class="mr-1">
+        <plex-button *ngIf='tieneAccesoHUDS' position="right" label="HUDS DE UN PACIENTE" type="primary"
+                     (click)="verHuds()" class="mr-1">
         </plex-button>
         <plex-button position="right" label="PACIENTE FUERA DE AGENDA" type="primary"
                      (click)="crearPrestacion('fueraAgenda')" class="mr-1">
