@@ -859,20 +859,16 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         // this.registrosColapsados();
     }
 
-    colapsarPrestaciones(option = 'expand') {
+    toggleCollapse() {
+        this.collapse = !this.collapse;
         if (this.prestacion.ejecucion.registros) {
             this.copiaRegistro = JSON.parse(JSON.stringify(this.itemsRegistros));
             this.prestacion.ejecucion.registros.forEach(element => {
                 if (this.itemsRegistros[element.id]) {
-                    if (option === 'expand') {
-                        this.itemsRegistros[element.id].collapse = false;
-                    } else if (option === 'collapse') {
-                        this.itemsRegistros[element.id].collapse = true;
-                    }
+                    this.itemsRegistros[element.id].collapse = this.collapse;
                 }
             });
         }
-
     }
 
     recuperaLosMasFrecuentes(concepto = null, elementoRUP = null) {
