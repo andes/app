@@ -99,6 +99,7 @@ export class BebeCruComponent implements AfterViewInit {
 
     public pacientes: IPacienteMatch[] | IPaciente[];
     public showBuscador = true;
+    public disableGeolocalizar = true;
     changeRelaciones: boolean;
     paisArgentina = null;
     provinciaActual = null;
@@ -471,14 +472,14 @@ export class BebeCruComponent implements AfterViewInit {
         this.geoReferenciaAux = coordenadas;    // Se actualiza vista del mapa
         this.bebeModel.direccion[0].geoReferencia = coordenadas;    // Se asigna nueva georeferencia al paciente
     }
-    actualizarMapa() {
+    geoReferenciar() {
         // campos de direccion completos?
         if (this.bebeModel.direccion[0].valor && this.bebeModel.direccion[0].ubicacion.provincia && this.bebeModel.direccion[0].ubicacion.localidad) {
             let direccionCompleta = this.bebeModel.direccion[0].valor + ', ' + this.bebeModel.direccion[0].ubicacion.localidad.nombre
                 + ', ' + this.bebeModel.direccion[0].ubicacion.provincia.nombre;
             // se calcula nueva georeferencia
             this.georeferenciaService.getGeoreferencia({ direccion: direccionCompleta }).subscribe(point => {
-                if (point) {
+                if (point && Object.keys(point).length) {
                     this.geoReferenciaAux = [point.lat, point.lng]; // se actualiza vista de mapa
                     this.bebeModel.direccion[0].geoReferencia = [point.lat, point.lng]; // Se asigna nueva georeferencia al paciente
                     this.infoMarcador = '';

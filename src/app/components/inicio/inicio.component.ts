@@ -29,7 +29,7 @@ export class InicioComponent implements AfterViewInit {
     ngAfterViewInit() {
         window.setTimeout(() => {
             this.loading = true;
-            this.modulosService.search({}).subscribe(
+            this.appComponent.getModulos().subscribe(
                 registros => {
                     registros.forEach((modulo) => {
                         let tienePermiso = false;
@@ -43,13 +43,14 @@ export class InicioComponent implements AfterViewInit {
                         });
                     });
                     if (this.cajasModulos.length) {
+                        this.cajasModulos = this.cajasModulos.sort((a, b) => a.orden - b.orden);
                         this.denied = false;
                         let modulos = this.cajasModulos.map(p => {
                             return p._id;
                         });
                         this.commonNovedadesService.getNovedadesSinFiltrar().subscribe(novedades => {
                             modulos.forEach((moduloId) => {
-                                this.novedades[moduloId] = novedades.filter(n => n.modulo._id === moduloId);
+                                this.novedades[moduloId] = novedades.filter(n => n.modulo && n.modulo._id === moduloId);
                             });
                         });
                     } else {

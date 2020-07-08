@@ -1,7 +1,10 @@
 <div *ngIf="paciente">
     <div class="row mb-1">
-        <div class="col">
+        <div *ngIf="!paciente.foto" class="col">
             <img class="img-thumbnail" [mpiFotoPaciente]="paciente" />
+        </div>
+        <div *ngIf="paciente.foto" class="col">
+            <img class="img-thumbnail" src="{{ paciente.foto }}">
         </div>
     </div>
     <div class="row mb-1" *ngIf="paciente.apellido">

@@ -15,7 +15,9 @@ import { take } from 'rxjs/operators';
 })
 export class SelectOrganizacionComponent implements OnInit {
     public organizaciones = null;
+    public tieneOrg = true;
     public organizacionElegida;
+    public showModalDisclaimer = false;
     constructor(
         private plex: Plex,
         private auth: Auth,
@@ -30,13 +32,13 @@ export class SelectOrganizacionComponent implements OnInit {
     ngOnInit() {
         this.plex.updateTitle('Seleccione una organización');
         this.auth.organizaciones().subscribe(data => {
-            if (data) {
+            if (data.length) {
                 this.organizaciones = data;
                 if (this.organizaciones.length === 1) {
                     this.seleccionar(this.organizaciones[0]);
                 }
             } else {
-                this.plex.info('danger', 'El usuario no tiene ningún permiso asignado');
+                this.tieneOrg = false;
             }
         });
     }
@@ -51,7 +53,7 @@ export class SelectOrganizacionComponent implements OnInit {
                             if (userDisclaimers.some(item => item.id === disclaimer.id)) {
                                 this.router.navigate(['inicio']);
                             } else {
-                                this.router.navigate(['/auth/disclaimer']);
+                                this.showModalDisclaimer = true;
                             }
                         });
                     } else {
@@ -63,6 +65,14 @@ export class SelectOrganizacionComponent implements OnInit {
         }, (err) => {
             this.plex.info('danger', 'Error al seleccionar organización');
         });
+    }
+
+    respuestaDisclaimer(respuesta) {
+        if (respuesta) {
+
+        } else {
+            this.showModalDisclaimer = false;
+        }
     }
 
 }

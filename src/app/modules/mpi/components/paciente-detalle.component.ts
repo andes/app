@@ -1,9 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { ObraSocialService } from '../../../services/obraSocial.service';
-import { IFinanciador } from '../../../interfaces/IFinanciador';
+import { IObraSocial } from '../../../interfaces/IObraSocial';
 import { ObraSocialCacheService } from '../../../services/obraSocialCache.service';
 import { Observable } from 'rxjs';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 
 @Component({
     selector: 'paciente-detalle',
@@ -14,8 +15,9 @@ export class PacienteDetalleComponent implements OnInit {
     @Input() orientacion: 'vertical' | 'horizontal' = 'vertical';
     @Input() paciente: IPaciente;
     @Input() fields: string[] = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado'];
+    @Input() reload: Boolean = false;
 
-    obraSocial: IFinanciador;
+    obraSocial: IObraSocial;
     token$: Observable<string>;
 
     get showSexo() {
@@ -97,21 +99,42 @@ export class PacienteDetalleComponent implements OnInit {
 
     constructor(
         private obraSocialService: ObraSocialService,
-        private obraSocialCacheService: ObraSocialCacheService
+        private obraSocialCacheService: ObraSocialCacheService,
+        private pacienteService: PacienteService
     ) {
     }
 
     ngOnInit() {
-        this.loadObraSocial();
     }
 
-    loadObraSocial() {
+    // tslint:disable-next-line: use-lifecycle-interface
+    ngOnChanges() {
+        this.loadObraSocial();
+        if (this.reload) {
+            this.pacienteService.getById(this.paciente.id).subscribe(result => {
+                this.paciente = result;
+            });
+        }
+    }
 
+    // TODO: Eliminar este metodo y utilizar el financiador que viene en el paciente (una vez que se agregue en el multimatch)
+    loadObraSocial() {
+        this.obraSocial = {
+            id: '',
+            tipoDocumento: '',
+            dni: 0,
+            transmite: '',
+            nombre: '',
+            codigoFinanciador: 0,
+            financiador: ' ',
+            version: new Date(),
+            numeroAfiliado: '',
+        };
         if (!this.paciente || !this.paciente.documento) {
             this.obraSocialCacheService.setFinanciadorPacienteCache(null);
             return;
         }
-        if (this.paciente.financiador && this.paciente.financiador.length > 0) {
+        if (this.paciente.financiador && this.paciente.financiador.length > 0 && this.paciente.financiador[0].nombre) {
             this.obraSocial = this.paciente.financiador[0] as any;
             this.obraSocialCacheService.setFinanciadorPacienteCache(this.obraSocial);
             return;
@@ -121,6 +144,7 @@ export class PacienteDetalleComponent implements OnInit {
                 this.obraSocial = resultado[0];
                 this.obraSocialCacheService.setFinanciadorPacienteCache(this.obraSocial);
             } else {
+                this.obraSocial = null;
                 this.obraSocialCacheService.setFinanciadorPacienteCache(null);
             }
         });

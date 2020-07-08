@@ -237,7 +237,7 @@ export class SeccionComponent extends RUPComponent implements OnInit, OnDestroy 
 
         if (existeRegistro) {
             if (snomedConcept.semanticTag === 'procedimiento' || snomedConcept.semanticTag === 'elemento de registro') {
-                this.plantillasService.get(snomedConcept.conceptId).subscribe(() => { });
+                this.plantillasService.get(snomedConcept.conceptId, esSolicitud).subscribe(() => { });
             }
             this.registro.registros.push(nuevoRegistro);
         }

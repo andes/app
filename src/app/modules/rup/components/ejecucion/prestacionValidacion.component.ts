@@ -315,10 +315,22 @@ export class PrestacionValidacionComponent implements OnInit {
                 // Se copian los registros de la ejecución actual, para agregarle la frecuencia
                 let registros = this.prestacion.ejecucion.registros;
                 // filtramos los planes que deben generar prestaciones pendientes (Planes con conceptos turneales)
-                let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
+
+                let seccionesRegistros = [...registros];
+                registros.forEach(registro => {
+                    if (registro.hasSections) { // COLONO O EPICRISIS
+                        registro.registros.forEach(seccion => {
+                            if (seccion.isSection && !seccion.noIndex) {
+                                seccionesRegistros = [...seccionesRegistros, ...seccion.registros];
+                            }
+                        });
+                    }
+                });
+
+                let planes = seccionesRegistros.filter(r => r.esSolicitud);
                 this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                     this.prestacion = prestacion;
-                    this.prestacion.ejecucion.registros.forEach(registro => {
+                    let recorrerRegistros = registro => {
                         if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                             if (registro.relacionadoCon[0] && (typeof registro.relacionadoCon[0] === 'string')) {
                                 registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
@@ -330,7 +342,16 @@ export class PrestacionValidacionComponent implements OnInit {
                             seCreoSolicitud = true;
                             this.plex.info('success', 'La solicitud está en la bandeja de entrada de la organización destino', 'Información');
                         }
-                    });
+
+                        if (registro.hasSections) { // COLONO O EPICRISIS
+                            registro.registros.forEach(seccion => {
+                                if (seccion.isSection && !seccion.noIndex) {
+                                    seccion.registros.forEach(r => recorrerRegistros(r));
+                                }
+                            });
+                        }
+                    };
+                    this.prestacion.ejecucion.registros.forEach((r) => recorrerRegistros(r));
 
                     this.motivoReadOnly = true;
                     if (this.prestacion.solicitud.tipoPrestacion.noNominalizada) {

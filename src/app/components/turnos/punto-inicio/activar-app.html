@@ -9,33 +9,38 @@
             </div>
         </div>
     </header>
-    <div class="row">
-        <div class="col-12">
-            <i class="mdi mdi-map-marker"></i>
-            <span style="color: #00A8E0">Usuario Andes (E-Mail obligatorio)</span>
+    <form #formularioValidacion="ngForm">
+        <div class="row">
+            <div class="col-12">
+                <i class="mdi mdi-map-marker"></i>
+                <span style="color: #00A8E0">Usuario Andes (E-Mail obligatorio)</span>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <plex-text [(ngModel)]="email" [readonly]="!checkPass" name="searchTerm" placeholder="e-mail"></plex-text>
+        <div class="row">
+            <div class="col-12">
+                <plex-text email [(ngModel)]="email" [readonly]="!checkPass" name="email" required placeholder="e-mail">
+                </plex-text>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <i class="mdi mdi-map-marker"></i>
-            <span style="color: #00A8E0">Celular</span>
+        <div class="row">
+            <div class="col-12">
+                <i class="mdi mdi-map-marker"></i>
+                <span style="color: #00A8E0">Celular</span>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <plex-text [(ngModel)]="celular" [readonly]="!checkPass" name="searchTerm" placeholder="Celular">
-            </plex-text>
+        <div class="row">
+            <div class="col-12">
+                <plex-phone [(ngModel)]="celular" [readonly]="!checkPass" name="celular" placeholder="Celular">
+                </plex-phone>
+            </div>
         </div>
-    </div>
-    <br>
-
-    <plex-button *ngIf="!hideButton" label="Activar App Mobile" type="primary" (click)="activarApp()"></plex-button>
-
+        <br>
+        <plex-button [disabled]="formularioValidacion.invalid" *ngIf="!hideButton" label="Activar App Mobile"
+                     type="primary" (click)="activarApp()"></plex-button>
+        <plex-button [disabled]="formularioValidacion.invalid" *ngIf="!hideButtonResend"
+                     label="Reenviar Código Activación" type="default" (click)="activarApp()">
+        </plex-button>
+    </form>
 
     <div>
         <h5>
@@ -45,8 +50,5 @@
             </span>
         </h5>
     </div>
-
-    <plex-button *ngIf="!hideButtonResend" label="Reenviar Código Activación" type="default" (click)="activarApp()">
-    </plex-button>
 
 </fieldset>

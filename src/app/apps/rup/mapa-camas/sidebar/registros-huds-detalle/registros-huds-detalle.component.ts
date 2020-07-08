@@ -11,6 +11,27 @@ import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.in
 import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-item.component';
 import { IMAQEstado } from '../../interfaces/IMaquinaEstados';
 
+function arrayToSet(array, key, itemFn) {
+    const listado = [];
+    array.forEach(elem => {
+        const item = itemFn(elem);
+        if (Array.isArray(item)) {
+            item.forEach(inside => {
+                const index = listado.findIndex(i => i[key] === inside[key]);
+                if (index < 0) {
+                    listado.push(inside);
+                }
+            });
+        } else {
+            const index = listado.findIndex(i => i[key] === item[key]);
+            if (index < 0) {
+                listado.push(item);
+            }
+        }
+    });
+    return listado;
+}
+
 @Component({
     selector: 'app-registros-huds-detalle',
     templateUrl: './registros-huds-detalle.component.html'
@@ -23,13 +44,16 @@ export class RegistrosHudsDetalleComponent implements OnInit {
 
     @Observe() public desde: Date;
     @Observe() public hasta: Date;
+    @Observe() public tipoPrestacion;
 
     public desde$: Observable<Date>;
     public hasta$: Observable<Date>;
+    public tipoPrestacion$: Observable<any>;
 
     public cama$ = this.mapaCamasService.selectedCama;
     public estadoCama$: Observable<IMAQEstado>;
     public accionesEstado$: Observable<any>;
+    public prestacionesList$: Observable<any>;
 
     @Output() accion = new EventEmitter();
 
@@ -65,16 +89,18 @@ export class RegistrosHudsDetalleComponent implements OnInit {
             cache()
         );
 
-
-
         this.historialFiltrado$ = combineLatest(
             this.historial$,
             this.desde$,
-            this.hasta$
+            this.hasta$,
+            this.tipoPrestacion$
         ).pipe(
-            map(([prestaciones, desde, hasta]) => {
+            map(([prestaciones, desde, hasta, tipoPrestacion]) => {
                 return prestaciones.filter((prestacion) => {
                     const fecha = moment(prestacion.ejecucion.fecha);
+                    if (tipoPrestacion) {
+                        return fecha.isSameOrBefore(hasta, 'd') && fecha.isSameOrAfter(desde, 'd') && tipoPrestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId;
+                    }
                     return fecha.isSameOrBefore(hasta, 'd') && fecha.isSameOrAfter(desde, 'd');
                 });
             })
@@ -85,6 +111,10 @@ export class RegistrosHudsDetalleComponent implements OnInit {
             notNull(),
             pluck('acciones'),
             map(acciones => acciones.filter(acc => acc.tipo === 'nuevo-registro'))
+        );
+
+        this.prestacionesList$ = this.historial$.pipe(
+            map((prestaciones) => arrayToSet(prestaciones, 'conceptId', (item) => item.solicitud.tipoPrestacion))
         );
     }
 
@@ -103,6 +133,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
 
     verHuds() {
         this.cama$.pipe(take(1)).subscribe((cama) => {
+            this.prestacionService.notificaRuta({ nombre: 'Mapa de Camas', ruta: '/internacion/mapa-camas' });
             this.router.navigate(['/rup/huds/paciente/' + cama.paciente.id]);
         });
     }

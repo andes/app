@@ -89,16 +89,6 @@ export class PrestacionesService {
         this.datosRefSet.next(null);
     }
 
-
-    public refsetsIds = {
-        cronico: '1641000013105',
-        Antecedentes_Familiares: '1621000013103',
-        Antecedentes_Personales_procedimientos: '1911000013100',
-        Antecedentes_Personales_hallazgos: '1901000013103',
-        Antecedentes_Para_Estudios_Otoemision: '2121000013101',
-        situacionLaboral: '200000000',
-        nivelEstudios: '3'
-    };
     public elementosRegistros = {
         odontograma: '3561000013109'
     };
@@ -294,9 +284,6 @@ export class PrestacionesService {
                                 estado: registro.valor && registro.valor.estado ? registro.valor.estado : '',
                                 evolucion: registro.valor && registro.valor.evolucion ? registro.valor.evolucion : '',
                                 idRegistroOrigen: registro.valor && registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : null,
-                                idRegistroTransformado: registro.valor && registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : null,
-                                origen: registro.valor && registro.valor.origen ? registro.valor.origen : null,
-                                idRegistroGenerado: registro.valor && registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : null,
                                 informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
                                 relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : [],
                                 valor: registro.valor
@@ -316,9 +303,6 @@ export class PrestacionesService {
                             estado: registro.valor && registro.valor.estado ? registro.valor.estado : ultimaEvolucion.estado,
                             evolucion: registro.valor && registro.valor.evolucion ? registro.valor.evolucion : '',
                             idRegistroOrigen: registro.valor && registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : ultimaEvolucion.idRegistroOrigen,
-                            idRegistroTransformado: registro.valor && registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : ultimaEvolucion.idRegistroTransformado,
-                            origen: registro.valor && registro.valor.origen ? registro.valor.origen : ultimaEvolucion.origen,
-                            idRegistroGenerado: registro.valor && registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : ultimaEvolucion.idRegistroGenerado,
                             informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
                             relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : [],
                             valor: registro.valor
@@ -643,19 +627,22 @@ export class PrestacionesService {
                     if (this.cache[prestacion.paciente.id]) {
                         existePrestacion = this.cache[prestacion.paciente.id].find(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === prestacion.id && p.solicitud.registros[0]._id === plan.id);
                     }
-                    if (!existePrestacion && plan.valor && plan.valor.solicitudPrestacion.organizacionDestino) {
+                    if (!existePrestacion && plan.valor && (plan.valor.solicitudPrestacion.organizacionDestino || plan.valor.solicitudPrestacion.autocitado)) {
+                        if (!plan.valor.solicitudPrestacion.organizacionDestino) {
+                            plan.valor.solicitudPrestacion.organizacionDestino = this.auth.organizacion;
+                        }
                         planesAux.push(plan);
                     }
                 }
             });
-
             planesAux.forEach(plan => {
-                postRequest.push(this.servicioReglas.get({
+                let reglas = this.servicioReglas.get({
                     organizacionOrigen: this.auth.organizacion.id,
                     prestacionOrigen: prestacion.solicitud.tipoPrestacion.conceptId,
                     prestacionDestino: plan.valor.solicitudPrestacion.prestacionSolicitada.conceptId,
                     organizacionDestino: plan.valor.solicitudPrestacion.organizacionDestino.id
-                }));
+                });
+                postRequest.push(reglas);
             });
         }
         if (postRequest && postRequest.length) {
@@ -663,8 +650,15 @@ export class PrestacionesService {
                 switchMap((reglas: any) => {
                     for (let i = 0; i < reglas.length; i++) {
                         const regla = reglas[i][0];
-                        const prestacionOrigen = regla.origen.prestaciones.find(p => p.prestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId);
-                        const prestacionDestino = regla.destino.prestacion; // para utilizar los datos de la regla y no un sinonimo
+                        let prestacionOrigen;
+                        let prestacionDestino;
+                        if (regla) {
+                            prestacionOrigen = regla.origen.prestaciones.find(p => p.prestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId);
+                            prestacionDestino = regla.destino.prestacion; // para utilizar los datos de la regla y no un sinonimo
+                        } else {
+                            prestacionOrigen = prestacion.solicitud.tipoPrestacion;
+                            prestacionDestino = planesAux[i].valor.solicitudPrestacion.prestacionSolicitada; // para utilizar los datos de la regla y no un sinonimo
+                        }
                         // creamos objeto de prestacion
                         let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, prestacionDestino, 'validacion', 'ambulatorio');
                         // asignamos el tipoPrestacionOrigen a la solicitud
@@ -721,7 +715,7 @@ export class PrestacionesService {
             estado: { tipo: 'validada' },
             ...(planesCrear && planesCrear.length) && { planes: planesCrear },
             registros: prestacion.ejecucion.registros,
-            registrarFrecuentes: true
+            registrarFrecuentes: false
         };
         return this.patch(prestacion.id, dto);
 

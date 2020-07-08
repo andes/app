@@ -39,10 +39,10 @@
                             <div *ngIf="mostrarCalendario" class="col">
                                 <plex-bool [(ngModel)]="mostrarNoDisponibles" type="slide" name="mostrarNoDisponibles"
                                            title="{{mostrarNoDisponibles ? 'Ocultar agendas sin turnos' : 'Mostrar agendas sin turnos'}}"
-                                           (change)="actualizar('')"></plex-bool>
+                                           (change)="actualizar()"></plex-bool>
                                 <plex-bool [(ngModel)]="ocultarFinesDeSemana" type="slide" name="ocultarFinesDeSemana"
                                            title="{{ocultarFinesDeSemana ? 'Mostrar sábados y domingos' : 'Ocultar sábados y domingos'}}"
-                                           (change)="actualizar('')"></plex-bool>
+                                           (change)="actualizar()"></plex-bool>
                             </div>
                             <div class="col-3 text-right">
                                 <plex-button type="link" icon="chevron-left" (click)="cambiarMes('-')"></plex-button>

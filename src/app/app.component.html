@@ -3,7 +3,7 @@
     <div navIcon class="navbar-brand hover" [routerLink]="'/'" tabindex="-1">
         <div class="logo-nav" svgLogo></div>
     </div>
-    <div nav-item *ngIf="loggedIn()">
+    <div nav-item *ngIf="loggedIn() && tieneNovedades">
         <plex-icon name="bell" class=""></plex-icon>
         <plex-title titulo="Novedades"></plex-title>
         <header-novedades></header-novedades>

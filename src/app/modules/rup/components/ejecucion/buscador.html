@@ -19,9 +19,8 @@
 <!-- Fin Tipo de búsqueda -->
 
 <!-- Apunta a components/snomed/snomed-buscar.component.ts -->
-<snomed-buscar (onSearch)="recibeResultados($event)"
-    *ngIf="(busquedaActual === 'buscadorBasico' || busquedaActual === 'porConcepto') && autofocus"
-    [autofocus]="autofocus" id="buscador"></snomed-buscar>
+<snomed-buscar (onSearch)="recibeResultados($event)" *ngIf="busquedaActual === 'buscadorBasico' && autofocus"
+               [autofocus]="autofocus" id="buscador"></snomed-buscar>
 
 <div class="buscador"
      *ngIf="busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes' || busquedaActual === 'frecuentesTP'">
@@ -36,112 +35,79 @@
         <div class="container-filtros">
             <ul class="botones-filtros">
                 <li>
-                    <!-- <plex-badge size="sm" *ngIf="getCantidadResultados('todos')" type="todos ml-1 float-right"
-                                [ngClass]="{'active': filtroActual === 'todos'}">{{ getCantidadResultados('todos')}}
-                    </plex-badge> -->
                     <small *ngIf="getCantidadResultados('todos')" class="contador badge-todos ml-1 float-right"
-                            [ngClass]="{'active': filtroActual === 'todos'}">{{ getCantidadResultados('todos')}}</small>
+                           [ngClass]="{'active': filtroActual === 'todos'}">{{ getCantidadResultados('todos')}}</small>
 
                     <button (click)="filtroBuscadorSnomed('todos')" [ngClass]="{'active': filtroActual === 'todos'}"
-                            [disabled]="!wizardActivo && getCantidadResultados('todos') === 0"
-                            class="btn btn-block btn-todos">
+                            [disabled]="getCantidadResultados('todos') === 0" class="btn btn-block btn-todos">
                         <i class="icon icon-rup-semantic-todos"></i>
                         TODOS
                     </button>
                 </li>
                 <li>
-                    <!-- <plex-badge size="sm" *ngIf="getCantidadResultados('hallazgos')"
-                                type="hallazgo ml-1 float-right"
-                                [ngClass]="{'active': filtroActual === 'hallazgos'}">{{
-                        getCantidadResultados('hallazgos')}}
-                    </plex-badge> -->
-                    <small *ngIf="getCantidadResultados('hallazgos')"
-                            class="contador badge-hallazgo ml-1 float-right"
-                            [ngClass]="{'active': filtroActual === 'hallazgos'}">{{
+                    <small *ngIf="getCantidadResultados('hallazgos')" class="contador badge-hallazgo ml-1 float-right"
+                           [ngClass]="{'active': filtroActual === 'hallazgos'}">{{
                         getCantidadResultados('hallazgos')}}
                     </small>
 
                     <button (click)="filtroBuscadorSnomed('hallazgos')"
                             [ngClass]="{'active': filtroActual === 'hallazgos'}"
-                            [disabled]="!wizardActivo && getCantidadResultados('hallazgos') === 0"
-                            class="btn btn-block btn-hallazgo">
+                            [disabled]="getCantidadResultados('hallazgos') === 0" class="btn btn-block btn-hallazgo">
                         <i class="icon icon-rup-semantic-hallazgo"></i>
                         HALLAZGOS
                     </button>
                 </li>
 
                 <li>
-                    <!-- <plex-badge size="sm" *ngIf="getCantidadResultados('trastornos')"
-                                type="trastorno ml-1 float-right"
-                                [ngClass]="{'active': filtroActual === 'trastornos'}">{{
-                        getCantidadResultados('trastornos')}}
-                    </plex-badge> -->
-                    <small *ngIf="getCantidadResultados('trastornos')"
-                            class="contador badge-trastorno ml-1 float-right"
-                            [ngClass]="{'active': filtroActual === 'trastornos'}">{{
+                    <small *ngIf="getCantidadResultados('trastornos')" class="contador badge-trastorno ml-1 float-right"
+                           [ngClass]="{'active': filtroActual === 'trastornos'}">{{
                         getCantidadResultados('trastornos')}}
                     </small>
 
                     <button (click)="filtroBuscadorSnomed('trastornos')"
                             [ngClass]="{'active': filtroActual === 'trastornos'}"
-                            [disabled]="!wizardActivo && getCantidadResultados('trastornos') === 0"
-                            class="btn btn-block btn-trastorno">
+                            [disabled]="getCantidadResultados('trastornos') === 0" class="btn btn-block btn-trastorno">
                         <i class="icon icon-rup-semantic-trastorno"></i>
                         TRASTORNOS
                     </button>
                 </li>
 
                 <li>
-                    <!-- <plex-badge size="sm" *ngIf="getCantidadResultados('procedimientos')"
-                                type="procedimiento ml-1 float-right"
-                                [ngClass]="{'active': filtroActual === 'procedimientos'}">{{
-                        getCantidadResultados('procedimientos')}}
-                    </plex-badge> -->
                     <small *ngIf="getCantidadResultados('procedimientos')"
-                            class="contador badge-procedimiento ml-1 float-right"
-                            [ngClass]="{'active': filtroActual === 'procedimientos'}">{{
+                           class="contador badge-procedimiento ml-1 float-right"
+                           [ngClass]="{'active': filtroActual === 'procedimientos'}">{{
                         getCantidadResultados('procedimientos')}}
                     </small>
 
                     <button (click)="filtroBuscadorSnomed('procedimientos')"
                             [ngClass]="{'active': filtroActual === 'procedimientos'}"
-                            [disabled]="!wizardActivo && getCantidadResultados('procedimientos') === 0"
+                            [disabled]="getCantidadResultados('procedimientos') === 0"
                             class="btn btn-block btn-procedimiento">
                         <i class="icon icon-rup-semantic-procedimiento"></i>
                         PROCEDIM.
                     </button>
                 </li>
                 <li>
-                    <!-- <plex-badge size="sm" *ngIf="getCantidadResultados('planes')" type="solicitud ml-1 float-right"
-                                [ngClass]="{'active': filtroActual === 'planes'}">
-                        {{ getCantidadResultados('planes')}}</plex-badge> -->
                     <small *ngIf="getCantidadResultados('planes')" class="contador badge-solicitud ml-1 float-right"
-                            [ngClass]="{'active': filtroActual === 'planes'}">{{ getCantidadResultados('planes')}}</small>
+                           [ngClass]="{'active': filtroActual === 'planes'}">{{ getCantidadResultados('planes')}}</small>
 
                     <button (click)="filtroBuscadorSnomed('planes')" class="btn btn-block btn-solicitud"
                             [ngClass]="{'active': filtroActual === 'planes'}"
-                            [disabled]="!wizardActivo && getCantidadResultados('planes') === 0">
+                            [disabled]="getCantidadResultados('planes') === 0">
                         <i class="icon icon-rup-semantic-plan"></i>
                         SOLICITUDES
                     </button>
                 </li>
 
                 <li>
-                    <!-- <plex-badge size="sm" *ngIf="getCantidadResultados('productos')"
-                                type="producto ml-1 float-right"
-                                [ngClass]="{'active': filtroActual === 'productos'}">{{
-                        getCantidadResultados('productos')}}
-                    </plex-badge> -->
-                    <small *ngIf="getCantidadResultados('productos')"
-                            class="contador badge-producto ml-1 float-right"
-                            [ngClass]="{'active': filtroActual === 'productos'}">{{
+                    <small *ngIf="getCantidadResultados('productos')" class="contador badge-producto ml-1 float-right"
+                           [ngClass]="{'active': filtroActual === 'productos'}">{{
                         getCantidadResultados('productos')}}
                     </small>
 
                     <button (click)="filtroBuscadorSnomed('productos')"
                             [ngClass]="{'active': filtroActual === 'productos'}"
-                            [disabled]="!wizardActivo && getCantidadResultados('productos') === 0"
-                            class="btn btn-block btn-producto">
+                            [disabled]="getCantidadResultados('productos') === 0" class="btn btn-block btn-producto">
                         <i class="icon icon-rup-semantic-producto"></i>
                         INSUMOS
                     </button>
@@ -174,7 +140,7 @@
             </ng-container>
 
             <ng-container
-                          *ngIf="results && results[busquedaActual] && results[busquedaActual][filtroActual] && results[busquedaActual][filtroActual]?.length === 0 && !loading">
+                          *ngIf="results && results[busquedaActual] && results[busquedaActual][filtroActual] && results[busquedaActual][filtroActual]?.length === 0">
                 <h4 class="pt-3 pb-3 text-center">No se han encontrado resultados.</h4>
 
                 <p class="text-center"

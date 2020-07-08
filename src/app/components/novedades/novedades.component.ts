@@ -19,7 +19,7 @@ export class NovedadesComponent implements OnInit {
             modulo = params['modulo'];
             this.commonNovedadesService.getNovedadesSinFiltrar().subscribe((novedades) => {
                 if (modulo) {
-                    let novedadesFiltradas = novedades.filter(n => n.modulo._id === modulo);
+                    let novedadesFiltradas = novedades.filter(n => n.modulo && n.modulo._id === modulo);
                     this.commonNovedadesService.setNovedades(novedadesFiltradas);
                 } else {
                     this.commonNovedadesService.setNovedades(novedades);

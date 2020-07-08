@@ -30,45 +30,26 @@
                 {{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.motivo}}
             </span>
             <br>
-
-            <ng-container *ngIf='prestacionSeleccionada.solicitud.registros[0].valor?.documentos?.length'>
-                <b>Archivos Adjuntos</b>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
-                            <ng-container
-                                          *ngFor="let doc of this.prestacionSeleccionada.solicitud.registros[0].valor.documentos; let i = index">
-                                <a (click)="activaLightbox(i)">
-                                    <div class="image hover">
-
-                                        <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
-                                        <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)"
-                                           class="adjunto">
-                                            {{ doc.ext }}
-                                        </a>
-                                    </div>
-                                </a>
-
-                                <div (click)="lightbox = false" *ngIf="i === indice && lightbox"
-                                     [ngClass]="{'lightbox': i === indice && lightbox }" class="hover">
-                                    <i (click)=imagenPrevia(i)
-                                       class="mdi mdi-chevron-double-left previous parpadeo"></i>
-                                    <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
-                                    <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)"
-                                       class="adjunto m-1 p-2">
-                                        {{ doc.ext }}
-                                    </a>
-                                    <i (click)=imagenSiguiente(i)
-                                       class="mdi mdi-chevron-double-right next parpadeo"></i>
-                                </div>
-                            </ng-container>
-                        </div>
-                    </div>
-                </div>
-            </ng-container>
         </div>
     </div>
-
+    <div class="row" *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.documentos?.length">
+        <div class="col-12">
+            <b>Archivos Adjuntos</b>
+            <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
+                <ng-container
+                              *ngFor="let doc of this.prestacionSeleccionada.solicitud.registros[0].valor.documentos; let i = index">
+                    <plex-visualizador [files]="documentos" #visualizador></plex-visualizador>
+                    <div class="image hover">
+                        <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)" (click)="visualizador.open(i)">
+                        <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto"
+                           (click)="visualizador.open(i)">
+                            {{ doc.ext }}
+                        </a>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
     <!--  BOX MOTIVO Y CONFIRMAR ANULACION -->
     <span>
         <div class="row">

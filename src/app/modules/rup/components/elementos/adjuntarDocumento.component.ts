@@ -65,6 +65,10 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         });
     }
 
+    isEmpty() {
+        return this.registro.valor.documentos.length === 0;
+    }
+
     changeListener($event): void {
         this.readThis($event.target);
     }

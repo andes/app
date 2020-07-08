@@ -238,6 +238,7 @@ export class PacienteCruComponent implements OnInit {
                     this.pacienteModel.sexo = this.paciente.sexo;
                     this.pacienteModel.documento = this.paciente.documento;
                     this.pacienteModel.estado = 'validado';
+                    this.pacienteModel.scan = this.paciente.scan;
                     this.paciente = Object.assign({}, this.pacienteModel);
                     this.actualizarDatosPaciente();
                 }
@@ -454,14 +455,14 @@ export class PacienteCruComponent implements OnInit {
         }
     }
 
-    actualizarMapa() {
+    geoReferenciar() {
         // campos de direccion completos?
         if (this.pacienteModel.direccion[0].valor && this.pacienteModel.direccion[0].ubicacion.provincia && this.pacienteModel.direccion[0].ubicacion.localidad) {
             let direccionCompleta = this.pacienteModel.direccion[0].valor + ', ' + this.pacienteModel.direccion[0].ubicacion.localidad.nombre
                 + ', ' + this.pacienteModel.direccion[0].ubicacion.provincia.nombre;
             // se calcula nueva georeferencia
             this.georeferenciaService.getGeoreferencia({ direccion: direccionCompleta }).subscribe(point => {
-                if (point) {
+                if (point && Object.keys(point).length) {
                     this.geoReferenciaAux = [point.lat, point.lng]; // se actualiza vista de mapa
                     this.pacienteModel.direccion[0].geoReferencia = [point.lat, point.lng]; // Se asigna nueva georeferencia al paciente
                     this.infoMarcador = '';
@@ -597,12 +598,8 @@ export class PacienteCruComponent implements OnInit {
                         if (this.changeRelaciones) {
                             this.saveRelaciones(resultadoSave);
                         }
-                        if (this.escaneado) {
-                            // Si el paciente fue escaneado se agrega al historial de búsqueda
-                            this.historialBusquedaService.add(resultadoSave);
-                        }
+                        this.historialBusquedaService.add(resultadoSave);
                         this.plex.info('success', 'Los datos se actualizaron correctamente');
-
                         this.redirect(resultadoSave);
                     }
                 },

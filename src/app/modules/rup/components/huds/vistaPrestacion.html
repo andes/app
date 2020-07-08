@@ -1,9 +1,11 @@
 <div class="prestaciones mt-3 ml-3" *ngIf="ready$ | async">
     <ng-container *ngIf="prestacion">
-        <h4 class="text-capitalize" justify>
-            {{ prestacion.solicitud.tipoPrestacion.term }}
-            <ng-content></ng-content>
-        </h4>
+
+        <plex-title main titulo="{{ prestacion.solicitud.tipoPrestacion.term }}">
+            <plex-button *ngIf='puedeDescargarInforme' type="info" size="sm" icon="download" title="Descargar PDF" [disabled]="requestInProgress"
+                (click)="descargarInforme()" titlePosition="left">
+            </plex-button>
+        </plex-title>
         <div class="row">
             <div class="col-6">
                 <b> Fecha: </b>

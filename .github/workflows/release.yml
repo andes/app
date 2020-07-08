@@ -1,0 +1,18 @@
+name: RELEASE
+on:
+    schedule:
+        - cron: '0 14 * * 3'
+jobs:
+    release:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v1
+            - name: Use Node.js
+              uses: actions/setup-node@v1
+              with:
+                  node-version: '10.x'
+            - run: npm ci
+            - name: Release 
+              env:
+                  GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+              run: npx semantic-release

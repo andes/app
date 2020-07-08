@@ -8,4 +8,7 @@ export interface IObraSocial {
   financiador: String;
   version: Date;
   numeroAfiliado: String;
+  prepaga?: Boolean;
+  codigoPuco?: Number;
+  idObraSocial?: Number;
 }

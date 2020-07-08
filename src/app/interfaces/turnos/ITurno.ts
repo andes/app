@@ -1,6 +1,5 @@
 import { ITipoPrestacion } from './../ITipoPrestacion';
 import { IObraSocial } from './../IObraSocial';
-import { IFinanciador } from '../IFinanciador';
 
 // TODO: Recordar actualizar Schema!
 export interface ITurno {
@@ -21,7 +20,7 @@ export interface ITurno {
             organizacion: string,
             nroCarpeta: string
         }],
-        obraSocial: IFinanciador
+        obraSocial: IObraSocial
 
     };
     tipoPrestacion: ITipoPrestacion;
