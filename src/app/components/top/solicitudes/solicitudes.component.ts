@@ -55,7 +55,7 @@ export class SolicitudesComponent implements OnInit {
     public activeTab = 0;
     public showSidebar = false;
     public mostrarMasOpciones = false;
-    public organizacion;
+    public organizacionesOrigen = [];
     public prestacionesPermisos = [];
     public permisosReglas;
     public permisoAnular = false;
@@ -350,8 +350,8 @@ export class SolicitudesComponent implements OnInit {
                 }
             }
         }
-        if (this.organizacion) {
-            params['organizacionOrigen'] = this.organizacion.id;
+        if (this.organizacionesOrigen && this.organizacionesOrigen.length) {
+            params['organizacionOrigen'] = this.organizacionesOrigen.map(o => o.id);
         }
         if (this.prestacionDestino) {
             params['prestacionDestino'] = this.prestacionDestino.id;
