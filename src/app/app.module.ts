@@ -113,9 +113,6 @@ import { SIISAService } from './services/siisa.service';
 // ... Usuarios
 import { UsuarioService } from './services/usuarios/usuario.service';
 
-// ... Llaves
-import { LlavesTipoPrestacionService } from './services/llaves/llavesTipoPrestacion.service';
-
 // Auditoría
 import { SisaService } from './services/fuentesAutenticas/servicioSisa.service';
 import { SintysService } from './services/fuentesAutenticas/servicioSintys.service';
@@ -230,11 +227,6 @@ import { ResumenPacienteDinamicoNinoComponent } from './modules/rup/components/e
 
 // Seguimiento Pacientes SJ
 import { SeguimientoPacienteComponent } from './modules/rup/components/ejecucion/seguimiento-paciente/seguimientoPaciente.component';
-
-
-// TODO: Eliminar todo esto de las llaves: deprecated
-import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
-import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
 
 
 // AUDITORIA
@@ -416,7 +408,6 @@ registerLocaleData(localeEs, 'es');
         PermisosComponent,
         PuntoInicioComponent,
         VincularPacientesComponent,
-        LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
         HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
         TurnosPacienteComponent,
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
@@ -568,7 +559,6 @@ registerLocaleData(localeEs, 'es');
         SIISAService,
         ElementosRUPService,
         ConceptObserverService,
-        LlavesTipoPrestacionService,
         LogService,
         SisaService,
         SintysService,
