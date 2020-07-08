@@ -36,14 +36,14 @@
                     </div>
                 </div>
                 <div class="row mb-2" *ngIf="mostrarMasOpciones">
-                    <div class="col-3">
+                    <div class="col-3" *ngIf="tipoSolicitud === 'entrada'" >
                         <plex-select [(ngModel)]="organizacionesOrigen" name="organizacion" (getData)="loadOrganizacion($event)"
                                      label="Organización origen" placeholder="Seleccione la organización"
                                      labelField="nombre" [multiple]="true" (change)="cargarSolicitudes()">
                         </plex-select>
                     </div>
                     <div class="col-3">
-                        <plex-select [(ngModel)]="prestacionDestino" [required]="true" name="nombrePrestacion"
+                        <plex-select [(ngModel)]="prestacionDestino" name="nombrePrestacion"
                                      label="Prestación destino" name="prestacionDestino"
                                      tmPrestaciones="solicitudes:tipoPrestacion:?" (change)="cargarSolicitudes()"
                                      [preload]="true">
