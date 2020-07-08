@@ -273,12 +273,9 @@
                                                     <div class="row p-0 m-0">
                                                         <div class="col-10 p-0 m-0">
                                                             <div class="sugerido">
-                                                                <small>
-                                                                    Ultima evolución:
-                                                                    {{ registro.fechaEjecucion | fecha }}</small>
+                                                                <small>Última evolución: {{ registro.evoluciones[0].fechaCarga | fecha }}</small>
                                                                 <br>
-                                                                <small>Profesional: {{
-                                                                    registro.evoluciones[0].profesional}}</small>
+                                                                <small>Profesional: {{ registro.evoluciones[0].profesional }}</small>
                                                             </div>
                                                         </div>
                                                     </div>
