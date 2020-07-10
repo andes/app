@@ -79,10 +79,14 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     conceptosTurneables: ITipoPrestacion[] = [];
     public title;
 
-    constructor(public servicioPrestacion: PrestacionesService,
+    constructor(
+        public servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
-        private servicioPaciente: PacienteService, private SNOMED: SnomedService,
-        public plex: Plex, public auth: Auth, private router: Router,
+        private servicioPaciente: PacienteService,
+        private SNOMED: SnomedService,
+        public plex: Plex,
+        public auth: Auth,
+        private router: Router,
         public servicioAgenda: AgendaService,
         private route: ActivatedRoute,
         private codificacionService: CodificacionService,

@@ -115,7 +115,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
                     this.redirect('inicio');
                 }
                 this.tiposPrestacion = data;
-                localStorage.removeItem('idAgenda');
                 this.actualizar();
             });
         }
@@ -538,7 +537,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
     routeTo(action, id) {
         if (this.agendaSeleccionada && this.agendaSeleccionada !== 'fueraAgenda') {
             let agenda = this.agendaSeleccionada ? this.agendaSeleccionada : null;
-            localStorage.setItem('idAgenda', agenda.id);
         }
         if (id) {
             this.router.navigate(['rup/' + action + '/', id]);
