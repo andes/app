@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MapaCamasService } from '../../../services/mapa-camas.service';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 function arrayToSet(array, key, itemFn) {
     const listado = [];
@@ -37,6 +37,8 @@ export class FiltrosCamasComponent implements OnInit {
     public equipamientoList$: Observable<any[]>;
     public estadoList$: Observable<any[]>;
 
+    public paciente = '';
+
     filtro: any = {};
     censables = [
         { id: 0, nombre: 'No censable' },
@@ -68,19 +70,8 @@ export class FiltrosCamasComponent implements OnInit {
             map((camas) => arrayToSet(camas, 'estado', (item) => item)),
             map(estados => estados.map(e => ({ estado: e.estado })))
         );
-
-
-        this.resetFiltros();
     }
 
-    private resetFiltros() {
-        const filtrosAplicados = window.sessionStorage.getItem('filtrosMapaCamas');
-        if (filtrosAplicados && filtrosAplicados !== '"[object Object]"') {
-            this.filtro = JSON.parse(filtrosAplicados);
-        } else {
-            this.filtro = {};
-        }
-    }
 
     filtrar() {
         this.mapaCamasService.unidadOrganizativaSelected.next(this.filtro.unidadOrganizativa);
@@ -91,7 +82,5 @@ export class FiltrosCamasComponent implements OnInit {
 
         this.mapaCamasService.equipamientoSelected.next(this.filtro.equipamiento);
         this.mapaCamasService.estadoSelected.next(this.filtro.estado);
-
-        window.sessionStorage.setItem('filtrosMapaCamas', JSON.stringify(this.filtro));
     }
 }
