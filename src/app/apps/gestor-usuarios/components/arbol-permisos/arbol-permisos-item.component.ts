@@ -28,8 +28,6 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
     @Input() parentPermission: String = '';
     @Input() userPermissions: String[] = [];
 
-    @Output() change = new EventEmitter();
-
     @ViewChild('panel', { static: false }) accordions: PlexPanelComponent;
     @ViewChildren(ArbolPermisosItemComponent) childsComponents: QueryList<ArbolPermisosItemComponent>;
 
@@ -65,7 +63,6 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                 }
             }
         }
-        this.change.emit();
     }
 
     removeInnerPermissions() {
@@ -130,10 +127,6 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
             this.itemsCount = items.length;
             this.allModule = items.length > 0 && items.indexOf('*') >= 0;
         }
-    }
-
-    selectChange() {
-        this.change.emit();
     }
 
     loadData(type, event) {

@@ -28,17 +28,15 @@
 </plex-accordion>
 <div *ngIf="item.type" [hidden]="isHidden">
 
-    <plex-bool [(ngModel)]="state" *ngIf="item.type === 'boolean'" [label]="item.title" type="slide"
-               (change)="selectChange()"> </plex-bool>
+    <plex-bool [(ngModel)]="state" *ngIf="item.type === 'boolean'" [label]="item.title" type="slide"></plex-bool>
 
     <div *ngIf="item.type !== 'boolean'">
         <h5>
             {{item.title}}
-            <plex-bool *ngIf="!item.avoidAll" [(ngModel)]="all" label="Seleccionar todos" type="slide"
-                       (change)="change.emit()"> </plex-bool>
+            <plex-bool *ngIf="!item.avoidAll" [(ngModel)]="all" label="Seleccionar todos" type="slide"> </plex-bool>
         </h5>
         <plex-select [multiple]="true" [readonly]="all" [(ngModel)]="seleccionados" *ngIf="!loading"
-                     (getData)="loadData(item.type, $event)" placeholder="Seleccione los elementos con permisos"
-                     (change)="selectChange()" name="plexSelect" idField="id"></plex-select>
+            (getData)="loadData(item.type, $event)" placeholder="Seleccione los elementos con permisos" name="plexSelect"
+            idField="id"></plex-select>
     </div>
 </div>

@@ -114,13 +114,9 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
         this.habilitados[perfil.id] = enabled;
     }
 
-    onChange() {
-        this.permisos = this.arbol.getPermisos();
-    }
-
     grabar() {
         const body = {
-            permisos: this.permisos,
+            permisos: this.arbol.getPermisos(),
             id: this.organizacionId,
             nombre: this.orgName,
             perfiles: this.perfiles.filter(p => this.habilitados[p.id]).map(p => {
