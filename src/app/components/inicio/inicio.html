@@ -10,8 +10,11 @@
                 <div class="hola">
                     Hola <b>{{ auth.usuario.nombre }}</b>
                 </div>
-                <div class="mensaje">
+                <div *ngIf="!denied" class="mensaje">
                     ¿En qué vas a trabajar hoy?
+                </div>
+                <div *ngIf="denied" class="mensaje">
+                    ¡Bienvenida/o a ANDES!
                 </div>
             </div>
         </header>
@@ -42,26 +45,26 @@
 
                 <div class="divisor"></div>
 
-                <div *ngFor="let seccion of secciones" class="secciones">
-                    <div class="seccion hover" (click)="redirect(seccion)">
-                        <div class="principal {{ seccion.class }}">
-                            <div class="band"></div>
-                            <plex-icon [name]="seccion.icono" size="lg"></plex-icon>
+                <div class="secciones" justify>
+                    <ng-container *ngFor="let seccion of secciones">
+                        <div class="seccion hover" (click)="redirect(seccion)">
+                            <div class="principal {{ seccion.class }}">
+                                <div class="band"></div>
+                                <plex-icon [name]="seccion.icono" size="lg"></plex-icon>
+                            </div>
+                            <div class="titulo ml-2" [innerHTML]="seccion.nombre"></div>
                         </div>
-                        <div class="titulo ml-2" [innerHTML]="seccion.nombre"></div>
-                    </div>
-                </div>
-            </div>
-            <div *ngIf="denied && !loading">
-                <div>
-                    <div class="boton color-amarillo">
-                        <i class="icono mdi mdi-alert"></i>
-                        <div>ATENCIÓN</div>
-                        <div>PERMISOS DE APLICACIONES</div>
-                        <div>Ud. no posee permisos para ningún módulo de ANDES</div>
-                    </div>
+                    </ng-container>
                 </div>
             </div>
         </main>
+        <div *ngIf="denied && !loading" class="w-100 h-100 d-flex justify-content-center align-items-center">
+            <main role="main" class="inner">
+                <plex-label icon="llave" type="warning" size="xl" direction="column"
+                            titulo="No tenés permisos para ningún módulo de ANDES"
+                            subtitulo="Ponete en contacto con el informático local o coordinador de área">
+                </plex-label>
+            </main>
+        </div>
     </plex-layout-main>
 </plex-layout>

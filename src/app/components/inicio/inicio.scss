@@ -111,7 +111,7 @@ main {
     }
     .mensaje {
         font-size: 28px;
-        color: $andes-azul;
+        color: $andes-azul-claro;
     }
 }
 
@@ -274,6 +274,7 @@ main {
 }
 
 .secciones {
+    width: 100%;
     &:not(:last-child) {
         border-right: 1px solid $andes-azul-claro;
     }
