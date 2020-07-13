@@ -4,6 +4,7 @@ import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { switchMap, map } from 'rxjs/operators';
+import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 
 @Injectable()
 export class ListadoInternacionService {
@@ -14,14 +15,14 @@ export class ListadoInternacionService {
     public pacienteText = new BehaviorSubject<string>(null);
     public fechaIngresoDesde = new BehaviorSubject<Date>(moment().subtract(1, 'months').toDate());
     public fechaIngresoHasta = new BehaviorSubject<Date>(moment().toDate());
-    public fechaEgresoDesde = new BehaviorSubject<Date>(moment().subtract(1, 'months').toDate());
-    public fechaEgresoHasta = new BehaviorSubject<Date>(moment().toDate());
+    public fechaEgresoDesde = new BehaviorSubject<Date>(null);
+    public fechaEgresoHasta = new BehaviorSubject<Date>(null);
 
     public estado = new BehaviorSubject<any>(null);
 
     constructor(
-        private prestacionService: PrestacionesService,
         private auth: Auth,
+        private mapaHTTP: MapaCamasHTTP,
     ) {
         this.listaInternacion$ = combineLatest(
             this.fechaIngresoDesde,
@@ -33,13 +34,9 @@ export class ListadoInternacionService {
                 const filtros = {
                     fechaIngresoDesde, fechaIngresoHasta,
                     fechaEgresoDesde, fechaEgresoHasta,
-                    organizacion: this.auth.organizacion.id,
-                    conceptId: PrestacionesService.InternacionPrestacion.conceptId,
-                    ordenFecha: true,
-                    estado: ['validada', 'ejecucion']
                 };
 
-                return this.prestacionService.get(filtros);
+                return this.mapaHTTP.getPrestacionesInternacion(filtros);
             })
         );
 
@@ -82,6 +79,4 @@ export class ListadoInternacionService {
     setFechaHasta(fecha: Date) {
         this.fechaIngresoHasta.next(fecha);
     }
-
-
 }

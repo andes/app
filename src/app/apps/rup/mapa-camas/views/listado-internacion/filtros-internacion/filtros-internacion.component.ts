@@ -15,8 +15,8 @@ export class FiltrosInternacionComponent implements OnInit {
     filtros: any = {
         fechaIngresoDesde: moment().subtract(1, 'months').toDate(),
         fechaIngresoHasta: moment().toDate(),
-        fechaEgresoDesde: moment().subtract(1, 'months').toDate(),
-        fechaEgresoHasta: moment().toDate()
+        fechaEgresoDesde: null,
+        fechaEgresoHasta: null
     };
     estadosInternacion;
     permisoDescarga;
