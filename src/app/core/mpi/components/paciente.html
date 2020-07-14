@@ -31,7 +31,7 @@
         <plex-loader *ngIf="loading" class="loading" type="ball-pulse"></plex-loader>
         <form #formulario="ngForm" [ngClass]="{'loadMode': loading}">
 
-            <plex-tabs [activeIndex]="tabIndex" (change)="checkTabs($event)">
+            <plex-tabs [activeIndex]="tabIndex" (change)="setMainSize($event)">
 
                 <plex-tab label="datos básicos" icon="" (click)="tabIndex = 0">
                     <datos-basicos [paciente]="pacienteModel" [tipoPaciente]="tipoPaciente"
@@ -62,46 +62,56 @@
         </form>
     </plex-layout-main>
 
-    <plex-layout-sidebar type="invert">
+    <plex-layout-sidebar [type]="'invert'">
         <div [ngClass]="{'loadMode': loading}">
-            <span *ngIf='!showMobile'>
+            <ng-container *ngIf='!showMobile'>
                 <!-- Pacientes candidatos -->
-                <div *ngIf='(pacientesSimilares && pacientesSimilares.length > 0); else showPanel' type="invert"
-                     title="Pacientes Candidatos">
+                <div *ngIf='(pacientesSimilares && pacientesSimilares.length); else showPanel'>
                     <header>
-                        <h4>Pacientes Candidatos</h4>
+                        <plex-title titulo="Pacientes Candidatos" size="md"></plex-title>
                     </header>
-                    <div class="row">
-                        <div class="col-md-12 hover">
-                            <ul class="list-group">
-                                <li class="list-group-item justify-content-between"
-                                    *ngFor="let elem of pacientesSimilares">
-                                    <h4 class="box-title-elemento">{{elem.paciente.apellido| uppercase}}
-                                        {{elem.paciente.nombre| uppercase}}
-                                        <br>
-                                        <small>Documento: {{elem.paciente.documento}}
-                                            <br> fecha de Nacimiento: {{elem.paciente.fechaNacimiento | fecha }}
-                                            <br> Sexo: {{elem.paciente.sexo}}
-                                        </small>
+                    <plex-list>
+                        <plex-item *ngFor="let elem of pacientesSimilares" class="">
 
-                                    </h4>
-                                    <h4>Similitud: {{elem.match * 100}} %
-                                        <span>
-                                            <plex-button type="primary btn-sm" icon="account" label="Seleccionar"
-                                                         (click)="onSelect(elem.paciente)"></plex-button>
-                                        </span>
-                                    </h4>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                            <img [mpiFotoPaciente]="elem.paciente" />
+
+                            <plex-label *ngIf="!elem.paciente.numeroIdentificacion"
+                                        titulo="{{ elem.paciente | nombre }}"
+                                        subtitulo="{{ (elem.paciente.documento | number) || 'Sin DNI' }}">
+                            </plex-label>
+
+                            <plex-label *ngIf="elem.paciente.numeroIdentificacion" titulo="{{ elem.paciente | nombre }}"
+                                        subtitulo="{{ elem.paciente.numeroIdentificacion }}"></plex-label>
+
+                            <plex-label titulo="{{ elem.paciente | edad }}"
+                                        subtitulo="{{ elem.paciente.fechaNacimiento | fecha:'utc' }}">
+                            </plex-label>
+
+                            <plex-badge *ngIf="elem.paciente.fechaFallecimiento" type="danger">Fallecido:
+                                {{ elem.paciente.fechaFallecimiento | fecha:'utc'}}
+                            </plex-badge>
+
+                            <plex-badge type="info">{{ elem.paciente | sexo }}
+                            </plex-badge>
+
+                            <plex-badge type="" class=""
+                                        [ngClass]="{'text-success' : elem.paciente.estado === 'validado' , 'text-warning' : elem.paciente.estado === 'temporal'} ">
+                                {{ elem.paciente.estado }}
+                            </plex-badge>
+
+                            <plex-label titulo="Similitud: {{elem.match * 100}} %"></plex-label>
+
+                            <plex-button type="info" size="sm" label="Seleccionar" (click)="onSelect(elem.paciente)">
+                            </plex-button>
+                        </plex-item>
+                    </plex-list>
                 </div>
                 <ng-template #showPanel>
                     <paciente-panel [paciente]="pacienteModel" [direction]="detailDirection"
                                     [showRelaciones]="showRelaciones" (changeRelacion)="toRelacionesOnChange($event)">
                     </paciente-panel>
                 </ng-template>
-            </span>
+            </ng-container>
         </div>
         <activar-app *ngIf='showMobile' [paciente]="pacienteModel"></activar-app>
     </plex-layout-sidebar>

@@ -264,10 +264,12 @@ export class DatosContactoComponent implements OnInit, OnDestroy {
             this.paciente.direccion[0].ubicacion.provincia = this.provinciaActual;
             this.loadLocalidades(this.provinciaActual);
         } else {
+            this.loadProvincia();
             this.viveLocActual = false;
-            this.changeLocalidadActual();
-            this.localidades = [];
+            this.localidades$ = null;
             this.paciente.direccion[0].ubicacion.provincia = null;
+            this.paciente.direccion[0].ubicacion.localidad = null;
+            this.paciente.direccion[0].ubicacion.barrio = null;
         }
     }
 
@@ -284,6 +286,7 @@ export class DatosContactoComponent implements OnInit, OnDestroy {
         } else {
             this.paciente.direccion[0].ubicacion.localidad = null;
             this.paciente.direccion[0].ubicacion.barrio = null;
+            this.loadLocalidades(this.paciente.direccion[0].ubicacion.provincia);
         }
     }
 

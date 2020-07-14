@@ -168,11 +168,8 @@ export class PacienteComponent implements OnInit {
                             resultado.scan = this.paciente.scan;
                         }
                         if (this.escaneado && resultado.estado !== 'validado') {
-                            resultado.nombre = this.paciente.nombre.toUpperCase();
-                            resultado.apellido = this.paciente.apellido.toUpperCase();
-                            resultado.fechaNacimiento = this.paciente.fechaNacimiento;
-                            resultado.sexo = this.paciente.sexo;
-                            resultado.documento = this.paciente.documento;
+                            resultado.nombre = resultado.nombre.toUpperCase();
+                            resultado.apellido = resultado.apellido.toUpperCase();
                         }
                         this.paciente = Object.assign({}, resultado);
                         this.loading = false;
@@ -252,6 +249,9 @@ export class PacienteComponent implements OnInit {
         if (!this.paciente.contacto || !this.paciente.contacto.length) {
             this.paciente.contacto = [this.contacto];
         }
+        if (!this.paciente.direccion || !this.paciente.direccion.length) {
+            this.paciente.direccion = [this.direccion];
+        }
         this.pacienteModel = Object.assign({}, this.paciente);
 
         if (this.pacienteModel.fechaNacimiento) {
@@ -297,6 +297,7 @@ export class PacienteComponent implements OnInit {
                     } else {
                         this.plex.info('warning', 'Existen pacientes similares, verifique las sugerencias');
                     }
+                    this.setMainSize(null);
                 } else {
                     if (this.changeRelaciones) {
                         this.saveRelaciones(resultadoSave);
@@ -418,7 +419,11 @@ export class PacienteComponent implements OnInit {
         this.redirect();
     }
 
-    checkTabs(tabIndex) {
+    setMainSize(tabIndex) {
+        if (this.pacientesSimilares && this.pacientesSimilares.length) {
+            this.mainSize = 9;
+            return;
+        }
         if (tabIndex === 1) {
             this.datosContacto.refreshMap();
         }
