@@ -589,10 +589,9 @@
 
                                         <plex-button size="block"
                                                      *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'"
-                                                     (click)="setRouteToParams(['validacion', prestacion.id]); accesoHudsPaciente = prestacion.paciente; accesoHudsTurno = null; accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id; preAccesoHuds(motivoVerContinuarPrestacion)"
+                                                     (click)="onVerResumenClick('validacion', prestacion)"
                                                      label="VER RESUMEN" type="success btn-sm">
                                         </plex-button>
-
                                     </td>
                                 </tr>
                             </tbody>
