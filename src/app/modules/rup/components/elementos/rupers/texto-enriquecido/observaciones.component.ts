@@ -1,7 +1,18 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { RUPComponent } from './../core/rup.component';
-import { RupElement } from '.';
+import { RUPComponent } from '../../../core/rup.component';
+import { RupElement } from '../..';
 import { PlexTextToolBar } from '@andes/plex';
+
+/**
+ * Texto enriquecido del tipo de observaciones, motivos, indicaciones, etc
+ * Params:
+ *
+ * 1. required: Es obligatorio cargar valor
+ * 2. titulo: Label del plex-text
+ * 3. placeholder: placeholder a mostar cuando el texto esta vacío
+ */
+
+
 
 @Component({
     selector: 'rup-observaciones',
@@ -9,8 +20,6 @@ import { PlexTextToolBar } from '@andes/plex';
 })
 @RupElement('ObservacionesComponent')
 export class ObservacionesComponent extends RUPComponent implements OnInit, AfterViewInit {
-    public referentSet = [];
-    // suscriptionSeccion: any;
     seleccionado: any;
     suscriptionBuscador: any;
 
@@ -66,5 +75,10 @@ export class ObservacionesComponent extends RUPComponent implements OnInit, Afte
                 }
             });
         }
+    }
+
+    onCloseFullscreen(valor: string) {
+        this.registro.valor = valor;
+        this.fullscreen = false;
     }
 }

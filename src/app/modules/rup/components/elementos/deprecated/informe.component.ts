@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { RUPComponent } from './../core/rup.component';
-import { RupElement } from '.';
+import { RUPComponent } from '../../core/rup.component';
+import { RupElement } from '..';
 
 /**
  * [DEPRECATED] Cambiar desde base de datos a ObservacionesComponent

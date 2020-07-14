@@ -7,7 +7,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from '@andes/shared';
 import { ChartsModule } from 'ng2-charts';
 import { NgDragDropModule } from 'ng-drag-drop';
-import { RUPTextModalModule } from './components/core/text-fullscreen/text-modal.module';
 
 
 import { SelectPorRefsetComponent } from './components/elementos/SelectPorRefset.component';
@@ -18,10 +17,10 @@ import { FrecuenciaCardiacaComponent } from './components/elementos/frecuenciaCa
 import { FrecuenciaRespiratoriaComponent } from './components/elementos/frecuenciaRespiratoria.component';
 import { HipertensionArterialComponent } from './components/elementos/hipertensionArterial.component';
 import { IndiceDeMasaCorporalComponent } from './components/elementos/indiceDeMasaCorporal.component';
-import { InformesComponent } from './components/elementos/informe.component';
+import { InformesComponent } from './components/elementos/deprecated/informe.component';
 import { NuevaEvolucionProblemaComponent } from './components/elementos/nuevaEvolucionProblema.component';
 import { ObesidadComponent } from './components/elementos/obesidad.component';
-import { ObservacionesComponent } from './components/elementos/observaciones.component';
+import { ObservacionesComponent } from './components/elementos/rupers/texto-enriquecido/observaciones.component';
 import { PesoComponent } from './components/elementos/peso.component';
 import { PercentiloPerimetroCefalicoComponent } from './components/elementos/percentiloPerimetroCefalico.component';
 import { PerimetroCefalicoComponent } from './components/elementos/perimetroCefalico.component';
@@ -88,6 +87,7 @@ import { MPILibModule } from '../mpi/mpi-lib.module';
 import { ModalSeleccionEmailComponent } from './components/ejecucion/modal-seleccion-email.component';
 import { VistaPrestacionComponent } from './components/huds/vistaPrestacion';
 import { RelacionRUPPipe } from '../../pipes/relacionRUP.pipe';
+import { RUPObservacionesModalComponent } from './components/elementos/components/observaciones-modal.component';
 
 const RUPComponentsArray = [
     RUPComponent,
@@ -170,15 +170,15 @@ const RUPComponentsArray = [
         SharedModule,
         ChartsModule,
         NgDragDropModule,
-        MPILibModule,
-        RUPTextModalModule
+        MPILibModule
     ],
     declarations: [
         ...RUPComponentsArray,
         RUPAccionesEnvioInformeComponent,
         ModalSeleccionEmailComponent,
         VistaPrestacionComponent,
-        RelacionRUPPipe
+        RelacionRUPPipe,
+        RUPObservacionesModalComponent
 
     ],
     entryComponents: [
