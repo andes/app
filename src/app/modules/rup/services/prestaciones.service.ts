@@ -239,7 +239,11 @@ export class PrestacionesService {
                     if (prestacion.ejecucion) {
                         const conceptos = prestacion.ejecucion.registros
                             // .filter(registro => semanticTags.includes(registro.concepto.semanticTag))
-                            .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
+                            .map(registro => {
+                                registro.idPrestacion = prestacion.id;
+                                registro.tipoPrestacion = prestacion.solicitud.tipoPrestacion.term;
+                                return registro;
+                             });
                         // ConceptId del informe requerido en en todas las prestaciones ambulatorias
                         if (conceptos.length > 0) {
                             conceptos[0].informeRequerido = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === PrestacionesService.InformeDelEncuentro);
@@ -260,6 +264,7 @@ export class PrestacionesService {
                     });
                     if (!registroEncontrado) {
                         let dato = {
+                            tipoPrestacion: registro.tipoPrestacion,
                             idPrestacion: registro.idPrestacion,
                             idRegistro: registro.id,
                             fechaEjecucion: prestaciones.find(p => p.id === registro.idPrestacion).ejecucion.fecha,
@@ -287,6 +292,7 @@ export class PrestacionesService {
                     } else {
                         let ultimaEvolucion = registroEncontrado.evoluciones[registroEncontrado.evoluciones.length - 1];
                         let nuevaEvolucion = {
+                            tipoPrestacion: registro.tipoPrestacion,
                             idPrestacion: registro.idPrestacion,
                             fechaCarga: registro.createdAt,
                             idRegistro: registro.id,
