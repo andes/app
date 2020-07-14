@@ -14,7 +14,7 @@
                                            [autoFocus]="!seleccion?.id" [readonly]="!puedeEditarCompleto"></plex-text>
                             </div>
                             <div class="col-4">
-                                <plex-select name="tipoEstablecimiento" [data]="tiposEstablecimiento"
+                                <plex-select name="tipoEstablecimiento" [data]="tiposEstablecimiento$ | async"
                                              [(ngModel)]="organizacionModel.tipoEstablecimiento"
                                              label="Tipo de Establecimiento" [readonly]="!puedeEditarCompleto">
                                 </plex-select>
@@ -71,7 +71,11 @@
                                                [(ngModel)]="organizacionModel.direccion.valor"
                                                placeholder="Ej: Belgrano 1547 - Piso 2 - Departamento 3....">
                                     </plex-text>
-                                    <plex-select name="localidad" [data]="localidadesNeuquen"
+                                    <plex-select name="provincia" [data]="provincias$ | async"
+                                                [(ngModel)]="organizacionModel.direccion.ubicacion.provincia"
+                                                (change)="onSelectProvincia()" label="Provincia">
+                                    </plex-select>
+                                    <plex-select name="localidad" [data]="localidades$ | async"
                                                  [(ngModel)]="organizacionModel.direccion.ubicacion.localidad"
                                                  label="Localidad">
                                     </plex-select>
@@ -188,7 +192,7 @@
                                             <div class="col-4">
                                                 <plex-select name="localidad22-{{i}}"
                                                              [(ngModel)]="_unEdificio.direccion.ubicacion.localidad"
-                                                             [data]="localidadesNeuquen" label="Localidad"
+                                                             [data]="localidades$ | async" label="Localidad"
                                                              [required]="true" [readonly]="!puedeEditarCompleto">
                                                 </plex-select>
                                             </div>
