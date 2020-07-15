@@ -1,3 +1,21 @@
+# [5.4.0](https://github.com/andes/app/compare/v5.3.0...v5.4.0) (2020-07-15)
+
+
+### Bug Fixes
+
+* **TM:** Organizaciones arregla seleccion de items de ubicacion vacios ([fc9b440](https://github.com/andes/app/commit/fc9b440c768a486ddb6a1f527a1d1c0af45a9eb2))
+* **TM:** refresca lista de organizaciones al retornar de creacion ([491c2db](https://github.com/andes/app/commit/491c2dbcf9921e9230ad8fa999e30ea2e2ae9871))
+* **TOP:** oculta filtro org origen de bandeja salida ([3fd1cc1](https://github.com/andes/app/commit/3fd1cc190d6e04ffda988314afa408d25739ea0a))
+
+
+### Features
+
+* **gestor-usuarios:** ocultar botón de 'Perfiles' si no tiene permiso ([e44dfc4](https://github.com/andes/app/commit/e44dfc4cabf99ddfc51c4baf146d861b092fba3e))
+* **menu:** armado de menú hamburguesa a partir de los módulos ([2ebe4c2](https://github.com/andes/app/commit/2ebe4c245a5a60bf4e9413fbaf8d4d4726eb1795))
+* **TM:** agrega provincia a edicion de organizacion ([3867e03](https://github.com/andes/app/commit/3867e03be42020759741f10b2faa34c089a1e221))
+* **TOP:** filtro multiple organizaciones origen ([1fc357f](https://github.com/andes/app/commit/1fc357f64a81762daafc2d5e1afc0d380bea586f))
+* **TOP:** profesional sin permisos acceso mis asginadas x defecto ([6f12051](https://github.com/andes/app/commit/6f12051a5e826433837ddcf56b68442b3f6e4e91))
+
 # [5.3.0](https://github.com/andes/app/compare/v5.2.0...v5.3.0) (2020-07-08)
 
 
