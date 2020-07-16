@@ -1,6 +1,6 @@
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
-import { Component, OnInit, Output, Input, EventEmitter, SimpleChanges, OnChanges, Renderer2 } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, SimpleChanges, OnChanges, Renderer2, AfterViewChecked } from '@angular/core';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { FrecuentesProfesionalService } from '../../services/frecuentesProfesional.service';
 import { Auth } from '@andes/auth';
@@ -16,7 +16,7 @@ import { gtag } from '../../../../shared/services/analytics.service';
     styleUrls: ['buscador.scss']
 })
 
-export class BuscadorComponent implements OnInit, OnChanges {
+export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
     autofocus: any;
     @Input() _draggable: Boolean = false; // TODO Ver si lo sacamos.
     // Son los mas frecuentes del elemento rup.(tipo de prestación)
@@ -176,13 +176,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @memberof BuscadorComponent
      */
     ngOnChanges(changes: SimpleChanges) {
-        // if (this.ultimoTipoBusqueda !== this.busquedaActual) {
-        //     this.results.buscadorBasico = [];
-        //     if (this.resultsAux && this.resultsAux.buscadorBasico) {
-        //         this.resultsAux.buscadorBasico = [];
-        //     }
-        //     this.results[this.busquedaActual] = [];
-        // }
         if (changes.frecuentesTipoPrestacion && changes.frecuentesTipoPrestacion.currentValue) {
             if (typeof this.results.sugeridos['todos'] === 'undefined') {
                 this.results.sugeridos['todos'] = [];
@@ -196,9 +189,12 @@ export class BuscadorComponent implements OnInit, OnChanges {
                 }
             });
         }
+    }
+
+    ngAfterViewChecked() {
         let concepto: any = this.servicioPrestacion.getRefSetData();
         this.secciones = (concepto && concepto.conceptos && concepto.conceptos.term) ? concepto.conceptos.term : '';
-
+        this.busquedaRefSet = this.servicioPrestacion.getRefSetData();
 
         if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
             this.autofocus = false;
@@ -208,9 +204,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
             this.setTipoBusqueda(this.busquedaActual);
             this.busquedaPorConcepto = false;
         }
-
-
-
     }
 
     /**
@@ -305,7 +298,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @memberof BuscadorComponent
      */
     recibeResultados(resultadosSnomed: any) {
-        this.busquedaRefSet = this.servicioPrestacion.getRefSetData();
+
         setTimeout(() => {
             if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
                 this.autofocus = false;
