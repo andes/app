@@ -1,0 +1,43 @@
+<div class="row">
+    <div class="col">
+        <plex-box type="primary">
+            <table *ngIf="casos.length" style="table-layout:fixed" class="table table-fixed">
+                <thead>
+                    <tr>
+                        <th>Paciente</th>
+                        <th>DNI</th>
+                        <th>Edad</th>
+                        <th>Fecha de carga</th>
+                        <th>Ambito</th>
+                        <th>Prestacion</th>
+                    </tr>
+                </thead>
+            </table>
+            <table style="table-layout:fixed" class="table table-fixed">
+                <tbody>
+                    <tr *ngFor="let caso of casos; let i=index" class="hover">
+                        <td>
+                            {{ caso.paciente_apellido }} , {{caso.paciente_nombre}}
+                        </td>
+                        <td>
+                            {{ caso.paciente_documento }}
+                        </td>
+                        <td>
+                            {{ caso.paciente_edad }}
+                        </td>
+                        <td>
+                            {{ caso.fechaCarga }}
+                        </td>
+                        <td>
+                            {{ caso.ambito }}
+                        </td>
+                        <td>
+                            {{ caso.tipoPrestacion }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </plex-box>
+    </div>
+
+</div>
