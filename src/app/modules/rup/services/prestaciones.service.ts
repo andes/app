@@ -707,7 +707,7 @@ export class PrestacionesService {
             estado: { tipo: 'validada' },
             ...(planesCrear && planesCrear.length) && { planes: planesCrear },
             registros: prestacion.ejecucion.registros,
-            registrarFrecuentes: false
+            registrarFrecuentes: true
         };
         return this.patch(prestacion.id, dto);
 

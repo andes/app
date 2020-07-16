@@ -562,14 +562,14 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
                                     resultado = this.cargarNuevoRegistro(snomedConcept, valor);
 
-                                    if (dientesOdontograma) {
+                                    if (dientesOdontograma && dientesOdontograma.refsetId) {
                                         resultado.relacionadoCon = dientesOdontograma.conceptos;
                                     }
 
                                 } else {
 
                                     resultado = this.cargarNuevoRegistro(snomedConcept);
-                                    if (resultado && dientesOdontograma) {
+                                    if (resultado && dientesOdontograma && dientesOdontograma.refsetId) {
                                         resultado.relacionadoCon = dientesOdontograma.conceptos;
                                     }
                                 }
@@ -577,14 +577,14 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
                         }
                     } else {
                         resultado = this.cargarNuevoRegistro(snomedConcept);
-                        if (resultado && dientesOdontograma) {
+                        if (resultado && dientesOdontograma && dientesOdontograma.refsetId) {
                             resultado.relacionadoCon = dientesOdontograma.conceptos;
                         }
                     }
                 });
         } else {
             resultado = this.cargarNuevoRegistro(snomedConcept);
-            if (dientesOdontograma && dientesOdontograma.conceptos) {
+            if (dientesOdontograma && dientesOdontograma.conceptos && dientesOdontograma.refsetId) {
                 resultado.relacionadoCon = dientesOdontograma.conceptos;
             }
         }
