@@ -4,7 +4,7 @@
             <div class="columna">
                 <div class="concepto prestacion-offset">
                     <h4 *ngIf="registro?.solicitud">
-                        {{ registro.solicitud.registros[0].concepto.term[0].toUpperCase() + registro.solicitud.registros[0].concepto.term.slice(1) }}
+                        {{ registro.solicitud.tipoPrestacion.term }}
                     </h4>
                 </div>
                 <div class="divisor">
