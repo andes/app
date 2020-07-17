@@ -5,21 +5,18 @@
             <div class="w-100 h-100">
                 <plex-tabs [hidden]="showDatosSolicitud" [activeIndex]="activeIndex" (close)="onCloseTab($event)">
                     <plex-tab label="Registros de esta consulta">
-                        <div class="row"
+                        <div justify="end" class="mb-1"
                              *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length">
-                            <div class="col-9">
-                                <!-- Acciones sobre los registros -->
-                            </div>
-                            <div class="col-3 float-right text-right panel-acciones">
-                                <button *ngIf="collapse" title="Collapsar los registros" titlePosition="left"
-                                        (click)="colapsarPrestaciones('collapse'); collapse = false;"
-                                        class="btn btn-primary">
+                            <div class="col float-right text-right panel-acciones">
+                                <help-solicitud [solicitud]='prestacion.solicitud' class='mr-1'></help-solicitud>
+                                <plex-button *ngIf="collapse" title="Collapsar los registros" titlePosition="left"
+                                        (click)="colapsarPrestaciones('collapse'); collapse = false;" type="info">
                                     <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : !collapse}"></i>
-                                </button>
-                                <button *ngIf="!collapse" title="Expandir los registros" titlePosition="left"
-                                        (click)="colapsarPrestaciones(); collapse = true;" class="btn btn-primary">
+                                </plex-button>
+                                <plex-button *ngIf="!collapse" title="Expandir los registros" titlePosition="left"
+                                        (click)="colapsarPrestaciones(); collapse = true;" type="info">
                                     <i class="mdi mdi-chevron-left" [ngClass]="{'spin' : !collapse}"></i>
-                                </button>
+                                </plex-button>
                             </div>
                         </div>
 

@@ -1,0 +1,19 @@
+<plex-help size='md' type="help" titulo="Información de la Solicitud" class='text-left'>
+    <div class="container mb-4 float-left">
+        <div class="row">
+            <div class="col-12">
+                <label>Organización:</label> {{solicitud.organizacion.nombre}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <label>Fecha:</label> {{solicitud.fecha | date}}
+            </div>
+        </div>
+        <div class="row" *ngIf="solicitud.prestacionOrigen">
+            <div class="col">
+                <label>Prestación de origen:</label> {{solicitud.prestacionOrigen}}
+            </div>
+        </div>
+    </div>
+</plex-help>
