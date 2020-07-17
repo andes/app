@@ -28,6 +28,15 @@
     </plex-text>
 </div>
 
+<div *ngIf="descendienteSearch && busquedaActual === 'buscadorBasico'">
+    <plex-badge type="info">
+        DESCENDIENTES DE {{ descendienteSearch.term.substr(0, 30) }}
+        <plex-button (click)="removeDescendiente()" icon="close">
+
+        </plex-button>
+    </plex-badge>
+</div>
+
 <!-- MAESTRO DE PROBLEMAS - BD:tipoProblema -->
 <div class="menu-buscador">
     <!-- Botones filtros -->
@@ -138,13 +147,12 @@
                     </ng-container>)
                 </i>
             </ng-container>
-
             <ng-container
                           *ngIf="results && results[busquedaActual] && results[busquedaActual][filtroActual] && results[busquedaActual][filtroActual]?.length === 0">
                 <h4 class="pt-3 pb-3 text-center">No se han encontrado resultados.</h4>
 
                 <p class="text-center"
-                   *ngIf="search && (busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes')">
+                   *ngIf="search && (busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes' || busquedaActual === 'frecuentesTP')">
                     Intentar con el
                     <a href="javascript: void(0);" (click)="setTipoBusqueda('buscadorBasico');">Buscador básico</a>
                 </p>
@@ -184,6 +192,10 @@
                                     item.semanticTag }}
                                 </plex-badge>
                                 <plex-button type="info" size="sm" icon="plus" (click)="seleccionarConcepto(item, i)">
+                                </plex-button>
+                                <plex-button class="ml-1" type="info" size="sm" icon="graph"
+                                             title="filtrar por descendientes" (click)="filtrarPorDescendientes(item)"
+                                             *ngIf="!expression">
                                 </plex-button>
                             </div>
                         </div>

@@ -10,6 +10,7 @@ import { ISnomedSearchResult } from './../../interfaces/snomedSearchResult.inter
 import { SnomedBuscarService } from '../../../../components/snomed/snomed-buscar.service';
 import { gtag } from '../../../../shared/services/analytics.service';
 import { forkJoin } from 'rxjs';
+import { ISnomedConcept } from '../../interfaces/snomed-concept.interface';
 
 @Component({
     selector: 'rup-buscador',
@@ -487,6 +488,21 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
             return this.conceptos[this.filtroActual];
         }
         return this.busquedaPorConcepto;
+    }
+
+    descendienteSearch: ISnomedConcept;
+    previousText = null;
+    filtrarPorDescendientes(item: ISnomedConcept) {
+        this.previousText = this.search;
+        this.descendienteSearch = item;
+        this.busquedaActual = 'buscadorBasico';
+        this.buscadorService.search({ term: '', expression: `<<${item.conceptId}` });
+    }
+
+    removeDescendiente() {
+        this.search = this.previousText;
+        this.descendienteSearch = null;
+        this.buscadorService.search(this.previousText);
     }
 
 }
