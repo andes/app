@@ -126,8 +126,19 @@
         <div class="col">
             <small class="pr-1" *ngIf="getSemanticTagFiltros()">Filtros:</small>
             <i class="text-secondary ml-1">{{ getSemanticTagFiltros() }}</i>
+
+
         </div>
+
     </div>
+
+</div>
+<div class="mt-1"
+     *ngIf="filtroActual !== 'solicitudes' && filtroActual !== 'planes' && filtroActual !== 'laboratorios' && filtroActual !== 'vacunas'">
+    <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()" placeholder="Buscar un concepto..."
+               autoFocus="true">
+    </plex-text>
+
 </div>
 <div class="row huds-busqueda">
     <div class="col">
@@ -205,8 +216,8 @@
 
         <!-- Vista: HALLAZGOS -->
         <ng-container *ngIf="filtroActual === 'hallazgo'">
-            <ul *ngIf="hallazgos" class="hover conceptos list-unstyled">
-                <ng-container *ngFor="let registro of hallazgos; let iConcepto = index">
+            <ul *ngIf="registrosTotales.hallazgo" class="hover conceptos list-unstyled">
+                <ng-container *ngFor="let registro of registrosTotales.hallazgo ; let iConcepto = index">
                     <li>
                         <div class="rup-card mini hallazgo"
                              [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
@@ -255,10 +266,10 @@
             </ul>
         </ng-container>
 
-        <!-- Vista: HALLAZGOS -->
+        <!-- Vista: TRASTORNOS -->
         <ng-container *ngIf="filtroActual === 'trastorno'">
-            <ul *ngIf="trastornos" class="hover conceptos list-unstyled">
-                <ng-container *ngFor="let registro of trastornos; let iConcepto = index">
+            <ul *ngIf="registrosTotales.trastorno" class="hover conceptos list-unstyled">
+                <ng-container *ngFor="let registro of registrosTotales.trastorno; let iConcepto = index">
                     <li>
                         <div class="rup-card mini trastorno"
                              [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
@@ -277,11 +288,14 @@
                                                     <div class="row p-0 m-0">
                                                         <div class="col-10 p-0 m-0">
                                                             <div class="sugerido">
-                                                                <small>Prestación: {{ registro.evoluciones[0].tipoPrestacion }}</small>
+                                                                <small>Prestación:
+                                                                    {{ registro.evoluciones[0].tipoPrestacion }}</small>
                                                                 <br>
-                                                                <small>Última evolución: {{ registro.evoluciones[0].fechaCarga | fecha }}</small>
+                                                                <small>Última evolución:
+                                                                    {{ registro.evoluciones[0].fechaCarga | fecha }}</small>
                                                                 <br>
-                                                                <small>Profesional: {{ registro.evoluciones[0].profesional }}</small>
+                                                                <small>Profesional:
+                                                                    {{ registro.evoluciones[0].profesional }}</small>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -316,8 +330,8 @@
 
         <!-- Vista: PROCEDIMIENTOS -->
         <ng-container *ngIf="filtroActual === 'procedimiento'">
-            <ul *ngIf="procedimientos" class="hover conceptos list-unstyled">
-                <ng-container *ngFor="let registro of procedimientos; let iPrestacion = index">
+            <ul *ngIf="registrosTotales.procedimiento" class="hover conceptos list-unstyled">
+                <ng-container *ngFor="let registro of registrosTotales.procedimiento; let iPrestacion = index">
                     <li>
                         <div class="rup-card mini procedimiento"
                              [ngClass]="{'active': huds.isOpen(registro, 'concepto'), 'solicitud': registro.esSolicitud}"
@@ -447,8 +461,8 @@
 
         <!-- Vista: PRODUCTOS -->
         <ng-container *ngIf="filtroActual === 'producto'">
-            <ul *ngIf="productos" class="conceptos hover list-unstyled">
-                <ng-container *ngFor="let registro of productos; let iCronico = index">
+            <ul *ngIf="registrosTotales.producto" class="conceptos hover list-unstyled">
+                <ng-container *ngFor="let registro of this.registrosTotales.producto; let iCronico = index">
                     <li>
                         <div class="rup-card mini producto" [ngClass]="{'active': huds.isOpen(registro, 'concepto')}">
                             <div class="rup-header">
@@ -507,7 +521,7 @@
                     </li>
                 </ng-container>
             </ul>
-            <div *ngIf="productos.length === 0">No hay medicamentos registrados</div>
+            <div *ngIf="registrosTotales.producto.length === 0">No hay medicamentos registrados</div>
         </ng-container>
 
 
