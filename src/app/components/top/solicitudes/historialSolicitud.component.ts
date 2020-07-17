@@ -9,6 +9,19 @@ export class HistorialSolicitudComponent {
     prestacion;
     itemsHistorial = [];
 
+    salidaEstados = {
+        auditoria: 'Creada',
+        asignacionProfesional: 'Asignada',
+        pendiente: 'Aceptada',
+        ejecucion: 'Ejecutada',
+        validada: 'Validada',
+        asignacionTurno: 'Turno Asignado',
+        liberacionTurno: 'Turno Liberado',
+        rechazada: 'Contrarreferida',
+        anulada: 'Anulada',
+        referencia: 'Referida'
+    };
+
     @Input('prestacion')
     set _prestacion(value) {
         this.prestacion = value;
@@ -39,29 +52,28 @@ export class HistorialSolicitudComponent {
         }
         this.itemsHistorial = [...this.prestacion.estados, ...historial, ...dacionTurno]
             .sort( (a, b) => moment(b.createdAt).diff(moment(a.createdAt)))
-            .map( (e) => ({
-                descripcion: e.tipo ? e.tipo : e.accion,
-                observaciones: e.observaciones,
-                createdAt: e.createdAt,
-                createdBy: e.createdBy
-            }))
+            .map( (e) => {
+                let reg: any = {
+                    descripcion: e.tipo ? e.tipo : e.accion,
+                    observaciones: e.observaciones,
+                    createdAt: e.createdAt,
+                    createdBy: e.createdBy
+                };
+
+                if (e.tipoPrestacion) {
+                    reg.tipoPrestacion = e.tipoPrestacion;
+                }
+                if (e.profesional) {
+                    reg.profesional = e.profesional;
+                }
+                if (e.organizacion) {
+                    reg.organizacion = e.organizacion;
+                }
+                return reg;
+            })
             // filtramos registros con 'asignacionProfesional' ya este estado viene en los estados y el historial, y se duplica
-            .filter(e => e.descripcion !== 'asignacionProfesional');
+            .filter((e: any) => e.descripcion !== 'asignada');
 
-
-        let salidaEstados = {
-            auditoria: 'Creada',
-            asignada: 'Asignada',
-            pendiente: 'Aceptada',
-            ejecucion: 'Ejecutada',
-            validada: 'Validada',
-            asignacionTurno: 'Turno Asignado',
-            liberacionTurno: 'Turno Liberado',
-            rechazada: 'Contrarreferida',
-            anulada: 'Anulada',
-            referencia: 'Referida'
-        };
-
-        this.itemsHistorial.forEach(e => e.descripcion = salidaEstados[e.descripcion]);
+        this.itemsHistorial.forEach(e => e.descripcion = this.salidaEstados[e.descripcion]);
     }
 }

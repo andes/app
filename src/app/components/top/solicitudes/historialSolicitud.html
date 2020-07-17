@@ -11,6 +11,23 @@
                     <b>{{ reg.createdAt | date: "dd/MM/yyyy 'a las' HH:mm "  }}</b>
                     <br />
                     {{ reg.descripcion }} por <b>{{ reg.createdBy.nombreCompleto }}</b>
+                    
+                    <ng-container *ngIf="reg.descripcion === salidaEstados.referencia">
+                        <ng-container *ngIf="reg.tipoPrestacion">
+                            <br />Prestación Destino Original: 
+                            <b>{{ reg.tipoPrestacion.term }}</b>
+                        </ng-container>
+
+                        <ng-container *ngIf="reg.organizacion">
+                            <br />Organización Destino Original: 
+                            <b>{{ reg.organizacion.nombre }}</b>
+                        </ng-container>
+                    </ng-container>
+                    <ng-container *ngIf="reg.profesional && (reg.descripcion === salidaEstados.referencia || reg.descripcion === salidaEstados.asignacionProfesional)">
+                        <br />Profesional Destino Original: 
+                        <b>{{ reg.profesional.nombre }} {{ reg.profesional.apellido }}</b>
+                    </ng-container>
+                    
                     <ng-container *ngIf='reg.observaciones'>
                         <br />
                         <b>NOTAS: </b>{{ reg.observaciones }}
