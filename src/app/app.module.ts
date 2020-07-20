@@ -29,7 +29,7 @@ import { ExcelService } from './services/xlsx.service';
 import { PlexModule } from '@andes/plex';
 import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
-import { AuthModule } from '@andes/auth';
+import { AuthModule, Auth } from '@andes/auth';
 import { SharedModule } from '@andes/shared';
 import { RoutingGuard, RoutingNavBar, RoutingHudsGuard } from './app.routings-guard.class';
 import { AgmCoreModule } from '@agm/core';
@@ -351,6 +351,7 @@ import { ModulosService } from './services/novedades/modulos.service';
 
 import { ConceptosTurneablesService } from './services/conceptos-turneables.service';
 import { DisclaimerService } from './services/disclaimer.service';
+import { AuthContext } from '@andes/shared';
 
 registerLocaleData(localeEs, 'es');
 
@@ -515,6 +516,7 @@ registerLocaleData(localeEs, 'es');
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'es-AR' },
+        { provide: AuthContext, useExisting: Auth },
         HttpClient,
         Plex,
         Server,
