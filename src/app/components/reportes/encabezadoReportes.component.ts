@@ -68,7 +68,7 @@ export class EncabezadoReportesComponent implements OnInit {
 
     }
 
-    public async ngOnInit() {
+    public ngOnInit() {
         if (!this.auth.check('reportes')) {
             this.router.navigate(['./inicio']);
         }
@@ -78,7 +78,7 @@ export class EncabezadoReportesComponent implements OnInit {
             organizacion: this.auth.organizacion.id
         };
         this.organizacion = this.auth.organizacion.nombre;
-        await this.queryService.getAllQueries({ desdeAndes: true }).subscribe((query) => {
+        this.queryService.getAllQueries({ desdeAndes: true }).subscribe((query) => {
             this.opciones = [{
                 id: 1,
                 nombre: 'Reporte C2'
