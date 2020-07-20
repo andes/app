@@ -7,7 +7,6 @@ import * as moment from 'moment';
 import { OrganizacionService } from '../../services/organizacion.service';
 import { AgendaService } from '../../services/turnos/agenda.service';
 import { QueriesService } from '../../services/query.service';
-import { saveAs } from 'file-saver';
 import { Slug } from 'ng2-slugify';
 
 
@@ -211,14 +210,7 @@ export class EncabezadoReportesComponent implements OnInit {
             fechaHasta: this.parametros['horaFin'],
             organizacion: this.parametros['organizacion']
         };
-        this.queryService.descargarCsv(this.tipoReportes.nombre, params).subscribe(data => {
-            if (data.size) {
-                const blob = new Blob([data], { type: data.type });
-                saveAs(blob, this.slug.slugify(this.tipoReportes.nombre + ' ' + moment().format('DD-MM-YYYY-hmmss')) + '.csv');
-            } else {
-                this.plex.info('warning', 'Su búsqueda no arrojó ningún resultado', 'Consultas');
-            }
-        });
+        this.queryService.descargarCsv(this.tipoReportes.nombre, params).subscribe();
     }
 
     selectChange(event) {

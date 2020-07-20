@@ -1,7 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
-import { Server } from '@andes/shared';
-import { IFiltroQuery } from '../interfaces/IFiltroQuery';
+import { Server, saveAs } from '@andes/shared';
 
 @Injectable()
 export class QueriesService {
@@ -22,8 +21,10 @@ export class QueriesService {
         return this.server.get(`${this.biUrl}/queries/${nombre}/json`, { params });
     }
 
-    descargarCsv(nombre: String, params) {
+    descargarCsv(nombre, params) {
         const options: any = { params, responseType: 'blob' };
-        return this.server.get(`${this.biUrl}/queries/${nombre}/csv`, options);
+        return this.server.get(`${this.biUrl}/queries/${nombre}/csv`, options).pipe(
+            saveAs(nombre, 'csv')
+        );
     }
 }
