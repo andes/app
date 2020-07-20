@@ -50,7 +50,7 @@
                 <th></th>
             </thead>
             <tbody>
-                <ng-container *ngIf="!agendas.length">
+                <ng-container *ngIf="!agendas.length || !matchPaciente">
                     <tr>
                         <td colspan="3">
                             <i class="mdi mdi-emoticon-sad"></i> No hay agendas programadas para este día
@@ -63,7 +63,7 @@
                     <ng-container *ngFor="let agenda of agendas; let i=index">
                         <tr class="hover" [ngClass]="{'bg-inverse text-white': agendaSeleccionada == agenda}"
                             (click)="cargarTurnos(this.agenda)"
-                            *ngIf="agenda.dinamica || getCantidadPacientes(agenda) || agenda.tipoPrestaciones[0].noNominalizada">
+                            *ngIf="!paciente || (!agenda.tipoPrestaciones[0].noNominalizada && getCantidadPacientes(agenda))">
 
                             <td>
                                 <div>
@@ -146,7 +146,7 @@
                     </plex-title>
 
                     <ng-container
-                                  *ngIf="agendaSeleccionada && agendaSeleccionada !== 'fueraAgenda' && (agendaSeleccionada.dinamica || getCantidadPacientes(agendaSeleccionada) || agendaSeleccionada.tipoPrestaciones[0].noNominalizada)">
+                                  *ngIf="agendaSeleccionada && agendaSeleccionada !== 'fueraAgenda' && (!paciente || (!agendaSeleccionada.tipoPrestaciones[0].noNominalizada && getCantidadPacientes(agendaSeleccionada)) )">
                         <div class="row">
                             <div class="col-12">
                                 <ng-container>
