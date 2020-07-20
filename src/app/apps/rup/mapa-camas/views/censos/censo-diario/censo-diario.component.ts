@@ -64,6 +64,7 @@ export class CensosDiariosComponent implements OnInit {
                     existencia24: censoDiario.censo.existenciaALas24,
                     ingresoEgresoDia: censoDiario.censo.ingresosYEgresos,
                     pacientesDia: censoDiario.censo.pacientesDia,
+                    diasEstada: censoDiario.censo.diasEstada,
                     disponibles24: censoDiario.censo.disponibles,
                 };
 
@@ -77,7 +78,8 @@ export class CensosDiariosComponent implements OnInit {
                             ingreso: actividad.ingreso,
                             paseDe: actividad.paseDe,
                             egreso: actividad.egreso,
-                            paseA: actividad.paseA
+                            paseA: actividad.paseA,
+                            diasEstada: actividad.diasEstada
                         };
                         if (!movimiento.ingreso && !movimiento.paseDe && !movimiento.egreso && !movimiento.paseA) {
                             delDiaAnterior = true;
