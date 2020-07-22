@@ -1,10 +1,9 @@
 <div class="w-100" *ngIf="registrosRelaciones.relacionesOrdenadas">
     <plex-title size="sm" titulo="Relaciones"></plex-title>
-    <ng-container *ngFor="let rama of registrosRelaciones.relacionesOrdenadas; let iRama = index">
+    <ng-container *ngFor="let rama of registrosRelaciones.relacionesOrdenadas;">
         <ul class="list-group">
-            <li [ngClass]="{
-                    'ml-0': !rama.esDiagnosticoPrincipal
-                }" class="list-group-item pl-0 pt-0 pb-0 mb-0 ml-{{ registrosRelaciones.registrosDeep[rama.id] }}">
+            <li [class.ml-0]="!rama.esDiagnosticoPrincipal"
+                class="list-group-item pl-0 pt-0 pb-0 mb-0 ml-{{ registrosRelaciones.registrosDeep[rama.id] }}">
                 <div>
                     <span
                           class="type {{ rama.esSolicitud ? 'solicitud' : rama.concepto.semanticTag }} pr-2 mr-1"></span>

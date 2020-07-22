@@ -298,7 +298,6 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
             this.defualtDiagnosticoPrestacion();
             this.registrosOrdenados = this.prestacion.ejecucion.registros;
-            this.huds.armarRelaciones(this.prestacion);
 
         });
     }
