@@ -62,7 +62,8 @@
                 </ng-container>
             </plex-title>
             <fieldset>
-                <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal">
+                <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal" 
+                [fields]="pacienteFields">
                 </paciente-detalle>
             </fieldset>
         </ng-container>

@@ -54,7 +54,7 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
     public permisoIngreso = false;
     canEdit = this.auth.check('internacion:cama:create');
     canMovimientos = this.auth.check('internacion:movimientos');
-
+    pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
 
     constructor(
         private auth: Auth,

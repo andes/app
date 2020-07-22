@@ -14,6 +14,7 @@ export class InformeIngresoComponent implements OnInit {
     prestacion$: Observable<IPrestacion>;
     informeIngreso$: Observable<any>;
     paciente$: Observable<any>;
+    pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
 
     // EVENTOS
     @Output() cancel = new EventEmitter<any>();
