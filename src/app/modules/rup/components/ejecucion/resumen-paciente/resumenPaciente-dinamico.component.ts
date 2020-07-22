@@ -43,10 +43,10 @@ export class ResumenPacienteDinamicoComponent implements OnInit {
             term: 'medición de depuración renal'
         },
         {
-            conceptId: '386053000',
-            fsn: 'seguimiento de la temperatura (procedimiento)',
-            semanticTag: 'procedimiento',
-            term: 'procedimiento de evaluacion'
+            conceptId: '211000246108',
+            fsn: 'curva de temperatura corporal (elemento de registro)',
+            semanticTag: 'elemento de registro',
+            term: 'curva de temperatura corporal'
         }
     ];
 
