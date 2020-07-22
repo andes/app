@@ -1,4 +1,3 @@
-import { AppMobileService } from '../../../services/appMobile.service';
 import { ParentescoService } from '../../../services/parentesco.service';
 import { IContacto } from '../../../interfaces/IContacto';
 import { IDireccion } from '../interfaces/IDireccion';
@@ -112,25 +111,18 @@ export class PacienteComponent implements OnInit {
     public showDeshacer = false;
     private subscripcionValidar: Subscription = null;
 
-    // // PARA LA APP MOBILE
-    public showMobile = false;
-    public checkPass = false;
-    public emailAndes: String = '';
-    public messageApp: String = '';
-    public celularAndes: String = '';
-    public activarApp = false;
-
     origen = '';
     tipoPaciente = '';
     contactoImportado = false;
     direccionImportada = false;
+    activacionMobilePendiente = null;
+    dataMobile;
 
     constructor(
         private historialBusquedaService: HistorialBusquedaService,
         private pacienteService: PacienteService,
         //     private pacienteHttpService: PacienteHttpService,
         private parentescoService: ParentescoService,
-        public appMobile: AppMobileService,
         private pacienteCache: PacienteCacheService,
         private _router: Router,
         public plex: Plex,
@@ -259,12 +251,6 @@ export class PacienteComponent implements OnInit {
         }
         this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
         this.checkDisableValidar();
-
-        // Se piden los datos para app mobile en la 1er carga del paciente
-        if (!this.paciente.id) {
-            this.checkPass = true;
-            this.activarApp = true;
-        }
     }
 
 
@@ -301,6 +287,9 @@ export class PacienteComponent implements OnInit {
                 } else {
                     if (this.changeRelaciones) {
                         this.saveRelaciones(resultadoSave);
+                    }
+                    if (this.activacionMobilePendiente) {
+                        this.datosContacto.activarAppMobile(resultadoSave, this.dataMobile);
                     }
                     this.historialBusquedaService.add(resultadoSave);
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
@@ -386,36 +375,10 @@ export class PacienteComponent implements OnInit {
         }
     }
 
-    activarAppMobile(unPaciente: IPaciente) {
-        // Activa la app mobile
-        if (this.activarApp && this.emailAndes && this.celularAndes) {
-            this.appMobile.create(unPaciente.id, {
-                email: this.emailAndes,
-                telefono: this.celularAndes
-            }).subscribe((datos) => {
-                if (datos.error) {
-                    if (datos.error === 'email_not_found') {
-                        this.plex.info('El paciente no tiene asignado un email.', 'Atención');
-                    }
-                    if (datos.error === 'email_exists') {
-                        this.plex.info('El mail ingresado ya existe, ingrese otro email', 'Atención');
-                    }
-                } else {
-                    this.plex.info('success', 'Se ha enviado el código de activación al paciente');
-                }
-            });
-        }
-    }
-
-    gestionMobile(band) {
-        this.showMobile = band;
-    }
-
     cancel() {
         if (this.subscripcionValidar) {
             this.subscripcionValidar.unsubscribe();
         }
-        this.showMobile = false;
         this.redirect();
     }
 
@@ -436,6 +399,14 @@ export class PacienteComponent implements OnInit {
             this.mainSize = 10;
             this.detailDirection = 'column';
             this.showRelaciones = false;
+        }
+    }
+
+
+    checkDisableValidar() {
+        if (!this.validado || !this.pacienteModel.foto) {
+            let sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
+            this.disableValidar = !(parseInt(this.pacienteModel.documento, 0) >= 99999 && sexo !== undefined && sexo !== 'otro');
         }
     }
 
@@ -460,19 +431,15 @@ export class PacienteComponent implements OnInit {
         this.pacienteModel.notas = notasNew;
     }
 
+    mobileNotification(data) {
+        this.dataMobile = data;
+        this.activacionMobilePendiente = (data !== null);
+    }
 
     actualizarRelaciones(data: any) {
         this.changeRelaciones = true;
         this.pacienteModel.relaciones = data.relaciones;
         this.relacionesBorradas = data.relacionesBorradas;
-    }
-
-
-    checkDisableValidar() {
-        if (!this.validado || !this.pacienteModel.foto) {
-            let sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-            this.disableValidar = !(parseInt(this.pacienteModel.documento, 0) >= 99999 && sexo !== undefined && sexo !== 'otro');
-        }
     }
 
     toRelacionesOnChange(data) {

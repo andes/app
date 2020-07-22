@@ -8,7 +8,6 @@
                 </plex-title>
 
                 <plex-wrapper *ngFor="let _unContacto of paciente.contacto; let i = index">
-
                     <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}"
                                  [required]="i <= 0" label="Tipo" (change)="_unContacto.valor = ''"
                                  [readonly]="noPoseeContacto">
@@ -25,11 +24,11 @@
                                     [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}"
                                     [readonly]="noPoseeContacto">
                         </plex-phone>
-                        <plex-text label="Dirección"
+                        <plex-text email label="Dirección"
                                    *ngIf="_unContacto.tipo === 'email' || _unContacto.tipo.id === 'email'"
                                    [(ngModel)]="_unContacto.valor" placeholder="Ej: ejemplo@email.com"
                                    [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}"
-                                   (change)="verificarCorreoValido(i, $event.value)" [readonly]="noPoseeContacto">
+                                   [readonly]="noPoseeContacto">
                         </plex-text>
 
                         <plex-button *ngIf="i == 0" title="Agregar contacto" titlePosition="left" type="info"
@@ -40,8 +39,14 @@
 
                     <plex-button *ngIf="i > 0" label="" type="danger" icon="close" (click)="removeContacto(i)">
                     </plex-button>
-
                 </plex-wrapper>
+
+
+                <!-- APP-MOBILE -->
+                <activar-app *ngIf="paciente.estado === 'validado'" [paciente]="paciente" [showCampoCelular]="false"
+                             (activar)="mobileNotify($event)">
+                </activar-app>
+
 
                 <!-- DATOS DE DOMICILIO -->
 
@@ -73,13 +78,11 @@
                         </plex-select>
 
                         <!-- barrios solo para NQN capital-->
-                        <plex-select label="Barrio" [disabled]="!viveLocActual"
+                        <plex-select class="pr-3" label="Barrio" [disabled]="!viveLocActual"
                                      [(ngModel)]="paciente.direccion[0].ubicacion.barrio" name="barrio"
-                                     [data]="barrios$ | async" labelField="nombre" grow="1">
+                                     [data]="barrios$ | async" labelField="nombre" grow="full">
                         </plex-select>
-                    </plex-wrapper>
 
-                    <plex-wrapper>
                         <plex-text label="Dirección" [(ngModel)]="paciente.direccion[0].valor" name="direccion"
                                    placeholder="Ej: Avenida las Flores 1200">
                         </plex-text>

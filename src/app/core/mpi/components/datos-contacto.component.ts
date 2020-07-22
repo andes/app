@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
 import { IPaciente } from '../interfaces/IPaciente';
 import { IContacto } from '../../../interfaces/IContacto';
 import { IProvincia } from '../../../interfaces/IProvincia';
@@ -13,12 +13,13 @@ import { BarrioService } from '../../../services/barrio.service';
 import { LocalidadService } from '../../../services/localidad.service';
 import { Auth } from '@andes/auth';
 import * as enumerados from '../../../utils/enumerados';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription, Observable, combineLatest } from 'rxjs';
 import { NgForm } from '@angular/forms';
 import { cache } from '@andes/shared';
 import { switchMap, map } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
 import { GeorrefMapComponent } from './georref-map.component';
+import { AppMobileService } from '../../../services/appMobile.service';
+import { PacienteService } from '../services/paciente.service';
 
 @Component({
     selector: 'datos-contacto',
@@ -30,6 +31,7 @@ export class DatosContactoComponent implements OnInit, OnDestroy {
 
     @Input() paciente: IPaciente;
     @Output() changes: EventEmitter<any> = new EventEmitter<any>();
+    @Output() mobileApp: EventEmitter<any> = new EventEmitter<any>();
     @ViewChild('form', null) ngForm: NgForm;
     @ViewChild('mapa', null) mapa: GeorrefMapComponent;
 
@@ -46,6 +48,7 @@ export class DatosContactoComponent implements OnInit, OnDestroy {
     noPoseeContacto = false;
     contactosCache = [];
     tipoComunicacion: any[];
+
     public organizacion$: Observable<any>;
     public paises$: Observable<any>;
     public provincias$: Observable<any>;
@@ -82,12 +85,14 @@ export class DatosContactoComponent implements OnInit, OnDestroy {
     constructor(
         private auth: Auth,
         private plex: Plex,
+        private pacienteService: PacienteService,
         private georeferenciaService: GeoreferenciaService,
         private organizacionService: OrganizacionService,
         private paisService: PaisService,
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
         private barriosService: BarrioService,
+        private appMobile: AppMobileService
     ) { }
 
 
@@ -102,6 +107,7 @@ export class DatosContactoComponent implements OnInit, OnDestroy {
         this.provincias$ = this.provinciaService.get({}).pipe(
             cache()
         );
+        // this.celulares = this.paciente.contacto.filter(c => c.tipo === 'celular' && c.valor.length);
 
         this.georeferencia$ = combineLatest(
             this.organizacion$,
@@ -194,20 +200,6 @@ export class DatosContactoComponent implements OnInit, OnDestroy {
         }
     }
 
-    verificarCorreoValido(indice, mail) {
-        let formato = /^[a-zA-Z0-9_.+-]+\@[a-zA-Z0-9-]+(\.[a-z]{2,4})+$/;
-        this.ngForm.form.controls['valor-' + indice].setErrors({});  // con cada caracter nuevo 'limpia' el error y reevalúa
-        window.setTimeout(() => {
-            if (mail) {
-                if (formato.test(mail)) {
-                    this.ngForm.form.controls['valor-0'].setErrors({});
-                } else {
-                    this.ngForm.form.controls['valor-0'].setErrors({ invalid: true, pattern: { requiredPattern: formato } });
-                }
-            }
-        }, 500);
-    }
-
     onFocusout(type, value) {
         let item = null;
         for (let elem of this.paciente.contacto) {
@@ -223,6 +215,54 @@ export class DatosContactoComponent implements OnInit, OnDestroy {
             } else if (item.valor !== value) {
                 this.addContacto(type, value);
             }
+        }
+    }
+
+    // notificación para activar cuenta al guardar
+    mobileNotify(data) {
+        this.mobileApp.emit(data);
+    }
+
+
+    activarAppMobile(unPaciente: IPaciente, cuenta: any) {
+        // Activa la app mobile
+        if (cuenta.email && cuenta.celular) {
+            let poseeMail = unPaciente.contacto.find((c: any) => c.tipo === 'email' && c.valor === cuenta.email);
+            if (!poseeMail) {
+                // Se agrega nuevo contacto al paciente
+                let nuevo = {
+                    tipo: 'email',
+                    valor: cuenta.email,
+                    ranking: 1,
+                    activo: true,
+                    ultimaActualizacion: new Date()
+                };
+                unPaciente.contacto.push(nuevo);
+                let cambios = {
+                    op: 'updateContactos',
+                    contacto: unPaciente.contacto
+                };
+                this.pacienteService.patch(unPaciente.id, cambios).subscribe(resultado => {
+                    if (resultado) {
+                        this.plex.toast('info', 'Datos del paciente actualizados');
+                    }
+                });
+            }
+            this.appMobile.create(unPaciente.id, {
+                email: cuenta.email,
+                telefono: cuenta.celular
+            }).subscribe((datos) => {
+                if (datos.error) {
+                    if (datos.error === 'email_not_found') {
+                        this.plex.info('El paciente no tiene asignado un email.', 'Atención');
+                    }
+                    if (datos.error === 'email_exists') {
+                        this.plex.info('El activando app-mobile con un mail existente', 'Atención');
+                    }
+                } else {
+                    this.plex.toast('success', 'Se ha enviado el código de activación mobile al paciente');
+                }
+            });
         }
     }
 

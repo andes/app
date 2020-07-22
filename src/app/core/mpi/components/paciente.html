@@ -5,12 +5,12 @@
 
                 <plex-button label="Volver" type="danger" position="left" (click)="cancel()">
                 </plex-button>
-                <plex-button *ngIf="pacienteModel.id && pacienteModel.estado === 'validado' && !showMobile"
+                <!-- <plex-button *ngIf="pacienteModel.id && pacienteModel.estado === 'validado' && !showMobile"
                              label="Gestión de App Mobile" type="info" position="right" (click)="gestionMobile(true)">
-                </plex-button>
-                <plex-button *ngIf="showMobile" label="Volver a detalles paciente" type="info" position="right"
+                </plex-button> -->
+                <!-- <plex-button *ngIf="showMobile" label="Volver a detalles paciente" type="info" position="right"
                              (click)="gestionMobile(false)">
-                </plex-button>
+                </plex-button> -->
                 <plex-button *ngIf="(tipoPaciente === '' || tipoPaciente === 'con-dni') && !showDeshacer"
                              label="Validar Paciente" type="info" position="right" [disabled]="disableValidar"
                              (click)="validarPaciente()">
@@ -40,7 +40,8 @@
                 </plex-tab>
 
                 <plex-tab label="datos de contacto" icon="" (click)="tabIndex = 1">
-                    <datos-contacto #datosContacto [paciente]="pacienteModel" (changes)="datosContactoForm($event)">
+                    <datos-contacto #datosContacto [paciente]="pacienteModel" (changes)="datosContactoForm($event)"
+                                    (mobileApp)="mobileNotification($event)">
                     </datos-contacto>
                 </plex-tab>
 
@@ -64,56 +65,52 @@
 
     <plex-layout-sidebar [type]="'invert'">
         <div [ngClass]="{'loadMode': loading}">
-            <ng-container *ngIf='!showMobile'>
-                <!-- Pacientes candidatos -->
-                <div *ngIf='(pacientesSimilares && pacientesSimilares.length); else showPanel'>
-                    <header>
-                        <plex-title titulo="Pacientes Candidatos" size="md"></plex-title>
-                    </header>
-                    <plex-list>
-                        <plex-item *ngFor="let elem of pacientesSimilares" class="">
+            <!-- Pacientes candidatos -->
+            <div *ngIf='(pacientesSimilares && pacientesSimilares.length); else showPanel'>
+                <header>
+                    <plex-title titulo="Pacientes Candidatos" size="md"></plex-title>
+                </header>
+                <plex-list>
+                    <plex-item *ngFor="let elem of pacientesSimilares" class="">
 
-                            <img [mpiFotoPaciente]="elem.paciente" />
+                        <img [mpiFotoPaciente]="elem.paciente" />
 
-                            <plex-label *ngIf="!elem.paciente.numeroIdentificacion"
-                                        titulo="{{ elem.paciente | nombre }}"
-                                        subtitulo="{{ (elem.paciente.documento | number) || 'Sin DNI' }}">
-                            </plex-label>
+                        <plex-label *ngIf="!elem.paciente.numeroIdentificacion" titulo="{{ elem.paciente | nombre }}"
+                                    subtitulo="{{ (elem.paciente.documento | number) || 'Sin DNI' }}">
+                        </plex-label>
 
-                            <plex-label *ngIf="elem.paciente.numeroIdentificacion" titulo="{{ elem.paciente | nombre }}"
-                                        subtitulo="{{ elem.paciente.numeroIdentificacion }}"></plex-label>
+                        <plex-label *ngIf="elem.paciente.numeroIdentificacion" titulo="{{ elem.paciente | nombre }}"
+                                    subtitulo="{{ elem.paciente.numeroIdentificacion }}"></plex-label>
 
-                            <plex-label titulo="{{ elem.paciente | edad }}"
-                                        subtitulo="{{ elem.paciente.fechaNacimiento | fecha:'utc' }}">
-                            </plex-label>
+                        <plex-label titulo="{{ elem.paciente | edad }}"
+                                    subtitulo="{{ elem.paciente.fechaNacimiento | fecha:'utc' }}">
+                        </plex-label>
 
-                            <plex-badge *ngIf="elem.paciente.fechaFallecimiento" type="danger">Fallecido:
-                                {{ elem.paciente.fechaFallecimiento | fecha:'utc'}}
-                            </plex-badge>
+                        <plex-badge *ngIf="elem.paciente.fechaFallecimiento" type="danger">Fallecido:
+                            {{ elem.paciente.fechaFallecimiento | fecha:'utc'}}
+                        </plex-badge>
 
-                            <plex-badge type="info">{{ elem.paciente | sexo }}
-                            </plex-badge>
+                        <plex-badge type="info">{{ elem.paciente | sexo }}
+                        </plex-badge>
 
-                            <plex-badge type="" class=""
-                                        [ngClass]="{'text-success' : elem.paciente.estado === 'validado' , 'text-warning' : elem.paciente.estado === 'temporal'} ">
-                                {{ elem.paciente.estado }}
-                            </plex-badge>
+                        <plex-badge type="" class=""
+                                    [ngClass]="{'text-success' : elem.paciente.estado === 'validado' , 'text-warning' : elem.paciente.estado === 'temporal'} ">
+                            {{ elem.paciente.estado }}
+                        </plex-badge>
 
-                            <plex-label titulo="Similitud: {{elem.match * 100}} %"></plex-label>
+                        <plex-label titulo="Similitud: {{elem.match * 100}} %"></plex-label>
 
-                            <plex-button type="info" size="sm" label="Seleccionar" (click)="onSelect(elem.paciente)">
-                            </plex-button>
-                        </plex-item>
-                    </plex-list>
-                </div>
-                <ng-template #showPanel>
-                    <paciente-panel [paciente]="pacienteModel" [direction]="detailDirection"
-                                    [showRelaciones]="showRelaciones" (changeRelacion)="toRelacionesOnChange($event)">
-                    </paciente-panel>
-                </ng-template>
-            </ng-container>
+                        <plex-button type="info" size="sm" label="Seleccionar" (click)="onSelect(elem.paciente)">
+                        </plex-button>
+                    </plex-item>
+                </plex-list>
+            </div>
+            <ng-template #showPanel>
+                <paciente-panel [paciente]="pacienteModel" [direction]="detailDirection"
+                                [showRelaciones]="showRelaciones" (changeRelacion)="toRelacionesOnChange($event)">
+                </paciente-panel>
+            </ng-template>
         </div>
-        <activar-app *ngIf='showMobile' [paciente]="pacienteModel"></activar-app>
     </plex-layout-sidebar>
 
 </plex-layout>
