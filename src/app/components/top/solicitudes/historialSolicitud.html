@@ -1,0 +1,22 @@
+<ng-container>
+    <hr>
+    <h3>Historial</h3>
+    <br>
+
+    <table *ngIf="itemsHistorial.length" class="table table-striped">
+        <tbody>
+            <tr class="hover" *ngFor="let reg of itemsHistorial">
+                <td>
+                    <plex-icon name="dialpad" prefix></plex-icon>
+                    <b>{{ reg.createdAt | date: "dd/MM/yyyy 'a las' HH:mm "  }}</b>
+                    <br />
+                    {{ reg.descripcion }} por <b>{{ reg.createdBy.nombreCompleto }}</b>
+                    <ng-container *ngIf='reg.observaciones'>
+                        <br />
+                        <b>NOTAS: </b>{{ reg.observaciones }}
+                    </ng-container>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</ng-container>

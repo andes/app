@@ -21,7 +21,6 @@ export class ElementosRUPService {
     // Precalcula los elementos default para solicitudes
     private defaultsParaSolicitud: IElementosRUPCache = {};
 
-    private cacheBusquedaGuidada: any = {};
     // Indica que el servicio está listo para usarse.
     // BehaviorSubject permite que el subscribe se ejecute con el ultimo valor (aunque no haya cambios)
     public ready = new BehaviorSubject<boolean>(false);
@@ -185,23 +184,28 @@ export class ElementosRUPService {
         }
     }
 
-    /**
-     * Metodo get. Trae el objeto elementoRup.
-     * @param {any} params Opciones de busqueda
-     */
-    guiada(id): Observable<IElementoRUP[]> {
-        if (this.cacheBusquedaGuidada[id]) {
-            return new Observable((observer) => {
-                observer.next(this.cacheBusquedaGuidada[id]);
-                observer.complete();
-            });
-        } else {
-            return this.server.get(url + '/' + id + '/guiada', { showError: true });
-        }
-    }
-
     getConceptosInternacion() {
         let conceptosInternacion = {
+            // Lo pongo así porque no tiene sentido lo que hicieron con los otros conceptos
+            // Pronto este listado no tiene más sentido
+            valoracionInicial: {
+                conceptId: '5491000013101',
+                term: 'evaluación médica inicial',
+                fsn: 'evaluación médica inicial (procedimiento)',
+                semanticTag: 'procedimiento',
+            },
+            evolucion: {
+                conceptId: '5971000013106',
+                term: 'evolución médica',
+                fsn: 'evolución médica (procedimiento)',
+                semanticTag: 'procedimiento',
+            },
+            indicaciones: {
+                conceptId: '4981000013105',
+                term: 'plan de indicaciones médicas',
+                fsn: 'plan de indicaciones médicas (procedimiento)',
+                semanticTag: 'procedimiento',
+            },
             epicrisis: this.cache['2341000013106'] ? this.cache['2341000013106'].conceptos[0] : null,
             ingreso: this.cache['721915006'] ? this.cache['721915006'].conceptos[0] : null,
             egreso: this.cache['58000006'] ? this.cache['58000006'].conceptos[0] : null

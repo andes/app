@@ -24,10 +24,10 @@
     <div class="row">
             <!-- <div class="col-12"> -->
         <div class="col-12" *ngIf="mostrarMsjMultiCarpeta">
-            <span class="badge-warning">
-                Hay solicitudes de carpetas sin seleccionar. No se puede prestar carpetas para el mismo paciente y la misma
-                fecha.
-            </span>
+            <plex-badge type="warning">
+                Hay solicitudes de carpetas sin seleccionar. No se puede prestar carpetas para el mismo paciente y la
+                misma fecha.
+            </plex-badge>
         </div>
         <div class="col-3">
             <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')"
@@ -96,9 +96,9 @@
                     <td>
                         <b>{{carpeta.numero}}</b>
                         <br>
-                        <span class="badge-{{carpeta.tipo === 'Automatica' ? 'success':'info'}} float-left">
+                        <plex-badge type="{{carpeta.tipo === 'Automatica' ? 'success':'info'}}">
                             {{carpeta.tipo === 'Automatica' ? 'Automática':'Manual'}}
-                        </span>
+                        </plex-badge>
                     </td>
                     <td>
                         <b>
@@ -149,11 +149,11 @@
                     </td>
                     <!-- Boton para subir HUDS digitalizada -->
                     <td>
-                        <upload-file label="Adjuntar HUDS" [extensiones]="['pdf']"
+                        <upload-file *ngIf="puedeAdjutarHUDS" label="Adjuntar HUDS" [extensiones]="['pdf']"
                             (onUpload)="onUpload($event, carpeta)"></upload-file>
                         <br><br>
                         <span *ngIf="errorExt===i">
-                            <span class="badge-danger">Archivo inválido. Solo se admite PDF</span>
+                            <plex-badge type="danger">Archivo inválido. Solo se admite PDF</plex-badge>
                         </span>
                     </td>
                     <!-- Estado -->
@@ -163,7 +163,7 @@
                         </plex-button>
                     </td>
                     <td *ngIf="carpeta.estado == 'Prestada'">
-                        <span class="badge-warning float-left">Prestada</span>
+                        <plex-badge type="warning">Prestada</plex-badge>
                     </td>
                 </tr>
             </tbody>

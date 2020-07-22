@@ -1,12 +1,11 @@
 import { Auth } from '@andes/auth';
-import { SnomedService } from './../../services/term/snomed.service';
+import { SnomedService } from '../../apps/mitos';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding } from '@angular/core';
 import { OrganizacionService } from './../../services/organizacion.service';
 import { IOrganizacion, ISectores } from './../../interfaces/IOrganizacion';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ISnomedConcept } from '../../modules/rup/interfaces/snomed-concept.interface';
-import { CamasService } from '../../apps/rup/internacion/services/camas.service';
 
 @Component({
     selector: 'organizacion-sectores',
@@ -36,7 +35,6 @@ export class OrganizacionSectoresComponent implements OnInit {
         public plex: Plex,
         public snomed: SnomedService,
         private router: Router,
-        public CamaService: CamasService,
         private route: ActivatedRoute,
         private auth: Auth
     ) { }
@@ -76,6 +74,7 @@ export class OrganizacionSectoresComponent implements OnInit {
      * Grabar los cambios de la organización
      */
     onSave() {
+        this.checkUnidadesOrganizativasPorSector();
         this.organizacionService.save(this.organizacion).subscribe(() => {
             this.router.navigate(['/tm/organizacion']);
         });
@@ -141,16 +140,10 @@ export class OrganizacionSectoresComponent implements OnInit {
 
     removeItem($event) {
         if ($event.id) {
-            this.CamaService.camaXsector($event.id).subscribe(camas => {
-                if (camas.length <= 0) {
-                    this.plex.confirm('¿Desea eliminarlo?', 'Eliminar Sector').then((confirmar) => {
-                        let index = this.organizacion.mapaSectores.findIndex((item) => item === $event);
-                        if (confirmar && index >= 0) {
-                            this.organizacion.mapaSectores.splice(index, 1);
-                        }
-                    });
-                } else {
-                    this.plex.info('warning', 'El sector contiene camas', 'No se puede borrar');
+            this.plex.confirm('¿Desea eliminarlo?', 'Eliminar Sector').then((confirmar) => {
+                let index = this.organizacion.mapaSectores.findIndex((item) => item === $event);
+                if (confirmar && index >= 0) {
+                    this.organizacion.mapaSectores.splice(index, 1);
                 }
             });
         } else {
@@ -263,4 +256,24 @@ export class OrganizacionSectoresComponent implements OnInit {
 
     }
 
+    checkUnidadesOrganizativasPorSector() {
+        for (const sector of this.organizacion.mapaSectores) {
+            this.searchSector(sector);
+        }
+    }
+
+    searchSector(sector) {
+        if (sector.unidadConcept) {
+            if (!this.organizacion.unidadesOrganizativas.some(uo => uo.conceptId === sector.unidadConcept.conceptId)) {
+                this.organizacion.unidadesOrganizativas.push(sector.unidadConcept);
+            }
+        }
+        if (sector.hijos.length !== 0) {
+            for (const hijo of sector.hijos) {
+                this.searchSector(hijo);
+            }
+        } else {
+            return null;
+        }
+    }
 }

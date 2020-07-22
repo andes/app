@@ -36,18 +36,22 @@
                                              name="profesional">
                                 </plex-select>
                             </div>
-                            <div *ngIf="mostrarCalendario" class="col">
-                                <plex-bool [(ngModel)]="mostrarNoDisponibles" type="slide" name="mostrarNoDisponibles"
+                            <div class="col-4">
+                                <plex-bool *ngIf="mostrarCalendario" [(ngModel)]="mostrarNoDisponibles" type="slide"
+                                           name="mostrarNoDisponibles"
                                            title="{{mostrarNoDisponibles ? 'Ocultar agendas sin turnos' : 'Mostrar agendas sin turnos'}}"
-                                           (change)="actualizar('')"></plex-bool>
-                                <plex-bool [(ngModel)]="ocultarFinesDeSemana" type="slide" name="ocultarFinesDeSemana"
+                                           (change)="actualizar()"></plex-bool>
+                                <plex-bool *ngIf="mostrarCalendario" [(ngModel)]="ocultarFinesDeSemana" type="slide"
+                                           name="ocultarFinesDeSemana"
                                            title="{{ocultarFinesDeSemana ? 'Mostrar sábados y domingos' : 'Ocultar sábados y domingos'}}"
-                                           (change)="actualizar('')"></plex-bool>
-                            </div>
-                            <div class="col-3 text-right">
-                                <plex-button type="link" icon="chevron-left" (click)="cambiarMes('-')"></plex-button>
+                                           (change)="actualizar()">
+                                </plex-bool>
+
+                                <plex-button type="link" icon="chevron-left" (click)="cambiarMes('-')">
+                                </plex-button>
                                 <span class="text-120">{{ opciones.fecha | date: "MMM yyyy" | uppercase }}</span>
-                                <plex-button type="link" icon="chevron-right" (click)="cambiarMes('+')"></plex-button>
+                                <plex-button type="link" icon="chevron-right" (click)="cambiarMes('+')">
+                                </plex-button>
                             </div>
                         </div>
                     </header>
@@ -66,10 +70,9 @@
             <!--Lateral-->
             <div class="col-4 h-100">
                 <plex-box>
-
                     <!--Ninguna agenda seleccionada-->
                     <ng-container *ngIf="estadoT === 'noSeleccionada' && !_solicitudPrestacion?.solicitud">
-                        <legend class="pt-3 text-center">Búsquedas recientes</legend>
+                        <plex-title size="sm" titulo="Búsquedas recientes"></plex-title>
                         <ul class="list-group">
                             <li *ngFor="let busqueda of busquedas; let i = index" class="list-group-item hover"
                                 [appHover]="'active'" title="Buscar turnos similares" (click)="seleccionarBusqueda(i)">
@@ -95,8 +98,8 @@
                                          icon="chevron-left" class="text-lg" title="Agenda anterior"
                                          (click)="verAgenda('izq')"></plex-button>
                             <span>{{ agenda.horaInicio | date: 'EEE d MMM' }}
-                                <div class="badge badge-{{ estadosAgenda[agenda.estado].class }}">
-                                    {{ estadosAgenda[agenda.estado].nombre }}</div>
+                                <plex-badge type="{{ estadosAgenda[agenda.estado].class }}">
+                                    {{ estadosAgenda[agenda.estado].nombre }}</plex-badge>
                             </span>
                             <span *ngIf="estadoT==='dinamica'">
                                 {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs
@@ -107,7 +110,7 @@
                             <!-- Listado de prestaciones -->
                             <div *ngIf="agenda && agenda.tipoPrestaciones">
                                 <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
-                                    {{ tipoPrestacion.nombre }}
+                                    {{ tipoPrestacion.term }}
                                 </div>
                             </div>
                             <div *ngIf="agenda && agenda.profesionales">
@@ -123,7 +126,6 @@
                             <div *ngFor="let bloque of bloques">
                                 <div *ngIf="bloque.descripcion">
                                     <span>Bloque: {{bloque.descripcion}}</span>
-                                    <!--<span class="h5 badge badge-pill badge-default"> {{bloque.duracionTurno}} '</span>-->
                                 </div>
                                 <!--Tipos de turnos-->
                                 <table class="table table-condensed text-center small"
@@ -305,7 +307,7 @@
                         <div class="row">
                             <div class="col">
                                 <label>Paciente</label>
-                                <div *ngIf="paciente" class="text-ellipsis">{{this.paciente | paciente}}</div>
+                                <div *ngIf="paciente" class="text-ellipsis">{{this.paciente | nombre }}</div>
                                 <!-- <div *ngIf="paciente.documento !== ''">{{this.paciente.documento | number}}</div> -->
                                 <label>Turno</label>
                                 <div>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}} a las {{turno.horaInicio |
@@ -324,9 +326,9 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div *ngIf="agenda.espacioFisico" class="col">
+                            <div *ngIf="agenda.espacioFisico || agenda.otroEspacioFisico" class="col">
                                 <label>Espacio Físico</label>
-                                <div>{{agenda.espacioFisico.nombre}}</div>
+                                <div>{{agenda | espacioFisico}}</div>
                             </div>
                             <div class="col">
                                 <ng-container *ngIf="!desplegarOS && obraSocialPaciente">
@@ -412,7 +414,8 @@
     <footer *ngIf="autorizado && showDarTurnos">
         <div class="row">
             <div class="col text-left">
-                <plex-button label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
+                <plex-button label="No se asigna turno" type="danger" size="sm" (click)="noSeAsignaTurno()">
+                </plex-button>
             </div>
         </div>
     </footer>

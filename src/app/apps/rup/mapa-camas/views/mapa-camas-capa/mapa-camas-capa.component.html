@@ -1,0 +1,90 @@
+<plex-layout main="8">
+    <plex-layout-main>
+        <header [hidden]="mainView !== 'mapa-camas'">
+            <plex-title titulo="Mapa de Camas">
+                <plex-button *ngIf="capa === 'estadistica'" class="mr-1" size="sm" label="LISTA DE ESPERA"
+                             type="primary" (click)="gotoListaEspera()">
+                </plex-button>
+                <plex-button *ngIf="capa === 'estadistica'" class="mr-1" size="sm" label="LISTADO DE INTERNACIÓN"
+                             type="primary" (click)="verListadoInternacion()">
+                </plex-button>
+                <plex-dropdown *ngIf="capa === 'estadistica' && permisoCenso" size="sm" label="VER CENSO" type="primary"
+                               class="d-inline-block" [right]="true" [items]="itemsDropdown">
+                </plex-dropdown>
+            </plex-title>
+
+            <app-filtros-camas></app-filtros-camas>
+
+            <plex-title titulo="LISTADO DE CAMAS" size="sm">
+                <plex-button *ngIf="permisoCrearCama" label="AGREGAR CAMA" type="success" size="sm"
+                             (click)="agregarCama()">
+                </plex-button>
+            </plex-title>
+
+        </header>
+        <fieldset [hidden]="mainView !== 'mapa-camas'">
+            <table class="table table-striped table-hover">
+                <tr>
+                    <th>CAMA</th>
+                    <th>PACIENTE</th>
+                    <th>UNIDAD ORGANIZATIVA</th>
+                    <th>ESTADO</th>
+                    <th>ACCIONES</th>
+                </tr>
+                <ng-container *ngIf="(selectedCama$ | async) as selectedCama">
+                    <tr app-item-cama *ngFor="let cama of camas | async" [cama]="cama" [capa]="capa"
+                        [permisoIngreso]="permisoIngreso" (accionCama)="selectCama(cama, $event)"
+                        (click)="verDetalle(cama, selectedCama)" [class.invert]="cama._id === selectedCama._id">
+                    </tr>
+                </ng-container>
+            </table>
+        </fieldset>
+        <ng-container *ngIf="mainView !== 'mapa-camas'">
+            <vista-prestacion [idPrestacion]="mainView.id">
+                <plex-button type="danger" size="sm" icon="close" (click)="mapaCamasService.resetView()"></plex-button>
+            </vista-prestacion>
+        </ng-container>
+    </plex-layout-main>
+    <plex-layout-sidebar type="invert">
+        <app-estado-servicio *ngIf="!accion"></app-estado-servicio>
+        <ng-container *ngIf="selectedPaciente$ | async as selectedPaciente">
+            <app-elegir-paciente *ngIf="(selectedPaciente.id === null) && (accion === 'internarPaciente')">
+                <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
+                </plex-button>
+            </app-elegir-paciente>
+            <app-ingresar-paciente *ngIf="(selectedPaciente.id !== null) && (accion === 'internarPaciente')"
+                                   (onSave)="volverAResumen()" (volver)="mapaCamasService.selectPaciente(null)">
+                <plex-button title="Volver" icon="arrow-left" type="danger" size="sm"
+                             (click)="mapaCamasService.selectPaciente(null)">
+                </plex-button>
+            </app-ingresar-paciente>
+        </ng-container>
+        <app-desocupar-cama *ngIf="accion === 'desocuparCama'" (accionDesocupar)="accionDesocupar($event)">
+            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
+            </plex-button>
+        </app-desocupar-cama>
+        <app-cambiar-cama *ngIf="accion === 'cambiarCama'" cambiarUO="{{ cambiarUO }}" (onSave)="volverAResumen()">
+            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
+            </plex-button>
+        </app-cambiar-cama>
+        <app-egresar-paciente *ngIf="accion === 'egresarPaciente'" (onSave)="volverAResumen()"
+                              (cancel)="volverAResumen()">
+            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADesocupar()">
+            </plex-button>
+        </app-egresar-paciente>
+        <app-cama-destino-generico *ngIf="accion === 'accionGenerica'" [relacion]="estadoRelacion"
+                                   (onSave)="volverAResumen()">
+            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
+            </plex-button>
+        </app-cama-destino-generico>
+        <ng-container *ngIf="(selectedCama$ | async) as selectedCama">
+            <app-cama-detalle *ngIf="accion === 'verDetalle'" (cancel)="volverAResumen()"
+                              (accionCama)="selectCama(selectedCama, $event)" (refresh)="refresh($event)">
+            </app-cama-detalle>
+        </ng-container>
+        <app-nuevo-registro-salud *ngIf="accion === 'nuevo-registro'">
+            <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
+            </plex-button>
+        </app-nuevo-registro-salud>
+    </plex-layout-sidebar>
+</plex-layout>

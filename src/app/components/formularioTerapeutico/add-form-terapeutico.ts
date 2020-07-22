@@ -4,7 +4,7 @@ import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { FormTerapeuticoService } from './../../services/formTerapeutico/formTerapeutico.service';
-import { SnomedService } from '../../services/term/snomed.service';
+import { SnomedService } from '../../apps/mitos';
 
 
 @Component({
@@ -60,7 +60,7 @@ export class AddformTerapeuticoComponent implements OnInit {
         if (event && event.query) {
             let query = {
                 search: event.query,
-                semanticTag: ['producto']
+                semanticTag: ['producto', 'fármaco de uso clínico']
             };
             this.SNOMED.get(
                 query

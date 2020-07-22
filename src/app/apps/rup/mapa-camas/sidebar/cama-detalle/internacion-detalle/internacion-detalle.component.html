@@ -1,0 +1,42 @@
+<ng-container>
+    <div class="mt-2">
+        <ng-container *ngIf="!editar">
+            <plex-options [items]="items" (activated)="onActiveOption($event)"></plex-options>
+        </ng-container>
+
+        <ng-container *ngIf="mostrar === 'ingreso'">
+            <app-informe-ingreso *ngIf="!editar" (cancel)="activatedOption('ingreso')">
+                <plex-button *ngIf="permisoIngreso" title="editar ingreso" icon="pencil" type="warning" size="sm"
+                             (click)="toggleEdit()">
+                </plex-button>
+            </app-informe-ingreso>
+            <app-ingresar-paciente *ngIf="editar" (onSave)="toggleEdit()">
+                <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="toggleEdit()">
+                </plex-button>
+            </app-ingresar-paciente>
+        </ng-container>
+        <ng-container *ngIf="mostrar === 'movimientos'">
+            <app-movimientos-internacion>
+                <plex-button *ngIf="((view$ | async) === 'listado-internacion' && permisoMovimiento)"
+                             [disabled]="prestacion.ejecucion.registros[1]" label="Cambiar cama" type="warning"
+                             size="sm" (click)="changeCama()">
+                </plex-button>
+            </app-movimientos-internacion>
+        </ng-container>
+        <ng-container *ngIf="mostrar === 'egreso'">
+            <app-informe-egreso *ngIf="!editar && existeEgreso" (cancel)="activatedOption('egreso')">
+                <plex-button *ngIf="permisoEgreso" title="editar egreso" icon="pencil" type="warning" size="sm"
+                             (click)="toggleEdit()">
+                </plex-button>
+            </app-informe-egreso>
+            <app-egresar-paciente *ngIf="permisoEgreso && (editar || !existeEgreso)">
+                <plex-button *ngIf="existeEgreso" title="volver" icon="arrow-left" type="danger" size="sm"
+                             (click)="toggleEdit();">
+                </plex-button>
+            </app-egresar-paciente>
+        </ng-container>
+        <ng-container *ngIf="mostrar === 'registros'">
+            <app-registros-huds-detalle (accion)="onAccion($event)"></app-registros-huds-detalle>
+        </ng-container>
+    </div>
+</ng-container>

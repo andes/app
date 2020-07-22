@@ -20,12 +20,12 @@
                 <li *ngFor="let turno of ultimosTurnos let i=index" class="list-group-item" [appHover]="'active'">
                     <div class="list-group-item-text">
                         <div>
-                            <span *ngIf="turno.estado === 'asignado' || turno.estado === 'turnoDoble'"
-                                  class="badge badge-success">
-                                ASIGNADO</span>
-                            <span *ngIf="turno.estado === 'liberado' || turno.estado === 'suspendido' "
-                                  class="badge badge-danger">
-                                {{turno.estado | uppercase}}</span>
+                            <plex-badge *ngIf="turno.estado === 'asignado' || turno.estado === 'turnoDoble'"
+                                        type="success">
+                                ASIGNADO</plex-badge>
+                            <plex-badge *ngIf="turno.estado === 'liberado' || turno.estado === 'suspendido' "
+                                        type="danger">
+                                {{turno.estado | uppercase}}</plex-badge>
 
                             | {{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}}
                         </div>

@@ -80,11 +80,10 @@
                             </div>
                             <div class="row" *ngIf="!espacioFisicoPropios">
                                 <div class="col">
-                                    <plex-select [(ngModel)]="modelo.espacioFisico" name="otrosEspacios"
+                                    <plex-select [(ngModel)]="modelo.otroEspacioFisico" name="otrosEspacios"
                                                  (getData)="loadEspaciosFisicos($event)"
                                                  label="Seleccione un espacio físico"
-                                                 placeholder="Seleccione un espacio físico" labelField="nombre"
-                                                 (change)="validarTodo()">
+                                                 placeholder="Seleccione un espacio físico" labelField="nombre">
                                     </plex-select>
                                 </div>
                             </div>
@@ -265,7 +264,7 @@
                             <div class="col-4">
                                 <plex-bool *ngIf="elementoActivo.accesoDirectoProgramado > 0 && mobileEnabled"
                                            [(ngModel)]="elementoActivo.turnosMobile" label="Ventanilla virtual"
-                                           name="turnosMobile"></plex-bool>
+                                           name="turnosMobile" (change)="onVentanillaVirtualChange($event)"></plex-bool>
                             </div>
                             <div class="col-4"
                                  *ngIf="elementoActivo.turnosMobile && elementoActivo.accesoDirectoProgramado > 0 && mobileEnabled">

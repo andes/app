@@ -47,4 +47,20 @@ export class UsuarioService {
         }
 
     }
+
+    saveDisclaimer(usuario: any, disclaimer: any): Observable<any> {
+        if (usuario.username) {
+            return this.server.post(`/modules/gestor-usuarios/usuarios/${usuario.username}/disclaimers/${disclaimer.id}`, { usuario: usuario, disclaimer: disclaimer });
+        }
+
+    }
+
+    getDisclaimers(usuario: any): Observable<any> {
+        if (usuario.username) {
+            return this.server.get(`/modules/gestor-usuarios/usuarios/${usuario.username}/disclaimers`);
+        }
+
+    }
+
+
 }

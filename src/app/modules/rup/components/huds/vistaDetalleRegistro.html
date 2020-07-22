@@ -66,18 +66,18 @@
                      [ngClass]="(estaSeleccionado(registro, detalleConcepto) ? 'selected selected-' + registro.semanticTag : 'dummy-border')"
                      (mouseenter)="mostrarRegistro(i)">
                     <div class="col-2 d-flex align-items-center mr-1">
-                        <span class="badge badge-primary" *ngIf="registro?.updatedAt">
+                        <plex-badge type="info" *ngIf="registro?.updatedAt">
                             {{ registro?.updatedAt | date:'dd/mm/yyyy HH:mm' }}
                             <span class="join-items" *ngIf="i < relaciones.length-1">
                                 <span class="join-line"></span>
                             </span>
-                        </span>
-                        <span class="badge badge-primary" *ngIf="!registro?.updatedAt">
+                        </plex-badge>
+                        <plex-badge type="info" *ngIf="!registro?.updatedAt">
                             {{ registro?.createdAt | date:'dd/mm/yyyy HH:mm' }}
                             <span class="join-items">
                                 <span class="join-line"></span>
                             </span>
-                        </span>
+                        </plex-badge>
                     </div>
                     <div class="col text-capitalize line-height-12 d-flex align-items-center">
                         <small>
@@ -90,31 +90,12 @@
                         </small>
                     </div>
                     <div class="col-2 d-flex align-items-center">
-                        <span class="badge badge-{{ registro?.semanticTag }}">
+                        <plex-badge type="{{ registro?.semanticTag }}">
                             {{ registro?.semanticTag }}
-                        </span>
+                        </plex-badge>
                     </div>
                 </div>
             </ng-container>
         </div>
-        <!-- <plex-list class="w-75" [striped]="true">
-                    <plex-heading>
-                        <b label>Historial</b>
-                        <b label>Concepto</b>
-                        <b label>Profesional</b>
-                        <b label>Tipo</b>
-                    </plex-heading>
-                    <plex-item *ngFor="let registro of relaciones; let i=index">
-                        <plex-label *ngIf="registro?.updatedAt">{{ registro.updatedAt | fecha }}</plex-label>
-                        <plex-label *ngIf="!registro?.updatedAt">{{ registro.createdAt | fecha }}</plex-label>
-                        <plex-label [tituloBold]="false" [titulo]="detalleConcepto.relacion.concepto.term">
-                        </plex-label>
-                        <plex-label>
-                            {{ registro.profesional | profesional }}
-                        </plex-label>
-                        <span badge class="badge badge-{{ registro.semanticTag }}">
-                            {{ registro.semanticTag }}</span>
-                    </plex-item>
-                </plex-list> -->
     </div>
 </ng-container>

@@ -1,5 +1,5 @@
 const _package = require('../../package.json');
-import { apiKeys, hotjar } from './apiKeyMaps';
+import { apiKeys, analytics, hotjar } from './apiKeyMaps';
 
 export const environment = {
   production: false,
@@ -9,5 +9,6 @@ export const environment = {
   APIStatusCheck: false,
   version: _package.version,
   MAPS_KEY: apiKeys.develop,
-  HOTJAR_KEY: hotjar.key
+  HOTJAR_KEY: hotjar.key,
+  ANALYTICS_KEY: analytics.key,
 };

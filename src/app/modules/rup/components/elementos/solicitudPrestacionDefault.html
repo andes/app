@@ -1,8 +1,8 @@
 <ng-container *ngIf="!soloValores">
-    <plex-text label="Motivo" multiline="true" autoFocus="1" [(ngModel)]="registro.valor.solicitudPrestacion.motivo"
-               name="motivo"></plex-text>
-    <plex-text label="Indicaciones" multiline="true" [(ngModel)]="registro.valor.solicitudPrestacion.indicaciones"
-               name="indicaciones"></plex-text>
+    <plex-text label="Diagnóstico/Motivo" multiline="true" autoFocus="1"
+               [(ngModel)]="registro.valor.solicitudPrestacion.motivo" name="motivo"></plex-text>
+    <plex-text label="Indicaciones" [html]="true" height=100
+               [(ngModel)]="registro.valor.solicitudPrestacion.indicaciones" name="indicaciones"></plex-text>
 
     <!-- <plex-select [(ngModel)]="registro.valor?.solicitudPrestacion?Prestacion.profesionales" (getData)="loadProfesionales($event)" placeholder="Profesionales"
         (change)="verificarAutocitacion()" labelField="apellido + ' ' + nombre" [multiple]="true" label="Profesional(es) destino">
@@ -22,15 +22,14 @@
 </ng-container>
 <div class="row" *ngIf="soloValores">
     <div class="col-12 readonly">
-        <!-- <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">Motivo de consulta principal</small>
-        <br> -->
         <div>
-            <span>Motivo</span>
+            <span>Diagnóstico/Motivo</span>
             {{ registro.valor.solicitudPrestacion.motivo || '(no definido)' }}
         </div>
         <div>
             <span>Indicaciones</span>
-            {{ registro.valor.solicitudPrestacion.indicaciones || '(ninguna)' }}
+
+            <span [innerHTML]="registro.valor.solicitudPrestacion.indicaciones"></span>
         </div>
         <div *ngIf="registro.valor?.solicitudPrestacion?.organizacionDestino">
             <span>Organización a la cual se solicita</span>

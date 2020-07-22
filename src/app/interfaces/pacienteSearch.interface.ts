@@ -9,5 +9,4 @@ export interface PacienteSearch {
     sexo?: string;
     fechaNacimiento?: Date;
     escaneado?: boolean;
-    incluirInactivos?: boolean;
 }

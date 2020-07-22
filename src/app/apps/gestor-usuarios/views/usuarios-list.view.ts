@@ -25,7 +25,7 @@ export class UsuariosListComponent implements OnInit {
     ) {
     }
 
-    public verPerfiles = this.auth.check('usuarios:perfiles:?') || this.auth.check('global:usuarios:perfiles:?');
+    public verPerfiles = this.auth.check('usuarios:perfiles:write') || this.auth.check('global:usuarios:perfiles:write');
     public readOnly = !this.auth.check('usuarios:write');
 
     refresh = new BehaviorSubject({});
@@ -39,7 +39,7 @@ export class UsuariosListComponent implements OnInit {
 
     public organizaciones = [];
     public usuarios$;
-
+    public organizacionesConPermisos = [];
 
     ngOnInit() {
         this.plex.updateTitle([{
@@ -86,7 +86,7 @@ export class UsuariosListComponent implements OnInit {
                 if (query.search) {
                     query.search = '^' + query.search;
                 }
-                return this.usuariosHttp.find({ ...query, fields: '-password -permisosGlobales' });
+                return this.usuariosHttp.find({ ...query, fields: '-password -permisosGlobales', limit: 50 });
             }),
             tap(() => this.userSelected = null),
             cache()
@@ -109,9 +109,10 @@ export class UsuariosListComponent implements OnInit {
         this.orgList$ = this.userSelected$.pipe(
             map((user: any) => {
                 if (user) {
-                    return user.organizaciones.filter(org => {
+                    this.organizacionesConPermisos = user.organizaciones.filter(org => {
                         return this.organizaciones.find(o => o.id === org.id);
                     });
+                    return user.organizaciones;
                 } else {
                     return of([]);
                 }

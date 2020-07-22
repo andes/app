@@ -83,6 +83,7 @@ export class ListarSolicitudesComponent implements OnInit {
     esEscaneado = false;
     carpetaEfector: any;
     mostrarMsjMultiCarpeta = false;
+    puedeAdjutarHUDS: Boolean;
 
     constructor(
         public plex: Plex,
@@ -98,6 +99,7 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.puedeAdjutarHUDS = this.auth.check('cda:post') && this.auth.check('cda:get') && this.auth.check('cda:list');
         this.fechaDesde = new Date();
         this.fechaHasta = new Date();
         this.filters.fechaDesde = moment(this.fechaDesde).startOf('day');

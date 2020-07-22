@@ -1,6 +1,7 @@
+import { IDireccion } from './../../../../core/mpi/interfaces/IDireccion';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
-import { SnomedService } from './../../../../services/term/snomed.service';
-import { Component, OnInit, Output, EventEmitter, HostBinding, ViewEncapsulation } from '@angular/core';
+import { SnomedService } from '../../../../apps/mitos';
+import { Component, OnInit, Output, EventEmitter, HostBinding, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -11,9 +12,12 @@ import { DocumentosService } from './../../../../services/documentos.service';
 import { CodificacionService } from '../../services/codificacion.service';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { ReglaService } from '../../../../services/top/reglas.service';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, merge, combineLatest, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HUDSService } from '../../services/huds.service';
+import { OrganizacionService } from '../../../../services/organizacion.service';
+import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
+import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -25,15 +29,14 @@ import { HUDSService } from '../../services/huds.service';
     // Use to disable CSS Encapsulation for this component
     encapsulation: ViewEncapsulation.None
 })
-export class PrestacionValidacionComponent implements OnInit {
+export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
     elementoRUP: any;
     @HostBinding('class.plex-layout') layout = true;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
     // Tiene permisos para descargar?
-    public puedeDescargarPDF = false;
-    descargaCerrada: any = true;
+
 
     // Id de la Agenda desde localStorage (revisar si aun hace falta)
     public idAgenda: any;
@@ -49,13 +52,12 @@ export class PrestacionValidacionComponent implements OnInit {
 
     // Paciente MPI
     public paciente;
-
     // Array de elementos RUP que se pueden ejecutar
     public elementosRUP: any[];
-
     // Indica si muestra el calendario para dar turno autocitado
     public showDarTurnos = false;
-
+    // Indica si muestra el modal de selección de correo
+    public showModalEmails = false;
     // Mostrar datos de la Solicitud "padre"?
     public showDatosSolicitud = false;
 
@@ -83,9 +85,6 @@ export class PrestacionValidacionComponent implements OnInit {
     // Orden de los registros en pantalla
     public ordenRegistros: any = '';
 
-    // Array que guarda los grupos de conceptos en la Búsqueda Guiada
-    public gruposGuiada: any[] = [];
-
     // Array con opciones para indicar si es primera vez
     public opcionDiagnosticoPrincipal = [
         { id: true, label: 'Si' },
@@ -100,6 +99,7 @@ export class PrestacionValidacionComponent implements OnInit {
     public btnVolver;
     public rutaVolver;
     verMasRelaciones: any = [];
+    conceptosTurneables: ITipoPrestacion[] = [];
 
     constructor(public servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -110,7 +110,9 @@ export class PrestacionValidacionComponent implements OnInit {
         private servicioDocumentos: DocumentosService,
         private codificacionService: CodificacionService,
         public servicioReglas: ReglaService,
-        public huds: HUDSService
+        public huds: HUDSService,
+        public organizacionService: OrganizacionService,
+        private conceptosTurneablesService: ConceptosTurneablesService
     ) {
     }
 
@@ -118,24 +120,30 @@ export class PrestacionValidacionComponent implements OnInit {
         return this.prestacion && this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada';
     }
 
+    ngOnDestroy() {
+        this.prestacionSubscription.unsubscribe();
+    }
+
     ngOnInit() {
         // consultamos desde que pagina se ingreso para poder volver a la misma
         this.btnVolver = 'Volver';
-        this.rutaVolver =
-            this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
-                if (resp) {
-                    this.btnVolver = resp.nombre;
-                    this.rutaVolver = resp.ruta;
-                }
-            });
+
+        this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
+            if (resp) {
+                this.btnVolver = resp.nombre;
+                this.rutaVolver = resp.ruta;
+            }
+        });
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
-        if (this.auth.getPermissions('rup:?').length <= 0) {
+        const permisosAmbulatorio = this.auth.getPermissions('rup:?').length > 0;
+        const permisosInternacion = this.auth.getPermissions('internacion:rol:?').length > 0;
+        if (!(permisosAmbulatorio || permisosInternacion)) {
             this.redirect('inicio');
         }
         if (!this.auth.profesional) {
             this.redirect('inicio');
         }
-        this.puedeDescargarPDF = this.auth.getPermissions('descargas:?').length > 0;
+
         this.route.params.subscribe(params => {
             let id = params['id'];
             this.idAgenda = localStorage.getItem('agenda');
@@ -154,13 +162,21 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     get registros() {
-        return [...this.c2Array, ...this.prestacion.ejecucion.registros];
+        return [...this.prestacion.ejecucion.registros, ...this.c2Array];
     }
+
     public c2Array = [];
+
+    private prestacionSubscription: Subscription;
+
     inicializar(id) {
 
         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
-        this.servicioPrestacion.getById(id).subscribe(prestacion => {
+        this.prestacionSubscription = combineLatest(
+            this.conceptosTurneablesService.getAll(),
+            this.servicioPrestacion.getById(id)
+        ).subscribe(([conceptosTurneables, prestacion]) => {
+            this.conceptosTurneables = conceptosTurneables;
             this.prestacion = prestacion;
 
             this.registrosOriginales = prestacion.ejecucion.registros;
@@ -178,6 +194,8 @@ export class PrestacionValidacionComponent implements OnInit {
 
             // Busca el elementoRUP que implementa esta prestación
             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
+            // Si el elemento no indica si requiere diagnostico principal, lo setea en true por defecto
+            this.elementoRUP.requiereDiagnosticoPrincipal = typeof this.elementoRUP.requiereDiagnosticoPrincipal === 'undefined' ? true : this.elementoRUP.requiereDiagnosticoPrincipal;
 
             // Una vez que esta la prestacion llamamos a la funcion cargaPlan que muestra para cargar turnos si tienen permisos
             if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
@@ -197,9 +215,6 @@ export class PrestacionValidacionComponent implements OnInit {
                 }
             }
 
-            this.elementosRUPService.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).subscribe((grupos) => {
-                this.gruposGuiada = grupos;
-            });
             if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
                 // Carga la información completa del paciente
                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
@@ -207,61 +222,53 @@ export class PrestacionValidacionComponent implements OnInit {
                     this.plex.setNavbarItem(HeaderPacienteComponent, { paciente: this.paciente });
                     let registros = this.prestacion.ejecucion.registros;
 
-                    function puederSerC2(registro) {
-                        return (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'situacion');
-                    }
+                    if (!this.validada) {
+                        const puederSerC2 = (registro) => {
+                            return (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'situacion');
+                        };
 
-                    if (['73761001', '2341000013106'].indexOf(prestacion.solicitud.tipoPrestacion.conceptId) >= 0 && this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada') {
-                        prestacion.ejecucion.registros[0].registros.forEach(r => {
-                            // Excluimos Pautas de Alarmas. Porque son hallazgos de alarmas y no presentes.
-                            if (r.concepto.conceptId !== '900000000000003001') {
-                                if (r.registros.length > 0) {
-                                    this.c2Array = [...this.c2Array, ...r.registros];
-                                }
-                            }
-                        });
-                        this.c2Array = this.c2Array.filter(puederSerC2);
-                        // let arrayOrdenado = c2Array.concat(this.prestacion.ejecucion.registros);
-                        // this.prestacion.ejecucion.registros = arrayOrdenado;
-                        const subscriptions = [];
-                        for (let index = 0; index < this.c2Array.length; index++) {
+                        const encolarRequestCIE10 = (registro) => {
                             let parametros = {
-                                conceptId: this.c2Array[index].concepto.conceptId,
+                                conceptId: registro.concepto.conceptId,
                                 paciente: this.paciente,
-                                secondaryConcepts: this.c2Array.map(x => x.concepto.conceptId)
+                                secondaryConcepts: this.prestacion.ejecucion.registros.map(r => r.concepto.conceptId)
                             };
-                            this.codigosCie10[this.c2Array[index].id] = {};
-                            subscriptions.push(this.SNOMED.getCie10(parametros));
-                        }
+                            this.codigosCie10[registro.id] = {};
+                            subscriptions.push(
+                                forkJoin({
+                                    registro: of(registro),
+                                    cie10: this.SNOMED.getCie10(parametros).pipe(catchError(() => of({})))
+                                })
+                            );
+                        };
 
-                        forkJoin(subscriptions).subscribe((codigos: any[]) => {
-                            for (let index = 0; index < this.c2Array.length; index++) {
-                                if (!codigos[index].c2) {
-                                    this.c2Array.splice(index, 1);
-                                    index--;
-                                } else {
-                                    this.codigosCie10[this.c2Array[index].id] = codigos[index];
+                        const subscriptions = [];
+                        registros.forEach(registro => {
+                            if (registro.hasSections) { // COLONO O EPICRISIS
+                                registro.registros.forEach(seccion => {
+                                    if (seccion.isSection && !seccion.noIndex) {
+                                        seccion.registros.forEach((registroInterno) => {
+                                            if (puederSerC2(registroInterno)) {
+                                                this.c2Array.push(registroInterno);
+                                                encolarRequestCIE10(registroInterno);
+                                            }
+                                        });
+                                    }
+                                });
+                            } else {
+                                if (puederSerC2(registro)) {
+                                    encolarRequestCIE10(registro);
                                 }
                             }
                         });
-
-                    } else {
-                        registros.forEach(registro => {
-
-                            if (puederSerC2(registro)) {
-                                let parametros = {
-                                    conceptId: registro.concepto.conceptId,
-                                    paciente: this.paciente,
-                                    secondaryConcepts: this.prestacion.ejecucion.registros.map(r => r.concepto.conceptId)
-                                };
-                                this.codigosCie10[registro.id] = {};
-                                this.SNOMED.getCie10(parametros).pipe(catchError(() => of(null))).subscribe(codigo => {
-                                    this.codigosCie10[registro.id] = codigo;
-                                });
-                            }
+                        forkJoin(subscriptions).subscribe((codigos: any[]) => {
+                            codigos.forEach(codigo => {
+                                this.codigosCie10[codigo.registro.id] = codigo.cie10;
+                            });
                         });
                     }
 
+                    //  (['73761001', '2341000013106']
 
                 });
             }
@@ -296,20 +303,22 @@ export class PrestacionValidacionComponent implements OnInit {
         });
     }
 
+
     /**
      * Confirmamos validacion y guardamos
      * @memberof PrestacionValidacionComponent
      */
     validar() {
-        let existeDiagnostico = this.prestacion.ejecucion.registros.find(p => p.esDiagnosticoPrincipal === true);
-        let diagnosticoRepetido = this.prestacion.ejecucion.registros.filter(p => p.esDiagnosticoPrincipal === true).length > 1;
-        let existeC2 = this.prestacion.ejecucion.registros.find(p => (p.esPrimeraVez === undefined && this.codigosCie10[p.id] && this.codigosCie10[p.id].c2));
+        let existeDiagnostico = this.registros.find(p => p.esDiagnosticoPrincipal === true);
+        let diagnosticoRepetido = this.registros.filter(p => p.esDiagnosticoPrincipal === true).length > 1;
 
+        let existeC2 = this.registros.find(p => (p.esPrimeraVez === undefined && this.codigosCie10[p.id] && this.codigosCie10[p.id].c2));
         if (existeC2) {
             this.plex.toast('info', existeC2.concepto.term.toUpperCase() + '. Debe indicar si es primera vez.');
             return false;
         }
-        if (!existeDiagnostico && this.prestacion.solicitud.ambitoOrigen !== 'internacion' && !this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+
+        if (this.elementoRUP.requiereDiagnosticoPrincipal && !existeDiagnostico) {
             this.plex.toast('info', 'Debe seleccionar un procedimiento / diagnóstico principal', 'procedimiento / diagóstico principal', 1000);
             return false;
         }
@@ -317,6 +326,7 @@ export class PrestacionValidacionComponent implements OnInit {
             this.plex.toast('info', 'No puede seleccionar más de un procedimiento / diagnóstico principal');
             return false;
         }
+
         this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
             if (!validar) {
                 return false;
@@ -326,10 +336,22 @@ export class PrestacionValidacionComponent implements OnInit {
                 // Se copian los registros de la ejecución actual, para agregarle la frecuencia
                 let registros = this.prestacion.ejecucion.registros;
                 // filtramos los planes que deben generar prestaciones pendientes (Planes con conceptos turneales)
-                let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
+
+                let seccionesRegistros = [...registros];
+                registros.forEach(registro => {
+                    if (registro.hasSections) { // COLONO O EPICRISIS
+                        registro.registros.forEach(seccion => {
+                            if (seccion.isSection && !seccion.noIndex) {
+                                seccionesRegistros = [...seccionesRegistros, ...seccion.registros];
+                            }
+                        });
+                    }
+                });
+
+                let planes = seccionesRegistros.filter(r => r.esSolicitud);
                 this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                     this.prestacion = prestacion;
-                    this.prestacion.ejecucion.registros.forEach(registro => {
+                    let recorrerRegistros = registro => {
                         if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                             if (registro.relacionadoCon[0] && (typeof registro.relacionadoCon[0] === 'string')) {
                                 registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
@@ -341,7 +363,16 @@ export class PrestacionValidacionComponent implements OnInit {
                             seCreoSolicitud = true;
                             this.plex.info('success', 'La solicitud está en la bandeja de entrada de la organización destino', 'Información');
                         }
-                    });
+
+                        if (registro.hasSections) { // COLONO O EPICRISIS
+                            registro.registros.forEach(seccion => {
+                                if (seccion.isSection && !seccion.noIndex) {
+                                    seccion.registros.forEach(r => recorrerRegistros(r));
+                                }
+                            });
+                        }
+                    };
+                    this.prestacion.ejecucion.registros.forEach((r) => recorrerRegistros(r));
 
                     this.motivoReadOnly = true;
                     if (this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
@@ -463,7 +494,7 @@ export class PrestacionValidacionComponent implements OnInit {
             if (ruta) {
                 ruteo = ruta;
             } else {
-                ruteo = '/internacion/camas';
+                ruteo = '/internacion/mapa-camas';
             }
         }
         this.router.navigate([ruteo]);
@@ -484,7 +515,7 @@ export class PrestacionValidacionComponent implements OnInit {
     cargaPlan(prestacionesSolicitadas) {
         prestacionesSolicitadas = prestacionesSolicitadas.filter(ps => ps.solicitud.registros[0].valor.solicitudPrestacion.autocitado);
         let tiposPrestaciones = prestacionesSolicitadas.map(ps => {
-            return this.servicioPrestacion.conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId);
+            return this.conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId);
         });
 
         prestacionesSolicitadas.forEach(ps => {
@@ -526,7 +557,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
     defualtDiagnosticoPrestacion() {
         let count = 0;
-        let items = this.prestacion.ejecucion.registros.filter(elemento => ['hallazgo', 'trastorno', 'situación', 'procedimiento', 'entidad observable', 'régimen/tratamiento', 'producto'].indexOf(elemento.concepto.semanticTag) >= 0);
+        let items = this.prestacion.ejecucion.registros.filter(elemento => ['hallazgo', 'trastorno', 'situación', 'procedimiento', 'entidad observable', 'régimen/tratamiento', 'producto', 'fármaco de uso clínico'].indexOf(elemento.concepto.semanticTag) >= 0);
         if (items.length === 1) {
             items[0].esDiagnosticoPrincipal = true;
         }
@@ -630,69 +661,6 @@ export class PrestacionValidacionComponent implements OnInit {
 
     compareArrays(arr1: any[], arr2: any[]) {
         return arr1.join('') === arr2.join('');
-    }
-
-    descargarResumen() {
-
-        this.descargaCerrada = false;
-
-        this.prestacion.ejecucion.registros.forEach(x => {
-            x.icon = 'down';
-        });
-
-        setTimeout(async () => {
-            let informe = {
-                idPrestacion: this.prestacion.id
-            };
-
-            this.servicioDocumentos.descargarArchivo(informe, this.prestacion.solicitud.tipoPrestacion.term, { type: 'application/pdf' }).subscribe(result => {
-                this.descargaCerrada = true;
-            });
-
-        });
-    }
-
-    async descargarRegistro(idRegistro, term) {
-
-        this.descargaCerrada = false;
-
-        let informe = {
-            idPrestacion: this.prestacion.id,
-            idRegistro
-        };
-
-        this.servicioDocumentos.descargarArchivo(informe, term, { type: 'application/pdf' }).subscribe(result => {
-            this.descargaCerrada = true;
-        });
-
-    }
-
-    /**
-     * Busca los grupos de la búsqueda guiada a los que pertenece un concepto
-     * @param {IConcept} concept
-     */
-    enBusquedaGuiada(concept) {
-        let results = [];
-        this.gruposGuiada.forEach(data => {
-            if (data.conceptIds.indexOf(concept.conceptId) >= 0) {
-                results.push(data);
-            }
-        });
-        return results;
-    }
-
-
-    /**
-     * Determina si muestra el label motivo de consulta.
-     */
-
-    showMotivo(elemento) {
-        if (this.elementoRUP.motivoConsultaOpcional) {
-            return false;
-        }
-        let last = this.prestacion.estados.length - 1;
-        return this.prestacion.estados[last].tipo !== 'validada' && elemento.valor && elemento.valor.estado !== 'transformado' && this.prestacion.solicitud.ambitoOrigen !== 'internacion';
-
     }
 
     toggleVerMasRelaciones(item) {

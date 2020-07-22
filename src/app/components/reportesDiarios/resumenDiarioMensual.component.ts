@@ -42,6 +42,9 @@ export class ResumenDiarioMensualComponent implements OnInit {
         return this._parametros;
     }
 
+    @Input()
+    titulo = '';
+
 
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 

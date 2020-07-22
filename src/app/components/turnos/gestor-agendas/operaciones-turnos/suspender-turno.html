@@ -18,13 +18,14 @@
             {{turno.horaInicio | date: 'H:mm'}} hs
         </div>
         <div class="col-7 text-center">
-            <span *ngIf="turno.paciente?.id">{{turno.paciente | paciente}} {{turno.estado}}</span>
+            <span *ngIf="turno.paciente?.id">{{turno.paciente | nombre }} {{turno.estado}}</span>
             <span *ngIf="!turno.paciente?.id && turno.estado !== 'turnoDoble'">sin paciente asignado</span>
             <span *ngIf="turno.estado === 'turnoDoble'">turno doble</span>
         </div>
         <div class="col-3 text-center" (click)="seleccionarTurno(turno)">
             <span *ngIf="turno.paciente?.id && estaSeleccionado(turno)">
-                <i *ngIf="turno.paciente?.id && !fueEnviado(turno) && !estaPendiente(turno)" class="mdi mdi-checkbox-marked"></i>
+                <i *ngIf="turno.paciente?.id && !fueEnviado(turno) && !estaPendiente(turno)"
+                   class="mdi mdi-checkbox-marked"></i>
                 <i *ngIf="fueEnviado(turno)" class="mdi mdi-check-circle text-success"></i>
                 <i *ngIf="estaPendiente(turno)">Pendiente</i>
             </span>
@@ -39,8 +40,8 @@
 
     <div class="row">
         <div class="col-12">
-            <plex-select [(ngModel)]="motivoSuspensionSelect.select" name="motivoSuspension" [data]="motivoSuspension" label="Motivos de Suspensión"
-                placeholder="Seleccione un motivo de suspensión">
+            <plex-select [(ngModel)]="motivoSuspensionSelect.select" name="motivoSuspension" [data]="motivoSuspension"
+                         label="Motivos de Suspensión" placeholder="Seleccione un motivo de suspensión">
             </plex-select>
         </div>
     </div>
@@ -74,7 +75,8 @@
     <div class="mt-3 float-right">
         <plex-button *ngIf="!suspendio" type="danger" label="Cancelar" (click)="cancelar()">
         </plex-button>
-        <plex-button *ngIf="!suspendio" type="success" label="Confirmar" (click)="suspenderTurno()" title="Confirmar {{turnosSeleccionados.length | pluralizar:['turno','turnos']}}">
+        <plex-button *ngIf="!suspendio" type="success" label="Confirmar" (click)="suspenderTurno()"
+                     title="Confirmar {{turnosSeleccionados.length | pluralizar:['turno','turnos']}}">
         </plex-button>
         <!--<plex-button *ngIf="!suspendio" icon="mdi mdi-backup-restore" label="Reprogramar" (click)="reasignarTurno(turno)" title="Reprogramar Turno">
         </plex-button>-->

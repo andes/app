@@ -1,19 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { PlantillasService } from '../../../modules/rup/services/plantillas.service';
 import { ISnomedConcept } from '../../../modules/rup/interfaces/snomed-concept.interface';
-import { SnomedService } from '../../../services/term/snomed.service';
+import { SnomedService } from '../../mitos';
 import { Unsubscribe } from '@andes/shared';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-
+import { PrestacionesService } from '../../../../app/modules/rup/services/prestaciones.service';
 @Component({
     selector: 'app-plantillas-rup',
     templateUrl: './plantillas-rup.component.html',
     styleUrls: [
         './plantillas-rup.component.scss',
         '../../../modules/rup/components/core/_rup.scss'
-    ]
+    ],
+    encapsulation: ViewEncapsulation.None
 })
 export class PlantillasRUPComponent implements OnInit {
 
@@ -24,6 +25,7 @@ export class PlantillasRUPComponent implements OnInit {
 
     procedimiento: ISnomedConcept;
     incluyeDescendientes = false;
+
     descendientes: ISnomedConcept[] = [];
 
     subject: BehaviorSubject<any[]> = new BehaviorSubject<any>([]);
@@ -33,7 +35,8 @@ export class PlantillasRUPComponent implements OnInit {
     constructor(
         public plex: Plex,
         private sp: PlantillasService,
-        private snomedService: SnomedService) { }
+        private snomedService: SnomedService,
+        public servicioPrestacion: PrestacionesService) { }
 
     ngOnInit() {
         this.plex.updateTitle([{
@@ -57,6 +60,7 @@ export class PlantillasRUPComponent implements OnInit {
                     conceptos: [this.procedimiento],
                     descripcion: '',
                     title: '',
+                    esSolicitud: false,
                     expression: `${this.procedimiento.conceptId}`,
                 };
             } else {
@@ -64,6 +68,7 @@ export class PlantillasRUPComponent implements OnInit {
             }
 
             const newArr = [plantilla, ...val];
+
             this.subject.next(newArr);
         });
     }
@@ -94,8 +99,10 @@ export class PlantillasRUPComponent implements OnInit {
 
         let query = {
             search: this.searchTerm,
-            semanticTag: ['procedimiento']
+            semanticTag: ['procedimiento', 'elemento de registro', 'régimen/tratamiento']
+
         };
+
 
         this.snomedService.get(query).subscribe((resultado: ISnomedConcept[]) => {
             this.procedimientos = resultado;
@@ -104,9 +111,10 @@ export class PlantillasRUPComponent implements OnInit {
 
 
     cargarPlantillas(procedimiento) {
+
         this.procedimiento = procedimiento;
         this.subject.next([]);
-        this.sp.get(procedimiento.conceptId).subscribe(plantillas => {
+        this.sp.get(procedimiento.conceptId, procedimiento.esSolicitud, true).subscribe(plantillas => {
 
             if (plantillas) {
                 plantillas.forEach(x => {
@@ -127,6 +135,7 @@ export class PlantillasRUPComponent implements OnInit {
         if (typeof plantilla.id !== 'undefined') {
             plantilla['expression'] = expression;
             body = { plantilla, ...{ expression } }.plantilla;
+
             this.sp.patch(plantilla.id, body).subscribe(result => {
                 if (result.id) {
                     this.cargarPlantillas(this.procedimiento);
@@ -177,7 +186,11 @@ export class PlantillasRUPComponent implements OnInit {
                 if (confirmar) {
                     if (plantilla.id) {
                         this.sp.delete(plantilla.id).subscribe(result => {
-                            this.subject.next(result);
+                            const listado = this.subject.getValue();
+
+                            listado.splice(idx, 1);
+
+                            this.subject.next(listado);
                             this.plex.toast('success', 'Título: ' + plantilla.title, 'Plantilla Eliminada');
                         });
                     } else {
@@ -197,6 +210,7 @@ export class PlantillasRUPComponent implements OnInit {
             conceptos: [procedimiento],
             descripcion: '',
             title: '',
+            esSolicitud: false,
             expression: `${procedimiento.conceptId}`
         };
 

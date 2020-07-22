@@ -13,29 +13,26 @@ import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
 import { AdjuntosService } from '../../services/adjuntos.service';
 import { DomSanitizer } from '@angular/platform-browser';
-import { SnomedService } from '../../../../services/term/snomed.service';
+import { SnomedService } from '../../../../apps/mitos';
 import { OcupacionService } from '../../../../services/ocupacion/ocupacion.service';
 import { FinanciadorService } from '../../../../services/financiador.service';
 import { ProcedimientosQuirurgicosService } from '../../../../services/procedimientosQuirurgicos.service';
-import { Cie10Service } from '../../../../services/term/cie10.service';
+import { Cie10Service } from '../../../../apps/mitos/services/cie10.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { ElementosRUPRegister } from '../elementos';
 import { ActivatedRoute } from '@angular/router';
 import { ReglaService } from '../../../../services/top/reglas.service';
+import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
+import { PlantillasService } from '../../services/plantillas.service';
 
 @Component({
     selector: 'rup',
-    styleUrls: [
-        '_rup.scss',
-        // TODO: Crear package NPM con las fonts
-        // '../../assets/font.css'
-    ],
     encapsulation: ViewEncapsulation.None,
-    template: '' // Debe quedar vacío, y cada atómo indicar que usa 'rup.html' o su propio template
+    template: ''
 })
 export class RUPComponent implements OnInit, AfterViewInit {
     @ViewChildren(RUPComponent) rupElements: QueryList<RUPComponent>;
-    @ViewChild('form', { static: true }) formulario: any;
+    @ViewChild('form', { static: false }) formulario: any;
     public rupInstance: any;
 
     // Propiedades
@@ -51,7 +48,7 @@ export class RUPComponent implements OnInit, AfterViewInit {
 
     // Eventos
     @Output() change: EventEmitter<any> = new EventEmitter<any>();
-    @Output() ejecutarConcepto: EventEmitter<any> = new EventEmitter<any>();
+
     @Output() ejecutarAccion: EventEmitter<any> = new EventEmitter<any>();
 
     /**
@@ -90,10 +87,7 @@ export class RUPComponent implements OnInit, AfterViewInit {
         componentReference.instance['change'].subscribe(value => {
             this.emitChange(false);
         });
-        // Event bubbling
-        componentReference.instance['ejecutarConcepto'].subscribe(value => {
-            this.emitEjecutarConcepto(value);
-        });
+
         // Event bubbling
         componentReference.instance['ejecutarAccion'].subscribe((value, datos) => {
             this.emitEjecutarAccion(value, datos);
@@ -115,7 +109,8 @@ export class RUPComponent implements OnInit, AfterViewInit {
         public elementosRUPService: ElementosRUPService,
         public prestacionesService: PrestacionesService,
         public servicioTipoPrestacion: TipoPrestacionService,
-        public auth: Auth, public ocupacionService: OcupacionService,
+        public auth: Auth,
+        public ocupacionService: OcupacionService,
         public financiadorService: FinanciadorService,
         public serviceProfesional: ProfesionalService,
         public adjuntosService: AdjuntosService,
@@ -128,8 +123,11 @@ export class RUPComponent implements OnInit, AfterViewInit {
         public route: ActivatedRoute,
         public agendaService: AgendaService,
         public organizacionservice: OrganizacionService,
-        public servicioReglas: ReglaService
-    ) { }
+        public servicioReglas: ReglaService,
+        public conceptosTurneablesService: ConceptosTurneablesService,
+        public plantillasService: PlantillasService
+    ) {
+    }
 
     ngOnInit() {
         this.loadComponent();
@@ -171,13 +169,6 @@ export class RUPComponent implements OnInit, AfterViewInit {
 
         // Notifica al componente padre del cambio
         this.change.emit(this.registro);
-    }
-
-    public emitEjecutarConcepto(concepto) {
-        this.prepareEmit();
-
-        // Notifica al componente padre del cambio
-        this.ejecutarConcepto.emit(concepto);
     }
 
     public emitEjecutarAccion(evento, datos) {
@@ -222,7 +213,7 @@ export class RUPComponent implements OnInit, AfterViewInit {
     * Si existe un formulario en el elementoRIP, lo valida automaticamente, y si la misma tiene más elementosRUP
     * adentro ejecuta el validate en cada uno de sus hijos.
     *
-    * Cada elementoRUP puede sobreescribir esta funcionalidad, implementando el metodo 'validate'.
+    * Cada elementoRUP puede sobreescribir el metodo OnValidate para agregar validaciones especiales.
     *
     * @protected
     * @memberof RUPComponent
@@ -230,7 +221,12 @@ export class RUPComponent implements OnInit, AfterViewInit {
     public validate() {
         const validChild = this.validateChild();
         const validForm = this.validateForm();
-        return validChild && validForm;
+        const validateMain = this.onValidate();
+        return validChild && validForm && validateMain;
+    }
+
+    public onValidate() {
+        return true;
     }
 
     /**
@@ -270,4 +266,22 @@ export class RUPComponent implements OnInit, AfterViewInit {
         return true;
     }
 
+    checkEmpty() {
+        const isEmptyValue = this.isEmpty();
+        const isEmptyChild = this.rupElements.toArray().every((item) => {
+            const instance = item.rupInstance;
+            return instance.checkEmpty();
+            // return (instance.registro as IPrestacionRegistro).isEmpty as boolean;
+        });
+        this.registro.isEmpty = isEmptyValue && isEmptyChild;
+        return this.registro.isEmpty;
+    }
+
+    /**
+     * Esta función puede ser override por el elementoRUP
+     */
+    isEmpty() {
+        const hasValue = !!this.registro.valor;
+        return !hasValue;
+    }
 }

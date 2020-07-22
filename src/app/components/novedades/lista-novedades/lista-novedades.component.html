@@ -1,0 +1,12 @@
+<plex-title titulo="últimas novedades">
+</plex-title>
+<plex-list>
+    <plex-item *ngFor="let novedad of novedades$; let indiceNovedad = index" (click)="onSelectedNovedadChange(novedad)">
+        <img *ngIf="novedad.imagenes.length > 0" [src]="getFoto(novedad)" alt="">
+        <plex-label titulo="{{novedad.titulo}}" subtitulo="">
+        </plex-label>
+        <plex-badge size="md" type="info">{{novedad.fecha | date: 'dd/MM/yyyy'}}</plex-badge>
+        <plex-badge size="md" type="success"> {{novedad.modulo? novedad.modulo.nombre : 'general'}} </plex-badge>
+    </plex-item>
+    <hr class="bg-white">
+</plex-list>

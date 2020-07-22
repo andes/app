@@ -18,9 +18,17 @@ export class PuntoInicioInternacionComponent implements OnInit {
     public pacienteSeleccionado;
     public epicrisisPaciente = [];
     public showLoader = false;
-    public showInternacionEjecucion = false;
     public internacionEjecucion;
     public conceptosInternacion;
+
+    public registros = [
+        { label: 'VALORACION INICIAL', handler: () => { this.nuevoRegistro(this.conceptosInternacion.valoracionInicial); } },
+        { label: 'EVOLUCION', handler: () => { this.nuevoRegistro(this.conceptosInternacion.evolucion); } },
+        { label: 'PLAN DE INDICACIONES', handler: () => { this.nuevoRegistro(this.conceptosInternacion.indicaciones); } },
+        { label: 'EPICRISIS', handler: () => { this.nuevoRegistro(this.conceptosInternacion.epicrisis); } },
+
+    ];
+    public tipoPrestaciones = [];
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -34,6 +42,8 @@ export class PuntoInicioInternacionComponent implements OnInit {
     ngOnInit() {
         this.elementoRupService.ready.subscribe(() => {
             this.conceptosInternacion = this.elementoRupService.getConceptosInternacion();
+
+
         });
     }
 
@@ -62,27 +72,15 @@ export class PuntoInicioInternacionComponent implements OnInit {
         this.pacienteSeleccionado = paciente;
         this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, this.conceptosInternacion.epicrisis.term, this.auth.profesional, null, null).subscribe(hudsToken => {
             window.sessionStorage.setItem('huds-token', hudsToken.token);
-            this.servicioPrestacion.internacionesXPaciente(paciente, 'ejecucion', this.auth.organizacion.id).subscribe(resultado => {
-                // Si el paciente ya tiene una internacion en ejecucion
-                if (resultado && resultado.length) {
-                    this.servicioPrestacion.get({ idPrestacionOrigen: resultado.ultimaInternacion.id }).subscribe(prestacionExiste => {
-                        if (prestacionExiste.length) {
-                            this.internacionEjecucion = prestacionExiste[0];
-                            this.showInternacionEjecucion = true;
-                        }
-                    });
-                } else {
-                    this.showInternacionEjecucion = false;
-                }
-            });
-            this.servicioPrestacion.getPrestacionesXtipo(paciente.id, this.conceptosInternacion.epicrisis.conceptId).subscribe(epicrisis => {
-                this.epicrisisPaciente = epicrisis
-                    .map(e => {
-                        if (e.ejecucion.registros.length > 0 && e.ejecucion.registros[0] && e.ejecucion.registros[0].registros.length > 0) {
-                            e.ejecucion.registros[0].registros[0].valor = e.ejecucion.registros[0].registros[0].valor.substring(0, 100);
-                        }
-                        return e;
-                    });
+
+            this.tipoPrestaciones = [
+                this.conceptosInternacion.valoracionInicial.conceptId,
+                this.conceptosInternacion.indicaciones.conceptId,
+                this.conceptosInternacion.epicrisis.conceptId,
+                this.conceptosInternacion.evolucion.conceptId
+            ];
+            this.servicioPrestacion.getPrestacionesXtipo(paciente.id, this.tipoPrestaciones).subscribe(prestaciones => {
+                this.epicrisisPaciente = prestaciones;
                 this.showLoader = false;
             });
         });
@@ -93,9 +91,8 @@ export class PuntoInicioInternacionComponent implements OnInit {
      * Nos rutea a la ejecucion de RUP.
      * @param paciente
      */
-    nuevaEpicrisis(paciente) {
-        let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(paciente, this.conceptosInternacion.epicrisis, 'ejecucion', 'internacion');
-        // nuevaPrestacion.solicitud.prestacionOrigen = nuevaInternacion.id;
+    nuevoRegistro(concepto) {
+        let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.pacienteSeleccionado, concepto, 'ejecucion', 'internacion');
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
             this.router.navigate(['rup/ejecucion', prestacion.id]);
         });

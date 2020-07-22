@@ -1,0 +1,77 @@
+.novedades-home {
+    min-width: 500px;
+}
+section.detalle-novedad {
+
+    .contenedor-imagen {
+        padding: 0!important;
+        background-color: transparent;
+        height: fit-content;
+        position: relative;
+        img {
+            width: 100%;
+            object-fit: cover;
+            max-height: 400px;
+        }
+
+
+        .jumbotron-text {
+            width: 100%;
+            height: fit-content;
+
+            h1, p {
+                color: black;
+            }
+        }
+    }
+
+    section.contenedor-nota {
+        margin-top: 1rem;
+        hyphens: manual;
+
+        p {
+            font-size: 1.1em;
+            line-height: 1.65;
+        }
+
+        .contenedor-badges {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: flex-start;
+            grid-column: 1;
+            grid-gap: 2rem;
+        }
+
+        .contenedor-texto {
+            grid-column: 2;
+        }
+    }
+
+    plex-badge {
+        margin: 0 .5rem .5rem 0;
+    }
+
+    .galeria-imagenes {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-gap: 10px;
+
+        .img-thumbnail {
+            height: 150px;
+            object-fit: cover;
+            width: 100%;
+        }
+    }
+
+    hr.bg-white {
+        border: solid 1px white;
+    }
+
+}
+
+plex-help[icon=bell] {
+    div.jumbotron.info.open {
+        min-width: 500px;
+    }
+}

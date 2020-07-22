@@ -24,8 +24,7 @@ export interface IRegla {
             conceptId: String,
             term: String,
             fsn: String,
-            // semanticTag: SemanticTag,
-            refsetIds: [String]
+            // semanticTag: SemanticTag
         }
     };
 }

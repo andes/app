@@ -5,7 +5,10 @@
     <div class="container-filtros">
         <ul class="botones-filtros">
             <li>
-                <small *ngIf="getCantidadResultados('planes')" class="badge badge-solicitud ml-1 float-right"
+                <!-- <plex-badge size="sm" *ngIf="getCantidadResultados('planes')" type="solicitud ml-1 float-right"
+                            [ngClass]="{'active': filtroActual === 'planes'}">{{
+                            getCantidadResultados('planes')}}</plex-badge> -->
+                <small *ngIf="getCantidadResultados('planes')" class="contador badge-solicitud ml-1 float-right"
                        [ngClass]="{'active': filtroActual === 'planes'}">{{
                             getCantidadResultados('planes')}}</small>
                 <button (click)="filtroBuscador('planes')" class="btn btn-block p-0 btn-solicitud"
@@ -15,7 +18,10 @@
                 </button>
             </li>
             <li>
-                <small *ngIf="getCantidadResultados('solicitudes')" class="badge badge-solicitud ml-1 float-right"
+                <!-- <plex-badge size="sm" *ngIf="getCantidadResultados('solicitudes')" type="solicitud ml-1 float-right"
+                            [ngClass]="{'active': filtroActual === 'solicitudes'}">{{
+                            getCantidadResultados('solicitudes')}}</plex-badge> -->
+                <small *ngIf="getCantidadResultados('solicitudes')" class="contador badge-solicitud ml-1 float-right"
                        [ngClass]="{'active': filtroActual === 'solicitudes'}">{{
                             getCantidadResultados('solicitudes')}}</small>
                 <button (click)="filtroBuscador('solicitudes')" [ngClass]="{'active': filtroActual === 'solicitudes'}"
@@ -25,7 +31,10 @@
                 </button>
             </li>
             <li>
-                <small *ngIf="getCantidadResultados('hallazgo')" class="badge badge-hallazgo ml-1 float-right"
+                <!-- <plex-badge size="sm" *ngIf="getCantidadResultados('hallazgo')" type="hallazgo ml-1 float-right"
+                            [ngClass]="{'active': filtroActual === 'hallazgo'}">{{
+                            getCantidadResultados('hallazgo')}}</plex-badge> -->
+                <small *ngIf="getCantidadResultados('hallazgo')" class="contador badge-hallazgo ml-1 float-right"
                        [ngClass]="{'active': filtroActual === 'hallazgo'}">{{
                             getCantidadResultados('hallazgo')}}</small>
                 <button (click)="filtroBuscador('hallazgo')" [ngClass]="{'active': filtroActual === 'hallazgo'}"
@@ -35,7 +44,10 @@
                 </button>
             </li>
             <li>
-                <small *ngIf="getCantidadResultados('trastorno')" class="badge badge-trastorno ml-1 float-right"
+                <!-- <plex-badge size="sm" *ngIf="getCantidadResultados('trastorno')" type="trastorno ml-1 float-right"
+                            [ngClass]="{'active': filtroActual === 'trastorno'}">{{
+                            getCantidadResultados('trastorno')}}</plex-badge> -->
+                <small *ngIf="getCantidadResultados('trastorno')" class="contador badge-trastorno ml-1 float-right"
                        [ngClass]="{'active': filtroActual === 'trastorno'}">{{
                             getCantidadResultados('trastorno')}}</small>
                 <button (click)="filtroBuscador('trastorno')" [ngClass]="{'active': filtroActual === 'trastorno'}"
@@ -45,7 +57,12 @@
                 </button>
             </li>
             <li>
-                <small *ngIf="getCantidadResultados('procedimiento')" class="badge badge-procedimiento ml-1 float-right"
+                <!-- <plex-badge size="sm" *ngIf="getCantidadResultados('procedimiento')"
+                            type="procedimiento ml-1 float-right"
+                            [ngClass]="{'active': filtroActual === 'procedimiento'}">{{
+                            getCantidadResultados('procedimiento')}}</plex-badge> -->
+                <small *ngIf="getCantidadResultados('procedimiento')"
+                       class="contador badge-procedimiento ml-1 float-right"
                        [ngClass]="{'active': filtroActual === 'procedimiento'}">{{
                             getCantidadResultados('procedimiento')}}</small>
                 <button (click)="filtroBuscador('procedimiento')"
@@ -56,7 +73,10 @@
                 </button>
             </li>
             <li>
-                <small *ngIf="getCantidadResultados('producto')" class="badge badge-producto ml-1 float-right"
+                <!-- <plex-badge size="sm" *ngIf="getCantidadResultados('producto')" type="producto ml-1 float-right"
+                            [ngClass]="{'active': filtroActual === 'producto'}">{{
+                            getCantidadResultados('producto')}}</plex-badge> -->
+                <small *ngIf="getCantidadResultados('producto')" class="contador badge-producto ml-1 float-right"
                        [ngClass]="{'active': filtroActual === 'producto'}">{{
                             getCantidadResultados('producto')}}</small>
                 <button (click)="filtroBuscador('producto')" [ngClass]="{'active': filtroActual === 'producto'}"
@@ -66,7 +86,10 @@
                 </button>
             </li>
             <li>
-                <small *ngIf="getCantidadResultados('laboratorios')" class="badge badge-otro ml-1 float-right"
+                <!-- <plex-badge size="sm" *ngIf="getCantidadResultados('laboratorios')" type="otro ml-1 float-right"
+                            [ngClass]="{'active': filtroActual === 'laboratorios'}">{{
+                            getCantidadResultados('laboratorios')}}</plex-badge> -->
+                <small *ngIf="getCantidadResultados('laboratorios')" class="contador badge-otro ml-1 float-right"
                        [ngClass]="{'active': filtroActual === 'laboratorios'}">{{
                             getCantidadResultados('laboratorios')}}</small>
                 <button (click)="filtroBuscador('laboratorios')" [ngClass]="{'active': filtroActual === 'laboratorios'}"
@@ -76,9 +99,11 @@
                 </button>
             </li>
             <li>
-                <small *ngIf="getCantidadResultados('vacunas')" class="badge badge-vacuna ml-1 float-right"
+                <!-- <plex-badge size="sm" *ngIf="getCantidadResultados('vacunas')" type="vacuna ml-1 float-right"
+                            [ngClass]="{'active': filtroActual === 'vacunas'}">{{ getCantidadResultados('vacunas') }}
+                </plex-badge> -->
+                <small *ngIf="getCantidadResultados('vacunas')" class="contador badge-vacuna ml-1 float-right"
                        [ngClass]="{'active': filtroActual === 'vacunas'}">{{ getCantidadResultados('vacunas') }}</small>
-
                 <button (click)="filtroBuscador('vacunas')" [ngClass]="{'active': filtroActual === 'vacunas'}"
                         class="btn btn-block p-0 btn-vacuna">
                     <i class="icon mdi mdi-eyedropper-variant"></i>
@@ -87,18 +112,20 @@
             </li>
         </ul>
     </div>
+    <div class="grow" *ngIf="filtroActual === 'planes'">
+        <plex-options (activated)='setAmbitoOrigen($event)' [items]="filtrosAmbitos">
+        </plex-options>
+        <div class="ml-1">
+            <plex-button type="info" size="sm" [icon]="showFiltros ? 'mdi mdi-chevron-up' : 'mdi mdi-chevron-down'"
+                         [title]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" class="float-right"
+                         (click)="toogleFiltros()">
+            </plex-button>
+        </div>
+    </div>
     <div class="row">
-        <div class="col-10">
+        <div class="col">
             <small class="pr-1" *ngIf="getSemanticTagFiltros()">Filtros:</small>
             <i class="text-secondary ml-1">{{ getSemanticTagFiltros() }}</i>
-        </div>
-        <div class="col-2">
-            <ng-container *ngIf="filtroActual === 'planes'">
-                <plex-button [icon]="showFiltros ? 'mdi mdi-close' : 'mdi mdi-magnify'" size="sm" type="info"
-                             [title]="showFiltros ? 'Cerrar filtros' : 'Ver filtros'" class="float-right"
-                             (click)="toogleFiltros()">
-                </plex-button>
-            </ng-container>
         </div>
     </div>
 </div>
@@ -157,13 +184,13 @@
                                         </div>
                                         <div class="col-2 p-0 m-0">
                                             <div class="p-0 pt-1 pr-1 float-right">
-                                                <plex-button *ngIf='registro.evoluciones' size="sm" class="btn"
-                                                             type="info" icon="information-outline"
+                                                <plex-button *ngIf='registro.evoluciones' size="sm" type="info"
+                                                             icon="information-outline"
                                                              title="Registrado por profesional" titlePosition="left">
                                                 </plex-button>
-                                                <plex-button *ngIf='!registro.evoluciones' size="sm" class="btn"
-                                                             type="info" icon="information-outline"
-                                                             title="Registrado por gestión" titlePosition="left">
+                                                <plex-button *ngIf='!registro.evoluciones' size="sm" type="info"
+                                                             icon="information-outline" title="Registrado por gestión"
+                                                             titlePosition="left">
                                                 </plex-button>
                                             </div>
                                         </div>
@@ -246,12 +273,9 @@
                                                     <div class="row p-0 m-0">
                                                         <div class="col-10 p-0 m-0">
                                                             <div class="sugerido">
-                                                                <small>
-                                                                    Ultima evolución:
-                                                                    {{ registro.fechaEjecucion | fecha }}</small>
+                                                                <small>Última evolución: {{ registro.evoluciones[0].fechaCarga | fecha }}</small>
                                                                 <br>
-                                                                <small>Profesional: {{
-                                                                    registro.evoluciones[0].profesional}}</small>
+                                                                <small>Profesional: {{ registro.evoluciones[0].profesional }}</small>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -262,9 +286,10 @@
                                         <div class="col-2 p-0 m-0">
                                             <div class="p-0 pt-1 pr-1 float-right">
                                                 <ng-container *ngIf="registro.evoluciones">
-                                                    <small class="badge badge-success text-default p-1">
+                                                    <plex-badge size="sm"
+                                                                type="{{ registro.evoluciones[registro.evoluciones.length-1].estado === 'activo' ? 'danger' : 'info' }}">
                                                         {{ registro.evoluciones[registro.evoluciones.length-1].estado }}
-                                                    </small>
+                                                    </plex-badge>
                                                 </ng-container>
                                                 <button class="btn btn-sm btn-primary btn-icon-rup p-0"
                                                         *ngIf="emitirConceptos"
@@ -396,9 +421,9 @@
                                         </div>
                                         <div class="col-2 p-0 m-0">
                                             <div class="p-0 pt-1 pr-1 float-right">
-                                                <small class="badge badge-{{prestacion.estado}} text-default p-1">
+                                                <plex-badge size="sm" size="ms" type="{{prestacion.estado}}">
                                                     {{prestacion.estado}}
-                                                </small>
+                                                </plex-badge>
                                             </div>
                                         </div>
                                     </div>
@@ -454,10 +479,10 @@
                                         <div class="col-2 p-0 m-0">
                                             <div class="p-0 pt-1 pr-1 float-right">
                                                 <ng-container *ngIf="registro.evoluciones">
-                                                    <small class="badge badge-success text-default p-1">
-                                                        {{ registro.evoluciones[registro.evoluciones.length-1].estado
-                                                        }}
-                                                    </small>
+                                                    <plex-badge size="sm"
+                                                                type="{{ registro.evoluciones[registro.evoluciones.length-1].estado === 'activo' ? 'danger' : 'info' }}">
+                                                        {{ registro.evoluciones[registro.evoluciones.length-1].estado }}
+                                                    </plex-badge>
                                                 </ng-container>
                                             </div>
                                         </div>

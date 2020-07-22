@@ -1,4 +1,4 @@
-import { Server } from '@andes/shared';
+import { Server, Cache, cache } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -10,6 +10,8 @@ export class TipoPrestacionService {
     public static Vacunas_CDA_ID = '33879002';
 
     private tipoPrestacionUrl = '/core/tm/tiposPrestaciones';  // URL to web api
+
+    private prestacionesAll: Observable<ITipoPrestacion[]>;
 
     constructor(private server: Server) { }
 
@@ -54,5 +56,12 @@ export class TipoPrestacionService {
      */
     enable(tipoPrestacion: ITipoPrestacion): Observable<ITipoPrestacion> {
         return this.put(tipoPrestacion);
+    }
+
+    getAll() {
+        if (!this.prestacionesAll) {
+            this.prestacionesAll = this.get({}).pipe(cache()) as any;
+        }
+        return this.prestacionesAll;
     }
 }

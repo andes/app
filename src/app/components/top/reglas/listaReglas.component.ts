@@ -29,7 +29,6 @@ export class ListaReglasComponent implements OnInit {
      */
     organizacionOrigen: IOrganizacion;
     prestacionOrigen: ITipoPrestacion;
-    prestacionesOrigen: ITipoPrestacion[] = [];
     /**
      * Organización ingresada en el filtro de organización destino
      * @type {IOrganizacion}
@@ -56,12 +55,7 @@ export class ListaReglasComponent implements OnInit {
     ngOnInit() {
         if (this.esParametrizado) {
             this.organizacionOrigen = this.auth.organizacion as any;
-
-            let idPrestacionesPermisoProfesional = this.auth.getPermissions('rup:tipoPrestacion:?');
-            this.servicioPrestacion.get({ id: idPrestacionesPermisoProfesional }).subscribe(prestaciones => {
-                this.prestacionesOrigen = prestaciones;
-                this.actualizarTabla();
-            });
+            this.actualizarTabla();
         }
     }
     /**
@@ -107,7 +101,7 @@ export class ListaReglasComponent implements OnInit {
                 prestacionDestino: this.prestacionDestino ? this.prestacionDestino.conceptId : ''
             };
             if (this.esParametrizado) {
-                parametros['prestacionesOrigen'] = this.prestacionesOrigen.map(prestacion => { return prestacion.conceptId; });
+                parametros['prestacionesOrigen'] = 'rup:tipoPrestacion:?';
             } else {
                 parametros['prestacionOrigen'] = this.prestacionOrigen ? this.prestacionOrigen.conceptId : '';
             }
@@ -139,12 +133,9 @@ export class ListaReglasComponent implements OnInit {
      */
     obtenerFilasTabla(reglas: [IRegla]) {
         this.filas = [];
-        const conceptIds = this.prestacionesOrigen.map(prestacion => { return prestacion.conceptId; });
         for (let regla of reglas) {
             regla.origen.prestaciones.forEach((prestacionAux: any) => { // prestacionAux es cada celda del arreglo de origen.prestaciones. Tiene la prestación y si es auditable
-                if ((this.prestacionOrigen && this.prestacionOrigen.conceptId === prestacionAux.prestacion.conceptId) ||
-                    (conceptIds.length && conceptIds.some(conceptIdOrigen => { return conceptIdOrigen === prestacionAux.prestacion.conceptId; })) ||
-                    (!this.prestacionOrigen && !conceptIds.length)) {
+                if (!this.prestacionOrigen || this.prestacionOrigen.conceptId === prestacionAux.prestacion.conceptId) {
                     /* Es necesaria esta validación porque una regla tiene un origen y un destino. El origen se compone de
                      * una organización y una lista de prestaciones. Entonces si filtra por prestación origen, que muestre
                      * solo aquellas partes de la regla que cumpla con los filtros ingresados. El destino es una organización

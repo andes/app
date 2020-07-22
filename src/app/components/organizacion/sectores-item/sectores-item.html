@@ -1,7 +1,7 @@
 <div class="plex-card" [ngClass]="getClass()">
     <div class="plex-header" (click)="selectItem($event)">
-        <div class="plex-icon"> 
-            <i class="mdi mdi-file-tree"></i> 
+        <div class="plex-icon">
+            <i class="mdi mdi-file-tree"></i>
         </div>
         <div class="title">
             {{root.tipoSector.term}} - {{root.nombre}}
@@ -10,9 +10,10 @@
             <span class="btn btn-sm btn-success collapse-card" (click)="onAddClick()">
                 <i class="mdi mdi-plus"></i>
             </span>
-            <span class="btn btn-sm btn-danger collapse-card" (click)="onRemoveClick()">
+            <!-- QUEDA COMENTADO HASTA DESARROLLAR UN NUEVO SAFE-CHECK EN EL NUEVO MAPA DE CAMAS -->
+            <!-- <span class="btn btn-sm btn-danger collapse-card" (click)="onRemoveClick()">
                 <i class="mdi mdi-close"></i>
-            </span>
+            </span> -->
             <span class="btn btn-sm btn-primary collapse-card" (click)="onEditClick()">
                 <i class="mdi mdi-pencil"></i>
             </span>
@@ -27,7 +28,9 @@
         </div> -->
         <div class="content">
             <div *ngFor="let child of root.hijos">
-                <sectores-item [root]="child" [actions]="actions" (onSelect)="onSelectItem($event)" (onAdd)="onAdd.emit($event)" (onEdit)="onEdit.emit($event)" (onRemove)="removeChild($event)" [selected]="selected"></sectores-item>
+                <sectores-item [root]="child" [actions]="actions" (onSelect)="onSelectItem($event)"
+                               (onAdd)="onAdd.emit($event)" (onEdit)="onEdit.emit($event)"
+                               (onRemove)="removeChild($event)" [selected]="selected"></sectores-item>
             </div>
         </div>
     </div>

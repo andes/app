@@ -1,9 +1,7 @@
 @import '../variables';
+@import '../core/rup';
 
-// TODO: Crear paquete NPM con las fonts
 @media print {
-    @import '../../assets/font.css';
-
     * {
         -webkit-print-color-adjust: exact !important;
         /* Chrome, Safari */

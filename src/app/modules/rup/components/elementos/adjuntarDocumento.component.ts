@@ -65,6 +65,10 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         });
     }
 
+    isEmpty() {
+        return this.registro.valor.documentos.length === 0;
+    }
+
     changeListener($event): void {
         this.readThis($event.target);
     }
@@ -190,6 +194,17 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         clearTimeout(this.timeout);
         this.waiting = false;
         this.adjuntosService.delete(this.adjunto._id).subscribe(() => { });
+    }
+
+    get documentos() {
+        if (this.registro.valor && this.registro.valor.documentos) {
+            return this.registro.valor.documentos.map((doc) => {
+                doc.url = this.createUrl(doc);
+                return doc;
+            });
+        } else {
+            return [];
+        }
     }
 }
 // ElementosRUPRegister.register('AdjuntarDocumentoComponent', AdjuntarDocumentoComponent);

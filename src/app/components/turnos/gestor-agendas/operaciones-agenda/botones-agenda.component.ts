@@ -69,7 +69,6 @@ export class BotonesAgendaComponent implements OnInit {
                 'op': estado,
                 'estado': estado
             };
-
             this.serviceAgenda.patch(agenda.id, patch).subscribe((resultado: any) => {
                 // Si son múltiples, esperar a que todas se actualicen
                 agenda.estado = resultado.estado;
@@ -82,6 +81,11 @@ export class BotonesAgendaComponent implements OnInit {
                         this.actualizarEstadoEmit.emit(estado);
                     }
                     alertCount++;
+                }
+            }, err => {
+                if (err) {
+                    this.plex.info('warning', 'Otro usuario ha modificado el estado de la agenda seleccionada, su gestor se ha actualizado', err);
+                    this.actualizarEstadoEmit.emit(estado);
                 }
             });
         });
@@ -289,7 +293,16 @@ export class BotonesAgendaComponent implements OnInit {
 
     // Botón editar agenda
     editarAgenda() {
-        this.editarAgendaEmit.emit(this.agendasSeleccionadas[0]);
+        let select = this.agendasSeleccionadas[0];
+        this.serviceAgenda.getById(select.id).subscribe((agenda: any) => {
+            if (agenda.estado === select.estado) {
+                this.editarAgendaEmit.emit(select);
+            } else {
+                this.plex.info('warning', 'Otro usuario ha modificado el estado de la agenda seleccionada, su gestor se ha actualizado', 'Operacion no exitosa');
+                this.actualizarEstadoEmit.emit(agenda.estado);
+            }
+        });
+
     }
 
     // Botón clonar, emite que se va a clonar la agenda

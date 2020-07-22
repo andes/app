@@ -21,9 +21,7 @@ export class LoginComponent implements OnInit {
         private auth: Auth,
         private router: Router,
         public ws: WebSocketService
-    ) {
-
-    }
+    ) { }
 
     ngOnInit() {
         this.auth.logout();
@@ -48,13 +46,14 @@ export class LoginComponent implements OnInit {
     login(event) {
         if (event.formValid) {
             this.loading = true;
-            this.auth.login(this.usuario.toString(), this.password).subscribe(() => {
-                this.ws.setToken(window.sessionStorage.getItem('jwt'));
-                this.router.navigate(['/auth/select-organizacion']);
-            }, () => {
-                this.plex.info('danger', 'Usuario o contraseña incorrectos');
-                this.loading = false;
-            });
+            this.auth.login(this.usuario.toString(), this.password)
+                .subscribe((data) => {
+                    this.ws.setToken(window.sessionStorage.getItem('jwt'));
+                    this.router.navigate(['/auth/select-organizacion']);
+                }, (err) => {
+                    this.plex.info('danger', 'Usuario o contraseña incorrectos');
+                    this.loading = false;
+                });
         }
     }
 

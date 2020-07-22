@@ -1,0 +1,77 @@
+<plex-tabs size="full" [activeIndex]="tabIndex" (change)="cambiarTab($event)" *ngIf="cama$ | async as cama">
+    <plex-tab label="CAMA">
+        <ng-container *ngIf="estadoCama$ | async as estadoCama">
+            <plex-title titulo="DATOS DE CAMA">
+                <ng-container *ngIf="canMovimientos">
+                    <ng-container *ngFor="let relacion of relaciones$ | async">
+                        <ng-container
+                                      *ngIf="(relacion.accion !== 'internarPaciente') || (relacion.accion === 'internarPaciente' && permisoIngreso)">
+                            <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color"
+                                         size="sm" (click)="accion(relacion)">
+                            </plex-button>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+                <plex-button title="Editar Cama" icon="pencil" type="warning" size="sm" (click)="goTo(cama)"
+                             *ngIf="canEdit">
+                </plex-button>
+                <plex-button title="Volver" icon="arrow-left" type="info" size="sm" (click)="cancelar()">
+                </plex-button>
+            </plex-title>
+            <fieldset>
+                <plex-detail size="lg" direction="row">
+                    <plex-icon name="{{ estadoCama.icon.substring(this.estadoCama.icon.indexOf('-') + 1) }}"
+                               prefix="adi"></plex-icon>
+                    <plex-badge [type]="estadoCama.color">
+                        {{estadoCama.label}}
+                    </plex-badge>
+                    <plex-badge type="info">
+                        {{ cama.esCensable ? 'Censable' : 'No Censable' }}
+                    </plex-badge>
+                    <plex-badge *ngIf="cama.genero?.term === 'género masculino'" type="info">
+                        Cama Masculina
+                    </plex-badge>
+                    <plex-badge *ngIf="cama.genero?.term === 'género femenino'" type="info">
+                        Cama Femenina
+                    </plex-badge>
+                    <plex-badge *ngIf="!cama.genero?.term" type="info">
+                        Sin Género
+                    </plex-badge>
+                    <div [class]="'text-' + estadoCama.color" title>
+                        {{ cama.nombre }}
+                    </div>
+                    <plex-label titulo="Unidad Organizativa" subtitulo="{{ cama.unidadOrganizativa.term }}">
+                    </plex-label>
+                    <plex-label titulo="Especialidades" subtitulo="{{ cama.especialidades | enumerar: ['term'] }}"
+                                *ngIf="cama.especialidades">
+                    </plex-label>
+                    <plex-label titulo="Tipo de cama" subtitulo="{{ cama.tipoCama.term }}"></plex-label>
+                    <plex-label titulo="Sector" subtitulo="{{ sector(cama) }}"></plex-label>
+                    <plex-label titulo="Equipamiento" subtitulo="{{ cama.equipamiento | enumerar: ['term'] }}"
+                                *ngIf="cama.equipamiento">
+                    </plex-label>
+                    <plex-label *ngIf="estadoCama.key === 'bloqueada'" titulo="Motivo bloqueo"
+                                subtitulo="{{ cama.observaciones }}"></plex-label>
+                </plex-detail>
+            </fieldset>
+        </ng-container>
+        <ng-container *ngIf="cama.paciente">
+            <plex-title size="sm" justify titulo="DATOS DE PACIENTE">
+                <ng-container *ngIf="(accionesEstado$ | async)?.length > 0">
+                    <plex-button size="sm" type="info" (click)="onNuevoRegistrio()"> NUEVO REGISTRO </plex-button>
+                </ng-container>
+            </plex-title>
+            <fieldset>
+                <paciente-detalle [paciente]="paciente$ | async" orientacion="horizontal">
+                </paciente-detalle>
+            </fieldset>
+        </ng-container>
+    </plex-tab>
+    <plex-tab *ngIf="cama.paciente" label="INTERNACION">
+        <app-internacion-detalle (accion)="onAccion($event)">
+        </app-internacion-detalle>
+    </plex-tab>
+    <plex-tab label="HISTORIAL">
+        <app-historial-detalle></app-historial-detalle>
+    </plex-tab>
+</plex-tabs>

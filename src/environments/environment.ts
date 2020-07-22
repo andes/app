@@ -13,5 +13,6 @@ export const environment = {
   APIStatusCheck: false,
   version: _package.version,
   MAPS_KEY: '',
-  HOTJAR_KEY: ''
+  HOTJAR_KEY: '',
+  ANALYTICS_KEY: ''
 };

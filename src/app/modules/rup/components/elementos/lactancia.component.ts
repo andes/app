@@ -32,6 +32,12 @@ export class LactanciaComponent extends RUPComponent implements OnInit {
         }
     }
 
+    isEmpty() {
+        const opciones = this.registro.valor || [];
+        const isEmpty = opciones.every((v) => !v.checkbox);
+        return isEmpty;
+    }
+
     private estaSeleccionado(concepto) { // Se genera el arreglo de un registro de lactancia
         let checkbox = false;
         if (this.registro.valor.length) {

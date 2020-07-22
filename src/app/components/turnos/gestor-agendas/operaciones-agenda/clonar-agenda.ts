@@ -234,6 +234,13 @@ export class ClonarAgendaComponent implements OnInit {
                             agenda.conflictoEF = 1;
                             dia.estado = 'conflicto';
                         }
+                    } else {
+                        if (agenda.otroEspacioFisico && this.agenda.otroEspacioFisico) {
+                            if (agenda.otroEspacioFisico.id === this.agenda.otroEspacioFisico.id) {
+                                agenda.conflictoEF = 1;
+                                dia.estado = 'conflicto';
+                            }
+                        }
                     }
                     let band = (agenda.conflictoEF === 1 || agenda.conflictoProfesional === 1) ? true : false;
                     return band;

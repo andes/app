@@ -12,6 +12,7 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { Subscription } from 'rxjs';
+import { InstitucionService } from '../../../../services/turnos/institucion.service';
 
 @Component({
     selector: 'planificar-agenda',
@@ -28,6 +29,11 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     private _editarAgenda: any;
     @Input('editaAgenda')
     set editaAgenda(value: any) {
+        if (value.otroEspacioFisico) {
+            this.espacioFisicoPropios = false;
+        } else {
+            this.espacioFisicoPropios = true;
+        }
         this._editarAgenda = value;
     }
     get editaAgenda(): any {
@@ -57,7 +63,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     private lastRequest: Subscription;
 
     constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public organizacionService: OrganizacionService,
-        public serviceAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
+        public serviceAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public servicioInstitucion: InstitucionService, public auth: Auth) { }
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
@@ -150,11 +156,12 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
      * @memberof PlanificarAgendaComponent
      */
     filtrarEspacioFisico() {
-        this.modelo.espacioFisico = null;
         if (!this.espacioFisicoPropios) {
             this.textoEspacio = 'Otros Espacios Físicos';
+            this.modelo.espacioFisico = null;
             this.showBloque = true;
         } else {
+            this.modelo.otroEspacioFisico = null;
             this.textoEspacio = 'Espacios físicos de la organización';
         }
     }
@@ -165,21 +172,23 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 activo: true,
                 nombre: event.query
             };
+            let listaEspaciosFisicos = [];
             if (!this.espacioFisicoPropios) {
-                query['sinOrganizacion'] = true;
+                this.servicioInstitucion.get({ search: '^' + event.query }).subscribe(resultado => {
+                    listaEspaciosFisicos = resultado;
+                    event.callback(listaEspaciosFisicos);
+                });
             } else {
                 query['organizacion'] = this.auth.organizacion.id;
+                this.servicioEspacioFisico.get(query).subscribe(resultado => {
+                    if (this.modelo.espacioFisico && this.modelo.espacioFisico.id) {
+                        listaEspaciosFisicos = this.modelo.espacioFisico ? this.modelo.espacioFisico.concat(resultado) : resultado;
+                    } else {
+                        listaEspaciosFisicos = resultado;
+                    }
+                    event.callback(listaEspaciosFisicos);
+                });
             }
-            this.servicioEspacioFisico.get(query).subscribe(resultado => {
-                let listaEspaciosFisicos = [];
-
-                if (this.modelo.espacioFisico && this.modelo.espacioFisico.id) {
-                    listaEspaciosFisicos = this.modelo.espacioFisico ? this.modelo.espacioFisico.concat(resultado) : resultado;
-                } else {
-                    listaEspaciosFisicos = resultado;
-                }
-                event.callback(listaEspaciosFisicos);
-            });
         } else {
             event.callback(this.modelo.espacioFisico ? [this.modelo.espacioFisico] : event.callback([]));
         }
@@ -225,11 +234,13 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             } else {
                 this.noNominalizada = false;
                 this.modelo.nominalizada = true;
+                this.modelo.bloques.length = 0;
+                this.resetBloques();
             }
             // Se activan las prestaciones para la agenda
-            this.modelo.bloques[0].tipoPrestaciones.forEach(unaPrestacion => {
-                unaPrestacion.activo = true;
-            });
+            this.modelo.bloques[0].tipoPrestaciones.forEach(unaPrestacion => unaPrestacion.activo = true);
+            this.modelo.bloques.cantidadTurnos = 0;
+            this.validarTodo();
         }
     }
 
@@ -348,10 +359,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             }
         }
         if (this.modelo.bloques.length === 0) {
-            this.addBloque();
-            this.bloqueActivo = 0;
-            this.elementoActivo.horaInicio = this.modelo.horaInicio;
-            this.elementoActivo.horaFin = this.modelo.horaFin;
+            this.resetBloques();
         } else {
             this.modelo.bloques.forEach((bloque) => {
                 // Si se elimino una prestación, la saco de los bloques
@@ -388,6 +396,13 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 }
             });
         }
+    }
+
+    private resetBloques() {
+        this.addBloque();
+        this.bloqueActivo = 0;
+        this.elementoActivo.horaInicio = this.modelo.horaInicio;
+        this.elementoActivo.horaFin = this.modelo.horaFin;
     }
 
     cambioHoraBloques(texto: String) {
@@ -756,6 +771,11 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
 
             this.modelo.organizacion = this.auth.organizacion;
             let bloques = this.modelo.bloques;
+            if (this.espacioFisicoPropios) {
+                this.modelo.otroEspacioFisico = null;
+            } else {
+                this.modelo.espacioFisico = null;
+            }
 
             bloques.forEach((bloque, index) => {
                 bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
@@ -819,7 +839,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             if (!this.modelo.nominalizada) {
                 this.cleanDatosTurnos();
             }
-
             espOperation = this.serviceAgenda.save(this.modelo);
             espOperation.subscribe((resultado: any) => {
                 this.plex.toast('success', 'La agenda se guardó correctamente');
@@ -912,5 +931,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             return (arrayTP.length === 1);
         }
     }
-}
 
+    onVentanillaVirtualChange($event) {
+        if (!$event.value) {
+            this.elementoActivo.cupoMobile = 0;
+        }
+    }
+}

@@ -52,10 +52,12 @@
                 <div class="row" *ngFor="let plantilla of plantillas$ | async; let i = index">
                     <div class="col-12">
                         <div></div>
-                        <div class="rup-card procedimiento">
+                        <div
+                             class="rup-card {{plantilla.esSolicitud ? 'solicitud' : servicioPrestacion.getCssClass(procedimiento)}}">
                             <div class="rup-header">
                                 <div class="icon-rup drag-handle">
-                                    <i class="icon icon-rup-semantic-procedimiento"></i>
+                                    <i
+                                       class="icon icon-rup-semantic-{{plantilla.esSolicitud ? 'plan': servicioPrestacion.getCssClass(procedimiento)}}"></i>
                                 </div>
                                 <div class="title text-capitalize">
                                     Template de: {{ procedimiento.term }}
@@ -64,6 +66,12 @@
                                     </ng-container>
                                 </div>
                                 <div class="actions">
+                                    <ng-container
+                                                  *ngIf="procedimiento.semanticTag === 'procedimiento' || procedimiento.semanticTag === 'régimen/tratamiento'">
+                                        <plex-bool type="slide" label="es solicitud"
+                                                   [(ngModel)]="plantilla.esSolicitud">
+                                        </plex-bool>
+                                    </ng-container>
                                     <plex-button icon="check" type="success" size="sm"
                                                  (click)="guardarPlantilla(plantilla, procedimiento.conceptId)">
                                     </plex-button>
@@ -74,15 +82,15 @@
                             </div>
                             <div class="rup-body">
                                 <div class="legend drag-handle">
-                                    <span>template de procedimiento</span>
+                                    <span>{{plantilla.esSolicitud ? 'solicitud' :procedimiento.semanticTag}}</span>
                                 </div>
                                 <div class="content">
                                     <plex-text label="Título" [(ngModel)]="plantilla.title" name="title"
                                                [required]="true">
                                     </plex-text>
                                     <plex-text label="Texto de plantilla" [(ngModel)]="plantilla.descripcion"
-                                               name="contenido" [html]="true" [height]="100" [readonly]="false"
-                                               class="w-100" [required]="true">
+                                               name="contenido" [html]="true" [readonly]="false" class="w-100"
+                                               [required]="true">
                                     </plex-text>
                                 </div>
                             </div>
@@ -94,10 +102,10 @@
     </plex-layout-main>
     <plex-layout-sidebar>
         <header>
-            <div class="page-title">Buscar Procedimiento</div>
+            <div class="page-title">Buscar Concepto</div>
         </header>
         <plex-text [(ngModel)]="searchTerm" name="searchTerm" [debounce]="600" (change)="buscarProcedimiento()"
-                   placeholder="Buscar un procedimiento..." autoFocus="true"></plex-text>
+                   placeholder="Buscar un concepto..." autoFocus="true"></plex-text>
         <plex-loader *ngIf="loading" type="linear"></plex-loader>
         <plex-list *ngIf="procedimientos" [striped]="true">
             <plex-heading>
@@ -105,11 +113,15 @@
                 <b badge>Tipo</b>
             </plex-heading>
             <ng-container *ngFor="let pr of procedimientos">
-                <plex-item class="hover" [botonera]="false" (click)="cargarPlantillas(pr)">
+                <plex-item class="hover" (click)="cargarPlantillas(pr)">
                     <plex-label class="text-capitalize">{{ pr.term }}</plex-label>
-                    <span class="badge badge-procedimiento">{{ pr.semanticTag }}</span>
+                    <plex-badge type="{{servicioPrestacion.getCssClass(pr)}}">
+                        {{pr.semanticTag}}</plex-badge>
+
                 </plex-item>
+
             </ng-container>
         </plex-list>
+
     </plex-layout-sidebar>
 </plex-layout>

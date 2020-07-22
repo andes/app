@@ -5,6 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { Auth } from '@andes/auth';
+import { ReglaService } from '../../../services/top/reglas.service';
 
 @Component({
     selector: 'auditar-solicitud',
@@ -22,20 +23,22 @@ export class AuditarSolicitudComponent implements OnInit {
         'dat'
     ];
 
-
-    @Input() prestacionSeleccionada: any;
+    prestacionSeleccionada: any;
+    @Input('prestacionSeleccionada')
+    set _prestacionSeleccionada(value) {
+        this.prestacionSeleccionada = value;
+        this.resetAuditoria();
+    }
     @Input() showCitar: any;
     @Output() returnAuditoria: EventEmitter<any> = new EventEmitter<any>();
     @Output() returnCitar: EventEmitter<any> = new EventEmitter<any>();
     // Adjuntos
     fotos: any[] = [];
     fileToken: String = null;
-    lightbox = false;
-    indice;
     showConfirmar = false;
     showPrioridad = false;
     prioridad;
-    profesional;
+    profesional = null;
     profesionales = [];
     prioridades = [
         { id: 'prioritario', nombre: 'PRIORITARIO' }
@@ -44,9 +47,18 @@ export class AuditarSolicitudComponent implements OnInit {
     corfirmarAuditoria = false;
     solicitudAsignada = false;
     observaciones = '';
+    organizacionesDestino = [];
+    tipoPrestacionesDestino = [];
+    tipoPrestacionesDestinoData = [];
+    profesionalDestino;
+    organizacionDestino;
+    tipoPrestacionDestino;
+    reglasTOP;
+
     constructor(
         public plex: Plex,
         public adjuntosService: AdjuntosService,
+        private servicioReglas: ReglaService,
         public sanitazer: DomSanitizer,
         public servicioProfesional: ProfesionalService,
         public auth: Auth,
@@ -60,32 +72,81 @@ export class AuditarSolicitudComponent implements OnInit {
         });
     }
 
+    resetAuditoria() {
+        this.solicitudAsignada = false;
+        this.corfirmarAuditoria = false;
+        this.showPrioridad = false;
+        this.showConfirmar = false;
+        this.observaciones = '';
+        this.tipoPrestacionDestino = null;
+        this.organizacionDestino = null;
+        this.profesionalDestino = null;
+    }
 
     aceptar() {
-        this.corfirmarAuditoria = true;
+        this.prioridad = null;
         this.showPrioridad = true;
-        this.estadoSolicitud = 1;
-        this.showConfirmar = true;
+        this.estadoSolicitud = 0;
+        this.doShowConfirmar();
     }
 
     asignar() {
-        this.corfirmarAuditoria = true;
+        this.profesional = this.prestacionSeleccionada.solicitud.profesional ? this.prestacionSeleccionada.solicitud.profesional : null;
         this.solicitudAsignada = true;
-        this.estadoSolicitud = 2;
-        this.showConfirmar = true;
+        this.estadoSolicitud = 1;
+        this.doShowConfirmar();
     }
 
-    rechazar() {
-        this.corfirmarAuditoria = true;
+    responder() {
+        this.estadoSolicitud = 2;
+        this.doShowConfirmar();
+    }
+
+    referir() {
+        this.servicioReglas.get({
+            organizacionOrigen: this.auth.organizacion.id,
+            prestacionOrigen: this.prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId })
+            .subscribe(
+                res => {
+                    this.reglasTOP = res;
+                    this.organizacionesDestino = res.map(elem => ({ id: elem.destino.organizacion.id, nombre: elem.destino.organizacion.nombre }));
+                }
+            );
+
         this.estadoSolicitud = 3;
+        this.doShowConfirmar();
+    }
+
+    private doShowConfirmar() {
         this.showConfirmar = true;
+        this.corfirmarAuditoria = true;
     }
 
     confirmar() {
         if (this.corfirmarAuditoria) {
-            this.returnAuditoria.emit({ status: this.estadoSolicitud, observaciones: this.observaciones, prioridad: this.prioridad ? this.prioridad.id : null, profesional: this.profesional ? this.profesional : null });
+            let data: any = { status: this.estadoSolicitud, observaciones: this.observaciones, prioridad: this.prioridad ? this.prioridad.id : null, profesional: this.profesional};
+
+            if (this.estadoSolicitud === 3) {
+                data.organizacion = this.organizacionDestino;
+                data.profesional = this.profesionalDestino;
+                data.prestacion = this.tipoPrestacionesDestino.find(e => e.conceptId === this.tipoPrestacionDestino.id);
+                // verifica si la solicitud es auditable, si no lo es, pasa el estado a pendiente
+                if (!this.esRemisionAuditable()) {
+                    data.estado = {tipo: 'pendiente' };
+                }
+            }
+
+            this.returnAuditoria.emit(data);
+            this.estadoSolicitud = -1;
             this.showPrioridad = false;
         }
+    }
+
+    // Verifica si la regla para ver si la solicitud es auditable
+    esRemisionAuditable() {
+        let regla = this.reglasTOP.find(rule => rule.destino.prestacion.conceptId === this.tipoPrestacionDestino.id );
+        let regla2 = regla.origen.prestaciones.find(rule => rule.prestacion.conceptId === this.prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId);
+        return regla2.auditable;
     }
 
     cerrar() {
@@ -93,11 +154,24 @@ export class AuditarSolicitudComponent implements OnInit {
     }
 
     cancelar() {
-        this.estadoSolicitud = 0;
+        this.profesional = null;
+        this.estadoSolicitud = -1;
         this.corfirmarAuditoria = false;
         this.showConfirmar = false;
         this.showPrioridad = false;
         this.solicitudAsignada = false;
+        this.observaciones = '';
+        this.cancelarRemision();
+    }
+
+    private cancelarRemision() {
+        this.organizacionesDestino = [];
+        this.tipoPrestacionesDestino = [];
+        this.tipoPrestacionesDestinoData = [];
+        this.profesionalDestino = null;
+        this.organizacionDestino = null;
+        this.tipoPrestacionDestino = null;
+        this.reglasTOP = [];
     }
 
     cancelarAceptar() {
@@ -120,35 +194,25 @@ export class AuditarSolicitudComponent implements OnInit {
         }
     }
 
-    activaLightbox(index) {
-        if (this.prestacionSeleccionada.solicitud.registros[0].valor.documentos[index].ext !== 'pdf') {
-            this.lightbox = true;
-            this.indice = index;
-        }
-    }
-
     loadProfesionales(event) {
-        if (event.query) {
-            let query = {
-                nombreCompleto: event.query
-            };
-            this.servicioProfesional.get(query).subscribe(event.callback);
+        return event.query ? this.servicioProfesional.get({ nombreCompleto: event.query }).subscribe(event.callback) : event.callback([]);
+    }
+
+    onSelectOrganizacionDestino() {
+        if (this.organizacionDestino) {
+            this.servicioReglas.get({
+                organizacionOrigen: this.prestacionSeleccionada.solicitud.organizacion.id,
+                organizacionDestino: this.organizacionDestino.id,
+                prestacionOrigen: this.prestacionSeleccionada.solicitud.tipoPrestacionOrigen.conceptId
+            }).subscribe(res => {
+                this.reglasTOP = res;
+                this.tipoPrestacionesDestino = res.map(e => e.destino.prestacion);
+                this.tipoPrestacionesDestinoData = this.tipoPrestacionesDestino.map(e => ({ id: e.conceptId, nombre: e.term }));
+            });
         } else {
-            event.callback([]);
-        }
-    }
-
-    imagenPrevia(i) {
-        let imagenPrevia = i - 1;
-        if (imagenPrevia >= 0) {
-            this.indice = imagenPrevia;
-        }
-    }
-
-    imagenSiguiente(i) {
-        let imagenSiguiente = i + 1;
-        if (imagenSiguiente <= this.fotos.length - 1) {
-            this.indice = imagenSiguiente;
+            this.tipoPrestacionDestino = null;
+            this.tipoPrestacionesDestino = [];
+            this.tipoPrestacionesDestinoData = [];
         }
     }
 
@@ -158,6 +222,18 @@ export class AuditarSolicitudComponent implements OnInit {
 
     confirmarCitar() {
         this.returnCitar.emit({ status: false, motivo: this.observaciones });
+    }
+
+    get documentos() {
+        let solicitudRegistros = this.prestacionSeleccionada.solicitud.registros;
+        if (solicitudRegistros.some(reg => reg.valor.documentos)) {
+            return solicitudRegistros[0].valor.documentos.map((doc) => {
+                doc.url = this.createUrl(doc);
+                return doc;
+            });
+        } else {
+            return [];
+        }
     }
 
 }

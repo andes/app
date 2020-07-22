@@ -45,6 +45,7 @@ export class PrestacionCrearComponent implements OnInit {
     public loading = false;
     public disableGuardar = false;
     public resultadoBusqueda = [];
+    public tieneAccesoHUDS: Boolean;
     /**
      * Indica si muestra el calendario para dar turno autocitado
      */
@@ -77,7 +78,9 @@ export class PrestacionCrearComponent implements OnInit {
         private hudsService: HUDSService) { }
 
     ngOnInit() {
+        this.tieneAccesoHUDS = this.auth.check('huds:visualizacionHuds');
         // Carga tipos de prestaciones permitidas para el usuario
+
         this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
             this.tiposPrestacion = data;
         });
@@ -184,8 +187,9 @@ export class PrestacionCrearComponent implements OnInit {
                 }
             };
             this.disableGuardar = true;
-            if (pacientePrestacion) {
+            if (this.tieneAccesoHUDS && pacientePrestacion) {
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
+
                 const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.paciente, 'Fuera de agenda', this.auth.profesional, null, this.tipoPrestacionSeleccionada.id);
                 const nuevaPrest = this.servicioPrestacion.post(nuevaPrestacion);
                 const res = concat(token, nuevaPrest);
@@ -230,7 +234,6 @@ export class PrestacionCrearComponent implements OnInit {
         this.servicioAgenda.get(params).subscribe(agendas => {
             this.agendasAutocitar = agendas;
             this.prestacionAutocitar = this.tipoPrestacionSeleccionada;
-            this.servicioPrestacion.crearPrestacion(this.paciente, this.tipoPrestacionSeleccionada.id, 'solicitud', (new Date()), null);
             this.showAutocitar = true;
         });
     }

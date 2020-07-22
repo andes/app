@@ -38,7 +38,7 @@
                     {{movimiento.datosPrestamo.turno.profesionales |
                                             enumerar:['apellido','nombre'] }}
                     <br>
-                    <span class="badge-success float-left">Solicitud Automática</span>
+                    <plex-badge type="success">Solicitud Automática</plex-badge>
                 </td>
                 <td *ngIf="movimiento.datosSolicitudManual">
                     {{movimiento.estado == 'En archivo' ? 'Devuelta por:' : 'Prestada a:'}}
@@ -51,7 +51,7 @@
                         {{movimiento.datosSolicitudManual.responsable.nombre}}
                     </span>
                     <br>
-                    <span class="badge-warning float-left">Solicitud Manual</span>
+                    <plex-badge type="warning">Solicitud Manual</plex-badge>
                 </td>
                 <td>
                     <span *ngIf="movimiento.datosSolicitudManual">

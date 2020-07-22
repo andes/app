@@ -27,8 +27,6 @@ export class AnularSolicitudComponent implements OnInit {
     // Adjuntos
     fotos: any[] = [];
     fileToken: String = null;
-    lightbox = false;
-    indice;
     showConfirmar = false;
     motivo = '';
     constructor(
@@ -82,24 +80,15 @@ export class AnularSolicitudComponent implements OnInit {
         }
     }
 
-    activaLightbox(index) {
-        if (this.prestacionSeleccionada.solicitud.registros[0].valor.documentos[index].ext !== 'pdf') {
-            this.lightbox = true;
-            this.indice = index;
-        }
-    }
-
-    imagenPrevia(i) {
-        let imagenPrevia = i - 1;
-        if (imagenPrevia >= 0) {
-            this.indice = imagenPrevia;
-        }
-    }
-
-    imagenSiguiente(i) {
-        let imagenSiguiente = i + 1;
-        if (imagenSiguiente <= this.fotos.length - 1) {
-            this.indice = imagenSiguiente;
+    get documentos() {
+        let solicitudRegistros = this.prestacionSeleccionada.solicitud.registros;
+        if (solicitudRegistros.some(reg => reg.valor.documentos)) {
+            return solicitudRegistros[0].valor.documentos.map((doc) => {
+                doc.url = this.createUrl(doc);
+                return doc;
+            });
+        } else {
+            return [];
         }
     }
 

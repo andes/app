@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, Input, EventEmitter, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { SnomedService } from './../../services/term/snomed.service';
+import { SnomedService } from '../../apps/mitos';
 import { Unsubscribe } from '@andes/shared';
 import { SnomedBuscarService } from './snomed-buscar.service';
 
@@ -84,7 +84,7 @@ export class SnomedBuscarComponent implements OnInit, OnDestroy {
                 case 'productos':
                     apiMethod = this.SNOMED.get({
                         search: search,
-                        semanticTag: ['producto', 'objeto físico', 'medicamento clínico']
+                        semanticTag: ['producto', 'objeto físico', 'medicamento clínico', 'fármaco de uso clínico']
                     });
                     break;
                 case 'equipamientos':
@@ -96,7 +96,7 @@ export class SnomedBuscarComponent implements OnInit, OnDestroy {
                 default:
                     apiMethod = this.SNOMED.get({
                         search: search,
-                        semanticTag: ['hallazgo', 'trastorno', 'procedimiento', 'entidad observable', 'producto', 'situación', 'régimen/tratamiento', 'elemento de registro', 'objeto físico', 'medicamento clínico', 'evento']
+                        semanticTag: ['hallazgo', 'trastorno', 'procedimiento', 'entidad observable', 'producto', 'situación', 'régimen/tratamiento', 'elemento de registro', 'objeto físico', 'medicamento clínico', 'fármaco de uso clínico', 'evento']
                     });
                     break;
             }

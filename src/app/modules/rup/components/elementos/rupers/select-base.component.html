@@ -1,0 +1,43 @@
+<ng-container *ngIf="!soloValores">
+    <form #form="ngForm">
+        <div class="grow">
+            <ng-container *ngIf="params.preload">
+                <plex-select [required]="params.required" [multiple]="params.multiple" [(ngModel)]="itemSelected"
+                             name="organizacion" [data]="dataLoaded" (change)="onValueChange()" [label]="titulo"
+                             [disabled]="otherEnabled" [labelField]="labelField" [idField]="idField">
+                </plex-select>
+            </ng-container>
+            <ng-container *ngIf="!params.preload">
+                <plex-select [required]="params.required" [multiple]="params.multiple" [(ngModel)]="itemSelected"
+                             name="organizacion" (getData)="loadDatos($event)" (change)="onValueChange()"
+                             [label]="titulo" [disabled]="otherEnabled" [labelField]="labelField" [idField]="idField">
+                </plex-select>
+            </ng-container>
+            <div class="ml-1" *ngIf="allowOther">
+                <label> &nbsp; </label>
+                <plex-bool label="OTRO" (change)="onValueChange()" [(ngModel)]="otherEnabled" name="bool">
+                </plex-bool>
+            </div>
+        </div>
+
+        <plex-text *ngIf="otherEnabled" label="Otro" [(ngModel)]="otherText" name="otherText"
+                   placeholder="Ingrese una opción alternativa" (change)="onValueChange()" [required]="params.required">
+        </plex-text>
+    </form>
+</ng-container>
+<ng-container *ngIf="soloValores">
+    <p *ngIf="registro.valor" class="readonly">
+        <span>{{ titulo }} </span>
+        <ng-container *ngIf="registro.valor">
+            <ng-container *ngIf="params.multiple">
+                <ng-container *ngFor="let item of registro.valor; let last = last">
+                    {{ displayName(item) }}
+                    {{ last ? ' ' : '-' }}
+                </ng-container>
+            </ng-container>
+            <ng-container *ngIf="!params.multiple">
+                {{ otherEnabled ? registro.valor.nombre : displayName(registro.valor) }}
+            </ng-container>
+        </ng-container>
+    </p>
+</ng-container>

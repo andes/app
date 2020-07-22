@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Observable } from 'rxjs';
-import { IFinanciador } from '../interfaces/IFinanciador';
 import { BehaviorSubject } from 'rxjs';
+import { IObraSocial } from '../interfaces/IObraSocial';
 
 @Injectable()
 export class ObraSocialCacheService {
@@ -12,7 +12,7 @@ export class ObraSocialCacheService {
      * Obtiene los datos de la obra social asociada a un paciente
      */
 
-    getFinanciadorPacienteCache(): Observable<IFinanciador> {
+    getFinanciadorPacienteCache(): Observable<IObraSocial> {
         return this.financiadorPacienteCache.asObservable();
     }
 

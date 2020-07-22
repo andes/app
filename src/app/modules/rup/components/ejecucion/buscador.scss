@@ -1,4 +1,4 @@
-@import '../variables';
+@import "../core/rup";
 .header {
     align-items: center;
 }
@@ -20,6 +20,15 @@
     cdk-virtual-scroll-viewport {
         height: 100%;
         overflow-x: hidden;
+
+        plex-button[type="info"] {
+            .btn {
+                width: 20px;
+                justify-content: center;
+                display: flex;
+                height: 26px;
+            }
+        }
     }
 }
 
@@ -62,7 +71,7 @@
                     filter: alpha(opacity=65);
                     -webkit-box-shadow: none;
                     box-shadow: none;
-                    opacity: .65;
+                    opacity: 0.65;
                 } // fix a mano para el boton btn-otro para que entre el texto en los filtros
                 &.btn-otro {
                     padding-top: 0;
@@ -72,7 +81,7 @@
                     }
                 }
             }
-            .badge {
+            .contador {
                 display: inline-block;
                 top: 0;
                 right: 0;
@@ -80,19 +89,7 @@
                 text-align: left;
                 padding: 3px;
                 font-size: 0.7rem;
-                z-index: 1000;
             }
-        }
-    }
-}
-
-.busqueda-guiada {
-    .grupo {
-        border: 2px solid #ccc;
-        padding: 5px;
-        margin-bottom: 2px;
-        .conceptos {
-            margin: 10px 0;
         }
     }
 }
@@ -104,8 +101,7 @@
     right: 55px;
 }
 
-@each $tag,
-$color in $rup_colors {
+@each $tag, $color in $rup_colors {
     .menu-buscador .badge-#{$tag} {
         color: white;
         background-color: $color;

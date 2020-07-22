@@ -17,37 +17,47 @@ $invert: #002738;
 $calificador: #660520;
 $laboratorio: #a0a0a0;
 $registro: #8bc43f; // elemento de registro
-// definimos esta lista para poder acceder mediante la funcion map-get() ya que en sass no se puede hacer 
+// definimos esta lista para poder acceder mediante la funcion map-get() ya que en sass no se puede hacer
 // la interpolacion del string a una variable directamente
 $plex-tabs-color-extend: (
-    problema: $problema, 
-    calificador: $calificador, 
-    laboratorio: $laboratorio, 
-    trastorno: $trastorno, 
-    situación: $problema, 
-    hallazgo: $hallazgo, 
-    procedimiento: $procedimiento, 
-    regimen: $procedimiento, 
-    entidad: $procedimiento, 
-    solicitud: $solicitud, 
-    producto: $producto, 
-    adjunto: $adjunto, 
-    elementoderegistro: $registro, 
-    invert: $invert, 
-    todos: $todos, 
+    problema: $problema,
+    calificador: $calificador,
+    laboratorio: $laboratorio,
+    trastorno: $trastorno,
+    situación: $problema,
+    hallazgo: $hallazgo,
+    procedimiento: $procedimiento,
+    regimen: $procedimiento,
+    entidad: $procedimiento,
+    solicitud: $solicitud,
+    producto: $producto,
+    adjunto: $adjunto,
+    elementoderegistro: $registro,
+    invert: $invert,
+    todos: $todos,
     otro: $otro
 );
 
 .logo-nav {
     float: left;
-    background-color: var(--nav-bar-icon-color);;
+    background-color: var(--nav-bar-icon-color);
+    ;
     width: 100px;
     height: 50px;
     padding: 7px;
 }
+nav .actions {
+    position: absolute;
+    right: 0;
+}
 
+@import 'app/modules/rup/assets/font.css';
+
+$adi-font-path: '~@andes/icons/fonts/';
+@import '~@andes/icons/scss/andes-icons';
 // Plex
 @import '~@andes/plex/src/lib/styles.scss';
+@import './src/app/components/novedades/novedades.scss';
 // IMPORTS DE MÓDULOS
 // RUP
 // @andrrrl ver con @jfgabriel

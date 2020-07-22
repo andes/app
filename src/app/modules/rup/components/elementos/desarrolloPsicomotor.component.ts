@@ -28,6 +28,11 @@ export class DesarrolloPsicomotorComponent extends RUPComponent implements OnIni
         }
     }
 
+    isEmpty() {
+        const opciones = this.registro.valor || [];
+        return opciones.every((v) => !v.checked);
+    }
+
     private estaSeleccionado(concepto) {
         let checked = false;
         if (this.registro.valor && this.registro.valor.length) {

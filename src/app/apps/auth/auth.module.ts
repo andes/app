@@ -1,3 +1,4 @@
+import { ModalDisclaimerComponent } from './components/accept-disclaimer/modal-disclaimer.component';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -21,7 +22,8 @@ import { AuthAppRouting } from './auth.routing';
     declarations: [
         LoginComponent,
         LogoutComponent,
-        SelectOrganizacionComponent
+        SelectOrganizacionComponent,
+        ModalDisclaimerComponent
     ]
 })
 export class AuthAppModule {

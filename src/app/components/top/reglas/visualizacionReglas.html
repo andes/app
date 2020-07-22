@@ -1,9 +1,8 @@
 <header *ngIf="!esParametrizado">
     <div class="row">
         <div class="col-md-3">
-            <plex-select [(ngModel)]="organizacionOrigen" name="orgOrigen" (getData)="loadOrganizaciones($event)"
-                         label="Organización origen" placeholder="Seleccione la organización"
-                         (change)="actualizarTabla()">
+            <plex-select [(ngModel)]="organizacionOrigen" name="orgOrigen" tmOrganizaciones label="Organización origen"
+                         placeholder="Seleccione la organización" (change)="actualizarTabla()">
             </plex-select>
         </div>
         <div class="col-md-3">
@@ -12,7 +11,7 @@
             </plex-select>
         </div>
         <div class="col-md-3">
-            <plex-select [(ngModel)]="organizacionDestino" name="orgDestino" (getData)="loadOrganizaciones($event)"
+            <plex-select [(ngModel)]="organizacionDestino" name="orgDestino" tmOrganizaciones
                          label="Organización destino" placeholder="Seleccione la organización"
                          (change)="actualizarTabla()">
             </plex-select>

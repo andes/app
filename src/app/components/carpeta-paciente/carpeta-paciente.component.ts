@@ -8,10 +8,21 @@ import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 @Component({
     selector: 'carpeta-paciente',
     templateUrl: 'carpeta-paciente.html',
-    styles: [' .fondoNegro { background-color: #002738 !important; color: white;} .btnEdit {margin-top: 0.5em; margin-left: 0.5em; margin-right: 0.5em;}']
+    styles: [`
+        .invert .default {background: transparent !important; color: white;}
+        .fondoNegro { background-color: #002738 !important; color: white;}
+        .btnEdit {margin-top: 0.5em; margin-left: 0.5em; margin-right: 0.5em;}
+    `]
 })
 
 export class CarpetaPacienteComponent implements OnInit {
+
+    /**
+     * Este flag esta agregado para mantener compatibilidad con todos
+     * PERO debería desaparecer cuando las componentes que usan <carpeta-paciente> se adapten.
+     */
+    @Input() emitOnNew = false;
+
     @Input() turnoSeleccionado: ITurno;
     @Input() pacienteSeleccionado: IPaciente;
     @Output() guardarCarpetaEmit = new EventEmitter<any>();
@@ -29,6 +40,7 @@ export class CarpetaPacienteComponent implements OnInit {
     paciente: any;
     showEdit = false;
     nroCarpetaSugerido: string;
+    nuevoNroCarpeta: string;
     constructor(public auth: Auth, public plex: Plex, public servicioPaciente: PacienteService) { }
 
     ngOnInit() {
@@ -88,6 +100,11 @@ export class CarpetaPacienteComponent implements OnInit {
                         this.nroCarpetaOriginal = this.carpetaPaciente.nroCarpeta;
                         this.carpetaEfectores.push(this.carpetaPaciente);
                         this.indiceCarpeta = this.carpetaEfectores.length - 1;
+                        // Cuando se encontro una carpeta de la coleccion y no se inpacto en el paciente notifico como si fuese un cambio
+                        if (this.emitOnNew) {
+                            // Debería Guardar la carpeta en paciente. Queda para revisar.
+                            this.guardarCarpetaEmit.emit([carpetaE]);
+                        }
                     }
                     if (!this.carpetaPaciente || this.carpetaPaciente.nroCarpeta === '') {
                         this.showNuevaCarpeta = true;
@@ -104,8 +121,8 @@ export class CarpetaPacienteComponent implements OnInit {
 
 
     guardarCarpetaPaciente(nuevaCarpeta = false) {
-        if (this.autorizado && this.carpetaPaciente.nroCarpeta && this.carpetaPaciente.nroCarpeta !== '' && this.carpetaPaciente.nroCarpeta !== this.nroCarpetaOriginal) {
-            this.carpetaPaciente.nroCarpeta = this.carpetaPaciente.nroCarpeta.trim();
+        if (this.autorizado && this.nuevoNroCarpeta) {
+            this.carpetaPaciente.nroCarpeta = this.nuevoNroCarpeta.trim();
             if (this.indiceCarpeta > -1) {
                 this.carpetaEfectores[this.indiceCarpeta] = this.carpetaPaciente;
             } else {
@@ -152,6 +169,7 @@ export class CarpetaPacienteComponent implements OnInit {
     }
 
     editar() {
+        this.nuevoNroCarpeta = this.carpetaPaciente.nroCarpeta;
         this.showEdit = true;
     }
 

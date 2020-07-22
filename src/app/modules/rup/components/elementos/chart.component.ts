@@ -162,4 +162,8 @@ export class ChartComponent implements AfterViewInit {
             }
         };
     }
+
+    isEmpty() {
+        return false;
+    }
 }

@@ -14,7 +14,7 @@
         </div>
         <div class="col-8">
             <span *ngIf="turno.paciente && turno.paciente.id; else valueIfEmpty">
-                {{turno.paciente | paciente}}</span>
+                {{turno.paciente | nombre }}</span>
             <ng-template #valueIfEmpty>Sin paciente asignado</ng-template>
         </div>
     </div>

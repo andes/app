@@ -10,6 +10,7 @@ import { FacturacionAutomaticaService } from './../../services/facturacionAutoma
 
 import { Plex } from '@andes/plex';
 import { HUDSService } from '../../modules/rup/services/huds.service';
+import { Router } from '@angular/router';
 @Component({
     selector: 'turnos-prestaciones',
     templateUrl: 'turnos-prestaciones.html',
@@ -32,15 +33,18 @@ export class TurnosPrestacionesComponent implements OnInit {
     public arrayEstadosFacturacion;
     public documento;
     prestacion: any;
-    router: any;
     public prestaciones: any;
+    public puedeEmitirComprobante: Boolean;
 
+    public selectProfesional: Boolean = false;
+    public profesional: any;
     public botonBuscarDisabled: Boolean = false;
 
     constructor(
         private auth: Auth, private plex: Plex,
         private turnosPrestacionesService: TurnosPrestacionesService, public servicioPrestacion: TipoPrestacionService, public serviceProfesional: ProfesionalService,
-        private servicioOS: ObraSocialService, private facturacionAutomaticaService: FacturacionAutomaticaService, private hudsService: HUDSService
+        private servicioOS: ObraSocialService, private facturacionAutomaticaService: FacturacionAutomaticaService, private hudsService: HUDSService, private router: Router
+
     ) { }
     ngOnInit() {
         this.arrayEstados = [{ id: 'Sin registro de asistencia', nombre: 'Sin registro de asistencia' }, { id: 'Ausente', nombre: 'Ausente' }, { id: 'Presente con registro del profesional', nombre: 'Presente con registro del profesional' }, { id: 'Presente sin registro del profesional', nombre: 'Presente sin registro del profesional' }];
@@ -70,6 +74,8 @@ export class TurnosPrestacionesComponent implements OnInit {
         this.fechaDesde = moment(this.fechaDesde).startOf('day');
         this.fechaHasta = moment(this.fechaHasta).endOf('day');
 
+        this.puedeEmitirComprobante = this.auth.check('turnosPrestaciones:emitirComprobante');
+
         // Iniciamos la búsqueda
         this.parametros = {
             fechaDesde: this.fechaDesde,
@@ -84,7 +90,6 @@ export class TurnosPrestacionesComponent implements OnInit {
             name: 'BUSCADOR DE TURNOS Y PRESTACIONES'
         }]);
     }
-
 
     initialize() {
         let fecha = moment().format();
@@ -106,11 +111,33 @@ export class TurnosPrestacionesComponent implements OnInit {
             estado: '',
             estadoFacturacion: '',
         };
+        let permisos = this.auth.getPermissions('turnosPrestaciones:*').length;
+        if (this.auth.profesional) {
+            if (permisos === 0) {
+                this.serviceProfesional.get({ id: this.auth.profesional }).subscribe(rta => {
+                    this.profesional = rta[0];
+                    params.idProfesional = this.profesional.id;
+                    this.parametros['idProfesional'] = this.profesional.id;
+                    this.selectProfesional = true;
+                    this.busquedaPrestaciones(params);
+                });
+            } else {
+                this.busquedaPrestaciones(params);
+            }
+        } else {
+            if (permisos === 0) {
+                this.router.navigate(['inicio']);
+            } else {
+                this.busquedaPrestaciones(params);
+            }
+        }
+    }
+
+    private busquedaPrestaciones(params) {
         this.turnosPrestacionesService.get(params).subscribe((data) => {
             this.busquedas = this.ordenarPorFecha(data);
             this.loading = false;
         });
-
     }
 
     @Unsubscribe()
@@ -127,7 +154,6 @@ export class TurnosPrestacionesComponent implements OnInit {
     }
 
     refreshSelection(value, tipo) {
-
         let fechaDesde = this.fechaDesde ? moment(this.fechaDesde).startOf('day') : null;
         let fechaHasta = this.fechaHasta ? moment(this.fechaHasta).endOf('day') : null;
 
@@ -227,19 +253,6 @@ export class TurnosPrestacionesComponent implements OnInit {
         this.servicioPrestacion.get({
             turneable: 1
         }).subscribe(event.callback);
-    }
-
-    @Unsubscribe()
-    loadFinanciadores(event) {
-        if (event.query && event.query !== '' && event.query.length > 2) {
-            let query = {
-                nombre: event.query
-            };
-            return this.servicioOS.getListado(query).subscribe(event.callback);
-        } else {
-            event.callback([]);
-        }
-
     }
 
     @Unsubscribe()

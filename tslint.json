@@ -97,11 +97,12 @@
             "check-type"
         ],
         "directive-selector": [
-            true,
+            false,
             "attribute",
             [
                 "app",
-                "mpi"
+                "mpi",
+                "tm"
             ],
             "camelCase"
         ],

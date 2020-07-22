@@ -36,8 +36,8 @@ export class SolicitudesComponent implements OnInit {
     public showBotonCargarSolicitud = true;
     public prestaciones = [];
     public showIniciarPrestacion = false;
-    public fechaDesde: Date = new Date();
-    public fechaHasta: Date = new Date();
+    public fechaDesde: Date = moment().startOf('day').toDate();
+    public fechaHasta: Date = moment().startOf('day').toDate();
     public darTurnoArraySalida = [];
     public darTurnoArrayEntrada = [];
     public auditarArraySalida = [];
@@ -55,7 +55,7 @@ export class SolicitudesComponent implements OnInit {
     public activeTab = 0;
     public showSidebar = false;
     public mostrarMasOpciones = false;
-    public organizacion;
+    public organizacionesOrigen = [];
     public prestacionesPermisos = [];
     public permisosReglas;
     public permisoAnular = false;
@@ -85,6 +85,7 @@ export class SolicitudesComponent implements OnInit {
         { id: 'registroHUDS', nombre: 'REGISTRO EN HUDS' },
         { id: 'anulada', nombre: 'ANULADA' }
     ];
+
     public prioridad;
     public prioridades = [
         { id: 'prioritario', nombre: 'PRIORITARIO' },
@@ -112,12 +113,11 @@ export class SolicitudesComponent implements OnInit {
     ngOnInit() {
 
         if (!this.auth.getPermissions('solicitudes:?').length) {
-            this.router.navigate(['inicio']);
-        } else {
-            if (this.auth.getPermissions('solicitudes:?').length === 1 && this.auth.getPermissions('solicitudes:reglas:?')[0] !== '*' && this.auth.getPermissions('solicitudes:asignadas:?').length) {
-                this.router.navigate(['asignadas']);
-            }
+            this.router.navigate([this.auth.profesional ? 'asignadas' : 'inicio']);
+        } else if (this.auth.getPermissions('solicitudes:?').length === 1 && this.auth.getPermissions('solicitudes:reglas:?')[0] !== '*') {
+            this.router.navigate(['asignadas']);
         }
+
         this.permisosReglas = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:reglas:?')[0] === '*' : false;
         this.prestacionesPermisos = this.auth.getPermissions('solicitudes:tipoPrestacion:?');
         this.permisoAnular = this.auth.check('solicitudes:anular');
@@ -152,12 +152,6 @@ export class SolicitudesComponent implements OnInit {
         }
     }
 
-    loadPrestaciones(event) {
-        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe(data =>
-            event.callback(this.prestacionesPermisos[0] === '*' ? data : data.filter(e => this.prestacionesPermisos.indexOf(e.id) >= 0))
-        );
-    }
-
     cambio(activeTab) {
         this.activeTab = activeTab;
         this.showSidebar = false;
@@ -189,10 +183,17 @@ export class SolicitudesComponent implements OnInit {
         this.prestacionSeleccionada = prestacion;
         this.pacienteSolicitud = prestacion.paciente;
         if (prestacion.solicitud && prestacion.solicitud.turno) {
-            this.servicioTurnos.getTurnos({ id: prestacion.solicitud.turno }).subscribe(turnos => this.turnoSeleccionado = turnos[0].bloques[0].turnos[0]);
+            this.servicioTurnos.getTurnos({ id: prestacion.solicitud.turno }).subscribe(turnos => {
+                this.turnoSeleccionado = turnos[0].bloques[0].turnos[0];
+                this.setShowDetallesFlags();
+            });
         } else {
             this.turnoSeleccionado = null;
+            this.setShowDetallesFlags();
         }
+    }
+
+    private setShowDetallesFlags() {
         this.showDetalle = true;
         this.showSidebar = true;
         this.showAnular = false;
@@ -288,19 +289,30 @@ export class SolicitudesComponent implements OnInit {
     }
 
     getParams() {
-        let params = {
+        let params: any = {
             solicitudDesde: this.fechaDesde,
             solicitudHasta: this.fechaHasta,
-            ordenFechaDesc: true
+            ordenFechaDesc: true,
+            estados: [
+                'auditoria',
+                'pendiente',
+                'rechazada',
+                'validada',
+                'asignada'
+            ]
         };
         if (this.tipoSolicitud === 'entrada') {
+            params.referidas = true;
+
             if (this.asignadas) {
                 params['idProfesional'] = this.auth.profesional;
             }
+
             if (this.estadoEntrada) {
 
                 if (this.estadoEntrada.id === 'turnoDado') {
                     params['tieneTurno'] = true;
+                    params.estados = params.estados.filter(e => e !== 'validada');
                 } else if (this.estadoEntrada.id === 'registroHUDS') {
                     params['tieneTurno'] = true;
                     params['estados'] = ['validada'];
@@ -312,20 +324,7 @@ export class SolicitudesComponent implements OnInit {
                 }
                 if (this.prestacionDestino) {
                     params['prestacionDestino'] = this.prestacionDestino.id;
-                } else {
-                    params['estados'] = [this.estadoEntrada.id];
-                    if (this.estadoEntrada.id === 'pendiente') {
-                        params['tieneTurno'] = false;
-                    }
                 }
-            } else {
-                params['estados'] = [
-                    'auditoria',
-                    'pendiente',
-                    'rechazada',
-                    'validada',
-                    'asignada'
-                ];
             }
         }
         if (this.tipoSolicitud === 'salida') {
@@ -336,6 +335,7 @@ export class SolicitudesComponent implements OnInit {
 
                 if (this.estadoSalida.id === 'turnoDado') {
                     params['tieneTurno'] = true;
+                    params.estados = params.estados.filter(e => e !== 'validada');
                 } else if (this.estadoSalida.id === 'registroHUDS') {
                     params['tieneTurno'] = true;
                     params['estados'] = ['validada'];
@@ -347,24 +347,11 @@ export class SolicitudesComponent implements OnInit {
                 }
                 if (this.prestacionDestino) {
                     params['prestacionDestino'] = this.prestacionDestino.id;
-                } else {
-                    params['estados'] = [this.estadoSalida.id];
-                    if (this.estadoSalida.id === 'pendiente') {
-                        params['tieneTurno'] = false;
-                    }
                 }
-            } else {
-                params['estados'] = [
-                    'auditoria',
-                    'pendiente',
-                    'rechazada',
-                    'validada',
-                    'asignada'
-                ];
             }
         }
-        if (this.organizacion) {
-            params['organizacionOrigen'] = this.organizacion.id;
+        if (this.organizacionesOrigen && this.organizacionesOrigen.length) {
+            params['organizacionOrigen'] = this.organizacionesOrigen.map(o => o.id);
         }
         if (this.prestacionDestino) {
             params['prestacionDestino'] = this.prestacionDestino.id;
@@ -521,6 +508,17 @@ export class SolicitudesComponent implements OnInit {
                         this.visualizarEntrada[i] = false;
                     }
                     break;
+                case 'rechazada':
+
+                        // Se puede dar turno?
+                        this.darTurnoArrayEntrada[i] = false;
+
+                        // Se puede visualizar?
+                        this.visualizarEntrada[i] = true;
+
+                        // Se puede auditar?
+                        this.auditarArrayEntrada[i] = true;
+                        break;
                 case 'validada':
 
                     // Hay turno?
@@ -563,25 +561,38 @@ export class SolicitudesComponent implements OnInit {
     returnAuditoria(event) {
         this.showAuditar = false;
         this.showSidebar = false;
-        if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length) {
-            let patch: any = {
-                op: 'estadoPush',
-                estado: {
-                    tipo: event.status === 1 ? 'pendiente' : (event.status === 2 ? 'asignada' : 'rechazada'),
-                    observaciones: event.observaciones
-                }
-            };
+        const statuses = ['pendiente', 'asignada', 'rechazada', 'referida'];
+        if (event.status !== this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length) {
+            let patch: any;
 
-            // DEPRECADO
-            if (!event.status) {
-                patch.motivoRechazo = event.observaciones;
+            if (event.status !== 3) {
+                patch = {
+                    op: 'estadoPush',
+                    estado: { tipo: statuses[event.status], observaciones: event.observaciones }
+                };
+
+                // DEPRECADO
+                if (!event.status) {
+                    patch.motivoRechazo = event.observaciones;
+                }
+                if (event.prioridad) {
+                    patch.prioridad = event.prioridad;
+                }
+                if (event.profesional) {
+                    patch.profesional = event.profesional;
+                }
+
+            } else {
+                patch = {
+                    op: 'referir',
+                    estado: event.estado,
+                    observaciones: event.observaciones,
+                    organizacion: event.organizacion,
+                    profesional: event.profesional,
+                    tipoPrestacion: event.prestacion
+                };
             }
-            if (event.prioridad) {
-                patch.prioridad = event.prioridad;
-            }
-            if (event.profesional) {
-                patch.profesional = event.profesional;
-            }
+
             this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
                 respuesta => this.cargarSolicitudes()
             );
@@ -619,7 +630,7 @@ export class SolicitudesComponent implements OnInit {
         if (event.status === false) {
             if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
                 let patch = {
-                    op: 'estadoPush',
+                    op: 'citar',
                     estado: {
                         tipo: 'pendiente',
                         observaciones: event.motivo

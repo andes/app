@@ -1,0 +1,34 @@
+<fieldset>
+    <div class="row">
+        <div class="col-2">
+            <plex-text (change)="filtrar()" [(ngModel)]="filtros.documento" label="Documento">
+            </plex-text>
+        </div>
+        <div class="col-2">
+            <plex-text (change)="filtrar()" [(ngModel)]="filtros.apellido" label="Apellido">
+            </plex-text>
+        </div>
+
+        <div class="col-2">
+            <plex-datetime type="date" (change)="filtrarFecha()" [(ngModel)]="filtros.fechaIngresoDesde"
+                           name="fechaIngresoDesde" label="Desde" [required]="true" [max]="filtros.fechaIngresoHasta"
+                           [debounce]="600">
+            </plex-datetime>
+        </div>
+
+        <div class="col-2">
+            <plex-datetime type="date" [(ngModel)]="filtros.fechaIngresoHasta" name='fechaIngresoHasta' label="Hasta"
+                           (change)="filtrarFecha()" [min]="filtros.fechaIngresoDesde" [debounce]="600"></plex-datetime>
+        </div>
+        <div class="col-3">
+            <plex-select [(ngModel)]="filtros.estado" [data]='estadosInternacion' label="Estado" (change)="filtrar()">
+            </plex-select>
+        </div>
+        <div *ngIf="permisoDescarga" class="col-1">
+            <label>&nbsp;</label>
+            <plex-button type="warning" icon="download mdi-14px" title="Descargar Csv" titlePosition="top"
+                         (click)="reporteInternaciones()" [disabled]="listadoInternacion && !listadoInternacion.length">
+            </plex-button>
+        </div>
+    </div>
+</fieldset>

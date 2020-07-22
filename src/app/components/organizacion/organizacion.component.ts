@@ -36,13 +36,17 @@ export class OrganizacionComponent implements OnInit {
             this.router.navigate(['inicio']);
         } else {
             this.updateTitle('Organizaciones');
-            this.auth.organizaciones().subscribe(data => {
-                if (data) {
-                    data.forEach(dat => { this.idOrganizaciones.push(dat.id); });
-                }
-                this.loadDatos();
-            });
+            this.reloadOrganizaciones();
         }
+    }
+
+    private reloadOrganizaciones() {
+        this.auth.organizaciones().subscribe(data => {
+            if (data) {
+                data.forEach(dat => { this.idOrganizaciones.push(dat.id); });
+            }
+            this.loadDatos();
+        });
     }
 
     private updateTitle(nombre: string) {
@@ -83,7 +87,7 @@ export class OrganizacionComponent implements OnInit {
         this.updateTitle('Organizaciones');
         this.showcreate = false;
         this.seleccion = null;
-        this.loadDatos();
+        this.reloadOrganizaciones();
     }
 
     activate(objOrganizacion: IOrganizacion) {

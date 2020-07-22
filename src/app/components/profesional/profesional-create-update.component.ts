@@ -179,22 +179,24 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
             let documentoRena = null;
 
             profesional.sexo = ((typeof profesional.sexo === 'string')) ? profesional.sexo : (Object(profesional.sexo).id);
-            sexoRena = profesional.sexo === 'masculino' ? 'M' : 'F';
+            sexoRena = profesional.sexo;
             documentoRena = profesional.documento;
             this.renaperService.get({ documento: documentoRena, sexo: sexoRena }).subscribe(
                 resultado => {
-                    if (resultado.datos.nroError === 0) {
+                    if (resultado) {
                         this.validado = true;
-                        this.profesional.nombre = resultado.datos.nombres.toUpperCase();
-                        this.profesional.apellido = resultado.datos.apellido.toUpperCase();
-                        this.profesional.fechaNacimiento = moment(resultado.datos.fechaNacimiento, 'YYYY-MM-DD');
+                        this.profesional.nombre = resultado.nombre.toUpperCase();
+                        this.profesional.apellido = resultado.apellido.toUpperCase();
+                        this.profesional.fechaNacimiento = moment(resultado.fechaNacimiento, 'YYYY-MM-DD');
                         this.profesional.validadoRenaper = true;
-                        this.profesional.foto = resultado.datos.foto;
+                        this.profesional.foto = resultado.foto;
                         this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl(this.profesional.foto);
                         this.plex.toast('success', 'El profesional ha sido validado con RENAPER');
                     } else {
                         this.plex.info('warning', '', 'El profesional no se encontró en RENAPER');
                     }
+                }, err => {
+                    this.plex.info('warning', '', 'El profesional no se encontró en RENAPER');
                 });
         }
     }

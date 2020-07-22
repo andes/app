@@ -25,10 +25,10 @@
             <plex-button type="danger" size="sm" (click)="borrar()">
                 <plex-icon name="delete"></plex-icon>
             </plex-button>
-            <plex-button type="info" size="sm" (click)="copy()" title="Copiar permisos">
+            <plex-button type="info" size="sm" (click)="copy()" title="Copiar permisos" titlePosition="left">
                 <plex-icon name="content-copy"></plex-icon>
             </plex-button>
-            <plex-button type="info" size="sm" (click)="paste()" title="Pegar permisos"
+            <plex-button type="info" size="sm" (click)="paste()" title="Pegar permisos" titlePosition="left"
                          *ngIf="permisosService.hasCopy()">
                 <plex-icon name="content-paste"></plex-icon>
             </plex-button>

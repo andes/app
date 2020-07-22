@@ -1,8 +1,8 @@
 <plex-detail size="lg" direction="{{ orientacion === 'vertical' ? 'column' : 'row' }}">
 
-    <img class="img-user" [mpiFotoPaciente]="paciente" />
+    <img [mpiFotoPaciente]="paciente" />
 
-    <plex-badge [type]="estadoBadgeType">
+    <plex-badge [type]="estadoBadgeType" *ngIf="paciente.estado">
         {{ paciente.estado | uppercase }}
     </plex-badge>
 
@@ -35,4 +35,5 @@
 
     <plex-label *ngIf="showTelefono" titulo="Teléfono" [subtitulo]="contacto"></plex-label>
 
+    <ng-content select="plex-label" ngProjectAs="plex-label"></ng-content>
 </plex-detail>

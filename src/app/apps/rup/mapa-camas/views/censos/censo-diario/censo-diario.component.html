@@ -1,0 +1,91 @@
+<plex-layout main="12">
+    <plex-layout-main>
+        <plex-title titulo="Censo Diario"></plex-title>
+        <fieldset>
+            <div class="row">
+                <div class="col-md-3">
+                    <plex-datetime type="date" [(ngModel)]="fecha" name="fecha" label="Fecha" (change)="resetCenso()"
+                                   [debounce]="600">
+                    </plex-datetime>
+                </div>
+                <div class="col-md-3" *ngIf="unidadesOranizativas.length > 0">
+                    <plex-select label="Unidad Organizativa" [(ngModel)]="selectedUnidadOranizativa" name="sectores"
+                                 [data]="unidadesOranizativas" [required]="true">
+                    </plex-select>
+                </div>
+                <div class="d-flex align-items-end col-md-2">
+                    <plex-button [disabled]="!fecha || !selectedUnidadOranizativa" label="GENERAR CENSO" type="primary"
+                                 (click)="generarCensoDiario()">
+                    </plex-button>
+                    <plex-button [disabled]="!censo" title="Descargar censo diario" type="warning"
+                                 (click)="descargarCenso()">
+                        <plex-icon name="download"></plex-icon>
+                    </plex-button>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset *ngIf="censoPacientes.length > 0">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Paciente</th>
+                        <th>Cama</th>
+                        <th>Ingreso</th>
+                        <th>Pase de</th>
+                        <th>Egreso</th>
+                        <th>Pase a</th>
+                        <th>Dias Estada</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let censoP of censoPacientes">
+                        <td>{{censoP.datos.paciente.apellido}}, {{censoP.datos.paciente.nombre}} |
+                            {{censoP.datos.paciente.documento}} </td>
+                        <td>{{censoP.datos.cama.nombre}},
+                            {{censoP.datos.cama.sectores[censoP.datos.cama.sectores.length -1].nombre}}
+                        </td>
+                        <td>{{censoP.ingreso}}</td>
+                        <td>{{censoP.paseDe}}</td>
+                        <td>{{censoP.egreso}}</td>
+                        <td>{{censoP.paseA}}</td>
+                        <td>{{censoP.diasEstada}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
+        <fieldset *ngIf="censo">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Existencia a las 0</th>
+                        <th>Ingresos</th>
+                        <th>Pases De</th>
+                        <th>Altas</th>
+                        <th>Defunciones</th>
+                        <th>Pases A</th>
+                        <th>Existencia a las 24</th>
+                        <th>Ingresos y egresos</th>
+                        <th>Pacientes Dia</th>
+                        <th>Dias estada</th>
+                        <th>Disponibles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{censo.existencia0}}</td>
+                        <td>{{censo.ingresos}}</td>
+                        <td>{{censo.pasesDe}}</td>
+                        <td>{{censo.egresosAlta}}</td>
+                        <td>{{censo.egresosDefuncion}}</td>
+                        <td>{{censo.pasesA}}</td>
+                        <td>{{censo.existencia24}}</td>
+                        <td>{{censo.ingresoEgresoDia}}</td>
+                        <td>{{censo.pacientesDia}}</td>
+                        <td>{{censo.diasEstada}}</td>
+                        <td>{{censo.disponibles24}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
+    </plex-layout-main>
+</plex-layout>

@@ -58,17 +58,15 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
             estados: [
                 'auditoria', // solicitudes a ser auditadas, pueden pasar a rechazadas o a pendientes
                 'pendiente', // solicitudes pendientes pueden tener o no turno asociado, están pendientes de ejecución
-                'rechazada', // solicitudes rechazadas en el proceso de auditoría
-                'validada'   // solicitudes validadas, si tienen turno asociado veremos la información
             ]
         };
 
         this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
-            this.solicitudesPrestaciones = this.sortSolicitudees(resultado);
+            this.solicitudesPrestaciones = this.sortSolicitudes(resultado);
         });
     }
 
-    private sortSolicitudees(solicitudes) {
+    private sortSolicitudes(solicitudes) {
         return solicitudes.sort((a, b) => {
             let inia = a.solicitud.fecha ? new Date(a.solicitud.fecha) : null;
             let inib = b.solicitud.fecha ? new Date(b.solicitud.fecha) : null;
@@ -79,11 +77,6 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
 
     }
 
-    // Emite a <solicitud-turno-ventanilla> la solicitud/prestación completa para usar en darTurno
-    solicitudPrestacionDarTurno(prestacionSolicitud) {
-        this.solicitudPrestacionEmit.emit(prestacionSolicitud);
-    }
-
     formularioSolicitud() {
         this.showCargarSolicitud = true;
     }
@@ -92,6 +85,7 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
         this.cargarSolicitudes();
         this.showCargarSolicitud = false;
     }
+
     redirect(pagina: string) {
         this.router.navigate(['./' + pagina]);
         return false;

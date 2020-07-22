@@ -8,7 +8,7 @@ import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisi
 import { OrganizacionService } from './../../../../services/organizacion.service';
 import * as enumerados from './../../../../utils/enumerados';
 import { Router } from '@angular/router';
-import { SnomedService } from '../../../../services/term/snomed.service';
+import { SnomedService } from '../../../../apps/mitos';
 
 @Component({
     selector: 'edit-espacio-fisico',

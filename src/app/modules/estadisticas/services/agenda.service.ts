@@ -23,7 +23,7 @@ export class EstAgendasService {
     }
 
     descargarCSV (data) {
-        return this.server.post(this.baseURL + '/dashboard/descargarCsv', data);
+        return this.server.post(this.baseURL + '/dashboard/descargarCsv', data, {responseType: 'blob'});
     }
 
 }

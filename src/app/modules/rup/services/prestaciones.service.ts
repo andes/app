@@ -1,28 +1,31 @@
 
 import { map, switchMap } from 'rxjs/operators';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
-import { Injectable, Output, EventEmitter } from '@angular/core';
+import { Injectable, Output, EventEmitter, DebugElement } from '@angular/core';
 import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
 import { IPrestacionGetParams } from '../interfaces/prestacionGetParams.interface';
-import { SnomedService } from '../../../services/term/snomed.service';
+import { SnomedService } from '../../../apps/mitos';
 import { ReglaService } from '../../../services/top/reglas.service';
 import { HUDSService } from '../services/huds.service';
+import { Plex } from '@andes/plex';
 
 
 @Injectable()
 export class PrestacionesService {
     public static InformeDelEncuentro = '371531000';
+
     public static SemanticTags = {
         hallazgo: ['hallazgo', 'situación', 'evento'],
         trastorno: ['trastorno'],
         procedimiento: ['procedimiento', 'entidad observable', 'régimen/tratamiento'],
         plan: ['procedimiento', 'régimen/tratamiento'],
-        producto: ['producto', 'objeto físico', 'medicamento clínico'],
+        producto: ['producto', 'objeto físico', 'medicamento clínico', 'fármaco de uso clínico'],
         elementoderegistro: ['elemento de registro']
     };
+
     public static InternacionPrestacion = {
         fsn: 'admisión hospitalaria (procedimiento)',
         semanticTag: 'procedimiento',
@@ -86,16 +89,6 @@ export class PrestacionesService {
         this.datosRefSet.next(null);
     }
 
-
-    public refsetsIds = {
-        cronico: '1641000013105',
-        Antecedentes_Familiares: '1621000013103',
-        Antecedentes_Personales_procedimientos: '1911000013100',
-        Antecedentes_Personales_hallazgos: '1901000013103',
-        Antecedentes_Para_Estudios_Otoemision: '2121000013101',
-        situacionLaboral: '200000000',
-        nivelEstudios: '3'
-    };
     public elementosRegistros = {
         odontograma: '3561000013109'
     };
@@ -103,15 +96,15 @@ export class PrestacionesService {
     // Ids de conceptos que refieren que un paciente no concurrió a la consulta
     // Se usan para hacer un PATCH en el turno, quedando turno.asistencia = 'noAsistio'
 
-    public conceptosTurneables: any[];
-
-    constructor(private server: Server, public auth: Auth, private servicioTipoPrestacion: TipoPrestacionService, public snomed: SnomedService, private servicioReglas: ReglaService, private hudsService: HUDSService) {
-
-        this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
-            this.conceptosTurneables = conceptosTurneables;
-        });
+    constructor(
+        private server: Server,
+        public auth: Auth,
+        public snomed: SnomedService,
+        private servicioReglas: ReglaService,
+        private hudsService: HUDSService,
+        private plex: Plex
+    ) {
     }
-    // ------ TODO----- Ver en que servicio dejar esta funcionalidad
 
     /**
      * Le pasamos por parametro un objeto con el nombre y la ruta
@@ -233,22 +226,15 @@ export class PrestacionesService {
                     prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
                 }
                 prestaciones.forEach((prestacion: any) => {
-                    // Fix momentaneo hasta reestructurar las busquedas en las HUDS.
-                    // Epicrisis y Colonoscopia tienen secciones.
-                    if (['73761001', '2341000013106'].indexOf(prestacion.solicitud.tipoPrestacion.conceptId) >= 0) {
-                        let regs = [];
-                        prestacion.ejecucion.registros[0].registros.forEach(r => {
-                            // Excluimos Pautas de Alarmas. Porque son hallazgos de alarmas y no presentes.
-                            if (r.concepto.conceptId !== '900000000000003001') {
-                                regs = [...regs, ...r.registros];
-                            }
-                        });
-                        regs.forEach(r => {
-                            r.createdAt = prestacion.ejecucion.registros[0].createdAt;
-                            r.createdBy = prestacion.ejecucion.registros[0].createdBy;
-                        });
-                        prestacion.ejecucion.registros = regs;
-                    }
+                    prestacion.ejecucion.registros.forEach(registro => {
+                        if (registro.hasSections) { // COLONO O EPICRISIS
+                            registro.registros.forEach(seccion => {
+                                if (seccion.isSection && !seccion.noIndex) {
+                                    prestacion.ejecucion.registros = [...prestacion.ejecucion.registros, ...seccion.registros];
+                                }
+                            });
+                        }
+                    });
 
                     if (prestacion.ejecucion) {
                         const conceptos = prestacion.ejecucion.registros
@@ -272,61 +258,53 @@ export class PrestacionesService {
                             }
                         }
                     });
-                    if (registro.valor) {
-                        if (!registroEncontrado) {
-                            let dato = {
+                    if (!registroEncontrado) {
+                        let dato = {
+                            idPrestacion: registro.idPrestacion,
+                            idRegistro: registro.id,
+                            fechaEjecucion: prestaciones.find(p => p.id === registro.idPrestacion).ejecucion.fecha,
+                            concepto: registro.concepto,
+                            prestaciones: [registro.idPrestacion],
+                            esSolicitud: registro.esSolicitud,
+                            elementoRUP: registro.elementoRUP,
+                            evoluciones: [{
                                 idPrestacion: registro.idPrestacion,
                                 idRegistro: registro.id,
-                                fechaEjecucion: prestaciones.find(p => p.id === registro.idPrestacion).ejecucion.fecha,
-                                concepto: registro.concepto,
-                                prestaciones: [registro.idPrestacion],
-                                esSolicitud: registro.esSolicitud,
-                                elementoRUP: registro.elementoRUP,
-                                evoluciones: [{
-                                    idPrestacion: registro.idPrestacion,
-                                    idRegistro: registro.id,
-                                    fechaCarga: registro.createdAt,
-                                    profesional: registro.createdBy.nombreCompleto,
-                                    fechaInicio: registro.valor.fechaInicio ? registro.valor.fechaInicio : null,
-                                    estado: registro.valor.estado ? registro.valor.estado : '',
-                                    evolucion: registro.valor.evolucion ? registro.valor.evolucion : '',
-                                    idRegistroOrigen: registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : null,
-                                    idRegistroTransformado: registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : null,
-                                    origen: registro.valor.origen ? registro.valor.origen : null,
-                                    idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : null,
-                                    informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
-                                    relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : [],
-                                    valor: registro.valor
-                                }],
-                                registros: [registro],
-                                privacy: (registro.privacy && registro.privacy.scope) ? registro.privacy.scope : 'public'
-                            };
-                            registroSalida.push(dato);
-                        } else {
-                            let ultimaEvolucion = registroEncontrado.evoluciones[registroEncontrado.evoluciones.length - 1];
-                            let nuevaEvolucion = {
-                                idPrestacion: registro.idPrestacion,
                                 fechaCarga: registro.createdAt,
-                                idRegistro: registro.id,
                                 profesional: registro.createdBy.nombreCompleto,
-                                fechaInicio: registro.valor.fechaInicio ? registro.valor.fechaInicio : ultimaEvolucion.fechaInicio,
-                                estado: registro.valor.estado ? registro.valor.estado : ultimaEvolucion.estado,
-                                evolucion: registro.valor.evolucion ? registro.valor.evolucion : '',
-                                idRegistroOrigen: registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : ultimaEvolucion.idRegistroOrigen,
-                                idRegistroTransformado: registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : ultimaEvolucion.idRegistroTransformado,
-                                origen: registro.valor.origen ? registro.valor.origen : ultimaEvolucion.origen,
-                                idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : ultimaEvolucion.idRegistroGenerado,
+                                fechaInicio: registro.valor && registro.valor.fechaInicio ? registro.valor.fechaInicio : null,
+                                estado: registro.valor && registro.valor.estado ? registro.valor.estado : '',
+                                evolucion: registro.valor && registro.valor.evolucion ? registro.valor.evolucion : '',
+                                idRegistroOrigen: registro.valor && registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : null,
                                 informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
                                 relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : [],
                                 valor: registro.valor
-                            };
-                            registroEncontrado.prestaciones.push(registro.idPrestacion);
-                            registroEncontrado.evoluciones.push(nuevaEvolucion);
-                            registroEncontrado.registros.push(registro);
-                            // ordenamos las evoluciones para que la primero del array sea la ultima registrada
-                            registroEncontrado.evoluciones = registroEncontrado.evoluciones.sort((a, b) => b.fechaCarga - a.fechaCarga);
-                            registroEncontrado.privacy = (registro.privacy && registro.privacy.scope) ? registro.privacy.scope : 'public';
-                        }
+                            }],
+                            registros: [registro],
+                            privacy: (registro.privacy && registro.privacy.scope) ? registro.privacy.scope : 'public'
+                        };
+                        registroSalida.push(dato);
+                    } else {
+                        let ultimaEvolucion = registroEncontrado.evoluciones[registroEncontrado.evoluciones.length - 1];
+                        let nuevaEvolucion = {
+                            idPrestacion: registro.idPrestacion,
+                            fechaCarga: registro.createdAt,
+                            idRegistro: registro.id,
+                            profesional: registro.createdBy.nombreCompleto,
+                            fechaInicio: registro.valor && registro.valor.fechaInicio ? registro.valor.fechaInicio : ultimaEvolucion.fechaInicio,
+                            estado: registro.valor && registro.valor.estado ? registro.valor.estado : ultimaEvolucion.estado,
+                            evolucion: registro.valor && registro.valor.evolucion ? registro.valor.evolucion : '',
+                            idRegistroOrigen: registro.valor && registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : ultimaEvolucion.idRegistroOrigen,
+                            informeRequerido: registro.informeRequerido ? registro.informeRequerido : null,
+                            relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : [],
+                            valor: registro.valor
+                        };
+                        registroEncontrado.prestaciones.push(registro.idPrestacion);
+                        registroEncontrado.evoluciones.push(nuevaEvolucion);
+                        registroEncontrado.registros.push(registro);
+                        // ordenamos las evoluciones para que la primero del array sea la ultima registrada
+                        registroEncontrado.evoluciones = registroEncontrado.evoluciones.sort((a, b) => b.fechaCarga - a.fechaCarga);
+                        registroEncontrado.privacy = (registro.privacy && registro.privacy.scope) ? registro.privacy.scope : 'public';
                     }
                 });
                 registroSalida = registroSalida.sort((a, b) => {
@@ -461,16 +439,16 @@ export class PrestacionesService {
         * @param {String} idPaciente
         * @param conceptId
         */
-    getPrestacionesXtipo(idPaciente: any, conceptId: any): Observable<any[]> {
-        return this.getByPaciente(idPaciente).pipe(map(prestaciones => {
-            let prestacionesXtipo = [];
-            prestaciones.forEach(prestacion => {
-                if (prestacion.solicitud.tipoPrestacion.conceptId === conceptId) {
-                    prestacionesXtipo = [...prestacionesXtipo, prestacion];
-                }
-            });
-            return prestacionesXtipo;
-        }));
+    getPrestacionesXtipo(idPaciente: any, conceptIds: string[] | string): Observable<any[]> {
+        const conceptos = Array.isArray(conceptIds) ? conceptIds : [conceptIds];
+        return this.getByPaciente(idPaciente).pipe(
+            map(prestaciones => {
+                const prestacionesXtipo = prestaciones.filter(prestacion => {
+                    return conceptos.find(id => prestacion.solicitud.tipoPrestacion.conceptId === id);
+                });
+                return prestacionesXtipo;
+            })
+        );
     }
 
 
@@ -639,21 +617,24 @@ export class PrestacionesService {
                     // verificamos si existe la prestacion creada anteriormente. Para no duplicar.
                     let existePrestacion = null;
                     if (this.cache[prestacion.paciente.id]) {
-                        existePrestacion = this.cache[prestacion.paciente.id].find(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === prestacion.id && p.solicitud.registros[0]._id === plan.id);
+                        existePrestacion = this.cache[prestacion.paciente.id].find(p => (p.estados[p.estados.length - 1].tipo === 'pendiente' || p.estados[p.estados.length - 1].tipo === 'auditoria') && p.solicitud.prestacionOrigen === prestacion.id && p.solicitud.registros[0]._id === plan.id);
                     }
-                    if (!existePrestacion && plan.valor && plan.valor.solicitudPrestacion.organizacionDestino) {
+                    if (!existePrestacion && plan.valor && (plan.valor.solicitudPrestacion.organizacionDestino || plan.valor.solicitudPrestacion.autocitado)) {
+                        if (!plan.valor.solicitudPrestacion.organizacionDestino) {
+                            plan.valor.solicitudPrestacion.organizacionDestino = this.auth.organizacion;
+                        }
                         planesAux.push(plan);
                     }
                 }
             });
-
             planesAux.forEach(plan => {
-                postRequest.push(this.servicioReglas.get({
+                let reglas = this.servicioReglas.get({
                     organizacionOrigen: this.auth.organizacion.id,
                     prestacionOrigen: prestacion.solicitud.tipoPrestacion.conceptId,
                     prestacionDestino: plan.valor.solicitudPrestacion.prestacionSolicitada.conceptId,
                     organizacionDestino: plan.valor.solicitudPrestacion.organizacionDestino.id
-                }));
+                });
+                postRequest.push(reglas);
             });
         }
         if (postRequest && postRequest.length) {
@@ -661,8 +642,15 @@ export class PrestacionesService {
                 switchMap((reglas: any) => {
                     for (let i = 0; i < reglas.length; i++) {
                         const regla = reglas[i][0];
-                        const prestacionOrigen = regla.origen.prestaciones.find(p => p.prestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId);
-                        const prestacionDestino = regla.destino.prestacion; // para utilizar los datos de la regla y no un sinonimo
+                        let prestacionOrigen;
+                        let prestacionDestino;
+                        if (regla) {
+                            prestacionOrigen = regla.origen.prestaciones.find(p => p.prestacion.conceptId === prestacion.solicitud.tipoPrestacion.conceptId);
+                            prestacionDestino = regla.destino.prestacion; // para utilizar los datos de la regla y no un sinonimo
+                        } else {
+                            prestacionOrigen = prestacion.solicitud.tipoPrestacion;
+                            prestacionDestino = planesAux[i].valor.solicitudPrestacion.prestacionSolicitada; // para utilizar los datos de la regla y no un sinonimo
+                        }
                         // creamos objeto de prestacion
                         let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, prestacionDestino, 'validacion', 'ambulatorio');
                         // asignamos el tipoPrestacionOrigen a la solicitud
@@ -762,24 +750,6 @@ export class PrestacionesService {
     }
 
     /**
-     * Devuelve si un concepto es turneable o no.
-     * Se fija en la variable conceptosTurneables inicializada en OnInit
-     *
-     * @param {any} concepto Concepto SNOMED a verificar si esta en el array de conceptosTurneables
-     * @returns  boolean TRUE/FALSE si es turneable o no
-     * @memberof BuscadorComponent
-     */
-    public esTurneable(concepto) {
-        if (!this.conceptosTurneables) {
-            return false;
-        }
-
-        return this.conceptosTurneables.find(x => {
-            return x.conceptId === concepto.conceptId;
-        });
-    }
-
-    /**
      * Devuelve true si se cargo en la prestación algun concepto que representa la ausencia del paciente
      *
      * @param {any} prestacion prestación en ejecución
@@ -802,7 +772,7 @@ export class PrestacionesService {
     public getCssClass(conceptoSNOMED, esSolicitud) {
         let clase = conceptoSNOMED.semanticTag;
 
-        if (conceptoSNOMED.plan || this.esTurneable(conceptoSNOMED) || (typeof esSolicitud !== 'undefined' && esSolicitud)) {
+        if (conceptoSNOMED.plan || (typeof esSolicitud !== 'undefined' && esSolicitud)) {
             clase = 'solicitud';
         } else if (conceptoSNOMED.semanticTag === 'régimen/tratamiento') {
             clase = 'regimen';
@@ -810,7 +780,7 @@ export class PrestacionesService {
             clase = 'elementoderegistro';
         } else if (conceptoSNOMED.semanticTag === 'evento') {
             clase = 'hallazgo';
-        } else if (conceptoSNOMED.semanticTag === 'objeto físico' || conceptoSNOMED.semanticTag === 'medicamento clínico') {
+        } else if (conceptoSNOMED.semanticTag === 'objeto físico' || conceptoSNOMED.semanticTag === 'medicamento clínico' || conceptoSNOMED.semanticTag === 'fármaco de uso clínico') {
             clase = 'producto';
         } else if (conceptoSNOMED.semanticTag === 'entidad observable') {
             clase = 'procedimiento';
@@ -830,7 +800,7 @@ export class PrestacionesService {
     public getIcon(conceptoSNOMED, esSolicitud) {
         let icon = conceptoSNOMED.semanticTag;
 
-        if (conceptoSNOMED.plan || this.esTurneable(conceptoSNOMED) || (typeof esSolicitud !== 'undefined' && esSolicitud)) {
+        if (conceptoSNOMED.plan || (typeof esSolicitud !== 'undefined' && esSolicitud)) {
             icon = 'plan';
         } else {
             switch (conceptoSNOMED.semanticTag) {
@@ -857,6 +827,7 @@ export class PrestacionesService {
                 case 'producto':
                 case 'objeto físico':
                 case 'medicamento clínico':
+                case 'fármaco de uso clínico':
                     icon = 'producto';
                     break;
                 case 'elemento de registro':
@@ -894,61 +865,6 @@ export class PrestacionesService {
         return salida;
     }
 
-
-    /*******
-     * INTERNACION
-     */
-
-    /**
-    * Devuelve el la ultima internacion del paciente y la cama ocupada en caso que corresponda
-    *
-    * @param {any} paciente id del paciente en internacion
-    * @param {any} estado estado de la internacion
-    * @param {any} organizacion organizacion en la que se ejecuta la internacion (puede ser null)
-    * @returns  {array} Ultima Internacion del paciente en el estado que ingresa por parametro
-    * @memberof PrestacionesService
-    */
-    public internacionesXPaciente(paciente, estado, organizacion) {
-        let opt = { params: { estado: estado, ambitoOrigen: 'internacion', organizacion: organizacion }, options: {} };
-        return this.server.get('/modules/rup/internaciones/ultima/' + (paciente.id ? paciente.id : paciente._id), opt);
-    }
-
-    /**
-* Devuelve el listado de internacion por organizacion
-*
-
-* @returns  {array} Listado Organizacion
-* @memberof PrestacionesService
-*/
-    public listadoInternacion(filtros?) {
-        return this.server.get('/modules/rup/internaciones/listadoInternacion/', { params: filtros, showError: true });
-    }
-
-
-    /**
-   * Devuelve el listado de estados de la/s camas por las que paso la internación
-   *
-   * @param {any} idInternacion id de la intenacion
-   * @returns  {array} lista de camas-estados por los que paso la internación
-   * @memberof PrestacionesService
-   */
-    public getPasesInternacion(idInternacion) {
-        return this.server.get('/modules/rup/internaciones/pases/' + idInternacion, null);
-    }
-
-    /**
-     * Método get. Trae lista de objetos prestacion.
-     *
-     * @param {*} idOrganizacion Opciones de búsqueda
-     * @param {*} [options={}] Options a pasar a la API
-     * @returns {Observable<IPrestacion[]>}
-     *
-     * @memberof PrestacionesService
-     */
-    getInternacionesPendientes(params: any = {}): Observable<IPrestacion[]> {
-        return this.server.get(this.prestacionesUrl + '/sincama', { params: params, showError: true });
-    }
-
     getFriendlyName(registro) {
         let nombre = (registro && registro.concepto && registro.concepto.term) ? registro.concepto.term : '';
 
@@ -959,6 +875,45 @@ export class PrestacionesService {
 
         return nombre;
 
+    }
+
+
+    romperValidacion(prestacion: IPrestacion) {
+        return new Observable((observer) => {
+            this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación').then(validar => {
+                if (!validar) {
+                    observer.error();
+                    observer.complete();
+                    return false;
+                } else {
+                    const prestacionCopia = JSON.parse(JSON.stringify(prestacion));
+                    const estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia._id };
+
+                    // Guardamos la prestacion copia
+                    this.clonar(prestacionCopia, estado).subscribe(prestacionClonada => {
+                        const prestacionModificada = prestacionClonada;
+
+                        // hacemos el patch y luego creamos los planes
+                        let cambioEstado: any = {
+                            op: 'romperValidacion',
+                            estado: { tipo: 'ejecucion', idOrigenModifica: prestacionModificada.id }
+                        };
+
+                        // Vamos a cambiar el estado de la prestación a ejecucion
+                        this.patch(prestacion.id, cambioEstado).subscribe(() => {
+                            observer.next();
+                            observer.complete();
+                        }, (err) => {
+                            this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
+                            observer.error();
+                            observer.complete();
+                        });
+                    });
+                }
+
+            });
+
+        });
     }
 
 }

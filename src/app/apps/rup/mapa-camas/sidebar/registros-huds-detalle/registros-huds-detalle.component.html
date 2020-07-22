@@ -1,0 +1,59 @@
+<plex-title titulo="Registros">
+    <ng-container *ngIf="esProfesional">
+        <plex-button *ngIf="puedeVerHuds" type="info" size="sm" (click)="verHuds()">
+            HUDS
+        </plex-button>
+        <ng-container *ngIf="(accionesEstado$ | async)?.length > 0">
+            <plex-button size="sm" type="info" (click)="onNuevoRegistrio()" class="ml-1">
+                NUEVO
+            </plex-button>
+        </ng-container>
+    </ng-container>
+    <ng-content></ng-content>
+</plex-title>
+
+<div class="row">
+    <div class="col-6">
+        <plex-datetime label="Desde" name="desde" type="date" [(ngModel)]="desde" [max]="hasta" [debounce]="600">
+        </plex-datetime>
+    </div>
+    <div class="col-6">
+        <plex-datetime label="Hasta" name="haste" type="date" [(ngModel)]="hasta" [min]="desde" [debounce]="600">
+        </plex-datetime>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <plex-select label="Prestacion" name="tipoPrestacion" [(ngModel)]="tipoPrestacion" idField="conceptId" labelField="term"
+                     [data]="prestacionesList$ | async">
+        </plex-select>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                <small class="font-weight-bold">
+                    FECHA
+                </small>
+            </th>
+            <th>
+                <small class="font-weight-bold">
+                    PRESTACION
+                </small>
+            </th>
+            <th>
+                <small class="font-weight-bold">
+                    PROFESIONAL
+                </small>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr registro-huds-item [prestacion]="prestacion" (accion)="onItemAccion(prestacion, $event)"
+            *ngFor="let prestacion of historialFiltrado$ | async">
+        </tr>
+    </tbody>
+</table>

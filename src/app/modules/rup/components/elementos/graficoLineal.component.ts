@@ -123,4 +123,8 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
 
     // Chart events (chartClick)
     public chartHovered(e: any): void { }
+
+    isEmpty() {
+        return false;
+    }
 }

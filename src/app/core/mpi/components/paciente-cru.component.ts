@@ -20,6 +20,7 @@ import { OrganizacionService } from '../../../services/organizacion.service';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HistorialBusquedaService } from '../services/historialBusqueda.service';
+import { Subscription } from 'rxjs';
 @Component({
     selector: 'paciente-cru',
     templateUrl: 'paciente-cru.html',
@@ -52,7 +53,8 @@ export class PacienteCruComponent implements OnInit {
     noPoseeContacto = false;
     contactosCache = [];
     disableGuardar = false;
-    enableIgnorarGuardar = false;
+    visualizarIgnorarGuardar = false;
+    disableIgnorarGuardar = false;
     sugerenciaAceptada = false;
     entidadValidadora = '';
     viveLocActual = false;
@@ -123,6 +125,7 @@ export class PacienteCruComponent implements OnInit {
     public nombrePattern: string;
     public showDeshacer = false;
     public patronDocumento = /^[1-9]{1}[0-9]{5,7}$/;
+    private subscripcionValidar: Subscription = null;
     // PARA LA APP MOBILE
     public showMobile = false;
     public checkPass = false;
@@ -235,6 +238,7 @@ export class PacienteCruComponent implements OnInit {
                     this.pacienteModel.sexo = this.paciente.sexo;
                     this.pacienteModel.documento = this.paciente.documento;
                     this.pacienteModel.estado = 'validado';
+                    this.pacienteModel.scan = this.paciente.scan;
                     this.paciente = Object.assign({}, this.pacienteModel);
                     this.actualizarDatosPaciente();
                 }
@@ -261,7 +265,7 @@ export class PacienteCruComponent implements OnInit {
         this.paciente = Object.assign({}, paciente);
         this.actualizarDatosPaciente();
         this.disableGuardar = false;
-        this.enableIgnorarGuardar = false;
+        this.visualizarIgnorarGuardar = false;
         this.sugerenciaAceptada = true;
         this.pacientesSimilares = [];
     }
@@ -451,14 +455,14 @@ export class PacienteCruComponent implements OnInit {
         }
     }
 
-    actualizarMapa() {
+    geoReferenciar() {
         // campos de direccion completos?
         if (this.pacienteModel.direccion[0].valor && this.pacienteModel.direccion[0].ubicacion.provincia && this.pacienteModel.direccion[0].ubicacion.localidad) {
             let direccionCompleta = this.pacienteModel.direccion[0].valor + ', ' + this.pacienteModel.direccion[0].ubicacion.localidad.nombre
                 + ', ' + this.pacienteModel.direccion[0].ubicacion.provincia.nombre;
             // se calcula nueva georeferencia
             this.georeferenciaService.getGeoreferencia({ direccion: direccionCompleta }).subscribe(point => {
-                if (point) {
+                if (point && Object.keys(point).length) {
                     this.geoReferenciaAux = [point.lat, point.lng]; // se actualiza vista de mapa
                     this.pacienteModel.direccion[0].geoReferencia = [point.lat, point.lng]; // Se asigna nueva georeferencia al paciente
                     this.infoMarcador = '';
@@ -557,8 +561,9 @@ export class PacienteCruComponent implements OnInit {
         }
         // Existen relaciones sin especificar el tipo?
         if (faltaParentezco) {
-            this.plex.info('warning', 'Existen relaciones sin parentezco. Completelas antes de guardar', 'Atención');
+            this.plex.info('warning', 'Existen relaciones sin parentezco. Debe completarlas antes de guardar', 'Atención');
         } else {
+            this.disableIgnorarGuardar = ignoreCheck;
             this.disableGuardar = true;
             let pacienteGuardar: any = Object.assign({}, this.pacienteModel);
             pacienteGuardar.ignoreCheck = ignoreCheck;
@@ -583,8 +588,8 @@ export class PacienteCruComponent implements OnInit {
                     if (resultadoSave.resultadoMatching && resultadoSave.resultadoMatching.length > 0) {
                         this.pacientesSimilares = this.escaneado ? resultadoSave.resultadoMatching.filter(elem => elem.paciente.estado === 'validado') : resultadoSave.resultadoMatching;
                         // Si el matcheo es alto o el dni-sexo está repetido no podemos ignorar las sugerencias
-                        this.enableIgnorarGuardar = !resultadoSave.macheoAlto && !resultadoSave.dniRepetido;
-                        if (!this.enableIgnorarGuardar) {
+                        this.visualizarIgnorarGuardar = !resultadoSave.macheoAlto && !resultadoSave.dniRepetido;
+                        if (!this.visualizarIgnorarGuardar) {
                             this.plex.info('danger', 'El paciente ya existe, verifique las sugerencias');
                         } else {
                             this.plex.info('warning', 'Existen pacientes similares, verifique las sugerencias');
@@ -593,12 +598,8 @@ export class PacienteCruComponent implements OnInit {
                         if (this.changeRelaciones) {
                             this.saveRelaciones(resultadoSave);
                         }
-                        if (this.escaneado) {
-                            // Si el paciente fue escaneado se agrega al historial de búsqueda
-                            this.historialBusquedaService.add(resultadoSave);
-                        }
+                        this.historialBusquedaService.add(resultadoSave);
                         this.plex.info('success', 'Los datos se actualizaron correctamente');
-
                         this.redirect(resultadoSave);
                     }
                 },
@@ -712,6 +713,9 @@ export class PacienteCruComponent implements OnInit {
             De lo contrario se estaría agregando un paciente que no se terminó de registrar. */
             this.historialBusquedaService.add(this.paciente);
         }
+        if (this.subscripcionValidar) {
+            this.subscripcionValidar.unsubscribe();
+        }
         this.showMobile = false;
         this.redirect();
     }
@@ -759,7 +763,11 @@ export class PacienteCruComponent implements OnInit {
         }
         this.disableValidar = true;
         this.loading = true;
-        this.pacienteService.validar(this.pacienteModel).subscribe(
+
+        if (this.subscripcionValidar) {
+            this.subscripcionValidar.unsubscribe();
+        }
+        this.subscripcionValidar = this.pacienteService.validar(this.pacienteModel).subscribe(
             resultado => {
                 this.loading = false;
                 if (resultado.existente) {
