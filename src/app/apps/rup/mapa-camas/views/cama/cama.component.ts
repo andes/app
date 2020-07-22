@@ -50,6 +50,7 @@ export class CamaMainComponent implements OnInit {
         'medica',
         // 'enfermeria'
     ];
+    public puedeEditar = true;
 
     constructor(
         public auth: Auth,
@@ -106,6 +107,9 @@ export class CamaMainComponent implements OnInit {
     getCama() {
         const id = this.route.snapshot.params.id;
         if (id) {
+            if (!this.auth.check('internacion:cama:edit')) {
+                this.puedeEditar = false;
+            }
             const snapshotRequests = this.capas.map(capa => {
                 return this.camasHTTP.snapshot(this.ambito, capa, moment().toDate(), null, null, id).pipe(
                     map(snapshots => snapshots[0])
