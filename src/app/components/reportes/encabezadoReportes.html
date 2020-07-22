@@ -1,52 +1,63 @@
-<form class="plex-layout" #form="ngForm">
-    <section>
-        <div class="row">
-            <div class="col">
-                <plex-box>
-                    <header>
-                        <div class="clearfix">
-                            <div class="page-title float-left">Reportes</div>
-                        </div>
+<plex-layout>
+    <plex-layout-main>
+        <section>
+            <div class="row">
+                <div class="col">
+                    <plex-box>
+                        <header>
+                            <plex-title titulo="reportes"></plex-title>
+                            <form #formularioValidacion="ngForm">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <plex-datetime type="date" [(ngModel)]="horaInicio"
+                                                       (change)="refreshSelection($event,'horaInicio')"
+                                                       name="horaInicio" label="Desde" class="fechas" [required]="true">
+                                        </plex-datetime>
+                                    </div>
+                                    <div class="col-2">
+                                        <plex-datetime type="date" [(ngModel)]="horaFin"
+                                                       (change)="refreshSelection($event,'horaFin')" name="horaFin"
+                                                       label="Hasta" class="fechas" [required]="true">
+                                        </plex-datetime>
+                                    </div>
+                                    <br>
+                                    <div class="col-4">
+                                        <plex-text label="Organización" [(ngModel)]="organizacion" name="organizacion"
+                                                   [readonly]="true">
+                                        </plex-text>
+                                    </div>
+                                    <br>
+                                    <div class="col-4">
+                                        <plex-select [(ngModel)]="tipoReportes" name="tipoReportes" [data]="opciones"
+                                                     label-field="Tipo de reportes" label="Seleccione reporte"
+                                                     [required]="true" (change)="selectChange($event)">
+                                        </plex-select>
+                                    </div>
+                                    <br>
 
-                        <div class="row">
-                            <div class="col-2">
-                                <plex-datetime type="date" [(ngModel)]="horaInicio" (change)="refreshSelection($event,'horaInicio')" name="horaInicio" label="Desde"
-                                    class="fechas" [required]="true">
-                                </plex-datetime>
-                            </div>
-                            <div class="col-2">
-                                <plex-datetime type="date" [(ngModel)]="horaFin" (change)="refreshSelection($event,'horaFin')" name="horaFin" label="Hasta"
-                                    class="fechas" [required]="true">
-                                </plex-datetime>
-                            </div>
+                                </div>
+                            </form>
                             <br>
-                            <div class="col-4">
-                                <plex-select [(ngModel)]="organizacion" name="organizacion" (getData)="loadOrganizacion($event)" label="Organización" placeholder="Seleccione la organización"
-                                    labelField="nombre" [required]="true">
-                                </plex-select>
-                            </div>
-                            <br>
-                            <div class="col-4">
-                                <plex-select [(ngModel)]="tipoReportes" name="tipoReportes" [data]="opciones" label-field="Tipo de reportes" label="Seleccione reporte"
-                                    [required]="true">
-                                </plex-select>
-                            </div>
-                            <br>
-
-                        </div>
-                        <br>
-                    </header>
-                    <consultaDiagnostico *ngIf="showConsultaDiagnostico" [diagnosticos]="diagnosticos"></consultaDiagnostico>
-                    <reporteC2 *ngIf="showReporteC2" [diagnosticos]="diagnosticos"></reporteC2>
-                    <cantidadConsultaXPrestacion *ngIf="showCantidadConsultaXPrestacion" [diagnosticos]="diagnosticos"></cantidadConsultaXPrestacion>
-                </plex-box>
+                        </header>
+                        <consultaDiagnostico *ngIf="showConsultaDiagnostico" [diagnosticos]="diagnosticos">
+                        </consultaDiagnostico>
+                        <reporteC2 *ngIf="showReporteC2" [diagnosticos]="diagnosticos"></reporteC2>
+                        <cantidadConsultaXPrestacion *ngIf="showCantidadConsultaXPrestacion"
+                                                     [diagnosticos]="diagnosticos">
+                        </cantidadConsultaXPrestacion>
+                        <seguimientoCovid *ngIf="showSeguimientoCovid" [casos]="casos"></seguimientoCovid>
+                    </plex-box>
+                </div>
             </div>
-        </div>
 
-    </section>
+        </section>
+    </plex-layout-main>
+    <plex-layout-footer>
+        <plex-button *ngIf="enableCsv && formularioValidacion.valid" type="warning" label="Descargar Reporte (csv)"
+                     (click)="descargarCsv()" position="right"></plex-button>
+        <plex-button [disabled]="formularioValidacion.invalid" type="success" label="Generar Reporte"
+                     (click)="imprimir()" position="right" class="ml-2"></plex-button>
 
-    <footer>
-        <plex-button type="success" label="Generar Reporte" (click)="imprimir()" class="float-right"></plex-button>
-    </footer>
+    </plex-layout-footer>
 
-</form>
+</plex-layout>
