@@ -167,6 +167,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
      */
     actualizarVista(vista) {
         this.filtroActual = vista;
+
     }
 
     devolverPrestacion(prestacion) {
@@ -422,11 +423,12 @@ export class HudsBusquedaComponent implements AfterContentInit {
 
     buscar() {
 
+        this.registrosTotales[this.filtroActual] = this.registrosTotalesCopia[this.filtroActual];
+
         if (this.searchTerm) {
+
             this.registrosTotales[this.filtroActual] = this.registrosTotales[this.filtroActual].filter
                 (p => this.filtrarPorTerm(p));
-        } else {
-            this.registrosTotales[this.filtroActual] = this.registrosTotalesCopia[this.filtroActual];
         }
     }
 

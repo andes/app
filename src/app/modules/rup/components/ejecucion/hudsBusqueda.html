@@ -38,7 +38,7 @@
                        [ngClass]="{'active': filtroActual === 'hallazgo'}">{{
                             getCantidadResultados('hallazgo')}}</small>
                 <button (click)="filtroBuscador('hallazgo')" [ngClass]="{'active': filtroActual === 'hallazgo'}"
-                        class="btn btn-block p-0 btn-hallazgo">
+                        class="btn btn-block p-0 btn-hallazgo" (click)="buscar()">
                     <i class="icon icon-rup-semantic-hallazgo"></i>
                     HALLAZGOS
                 </button>
@@ -51,7 +51,7 @@
                        [ngClass]="{'active': filtroActual === 'trastorno'}">{{
                             getCantidadResultados('trastorno')}}</small>
                 <button (click)="filtroBuscador('trastorno')" [ngClass]="{'active': filtroActual === 'trastorno'}"
-                        class="btn btn-block p-0 btn-trastorno">
+                        class="btn btn-block p-0 btn-trastorno" (click)="buscar()">
                     <i class="icon icon-rup-semantic-trastorno"></i>
                     TRASTORNOS
                 </button>
@@ -67,7 +67,7 @@
                             getCantidadResultados('procedimiento')}}</small>
                 <button (click)="filtroBuscador('procedimiento')"
                         [ngClass]="{'active': filtroActual === 'procedimiento'}"
-                        class="btn btn-block p-0 btn-procedimiento">
+                        class="btn btn-block p-0 btn-procedimiento" (click)="buscar()">
                     <i class="icon icon-rup-semantic-procedimiento"></i>
                     PROC.
                 </button>
@@ -80,7 +80,7 @@
                        [ngClass]="{'active': filtroActual === 'producto'}">{{
                             getCantidadResultados('producto')}}</small>
                 <button (click)="filtroBuscador('producto')" [ngClass]="{'active': filtroActual === 'producto'}"
-                        class="btn btn-block p-0 btn-producto">
+                        class="btn btn-block p-0 btn-producto" (click)="buscar()">
                     <i class="icon icon-rup-semantic-producto"></i>
                     PRODUCTOS
                 </button>
@@ -135,7 +135,7 @@
 </div>
 <div class="mt-1"
      *ngIf="filtroActual !== 'solicitudes' && filtroActual !== 'planes' && filtroActual !== 'laboratorios' && filtroActual !== 'vacunas'">
-    <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()" placeholder="Buscar un concepto..."
+    <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()" placeholder="Buscar registros..."
                autoFocus="true">
     </plex-text>
 
