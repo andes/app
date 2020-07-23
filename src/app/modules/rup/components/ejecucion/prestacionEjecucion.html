@@ -8,14 +8,15 @@
                         <div justify="end" class="mb-1"
                              *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length">
                             <div class="col float-right text-right panel-acciones">
-                                <plex-help class="mr-1 text-left" titulo="Reglas Solicitudes" tituloBoton="Reglas Solicitudes">
+                                <plex-help class="mr-1 text-left" titulo="Reglas Solicitudes"
+                                           tituloBoton="Reglas Solicitudes">
                                     <visualizacion-reglas info [esParametrizado]="true" *plHelp></visualizacion-reglas>
                                 </plex-help>
                                 <help-solicitud [solicitud]='prestacion.solicitud' class='mr-1'></help-solicitud>
-
-                                <plex-button (click)="toggleCollapse($event)" type="primary" icon="{{ collapse ? 'chevron-down' : 'chevron-up'}}"
-                                    class="collapse-card" title="{{ collapse ? 'Expandir los registros' : 'Colapsar los registros'}}"
-                                    titlePosition="left">
+                                <plex-button (click)="toggleCollapse($event)" type="primary"
+                                             icon="{{ collapse ? 'chevron-down' : 'chevron-up'}}" class="collapse-card"
+                                             title="{{ collapse ? 'Expandir los registros' : 'Colapsar los registros'}}"
+                                             titlePosition="left">
                                 </plex-button>
                             </div>
                         </div>
@@ -324,6 +325,11 @@
                                       (evtData)="ejecutarConceptoHuds($event)"
                                       (_onDragStart)="arrastrandoConcepto(true)"
                                       (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
+                </plex-tab>
+                <plex-tab icon="file-tree" *ngIf="prestacion.solicitud.ambitoOrigen === 'ambulatorio'">
+                    <div class="pt-2">
+                        <rup-relaciones [registros]="prestacion.ejecucion.registros"></rup-relaciones>
+                    </div>
                 </plex-tab>
             </plex-tabs>
         </div>

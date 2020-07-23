@@ -11,7 +11,7 @@
                         </span>
 
                         <div class="float-right mr-2 menu-info">
-                            <help-solicitud [solicitud]='prestacion.solicitud' ></help-solicitud>
+                            <help-solicitud [solicitud]='prestacion.solicitud'></help-solicitud>
                             <rup-acciones-envio-informe [prestacion]="prestacion">
                             </rup-acciones-envio-informe>
                             <!-- <ng-container *ngIf="validada && !prestacion.solicitud.tipoPrestacion.noNominalizada">
@@ -260,37 +260,8 @@
                 </ng-container>
             </div>
 
-            <div *ngIf="prestacion.solicitud.ambitoOrigen == 'ambulatorio'" class="relaciones col-3">
-                <!-- ÁRBOL -->
-                <plex-box class="w-25">
-                    <header>
-                        <div class="clearfix">
-                            <div *ngIf="registrosOrdenados">
-                                <div class="page-title">
-                                    Relaciones
-                                </div>
-                            </div>
-                        </div>
-                    </header>
-
-                    <ng-container *ngFor="let rama of registrosOrdenados; let iRama = index">
-                        <ul class="list-group">
-                            <li [ngClass]="{
-                                'ml-0': !rama.esDiagnosticoPrincipal
-                            }" class="list-group-item pl-0 pt-0 pb-0 mb-0 ml-{{ registrosDeep[rama.id] }}">
-                                <div>
-                                    <span
-                                          class="type {{ rama.esSolicitud ? 'solicitud' : rama.concepto.semanticTag }} pr-2 mr-1"></span>
-                                    <small>{{ rama.nombre }}
-                                        <plex-badge size="sm" type="info" *ngIf="rama.esDiagnosticoPrincipal">
-                                            Procedimiento / diagnóstico principal
-                                        </plex-badge>
-                                    </small>
-                                </div>
-                            </li>
-                        </ul>
-                    </ng-container>
-                </plex-box>
+            <div *ngIf="prestacion.solicitud.ambitoOrigen == 'ambulatorio'" class="col-3 pl-3">
+                <rup-relaciones [registros]="prestacion.ejecucion.registros"></rup-relaciones>
             </div>
         </div>
     </plex-box>

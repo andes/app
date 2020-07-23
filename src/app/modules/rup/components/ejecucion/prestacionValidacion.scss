@@ -10,37 +10,6 @@
     }
 }
 
-.type.prestacion {
-    background-color: $solicitud;
-}
-
-.type.hallazgo,
-.type.situación {
-    background-color: $problema;
-}
-
-.type.trastorno {
-    background-color: $trastorno;
-}
-
-.type.procedimiento,
-.type.entidad.observable,
-.régimen\/tratamiento {
-    background-color: $procedimiento;
-}
-
-.type.solicitud {
-    background-color: $solicitud;
-}
-
-.type.producto {
-    background-color: $producto;
-}
-
-.type.elemento.de.registro {
-    background-color: $adjunto;
-}
-
 .bg-invert {
     background-color: $invert !important;
 }

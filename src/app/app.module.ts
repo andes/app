@@ -217,6 +217,7 @@ import { PrestacionCrearComponent } from './modules/rup/components/ejecucion/pre
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
 import { PrestacionValidacionComponent } from './modules/rup/components//ejecucion/prestacionValidacion.component';
 import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
+import { RupRelacionesComponent } from './modules/rup/components/huds/relaciones-rup.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
 import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
 import { VistaCDAComponent } from './modules/rup/components/huds/vistaCDA.component';
@@ -420,6 +421,7 @@ registerLocaleData(localeEs, 'es');
         PrestacionCrearComponent,
         PrestacionEjecucionComponent,
         PrestacionValidacionComponent,
+        RupRelacionesComponent,
         SnomedBuscarComponent,
         DetalleAgendaComponent,
         HeaderPacienteComponent,

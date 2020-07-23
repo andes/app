@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs/Rx';
 import { Server } from '@andes/shared';
+import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface';
 
 // Por el momento lo dejo en any.
 // Este alias me permite en el futuro cambiar el tipo en todos lados
@@ -113,5 +114,29 @@ export class HUDSService {
 
     getHudsToken() {
         return window.sessionStorage.getItem('huds-token');
+    }
+
+    armarRelaciones(registros: IPrestacionRegistro[]) {
+        let registrosDeep: any = {};
+        let relacionesOrdenadas = [];
+        let roots = registros.filter(x => x.relacionadoCon.length === 0);
+
+        let traverse = (_registros, registro, deep) => {
+            let orden = [];
+            let hijos = _registros.filter(item => item.relacionadoCon[0] && (item.relacionadoCon[0].id === registro.id || item.relacionadoCon[0].conceptId === registro.concepto.conceptId));
+            registrosDeep[registro.id] = deep;
+            hijos.forEach((hijo) => {
+                orden = [...orden, hijo, ...traverse(_registros, hijo, deep + 1)];
+            });
+            return orden;
+        };
+
+        roots.forEach((root) => {
+            registrosDeep[root.id] = 0;
+            relacionesOrdenadas = [...relacionesOrdenadas, root, ...traverse(registros, root, 1)];
+        });
+
+
+        return { relacionesOrdenadas, registrosDeep };
     }
 }

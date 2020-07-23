@@ -14,6 +14,7 @@ import { HeaderPacienteComponent } from '../../../../components/paciente/headerP
 import { ReglaService } from '../../../../services/top/reglas.service';
 import { forkJoin, of, merge, combineLatest, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { HUDSService } from '../../services/huds.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
@@ -109,6 +110,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         private servicioDocumentos: DocumentosService,
         private codificacionService: CodificacionService,
         public servicioReglas: ReglaService,
+        public huds: HUDSService,
         public organizacionService: OrganizacionService,
         private conceptosTurneablesService: ConceptosTurneablesService
     ) {
@@ -296,7 +298,6 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
             this.defualtDiagnosticoPrestacion();
             this.registrosOrdenados = this.prestacion.ejecucion.registros;
-            this.armarRelaciones();
 
         });
     }
@@ -563,48 +564,6 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
     mostrarDatosSolicitud(bool) {
         this.showDatosSolicitud = bool;
-    }
-
-
-    // Indices de profundidad de las relaciones
-    registrosDeep: any = {};
-    armarRelaciones() {
-        let relacionesOrdenadas = [];
-        let registros = this.prestacion.ejecucion.registros;
-        let roots = registros.filter(x => x.relacionadoCon.length === 0);
-
-        let traverse = (_registros, registro, deep) => {
-            let orden = [];
-            let hijos = _registros.filter(item => item.relacionadoCon[0] && (item.relacionadoCon[0].id === registro.id || item.relacionadoCon[0].conceptId === registro.concepto.conceptId));
-            this.registrosDeep[registro.id] = deep;
-            hijos.forEach((hijo) => {
-                orden = [...orden, hijo, ...traverse(_registros, hijo, deep + 1)];
-            });
-            return orden;
-        };
-
-        roots.forEach((root) => {
-            this.registrosDeep[root.id] = 0;
-            relacionesOrdenadas = [...relacionesOrdenadas, root, ...traverse(this.prestacion.ejecucion.registros, root, 1)];
-        });
-
-
-        this.registrosOrdenados = relacionesOrdenadas;
-    }
-
-
-
-    reordenarRelaciones() {
-        let rel: any;
-        let relIdx: any;
-        // this.prestacion.ejecucion.registros.forEach((item, index) => {
-        //     rel = this.prestacion.ejecucion.registros.find(x => x.id === item.relacionadoCon[0].id);
-        //     relIdx = this.prestacion.ejecucion.indexOf(rel);
-
-        //     if (rel.length > 0 && relIdx > index) {
-        //         this.swapItems(rel, item);
-        //     }
-        // });
     }
 
     swapItems(a, b) {

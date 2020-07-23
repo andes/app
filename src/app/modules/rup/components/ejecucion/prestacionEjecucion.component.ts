@@ -503,7 +503,7 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
 
         //
         // Agregamos al array de registros
-        this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
+        this.prestacion.ejecucion.registros = [...this.prestacion.ejecucion.registros, nuevoRegistro];
         this.showDatosSolicitud = false;
         // this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
         return nuevoRegistro;
