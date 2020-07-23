@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, AfterViewChecked } from '@angular/core';
+import { Component, Input, OnChanges, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { HUDSService } from '../../services/huds.service';
 import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
@@ -14,11 +14,12 @@ export class RupRelacionesComponent implements AfterViewChecked {
 
     registrosRelaciones: any = {};
 
-    constructor(private huds: HUDSService) { }
+    constructor(private huds: HUDSService, private cd: ChangeDetectorRef) { }
 
     ngAfterViewChecked() {
         if (this.registros) {
             this.registrosRelaciones = this.huds.armarRelaciones(this.registros);
+            this.cd.detectChanges();
         }
     }
 
