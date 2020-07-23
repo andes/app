@@ -104,7 +104,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
     }
 
     private buscarPorTexto() {
-        let textoLibre = this.textoLibre && this.textoLibre.trim();
+        let textoLibre = (this.textoLibre && this.textoLibre.length) ? this.textoLibre.trim() : '';
 
         if (this.searchSubscription) {
             this.searchSubscription.unsubscribe();
@@ -165,7 +165,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
             return;
         }
 
-        let textoLibre = this.textoLibre && this.textoLibre.trim();
+        let textoLibre = (this.textoLibre && this.textoLibre.length) ? this.textoLibre.trim() : '';
         // Inicia búsqueda
         if (textoLibre) {
             this.timeoutHandle = window.setTimeout(() => {

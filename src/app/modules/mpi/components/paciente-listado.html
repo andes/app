@@ -10,7 +10,8 @@
         </plex-label>
 
         <plex-label *ngIf="paciente.numeroIdentificacion" titulo="{{ paciente | nombre }}"
-                    subtitulo="{{ paciente.numeroIdentificacion }}"></plex-label>
+                    subtitulo="{{ paciente.numeroIdentificacion }}">
+        </plex-label>
 
         <plex-label titulo="{{ paciente | edad }}" subtitulo="{{ paciente.fechaNacimiento | fecha:'utc' }}">
         </plex-label>

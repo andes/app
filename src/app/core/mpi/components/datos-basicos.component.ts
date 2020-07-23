@@ -53,6 +53,7 @@ export class DatosBasicosComponent implements OnInit, OnDestroy {
         nombre: '',
         apellido: '',
         documento: '',
+        numeroIdentificacion: '',
         fechaNacimiento: null,
         sexo: '',
         foto: ''

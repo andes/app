@@ -63,6 +63,7 @@ export class ActivarAppComponent {
     public disableActivacion = true;
     public emailReadonly = false;
     public cuentaActivada = false;
+    private cuentaExistente = false;
 
     // Inicialización
     constructor(
@@ -88,6 +89,7 @@ export class ActivarAppComponent {
                     this.emailReadonly = true;
                     this.showReenviar = true;
                     this.disableActivacion = false;
+                    this.cuentaExistente = true;
                 } else {
                     this.message = 'Cuenta activada exitosamente';
                     this.typeMessage = 'success';
@@ -180,19 +182,17 @@ export class ActivarAppComponent {
             };
             this.servicePaciente.patch(this.paciente.id, cambios).subscribe(resultado => {
                 if (resultado) {
-                    this.plex.toast('info', 'Datos del paciente actualizados');
+                    this.plex.toast('info', 'Datos del paciente actualizados', 'Información', 500);
                 }
             });
-            if (!this.showActivar && this.showReenviar) {
+            if (this.cuentaExistente) {
                 // Reenviar codigo de activación
                 this.appMobile.reenviar(this.paciente.id, { contacto }).subscribe((resultado) => {
                     if (resultado.status === 'OK') {
-                        this.plex.toast('success', 'El código de activación ha sido reenviado.');
+                        this.plex.toast('success', 'El código de activación ha sido reenviado.', 'Información', 500);
                         this.message = 'Cuenta pendiente de activación por el usuario';
                         this.typeMessage = 'info';
                     }
-                    this.showActivar = false;
-                    this.showReenviar = true;
                 });
             } else {
                 // Activar mobile
@@ -205,12 +205,15 @@ export class ActivarAppComponent {
                             this.plex.info('warning', 'El mail ingresado ya existe, ingrese otro email');
                         }
                     } else {
-                        this.plex.toast('success', 'Se ha enviado el código de activación al paciente');
+                        this.plex.toast('success', 'Se ha enviado el código de activación al paciente', 'Información', 500);
                         this.message = 'Cuenta pendiente de activación por el usuario';
                         this.typeMessage = 'info';
                     }
                 });
             }
+            this.showActivar = false;
+            this.showReenviar = true;
+            this.cuentaExistente = true;
         } else {
             this.plex.info('warning', 'Debe ingresar un número de celular y un email como datos de contacto para activar la app mobile');
         }

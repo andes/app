@@ -3,8 +3,6 @@ import {
     OnInit,
     Input,
     HostBinding,
-    ViewChild,
-    ElementRef,
     Output,
     EventEmitter
 } from '@angular/core';
@@ -34,7 +32,6 @@ export class RelacionesPacientesComponent implements OnInit {
         return this._paciente;
     }
     @Output() actualizar: EventEmitter<any> = new EventEmitter<any>();
-    @ViewChild('listadoRel', { static: true }) listado: ElementRef;
 
     _paciente: IPaciente;
     parentescoModel: any[] = [];
@@ -76,12 +73,6 @@ export class RelacionesPacientesComponent implements OnInit {
             this.searchClear = false;
             this.loading = false;
             this.actualizarPosiblesRelaciones(pacientes);
-            if (this.paciente.relaciones && this.paciente.relaciones.length > 2) {
-                // scroll hacia resultado de búsqueda
-                window.setTimeout(() => {
-                    this.listado.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 200);
-            }
         }
     }
 
@@ -130,15 +121,21 @@ export class RelacionesPacientesComponent implements OnInit {
                 nombre: '',
                 apellido: '',
                 documento: '',
+                numeroIdentificacion: '',
                 foto: ''
             });
 
             // Se completan los campos de la nueva relación
             nuevaRelacion.referencia = unaRelacion.id;
-            nuevaRelacion.documento = unaRelacion.documento;
             nuevaRelacion.apellido = unaRelacion.apellido;
             nuevaRelacion.nombre = unaRelacion.nombre;
             nuevaRelacion.relacion = unaRelacion.relacion;
+            if (unaRelacion.documento) {
+                nuevaRelacion.documento = unaRelacion.documento;
+            }
+            if (unaRelacion.numeroIdentificacion) {
+                nuevaRelacion.numeroIdentificacion = unaRelacion.numeroIdentificacion;
+            }
             if (unaRelacion.foto) {
                 nuevaRelacion.foto = unaRelacion.foto;
             }
@@ -156,6 +153,9 @@ export class RelacionesPacientesComponent implements OnInit {
 
             // Si esta relación fue borrada anteriormente en esta edición, se quita del arreglo 'relacionesBorradas'
             index = this.relacionesBorradas.findIndex(rel => rel.documento === nuevaRelacion.documento);
+            if (index < 0) {
+                index = this.relacionesBorradas.findIndex(rel => rel.numeroIdentificacion === nuevaRelacion.numeroIdentificacion);
+            }
             if (index >= 0) {
                 this.relacionesBorradas.splice(index, 1);
             }
@@ -164,24 +164,14 @@ export class RelacionesPacientesComponent implements OnInit {
         this.relacionEntrante = [];
     }
 
-    // Dado un indice, retorna el tipo de vinculo segun el array de relaciones del paciente
-    // Si indice es undefined, retorna siempre true indicando que se puede agregar una nueva relacion
-    // private checkVinculo(index?): Boolean {
-    //     let relacion = null;
-    //     if (this.paciente.relaciones && this.paciente.relaciones.length) {
-    //         if (!index) {
-    //             index = this.paciente.relaciones.length - 1;
-    //         }
-    //         relacion = this.paciente.relaciones[index];
-    //         return relacion.relacion;
-    //     }
-    //     return true;
-    // }
 
     removeRelacion(i) {
         if (i >= 0) {
             // si la relacion borrada ya se encotraba almacenada en la DB
             let index = this.relacionesIniciales.findIndex(unaRel => unaRel.documento === this.paciente.relaciones[i].documento);
+            if (index < 0) {
+                index = this.relacionesIniciales.findIndex(unaRel => unaRel.numeroIdentificacion === this.paciente.relaciones[i].numeroIdentificacion);
+            }
             if (index >= 0) {
                 this.relacionesBorradas.push(this.paciente.relaciones[i]);
             }
@@ -206,10 +196,4 @@ export class RelacionesPacientesComponent implements OnInit {
             }
         }
     }
-
-    // cambioRelacion(i) {
-    //     if (this.checkVinculo(i)) {
-    //         this.actualizar.emit({ relaciones: this.paciente.relaciones, relacionesBorradas: this.relacionesBorradas });
-    //     }
-    // }
 }

@@ -12,8 +12,12 @@
 
     <div title>{{ paciente | nombre }}</div>
 
-    <div subtitle>{{ paciente.documento }}</div>
-
+    <div subtitle>
+        <plex-copy *ngIf="paciente.documento" [value]="paciente.documento">{{ paciente.documento | number }}</plex-copy>
+        <plex-copy *ngIf="paciente.numeroIdentificacion" [value]="paciente.numeroIdentificacion">{{ paciente.numeroIdentificacion | number }}</plex-copy>
+        <span *ngIf="!paciente.numeroIdentificacion && !paciente.documento">Sin DNI</span>
+    </div>
+    
     <plex-label *ngIf="paciente.fechaNacimiento" titulo="Fecha de Nacimiento"
                 subtitulo="{{ paciente.fechaNacimiento | fecha:'utc' }}" justify="{{ justificado }}"></plex-label>
 
@@ -24,7 +28,7 @@
     <plex-label *ngIf="paciente.cuil" titulo="CUIL" subtitulo="{{ paciente.cuil}}" justify="{{ justificado }}">
     </plex-label>
 
-    <plex-label *ngIf="paciente.edad" titulo="Edad" subtitulo="{{ paciente | edad }}" justify="{{ justificado }}">
+    <plex-label *ngIf="paciente.fechaNacimiento" titulo="Edad" subtitulo="{{ paciente | edad }}" justify="{{ justificado }}">
     </plex-label>
 
     <plex-label *ngIf="paciente.sexo" titulo="Sexo" subtitulo="{{ paciente | sexo }}" justify="{{ justificado }}">
@@ -43,7 +47,12 @@
         <plex-item *ngFor="let relacionado of relaciones; let i = index" class="">
             <img [mpiFotoPaciente]="idPacientesRelacionados[i]" />
 
-            <plex-label titulo="{{ relacionado | nombre }}" subtitulo="{{ relacionado.documento | number}}">
+            <plex-label *ngIf="!relacionado.numeroIdentificacion" titulo="{{ relacionado | nombre }}"
+                        subtitulo="{{ (relacionado.documento | number) || 'Sin DNI' }}">
+            </plex-label>
+
+            <plex-label *ngIf="relacionado.numeroIdentificacion" titulo="{{ relacionado | nombre }}"
+                        subtitulo="{{ relacionado.numeroIdentificacion }}">
             </plex-label>
 
             <plex-badge type="info">{{ relacionado.relacion.nombre }}

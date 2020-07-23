@@ -5,12 +5,6 @@
 
                 <plex-button label="Volver" type="danger" position="left" (click)="cancel()">
                 </plex-button>
-                <!-- <plex-button *ngIf="pacienteModel.id && pacienteModel.estado === 'validado' && !showMobile"
-                             label="Gestión de App Mobile" type="info" position="right" (click)="gestionMobile(true)">
-                </plex-button> -->
-                <!-- <plex-button *ngIf="showMobile" label="Volver a detalles paciente" type="info" position="right"
-                             (click)="gestionMobile(false)">
-                </plex-button> -->
                 <plex-button *ngIf="(tipoPaciente === '' || tipoPaciente === 'con-dni') && !showDeshacer"
                              label="Validar Paciente" type="info" position="right" [disabled]="disableValidar"
                              (click)="validarPaciente()">

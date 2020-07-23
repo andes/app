@@ -111,6 +111,7 @@ export class PacienteDetalleComponent implements OnInit {
                     apellido: rel.apellido,
                     nombre: rel.nombre,
                     documento: rel.documento,
+                    numeroIdentificacion: rel.numeroIdentificacion,
                     parentesco: rel.relacion.nombre
                 };
             });
@@ -153,6 +154,7 @@ export class PacienteDetalleComponent implements OnInit {
         };
         if (!this.paciente || !this.paciente.documento) {
             this.obraSocialCacheService.setFinanciadorPacienteCache(null);
+            this.obraSocial = null;
             return;
         }
         if (this.paciente.financiador && this.paciente.financiador.length > 0 && this.paciente.financiador[0].nombre) {

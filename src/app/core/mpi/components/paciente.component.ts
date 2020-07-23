@@ -85,8 +85,8 @@ export class PacienteComponent implements OnInit {
         sexo: undefined,
         genero: undefined,
         fechaNacimiento: null, // Fecha Nacimiento
-        tipoIdentificacion: '',
-        numeroIdentificacion: '',
+        tipoIdentificacion: null,
+        numeroIdentificacion: null,
         edad: null,
         edadReal: null,
         fechaFallecimiento: null,
@@ -266,6 +266,7 @@ export class PacienteComponent implements OnInit {
         pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
         pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : null;
         pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : pacienteGuardar.sexo;
+        pacienteGuardar.tipoIdentificacion = this.pacienteModel.tipoIdentificacion ? ((typeof this.pacienteModel.tipoIdentificacion === 'string')) ? this.pacienteModel.tipoIdentificacion : (Object(this.pacienteModel.tipoIdentificacion).id) : null;
         pacienteGuardar.contacto.map(elem => {
             elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
             return elem;
@@ -361,7 +362,8 @@ export class PacienteComponent implements OnInit {
                         referencia: unPacienteSave.id,
                         nombre: unPacienteSave.nombre,
                         apellido: unPacienteSave.apellido,
-                        documento: unPacienteSave.documento,
+                        documento: (unPacienteSave.documento) ? unPacienteSave.documento : null,
+                        numeroIdentificacion: (unPacienteSave.numeroIdentificacion) ? unPacienteSave.numeroIdentificacion : null,
                         foto: unPacienteSave.foto ? unPacienteSave.foto : null
                     };
                     if (dto.referencia) {
