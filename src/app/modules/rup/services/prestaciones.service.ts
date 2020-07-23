@@ -243,7 +243,7 @@ export class PrestacionesService {
                                 registro.idPrestacion = prestacion.id;
                                 registro.tipoPrestacion = prestacion.solicitud.tipoPrestacion.term;
                                 return registro;
-                             });
+                            });
                         // ConceptId del informe requerido en en todas las prestaciones ambulatorias
                         if (conceptos.length > 0) {
                             conceptos[0].informeRequerido = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === PrestacionesService.InformeDelEncuentro);
@@ -273,6 +273,7 @@ export class PrestacionesService {
                             esSolicitud: registro.esSolicitud,
                             elementoRUP: registro.elementoRUP,
                             evoluciones: [{
+                                tipoPrestacion: registro.tipoPrestacion,
                                 idPrestacion: registro.idPrestacion,
                                 idRegistro: registro.id,
                                 fechaCarga: registro.createdAt,
