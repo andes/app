@@ -40,6 +40,7 @@ export class ModalMotivoAccesoHudsComponent {
         } else {
             this.motivoAccesoHuds.emit(null);
         }
-        this.modal.close();
+        // No se usa this.modal.close() porque interfiere con el cerrar con la tecla ESC
+        this.modal.showed = false;
     }
 }
