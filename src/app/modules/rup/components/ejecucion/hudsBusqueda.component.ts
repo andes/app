@@ -358,7 +358,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
             case 'procedimiento':
                 return this.procedimientos.length;
             case 'planes':
-                return this.prestaciones.length;
+                return this.prestacionesCopia.length;
             case 'producto':
                 return this.productos.length;
             case 'laboratorios':
