@@ -225,6 +225,10 @@
                                                     <div class="row p-0 m-0">
                                                         <div class="col-10 p-0 m-0">
                                                             <div class="sugerido">
+                                                                <small>Prestación:
+                                                                    {{ registro.tipoPrestacion }}
+                                                                </small>
+                                                                <br>
                                                                 <small>
                                                                     Creada:
                                                                     {{ registro.fechaEjecucion | fecha }}</small>
@@ -273,6 +277,8 @@
                                                     <div class="row p-0 m-0">
                                                         <div class="col-10 p-0 m-0">
                                                             <div class="sugerido">
+                                                                <small>Prestación: {{ registro.evoluciones[0].tipoPrestacion }}</small>
+                                                                <br>
                                                                 <small>Última evolución: {{ registro.evoluciones[0].fechaCarga | fecha }}</small>
                                                                 <br>
                                                                 <small>Profesional: {{ registro.evoluciones[0].profesional }}</small>
@@ -331,6 +337,10 @@
                                                     <div class="row p-0 m-0">
                                                         <div class="col-10 p-0 m-0">
                                                             <div class="sugerido">
+                                                                <small>Prestación:
+                                                                    {{ registro.tipoPrestacion }}
+                                                                </small>
+                                                                <br>
                                                                 <small>Creada:
                                                                     {{ registro.fechaEjecucion | fecha }}</small>
                                                                 <br>
@@ -466,6 +476,10 @@
                                                     <div class="row p-0 m-0">
                                                         <div class="col-10 p-0 m-0">
                                                             <ng-container *ngIf="registro.evoluciones">
+                                                                <small class="sugerido">Prestación:
+                                                                    {{ registro.tipoPrestacion }}
+                                                                </small>
+                                                                <br>
                                                                 <small class="sugerido">
                                                                     último registro:
                                                                     {{ registro.fechaEjecucion | fecha }}
