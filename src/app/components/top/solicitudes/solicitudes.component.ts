@@ -243,7 +243,7 @@ export class SolicitudesComponent implements OnInit {
         this.showIniciarPrestacion = false;
     }
 
-    iniciarPrestacion(prestacion) {
+    onIniciarPrestacionClick(prestacion) {
         this.prestacionSeleccionada = prestacion;
         this.pacienteSolicitud = prestacion.paciente;
         this.showIniciarPrestacion = true;
@@ -298,6 +298,7 @@ export class SolicitudesComponent implements OnInit {
                 'pendiente',
                 'rechazada',
                 'validada',
+                'ejecucion',
                 'asignada'
             ]
         };
@@ -690,86 +691,36 @@ export class SolicitudesComponent implements OnInit {
         this.showIniciarPrestacion = false;
         this.showSidebar = false;
         if (event.status === false) {
-            let solicitud = event.prestacionSeleccionada;
-            this.plex.confirm('Paciente: <b>' + solicitud.paciente.apellido + ', ' + solicitud.paciente.nombre + '.</b><br>Prestación: <b>' + solicitud.solicitud.tipoPrestacion.term + '</b>', '¿Está seguro de querer iniciar una pestación?').then(confirmacion => {
+            this.plex.confirm(`Paciente: <b>${this.prestacionSeleccionada.paciente.apellido}, ${this.prestacionSeleccionada.paciente.nombre}.</b><br>Prestación: <b>${this.prestacionSeleccionada.solicitud.tipoPrestacion.term}</b>, ¿Está seguro de querer iniciar una pestación?`)
+            .then(confirmacion => {
                 if (confirmacion) {
-                    let obraSocialPaciente;
-                    this.osService.getFinanciadorPacienteCache().subscribe((financiador) => obraSocialPaciente = financiador);
-                    if (solicitud.solicitud.tipoPrestacion) {
-                        let conceptoSnomed = solicitud.solicitud.tipoPrestacion;
-                        let nuevaPrestacion;
-                        nuevaPrestacion = {
-                            paciente: solicitud.paciente,
-                            solicitud: {
-                                fecha: event.fecha,
-                                tipoPrestacion: conceptoSnomed,
-                                // profesional logueado
-                                profesional:
-                                {
-                                    id: this.auth.profesional, nombre: this.auth.usuario.nombre,
-                                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                                },
-                                // organizacion desde la que se solicita la prestacion
-                                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
-                            },
-                            ejecucion: {
-                                fecha: event.fecha,
-                                registros: [],
-                                // organizacion desde la que se solicita la prestación
-                                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
-                            },
-                            estados: {
-                                fecha: new Date(),
-                                tipo: 'ejecucion'
-                            }
-                        };
-                        if (solicitud.paciente) {
-                            nuevaPrestacion.paciente['_id'] = solicitud.paciente.id;
-                            const token = this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, solicitud.paciente, 'Fuera de agenda', this.auth.profesional, null, solicitud.solicitud.tipoPrestacion.id);
-                            const nuevaPrest = this.servicioPrestacion.post(nuevaPrestacion);
-                            const res = concat(token, nuevaPrest);
-
-                            res.subscribe(input => {
-                                if (input.token) {
-                                    // se obtuvo token y loguea el acceso a la huds del paciente
-                                    window.sessionStorage.setItem('huds-token', input.token);
-                                } else {
-                                    if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
-                                        let patch = {
-                                            op: 'estadoPush',
-                                            estado: {
-                                                tipo: 'validada',
-                                                observaciones: event.motivo
-                                            }
-                                        };
-                                        this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
-                                            () => this.router.navigate(['/rup/ejecucion', input.id])
-                                        );
-                                    }
-                                }
-                            }, (err) => this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err));
-                        } else {
-                            this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
-                                if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
-                                    let patch = {
-                                        op: 'estadoPush',
-                                        estado: {
-                                            tipo: 'validada',
-                                            observaciones: event.motivo
-                                        }
-                                    };
-                                    this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
-                                        () => this.router.navigate(['/rup/ejecucion', prestacion.id])
-                                    );
-                                }
-                            }, (err) => this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err));
-                        }
-                    }
-                } else {
-                    return false;
+                    this.confirmarIniciarPrestacion(event.fecha);
                 }
             });
         }
     }
 
+    private confirmarIniciarPrestacion(fecha) {
+        concat(
+            // token HUDS
+            this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, this.prestacionSeleccionada.paciente, 'Fuera de agenda', this.auth.profesional, null, this.prestacionSeleccionada.solicitud.tipoPrestacion.id),
+            // PATCH pasar prestacion a ejecución
+            this.iniciarPrestacion(fecha)
+        ).subscribe(
+           () => this.router.navigate(['/rup/ejecucion', this.prestacionSeleccionada.id]),
+           (err) => this.plex.info('danger', 'La prestación no pudo ser iniciada. ' + err)
+        );
+    }
+
+    private iniciarPrestacion(fecha) {
+        return this.servicioPrestacion.patch(this.prestacionSeleccionada.id, {
+            op: 'estadoPush',
+            ejecucion: { fecha },
+            estado: {
+                fecha: new Date(),
+                tipo: 'ejecucion'
+            }
+        });
+    }
 }
+
