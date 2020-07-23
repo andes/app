@@ -1,3 +1,22 @@
+# [5.5.0](https://github.com/andes/app/compare/v5.4.0...v5.5.0) (2020-07-22)
+
+
+### Bug Fixes
+
+* **mapa-camas:** botón validad prestación disabled ([#1767](https://github.com/andes/app/issues/1767)) ([f5a773d](https://github.com/andes/app/commit/f5a773d2c128271a85882f16d8d0bd02fa304411))
+* **rup:** arreglo de acceso a huds sin elegir motivo ([83e39cc](https://github.com/andes/app/commit/83e39ccd0751e8015b8b8a3b47734ff6b4dee7a4))
+* **rup:** error en lifecycle de angular ([#1796](https://github.com/andes/app/issues/1796)) ([991a2fa](https://github.com/andes/app/commit/991a2fa73e587ea54a755324d85a69bdd5bcdc30))
+* **RUP:** arregla duplicacion solicitudes auditables ([#1729](https://github.com/andes/app/issues/1729)) ([289b5aa](https://github.com/andes/app/commit/289b5aa93f664ac239437ff960d22d66fd829f94))
+
+
+### Features
+
+* **ambulatorio:** visualizar agendas sin turnos  ([#1717](https://github.com/andes/app/issues/1717)) ([7888045](https://github.com/andes/app/commit/7888045f36a8ffacd6dccd65f620b8e07e67a315))
+* **mapa-camas:** dias de estada x servicios ([#1780](https://github.com/andes/app/issues/1780)) ([b9bdfe0](https://github.com/andes/app/commit/b9bdfe018b43203df750811b515587e68ff40707))
+* **mapa-camas:** persistencia de filtros segun usuario ([#1771](https://github.com/andes/app/issues/1771)) ([2367ec5](https://github.com/andes/app/commit/2367ec5a55ac33e130721eee75897d68e4c6a194))
+* **rup:** configurar diagnostico principal dinamico ([#1722](https://github.com/andes/app/issues/1722)) ([38e2fa4](https://github.com/andes/app/commit/38e2fa4540f055722d6c4f0531c16bbbf9818121))
+* **RUP:** Implementa plex-help ([b508a8e](https://github.com/andes/app/commit/b508a8e2bf4540fd024ee9b8d7a5dd899d5c2548))
+
 # [5.4.0](https://github.com/andes/app/compare/v5.3.0...v5.4.0) (2020-07-15)
 
 

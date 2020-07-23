@@ -19,7 +19,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class NuevaSolicitudComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @ViewChildren('upload') childsComponents: QueryList<any>;
-    private wizardActivo = false; // Se usa para evitar que los botones aparezcan deshabilitados
+    wizardActivo = false; // Se usa para evitar que los botones aparezcan deshabilitados
 
     showSeleccionarPaciente = true;
     permisos = this.auth.getPermissions('solicitudes:tipoPrestacion:?');
@@ -37,8 +37,6 @@ export class NuevaSolicitudComponent implements OnInit {
     fotos: any[] = [];
     fileToken: String = null;
     timeout = null;
-    lightbox = false;
-    indice;
     documentos = [];
 
     // ---- Variables asociadas a componentes paciente buscar y paciente listado
@@ -462,25 +460,11 @@ export class NuevaSolicitudComponent implements OnInit {
         this.fotos.splice(index, 1);
     }
 
-    activaLightbox(index) {
-        if (this.fotos[index].ext !== 'pdf') {
-            this.lightbox = true;
-            this.indice = index;
-        }
-    }
-
-    imagenPrevia(i) {
-        let imagenPrevia = i - 1;
-        if (imagenPrevia >= 0) {
-            this.indice = imagenPrevia;
-        }
-    }
-
-    imagenSiguiente(i) {
-        let imagenSiguiente = i + 1;
-        if (imagenSiguiente <= this.fotos.length - 1) {
-            this.indice = imagenSiguiente;
-        }
+    get documentosUrl() {
+        return this.documentos.map((doc) => {
+            doc.url = this.createUrl(doc);
+            return doc;
+        });
     }
 
     createUrl(doc) {

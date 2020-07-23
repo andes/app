@@ -8,14 +8,15 @@
                         <div justify="end" class="mb-1"
                              *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length">
                             <div class="col float-right text-right panel-acciones">
+                                <plex-help class="mr-1 text-left" titulo="Reglas Solicitudes"
+                                           tituloBoton="Reglas Solicitudes">
+                                    <visualizacion-reglas info [esParametrizado]="true" *plHelp></visualizacion-reglas>
+                                </plex-help>
                                 <help-solicitud [solicitud]='prestacion.solicitud' class='mr-1'></help-solicitud>
-                                <plex-button *ngIf="collapse" title="Collapsar los registros" titlePosition="left"
-                                             (click)="colapsarPrestaciones('collapse'); collapse = false;" type="info">
-                                    <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : !collapse}"></i>
-                                </plex-button>
-                                <plex-button *ngIf="!collapse" title="Expandir los registros" titlePosition="left"
-                                             (click)="colapsarPrestaciones(); collapse = true;" type="info">
-                                    <i class="mdi mdi-chevron-left" [ngClass]="{'spin' : !collapse}"></i>
+                                <plex-button (click)="toggleCollapse($event)" type="primary"
+                                             icon="{{ collapse ? 'chevron-down' : 'chevron-up'}}" class="collapse-card"
+                                             title="{{ collapse ? 'Expandir los registros' : 'Colapsar los registros'}}"
+                                             titlePosition="left">
                                 </plex-button>
                             </div>
                         </div>

@@ -107,7 +107,7 @@
                         </ng-container>
                     </div>
                     <td>{{busqueda.estado}}</td>
-                    <td *ngIf="!sumarB">{{busqueda.financiador ? busqueda.financiador.financiador : 'No posee'}}</td>
+                    <td *ngIf="!sumarB">{{busqueda.financiador ? busqueda.financiador.nombre : 'No posee'}}</td>
                     <td *ngIf="sumarB">
                         {{busqueda.estadoFacturacion? busqueda.estadoFacturacion?.estado: 'Sin Comprobante'}}</td>
                 </tr>

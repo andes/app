@@ -181,8 +181,8 @@
                 <div class="row mb-3">
                     <div class="col-12">
                         <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
-                        <strong *ngIf="!soloValores">Cargar documentos</strong>
-                        <span *ngIf="!waiting && !soloValores">
+                        <strong>Cargar documentos</strong>
+                        <span *ngIf="!waiting">
                             <plex-button type="primary" class="btn-sm" label="Desde mi PC" (click)="upload.click()">
                             </plex-button>
                             <span *ngIf="errorExt">
@@ -200,30 +200,17 @@
                     <div class="col-12">
                         <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
                             <ng-container *ngFor="let doc of fotos; let i = index">
-                                <a (click)="activaLightbox(i)">
-                                    <div class="image hover">
-
-                                        <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
-                                        <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)"
-                                           class="adjunto">
-                                            {{ doc.ext }}
-                                        </a>
-                                        <div *ngIf="!soloValores" class="x-mark" (click)="imageRemoved(doc)">
-                                            <span class="close"></span>
-                                        </div>
-                                    </div>
-                                </a>
-                                <div (click)="lightbox = false" *ngIf="i === indice && lightbox"
-                                     [ngClass]="{'lightbox': i === indice && lightbox }" class="hover">
-                                    <i (click)=imagenPrevia(i)
-                                       class="mdi mdi-chevron-double-left previous parpadeo"></i>
-                                    <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
+                                <plex-visualizador [files]="documentosUrl" #visualizador></plex-visualizador>
+                                <div class="image hover">
+                                    <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)"
+                                         (click)="visualizador.open(i)">
                                     <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)"
-                                       class="adjunto m-1 p-2">
+                                       class="adjunto" (click)="visualizador.open(i)">
                                         {{ doc.ext }}
                                     </a>
-                                    <i (click)=imagenSiguiente(i)
-                                       class="mdi mdi-chevron-double-right next parpadeo"></i>
+                                    <div class="x-mark" (click)="imageRemoved(doc)">
+                                        <span class="close"></span>
+                                    </div>
                                 </div>
                             </ng-container>
                         </div>
