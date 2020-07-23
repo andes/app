@@ -761,4 +761,17 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         this.accesoHudsPrestacion = prestacion;
         this.showModalMotivo = true;
     }
+
+    onVerResumenClick(estado, prestacion) {
+        const esPrestacionNoNominalizada = prestacion.solicitud.tipoPrestacion.noNominalizada;
+        if (!esPrestacionNoNominalizada) {
+            this.setRouteToParams([estado, prestacion.id]);
+            this.accesoHudsPaciente = prestacion.paciente;
+            this.accesoHudsTurno = null;
+            this.accesoHudsPrestacion = prestacion.solicitud.tipoPrestacion.id;
+            this.preAccesoHuds(this.motivoVerContinuarPrestacion);
+        } else {
+            this.routeTo(estado, prestacion.id);
+        }
+    }
 }
