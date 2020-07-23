@@ -102,8 +102,8 @@ export class PacienteCruComponent implements OnInit {
         sexo: undefined,
         genero: undefined,
         fechaNacimiento: null, // Fecha Nacimiento
-        tipoIdentificacion: '',
-        numeroIdentificacion: '',
+        tipoIdentificacion: null,
+        numeroIdentificacion: null,
         edad: null,
         edadReal: null,
         fechaFallecimiento: null,
@@ -183,7 +183,7 @@ export class PacienteCruComponent implements OnInit {
                 this.localidadActual = org.direccion.ubicacion.localidad;
                 setTimeout(() => {
                     this.loadPaciente();
-                }, 1000);
+                }, 0);
             }
         });
         // Cargamos todas las provincias
@@ -212,6 +212,7 @@ export class PacienteCruComponent implements OnInit {
         if (this.paciente) {
 
             if (this.paciente.id) {
+                this.historialBusquedaService.add(this.paciente);
                 // Busco el paciente en mongodb
                 this.pacienteService.getById(this.paciente.id).subscribe(resultado => {
 
@@ -708,11 +709,6 @@ export class PacienteCruComponent implements OnInit {
     }
 
     cancel() {
-        if (this.escaneado && this.paciente.id) {
-            /* El paciente escaneado se agrega al historial de búsqueda sólo si ya existía.
-            De lo contrario se estaría agregando un paciente que no se terminó de registrar. */
-            this.historialBusquedaService.add(this.paciente);
-        }
         if (this.subscripcionValidar) {
             this.subscripcionValidar.unsubscribe();
         }

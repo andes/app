@@ -16,7 +16,11 @@
                 </td>
                 <td class="text-center">
                     <span *ngIf="_unaRel?.documento" class="d-block">{{_unaRel.documento}}</span>
-                    <span *ngIf="!_unaRel?.documento" class="d-block">N/D</span>
+                    <ng-container *ngIf="!_unaRel?.documento">
+                        <span *ngIf="_unaRel?.numeroIdentificacion"
+                              class="d-block">{{_unaRel.numeroIdentificacion}}</span>
+                        <span *ngIf="!_unaRel?.numeroIdentificacion" class="d-block">N/D</span>
+                    </ng-container>
                 </td>
                 <td>{{_unaRel.apellido}} {{_unaRel.nombre}}</td>
                 <td>

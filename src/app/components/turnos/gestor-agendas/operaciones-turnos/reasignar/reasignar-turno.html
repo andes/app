@@ -72,7 +72,7 @@
                                                         DNI {{turno.paciente.documento}}</span>
                                                     <span
                                                           *ngIf="turno && turno.paciente && turno.paciente.documento === ''">|
-                                                        Sin documento (temporal)</span>
+                                                        {{turno.paciente.numeroIdentificacion || 'Sin documento (temporal)'}}</span>
                                                 </small>
                                                 <small>
                                                     <span
@@ -123,7 +123,7 @@
                                                         DNI {{turno.paciente.documento|number}}</span>
                                                     <span
                                                           *ngIf="turno && turno.paciente && turno.paciente.documento === ''">|
-                                                        Sin documento (temporal)</span>
+                                                        {{turno.paciente.numeroIdentificacion || 'Sin documento (temporal)'}}</span>
                                                 </small>
                                                 <small>
                                                     <span

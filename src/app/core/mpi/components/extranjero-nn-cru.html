@@ -147,13 +147,14 @@
                                         <plex-select label="Provincia"
                                                      [(ngModel)]="pacienteModel.direccion[0].ubicacion.provincia"
                                                      name="provincia" [data]="provincias" labelField="nombre"
+                                                     [required]="true"
                                                      (change)="loadLocalidades(pacienteModel.direccion[0].ubicacion.provincia)">
                                         </plex-select>
                                     </div>
                                 </div>
                                 <div class="row" *ngIf="!viveProvActual || (viveProvActual && !viveLocActual)">
                                     <div class="col">
-                                        <plex-select label="Localidad"
+                                        <plex-select label="Localidad" [required]="localidadRequerida"
                                                      [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad"
                                                      name="localidad" [data]="localidades" labelField="nombre"
                                                      (change)="loadBarrios(pacienteModel.direccion[0].ubicacion.localidad)">

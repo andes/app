@@ -4,7 +4,7 @@
     <div class="row" style="margin-bottom: 0.25rem">
         <div class="col-4">
             <plex-text [(ngModel)]="numeroCarpeta" name="numeroCarpeta" label="Número de carpeta"
-                placeholder="Escriba el número de carpeta" labelField="numero" [required]="true">
+                       placeholder="Escriba el número de carpeta" labelField="numero" [required]="true">
             </plex-text>
         </div>
         <div class="col-2" style="margin-top:36px;">
@@ -13,7 +13,13 @@
         </div>
         <div class="col-6 text-right" *ngIf="paciente">
             <h5>Paciente: <strong>{{ paciente.apellido }}, {{ paciente.nombre }}</strong> |
-                Documento: <strong>{{ paciente.documento }}</strong></h5>
+                Documento:
+                <ng-container *ngIf="paciente?.documento"> <strong>{{paciente.documento}}</strong>
+                </ng-container>
+                <ng-container *ngIf="!paciente?.documento">
+                    <strong>{{paciente.numeroIdentificacion || 'Sin documento (temporal)'}}</strong>
+                </ng-container>
+            </h5>
         </div>
     </div>
 
@@ -73,7 +79,7 @@
                 </td>
                 <td>
                     <span
-                        *ngIf="movimiento.datosSolicitudManual">{{movimiento.datosSolicitudManual.observaciones}}</span>
+                          *ngIf="movimiento.datosSolicitudManual">{{movimiento.datosSolicitudManual.observaciones}}</span>
                 </td>
                 <td>
                     <span *ngIf="movimiento.estado === 'En archivo'">

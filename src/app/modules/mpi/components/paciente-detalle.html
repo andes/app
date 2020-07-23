@@ -11,9 +11,12 @@
     </div>
 
     <div subtitle>
-        <plex-copy *ngIf="paciente.documento" [value]="paciente.documento">
-            {{ paciente.documento | number  }}
+        <plex-copy *ngIf="paciente.documento" [value]="paciente.documento">{{ paciente.documento | number }}
         </plex-copy>
+        <plex-copy *ngIf="paciente.numeroIdentificacion" [value]="paciente.numeroIdentificacion">
+            {{ paciente.numeroIdentificacion | number }}
+        </plex-copy>
+        <span *ngIf="!paciente.numeroIdentificacion && !paciente.documento">Sin DNI</span>
     </div>
 
     <plex-label *ngIf="showSexo" titulo="Sexo / Género" subtitulo="{{paciente | sexo}}"></plex-label>

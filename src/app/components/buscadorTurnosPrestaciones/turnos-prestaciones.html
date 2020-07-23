@@ -143,13 +143,11 @@
             </div>
 
             <div class="col-md">
-                <div *ngIf="prestacion.paciente.documento !== ''">
-                    <label class="block">Documento</label>
-                    <span>{{ prestacion.paciente.documento }}</span>
-                </div>
-                <div *ngIf="prestacion.paciente.documento === ''">
-                    <label class="block">Documento</label>
-                    <span class="text-danger">Sin documento</span>
+                <label class="block">Documento</label>
+                <div>
+                    <span *ngIf="prestacion.paciente.documento">{{ prestacion.paciente.documento }}</span>
+                    <span
+                          *ngIf="!prestacion.paciente.documento">{{ prestacion.paciente.numeroIdentificacion || 'Sin documento' }}</span>
                 </div>
             </div>
 

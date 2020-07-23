@@ -32,8 +32,8 @@
                                     <b>Paciente: </b> {{ agendaReasignar?.turno.paciente | nombre }} |
                                     <small *ngIf="agendaReasignar?.turno.paciente.documento !== ''">DNI
                                         {{ agendaReasignar?.turno.paciente.documento }}</small>
-                                    <small *ngIf="agendaReasignar?.turno.paciente.documento === ''">Sin documento
-                                        (temporal)</small>
+                                    <small
+                                           *ngIf="agendaReasignar?.turno.paciente.documento === ''">{{agendaReasignar.turno.paciente.numeroIdentificacion || 'Sin documento (temporal)'}}</small>
                                     <br>
                                 </span>
                                 <span>

@@ -79,7 +79,11 @@ export class BusquedaMpiComponent implements OnInit {
             this.historialBusquedaService.add(paciente);
             this.pacienteCache.setPaciente(paciente);
             this.pacienteCache.setScanState(this.escaneado);
-            this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru
+            if (paciente.tipoIdentificacion || paciente.numeroIdentificacion) {
+                this.router.navigate(['apps/mpi/extranjero']);  // abre formulario paciente extranjero
+            } else {
+                this.router.navigate(['apps/mpi/paciente']);  // abre formulario paciente con/sin-dni
+            }
         }
     }
 

@@ -112,14 +112,20 @@ export class RelacionesPacientesComponent implements OnInit {
                     nombre: '',
                     apellido: '',
                     documento: '',
+                    numeroIdentificacion: '',
                     foto: ''
                 });
 
                 // Se completan los campos de la nueva relación
                 unaRelacion.referencia = pacienteEncontrado.id;
-                unaRelacion.documento = pacienteEncontrado.documento;
                 unaRelacion.apellido = pacienteEncontrado.apellido;
                 unaRelacion.nombre = pacienteEncontrado.nombre;
+                if (pacienteEncontrado.documento) {
+                    unaRelacion.documento = pacienteEncontrado.documento;
+                }
+                if (pacienteEncontrado.numeroIdentificacion) {
+                    unaRelacion.numeroIdentificacion = pacienteEncontrado.numeroIdentificacion;
+                }
                 if (pacienteEncontrado.foto) {
                     unaRelacion.foto = pacienteEncontrado.foto;
                 }
@@ -137,6 +143,9 @@ export class RelacionesPacientesComponent implements OnInit {
 
                 // Si esta relación fue borrada anteriormente en esta edición, se quita del arreglo 'relacionesBorradas'
                 index = this.relacionesBorradas.findIndex(rel => rel.documento === unaRelacion.documento);
+                if (index < 0) {
+                    index = this.relacionesBorradas.findIndex(rel => rel.numeroIdentificacion === unaRelacion.numeroIdentificacion);
+                }
                 if (index >= 0) {
                     this.relacionesBorradas.splice(index, 1);
                 }
@@ -166,6 +175,9 @@ export class RelacionesPacientesComponent implements OnInit {
         if (i >= 0) {
             // si la relacion borrada ya se encotraba almacenada en la DB
             let index = this.relacionesIniciales.findIndex(unaRel => unaRel.documento === this.paciente.relaciones[i].documento);
+            if (index < 0) {
+                index = this.relacionesIniciales.findIndex(unaRel => unaRel.numeroIdentificacion === this.paciente.relaciones[i].numeroIdentificacion);
+            }
             if (index >= 0) {
                 this.relacionesBorradas.push(this.paciente.relaciones[i]);
             }

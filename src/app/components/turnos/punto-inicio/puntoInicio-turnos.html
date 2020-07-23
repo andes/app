@@ -41,7 +41,8 @@
                                 <b>Documento: </b>
                                 <span *ngIf="paciente.documento">{{ paciente.documento |
                                     number}}</span>
-                                <span *ngIf="!paciente.documento" class="text-danger">Sin documento</span>
+                                <span *ngIf="!paciente.documento" class="text-danger">
+                                    {{paciente.numeroIdentificacion || 'Sin documento'}}</span>
                                 |
                                 <b>Fecha de Nacimiento: </b>
                                 <span *ngIf="paciente.fechaNacimiento">{{

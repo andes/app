@@ -17,8 +17,8 @@
                 <img class="img-thumbnail" [mpiFotoPaciente]="paciente" />
             </td>
             <td class="text-center">
-                <span *ngIf="paciente?.documento !== ''" class="d-block">{{paciente.documento}}</span>
-                <span *ngIf="paciente?.documento === ''" class="d-block">N/D</span>
+                <span *ngIf="paciente?.documento" class="d-block">{{paciente.documento}}</span>
+                <span *ngIf="!paciente?.documento" class="d-block">{{paciente.numeroIdentificacion || 'N/D'}}</span>
                 <plex-badge *ngIf="paciente.estado == 'validado'" type="success">Validado</plex-badge>
                 <plex-badge *ngIf="paciente.estado != 'validado'" type="warning">Temporal</plex-badge>
             </td>
@@ -42,8 +42,8 @@
             [ngClass]="{'bg-inverse text-white': paciente.id == seleccionado?.id}" (click)="seleccionar(paciente)"
             (mouseenter)="hoverPaciente(paciente)">
             <td class="text-center">
-                <span *ngIf="paciente?.documento !== ''" class="d-block">{{paciente.documento}}</span>
-                <span *ngIf="paciente?.documento === ''" class="d-block">N/D</span>
+                <span *ngIf="paciente?.documento" class="d-block">{{paciente.documento}}</span>
+                <span *ngIf="!paciente?.documento" class="d-block">{{paciente.numeroIdentificacion || 'N/D'}}</span>
                 <plex-badge *ngIf="paciente.estado == 'validado'" type="success">Validado</plex-badge>
                 <plex-badge *ngIf="paciente.estado != 'validado'" type="warning">Temporal</plex-badge>
             </td>

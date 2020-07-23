@@ -52,6 +52,7 @@ export class BebeCruComponent implements AfterViewInit {
         nombre: '',
         apellido: '',
         documento: '',
+        numeroIdentificacion: '',
         fechaNacimiento: null,
         sexo: '',
         foto: ''
@@ -77,8 +78,8 @@ export class BebeCruComponent implements AfterViewInit {
         sexo: undefined,
         genero: undefined,
         fechaNacimiento: null, // Fecha Nacimiento
-        tipoIdentificacion: '',
-        numeroIdentificacion: '',
+        tipoIdentificacion: null,
+        numeroIdentificacion: null,
         edad: null,
         edadReal: null,
         fechaFallecimiento: null,

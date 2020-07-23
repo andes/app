@@ -14,7 +14,8 @@
     </div>
     <div class="row mb-1">
         <div class="col">
-            <span *ngIf="paciente.documento" class="mr-1">{{ paciente.documento }}</span>
+            <span *ngIf="paciente?.documento" class="mr-1">{{paciente.documento}}</span>
+            <span *ngIf="!paciente?.documento" class="mr-1">{{paciente.numeroIdentificacion || 'N/D'}}</span>
             <plex-badge [type]="(paciente.estado === 'validado' ? 'success' : 'warning')">
                 {{ paciente.estado | uppercase }} </plex-badge>
         </div>
@@ -35,16 +36,7 @@
             <span>{{ paciente.cuil }}</span>
         </div>
     </div>
-    <!-- <div class="row mb-1">
-        <div class="col">
-            <label>Cobertura social</label>
-            <plex-loader *ngIf="coberturaSocial.loading" type="linear"></plex-loader>
-            <div *ngIf="!coberturaSocial.loading">
-                <span *ngIf="!coberturaSocial.error">{{ coberturaSocial.data }}</span>
-                <span *ngIf="coberturaSocial.error" class="text-warning">No disponible en este momento</span>
-            </div>
-        </div>
-    </div> -->
+
     <div class="row mb-1">
         <div class="col">
             <label>Relaciones</label>
@@ -55,15 +47,13 @@
                 <table *ngIf="relaciones.data && relaciones.data.length" class="table table-sm"
                        [ngClass]="{'table-hover': permitirseleccionarRelacion}">
                     <tbody>
-                        <!-- COMENTADO HASTA TERMINAR FUNCIONALIDAD
-                        <tr [ngClass]="{'hover': permitirseleccionarRelacion}" *ngFor="let relacion of relaciones.data"
-                            (click)="permitirseleccionarRelacion && seleccionarRelacionado(relacion)"> -->
                         <tr *ngFor="let relacion of relaciones.data">
-                            <td
-                                *ngIf="relacion?.apellido && relacion?.documento && relacion?.nombre && relacion?.relacion?.nombre">
+                            <td *ngIf="relacion?.referencia">
                                 <span class="mr-1">{{relacion.apellido}},{{relacion.nombre}}
                                     <em>({{relacion.relacion.nombre}})</em></span>
-                                <span class="d-block"><em>{{relacion.documento}}</em></span>
+                                <span *ngIf="relacion?.documento" class="d-block"><em>{{relacion.documento}}</em></span>
+                                <span *ngIf="!relacion?.documento"
+                                      class="d-block"><em>{{relacion.numeroIdentificacion || 'N/D'}}</em></span>
                             </td>
                         </tr>
                     </tbody>

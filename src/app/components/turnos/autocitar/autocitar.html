@@ -17,9 +17,10 @@
                                 <div class="col">
                                     Paciente: {{paciente | nombre }}
                                     <small>
-                                        <span *ngIf="paciente.documento !== ''">| DNI
+                                        <span *ngIf="paciente.documento">| DNI
                                             {{paciente.documento}}</span>
-                                        <span *ngIf="paciente.documento === ''">| Sin documento (temporal)</span>
+                                        <span *ngIf="!paciente.documento">|
+                                            {{ paciente.numeroIdentificacion || 'Sin documento (temporal)'}}</span>
                                     </small>
                                     <br>
                                     <b>{{prestacionAutocitar.nombre}}</b>

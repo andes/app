@@ -7,11 +7,10 @@
             <strong>{{paciente | nombre}}</strong>
         </div>
         <div class="small">
-            <ng-container *ngIf="paciente.documento !== ''">
-                {{ paciente.documento }}
+            <ng-container *ngIf="paciente?.documento">{{paciente.documento}}
             </ng-container>
-            <ng-container *ngIf="paciente.documento === ''">
-                <b>Sin documento (temporal)</b>
+            <ng-container *ngIf="!paciente?.documento">
+                {{paciente.numeroIdentificacion || 'Sin documento (temporal)'}}
             </ng-container>
             |
             <ng-container *ngIf="paciente.fechaNacimiento !== null">

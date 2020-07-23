@@ -234,7 +234,7 @@
                                                         DNI {{turno.paciente.documento}}
                                                     </span>
                                                     <span *ngIf="turno.paciente.documento === ''">
-                                                        Sin documento (temporal)
+                                                        {{ turno.paciente.numeroIdentificacion || 'Sin documento (temporal)'}}
                                                     </span>
                                                 </span>
                                                 <span
@@ -426,9 +426,8 @@
                                                         <br>
                                                         <span *ngIf="sobreturno.paciente.documento !== ''"> DNI
                                                             {{sobreturno.paciente.documento}}</span>
-                                                        <span *ngIf="sobreturno.paciente.documento === ''"> Sin
-                                                            documento
-                                                            (temporal)
+                                                        <span *ngIf="sobreturno.paciente.documento === ''">
+                                                            {{ sobreturno.paciente.numeroIdentificacion || 'Sin documento (temporal)'}}
                                                         </span>
                                                     </span>
                                                     <span
@@ -551,8 +550,8 @@
                                                 <span *ngIf="prestacion.paciente.documento !== ''">
                                                     DNI {{prestacion.paciente.documento|number}}
                                                 </span>
-                                                <span *ngIf="prestacion.paciente.documento === ''">
-                                                    Sin documento (temporal)
+                                                <span
+                                                      *ngIf="prestacion.paciente.documento === ''">{{ prestacion.paciente.numeroIdentificacion || 'Sin documento (temporal)'}}
                                                 </span>
                                             </span>
                                         </small>

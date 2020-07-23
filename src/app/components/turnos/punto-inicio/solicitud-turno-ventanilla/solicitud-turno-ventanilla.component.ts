@@ -30,6 +30,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
         let paciente = {
             id: this.paciente.id,
             documento: this.paciente.documento,
+            numeroIdentificacion: this.paciente.numeroIdentificacion,
             apellido: this.paciente.apellido,
             nombre: this.paciente.nombre,
             sexo: this.paciente.sexo,

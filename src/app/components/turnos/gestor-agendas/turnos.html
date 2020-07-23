@@ -229,7 +229,7 @@
                                 <span *ngIf="turno?.paciente?.id && turno.paciente.documento !== ''">
                                     <br>DNI {{ turno.paciente.documento }}</span>
                                 <span *ngIf="turno?.paciente?.id && turno.paciente.documento === ''">
-                                    <br>Sin documento (temporal)
+                                    <br>{{turno.paciente.numeroIdentificacion || 'Sin documento (temporal)'}}
                                 </span>
                                 <span *ngIf="turno.estado ==='asignado' && turno.paciente.carpetaEfectores">
                                     <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">
@@ -325,7 +325,7 @@
                             <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.documento !== ''">
                                 <br> DNI {{sobreturno.paciente.documento}}</span>
                             <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.documento === ''">
-                                <br> Sin documento</span>
+                                <br> {{sobreturno.paciente.numeroIdentificacion || 'Sin documento (temporal)'}}</span>
                             <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.carpetaEfectores?.length > 0">
                                 | Nro Carpeta
                                 <small> | </small>

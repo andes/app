@@ -10,8 +10,11 @@
                     (click)="onPacienteSelected(paciente)">
                     <td>
                         {{ paciente | nombre }}<br>
-                        <span *ngIf="paciente?.documento !== ''"><b>DNI: </b> {{paciente.documento}}</span>
-                        <span *ngIf="paciente?.documento === ''"><b>DNI: </b>N/D</span>
+                        <span *ngIf="paciente?.documento">{{paciente.documento}}</span>
+                        <ng-container *ngIf="!paciente?.documento">
+                            <span *ngIf="paciente?.numeroIdentificacion">{{paciente.numeroIdentificacion}}</span>
+                            <span *ngIf="!paciente?.numeroIdentificacion" class="text-danger">N/D</span>
+                        </ng-container>
                         <span *ngIf="paciente.fechaNacimiento !== null">
                             <span><b>| Fecha de Nac: </b>{{paciente.fechaNacimiento | fecha:'utc'}}</span>
                             <span *ngIf="paciente.fechaNacimiento === null"><b>| Fecha de Nac: </b>N/D</span>

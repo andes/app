@@ -308,11 +308,13 @@
                             <div class="col">
                                 <label>Paciente</label>
                                 <div *ngIf="paciente" class="text-ellipsis">{{this.paciente | nombre }}</div>
-                                <!-- <div *ngIf="paciente.documento !== ''">{{this.paciente.documento | number}}</div> -->
                                 <label>Turno</label>
                                 <div>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}} a las {{turno.horaInicio |
                                     date:'HH:mm'}}</div>
-                                <div *ngIf="paciente.documento === ''">Sin documento (temporal)</div>
+                                <div *ngIf="paciente?.documento">{{paciente.documento}}</div>
+                                <div *ngIf="!paciente?.documento">
+                                    {{paciente.numeroIdentificacion || 'Sin documento (temporal)'}}
+                                </div>
                             </div>
                             <div class="col">
                                 <div *ngIf="turno.tipoPrestacion">
@@ -343,7 +345,8 @@
                                 </ng-container>
                                 <plex-select *ngIf="desplegarOS" label="Obra Social" [(ngModel)]="obraSocialPaciente"
                                              name="obraSocialPaciente" (getData)="loadObrasSociales($event)"
-                                             labelField="financiador"></plex-select>
+                                             labelField="financiador">
+                                </plex-select>
                             </div>
                         </div>
                         <div class="row" *ngIf="desplegarOS && obraSocialPaciente">
@@ -355,7 +358,8 @@
                         <div class="row">
                             <div class="col">
                                 <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta"
-                                           [(ngModel)]="motivoConsulta"></plex-text>
+                                           [(ngModel)]="motivoConsulta">
+                                </plex-text>
                             </div>
                         </div>
                         <div class="row">
@@ -382,7 +386,8 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <plex-phone label="Celular" [(ngModel)]="telefono" (change)="cambiarTelefono()"
-                                                    name="telefono"></plex-phone>
+                                                    name="telefono">
+                                        </plex-phone>
                                     </div>
                                     <div class="col-6">
                                         <plex-text *ngIf="carpetaEfector" (change)="cambiarCarpeta()"

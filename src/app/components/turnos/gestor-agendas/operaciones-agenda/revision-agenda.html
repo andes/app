@@ -447,7 +447,8 @@
                                     </small>
                                     <small
                                            *ngIf="turno.paciente && turno.paciente.id && turno.paciente.documento === ''">
-                                        <span>| Sin documento (temporal)</span>
+                                        <span>|
+                                            {{turno.paciente.numeroIdentificacion || 'Sin documento (temporal)'}}</span>
                                     </small>
                                     <small>
                                         <span *ngIf="turno?.paciente?.carpetaEfectores?.length">
@@ -510,8 +511,10 @@
                                         <span
                                               *ngIf="sobreturno.paciente && sobreturno.paciente.id && sobreturno.paciente.documento !== ''">|
                                             DNI: {{ sobreturno.paciente.documento }}</span>
-                                        <span *ngIf="sobreturno.paciente && sobreturno.paciente.id && sobreturno.paciente.documento === ''"
-                                              class="text-danger">| DNI: Sin documento (temporal)</span>
+                                        <span
+                                              *ngIf="sobreturno.paciente && sobreturno.paciente.id && sobreturno.paciente.documento === ''">|
+                                            DNI:
+                                            {{sobreturno.paciente.numeroIdentificacion || 'Sin documento (temporal)'}}</span>
                                     </small>
                                     <small>
                                         <span *ngIf="sobreturno?.paciente?.carpetaEfectores?.length">

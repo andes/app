@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
-import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 import { Plex } from '@andes/plex';
-import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
 import { PaisService } from '../../../services/pais.service';
 import { LocalidadService } from '../../../services/localidad.service';
 import { ProvinciaService } from '../../../services/provincia.service';
@@ -19,6 +17,8 @@ import { OrganizacionService } from '../../../services/organizacion.service';
 import { Auth } from '@andes/auth';
 import { IOrganizacion } from '../../../interfaces/IOrganizacion';
 import { Router, ActivatedRoute } from '@angular/router';
+import { PacienteCacheService } from '../services/pacienteCache.service';
+import { HistorialBusquedaService } from '../services/historialBusqueda.service';
 
 @Component({
     selector: 'extranjero-nn-cru',
@@ -44,6 +44,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
     paisArgentina = null;
     provinciaActual = null;
     localidadActual = null;
+    localidadRequerida = true;
     organizacionActual = null;
     noPoseeContacto = false;
     contactosBackUp = [];
@@ -96,8 +97,8 @@ export class ExtranjeroNNCruComponent implements OnInit {
         sexo: undefined,
         genero: undefined,
         fechaNacimiento: null, // Fecha Nacimiento
-        tipoIdentificacion: '',
-        numeroIdentificacion: '',
+        tipoIdentificacion: null,
+        numeroIdentificacion: null,
         edad: null,
         edadReal: null,
         fechaFallecimiento: null,
@@ -113,14 +114,16 @@ export class ExtranjeroNNCruComponent implements OnInit {
         notaError: ''
     };
 
-    public pacientes: IPacienteMatch[] | IPaciente[];
+    paciente: IPaciente;
     changeRelaciones: boolean;
     verMapa = false; // boton
     geoReferenciaAux = []; // Se utiliza para chequear cambios.
     infoMarcador: String = null;
     origen = '';
+
     constructor(
         private organizacionService: OrganizacionService,
+        private historialBusquedaService: HistorialBusquedaService,
         private auth: Auth,
         private georeferenciaService: GeoreferenciaService,
         private location: Location,
@@ -129,6 +132,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
         private barriosService: BarrioService,
+        private pacienteCache: PacienteCacheService,
         private parentescoService: ParentescoService,
         private pacienteService: PacienteService,
         private _router: Router,
@@ -141,6 +145,8 @@ export class ExtranjeroNNCruComponent implements OnInit {
 
         this.route.params.subscribe(params => {
             this.origen = params['origen'];
+            this.paciente = this.pacienteCache.getPacienteValor();
+            this.pacienteCache.clearPaciente();
         });
 
         // Se cargan los parentescos para las relaciones
@@ -175,17 +181,8 @@ export class ExtranjeroNNCruComponent implements OnInit {
                 this.provinciaActual = org.direccion.ubicacion.provincia;
                 this.localidadActual = org.direccion.ubicacion.localidad;
                 setTimeout(() => {
-                    if (org.direccion.geoReferencia) {
-                        this.geoReferenciaAux = org.direccion.geoReferencia;
-                    } else {
-                        let direccionCompleta = org.direccion.valor + ', ' + this.localidadActual.nombre + ', ' + this.provinciaActual.nombre;
-                        this.georeferenciaService.getGeoreferencia({ direccion: direccionCompleta }).subscribe(point => {
-                            if (point) {
-                                this.geoReferenciaAux = [point.lat, point.lng];
-                            }
-                        });
-                    }
-                }, 1000);
+                    this.loadPaciente();
+                }, 0);
             }
         });
     }
@@ -202,6 +199,45 @@ export class ExtranjeroNNCruComponent implements OnInit {
 
 
     // ---------------- PACIENTE -----------------------
+
+    private loadPaciente() {
+        if (this.paciente) {
+            this.historialBusquedaService.add(this.paciente);
+            if (!this.paciente.contacto || !this.paciente.contacto.length) {
+                // Si no tiene contacto o esta vacia, se le asigna el arreglo con el schema default
+                this.paciente.contacto = [this.contacto];
+            }
+            if (!this.paciente.direccion || !this.paciente.direccion.length) {
+                // Si no tiene dirección o esta vacia, se le asigna el arreglo con el schema default
+                this.paciente.direccion = [this.direccion];
+            } else {
+                if (this.paciente.direccion[0].ubicacion) {
+                    if (this.paciente.direccion[0].ubicacion.provincia) {
+                        if (this.provinciaActual) {
+                            (this.paciente.direccion[0].ubicacion.provincia.nombre === this.provinciaActual.nombre) ? this.viveProvActual = true : this.viveProvActual = false;
+                        }
+                        this.loadLocalidades(this.paciente.direccion[0].ubicacion.provincia);
+                    }
+                    if (this.paciente.direccion[0].ubicacion.localidad) {
+                        if (this.localidadActual) {
+                            (this.paciente.direccion[0].ubicacion.localidad.nombre === this.localidadActual.nombre) ? this.viveLocActual = true : (this.viveLocActual = false, this.barrios = null);
+                        }
+                        this.loadBarrios(this.paciente.direccion[0].ubicacion.localidad);
+                    }
+                }
+            }
+
+            this.pacienteModel = Object.assign({}, this.paciente);
+            if (this.pacienteModel.fechaNacimiento) {
+                this.pacienteModel.fechaNacimiento = moment(this.pacienteModel.fechaNacimiento).add(3, 'h').toDate(); // mers alert
+            }
+            this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
+            this.inicializarMapaDefault();
+
+        } else {
+            this.inicializarMapaDefault();
+        }
+    }
 
 
     isEmptyObject(obj) {
@@ -279,13 +315,37 @@ export class ExtranjeroNNCruComponent implements OnInit {
     }
 
     loadLocalidades(provincia) {
+        this.localidadRequerida = false;
         if (provincia && provincia.id) {
             if (provincia.id === this.provinciaActual.id) {
                 this.viveProvActual = true;
             }
             this.localidadService.getXProvincia(provincia.id).subscribe(result => {
                 this.localidades = result;
+                if (this.localidades && this.localidades.length) {
+                    this.localidadRequerida = true;
+                }
+
             });
+        }
+    }
+
+    inicializarMapaDefault() {
+        // ubicacion inicial mapa de google
+        if (this.pacienteModel.direccion[0].geoReferencia) {
+            this.geoReferenciaAux = this.pacienteModel.direccion[0].geoReferencia;
+            this.infoMarcador = null;
+        } else {
+            if (this.organizacionActual.direccion.geoReferencia) {
+                this.geoReferenciaAux = this.organizacionActual.direccion.geoReferencia;
+            } else {
+                let direccionCompleta = this.organizacionActual.direccion.valor + ', ' + this.localidadActual.nombre + ', ' + this.provinciaActual.nombre;
+                this.georeferenciaService.getGeoreferencia({ direccion: direccionCompleta }).subscribe(point => {
+                    if (point) {
+                        this.geoReferenciaAux = [point.lat, point.lng];
+                    }
+                });
+            }
         }
     }
 
@@ -423,7 +483,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
         } else {
             this.disableGuardar = true;
             let pacienteGuardar: any = Object.assign({}, this.pacienteModel);
-            pacienteGuardar.tipoIdentificacion = ((typeof this.pacienteModel.tipoIdentificacion === 'string')) ? this.pacienteModel.tipoIdentificacion : (Object(this.pacienteModel.tipoIdentificacion).id);
+            pacienteGuardar.tipoIdentificacion = Object(this.pacienteModel.tipoIdentificacion).id;
             pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
             pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : null;
             pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : pacienteGuardar.sexo;
@@ -443,6 +503,7 @@ export class ExtranjeroNNCruComponent implements OnInit {
                     if (this.changeRelaciones) {
                         this.saveRelaciones(resultadoSave);
                     }
+                    this.historialBusquedaService.add(resultadoSave);
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
                     this.redirect(resultadoSave);
                 },

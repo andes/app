@@ -8,7 +8,8 @@
                 <label>Paciente</label> {{ modelo.paciente | nombre }}
                 <span>Documento:
                     <span *ngIf="modelo.paciente.documento !== ''">{{ modelo.paciente.documento }}</span>
-                    <span *ngIf="modelo.paciente.documento === ''" class="text-danger">Sin documento</span>
+                    <span
+                          *ngIf="modelo.paciente.documento === ''">{{ modelo.paciente.numeroIdentificacion || 'Sin documento' }}</span>
                 </span>
                 <span>Fecha de nacimiento
                     <span *ngIf="modelo.paciente.fechaNacimiento !== null">{{ modelo.paciente.fechaNacimiento |
