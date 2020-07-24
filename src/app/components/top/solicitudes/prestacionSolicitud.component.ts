@@ -47,7 +47,7 @@ export class PrestacionSolicitudComponent implements OnInit {
     }
 
     confirmarPrestacion() {
-        this.returnPrestacion.emit({ status: false, fecha: this.fecha, prestacionSeleccionada: this.prestacionSeleccionada });
+        this.returnPrestacion.emit({ status: false, fecha: this.fecha });
     }
 
     esImagen(extension) {
