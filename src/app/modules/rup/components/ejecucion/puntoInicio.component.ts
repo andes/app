@@ -629,7 +629,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         let params: any = {
             op: 'estadoPush',
             ejecucion: {
-                fecha: turno.horaInicio,
                 registros: [],
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
