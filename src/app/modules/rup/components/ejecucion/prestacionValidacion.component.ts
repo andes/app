@@ -1,4 +1,3 @@
-import { IDireccion } from './../../../../core/mpi/interfaces/IDireccion';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { SnomedService } from '../../../../apps/mitos';
 import { Component, OnInit, Output, EventEmitter, HostBinding, ViewEncapsulation, OnDestroy } from '@angular/core';
@@ -8,11 +7,10 @@ import { Plex } from '@andes/plex';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { DocumentosService } from './../../../../services/documentos.service';
 import { CodificacionService } from '../../services/codificacion.service';
 import { HeaderPacienteComponent } from '../../../../components/paciente/headerPaciente.component';
 import { ReglaService } from '../../../../services/top/reglas.service';
-import { forkJoin, of, merge, combineLatest, Subscription } from 'rxjs';
+import { forkJoin, of, combineLatest, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HUDSService } from '../../services/huds.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
@@ -34,22 +32,12 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     elementoRUP: any;
     @HostBinding('class.plex-layout') layout = true;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
-
-    // Tiene permisos para descargar?
-
-
-    // Id de la Agenda desde localStorage (revisar si aun hace falta)
-    public idAgenda: any;
-
     // Orden en que se muestran los registros
     public ordenSeleccionado: string;
     public tipoOrden: any[] = null;
-
     // Prestación actual en Ejecución
     public prestacion: any;
-
     public registrosOriginales: any;
-
     // Paciente MPI
     public paciente;
     // Array de elementos RUP que se pueden ejecutar
@@ -60,31 +48,22 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     public showModalEmails = false;
     // Mostrar datos de la Solicitud "padre"?
     public showDatosSolicitud = false;
-
     // Datos de la Solicitud que se usará para dar un turno
     public solicitudTurno;
-
     // Si la Prestación está Validada ya no se podrá cambiar el motivo principal de la consulta
     public motivoReadOnly = false;
-
     // Array con los mapeos de snomed a cie10
     public codigosCie10 = {};
-
     // Array con los planes autocitados para dar turno
     public prestacionesAgendas = [];
-
     // Array con los Planes que se van a guardar en los turnos
     public asignarTurno = [];
-
     // Array para armar árbol de relaciones
     public relaciones: any[];
-
     // Array que guarda el árbol de relaciones
     public registrosOrdenados: any[] = [];
-
     // Orden de los registros en pantalla
     public ordenRegistros: any = '';
-
     // Array con opciones para indicar si es primera vez
     public opcionDiagnosticoPrincipal = [
         { id: true, label: 'Si' },
@@ -107,7 +86,6 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         public plex: Plex, public auth: Auth, private router: Router,
         public servicioAgenda: AgendaService,
         private route: ActivatedRoute,
-        private servicioDocumentos: DocumentosService,
         private codificacionService: CodificacionService,
         public servicioReglas: ReglaService,
         public huds: HUDSService,
@@ -127,7 +105,6 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     ngOnInit() {
         // consultamos desde que pagina se ingreso para poder volver a la misma
         this.btnVolver = 'Volver';
-
         this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
             if (resp) {
                 this.btnVolver = resp.nombre;
@@ -137,22 +114,17 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
         const permisosAmbulatorio = this.auth.getPermissions('rup:?').length > 0;
         const permisosInternacion = this.auth.getPermissions('internacion:rol:?').length > 0;
-        if (!(permisosAmbulatorio || permisosInternacion)) {
-            this.redirect('inicio');
-        }
-        if (!this.auth.profesional) {
+        if (!(permisosAmbulatorio || permisosInternacion) || !this.auth.profesional) {
             this.redirect('inicio');
         }
 
         this.route.params.subscribe(params => {
             let id = params['id'];
-            this.idAgenda = localStorage.getItem('agenda');
             this.elementosRUPService.ready.subscribe((resultado) => {
                 if (resultado) {
                     this.inicializar(id);
                 }
             });
-
         });
     }
 
@@ -170,7 +142,6 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     private prestacionSubscription: Subscription;
 
     inicializar(id) {
-
         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
         this.prestacionSubscription = combineLatest(
             this.conceptosTurneablesService.getAll(),
@@ -178,7 +149,6 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         ).subscribe(([conceptosTurneables, prestacion]) => {
             this.conceptosTurneables = conceptosTurneables;
             this.prestacion = prestacion;
-
             this.registrosOriginales = prestacion.ejecucion.registros;
             this.plex.updateTitle([{
                 route: '/',
@@ -189,9 +159,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
             }, {
                 name: this.prestacion && this.prestacion.solicitud.tipoPrestacion.term ? this.prestacion.solicitud.tipoPrestacion.term : ''
             }]);
-
             this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
-
             // Busca el elementoRUP que implementa esta prestación
             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
             // Si el elemento no indica si requiere diagnostico principal, lo setea en true por defecto
@@ -298,7 +266,6 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
 
             this.defualtDiagnosticoPrestacion();
             this.registrosOrdenados = this.prestacion.ejecucion.registros;
-
         });
     }
 
@@ -372,18 +339,8 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
                         }
                     };
                     this.prestacion.ejecucion.registros.forEach((r) => recorrerRegistros(r));
-
                     this.motivoReadOnly = true;
-                    if (this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
-                        if (localStorage.idAgenda) {
-                            let dto = {
-                                estado: 'auditada',
-                                op: 'auditada'
-                            };
-                            // si la prestacion corresponde a una agenda no nominalizada, esta se audita una vez validada la prestacion
-                            this.servicioAgenda.patch(localStorage.idAgenda, dto).subscribe();
-                        }
-                    } else {
+                    if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
                         this.servicioPrestacion.clearConceptosPaciente(this.paciente.id);
 
                         // actualizamos las prestaciones de la HUDS
@@ -497,13 +454,6 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
             }
         }
         this.router.navigate([ruteo]);
-        // this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Volver al ' + mensaje + '?').then(confirmado => {
-        //     if (confirmado) {
-        //         this.router.navigate([ruteo]);
-        //     } else {
-        //         return;
-        //     }
-        // });
     }
 
     darTurno(prestacionSolicitud) {
@@ -571,7 +521,6 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         return this;
     }
 
-
     hayRegistros(tipos: any[], tipo: any = null) {
         if (!tipo) {
             return this.prestacion.ejecucion.registros.filter(x => {
@@ -606,7 +555,6 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         }
     }
 
-
     public reemplazar(arr, glue) {
         return arr.join(glue);
     }
@@ -631,9 +579,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     }
 
     ordenarPorTipo(tipos: any[]) {
-
         this.ordenSeleccionado = tipos.join(',');
-
         if (this.tipoOrden === tipos) {
             return 0;
         } else {
