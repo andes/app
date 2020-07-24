@@ -1,6 +1,6 @@
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
-import { Component, OnInit, Output, Input, EventEmitter, SimpleChanges, OnChanges, Renderer2, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, SimpleChanges, OnChanges, Renderer2, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { FrecuentesProfesionalService } from '../../services/frecuentesProfesional.service';
 import { Auth } from '@andes/auth';
@@ -9,6 +9,7 @@ import { ElementosRUPService } from '../../services/elementosRUP.service';
 import { ISnomedSearchResult } from './../../interfaces/snomedSearchResult.interface';
 import { SnomedBuscarService } from '../../../../components/snomed/snomed-buscar.service';
 import { gtag } from '../../../../shared/services/analytics.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'rup-buscador',
@@ -34,8 +35,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
 
     // TODO Ver si lo dejamos asi
     public _dragScope = ['registros-rup', 'vincular-registros-rup'];
-
-    public conceptosTurneables: any[];
 
     public conceptos = {
         hallazgos: ['hallazgo', 'situación', 'evento'],
@@ -70,12 +69,12 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
     secciones: any;
 
     constructor(
-        public servicioTipoPrestacion: TipoPrestacionService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
         private auth: Auth,
         public servicioPrestacion: PrestacionesService,
         private buscadorService: SnomedBuscarService,
-        public renderer: Renderer2
+        public renderer: Renderer2,
+        private cd: ChangeDetectorRef
     ) {
     }
 
@@ -87,26 +86,28 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
         // inicializamos el filtro actual para los hallazgos
         // this.ultimoTipoBusqueda = this.busquedaActual;
         // Se inicializa el buscador básico, principal
-        await this.inicializarBuscadorBasico();
+        this.inicializarBuscadorBasico();
 
     }
 
     inicializarBuscadorBasico() {
-        this.servicioTipoPrestacion.get({}).subscribe(async conceptosTurneables => {
-            this.conceptosTurneables = conceptosTurneables;
-            if (this.frecuentesTipoPrestacion.length > 0) {
-                this.results.sugeridos['todos'] = [];
-                this.frecuentesTipoPrestacion.forEach(element => {
-                    if (this.results.sugeridos['todos'].indexOf(element) === -1) {
-                        this.results.sugeridos['todos'].push(element);
-                    }
-                });
-                // filtramos los resultados
-                this.filtrarResultados('sugeridos');
-                this.resultsAux.sugeridos = Object.assign({}, this.results.sugeridos);
-            }
 
-            let fp = await this.inicializarFrecuentesProfesional();
+        if (this.frecuentesTipoPrestacion.length > 0) {
+            this.results.sugeridos['todos'] = [];
+            this.frecuentesTipoPrestacion.forEach(element => {
+                if (this.results.sugeridos['todos'].indexOf(element) === -1) {
+                    this.results.sugeridos['todos'].push(element);
+                }
+            });
+            // filtramos los resultados
+            this.filtrarResultados('sugeridos');
+            this.resultsAux.sugeridos = Object.assign({}, this.results.sugeridos);
+        }
+
+        forkJoin(
+            this.inicializarFrecuentesProfesional(),
+            this.inicializarFrecuentesTP()
+        ).subscribe(([fp, frecuentesTP]) => {
             if (fp && fp.length) {
                 const frecuentesProfesional = fp.map((res: any) => {
                     let concepto = res.concepto;
@@ -122,7 +123,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
                 this.results['misFrecuentes']['todos'] = [];
             }
 
-            let frecuentesTP = await this.inicializarFrecuentesTP();
 
             this.results['frecuentesTP']['todos'] = frecuentesTP.map(res => {
                 let concepto = res.concepto;
@@ -144,6 +144,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
 
             // inicializamos el filtro actual para los hallazgos
             this.filtroActual = 'todos';
+
         });
 
     }
@@ -154,7 +155,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
             'tipoPrestacion': this.conceptoFrecuente.conceptId,
             'idOrganizacion': this.auth.organizacion.id,
         };
-        return this.frecuentesProfesionalService.get(queryFP).toPromise();
+        return this.frecuentesProfesionalService.get(queryFP);
     }
 
 
@@ -162,7 +163,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
         let queryFTP = {
             'tipoPrestacion': this.prestacion.solicitud.tipoPrestacion.conceptId
         };
-        return this.frecuentesProfesionalService.getXPrestacion(queryFTP).toPromise();
+        return this.frecuentesProfesionalService.getXPrestacion(queryFTP);
     }
 
     /**
@@ -201,6 +202,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
             this.setTipoBusqueda(this.busquedaActual);
             this.busquedaPorConcepto = false;
         }
+        this.cd.detectChanges();
     }
 
     /**
