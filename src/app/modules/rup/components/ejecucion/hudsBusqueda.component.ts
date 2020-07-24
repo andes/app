@@ -6,6 +6,7 @@ import { Auth } from '@andes/auth';
 import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 
 import { HUDSService } from '../../services/huds.service';
+import { gtag } from '../../../../shared/services/analytics.service';
 @Component({
     selector: 'rup-hudsBusqueda',
     templateUrl: 'hudsBusqueda.html',
@@ -203,9 +204,10 @@ export class HudsBusquedaComponent implements AfterContentInit {
         this.evtData.emit(resultado);
     }
 
-    emitTabs(registro, tipo) {
+    emitTabs(registro, tipo, index: number) {
         switch (tipo) {
             case 'concepto':
+                gtag('huds-open', tipo, registro.concepto.term, index);
                 registro.class = this.servicioPrestacion.getCssClass(registro.concepto, null);
                 if (registro.esSolicitud) {
                     registro.tipo = 'solicitud';
@@ -213,6 +215,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
                 }
                 break;
             case 'rup':
+                gtag('huds-open', tipo, registro.prestacion.term, index);
                 registro = registro.data;
                 if (registro.ejecucion.registros) {
                     registro.ejecucion.registros.forEach(reg => {
@@ -227,10 +230,12 @@ export class HudsBusquedaComponent implements AfterContentInit {
                 }
                 break;
             case 'cda':
+                gtag('huds-open', tipo, registro.prestacion.term, index);
                 registro = registro.data;
                 registro.class = 'plan';
                 break;
             case 'solicitud':
+                gtag('huds-open', tipo, registro.solicitud.registros[0].concepto.term, index);
                 registro.tipo = 'solicitud';
                 registro.class = 'plan';
                 break;
@@ -421,7 +426,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
         this.filtrar();
     }
 
-    clickSolicitud(registro) {
-        this.emitTabs(registro, (registro.evoluciones ? 'concepto' : 'solicitud'));
+    clickSolicitud(registro, index) {
+        this.emitTabs(registro, (registro.evoluciones ? 'concepto' : 'solicitud'), index);
     }
 }

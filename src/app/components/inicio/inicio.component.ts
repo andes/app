@@ -6,6 +6,7 @@ import { Auth } from '@andes/auth';
 import { AppComponent } from './../../app.component';
 import { LABELS } from '../../styles/properties';
 import { Router, ActivatedRoute } from '@angular/router';
+import { setDimension } from '../../shared/services/analytics.service';
 
 @Component({
     templateUrl: 'inicio.html',
@@ -20,13 +21,21 @@ export class InicioComponent implements AfterViewInit {
     public cajasModulos: any = [];
     public novedades: any[] = [];
 
-    constructor(public auth: Auth, public appComponent: AppComponent, private plex: Plex,
+    constructor(
+        public auth: Auth,
+        public appComponent: AppComponent,
+        private plex: Plex,
         private commonNovedadesService: CommonNovedadesService,
         private modulosService: ModulosService,
         private route: ActivatedRoute,
-        private router: Router) { }
+        private router: Router
+    ) { }
 
     ngAfterViewInit() {
+        if (this.auth.profesional) {
+            // Google Analytics
+            setDimension('profesional', this.auth.profesional);
+        }
         window.setTimeout(() => {
             this.loading = true;
             this.appComponent.getModulos().subscribe(
