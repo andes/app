@@ -1,16 +1,33 @@
 <!-- Este es un elemento RUP -->
 
 <!-- Moléculas -->
-<ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
+<ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length && !elementoRUP.params.filter">
     <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
         <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
             <div *ngIf="item.elementoRUP"
-                 class="col-{{ item.style.columns }} mr-{{ item.style?.offset ? item.style.offset : '0' }}">
-                <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
-                     [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="soloValores"
-                     (change)="emitChange($event)">
-                </rup>
+                 class="col-{{ item.style.columns }} mr-{{ item.style?.offset ? item.style.offset : '0' }}">              
+                    <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
+                        [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="soloValores"
+                        (change)="emitChange($event)">
+                    </rup>
             </div>
         </ng-container>
     </div>
+</ng-container>
+
+<ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length && elementoRUP.params.filter">
+    <ng-container *ngIf="elementoRUP.params.filter === 'sexo'">
+        <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
+            <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
+                <ng-container *ngIf="item.params && (item.params.sexo === sexo || item.params.sexo === 'todos')">
+                    <div *ngIf="item.elementoRUP" class="col-{{ item.style.columns }} mr-{{ item.style?.offset ? item.style.offset : '0' }}">              
+                       <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params"
+                           [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="soloValores"
+                           (change)="emitChange($event)">
+                       </rup>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+    </ng-container>
 </ng-container>
