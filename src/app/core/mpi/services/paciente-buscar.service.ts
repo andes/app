@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { PacienteHttpService } from '../services/pacienteHttp.service';
 import { map, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { PacienteService } from './paciente.service';
@@ -15,7 +14,7 @@ export interface PacienteEscaneado {
 
 @Injectable()
 export class PacienteBuscarService {
-    constructor(/*private pacienteHttp: PacienteHttpService*/
+    constructor(
         private pacienteService: PacienteService) { }
 
     /**
@@ -27,13 +26,9 @@ export class PacienteBuscarService {
         for (let key in DocumentoEscaneados) {
             if (DocumentoEscaneados[key].regEx.test(textoLibre)) {
                 // Loggea el documento escaneado para análisis
-                // this.logService.post('mpi', 'scan', { data: textoLibre }).subscribe(() => { });
                 return this.parseDocumentoEscaneado(textoLibre, DocumentoEscaneados[key]);
             }
         }
-        // if (textoLibre.length > 30) {
-        // this.logService.post('mpi', 'scanFail', { data: textoLibre }).subscribe(() => { });
-        // }
         return null;
     }
 
@@ -69,12 +64,6 @@ export class PacienteBuscarService {
     public findByScan(pacienteEscaneado: PacienteEscaneado) {
         const textoLibre = pacienteEscaneado.scan;
         // 1. Busca por documento escaneado (simplequery)
-        // return this.pacienteHttp.get({
-        //     apellido: pacienteEscaneado.apellido,
-        //     nombre: pacienteEscaneado.nombre,
-        //     documento: pacienteEscaneado.documento,
-        //     sexo: pacienteEscaneado.sexo,
-        //     activo: true
         return this.pacienteService.getMatch({
             type: 'simplequery',
             apellido: pacienteEscaneado.apellido,
@@ -91,7 +80,6 @@ export class PacienteBuscarService {
                 if (resultado) { return of(resultado); }
 
                 // 1.3. Si no encontró el paciente escaneado, busca uno similar
-                // return this.pacienteHttp.match({
                 return this.pacienteService.getMatch({
                     type: 'suggest',
                     apellido: pacienteEscaneado.apellido,
@@ -111,7 +99,6 @@ export class PacienteBuscarService {
                             return { escaneado: true, pacientes: [candidato], err: null };
                         } else {
                             // 1.3.3. Busca uno con un porcentaje alto de matcheo
-                            // if (resultadoSuggest[0]._score >= 0.94) {
                             if (resultadoSuggest[0].match >= 0.94) {
                                 if (resultadoSuggest[0].estado === 'validado') {
                                     return { pacientes: [resultadoSuggest[0]], err: null };

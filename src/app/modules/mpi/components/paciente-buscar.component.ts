@@ -50,7 +50,6 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
 
     constructor(
         private plex: Plex,
-        // private pacienteHttp: PacienteHttpService,
         private pacienteService: PacienteService,
         private pacienteBuscar: PacienteBuscarService) {
     }
@@ -111,7 +110,6 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
         }
 
         if (this.scrolling) {
-            // this.searchSubscription = this.pacienteHttp.match({
             this.searchSubscription = this.pacienteService.getMatch({
                 type: 'multimatch',
                 cadenaInput: textoLibre,
@@ -131,7 +129,6 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                 (err) => this.searchEnd.emit({ pacientes: [], err: err })
             );
         } else {
-            // this.searchSubscription = this.pacienteHttp.match({
             this.searchSubscription = this.pacienteService.getMatch({
                 type: 'multimatch',
                 cadenaInput: textoLibre

@@ -1,6 +1,5 @@
 import { OnInit, Component, Input, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
 import { IPaciente } from '../interfaces/IPaciente';
-import { PacienteHttpService } from '../services/pacienteHttp.service';
 import * as enumerados from '../../../utils/enumerados';
 import { Plex } from '@andes/plex';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
@@ -62,11 +61,9 @@ export class DatosBasicosComponent implements OnInit, OnDestroy {
 
     constructor(
         private plex: Plex,
-        // private pacienteHttpService: PacienteHttpService,
         private pacienteService: PacienteService,
         private parentescoService: ParentescoService
     ) {
-        // this.nombrePattern = pacienteHttpService.nombreRegEx.source;
         this.nombrePattern = pacienteService.nombreRegEx.source;
     }
 
@@ -157,7 +154,6 @@ export class DatosBasicosComponent implements OnInit, OnDestroy {
     onPacienteSelected(pacienteSelected: IPaciente) {
         this.searchClear = true;
         if (pacienteSelected) {
-            // this.pacienteHttpService.findById(pacienteSelected.id, { activo: true }).subscribe(paciente => {
             this.pacienteService.getById(pacienteSelected.id).subscribe(paciente => {
                 // Relacionamos al bebe con su progenitor/a
                 this.relacionBebe.apellido = paciente.apellido;

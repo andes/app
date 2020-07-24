@@ -11,7 +11,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { HistorialBusquedaService } from '../services/historialBusqueda.service';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 import { Subscription } from 'rxjs';
-import { PacienteHttpService } from '../services/pacienteHttp.service';
 import { RelacionesPacientesComponent } from './relaciones-pacientes.component';
 import { DatosContactoComponent } from './datos-contacto.component';
 
@@ -121,7 +120,6 @@ export class PacienteComponent implements OnInit {
     constructor(
         private historialBusquedaService: HistorialBusquedaService,
         private pacienteService: PacienteService,
-        //     private pacienteHttpService: PacienteHttpService,
         private parentescoService: ParentescoService,
         private pacienteCache: PacienteCacheService,
         private _router: Router,

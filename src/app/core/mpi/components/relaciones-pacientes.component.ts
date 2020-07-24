@@ -9,7 +9,6 @@ import {
 import { Plex } from '@andes/plex';
 import { ParentescoService } from '../../../services/parentesco.service';
 import { IPaciente } from '../interfaces/IPaciente';
-import { PacienteHttpService } from '../services/pacienteHttp.service';
 import { PacienteService } from '../services/paciente.service';
 
 @Component({
@@ -50,7 +49,6 @@ export class RelacionesPacientesComponent implements OnInit {
 
     constructor(
         private parentescoService: ParentescoService,
-        // private pacienteHttpService: PacienteHttpService,
         private pacienteService: PacienteService,
         public plex: Plex) { }
 
@@ -99,7 +97,6 @@ export class RelacionesPacientesComponent implements OnInit {
 
     seleccionarRelacionEntrante(paciente) {
         if (paciente.id) {
-            // this.pacienteHttpService.findById(paciente.id, { activo: true }).subscribe(pac => {
             this.pacienteService.getById(paciente.id).subscribe(pac => {
                 this.relacionEntrante = [pac];
                 this.onSearchClear();

@@ -58,7 +58,6 @@ import { LocalidadService } from './services/localidad.service';
 import { PaisService } from './services/pais.service';
 import { PacienteService } from './core/mpi/services/paciente.service';
 import { PacienteBuscarService } from './core/mpi/services/paciente-buscar.service';
-import { PacienteHttpService } from './core/mpi/services/pacienteHttp.service';
 import { TipoEstablecimientoService } from './services/tipoEstablecimiento.service';
 import { ProvinciaService } from './services/provincia.service';
 import { FinanciadorService } from './services/financiador.service';
@@ -523,7 +522,6 @@ registerLocaleData(localeEs, 'es');
         BarrioService,
         PacienteService,
         PacienteBuscarService,
-        PacienteHttpService,
         FinanciadorService,
         ParentescoService,
         appRoutingProviders,
