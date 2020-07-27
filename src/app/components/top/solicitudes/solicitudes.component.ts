@@ -133,7 +133,6 @@ export class SolicitudesComponent implements OnInit {
             this.fechaHasta = null;
             this.estadoEntrada = { id: 'asignada', nombre: 'ASIGNADA' };
         }
-        this.cargarSolicitudes();
     }
 
     loadOrganizacion(event) {
