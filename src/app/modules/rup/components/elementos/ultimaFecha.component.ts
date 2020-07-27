@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from '../core/rup.component';
 import { RupElement } from '.';
-import { isNullOrUndefined } from 'util';
+
 @Component({
     selector: 'rup-ultima-fecha',
     templateUrl: 'ultimaFecha.html'
@@ -9,9 +9,7 @@ import { isNullOrUndefined } from 'util';
 @RupElement('UltimaFechaComponent')
 export class UltimaFechaComponent extends RUPComponent implements OnInit {
     public alerta: any;
-    consultasValidadas: any;
     ultimaConsulta: any;
-    ultimaConsultaIndex: number;
     validacion = false;
     min = new Date();
     max = new Date();
@@ -36,45 +34,28 @@ export class UltimaFechaComponent extends RUPComponent implements OnInit {
                 this.validacion = urlParts[1].path === 'validacion';
             }
         });
-        this.registro.valido = true;
-        let params: any = {
-            idPaciente: this.paciente.id,
-            ordenFecha: true,
-            estado: 'validada'
-        };
-        this.ultimaConsultaIndex = 0;
 
-        // Nos aseguramos que NO estamos en la pantalla de Validación/Resumen
-
+        this.calculaTiempo();
         if (!this.validacion && !this.soloValores && !this.registro.valor) {
+            const query = (this.params && this.params.query) || this.registro.concepto.conceptId;
+            this.prestacionesService.getRegistrosHuds(this.paciente.id, query).subscribe((prestaciones: any[]) => {
 
-            // Se busca en la HUDS si hay prestaciones con valores ya cargados
-            this.prestacionesService.get(params).subscribe(consultasPaciente => {
+                prestaciones = prestaciones.sort((a, b) => {
+                    let dateA = a.fecha.getTime();
+                    let dateB = b.fecha.getTime();
+                    return dateA <= dateB ? 1 : -1;
+                });
+                if (prestaciones.length > 0) {
+                    const valor = prestaciones[0].registro.valor;
+                    if (valor && valor.toUTCString) { // Para chequear que sea una Date
+                        this.registro.valor = this.min = valor;
 
-                // Se da vuelta el array, para que quede el último registro en la última posición del array (length - 1)
-                this.consultasValidadas = consultasPaciente;
-
-                // Hay registros anteriores en la HUDS?
-                if (this.consultasValidadas && this.consultasValidadas.length > 0) {
-
-                    // Se busca la ultima consulta en la que hubo registro
-                    while (this.ultimaConsultaIndex < this.consultasValidadas.length && !this.ultimaConsulta) {
-                        this.ultimaConsulta = this.consultasValidadas[this.ultimaConsultaIndex].ejecucion.registros.find(x =>
-                            x.concepto.conceptId === this.registro.concepto.conceptId);
-
-                        this.ultimaConsultaIndex++;
+                    } else {
+                        this.registro.valor = this.min = prestaciones[0].fecha;
                     }
-
-                    // Si se encontro consulta se guardan registros
-                    if (this.ultimaConsulta ) {
-                        this.registro.valor = this.ultimaConsulta.valor;
-                        this.calculaTiempo();
-                        this.min = this.registro.valor;
-                    }
-
+                    this.calculaTiempo();
                 }
             });
-
         }
     }
 
