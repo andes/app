@@ -6,7 +6,6 @@
             <plex-button position="right" class="float-right mr-1" type="success" label="Guardar"
                          (click)="guardarSolicitud($event)" [validateForm]="form"> </plex-button>
         </plex-title>
-
         <form #form="ngForm">
             <div class="row">
                 <div *ngIf="showSeleccionarPaciente" class="col-12">
@@ -35,192 +34,136 @@
                     <!-- ------------------------------------------------ -->
                 </div>
             </div>
-
-            <!-- Fecha Solicitud -->
-            <div class="row">
-                <div class="col-6" *ngIf=" !showSeleccionarPaciente" [plexWizard]="0">
-                    <plex-datetime type="date" [(ngModel)]="modelo.solicitud.fecha" name="fechaSolicitud"
-                                   label="Fecha en que el profesional solicitó la prestación" [required]="true">
-                    </plex-datetime>
-                </div>
-            </div>
-
             <!-- SOLICITUD ENTRADA -->
-
-            <ng-container *ngIf=" !showSeleccionarPaciente && tipoSolicitud == 'entrada'">
-                <!-- Autocitado? -->
-                <div class="row">
-                    <div class="col d-flex">
-                        <plex-bool class="align-self-center" [(ngModel)]="autocitado" label="Autocitado"
-                                   name="autocitado">
-                        </plex-bool>
-                    </div>
-                </div>
-                <!-- Tipo Prestación Destino -->
-                <div class="row">
-                    <div class="col">
-                        <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" name="tipoPrestacionDestino"
-                                     (getData)="loadTipoPrestaciones($event)" label="Tipo de Prestación Solicitada"
-                                     placeholder="Tipos de Prestación solicitada" [required]="true"
-                                     (change)="onSelectPrestacionOrigen()">
+            <ng-container *ngIf="!showSeleccionarPaciente && tipoSolicitud == 'entrada'">
+                <plex-wrapper>
+                    <plex-datetime [plexWizard]="0" type="date" [(ngModel)]="modelo.solicitud.fecha"
+                                   name="fechaSolicitud" label="Fecha de solicitud" [required]="true">
+                    </plex-datetime>
+                    <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" name="tipoPrestacionDestino"
+                                 (getData)="loadTipoPrestaciones($event)" label="Tipo de Prestación Solicitada"
+                                 placeholder="Tipos de Prestación solicitada" [required]="true"
+                                 (change)="onSelectPrestacionOrigen()">
+                    </plex-select>
+                    <plex-select [plexWizard]="0" *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.organizacionOrigen"
+                                 name="organizacionOrigen" [data]="dataOrganizacionesOrigen" label="Organización origen"
+                                 placeholder="Seleccione la organización" labelField="nombre"
+                                 (change)="onSelectOrganizacionOrigen(); checkProfesional()" [required]="true">
+                    </plex-select>
+                </plex-wrapper>
+                <plex-grid type="full" cols="4">
+                    <plex-bool [(ngModel)]="autocitado" label="Autocitado" grow="1" name="autocitado">
+                    </plex-bool>
+                </plex-grid>
+                <plex-grid type="full" cols="2">
+                    <plex-wrapper>
+                        <plex-select *ngIf="!autocitado" [(ngModel)]="prestacionOrigen"
+                                     [data]="dataTipoPrestacionesOrigen" name="tipoPrestacion" (change)="onSelect()"
+                                     label="Tipos de Prestación Origen" placeholder="Tipos de Prestación Origen"
+                                     [required]="true" grow="full">
                         </plex-select>
-                    </div>
-                </div>
-                <!-- Organización Origen -->
-                <div class="row">
-                    <div class="col" *ngIf="!autocitado">
-                        <plex-select [(ngModel)]="modelo.solicitud.organizacionOrigen" name="organizacionOrigen"
-                                     [data]="dataOrganizacionesOrigen" label="Organización origen"
-                                     placeholder="Seleccione la organización" labelField="nombre"
-                                     (change)="onSelectOrganizacionOrigen(); checkProfesional()" [required]="true">
-                        </plex-select>
-                    </div>
-                </div>
-                <!-- Tipo Prestación Origen -->
-                <div class="row">
-                    <div class="col" *ngIf="!autocitado">
-                        <plex-select [(ngModel)]="prestacionOrigen" [data]="dataTipoPrestacionesOrigen"
-                                     name="tipoPrestacion" (change)="onSelect()" label="Tipos de Prestación Origen"
-                                     placeholder="Tipos de Prestación Origen" [required]="true">
-                        </plex-select>
-                    </div>
-                </div>
-                <!-- Profesional Origen -->
-                <div class="row">
-                    <div class="col">
                         <plex-select [(ngModel)]="modelo.solicitud.profesionalOrigen" name="profesionalOrigen"
                                      (getData)="loadProfesionales($event)" label="Profesional solicitante"
                                      placeholder="Escriba el apellido del Profesional"
                                      labelField="apellido + ' ' + nombre" [required]="true"
-                                     (change)="checkProfesional()">
+                                     (change)="checkProfesional()" grow="full">
                         </plex-select>
-                    </div>
-                </div>
-                <!-- Profesional Destino -->
-                <div class="row">
-                    <div class="col" *ngIf="!autocitado">
                         <plex-select *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.profesional"
                                      label="Profesional destino" name="profesional"
                                      (getData)="loadProfesionales($event)" (change)="checkProfesional()"
                                      placeholder="Escriba el apellido de un Profesional"
-                                     labelField="apellido + ' ' + nombre">
+                                     labelField="apellido + ' ' + nombre" grow="full">
                         </plex-select>
-                    </div>
-                </div>
+                    </plex-wrapper>
+                    <plex-wrapper>
+                        <plex-text [(ngModel)]="motivo" label="Notas / Diagnóstico / Motivo" name="motivo"
+                                   [required]="true" multiline="true"></plex-text>
+                    </plex-wrapper>
+                </plex-grid>
             </ng-container>
             <!-- /SOLICITUD ENTRADA -->
-
             <!-- SOLICITUD SALIDA -->
-            <ng-container *ngIf=" !showSeleccionarPaciente && tipoSolicitud == 'salida'">
-                <!-- Tipo Prestación origen -->
-                <div class="row">
-                    <div class="col">
-                        <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen" name="tipoPrestacionOrigen"
-                                     (change)="onSelect()" (getData)="loadTipoPrestaciones($event)"
-                                     label="Tipos de Prestación Origen" placeholder="Tipos de Prestación Origen"
-                                     [required]="true">
-                        </plex-select>
-                    </div>
-                </div>
-                <!-- Profesional Origen -->
-                <div class="row">
-                    <div class="col">
+            <ng-container *ngIf="!showSeleccionarPaciente && tipoSolicitud == 'salida'">
+                <plex-wrapper>
+                    <plex-datetime [plexWizard]="0" type="date" [(ngModel)]="modelo.solicitud.fecha"
+                                   name="fechaSolicitud" label="Fecha de solicitud" [required]="true">
+                    </plex-datetime>
+                    <plex-select [plexWizard]="0" [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen"
+                                 name="tipoPrestacionOrigen" (change)="onSelect()"
+                                 (getData)="loadTipoPrestaciones($event)" label="Tipos de Prestación Origen"
+                                 placeholder="Tipos de Prestación Origen" [required]="true">
+                    </plex-select>
+                    <plex-select [plexWizard]="0" *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.organizacion"
+                                 name="organizacionDestino" label="Organización destino"
+                                 placeholder="Seleccione la organización" labelField="nombre"
+                                 [data]="dataOrganizacionesDestino" [required]="true"
+                                 (change)="onSelectOrganizacionDestino()">
+                    </plex-select>
+                </plex-wrapper>
+                <plex-grid type="full" cols="2">
+                    <plex-wrapper>
                         <plex-select [(ngModel)]="modelo.solicitud.profesionalOrigen" name="profesionalOrigen"
                                      (getData)="loadProfesionales($event)" label="Profesional solicitante"
                                      placeholder="Escriba el apellido del Profesional"
-                                     labelField="apellido + ' ' + nombre" [required]="true">
+                                     labelField="apellido + ' ' + nombre" [required]="true" grow="full">
                         </plex-select>
-                    </div>
-                </div>
-                <!-- Organización Destino -->
-                <div class="row">
-                    <div class="col">
-                        <plex-select [(ngModel)]="modelo.solicitud.organizacion" name="organizacionDestino"
-                                     label="Organización destino" placeholder="Seleccione la organización"
-                                     labelField="nombre" [data]="dataOrganizacionesDestino" [required]="true"
-                                     (change)="onSelectOrganizacionDestino()">
-                        </plex-select>
-                    </div>
-                </div>
-                <!-- Tipo Prestación Destino -->
-                <div class="row">
-                    <div class="col">
                         <plex-select [(ngModel)]="prestacionDestino" name="tipoPrestacionDestino"
                                      [data]="dataReglasDestino" label="Tipo de Prestación Solicitada"
                                      placeholder="Tipos de Prestación solicitada" [required]="true"
-                                     (change)="onSelectPrestacionDestino()">
+                                     (change)="onSelectPrestacionDestino()" grow="full">
                         </plex-select>
-                    </div>
-                </div>
-                <!-- Profesional Destino -->
-                <div class="row">
-                    <div class="col">
                         <plex-select *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.profesional"
                                      label="Profesional destino" name="profesional"
                                      (getData)="loadProfesionales($event)"
                                      placeholder="Escriba el apellido de un Profesional"
-                                     labelField="apellido + ' ' + nombre">
+                                     labelField="apellido + ' ' + nombre" grow="full">
                         </plex-select>
-                    </div>
-                </div>
+                    </plex-wrapper>
+                    <plex-wrapper>
+                        <plex-text [(ngModel)]="motivo" label="Notas / Diagnóstico / Motivo" name="motivo"
+                                   [required]="true" multiline="true"></plex-text>
+                    </plex-wrapper>
+                </plex-grid>
             </ng-container>
-
             <!-- /SOLICITUD SALIDA -->
-
-            <!-- MOTIVO DE CONSULTA -->
-            <div class="row" *ngIf="!showSeleccionarPaciente">
-                <div class="col">
-                    <plex-text [(ngModel)]="motivo" label="Notas / Diagnóstico / Motivo" name="motivo" multiline="true"
-                               [required]="true"></plex-text>
-                </div>
-            </div>
-            <!-- Adjuntar Archivo -->
-            <br>
-            <div class="container-fluid" *ngIf="!showSeleccionarPaciente">
-
-                <div class="row mb-3">
-                    <div class="col-12">
-                        <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
-                        <strong>Cargar documentos</strong>
-                        <span *ngIf="!waiting">
-                            <plex-button type="primary" class="btn-sm" label="Desde mi PC" (click)="upload.click()">
-                            </plex-button>
-                            <span *ngIf="errorExt">
-                                <plex-badge type="danger"> Archivo inválido </plex-badge>
-                            </span>
-                        </span>
-                        <span *ngIf="waiting">
-                            <plex-loader class="app-waiting" type="ball-pulse-sync"></plex-loader>
-                            <plex-button type="danger" class="btn-sm" label="Cancelar" (click)="cancelarAdjunto()">
-                            </plex-button>
-                        </span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
-                            <ng-container *ngFor="let doc of fotos; let i = index">
-                                <plex-visualizador [files]="documentosUrl" #visualizador></plex-visualizador>
-                                <div class="image hover">
-                                    <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)"
-                                         (click)="visualizador.open(i)">
-                                    <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)"
-                                       class="adjunto" (click)="visualizador.open(i)">
-                                        {{ doc.ext }}
-                                    </a>
-                                    <div class="x-mark" (click)="imageRemoved(doc)">
-                                        <span class="close"></span>
-                                    </div>
-                                </div>
-                            </ng-container>
+            <!-- Adjuntar Archivos -->
+            <plex-title titulo="Cargar documentos" *ngIf="!showSeleccionarPaciente">
+                <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
+                <plex-button *ngIf="!waiting" type="primary" size="sm" label="Desde mi PC" (click)="upload.click()">
+                </plex-button>
+            </plex-title>
+            <plex-wrapper *ngIf="!showSeleccionarPaciente">
+                <span *ngIf="!waiting">
+                    <span *ngIf="errorExt">
+                        <plex-badge type="danger"> Archivo inválido </plex-badge>
+                    </span>
+                </span>
+                <span *ngIf="waiting">
+                    <plex-loader class="app-waiting" type="ball-pulse-sync"></plex-loader>
+                    <plex-button type="danger" class="btn-sm" label="Cancelar" (click)="cancelarAdjunto()">
+                    </plex-button>
+                </span>
+                <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
+                    <ng-container *ngFor="let doc of fotos; let i = index">
+                        <plex-visualizador [files]="documentosUrl" #visualizador></plex-visualizador>
+                        <div class="image hover">
+                            <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)" (click)="visualizador.open(i)">
+                            <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto"
+                               (click)="visualizador.open(i)">
+                                {{ doc.ext }}
+                            </a>
+                            <div class="x-mark" (click)="imageRemoved(doc)">
+                                <span class="close"></span>
+                            </div>
                         </div>
-                    </div>
+                    </ng-container>
                 </div>
-            </div>
+            </plex-wrapper>
+            <!-- /Adjuntar Archivos -->
         </form>
     </plex-layout-main>
-    <plex-layout-sidebar>
-        <plex-title titulo="DATOS DEL PACIENTE"></plex-title>
+    <plex-layout-sidebar type="invert">
+        <plex-title titulo="Detalle del paciente"></plex-title>
         <paciente-detalle *ngIf="!showSeleccionarPaciente" [paciente]="paciente"></paciente-detalle>
     </plex-layout-sidebar>
 </plex-layout>

@@ -105,6 +105,13 @@ export class NuevaSolicitudComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.plex.updateTitle([{
+            route: '/solicitudes',
+            name: 'TOP'
+        }, {
+            name: 'Nueva solicitud'
+        }
+        ]);
         this.route.params.subscribe(params => {
             this.tipoSolicitud = params['tipo'];
             if (this.tipoSolicitud === 'entrada') {
@@ -369,7 +376,7 @@ export class NuevaSolicitudComponent implements OnInit {
             });
 
         } else {
-            this.plex.info('warning', 'Debe completar los datos requeridos');
+            this.plex.info('danger', 'Debe completar los datos requeridos');
         }
     }
 
@@ -389,13 +396,6 @@ export class NuevaSolicitudComponent implements OnInit {
 
     loadTipoPrestaciones(event) {
         this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data: any) => {
-            // let dataF;
-            // if (this.permisos[0] === '*') {
-            //     dataF = data;
-            // } else {
-            //     dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
-            // }
-            // event.callback(dataF);
             event.callback(data);
         });
     }
