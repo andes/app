@@ -10,10 +10,9 @@
             <span class="btn btn-sm btn-success collapse-card" (click)="onAddClick()">
                 <i class="mdi mdi-plus"></i>
             </span>
-            <!-- QUEDA COMENTADO HASTA DESARROLLAR UN NUEVO SAFE-CHECK EN EL NUEVO MAPA DE CAMAS -->
-            <!-- <span class="btn btn-sm btn-danger collapse-card" (click)="onRemoveClick()">
+            <span class="btn btn-sm btn-danger collapse-card" (click)="onRemoveClick()">
                 <i class="mdi mdi-close"></i>
-            </span> -->
+            </span>
             <span class="btn btn-sm btn-primary collapse-card" (click)="onEditClick()">
                 <i class="mdi mdi-pencil"></i>
             </span>
@@ -23,12 +22,9 @@
         </div>
     </div>
     <div class="plex-body" *ngIf="hasItems() && !hidden">
-        <!-- <div class="legend">
-
-        </div> -->
         <div class="content">
             <div *ngFor="let child of root.hijos">
-                <sectores-item [root]="child" [actions]="actions" (onSelect)="onSelectItem($event)"
+                <sectores-item [root]="child" [actions]="actions"  [idOrganizacion]="idOrganizacion" (onSelect)="onSelectItem($event)"
                                (onAdd)="onAdd.emit($event)" (onEdit)="onEdit.emit($event)"
                                (onRemove)="removeChild($event)" [selected]="selected"></sectores-item>
             </div>

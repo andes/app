@@ -9,6 +9,7 @@ import { ITipoPrestacion } from './ITipoPrestacion';
 // export enum tipoCom {"Teléfono Fijo", "Teléfono Celular", "email"};
 
 export interface ISectores {
+    id?: string;
     tipoSector: ISnomedConcept;
     unidadConcept?: ISnomedConcept;
     nombre: String;

@@ -2,6 +2,7 @@ import { SnomedService } from '../../../apps/mitos';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import { ISectores } from '../../../interfaces/IOrganizacion';
+import { OrganizacionService } from '../../../services/organizacion.service';
 
 @Component({
     selector: 'sectores-item',
@@ -21,12 +22,13 @@ export class SectoresItemComponent implements OnInit {
     @Input() root: ISectores;
     @Input() actions: Boolean = true;
     @Input() selected: any;
+    @Input() idOrganizacion: string;
     public hidden = false;
 
-    public idOrganizacion: String;
     constructor(
         public plex: Plex,
-        public snomed: SnomedService
+        public snomed: SnomedService,
+        private organizacionService: OrganizacionService,
     ) { }
 
     /**
@@ -133,9 +135,16 @@ export class SectoresItemComponent implements OnInit {
      */
     removeChild(child) {
         this.plex.confirm('¿Desea eliminarlo?', 'Eliminar Sector').then((confirmar) => {
-            let index = this.root.hijos.findIndex((item) => item === child);
-            if (index >= 0) {
-                this.root.hijos.splice(index, 1);
+            if (confirmar) {
+                this.organizacionService.deleteSector(this.idOrganizacion, child._id).subscribe(result => {
+                    if (result === child._id) {
+                        let index = this.root.hijos.findIndex((item) => item === child);
+                        this.root.hijos.splice(index, 1);
+                        this.plex.info('success', 'El sector fue eliminado', 'Sector eliminado!');
+                    } else {
+                        this.plex.info('danger', 'No se puede eliminar sector ya que hay camas asignadas.', 'No se puede eliminar');
+                    }
+                });
             }
         });
     }
