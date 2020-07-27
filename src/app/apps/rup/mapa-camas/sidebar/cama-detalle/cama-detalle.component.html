@@ -53,6 +53,19 @@
                     <plex-label *ngIf="estadoCama.key === 'bloqueada'" titulo="Motivo bloqueo"
                                 subtitulo="{{ cama.observaciones }}"></plex-label>
                 </plex-detail>
+                <ng-container *ngIf="cama.estado === 'ocupada'">
+                    <plex-label titulo="Nota" subtitulo="{{(!editNota) ? cama.nota : ''}}"></plex-label>
+                    <plex-button *ngIf="!editNota" size="sm" title="Editar nota" type="warning" icon="comment-edit-outline"
+                        (click)="toggleEditNota(true, cama.nota)"></plex-button>
+                    <ng-container *ngIf="editNota">
+                        <textarea  class="form-control" [(ngModel)]="nota" id="nota" 
+                        name="nota" placeholder="Agregar nota..."></textarea>
+                        <plex-button class="float-right" size="sm" title="Guardar nota" type="success" icon="comment-processing-outline"
+                        (click)="guardarNota(cama)"></plex-button>
+                        <plex-button class="float-right" size="sm" title="Cancelar" type="danger" icon="close"
+                        (click)="toggleEditNota(false, cama.nota)"></plex-button>
+                    </ng-container>
+                </ng-container>
             </fieldset>
         </ng-container>
         <ng-container *ngIf="cama.paciente">

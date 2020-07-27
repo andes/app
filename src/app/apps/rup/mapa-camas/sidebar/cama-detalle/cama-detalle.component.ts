@@ -1,23 +1,23 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
-import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { ElementosRUPService } from '../../../../../modules/rup/services/elementosRUP.service';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { ISnapshot } from '../../interfaces/ISnapshot';
-import { tap, map, switchMap, startWith, pluck, filter } from 'rxjs/operators';
-import { Observable, combineLatest, of, Subscription } from 'rxjs';
+import { map, switchMap, pluck, filter } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { IMAQEstado, IMAQRelacion } from '../../interfaces/IMaquinaEstados';
-import { PacienteService } from '../../../../../core/mpi/services/paciente.service';
 import { Auth } from '@andes/auth';
 import { notNull } from '@andes/shared';
+import { Plex } from '@andes/plex';
+import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 
 
 @Component({
     selector: 'app-cama-detalle',
     templateUrl: 'cama-detalle.component.html'
 })
-export class CamaDetalleComponent implements OnInit, OnDestroy {
+export class CamaDetalleComponent implements OnInit {
     public cama$: Observable<ISnapshot>;
     public estadoCama$: Observable<IMAQEstado>;
     public relaciones$: Observable<IMAQRelacion[]>;
@@ -54,15 +54,15 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
     canEdit = this.auth.check('internacion:cama:edit');
     canMovimientos = this.auth.check('internacion:movimientos');
     pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
+    public nota: String;
+    public editNota = false;
 
     constructor(
         private auth: Auth,
+        public plex: Plex,
         private router: Router,
-        private mapaCamasService: MapaCamasService
+        private mapaCamasService: MapaCamasService,
     ) {
-    }
-
-    ngOnDestroy() {
     }
 
     ngOnInit() {
@@ -94,8 +94,10 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
     }
 
     cambiarTab(index) {
-        this.mapaCamasService.resetView();
-        this.tabIndex = index;
+        if (!this.editNota) {
+            this.mapaCamasService.resetView();
+            this.tabIndex = index;
+        }
     }
 
     goTo(cama) {
@@ -126,5 +128,18 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
 
     onNuevoRegistrio() {
         this.accionCama.emit({ accion: 'nuevo-registro' });
+    }
+
+    toggleEditNota(value: boolean, nota) {
+        this.nota = nota;
+        this.editNota = value;
+    }
+
+    guardarNota(cama) {
+        cama.nota = this.nota;
+        this.mapaCamasService.save(cama, moment().toDate(), false).subscribe(camaNota => {
+            this.plex.info('success', 'Nota guardada');
+            this.editNota = false;
+        });
     }
 }

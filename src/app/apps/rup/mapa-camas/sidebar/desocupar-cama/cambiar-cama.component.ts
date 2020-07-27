@@ -73,7 +73,8 @@ export class CambiarCamaComponent implements OnInit, OnDestroy {
             _id: camaNueva.idCama,
             estado: camaActual.estado,
             idInternacion: camaActual.idInternacion,
-            paciente: camaActual.paciente
+            paciente: camaActual.paciente,
+            nota: camaActual.nota
         };
         return forkJoin(
             this.mapaCamasService.save(camaOcupada, fecha),

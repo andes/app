@@ -37,6 +37,7 @@ export interface ISnapshot {
         egreso?: boolean,
         idInternacion?: boolean
     };
+    nota: String;
     createdAt?: Date;
     createdBy?: {
         id: String,
