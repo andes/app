@@ -174,14 +174,6 @@ export class SolicitudesComponent implements OnInit {
         this.showSidebar = false;
     }
 
-    refreshSelection(value, tipo) {
-        return true;
-    }
-
-    estaSeleccionada(solicitud: any) {
-        return (this.tipoSolicitud === 'entrada' ? this.prestacionesEntrada : this.prestacionesSalida).findIndex(x => x.id === solicitud._id);
-    }
-
     seleccionar(prestacion) {
         (this.tipoSolicitud === 'entrada' ? this.prestacionesEntrada : this.prestacionesSalida).forEach(e => e.seleccionada = false);
 
