@@ -2,9 +2,10 @@
     <ng-container *ngIf="prestacion">
 
         <plex-title main titulo="{{ prestacion.solicitud.tipoPrestacion.term }}">
-            <plex-button *ngIf='puedeDescargarInforme' type="info" size="sm" icon="download" title="Descargar PDF" [disabled]="requestInProgress"
-                (click)="descargarInforme()" titlePosition="left">
+            <plex-button *ngIf='puedeDescargarInforme' type="info" size="sm" icon="download" title="Descargar PDF"
+                         [disabled]="requestInProgress" (click)="descargarInforme()" titlePosition="left">
             </plex-button>
+            <ng-content></ng-content>
         </plex-title>
         <div class="row">
             <div class="col-6">

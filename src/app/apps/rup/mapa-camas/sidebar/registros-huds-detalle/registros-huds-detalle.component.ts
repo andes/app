@@ -54,6 +54,8 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     public estadoCama$: Observable<IMAQEstado>;
     public accionesEstado$: Observable<any>;
     public prestacionesList$: Observable<any>;
+    public min$: Observable<Date>;
+    public max$: Observable<Date>;
 
     @Output() accion = new EventEmitter();
 
@@ -68,8 +70,8 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.desde = moment().subtract(7, 'd');
-        this.hasta = moment();
+        this.desde = moment(this.mapaCamasService.fecha).subtract(7, 'd').toDate();
+        this.hasta = moment(this.mapaCamasService.fecha).toDate();
 
         this.puedeVerHuds = this.auth.check('huds:visualizacionHuds');
 
@@ -81,21 +83,47 @@ export class RegistrosHudsDetalleComponent implements OnInit {
                 return this.getHUDS(paciente);
             }),
             map(prestaciones => {
-                return prestaciones.filter(p => p.solicitud.ambitoOrigen === 'internacion');
-            }),
-            map(prestaciones => {
                 return prestaciones.filter(p => this.validadaCreadasPorMi(p));
             }),
             cache()
+        );
+
+        this.min$ = this.mapaCamasService.historialInternacion$.pipe(
+            map(movimientos => {
+                if (movimientos.length > 0) {
+                    const lastIndex = movimientos.length - 1;
+                    return moment(movimientos[lastIndex].fecha).startOf('day').toDate();
+                }
+                return new Date();
+            }),
+            tap((date) => {
+                if (moment(this.desde).isSameOrBefore(moment(date))) {
+                    this.desde = date;
+                }
+            })
+        );
+
+        this.max$ = this.mapaCamasService.historialInternacion$.pipe(
+            map(movimientos => {
+                const egreso = movimientos.find(m => m.extras && m.extras.egreso);
+                if (egreso) {
+                    this.hasta = egreso.fecha;
+                    return egreso.fecha;
+                }
+                return null;
+            })
         );
 
         this.historialFiltrado$ = combineLatest(
             this.historial$,
             this.desde$,
             this.hasta$,
-            this.tipoPrestacion$
+            this.tipoPrestacion$,
+            this.min$,
         ).pipe(
-            map(([prestaciones, desde, hasta, tipoPrestacion]) => {
+            map(([prestaciones, desde, hasta, tipoPrestacion, min]) => {
+                desde = desde.getTime() < min.getTime() ? min : desde;
+                desde = moment(desde);
                 return prestaciones.filter((prestacion) => {
                     const fecha = moment(prestacion.ejecucion.fecha);
                     if (tipoPrestacion) {
@@ -119,10 +147,11 @@ export class RegistrosHudsDetalleComponent implements OnInit {
     }
 
     validadaCreadasPorMi(prestacion) {
+        const ejecutada = prestacion.estados.some(e => e.tipo === 'ejecucion');
         const estadoPrestacion = prestacion.estados[prestacion.estados.length - 1];
         const esValidada = estadoPrestacion.tipo === 'validada';
         const createdByMe = estadoPrestacion.createdBy.id === this.auth.usuario.id;
-        return esValidada || createdByMe;
+        return ejecutada && (esValidada || createdByMe);
     }
 
     esEjecucion(prestacion) {

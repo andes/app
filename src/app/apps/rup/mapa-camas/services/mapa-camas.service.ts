@@ -5,13 +5,14 @@ import { ISnapshot } from '../interfaces/ISnapshot';
 import { ICama } from '../interfaces/ICama';
 import { IMaquinaEstados, IMAQRelacion, IMAQEstado } from '../interfaces/IMaquinaEstados';
 import { MapaCamasHTTP } from './mapa-camas.http';
-import { switchMap, map, pluck, catchError, startWith } from 'rxjs/operators';
+import { switchMap, map, pluck, catchError, startWith, tap, publishReplay, refCount } from 'rxjs/operators';
 import { ISectores } from '../../../../interfaces/IOrganizacion';
 import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concept.interface';
 import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 import { MaquinaEstadosHTTP } from './maquina-estados.http';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+
 
 @Injectable()
 export class MapaCamasService {
@@ -60,6 +61,11 @@ export class MapaCamasService {
     public capa;
     public fecha: Date;
     public permisos: string[];
+
+    /**
+     * Listado de movimientos de la internacion seleccionada
+     */
+    public historialInternacion$: Observable<ISnapshot[]>;
 
     constructor(
         private camasHTTP: MapaCamasHTTP,
@@ -157,6 +163,15 @@ export class MapaCamasService {
             })
         );
 
+        const hoy = new Date();
+        const desde = moment().subtract(6, 'months').toDate();
+        this.historialInternacion$ = this.historial('internacion', desde, hoy).pipe(
+            map((historial: ISnapshot[]) => {
+                return historial.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+            }),
+            cache()
+        );
+
         const proximoMinuto = moment().add(1, 'minute').startOf('minute');
         const segundosAPoxMin = proximoMinuto.diff(moment());
         this.fechaActual$ = timer(segundosAPoxMin, 60000).pipe(
@@ -224,28 +239,6 @@ export class MapaCamasService {
         return this.snapshot$.pipe(
             map((camas) => {
                 return this.getCamasDisponiblesCama(camas, cama);
-            })
-        );
-    }
-
-    verificarCamaDesocupar(cama: ISnapshot, prestacion: IPrestacion) {
-        return this.historial('internacion', cama.fecha, moment().toDate(), prestacion).pipe(
-            map((movimientos: ISnapshot[]) => {
-                let puedeDesocupar = 'noPuede';
-                if (!prestacion.ejecucion.registros[1] || !prestacion.ejecucion.registros[1].valor.InformeEgreso) {
-                    if (movimientos.length === 1) {
-                        puedeDesocupar = 'puede';
-                    } else if (movimientos.length === 0) {
-                        puedeDesocupar = 'puede';
-                    } else {
-                        let movOrd = movimientos.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-                        if (movOrd[movOrd.length - 1].nombre === cama.nombre) {
-                            puedeDesocupar = 'puede';
-                        }
-                    }
-                }
-
-                return puedeDesocupar;
             })
         );
     }
@@ -377,7 +370,7 @@ export class MapaCamasService {
         return this.camasHTTP.snapshot(ambito, capa, fecha, idInternacion, estado) as any;
     }
 
-    historial(type: 'cama' | 'internacion', desde: Date, hasta: Date, prestacion = null): Observable<ISnapshot[]> {
+    historial(type: 'cama' | 'internacion', desde: Date, hasta: Date): Observable<ISnapshot[]> {
         return combineLatest(
             this.ambito2,
             this.capa2,
@@ -389,17 +382,14 @@ export class MapaCamasService {
                 if (type === 'cama') {
                     return this.camasHTTP.historial(ambito, capa, desde, hasta, { idCama: selectedCama.idCama });
                 } else if (type === 'internacion') {
-                    if (prestacion) {
-                        return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: prestacion.id, esMovimiento: true });
-                    } else {
-                        if (view === 'mapa-camas') {
-                            return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: selectedCama.idInternacion, esMovimiento: true });
-                        } else if (view === 'listado-internacion') {
-                            return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: selectedPrestacion.id, esMovimiento: true });
-                        }
+                    if (view === 'mapa-camas') {
+                        return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: selectedCama.idInternacion, esMovimiento: true });
+                    } else if (view === 'listado-internacion') {
+                        return this.camasHTTP.historial(ambito, capa, desde, hasta, { idInternacion: selectedPrestacion.id, esMovimiento: true });
                     }
                 }
-            })
+            }),
+            cache()
         );
     }
 
