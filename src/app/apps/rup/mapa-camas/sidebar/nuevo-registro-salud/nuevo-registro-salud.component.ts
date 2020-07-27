@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { switchMap, pluck, map, tap, take } from 'rxjs/operators';
 import { Auth } from '@andes/auth';
 import { HUDSService } from '../../../../../modules/rup/services/huds.service';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { Router } from '@angular/router';
+import { ISnomedConcept } from '../../../../../modules/rup/interfaces/snomed-concept.interface';
 
 @Component({
     selector: 'app-nuevo-registro-salud',
@@ -20,6 +21,7 @@ export class NuevoRegistroSaludComponent implements OnInit {
     public hora: Date;
     public registro: any;
 
+
     constructor(
         private mapaCamasService: MapaCamasService,
         private auth: Auth,
@@ -29,12 +31,7 @@ export class NuevoRegistroSaludComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.accionesEstado$ = this.mapaCamasService.selectedCama.pipe(
-            switchMap(cama => this.mapaCamasService.getEstadoCama(cama)),
-            pluck('acciones'),
-            map(acciones => acciones.filter(acc => acc.tipo === 'nuevo-registro'))
-        );
-
+        this.accionesEstado$ = this.mapaCamasService.prestacionesPermitidas(this.mapaCamasService.selectedCama);
         this.paciente$ = this.mapaCamasService.selectedCama.pipe(
             pluck('paciente')
         );

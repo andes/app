@@ -18,7 +18,8 @@ export interface IMAQEstado {
         label: string,
         tipo: string,
         parametros: {
-            concepto?: ISnomedConcept
+            concepto?: ISnomedConcept,
+            unidadOrganizativa?: string[],
         }
     }[];
 }
