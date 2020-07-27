@@ -56,6 +56,7 @@ export class SolicitudesComponent implements OnInit {
     public showSidebar = false;
     public mostrarMasOpciones = false;
     public organizacionesOrigen = [];
+    public organizacionesDestino = [];
     public prestacionesPermisos = [];
     public permisosReglas;
     public permisoAnular = false;
@@ -156,7 +157,13 @@ export class SolicitudesComponent implements OnInit {
         this.activeTab = activeTab;
         this.showSidebar = false;
         this.tipoSolicitud = (this.activeTab === 0) ? 'entrada' : 'salida';
+        this.limpiarFiltros();
         this.cargarSolicitudes();
+    }
+
+    private limpiarFiltros() {
+        this.organizacionesDestino = [];
+        this.organizacionesOrigen = [];
     }
 
     cerrar() {
@@ -351,9 +358,7 @@ export class SolicitudesComponent implements OnInit {
                 }
             }
         }
-        if (this.organizacionesOrigen && this.organizacionesOrigen.length) {
-            params['organizacionOrigen'] = this.organizacionesOrigen.map(o => o.id);
-        }
+
         if (this.prestacionDestino) {
             params['prestacionDestino'] = this.prestacionDestino.id;
         } else {
@@ -366,11 +371,7 @@ export class SolicitudesComponent implements OnInit {
             params['prioridad'] = this.prioridad.id;
         }
 
-        if (this.tipoSolicitud === 'entrada') {
-            params['organizacion'] = this.auth.organizacion.id;
-        } else {
-            params['organizacionOrigen'] = this.auth.organizacion.id;
-        }
+        this.setOrganizacionesParams(params);
 
         if (this.paciente && this.paciente.length >= 3) {
             params['paciente'] = this.paciente;
@@ -379,6 +380,23 @@ export class SolicitudesComponent implements OnInit {
         params['skip'] = this.skip;
         params['limit'] = this.limit;
         return params;
+    }
+
+    // Setea parametros de búsqueda por organizaciones
+    private setOrganizacionesParams(params) {
+        if (this.tipoSolicitud === 'entrada') {
+            // Si es bandeja de entrada, por defecto la organización es la propia
+            params.organizacion = this.auth.organizacion.id;
+            if (this.organizacionesOrigen && this.organizacionesOrigen.length) {
+                params.organizacionOrigen = this.organizacionesOrigen.map(o => o.id);
+            }
+        } else {
+            // Si es bandeja de entrada, por defecto la organización origen es la propia
+            params.organizacionOrigen = this.auth.organizacion.id;
+            if (this.organizacionesDestino && this.organizacionesDestino.length) {
+                params.organizacion = this.organizacionesDestino.map(o => o.id);
+            }
+        }
     }
 
     @Unsubscribe()

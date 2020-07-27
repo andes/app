@@ -42,6 +42,12 @@
                                      labelField="nombre" [multiple]="true" (change)="cargarSolicitudes()">
                         </plex-select>
                     </div>
+                    <div class="col-3" *ngIf="tipoSolicitud === 'salida'" >
+                        <plex-select [(ngModel)]="organizacionesDestino" name="organizacion" (getData)="loadOrganizacion($event)"
+                                     label="Organización destino" placeholder="Seleccione la organización"
+                                     labelField="nombre" [multiple]="true" (change)="cargarSolicitudes()">
+                        </plex-select>
+                    </div>
                     <div class="col-3">
                         <plex-select [(ngModel)]="prestacionDestino" name="nombrePrestacion"
                                      label="Prestación destino" name="prestacionDestino"
@@ -235,6 +241,8 @@
                                     <thead>
                                         <th>Fecha</th>
                                         <th>Paciente</th>
+                                        <th *ngIf="!showSidebar">Organización
+                                            Destino</th>
                                         <th *ngIf="!showSidebar">Profesional
                                             Origen</th>
                                         <th>Tipo de prestación Destino</th>
@@ -252,6 +260,9 @@
                                             <td>
                                                 {{prestacion.paciente | nombre }}<br>DNI
                                                 {{prestacion.paciente.documento}}</td>
+                                            <td *ngIf="!showSidebar" (click)="seleccionar(prestacion)">
+                                                {{prestacion.solicitud.organizacion.nombre}}
+                                            </td>
                                             <td *ngIf="!prestacion.solicitud.organizacionOrigen && !showSidebar">
                                             </td>
                                             <td *ngIf="prestacion.solicitud.profesionalOrigen && !showSidebar">{{prestacion.solicitud.profesionalOrigen
