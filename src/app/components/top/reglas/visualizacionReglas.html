@@ -1,58 +1,52 @@
-<header *ngIf="!esParametrizado">
-    <div class="row">
-        <div class="col-md-3">
-            <plex-select [(ngModel)]="organizacionOrigen" name="orgOrigen" tmOrganizaciones label="Organización origen"
-                         placeholder="Seleccione la organización" (change)="actualizarTabla()">
-            </plex-select>
-        </div>
-        <div class="col-md-3">
-            <plex-select [(ngModel)]="prestacionOrigen" (getData)="loadPrestaciones($event)" name="prestOrigen"
-                         label="Prestación origen" placeholder="Seleccione la prestación" (change)="actualizarTabla()">
-            </plex-select>
-        </div>
-        <div class="col-md-3">
-            <plex-select [(ngModel)]="organizacionDestino" name="orgDestino" tmOrganizaciones
-                         label="Organización destino" placeholder="Seleccione la organización"
-                         (change)="actualizarTabla()">
-            </plex-select>
-        </div>
-        <div class="col-md-3">
-            <plex-select [(ngModel)]="prestacionDestino" name="prestDestino" (getData)="loadPrestaciones($event)"
-                         label="Prestación destino" placeholder="Seleccione la prestación" (change)="actualizarTabla()">
-            </plex-select>
-        </div>
-    </div>
-</header>
-<div class="row">
-    <div *ngIf="!filtroIngresado() || !filas?.length" class="alert alert-default">
-        No hay resultados que coincidan con los filtros de búsqueda
-    </div>
+<plex-wrapper *ngIf="!esParametrizado">
+        <plex-select [(ngModel)]="organizacionOrigen" name="orgOrigen" tmOrganizaciones label="Organización origen"
+                     placeholder="Seleccione la organización" (change)="actualizarTabla()">
+        </plex-select>
+        <plex-select [(ngModel)]="prestacionOrigen" (getData)="loadPrestaciones($event)" name="prestOrigen"
+                     label="Prestación origen" placeholder="Seleccione la prestación" (change)="actualizarTabla()">
+        </plex-select>
+        <plex-select [(ngModel)]="organizacionDestino" name="orgDestino" tmOrganizaciones label="Organización destino"
+                     placeholder="Seleccione la organización" (change)="actualizarTabla()">
+        </plex-select>
+        <plex-select [(ngModel)]="prestacionDestino" name="prestDestino" (getData)="loadPrestaciones($event)"
+                     label="Prestación destino" placeholder="Seleccione la prestación" (change)="actualizarTabla()">
+        </plex-select>
+</plex-wrapper>
+<div *ngIf="!filtroIngresado() || !filas?.length" class="alert alert-default">
+    No hay resultados que coincidan con los filtros de búsqueda
 </div>
 <div class="row">
-    <div class="col">
-        <table *ngIf="filtroIngresado() && filas?.length" class="table table-striped table-sm">
-            <thead>
-                <tr>
-                    <th *ngIf="!esParametrizado">Organización origen</th>
-                    <th>Prestación origen</th>
-                    <th>Organización destino</th>
-                    <th>Prestación destino</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let fila of filas">
-                    <td *ngIf="!esParametrizado"><small>{{fila.organizacionOrigen.nombre}}</small></td>
-                    <td><small>{{fila.prestacionOrigen.prestacion.term}}</small></td>
-                    <td><small>{{fila.organizacionDestino.nombre}}</small></td>
-                    <td><small>{{fila.prestacionDestino.term}}</small></td>
-                    <td *ngIf="!seleccionada && !esParametrizado">
-                        <small>
-                            <plex-badge *ngIf="fila.prestacionOrigen.auditable" type="success">auditable
-                            </plex-badge>
-                        </small>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="col-12">
+        <ng-container *ngIf="filtroIngresado() && filas?.length">
+            <plex-list [striped]="true">
+                <plex-item>
+                    <b *ngIf="!esParametrizado">Organización origen</b>
+                    <b label> Prestación origen </b>
+                    <b label> Organización destino </b>
+                    <b label> Prestación destino </b>
+                </plex-item>
+                <plex-item *ngFor="let fila of filas">
+                    <div class="elementos-graficos w-100" *ngIf="!esParametrizado">
+                        <plex-icon name="hospital-building" type="info"></plex-icon>
+                        <plex-label [tituloBold]="true" titulo="{{ fila.organizacionOrigen.nombre }}"
+                                    subtitulo="Ciudad de {{ fila.organizacionOrigen.direccion.ubicacion.localidad.nombre }}">
+                        </plex-label>
+                    </div>
+                    <plex-label [tituloBold]="!esParametrizado" titulo="{{ fila.prestacionOrigen.prestacion.term }}">
+                    </plex-label>
+                    <div class="elementos-graficos w-100">
+                        <plex-icon *ngIf="!esParametrizado" name="hospital-building" type="success"></plex-icon>
+                        <plex-label [tituloBold]="!esParametrizado" titulo="{{ fila.organizacionDestino.nombre }}"
+                                    subtitulo="Ciudad de {{ fila.organizacionDestino.direccion.ubicacion.localidad.nombre }}">
+                        </plex-label>
+                    </div>
+                    <plex-label [tituloBold]="!esParametrizado" titulo="{{ fila.prestacionDestino.term }}"></plex-label>
+                    <plex-badge *ngIf="fila.prestacionOrigen.auditable && !esParametrizado" type="success">auditable
+                    </plex-badge>
+                    <plex-badge *ngIf="!fila.prestacionOrigen.auditable && !esParametrizado" type="warning">no auditable
+                    </plex-badge>
+                </plex-item>
+            </plex-list>
+        </ng-container>
     </div>
 </div>
