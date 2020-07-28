@@ -13,8 +13,8 @@ export class HistorialSolicitudComponent {
     set _prestacion(value) {
         this.prestacion = value;
         this.cargarItemsHistorial();
-
     }
+
     @Input('turno')
     set _turno(value) {
         this.turno = value;
