@@ -25,7 +25,7 @@ export class MovimientosInternacionComponent implements OnInit {
     ngOnInit() {
         this.onChange();
 
-        this.historial$ = this.historial.pipe(
+        const fechaPipe = this.historial.pipe(
             startWith({
                 desde: this.desde, hasta: this.hasta
             }),
@@ -34,14 +34,20 @@ export class MovimientosInternacionComponent implements OnInit {
                     desde: moment(filtros.desde).startOf('day').toDate(),
                     hasta: moment(filtros.hasta).endOf('day').toDate(),
                 };
-            }),
-            switchMap((filtros: any) => {
-                return this.mapaCamasService.historial('internacion', filtros.desde, filtros.hasta);
-            }),
-            map((historial: ISnapshot[]) => {
-                return historial.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
             })
         );
+
+        this.historial$ = combineLatest(
+            this.mapaCamasService.historialInternacion$,
+            fechaPipe
+        ).pipe(
+            map(([movimientos, { desde, hasta }]) => {
+                return movimientos.filter((mov) => {
+                    return desde.getTime() < mov.fecha.getTime() && mov.fecha.getTime() <= hasta.getTime();
+                });
+            })
+        );
+
     }
 
     onChange() {
