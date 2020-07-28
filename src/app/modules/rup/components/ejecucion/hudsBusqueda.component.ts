@@ -7,6 +7,7 @@ import { TipoPrestacionService } from '../../../../services/tipoPrestacion.servi
 
 import { HUDSService } from '../../services/huds.service';
 import { gtag } from '../../../../shared/services/analytics.service';
+
 @Component({
     selector: 'rup-hudsBusqueda',
     templateUrl: 'hudsBusqueda.html',
@@ -19,10 +20,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
     laboratorios: any = [];
     vacunas: any = [];
     ordenDesc = true;
-
-    procedimientos: any = [];
-    procedimientosCopia: any[];
-
+    searchTerm: string;
     hallazgosCronicosAux: any[];
     hallazgosNoActivosAux: any;
     filtroActual: any = 'planes';
@@ -68,14 +66,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
     set prestaciones(value) {
         this._prestaciones = value.sort((a, b) => (a.data.ejecucion && b.data.ejecucion) ? (b.data.ejecucion.fecha - a.data.ejecucion.fecha) : (b.fecha - a.fecha));
     }
-    /**
-     * Copia de las prestaciones para aplicar los filtros
-     */
-    /**
-     * Listado de todos los hallazgos
-     */
-    public hallazgos: any = [];
-    public trastornos: any = [];
+
     public todos: any = [];
     public solicitudes: any = [];
     public solicitudesTOP: any = [];
@@ -84,13 +75,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
      * Listado de todos los trastornos
      */
     public hallazgosCronicos: any = [];
-
-    /**
-     * Listado de todos los productos (medicamentos)
-     */
-    public productos: any = [];
-    // copia de los productos para el buscador
-    public productosCopia: any = [];
 
     /**
          * Listado de todos los hallazgos no activos
@@ -115,6 +99,19 @@ export class HudsBusquedaComponent implements AfterContentInit {
         vacunas: ['vacunas'],
     };
 
+    public registrosTotales = {
+        procedimiento: [],
+        hallazgo: [],
+        trastorno: [],
+        producto: []
+    };
+
+    public registrosTotalesCopia = {
+        procedimiento: [],
+        hallazgo: [],
+        trastorno: [],
+        producto: []
+    };
 
     public txtABuscar;
 
@@ -170,6 +167,7 @@ export class HudsBusquedaComponent implements AfterContentInit {
      */
     actualizarVista(vista) {
         this.filtroActual = vista;
+
     }
 
     devolverPrestacion(prestacion) {
@@ -270,22 +268,25 @@ export class HudsBusquedaComponent implements AfterContentInit {
             this.todos = registros;
 
             this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id).subscribe((hallazgos) => {
-                this.hallazgos = hallazgos;
+                this.registrosTotales.hallazgo = hallazgos;
+                this.registrosTotalesCopia.hallazgo = hallazgos;
+                // this.hallazgos = hallazgos;
             });
 
             this.servicioPrestacion.getByPacienteTrastorno(this.paciente.id).subscribe((trastornos) => {
-                this.trastornos = trastornos;
-
+                this.registrosTotales.trastorno = trastornos;
+                this.registrosTotalesCopia.trastorno = trastornos;
             });
 
             this.servicioPrestacion.getByPacienteMedicamento(this.paciente.id).subscribe((medicamentos) => {
-                this.productos = medicamentos;
-                this.productosCopia = medicamentos;
+                this.registrosTotales.producto = medicamentos;
+                this.registrosTotalesCopia.producto = medicamentos;
             });
 
             this.servicioPrestacion.getByPacienteProcedimiento(this.paciente.id).subscribe((procedimientos) => {
-                this.procedimientos = procedimientos;
-                this.procedimientosCopia = procedimientos;
+                this.registrosTotales.procedimiento = procedimientos;
+                this.registrosTotalesCopia.procedimiento = procedimientos;
+
             });
 
             this.servicioPrestacion.getByPacienteSolicitud(this.paciente.id).subscribe((solicitudes) => {
@@ -307,21 +308,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
         });
     }
 
-    // Trae los procedimientos registrados para el paciente
-    listarProcedimientos() {
-        this.servicioPrestacion.getByPacienteProcedimiento(this.paciente.id).subscribe(procedimientos => {
-            this.procedimientos = procedimientos;
-            this.procedimientosCopia = procedimientos;
-        });
-    }
-
-    // Trae los medicamentos registrados para el paciente
-    listarMedicamentos() {
-        this.servicioPrestacion.getByPacienteMedicamento(this.paciente.id).subscribe(medicamentos => {
-            this.productos = medicamentos;
-            this.productosCopia = medicamentos;
-        });
-    }
 
 
     // Trae los cdas registrados para el paciente
@@ -357,15 +343,15 @@ export class HudsBusquedaComponent implements AfterContentInit {
             case 'todos':
                 return this.todos.length;
             case 'hallazgo':
-                return this.hallazgos.length;
+                return this.registrosTotalesCopia.hallazgo.length;
             case 'trastorno':
-                return this.trastornos.length;
+                return this.registrosTotalesCopia.trastorno.length;
             case 'procedimiento':
-                return this.procedimientos.length;
+                return this.registrosTotalesCopia.procedimiento.length;
             case 'planes':
                 return this.prestacionesCopia.length;
             case 'producto':
-                return this.productos.length;
+                return this.registrosTotalesCopia.producto.length;
             case 'laboratorios':
                 return this.laboratorios.length;
             case 'vacunas':
@@ -396,13 +382,6 @@ export class HudsBusquedaComponent implements AfterContentInit {
         return filtro;
     }
 
-    buscar() {
-        const regex_buscar = new RegExp('.*' + this.txtABuscar + '.*', 'ig');
-        this.hallazgosCronicos = this.hallazgos.filter(a => regex_buscar.test(a.concepto.term) || this.txtABuscar === null);
-        this.procedimientos = this.procedimientosCopia.filter(p => regex_buscar.test(p.concepto.term) || this.txtABuscar === null);
-        this.prestaciones = this.prestacionesCopia.filter(p => regex_buscar.test(p.prestacion.term) || this.txtABuscar === null);
-        this.productos = this.productosCopia.filter(p => regex_buscar.test(p.concepto.term) || this.txtABuscar === null);
-    }
 
     filtrar() {
         this.prestaciones = this.prestacionesCopia.slice();
@@ -429,4 +408,28 @@ export class HudsBusquedaComponent implements AfterContentInit {
     clickSolicitud(registro, index) {
         this.emitTabs(registro, (registro.evoluciones ? 'concepto' : 'solicitud'), index);
     }
+
+    filtrarPorTerm(p) {
+
+        if (p.concepto.term.includes(this.searchTerm.toLowerCase())) {
+
+            return true;
+
+        } else {
+
+            return p.registros.some(r => this.filtrarPorTerm(r));
+        }
+    }
+
+    buscar() {
+
+        this.registrosTotales[this.filtroActual] = this.registrosTotalesCopia[this.filtroActual];
+
+        if (this.searchTerm) {
+
+            this.registrosTotales[this.filtroActual] = this.registrosTotales[this.filtroActual].filter
+                (p => this.filtrarPorTerm(p));
+        }
+    }
+
 }
