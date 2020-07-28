@@ -306,7 +306,7 @@ export class MapaCamasService {
             const esNumero = Number.isInteger(Number(paciente));
             if (esNumero) {
                 camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
-                snap.paciente.documento.includes(paciente));
+                    snap.paciente.documento.includes(paciente));
             } else {
                 camasFiltradas = camasFiltradas.filter((snap: ISnapshot) =>
                     (snap.paciente.nombre.toLowerCase().includes(paciente.toLowerCase()) ||
@@ -490,5 +490,38 @@ export class MapaCamasService {
             );
         }
         return this.paciente$[paciente.id];
+    }
+
+
+    prestacionesPermitidas(cama: Observable<ISnapshot>) {
+        const unidadOrganizativa$ = cama.pipe(
+            pluck('unidadOrganizativa')
+        );
+        const accionesCapa$ = cama.pipe(
+            switchMap(_cama => this.getEstadoCama(_cama)),
+            pluck('acciones')
+        );
+
+        return combineLatest(
+            unidadOrganizativa$,
+            accionesCapa$
+        ).pipe(
+            map(([uo, acciones]) => {
+                const registros = acciones.filter(acc => acc.tipo === 'nuevo-registro');
+                return registros.filter((registro) => {
+                    const { unidadOrganizativa } = registro.parametros;
+                    if (unidadOrganizativa.length === 0) {
+                        return true;
+                    }
+                    const isExclude = unidadOrganizativa[0].startsWith('!');
+                    if (!isExclude) {
+                        return unidadOrganizativa.includes(uo.conceptId);
+                    } else {
+                        return !unidadOrganizativa.map(s => s.substr(1)).includes(uo.conceptId);
+                    }
+                });
+
+            })
+        );
     }
 }
