@@ -1,5 +1,6 @@
 
 export interface IPacienteRelacion {
+    id: string;
     relacion: {
         id: string,
         nombre: string,

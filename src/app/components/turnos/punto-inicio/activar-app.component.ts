@@ -3,7 +3,8 @@ import {
     Input,
     ViewChild,
     Output,
-    EventEmitter
+    EventEmitter,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import {
     Plex
@@ -28,6 +29,7 @@ import {
 import { NgForm } from '@angular/forms';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'activar-app',
     templateUrl: 'activar-app.html'
 })
@@ -168,7 +170,9 @@ export class ActivarAppComponent {
     }
 
     activarApp() {
-        this.celular = this.contacto('celular');
+        if (!this.showCampoCelular) {
+            this.celular = this.contacto('celular');
+        }
         if (this.celular && this.email) {
             this.addContacto('celular', this.celular);
             this.addContacto('email', this.email);

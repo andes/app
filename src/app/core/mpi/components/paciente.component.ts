@@ -13,6 +13,7 @@ import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.i
 import { Subscription } from 'rxjs';
 import { RelacionesPacientesComponent } from './relaciones-pacientes.component';
 import { DatosContactoComponent } from './datos-contacto.component';
+import { DatosBasicosComponent } from './datos-basicos.component';
 
 @Component({
     selector: 'paciente',
@@ -23,6 +24,7 @@ export class PacienteComponent implements OnInit {
 
     @ViewChild('relaciones', null) relaciones: RelacionesPacientesComponent;
     @ViewChild('datosContacto', null) datosContacto: DatosContactoComponent;
+    @ViewChild('datosBasicos', null) datosBasicos: DatosBasicosComponent;
 
     mainSize = 10;  // tamaño de layout-main
     detailDirection = 'column'; // estilo de paciente-panel
@@ -32,11 +34,9 @@ export class PacienteComponent implements OnInit {
     relacionesBorradas: any[];
     backUpDatos = [];
     pacientesSimilares = [];
-    datosBasicosValid: Boolean = false;
-    datosContactosValid: Boolean = false;
 
     validado = false;
-    disableGuardar = true;
+    disableGuardar = false;
     visualizarIgnorarGuardar = false;
     disableIgnorarGuardar = false;
     sugerenciaAceptada = false;
@@ -252,8 +252,10 @@ export class PacienteComponent implements OnInit {
     }
 
 
-    save(event, ignoreCheck = false) {
-        if (!event.formValid) {
+    save(ignoreCheck = false) {
+        let contactoValid = this.datosContacto.checkForm();
+        let datosBasicosValid = this.datosBasicos.checkForm();
+        if (!contactoValid || !datosBasicosValid) {
             this.plex.info('warning', 'Debe completar los datos obligatorios');
             return;
         }
@@ -328,7 +330,7 @@ export class PacienteComponent implements OnInit {
     saveRelaciones(unPacienteSave) {
         if (unPacienteSave) {
             // Borramos relaciones
-            if (this.relacionesBorradas.length > 0) {
+            if (this.relacionesBorradas && this.relacionesBorradas.length) {
                 this.relacionesBorradas.forEach(rel => {
                     let relacionOpuesta = this.parentescoModel.find((elem) => {
                         if (elem.nombre === rel.relacion.opuesto) {
@@ -348,7 +350,7 @@ export class PacienteComponent implements OnInit {
                 });
             }
             // agregamos las relaciones opuestas
-            if (unPacienteSave.relaciones && unPacienteSave.relaciones.length > 0) {
+            if (unPacienteSave.relaciones && unPacienteSave.relaciones.length) {
                 unPacienteSave.relaciones.forEach(rel => {
                     let relacionOpuesta = this.parentescoModel.find((elem) => {
                         if (elem.nombre === rel.relacion.opuesto) {
@@ -376,10 +378,14 @@ export class PacienteComponent implements OnInit {
     }
 
     cancel() {
-        if (this.subscripcionValidar) {
-            this.subscripcionValidar.unsubscribe();
-        }
-        this.redirect();
+        this.plex.confirm('¿Deséa salir sin guardar los datos?', 'Atención').then(confirmacion => {
+            if (confirmacion) {
+                if (this.subscripcionValidar) {
+                    this.subscripcionValidar.unsubscribe();
+                }
+                this.redirect();
+            }
+        });
     }
 
     setMainSize(tabIndex) {
@@ -413,18 +419,15 @@ export class PacienteComponent implements OnInit {
     // ---------------- NOTIFICACIONES --------------------
 
     datosBasicosForm(data) {
-        this.datosBasicosValid = data.isValid;  // formulario valido
-        this.disableGuardar = !(this.datosContactosValid && this.datosBasicosValid);
-        this.checkDisableValidar();
-
+        if (data.checkValues) {
+            this.checkDisableValidar();
+        }
         if (data.refreshData) {
             this.datosContacto.refreshVars();
         }
-    }
-
-    datosContactoForm(data) {
-        this.datosContactosValid = data.isValid;    // formulario valido
-        this.disableGuardar = !(this.datosContactosValid && this.datosBasicosValid);
+        if (data.relaciones) {
+            this.actualizarRelaciones(data);
+        }
     }
 
     notasNotification(notasNew) {

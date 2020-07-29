@@ -1,4 +1,4 @@
-import { OnInit, Component, Input, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
+import { OnInit, Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { IPaciente } from '../interfaces/IPaciente';
 import * as enumerados from '../../../utils/enumerados';
 import { Plex } from '@andes/plex';
@@ -16,7 +16,7 @@ import { PacienteService } from '../services/paciente.service';
     styleUrls: []
 })
 
-export class DatosBasicosComponent implements OnInit, OnDestroy {
+export class DatosBasicosComponent implements OnInit {
 
     @Input() paciente: IPaciente;
     @Input() tipoPaciente = 'con-dni';
@@ -43,6 +43,7 @@ export class DatosBasicosComponent implements OnInit, OnDestroy {
     showBuscador = true;
     searchClear = true;
     relacionBebe: IPacienteRelacion = {
+        id: null,
         relacion: {
             id: '',
             nombre: '',
@@ -77,18 +78,16 @@ export class DatosBasicosComponent implements OnInit, OnDestroy {
         this.generos = enumerados.getObjGeneros();
         this.estadosCiviles = enumerados.getObjEstadoCivil();
         this.estados = enumerados.getEstados();
-        // this.checkDisableValidar();
         this.parentescoService.get().subscribe(resultado => { this.parentescoModel = resultado; });
-
-        this.formChangesSubscription = this.ngForm.form.valueChanges
-            .debounceTime(300)
-            .subscribe(formValues => {
-                this.changes.emit({ values: formValues, isValid: this.ngForm.valid });
-            });
     }
 
-    ngOnDestroy() {
-        this.formChangesSubscription.unsubscribe();
+    public checkForm() {
+        this.ngForm.control.markAllAsTouched();
+        return this.ngForm.control.valid;
+    }
+
+    checkDisableValidar() {
+        this.changes.emit({ checkValues: true });
     }
 
     get validado() {
@@ -125,17 +124,14 @@ export class DatosBasicosComponent implements OnInit, OnDestroy {
                 pacienteScaneado.estado = 'validado'; // este paciente fue scaneado
                 pacienteScaneado.genero = pacienteScaneado.sexo;
                 this.plex.showLoader();
-                // this.changes.emit({ disableValidar: true });
                 this.pacienteService.save(pacienteScaneado).subscribe(
                     pacGuardado => {
                         this.onPacienteSelected(pacGuardado);
                         this.plex.hideLoader();
-                        // this.changes.emit({ disableValidar: false });
                     },
                     () => {
                         this.plex.toast('warning', 'Paciente no guardado', 'Error');
                         this.plex.hideLoader();
-                        // this.changes.emit({ disableValidar: false });
                     });
             } else {
                 this.onPacienteSelected(pacienteScaneado);
@@ -177,7 +173,7 @@ export class DatosBasicosComponent implements OnInit, OnDestroy {
                 this.copiarContacto(paciente);
                 this.busquedaTutor = [];
                 this.showBuscador = false;
-                this.changes.emit({ refreshData: true });
+                this.changes.emit({ refreshData: true, relaciones: this.paciente.relaciones });
             });
         } else {
             this.plex.info('warning', 'Imposible obtener el paciente seleccionado', 'Error');
@@ -200,19 +196,13 @@ export class DatosBasicosComponent implements OnInit, OnDestroy {
         }
         if (!this.paciente.direccion[0].ubicacion.provincia && tutor.direccion[0].ubicacion && tutor.direccion[0].ubicacion.provincia) {
             this.paciente.direccion[0].ubicacion.provincia = tutor.direccion[0].ubicacion.provincia;
-            // this.viveProvActual = (paciente.direccion[0].ubicacion.provincia.id === this.provinciaActual.id);
             this.direccionImportada = true;
         }
         if (!this.paciente.direccion[0].ubicacion.localidad && tutor.direccion[0].ubicacion.localidad) {
             this.paciente.direccion[0].ubicacion.localidad = tutor.direccion[0].ubicacion.localidad;
-            // this.viveLocActual = (paciente.direccion[0].ubicacion.localidad.id === this.localidadActual.id);
-            if (tutor.direccion[0].geoReferencia) {
-                this.paciente.direccion[0].geoReferencia = tutor.direccion[0].geoReferencia;
-            }
             this.direccionImportada = true;
         }
         if (!this.paciente.direccion[0].ubicacion.provincia && !this.paciente.direccion[0].ubicacion.localidad) {
-            // this.localidadRequerida = true;
         }
         if (!this.paciente.direccion[0].ubicacion.barrio && tutor.direccion[0].ubicacion.barrio) {
             this.paciente.direccion[0].ubicacion.barrio = tutor.direccion[0].ubicacion.barrio;
@@ -235,8 +225,6 @@ export class DatosBasicosComponent implements OnInit, OnDestroy {
             this.paciente.contacto[0].tipo = 'celular';
             this.contactoImportado = false;
         }
-        this.changes.emit({ refreshData: true });
-        // this.viveLocActual = false;
-        // this.viveProvActual = false;
+        this.changes.emit({ refreshData: true, relaciones: [] });
     }
 }

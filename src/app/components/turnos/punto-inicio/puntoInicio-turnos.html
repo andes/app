@@ -85,7 +85,11 @@
             </lista-solicitud-turno-ventanilla>
         </div>
         <div *ngIf="showActivarApp && paciente" type="info">
-            <activar-app [paciente]="paciente"></activar-app>
+            <activar-app *ngIf="paciente?.estado === 'validado'" [paciente]="paciente"></activar-app>
+            <plex-label class="pt-4" justify="center" *ngIf="paciente?.estado !== 'validado'" direction="column"
+                        icon="account" size="xl" titulo="Activar app mobile"
+                        subtitulo="Esta opción está disponible solo para pacientes validados">
+            </plex-label>
         </div>
     </plex-layout-sidebar>
 </plex-layout>

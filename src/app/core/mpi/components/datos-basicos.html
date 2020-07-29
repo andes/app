@@ -105,11 +105,11 @@
 
                     <plex-select label="Tipo de identificación" [(ngModel)]="paciente.tipoIdentificacion"
                                  [data]="tipoIdentificacion" name="tipoIdentificacion" placeholder="Seleccione.."
-                                 grow="3" required="true">
+                                 grow="3">
                     </plex-select>
 
                     <plex-text label="Número de identificación" [(ngModel)]="paciente.numeroIdentificacion"
-                               name="numeroIdentificacion" required="true" pattern="[0-9]+" grow="3">
+                               name="numeroIdentificacion" pattern="[0-9]+" grow="3">
                     </plex-text>
                 </plex-wrapper>
             </div>
@@ -123,12 +123,12 @@
                 <plex-wrapper>
                     <plex-int class="mr-3" label="Número de DNI ARGENTINO" [(ngModel)]="paciente.documento"
                               [readonly]=" validado || noPoseeDNI " [pattern]="patronDocumento" name="documento"
-                              [required]="!noPoseeDNI" grow="3">
+                              [required]="!noPoseeDNI" (change)="checkDisableValidar()" grow="3">
                     </plex-int>
 
                     <plex-select [(ngModel)]="paciente.sexo" label="Seleccione sexo" [data]="sexos" name="sexo"
                                  required="true" placeholder="Seleccione.." [readonly]="validado"
-                                 (change)="completarGenero();" grow="3">
+                                 (change)="completarGenero(); checkDisableValidar()" grow="3">
                     </plex-select>
 
                     <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="validado"

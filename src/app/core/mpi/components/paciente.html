@@ -16,7 +16,7 @@
                              (click)="save($event,true)">
                 </plex-button>
                 <plex-button [disabled]="disableGuardar" label="Guardar" type="success" position="right"
-                             [validateForm]="formulario" (click)="save($event,false)">
+                             [validateForm]="formulario" (click)="save(false)">
                 </plex-button>
 
             </plex-title>
@@ -28,14 +28,13 @@
             <plex-tabs [activeIndex]="tabIndex" (change)="setMainSize($event)">
 
                 <plex-tab label="datos básicos" icon="" (click)="tabIndex = 0">
-                    <datos-basicos [paciente]="pacienteModel" [tipoPaciente]="tipoPaciente"
+                    <datos-basicos #datosBasicos [paciente]="pacienteModel" [tipoPaciente]="tipoPaciente"
                                    (changes)="datosBasicosForm($event)" name="datos basicos">
                     </datos-basicos>
                 </plex-tab>
 
                 <plex-tab label="datos de contacto" icon="" (click)="tabIndex = 1">
-                    <datos-contacto #datosContacto [paciente]="pacienteModel" (changes)="datosContactoForm($event)"
-                                    (mobileApp)="mobileNotification($event)">
+                    <datos-contacto #datosContacto [paciente]="pacienteModel" (mobileApp)="mobileNotification($event)">
                     </datos-contacto>
                 </plex-tab>
 

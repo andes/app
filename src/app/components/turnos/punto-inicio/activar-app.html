@@ -5,11 +5,10 @@
         </plex-phone>
 
         <plex-grid>
-            <div justify="start">
+            <div span="2" justify="start">
                 <b class="pr-3"
                    hint="'Esta dirección se utilizará como usuario para loguearse en la app-mobile y con fines administrativos'"
-                   icon="help">Usuario
-                    ANDES</b>
+                   icon="help">Activar App Mobile</b>
             </div>
             <plex-text email label="" name="email" debounce="3000" [(ngModel)]="email"
                        [readonly]="(showCampoCelular && !celular) || emailReadonly" (change)="checkEmail()">

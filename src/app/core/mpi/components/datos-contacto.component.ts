@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { IPaciente } from '../interfaces/IPaciente';
 import { IContacto } from '../../../interfaces/IContacto';
 import { IProvincia } from '../../../interfaces/IProvincia';
@@ -27,10 +27,9 @@ import { PacienteService } from '../services/paciente.service';
     styleUrls: ['datos-contacto.scss']
 })
 
-export class DatosContactoComponent implements OnInit, OnDestroy {
+export class DatosContactoComponent implements OnInit {
 
     @Input() paciente: IPaciente;
-    @Output() changes: EventEmitter<any> = new EventEmitter<any>();
     @Output() mobileApp: EventEmitter<any> = new EventEmitter<any>();
     @ViewChild('form', null) ngForm: NgForm;
     @ViewChild('mapa', null) mapa: GeorrefMapComponent;
@@ -107,7 +106,6 @@ export class DatosContactoComponent implements OnInit, OnDestroy {
         this.provincias$ = this.provinciaService.get({}).pipe(
             cache()
         );
-        // this.celulares = this.paciente.contacto.filter(c => c.tipo === 'celular' && c.valor.length);
 
         this.georeferencia$ = combineLatest(
             this.organizacion$,
@@ -142,16 +140,12 @@ export class DatosContactoComponent implements OnInit, OnDestroy {
                 return [point.lat, point.lng];
             }),
             cache());
-
-        this.formChangesSubscription = this.ngForm.form.valueChanges
-            .debounceTime(300)
-            .subscribe(formValues => {
-                this.changes.emit({ values: formValues, isValid: this.ngForm.valid });
-            });
     }
 
-    ngOnDestroy() {
-        this.formChangesSubscription.unsubscribe();
+
+    public checkForm() {
+        this.ngForm.control.markAllAsTouched();
+        return this.ngForm.control.valid;
     }
 
     public refreshVars() {

@@ -131,11 +131,13 @@ export class PacienteDetalleComponent implements OnInit {
 
     // tslint:disable-next-line: use-lifecycle-interface
     ngOnChanges() {
-        this.loadObraSocial();
         if (this.reload) {
             this.pacienteService.getById(this.paciente.id).subscribe(result => {
                 this.paciente = result;
+                this.loadObraSocial();
             });
+        } else {
+            this.loadObraSocial();
         }
     }
 

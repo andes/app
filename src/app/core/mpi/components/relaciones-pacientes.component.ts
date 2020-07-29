@@ -10,6 +10,7 @@ import { Plex } from '@andes/plex';
 import { ParentescoService } from '../../../services/parentesco.service';
 import { IPaciente } from '../interfaces/IPaciente';
 import { PacienteService } from '../services/paciente.service';
+import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
 
 @Component({
     selector: 'relaciones-pacientes',
@@ -95,12 +96,10 @@ export class RelacionesPacientesComponent implements OnInit {
         this.posiblesRelaciones = listaPacientes;
     }
 
-    seleccionarRelacionEntrante(paciente) {
-        if (paciente.id) {
-            this.pacienteService.getById(paciente.id).subscribe(pac => {
-                this.relacionEntrante = [pac];
-                this.onSearchClear();
-            });
+    seleccionarRelacionEntrante(data: IPaciente | IPacienteRelacion) {
+        if (data.id) {
+            this.relacionEntrante = [data];
+            this.onSearchClear();
         }
     }
 
@@ -112,7 +111,8 @@ export class RelacionesPacientesComponent implements OnInit {
         } else {
             // relacion inexistente, construimos una nueva
             this.buscarPacRel = '';
-            let nuevaRelacion = Object.assign({}, {
+            let nuevaRelacion: IPacienteRelacion = Object.assign({}, {
+                id: null,
                 relacion: null,
                 referencia: null,
                 nombre: '',
@@ -185,8 +185,7 @@ export class RelacionesPacientesComponent implements OnInit {
         if (index >= 0) {
             if (data.operacion === 'edit') {
                 // se muestra en panel principal para su edicion
-                this.relacionEntrante = [this.paciente.relaciones[index]];
-                this.onSearchClear();
+                this.seleccionarRelacionEntrante(this.paciente.relaciones[index]);
             }
             if (data.operacion === 'remove') {
                 this.removeRelacion(index);
