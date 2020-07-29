@@ -65,6 +65,9 @@ import { CalculoDeBostonComponent } from './components/elementos/calculoDeBoston
 import { SeleccionBinariaComponent } from './components/elementos/seleccionBinaria.component';
 import { ValorNumericoComponent } from './components/elementos/valorNumerico.component';
 import { ValorFechaComponent } from './components/elementos/valorFecha.component';
+
+import { UltimaFechaComponent } from './components/elementos/ultimaFecha.component';
+
 import { MoleculaBaseComponent } from './components/elementos/moleculaBase.component';
 import { ProcedimientoDeEnfermeriaComponent } from './components/elementos/procedimientoDeEnfermeria.component';
 
@@ -140,6 +143,7 @@ const RUPComponentsArray = [
     SeleccionBinariaComponent,
     ValorNumericoComponent,
     ValorFechaComponent,
+    UltimaFechaComponent,
     MoleculaBaseComponent,
     ProcedimientoDeEnfermeriaComponent,
     LugarDeNacimientoComponent,
