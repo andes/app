@@ -60,7 +60,7 @@ export class HistorialSolicitudComponent {
             rechazada: 'Contrarreferida',
             anulada: 'Anulada',
             referencia: 'Referida',
-            responder: 'Respondida'
+            devolver: 'Devuelta'
         };
 
         this.itemsHistorial.forEach(e => e.descripcion = salidaEstados[e.descripcion]);

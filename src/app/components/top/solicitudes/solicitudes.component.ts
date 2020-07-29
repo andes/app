@@ -101,7 +101,7 @@ export class SolicitudesComponent implements OnInit {
     public accesoHudsPaciente = null;
     public accesoHudsTurno = null;
     public motivoRespuesta: String;
-    public prestacionResponder: any;
+    public prestacionDevolver: any;
 
     constructor(
         public auth: Auth,
@@ -736,21 +736,21 @@ export class SolicitudesComponent implements OnInit {
         });
     }
 
-    responder(prestacion) {
-        this.prestacionResponder = prestacion;
+    devolver(prestacion) {
+        this.prestacionDevolver = prestacion;
         this.modal.showed = true;
     }
 
-    confirmarResponder() {
-        this.servicioPrestacion.patch(this.prestacionResponder.id, { op: 'responder', observaciones: this.motivoRespuesta }).subscribe(() => {
-            this.modal.showed = false;
-            this.cerrarResponder();
+    confirmarDevolver() {
+        this.servicioPrestacion.patch(this.prestacionDevolver.id, { op: 'devolver', observaciones: this.motivoRespuesta }).subscribe(() => {
+            this.cerrarDevolver();
             this.cargarSolicitudes();
         });
     }
 
-    cerrarResponder() {
-        this.prestacionResponder = null;
+    cerrarDevolver() {
+        this.modal.showed = false;
+        this.prestacionDevolver = null;
         this.motivoRespuesta = null;
     }
 }
