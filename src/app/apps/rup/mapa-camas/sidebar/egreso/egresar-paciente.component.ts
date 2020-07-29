@@ -12,6 +12,7 @@ import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { combineLatest, Subscription, Observable } from 'rxjs';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
+import { diagnosticosNoMasculinos, diagnosticosNoFemeninos } from '../../constantes-internacion';
 
 @Component({
     selector: 'app-egresar-paciente',
@@ -82,6 +83,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     public existeCausaExterna = false;
     public listaProcedimientosQuirurgicos: any[];
     public prestacionValidada = false;
+    public filtrosDiagnostico = [];
 
     private subscription: Subscription;
     private subscription2: Subscription;
@@ -138,6 +140,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     this.registro.valor.InformeEgreso.fechaEgreso = this.registro.valor.InformeEgreso.fechaEgreso;
                     this.fechaEgresoOriginal = this.registro.valor.InformeEgreso.fechaEgreso;
                 }
+
+                this.filtrosDiagnostico = (this.prestacion.paciente.sexo === 'femenino') ? diagnosticosNoMasculinos : diagnosticosNoFemeninos;
 
                 if (this.view === 'listado-internacion') {
                     if (this.subscription2) {
@@ -326,7 +330,8 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     codigoCIE10(event) {
         if (event && event.query) {
             let query = {
-                nombre: event.query
+                nombre: event.query,
+                filtroRango: JSON.stringify(this.filtrosDiagnostico)
             };
             this.cie10Service.get(query).subscribe((datos) => {
                 // mapeamos para mostrar el codigo primero y luego la descripcion
