@@ -1,3 +1,33 @@
+# [5.6.0](https://github.com/andes/app/compare/v5.5.0...v5.6.0) (2020-07-29)
+
+
+### Bug Fixes
+
+* **GDU:** quita event emit de onChange ([#1789](https://github.com/andes/app/issues/1789)) ([0001fd6](https://github.com/andes/app/commit/0001fd676fb1c8d3c3d8d190ee523ae31fedefc4))
+* **huds:** badge total de prestaciones ([#1769](https://github.com/andes/app/issues/1769)) ([d0769b9](https://github.com/andes/app/commit/d0769b9bb0250d9d8fdf3dcd81ad7638d1adeae6))
+* **huds:** cerrar modal acceso con escape ([#1579](https://github.com/andes/app/issues/1579)) ([e46f731](https://github.com/andes/app/commit/e46f731bb295b0a571fe7acd579a71a8e9d5de91))
+* **reportes:** elimina async await erroneos ([c1d6f5f](https://github.com/andes/app/commit/c1d6f5fa8436310940cf1baad5c1a5e2ce1af696))
+* **rup:** ajustes visuales ([#1730](https://github.com/andes/app/issues/1730)) ([ceb4453](https://github.com/andes/app/commit/ceb4453576c7d66742121f68508be09568d79bb3))
+* **rup:** sincronizacion de datos en buscador ([#1522](https://github.com/andes/app/issues/1522)) ([60fc180](https://github.com/andes/app/commit/60fc180e3999d834287cd5cdfa57d87f93c00afc)), closes [#1521](https://github.com/andes/app/issues/1521)
+* **rup:** ver resumen fuera de agenda no nominalizada ([#1792](https://github.com/andes/app/issues/1792)) ([9c198d0](https://github.com/andes/app/commit/9c198d0962c5b1905e3470ad46a07d78f958049e))
+* **TOP:** Arregla duplicacion de prestacion al iniciar solicitud asignada ([#1809](https://github.com/andes/app/issues/1809)) ([1fa618f](https://github.com/andes/app/commit/1fa618f3d2a81027c7bba163a6b8fff6f0460ca1))
+* **turnos:** muestra correctamente prepagas ([#1805](https://github.com/andes/app/issues/1805)) ([eb0e3c1](https://github.com/andes/app/commit/eb0e3c168df3d1659de773d981824b3b49757327))
+
+
+### Features
+
+* **citas:** audita agenda al validar prestacion no nominalizada ([#1783](https://github.com/andes/app/issues/1783)) ([def3680](https://github.com/andes/app/commit/def36809f799d0a534cdbe605fbf0cdf13a54bc1))
+* **huds:** agrega eventos de google analytics ([#1749](https://github.com/andes/app/issues/1749)) ([ddd1908](https://github.com/andes/app/commit/ddd1908a297c9622debd8035c27b94e7e828047f))
+* **huds:** filtrado de registro por texto ([#1799](https://github.com/andes/app/issues/1799)) ([fb3ef6a](https://github.com/andes/app/commit/fb3ef6a1227ae3265619c4fe775a44d97bb90479))
+* **huds:** muestra tipo de prestacion en registros ([#1793](https://github.com/andes/app/issues/1793)) ([90e4c00](https://github.com/andes/app/commit/90e4c00599e0f0376afcc29a954dc64971e01655))
+* **mapa-camas:** agrega teléfono y dirección en detalle de paciente ([#1806](https://github.com/andes/app/issues/1806)) ([ec5cb7a](https://github.com/andes/app/commit/ec5cb7ad75b85c0385d4706524ea67d68924faf0))
+* **mapa-camas:** quita filtro por ambito en registros medicos ([#1816](https://github.com/andes/app/issues/1816)) ([708f5e2](https://github.com/andes/app/commit/708f5e2ca0d4633bec2a35f1bfc2efcb225472b6))
+* **mapa-camas:** registros filtros por unidad organizativa ([#1814](https://github.com/andes/app/issues/1814)) ([71ffac1](https://github.com/andes/app/commit/71ffac10ffdaf18e4a8036bd0d6d48a30be63ec7))
+* **reportes:** se agrega reportes de covid ([f98525d](https://github.com/andes/app/commit/f98525d4f715cb6ba307792204f689c8d46dd67b))
+* **rup:** árbol relaciones en ejecución ([#1620](https://github.com/andes/app/issues/1620)) ([9e10b91](https://github.com/andes/app/commit/9e10b91b73c7a7061c7975a9a51ac050bede9b88))
+* **TOP:** help de reglas en ejecucion de prestacion ([#1787](https://github.com/andes/app/issues/1787)) ([4c9fd63](https://github.com/andes/app/commit/4c9fd6302ddbefbe80c40efc70741b6f98af27d8))
+* **TOP:** organizaciones destino en bandeja de salida ([#1795](https://github.com/andes/app/issues/1795)) ([6beae6d](https://github.com/andes/app/commit/6beae6dcf5b6085ee0d8918ff0f772890112c9ca))
+
 # [5.5.0](https://github.com/andes/app/compare/v5.4.0...v5.5.0) (2020-07-22)
 
 
