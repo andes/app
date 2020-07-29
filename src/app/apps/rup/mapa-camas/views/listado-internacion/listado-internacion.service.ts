@@ -31,12 +31,14 @@ export class ListadoInternacionService {
             this.fechaEgresoHasta,
             ).pipe(
             switchMap(([fechaIngresoDesde, fechaIngresoHasta, fechaEgresoDesde, fechaEgresoHasta]) => {
-                const filtros = {
-                    fechaIngresoDesde, fechaIngresoHasta,
-                    fechaEgresoDesde, fechaEgresoHasta,
-                };
+                if (fechaIngresoDesde && fechaIngresoHasta) {
+                    const filtros = {
+                        fechaIngresoDesde, fechaIngresoHasta,
+                        fechaEgresoDesde, fechaEgresoHasta,
+                    };
 
-                return this.mapaHTTP.getPrestacionesInternacion(filtros);
+                    return this.mapaHTTP.getPrestacionesInternacion(filtros);
+                }
             })
         );
 
