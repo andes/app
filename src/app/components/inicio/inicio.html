@@ -1,6 +1,6 @@
 <plex-layout>
     <plex-layout-main>
-        <header class="logo-container mt-3" justify responsive>
+        <header class="logo-container mt-3 border-1" justify responsive>
             <div justify="start">
                 <div svgLogo></div>
                 <div svgAcronimo></div>
@@ -17,7 +17,9 @@
                     ¡Bienvenida/o a ANDES!
                 </div>
             </div>
+
         </header>
+        <hr>
         <main>
             <plex-loader *ngIf="loading" type="linear"></plex-loader>
             <div *ngIf="!denied && !loading" class="modulos" justify>
@@ -27,7 +29,7 @@
                         <div class="principal {{ modulo.class }}">
                             <b class="titulo">{{ modulo.nombre }}
                                 <span class="hover" *ngIf="novedades[modulo._id]?.length > 0"
-                                      hint="Novedades del módulo {{ modulo.nombre }}" detach="true" icon="bell"
+                                      hint="Novedades del módulo {{ modulo.nombre }}" detach="both" icon="bell"
                                       (click)="irANovedades(modulo._id)"></span>
                             </b>
                             <div class="descripcion">{{modulo.descripcion}}</div>
@@ -43,7 +45,7 @@
                     </div>
                 </div>
 
-                <div class="divisor"></div>
+                <hr class="divisor">
 
                 <div class="secciones" justify>
                     <ng-container *ngFor="let seccion of secciones">
@@ -58,7 +60,7 @@
                 </div>
             </div>
         </main>
-        <div *ngIf="denied && !loading" class="w-100 h-100 d-flex justify-content-center align-items-center">
+        <div *ngIf="denied && !loading" class="w-100 h-75 d-flex justify-content-center align-items-center">
             <main role="main" class="inner">
                 <plex-label icon="llave" type="warning" size="xl" direction="column"
                             titulo="No tenés permisos para ningún módulo de ANDES"

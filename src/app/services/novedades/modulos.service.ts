@@ -3,6 +3,6 @@ import { Server, ResourceBaseHttp } from '@andes/shared';
 
 @Injectable()
 export class ModulosService extends ResourceBaseHttp {
-    protected url = '/core/tm/modulos_new';
+    protected url = '/core/tm/modulos_new2';
     constructor(protected server: Server) { super(server); }
 }
