@@ -44,8 +44,6 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     public elementosRUP: any[];
     // Indica si muestra el calendario para dar turno autocitado
     public showDarTurnos = false;
-    // Indica si muestra el modal de selección de correo
-    public showModalEmails = false;
     // Mostrar datos de la Solicitud "padre"?
     public showDatosSolicitud = false;
     // Datos de la Solicitud que se usará para dar un turno
