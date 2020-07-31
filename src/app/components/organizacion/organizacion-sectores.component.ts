@@ -3,11 +3,11 @@ import { Location } from '@angular/common';
 import { SnomedService } from '../../apps/mitos';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding } from '@angular/core';
-import { OrganizacionService } from './../../services/organizacion.service';
-import { ISectores } from './../../interfaces/IOrganizacion';
+import { ISectores, IOrganizacion } from './../../interfaces/IOrganizacion';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ISnomedConcept } from '../../modules/rup/interfaces/snomed-concept.interface';
-import { NgForm } from '@angular/forms';
+import { SectoresService } from '../../services/sectores.service';
+import { OrganizacionService } from '../../services/organizacion.service';
 
 @Component({
     selector: 'organizacion-sectores',
@@ -29,12 +29,13 @@ export class OrganizacionSectoresComponent implements OnInit {
     public tiposSectores: ISnomedConcept[];
 
     public idOrganizacion: String;
-    public nombreOrganizacion: String;
+    public organizacion: IOrganizacion;
     public mapaSectores: any[];
     public selectedItem: any;
 
     constructor(
         private organizacionService: OrganizacionService,
+        private sectoresService: SectoresService,
         public plex: Plex,
         public snomed: SnomedService,
         private router: Router,
@@ -54,8 +55,8 @@ export class OrganizacionSectoresComponent implements OnInit {
             if (!this.auth.check('tm:organizacion:sectores')) {
                 this.router.navigate(['inicio']);
             }
-            this.organizacionService.getSectores(this.idOrganizacion).subscribe(org => {
-                this.nombreOrganizacion = org.nombre;
+            this.organizacionService.getById(this.idOrganizacion).subscribe(org => {
+                this.organizacion = org;
                 this.mapaSectores = org.mapaSectores;
             });
         });
@@ -110,7 +111,7 @@ export class OrganizacionSectoresComponent implements OnInit {
     removeItem($event) {
         this.plex.confirm('¿Desea eliminarlo?', 'Eliminar Sector').then((confirmar) => {
             if (confirmar) {
-                this.organizacionService.deleteSector(this.idOrganizacion, $event._id).subscribe(result => {
+                this.sectoresService.deleteSector(this.idOrganizacion, $event._id).subscribe(result => {
                     if (result === $event._id) {
                         let index = this.mapaSectores.findIndex((item) => item === $event);
                         this.mapaSectores.splice(index, 1);
@@ -169,26 +170,27 @@ export class OrganizacionSectoresComponent implements OnInit {
             if (this.editing) {
                 this.selectedItem.nombre = item.nombre;
                 this.selectedItem.tipoSector = item.tipoSector;
-                this.selectedItem.unidadOrg = item.unidadConcept;
-                item = this.selectedItem;
-            } else {
-                if (this.selectedItem) {
-                    this.selectedItem.hijos.push(item);
-                    item = this.selectedItem;
-            } else {
-                    this.mapaSectores.push(item);
-                    this.mapaSectores = [...this.mapaSectores];
-                }
-            }
+                this.selectedItem.unidadConcept = item.unidadConcept;
 
-            this.organizacionService.patchSector(this.idOrganizacion, item, item.unidadConcept, this.editing).subscribe(mapaSectores => {
-                this.plex.info('success', 'El sector fue guardado', 'Sector guardado!');
-                this.mapaSectores = mapaSectores;
-                this.editing = false;
-                this.disabledPanel = true;
-                this.selectedItem = null;
-                this.clearForm();
-            });
+                this.sectoresService.patchSector(this.idOrganizacion, this.selectedItem).subscribe(mapaSectores => {
+                    this.plex.info('success', 'El sector fue guardado', 'Sector guardado!');
+                    this.mapaSectores = mapaSectores;
+                    this.editing = false;
+                    this.disabledPanel = true;
+                    this.selectedItem = null;
+                    this.clearForm();
+                });
+            } else {
+                const padre = (this.selectedItem) ? this.selectedItem._id : null;
+                this.sectoresService.postSector(this.idOrganizacion, item, padre).subscribe(mapaSectores => {
+                    this.plex.info('success', 'El sector fue agregado', 'Sector agregado!');
+                    this.mapaSectores = mapaSectores;
+                    this.editing = false;
+                    this.disabledPanel = true;
+                    this.selectedItem = null;
+                    this.clearForm();
+                });
+            }
         } else {
             this.plex.info('info', 'ERROR: Los datos de requeridos no estan completos');
             return;

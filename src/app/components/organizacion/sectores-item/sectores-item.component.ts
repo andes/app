@@ -2,7 +2,7 @@ import { SnomedService } from '../../../apps/mitos';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import { ISectores } from '../../../interfaces/IOrganizacion';
-import { OrganizacionService } from '../../../services/organizacion.service';
+import { SectoresService } from '../../../services/sectores.service';
 
 @Component({
     selector: 'sectores-item',
@@ -28,7 +28,7 @@ export class SectoresItemComponent implements OnInit {
     constructor(
         public plex: Plex,
         public snomed: SnomedService,
-        private organizacionService: OrganizacionService,
+        private sectoresService: SectoresService,
     ) { }
 
     /**
@@ -136,7 +136,7 @@ export class SectoresItemComponent implements OnInit {
     removeChild(child) {
         this.plex.confirm('¿Desea eliminarlo?', 'Eliminar Sector').then((confirmar) => {
             if (confirmar) {
-                this.organizacionService.deleteSector(this.idOrganizacion, child._id).subscribe(result => {
+                this.sectoresService.deleteSector(this.idOrganizacion, child._id).subscribe(result => {
                     if (result === child._id) {
                         let index = this.root.hijos.findIndex((item) => item === child);
                         this.root.hijos.splice(index, 1);

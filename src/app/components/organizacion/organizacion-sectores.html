@@ -2,7 +2,7 @@
     <plex-layout-main>
         <header>
             <plex-title titulo="MAPA DE SECTORES">
-                <plex-badge class="mr-2" type="info"> {{ !nombreOrganizacion ? '' : nombreOrganizacion }}</plex-badge>
+                <plex-badge *ngIf="organizacion" class="mr-2" type="info"> {{ organizacion.nombre }}</plex-badge>
                 <plex-button label="Agregar sector" size="sm" type="primary" (click)="onAddParent()"></plex-button>
                 <plex-button label="VOLVER" size="sm" type="danger" (click)="volver()"></plex-button>
             </plex-title>

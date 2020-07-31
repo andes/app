@@ -147,21 +147,4 @@ export class OrganizacionService {
     getOrgSisa(cod: string): Observable<any> {
         return this.server.get(this.organizacionUrl + '/sisa/' + cod);
     }
-
-    /* SECTORES */
-    getSectores(id: String): Observable<any> {
-        return this.server.get(this.organizacionUrl + '/' + id + '/sectores', null);
-    }
-
-    patchSector(id: String, sector: ISectores, unidadOrganizativa = null, edit = false): Observable<any> {
-        if (sector.id) {
-            return this.server.patch(this.organizacionUrl + '/' + id + '/sectores/' + sector.id, { sector, unidadOrganizativa, edit });
-        } else {
-            return this.server.patch(this.organizacionUrl + '/' + id + '/sectores/', { sector, unidadOrganizativa, edit });
-        }
-    }
-
-    deleteSector(id: String, idSector: string): Observable<any> {
-        return this.server.delete(this.organizacionUrl + '/' + id + '/sectores/' + idSector, null);
-    }
 }
