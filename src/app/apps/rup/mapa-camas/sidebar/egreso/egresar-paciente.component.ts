@@ -12,7 +12,7 @@ import { IMaquinaEstados } from '../../interfaces/IMaquinaEstados';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { combineLatest, Subscription, Observable } from 'rxjs';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
-import { diagnosticosNoMasculinos, diagnosticosNoFemeninos } from '../../constantes-internacion';
+import { diagnosticosNoMasculinos, diagnosticosNoMasculinosSin1050, diagnosticosNoFemeninos, diagnosticosMenores } from '../../constantes-internacion';
 
 @Component({
     selector: 'app-egresar-paciente',
@@ -141,7 +141,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     this.fechaEgresoOriginal = this.registro.valor.InformeEgreso.fechaEgreso;
                 }
 
-                this.filtrosDiagnostico = (this.prestacion.paciente.sexo === 'femenino') ? diagnosticosNoMasculinos : diagnosticosNoFemeninos;
+                this.setDiagnosticos();
 
                 if (this.view === 'listado-internacion') {
                     if (this.subscription2) {
@@ -195,6 +195,24 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         if (this.capa === 'estadistica') {
             this.calcularDiasEstada();
             this.checkEstadoCama();
+        }
+    }
+
+    setDiagnosticos() {
+        const edadMeses = moment(this.prestacion.ejecucion.fecha).diff(moment(this.prestacion.paciente.fechaNacimiento), 'months');
+        if (edadMeses < 1) {
+            this.filtrosDiagnostico = diagnosticosMenores;
+        } else {
+            const edadAnios = Math.round(edadMeses / 12);
+            if (this.prestacion.paciente.sexo === 'femenino') {
+                if (edadAnios >= 10 && edadAnios <= 50) {
+                    this.filtrosDiagnostico = diagnosticosNoMasculinos;
+                } else {
+                    this.filtrosDiagnostico = diagnosticosNoMasculinosSin1050;
+                }
+            } else {
+                this.filtrosDiagnostico = diagnosticosNoFemeninos;
+            }
         }
     }
 
