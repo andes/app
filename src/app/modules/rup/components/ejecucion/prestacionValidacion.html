@@ -233,7 +233,7 @@
                                     <div class="col-12">
                                         <ng-container
                                                       *ngIf="(elemento.concepto.semanticTag !== 'elemento de registro')">
-                                            <ng-container *ngIf="elementoRUP.requiereDiagnosticoPrincipal && prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado' && prestacion.solicitud.ambitoOrigen !== 'internacion'"
+                                            <ng-container *ngIf="elementoRUP.requiereDiagnosticoPrincipal && prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado'"
                                                           title="Establecer como Procedimiento/Diagnóstico principal"
                                                           class="diagnostico-principal d-flex align-items-end">
                                                 <plex-radio [data]="opcionDiagnosticoPrincipal"
@@ -299,5 +299,3 @@
 <!-- Calendario para dar turnos autocitados -->
 <dar-turnos *ngIf="showDarTurnos && solicitudTurno" (volverValidacion)="turnoDado($event)"
             [pacienteSeleccionado]="paciente" [solicitudPrestacion]="solicitudTurno"></dar-turnos>
-<modal-seleccion-email *ngIf="showModalEmails" (email)="enviarCorreo($event)">
-</modal-seleccion-email>
