@@ -1,0 +1,42 @@
+
+.egt, .egt th, .egt td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+
+body {
+    padding-top: 0;
+}
+
+hr {
+    margin: 1px 0;
+}
+th {
+    font-size: 1rem;
+}
+tr {
+    border-bottom: 2px solid rgba(0, 0, 0, .15);
+}
+
+.text-bottom {
+    vertical-align: bottom;
+}
+.text-center {
+    text-align: center;
+}
+.h50{
+    height: 50px;
+}
+.h30 {
+    height: 0px;
+}
+.font12{
+    font-size: 12px;
+}
+input[type=checkbox] {
+    transform: scale(1.5);
+}
+.ml25{  
+    margin-left: 25px;
+    padding-left: 25px;
+}

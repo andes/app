@@ -1,3 +1,5 @@
+@import '~@andes/plex/src/lib/css/variables';
+
 @media print {
     @page {
         size: portrait;
@@ -9,94 +11,77 @@
     }
     body {
         padding-top: 0;
+        -webkit-print-color-adjust: exact;
     }
-    // table {
-    //     // page-break-after: always;
-    // }
-    hr {
-        margin: 1px 0;
-    }
-    th {
-        font-size: 1rem;
-    }
-    tr {
-        border-bottom: 2px solid rgba(0, 0, 0, .15);
-    }
-    small {
-        font-size: 0.7rem;
-    }
-    .dato {
-        font-size: 0.9rem;
-    }
-    .content {
-        margin: 0 !important;
-    }
-    .plex-box>div {
-        padding: 0 !important;
-    }
-    .badge {
-        color: #333333;
-        border: 1px solid rgba(0, 0, 0, 0.69);
-    }
-    .firma-profesional{
-        text-align: center;
-        label {
-            font-size: 0.9rem;
-        }
-        p {
-            font-size: 0.7rem;
-        }
-        img {
-            max-height: 45px;
-        }
-    }
-    .pushup {
-        position: relative;
-        top: -1cm;
-    }
-    .leyenda {
-        background-color: rgba(0, 0, 0, 0.1);
-        display: inline-block;
-        font-size: 5px;
-        margin-bottom: 15px;
-        padding: 5px;
-        width: 100%;
-    }
-    .contenedor-zocalo {
-        display: inline-block; 
-        img {
-            float: left; // margin-right: 1rem;
-            &.logo-pdp {
-                height: 1cm;
-                width: auto;
-            }
-        }
     
-        hr {
-            margin: 5px 0 5px 0;
+    .login-header {
+        height: 80px;
+        margin-left: 30px;
+        .logo-gobierno {
+            width: var(--logo-gobierno-size);
+            float: left;
+            height: 100%;
+            background-repeat: no-repeat;
+            background-size: var(--logo-gobierno-size);
+            background-position: center left;
+            background-image: var(--logo-gobierno);
         }
+        .logo-gobierno-salud {
+            width: var(--logo-gobierno-salud-size);
+            float: left;
+            margin-left: 5px;
+            height: 100%;
+            background-repeat: no-repeat;
+            background-size: var(--logo-gobierno-salud-size);
+            background-position: center left;
+            background-image: var(--logo-gobierno-salud);
+        }
+    }
     
-        .contenedor-data-pdp {
-            width: 50%;
-            display: inline-block;
-            margin-left: 0.5cm;
-            text-align: justify;
-            font-size: 0.7rem;
-            h6 {
-                font-size: 0.7rem;
-            }
-        }
+.egt, .egt th, .egt td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
 
-        .contenedor-ley {
-            // display: inline-block;
-            float: right;
-            max-width: 5.25cm;
-            margin-left: 0; // text-align: right;
-            margin-left: 0.25cm;
-            text-align: justify;
-            h6 {
-                font-size: 0.8rem;
-            }
-        }
-    }
+body {
+    padding-top: 0;
 }
+
+hr {
+    margin: 1px 0;
+}
+th {
+    font-size: 1rem;
+}
+tr {
+    border-bottom: 2px solid rgba(0, 0, 0, .15);
+}
+td{
+    padding-left: 10px;
+}
+
+.text-bottom {
+    vertical-align: bottom;
+}
+.text-center {
+    text-align: center;
+}
+.h50{
+    height: 50px;
+}
+.h30 {
+    height: 0px;
+}
+.font12{
+    font-size: 12px;
+}
+input[type=checkbox] {
+    transform: scale(1.5);
+}
+.ml25{  
+    margin-left: 25px;
+    padding-left: 25px;
+}
+
+}
+

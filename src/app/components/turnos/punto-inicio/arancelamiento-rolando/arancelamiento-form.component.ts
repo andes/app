@@ -8,6 +8,8 @@ import { OrganizacionService } from '../../../../services/organizacion.service';
 import { ProfesionalService } from '../../../../services/profesional.service';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { IOrganizacion } from '../../../../interfaces/IOrganizacion';
+
 
 @Component({
     selector: 'arancelamiento-form',
@@ -17,10 +19,11 @@ import { catchError } from 'rxjs/operators';
 })
 export class ArancelamientoFormComponent implements OnInit {
 
+    public organizacionDatos: IOrganizacion;
     turnoSeleccionado: any;
     efector = this.auth.organizacion.nombre;
+    efectorCodigoSisa = this.organizacionService.getById(this.auth.organizacion.id);
     obraSocial: String;
-    efectorCodigoSisa: String;
     codigoOs: Number;
     numeroAfiliado: String;
     showForm = false;
@@ -32,6 +35,7 @@ export class ArancelamientoFormComponent implements OnInit {
     aclaracion1Firma: string;
     aclaracion2Firma: string;
     aclaracion3Firma: string;
+   // efectorcodigosisa = this.organizacionDatos.codigo.sisa;
 
     get muestraFirma() {
         return this.fotoFirma && this.fotoFirma.length > 0;
@@ -90,20 +94,13 @@ export class ArancelamientoFormComponent implements OnInit {
 
             if (this.turno.paciente.obraSocial) {
                 this.obraSocial = this.turno.paciente.obraSocial.financiador;
-                this.codigoOs = this.turno.paciente.obraSocial.codigoFinanciador ? this.turno.paciente.obraSocial.codigoFinanciador : this.turno.paciente.obraSocial.codigoPuco;
+                this.codigoOs = this.turno.paciente.obraSocial ? this.turno.paciente.obraSocial.codigoFinanciador : 0;
                 this.numeroAfiliado = this.turno.paciente.obraSocial.numeroAfiliado ? this.turno.paciente.obraSocial.numeroAfiliado : '';
                 this.showForm = true;
-                
-                this.organizacionService.getById(this.auth.organizacion.id).subscribe(resultado => {
-                    this.efectorCodigoSisa = resultado.codigo.sisa ? resultado.codigo.sisa : '';
-                    
-                    setTimeout(() => {
-                        this.imprimir();
-                        this.volverAPuntoInicio.emit();
-                    }, 100);
-                });
-
-               
+                setTimeout(() => {
+                    this.imprimir();
+                    this.volverAPuntoInicio.emit();
+                }, 100);
             } else if (this.turnoSeleccionado.paciente.documento) {
                 this.servicioOS.get({ dni: this.turnoSeleccionado.paciente.documento }).subscribe(resultado => {
                     if (resultado && resultado.length > 0) {
