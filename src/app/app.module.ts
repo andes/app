@@ -23,7 +23,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { HttpClient } from '@angular/common/http';
-import { ExcelService } from './services/xlsx.service';
 
 // Global
 import { PlexModule } from '@andes/plex';
@@ -47,24 +46,7 @@ import { HoverClassDirective } from './directives/hover-class.directive';
 import { DocumentosService } from './services/documentos.service';
 
 // Pipes
-import { EdadPipe } from './pipes/edad.pipe';
-import { FromNowPipe } from './pipes/fromNow.pipe';
-import { FechaPipe } from './shared/pipes/fecha.pipe';
-import { HoraPipe } from './shared/pipes/hora.pipe';
-import { SexoPipe } from './pipes/sexo.pipe';
-import { OrganizacionPipe } from './pipes/organizacion.pipe';
 import { SortBloquesPipe } from './pipes/agenda-bloques.pipe';
-import { TextFilterPipe } from './pipes/textFilter.pipe';
-import { FilterPermisos } from './pipes/filterPermisos.pipe';
-import { EnumerarPipe } from './pipes/enumerar.pipe';
-import { PluralizarPipe } from './pipes/pluralizar.pipe';
-import { ReplacePipe } from './pipes/replace.pipe';
-import { IconoCamaPipe } from './pipes/iconoCama.pipe';
-import { Html2TextPipe } from './pipes/html2text.pipe';
-
-// Servicios
-
-// Auth
 
 // ... Tablas Maestras
 import { OrganizacionService } from './services/organizacion.service';
@@ -389,10 +371,9 @@ registerLocaleData(localeEs, 'es');
         ProfesionalCreateUpdateComponent,
         UploadFileComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
-        FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe, ReplacePipe, EspacioFisicoPipe,
-        MapsComponent, EdadPipe, FromNowPipe, FechaPipe, HoraPipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
+        EspacioFisicoPipe,
+        MapsComponent, SortBloquesPipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, DinamicaFormComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
-        Html2TextPipe,
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
         TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
