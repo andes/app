@@ -3,8 +3,7 @@ import {
     Input,
     ViewChild,
     Output,
-    EventEmitter,
-    ChangeDetectionStrategy
+    EventEmitter
 } from '@angular/core';
 import {
     Plex
@@ -27,9 +26,10 @@ import {
     PacienteService
 } from '../../../core/mpi/services/paciente.service';
 import { NgForm } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'activar-app',
     templateUrl: 'activar-app.html'
 })
@@ -66,6 +66,7 @@ export class ActivarAppComponent {
     public emailReadonly = false;
     public cuentaActivada = false;
     private cuentaExistente = false;
+    public hasEmailValido$: Observable<boolean>;
 
     // Inicialización
     constructor(
@@ -75,7 +76,6 @@ export class ActivarAppComponent {
         public auth: Auth,
         public appMobile: AppMobileService
     ) { }
-
 
     verificarEstadoCuenta() {
         this.appMobile.check(this.paciente.id).subscribe(data => {
@@ -145,28 +145,31 @@ export class ActivarAppComponent {
         if (!this.celular) {
             this.celular = this.contacto('celular');
         }
-        if (this.ngForm.invalid || !this.celular || !this.email) {
+        if (this.ngForm.invalid || !this.email) {
             return;
         }
-        this.appMobile.getByEmail(this.email).subscribe(resp => {
-            if (resp.length && resp[0].pacientes[0].id !== this.paciente.id) {
-                this.disableActivacion = true;
-                this.message = 'Su dirección no ha podido ser validada, dirección ya utilizada';
-                this.typeMessage = 'danger';
-            } else {
-                this.disableActivacion = false;
-                this.emailReadonly = true;
-                this.disableEditar = false;
-                this.message = 'Su dirección ha sido validada,';
-                if (this.paciente.id) {
-                    this.message += ' puede iniciar el proceso de activación';
+        this.hasEmailValido$ = this.appMobile.getByEmail(this.email).pipe(
+            map(resp => {
+                if (resp.length && resp[0].pacientes[0].id !== this.paciente.id) {
+                    this.disableActivacion = true;
+                    this.message = 'Su dirección no ha podido ser validada, dirección ya utilizada';
+                    this.typeMessage = 'danger';
                 } else {
-                    this.message += ' se ha iniciado el proceso de activación';
-                    this.activar.emit({ email: this.email, celular: this.celular });
+                    this.disableActivacion = false;
+                    this.emailReadonly = true;
+                    this.disableEditar = false;
+                    this.message = 'Su dirección ha sido validada,';
+                    if (this.paciente.id) {
+                        this.message += ' puede iniciar el proceso de activación';
+                    } else {
+                        this.message += ' se ha iniciado el proceso de activación';
+                        this.activar.emit({ email: this.email, celular: this.celular });
+                    }
+                    this.typeMessage = 'success';
                 }
-                this.typeMessage = 'success';
-            }
-        });
+                return true;
+            })
+        );
     }
 
     activarApp() {
@@ -222,4 +225,5 @@ export class ActivarAppComponent {
             this.plex.info('warning', 'Debe ingresar un número de celular y un email como datos de contacto para activar la app mobile');
         }
     }
+
 }

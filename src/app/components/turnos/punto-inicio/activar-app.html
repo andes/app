@@ -6,11 +6,9 @@
 
         <plex-grid>
             <div span="2" justify="start">
-                <b class="pr-3"
-                   hint="'Esta dirección se utilizará como usuario para loguearse en la app-mobile y con fines administrativos'"
-                   icon="help">Activar App Mobile</b>
+                <b class="pr-3">Activar App Mobile</b>
             </div>
-            <plex-text email label="" name="email" debounce="3000" [(ngModel)]="email"
+            <plex-text email label="" name="email" debounce="900" [(ngModel)]="email" placeholder="maria@gmail.com"
                        [readonly]="(showCampoCelular && !celular) || emailReadonly" (change)="checkEmail()">
             </plex-text>
         </plex-grid>
@@ -33,6 +31,7 @@
                      label="Reenviar Código" type="info" (click)="activarApp()">
         </plex-button>
 
-        <plex-badge *ngIf="message" class="pt-2 pr-3" [type]="typeMessage" size="block">{{ message }}</plex-badge>
+        <plex-badge *ngIf="hasEmailValido$| async" class="pt-2 pr-3" [type]="typeMessage" size="block">{{ message }}
+        </plex-badge>
     </plex-wrapper>
 </form>

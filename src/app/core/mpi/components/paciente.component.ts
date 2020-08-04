@@ -378,7 +378,7 @@ export class PacienteComponent implements OnInit {
     }
 
     cancel() {
-        this.plex.confirm('¿Deséa salir sin guardar los datos?', 'Atención').then(confirmacion => {
+        this.plex.confirm('¿Desea salir sin guardar los datos?', 'Atención').then(confirmacion => {
             if (confirmacion) {
                 if (this.subscripcionValidar) {
                     this.subscripcionValidar.unsubscribe();
