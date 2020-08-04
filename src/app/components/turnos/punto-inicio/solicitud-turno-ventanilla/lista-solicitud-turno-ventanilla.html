@@ -30,7 +30,7 @@
                                 {{ prestacion.solicitud.tipoPrestacion.term }}
                             </td>
                             <td>
-                                {{ prestacion.solicitud.profesional | profesional }} -
+                                {{ prestacion.solicitud.profesional | nombre }} -
                                 {{ prestacion?.solicitud?.organizacion?.nombre }}
                                 <span class="text-danger"
                                       *ngIf="prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado === true">(autocitado)</span>

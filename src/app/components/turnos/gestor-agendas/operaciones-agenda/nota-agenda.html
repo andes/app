@@ -25,7 +25,7 @@
                     <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Equipo de Salud no
                         asignado</span>
                     <ng-container *ngIf="agenda.profesionales">
-                        <div *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}}</div>
+                        <div *ngFor="let profesional of agenda.profesionales">{{profesional | nombre}}</div>
                     </ng-container>
                 </div>
             </div>

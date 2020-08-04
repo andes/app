@@ -91,7 +91,7 @@
                                     </span>
                                     <ng-container *ngIf="agenda.profesionales">
                                         <div *ngFor="let profesional of agenda.profesionales">
-                                            {{profesional | profesional}}
+                                            {{profesional | nombre}}
                                         </div>
                                     </ng-container>
                                 </div>
@@ -255,7 +255,7 @@
                                                 <ng-container class="text-muted"
                                                               *ngIf="turno?.prestacion?.solicitud?.profesional">
                                                     <br>
-                                                    Prof.: {{turno.prestacion.solicitud.profesional | profesional}}
+                                                    Prof.: {{turno.prestacion.solicitud.profesional | nombre}}
                                                 </ng-container>
                                             </small>
 
@@ -450,7 +450,7 @@
                                                               *ngIf="sobreturno?.prestacion?.solicitud?.profesional">
                                                     <br>
                                                     <small> Prof.: {{sobreturno.prestacion.solicitud.profesional |
-                                                    profesional}}
+                                                    nombre}}
                                                     </small>
                                                 </ng-container>
 
@@ -562,7 +562,7 @@
                                         <small *ngIf="prestacion && prestacion.solicitud.tipoPrestacion.noNominalizada"
                                                class="text-muted">No nominalizada</small>
                                         <ng-container *ngIf="prestacion?.solicitud?.profesional">
-                                            <br> Prof.: {{prestacion.solicitud.profesional | profesional}}
+                                            <br> Prof.: {{prestacion.solicitud.profesional | nombre}}
                                         </ng-container>
                                     </td>
                                     <td>
