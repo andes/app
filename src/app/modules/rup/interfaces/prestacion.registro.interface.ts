@@ -17,9 +17,9 @@ export class IPrestacionRegistro {
     nombre: string;
     concepto: ISnomedConcept;
     // Indica si este registro está destacado
-    destacado: Boolean;
+    destacado: boolean;
     // Indica si este registro es una solicitud
-    esSolicitud: Boolean;
+    esSolicitud: boolean;
     // Almacena el valor del átomo, molécula o fórmula.
     // Para el caso de las moléculas, el valor puede ser nulo.
     valor: any;
@@ -40,9 +40,9 @@ export class IPrestacionRegistro {
     transformado: any;
     esPrimeraVez: boolean;
 
-    hasSections: Boolean;
-    isSection: Boolean;
-    noIndex: Boolean;
+    hasSections: boolean;
+    isSection: boolean;
+    noIndex: boolean;
 
     createdAt: Date;
 

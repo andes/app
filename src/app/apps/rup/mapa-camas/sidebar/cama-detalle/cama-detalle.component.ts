@@ -47,7 +47,6 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
     public relacionesPosibles;
     public especialidades;
     public validadoColor;
-    public conceptosInternacion;
     public titleColor;
     public tabIndex = 0;
     public editar = false;
@@ -59,7 +58,6 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
     constructor(
         private auth: Auth,
         private router: Router,
-        private elementoRupService: ElementosRUPService,
         private mapaCamasService: MapaCamasService
     ) {
     }
@@ -69,11 +67,6 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.permisoIngreso = this.auth.check('internacion:ingreso');
-
-        this.elementoRupService.ready.subscribe(() => {
-            this.conceptosInternacion = this.elementoRupService.getConceptosInternacion();
-        });
-
         this.cama$ = this.mapaCamasService.selectedCama;
         this.paciente$ = this.cama$.pipe(
             filter(cama => !!cama.paciente),

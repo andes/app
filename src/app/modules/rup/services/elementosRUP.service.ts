@@ -6,6 +6,7 @@ import { Server } from '@andes/shared';
 import { IElementoRUP } from './../interfaces/elementoRUP.interface';
 import { IElementosRUPCache } from './../interfaces/elementosRUPCache.interface';
 import { ISnomedConcept } from './../interfaces/snomed-concept.interface';
+import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface';
 
 const url = '/modules/rup/elementosRUP';
 
@@ -127,9 +128,9 @@ export class ElementosRUPService {
      * @returns {IElementoRUP} Elemento que implementa el concepto
      * @memberof ElementosRUPService
      */
-    elementoRegistro(registro) {
+    elementoRegistro(registro: IPrestacionRegistro) {
         if (registro.elementoRUP) {
-            return this.cacheById[registro.elementoRUP];
+            return this.populateElemento(this.cacheById[registro.elementoRUP], registro.esSolicitud);
         } else {
             return this.buscarElemento(registro.concepto, registro.esSolicitud);
         }
@@ -164,24 +165,38 @@ export class ElementosRUPService {
         if (typeof concepto.conceptId === 'undefined') {
             concepto = concepto[1];
         }
-
-        // TODO: ver cómo resolver esto mejor...
         concepto.semanticTag = concepto.semanticTag === 'plan' ? 'procedimiento' : concepto.semanticTag;
         if (esSolicitud) {
             let elemento = this.cacheParaSolicitud[concepto.conceptId];
             if (elemento) {
-                return elemento;
+                return this.populateElemento(elemento, esSolicitud);
             } else {
-                return this.defaultsParaSolicitud[concepto.semanticTag];
+                return this.populateElemento(this.defaultsParaSolicitud[concepto.semanticTag], esSolicitud);
             }
         } else {
             let elemento = this.cache[concepto.conceptId];
             if (elemento) {
-                return elemento;
+                return this.populateElemento(elemento, esSolicitud);
             } else {
-                return this.defaults[concepto.semanticTag];
+                return this.populateElemento(this.defaults[concepto.semanticTag], esSolicitud);
             }
         }
+    }
+
+    /**
+     * Popula los requeridos de un elemento rup
+     */
+
+    populateElemento(elemento: IElementoRUP, esSolicitud: boolean) {
+        elemento.requeridos.forEach((elem) => {
+            if (!elem.elementoRUP) {
+                elem.elementoRUP = this.buscarElemento(elem.concepto, esSolicitud);
+                elem.params = { ...elem.elementoRUP.params, ...(elem.params || {}) };
+            } else if (typeof (elem.elementoRUP as any) === 'string') {
+                elem.elementoRUP = this.populateElemento(this.cacheById[elem.elementoRUP as any], false);
+            }
+        });
+        return elemento;
     }
 
     getConceptosInternacion() {

@@ -292,8 +292,8 @@ export class RUPComponent implements OnInit, AfterViewInit {
         const requeridos = [];
         for (let i = 0; i < this.registro.registros.length; i++) {
             const concepto = this.registro.registros[i].concepto;
-            const requerido = this.elementoRUP.requeridos.find(r => r.concepto.conceptId === concepto.conceptId);
-            if (requerido) {
+            const requerido = this.elementoRUP.requeridos[i];
+            if (requerido && requerido.concepto.conceptId === concepto.conceptId) {
                 requeridos.push(requerido);
             }
         }

@@ -47,7 +47,7 @@ export interface IElementoRUP {
 }
 
 export interface IElementoRUPRequeridos {
-    elementoRUP: IElementoRUP;
+    elementoRUP?: IElementoRUP;
     concepto: ISnomedConcept;
     // Indica estilos para la instancia del elementoRUP
     style: {
