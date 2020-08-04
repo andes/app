@@ -284,4 +284,19 @@ export class RUPComponent implements OnInit, AfterViewInit {
         const hasValue = !!this.registro.valor;
         return !hasValue;
     }
+
+    /**
+     * Costrasta los requeridos contra los registros para determinar exactamente sobre que iterar.
+     */
+    get requeridos() {
+        const requeridos = [];
+        for (let i = 0; i < this.registro.registros.length; i++) {
+            const concepto = this.registro.registros[i].concepto;
+            const requerido = this.elementoRUP.requeridos.find(r => r.concepto.conceptId === concepto.conceptId);
+            if (requerido) {
+                requeridos.push(requerido);
+            }
+        }
+        return requeridos;
+    }
 }
