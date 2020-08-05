@@ -20,22 +20,20 @@ export class SelectOrganizacionDirective implements OnInit, OnDestroy {
 
     constructor(
         private organizacionService: OrganizacionService,
-        private _viewContainerRef: ViewContainerRef
+        private plexSelect: PlexSelectComponent
     ) {
-        const plexSelect: PlexSelectComponent = this._viewContainerRef['_data'].componentView.component;
         plexSelect.idField = 'id';
         plexSelect.labelField = 'nombre';
     }
 
     ngOnInit() {
-        const plexSelect: PlexSelectComponent = this._viewContainerRef['_data'].componentView.component;
         if (this.preload) {
-            plexSelect.data = [];
+            this.plexSelect.data = [];
             this.organizacionService.get({ fields: 'nombre' }).subscribe(result => {
-                plexSelect.data = result;
+                this.plexSelect.data = result;
             });
         } else {
-            this.subscription = plexSelect.getData.subscribe(($event) => {
+            this.subscription = this.plexSelect.getData.subscribe(($event) => {
                 const inputText: string = $event.query;
                 if (inputText && inputText.length > 2) {
                     if (this.lastCallSubscription) {

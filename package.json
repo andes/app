@@ -46,7 +46,7 @@
     "enhanced-resolve": "^4.1.0",
     "file-saver": "^2.0.2",
     "ng-drag-drop": "^5.0.0",
-    "ng2-charts": "^1.6.0",
+    "ng2-charts": "^2.3.2",
     "ng2-slugify": "^0.1.0",
     "ngx-infinite-scroll": "^8.0.0",
     "ol": "^5.3.3",
