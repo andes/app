@@ -51,9 +51,9 @@
                         </plex-select>
                     </div>
                     <div class="col-3">
-                        <plex-select [(ngModel)]="prestacionDestino" name="nombrePrestacion" label="Prestación destino"
+                        <plex-select [(ngModel)]="prestacionesDestino" label="Prestación destino"
                                      name="prestacionDestino" tmPrestaciones="solicitudes:tipoPrestacion:?"
-                                     (change)="cargarSolicitudes()" [preload]="true">
+                                     (change)="cargarSolicitudes()" [preload]="true" [multiple]="true">
                         </plex-select>
                     </div>
                     <div class="col-3">
