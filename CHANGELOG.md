@@ -1,3 +1,18 @@
+# [5.7.0](https://github.com/andes/app/compare/v5.6.0...v5.7.0) (2020-08-05)
+
+
+### Bug Fixes
+
+* **huds:** no se visualizaban las solicitudes ([#1822](https://github.com/andes/app/issues/1822)) ([080a500](https://github.com/andes/app/commit/080a500e0a8028343da8bae43d25d45002f391b6))
+* **rup:** diagnostico principal en internacion ([#1825](https://github.com/andes/app/issues/1825)) ([5211b89](https://github.com/andes/app/commit/5211b898102dfbd1c4a5522b97df2943b06ab566))
+
+
+### Features
+
+* **elementos-rup:** componente ultima fecha ([#1694](https://github.com/andes/app/issues/1694)) ([9198523](https://github.com/andes/app/commit/91985236ca66de5b7b80baf8de278c3152fb446b))
+* **huds:** agrega grafico de temperatura a resumen-paciente ([#1772](https://github.com/andes/app/issues/1772)) ([e1e5d13](https://github.com/andes/app/commit/e1e5d13ddf0b6e6e15859da6338388c5abdfc227))
+* **rup:** expandir observaciones ([#1791](https://github.com/andes/app/issues/1791)) ([d850a3e](https://github.com/andes/app/commit/d850a3e0ae2cbe0c616b24054126785f956da1f0))
+
 # [5.6.0](https://github.com/andes/app/compare/v5.5.0...v5.6.0) (2020-07-29)
 
 
