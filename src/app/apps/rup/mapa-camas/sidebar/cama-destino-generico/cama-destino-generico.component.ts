@@ -24,7 +24,6 @@ export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
     public capa;
     public destino;
     public titulo: string;
-    public otroMotivo = false;
 
     private subscription: Subscription;
 
@@ -81,9 +80,5 @@ export class CamaDestinoGenericoComponent implements OnInit, OnDestroy {
 
     selectCama(cama: ISnapshot) {
         this.mapaCamasService.select(cama);
-    }
-
-    cambiarMotivo() {
-        this.selectedCama.observaciones = null;
     }
 }
