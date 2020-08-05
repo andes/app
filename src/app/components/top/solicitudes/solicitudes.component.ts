@@ -133,7 +133,6 @@ export class SolicitudesComponent implements OnInit {
             this.fechaHasta = null;
             this.estadoEntrada = { id: 'asignada', nombre: 'ASIGNADA' };
         }
-        this.cargarSolicitudes();
     }
 
     loadOrganizacion(event) {
@@ -173,14 +172,6 @@ export class SolicitudesComponent implements OnInit {
         this.showCitar = false;
         this.showIniciarPrestacion = false;
         this.showSidebar = false;
-    }
-
-    refreshSelection(value, tipo) {
-        return true;
-    }
-
-    estaSeleccionada(solicitud: any) {
-        return (this.tipoSolicitud === 'entrada' ? this.prestacionesEntrada : this.prestacionesSalida).findIndex(x => x.id === solicitud._id);
     }
 
     seleccionar(prestacion) {
