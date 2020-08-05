@@ -118,6 +118,7 @@ export class RelacionesPacientesComponent implements OnInit {
                 nombre: '',
                 apellido: '',
                 documento: '',
+                fechaFallecimiento: null,
                 numeroIdentificacion: '',
                 foto: ''
             });
@@ -135,6 +136,9 @@ export class RelacionesPacientesComponent implements OnInit {
             }
             if (unaRelacion.foto) {
                 nuevaRelacion.foto = unaRelacion.foto;
+            }
+            if (unaRelacion.fechaFallecimiento) {
+                nuevaRelacion.fechaFallecimiento = unaRelacion.fechaFallecimiento;
             }
 
             // Se inserta nueva relación en array de relaciones del paciente

@@ -28,6 +28,8 @@
                             <plex-badge *ngIf="paciente.estado != 'validado'" type="warning"
                                         title="Los pacientes temporales sin validar se inactivan luego de un tiempo">
                                 Temporal</plex-badge>
+                            <plex-badge type="danger" *ngIf="paciente.fechaFallecimiento"> Fallecido
+                            </plex-badge>
                             {{ paciente | nombre }}
                             <br>
                             <b>Documento: </b>

@@ -1,6 +1,6 @@
 <ng-container>
     <plex-detail direction="{{ orientacion === 'vertical' ? 'column' : 'row' }}" size="lg" justify="{{ justificado }}">
-        <img [mpiFotoPaciente]=" paciente" />
+        <img [ngClass]="{'img-fallecido' : paciente.fechaFallecimiento}" [mpiFotoPaciente]=" paciente" />
 
         <plex-badge [type]="estadoBadgeType" *ngIf="paciente.estado">
             {{ paciente.estado | uppercase }}
@@ -59,7 +59,7 @@
         <plex-label *ngIf="!relaciones?.length" titulo="No hay ninguna relación registrada" subtitulo=""></plex-label>
 
         <plex-item *ngFor="let relacionado of relaciones" class="">
-            <img [mpiFotoPaciente]="relacionado" />
+            <img [ngClass]="{'img-fallecido' : relacionado.fechaFallecimiento}" [mpiFotoPaciente]="relacionado" />
 
             <plex-label *ngIf="!relacionado.numeroIdentificacion?.length" titulo="{{ relacionado | nombre }}"
                         subtitulo="{{ (relacionado.documento | number) || 'Sin DNI' }}">
@@ -70,6 +70,9 @@
             </plex-label>
 
             <plex-badge type="info">{{ relacionado.parentesco }}
+            </plex-badge>
+
+            <plex-badge type="danger" *ngIf="relacionado.fechaFallecimiento"> Fallecido
             </plex-badge>
 
         </plex-item>

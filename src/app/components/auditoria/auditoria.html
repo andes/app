@@ -111,7 +111,8 @@
                                                 [ngClass]="{'bg-inverse text-white': paciente.id == pacienteSelected?.id}"
                                                 (click)="onSelectReportados(paciente)">
                                                 <td>
-                                                    <img class="img-thumbnail" [mpiFotoPaciente]="paciente" />
+                                                    <img [ngClass]="{'img-fallecido' : paciente.fechaFallecimiento}"
+                                                         [mpiFotoPaciente]="paciente" />
                                                 </td>
                                                 <td class="text-center">
                                                     <span *ngIf="paciente?.documento !== ''"

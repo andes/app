@@ -27,14 +27,6 @@ export interface IPaciente {
     foto: string;
     relaciones: [IPacienteRelacion];
     financiador: [{
-        // entidad: {
-        //     id: string;
-        //     nombre: string
-        // };
-        // activo: Boolean;
-        // fechaAlta: Date;
-        // fechaBaja: Date;
-        // ranking: Number;
         codigoPuco: Number,
         nombre: string,
         financiador: String,

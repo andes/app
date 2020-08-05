@@ -2,6 +2,10 @@ img {
     height: 60px;
 }
 
+.img-fallecido {
+    filter: grayscale(100%);
+}
+
 span.error-paciente {
     text-overflow: ellipsis;
     overflow: hidden;

@@ -1,11 +1,5 @@
-import { Plex } from '@andes/plex';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
-import { ObraSocialService } from '../../../services/obraSocial.service';
-import { ProfeService } from '../../../services/profe.service';
-import { PacienteService } from '../../../core/mpi/services/paciente.service';
-import { ɵangular_packages_core_testing_testing_a } from '@angular/core/testing';
-import { RelacionesPacientesComponent } from '../../../core/mpi/components/relaciones-pacientes.component';
 
 @Component({
     selector: 'paciente-panel',
@@ -52,9 +46,7 @@ export class PacientePanelComponent {
 
     @Output() changeRelacion: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(private plex: Plex,
-        private obraSocialService: ObraSocialService,
-        private profeService: ProfeService) {
+    constructor() {
         this.coberturaSocial = { data: null, loading: false, error: false };
     }
 

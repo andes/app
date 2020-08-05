@@ -66,7 +66,8 @@
                 <plex-list>
                     <plex-item *ngFor="let elem of pacientesSimilares" class="">
 
-                        <img [mpiFotoPaciente]="elem.paciente" />
+                        <img [ngClass]="{'img-fallecido' : elem.paciente.fechaFallecimiento}"
+                             [mpiFotoPaciente]="elem.paciente" />
 
                         <plex-label *ngIf="!elem.paciente.numeroIdentificacion" titulo="{{ elem.paciente | nombre }}"
                                     subtitulo="{{ (elem.paciente.documento | number) || 'Sin DNI' }}">
