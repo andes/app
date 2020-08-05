@@ -132,7 +132,8 @@ const appRoutes: Routes = [
   { path: 'cantidadConsultaXPrestacion', component: CantidadConsultaXPrestacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // ReportesDiarios
-  { path: 'reportesDiarios', loadChildren: './components/reportesDiarios/reportes-diarios.module#ReportesDiariosModule', canActivate: [RoutingNavBar, RoutingGuard] },
+
+  { path: 'reportesDiarios', loadChildren: () => import('./components/reportesDiarios/reportes-diarios.module').then(m => m.ReportesDiariosModule), canActivate: [RoutingNavBar, RoutingGuard] },
 
   // Solicitudes
   { path: 'solicitudes', component: SolicitudesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
@@ -147,20 +148,20 @@ const appRoutes: Routes = [
   { path: 'top/reglasVisualizacion', component: VisualizacionReglasTopComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // Principal
-  { path: 'auth', loadChildren: './apps/auth/auth.module#AuthAppModule' },
+  { path: 'auth', loadChildren: () => import('./apps/auth/auth.module').then(m => m.AuthAppModule) },
   { path: 'inicio', component: InicioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
-  { path: 'estadisticas', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'dashboard', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'visualizacion-informacion', loadChildren: './modules/visualizacion-informacion/visualizacion-informacion.module#VisualizacionInformacionModule', canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'estadisticas', loadChildren: () => import('./modules/estadisticas/estadistica.module').then(m => m.EstadisticaModule), canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'dashboard', loadChildren: () => import('./modules/estadisticas/estadistica.module').then(m => m.EstadisticaModule), canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'gestor-usuarios', loadChildren: () => import('./apps/gestor-usuarios/gestor-usuarios.module').then(m => m.GestorUsuariosModule), canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'visualizacion-informacion', loadChildren: () => import('./modules/visualizacion-informacion/visualizacion-informacion.module').then(m => m.VisualizacionInformacionModule), canActivate: [RoutingNavBar, RoutingGuard] },
 
-  { path: 'gestor-usuarios', loadChildren: './apps/gestor-usuarios/gestor-usuarios.module#GestorUsuariosModule', canActivate: [RoutingNavBar, RoutingGuard] },
   // Campañas Salud
   { path: 'campaniasSalud', component: CampaniaSaludComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   // Turnero
-  { path: 'pantallas', loadChildren: './apps/turnero/turnero.module#TurneroModule', canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'pantallas', loadChildren: () => import('./apps/turnero/turnero.module').then(m => m.TurneroModule), canActivate: [RoutingNavBar, RoutingGuard] },
 
-  { path: 'internacion', loadChildren: './apps/rup/mapa-camas/mapa-camas.module#MapaCamasModule', canActivate: [RoutingNavBar, RoutingGuard] },
+  { path: 'internacion', loadChildren: () => import('./apps/rup/mapa-camas/mapa-camas.module').then(m => m.MapaCamasModule), canActivate: [RoutingNavBar, RoutingGuard] },
 
   // dejar siempre al último porque no encuentra las url después de esta
   { path: 'novedades/ver/:novedad', component: NovedadesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
