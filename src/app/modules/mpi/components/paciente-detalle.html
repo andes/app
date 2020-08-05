@@ -1,4 +1,4 @@
-<plex-detail size="lg" direction="{{ orientacion === 'vertical' ? 'column' : 'row' }}">
+<plex-detail size="lg" justify="center" direction="{{ orientacion === 'vertical' ? 'column' : 'row' }}">
 
     <img [mpiFotoPaciente]="paciente" />
 
@@ -16,24 +16,27 @@
         </plex-copy>
     </div>
 
-    <plex-label *ngIf="showSexo" titulo="Sexo / Género" subtitulo="{{paciente | sexo}}"></plex-label>
+    <plex-label justify="center" *ngIf="showSexo" titulo="Sexo / Género" subtitulo="{{paciente | sexo}}"></plex-label>
 
-    <plex-label *ngIf="showFechaNacimiento" titulo="Fecha de Nacimiento"
+    <plex-label justify="center" *ngIf="showFechaNacimiento" titulo="Fecha de Nacimiento"
                 subtitulo="{{ (paciente.fechaNacimiento | fecha:'utc') || 'Desconocida' }}"></plex-label>
 
-    <plex-label *ngIf="showEdad" titulo="Edad" subtitulo="{{ (paciente | edad) || 'Desconocida' }}"></plex-label>
-
-    <plex-label *ngIf="showCuil" titulo="CUIL" subtitulo="{{ paciente.cuil || 'Sin cuil' }}"></plex-label>
-
-    <plex-label *ngIf="showFinanciador" [titulo]="financiadorLabel"
-                subtitulo="{{ obraSocial?.financiador || 'Sin obra social' }}"></plex-label>
-
-    <plex-label *ngIf="showNumeroAfiliado && numeroAfiliado" titulo="Número de Afiliado" [subtitulo]="numeroAfiliado">
+    <plex-label justify="center" *ngIf="showEdad" titulo="Edad" subtitulo="{{ (paciente | edad) || 'Desconocida' }}">
     </plex-label>
 
-    <plex-label *ngIf="showDireccion" titulo="Dirección" [subtitulo]="direccion"></plex-label>
+    <plex-label justify="center" *ngIf="showCuil" titulo="CUIL" subtitulo="{{ paciente.cuil || 'Sin cuil' }}">
+    </plex-label>
 
-    <plex-label *ngIf="showTelefono" titulo="Teléfono" [subtitulo]="contacto"></plex-label>
+    <plex-label justify="center" *ngIf="showFinanciador" [titulo]="financiadorLabel"
+                subtitulo="{{ obraSocial?.financiador || 'Sin obra social' }}"></plex-label>
 
-    <ng-content select="plex-label" ngProjectAs="plex-label"></ng-content>
+    <plex-label justify="center" *ngIf="showNumeroAfiliado && numeroAfiliado" titulo="Número de Afiliado"
+                [subtitulo]="numeroAfiliado">
+    </plex-label>
+
+    <plex-label justify="center" *ngIf="showDireccion" titulo="Dirección" [subtitulo]="direccion"></plex-label>
+
+    <plex-label justify="center" *ngIf="showTelefono" titulo="Teléfono" [subtitulo]="contacto"></plex-label>
+
+    <ng-content justify="center" select="plex-label" ngProjectAs="plex-label"></ng-content>
 </plex-detail>
