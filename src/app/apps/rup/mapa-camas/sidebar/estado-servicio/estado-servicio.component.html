@@ -3,7 +3,7 @@
         <ng-container *ngIf="fecha$ | async as fecha">
             <plex-badge type="info" size="sm">{{fecha | date: 'dd/MM/yyyy'}} | {{fecha | date: 'HH:mm'}}
                 <plex-datetime title="Cambiar Fecha" titlePosition="left" btnOnly="true" size="sm" type="datetime"
-                               [(ngModel)]="fecha" (change)="setFecha(fecha)" name="fecha" class="d-inline-block"
+                               [ngModel]="fecha" (change)="setFecha(fecha)" name="fecha" class="d-inline-block"
                                [max]="fechaActual" [debounce]="600">
                 </plex-datetime>
             </plex-badge>

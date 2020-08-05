@@ -33,5 +33,9 @@
   "exclude": [
     "node_modules/@schematics/**/*.ts",
     "node_modules/karma/**/*.ts"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  }
 }
