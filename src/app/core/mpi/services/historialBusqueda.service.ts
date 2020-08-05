@@ -3,6 +3,7 @@ import { IPaciente } from '../interfaces/IPaciente';
 import { BehaviorSubject } from 'rxjs';
 
 Injectable();
+@Injectable()
 export class HistorialBusquedaService {
 
     private historial: BehaviorSubject<IPaciente[]> = new BehaviorSubject([]);

@@ -4,7 +4,7 @@ import { ProfesionalService } from './../../../../services/profesional.service';
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, OnDestroy, EventEmitter, ViewEncapsulation, QueryList, ViewChildren, ViewChild, ElementRef, Renderer, AfterViewInit } from '@angular/core';
+import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, OnDestroy, EventEmitter, ViewEncapsulation, QueryList, ViewChildren, ViewChild, ElementRef, AfterViewInit, Renderer2 } from '@angular/core';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { IElementoRUP, IElementoRUPRequeridos } from './../../interfaces/elementoRUP.interface';
@@ -102,7 +102,7 @@ export class RUPComponent implements OnInit, AfterViewInit {
     // Constructor
     constructor(
         private elemento: ElementRef,
-        private renderer: Renderer,
+        private renderer: Renderer2,
         private componentFactoryResolver: ComponentFactoryResolver,
         private viewContainerRef: ViewContainerRef, // Referencia al padre del componente que queremos cargar
         protected conceptObserverService: ConceptObserverService,
@@ -136,7 +136,7 @@ export class RUPComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         // Hack momentaneo
         if (!this.soloValores) {
-            this.renderer.invokeElementMethod(this.elemento.nativeElement, 'scrollIntoView');
+            this.elemento.nativeElement.scrollIntoView();
         }
     }
 

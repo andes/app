@@ -1,4 +1,4 @@
-import { Directive, Input, HostListener, Renderer, ElementRef } from '@angular/core';
+import { Directive, Input, HostListener, ElementRef, Renderer2 } from '@angular/core';
 
 
 @Directive({ selector: '[appHover]' })
@@ -15,7 +15,7 @@ export class HoverClassDirective {
         return (' ' + this.elementRef.nativeElement.className + ' ').indexOf(' ' + name + ' ') > -1;
     }
 
-    constructor(public elementRef: ElementRef, private renderer: Renderer) { }
+    constructor(public elementRef: ElementRef, private renderer: Renderer2) { }
 
     @HostListener('mouseover') mouseover() {
         this.noQuitarClases = {};
@@ -24,7 +24,7 @@ export class HoverClassDirective {
             if (this.hasClass(i)) {
                 this.noQuitarClases[i] = true;
             } else {
-                this.renderer.setElementClass(this.elementRef.nativeElement, i, true);
+                this.renderer.addClass(this.elementRef.nativeElement, i);
             }
         });
     }
@@ -33,7 +33,7 @@ export class HoverClassDirective {
         let list = this.appHover.split(' ');
         list.forEach((i) => {
             if (!this.noQuitarClases[i]) {
-                this.renderer.setElementClass(this.elementRef.nativeElement, i, false);
+                this.renderer.removeClass(this.elementRef.nativeElement, i);
             }
         });
     }
