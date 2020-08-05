@@ -22,9 +22,9 @@ import { DatosBasicosComponent } from './datos-basicos.component';
 })
 export class PacienteComponent implements OnInit {
 
-    @ViewChild('relaciones', null) relaciones: RelacionesPacientesComponent;
-    @ViewChild('datosContacto', null) datosContacto: DatosContactoComponent;
-    @ViewChild('datosBasicos', null) datosBasicos: DatosBasicosComponent;
+    @ViewChild('relaciones', { static: false }) relaciones: RelacionesPacientesComponent;
+    @ViewChild('datosContacto', { static: false }) datosContacto: DatosContactoComponent;
+    @ViewChild('datosBasicos', { static: false }) datosBasicos: DatosBasicosComponent;
 
     mainSize = 10;  // tamaño de layout-main
     detailDirection = 'column'; // estilo de paciente-panel

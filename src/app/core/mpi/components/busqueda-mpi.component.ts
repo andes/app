@@ -13,7 +13,7 @@ import { PacienteBuscarComponent } from '../../../modules/mpi/components/pacient
 })
 export class BusquedaMpiComponent implements OnInit {
 
-    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
+    @ViewChild('buscador', { static: false }) buscador: PacienteBuscarComponent;
     public disableNuevoPaciente = true;
     loading = false;
     resultadoBusqueda: IPaciente[] = [];
