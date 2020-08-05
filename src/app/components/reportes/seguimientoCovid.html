@@ -8,7 +8,8 @@
                         <th>DNI</th>
                         <th>Edad</th>
                         <th>Fecha de carga</th>
-                        <th>Ambito</th>
+                        <th *ngIf="casos[0].ambito">Ambito</th>
+                        <th *ngIf="casos[0].espacioFisico">Espacio Fisico</th>
                         <th>Prestacion</th>
                     </tr>
                 </thead>
@@ -28,8 +29,11 @@
                         <td>
                             {{ caso.fechaCarga }}
                         </td>
-                        <td>
+                        <td *ngIf="caso.ambito">
                             {{ caso.ambito }}
+                        </td>
+                        <td *ngIf="caso.espacioFisico">
+                            {{ caso.espacioFisico }}
                         </td>
                         <td>
                             {{ caso.tipoPrestacion }}
