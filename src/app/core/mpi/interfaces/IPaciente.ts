@@ -62,4 +62,6 @@ export interface IPaciente {
         nota: string,
         destacada: Boolean
     }];
+    _score?: number;
+    vinculos: [string];
 }

@@ -3,14 +3,14 @@ import {
     OnInit,
     Input,
     HostBinding,
-    ViewChild,
-    ElementRef,
     Output,
     EventEmitter
 } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ParentescoService } from '../../../services/parentesco.service';
 import { IPaciente } from '../interfaces/IPaciente';
+import { PacienteService } from '../services/paciente.service';
+import { IPacienteRelacion } from '../../../modules/mpi/interfaces/IPacienteRelacion.inteface';
 
 @Component({
     selector: 'relaciones-pacientes',
@@ -32,13 +32,13 @@ export class RelacionesPacientesComponent implements OnInit {
         return this._paciente;
     }
     @Output() actualizar: EventEmitter<any> = new EventEmitter<any>();
-    @ViewChild('listadoRel', { static: true }) listado: ElementRef;
 
     _paciente: IPaciente;
     parentescoModel: any[] = [];
     relacionesBorradas: any[] = [];
     relacionesIniciales: any[] = [];
     posiblesRelaciones: any[] = [];
+    relacionEntrante: any[] = [];
     disableGuardar = false;
     enableIgnorarGuardar = false;
     buscarPacRel = '';
@@ -50,6 +50,7 @@ export class RelacionesPacientesComponent implements OnInit {
 
     constructor(
         private parentescoService: ParentescoService,
+        private pacienteService: PacienteService,
         public plex: Plex) { }
 
 
@@ -63,6 +64,7 @@ export class RelacionesPacientesComponent implements OnInit {
 
     onSearchStart() {
         this.loading = true;
+        this.relacionEntrante = [];
     }
 
     onSearchEnd(pacientes: IPaciente[]) {
@@ -70,12 +72,6 @@ export class RelacionesPacientesComponent implements OnInit {
             this.searchClear = false;
             this.loading = false;
             this.actualizarPosiblesRelaciones(pacientes);
-            if (this.paciente.relaciones && this.paciente.relaciones.length > 2) {
-                // scroll hacia resultado de búsqueda
-                window.setTimeout(() => {
-                    this.listado.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 200);
-            }
         }
     }
 
@@ -100,72 +96,79 @@ export class RelacionesPacientesComponent implements OnInit {
         this.posiblesRelaciones = listaPacientes;
     }
 
-    seleccionarPacienteRelacionado(pacienteEncontrado) {
-        if (pacienteEncontrado) {
-            let permitirNuevaRelacion = this.checkVinculo();
-            // Control: Si los datos de las relaciones agregadas anteriormente no estan completas, no se permitira agregar nuevas.
-            if (permitirNuevaRelacion) {
-                this.buscarPacRel = '';
-                let unaRelacion = Object.assign({}, {
-                    relacion: null,
-                    referencia: null,
-                    nombre: '',
-                    apellido: '',
-                    documento: '',
-                    foto: ''
-                });
+    seleccionarRelacionEntrante(data: IPaciente | IPacienteRelacion) {
+        if (data.id) {
+            this.relacionEntrante = [data];
+            this.onSearchClear();
+        }
+    }
 
-                // Se completan los campos de la nueva relación
-                unaRelacion.referencia = pacienteEncontrado.id;
-                unaRelacion.documento = pacienteEncontrado.documento;
-                unaRelacion.apellido = pacienteEncontrado.apellido;
-                unaRelacion.nombre = pacienteEncontrado.nombre;
-                if (pacienteEncontrado.foto) {
-                    unaRelacion.foto = pacienteEncontrado.foto;
-                }
+    addRelacion(unaRelacion) {
+        // es una relacion existente?
+        if (unaRelacion.referencia) {
+            // notificamos cambios
+            this.actualizar.emit({ relaciones: this.paciente.relaciones, relacionesBorradas: this.relacionesBorradas });
+        } else {
+            // relacion inexistente, construimos una nueva
+            this.buscarPacRel = '';
+            let nuevaRelacion: IPacienteRelacion = Object.assign({}, {
+                id: null,
+                relacion: null,
+                referencia: null,
+                nombre: '',
+                apellido: '',
+                documento: '',
+                numeroIdentificacion: '',
+                foto: ''
+            });
 
-                // Se inserta nueva relación en array de relaciones del paciente
-                let index = null;
-                if (this.paciente.relaciones && this.paciente.relaciones.length) {
-                    this.paciente.relaciones.push(unaRelacion);
-                } else {
-                    this.paciente.relaciones = [unaRelacion];
-                }
-                // notificamos cambios
-                this.actualizar.emit({ relaciones: this.paciente.relaciones, relacionesBorradas: this.relacionesBorradas });
-                this.idPacientesRelacionados.push({ id: unaRelacion.referencia });
+            // Se completan los campos de la nueva relación
+            nuevaRelacion.referencia = unaRelacion.id;
+            nuevaRelacion.apellido = unaRelacion.apellido;
+            nuevaRelacion.nombre = unaRelacion.nombre;
+            nuevaRelacion.relacion = unaRelacion.relacion;
+            if (unaRelacion.documento) {
+                nuevaRelacion.documento = unaRelacion.documento;
+            }
+            if (unaRelacion.numeroIdentificacion) {
+                nuevaRelacion.numeroIdentificacion = unaRelacion.numeroIdentificacion;
+            }
+            if (unaRelacion.foto) {
+                nuevaRelacion.foto = unaRelacion.foto;
+            }
 
-                // Si esta relación fue borrada anteriormente en esta edición, se quita del arreglo 'relacionesBorradas'
-                index = this.relacionesBorradas.findIndex(rel => rel.documento === unaRelacion.documento);
-                if (index >= 0) {
-                    this.relacionesBorradas.splice(index, 1);
-                }
-                // Se borran los resultados de la búsqueda.
-                this.posiblesRelaciones = null;
+            // Se inserta nueva relación en array de relaciones del paciente
+            let index = null;
+            if (this.paciente.relaciones && this.paciente.relaciones.length) {
+                this.paciente.relaciones.push(nuevaRelacion);
             } else {
-                this.plex.toast('info', 'Antes de agregar una nueva relación debe completar las existentes.', 'Información');
+                this.paciente.relaciones = [nuevaRelacion];
+            }
+            // notificamos cambios
+            this.actualizar.emit({ relaciones: this.paciente.relaciones, relacionesBorradas: this.relacionesBorradas });
+            this.idPacientesRelacionados.push({ id: nuevaRelacion.referencia });
+
+            // Si esta relación fue borrada anteriormente en esta edición, se quita del arreglo 'relacionesBorradas'
+            index = this.relacionesBorradas.findIndex(rel => rel.documento === nuevaRelacion.documento);
+            if (index < 0) {
+                index = this.relacionesBorradas.findIndex(rel => rel.numeroIdentificacion === nuevaRelacion.numeroIdentificacion);
+            }
+            if (index >= 0) {
+                this.relacionesBorradas.splice(index, 1);
             }
         }
+        // Se borra la edicion en panel principal.
+        this.relacionEntrante = [];
     }
 
-    // Dado un indice, retorna el tipo de vinculo segun el array de relaciones del paciente
-    // Si indice es undefined, retorna siempre true indicando que se puede agregar una nueva relacion
-    private checkVinculo(index?): Boolean {
-        let relacion = null;
-        if (this.paciente.relaciones && this.paciente.relaciones.length) {
-            if (!index) {
-                index = this.paciente.relaciones.length - 1;
-            }
-            relacion = this.paciente.relaciones[index];
-            return relacion.relacion;
-        }
-        return true;
-    }
 
     removeRelacion(i) {
         if (i >= 0) {
             // si la relacion borrada ya se encotraba almacenada en la DB
             let index = this.relacionesIniciales.findIndex(unaRel => unaRel.documento === this.paciente.relaciones[i].documento);
+            if (index < 0) {
+                index = this.relacionesIniciales.findIndex(unaRel => unaRel.numeroIdentificacion === this.paciente.relaciones[i].numeroIdentificacion);
+            }
             if (index >= 0) {
                 this.relacionesBorradas.push(this.paciente.relaciones[i]);
             }
@@ -176,9 +179,17 @@ export class RelacionesPacientesComponent implements OnInit {
         }
     }
 
-    cambioRelacion(i) {
-        if (this.checkVinculo(i)) {
-            this.actualizar.emit({ relaciones: this.paciente.relaciones, relacionesBorradas: this.relacionesBorradas });
+
+    public onChange(data) {
+        let index = this.paciente.relaciones.findIndex((rel: any) => rel.referencia === data.idRelacionado);
+        if (index >= 0) {
+            if (data.operacion === 'edit') {
+                // se muestra en panel principal para su edicion
+                this.seleccionarRelacionEntrante(this.paciente.relaciones[index]);
+            }
+            if (data.operacion === 'remove') {
+                this.removeRelacion(index);
+            }
         }
     }
 }

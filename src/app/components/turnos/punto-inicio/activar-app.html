@@ -1,54 +1,37 @@
-<fieldset>
-    <legend>ACTIVACION DE APP MOBILE</legend>
-    <header>
-        <div class="row">
-            <div class="col">
-                <h5>
-                    <span style="color: #00A8E0">{{ paciente | nombre }}</span>
-                </h5>
+<form #form="ngForm">
+    <plex-wrapper>
+        <plex-phone *ngIf="showCampoCelular" class="pr-3" label="Teléfono celular" name="celular" [(ngModel)]="celular"
+                    [disabled]="cuentaActivada" grow="full">
+        </plex-phone>
+
+        <plex-grid>
+            <div span="2" justify="start">
+                <b class="pr-3">Activar App Mobile</b>
             </div>
-        </div>
-    </header>
-    <form #formularioValidacion="ngForm">
-        <div class="row">
-            <div class="col-12">
-                <i class="mdi mdi-map-marker"></i>
-                <span style="color: #00A8E0">Usuario Andes (E-Mail obligatorio)</span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <plex-text email [(ngModel)]="email" [readonly]="!checkPass" name="email" required placeholder="e-mail">
-                </plex-text>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <i class="mdi mdi-map-marker"></i>
-                <span style="color: #00A8E0">Celular</span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <plex-phone [(ngModel)]="celular" [readonly]="!checkPass" name="celular" placeholder="Celular">
-                </plex-phone>
-            </div>
-        </div>
-        <br>
-        <plex-button [disabled]="formularioValidacion.invalid" *ngIf="!hideButton" label="Activar App Mobile"
-                     type="primary" (click)="activarApp()"></plex-button>
-        <plex-button [disabled]="formularioValidacion.invalid" *ngIf="!hideButtonResend"
-                     label="Reenviar Código Activación" type="default" (click)="activarApp()">
+            <plex-text email label="" name="email" debounce="900" [(ngModel)]="email" placeholder="maria@gmail.com"
+                       [readonly]="(showCampoCelular && !celular) || emailReadonly" (change)="checkEmail()">
+            </plex-text>
+        </plex-grid>
+
+        <plex-button *ngIf="showEditar" label="" type="warning" name="editarUsuario" title="Editar correo"
+                     [disabled]="disableEditar" (click)="editarEmail()">
+            <plex-icon name="pencil" size="xxl" type="light"></plex-icon>
         </plex-button>
-    </form>
 
-    <div>
-        <h5>
-            <span style="color: red" *ngIf="message.length > 0">
-                <i class="mdi mdi-alert-circle-outline"></i>
-                {{message}}
-            </span>
-        </h5>
-    </div>
+        <plex-button *ngIf="cuentaActivada" label="" type="success" name="activacionSuccess" title="" disabled="true">
+            <plex-icon name="check" size="xxl" type="light"></plex-icon>
+        </plex-button>
 
-</fieldset>
+        <plex-button *ngIf="paciente.id && showActivar"
+                     [disabled]="form.invalid || disableActivacion || (showCampoCelular && !celular)"
+                     label="Activar app" type="info" (click)="activarApp()"></plex-button>
+
+        <plex-button *ngIf="paciente.id && showReenviar"
+                     [disabled]="form.invalid || disableActivacion || (showCampoCelular && !celular)"
+                     label="Reenviar Código" type="info" (click)="activarApp()">
+        </plex-button>
+
+        <plex-badge *ngIf="hasEmailValido$| async" class="pt-2 pr-3" [type]="typeMessage" size="block">{{ message }}
+        </plex-badge>
+    </plex-wrapper>
+</form>

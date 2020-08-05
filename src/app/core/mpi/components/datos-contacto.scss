@@ -1,0 +1,15 @@
+plex-grid .columna {
+    grid-column: span 1;
+}
+georref-map.columna {
+    margin-top: 1.5rem;
+    padding-left: 0.5rem;
+}
+plex-grid.size-md .columna, plex-grid.size-sm .columna {
+    grid-column: span 2 !important;
+}
+plex-grid.size-md georref-map.columna, plex-grid.size-ms georref-map.columna {
+    margin-top: 0;
+    padding-left: 0;
+}
+

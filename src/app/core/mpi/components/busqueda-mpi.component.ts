@@ -1,22 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IPaciente } from '../interfaces/IPaciente';
 import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
 import { PacienteCacheService } from '../services/pacienteCache.service';
 import { Auth } from '@andes/auth';
 import { HistorialBusquedaService } from '../services/historialBusqueda.service';
+import { PacienteBuscarComponent } from '../../../modules/mpi/components/paciente-buscar.component';
 
 @Component({
     selector: 'busqueda-mpi',
     templateUrl: 'busqueda-mpi.html'
 })
 export class BusquedaMpiComponent implements OnInit {
+
+    @ViewChild('buscador', null) buscador: PacienteBuscarComponent;
     public disableNuevoPaciente = true;
     loading = false;
     resultadoBusqueda: IPaciente[] = [];
     searchClear = true;    // True si el campo de búsqueda se encuentra vacío
     historialSeleccionados: IPaciente[] = [];
     escaneado: boolean;
+    sidebar = 8;
+    paciente: IPaciente = null;
+    showDetallePaciente = false;
 
     constructor(
         private historialBusquedaService: HistorialBusquedaService,
@@ -72,15 +78,33 @@ export class BusquedaMpiComponent implements OnInit {
         this.resultadoBusqueda = [];
     }
 
+    toPacienteBuscarOnScroll(data) {
+        this.buscador.onScroll(data);
+    }
+
     // ------------- SOBRE LISTA RESULTADO --------------
 
-    onPacienteSelected(paciente: IPaciente) {
+    toEdit(paciente: IPaciente) {
         if (paciente) {
             this.historialBusquedaService.add(paciente);
             this.pacienteCache.setPaciente(paciente);
             this.pacienteCache.setScanState(this.escaneado);
-            this.router.navigate(['apps/mpi/paciente']);  // abre paciente-cru
+            if (paciente.numeroIdentificacion || paciente.tipoIdentificacion) {
+                this.router.navigate(['apps/mpi/paciente/extranjero/mpi']);  // abre formulario paciente extranjero
+            } else {
+                this.router.navigate(['apps/mpi/paciente']);  // abre formulario paciente con/sin-dni
+            }
         }
+    }
+
+    toVisualize(paciente: IPaciente) {
+        this.paciente = paciente ? paciente : null;
+        this.showDetallePaciente = (this.paciente != null);
+    }
+
+    closeDetallePaciente() {
+        this.showDetallePaciente = false;
+        this.paciente = null;
     }
 
     // --------------------------------------------------

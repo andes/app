@@ -1,0 +1,99 @@
+<section class="mt-2">
+    <form #form="ngForm">
+
+        <!-- DATOS DE CONTACTO -->
+
+        <plex-title titulo=" datos de contacto" size="sm">
+            <plex-bool [(ngModel)]="noPoseeContacto" label="Sin datos de contacto" name="noPoseeContacto" type="slide"
+                       (change)="limpiarContacto()"></plex-bool>
+        </plex-title>
+
+        <plex-grid type="full" cols="2" size="lg" responsive>
+            <plex-wrapper class="pt-1" *ngFor="let _unContacto of paciente.contacto; let i = index">
+                <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}"
+                             [required]="i <= 0" label="Tipo" (change)="_unContacto.valor = ''"
+                             [readonly]="noPoseeContacto">
+                </plex-select>
+
+                <ng-container *ngIf="_unContacto.tipo">
+                    <plex-phone *ngIf="_unContacto.tipo === 'fijo' || _unContacto.tipo.id === 'fijo'" label="Número"
+                                [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000" name="valor-{{i}}"
+                                [required]="!noPoseeContacto && (i <= 0)" [readonly]="noPoseeContacto">
+                    </plex-phone>
+                    <plex-phone label="Número"
+                                *ngIf="_unContacto.tipo === 'celular' || _unContacto.tipo.id === 'celular'"
+                                [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000"
+                                [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}"
+                                [readonly]="noPoseeContacto">
+                    </plex-phone>
+                    <plex-text email label="Dirección"
+                               *ngIf="_unContacto.tipo === 'email' || _unContacto.tipo.id === 'email'"
+                               [(ngModel)]="_unContacto.valor" placeholder="Ej: ejemplo@email.com"
+                               [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}"
+                               [readonly]="noPoseeContacto">
+                    </plex-text>
+                    <plex-button *ngIf="i == 0" title="Agregar contacto" titlePosition="left" type="info" icon="plus"
+                                 name="agregarContacto" (click)="addContacto('celular', '')"
+                                 [disabled]="noPoseeContacto">
+                    </plex-button>
+                </ng-container>
+                <plex-button *ngIf="i > 0" label="" type="danger" icon="close" (click)="removeContacto(i)">
+                </plex-button>
+            </plex-wrapper>
+
+            <!-- APP-MOBILE -->
+
+            <div *ngIf="paciente.estado === 'validado'">
+                <activar-app [paciente]="paciente" [showCampoCelular]="false" (activar)="mobileNotify($event)">
+                </activar-app>
+            </div>
+        </plex-grid>
+
+        <!-- DATOS DE DOMICILIO -->
+
+        <plex-title titulo="Datos del domicilio" size="sm">
+            <plex-bool class="mr-3" *ngIf="provinciaActual" [(ngModel)]="viveProvActual"
+                       label="¿Provincia de {{provinciaActual.nombre}}?" name="viveProvActual"
+                       (change)="changeProvActual()">
+            </plex-bool>
+            <plex-bool *ngIf="viveProvActual && localidadActual" [(ngModel)]="viveLocActual"
+                       label="¿Localidad {{localidadActual.nombre}}?" name="viveLocActual"
+                       (change)="changeLocalidadActual()">
+            </plex-bool>
+        </plex-title>
+
+        <plex-grid type="full" size="lg" responsive>
+            <ng-container *ngIf="paciente?.direccion?.length">
+                <plex-wrapper>
+                    <plex-select [disabled]="viveProvActual" [(ngModel)]="paciente.direccion[0].ubicacion.provincia"
+                                 name="provincia" [required]="!viveProvActual" [data]="provincias$ | async"
+                                 idField="nombre" labelField="nombre" label="Provincia"
+                                 (change)="loadLocalidades(paciente.direccion[0].ubicacion.provincia)">
+                    </plex-select>
+                    <plex-select [disabled]="viveLocActual" label="Localidad" [required]="viveProvActual"
+                                 [(ngModel)]="paciente.direccion[0].ubicacion.localidad" name="localidad"
+                                 [data]="localidades$ | async" labelField="nombre"
+                                 (change)="loadBarrios(paciente.direccion[0].ubicacion.localidad)" grow="2">
+                    </plex-select>
+                    <!-- barrios solo para NQN capital-->
+                    <plex-select class="pr-3" label="Barrio" [disabled]="!viveLocActual"
+                                 [(ngModel)]="paciente.direccion[0].ubicacion.barrio" name="barrio"
+                                 [data]="barrios$ | async" labelField="nombre" grow="full">
+                    </plex-select>
+                    <plex-text label="Dirección" [(ngModel)]="paciente.direccion[0].valor" name="direccion"
+                               placeholder="Ej: Avenida las Flores 1200">
+                    </plex-text>
+                    <plex-button [disabled]="disableGeoreferenciar" type="info" size="md" icon="map-marker"
+                                 (click)="geoReferenciar()">
+                    </plex-button>
+                </plex-wrapper>
+            </ng-container>
+
+            <!-- MAPA -->
+
+            <georref-map class="columna" #mapa [latLong]="georeferencia$ | async"
+                         (changeCoordinates)="changeCoordenadas($event)">
+            </georref-map>
+        </plex-grid>
+    </form>
+</section>

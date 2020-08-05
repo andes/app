@@ -9,8 +9,9 @@ import { Plex } from '@andes/plex';
     styleUrls: ['paciente-listado.scss']
 })
 export class PacienteListadoComponent {
-    private _pacientes: IPacienteMatch[] | IPaciente[];
-    private seleccionado: IPacienteMatch | IPaciente;
+    private _pacientes: IPacienteMatch[] | IPaciente[] = [];
+    pacienteSeleccionado: IPaciente;
+    selectedId: string;
 
     // Propiedades públicas
     public listado: IPaciente[]; // Contiene un listado plano de pacientes
@@ -41,45 +42,41 @@ export class PacienteListadoComponent {
             this.seleccionar(this.listado[0]);
         }
     }
-    /**
-     * Indica si selecciona automáticamente el primer paciente de la lista
-     *
-     */
+
+    // Indica si selecciona automáticamente el primer paciente de la lista
     @Input() autoselect = false;
-    /**
-    * Indica como se muestra la tabla de resultados
-    *
-    */
-    @Input() type: 'default' | 'sm' = 'default';
-    /**
-     * Evento que se emite cuando se selecciona un paciente
-     *
-     * @type {EventEmitter<IPaciente>}
-     */
+
+    // Indica si debe aparecer el boton 'editar' en cada resultado
+    @Input() editing = false;
+
+    // Evento que se emite cuando se selecciona un paciente (click en la lista)
     @Output() selected: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
-    /**
-     * Evento que se emite cuando el mouse está sobre un paciente
-     *
-     * @type {EventEmitter<any>}
-     * @memberof PacienteListadoComponent
-     */
+
+    // Evento que se emite cuando se presiona el boton 'editar' de un paciente
+    @Output() edit: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
+
+    // Evento que se emite cuando el mouse está sobre un paciente
     @Output() hover: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
+    // Evento que se emite cuando se scrollea en la lista
+    @Output() scrolled: EventEmitter<null> = new EventEmitter<null>();
 
     constructor(private plex: Plex) {
     }
 
     public seleccionar(paciente: IPaciente) {
-        if (this.seleccionado !== paciente) {
-            this.seleccionado = paciente;
-            this.selected.emit(this.seleccionado);
-        } else {
-            this.seleccionado = null;
-            this.selected.emit(null);
-        }
+        (paciente.id) ? this.selected.emit(paciente) : this.selected.emit(null);
+    }
+
+    public editar(paciente: IPaciente) {
+        (paciente.id) ? this.edit.emit(paciente) : this.edit.emit(null);
     }
 
     public hoverPaciente(paciente: IPaciente) {
         this.hover.emit(paciente);
+    }
+
+    public onScroll() {
+        this.scrolled.emit();
     }
 }

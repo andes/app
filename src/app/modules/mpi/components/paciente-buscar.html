@@ -1,4 +1,9 @@
-<plex-text [(ngModel)]="textoLibre" [debounce]="400" (change)="buscar($event)" name='buscador' [autoFocus]="autoFocus"
-           prefix="<i class='mdi mdi-barcode-scan'></i>"
-           placeholder="Escanee un documento digital, o escriba un documento / apellido / nombre">
-</plex-text>
+<plex-wrapper>
+    <plex-text [(ngModel)]="textoLibre" (change)="buscar($event)" name='buscador' [autoFocus]="autoFocus"
+               prefix="<i class='mdi mdi-barcode-scan'></i>"
+               placeholder="Escanee un documento digital, o escriba un documento / apellido / nombre">
+    </plex-text>
+    <plex-dropdown *ngIf="create" class="mr-0 dropdown-inline" [disabled]="disabled"
+                   [type]="disabled ? 'default' : 'primary'" [right]="true" [items]="routes" label="NUEVO PACIENTE">
+    </plex-dropdown>
+</plex-wrapper>

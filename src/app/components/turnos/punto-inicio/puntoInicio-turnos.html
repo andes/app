@@ -1,75 +1,67 @@
 <plex-layout main="7" *ngIf="!showCreateUpdate && showDashboard && !showDarTurnos">
     <plex-layout-main>
         <!-- BOTONES DE REGISTRO MPI -->
-        <div class="row">
-            <div class="col-9 pr-0">
-                <paciente-buscar (searchStart)="onSearchStart()"
-                                 (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
-                                 (searchClear)="onSearchClear()">
-                </paciente-buscar>
-            </div>
-            <div class="col-3">
-                <mpi-botones-registro [hostComponent]="'puntoInicio'" [disabled]="disableNuevoPaciente">
-                </mpi-botones-registro>
-            </div>
-        </div>
+
+        <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event.pacientes,$event.escaneado)"
+                         (searchClear)="onSearchClear()" [returnScannedPatient]="true" [hostComponent]="'puntoInicio'"
+                         [create]="true">
+        </paciente-buscar>
 
         <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
-        <div class="row pt-2">
-            <!-- LISTA DE RESULTADOS DE LA BÚSQUEDA -->
-            <div class="col pr-2" *ngIf="!paciente">
-                <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
-                                  [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
-                <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length && !searchClear" class="alert alert-danger">
-                    <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
-                </div>
-            </div>
-
-            <!-- VISTA DE PACIENTE SELECCIONADO DE LA LISTA DE RESULTADOS -->
-            <div class="col pr-2" *ngIf="paciente">
-                <table class="table table-striped">
-                    <tbody>
-                        <tr class="hover">
-                            <td (click)="showDatos()">
-                                <plex-badge *ngIf="paciente.estado == 'validado'" type="success">Validado</plex-badge>
-                                <plex-badge *ngIf="paciente.estado != 'validado'" type="warning"
-                                            title="Los pacientes temporales sin validar se inactivan luego de un tiempo">
-                                    Temporal</plex-badge>
-                                {{ paciente | nombre }}
-                                <br>
-                                <b>Documento: </b>
-                                <span *ngIf="paciente.documento">{{ paciente.documento |
-                                    number}}</span>
-                                <span *ngIf="!paciente.documento" class="text-danger">Sin documento</span>
-                                |
-                                <b>Fecha de Nacimiento: </b>
-                                <span *ngIf="paciente.fechaNacimiento">{{
-                                    paciente.fechaNacimiento
-                                    | fecha:'utc' }}</span>
-                                <span *ngIf="!paciente.fechaNacimiento" class="text-danger">Sin fecha de
-                                    nacimiento</span>
-                                <br>
-                                <b>Sexo: </b>
-                                <span>{{paciente.sexo}}</span>
-                            </td>
-                            <td>
-                                <plex-button *ngIf="puedeDarTurno" title="Dar Turno" icon="calendar-plus"
-                                             (click)="verificarOperacion('darTurno', paciente)"></plex-button>
-                            </td>
-                            <td>
-                                <plex-button *ngIf="puedeCrearSolicitud" title="Solicitudes" icon="open-in-app"
-                                             (click)="verificarOperacion('ingresarSolicitud', paciente)"></plex-button>
-                            </td>
-                            <td>
-                                <plex-button title="Activar App" icon="cellphone-android"
-                                             (click)="verificarOperacion('activarApp', paciente)"></plex-button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <!-- LISTA DE RESULTADOS DE LA BÚSQUEDA -->
+        <div class="col pr-2" *ngIf="!paciente">
+            <paciente-listado *ngIf="resultadoBusqueda && resultadoBusqueda.length" [pacientes]="resultadoBusqueda"
+                              [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
+            <div *ngIf="resultadoBusqueda && !resultadoBusqueda.length && !searchClear" class="alert alert-danger">
+                <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente..
             </div>
         </div>
+
+        <!-- VISTA DE PACIENTE SELECCIONADO DE LA LISTA DE RESULTADOS -->
+        <div class="col pr-2" *ngIf="paciente">
+            <table class="table table-striped">
+                <tbody>
+                    <tr class="hover">
+                        <td (click)="showDatos()">
+                            <plex-badge *ngIf="paciente.estado == 'validado'" type="success">Validado</plex-badge>
+                            <plex-badge *ngIf="paciente.estado != 'validado'" type="warning"
+                                        title="Los pacientes temporales sin validar se inactivan luego de un tiempo">
+                                Temporal</plex-badge>
+                            {{ paciente | nombre }}
+                            <br>
+                            <b>Documento: </b>
+                            <span *ngIf="paciente.documento">{{ paciente.documento |
+                                    number}}</span>
+                            <span *ngIf="!paciente.documento" class="text-danger">Sin documento</span>
+                            |
+                            <b>Fecha de Nacimiento: </b>
+                            <span *ngIf="paciente.fechaNacimiento">{{
+                                    paciente.fechaNacimiento
+                                    | fecha:'utc' }}</span>
+                            <span *ngIf="!paciente.fechaNacimiento" class="text-danger">Sin fecha de
+                                nacimiento</span>
+                            <br>
+                            <b>Sexo: </b>
+                            <span>{{paciente.sexo}}</span>
+                        </td>
+                        <td>
+                            <plex-button *ngIf="puedeDarTurno" title="Dar Turno" icon="calendar-plus"
+                                         (click)="verificarOperacion('darTurno', paciente)"></plex-button>
+                        </td>
+                        <td>
+                            <plex-button *ngIf="puedeCrearSolicitud" title="Solicitudes" icon="open-in-app"
+                                         (click)="verificarOperacion('ingresarSolicitud', paciente)"></plex-button>
+                        </td>
+                        <td>
+                            <plex-button title="Activar App" icon="cellphone-android"
+                                         (click)="verificarOperacion('activarApp', paciente)"></plex-button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
         <div *ngIf="showArancelamiento">
             <arancelamiento-form [turno]="turnoArancelamiento" (volverAPuntoInicio)='volverAPuntoInicio($event)'>
             </arancelamiento-form>
@@ -93,7 +85,11 @@
             </lista-solicitud-turno-ventanilla>
         </div>
         <div *ngIf="showActivarApp && paciente" type="info">
-            <activar-app [paciente]="paciente"></activar-app>
+            <activar-app *ngIf="paciente?.estado === 'validado'" [paciente]="paciente"></activar-app>
+            <plex-label class="pt-4" justify="center" *ngIf="paciente?.estado !== 'validado'" direction="column"
+                        icon="account" size="xl" titulo="Activar app mobile"
+                        subtitulo="Esta opción está disponible solo para pacientes validados">
+            </plex-label>
         </div>
     </plex-layout-sidebar>
 </plex-layout>

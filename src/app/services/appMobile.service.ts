@@ -30,6 +30,14 @@ export class AppMobileService {
     }
 
     /**
+     * Devuelve una cuenta segun email, en caso de que exista
+     * @param {String} email
+     */
+    getByEmail(email: String): Observable<any> {
+        return this.server.get(this.mobileUrl + 'email/' + email, {});
+    }
+
+    /**
      * Reenvía el código de verificación a un paciente
      * @param {objectId} idPaciente
      */
