@@ -97,7 +97,8 @@
                                 <table *ngIf="prestacionesEntrada?.length"
                                        class="table table-striped table-sm table-lista-solicitudes">
                                     <thead>
-                                        <th>Fecha</th>
+                                        <th>Fecha de registro</th>
+                                        <th>Fecha de solicitud</th>
                                         <th>Paciente</th>
                                         <th *ngIf="!showSidebar">
                                             Organización Origen</th>
@@ -114,6 +115,8 @@
                                            (scrolled)="onScroll()" [scrollWindow]="false">
                                         <tr *ngFor="let prestacion of prestacionesEntrada; let i=index" class="hover"
                                             [ngClass]="{'bg-inverse text-white': (prestacion.seleccionada===true)}">
+                                            <td>
+                                                {{prestacion.createdAt | fecha}}</td>
                                             <td (click)="seleccionar(prestacion)">{{prestacion.solicitud.fecha
                                         | fecha}}<br>
                                                 <popover-audit placement="right" [data]="prestacion"
@@ -244,7 +247,8 @@
                                 <table *ngIf="prestacionesSalida?.length"
                                        class="table table-striped table-sm table-lista-solicitudes">
                                     <thead>
-                                        <th>Fecha</th>
+                                        <th>Fecha de registro</th>
+                                        <th>Fecha de solicitud</th>
                                         <th>Paciente</th>
                                         <th *ngIf="!showSidebar">Organización
                                             Destino</th>
@@ -260,6 +264,8 @@
                                         <tr *ngFor="let prestacion of prestacionesSalida; let i=index" class="hover"
                                             (click)="seleccionar(prestacion)"
                                             [ngClass]="{'bg-inverse text-white': (prestacion.seleccionada===true)}">
+                                            <td>
+                                                {{prestacion.createdAt | fecha}}</td>
                                             <td>
                                                 {{prestacion.solicitud.fecha | fecha}}</td>
                                             <td>
