@@ -80,7 +80,7 @@ export class VisualizacionReglasComponent implements OnInit {
                 prestacionDestino: this.prestacionDestino ? this.prestacionDestino.conceptId : ''
             };
             if (this.esParametrizado) {
-                parametros['prestacionesOrigen'] = 'rup:tipoPrestacion:?';
+                parametros['prestacionesOrigen'] = 'solicitudes:tipoPrestacion:?';
             } else {
                 parametros['prestacionOrigen'] = this.prestacionOrigen ? this.prestacionOrigen.conceptId : '';
             }
