@@ -18,7 +18,14 @@
             <plex-copy *ngIf="paciente.numeroIdentificacion" [value]="paciente.numeroIdentificacion">
                 {{ paciente.numeroIdentificacion }}
             </plex-copy>
-            <span *ngIf="!paciente.numeroIdentificacion && !paciente.documento">Sin DNI</span>
+            <ng-container *ngIf="!this.paciente.numeroIdentificacion && !this.paciente.documento">
+                <plex-copy *ngIf="showDocumentoProgenitor()"
+                           [value]="relaciones[0].documento || relaciones[0].numeroIdentificacion">
+                    {{ relaciones[0].documento || relaciones[0].numeroIdentificacion}} (documento de
+                    {{relaciones[0].parentesco}})
+                </plex-copy>
+                <span *ngIf="!showDocumentoProgenitor()">Sin DNI</span>
+            </ng-container>
         </div>
 
         <plex-label *ngIf="showSexo" titulo="Sexo / Género" subtitulo="{{paciente | sexo}}" justify="{{ justificado }}">

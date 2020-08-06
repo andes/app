@@ -142,6 +142,12 @@ export class PacienteDetalleComponent implements OnInit {
         }
     }
 
+    public showDocumentoProgenitor() {
+        //  si es un paciente sin documento menor a 5 años mostramos documento de un familiar/tutor
+        return this.paciente.edad < 5 && this.relaciones !== null && this.relaciones.length > 0
+            && (this.relaciones[0].documento || this.relaciones[0].numeroIdentificacion);
+
+    }
     // TODO: Eliminar este metodo y utilizar el financiador que viene en el paciente (una vez que se agregue en el multimatch)
     loadObraSocial() {
         this.obraSocial = {
