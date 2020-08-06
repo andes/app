@@ -19,7 +19,7 @@
                         </span>
                     </div>
                     <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" name="tipoPrestacionDestino"
-                                 (getData)="loadTipoPrestaciones($event)" label="Tipo de Prestación Solicitada"
+                                 tmPrestaciones="solicitudes:tipoPrestacion:?" label="Tipo de Prestación Solicitada"
                                  placeholder="Tipos de Prestación solicitada" [required]="true"
                                  (change)="onSelectPrestacionOrigen()">
                     </plex-select>
@@ -73,7 +73,7 @@
                     </div>
                     <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen"
                                  name="tipoPrestacionOrigen" (change)="onSelect()"
-                                 (getData)="loadTipoPrestaciones($event)" label="Tipos de Prestación Origen"
+                                 tmPrestaciones="solicitudes:tipoPrestacion:?" label="Tipos de Prestación Origen"
                                  placeholder="Tipos de Prestación Origen" [required]="true">
                     </plex-select>
                     <plex-select *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.organizacion"
