@@ -112,33 +112,41 @@ export class VisualizacionReglasComponent implements OnInit {
      */
     obtenerFilasTabla(reglas: [IRegla]) {
         this.filas = [];
-        for (let regla of reglas) {
-            regla.origen.prestaciones.forEach((prestacionAux: any) => { // prestacionAux es cada celda del arreglo de origen.prestaciones. Tiene la prestación y si es auditable
-                if (!this.prestacionOrigen || this.prestacionOrigen.conceptId === prestacionAux.prestacion.conceptId) {
-                    /* Es necesaria esta validación porque una regla tiene un origen y un destino. El origen se compone de
-                     * una organización y una lista de prestaciones. Entonces si filtra por prestación origen, que muestre
-                     * solo aquellas partes de la regla que cumpla con los filtros ingresados. El destino es una organización
-                     * y una sola prestación por lo que no es necesario más validaciones. */
-                    this.filas.push({
-                        organizacionOrigen: regla.origen.organizacion,
-                        prestacionOrigen: prestacionAux,
-                        organizacionDestino: regla.destino.organizacion,
-                        prestacionDestino: regla.destino.prestacion
-                    });
-                }
-            });
-        }
-        if (this.esParametrizado) {
-            this.filas.sort((fila1, fila2) => {
-                if (fila2.prestacionDestino.term < fila1.prestacionDestino.term) {
-                    return 1;
-                }
-                if (fila2.prestacionDestino.term > fila1.prestacionDestino.term) {
-                    return -1;
-                }
-                return 0;
-            });
-        }
+        let ids = reglas.map(regla => regla.origen.organizacion.id).concat(reglas.map(regla => regla.destino.organizacion.id));
+        let parametros = {
+            ids: ids
+        };
+        this.servicioOrganizacion.get(parametros)
+            .subscribe(
+                organizaciones => {
+                    for (let regla of reglas) {
+                        regla.origen.prestaciones.forEach((prestacionAux: any) => { // prestacionAux es cada celda del arreglo de origen.prestaciones. Tiene la prestación y si es auditable
+                            if (!this.prestacionOrigen || this.prestacionOrigen.conceptId === prestacionAux.prestacion.conceptId) {
+                                /* Es necesaria esta validación porque una regla tiene un origen y un destino. El origen se compone de
+                                 * una organización y una lista de prestaciones. Entonces si filtra por prestación origen, que muestre
+                                 * solo aquellas partes de la regla que cumpla con los filtros ingresados. El destino es una organización
+                                 * y una sola prestación por lo que no es necesario más validaciones. */
+                                this.filas.push({
+                                    organizacionOrigen: organizaciones.find(org => org.id === regla.origen.organizacion.id),
+                                    prestacionOrigen: prestacionAux,
+                                    organizacionDestino: organizaciones.find(org => org.id === regla.destino.organizacion.id),
+                                    prestacionDestino: regla.destino.prestacion
+                                });
+                            }
+                        });
+                    }
+                    if (this.esParametrizado) {
+                        this.filas.sort((fila1, fila2) => {
+                            if (fila2.prestacionDestino.term < fila1.prestacionDestino.term) {
+                                return 1;
+                            }
+                            if (fila2.prestacionDestino.term > fila1.prestacionDestino.term) {
+                                return -1;
+                            }
+                            return 0;
+                        });
+                    }
+                });
     }
 }
 
