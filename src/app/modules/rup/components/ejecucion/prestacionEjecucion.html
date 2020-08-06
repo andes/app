@@ -10,7 +10,7 @@
                             <div class="col float-right text-right panel-acciones">
                                 <plex-help class="mr-1 text-left" titulo="Reglas Solicitudes"
                                            tituloBoton="Reglas Solicitudes">
-                                    <visualizacion-reglas info [esParametrizado]="true" *plHelp></visualizacion-reglas>
+                                    <visualizacion-reglas info [esParametrizado]="true" [soloOrigen]="true" *plHelp></visualizacion-reglas>
                                 </plex-help>
                                 <help-solicitud [solicitud]='prestacion.solicitud' class='mr-1'></help-solicitud>
                                 <plex-button (click)="toggleCollapse($event)" type="primary"

@@ -12,6 +12,8 @@ import { Auth } from '@andes/auth';
 export class VisualizacionReglasComponent implements OnInit {
     @Input()
     esParametrizado = false;
+    @Input()
+    soloOrigen = false;
     /**
      * Organización ingresada en el filtro de organización origen
      * @type {IOrganizacion}
@@ -76,7 +78,8 @@ export class VisualizacionReglasComponent implements OnInit {
             let parametros = {
                 organizacionOrigen: this.organizacionOrigen ? this.organizacionOrigen.id : '',
                 organizacionDestino: this.organizacionDestino ? this.organizacionDestino.id : '',
-                prestacionDestino: this.prestacionDestino ? this.prestacionDestino.conceptId : ''
+                prestacionDestino: this.prestacionDestino ? this.prestacionDestino.conceptId : '',
+                soloOrigen: this.soloOrigen
             };
             if (this.esParametrizado) {
                 parametros['prestacionesOrigen'] = 'rup:tipoPrestacion:?';
