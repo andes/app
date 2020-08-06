@@ -29,7 +29,7 @@
                     <div class="elementos-graficos w-100" *ngIf="!esParametrizado">
                         <plex-icon name="hospital-building" type="info"></plex-icon>
                         <plex-label [tituloBold]="true" titulo="{{ fila.organizacionOrigen.nombre }}"
-                                    subtitulo="Ciudad de {{ fila.organizacionOrigen.direccion.ubicacion.localidad.nombre }}">
+                                    subtitulo="Ciudad de {{ fila.organizacionOrigen.direccion?.ubicacion?.localidad?.nombre }}">
                         </plex-label>
                     </div>
                     <plex-label [tituloBold]="!esParametrizado" titulo="{{ fila.prestacionOrigen.prestacion.term }}">
@@ -37,7 +37,7 @@
                     <div class="elementos-graficos w-100">
                         <plex-icon *ngIf="!esParametrizado" name="hospital-building" type="success"></plex-icon>
                         <plex-label [tituloBold]="!esParametrizado" titulo="{{ fila.organizacionDestino.nombre }}"
-                                    subtitulo="Ciudad de {{ fila.organizacionDestino.direccion.ubicacion.localidad.nombre }}">
+                                    subtitulo="Ciudad de {{ fila.organizacionDestino.direccion?.ubicacion?.localidad?.nombre }}">
                         </plex-label>
                     </div>
                     <plex-label [tituloBold]="!esParametrizado" titulo="{{ fila.prestacionDestino.term }}"></plex-label>
