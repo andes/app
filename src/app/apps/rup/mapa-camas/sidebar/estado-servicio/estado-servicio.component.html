@@ -19,8 +19,8 @@
         <app-icono-camita icono="adi adi-cama" class="subcontainer-resumen total" nombre="Totales" [cantidad]="total">
         </app-icono-camita>
         <ng-container *ngFor="let estado of mapaCamasService.estado$ | async">
-            <app-icono-camita [icono]="estado.icon" [class]="'subcontainer-resumen ' + estado.key"
-                              [nombre]="estado.label + 's'"
+            <app-icono-camita [icono]="estado.icon"
+                              [nombre]="estado.label + 's'" [color]="estado.color"
                               [cantidad]="camasXEstado[estado.key] ? camasXEstado[estado.key].length : 0">
             </app-icono-camita>
         </ng-container>
