@@ -32,7 +32,7 @@ export class MapaCamasService {
     public estadoSelected = new BehaviorSubject<string>(null);
     public equipamientoSelected = new BehaviorSubject<ISnomedConcept[]>(null);
 
-    public selectedPaciente = new BehaviorSubject<any>({} as any);
+    public selectedPaciente = new BehaviorSubject<{ id: string }>({ id: null });
     public pacienteAux = new BehaviorSubject<any>({} as any);
 
     public selectedCama = new BehaviorSubject<ISnapshot>({} as any);
@@ -278,11 +278,11 @@ export class MapaCamasService {
         this.selectedCama.next(cama);
     }
 
-    selectPaciente(paciente: any) {
+    selectPaciente(paciente: string) {
         if (!paciente) {
-            return this.selectedPaciente.next({ id: null } as any);
+            return this.selectedPaciente.next({ id: null });
         }
-        this.selectedPaciente.next(paciente);
+        this.selectedPaciente.next({ id: paciente });
     }
 
     selectPrestacion(prestacion: IPrestacion) {
@@ -472,7 +472,7 @@ export class MapaCamasService {
         return (String(edad.valor) + ' ' + edad.unidad);
     }
 
-    private paciente$: any = {};
+    private paciente$: { [key: string]: Observable<any> } = {};
     getPaciente(paciente) {
         if (!this.paciente$[paciente.id]) {
             this.paciente$[paciente.id] = this.pacienteService.getById(paciente.id).pipe(

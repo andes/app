@@ -21,7 +21,6 @@ import { timer, Subscription } from 'rxjs';
 export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     capa$: Observable<string>;
     selectedCama$: Observable<ISnapshot>;
-    selectedPaciente$: Observable<IPaciente>;
     organizacion: string;
     fecha = moment().toDate();
     ambito: string;
@@ -113,7 +112,6 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
             return cama;
         });
 
-        this.selectedPaciente$ = this.mapaCamasService.selectedPaciente;
 
         this.mapaCamasService.setFecha(new Date());
         this.mapaCamasService.setOrganizacion(this.auth.organizacion.id);

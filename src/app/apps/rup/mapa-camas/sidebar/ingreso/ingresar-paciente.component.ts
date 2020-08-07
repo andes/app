@@ -12,7 +12,7 @@ import { ISnapshot } from '../../interfaces/ISnapshot';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { combineLatest, Subscription, Observable } from 'rxjs';
 import { ObraSocialService } from '../../../../../services/obraSocial.service';
-import { map } from 'rxjs/operators';
+import { map, switchMap, filter } from 'rxjs/operators';
 import { ObjectID } from 'bson';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
 import { Auth } from '@andes/auth';
@@ -112,7 +112,12 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
             this.mapaCamasService.capa2,
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.prestacion$,
-            this.mapaCamasService.selectedPaciente
+            this.mapaCamasService.selectedPaciente.pipe(
+                filter(pac => !!pac.id),
+                switchMap((paciente) => {
+                    return this.mapaCamasService.getPaciente(paciente);
+                })
+            )
         ).subscribe(([view, capa, cama, prestacion, paciente]) => {
             this.view = view;
             this.capa = capa;
