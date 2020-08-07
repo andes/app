@@ -27,10 +27,9 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
 
         this.elementoRUP.params.map((param) => {
 
-            this.prestacionesService.getRegistrosHuds(this.paciente.id, `${param.query}`).subscribe(prestaciones => {
+            this.prestacionesService.getRegistrosHuds(this.paciente.id, `${param.query}`, true).subscribe(prestaciones => {
 
                 if (prestaciones.length) {
-
                     // ordenamos los datosLineales por fecha
                     prestaciones.sort(function (a, b) {
                         let dateA = new Date(a.fecha).getTime();
@@ -41,6 +40,7 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
 
                     this.barChartDates.push(
                         prestaciones.filter(y => y.registro.valor !== null && isNumber(y.registro.valor)).map(p => ({ fecha: p.fecha })),
+
                     );
 
                     // asignamos los datosLineales al data para el chart
