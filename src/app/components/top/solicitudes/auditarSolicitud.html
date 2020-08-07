@@ -152,19 +152,22 @@
         <ng-container *ngIf="estadoSolicitud === 3">
             <div class="row">
                 <div class="col-12">
-                    <plex-select [(ngModel)]="organizacionDestino" [data]="organizacionesDestino" name="organizacionOrigen"
-                        label="Organización destino" labelField="nombre" [required]="true" (change)="onSelectOrganizacionDestino()">
+                    <plex-select [(ngModel)]="organizacionDestino" [data]="organizacionesDestino"
+                                 name="organizacionOrigen" label="Organización destino" labelField="nombre"
+                                 [required]="true" (change)="onSelectOrganizacionDestino()">
                     </plex-select>
                 </div>
-                <div class="col-12"> 
-                    <plex-select [(ngModel)]="tipoPrestacionDestino" name="tipoPrestacionDestino" [data]="tipoPrestacionesDestinoData"
-                        label="Tipo de Prestación Solicitada" placeholder="Tipos de Prestación solicitada" [required]="true" >
+                <div class="col-12">
+                    <plex-select [(ngModel)]="tipoPrestacionDestino" name="tipoPrestacionDestino"
+                                 [data]="tipoPrestacionesDestinoData" label="Tipo de Prestación Solicitada"
+                                 placeholder="Tipos de Prestación solicitada" [required]="true">
                     </plex-select>
                 </div>
                 <div class="col-12">
                     <plex-select *ngIf="!autocitado" [(ngModel)]="profesionalDestino" label="Profesional destino"
-                        name="profesional" (getData)="loadProfesionales($event)" placeholder="Escriba el apellido de un Profesional"
-                        labelField="apellido + ' ' + nombre">
+                                 name="profesional" (getData)="loadProfesionales($event)"
+                                 placeholder="Escriba el apellido de un Profesional"
+                                 labelField="apellido + ' ' + nombre">
                     </plex-select>
                 </div>
             </div>
@@ -175,7 +178,8 @@
             </div>
             <div class="col-6 text-right">
                 <plex-button type="success" (click)="confirmar()"
-                    [disabled]="estadoSolicitud === 3 && !(tipoPrestacionDestino && organizacionDestino)">Confirmar</plex-button>
+                             [disabled]="(estadoSolicitud === 3 && !(tipoPrestacionDestino && organizacionDestino)) || (estadoSolicitud === 1 && !profesional)">
+                    Confirmar</plex-button>
             </div>
         </div>
     </span>
