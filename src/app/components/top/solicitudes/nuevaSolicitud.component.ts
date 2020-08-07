@@ -202,6 +202,9 @@ export class NuevaSolicitudComponent implements OnInit {
 
     onSelect() {
         if (this.tipoSolicitud === 'salida') {
+            this.dataOrganizacionesDestino = [];
+            this.modelo.solicitud.organizacion = null;
+            this.prestacionOrigen = null;
             if (this.auth.organizacion.id && this.modelo.solicitud.tipoPrestacionOrigen && this.modelo.solicitud.tipoPrestacionOrigen.conceptId) {
                 this.servicioReglas.get({ organizacionOrigen: this.auth.organizacion.id, prestacionOrigen: this.modelo.solicitud.tipoPrestacionOrigen.conceptId })
                     .subscribe(
@@ -211,13 +214,8 @@ export class NuevaSolicitudComponent implements OnInit {
                             this.dataOrganizacionesDestino = res.map(elem => { return { id: elem.destino.organizacion.id, nombre: elem.destino.organizacion.nombre }; });
                         }
                     );
-            } else {
-                this.dataOrganizacionesDestino = [];
-                this.modelo.solicitud.organizacion = null;
             }
-        }
-
-        if (this.tipoSolicitud === 'entrada' && this.auth.organizacion.id) {
+        } else if (this.tipoSolicitud === 'entrada' && this.auth.organizacion.id) {
             if (this.prestacionOrigen) {
                 let regla: any = this.arrayReglasOrigen.find((rule: any) => { return rule.prestacion.conceptId === this.prestacionOrigen.id; });
                 if (regla.auditable) {
@@ -234,6 +232,8 @@ export class NuevaSolicitudComponent implements OnInit {
     }
 
     onSelectOrganizacionOrigen() {
+        this.prestacionOrigen = null;
+
         if (this.modelo.solicitud.organizacionOrigen) {
             let regla: any = this.arrayOrganizacionesOrigen.find((org: any) => org.origen.organizacion.id === this.modelo.solicitud.organizacionOrigen.id);
             if (regla && regla.origen) {
@@ -245,11 +245,12 @@ export class NuevaSolicitudComponent implements OnInit {
                 this.dataOrganizacionesOrigen = [];
             }
             this.dataReglasDestino = [];
-            this.prestacionOrigen = null;
         }
     }
 
     onSelectOrganizacionDestino() {
+        this.prestacionDestino = null;
+
         if (this.modelo.solicitud.organizacion) {
             this.servicioReglas.get({
                 organizacionOrigen: this.auth.organizacion.id,
@@ -258,22 +259,22 @@ export class NuevaSolicitudComponent implements OnInit {
             })
                 .subscribe(res => {
                     this.dataReglasDestino = res.map(elem => ({ id: elem.destino.prestacion.conceptId, nombre: elem.destino.prestacion.term }));
-                    if (!this.dataReglasDestino.find(e => e.id === this.prestacionDestino.id)) {
-                        this.prestacionDestino = null;
-                    }
                 });
         } else {
             if (!this.modelo.solicitud.tipoPrestacionOrigen) {
                 this.dataOrganizacionesDestino = [];
                 this.modelo.solicitud.organizacion = null;
-                this.prestacionDestino = null;
             }
             this.dataReglasDestino = [];
         }
     }
 
     onSelectPrestacionOrigen() {
-        if (this.tipoSolicitud === 'entrada' && this.modelo.solicitud && this.modelo.solicitud.tipoPrestacion) {
+        this.dataOrganizacionesOrigen = [];
+        this.modelo.solicitud.organizacionOrigen = null;
+        this.dataTipoPrestacionesOrigen = [];
+
+        if (this.modelo.solicitud && this.modelo.solicitud.tipoPrestacion) {
             this.servicioReglas.get({ organizacionDestino: this.auth.organizacion.id, prestacionDestino: this.modelo.solicitud.tipoPrestacion.conceptId })
                 .subscribe(
                     res => {
@@ -281,14 +282,7 @@ export class NuevaSolicitudComponent implements OnInit {
                         this.dataOrganizacionesOrigen = res.map(elem => { return { id: elem.origen.organizacion.id, nombre: elem.origen.organizacion.nombre }; });
                     }
                 );
-        } else {
-            this.clearOrganizacionesOrigen();
         }
-    }
-
-    clearOrganizacionesOrigen() {
-        this.dataOrganizacionesOrigen = [];
-        this.modelo.solicitud.organizacionOrigen = null;
     }
 
     onSelectPrestacionDestino() {
