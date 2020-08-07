@@ -8,8 +8,9 @@
             <div span="2" justify="start">
                 <b class="pr-3">Activar App Mobile</b>
             </div>
-            <plex-text email label="" name="email" debounce="900" [(ngModel)]="email" placeholder="maria@gmail.com"
-                       [readonly]="(showCampoCelular && !celular) || emailReadonly" (change)="checkEmail()">
+            <plex-text span="2" email label="" name="email" debounce="900" [(ngModel)]="email"
+                       placeholder="maria@gmail.com" [readonly]="(showCampoCelular && !celular) || emailReadonly"
+                       (change)="checkEmail()">
             </plex-text>
         </plex-grid>
 
@@ -31,7 +32,8 @@
                      label="Reenviar Código" type="info" (click)="activarApp()">
         </plex-button>
 
-        <plex-badge *ngIf="hasEmailValido$| async" class="pt-2 pr-3" [type]="typeMessage" size="block">{{ message }}
+        <plex-badge *ngIf="(hasEmailValido$| async) || message?.length" class="pt-2 pr-3" [type]="typeMessage"
+                    size="block">{{ message }}
         </plex-badge>
     </plex-wrapper>
 </form>
