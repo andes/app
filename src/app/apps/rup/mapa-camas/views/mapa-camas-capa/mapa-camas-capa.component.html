@@ -47,18 +47,10 @@
     </plex-layout-main>
     <plex-layout-sidebar type="invert">
         <app-estado-servicio *ngIf="!accion"></app-estado-servicio>
-        <ng-container *ngIf="selectedPaciente$ | async as selectedPaciente">
-            <app-elegir-paciente *ngIf="(selectedPaciente.id === null) && (accion === 'internarPaciente')">
-                <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
-                </plex-button>
-            </app-elegir-paciente>
-            <app-ingresar-paciente *ngIf="(selectedPaciente.id !== null) && (accion === 'internarPaciente')"
-                                   (onSave)="volverAResumen()" (volver)="mapaCamasService.selectPaciente(null)">
-                <plex-button title="Volver" icon="arrow-left" type="danger" size="sm"
-                             (click)="mapaCamasService.selectPaciente(null)">
-                </plex-button>
-            </app-ingresar-paciente>
-        </ng-container>
+
+        <app-ingreso-paciente-workflow *ngIf="accion === 'internarPaciente'" (cancel)="volverADetalle()"
+                                       (save)="volverAResumen()">
+        </app-ingreso-paciente-workflow>
         <app-desocupar-cama *ngIf="accion === 'desocuparCama'" (accionDesocupar)="accionDesocupar($event)">
             <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
             </plex-button>

@@ -27,7 +27,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     // EVENTOS
     @Output() onSave = new EventEmitter<any>();
-    @Output() volver = new EventEmitter<any>();
 
     // CONSTANTES
     public pacienteAsociado = pacienteAsociado;
