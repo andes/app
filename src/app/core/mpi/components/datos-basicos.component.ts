@@ -55,6 +55,7 @@ export class DatosBasicosComponent implements OnInit {
         documento: '',
         numeroIdentificacion: '',
         fechaNacimiento: null,
+        fechaFallecimiento: null,
         sexo: '',
         foto: ''
     };
@@ -154,8 +155,10 @@ export class DatosBasicosComponent implements OnInit {
                 // Relacionamos al bebe con su progenitor/a
                 this.relacionBebe.apellido = paciente.apellido;
                 this.relacionBebe.nombre = paciente.nombre;
-                this.relacionBebe.documento = paciente.documento;
+                this.relacionBebe.documento = (paciente.documento) ? paciente.documento : null;
+                this.relacionBebe.numeroIdentificacion = (paciente.numeroIdentificacion) ? paciente.numeroIdentificacion : null;
                 this.relacionBebe.fechaNacimiento = paciente.fechaNacimiento;
+                this.relacionBebe.fechaFallecimiento = paciente.fechaFallecimiento;
                 this.relacionBebe.sexo = paciente.sexo;
                 this.relacionBebe.foto = paciente.foto ? paciente.foto : null;
                 this.relacionBebe.referencia = paciente.id;
