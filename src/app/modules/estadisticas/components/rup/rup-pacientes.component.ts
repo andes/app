@@ -4,6 +4,7 @@ import { EstRupService } from '../../services/rup-estadisticas.service';
 import { SnomedService } from '../../services/snomed.service';
 import { Plex } from '@andes/plex';
 import { ISnomedConcept } from '../../../rup/interfaces/snomed-concept.interface';
+import { ConceptosTurneablesService } from '../../../../services/conceptos-turneables.service';
 
 
 function hasAncestor(conceptos, _padre, item) {
@@ -44,12 +45,14 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
 
     public registros: IRegistros[] = [];
     public tablas: any = [];
-    public conceptos: { [key: string]: ISnomedConcept }  = {};
+    public conceptos: { [key: string]: ISnomedConcept } = {};
 
     constructor(
         public estService: EstRupService,
         public snomed: SnomedService,
-        private plex: Plex
+        private plex: Plex,
+        private conceptosTurneablesService: ConceptosTurneablesService
+
     ) { }
 
     ngOnInit() {
@@ -61,19 +64,21 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
     }
 
     ngAfterViewInit() {
-        this.snomed.getQuery({ expression: '<1651000013107' }).subscribe((result) => {
+        this.conceptosTurneablesService.getAll().subscribe(result => {
             this.prestaciones = result;
         });
     }
 
     onPrestacionChange() {
-        this.snomed.getQuery({ expression: '<<' + this.prestacion.conceptId }).subscribe((result) => {
-            result.forEach((item) => { item.check = true; });
-            this.prestacionesHijas = result;
-        });
+        if (this.prestacion) {
+            this.snomed.getQuery({ expression: '<<' + this.prestacion.conceptId }).subscribe((result) => {
+                result.forEach((item) => { item.check = true; });
+                this.prestacionesHijas = result;
+            });
+        }
     }
 
-    volver () {
+    volver() {
         this.showData = false;
         this.selectedConcept = this.selectIndex = this.selectedChilds = this.selectedFather = null;
         this.tableDemografia = this.tableLocalidades = null;
@@ -206,11 +211,11 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
             const elemento: any = {
                 concepto: padre,
                 count: hijos.reduce((a, b) => a + b.count, 0),
-                ids: hijos.reduce((a, b) => [ ...a, ...b.ids ], []),
-                prestaciones: hijos.reduce((a, b) => [ ...a, ...b.prestaciones ], []),
-                relaciones: hijos.reduce((a, b) => [ ...a, ...b.relaciones ], []),
+                ids: hijos.reduce((a, b) => [...a, ...b.ids], []),
+                prestaciones: hijos.reduce((a, b) => [...a, ...b.prestaciones], []),
+                relaciones: hijos.reduce((a, b) => [...a, ...b.relaciones], []),
                 hijos,
-                hijosName: hijos.reduce( ((a, item) => a + item.concepto.term + ',' ) , '')
+                hijosName: hijos.reduce(((a, item) => a + item.concepto.term + ','), '')
             };
 
             let names = [];
@@ -234,7 +239,7 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
         });
     }
 
-    showChild (padre) {
+    showChild(padre) {
         if (!this.selectedFather || padre.conceptId !== this.selectedFather.conceptId) {
             this.selectedChilds = this.getChilds(padre);
             this.selectedFather = padre;
@@ -248,7 +253,7 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
      * Dado un concepto devuelve todos los hijos de ese concepto
      * @param concept
      */
-    getChilds (concept) {
+    getChilds(concept) {
         return this.registros.filter(item => hasAncestor(this.conceptos, concept, item));
     }
 
@@ -256,9 +261,9 @@ export class RupPacientesComponent implements AfterViewInit, OnInit {
     public tableDemografia = null;
     public tableLocalidades = null;
     demografia() {
-        this.estService.demografia(this.selectedConcept.prestaciones.map(i => i .prestacion_id)).subscribe(datos => {
+        this.estService.demografia(this.selectedConcept.prestaciones.map(i => i.prestacion_id)).subscribe(datos => {
             const { demografia, localidades } = datos;
-            const tabla = [[0, 0, 0, 0, 0, 0, 0, 0 , 0, 0], [0, 0, 0, 0, 0, 0, 0, 0 , 0, 0]];
+            const tabla = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
 
             demografia.forEach(dato => {
                 tabla[dato.sexo === 'femenino' ? 0 : 1][dato.decada] += dato.count;
