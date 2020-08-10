@@ -26,12 +26,9 @@
     </ng-container>
 
     <p *ngIf="soloValores" class="readonly">
-        <div *ngIf="params?.titulo; else showTerm">
-            <label class="text-capitalize">{{ params.titutlo }}</label>
-        </div>
-        <ng-template #showTerm>
-            <label class="text-capitalize">{{ registro.concepto.term }}</label>
-        </ng-template>
+
+        <label class="text-capitalize">{{ registro.concepto.term }}</label>
+
         <ng-container *ngIf="registro?.valor?.concepto || registro.valor.length === 1">
             <p class="list-item-group text-capitalize">{{ registro.valor?.concepto ? registro.valor.concepto.term :
                 registro.valor[0].concepto.term }}</p>
