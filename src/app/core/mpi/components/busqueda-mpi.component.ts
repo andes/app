@@ -23,6 +23,7 @@ export class BusquedaMpiComponent implements OnInit {
     sidebar = 8;
     paciente: IPaciente = null;
     showDetallePaciente = false;
+    fieldsDetalle = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'telefono', 'direccion'];
 
     constructor(
         private historialBusquedaService: HistorialBusquedaService,
