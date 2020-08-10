@@ -8,6 +8,8 @@ import { OrganizacionService } from '../../services/organizacion.service';
 import { AgendaService } from '../../services/turnos/agenda.service';
 import { QueriesService } from '../../services/query.service';
 import { Slug } from 'ng2-slugify';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 
 @Component({
@@ -78,7 +80,9 @@ export class EncabezadoReportesComponent implements OnInit {
             organizacion: this.auth.organizacion.id
         };
         this.organizacion = this.auth.organizacion.nombre;
-        this.queryService.getAllQueries({ desdeAndes: true }).subscribe((query) => {
+        this.queryService.getAllQueries({ desdeAndes: true }).pipe(
+            catchError((err => of([])))
+         ).subscribe(query => {
             this.opciones = [{
                 id: 1,
                 nombre: 'Reporte C2'
@@ -92,13 +96,15 @@ export class EncabezadoReportesComponent implements OnInit {
                 nombre: 'Consultas por prestación'
             },
             ];
-            this.queries = query;
-            let i = 4;
-            this.queries.forEach(element => {
-                this.opciones.push({ id: i, nombre: element.nombre });
-                i++;
+             if (query) {
+                 this.queries = query;
+                 let i = 4;
+                 this.queries.forEach(element => {
+                     this.opciones.push({ id: i, nombre: element.nombre });
+                     i++;
+                    });
+             }
             });
-        });
     }
 
     loadOrganizacion(event) {
