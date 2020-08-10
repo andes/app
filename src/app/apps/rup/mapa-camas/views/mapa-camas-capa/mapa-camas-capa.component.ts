@@ -44,6 +44,8 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     mainView;
     subscription: Subscription;
 
+    public sortBy: string;
+    public sortOrder = 'desc';
 
     public permisoIngreso = false;
     public permisoCenso = false;
@@ -197,5 +199,34 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
 
     trackByFn(item: ISnapshot) {
         return item.idCama;
+    }
+
+    sortTable(event: string) {
+        if (this.sortBy === event) {
+            this.sortOrder = (this.sortOrder === 'asc') ? 'desc' : 'asc';
+            this.camas = this.camas.pipe(
+                map(snapshots => snapshots.reverse())
+            );
+        } else {
+            this.sortBy = event;
+            this.sortOrder = 'desc';
+            this.camas = this.camas.pipe(
+                map(snapshots => this.sortSnapshots(snapshots, this.sortBy))
+            );
+        }
+    }
+
+    sortSnapshots(snapshots: ISnapshot[], value: string) {
+        if (value === 'cama') {
+            snapshots = snapshots.sort((a, b) => a.nombre.localeCompare((b.nombre as string)));
+        } else if (value === 'unidadOrganizativa') {
+            snapshots = snapshots.sort((a, b) => a.unidadOrganizativa.term.localeCompare(b.unidadOrganizativa.term));
+        } else if (value === 'estado') {
+            snapshots = snapshots.sort((a, b) => a.estado.localeCompare((b.estado as string)));
+        } else if (value === 'paciente') {
+            snapshots = snapshots.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.apellido.localeCompare((b.paciente.apellido as string)));
+        }
+
+        return snapshots;
     }
 }
