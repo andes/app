@@ -12,8 +12,7 @@ export class QueriesService {
 
     // Retorna todas las queries guardadas en la base de datos
     getAllQueries(params): Observable<any> {
-        const res = this.server.get(`${this.biUrl}/queries`, { params, showError: true });
-        return res;
+        return this.server.get(`${this.biUrl}/queries`, { params, showError: false });
     }
 
     // Devuelve el resultado de ejecutar la query enviada por parametro
