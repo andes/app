@@ -43,10 +43,11 @@
                     [subtitulo]="numeroAfiliado" justify="{{ justificado }}">
         </plex-label>
 
-        <plex-label *ngIf="showDireccion" titulo="Dirección" [subtitulo]="direccion" justify="{{ justificado }}">
+        <plex-label *ngIf="showDireccion" titulo="Dirección" [subtitulo]="direccion || 'Sin dirección'"
+                    justify="{{ justificado }}">
         </plex-label>
 
-        <plex-label *ngIf="showTelefono" titulo="Teléfono" [subtitulo]="contacto" justify="{{ justificado }}">
+        <plex-label *ngIf="showTelefono" titulo="Contacto" [subtitulo]="contacto" justify="{{ justificado }}">
         </plex-label>
     </plex-detail>
 </ng-container>
