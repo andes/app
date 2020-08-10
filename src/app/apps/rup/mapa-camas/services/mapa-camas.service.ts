@@ -12,6 +12,7 @@ import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.inter
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 import { MaquinaEstadosHTTP } from './maquina-estados.http';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 
 
 @Injectable()
@@ -32,7 +33,6 @@ export class MapaCamasService {
     public estadoSelected = new BehaviorSubject<string>(null);
     public equipamientoSelected = new BehaviorSubject<ISnomedConcept[]>(null);
 
-    public selectedPaciente = new BehaviorSubject<{ id: string }>({ id: null });
     public pacienteAux = new BehaviorSubject<any>({} as any);
 
     public selectedCama = new BehaviorSubject<ISnapshot>({} as any);
@@ -51,8 +51,6 @@ export class MapaCamasService {
     public snapshot$: Observable<ISnapshot[]>;
     public snapshotFiltrado$: Observable<ISnapshot[]>;
 
-    // public listaInternacion$: Observable<IPrestacion[]>;
-    // public listaInternacionFiltrada$: Observable<IPrestacion[]>;
     public fechaActual$: Observable<Date>;
 
     public mainView = new BehaviorSubject<any>('mapa-camas');
@@ -263,10 +261,6 @@ export class MapaCamasService {
         this.fecha = fecha;
     }
 
-    // setFechaHasta(fecha: Date) {
-    //     this.fechaIngresoHasta.next(fecha);
-    // }
-
     setView(view: 'mapa-camas' | 'listado-internacion') {
         this.view.next(view);
     }
@@ -276,13 +270,6 @@ export class MapaCamasService {
             return this.selectedCama.next({ idCama: null } as any);
         }
         this.selectedCama.next(cama);
-    }
-
-    selectPaciente(paciente: string) {
-        if (!paciente) {
-            return this.selectedPaciente.next({ id: null });
-        }
-        this.selectedPaciente.next({ id: paciente });
     }
 
     selectPrestacion(prestacion: IPrestacion) {
@@ -472,12 +459,12 @@ export class MapaCamasService {
         return (String(edad.valor) + ' ' + edad.unidad);
     }
 
-    private paciente$: { [key: string]: Observable<any> } = {};
-    getPaciente(paciente) {
+    private paciente$: { [key: string]: Observable<IPaciente> } = {};
+    getPaciente(paciente, _startWith = true) {
         if (!this.paciente$[paciente.id]) {
             this.paciente$[paciente.id] = this.pacienteService.getById(paciente.id).pipe(
-                cache(),
-                startWith(paciente)
+                _startWith ? startWith(paciente) : map(res => res),
+                cache()
             );
         }
         return this.paciente$[paciente.id];

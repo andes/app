@@ -1,11 +1,12 @@
-<ng-container *ngIf="selectedPaciente$ | async as selectedPaciente">
-    <app-elegir-paciente *ngIf="selectedPaciente.id === null">
-        <plex-button title=" Volver" icon="arrow-left" type="danger" size="sm" (click)="onback()">
-        </plex-button>
-    </app-elegir-paciente>
-    <app-ingresar-paciente *ngIf="selectedPaciente.id" (onSave)="onSave()">
-        <plex-button title="Volver" icon="arrow-left" type="danger" size="sm"
-                     (click)="mapaCamasService.selectPaciente(null)">
+<ng-container *ngIf="selectedPaciente$ | async; else seleccionPaciente">
+    <app-ingresar-paciente (onSave)="onSave()">
+        <plex-button title="Volver" icon="arrow-left" type="danger" size="sm" (click)="onBackIngreso()">
         </plex-button>
     </app-ingresar-paciente>
 </ng-container>
+<ng-template #seleccionPaciente>
+    <app-elegir-paciente>
+        <plex-button title=" Volver" icon="arrow-left" type="danger" size="sm" (click)="onBack()">
+        </plex-button>
+    </app-elegir-paciente>
+</ng-template>
