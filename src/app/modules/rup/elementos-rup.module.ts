@@ -17,7 +17,6 @@ import { FrecuenciaRespiratoriaComponent } from './components/elementos/frecuenc
 import { IndiceDeMasaCorporalComponent } from './components/elementos/indiceDeMasaCorporal.component';
 import { InformesComponent } from './components/elementos/deprecated/informe.component';
 import { NuevaEvolucionProblemaComponent } from './components/elementos/nuevaEvolucionProblema.component';
-import { ObesidadComponent } from './components/elementos/obesidad.component';
 import { ObservacionesComponent } from './components/elementos/rupers/texto-enriquecido/observaciones.component';
 import { PesoComponent } from './components/elementos/peso.component';
 import { PercentiloPerimetroCefalicoComponent } from './components/elementos/percentiloPerimetroCefalico.component';
@@ -39,7 +38,6 @@ import { OdontogramaRefsetComponent } from './components/elementos/OdontogramaRe
 import { LactanciaComponent } from './components/elementos/lactancia.component';
 import { InformeEpicrisisComponent } from './components/elementos/deprecated/informeEpicrisis.component';
 import { ElementoDeRegistroComponent } from './components/elementos/deprecated/elementoDeRegistro.component';
-import { OdontologiaDefaultComponent } from './components/elementos/odontologiaDefault.component';
 import { InternacionEgresoComponent } from './components/elementos/internacionEgreso.component';
 import { InternacionIngresoComponent } from './components/elementos/internacionIngreso.component';
 
@@ -94,7 +92,6 @@ const RUPComponentsArray = [
     IndiceDeMasaCorporalComponent,
     InformesComponent,
     NuevaEvolucionProblemaComponent,
-    ObesidadComponent,
     ObservacionesComponent,
     PesoComponent,
     PercentiloPerimetroCefalicoComponent,
@@ -116,7 +113,6 @@ const RUPComponentsArray = [
     LactanciaComponent,
     InformeEpicrisisComponent,
     ElementoDeRegistroComponent,
-    OdontologiaDefaultComponent,
     InformeActividadNoNominalizadaComponent,
     PercentiloPesoComponent,
     PercentiloTallaComponent,
