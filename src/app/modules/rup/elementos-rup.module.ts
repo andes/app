@@ -14,7 +14,6 @@ import { AutocitadoComponent } from './components/elementos/autocitado.component
 import { EvolucionProblemaDefaultComponent } from './components/elementos/evolucionProblemaDefault.component';
 import { FrecuenciaCardiacaComponent } from './components/elementos/frecuenciaCardiaca.component';
 import { FrecuenciaRespiratoriaComponent } from './components/elementos/frecuenciaRespiratoria.component';
-import { HipertensionArterialComponent } from './components/elementos/hipertensionArterial.component';
 import { IndiceDeMasaCorporalComponent } from './components/elementos/indiceDeMasaCorporal.component';
 import { InformesComponent } from './components/elementos/deprecated/informe.component';
 import { NuevaEvolucionProblemaComponent } from './components/elementos/nuevaEvolucionProblema.component';
@@ -68,8 +67,6 @@ import { UltimaFechaComponent } from './components/elementos/ultimaFecha.compone
 
 import { MoleculaBaseComponent } from './components/elementos/moleculaBase.component';
 import { ProcedimientoDeEnfermeriaComponent } from './components/elementos/procedimientoDeEnfermeria.component';
-
-import { LugarDeNacimientoComponent } from './components/elementos/lugarDeNacimiento.component';
 import { SelectOrganizacionComponent } from './components/elementos/rupers/select-organizacion.component';
 import { SelectProfesionalComponent } from './components/elementos/rupers/select-profesional.component';
 import { SelectPrestacionComponent } from './components/elementos/rupers/select-prestacion.component';
@@ -94,7 +91,6 @@ const RUPComponentsArray = [
     EvolucionProblemaDefaultComponent,
     FrecuenciaCardiacaComponent,
     FrecuenciaRespiratoriaComponent,
-    HipertensionArterialComponent,
     IndiceDeMasaCorporalComponent,
     InformesComponent,
     NuevaEvolucionProblemaComponent,
@@ -143,7 +139,6 @@ const RUPComponentsArray = [
     UltimaFechaComponent,
     MoleculaBaseComponent,
     ProcedimientoDeEnfermeriaComponent,
-    LugarDeNacimientoComponent,
     SelectOrganizacionComponent,
     SelectProfesionalComponent,
     SelectPrestacionComponent,
