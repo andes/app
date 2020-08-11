@@ -43,9 +43,6 @@ import { ConsultaDeNinoSanoM2AComponent } from './components/elementos/consultaD
 import { ConsultaDeNinoSanoE2Y3AComponent } from './components/elementos/consultaDeNinoSanoE2Y3A.component';
 import { ConsultaDeNinoSanoE3Y6AComponent } from './components/elementos/consultaDeNinoSanoE3Y6A.component';
 import { DesarrolloPsicomotorComponent } from './components/elementos/desarrolloPsicomotor.component';
-import { RegistrarMedidasAntropometricasNinoM2AComponent } from './components/elementos/RegistrarMedidasAntropometricasNinoM2A.component';
-import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './components/elementos/RegistrarMedidasAntropometricasNinoE2Y3A.component';
-import { RegistrarMedidasAntropometricasNinoE3Y6AComponent } from './components/elementos/RegistrarMedidasAntropometricasNinoE3Y6A.component';
 import { ResumenHistoriaClinicaComponent } from './components/elementos/resumenHistoriaClinica.component';
 import { FormulaBaseComponent } from './components/elementos/FormulaBase.component';
 import { CalculoDeBostonComponent } from './components/elementos/calculoDeBoston.component';
@@ -107,9 +104,6 @@ const RUPComponentsArray = [
     ConsultaDeNinoSanoE2Y3AComponent,
     ConsultaDeNinoSanoE3Y6AComponent,
     DesarrolloPsicomotorComponent,
-    RegistrarMedidasAntropometricasNinoM2AComponent,
-    RegistrarMedidasAntropometricasNinoE2Y3AComponent,
-    RegistrarMedidasAntropometricasNinoE3Y6AComponent,
     ResumenHistoriaClinicaComponent,
     FormulaBaseComponent,
     CalculoDeBostonComponent,
