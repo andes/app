@@ -300,7 +300,7 @@ import { NotaComponent } from './core/mpi/components/notas-paciente.component';
 import { PacienteCacheService } from './core/mpi/services/pacienteCache.service';
 import { HistorialBusquedaService } from './core/mpi/services/historialBusqueda.service';
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
-import { ChartComponent } from './modules/rup/components/elementos/chart.component';
+import { ChartComponent } from './modules/rup/components/ejecucion/resumen-paciente/chart.component';
 import { UploadFileComponent } from './shared/components/upload-file.component';
 import { CodificacionService } from './modules/rup/services/codificacion.service';
 import { VistaRegistroComponent } from './modules/rup/components/huds/vistaRegistro';
