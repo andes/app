@@ -19,7 +19,6 @@ import { InformesComponent } from './components/elementos/deprecated/informe.com
 import { NuevaEvolucionProblemaComponent } from './components/elementos/nuevaEvolucionProblema.component';
 import { ObservacionesComponent } from './components/elementos/rupers/texto-enriquecido/observaciones.component';
 import { PesoComponent } from './components/elementos/peso.component';
-import { PercentiloPerimetroCefalicoComponent } from './components/elementos/percentiloPerimetroCefalico.component';
 import { PerimetroCefalicoComponent } from './components/elementos/perimetroCefalico.component';
 import { RegistrarMedicamentoDefaultComponent } from './components/elementos/registrarMedicamentoDefault.component';
 import { SaturacionOxigenoComponent } from './components/elementos/saturacionOxigeno.component';
@@ -90,7 +89,6 @@ const RUPComponentsArray = [
     NuevaEvolucionProblemaComponent,
     ObservacionesComponent,
     PesoComponent,
-    PercentiloPerimetroCefalicoComponent,
     PerimetroCefalicoComponent,
     RegistrarMedicamentoDefaultComponent,
     SaturacionOxigenoComponent,
