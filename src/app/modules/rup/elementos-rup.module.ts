@@ -42,7 +42,6 @@ import { LactanciaComponent } from './components/elementos/lactancia.component';
 import { InformeEpicrisisComponent } from './components/elementos/deprecated/informeEpicrisis.component';
 import { ElementoDeRegistroComponent } from './components/elementos/deprecated/elementoDeRegistro.component';
 import { OdontologiaDefaultComponent } from './components/elementos/odontologiaDefault.component';
-import { CircunferenciaCinturaComponent } from './components/elementos/circunferenciaCintura.component';
 import { InternacionEgresoComponent } from './components/elementos/internacionEgreso.component';
 import { InternacionIngresoComponent } from './components/elementos/internacionIngreso.component';
 
@@ -124,7 +123,6 @@ const RUPComponentsArray = [
     InformeEpicrisisComponent,
     ElementoDeRegistroComponent,
     OdontologiaDefaultComponent,
-    CircunferenciaCinturaComponent,
     InformeActividadNoNominalizadaComponent,
     PercentiloPesoComponent,
     PercentiloTallaComponent,
