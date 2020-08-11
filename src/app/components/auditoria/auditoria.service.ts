@@ -5,7 +5,7 @@ import { Server } from '@andes/shared';
 
 @Injectable()
 export class AuditoriaService {
-    private pacienteUrlV2 = '/core-v2/mpi/paciente';  // URL to web api
+    private auditoriaUrl = '/core/mpi/pacientes/auditoria';  // URL to web api
     /**
      * RegEx para validar nombres y apellidos.
      */
@@ -18,7 +18,7 @@ export class AuditoriaService {
      * @param {String} id Busca por Id
      */
     findById(id): Observable<IPaciente> {
-        return this.server.get(`${this.pacienteUrlV2}/${id}`, null);
+        return this.server.get(`${this.auditoriaUrl}/${id}`, null);
     }
 
     /**
@@ -27,9 +27,9 @@ export class AuditoriaService {
      */
     get(params: any): Observable<IPaciente[]> {
         if (params) {
-            return this.server.get(this.pacienteUrlV2, { params, showError: true });
+            return this.server.get(`${this.auditoriaUrl}/`, { params, showError: true });
         } else {
-            return this.server.get(this.pacienteUrlV2, { showError: true });
+            return this.server.get(`${this.auditoriaUrl}/`, { showError: true });
         }
     }
 
@@ -40,7 +40,7 @@ export class AuditoriaService {
      */
     setActivo(paciente: IPaciente, activo: boolean) {
         paciente.activo = activo;
-        return this.server.patch(`${this.pacienteUrlV2}/${paciente.id}`, paciente);
+        return this.server.patch(`${this.auditoriaUrl}/${paciente.id}`, paciente);
     }
 
     /**
@@ -93,13 +93,13 @@ export class AuditoriaService {
 
     // se crea un nuevo paciente
     create(paciente) {
-        return this.server.post(`${this.pacienteUrlV2}`, paciente);
+        return this.server.post(`${this.auditoriaUrl}`, paciente);
     }
 
     // se actualiza un paciente existente
     update(paciente) {
         if (paciente.id) {
-            return this.server.patch(`${this.pacienteUrlV2}/${paciente.id}`, paciente);
+            return this.server.patch(`${this.auditoriaUrl}/${paciente.id}`, paciente);
         }
     }
 }

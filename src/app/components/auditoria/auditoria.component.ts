@@ -9,9 +9,8 @@ import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
 import { Observable, of } from 'rxjs';
+import { PacienteService } from '../../core/mpi/services/paciente.service';
 
-const sidebarDetalle = 4;
-const sidebarVincular = 4;
 @Component({
   selector: 'auditoria',
   templateUrl: 'auditoria.html',
@@ -22,12 +21,14 @@ export class AuditoriaComponent implements OnInit {
 
   @Output() patientToFix: any;
   @Output() patient: any;
-
   enableDuplicados: boolean;
   enableActivar: boolean;
   enableValidar: boolean;
-  pacienteSelected: any;
+  mainSize = 12;
+  showVinculaciones = false;
   showDetallePaciente = false;
+  pacienteSelected: IPaciente = null;
+  listaVinculados = [];
   enableVinculados = false;
   loading = false;
   showAuditoria = true;
@@ -37,7 +38,6 @@ export class AuditoriaComponent implements OnInit {
   pacientes: any;
   pacientesInactivos$: Observable<IPaciente[]> = of([]);
   pacientesReportados$: Observable<IPaciente[]> = of([]);
-  pacienteActivo: any;
   showVincular = false;
   showCandidatos = false;
   enableVincular = false;
@@ -48,18 +48,10 @@ export class AuditoriaComponent implements OnInit {
   permisoEdicion: Boolean;
   permisoVincular: Boolean;
 
-  pacienteFields = ['sexo', 'fechaNacimiento'];
-  showLinkear = false;
-  main = 12;
-  title = 'Auditoría de Pacientes';
-  detallesSidebar = {
-    cantReportados: 0,
-    cantVinculados: 0,
-    cantInactivos: 0
-  }
   constructor(
     public auth: Auth,
-    private pacienteService: AuditoriaService,
+    private auditoriaService: AuditoriaService,
+    private pacienteService: PacienteService,
     private servicioSisa: SisaService,
     private servicioRenaper: RenaperService,
     private agendaService: AgendaService,
@@ -73,7 +65,6 @@ export class AuditoriaComponent implements OnInit {
       this.router.navigate(['./inicio']);
       return;
     }
-    this.updateTitle(this.title);
     this.permisoEdicion = this.auth.check('auditoriaPacientes:edicion');
     this.permisoVincular = this.auth.check('auditoriaPacientes:vincular');
     if (this.permisoEdicion && !this.permisoVincular) {
@@ -81,38 +72,25 @@ export class AuditoriaComponent implements OnInit {
     }
     this.onLoadData();
   }
-  private updateTitle(nombre: string) {
-    this.plex.updateTitle('MPI / ' + nombre);
-    this.plex.updateTitle([{
-      route: 'inicio',
-      name: 'INICIO'
-    }, {
-      name: nombre
-    }]);
-  }
 
   onLoadData() {
     this.showDetallePaciente = false;
     this.enableVinculados = false;
-    this.getInactivos();
-    this.getVinculados();
-
   }
 
-  getVinculados() {
-    const params = { identificadores: 'ANDES' };
-    this.pacVinculados$ = this.pacienteService.get(params);
-    this.detallesSidebar.cantVinculados = this.pacVinculados$.toArray.length;
-  }
-  getInactivos() {
-    const params = { activo: false };
-    this.pacientesInactivos$ = this.pacienteService.get(params);
-  }
+  // getVinculados() {
+  //   const params = { identificadores: 'ANDES' };
+  //   this.pacVinculados$ = this.auditoriaService.get(params);
+  // }
+  // getInactivos() {
+  //   const params = { activo: false };
+  //   this.pacientesInactivos$ = this.auditoriaService.get(params);
+  // }
 
   // Aquellos pacientes que reportaron errores en sus datos personales
   getReportados() {
     const params = { reportarError: true, activo: true };
-    this.pacientesReportados$ = this.pacienteService.get(params);
+    this.pacientesReportados$ = this.auditoriaService.get(params);
     this.corregirPaciente = null;
   }
 
@@ -143,7 +121,7 @@ export class AuditoriaComponent implements OnInit {
         this.pacienteSelected.notaError = '';
         this.corregirPaciente = null;
         this.showBotonesReporte = false;
-        this.pacienteService.save(this.pacienteSelected).subscribe(() => {
+        this.auditoriaService.save(this.pacienteSelected).subscribe(() => {
           this.pacienteSelected = null;
           this.getReportados();
         });
@@ -152,115 +130,85 @@ export class AuditoriaComponent implements OnInit {
   }
 
   onSelect(paciente: any): void {
-    if (paciente) {
-      this.pacienteActivo = this.patient = paciente;
+    if (paciente && (!this.pacienteSelected || paciente.id !== this.pacienteSelected.id)) {
+      this.pacienteSelected = paciente;
       this.showCandidatos = false;
-      // Vinculamos solo pacientes activos.
-      this.enableVincular = paciente.activo; // tal vez haa que sacarlo de acá
-      this.enableActivar = !paciente.activo;
-      if (paciente && paciente.id) {
-
-        this.pacienteService.findById(paciente.id).subscribe(pac => {
-          this.pacienteSelected = pac;
-          this.showDetallePaciente = true;
-          this.showPanel();
-          if (this.pacienteSelected.estado !== 'validado') {
-            this.enableValidar = false;
-            this.enableDuplicados = false;
-          } else {
-            this.enableValidar = false;
-            if (paciente.identificadores) {
-              let identificadoresAndes = paciente.identificadores.filter(identificador => {
-                return identificador.entidad === 'ANDES';
-              });
-              this.enableDuplicados = (identificadoresAndes.length > 0);
-            }
-          }
-        });
-      }
-    } else {
-      this.pacienteSelected = null;
-      // this.showDetallePaciente = false;
-      this.showPanel();
-    }
-  }
-  /**
-   * Se observan vinculaciones y se puede vincular al paciente
-   * @param paciente
-   */
-  onLinked(paciente) {
-    if (paciente) {
-      this.showVincular = true;
-      this.showPanel();
-      this.pacienteActivo = this.patient = paciente;
       // Vinculamos solo pacientes activos.
       this.enableVincular = paciente.activo;
       this.enableActivar = !paciente.activo;
-      if (paciente && paciente.id) {
-        this.pacienteService.findById(paciente.id).subscribe(pac => {
-          this.pacienteSelected = pac;
+      this.showInSidebar('detallePaciente');
 
-          this.showDetallePaciente = true;
-          if (this.pacienteSelected.estado !== 'validado') {
-            this.enableValidar = false;
-            this.enableDuplicados = false;
-          } else {
-            this.enableValidar = false;
-            if (paciente.identificadores) {
-              let identificadoresAndes = paciente.identificadores.filter(identificador => {
-                return identificador.entidad === 'ANDES';
-              });
-              this.enableDuplicados = (identificadoresAndes.length > 0);
-            }
-          }
-        });
+      if (this.pacienteSelected.estado !== 'validado') {
+        this.enableValidar = false;
+        this.enableDuplicados = false;
+      } else {
+        this.enableValidar = false;
+        if (paciente.identificadores) {
+          let identificadoresAndes = paciente.identificadores.filter(identificador => {
+            return identificador.entidad === 'ANDES';
+          });
+          this.enableDuplicados = (identificadoresAndes.length > 0);
+        }
       }
-    } else {
-      this.pacienteSelected = null;
-      this.showVincular = false;
-      this.showPanel();
-
     }
-  }
-  /**
-   * Establece el tamaño del panel principal en base al tamaño del sidebar
-   */
-  showPanel() {
-    this.main = (this.showVincular) ? 12 - sidebarVincular : (this.showDetallePaciente) ? 12 - sidebarDetalle : 12;
   }
 
-  checkPanel(panelIndex) {
-    if (panelIndex === 1) {
-      this.getVinculados();
-    }
-    if (panelIndex === 2) {
-      this.getInactivos();
-    }
-    if (panelIndex === 3) {
-      this.getReportados();
-    }
-    this.showDetallePaciente = false;
-    this.enableActivar = false;
-    this.enableVinculados = false;
-    this.enableValidar = false;
-    this.enableVincular = false;
-    this.searchClear();
-  }
+
+  // checkPanel(panelIndex) {
+  //   if (panelIndex === 1) {
+  //     this.getVinculados();
+  //   }
+  //   if (panelIndex === 2) {
+  //     this.getInactivos();
+  //   }
+  //   if (panelIndex === 3) {
+  //     this.getReportados();
+  //   }
+  //   this.showDetallePaciente = false;
+  //   this.enableActivar = false;
+  //   this.enableVinculados = false;
+  //   this.enableValidar = false;
+  //   this.enableVincular = false;
+  //   this.searchClear();
+  // }
+
   onSelectVinculados(paciente: any): void {
     if (paciente.id) {
-      this.pacienteService.findById(paciente.id).subscribe(pac => {
+      this.auditoriaService.findById(paciente.id).subscribe(pac => {
         this.pacienteSelected = pac;
-        this.showDetallePaciente = true;
+        this.showDetallePaciente = false;
         this.enableValidar = false;
         this.enableVinculados = true;
       });
     }
   }
 
+  showInSidebar(opcion: string) {
+    switch (opcion) {
+      case 'detallePaciente':
+        this.showDetallePaciente = true;
+        this.showVinculaciones = false;
+        this.mainSize = 8;
+        break;
+      case 'vinculaciones':
+        this.showDetallePaciente = false;
+        this.showVinculaciones = true;
+        this.mainSize = 8;
+        break;
+    }
+  }
+
+  closeSidebar() {
+    this.mainSize = 12;
+    this.pacienteSelected = null;
+    this.showDetallePaciente = false;
+    this.showVinculaciones = false;
+  }
 
   verDuplicados() {
     this.showAuditoria = false;
   }
+
   ocultarAuditoria() {
     this.showAuditoria = false;
   }
@@ -288,7 +236,6 @@ export class AuditoriaComponent implements OnInit {
     }
   }
 
-
   operationLink(pacienteToFix, paciente) {
     this.patientToFix = pacienteToFix;
     this.patient = paciente;
@@ -312,6 +259,25 @@ export class AuditoriaComponent implements OnInit {
     }
   }
 
+  loadVinculados(paciente: IPaciente) {
+    if (paciente && paciente.id) {
+      this.pacienteSelected = paciente;
+      this.listaVinculados = [];
+      let idVinculados = paciente.identificadores;
+
+      if (idVinculados && idVinculados.length) {
+        idVinculados.forEach(identificador => {
+          if (identificador.entidad === 'ANDES') {
+            this.pacienteService.getById(identificador.valor).subscribe(pac => {
+              this.listaVinculados.unshift(pac);
+            });
+          }
+        });
+      }
+    }
+    this.showInSidebar('vinculaciones');
+  }
+
   cancelar() {
     this.showCandidatos = false;
     this.showBuscador = false;
@@ -326,7 +292,7 @@ export class AuditoriaComponent implements OnInit {
           if (confirmar) {
             this.pacienteSelected.activo = false;
           }
-          this.pacienteService.save(this.pacienteSelected).subscribe(res4 => {
+          this.auditoriaService.save(this.pacienteSelected).subscribe(res4 => {
             // TODO ocultar info paciente y resetear campo busqueda
           });
         });
@@ -335,7 +301,7 @@ export class AuditoriaComponent implements OnInit {
   }
 
   rechazarValidacion() {
-    this.pacienteService.save(this.pacienteSelected).subscribe(result => {
+    this.auditoriaService.save(this.pacienteSelected).subscribe(result => {
       this.plex.info('danger', '', 'Paciente no encontrado');
     });
   }
@@ -376,7 +342,7 @@ export class AuditoriaComponent implements OnInit {
     }
     this.pacienteSelected.fechaNacimiento = this.datosFA.matcheos.datosPaciente.fechaNacimiento;
     this.pacienteSelected.estado = 'validado';
-    this.pacienteService.save(this.pacienteSelected).subscribe(result => {
+    this.auditoriaService.save(this.pacienteSelected).subscribe(result => {
       this.plex.info('success', '', 'Validación Exitosa');
     });
   }
@@ -397,7 +363,7 @@ export class AuditoriaComponent implements OnInit {
   searchStart() {
     this.pacientes = null;
     this.pacienteSelected = null;
-
+    this.closeSidebar();
   }
 
   searchEnd(resultado: PacienteBuscarResultado) {
@@ -422,31 +388,22 @@ export class AuditoriaComponent implements OnInit {
 
   }
 
-  changeActived(event: { paciente: IPaciente; posicion: number; }) {
-    if (event && event.paciente) {
-      if (event.paciente.activo) {
-        this.desactivar(event.paciente, event.posicion);
-      } else {
-        this.activar(event.paciente);
-      }
-    }
-  }
-
-  activar(pac: IPaciente) {
+  activar(pac: IPaciente, index: number) {
     if (this.permisoVincular) {
-      this.pacienteService.setActivo(pac, true).subscribe(res => {
+      this.auditoriaService.setActivo(pac, true).subscribe(res => {
         this.plex.toast('success', 'Paciente Activado');
-        this.getInactivos();
+        //    this.getInactivos();
       });
     }
   }
+
   desactivar(pac: IPaciente, index: number) {
     if (this.permisoVincular) {
       // si el paciente tiene otros pacientes en su array de identificadores, no lo podemos desactivar
       if (pac.identificadores && pac.identificadores.filter(identificador => identificador.entidad === 'ANDES').length > 0) {
         this.plex.info('warning', 'Existen otros pacientes vinculados a este paciente', 'No Permitido');
       } else {
-        this.pacienteService.setActivo(pac, false).subscribe(res => {
+        this.auditoriaService.setActivo(pac, false).subscribe(res => {
           this.pacientes.splice(index, 1);
           this.pacienteSelected = null;
           this.plex.toast('info', 'Paciente Desactivado');

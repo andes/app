@@ -10,21 +10,18 @@ import { Plex } from '@andes/plex';
     styleUrls: ['auditoria-listado.scss']
 })
 export class ListadoAuditoriaComponent {
-    private _pacientes: IPacienteMatch[] | IPaciente[];
-    private seleccionado: IPaciente; // revisar si no debería ser también  IPacienteMatch[] | IPaciente[] !!!!!!!!!!!!!!!!!!!!!!!
-    private posicion: number;
-    // Propiedades públicas
-    public listado: IPaciente[]; // Contiene un listado plano de pacientes
+    _pacientes: IPacienteMatch[] | IPaciente[];
+    seleccionado: IPaciente; // revisar si no debería ser también  IPacienteMatch[] | IPaciente[] !!!!!!!!!!!!!!!!!!!!!!!
+    // posicion: number;
+    listado: IPaciente[]; // Contiene un listado plano de pacientes
+    itemsDropdown = [
+        { label: '', handler: () => { this.vincular(this.seleccionado); } },
+        { label: '', handler: () => { this.setActivo(this.seleccionado); } },
+    ];
 
-    /**
-     * Listado de pacientes para mostrar. Acepta una lista de pacientes o un resultado de una búsqueda
-     *
-     * @type {(IPacienteMatch[] | IPaciente[])}
-     */
     @Input()
     get pacientes(): IPacienteMatch[] | IPaciente[] {
         return this._pacientes;
-
     }
     set pacientes(value: IPacienteMatch[] | IPaciente[]) {
         this._pacientes = value;
@@ -43,91 +40,44 @@ export class ListadoAuditoriaComponent {
             this.seleccionar(this.listado[0]);
         }
     }
-    /**
-     * Indica si selecciona automáticamente el primer paciente de la lista
-     *
-     */
+
+    // Indica si selecciona automáticamente el primer paciente de la lista
     @Input() autoselect = false;
-
-    /**
-     * Evento que se emite cuando se selecciona un paciente
-     *
-     * @type {EventEmitter<IPaciente>}
-     */
     @Output() selected: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
-
-    /**
-     * Evento que se emite cuando se hace click en el boton vicular
-     *
-     * @type {EventEmitter<IPaciente>}
-     */
+    @Output() toLink: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
+    @Output() actived: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
     @Output() linked: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
-
-    /**
-     * Evento que se emite cuando se hace click en el boton inactivar/activar paciente
-     *
-     * @type {EventEmitter[IPaciente, number]}
-     */
-    @Output() actived: EventEmitter<[IPaciente, number]> = new EventEmitter<[IPaciente, number]>();
-    /**
-     * Evento que se emite cuando el mouse está sobre un paciente
-     *
-     * @type {EventEmitter<any>}
-     * @memberof PacienteListadoComponent
-     */
     @Output() hover: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
-    itemsDropdown: any[];
-    constructor(private plex: Plex) {
-        this.itemsDropdown = [
-            { label: 'VINCULAR', handler: () => { this.vincular(this.seleccionado); } },
-            { divider: true },
-            { label: 'ACTIVAR', handler: () => { this.changeActived(this.seleccionado); } },
+    constructor(private plex: Plex) { }
 
-        ];
-        this.posicion = -1;
+    public setDropDown(paciente: IPaciente) {
+        if (paciente.id) {
+            if (paciente.activo) {
+                this.itemsDropdown[0].label = 'VINCULAR';
+                this.itemsDropdown[1].label = 'INACTIVAR';
+            } else {
+                this.itemsDropdown[0].label = 'DESVINCULAR';
+                this.itemsDropdown[1].label = 'ACTIVAR';
+            }
+        }
     }
 
-    public getPacienteDropDown(paciente: IPaciente, pos: number) {
-        if (paciente) {
-            this.seleccionado = paciente;
-            this.posicion = pos;
-            const anItem = this.itemsDropdown.find(item =>
-                (item.label === 'ACTIVAR' || item.label === 'INACTIVAR')
-            );
-            anItem.label = (paciente.activo) ? 'INACTIVAR' : 'ACTIVAR';
-        } else { this.posicion = -1; }
-        console.log(this.itemsDropdown);
-    }
     public seleccionar(paciente: IPaciente) {
-        console.log('seleccionar paciente');
-        if (this.seleccionado !== paciente) {
-            this.seleccionado = paciente;
-            this.selected.emit(this.seleccionado);
-        } else {
-            this.seleccionado = null;
-            this.selected.emit(null);
-        }
+        (paciente.id) ? this.selected.emit(paciente) : this.selected.emit(null);
     }
-    public changeActived(paciente: IPaciente) {
-        console.log('changeActived', paciente);
-        if (this.seleccionado !== paciente) {
-            this.seleccionado = paciente;
-            this.actived.emit([this.seleccionado, this.posicion]);
-        } else {
-            this.seleccionado = null;
-            this.actived.emit([null, this.posicion]);
-        }
+
+    // Cambia estado activo/inactivo
+    public setActivo(paciente: IPaciente) {
+        (paciente.id) ? this.actived.emit(paciente) : this.actived.emit(null);
     }
+
     public vincular(paciente: IPaciente) {
-        console.log('vincular', paciente);
-        if (this.seleccionado !== paciente) {
-            this.seleccionado = paciente;
-            this.linked.emit(this.seleccionado);
-        } else {
-            this.seleccionado = null;
-            this.linked.emit(null);
-        }
+        (paciente.id) ? this.toLink.emit(paciente) : this.toLink.emit(null);
+    }
+
+    public verVinculados(paciente: IPaciente) {
+        (paciente.id) ? this.linked.emit(paciente) : this.linked.emit(null);
     }
 
     public hoverPaciente(paciente: IPaciente) {

@@ -1,97 +1,119 @@
-<plex-layout main="9">
-    <plex-layout-main>
-        <fieldset>
-            <legend>Listado de pacientes candidatos</legend>
-            <div class="row">
-                <div class="col-12">
-                    <div class="row">
-                        <div class="col-12">
-                            <span *ngIf="listaCandidatos?.length">
-                                <table class="table table-striped">
-                                    <tbody>
-                                        <tr class="hover" *ngFor="let item of listaCandidatos; let i=index">
-                                            <td>
-                                                <plex-badge *ngIf="item.paciente.estado == 'validado'" type="success">
-                                                    Validado</plex-badge>
-                                                <plex-badge *ngIf="item.paciente.estado != 'validado'" type="warning">
-                                                    Temporal</plex-badge>
-                                                {{ item.paciente | nombre }}
-                                                <b>Documento: </b>
-                                                <span *ngIf="item.paciente.documento">{{ item.paciente.documento
+<section>
+    <!-- Listado de pacientes vinculados -->
+    <ng-container *ngIf="showVinculaciones">
+        <plex-title titulo="Vinculaciones realizadas" size="sm"></plex-title>
+        <plex-label *ngIf="!listaVinculados?.length" titulo="No existen vinculaciones registradas" subtitulo="">
+        </plex-label>
+
+        <plex-list [striped]="true">
+            <ng-container *ngFor="let vinculado of listaVinculados; let pos = index">
+                <plex-item>
+                    <img [mpiFotoPaciente]="vinculado" />
+
+                    <plex-label *ngIf="!vinculado.numeroIdentificacion" titulo="{{ vinculado | nombre }}"
+                                subtitulo="{{ (vinculado.documento | number) || 'Sin DNI' }}">
+                    </plex-label>
+
+                    <plex-label *ngIf="vinculado.numeroIdentificacion" titulo="{{ vinculado | nombre }}"
+                                subtitulo="{{ vinculado.numeroIdentificacion }}">
+                    </plex-label>
+
+                    <plex-label titulo="{{ vinculado | edad }}"
+                                subtitulo="{{ vinculado.fechaNacimiento | fecha:'utc' }}">
+                    </plex-label>
+
+                    <plex-badge *ngIf="vinculado.fechaFallecimiento" type="danger">Fallecido:
+                        {{ vinculado.fechaFallecimiento | fecha:'utc'}}
+                    </plex-badge>
+
+                    <plex-badge
+                                [ngClass]="{'text-success' : vinculado.estado === 'validado' , 'text-warning' : vinculado.estado === 'temporal'}">
+                        {{ vinculado.estado }}
+                    </plex-badge>
+
+                    <plex-badge [ngClass]="{'text-primary' : vinculado.activo, 'text-danger' : !vinculado.activo}">
+                        {{ vinculado.activo ? 'activo' : 'inactivo' }}
+                    </plex-badge>
+
+                    <plex-button type="warning" label="desvincular" (click)="desvincular(pos)"></plex-button>
+                </plex-item>
+            </ng-container>
+        </plex-list>
+    </ng-container>
+
+
+
+
+
+    <span *ngIf="listaCandidatos?.length">
+        <table class="table table-striped">
+            <tbody>
+                <tr class="hover" *ngFor="let item of listaCandidatos; let i=index">
+                    <td>
+                        <plex-badge *ngIf="item.paciente.estado == 'validado'" type="success">
+                            Validado</plex-badge>
+                        <plex-badge *ngIf="item.paciente.estado != 'validado'" type="warning">
+                            Temporal</plex-badge>
+                        {{ item.paciente | nombre }}
+                        <b>Documento: </b>
+                        <span *ngIf="item.paciente.documento">{{ item.paciente.documento
                                                     |
                                                     number}}</span>
-                                                <span *ngIf="!item.paciente.documento" class="text-danger">Sin
-                                                    documento</span>
-                                                <br>
-                                                <b>Fecha de Nacimiento</b>
-                                                <span *ngIf="item.paciente.fechaNacimiento">{{item.paciente.fechaNacimiento
+                        <span *ngIf="!item.paciente.documento" class="text-danger">Sin
+                            documento</span>
+                        <br>
+                        <b>Fecha de Nacimiento</b>
+                        <span *ngIf="item.paciente.fechaNacimiento">{{item.paciente.fechaNacimiento
                                                     | date:'dd-MM-yyyy'}}</span>
-                                                <span *ngIf="!item.paciente.fechaNacimiento" class="text-danger">Sin
-                                                    fecha de nacimiento</span> |
-                                                <b>Sexo</b>
-                                                <span>{{item.paciente.sexo}}</span> |
-                                                <span *ngIf="item.match"> <b>Similitud</b> {{ item.match * 100 |
+                        <span *ngIf="!item.paciente.fechaNacimiento" class="text-danger">Sin
+                            fecha de nacimiento</span> |
+                        <b>Sexo</b>
+                        <span>{{item.paciente.sexo}}</span> |
+                        <span *ngIf="item.match"> <b>Similitud</b> {{ item.match * 100 |
                                                     number}} %</span>
-                                            </td>
-                                            <td>
-                                                <plex-badge *ngIf="item.paciente.activo" type="success">Activo
-                                                </plex-badge>
-                                                <plex-badge *ngIf="!item.paciente.activo" type="danger">Inactivo
-                                                </plex-badge>
-                                            </td>
-                                            <td>
-                                                <plex-badge *ngIf="item.vinculado" type="warning">VINCULADO</plex-badge>
-                                            </td>
-                                            <td>
-                                                <plex-button *ngIf="!item.vinculado" type='info' label="Vincular"
-                                                             (click)="vincular(item.paciente,i)"></plex-button>
-                                                <plex-button *ngIf="item.vinculado" type='danger' label="Desvincular"
-                                                             (click)="desvincular(item.paciente,i)"></plex-button>
-                                            </td>
-                                            <td>
-                                                <plex-button *ngIf="item.vinculado && item.paciente.activo"
-                                                             (click)="desactivar(item.paciente,i)" type='warning'
-                                                             label="Desactivar"></plex-button>
-                                                <plex-button *ngIf="item.vinculado && !item.paciente.activo"
-                                                             (click)="activar(item.paciente,i)" type='info'
-                                                             label="Activar"></plex-button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-1" *ngIf="!showBuscador">
+                    </td>
+                    <td>
+                        <plex-badge *ngIf="item.paciente.activo" type="success">Activo
+                        </plex-badge>
+                        <plex-badge *ngIf="!item.paciente.activo" type="danger">Inactivo
+                        </plex-badge>
+                    </td>
+                    <td>
+                        <plex-badge *ngIf="item.vinculado" type="warning">VINCULADO</plex-badge>
+                    </td>
+                    <td>
+                        <plex-button *ngIf="!item.vinculado" type='info' label="Vincular"
+                                     (click)="vincular(item.paciente,i)"></plex-button>
+                        <plex-button *ngIf="item.vinculado" type='danger' label="Desvincular"
+                                     (click)="desvincular(item.paciente,i)"></plex-button>
+                    </td>
+                    <td>
+                        <plex-button *ngIf="item.vinculado && item.paciente.activo"
+                                     (click)="desactivar(item.paciente,i)" type='warning' label="Desactivar">
+                        </plex-button>
+                        <plex-button *ngIf="item.vinculado && !item.paciente.activo" (click)="activar(item.paciente,i)"
+                                     type='info' label="Activar"></plex-button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </span>
+
+    <!-- <div class="col-1" *ngIf="!showBuscador">
                             <plex-button type='info' icon="mdi mdi-account-plus" (click)='showBuscador = true'>
                             </plex-button>
-                        </div>
-                        <div *ngIf='showBuscador' class="col">
-                            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                             (searchClear)="searchClear()"></paciente-buscar>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
-                                              [autoselect]="false" (selected)="addCandidato($event)"></paciente-listado>
-                            <div *ngIf="pacientes && !pacientes.length" class="alert alert-default"> ¡No se encontró
-                                ningún
-                                paciente! </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </fieldset>
-    </plex-layout-main>
+                        </div> -->
 
-    <plex-layout-sidebar>
-        <paciente-panel [paciente]="pacienteBase"> </paciente-panel>
-    </plex-layout-sidebar>
+    <!-- Visa vincular pacientes -->
+    <ng-container *ngIf="showBuscador">
+        <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="searchClear()">
+        </paciente-buscar>
 
-    <plex-layout-footer>
-        <plex-button position="left" label="Volver" type="info" (click)="cancelar()"></plex-button>
-    </plex-layout-footer>
+        <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [autoselect]="false"
+                          (selected)="addCandidato($event)"></paciente-listado>
+        <div *ngIf="pacientes && !pacientes.length" class="alert alert-default"> ¡No se encontró
+            ningún
+            paciente! </div>
+    </ng-container>
 
-</plex-layout>
+</section>

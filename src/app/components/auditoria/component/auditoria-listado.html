@@ -1,38 +1,42 @@
-<!-- type = default -->
+<section>
+    <plex-list [striped]="true">
+        <ng-container *ngFor="let paciente of listado; let pos = index">
 
-<div *ngIf="listado && listado.length">
-    <plex-list [striped]="true" height="70%">
-        <plex-heading>
-            <b label>Apellido y Nombre</b>
-            <b label>Documento</b>
-            <b label>Nacimiento</b>
-            <b></b>
-        </plex-heading>
-        <ng-container *ngFor="let paciente of listado;let pos=index">
-            <plex-item [botonera]="false" (click)="seleccionar(paciente)" (mouseenter)="hoverPaciente(paciente)"
-                       [selected]="paciente.id == seleccionado?.id">
-                <plex-label> <img class="img-thumbnail" [mpiFotoPaciente]="paciente" /> </plex-label>
-                <plex-label class="text-center" titulo="{{paciente | nombre}}" subtitulo="{{paciente | sexo}}">
+            <plex-item (click)="seleccionar(paciente)" [selected]="paciente.id == seleccionado?.id">
+
+                <img [mpiFotoPaciente]="paciente" />
+
+                <plex-label *ngIf="!paciente.numeroIdentificacion" titulo="{{ paciente | nombre }}"
+                            subtitulo="{{ (paciente.documento | number) || 'Sin DNI' }}">
                 </plex-label>
-                <plex-label>
-                    <span *ngIf="paciente?.documento !== ''">{{paciente.documento}}</span>
-                    <span *ngIf="paciente?.documento === ''">N/D</span>
+
+                <plex-label *ngIf="paciente.numeroIdentificacion" titulo="{{ paciente | nombre }}"
+                            subtitulo="{{ paciente.numeroIdentificacion }}">
                 </plex-label>
-                <plex-label>
-                    <span *ngIf="paciente.fechaNacimiento !== null">
-                        <span class="d-block">{{paciente.fechaNacimiento | fecha:'utc'}}</span>
-                        <span class="d-block">{{paciente | edad}}</span>
-                    </span>
-                    <span *ngIf="paciente.fechaNacimiento === null">N/D</span>
+
+                <plex-label titulo="{{ paciente | edad }}" subtitulo="{{ paciente.fechaNacimiento | fecha:'utc' }}">
                 </plex-label>
-                <plex-badge type="" class=""
-                            [ngClass]="{'text-success' : paciente.estado === 'validado' , 'text-warning' : paciente.estado === 'temporal'} "
-                            icon="check-circle">
-                    {{paciente.estado}}</plex-badge>
-                <plex-badge type="success" *ngIf="paciente.activo"> ACTIVO</plex-badge>
-                <plex-badge type="danger" *ngIf="!paciente.activo">INACTIVO</plex-badge>
-                <plex-dropdown right=" true" [items]="itemsDropdown" size="sm" icon="dots-vertical"
-                               (onOpen)="getPacienteDropDown(paciente,pos)">
+
+                <plex-badge *ngIf="paciente.fechaFallecimiento" type="danger">Fallecido:
+                    {{ paciente.fechaFallecimiento | fecha:'utc'}}
+                </plex-badge>
+
+                <plex-badge
+                            [ngClass]="{'text-success' : paciente.estado === 'validado' , 'text-warning' : paciente.estado === 'temporal'} ">
+                    {{ paciente.estado }}
+                </plex-badge>
+
+                <plex-badge [ngClass]="{'text-primary' : paciente.activo, 'text-danger' : paciente.activo} ">
+                    {{ paciente.activo ? 'activo' : 'inactivo' }}
+                </plex-badge>
+
+                <plex-badge type="warning">
+                    <plex-button type="warning" label="Vinculaciones" (click)="verVinculados(paciente)"></plex-button>
+                    {{ paciente.identificadores?.length }}
+                </plex-badge>
+
+                <plex-dropdown class="pl-2 mr-0" [right]="true" [items]="itemsDropdown" size="sm" icon="dots-vertical"
+                               label="" (onOpen)="setDropDown(paciente)">
                 </plex-dropdown>
                 <!--                 
                 <plex-button type="danger" size="sm" *ngIf="paciente.activo">DESACTIVAR </plex-button>
@@ -42,4 +46,4 @@
             </plex-item>
         </ng-container>
     </plex-list>
-</div>
+</section>

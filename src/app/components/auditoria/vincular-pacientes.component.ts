@@ -31,7 +31,7 @@ export class VincularPacientesComponent implements OnInit {
                 paciente => {
                     this.pacienteBase = paciente;
                     // this.buscarCandidatos();
-                    this.loadPacientesVinculados();
+                    // this.loadPacientesVinculados();
                 },
                 error => {
                     this.plex.info('warning', 'Intente nuevamente', 'Error de conexión');
@@ -41,27 +41,27 @@ export class VincularPacientesComponent implements OnInit {
     }
 
 
-    public cancelar() {
-        this.router.navigate(['apps/mpi/auditoria']);
-    }
+    // public cancelar() {
+    //     this.router.navigate(['apps/mpi/auditoria']);
+    // }
 
-    loadPacientesVinculados() {
-        let idsPacientesVinculados = this.pacienteBase.identificadores;
-        if (idsPacientesVinculados) {
-            idsPacientesVinculados.forEach(identificador => {
-                if (identificador.entidad === 'ANDES') {
-                    this.pacienteService.findById(identificador.valor).subscribe(pac => {
-                        this.listaCandidatos.unshift({ paciente: pac, vinculado: true, activo: pac.activo });
-                        this.verificarListado();
-                    });
-                } else {
-                    this.verificarListado();
-                }
-            });
-        } else {
-            this.verificarListado();
-        }
-    }
+    // loadPacientesVinculados() {
+    //     let idsPacientesVinculados = this.pacienteBase.identificadores;
+    //     if (idsPacientesVinculados) {
+    //         idsPacientesVinculados.forEach(identificador => {
+    //             if (identificador.entidad === 'ANDES') {
+    //                 this.pacienteService.findById(identificador.valor).subscribe(pac => {
+    //                     this.listaCandidatos.unshift({ paciente: pac, vinculado: true, activo: pac.activo });
+    //                     this.verificarListado();
+    //                 });
+    //             } else {
+    //                 this.verificarListado();
+    //             }
+    //         });
+    //     } else {
+    //         this.verificarListado();
+    //     }
+    // }
     // Verifica si existen candidatos o vinculados para el paciente base
     verificarListado() {
         this.showBuscador = !(this.listaCandidatos.length > 0);
@@ -97,7 +97,6 @@ export class VincularPacientesComponent implements OnInit {
                 });
             }
         });
-
     }
 
     activar(pac: IPaciente, index: number) {
