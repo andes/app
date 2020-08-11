@@ -43,7 +43,6 @@ import { InformeActividadNoNominalizadaComponent } from './components/elementos/
 import { PercentiloPesoComponent } from './components/elementos/percentiloPeso.component';
 import { PercentiloTallaComponent } from './components/elementos/percentiloTalla.component';
 import { TensionArterialPediatricaComponent } from './components/elementos/tensionArterialPediatrica.component';
-import { PercentiloDeTensionArterialComponent } from './components/elementos/percentiloDeTensionArterial.component';
 import { ConsultaDeNinoSanoM2AComponent } from './components/elementos/consultaDeNinoSanoM2A.component';
 import { ConsultaDeNinoSanoE2Y3AComponent } from './components/elementos/consultaDeNinoSanoE2Y3A.component';
 import { ConsultaDeNinoSanoE3Y6AComponent } from './components/elementos/consultaDeNinoSanoE3Y6A.component';
@@ -112,7 +111,6 @@ const RUPComponentsArray = [
     PercentiloPesoComponent,
     PercentiloTallaComponent,
     TensionArterialPediatricaComponent,
-    PercentiloDeTensionArterialComponent,
     ConsultaDeNinoSanoM2AComponent,
     ConsultaDeNinoSanoE2Y3AComponent,
     ConsultaDeNinoSanoE3Y6AComponent,
