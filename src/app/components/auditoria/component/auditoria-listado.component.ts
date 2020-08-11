@@ -10,21 +10,29 @@ import { Plex } from '@andes/plex';
     styleUrls: ['auditoria-listado.scss']
 })
 export class ListadoAuditoriaComponent {
-    private _pacientes: IPacienteMatch[] | IPaciente[];
-    private seleccionado: IPaciente; // revisar si no debería ser también  IPacienteMatch[] | IPaciente[] !!!!!!!!!!!!!!!!!!!!!!!
-    private posicion: number;
-    // Propiedades públicas
-    public listado: IPaciente[]; // Contiene un listado plano de pacientes
 
-    /**
-     * Listado de pacientes para mostrar. Acepta una lista de pacientes o un resultado de una búsqueda
-     *
-     * @type {(IPacienteMatch[] | IPaciente[])}
-     */
+    // Indica si selecciona automáticamente el primer paciente de la lista
+    @Input() autoselect = false;
+    // Evento que se emite al seleccionar un paciente de la lista
+    @Output() selected: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
+    // Evento que se emite al intentar vincular un paciente de la lista
+    @Output() setLink: EventEmitter<[IPaciente, boolean]> = new EventEmitter<[IPaciente, boolean]>();
+    // Evento que se emite al activar/inactivar un paciente de la lista
+    @Output() setActive: EventEmitter<[IPaciente, boolean]> = new EventEmitter<[IPaciente, boolean]>();
+    // Evento que se emite al intentar visualizar los vinculados de un paciente de la lista
+    @Output() linked: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
+    @Output() hover: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
+    // Evento que se emite cuando se scrollea en la lista
+    @Output() scrolled: EventEmitter<null> = new EventEmitter<null>();
+
+    _pacientes: IPacienteMatch[] | IPaciente[];
+    seleccionado: IPaciente;
+    listado: IPaciente[]; // Contiene un listado plano de pacientes
+    itemsDropdown: any = [];  // Acciones del dropdown 'vincular
+
     @Input()
     get pacientes(): IPacienteMatch[] | IPaciente[] {
         return this._pacientes;
-
     }
     set pacientes(value: IPacienteMatch[] | IPaciente[]) {
         this._pacientes = value;
@@ -43,94 +51,60 @@ export class ListadoAuditoriaComponent {
             this.seleccionar(this.listado[0]);
         }
     }
-    /**
-     * Indica si selecciona automáticamente el primer paciente de la lista
-     *
-     */
-    @Input() autoselect = false;
 
-    /**
-     * Evento que se emite cuando se selecciona un paciente
-     *
-     * @type {EventEmitter<IPaciente>}
-     */
-    @Output() selected: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
+    constructor(private plex: Plex) { }
 
-    /**
-     * Evento que se emite cuando se hace click en el boton vicular
-     *
-     * @type {EventEmitter<IPaciente>}
-     */
-    @Output() linked: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
-
-    /**
-     * Evento que se emite cuando se hace click en el boton inactivar/activar paciente
-     *
-     * @type {EventEmitter[IPaciente, number]}
-     */
-    @Output() actived: EventEmitter<[IPaciente, number]> = new EventEmitter<[IPaciente, number]>();
-    /**
-     * Evento que se emite cuando el mouse está sobre un paciente
-     *
-     * @type {EventEmitter<any>}
-     * @memberof PacienteListadoComponent
-     */
-    @Output() hover: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
-
-    itemsDropdown: any[];
-    constructor(private plex: Plex) {
-        this.itemsDropdown = [
-            { label: 'VINCULAR', handler: () => { this.vincular(this.seleccionado); } },
-            { divider: true },
-            { label: 'ACTIVAR', handler: () => { this.changeActived(this.seleccionado); } },
-
-        ];
-        this.posicion = -1;
-    }
-
-    public getPacienteDropDown(paciente: IPaciente, pos: number) {
-        if (paciente) {
-            this.seleccionado = paciente;
-            this.posicion = pos;
-            const anItem = this.itemsDropdown.find(item =>
-                (item.label === 'ACTIVAR' || item.label === 'INACTIVAR')
-            );
-            anItem.label = (paciente.activo) ? 'INACTIVAR' : 'ACTIVAR';
-        } else { this.posicion = -1; }
-        console.log(this.itemsDropdown);
-    }
-    public seleccionar(paciente: IPaciente) {
-        console.log('seleccionar paciente');
-        if (this.seleccionado !== paciente) {
-            this.seleccionado = paciente;
-            this.selected.emit(this.seleccionado);
-        } else {
-            this.seleccionado = null;
-            this.selected.emit(null);
+    getCantidadVinculados(paciente: IPaciente) {
+        let vinculaciones = [];
+        if (paciente.identificadores && paciente.identificadores.length) {
+            vinculaciones = paciente.identificadores.filter((item: any) => item.entidad === 'ANDES');
         }
+        return vinculaciones.length;
     }
-    public changeActived(paciente: IPaciente) {
-        console.log('changeActived', paciente);
-        if (this.seleccionado !== paciente) {
+
+    setDropDown(paciente: IPaciente) {
+        if (paciente.id) {
             this.seleccionado = paciente;
-            this.actived.emit([this.seleccionado, this.posicion]);
-        } else {
-            this.seleccionado = null;
-            this.actived.emit([null, this.posicion]);
-        }
-    }
-    public vincular(paciente: IPaciente) {
-        console.log('vincular', paciente);
-        if (this.seleccionado !== paciente) {
-            this.seleccionado = paciente;
-            this.linked.emit(this.seleccionado);
-        } else {
-            this.seleccionado = null;
-            this.linked.emit(null);
+            this.itemsDropdown = [];
+
+            if (paciente.activo) {
+                this.itemsDropdown[0] = { label: 'VINCULAR', handler: () => { this.setVinculacion(this.seleccionado, true); } };
+                this.itemsDropdown[1] = { label: 'INACTIVAR', handler: () => { this.setActivo(this.seleccionado, false); } };
+            } else {
+                this.itemsDropdown[0] = { label: 'ACTIVAR', handler: () => { this.setActivo(this.seleccionado, true); } };
+            }
         }
     }
 
-    public hoverPaciente(paciente: IPaciente) {
+    seleccionar(paciente: IPaciente) {
+        if (this.seleccionado && this.seleccionado.id === paciente.id) {
+            this.seleccionado = null;
+        } else {
+            this.seleccionado = paciente;
+            (paciente.id) ? this.selected.emit(paciente) : this.selected.emit(null);
+        }
+    }
+
+    // Cambia estado activo/inactivo
+    setActivo(paciente: IPaciente, activo: boolean) {
+        (paciente.id) ? this.setActive.emit([paciente, activo]) : this.setActive.emit(null);
+    }
+
+    // (Des)Vincula paciente entrante del seleccionado
+    setVinculacion(paciente: IPaciente, vincular: boolean) {
+        (paciente.id) ? this.setLink.emit([paciente, vincular]) : this.setLink.emit(null);
+    }
+
+    verVinculados(paciente: IPaciente) {
+        this.seleccionado = paciente;
+        (paciente.id) ? this.linked.emit(paciente) : this.linked.emit(null);
+    }
+
+    hoverPaciente(paciente: IPaciente) {
         this.hover.emit(paciente);
+    }
+
+    public onScroll() {
+        this.scrolled.emit();
     }
 }

@@ -1,4 +1,4 @@
-import { Observable, pipe } from 'rxjs';
+import { Observable, pipe, combineLatest } from 'rxjs';
 import { PacienteSearch } from '../../../interfaces/pacienteSearch.interface';
 import { IPaciente } from '../interfaces/IPaciente';
 import { Injectable } from '@angular/core';
@@ -47,21 +47,9 @@ export class PacienteService {
         }));
     }
 
-    // Búsqueda tipo SEARCH por elastic según condiciones.
+    // Búsqueda tipo matching según condiciones.
     getSearch(params: any): Observable<any[]> {
         return this.server.get(this.pacienteUrl + '/search', { params: params, showError: true });
-    }
-
-    get(params: PacienteSearch): Observable<IPaciente[]> {
-        return this.server.get(this.pacienteUrl, { params: params, showError: true });
-    }
-
-    getInactivos(): Observable<IPaciente[]> {
-        return this.server.get(`${this.pacienteUrl}/inactivos/`, { showError: true });
-    }
-
-    getAuditoriaVinculados(params: any): Observable<IPaciente[]> {
-        return this.server.get(`${this.pacienteUrl}/auditoria/vinculados/`, { params: params, showError: true });
     }
 
     getTemporales(): Observable<IPaciente[]> {
@@ -102,14 +90,6 @@ export class PacienteService {
     }
 
     /**
-     * Metodo setActivo. Actualiza estado (Activo/inactivo) de un paciente.
-     * @param {IPaciente} paciente Recibe IPaciente
-     */
-    setActivo(paciente: IPaciente): Observable<IPaciente> {
-        return this.server.put(`${this.pacienteUrl}/auditoria/setActivo`, paciente);
-    }
-
-    /**
      * Metodo patch. Modifica solo algunos campos del paciente. (por ejemplo telefono)
      * @param {any} cambios Recibe any
      */
@@ -131,7 +111,7 @@ export class PacienteService {
      */
     disable(paciente: IPaciente): Observable<IPaciente> {
         paciente.activo = false;
-        return this.setActivo(paciente);
+        return this.setActivo(paciente, false);
     }
 
     /**
@@ -140,7 +120,7 @@ export class PacienteService {
      */
     enable(paciente: IPaciente): Observable<IPaciente> {
         paciente.activo = true;
-        return this.setActivo(paciente);
+        return this.setActivo(paciente, true);
     }
 
     save(paciente: IPaciente, ignoreCheck: boolean = false): Observable<IPaciente> {
@@ -153,8 +133,70 @@ export class PacienteService {
     getSiguienteCarpeta(): Observable<any> {
         return this.server.get(`${this.carpetaUrl}/ultimaCarpeta`);
     }
+
     incrementarNroCarpeta(): Observable<any> {
         return this.server.post(`${this.carpetaUrl}/incrementarCuenta`, {});
     }
 
+
+
+    // ############################  AUDITORIA  #################################
+
+    get(params: any): Observable<IPaciente[]> {
+        return this.server.get(this.pacienteUrl, { params: params, showError: true });
+    }
+
+    getInactivos(): Observable<IPaciente[]> {
+        return this.server.get(`${this.pacienteUrl}/inactivos/`, { showError: true });
+    }
+
+    getAuditoriaVinculados(params: any): Observable<IPaciente[]> {
+        return this.server.get(`${this.pacienteUrl}/auditoria/vinculados/`, { params: params, showError: true });
+    }
+
+    /**
+     * Metodo setActivo: Actualiza dato activo (true/false) de un paciente
+     * @param {IPaciente} paciente
+     * @param {boolean} activo
+     */
+    setActivo(paciente: IPaciente, activo: boolean) {
+        paciente.activo = activo;
+        return this.server.put(`${this.pacienteUrl}/auditoria/setActivo`, paciente);
+    }
+
+    /**
+     * Se vinculan dos pacientes: modifica el array de identificadores del paciente.
+     * @param pacienteBase paciente que va a contener el vinculo de otro paciente
+     * @param pacienteLink paciente a ser vinculado
+     */
+    linkPatient(pacienteBase: IPaciente, pacienteLink: IPaciente): Observable<IPaciente[]> {
+        if (pacienteBase && pacienteBase.id && pacienteLink && pacienteLink.id) {
+            const dataLink = {
+                entidad: 'ANDES',
+                valor: pacienteLink.id
+            };
+            if (pacienteBase.identificadores) {
+                pacienteBase.identificadores.push(dataLink);
+            } else {
+                pacienteBase.identificadores = [dataLink]; // Primer elemento del array
+            }
+            return combineLatest(this.save(pacienteBase), this.setActivo(pacienteLink, false));
+        }
+        return;
+    }
+
+    /**
+     * Se desvinculan dos pacientes: modifica el array de identificadores del paciente.
+     * @param pacienteBase paciente que va a contener el vinculo de otro paciente
+     * @param pacienteLink paciente a ser desvinculado
+     */
+    unlinkPatient(pacienteBase: any, pacienteLink: IPaciente) {
+        if (pacienteBase && pacienteBase.id && pacienteLink && pacienteLink.id) {
+            if (pacienteBase.identificadores) {
+                pacienteBase.identificadores = (pacienteBase.identificadores.filter((x) => x.valor !== pacienteLink.id));
+            }
+            return combineLatest(this.save(pacienteBase), this.setActivo(pacienteLink, true));
+        }
+        return;
+    }
 }
