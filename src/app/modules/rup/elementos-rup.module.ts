@@ -32,8 +32,6 @@ import { TensionArterialComponent } from './components/elementos/tensionArterial
 import { TensionDiastolicaComponent } from './components/elementos/tensionDiastolica.component';
 import { TensionSistolicaComponent } from './components/elementos/tensionSistolica.component';
 import { AdjuntarDocumentoComponent } from './components/elementos/adjuntarDocumento.component';
-import { OtoemisionAcusticaDeOidoDerechoComponent } from './components/elementos/otoemisionAcusticaDeOidoDerecho.component';
-import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
 import { OdontogramaRefsetComponent } from './components/elementos/OdontogramaRefset.component';
 import { LactanciaComponent } from './components/elementos/lactancia.component';
 import { InformeEpicrisisComponent } from './components/elementos/deprecated/informeEpicrisis.component';
@@ -107,8 +105,6 @@ const RUPComponentsArray = [
     TensionDiastolicaComponent,
     TensionSistolicaComponent,
     AdjuntarDocumentoComponent,
-    OtoemisionAcusticaDeOidoDerechoComponent,
-    OtoemisionAcusticaDeOidoIzquierdoComponent,
     OdontogramaRefsetComponent,
     LactanciaComponent,
     InformeEpicrisisComponent,
