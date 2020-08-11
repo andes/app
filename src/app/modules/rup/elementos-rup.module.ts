@@ -22,11 +22,9 @@ import { PesoComponent } from './components/elementos/peso.component';
 import { RegistrarMedicamentoDefaultComponent } from './components/elementos/registrarMedicamentoDefault.component';
 import { SaturacionOxigenoComponent } from './components/elementos/saturacionOxigeno.component';
 import { GraficoLinealComponent } from './components/elementos/graficoLineal.component';
-import { SignosVitalesComponent } from './components/elementos/signosVitales.component';
 import { SolicitudPrestacionDefaultComponent } from './components/elementos/solicitudPrestacionDefault.component';
 import { TallaComponent } from './components/elementos/talla.component';
 import { TemperaturaComponent } from './components/elementos/temperatura.component';
-import { TensionArterialComponent } from './components/elementos/tensionArterial.component';
 import { TensionDiastolicaComponent } from './components/elementos/tensionDiastolica.component';
 import { TensionSistolicaComponent } from './components/elementos/tensionSistolica.component';
 import { AdjuntarDocumentoComponent } from './components/elementos/adjuntarDocumento.component';
@@ -38,7 +36,6 @@ import { InternacionEgresoComponent } from './components/elementos/internacionEg
 import { InternacionIngresoComponent } from './components/elementos/internacionIngreso.component';
 
 import { InformeActividadNoNominalizadaComponent } from './components/elementos/informeActividadNoNominalizada.component';
-import { TensionArterialPediatricaComponent } from './components/elementos/tensionArterialPediatrica.component';
 import { ConsultaDeNinoSanoM2AComponent } from './components/elementos/consultaDeNinoSanoM2A.component';
 import { ConsultaDeNinoSanoE2Y3AComponent } from './components/elementos/consultaDeNinoSanoE2Y3A.component';
 import { ConsultaDeNinoSanoE3Y6AComponent } from './components/elementos/consultaDeNinoSanoE3Y6A.component';
@@ -86,11 +83,9 @@ const RUPComponentsArray = [
     RegistrarMedicamentoDefaultComponent,
     SaturacionOxigenoComponent,
     GraficoLinealComponent,
-    SignosVitalesComponent,
     SolicitudPrestacionDefaultComponent,
     TallaComponent,
     TemperaturaComponent,
-    TensionArterialComponent,
     TensionDiastolicaComponent,
     TensionSistolicaComponent,
     AdjuntarDocumentoComponent,
@@ -99,7 +94,6 @@ const RUPComponentsArray = [
     InformeEpicrisisComponent,
     ElementoDeRegistroComponent,
     InformeActividadNoNominalizadaComponent,
-    TensionArterialPediatricaComponent,
     ConsultaDeNinoSanoM2AComponent,
     ConsultaDeNinoSanoE2Y3AComponent,
     ConsultaDeNinoSanoE3Y6AComponent,
