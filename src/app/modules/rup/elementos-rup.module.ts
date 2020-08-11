@@ -12,7 +12,6 @@ import { NgDragDropModule } from 'ng-drag-drop';
 import { SelectPorRefsetComponent } from './components/elementos/SelectPorRefset.component';
 import { AutocitadoComponent } from './components/elementos/autocitado.component';
 import { EvolucionProblemaDefaultComponent } from './components/elementos/evolucionProblemaDefault.component';
-import { FiltradoGlomerularComponent } from './components/elementos/filtradoGlomerular.component';
 import { FrecuenciaCardiacaComponent } from './components/elementos/frecuenciaCardiaca.component';
 import { FrecuenciaRespiratoriaComponent } from './components/elementos/frecuenciaRespiratoria.component';
 import { HipertensionArterialComponent } from './components/elementos/hipertensionArterial.component';
@@ -93,7 +92,6 @@ const RUPComponentsArray = [
     SelectPorRefsetComponent,
     AutocitadoComponent,
     EvolucionProblemaDefaultComponent,
-    FiltradoGlomerularComponent,
     FrecuenciaCardiacaComponent,
     FrecuenciaRespiratoriaComponent,
     HipertensionArterialComponent,
