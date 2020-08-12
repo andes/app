@@ -1,7 +1,7 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, OnInit, HostBinding } from '@angular/core';
+import { Component, OnInit, HostBinding, ViewChild } from '@angular/core';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
@@ -10,6 +10,7 @@ import { Unsubscribe } from '@andes/shared';
 import { HUDSService } from '../../../modules/rup/services/huds.service';
 import { ObraSocialCacheService } from '../../../services/obraSocialCache.service';
 import { concat } from 'rxjs';
+import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 
 @Component({
     selector: 'solicitudes',
@@ -19,6 +20,7 @@ import { concat } from 'rxjs';
 
 export class SolicitudesComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
+    @ViewChild('modal', { static: true }) modal: PlexModalComponent;
 
     paciente: any;
     fecha: any;
@@ -98,6 +100,8 @@ export class SolicitudesComponent implements OnInit {
     public accesoHudsPrestacion = null;
     public accesoHudsPaciente = null;
     public accesoHudsTurno = null;
+    public motivoRespuesta: String;
+    public prestacionDevolver: any;
 
     constructor(
         public auth: Auth,
@@ -730,6 +734,24 @@ export class SolicitudesComponent implements OnInit {
                 tipo: 'ejecucion'
             }
         });
+    }
+
+    devolver(prestacion) {
+        this.prestacionDevolver = prestacion;
+        this.modal.showed = true;
+    }
+
+    confirmarDevolver() {
+        this.servicioPrestacion.patch(this.prestacionDevolver.id, { op: 'devolver', observaciones: this.motivoRespuesta }).subscribe(() => {
+            this.cerrarDevolver();
+            this.cargarSolicitudes();
+        });
+    }
+
+    cerrarDevolver() {
+        this.modal.showed = false;
+        this.prestacionDevolver = null;
+        this.motivoRespuesta = null;
     }
 }
 
