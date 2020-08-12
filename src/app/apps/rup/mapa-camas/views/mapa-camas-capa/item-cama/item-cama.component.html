@@ -46,6 +46,11 @@
             <ng-container *ngFor="let relacion of relacionesPosibles$ | async">
                 <ng-container
                               *ngIf="(relacion.accion !== 'internarPaciente') || (relacion.accion === 'internarPaciente' && permisoIngreso)">
+                    <ng-container *ngIf="relacion.accion === 'egresarPaciente'">
+                        <plex-button title="Realizar pase" icon="swap-horizontal-bold" type="warning" size="sm"
+                                (click)="accion({accion: 'realizarPase'}, $event)">
+                    </plex-button>
+                    </ng-container>
                     <plex-button title="{{ relacion.nombre }}" [icon]="relacion.icon" [type]="relacion.color" size="sm"
                                  (click)="accion(relacion, $event)">
                     </plex-button>

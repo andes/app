@@ -20,7 +20,7 @@ import { ItemCamaComponent } from './views/mapa-camas-capa/item-cama/item-cama.c
 import { IngresarPacienteComponent } from './sidebar/ingreso/ingresar-paciente.component';
 import { IconoCamitaComponent } from './sidebar/estado-servicio/iconito-cama/icono-camita.component';
 import { CamaDestinoGenericoComponent } from './sidebar/cama-destino-generico/cama-destino-generico.component';
-import { CamaDesocuparComponent } from './sidebar/desocupar-cama/desocupar-cama.component';
+import { PaseCamaComponent } from './sidebar/desocupar-cama/pase-cama.component';
 import { EgresarPacienteComponent } from './sidebar/egreso/egresar-paciente.component';
 import { CamaDetalleComponent } from './sidebar/cama-detalle/cama-detalle.component';
 import { InternacionDetalleComponent } from './sidebar/cama-detalle/internacion-detalle/internacion-detalle.component';
@@ -57,7 +57,7 @@ export const INTERNACION_COMPONENTS = [
     IngresarPacienteComponent,
     IconoCamitaComponent,
     CamaDestinoGenericoComponent,
-    CamaDesocuparComponent,
+    PaseCamaComponent,
     EgresarPacienteComponent,
     CamaDetalleComponent,
     InternacionDetalleComponent,

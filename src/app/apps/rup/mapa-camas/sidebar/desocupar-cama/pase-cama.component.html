@@ -1,5 +1,5 @@
 <div>
-    <plex-title justify titulo="Desocupar cama">
+    <plex-title justify titulo="Realizar Pase">
         <ng-content></ng-content>
     </plex-title>
     <ng-container *ngIf="movimientoEgreso$ | async as movimientoEgreso; else puedeEgresar">
@@ -31,20 +31,13 @@
                         <ng-container *ngIf="!(camasDisponibles.camasMismaUO.length > 0)">
                             <strong>No hay camas disponibles en la unidad organizativa actual.</strong>
                         </ng-container>
-                        <plex-button label="Cambiar de unidad organizativa" type="secondary" size="block"
-                                     title="{{ (!permisoMovimiento) ? 'No tiene permisos suficientes' : null }}"
-                                     [disabled]="!permisoMovimiento || !(camasDisponibles.camasDistintaUO.length > 0)"
-                                     (click)="cambiarCama(true)" [validateForm]="formReparada" class="mb-2">
+                        <plex-button label="Cambiar de unidad organizativa" type="warning" size="block"
+                                        title="{{ (!permisoMovimiento) ? 'No tiene permisos suficientes' : null }}"
+                                        [disabled]="!permisoMovimiento || !(camasDisponibles.camasDistintaUO.length > 0)"
+                                        (click)="cambiarCama(true)" [validateForm]="formReparada" class="mb-2">
                         </plex-button>
                         <ng-container *ngIf="!(camasDisponibles.camasDistintaUO.length > 0)">
                             <strong> No hay camas disponibles en otra unidad organizativa.</strong>
-                        </ng-container>
-                        <ng-container *ngIf="(view$ | async) === 'mapa-camas'">
-                            <plex-button label="Egresar paciente" type="warning" size="block"
-                                         title="{{ (!permisoEgreso) ? 'No tiene permisos para egresar pacientes' : null }}"
-                                         [disabled]="!permisoEgreso" (click)="egresarPaciente()"
-                                         [validateForm]="formReparada">
-                            </plex-button>
                         </ng-container>
                     </ng-template>
                 </ng-container>

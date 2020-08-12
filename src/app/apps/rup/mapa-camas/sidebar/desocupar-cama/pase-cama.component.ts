@@ -1,17 +1,17 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { ISnapshot } from '../../interfaces/ISnapshot';
-import { Subscription, combineLatest, Observable, of } from 'rxjs';
-import { switchMap, map, switchMapTo } from 'rxjs/operators';
+import { combineLatest, Observable, of } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
 import { cache } from '@andes/shared';
 import { Auth } from '@andes/auth';
 
 
 @Component({
-    selector: 'app-desocupar-cama',
-    templateUrl: 'desocupar-cama.component.html'
+    selector: 'app-pase-cama',
+    templateUrl: 'pase-cama.component.html'
 })
-export class CamaDesocuparComponent implements OnInit, OnDestroy {
+export class PaseCamaComponent implements OnInit, OnDestroy {
     camasDisponibles$: Observable<any>;
 
     // EVENTOS

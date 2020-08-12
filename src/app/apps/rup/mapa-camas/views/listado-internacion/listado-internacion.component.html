@@ -64,11 +64,11 @@
                     </plex-title>
                     <app-internacion-detalle *ngIf="mostrar === 'datosInternacion'" (cambiarCama)="cambiarCama()">
                     </app-internacion-detalle>
-                    <app-desocupar-cama *ngIf="mostrar === 'desocuparCama'" (cancel)="volverADetalle()"
+                    <app-pase-cama *ngIf="mostrar === 'desocuparCama'" (cancel)="volverADetalle()"
                                         (accionDesocupar)="accionDesocupar($event)">
                         <plex-button title="volver" icon="arrow-left" type="danger" size="sm" (click)="volverADetalle()">
                         </plex-button>
-                    </app-desocupar-cama>
+                    </app-pase-cama>
                     <app-cambiar-cama *ngIf="mostrar === 'cambiarCama'" cambiarUO="{{ cambiarUO }}"
                                       (cancel)="volverADetalle()">
                     </app-cambiar-cama>
