@@ -63,7 +63,7 @@ export class SolicitudesComponent implements OnInit {
     public showAnular = false;
     public showCitar = false;
     public showDetalle = false;
-    public prestacionDestino;
+    public prestacionesDestino = [];
     public estado;
     public estadoEntrada;
     public estadoSalida;
@@ -321,8 +321,8 @@ export class SolicitudesComponent implements OnInit {
                         params['tieneTurno'] = false;
                     }
                 }
-                if (this.prestacionDestino) {
-                    params['prestacionDestino'] = this.prestacionDestino.id;
+                if (this.prestacionesDestino && this.prestacionesDestino.length) {
+                    params['prestacionDestino'] = this.prestacionesDestino.map(e => e.id);
                 }
             }
         }
@@ -344,14 +344,14 @@ export class SolicitudesComponent implements OnInit {
                         params['tieneTurno'] = false;
                     }
                 }
-                if (this.prestacionDestino) {
-                    params['prestacionDestino'] = this.prestacionDestino.id;
+                if (this.prestacionesDestino && this.prestacionesDestino.length) {
+                    params['prestacionDestino'] = this.prestacionesDestino.map(e => e.id);
                 }
             }
         }
 
-        if (this.prestacionDestino) {
-            params['prestacionDestino'] = this.prestacionDestino.id;
+        if (this.prestacionesDestino && this.prestacionesDestino.length) {
+            params['prestacionDestino'] = this.prestacionesDestino.map(e => e.id);
         } else {
             if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {
                 params['tipoPrestaciones'] = this.prestacionesPermisos;
