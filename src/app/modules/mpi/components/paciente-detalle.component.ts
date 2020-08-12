@@ -85,7 +85,8 @@ export class PacienteDetalleComponent implements OnInit {
 
     get contacto() {
         if (this.paciente.contacto && this.paciente.contacto.length > 0) {
-            const contacto = this.paciente.contacto[0];
+            let index = this.paciente.contacto.findIndex(c => c.tipo === 'celular' || c.tipo === 'fijo');
+            const contacto = (index >= 0) ? this.paciente.contacto[index] : this.paciente.contacto[0];
             return contacto.valor ? contacto.valor : 'Sin contacto';
         }
         return 'Sin contacto';
