@@ -7,7 +7,7 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, OnDestroy, EventEmitter, ViewEncapsulation, QueryList, ViewChildren, ViewChild, ElementRef, Renderer, AfterViewInit } from '@angular/core';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
-import { IElementoRUP } from './../../interfaces/elementoRUP.interface';
+import { IElementoRUP, IElementoRUPRequeridos } from './../../interfaces/elementoRUP.interface';
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
@@ -289,14 +289,21 @@ export class RUPComponent implements OnInit, AfterViewInit {
      * Costrasta los requeridos contra los registros para determinar exactamente sobre que iterar.
      */
     get requeridos() {
-        const requeridos = [];
+        const response = [];
+        const requeridos = [...this.elementoRUP.requeridos].filter(r => this.checkSexRule(this.prestacion, r));
         for (let i = 0; i < this.registro.registros.length; i++) {
             const concepto = this.registro.registros[i].concepto;
-            const requerido = this.elementoRUP.requeridos[i];
+            const requerido = requeridos[i];
             if (requerido && requerido.concepto.conceptId === concepto.conceptId) {
-                requeridos.push(requerido);
+                response.push(requerido);
             }
         }
-        return requeridos;
+        return response;
+    }
+
+    private checkSexRule(prestacion: IPrestacion, requerido: IElementoRUPRequeridos) {
+        const sexo = prestacion && prestacion.paciente && prestacion.paciente.sexo;
+        const sexoFilter = requerido && requerido.sexo;
+        return !sexo || !sexoFilter || sexo === sexoFilter;
     }
 }
