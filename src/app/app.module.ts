@@ -20,7 +20,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LOCALE_ID } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { ScrollingModule } from '@angular/cdk/scrolling';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { HttpClient } from '@angular/common/http';
 
@@ -36,17 +35,14 @@ import { ElementosRUPModule } from './modules/rup/elementos-rup.module';
 import { MitosModule } from './apps/mitos';
 import { MPILibModule } from './modules/mpi/mpi-lib.module';
 import { OrganizacionLibModule } from './components/organizacion/organizacion-lib.module';
-import { NgDragDropModule } from 'ng-drag-drop';
 
 
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
 
-import { HoverClassDirective } from './directives/hover-class.directive';
 import { DocumentosService } from './services/documentos.service';
 
 // Pipes
-import { SortBloquesPipe } from './pipes/agenda-bloques.pipe';
 
 // ... Tablas Maestras
 import { OrganizacionService } from './services/organizacion.service';
@@ -87,7 +83,6 @@ import { ObraSocialCacheService } from './services/obraSocialCache.service';
 import { ProfeService } from './services/profe.service';
 import { ReglasComponent } from './components/top/reglas/reglas.component';
 import { VisualizacionReglasTopComponent } from './components/top/reglas/visualizacionReglasTop.component';
-import { VisualizacionReglasComponent } from './components/top/reglas/visualizacionReglas.component';
 import { ReglaService } from './services/top/reglas.service';
 import { FacturacionAutomaticaService } from './services/facturacionAutomatica.service';
 import { SIISAService } from './services/siisa.service';
@@ -147,8 +142,6 @@ import { PucoComponent } from './components/puco/puco.component';
 import { TurnosComponent } from './components/turnos/gestor-agendas/turnos.component';
 import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/clonar-agenda';
 import { PlanificarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/planificar-agenda.component';
-import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component';
-import { CalendarioComponent } from './components/turnos/dar-turnos/calendario.component';
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 import { ListaEsperaCreateUpdateComponent } from './components/turnos/lista-espera/listaEspera-create-update.component';
 import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspera.component';
@@ -183,36 +176,16 @@ import { ListarCarpetasComponent } from './components/turnos/gestor-agendas/oper
 import { MapaEspacioFisicoComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico.component';
 import { SuspenderAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/suspender-agenda.component';
 import { ArancelamientoFormComponent } from './components/turnos/punto-inicio/arancelamiento/arancelamiento-form.component';
-import { AutocitarTurnoAgendasComponent } from './components/turnos/autocitar/autocitar.component';
-import { DinamicaFormComponent } from './components/turnos/autocitar/dinamica.component';
 import { MapaEspacioFisicoVistaComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico-vista.component';
 import { BuscadorCie10Component } from './components/turnos/gestor-agendas/operaciones-agenda/buscador-cie10.component';
 
 
 // ... RUP
 import { ElementosRUPService } from './modules/rup/services/elementosRUP.service';
-import { BuscadorComponent } from './modules/rup/components/ejecucion/buscador.component';
-import { HudsBusquedaComponent } from './modules/rup/components/ejecucion/hudsBusqueda.component';
 import { PrestacionesService } from './modules/rup/services/prestaciones.service';
 import { AdjuntosService } from './modules/rup/services/adjuntos.service';
 
 import { ConceptObserverService } from './modules/rup/services/conceptObserver.service';
-import { PrestacionCrearComponent } from './modules/rup/components/ejecucion/prestacionCrear.component';
-import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
-import { PrestacionValidacionComponent } from './modules/rup/components//ejecucion/prestacionValidacion.component';
-import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
-import { RupRelacionesComponent } from './modules/rup/components/huds/relaciones-rup.component';
-import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
-import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
-import { VistaCDAComponent } from './modules/rup/components/huds/vistaCDA.component';
-import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
-import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-estatico.component';
-import { ResumenPacienteDinamicoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico.component';
-import { ResumenPacienteDinamicoNinoComponent } from './modules/rup/components/ejecucion/resumen-paciente/resumenPaciente-dinamico-nino.component';
-
-// Seguimiento Pacientes SJ
-import { SeguimientoPacienteComponent } from './modules/rup/components/ejecucion/seguimiento-paciente/seguimientoPaciente.component';
-
 
 // AUDITORIA
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
@@ -236,7 +209,6 @@ import { routing, appRoutingProviders } from './app.routing';
 
 
 // Libs
-// import { ChartModule } from 'angular2-chartjs';
 import { ChartsModule } from 'ng2-charts';
 
 // INTERNACION
@@ -253,14 +225,11 @@ import { OrganizacionOfertaPrestacionalComponent } from './components/organizaci
 // Solicitudes
 import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.component';
 import { DetalleSolicitudComponent } from './components/top/solicitudes/detalleSolicitud.component';
-import { HistorialSolicitudComponent } from './components/top/solicitudes/historialSolicitud.component';
 import { AuditarSolicitudComponent } from './components/top/solicitudes/auditarSolicitud.component';
 import { NuevaSolicitudComponent } from './components/top/solicitudes/nuevaSolicitud.component';
 import { AnularSolicitudComponent } from './components/top/solicitudes/anularSolicitud.component';
 import { PrestacionSolicitudComponent } from './components/top/solicitudes/prestacionSolicitud.component';
 
-// Componentes RUP
-// [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
 
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
@@ -271,10 +240,8 @@ import { PrestarHcComponent } from './components/prestamosHC/solicitudes/prestar
 import { DevolverHcComponent } from './components/prestamosHC/prestamos/devolver-hc.component';
 import { ImprimirSolicitudesComponent } from './components/prestamosHC/solicitudes/imprimir-solicitudes.component';
 import { SolicitudManualComponent } from './components/prestamosHC/solicitudes/solicitud-manual-hc.component';
-import { HelpSolicitudComponent } from './modules/rup/components/ejecucion/help-solicitud.component';
 
 
-import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 // Configuracion prestaciones
 import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
 import { ConfiguracionPrestacionCrearComponent } from './components/configuracionPrestacion/configuracion-prestacion-crear.component';
@@ -299,16 +266,8 @@ import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/
 import { NotaComponent } from './core/mpi/components/notas-paciente.component';
 import { PacienteCacheService } from './core/mpi/services/pacienteCache.service';
 import { HistorialBusquedaService } from './core/mpi/services/historialBusqueda.service';
-/** moment pipes  - desde agular 5 hay que importar el locale a demanda */
-import { ChartComponent } from './modules/rup/components/ejecucion/resumen-paciente/chart.component';
 import { UploadFileComponent } from './shared/components/upload-file.component';
 import { CodificacionService } from './modules/rup/services/codificacion.service';
-import { VistaRegistroComponent } from './modules/rup/components/huds/vistaRegistro';
-import { VistaProcedimientoComponent } from './modules/rup/components/huds/vistaProcedimiento';
-import { VistaContextoPrestacionComponent } from './modules/rup/components/huds/vistaContextoPrestacion';
-import { VistaDetalleRegistroComponent } from './modules/rup/components/huds/vistaDetalleRegistro';
-import { VistaAccesosHudsComponent } from './modules/rup/components/huds/vista-accesos-huds.component';
-import { ModalMotivoAccesoHudsComponent } from './modules/rup/components/huds/modal-motivo-acceso-huds.component';
 
 import { SnomedBuscarService } from './components/snomed/snomed-buscar.service';
 import { HUDSService } from './modules/rup/services/huds.service';
@@ -316,16 +275,9 @@ import { GestorUsuariosProvidersModule } from './apps/gestor-usuarios/gestor-usu
 
 /** Configuraciones de entorno */
 import { environment } from '../environments/environment';
-import { PlantillasRUPComponent } from './apps/rup/plantillas-rup/plantillas-rup.component';
 import { LogoSvgComponent } from './styles/logo.svg';
 import { AcronimoSvgComponent } from './styles/acronimo.svg';
 import { ListaReglasComponent } from './components/top/reglas/listaReglas.component';
-import { VistaSolicitudTopComponent } from './modules/rup/components/huds/vistaSolicitudTop';
-import { SelectOrganizacionDirective } from './directives/organizacion-select.directive';
-import { SelectProfesionalesDirective } from './directives/profesionales-select.directive';
-import { SelectPrestacionesDirective } from './directives/prestaciones-select.directive';
-import { SelectFinanciadorDirective } from './directives/financiador-select-directive';
-import { EspacioFisicoPipe } from './pipes/espacioFisico.pipe';
 import { NovedadesComponent } from './components/novedades/novedades.component';
 import { HeaderNovedadesComponent } from './components/novedades/header-novedades/header-novedades.component';
 import { ListaNovedadesComponent } from './components/novedades/lista-novedades/lista-novedades.component';
@@ -338,7 +290,10 @@ import { ModulosService } from './services/novedades/modulos.service';
 import { ConceptosTurneablesService } from './services/conceptos-turneables.service';
 import { DisclaimerService } from './services/disclaimer.service';
 import { AuthContext } from '@andes/shared';
-import { SnomedLinkComponent } from './modules/rup/directives/snomed-link';
+import { RUPLibModule } from './modules/rup/rup-lib.module';
+import { TOPLibModule } from './components/top/top.module';
+import { DirectiveLibModule } from './directives/directives.module';
+import { CITASLibModule } from './components/turnos/citas.module';
 
 registerLocaleData(localeEs, 'es');
 
@@ -351,9 +306,7 @@ registerLocaleData(localeEs, 'es');
         FormsModule,
         HttpClientModule,
         AuthModule,
-        ScrollingModule,
         TurneroProvidersModule,
-        NgDragDropModule.forRoot(),
         ChartsModule,
         MitosModule.forRoot(),
         routing,
@@ -365,7 +318,11 @@ registerLocaleData(localeEs, 'es');
         MPILibModule,
         OrganizacionLibModule,
         ElementosRUPModule,
-        SharedModule
+        SharedModule,
+        RUPLibModule,
+        TOPLibModule,
+        DirectiveLibModule,
+        CITASLibModule
     ],
     declarations: [
         AppComponent, InicioComponent,
@@ -374,11 +331,11 @@ registerLocaleData(localeEs, 'es');
         ProfesionalCreateUpdateComponent,
         UploadFileComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
-        EspacioFisicoPipe,
-        MapsComponent, SortBloquesPipe,
-        PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, DinamicaFormComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
+        MapsComponent,
+        PlanificarAgendaComponent,
+        BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
-        DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
+        GestorAgendasComponent,
         TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
         ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, RevisionFueraAgendaComponent, PopoverAuditComponent,
         LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
@@ -388,9 +345,8 @@ registerLocaleData(localeEs, 'es');
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
         PermisosComponent,
-        PuntoInicioComponent,
         VincularPacientesComponent,
-        HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
+        PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
         TurnosPacienteComponent,
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
         ReporteC2Component,
@@ -401,41 +357,14 @@ registerLocaleData(localeEs, 'es');
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         MapaEspacioFisicoVistaComponent,
-        PrestacionCrearComponent,
-        PrestacionEjecucionComponent,
-        PrestacionValidacionComponent,
-        RupRelacionesComponent,
-        SnomedBuscarComponent,
         DetalleAgendaComponent,
         HeaderPacienteComponent,
-        HudsBusquedaComponent,
-        BuscadorComponent,
-        VistaHudsComponent,
-        VistaCDAComponent,
-        HudsBusquedaPacienteComponent,
-
-        // RUP
-        // ...RUPComponentsArray,
-        ResumenPacienteEstaticoComponent,
-        ResumenPacienteDinamicoComponent,
-        ResumenPacienteDinamicoNinoComponent,
-        SeguimientoPacienteComponent,
         PuntoInicioInternacionComponent,
-        ChartComponent,
         OrganizacionSectoresComponent,
-        VistaRegistroComponent,
-        VistaProcedimientoComponent,
-        VistaContextoPrestacionComponent,
-        VistaDetalleRegistroComponent,
-        VistaAccesosHudsComponent,
-        ModalMotivoAccesoHudsComponent,
-        HelpSolicitudComponent,
-        SnomedLinkComponent,
 
         // Solicitudes
         SolicitudesComponent,
         DetalleSolicitudComponent,
-        HistorialSolicitudComponent,
         PrestacionSolicitudComponent,
         AuditarSolicitudComponent,
         AnularSolicitudComponent,
@@ -458,8 +387,6 @@ registerLocaleData(localeEs, 'es');
         ReglasComponent,
         ListaReglasComponent,
         VisualizacionReglasTopComponent,
-        VisualizacionReglasComponent,
-        VistaSolicitudTopComponent,
 
         // MPI
         NotaComponent,
@@ -487,19 +414,11 @@ registerLocaleData(localeEs, 'es');
 
         // Buscador de turnos y prestaciones
         TurnosPrestacionesComponent,
-
-        PlantillasRUPComponent,
         LogoSvgComponent,
         AcronimoSvgComponent,
-
-        SelectOrganizacionDirective,
-        SelectProfesionalesDirective,
-        SelectPrestacionesDirective,
-        SelectFinanciadorDirective
     ],
     entryComponents: [
-        HeaderPacienteComponent,
-        ModalMotivoAccesoHudsComponent
+        HeaderPacienteComponent
     ],
     bootstrap: [
         AppComponent

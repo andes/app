@@ -144,15 +144,8 @@ const appRoutes: Routes = [
   // { path: 'citas/sobreturnos', component: AgregarSobreturnoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'citas/sobreturnos/:idAgenda', component: AgregarSobreturnoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'citas/paciente/:idAgenda', component: AgregarPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  // RUP
-  { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/crear/:opcion', component: PrestacionCrearComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/validacion/:id', component: PrestacionValidacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/vista/:id', component: VistaHudsComponent, canActivate: [RoutingNavBar, RoutingGuard, RoutingHudsGuard] },
-  { path: 'rup/huds/paciente/:id', component: VistaHudsComponent, canActivate: [RoutingNavBar, RoutingGuard, RoutingHudsGuard] },
-  { path: 'rup/huds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/plantillas', component: PlantillasRUPComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+
+  { path: 'rup', loadChildren: () => import('./modules/rup/rup.module').then(m => m.RUPModule), canActivate: [RoutingNavBar, RoutingGuard] },
 
   // Configuraciones / ABM
   { path: 'configuracionPrestacion', component: ConfiguracionPrestacionVisualizarComponent, canActivate: [RoutingNavBar, RoutingGuard] },
