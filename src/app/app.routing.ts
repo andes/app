@@ -25,7 +25,6 @@ import { ProfesionalComponent } from './components/profesional/profesional.compo
 import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { InicioComponent } from './components/inicio/inicio.component';
-import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 import { OrganizacionSectoresComponent } from './components/organizacion/organizacion-sectores.component';
 import { OrganizacionOfertaPrestacionalComponent } from './components/organizacion/organizacion-prestaciones.component';
@@ -179,9 +178,6 @@ const appRoutes: Routes = [
   // TOP
   { path: 'top/reglas', component: ReglasComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'top/reglasVisualizacion', component: VisualizacionReglasTopComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-
-  // TODO: Verificar si estas rutas todavía son válidas, y ubicarlas en los módulos correspondientes
-  /* VERIFICAR ==> */ { path: 'tipoprestaciones', component: TipoPrestacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // Principal
   { path: 'auth', loadChildren: './apps/auth/auth.module#AuthAppModule' },
