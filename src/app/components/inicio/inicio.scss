@@ -1,6 +1,3 @@
-$adi-font-path: "~@andes/icons/fonts/";
-@import "~@andes/icons/scss/andes-icons.scss";
-
 //
 // Variables
 $color-celeste: #039ac6;
@@ -30,9 +27,9 @@ $andes-naranja-claro: #f4a03b;
     --mpi-auditoria: #009599;
 
     // 2. CITAS
-    --citas: #00a5d1;
-    --citas-gestor: #00a5d1;
-    --citas-vantanilla: #396999;
+    --citas: #058db1;
+    --citas-gestor: #058db1;
+    --citas-vantanilla: #00a5d1;
 
     // 3. RUP
     --rup: #967da0;
@@ -55,6 +52,10 @@ $andes-naranja-claro: #f4a03b;
     --dasbboard-citas: #396999;
     --dasbboard-huds: #bc5485;
     --dasbboard-solicitudes: #a486ae;
+
+    // 7. Tablas Maestras
+    --tm-organizaciones: #9b6762;
+    --tm-espacios-fisicos: #b47670;
 }
 
 header {
@@ -91,6 +92,10 @@ header,
 main {
     margin-left: 20px;
 }
+main {
+    display: flex;
+    justify-content: space-between;
+}
 //
 // Clases
 .logo-container {
@@ -119,6 +124,7 @@ main {
 }
 
 .modulos {
+    width: 75vw;
     flex-wrap: wrap;
 
     .modulo {
@@ -127,30 +133,30 @@ main {
         align-items: flex-start;
         flex-direction: column;
 
-        margin: 20px 20px 0 0;
+        // margin-right: 20px;
 
         box-sizing: border-box;
-        width: 190px;
+        width: 210px;
 
         &:not(:last-child) {
             border-right: 1px solid $andes-azul-claro;
         }
 
         .principal {
-            width: 100%;
-            height: 120px;
+            width: 220px;
+            height: 62px;
 
             .titulo {
-                font-size: 31px;
+                font-size: 22px;
             }
             .descripcion {
-                font-size: 17px;
+                font-size: 13px;
             }
             &.mpi {
                 color: #00afa0;
             }
             &.citas {
-                color: #00a5d1;
+                color: #058db1;
             }
             &.rup {
                 color: #967da0;
@@ -164,10 +170,14 @@ main {
             &.dashboards {
                 color: #ce876b;
             }
+            &.tm {
+                // Tablas Maestras
+                color: #9b6762;
+            }
         }
 
         .submodulos {
-            height: 160px;
+            height: 120px;
             flex-wrap: wrap;
             justify-content: flex-start;
         }
@@ -188,8 +198,10 @@ main {
 
             box-shadow: 4px 2px 6px #aaa;
 
+            transition: all ease-in-out 0.25s;
             &:hover {
                 mix-blend-mode: luminosity;
+                width: 90px;
             }
 
             .titulo {
@@ -212,10 +224,10 @@ main {
 
             &.citas {
                 &.gestor {
-                    background-color: #396999;
+                    background-color: #058db1;
                 }
                 &.ventanilla {
-                    background-color: #396999;
+                    background-color: #00a5d1;
                 }
             }
 
@@ -261,8 +273,20 @@ main {
                 }
             }
 
-            &:nth-child(even) {
-                margin-left: 15px;
+            &.tm {
+                &.organizaciones {
+                    background-color: #9b6762;
+                }
+                &.espacios-fisicos {
+                    background-color: #b47670;
+                }
+            }
+
+            // &:not(:first-child) {
+            //     margin-left: 5px;
+            // }
+            &:first-child {
+                margin: 0 5px 5px 0;
             }
         }
     }
@@ -276,17 +300,19 @@ main {
 }
 
 .secciones {
-    width: 100%;
+    width: 20vw;
+    flex-direction: column;
     &:not(:last-child) {
         border-right: 1px solid $andes-azul-claro;
     }
 }
 .seccion {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
 
     padding-right: 40px;
+    margin-bottom: 2rem;
 
     &:hover {
         mix-blend-mode: luminosity;
@@ -320,28 +346,38 @@ main {
             font-size: 1.25rem;
             color: white;
         }
-        &.usuarios {
-            background-color: #d9a21b;
-        }
-        &.novedades {
-            background-color: #879357;
-        }
+
         &.solicitudes {
             background-color: #a486ae;
         }
         &.reportes {
             background-color: #ad5555;
         }
+        &.novedades {
+            background-color: #879357;
+        }
         &.analytics {
             background-color: #ce876b;
         }
-        &.organizaciones {
-            background-color: #a0956e;
+        // &.organizaciones {
+        //     background-color: #a0956e;
+        // }
+        &.usuarios {
+            background-color: #d9a21b;
+        }
+        &.campanias {
+            background-color: #cfb51f;
         }
     }
     .titulo {
-        font-weight: 600;
         font-size: 0.85rem;
+        font-weight: 600;
+        font-style: oblique;
+    }
+    .secundario {
+        font-size: 0.65rem;
+        display: flex;
+        flex-direction: column;
     }
 }
 

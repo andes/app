@@ -47,17 +47,20 @@
 
                 <hr class="divisor">
 
-                <div class="secciones" justify>
-                    <ng-container *ngFor="let seccion of secciones">
-                        <div class="seccion hover" (click)="redirect(seccion)">
-                            <div class="principal {{ seccion.class }}">
-                                <div class="band"></div>
-                                <plex-icon [name]="seccion.icono" size="lg"></plex-icon>
-                            </div>
-                            <div class="titulo ml-2" [innerHTML]="seccion.nombre"></div>
+            </div>
+            <div class="secciones">
+                <ng-container *ngFor="let seccion of secciones">
+                    <div class="seccion hover" (click)="redirect(seccion)">
+                        <div class="principal {{ seccion.class }}">
+                            <div class="band"></div>
+                            <plex-icon [name]="seccion.icono" size="lg"></plex-icon>
                         </div>
-                    </ng-container>
-                </div>
+                        <div class="secundario">
+                            <div class="titulo ml-2">{{seccion.nombre}}</div>
+                            <div class="subtitulo ml-2">{{seccion.subtitulo}}</div>
+                        </div>
+                    </div>
+                </ng-container>
             </div>
         </main>
         <div *ngIf="denied && !loading" class="w-100 h-75 d-flex justify-content-center align-items-center">
