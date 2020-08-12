@@ -118,7 +118,7 @@ export class ActivarAppComponent {
     }
 
     contacto(key) {
-        let index = this.paciente.contacto.findIndex(item => item.tipo === key);
+        let index = this.paciente.contacto.findIndex(item => item.tipo === key && item.valor !== null);
         if (index >= 0) {
             return this.paciente.contacto[index].valor.toString();
         }
