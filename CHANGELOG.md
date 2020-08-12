@@ -1,3 +1,19 @@
+# [5.8.0](https://github.com/andes/app/compare/v5.7.0...v5.8.0) (2020-08-12)
+
+
+### Bug Fixes
+
+* **mpi:** fix pacientes similares ([#1832](https://github.com/andes/app/issues/1832)) ([ef1737f](https://github.com/andes/app/commit/ef1737f3d265476eab578a0921f2d8fad9dd0147))
+* **reportes:** agrega control para cuando no esta activo el microservicio ([#1852](https://github.com/andes/app/issues/1852)) ([a1efc81](https://github.com/andes/app/commit/a1efc812b88e20d34a4a91900405868f4e9de1c9))
+* **TOP:** Agrega control en la seleccion del profesional al asignar una solicitud ([#1830](https://github.com/andes/app/issues/1830)) ([e9f038d](https://github.com/andes/app/commit/e9f038db4f657e09edcbd2d31e80b580ed85ab93))
+* **TOP:** control en visualización de reglas ([#1841](https://github.com/andes/app/issues/1841)) ([75b63a9](https://github.com/andes/app/commit/75b63a977b35cf4308c82660c5d40e76dc63fd02))
+
+
+### Features
+
+* **top:** nuva columna con fecha de registro ([#1834](https://github.com/andes/app/issues/1834)) ([660a800](https://github.com/andes/app/commit/660a80081f8ae3841db7d3ba914c1244738e3f20))
+* **TOP:** busca por mas de una prestacion destino ([#1837](https://github.com/andes/app/issues/1837)) ([a423351](https://github.com/andes/app/commit/a42335173bbdd9cccfb23bb654b5c7f8a2538a89))
+
 # [5.7.0](https://github.com/andes/app/compare/v5.6.0...v5.7.0) (2020-08-05)
 
 
