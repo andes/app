@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { Auth } from '@andes/auth';
-import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { switchMap, map } from 'rxjs/operators';
 import { MapaCamasHTTP } from '../../services/mapa-camas.http';
 

@@ -44,8 +44,14 @@ export class FiltrosInternacionComponent implements OnInit {
     }
 
     filtrarFecha() {
-        this.listadoInternacionService.fechaIngresoDesde.next(this.filtros.fechaIngresoDesde);
-        this.listadoInternacionService.fechaIngresoHasta.next(this.filtros.fechaIngresoHasta);
+        if (moment(this.filtros.fechaIngresoDesde).isValid()) {
+            this.listadoInternacionService.fechaIngresoDesde.next(this.filtros.fechaIngresoDesde);
+        }
+
+        if (moment(this.filtros.fechaIngresoHasta).isValid()) {
+            this.listadoInternacionService.fechaIngresoHasta.next(this.filtros.fechaIngresoHasta);
+        }
+
         this.listadoInternacionService.fechaEgresoDesde.next(this.filtros.fechaEgresoDesde);
         this.listadoInternacionService.fechaEgresoHasta.next(this.filtros.fechaEgresoHasta);
     }
