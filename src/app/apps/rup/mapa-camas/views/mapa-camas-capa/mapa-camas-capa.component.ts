@@ -128,7 +128,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
             fecha = this.fecha;
         }
 
-        this.camas = this.mapaCamasService.snapshotFiltrado$.pipe(
+        this.camas = this.mapaCamasService.snapshotOrdenado$.pipe(
             map(snapshots => snapshots.filter(snap => snap.estado !== 'inactiva'))
         );
     }
@@ -204,29 +204,12 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     sortTable(event: string) {
         if (this.sortBy === event) {
             this.sortOrder = (this.sortOrder === 'asc') ? 'desc' : 'asc';
-            this.camas = this.camas.pipe(
-                map(snapshots => snapshots.reverse())
-            );
+            this.mapaCamasService.sortOrder.next(this.sortOrder);
         } else {
             this.sortBy = event;
-            this.sortOrder = 'desc';
-            this.camas = this.camas.pipe(
-                map(snapshots => this.sortSnapshots(snapshots, this.sortBy))
-            );
+            this.mapaCamasService.sortBy.next(event);
+            this.mapaCamasService.sortOrder.next('desc');
         }
     }
 
-    sortSnapshots(snapshots: ISnapshot[], value: string) {
-        if (value === 'cama') {
-            snapshots = snapshots.sort((a, b) => a.nombre.localeCompare((b.nombre as string)));
-        } else if (value === 'unidadOrganizativa') {
-            snapshots = snapshots.sort((a, b) => a.unidadOrganizativa.term.localeCompare(b.unidadOrganizativa.term));
-        } else if (value === 'estado') {
-            snapshots = snapshots.sort((a, b) => a.estado.localeCompare((b.estado as string)));
-        } else if (value === 'paciente') {
-            snapshots = snapshots.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.apellido.localeCompare((b.paciente.apellido as string)));
-        }
-
-        return snapshots;
-    }
 }
