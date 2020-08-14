@@ -45,7 +45,12 @@
 
                 <ng-template #showRelacion>
                     <plex-wrapper>
-                        <plex-text label="Documento" [(ngModel)]="relacionBebe.documento" name="documentoRelacion"
+                        <plex-text *ngIf="relacionBebe.documento" label="Documento" [(ngModel)]="relacionBebe.documento"
+                                   name="documentoRelacion" [readonly]="true">
+                        </plex-text>
+
+                        <plex-text *ngIf="relacionBebe.numeroIdentificacion" label="Número de identificación"
+                                   [(ngModel)]="relacionBebe.numeroIdentificacion" name="numeroIdentificacionRelacion"
                                    [readonly]="true">
                         </plex-text>
 

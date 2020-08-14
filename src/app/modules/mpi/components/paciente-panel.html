@@ -55,7 +55,7 @@
                         subtitulo="{{ relacionado.numeroIdentificacion }}">
             </plex-label>
 
-            <plex-badge type="info">{{ relacionado.relacion.nombre }}
+            <plex-badge type="info">{{ relacionado?.relacion?.nombre }}
             </plex-badge>
 
             <plex-button type="warning" size="sm" icon="pencil" (click)="editRelacion(relacionado)">
