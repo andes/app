@@ -126,6 +126,9 @@ export class OrganizacionComponent implements OnInit {
     routePrestaciones(id) {
         this.router.navigate(['/tm/organizacion/' + id + '/ofertas_prestacionales']);
     }
+    routerConfiguracion(id) {
+        this.router.navigate(['/tm/organizacion/' + id + '/configuracion']);
+    }
 
     aplicarFiltroBusqueda() {
         this.skip = 0;

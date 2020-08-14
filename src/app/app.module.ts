@@ -119,6 +119,7 @@ import { EspecialidadComponent } from './components/especialidad/especialidad.co
 import { EspecialidadCreateUpdateComponent } from './components/especialidad/especialidad-create-update.component';
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
+import { OrganizacionCreateEmailComponent } from './components/organizacion/organizacion-create-email.component';
 import { ProcedimientosQuirurgicosService } from './services/procedimientosQuirurgicos.service';
 
 // ... MPI
@@ -323,6 +324,7 @@ registerLocaleData(localeEs, 'es');
         CITASLibModule
     ],
     declarations: [
+        OrganizacionCreateEmailComponent,
         AppComponent, InicioComponent,
         OrganizacionComponent, OrganizacionCreateUpdateComponent,
         ProfesionalComponent, ProfesionalCreateUpdateComponent,

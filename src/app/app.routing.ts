@@ -28,7 +28,7 @@ import { InicioComponent } from './components/inicio/inicio.component';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 import { OrganizacionSectoresComponent } from './components/organizacion/organizacion-sectores.component';
 import { OrganizacionOfertaPrestacionalComponent } from './components/organizacion/organizacion-prestaciones.component';
-
+import { OrganizacionCreateEmailComponent } from './components/organizacion/organizacion-create-email.component';
 // ... CITAS
 import { PlanificarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/planificar-agenda.component';
 import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component';
@@ -99,6 +99,7 @@ import { INTERNACION_ROUTES } from './apps/rup/mapa-camas/mapa-camas.routing';
 import { NovedadesComponent } from './components/novedades/novedades.component';
 import { DetalleNovedadComponent } from './components/novedades/lista-novedades/detalle-novedad/detalle-novedad.component';
 import { ListaNovedadesComponent } from './components/novedades/lista-novedades/lista-novedades.component';
+import { EmailValidator } from '@angular/forms';
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -111,7 +112,7 @@ const appRoutes: Routes = [
   { path: 'tm/especialidad', component: EspecialidadComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'tm/espacio_fisico', component: EspacioFisicoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'tm/mapa_espacio_fisico', component: MapaEspacioFisicoVistaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-
+  { path: 'tm/organizacion/:id/configuracion', component: OrganizacionCreateEmailComponent },
   // MPI
   { path: 'apps/mpi/busqueda', component: BusquedaMpiComponent, canActivate: [RoutingGuard] },
   // { path: 'apps/mpi/bebe', component: PacienteComponent, canActivate: [RoutingGuard] },
