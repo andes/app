@@ -27,7 +27,7 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
 
         this.elementoRUP.params.map((param) => {
 
-            this.prestacionesService.getRegistrosHuds(this.paciente.id, `${param.query}`, true).subscribe(prestaciones => {
+            this.prestacionesService.getRegistrosHuds(this.paciente.id, `${param.query}`, null, true).subscribe(prestaciones => {
 
                 if (prestaciones.length) {
                     // ordenamos los datosLineales por fecha

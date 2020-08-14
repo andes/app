@@ -424,7 +424,7 @@ export class PrestacionesService {
      * @returns {any[]} Prestaciones del paciente que coincidan con los conceptIds
      * @memberof PrestacionesService
      */
-    getRegistrosHuds(idPaciente: string, expresion, valor = null, deadLine = null) {
+    getRegistrosHuds(idPaciente: string, expresion, deadLine = null, valor = null) {
         let opt = {
             params: {
                 'valor': valor,
