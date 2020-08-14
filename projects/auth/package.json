@@ -1,0 +1,12 @@
+{
+  "name": "@andes/auth",
+  "version": "7.0.0",
+  "peerDependencies": {
+    "@angular/common": "^8.2.14",
+    "@angular/core": "^8.2.14",
+    "@andes/shared": ">= 3.0.0"
+  },
+  "dependencies": {
+    "shiro-trie": "0.4.6"
+  }
+}
