@@ -218,7 +218,7 @@ import { SeguimientoPacienteComponent } from './modules/rup/components/ejecucion
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { VincularPacientesComponent } from './components/auditoria/vincular-pacientes.component';
 import { ListadoAuditoriaComponent } from './components/auditoria/component/auditoria-listado.component';
-
+import { ModalCorreccionPacienteComponent } from './components/auditoria/component/modal-correccion-paciente.component'
 // REPORTES
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
 import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
@@ -387,6 +387,7 @@ registerLocaleData(localeEs, 'es');
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
         ListadoAuditoriaComponent,
+        ModalCorreccionPacienteComponent,
         PermisosComponent,
         PuntoInicioComponent,
         VincularPacientesComponent,

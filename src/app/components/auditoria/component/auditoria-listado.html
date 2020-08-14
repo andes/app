@@ -30,18 +30,20 @@
                     {{ paciente.activo ? 'activo' : 'inactivo' }}
                 </plex-badge>
 
-                <plex-badge type="warning">
+                <!-- <plex-badge type="warning">
                     <plex-button type="warning" label="Vinculaciones" (click)="verVinculados(paciente)"></plex-button>
                     {{ paciente.identificadores?.length }}
                 </plex-badge>
 
                 <plex-dropdown class="pl-2 mr-0" [right]="true" [items]="itemsDropdown" size="sm" icon="dots-vertical"
                                label="" (onOpen)="setDropDown(paciente)">
-                </plex-dropdown>
+                </plex-dropdown> -->
                 <!--                 
                 <plex-button type="danger" size="sm" *ngIf="paciente.activo">DESACTIVAR </plex-button>
                 <plex-button type="success" size="sm" *ngIf="!paciente.activo"> ACTIVAR </plex-button>
                 <plex-button type="info" size="sm" (click)="vincular(paciente)">VINCULAR</plex-button> -->
+
+                <plex-badge type="danger" *ngIf="paciente.reportarError"> Pendiente </plex-badge>
 
             </plex-item>
         </ng-container>

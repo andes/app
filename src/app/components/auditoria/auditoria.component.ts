@@ -37,14 +37,17 @@ export class AuditoriaComponent implements OnInit {
   pacVinculados$: Observable<IPaciente[]> = of([]);
   pacientes: any;
   pacientesInactivos$: Observable<IPaciente[]> = of([]);
-  pacientesReportados$: Observable<IPaciente[]> = of([]);
+  pacientesReportados;//$: Observable<IPaciente[]> = of([]);
   showVincular = false;
   showCandidatos = false;
   enableVincular = false;
   showBuscador = false;
   showMensaje = false;
-  corregirPaciente: Number = null;  // posicion delnpaciente a modificar (reporte de errores)
-  showBotonesReporte = false;
+  // posicion del paciente a modificar (reporte de errores) // vr si serve de algo esta varuable ahora
+  corregirPaciente: Number = null;
+  showBotonesReporte = false; //aparenemnete  muestra la vieja patalla para corregir los pacientes (sería el modal ahora)
+  public showModalCorregir = false;
+  showReporteError = false; // se muestra en el sidebar datos del error reportado
   permisoEdicion: Boolean;
   permisoVincular: Boolean;
 
@@ -67,7 +70,7 @@ export class AuditoriaComponent implements OnInit {
     }
     this.permisoEdicion = this.auth.check('auditoriaPacientes:edicion');
     this.permisoVincular = this.auth.check('auditoriaPacientes:vincular');
-    if (this.permisoEdicion && !this.permisoVincular) {
+    if (this.permisoEdicion) { //if (this.permisoEdicion && !this.permisoVincular) {
       this.getReportados(); // Si el usuario solo tiene permisos de edicion es necesario obtener los datos aquí
     }
     this.onLoadData();
@@ -88,16 +91,21 @@ export class AuditoriaComponent implements OnInit {
   // }
 
   // Aquellos pacientes que reportaron errores en sus datos personales
-  getReportados() {
+  getReportados() { // ver tema d elos permisos, capaz algunos pacientes no deberían ver esa pestaña directamente
     const params = { reportarError: true, activo: true };
-    this.pacientesReportados$ = this.auditoriaService.get(params);
-    this.corregirPaciente = null;
+    this.pacienteService.getSearch(params).subscribe(resultado => {
+      if (resultado) {
+        this.pacientesReportados = resultado;
+        this.corregirPaciente = null;
+      }
+    });
   }
 
   onSelectReportados(paciente: any): void {
     if (!this.showBotonesReporte) {
       if (paciente) {
         this.pacienteSelected = paciente;
+        this.showInSidebar('reporteError');
       } else {
         this.pacienteSelected = null;
       }
@@ -106,28 +114,50 @@ export class AuditoriaComponent implements OnInit {
 
   onSelectCorregir(index, paciente) {
     if (this.permisoEdicion) {
-      if (!this.showBotonesReporte) {
-        this.corregirPaciente = index;
-        this.showBotonesReporte = true;
-        this.pacienteSelected = paciente;
-      }
+      this.showModalCorregir = true;
     }
   }
 
-  guardarCorreccion(): void {
-    this.plex.confirm('Desea continuar?', 'La información que está por cambiar modificará información sensible del paciente y tendrá repercusión en su Historia de Salud.').then((confirmar) => {
-      if (confirmar) {
-        this.pacienteSelected.reportarError = false;
-        this.pacienteSelected.notaError = '';
-        this.corregirPaciente = null;
-        this.showBotonesReporte = false;
-        this.auditoriaService.save(this.pacienteSelected).subscribe(() => {
-          this.pacienteSelected = null;
-          this.getReportados();
-        });
-      }
-    });
+  savePatient(paciente: any) {
+    this.showModalCorregir = false;
+    // si el paciente no debe ser modificado (cancelar) entonces es null
+    if (paciente) {
+      paciente.reportarError = false;
+      paciente.notaError = '';
+      this.pacienteService.save(paciente).subscribe((respSave: any) => {
+
+        if (respSave && !respSave.errors) {
+          // Si el matcheo es alto o el dni-sexo está repetido no se permite guardar el paciente
+          if (respSave.macheoAlto && respSave.dniRepetido) {
+            this.plex.info('danger', 'Existen pacientes similares, el paciente no puede ser modificado hasta que sea vinculado');
+          } else {
+            this.pacienteSelected = respSave;
+            this.plex.toast('success', 'Los datos se actualizaron correctamente!');
+          }
+
+        } else {
+          this.plex.toast('danger', 'No es posible actualizar el paciente');
+        }
+        this.closeSidebar();
+        this.getReportados();
+      });
+    }
   }
+
+  // guardarCorreccion(): void {
+  //   this.plex.confirm('Desea continuar?', 'La información que está por cambiar modificará información sensible del paciente y tendrá repercusión en su Historia de Salud.').then((confirmar) => {
+  //     if (confirmar) {
+  //       this.pacienteSelected.reportarError = false;
+  //       this.pacienteSelected.notaError = '';
+  //       this.corregirPaciente = null;
+  //       this.showBotonesReporte = false;
+  //       this.auditoriaService.save(this.pacienteSelected).subscribe(() => {
+  //         this.pacienteSelected = null;
+  //         this.getReportados();
+  //       });
+  //     }
+  //   });
+  // }
 
   onSelect(paciente: any): void {
     if (paciente && (!this.pacienteSelected || paciente.id !== this.pacienteSelected.id)) {
@@ -188,11 +218,19 @@ export class AuditoriaComponent implements OnInit {
       case 'detallePaciente':
         this.showDetallePaciente = true;
         this.showVinculaciones = false;
+        this.showReporteError = false;
         this.mainSize = 8;
         break;
       case 'vinculaciones':
         this.showDetallePaciente = false;
         this.showVinculaciones = true;
+        this.showReporteError = false;
+        this.mainSize = 8;
+        break;
+      case 'reporteError':
+        this.showDetallePaciente = false;
+        this.showVinculaciones = false;
+        this.showReporteError = true;
         this.mainSize = 8;
         break;
     }
@@ -203,6 +241,7 @@ export class AuditoriaComponent implements OnInit {
     this.pacienteSelected = null;
     this.showDetallePaciente = false;
     this.showVinculaciones = false;
+    this.showReporteError = false;
   }
 
   verDuplicados() {

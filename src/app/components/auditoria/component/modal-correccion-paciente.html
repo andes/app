@@ -1,0 +1,61 @@
+<plex-modal #modal (closed)="notificarAccion(false)" size="md" justify>
+    <plex-icon name="alert-circle" type="danger"></plex-icon>
+    <plex-modal-title class="text-center" type="danger">
+        Cambio de datos sensibles de un paciente
+    </plex-modal-title>
+    <plex-modal-subtitle center class="text-muted text-center">
+        De continuar, la modificación tendrá repercusión en su <b>Historia de Salud</b>
+    </plex-modal-subtitle>
+    <main>
+        <section class="w-100">
+            <plex-title titulo="Registro Original" size="sm"></plex-title>
+            <plex-list>
+                <plex-item *ngIf="paciente" [selected]="{'selected' : selected === true}">
+                    <img [mpiFotoPaciente]="paciente" />
+                    <plex-label class="text-black" *ngIf="!paciente.numeroIdentificacion"
+                                titulo="{{ paciente | nombre }}"
+                                subtitulo="{{ (paciente.documento | number) || 'Sin DNI' }}">
+                    </plex-label>
+
+                    <plex-label type="info" *ngIf="paciente.numeroIdentificacion" titulo="{{ paciente | nombre }}"
+                                subtitulo="{{ paciente.numeroIdentificacion }}">
+                    </plex-label>
+
+                    <plex-badge *ngIf="paciente.fechaFallecimiento" type="danger">Fallecido:
+                        {{ paciente.fechaFallecimiento | fecha:'utc'}}
+                    </plex-badge>
+
+                    <plex-label titulo="{{ paciente | edad }}" subtitulo="{{ paciente.fechaNacimiento | fecha:'utc' }}">
+                    </plex-label>
+
+                    <plex-badge *ngIf="paciente.estado"
+                                [type]="(paciente.estado === 'validado') ? 'success' : 'warning'" right>
+                        {{ paciente.estado | uppercase }}
+                    </plex-badge>
+                </plex-item>
+            </plex-list>
+            <br>
+            <br>
+            <plex-title titulo="Datos a Actualizar" size="sm"></plex-title>
+            <div *ngIf="paciente">
+                <plex-wrapper>
+                    <plex-text label="Ingrese apellido correcto" type="info" [(ngModel)]="pacienteEdited.apellido"
+                               name="apellido" placeholder="Ingrese apellido correcto">
+                    </plex-text>
+                    <plex-text label="Ingrese nombre correcto" type="info" [(ngModel)]="pacienteEdited.nombre"
+                               name="nombre" placeholder="Ingrese nombre corregido">
+                    </plex-text>
+
+                </plex-wrapper>
+            </div>
+        </section>
+    </main>
+    <br>
+    <plex-button modal right type="success" (click)="notificarAccion(true)" [disabled]="!pacienteEdit()">
+        ACEPTAR
+    </plex-button>
+    <plex-button modal left type="danger" (click)="notificarAccion(false)">
+        CANCELAR
+    </plex-button>
+
+</plex-modal>
