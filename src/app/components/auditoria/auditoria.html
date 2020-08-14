@@ -23,12 +23,17 @@
                 </div>
             </plex-tab>
 
-            <plex-tab *ngIf="permisoEdicion" label="Errores reportados" (click)="panelIndex = 3" icon="account-details">
-                <!-- cele -->
-                <!-- cele -->
-                <!-- cele -->
-                <!-- cele -->
-                <!-- cele -->
+            <plex-tab *ngIf="permisoEdicion" label="Errores reportados" (click)="panelIndex = 1" icon="account-details">
+                <plex-wrapper></plex-wrapper>
+                <auditoria-listado *ngIf="pacientesReportados && pacientesReportados.length"
+                                   [pacientes]="pacientesReportados" [autoselect]="false"
+                                   (selected)="onSelectReportados($event)">
+                </auditoria-listado>
+
+                <div *ngIf="pacientesReportados && !pacientesReportados.length" class="alert alert-default">
+                    <i class="mdi mdi-emoticon-happy"></i> No se encontraron pacientes con datos reportados.
+                </div>
+
             </plex-tab>
         </plex-tabs>
 
@@ -45,7 +50,7 @@
         </paciente-detalle>
 
         <!-- Cabecera de detalle -->
-        <ng-container *ngIf="showCabeceraDetalle">
+        <ng-container *ngIf="showVinculaciones || showReporteError">
             <plex-detail direction="row" size="md" justify="start">
                 <img [mpiFotoPaciente]="pacienteSelected" />
 
@@ -75,6 +80,27 @@
 
         <vincular-pacientes #vincularComponent if="showVincular" [pacienteBase]="pacienteSelected">
         </vincular-pacientes>
+
+        <ng-container *ngIf="showReporteError" justify="center">
+            <plex-title titulo="Descripción" size="sm"></plex-title>
+
+            <plex-text *ngIf="pacienteSelected.notaError" readonly="true" multiline="true" name="motivo"
+                       [(ngModel)]="pacienteSelected.notaError">
+            </plex-text>
+
+            <plex-label *ngIf="!pacienteSelected.notaError">
+                No se ha encontrado alguna descripción del error
+            </plex-label>
+            <br>
+
+            <plex-button type="warning" position="right" *ngIf="permisoEdicion" (click)="onSelectCorregir()">
+                Corregir
+            </plex-button>
+
+            <modal-correccion-paciente [show]="permisoEdicion && showModalCorregir"
+                                       (patientCorrected)="savePatient($event)" [paciente]="pacienteSelected">
+            </modal-correccion-paciente>
+        </ng-container>
 
     </plex-layout-sidebar>
 

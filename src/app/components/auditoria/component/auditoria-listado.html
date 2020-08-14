@@ -39,6 +39,8 @@
                            label="" (onOpen)="setDropDown(paciente)">
             </plex-dropdown>
 
+            <plex-badge type="danger" *ngIf="paciente.reportarError"> Pendiente </plex-badge>
+
         </plex-item>
     </ng-container>
 </plex-list>
