@@ -1,6 +1,6 @@
 <div *ngIf="paciente">
     <div>
-        <img class="foto" [mpiFotoPaciente]="paciente" />
+        <img class="foto" [ngClass]="{'img-fallecido' : paciente.fechaFallecimiento}" [mpiFotoPaciente]="paciente" />
     </div>
     <div class="texto">
         <div>

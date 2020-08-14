@@ -88,7 +88,7 @@ export class PacienteComponent implements OnInit {
         numeroIdentificacion: null,
         edad: null,
         edadReal: null,
-        fechaFallecimiento: null,
+        fechaFallecimiento: undefined,
         direccion: [this.direccion],
         estadoCivil: undefined,
         foto: null,
@@ -488,6 +488,10 @@ export class PacienteComponent implements OnInit {
                     this.pacienteModel.estado = resultado.paciente.estado;
                     this.pacienteModel.fechaNacimiento = moment(resultado.paciente.fechaNacimiento).add(4, 'h').toDate(); // mas mers alert
                     this.pacienteModel.foto = resultado.paciente.foto;
+                    // Fecha de fallecimiento en caso de poseerla
+                    if (resultado.paciente.fechaFallecimiento) {
+                        this.pacienteModel.fechaFallecimiento = moment(resultado.paciente.fechaFallecimiento).add(4, 'h').toDate();
+                    }
                     //  Se completan datos FALTANTES
                     if (!this.pacienteModel.direccion[0].valor && resultado.paciente.direccion && resultado.paciente.direccion[0].valor) {
                         this.pacienteModel.direccion[0].valor = resultado.paciente.direccion[0].valor;

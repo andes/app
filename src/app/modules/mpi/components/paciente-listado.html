@@ -3,7 +3,7 @@
                [class.pacienteFallecido]="paciente.fechaFallecimiento && paciente.fechaFallecimiento !== null"
                [selected]="pacienteSeleccionado?.id === paciente.id" (click)="seleccionar(paciente)">
 
-        <img [mpiFotoPaciente]="paciente" />
+        <img [ngClass]="{'img-fallecido' : paciente.fechaFallecimiento}" [mpiFotoPaciente]="paciente" />
 
         <plex-label *ngIf="!paciente.numeroIdentificacion" titulo="{{ paciente | nombre }}"
                     subtitulo="{{ (paciente.documento | number) || 'Sin DNI' }}">

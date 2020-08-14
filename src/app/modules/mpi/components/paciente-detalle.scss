@@ -2,6 +2,10 @@ img {
     max-height: 200px;
 }
 
+.img-fallecido {
+    filter: grayscale(100%);
+}
+
 .title {
     font-size: 1.5em;
     -ms-flex-preferred-size: 0;
