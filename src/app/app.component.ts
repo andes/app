@@ -80,6 +80,11 @@ export class AppComponent {
         } else {
             this.loading = true;
         }
+
+        window.onbeforeunload = function () {
+            window.sessionStorage.clear();
+        };
+
     }
 
     public loggedIn() {
