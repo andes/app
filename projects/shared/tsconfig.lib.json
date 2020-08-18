@@ -4,16 +4,11 @@
     "outDir": "../../out-tsc/lib",
     "target": "es2015",
     "declaration": true,
+    "inlineSources": true,
     "lib": [
       "dom",
       "es2018"
-    ],
-    "baseUrl": ".",
-    "paths": {
-      "@andes/shared": [
-        "./../../dist/shared"
-      ]
-    }
+    ]
   },
   "angularCompilerOptions": {
     "annotateForClosureCompiler": true,

@@ -1,34 +1,37 @@
 {
-    "compilerOptions": {
-        "declaration": false,
-        "downlevelIteration": true,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "lib": [
-            "es6",
-            "dom"
-        ],
-        "baseUrl": ".",
-        "module": "esnext",
-        "moduleResolution": "node",
-        "outDir": "../dist/out-tsc",
-        "target": "es2015",
-        "typeRoots": [
-            "node_modules/@types"
-        ],
-        "paths": {
-            "@andes/auth": [
-                "projects/auth/src/public-api.ts"
-            ]
-        }
-    },
-    "include": [
-        "./**/*.ts",
-        "node_modules/@andes/**/*.ts",
-        "node_modules/ng2-slugify/**/*.ts"
+  "compilerOptions": {
+    "declaration": false,
+    "downlevelIteration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "es6",
+      "dom"
     ],
-    "exclude": [
-        "node_modules/@schematics/**/*.ts",
-        "node_modules/karma/**/*.ts"
-    ]
+    "baseUrl": ".",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "outDir": "../dist/out-tsc",
+    "target": "es2015",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "paths": {
+      "@andes/auth": [
+        "projects/auth/src/public-api.ts"
+      ],
+      "@andes/shared": [
+        "projects/shared/src/public-api.ts"
+      ]
+    }
+  },
+  "include": [
+    "./**/*.ts",
+    "node_modules/@andes/**/*.ts",
+    "node_modules/ng2-slugify/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules/@schematics/**/*.ts",
+    "node_modules/karma/**/*.ts"
+  ]
 }

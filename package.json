@@ -44,7 +44,7 @@
     "chart.js": "^2.7.3",
     "core-js": "^2.5.7",
     "enhanced-resolve": "^4.1.0",
-    "file-saver": "^2.0.0-rc.4",
+    "file-saver": "^2.0.2",
     "ng-drag-drop": "^5.0.0",
     "ng2-charts": "^1.6.0",
     "ng2-slugify": "^0.1.0",
