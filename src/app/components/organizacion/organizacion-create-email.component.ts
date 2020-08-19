@@ -43,20 +43,25 @@ export class OrganizacionCreateEmailComponent implements OnInit {
     }
 
     addEmail() {
-
-        this.organizacion.configuraciones.emails.push({ nombre: '', email: '' });
-
+        if ((this.organizacion.configuraciones.emails.length > 0) && !this.organizacion.configuraciones.emails.nombre && !this.organizacion.configuraciones.emails.email) {
+            this.plex.info('warning', 'debe completar todos los campos');
+        } else {
+            this.organizacion.configuraciones.emails.push({ nombre: '', email: '' });
+        }
     }
 
     save() {
-
-        this.organizacionService.save(this.organizacion).subscribe(result => {
-            if (result) {
-                this.plex.info('success', 'Los datos se actualizaron correctamente');
-            } else {
-                this.plex.info('warning', 'ERROR: Ocurrió un problema al actualizar los datos');
-            }
-        });
+        if (!this.organizacion.configuraciones.emails.nombre && !this.organizacion.configuraciones.emails.email) {
+            this.plex.info('warning', 'debe completar todos los campos');
+        } else {
+            this.organizacionService.save(this.organizacion).subscribe(result => {
+                if (result) {
+                    this.plex.info('success', 'Los datos se actualizaron correctamente');
+                } else {
+                    this.plex.info('warning', 'ERROR: Ocurrió un problema al actualizar los datos');
+                }
+            });
+        }
 
     }
 
