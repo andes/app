@@ -1,11 +1,13 @@
 import { Auth } from '@andes/auth';
+import { Location } from '@angular/common';
 import { SnomedService } from '../../apps/mitos';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding } from '@angular/core';
-import { OrganizacionService } from './../../services/organizacion.service';
-import { IOrganizacion, ISectores } from './../../interfaces/IOrganizacion';
+import { ISectores, IOrganizacion } from './../../interfaces/IOrganizacion';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ISnomedConcept } from '../../modules/rup/interfaces/snomed-concept.interface';
+import { SectoresService } from '../../services/sectores.service';
+import { OrganizacionService } from '../../services/organizacion.service';
 
 @Component({
     selector: 'organizacion-sectores',
@@ -28,14 +30,17 @@ export class OrganizacionSectoresComponent implements OnInit {
 
     public idOrganizacion: String;
     public organizacion: IOrganizacion;
+    public mapaSectores: any[];
     public selectedItem: any;
 
     constructor(
         private organizacionService: OrganizacionService,
+        private sectoresService: SectoresService,
         public plex: Plex,
         public snomed: SnomedService,
         private router: Router,
         private route: ActivatedRoute,
+        private location: Location,
         private auth: Auth
     ) { }
 
@@ -45,7 +50,6 @@ export class OrganizacionSectoresComponent implements OnInit {
     public unidadesOrganizativasQuery: String = '<<284548004';
 
     ngOnInit() {
-        this.loadSectores();
         this.route.params.subscribe(params => {
             this.idOrganizacion = params['id'];
             if (!this.auth.check('tm:organizacion:sectores')) {
@@ -53,59 +57,28 @@ export class OrganizacionSectoresComponent implements OnInit {
             }
             this.organizacionService.getById(this.idOrganizacion).subscribe(org => {
                 this.organizacion = org;
+                this.mapaSectores = org.mapaSectores;
             });
         });
     }
 
     /**
-     * Funciones del plex-box de la izquierda
-     */
-
-
-    /**
      * Devuelve se la organizacion tiene sectores
      */
-
     hasItems() {
-        return this.organizacion.mapaSectores && this.organizacion.mapaSectores.length > 0;
+        return this.mapaSectores && this.mapaSectores.length > 0;
     }
 
     /**
-     * Grabar los cambios de la organización
+     * Vuelve atrás
      */
-    onSave() {
-        this.checkUnidadesOrganizativasPorSector();
-        this.organizacionService.save(this.organizacion).subscribe(() => {
-            this.router.navigate(['/tm/organizacion']);
-        });
+    volver() {
+        this.location.back();
     }
-
-    /**
-     * Vuelve al listado de organizaciones
-     */
-
-
-    onCancel() {
-        if (this.sectoresIniciales.length === 0) {
-            this.sectoresIniciales = JSON.parse(JSON.stringify(this.organizacion.mapaSectores));
-        }
-        this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Desea volver?').then(confirmado => {
-            if (confirmado) {
-                this.router.navigate(['tm/organizacion']);
-            } else {
-                return;
-            }
-        });
-
-    }
-
-
-
 
     /**
      * Agrega un sector root
      */
-
     onAddParent() {
         this.disabledPanel = false;
     }
@@ -113,7 +86,6 @@ export class OrganizacionSectoresComponent implements OnInit {
     /**
      * Habilita el plex-box de la derecha para agregar un item
      */
-
     addItem($event) {
         this.selectedItem = $event;
         this.disabledPanel = false;
@@ -122,7 +94,6 @@ export class OrganizacionSectoresComponent implements OnInit {
     /**
      * Habilita el plex-box de la derecha en modo edición.
      */
-
     editItem($event) {
         this.selectedItem = $event;
         this.disabledPanel = false;
@@ -137,48 +108,20 @@ export class OrganizacionSectoresComponent implements OnInit {
     /**
      * Remueve un item root
      */
-
     removeItem($event) {
-        if ($event.id) {
-            this.plex.confirm('¿Desea eliminarlo?', 'Eliminar Sector').then((confirmar) => {
-                let index = this.organizacion.mapaSectores.findIndex((item) => item === $event);
-                if (confirmar && index >= 0) {
-                    this.organizacion.mapaSectores.splice(index, 1);
-                }
-            });
-        } else {
-            this.plex.confirm('¿Está seguro que desea eliminar el sector?', 'Eliminar Sector').then((confirmar) => {
-                let index = this.organizacion.mapaSectores.findIndex((item) => item === $event);
-                if (confirmar && index >= 0) {
-                    this.organizacion.mapaSectores.splice(index, 1);
-                }
-            });
-        }
-    }
-
-    /**
-     * Funciones del plex-box de la derecha
-     */
-
-    loadUnidades($event) {
-        this.snomed.getQuery({ expression: this.unidadesOrganizativasQuery }).subscribe(result => {
-            $event.callback(result);
+        this.plex.confirm('¿Desea eliminarlo?', 'Eliminar Sector').then((confirmar) => {
+            if (confirmar) {
+                this.sectoresService.deleteSector(this.idOrganizacion, $event._id).subscribe(result => {
+                    if (result === $event._id) {
+                        let index = this.mapaSectores.findIndex((item) => item === $event);
+                        this.mapaSectores.splice(index, 1);
+                        this.plex.info('success', 'El sector fue eliminado', 'Sector eliminado!');
+                    } else {
+                        this.plex.info('danger', 'No se puede eliminar sector ya que hay camas asignadas.', 'No se puede eliminar');
+                    }
+                });
+            }
         });
-    }
-
-    loadSectores() {
-        this.snomed.getQuery({ expression: this.ambienteHospitalarioQuery }).subscribe(result => {
-            this.tiposSectores = result;
-        });
-    }
-
-
-    onSectorChange() {
-
-    }
-
-    onUnidadChange() {
-
     }
 
     /**
@@ -210,9 +153,7 @@ export class OrganizacionSectoresComponent implements OnInit {
     /**
      * Cancela el modo edición
      */
-
     onDissmis() {
-        this.clearForm();
         this.selectedItem = null;
         this.disabledPanel = true;
     }
@@ -220,60 +161,49 @@ export class OrganizacionSectoresComponent implements OnInit {
     /**
      * Agrega un item al nodo seleccionado
      */
+    onAdd(valid) {
+        if (valid.formValid) {
+            let item = this.createObject();
+            if (!item) {
+                return;
+            }
+            if (this.editing) {
+                this.selectedItem.nombre = item.nombre;
+                this.selectedItem.tipoSector = item.tipoSector;
+                this.selectedItem.unidadConcept = item.unidadConcept;
 
-    onAdd() {
-        let item = this.createObject();
-        if (!item) {
+                this.sectoresService.patchSector(this.idOrganizacion, this.selectedItem).subscribe(mapaSectores => {
+                    this.plex.info('success', 'El sector fue guardado', 'Sector guardado!');
+                    this.mapaSectores = mapaSectores;
+                    this.editing = false;
+                    this.disabledPanel = true;
+                    this.selectedItem = null;
+                    this.clearForm();
+                });
+            } else {
+                const padre = (this.selectedItem) ? this.selectedItem._id : null;
+                this.sectoresService.postSector(this.idOrganizacion, item, padre).subscribe(mapaSectores => {
+                    this.plex.info('success', 'El sector fue agregado', 'Sector agregado!');
+                    this.mapaSectores = mapaSectores;
+                    this.editing = false;
+                    this.disabledPanel = true;
+                    this.selectedItem = null;
+                    this.clearForm();
+                });
+            }
+        } else {
+            this.plex.info('info', 'ERROR: Los datos de requeridos no estan completos');
             return;
         }
-        if (this.editing) {
-            this.selectedItem.nombre = item.nombre;
-            this.selectedItem.tipoSector = item.tipoSector;
-            this.selectedItem.unidadOrg = item.unidadConcept;
-            this.editing = false;
-        } else {
-            if (this.selectedItem) {
-                this.selectedItem.hijos.push(item);
-                // this.selectedItem.hijos = [...this.selectedItem.hijos];
-            } else {
-                this.organizacion.mapaSectores.push(item);
-                this.organizacion.mapaSectores = [...this.organizacion.mapaSectores];
-            }
-        }
-        this.disabledPanel = true;
-        this.selectedItem = null;
-        this.clearForm();
     }
 
     /**
      * Limpia el form del panel derecho
      */
-
     clearForm() {
         this.itemName = '';
         this.tipoSector = null;
         this.unidadOrg = null;
 
-    }
-
-    checkUnidadesOrganizativasPorSector() {
-        for (const sector of this.organizacion.mapaSectores) {
-            this.searchSector(sector);
-        }
-    }
-
-    searchSector(sector) {
-        if (sector.unidadConcept) {
-            if (!this.organizacion.unidadesOrganizativas.some(uo => uo.conceptId === sector.unidadConcept.conceptId)) {
-                this.organizacion.unidadesOrganizativas.push(sector.unidadConcept);
-            }
-        }
-        if (sector.hijos.length !== 0) {
-            for (const hijo of sector.hijos) {
-                this.searchSector(hijo);
-            }
-        } else {
-            return null;
-        }
     }
 }

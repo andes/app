@@ -50,6 +50,7 @@ import { SortBloquesPipe } from './pipes/agenda-bloques.pipe';
 
 // ... Tablas Maestras
 import { OrganizacionService } from './services/organizacion.service';
+import { SectoresService } from './services/sectores.service';
 import { OcupacionService } from './services/ocupacion/ocupacion.service';
 import { ProfesionalService } from './services/profesional.service';
 import { EspecialidadService } from './services/especialidad.service';
@@ -512,6 +513,7 @@ registerLocaleData(localeEs, 'es');
         RoutingNavBar,
         RoutingHudsGuard,
         OrganizacionService,
+        SectoresService,
         OcupacionService,
         ProvinciaService,
         TipoEstablecimientoService,

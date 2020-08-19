@@ -5,6 +5,7 @@ import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { SectoresService } from '../../services/sectores.service';
 
 const limit = 25;
 
@@ -29,7 +30,8 @@ export class OrganizacionComponent implements OnInit {
         public organizacionService: OrganizacionService,
         private auth: Auth,
         private router: Router,
-        private plex: Plex) { }
+        private plex: Plex,
+        private sectoresService: SectoresService) { }
 
     ngOnInit() {
         if (this.auth.getPermissions('tm:organizacion:?').length < 1) {
@@ -117,8 +119,8 @@ export class OrganizacionComponent implements OnInit {
             this.loader = true;
         }
     }
-    routeSectores(id) {
-        this.router.navigate(['/tm/organizacion/' + id + '/sectores']);
+    routeSectores(org) {
+        this.router.navigate(['/tm/organizacion/' + org.id + '/sectores']);
     }
 
     routePrestaciones(id) {

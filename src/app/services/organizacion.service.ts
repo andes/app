@@ -1,5 +1,5 @@
 import { Server, Cache } from '@andes/shared';
-import { IOrganizacion } from './../interfaces/IOrganizacion';
+import { IOrganizacion, ISectores } from './../interfaces/IOrganizacion';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 

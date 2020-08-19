@@ -54,7 +54,7 @@
                                 <plex-button *ngIf="checkAuth('editBasico') || checkAuth('editCompleto')" type="primary"
                                     label="Editar" (click)="onEdit(organizacion)"></plex-button>
                                 <plex-button *ngIf="checkAuth('sectores', organizacion.id)" type="primary"
-                                    label="Ver sectores" (click)="routeSectores(organizacion.id)"></plex-button>
+                                    label="Ver sectores" (click)="routeSectores(organizacion)"></plex-button>
                                 <plex-button *ngIf="checkAuth('prestaciones', organizacion.id)" type="primary"
                                     label="Ofertas Prestacionales" (click)="routePrestaciones(organizacion.id)"></plex-button>
                             </td>
