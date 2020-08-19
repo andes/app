@@ -1,3 +1,20 @@
+# [5.9.0](https://github.com/andes/app/compare/v5.8.0...v5.9.0) (2020-08-19)
+
+
+### Bug Fixes
+
+* **core:** remove beforeupload ([#1863](https://github.com/andes/app/issues/1863)) ([9732a5f](https://github.com/andes/app/commit/9732a5ffab563b9de939e35b218d09e9e1288ed3))
+* **mpi:** alta de bebe con progenitor/a extranjero/a ([#1847](https://github.com/andes/app/issues/1847)) ([9063fb3](https://github.com/andes/app/commit/9063fb3464693d157e1e16b55fb1f1fd2fd8c060))
+* **TOP:** fix asignadas sin profesional ([#1861](https://github.com/andes/app/issues/1861)) ([e36ae94](https://github.com/andes/app/commit/e36ae94de9cdb5f8bb8398ebc8934711877596b1))
+
+
+### Features
+
+* **core:** delete session data before close ([#1849](https://github.com/andes/app/issues/1849)) ([988cb06](https://github.com/andes/app/commit/988cb06d0bfde0f6f17b57357abe360b14b9a3e5))
+* **mpi:** estado/fecha de fallecimiento de paciente ([#1838](https://github.com/andes/app/issues/1838)) ([44e7a11](https://github.com/andes/app/commit/44e7a11aa725f43868549aa54e4c79b6a0228b16))
+* **mpi:** fix badge de activacion mobile ([#1845](https://github.com/andes/app/issues/1845)) ([5ac575a](https://github.com/andes/app/commit/5ac575afc15140e125e7322caef4f201bbe9a8dc))
+* **plex:** v6.11.4 ([#1858](https://github.com/andes/app/issues/1858)) ([22e414b](https://github.com/andes/app/commit/22e414b312e35fafa09d07873f7d9864a6b6f985))
+
 # [5.8.0](https://github.com/andes/app/compare/v5.7.0...v5.8.0) (2020-08-12)
 
 
