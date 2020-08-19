@@ -1,4 +1,4 @@
-@import '../variables';
+@import "../variables";
 
 $rotate: -90deg;
 
@@ -53,8 +53,7 @@ $rotate: -90deg;
             }
         }
 
-        @each $tag,
-        $color in $rup_colors {
+        @each $tag, $color in $rup_colors {
             .rup-border-#{$tag} {
                 &:hover {
                     background: #eee;
@@ -65,7 +64,6 @@ $rotate: -90deg;
             }
 
             &.#{$tag} {
-
                 &:hover,
                 &.active {
                     box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
@@ -95,22 +93,21 @@ $rotate: -90deg;
         }
     }
 
-    @each $tag,
-    $color in $rup_colors {
+    @each $tag, $color in $rup_colors {
         &.#{$tag}:not(.mini) {
             &:hover {
                 border: 2px solid $color;
                 box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
             }
 
-            >.rup-header,
-            >.rup-header .icon-rup,
+            > .rup-header,
+            > .rup-header .icon-rup,
             .rup-body .legend,
             .rup-footer .type {
                 background: $color !important;
             }
 
-            >.rup-header .icon-rup {
+            > .rup-header .icon-rup {
                 border-bottom: 1px solid $color;
                 background: $color !important;
                 mix-blend-mode: hard-light;
@@ -236,9 +233,7 @@ $rotate: -90deg;
 
 // Para resumen de Epicrisis
 .rup-clear {
-
-    @each $tag,
-    $color in $rup_colors {
+    @each $tag, $color in $rup_colors {
         &.#{$tag}:not(.mini) {
             border: 0;
 
@@ -246,15 +241,15 @@ $rotate: -90deg;
                 border: 0;
             }
 
-            >.rup-header,
-            >.rup-header .icon-rup,
+            > .rup-header,
+            > .rup-header .icon-rup,
             .rup-body .legend,
             .rup-footer .type {
                 background: transparent !important;
                 color: white;
             }
 
-            >.rup-header .icon-rup {
+            > .rup-header .icon-rup {
                 border-bottom: 1px solid $color;
                 background: transparent !important;
             }
@@ -301,7 +296,6 @@ $rotate: -90deg;
     }
 }
 
-
 // TEMP
 .metadato.fundacional {
     .legend {
@@ -311,7 +305,7 @@ $rotate: -90deg;
 
 .calificador {
     .legend {
-        background: repeating-linear-gradient(45deg, #C70039, #C70039 10px, #36131b 10px, #36131b 20px) !important;
+        background: repeating-linear-gradient(45deg, #c70039, #c70039 10px, #36131b 10px, #36131b 20px) !important;
     }
 }
 
@@ -405,8 +399,7 @@ $rotate: -90deg;
 /* fin elemento rup solo lectura */
 
 // BUTTONS
-@each $tag,
-$color in $rup_colors {
+@each $tag, $color in $rup_colors {
     .btn-#{$tag} {
         color: $color;
         border-color: $color;
@@ -440,14 +433,13 @@ $color in $rup_colors {
 }
 
 // BADGES
-@each $tag,
-$color in $rup_colors {
+@each $tag, $color in $rup_colors {
     .badge-#{$tag} {
         font-weight: normal;
         text-transform: uppercase;
         color: $color;
         border: 1px solid $color;
-        margin-bottom: .5rem;
+        margin-bottom: 0.5rem;
 
         &:focus {
             outline: 0;
@@ -460,10 +452,8 @@ $color in $rup_colors {
     }
 }
 
-
 // ejemplo resultado: .semantic-badge hallazgo > .icon-rup {}
-@each $tag,
-$color in $rup_colors {
+@each $tag, $color in $rup_colors {
     .semantic-badge-#{$tag} {
         i {
             border-bottom: 1px solid $color;
@@ -497,7 +487,7 @@ $color in $rup_colors {
 }
 
 .form-group {
-    &>label {
+    & > label {
         margin-bottom: 0 !important;
     }
 }
@@ -532,7 +522,6 @@ $color in $rup_colors {
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
     border-left: 8px solid;
-
 }
 
 // Debería ser global (Plex)
@@ -540,12 +529,11 @@ $color in $rup_colors {
 //     background-color: #002738 !important;
 // }
 
-
 // VISTA HUDS
 .grid-envolvente {
     display: grid;
     grid-template-rows: auto 1fr;
-    >.prestacion-offset {
+    > .prestacion-offset {
         padding: 10px;
 
         h4 {
@@ -555,7 +543,11 @@ $color in $rup_colors {
     }
 }
 
-@mixin grid-columnas($cols: (1fr 1fr)) {
+@mixin grid-columnas(
+    $cols: (
+        1fr 1fr,
+    )
+) {
     display: grid;
     grid-template-columns: $cols;
     grid-column-gap: 40px;
@@ -564,7 +556,7 @@ $color in $rup_colors {
     .concepto {
         grid-row: 1 / -1;
         display: grid;
-        grid-template-columns: .5fr;
+        grid-template-columns: 0.5fr;
         font-size: 1.75rem;
         border-bottom: 2px solid gray;
         margin-bottom: 15px;
@@ -597,7 +589,7 @@ $color in $rup_colors {
     div:not(:first-of-type) {
         &:not(.medicamento) &:not(.col-12) &:not(.col-6) &:not(.diente-container) {
             display: grid;
-            grid-template-columns: 1fr .25fr;
+            grid-template-columns: 1fr 0.25fr;
 
             div:nth-child(2) {
                 display: flex;
@@ -626,7 +618,6 @@ $color in $rup_colors {
                 height: 32px !important;
             }
         }
-
     }
 
     .divisor {
@@ -634,7 +625,6 @@ $color in $rup_colors {
         justify-content: space-between;
         align-items: center;
         border-bottom: 2px solid gray;
-
     }
 
     .datos-prestacion {
@@ -648,7 +638,6 @@ $color in $rup_colors {
 
         div {
             display: flex;
-
         }
     }
 
@@ -684,11 +673,9 @@ $color in $rup_colors {
 }
 
 .solo-valores-grid.hallazgos {
-
     @include grid-columnas();
 
     .columna {
-
         @include grid-columna();
 
         .evolucion {
@@ -720,7 +707,6 @@ $color in $rup_colors {
 }
 
 .solo-valores-grid.procedimientos {
-
     @include grid-columnas();
 
     .columna {
@@ -732,11 +718,9 @@ $color in $rup_colors {
     .badge {
         font-size: 1rem !important;
     }
-
 }
 
 .solo-valores-grid.odontograma {
-
     @include grid-columnas();
 
     .columna {
@@ -748,10 +732,7 @@ $color in $rup_colors {
     .badge {
         font-size: 1rem !important;
     }
-
 }
-
-
 
 observaciones {
     form {
