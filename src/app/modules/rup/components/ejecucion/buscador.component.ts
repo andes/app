@@ -500,9 +500,9 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewChecked {
     }
 
     removeDescendiente() {
-        this.search = this.previousText;
+        this.search = this.previousText || '';
         this.descendienteSearch = null;
-        this.buscadorService.search(this.previousText);
+        this.buscadorService.search(this.search);
     }
 
 }
