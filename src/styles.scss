@@ -51,11 +51,14 @@ nav .actions {
 
 $adi-font-path: "~@andes/icons/fonts/";
 @import "~@andes/icons/scss/andes-icons";
-// Plex
 
+$mdi-font-path: "~@mdi/font/fonts/";
+@import "~@mdi/font/scss/materialdesignicons";
+
+// Plex
 @import "~@andes/plex/src/lib/styles.scss";
 @import "./src/app/components/novedades/novedades.scss";
-// @import "app/modules/rup/assets/font.css";
+@import "app/modules/rup/assets/font.css";
 
 // IMPORTS DE MÓDULOS
 // RUP
