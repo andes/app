@@ -6,6 +6,12 @@
                 </plex-datetime>
             </ng-container>
             <ng-template #showSoloValores>
+                <div *ngIf="params?.title; else showTerm">
+                    <label class="text-capitalize">{{ params.title }}</label>
+                </div>
+                <ng-template #showTerm>
+                    <label class="text-capitalize">{{ registro.concepto.term }}</label>
+                </ng-template>
                 {{DateFormat}}
             </ng-template>
         </div>
