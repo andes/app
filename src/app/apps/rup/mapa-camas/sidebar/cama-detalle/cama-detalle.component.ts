@@ -52,7 +52,7 @@ export class CamaDetalleComponent implements OnInit, OnDestroy {
     public tabIndex = 0;
     public editar = false;
     public permisoIngreso = false;
-    canEdit = this.auth.check('internacion:cama:create');
+    canEdit = this.auth.check('internacion:cama:edit');
     canMovimientos = this.auth.check('internacion:movimientos');
     pacienteFields = ['sexo', 'fechaNacimiento', 'edad', 'cuil', 'financiador', 'numeroAfiliado', 'direccion', 'telefono'];
 

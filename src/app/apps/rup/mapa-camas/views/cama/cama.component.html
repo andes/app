@@ -2,8 +2,9 @@
     <plex-layout-main>
         <form #formCama="ngForm">
             <plex-title titulo="DATOS DE CAMA">
-                <plex-button label="GUARDAR" type="success" [validateForm]="formCama" (click)="save($event)"
-                             [disabled]="disabled">
+                <plex-button label="GUARDAR" title="{{ (puedeEditar) ? null : 'No tiene permisos para editar' }}"
+                            type="success" [validateForm]="formCama" (click)="save($event)"
+                             [disabled]="disabled || !puedeEditar">
                 </plex-button>
                 <plex-button *ngIf="permisoBaja && cama?.idCama"
                              title="{{ (verificarBaja()) ? null : 'Cama utilizada' }}"
