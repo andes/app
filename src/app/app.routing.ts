@@ -144,7 +144,12 @@ const appRoutes: Routes = [
   { path: 'citas/sobreturnos/:idAgenda', component: AgregarSobreturnoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'citas/paciente/:idAgenda', component: AgregarPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
-  { path: 'rup', loadChildren: () => import('./modules/rup/rup.module').then(m => m.RUPModule), canActivate: [RoutingNavBar, RoutingGuard] },
+  {
+    path: 'rup',
+    loadChildren: () => import('./modules/rup/rup.module').then(m => m.RUPModule),
+    canActivate: [RoutingNavBar, RoutingGuard],
+    runGuardsAndResolvers: 'always'
+  },
 
   // Configuraciones / ABM
   { path: 'configuracionPrestacion', component: ConfiguracionPrestacionVisualizarComponent, canActivate: [RoutingNavBar, RoutingGuard] },

@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from '@andes/shared';
 import { VisualizacionReglasComponent } from './reglas/visualizacionReglas.component';
 import { HistorialSolicitudComponent } from './solicitudes/historialSolicitud.component';
+import { DirectiveLibModule } from '../../directives/directives.module';
 
 @NgModule({
     imports: [
@@ -16,6 +17,7 @@ import { HistorialSolicitudComponent } from './solicitudes/historialSolicitud.co
         RouterModule,
         HttpClientModule,
         SharedModule,
+        DirectiveLibModule
     ],
     declarations: [
         VisualizacionReglasComponent,
