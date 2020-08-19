@@ -338,6 +338,7 @@ import { ModulosService } from './services/novedades/modulos.service';
 import { ConceptosTurneablesService } from './services/conceptos-turneables.service';
 import { DisclaimerService } from './services/disclaimer.service';
 import { AuthContext } from '@andes/shared';
+import { SnomedLinkComponent } from './modules/rup/directives/snomed-link';
 
 registerLocaleData(localeEs, 'es');
 
@@ -429,6 +430,7 @@ registerLocaleData(localeEs, 'es');
         VistaAccesosHudsComponent,
         ModalMotivoAccesoHudsComponent,
         HelpSolicitudComponent,
+        SnomedLinkComponent,
 
         // Solicitudes
         SolicitudesComponent,
