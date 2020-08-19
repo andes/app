@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, Input, EventEmitter, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, ViewEncapsulation, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { SnomedService } from '../../apps/mitos';
 import { Unsubscribe } from '@andes/shared';
@@ -16,6 +16,7 @@ import { SnomedBuscarService } from './snomed-buscar.service';
 export class SnomedBuscarComponent implements OnInit, OnDestroy {
     @Input() tipoBusqueda: String;
     @Input() autofocus: Boolean = true;
+    expression: string = null;
 
     @Output() onSearch: EventEmitter<any> = new EventEmitter<any>();
 
@@ -31,8 +32,9 @@ export class SnomedBuscarComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this._suscribe = this.buscadorService.onChange.subscribe((text) => {
-            this.searchTerm = text;
+        this._suscribe = this.buscadorService.onChange.subscribe((data) => {
+            this.searchTerm = data.term;
+            this.expression = data.expression;
             this.buscar();
         });
     }
@@ -41,7 +43,6 @@ export class SnomedBuscarComponent implements OnInit, OnDestroy {
         this._suscribe.unsubscribe();
     }
 
-
     /**
      * Buscar trastornos o hallazgos en el servicio de SNOMED
      * @param event  change event en el input buscar
@@ -49,7 +50,7 @@ export class SnomedBuscarComponent implements OnInit, OnDestroy {
      */
     @Unsubscribe()
     buscar(): void {
-        if (this.searchTerm && this.searchTerm !== '') {
+        if (this.searchTerm && this.searchTerm !== '' || this.expression) {
 
             if (this.searchTerm.match(/^\s{1,}/)) {
                 this.searchTerm = '';
@@ -95,6 +96,7 @@ export class SnomedBuscarComponent implements OnInit, OnDestroy {
                     break;
                 default:
                     apiMethod = this.SNOMED.get({
+                        expression: this.expression || undefined,
                         search: search,
                         semanticTag: ['hallazgo', 'trastorno', 'procedimiento', 'entidad observable', 'producto', 'situación', 'régimen/tratamiento', 'elemento de registro', 'objeto físico', 'medicamento clínico', 'fármaco de uso clínico', 'evento']
                     });

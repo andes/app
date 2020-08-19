@@ -10,7 +10,7 @@ export class SnomedService {
     constructor(private server: Server) {
     }
 
-    @Cache({ key: 'search' })
+    // @Cache({ key: 'search' })
     get(params: any): Observable<any[]> {
         return this.server.get(this.snomedURL, { params: params, showError: true });
     }
