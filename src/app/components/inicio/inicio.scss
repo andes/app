@@ -19,6 +19,16 @@ $andes-verde-claro: #63c7b7;
 $andes-naranja: #ff4a1a;
 $andes-naranja-claro: #f4a03b;
 
+$modulos: (
+    mpi: #00afa0,
+    citas: #058db1,
+    rup: #967da0,
+    int: #6e6187,
+    huds: #bc5485,
+    dashboard: #ce876b,
+    tm: #9b6762,
+);
+
 :root {
     // Módulos
     // 1. MPI
@@ -114,17 +124,17 @@ main {
 .bienvenida {
     text-align: center;
     .hola {
-        font-size: 38px;
+        font-size: 28px;
         color: $andes-azul-oscuro;
     }
     .mensaje {
-        font-size: 28px;
+        font-size: 18px;
         color: $andes-azul-claro;
     }
 }
 
 .modulos {
-    width: 75vw;
+    width: 73vw;
     flex-wrap: wrap;
 
     .modulo {
@@ -177,7 +187,7 @@ main {
         }
 
         .submodulos {
-            height: 120px;
+            height: 140px;
             flex-wrap: wrap;
             justify-content: flex-start;
         }
@@ -198,10 +208,15 @@ main {
 
             box-shadow: 4px 2px 6px #aaa;
 
-            transition: all ease-in-out 0.25s;
-            &:hover {
-                mix-blend-mode: luminosity;
-                width: 90px;
+            @each $modulo, $color in $modulos {
+                &.#{$modulo} {
+                    transition: all ease-in-out 0.25s;
+                    &:hover {
+                        // mix-blend-mode: luminosity;
+                        background-color: adjust-color($color, $lightness: -10%, $saturation: 10%) !important;
+                        width: 90px;
+                    }
+                }
             }
 
             .titulo {
@@ -282,9 +297,6 @@ main {
                 }
             }
 
-            // &:not(:first-child) {
-            //     margin-left: 5px;
-            // }
             &:first-child {
                 margin: 0 5px 5px 0;
             }
@@ -314,11 +326,35 @@ main {
     padding-right: 40px;
     margin-bottom: 2rem;
 
+    .principal .band {
+        width: 4px;
+        height: 50px;
+        margin-left: -8px;
+        background-color: white;
+        transition: all 0.5s ease-in-out;
+    }
+
+    .principal plex-icon {
+        margin-left: 0px;
+    }
+
     &:hover {
-        mix-blend-mode: luminosity;
+        // .principal {
+        .band {
+            position: relative;
+            left: 61px;
+        }
+        plex-icon {
+            position: relative;
+            transition: all 0.5s ease-in-out;
+            // margin-left: -80px;
+        }
+        // }
     }
 
     .principal {
+        transition: width ease-in-out 0.25s, margin ease-in 0.5s;
+
         width: 61px;
         height: 49px;
         border-radius: 0;
@@ -334,13 +370,6 @@ main {
         line-height: 11px;
 
         box-shadow: 4px 2px 6px #aaa;
-
-        .band {
-            width: 4px;
-            height: 50px;
-            margin-left: -8px;
-            background-color: white;
-        }
 
         .icono {
             font-size: 1.25rem;
@@ -359,9 +388,6 @@ main {
         &.analytics {
             background-color: #ce876b;
         }
-        // &.organizaciones {
-        //     background-color: #a0956e;
-        // }
         &.usuarios {
             background-color: #d9a21b;
         }

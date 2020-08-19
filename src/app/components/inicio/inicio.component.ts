@@ -1,5 +1,4 @@
 import { CommonNovedadesService } from './../novedades/common-novedades.service';
-import { ModulosService } from '../../services/novedades/modulos.service';
 import { Plex } from '@andes/plex';
 import { Component, AfterViewInit, HostBinding, OnInit } from '@angular/core';
 import { Auth } from '@andes/auth';
@@ -28,13 +27,12 @@ export class InicioComponent implements AfterViewInit, OnInit {
         public appComponent: AppComponent,
         private plex: Plex,
         private commonNovedadesService: CommonNovedadesService,
-        private modulosService: ModulosService,
         private route: ActivatedRoute,
         private router: Router
     ) { }
 
     ngOnInit() {
-        this.plex.navVisible(false);
+        // this.plex.navVisible(false);
     }
 
     ngAfterViewInit() {
