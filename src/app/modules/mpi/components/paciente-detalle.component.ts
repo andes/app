@@ -113,7 +113,7 @@ export class PacienteDetalleComponent implements OnInit {
                     nombre: rel.nombre,
                     documento: rel.documento,
                     numeroIdentificacion: rel.numeroIdentificacion,
-                    parentesco: rel.relacion.nombre
+                    parentesco: (rel.relacion) ? rel.relacion.nombre : 'Relación S/D'
                 };
             });
         }
@@ -142,12 +142,17 @@ export class PacienteDetalleComponent implements OnInit {
         }
     }
 
-    public showDocumentoProgenitor() {
-        //  si es un paciente sin documento menor a 5 años mostramos documento de un familiar/tutor
-        return this.paciente.edad < 5 && this.relaciones !== null && this.relaciones.length > 0
-            && (this.relaciones[0].documento || this.relaciones[0].numeroIdentificacion);
-
+    /**
+     * Retorna true/false si se deben visualizar datos del familiar/tutor
+     * caso de bebés que aún no poseen dni (pacientes menores a 5 años)
+     */
+    public showDatosTutor() {
+        //  si es un paciente sin documento menor a 5 años mostramos documento de
+        // un familiar/tutor(si existe relación)
+        const edad = 5;
+        return this.paciente.edad < edad && this.relaciones !== null && this.relaciones.length > 0 && this.relaciones[0];
     }
+
     // TODO: Eliminar este metodo y utilizar el financiador que viene en el paciente (una vez que se agregue en el multimatch)
     loadObraSocial() {
         this.obraSocial = {

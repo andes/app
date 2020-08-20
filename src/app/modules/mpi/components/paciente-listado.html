@@ -5,16 +5,24 @@
 
         <img [ngClass]="{'img-fallecido' : paciente.fechaFallecimiento}" [mpiFotoPaciente]="paciente" />
 
-        <plex-label *ngIf="!paciente.numeroIdentificacion" titulo="{{ paciente | nombre }}"
-                    subtitulo="{{ (paciente.documento | number) || 'Sin DNI' }}">
+        <plex-label *ngIf="!paciente.numeroIdentificacion && !showDatosTutor(paciente)" titulo="{{ paciente | nombre }}"
+                    subtitulo="{{ (paciente.documento | number) || 'Sin DNI'}}">
         </plex-label>
 
         <plex-label *ngIf="paciente.numeroIdentificacion" titulo="{{ paciente | nombre }}"
                     subtitulo="{{ paciente.numeroIdentificacion }}">
         </plex-label>
 
+        <plex-label *ngIf="showDatosTutor(paciente)" titulo="{{ paciente | nombre }}" subtitulo=" {{paciente.relaciones[0].relacion?.nombre.toUpperCase() || 'RELACIÓN S/D'}}: 
+                            {{ (paciente.relaciones[0].documento | number) || paciente.relaciones[0].numeroIdentificacion || 'Sin DNI'}}
+                            - {{ (paciente.relaciones[0] | nombre)}}">
+        </plex-label>
+
         <plex-label titulo="{{ paciente | edad }}" subtitulo="{{ paciente.fechaNacimiento | fecha:'utc' }}">
         </plex-label>
+
+        <plex-badge *ngIf="showDatosTutor(paciente)" type="warning"> Sin DNI
+        </plex-badge>
 
         <plex-badge type="info">{{ paciente | sexo }}
         </plex-badge>
