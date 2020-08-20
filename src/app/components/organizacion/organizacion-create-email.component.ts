@@ -15,9 +15,10 @@ export class OrganizacionCreateEmailComponent implements OnInit {
     public configuraciones: { emails: { nombre: string, email: string }[] } = {
         emails: [
 
-            { nombre: '', email: '' }
+            { nombre: null, email: null }
         ]
     };
+
 
     constructor(
         private route: ActivatedRoute,
@@ -27,6 +28,7 @@ export class OrganizacionCreateEmailComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+
         this.route.params.subscribe(params => {
             this.idOrganizacion = params['id'];
             this.organizacionService.getById(this.idOrganizacion).subscribe(org => {
@@ -34,8 +36,11 @@ export class OrganizacionCreateEmailComponent implements OnInit {
 
                 if (!this.organizacion.configuraciones) {
                     this.organizacion['configuraciones'] = this.configuraciones;
+
+
                 } else {
                     this.configuraciones = this.organizacion.configuraciones;
+
                 }
 
             });
@@ -43,17 +48,21 @@ export class OrganizacionCreateEmailComponent implements OnInit {
     }
 
     addEmail() {
-        if ((this.organizacion.configuraciones.emails.length > 0) && !this.organizacion.configuraciones.emails.nombre && !this.organizacion.configuraciones.emails.email) {
-            this.plex.info('warning', 'debe completar todos los campos');
-        } else {
-            this.organizacion.configuraciones.emails.push({ nombre: '', email: '' });
-        }
+
+        this.organizacion.configuraciones.emails.push({ nombre: null, email: null });
+
     }
 
     save() {
-        if (!this.organizacion.configuraciones.emails.nombre && !this.organizacion.configuraciones.emails.email) {
-            this.plex.info('warning', 'debe completar todos los campos');
+        // hay algun campo vacio?
+        const flag = this.organizacion.configuraciones.emails.some(e => e.nombre === null || e.email === null);
+
+
+        if (flag) {
+            this.plex.info('warning', 'no se completaron todos los campos');
+
         } else {
+
             this.organizacionService.save(this.organizacion).subscribe(result => {
                 if (result) {
                     this.plex.info('success', 'Los datos se actualizaron correctamente');
@@ -61,6 +70,7 @@ export class OrganizacionCreateEmailComponent implements OnInit {
                     this.plex.info('warning', 'ERROR: Ocurrió un problema al actualizar los datos');
                 }
             });
+
         }
 
     }
