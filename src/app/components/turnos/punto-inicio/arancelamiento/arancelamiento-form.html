@@ -1,6 +1,6 @@
 <form class="plex-layout">
     <div id="printpage" *ngIf="showForm">
-        <section >
+        <section>
             <div class="row login-header">
                 <div class="col">
                     <div class="logo-gobierno"></div>
@@ -74,18 +74,17 @@
             <table class="egt" style="height: 180px; margin-left: auto; margin-right: auto;" width="90%">
                 <tbody>
                     <tr>
-                        <td width="15%"><label>Tipo de Atención</label></td>
+                        <td width="20%"><label>Tipo de Atención</label></td>
                         <td width="15%"></td>
-                        <td></td>
-                        <td width="15%"></td>
-                        <td width="15%">
+                        <td></td>                        
+                        <td width="30%">
                             <label>Fecha de Prestación</label> {{ turnoSeleccionado.horaInicio | fecha}}  {{ turnoSeleccionado.horaInicio | date: 'EEE' | uppercase }}
                         </td>
                     </tr>
                     <tr>
                         <td rowspan="2"><label>Consulta</label> <input class="ml25" type="checkbox" name="" id=""></td>
                         <td><label for="">Especialidad</label></td>
-                        <td colspan="3">{{turnoSeleccionado.tipoPrestacion.term}}</td>
+                        <td colspan="2">{{turnoSeleccionado.tipoPrestacion.term}}</td>
                     </tr>
                     <tr>
                         <td><label for="">Diagnostico</label></td>
@@ -105,9 +104,9 @@
                     </tr>
                 </tbody>
             </table>
-             <table class="egt" style="height: 180px; margin-left: auto; margin-right: auto;" width="90%">
+            <table class="egt" style="height: 180px;margin-left: auto; margin-right: auto;" width="90%">
                     <tbody>
-                        <tr class="font12">
+                        <tr class="font11">
                             <td class="text-center" colspan="6">
                                 <label>
                                     NHPdGD: Nomenclador de Hospitales Públicos de Gestión Descentralizada -  CIE10 Clasificación Internacional de Enfermedades
@@ -115,52 +114,60 @@
                             </td>    
                         </tr>
                         <tr>
-                            <td rowspan="2" class="text-center text-bottom font12"><label>Firma del Médico y sello con N° de Matricula</label></td>                       
-                            <td rowspan="2"><label>Ultimo <br> Recibo de <br> Sueldo</label></td>  
+                            <td rowspan="2" class="text-center text-bottom font11" width="60%"><label>Firma del Médico y sello con N° de Matricula</label></td>                       
+                            <td rowspan="2" width="10%"><label>Ultimo <br> Recibo de <br> Sueldo</label></td>  
                             <td colspan="2" class="text-center"><label>Mes</label></td> 
                             <td colspan="2" class="text-center"><label>Año</label></td>
                                     
                         </tr>
-                        <tr class="h50">
-                            <td></td>                       
-                            <td></td>  
-                            <td></td>                       
-                            <td></td>  
-                        </tr>
-                        <tr>
-                            <td colspan="3">
-                                <label>NOMBRE DEL AGENTE DEL SEGURO DE SALUD</label>
-                            </td>
-                            <td colspan="3">
-                                <label>RNOS</label>
-                            </td> 
-                        </tr>
                         <tr class="h70">
-                            <td colspan="3" >
-                                {{obraSocial}}
-                            </td>
-                            <td colspan="3">
-                                {{codigoOs}}
-                            </td> 
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <label>Firma Responsable Administrativo/Contable</label>
-                            </td>
-                            <td colspan="2">
-                                <label>Aclaración Firma</label>
-                            </td> 
-                            <td colspan="2">
-                                <label>Firma Beneficiario</label>
-                            </td> 
-                        </tr>
-                        <tr class="h50">
-                            <td colspan="2"></td>
-                            <td colspan="2"></td> 
-                            <td colspan="2"></td> 
-                        </tr>
+                            <td></td>                       
+                            <td></td>  
+                            <td></td>                       
+                            <td></td>  
+                        </tr>                   
                     </tbody>
-                </table>                                     
+            </table>   
+            <table class="egt" style="margin-left: auto; margin-right: auto;" width="90%">
+                <tbody>
+                    <tr>
+                        <td colspan="3">
+                            <label>NOMBRE DEL AGENTE DEL SEGURO DE SALUD</label>
+                        </td>
+                        <td colspan="3">
+                            <label>RNOS</label>
+                        </td> 
+                    </tr>
+                    <tr class="h0">
+                        <td colspan="3" >
+                            {{obraSocial}}
+                        </td>
+                        <td colspan="3">
+                            {{codigoOs}}
+                        </td> 
+                    </tr>                       
+                </tbody>
+        </table>   
+            <table class="egt" style="margin-left: auto; margin-right: auto;" width="90%">
+                <tbody>                   
+                    <tr class="h0">
+                        <td colspan="2" width="50%">
+                            <label>Firma Responsable Administrativo/Contable</label>
+                        </td>
+                        <td colspan="2">
+                            <label>Aclaración Firma</label>
+                        </td> 
+                        <td colspan="2">
+                            <label>Firma Beneficiario</label>
+                        </td> 
+                    </tr>
+                    <tr class="h80">
+                        <td colspan="2"></td>
+                        <td colspan="2"></td> 
+                        <td colspan="2"></td> 
+                    </tr>
+                </tbody>
+            </table>                                     
         </section>
     </div>
 </form>

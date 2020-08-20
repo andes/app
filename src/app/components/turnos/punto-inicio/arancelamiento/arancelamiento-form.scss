@@ -10,8 +10,13 @@
         display: none;
     }
     body {
-        padding-top: 0;
+        padding: 0;
+        margin: 0;
         -webkit-print-color-adjust: exact;
+    }
+
+    .content {
+        margin-top: 0!important;
     }
     
     .login-header {
@@ -43,19 +48,13 @@
     border-collapse: collapse;
   }
 
-body {
-    padding-top: 0;
-}
-
 hr {
     margin: 1px 0;
 }
 th {
     font-size: 1rem;
 }
-tr {
-    border-bottom: 2px solid rgba(0, 0, 0, .15);
-}
+
 td{
     padding-left: 10px;
 }
@@ -66,14 +65,17 @@ td{
 .text-center {
     text-align: center;
 }
-.h50{
-    height: 50px;
+.h70{
+    height: 70px;
 }
-.h30 {
+.h80{
+    height: 80px;
+}
+.h0 {
     height: 0px;
 }
-.font12{
-    font-size: 12px;
+.font11{
+    font-size: 11px;
 }
 input[type=checkbox] {
     transform: scale(1.5);
@@ -82,6 +84,8 @@ input[type=checkbox] {
     margin-left: 25px;
     padding-left: 25px;
 }
-
+label{
+    margin-top: 5px;
 }
 
+}
