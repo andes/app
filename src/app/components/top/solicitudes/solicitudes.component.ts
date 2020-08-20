@@ -317,7 +317,6 @@ export class SolicitudesComponent implements OnInit {
                     params['tieneTurno'] = true;
                     params.estados = params.estados.filter(e => e !== 'validada');
                 } else if (this.estadoEntrada.id === 'registroHUDS') {
-                    params['tieneTurno'] = true;
                     params['estados'] = ['validada'];
                 } else {
                     params['estados'] = [this.estadoEntrada.id];
@@ -340,7 +339,6 @@ export class SolicitudesComponent implements OnInit {
                     params['tieneTurno'] = true;
                     params.estados = params.estados.filter(e => e !== 'validada');
                 } else if (this.estadoSalida.id === 'registroHUDS') {
-                    params['tieneTurno'] = true;
                     params['estados'] = ['validada'];
                 } else {
                     params['estados'] = [this.estadoSalida.id];
