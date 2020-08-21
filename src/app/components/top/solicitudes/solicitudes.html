@@ -216,8 +216,8 @@
                                                     </span>
                                                 </ng-container>
                                                 <span
-                                                    *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'asignada' && prestacion.solicitud.profesional?.id === auth.profesional">
-                                                    <plex-button type="info" icon="clipboard-arrow-left" (click)="devolver(prestacion)" title="Devolver">
+                                                    *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'asignada'">
+                                                    <plex-button type="info" icon="clipboard-arrow-left" (click)="devolver(prestacion)" title="{{ prestacion.solicitud.profesional?.id === auth.profesional ? 'Devolver' : 'Deshacer' }}">
                                                     </plex-button>
                                                 </span>
                                                 <plex-badge *ngIf="prestacion.solicitud.organizacion.id !== auth.organizacion.id"
@@ -363,7 +363,7 @@
 
 <plex-modal #modal (closed)="cerrarDevolver()">
     <plex-icon name="alert-circle" type="info"></plex-icon>
-    <plex-modal-title type="danger">Devolver Solicitud</plex-modal-title>
+    <plex-modal-title type="danger" *ngIf="prestacionDevolver">{{ prestacionDevolver.solicitud.profesional?.id === auth.profesional ? 'Devolver Solicitud' : 'Deshacer Asignación' }} </plex-modal-title>
     <plex-modal-subtitle type="">Por favor, indique el motivo:</plex-modal-subtitle>
     <main>
         <div class="w-50">
