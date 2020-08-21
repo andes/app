@@ -325,7 +325,7 @@ export class SolicitudesComponent implements OnInit {
                     }
                 }
                 if (this.prestacionesDestino && this.prestacionesDestino.length) {
-                    params['prestacionDestino'] = this.prestacionesDestino.map(e => e.id);
+                    params['prestacionDestino'] = this.prestacionesDestino.map(e => e.conceptId);
                 }
             }
         }
@@ -347,13 +347,13 @@ export class SolicitudesComponent implements OnInit {
                     }
                 }
                 if (this.prestacionesDestino && this.prestacionesDestino.length) {
-                    params['prestacionDestino'] = this.prestacionesDestino.map(e => e.id);
+                    params['prestacionDestino'] = this.prestacionesDestino.map(e => e.conceptId);
                 }
             }
         }
 
         if (this.prestacionesDestino && this.prestacionesDestino.length) {
-            params['prestacionDestino'] = this.prestacionesDestino.map(e => e.id);
+            params['prestacionDestino'] = this.prestacionesDestino.map(e => e.conceptId);
         } else {
             if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {
                 params['tipoPrestaciones'] = this.prestacionesPermisos;
@@ -522,15 +522,15 @@ export class SolicitudesComponent implements OnInit {
                     break;
                 case 'rechazada':
 
-                        // Se puede dar turno?
-                        this.darTurnoArrayEntrada[i] = false;
+                    // Se puede dar turno?
+                    this.darTurnoArrayEntrada[i] = false;
 
-                        // Se puede visualizar?
-                        this.visualizarEntrada[i] = true;
+                    // Se puede visualizar?
+                    this.visualizarEntrada[i] = true;
 
-                        // Se puede auditar?
-                        this.auditarArrayEntrada[i] = true;
-                        break;
+                    // Se puede auditar?
+                    this.auditarArrayEntrada[i] = true;
+                    break;
                 case 'validada':
 
                     // Hay turno?
@@ -703,11 +703,11 @@ export class SolicitudesComponent implements OnInit {
         this.showSidebar = false;
         if (event.status === false) {
             this.plex.confirm(`Paciente: <b>${this.prestacionSeleccionada.paciente.apellido}, ${this.prestacionSeleccionada.paciente.nombre}.</b><br>Prestación: <b>${this.prestacionSeleccionada.solicitud.tipoPrestacion.term}</b>, ¿Está seguro de querer iniciar una pestación?`)
-            .then(confirmacion => {
-                if (confirmacion) {
-                    this.confirmarIniciarPrestacion(event.fecha);
-                }
-            });
+                .then(confirmacion => {
+                    if (confirmacion) {
+                        this.confirmarIniciarPrestacion(event.fecha);
+                    }
+                });
         }
     }
 
@@ -718,8 +718,8 @@ export class SolicitudesComponent implements OnInit {
             // PATCH pasar prestacion a ejecución
             this.iniciarPrestacion(fecha)
         ).subscribe(
-           () => this.router.navigate(['/rup/ejecucion', this.prestacionSeleccionada.id]),
-           (err) => this.plex.info('danger', 'La prestación no pudo ser iniciada. ' + err)
+            () => this.router.navigate(['/rup/ejecucion', this.prestacionSeleccionada.id]),
+            (err) => this.plex.info('danger', 'La prestación no pudo ser iniciada. ' + err)
         );
     }
 

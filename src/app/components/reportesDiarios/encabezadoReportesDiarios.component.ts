@@ -192,7 +192,7 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
 
         // prestacion
         if (this.prestacion) {
-            this.parametros['prestacion'] = this.prestacion.id;
+            this.parametros['prestacion'] = this.prestacion.conceptId;
             this.parametros['prestacionNombre'] = this.prestacion.nombre;
         } else {
             this.parametros['prestacion'] = '';
@@ -273,7 +273,7 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
     }
 
     public toExcel() {
-        let data: Array<{title: string, table: any}>;
+        let data: Array<{ title: string, table: any }>;
 
         if (this.showResumenDiarioMensual) {
             data = this.reporte.map(item => {
@@ -290,7 +290,7 @@ export class EncabezadoReportesDiariosComponent implements OnInit {
                 title: this.parametros['tipoReportes'],
                 table: document.getElementById(this.parametros['tipoReportes']),
             }],
-            `reportesDiarios_${this.prestacion.nombre}_${dateStr}`);
+                `reportesDiarios_${this.prestacion.nombre}_${dateStr}`);
         }
     }
 
