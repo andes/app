@@ -5,6 +5,10 @@
         <plex-badge [type]="estadoBadgeType" *ngIf="paciente.estado">
             {{ paciente.estado | uppercase }}
         </plex-badge>
+        <plex-badge *ngIf="showDatosTutor()" type="warning"
+                    hint="Recién Nacido, no se encuentra registrado en una fuente auténtica" icon="help">
+            Sin DNI
+        </plex-badge>
 
         <plex-badge *ngIf="paciente.fechaFallecimiento" type="danger">Fallecido:
             {{ paciente.fechaFallecimiento | fecha:'utc'}}
@@ -18,7 +22,24 @@
             <plex-copy *ngIf="paciente.numeroIdentificacion" [value]="paciente.numeroIdentificacion">
                 {{ paciente.numeroIdentificacion }}
             </plex-copy>
-            <span *ngIf="!paciente.numeroIdentificacion && !paciente.documento">Sin DNI</span>
+            <ng-container *ngIf="!this.paciente.numeroIdentificacion && !this.paciente.documento">
+
+                <div *ngIf="showDatosTutor()" justify="center">
+                    <plex-label *ngIf="relaciones[0].parentesco" titulo="" subtitulo="">
+                        {{relaciones[0].parentesco.toUpperCase()}}
+                    </plex-label>
+                    <plex-copy *ngIf="relaciones[0].numeroIdentificacion || relaciones[0].documento"
+                               [value]="relaciones[0].documento || relaciones[0].numeroIdentificacion">
+                        {{ (relaciones[0].documento | number) || relaciones[0].numeroIdentificacion}}
+                    </plex-copy>
+                    <span *ngIf="!relaciones[0].numeroIdentificacion && !relaciones[0].documento">: Sin DNI</span>
+                </div>
+
+                <plex-label *ngIf="showDatosTutor()" titulo="" subtitulo="" justify="center">{{relaciones[0] | nombre}}
+                </plex-label>
+
+                <span *ngIf=" !showDatosTutor()">Sin DNI</span>
+            </ng-container>
         </div>
 
         <plex-label *ngIf="showSexo" titulo="Sexo / Género" subtitulo="{{paciente | sexo}}" justify="{{ justificado }}">
