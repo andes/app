@@ -498,7 +498,8 @@ registerLocaleData(localeEs, 'es');
         SelectFinanciadorDirective
     ],
     entryComponents: [
-        HeaderPacienteComponent
+        HeaderPacienteComponent,
+        ModalMotivoAccesoHudsComponent
     ],
     bootstrap: [
         AppComponent

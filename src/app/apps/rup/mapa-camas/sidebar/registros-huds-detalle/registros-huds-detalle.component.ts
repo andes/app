@@ -1,7 +1,7 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
-import { Observable, Subject, combineLatest } from 'rxjs';
-import { map, switchMap, take, tap, pluck } from 'rxjs/operators';
+import { Observable, Subject, combineLatest, throwError } from 'rxjs';
+import { map, switchMap, take, tap, pluck, catchError } from 'rxjs/operators';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { HUDSService } from '../../../../../modules/rup/services/huds.service';
 import { Auth } from '@andes/auth';
@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { RegistroHUDSItemAccion } from './registros-huds-item/registros-huds-item.component';
 import { IMAQEstado } from '../../interfaces/IMaquinaEstados';
+import { ModalMotivoAccesoHudsService } from '../../../../../modules/rup/components/huds/modal-motivo-acceso-huds.service';
+import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
 
 function arrayToSet(array, key, itemFn) {
     const listado = [];
@@ -66,24 +68,30 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         private prestacionService: PrestacionesService,
         private auth: Auth,
         private hudsService: HUDSService,
-        private router: Router
+        private router: Router,
+        private motivoAccesoService: ModalMotivoAccesoHudsService
     ) { }
 
     ngOnInit() {
         this.desde = moment(this.mapaCamasService.fecha).subtract(7, 'd').toDate();
         this.hasta = moment(this.mapaCamasService.fecha).toDate();
 
+
         this.puedeVerHuds = this.auth.check('huds:visualizacionHuds');
 
         this.historial$ = this.cama$.pipe(
             switchMap(cama => {
-                return this.hudsToken(cama.paciente).pipe(map(() => cama.paciente));
+                return this.motivoAccesoService.getAccessoHUDS(cama.paciente as IPaciente);
             }),
-            switchMap(paciente => {
+            switchMap(({ paciente }) => {
                 return this.getHUDS(paciente);
             }),
             map(prestaciones => {
                 return prestaciones.filter(p => this.validadaCreadasPorMi(p));
+            }),
+            catchError((e) => {
+                this.accion.emit(null);
+                return [];
             }),
             cache()
         );
@@ -169,15 +177,6 @@ export class RegistrosHudsDetalleComponent implements OnInit {
 
     getHUDS(paciente) {
         return this.prestacionService.getByPaciente(paciente.id, true);
-    }
-
-    hudsToken(paciente) {
-        const motivo = 'Internacion';
-        return this.hudsService.generateHudsToken(this.auth.usuario, this.auth.organizacion, paciente, motivo, this.auth.profesional, null, null).pipe(
-            tap((hudsToken) => {
-                window.sessionStorage.setItem('huds-token', hudsToken.token);
-            })
-        );
     }
 
     onNuevoRegistrio() {

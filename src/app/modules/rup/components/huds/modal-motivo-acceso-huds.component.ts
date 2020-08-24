@@ -18,7 +18,7 @@ export class ModalMotivoAccesoHudsComponent {
         }
     }
 
-    @Output() motivoAccesoHuds = new EventEmitter<any>();
+    @Output() motivoAccesoHuds = new EventEmitter<string>();
 
     public motivosAccesoHuds = [
         { id: 'auditoria', label: 'Procesos de Auditoría' },
