@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
 import { MapaCamasService } from '../../services/mapa-camas.service';
 import { Observable, Subject, combineLatest, throwError } from 'rxjs';
-import { map, switchMap, take, tap, pluck, catchError } from 'rxjs/operators';
+import { map, switchMap, take, tap, pluck, catchError, filter } from 'rxjs/operators';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import { HUDSService } from '../../../../../modules/rup/services/huds.service';
 import { Auth } from '@andes/auth';
@@ -80,6 +80,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
         this.puedeVerHuds = this.auth.check('huds:visualizacionHuds');
 
         this.historial$ = this.cama$.pipe(
+            filter((cama) => cama.estado === 'ocupada'),
             switchMap(cama => {
                 return this.motivoAccesoService.getAccessoHUDS(cama.paciente as IPaciente);
             }),

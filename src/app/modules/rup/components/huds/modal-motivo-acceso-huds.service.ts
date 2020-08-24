@@ -21,7 +21,6 @@ export class ModalMotivoAccesoHudsService {
 
     private askForReason(): Observable<string> {
         return new Observable((observer) => {
-
             const componentFactory = this.componentFactoryResolver.resolveComponentFactory(ModalMotivoAccesoHudsComponent);
             const componentRef = componentFactory.create(this.injector);
             const modalComponent = componentRef.instance;
@@ -29,19 +28,19 @@ export class ModalMotivoAccesoHudsService {
 
             const sub = modalComponent.motivoAccesoHuds.subscribe((motivo: string) => {
                 observer.next(motivo);
-
-                // Limpiamos componentes y memoría
                 observer.complete();
-                sub.unsubscribe();
-                this.appRef.detachView(componentRef.hostView);
-                componentRef.destroy();
-
             });
 
             // agregamos la vista al dom
             this.appRef.attachView(componentRef.hostView);
             const domElem = (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
             document.body.appendChild(domElem);
+
+            return () => {
+                sub.unsubscribe();
+                this.appRef.detachView(componentRef.hostView);
+                componentRef.destroy();
+            };
         });
     }
 
