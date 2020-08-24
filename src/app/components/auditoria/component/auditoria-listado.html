@@ -28,18 +28,16 @@
                 {{ paciente.activo ? 'activo' : 'inactivo' }}
             </plex-badge>
 
-            <plex-badge size="sm" type="warning">
+            <plex-badge *ngIf="!errorTab" size="sm" type="warning">
                 <plex-button class="ml-0" size="sm" type="warning" label="vinculaciones"
                              (click)="verVinculados(paciente)">
                 </plex-button>
                 {{ getCantidadVinculados(paciente) || 0}}
             </plex-badge>
 
-            <plex-dropdown class="pl-2 mr-0" [right]="true" [items]="itemsDropdown" size="sm" icon="dots-vertical"
-                           label="" (onOpen)="setDropDown(paciente)">
+            <plex-dropdown *ngIf="!errorTab" class="pl-2 mr-0" [right]="true" [items]="itemsDropdown" size="sm"
+                           icon="dots-vertical" label="" (onOpen)="setDropDown(paciente)">
             </plex-dropdown>
-
-            <plex-badge type="danger" *ngIf="paciente.reportarError"> Pendiente </plex-badge>
 
         </plex-item>
     </ng-container>

@@ -1,16 +1,16 @@
-<plex-modal #modal (closed)="notificarAccion(false)" size="md" justify>
+<plex-modal #modal size="md" justify>
     <plex-icon name="alert-circle" type="danger"></plex-icon>
-    <plex-modal-title class="text-center" type="danger">
+    <plex-modal-title class="font-title text-center" type="danger">
         Cambio de datos sensibles de un paciente
     </plex-modal-title>
-    <plex-modal-subtitle center class="text-muted text-center">
+    <plex-modal-subtitle center class="font-subtitle text-muted text-center">
         De continuar, la modificación tendrá repercusión en su <b>Historia de Salud</b>
     </plex-modal-subtitle>
     <main>
         <section class="w-100">
             <plex-title titulo="Registro Original" size="sm"></plex-title>
             <plex-list>
-                <plex-item *ngIf="paciente" [selected]="{'selected' : selected === true}">
+                <plex-item *ngIf="paciente" [selected]="true">
                     <img [mpiFotoPaciente]="paciente" />
                     <plex-label class="text-black" *ngIf="!paciente.numeroIdentificacion"
                                 titulo="{{ paciente | nombre }}"
@@ -35,27 +35,26 @@
                 </plex-item>
             </plex-list>
             <br>
-            <br>
             <plex-title titulo="Datos a Actualizar" size="sm"></plex-title>
             <div *ngIf="paciente">
                 <plex-wrapper>
-                    <plex-text label="Ingrese apellido correcto" type="info" [(ngModel)]="pacienteEdited.apellido"
-                               name="apellido" placeholder="Ingrese apellido correcto">
+                    <plex-text class="label-black" label=" Ingrese apellido correcto" type="info"
+                               [(ngModel)]="pacienteEdited.apellido" name="apellido"
+                               placeholder="Ingrese apellido correcto">
                     </plex-text>
-                    <plex-text label="Ingrese nombre correcto" type="info" [(ngModel)]="pacienteEdited.nombre"
-                               name="nombre" placeholder="Ingrese nombre corregido">
+                    <plex-text class="label-black" label="Ingrese nombre correcto" type="info"
+                               [(ngModel)]="pacienteEdited.nombre" name="nombre" placeholder="Ingrese nombre corregido">
                     </plex-text>
-
                 </plex-wrapper>
             </div>
         </section>
     </main>
     <br>
-    <plex-button modal right type="success" (click)="notificarAccion(true)" [disabled]="!pacienteEdit()">
-        ACEPTAR
-    </plex-button>
     <plex-button modal left type="danger" (click)="notificarAccion(false)">
         CANCELAR
+    </plex-button>
+    <plex-button modal right type="success" (click)="notificarAccion(true)" [disabled]="!pacienteEdit">
+        ACEPTAR
     </plex-button>
 
 </plex-modal>

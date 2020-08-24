@@ -1,15 +1,12 @@
 import { Plex } from '@andes/plex';
-import { Component, OnInit, Output, ViewChild } from '@angular/core';
-import { AgendaService } from './../../services/turnos/agenda.service';
-import { SisaService } from '../../services/fuentesAutenticas/servicioSisa.service';
-import { RenaperService } from '../../services/fuentesAutenticas/servicioRenaper.service';
-import { PacienteBuscarResultado } from '../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
-import { Observable, of, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { PacienteService } from '../../core/mpi/services/paciente.service';
 import { VincularPacientesComponent } from './vincular-pacientes.component';
+import { ModalCorreccionPacienteComponent } from './component/modal-correccion-paciente.component';
 
 @Component({
   selector: 'auditoria',
@@ -20,14 +17,13 @@ import { VincularPacientesComponent } from './vincular-pacientes.component';
 export class AuditoriaComponent implements OnInit {
 
   @ViewChild('vincularComponent', null) vincularPacientes: VincularPacientesComponent;
+  @ViewChild('modalCorreccion', null) modalCorreccion: ModalCorreccionPacienteComponent;
 
   // sidebar
   mainSize = 12;
   tituloSidebar = '';
-  showVinculaciones = false;
   showDetallePaciente = false;
   showCabeceraDetalle = false;
-  showVincularPacientes = false;
   // busqueda
   textoLibre: string = null;
   resultadoBusqueda: IPaciente[] = null;
@@ -38,18 +34,9 @@ export class AuditoriaComponent implements OnInit {
   parametros;
   scrollEnd = false;
   searchSubscription = new Subscription();
-
-  pacientesInactivos$: Observable<IPaciente[]> = of([]);
+  // reporte de errores
   pacientesReportados;
-  showVincular = false;
-  showCandidatos = false;
-  enableVincular = false;
-  showBuscador = false;
-  showMensaje = false;
-  // posicion del paciente a modificar (reporte de errores) // vr si serve de algo esta varuable ahora
   corregirPaciente: Number = null;
-  showBotonesReporte = false; // aparenemnete  muestra la vieja patalla para corregir los pacientes (sería el modal ahora)
-  public showModalCorregir = false;
   showReporteError = false; // se muestra en el sidebar datos del error reportado
   permisoEdicion: Boolean;
   permisoVincular: Boolean;
@@ -57,9 +44,6 @@ export class AuditoriaComponent implements OnInit {
   constructor(
     public auth: Auth,
     private pacienteService: PacienteService,
-    private servicioSisa: SisaService,
-    private servicioRenaper: RenaperService,
-    private agendaService: AgendaService,
     private plex: Plex,
     private router: Router,
   ) { }
@@ -72,7 +56,7 @@ export class AuditoriaComponent implements OnInit {
     }
     this.permisoEdicion = this.auth.check('auditoriaPacientes:edicion');
     this.permisoVincular = this.auth.check('auditoriaPacientes:vincular');
-    if (this.permisoEdicion) { // if (this.permisoEdicion && !this.permisoVincular) {
+    if (this.permisoEdicion) {
       this.getReportados(); // Si el usuario solo tiene permisos de edicion es necesario obtener los datos aquí
     }
     this.parametros = {
@@ -81,14 +65,11 @@ export class AuditoriaComponent implements OnInit {
     };
   }
 
-  showVinculados(paciente: IPaciente) {
-    this.pacienteSelected = paciente;
-    this.showInSidebar('vinculaciones');
-    this.vincularPacientes.loadVinculados(paciente);
-  }
+
+  // REPORTE DE ERRORES -----------------------------------------
 
   // Aquellos pacientes que reportaron errores en sus datos personales
-  getReportados() { // ver tema d elos permisos, capaz algunos pacientes no deberían ver esa pestaña directamente
+  getReportados() {
     const params = { reportarError: true, activo: true };
     this.pacienteService.getSearch(params).subscribe(resultado => {
       if (resultado) {
@@ -99,28 +80,30 @@ export class AuditoriaComponent implements OnInit {
   }
 
   onSelectReportados(paciente: any): void {
-    if (!this.showBotonesReporte) {
-      if (paciente) {
-        this.pacienteSelected = paciente;
-        this.showInSidebar('reporteError');
-      } else {
-        this.pacienteSelected = null;
-      }
+    if (paciente) {
+      this.pacienteSelected = paciente;
+      this.showInSidebar('reporteError');
+    } else {
+      this.pacienteSelected = null;
     }
   }
 
-  onSelectCorregir(index, paciente) {
+  onSelectCorregir() {
     if (this.permisoEdicion) {
-      this.showModalCorregir = true;
+      this.modalCorreccion.show();
+    } else {
+      this.plex.info('warning', 'Usted no posee permisos para realizar esta acción.');
     }
   }
 
-  savePatient(paciente: any) {
-    this.showModalCorregir = false;
-    // si el paciente no debe ser modificado (cancelar) entonces es null
+  savePatient(paciente: IPaciente) {
+    // si el paciente no debe ser modificado (cancelar) entonces es paciente=null
     if (paciente) {
       paciente.reportarError = false;
       paciente.notaError = '';
+      if (!paciente.tipoIdentificacion) {
+        paciente.tipoIdentificacion = null;
+      }
       this.pacienteService.save(paciente).subscribe((respSave: any) => {
 
         if (respSave && !respSave.errors) {
@@ -141,68 +124,40 @@ export class AuditoriaComponent implements OnInit {
     }
   }
 
-  // guardarCorreccion(): void {
-  //   this.plex.confirm('Desea continuar?', 'La información que está por cambiar modificará información sensible del paciente y tendrá repercusión en su Historia de Salud.').then((confirmar) => {
-  //     if (confirmar) {
-  //       this.pacienteSelected.reportarError = false;
-  //       this.pacienteSelected.notaError = '';
-  //       this.corregirPaciente = null;
-  //       this.showBotonesReporte = false;
-  //       this.auditoriaService.save(this.pacienteSelected).subscribe(() => {
-  //         this.pacienteSelected = null;
-  //         this.getReportados();
-  //       });
-  //     }
-  //   });
-  // }
 
   onSelect(paciente: any): void {
     this.pacienteSelected = paciente;
     this.showInSidebar('detallePaciente');
   }
 
-  // onSelectVinculados(paciente: any): void {
-  //   if (paciente.id) {
-  //     this.auditoriaService.findById(paciente.id).subscribe(pac => {
-  //       this.pacienteSelected = pac;
-  //       this.showDetallePaciente = false;
-  //       this.enableVinculados = true;
-  //     });
-  //   }
-  // }
 
   showInSidebar(opcion: string) {
     switch (opcion) {
       case 'detallePaciente':
         this.tituloSidebar = 'Detalle Paciente';
         this.showDetallePaciente = true;
-        this.showVinculaciones = false;
         this.showCabeceraDetalle = false;
-        this.showVincularPacientes = false;
         this.showReporteError = false;
+        this.vincularPacientes.close();
         this.mainSize = 8;
         break;
       case 'vinculaciones':
         this.tituloSidebar = 'Detalle Paciente';
         this.showDetallePaciente = false;
-        this.showVinculaciones = true;
         this.showCabeceraDetalle = true;
-        this.showVincularPacientes = true;
         this.showReporteError = false;
         this.mainSize = 8;
         break;
       case 'reporteError':
+        this.tituloSidebar = 'Descripción';
         this.showDetallePaciente = false;
-        this.showVinculaciones = false;
         this.showReporteError = true;
         this.mainSize = 8;
         break;
       case 'vincular':
         this.tituloSidebar = 'Buscar candidato';
         this.showDetallePaciente = false;
-        this.showVinculaciones = false;
         this.showCabeceraDetalle = false;
-        this.showVincularPacientes = true;
         this.mainSize = 6;
         break;
     }
@@ -213,32 +168,11 @@ export class AuditoriaComponent implements OnInit {
     this.pacienteSelected = null;
     this.showDetallePaciente = false;
     this.showCabeceraDetalle = false;
-    this.showVinculaciones = false;
-    this.showVincularPacientes = false;
     this.showReporteError = false;
+    this.vincularPacientes.close();
   }
 
-  // verDuplicados() {
-  //   this.showAuditoria = false;
-  // }
-
-  // operationLink(pacienteToFix, paciente) {
-  //   this.patientToFix = pacienteToFix;
-  //   this.patient = paciente;
-  //   this.verDuplicados();
-  // }
-
-  // viewLinkedPatients(paciente) {
-  //   this.verDuplicados();
-  //   this.patient = paciente;
-  //   this.patientToFix = null;
-  // }
-
-  // cancelVincular() {
-
-  //   this.searchClear();
-
-  // }
+  // VINCULACION Y ESTADO ACTIVO ----------------------------
 
   setEstadoActivo([paciente, activo]: [IPaciente, boolean]) {
     if (this.permisoVincular) {
@@ -253,23 +187,36 @@ export class AuditoriaComponent implements OnInit {
     }
   }
 
-  // llama al componente vincularPacientes según corresponda
-  vincular([paciente, vincular]: [IPaciente, boolean]) {
+  showVinculados(paciente: IPaciente) {
+    // Actualizamos sidebar de vinculaciones
+    this.pacienteSelected = paciente;
+    this.showInSidebar('vinculaciones');
+    this.vincularPacientes.loadVinculados(paciente);
+
+    // Actualizamos resultados en panel principal
+    this.buscar();
+  }
+
+  vincular(paciente: IPaciente) {
     if (this.permisoVincular) {
       this.pacienteSelected = paciente;
-      // vincular o desvincular un paciente?
-      if (vincular) {
-        this.showInSidebar('vincular');
-        this.vincularPacientes.buscarCandidatos();
-      } else {
-        this.vincularPacientes.desvincular(paciente);
-      }
+      this.showInSidebar('vincular');
+      this.vincularPacientes.buscarCandidatos();
+    } else {
+      this.plex.info('warning', 'Usted no posee permisos para realizar esta acción.');
+    }
+  }
+
+  desvincular(paciente: IPaciente) {
+    if (this.permisoVincular) {
+      this.vincularPacientes.desvincular(paciente);
+    } else {
+      this.plex.info('warning', 'Usted no posee permisos para realizar esta acción.');
     }
   }
 
 
   // BUSQUEDA DE PACIENTES ------------------------------------------------
-
 
   buscar(resetParams = true) {
     if (resetParams) {
@@ -294,15 +241,14 @@ export class AuditoriaComponent implements OnInit {
     }
 
     this.searchSubscription = this.pacienteService.getSearch(params).subscribe((resultado: any) => {
-      if (this.resultadoBusqueda && this.resultadoBusqueda.length) {
-        resultado = this.resultadoBusqueda.concat(resultado);
+      if (resultado && resultado.length) {
+        this.resultadoBusqueda = this.resultadoBusqueda.concat(resultado);
       }
       this.parametros.skip = resultado.length;
       // si vienen menos pacientes que {{ limit }} significa que ya se cargaron todos
       if (!resultado.length || resultado.length < this.parametros.limit) {
         this.scrollEnd = true;
       }
-      this.onSearchEnd({ pacientes: resultado, err: null });
     });
   }
 
@@ -323,18 +269,6 @@ export class AuditoriaComponent implements OnInit {
     this.searchClear = false;
     this.loading = true;
     this.closeSidebar();
-  }
-
-  onSearchEnd(resultado: PacienteBuscarResultado) {
-    this.loading = false;
-    if (resultado.err) {
-      this.plex.info('danger', resultado.err);
-    } else {
-      // Filtramos los pacientes que ya posean algo en el array de identificadores para evitar
-      // anidamiento de linkeos
-      this.resultadoBusqueda = this.pacienteSelected ? resultado.pacientes.filter((pac: any) => (
-        (this.pacienteSelected.id !== pac.id) && pac.identificadores && pac.identificadores.filter(identificador => identificador.entidad === 'ANDES').length < 1)) : resultado.pacientes;
-    }
   }
 
   onSearchClear() {

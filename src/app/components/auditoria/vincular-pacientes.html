@@ -6,7 +6,7 @@
         </plex-label>
 
         <plex-list [striped]="true">
-            <ng-container *ngFor="let vinculado of listaVinculados; let pos = index">
+            <ng-container *ngFor="let vinculado of listaVinculados">
                 <plex-item>
                     <img [mpiFotoPaciente]="vinculado" />
 
@@ -27,7 +27,7 @@
                     </plex-badge>
 
                     <div>
-                        <plex-button type="warning" label="desvincular" size="sm" (click)="desvincular(vinculado)">
+                        <plex-button type="warning" label="desvincular" size="sm" (click)="preDesvincular(vinculado)">
                         </plex-button>
                     </div>
                 </plex-item>
@@ -39,8 +39,6 @@
     <!-- Pacientes candidatos para vinculacion -->
 
     <ng-container *ngIf="showBuscador">
-        <plex-title titulo="Buscar candidatos" size="sm"></plex-title>
-
         <paciente-buscar (searchStart)="onSearchStart()" (searchEnd)="onSearchEnd($event)"
                          (searchClear)="onSearchClear()">
         </paciente-buscar>
@@ -128,10 +126,10 @@
             </section>
         </main>
 
-        <plex-button modal left type="danger" (click)="cancelar()">
+        <plex-button modal left type="danger" (click)="vincular(false)">
             Cancelar Vinculacion
         </plex-button>
-        <plex-button class="pt-4" modal right type="success" (click)="vincular()">
+        <plex-button class="pt-4" modal right type="success" (click)="vincular(true)">
             Confirmar vinculación
         </plex-button>
 

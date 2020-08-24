@@ -13,14 +13,17 @@ export class ListadoAuditoriaComponent {
 
     // Indica si selecciona automáticamente el primer paciente de la lista
     @Input() autoselect = false;
+    // Indica si se esta listando desde la seccion de reporte de errores, ya que tiene atributos de interés distintos
+    @Input() errorTab = false;
+
     // Evento que se emite al seleccionar un paciente de la lista
     @Output() selected: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
     // Evento que se emite al intentar vincular un paciente de la lista
-    @Output() setLink: EventEmitter<[IPaciente, boolean]> = new EventEmitter<[IPaciente, boolean]>();
+    @Output() link: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
     // Evento que se emite al activar/inactivar un paciente de la lista
     @Output() setActive: EventEmitter<[IPaciente, boolean]> = new EventEmitter<[IPaciente, boolean]>();
     // Evento que se emite al intentar visualizar los vinculados de un paciente de la lista
-    @Output() linked: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
+    @Output() showLinked: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
     @Output() hover: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
     // Evento que se emite cuando se scrollea en la lista
     @Output() scrolled: EventEmitter<null> = new EventEmitter<null>();
@@ -68,7 +71,7 @@ export class ListadoAuditoriaComponent {
             this.itemsDropdown = [];
 
             if (paciente.activo) {
-                this.itemsDropdown[0] = { label: 'VINCULAR', handler: () => { this.setVinculacion(this.seleccionado, true); } };
+                this.itemsDropdown[0] = { label: 'VINCULAR', handler: () => { this.vincular(this.seleccionado); } };
                 this.itemsDropdown[1] = { label: 'INACTIVAR', handler: () => { this.setActivo(this.seleccionado, false); } };
             } else {
                 this.itemsDropdown[0] = { label: 'ACTIVAR', handler: () => { this.setActivo(this.seleccionado, true); } };
@@ -91,13 +94,13 @@ export class ListadoAuditoriaComponent {
     }
 
     // (Des)Vincula paciente entrante del seleccionado
-    setVinculacion(paciente: IPaciente, vincular: boolean) {
-        (paciente.id) ? this.setLink.emit([paciente, vincular]) : this.setLink.emit(null);
+    vincular(paciente: IPaciente) {
+        (paciente.id) ? this.link.emit(paciente) : this.link.emit(null);
     }
 
     verVinculados(paciente: IPaciente) {
         this.seleccionado = paciente;
-        (paciente.id) ? this.linked.emit(paciente) : this.linked.emit(null);
+        (paciente.id) ? this.showLinked.emit(paciente) : this.showLinked.emit(null);
     }
 
     hoverPaciente(paciente: IPaciente) {

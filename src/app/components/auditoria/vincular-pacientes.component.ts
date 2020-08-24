@@ -16,8 +16,9 @@ import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
 export class VincularPacientesComponent {
 
     @Input() pacienteBase: IPaciente;
+    @Output() setLink: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
+    @Output() askUnlink: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
     @ViewChild('modalVinculacion', { static: true }) modalVinculacion: PlexModalComponent;
-    @Output() cancel: EventEmitter<null> = new EventEmitter<null>();
 
     pacienteLink: IPaciente = null;
     showVinculaciones = false;
@@ -51,38 +52,47 @@ export class VincularPacientesComponent {
         }
     }
 
-    // ACCIONES SOBRE UN PACIENTE -----------------------------
+    close() {
+        this.showBuscador = false;
+        this.showVinculaciones = false;
+    }
 
+    // ACCIONES SOBRE UN PACIENTE -----------------------------
 
     showModal(pac: IPaciente) {
         this.pacienteLink = pac;
         this.modalVinculacion.show();
     }
 
-    cancelar() {
+    vincular(success: boolean) {
+        if (success) {
+            this.pacienteService.linkPatient(this.pacienteBase, this.pacienteLink).subscribe(pacientes => {
+                if (pacientes.length) {
+                    this.pacienteBase = pacientes[0];
+                    this.pacienteLink = pacientes[1];
+                }
+                this.setLink.emit(this.pacienteBase);
+                this.plex.toast('success', 'La vinculación ha sido realizada correctamente', 'Información', 3000);
+            });
+        }
         this.modalVinculacion.close();
-        this.onSearchClear();
     }
 
-    vincular() {
-        this.pacienteService.linkPatient(this.pacienteBase, this.pacienteLink).subscribe(pacientes => {
-            if (pacientes.length) {
-                this.pacienteBase = pacientes[0];
-                this.pacienteLink = pacientes[1];
-            }
-            this.plex.toast('success', 'La vinculación ha sido realizada correctamente', 'Información', 3000);
-        });
+    // Notifica al componente 'Auditoria' para chequear permisos
+    preDesvincular(pac: any) {
+        this.askUnlink.emit(pac);
     }
 
     desvincular(pac: any) {
-        this.plex.confirm('¿Está seguro que desea desvincular a este paciente?').then((resultado) => {
-            let rta = resultado;
+        this.plex.confirm('¿Está seguro que desea desvincular a este paciente?').then((rta) => {
             if (rta) {
                 this.pacienteService.unlinkPatient(this.pacienteBase, pac).subscribe(pacientes => {
                     if (pacientes) {
                         this.pacienteBase = pacientes[0];
                         pac = pacientes[1];
                     }
+                    // actualizamos listado de vinculados
+                    this.setLink.emit(this.pacienteBase);
                     this.plex.toast('success', 'La desvinculación ha sido realizada correctamente', 'Información', 3000);
                 });
             }
@@ -95,6 +105,7 @@ export class VincularPacientesComponent {
     public buscarCandidatos() {
         this.showBuscador = true;
         this.showVinculaciones = false;
+        this.onSearchClear();
     }
 
     onSearchStart() {
