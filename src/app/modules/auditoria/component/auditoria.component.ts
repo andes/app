@@ -2,11 +2,11 @@ import { Plex } from '@andes/plex';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
-import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { Subscription } from 'rxjs';
-import { PacienteService } from '../../core/mpi/services/paciente.service';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { VincularPacientesComponent } from './vincular-pacientes.component';
-import { ModalCorreccionPacienteComponent } from './component/modal-correccion-paciente.component';
+import { ModalCorreccionPacienteComponent } from './../component/modal-correccion-paciente.component';
 
 @Component({
   selector: 'auditoria',
@@ -158,7 +158,7 @@ export class AuditoriaComponent implements OnInit {
         this.tituloSidebar = 'Buscar candidato';
         this.showDetallePaciente = false;
         this.showCabeceraDetalle = false;
-        this.mainSize = 6;
+        this.mainSize = 8;
         break;
     }
   }

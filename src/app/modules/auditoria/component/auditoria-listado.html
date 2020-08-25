@@ -35,8 +35,8 @@
                 {{ getCantidadVinculados(paciente) || 0}}
             </plex-badge>
 
-            <plex-dropdown *ngIf="!errorTab" class="pl-2 mr-0" [right]="true" [items]="itemsDropdown" size="sm"
-                           icon="dots-vertical" label="" (onOpen)="setDropDown(paciente)">
+            <plex-dropdown #drop *ngIf="!errorTab" class="pl-2 mr-0" [right]="true" [items]="itemsDropdown" size="sm"
+                           icon="dots-vertical" label="" (onOpen)="setDropDown(paciente, drop)">
             </plex-dropdown>
 
         </plex-item>

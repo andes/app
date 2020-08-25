@@ -1,8 +1,8 @@
 import { Component, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { PacienteBuscarResultado } from '../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
-import { IPaciente } from '../../core/mpi/interfaces/IPaciente';
-import { PacienteService } from '../../core/mpi/services/paciente.service';
+import { PacienteBuscarResultado } from '../../mpi/interfaces/PacienteBuscarResultado.inteface';
+import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
+import { PacienteService } from '../../../core/mpi/services/paciente.service';
 import { from } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import { PlexModalComponent } from '@andes/plex/src/lib/modal/modal.component';
@@ -127,11 +127,10 @@ export class VincularPacientesComponent {
             if (this.pacienteBase.estado === 'temporal') {
                 this.resultadoPacientes = this.resultadoPacientes.filter(pac => pac.estado === 'temporal');
             }
-            // Si el paciente ya se encuentra en la lista de candidatos, lo quitamos de los resultados de búsqueda
-            if (this.listaCandidatos.length > 0) {
-                this.resultadoPacientes = this.resultadoPacientes.filter(paciente =>
-                    this.listaCandidatos.filter(candidato => (candidato.paciente.id) === paciente.id).length < 1
-                );
+            // Si el paciente ya tiene vinculados, los quitamos de los resultados de búsqueda
+            if (this.pacienteBase.identificadores?.length > 0) {
+                this.resultadoPacientes = this.resultadoPacientes.filter(pac =>
+                    !(this.pacienteBase.identificadores.find(identif => identif.entidad === 'ANDES' && identif.valor === pac.id)));
             }
         }
     }

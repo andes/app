@@ -105,23 +105,6 @@ export class PacienteService {
         return this.server.post(`${this.pacienteUrl}/${id}/identificadores`, cambios);
     }
 
-    /**
-     * Metodo disable. deshabilita un objeto paciente.
-     * @param {IPaciente} paciente Recibe IPaciente{}
-     */
-    disable(paciente: IPaciente): Observable<IPaciente> {
-        paciente.activo = false;
-        return this.setActivo(paciente, false);
-    }
-
-    /**
-     * Metodo enable. habilita un objeto paciente.
-     * @param {IPaciente} paciente Recibe IPaciente
-     */
-    enable(paciente: IPaciente): Observable<IPaciente> {
-        paciente.activo = true;
-        return this.setActivo(paciente, true);
-    }
 
     save(paciente: IPaciente, ignoreCheck: boolean = false): Observable<IPaciente> {
         if (paciente.id) {
@@ -146,14 +129,6 @@ export class PacienteService {
         return this.server.get(this.pacienteUrl, { params: params, showError: true });
     }
 
-    getInactivos(): Observable<IPaciente[]> {
-        return this.server.get(`${this.pacienteUrl}/inactivos/`, { showError: true });
-    }
-
-    getAuditoriaVinculados(params: any): Observable<IPaciente[]> {
-        return this.server.get(`${this.pacienteUrl}/auditoria/vinculados/`, { params: params, showError: true });
-    }
-
     /**
      * Metodo setActivo: Actualiza dato activo (true/false) de un paciente
      * @param {IPaciente} paciente
@@ -175,12 +150,8 @@ export class PacienteService {
                 entidad: 'ANDES',
                 valor: pacienteLink.id
             };
-            if (pacienteBase.identificadores) {
-                pacienteBase.identificadores.push(dataLink);
-            } else {
-                pacienteBase.identificadores = [dataLink]; // Primer elemento del array
-            }
-            return combineLatest(this.save(pacienteBase), this.setActivo(pacienteLink, false));
+
+            return combineLatest(this.postIdentificadores(pacienteBase.id, { 'op': 'link', 'dto': dataLink }), this.setActivo(pacienteLink, false));
         }
         return;
     }

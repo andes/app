@@ -1,4 +1,4 @@
-import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
+import { IPacienteMatch } from '../../mpi/interfaces/IPacienteMatch.inteface';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Plex } from '@andes/plex';
@@ -32,6 +32,7 @@ export class ListadoAuditoriaComponent {
     seleccionado: IPaciente;
     listado: IPaciente[]; // Contiene un listado plano de pacientes
     itemsDropdown: any = [];  // Acciones del dropdown 'vincular
+    openedDropDown = null;
 
     @Input()
     get pacientes(): IPacienteMatch[] | IPaciente[] {
@@ -65,8 +66,12 @@ export class ListadoAuditoriaComponent {
         return vinculaciones.length;
     }
 
-    setDropDown(paciente: IPaciente) {
+    setDropDown(paciente: IPaciente, drop) {
+        if (this.openedDropDown) {
+            this.openedDropDown.open = (this.openedDropDown === drop) ? true : false;
+        }
         if (paciente.id) {
+            this.openedDropDown = drop;
             this.seleccionado = paciente;
             this.itemsDropdown = [];
 

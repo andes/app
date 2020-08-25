@@ -26,7 +26,7 @@ import { RevisionAgendaComponent } from './components/turnos/gestor-agendas/oper
 import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/operaciones-agenda/sobreturno.component';
 
 // ... MPI
-import { AuditoriaComponent } from './components/auditoria/auditoria.component';
+// import { ExtranjeroNNCruComponent } from './core/mpi/components/extranjero-nn-cru.component';
 import { BusquedaMpiComponent } from './core/mpi/components/busqueda-mpi.component';
 import { PacienteComponent } from './core/mpi/components/paciente.component';
 
@@ -50,7 +50,6 @@ import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.comp
 
 // Home de Estadisticas
 import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
-import { VincularPacientesComponent } from './components/auditoria/vincular-pacientes.component';
 
 
 // Campañas salud
@@ -71,9 +70,12 @@ const appRoutes: Routes = [
   { path: 'apps/mpi/busqueda', component: BusquedaMpiComponent, canActivate: [RoutingGuard] },
   { path: 'apps/mpi/paciente', component: PacienteComponent, canActivate: [RoutingGuard] },
   { path: 'apps/mpi/paciente/:opcion/:origen', component: PacienteComponent, canActivate: [RoutingGuard] },
-  { path: 'apps/mpi/auditoria/vincular-pacientes', component: VincularPacientesComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'apps/mpi/auditoria', component: AuditoriaComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-
+  {
+    path: 'apps/mpi/auditoria',
+    loadChildren: () => import('./modules/auditoria/auditoria.routing').then(m => m.AuditoriaRouting),
+    canActivate: [RoutingNavBar, RoutingGuard],
+    runGuardsAndResolvers: 'always'
+  },
   // Obras sociales
   { path: 'puco', component: PucoComponent, canActivate: [RoutingNavBar] },
 
@@ -102,10 +104,10 @@ const appRoutes: Routes = [
   },
 
   {
-      path: 'huds',
-      loadChildren: () => import('./modules/rup/huds.module').then(m => m.HUDSModule),
-      canActivate: [RoutingNavBar, RoutingGuard],
-      runGuardsAndResolvers: 'always'
+    path: 'huds',
+    loadChildren: () => import('./modules/rup/huds.module').then(m => m.HUDSModule),
+    canActivate: [RoutingNavBar, RoutingGuard],
+    runGuardsAndResolvers: 'always'
   },
 
   {
