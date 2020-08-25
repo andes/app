@@ -96,7 +96,11 @@ export class InternacionDetalleComponent implements OnInit, OnDestroy {
     }
 
     onAccion($event) {
-        this.accion.emit($event);
+        if ($event) {
+            this.accion.emit($event);
+        } else {
+            this.mostrar = this.items[0].key;
+        }
     }
 
     toggleEdit() {

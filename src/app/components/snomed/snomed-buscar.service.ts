@@ -16,6 +16,9 @@ export class SnomedBuscarService {
     constructor() { }
 
     search(param: string | SnomedBuscadorParam) {
+        if (!param) {
+            param = '';
+        }
         if (typeof param === 'string') {
             this.dataSource.next({ term: param });
         } else {

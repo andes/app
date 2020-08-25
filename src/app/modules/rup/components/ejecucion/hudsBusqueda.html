@@ -280,7 +280,7 @@
                                     <div class="row p-0 m-0 border-secondary border-left-0">
                                         <div class="col-10 p-0 m-0">
                                             <div class="row m-0 p-0">
-                                                <div class="col-2 icon-rup drag-handle">
+                                                <div class="col-2 icon-rup">
                                                     <i class="icon icon-rup-semantic-trastorno"></i>
                                                 </div>
                                                 <div class="col p-0 pl-2 float-left">
@@ -313,7 +313,7 @@
                                                 </ng-container>
                                                 <button class="btn btn-sm btn-primary btn-icon-rup p-0"
                                                         *ngIf="emitirConceptos"
-                                                        (click)="devolverHallazgo(registro, 'hallazgo')"
+                                                        (click)="$event.stopPropagation(); devolverHallazgo(registro, 'hallazgo')"
                                                         title="Agregar a la consulta" titlePosition="left">
                                                     <i class="mdi mdi-plus"></i>
                                                 </button>
