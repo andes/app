@@ -1,4 +1,4 @@
-<plex-layout *ngIf="prestacion" [main]="prestacion.solicitud.ambitoOrigen == 'ambulatorio'? 9 : 12">
+<plex-layout *ngIf="prestacion && !showDarTurnos" [main]="prestacion.solicitud.ambitoOrigen == 'ambulatorio'? 9 : 12">
     <plex-layout-main>
         <plex-title main [titulo]="title" *ngIf="prestacion && !showDarTurnos">
             <help-solicitud *ngIf="prestacion?.solicitud" [solicitud]='prestacion.solicitud'></help-solicitud>
