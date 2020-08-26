@@ -40,6 +40,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
     /* returnScannedPatient en true retorna un objeto con los datos del paciente escaneado en caso de
         que este no estuviera registrado */
     @Input() returnScannedPatient = false;
+    // Idica si debe implementar scroll infinito (Ver también el componente pacienteListado)
     @Input() scrolling = false;
 
     // Eventos

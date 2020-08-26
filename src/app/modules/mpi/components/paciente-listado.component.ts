@@ -49,6 +49,9 @@ export class PacienteListadoComponent {
     // Indica si debe aparecer el boton 'editar' en cada resultado
     @Input() editing = false;
 
+    // Idica si debe implementar scroll infinito (Ver también el componente pacienteBuscar)
+    @Input() scrolling = false;
+
     // Evento que se emite cuando se selecciona un paciente (click en la lista)
     @Output() selected: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 

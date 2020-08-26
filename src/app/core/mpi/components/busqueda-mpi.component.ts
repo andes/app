@@ -60,7 +60,7 @@ export class BusquedaMpiComponent implements OnInit {
         this.loading = true;
     }
 
-    onSearchEnd(pacientes: any[], escaneado: boolean, busqueda: string) {
+    onSearchEnd(pacientes: any[], escaneado: boolean, scan: string) {
         this.searchClear = false;
         this.escaneado = escaneado;
         this.loading = false;
