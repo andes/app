@@ -262,6 +262,17 @@ export class DatosContactoComponent implements OnInit {
 
     // -------------------- DOMICILIO -------------------
 
+    get direccionLegal() {
+        let dir = null;
+        if (this.paciente.direccion[1] && this.paciente.direccion[1].valor) {
+            dir = this.paciente.direccion[1];
+            const localidad = dir.ubicacion && dir.ubicacion.localidad && dir.ubicacion.localidad.nombre ? `, ${dir.ubicacion.localidad.nombre}` : '';
+            const provincia = dir.ubicacion && dir.ubicacion.provincia && dir.ubicacion.provincia.nombre ? `, ${dir.ubicacion.provincia.nombre}` : '';
+            dir = `${dir.valor} ${localidad} ${provincia}`;
+        }
+        return dir;
+    }
+
     loadProvincia() {
         this.provincias$ = this.provinciaService.get({}).pipe(
             cache()
