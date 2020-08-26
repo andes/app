@@ -35,8 +35,14 @@
             {{item.title}}
             <plex-bool *ngIf="!item.avoidAll" [(ngModel)]="all" label="Seleccionar todos" type="slide"> </plex-bool>
         </h5>
-        <plex-select [multiple]="true" [readonly]="all" [(ngModel)]="seleccionados" *ngIf="!loading"
-            (getData)="loadData(item.type, $event)" placeholder="Seleccione los elementos con permisos" name="plexSelect"
-            idField="id"></plex-select>
+        <plex-wrapper>
+            <plex-select [multiple]="true" [readonly]="all" [(ngModel)]="seleccionados" *ngIf="!loading"
+                         (getData)="loadData(item.type, $event)" placeholder="Seleccione los elementos con permisos"
+                         name="plexSelect" idField="id" (change)="parseSelecionados()"
+                         (paste)="$event.preventDefault();onPaste($event);">
+            </plex-select>
+            <plex-copy *ngIf="!loading && item.type === 'prestacion'" [value]="seleccionadosJson">
+            </plex-copy>
+        </plex-wrapper>
     </div>
 </div>

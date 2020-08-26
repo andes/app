@@ -3,6 +3,7 @@ import { PlexPanelComponent } from '@andes/plex/src/lib/accordion/panel.componen
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { TipoPrestacionService } from '../../../../services/tipoPrestacion.service';
 import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
 // import { IPermiso } from '../interfaces/IPermiso';
 let shiroTrie = require('shiro-trie');
 
@@ -16,10 +17,11 @@ type IPermiso = any;
 export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewInit {
 
     private shiro = shiroTrie.new();
-    private state = false;
-    private all = false;
-    private seleccionados = [];
-    private allModule = false;
+    public state = false;
+    public all = false;
+    public seleccionados = [];
+    public seleccionadosJson = '';
+    public allModule = false;
     public itemsCount = 0;
     public loading = true;
 
@@ -37,7 +39,8 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
     constructor(
         private servicioTipoPrestacion: TipoPrestacionService,
         private organizacionService: OrganizacionService,
-        private auth: Auth
+        private auth: Auth,
+        public plex: Plex
     ) { }
 
     get isHidden() {
@@ -85,6 +88,31 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
         this.refresh();
     }
 
+    public parseSelecionados() {
+        this.seleccionadosJson = JSON.stringify(this.seleccionados);
+    }
+
+    public onPaste(event: ClipboardEvent) {
+        if (this.item.type === 'prestacion') {
+            try {
+                let clipboardData = event.clipboardData;
+                let pastedText = clipboardData.getData('text');
+                if (!this.seleccionados) {
+                    this.seleccionados = [];
+                }
+                let arrayPrestaciones = this.seleccionados.concat(JSON.parse(pastedText));
+                let setPrestaciones = new Map();
+                arrayPrestaciones.forEach(prestacion => {
+                    setPrestaciones.set(prestacion._id, prestacion);
+                });
+                this.seleccionados = [...setPrestaciones.values()];
+                this.parseSelecionados();
+            } catch (e) {
+                this.plex.info('danger', 'Solo se permite pegar prestaciones válidas');
+            }
+        }
+    }
+
     refresh() {
         this.initShiro();
         if (this.item.type) {
@@ -106,12 +134,14 @@ export class ArbolPermisosItemComponent implements OnInit, OnChanges, AfterViewI
                                 this.servicioTipoPrestacion.get({ id: items }).subscribe((data) => {
                                     this.loading = false;
                                     this.seleccionados = [...data];
+                                    this.parseSelecionados();
                                 });
                                 break;
                             case 'organizacion':
                                 this.organizacionService.get({ ids: items }).subscribe((data) => {
                                     this.loading = false;
                                     this.seleccionados = [...data];
+                                    this.parseSelecionados();
                                 });
                                 break;
                         }
