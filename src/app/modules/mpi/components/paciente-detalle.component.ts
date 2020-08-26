@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { IPaciente } from '../../../core/mpi/interfaces/IPaciente';
-import { ObraSocialService } from '../../../services/obraSocial.service';
 import { IObraSocial } from '../../../interfaces/IObraSocial';
 import { ObraSocialCacheService } from '../../../services/obraSocialCache.service';
 import { Observable } from 'rxjs';
@@ -121,7 +120,6 @@ export class PacienteDetalleComponent implements OnInit {
     }
 
     constructor(
-        private obraSocialService: ObraSocialService,
         private obraSocialCacheService: ObraSocialCacheService,
         private pacienteService: PacienteService
     ) {
@@ -155,17 +153,7 @@ export class PacienteDetalleComponent implements OnInit {
 
     // TODO: Eliminar este metodo y utilizar el financiador que viene en el paciente (una vez que se agregue en el multimatch)
     loadObraSocial() {
-        this.obraSocial = {
-            id: '',
-            tipoDocumento: '',
-            dni: 0,
-            transmite: '',
-            nombre: '',
-            codigoFinanciador: 0,
-            financiador: ' ',
-            version: new Date(),
-            numeroAfiliado: '',
-        };
+        this.obraSocial = null;
         if (!this.paciente || !this.paciente.documento) {
             this.obraSocialCacheService.setFinanciadorPacienteCache(null);
             this.obraSocial = null;
@@ -175,15 +163,9 @@ export class PacienteDetalleComponent implements OnInit {
             this.obraSocial = this.paciente.financiador[0] as any;
             this.obraSocialCacheService.setFinanciadorPacienteCache(this.obraSocial);
             return;
+        } else {
+            this.obraSocialCacheService.setFinanciadorPacienteCache(null);
+            return;
         }
-        this.obraSocialService.getObrasSociales(this.paciente.documento).subscribe(resultado => {
-            if (resultado.length > 0) {
-                this.obraSocial = resultado[0];
-                this.obraSocialCacheService.setFinanciadorPacienteCache(this.obraSocial);
-            } else {
-                this.obraSocial = null;
-                this.obraSocialCacheService.setFinanciadorPacienteCache(null);
-            }
-        });
     }
 }

@@ -90,34 +90,32 @@ export class TurnosPacienteComponent implements OnInit {
     }
     loadObraSocial() {
         // TODO: si es en colegio médico hay que buscar en el paciente
-        if (!this._paciente || !this._paciente.documento) { return; }
-        this.obraSocialService.getObrasSociales(this._paciente.documento).subscribe(resultado => {
-            if (resultado.length) {
-                this._obraSocial = resultado;
-                this.obraSocialPaciente = resultado.map((os: any) => {
-                    let osPaciente;
+        if (!this._paciente || !this._paciente.documento) {
+            return;
+        } else {
+            this._obraSocial = this._paciente.financiador || [];
+        }
+        if (this._obraSocial.length) {
+            this.obraSocialPaciente = this._obraSocial.map((os: any) => {
+                let osPaciente;
 
-                    if (os.nombre) {
-                        osPaciente = {
-                            'id': os.nombre,
-                            'label': os.nombre
-                        };
-                    } else {
-                        osPaciente = {
-                            'id': os.financiador,
-                            'label': os.financiador
-                        };
-                    }
-                    return osPaciente;
-                });
-                this.modelo.obraSocial = this.obraSocialPaciente[0].label;
-            } else {
-                this._obraSocial = [];
-            }
-            this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
+                if (os.nombre) {
+                    osPaciente = {
+                        'id': os.nombre,
+                        'label': os.nombre
+                    };
+                } else {
+                    osPaciente = {
+                        'id': os.financiador,
+                        'label': os.financiador
+                    };
+                }
+                return osPaciente;
+            });
+            this.modelo.obraSocial = this.obraSocialPaciente[0].label;
+        }
+        this.obraSocialPaciente.push({ 'id': 'prepaga', 'label': 'Prepaga' });
 
-
-        });
 
 
     }
