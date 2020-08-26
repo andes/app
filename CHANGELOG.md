@@ -1,3 +1,25 @@
+# [5.10.0](https://github.com/andes/app/compare/v5.9.0...v5.10.0) (2020-08-26)
+
+
+### Bug Fixes
+
+* **obra-social:** elimina llamados el getObraSocial ([#1752](https://github.com/andes/app/issues/1752)) ([315a7b8](https://github.com/andes/app/commit/315a7b857095391c52d7ecd476ea427752c06857))
+* **top:** arreglo en visualización de reglas globales ([#1865](https://github.com/andes/app/issues/1865)) ([77760d0](https://github.com/andes/app/commit/77760d017bd153131101003e6285a257c3f40732))
+
+
+### Features
+
+* **elementos-rup:** agrega label en solo valores ([#1853](https://github.com/andes/app/issues/1853)) ([47bbfd1](https://github.com/andes/app/commit/47bbfd152ac1a5cbbad0af35241a5ab09bcc9c9a))
+* **huds:** add legal warning modal ([#1874](https://github.com/andes/app/issues/1874)) ([ff6434f](https://github.com/andes/app/commit/ff6434f1ddaa3f69234cf30eccbbb2ec13b068d7))
+* **huds:** agrega texto legales al modal de accesos ([#1875](https://github.com/andes/app/issues/1875)) ([826691c](https://github.com/andes/app/commit/826691c40e77f01ba3b5f07bda449ae473594aac))
+* **mapa-camas:** agrega modal acceso a registros medicos ([#1871](https://github.com/andes/app/issues/1871)) ([b488712](https://github.com/andes/app/commit/b488712a536f8c098bf5ee436c2e6313e3d0c738))
+* **mapa-camas:** permiso para editar cama ([#1807](https://github.com/andes/app/issues/1807)) ([9306a24](https://github.com/andes/app/commit/9306a24b2337fbd0ff310d04a7affbe5c5bb31a4))
+* **organizacion:** endpoints de sectores ([#1818](https://github.com/andes/app/issues/1818)) ([b5eb64b](https://github.com/andes/app/commit/b5eb64be6e8ed2440ab38544b36cd887aa846303))
+* **rup:** buscador filtrar por descendientes ([#1810](https://github.com/andes/app/issues/1810)) ([3cfdea8](https://github.com/andes/app/commit/3cfdea8079012839f53f042d24a4cef9892338bb))
+* **rup:** link a snomed browser en buscardor ([#1800](https://github.com/andes/app/issues/1800)) ([6264857](https://github.com/andes/app/commit/62648571437873f9efe872ccdaef6cc1a9cc73b8))
+* **TOP:** devolver asignadas para auditor ([#1869](https://github.com/andes/app/issues/1869)) ([67c6a04](https://github.com/andes/app/commit/67c6a04a33de6845e5bd4ec6a9c6c58605ec5ec7))
+* **TOP:** observaciones en referir solicitud ([#1860](https://github.com/andes/app/issues/1860)) ([532756a](https://github.com/andes/app/commit/532756a3e201e89323020e7ea3b04ee82dcdfc2e))
+
 # [5.9.0](https://github.com/andes/app/compare/v5.8.0...v5.9.0) (2020-08-19)
 
 
