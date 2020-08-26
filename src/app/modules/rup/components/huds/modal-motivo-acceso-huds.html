@@ -3,20 +3,26 @@
     <plex-modal-title type="danger">Historia Universal Digital de Salud</plex-modal-title>
     <plex-modal-subtitle type="">Por favor, indique el motivo de acceso:</plex-modal-subtitle>
     <main>
-        <div class="w-50">
-            <div>
+        <div class="w-100">
+            <div class="w-50">
                 <plex-radio [(ngModel)]="motivoSelected" [data]="motivosAccesoHuds">
                 </plex-radio>
             </div>
 
             <div class="mt-4">
-                <b>
-                    Recuerde que todos los ingresos y acciones realizados por UD. en la HUDS quedarán registrados.
+                <small>
+                    Recuerde que todos los ingresos y acciones realizados en la HUDS a través de su usuario y contraseña
+                    quedarán registrados.
                     <br>
                     El formulario aquí presente reviste el carácter de Declaración Jurada, quedando sujetos los
                     infractores
                     a las penalidades previstas en el Código Penal.
-                </b>
+                    Es importante recordar que la Ley 2611, en su artículo 4°, inciso K, señala: “Los
+                    pacientes tienen derecho a la intimidad y confidencialidad de los datos. En
+                    correspondencia con este derecho el servidor público debe indefectiblemente
+                    guardar y preservar el secreto profesional”
+                </small>
+
             </div>
         </div>
     </main>
