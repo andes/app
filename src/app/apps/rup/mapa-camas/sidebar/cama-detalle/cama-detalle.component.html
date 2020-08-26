@@ -20,8 +20,8 @@
             </plex-title>
             <fieldset>
                 <plex-detail size="lg" direction="row">
-                    <plex-icon name="{{ estadoCama.icon.substring(this.estadoCama.icon.indexOf('-') + 1) }}"
-                               prefix="adi"></plex-icon>
+                    <plex-icon name="{{ estadoCama.icon.substring(this.estadoCama.icon.indexOf('-') + 1) }}">
+                    </plex-icon>
                     <plex-badge [type]="estadoCama.color">
                         {{estadoCama.label}}
                     </plex-badge>

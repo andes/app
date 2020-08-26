@@ -28,7 +28,7 @@
                     <div class="modulo">
                         <div class="principal {{ modulo.class }}">
                             <b class="titulo">{{ modulo.nombre }}
-                                <span class="hover" *ngIf="novedades[modulo._id]?.length > 0"
+                                <span class="hover" *ngIf="novedades[modulo._id]?.length > 0" hintType="info"
                                       hint="Novedades del módulo {{ modulo.nombre }}" detach="both" icon="bell"
                                       (click)="irANovedades(modulo._id)"></span>
                             </b>
