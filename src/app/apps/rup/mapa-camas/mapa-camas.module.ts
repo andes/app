@@ -33,7 +33,6 @@ import { InternacionListadoComponent } from './views/listado-internacion/listado
 import { InternacionListaEsperaComponent } from './views/lista-espera/lista-espera.component';
 
 import { MapaCamasService } from './services/mapa-camas.service';
-import { MapaCamasHTTP } from './services/mapa-camas.http';
 import { MitosModule } from '../../mitos';
 import { OrganizacionLibModule } from '../../../components/organizacion/organizacion-lib.module';
 import { ElegirPacienteComponent } from './sidebar/ingreso/elegir-paciente.component';
@@ -79,7 +78,6 @@ export const INTERNACION_COMPONENTS = [
 
 export const INTERNACION_PROVIDERS = [
     MapaCamasService,
-    MapaCamasHTTP,
     MaquinaEstadosHTTP,
     ListadoInternacionService
 ];

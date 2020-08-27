@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ISnapshot } from '../interfaces/ISnapshot';
 import { ICama } from '../interfaces/ICama';
-import { IMaquinaEstados } from '../interfaces/IMaquinaEstados';
-import { map } from 'rxjs/operators';
 
 export type IFiltrosHistorial = any;
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+  })
 export class MapaCamasHTTP {
     private url = '/modules/rup/internacion';
 

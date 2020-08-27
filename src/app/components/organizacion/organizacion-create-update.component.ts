@@ -19,6 +19,8 @@ import { IContacto } from './../../interfaces/IContacto';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { ITipoEstablecimiento } from './../../interfaces/ITipoEstablecimiento';
 import { Router } from '@angular/router';
+import { MapaCamasHTTP } from '../../apps/rup/mapa-camas/services/mapa-camas.http';
+import { ISnapshot } from '../../apps/rup/mapa-camas/interfaces/ISnapshot';
 import { Observable, Subject, of } from 'rxjs';
 import { switchMap, startWith } from 'rxjs/operators';
 import { cache } from '@andes/shared';
@@ -130,6 +132,9 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     public puedeEditarCompleto = false;
     public puedeEditarBasico = false;
     public botonGuardarDisabled = false;
+
+    public camas: ISnapshot[];
+
     constructor(
         private organizacionService: OrganizacionService,
         private paisService: PaisService,
@@ -139,12 +144,17 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         public plex: Plex,
         public snomed: SnomedService,
         private auth: Auth,
-        private router: Router
+        private router: Router,
+        public mapaCamasService: MapaCamasHTTP,
     ) { }
 
     ngOnInit() {
         this.puedeEditarBasico = this.auth.check('tm:organizacion:editBasico');
         this.puedeEditarCompleto = this.auth.check('tm:organizacion:editCompleto');
+
+        this.mapaCamasService.snapshot('internacion', 'medica', moment().toDate()).subscribe((snapshot) => {
+            this.camas = snapshot.filter(s => s.estado !== 'inactiva');
+        });
 
         if ((this.seleccion && this.seleccion.id && !(this.puedeEditarBasico || this.puedeEditarCompleto)) ||
             (!this.seleccion && !this.auth.check('tm:organizacion:create'))) {
@@ -413,6 +423,15 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                 this.plex.info('warning', 'El código SISA no existe.', 'No sincronizó');
             }
         });
+    }
+
+    // Verifica si la Unidad Organizativa está siendo utilizada en alguna cama de internación
+    checkUnidadOrganizativaCama(unidadOrganizativa) {
+        if (this.camas) {
+            const aux = this.camas.filter(cama => cama.unidadOrganizativa.conceptId === unidadOrganizativa.conceptId);
+            return (aux.length > 0);
+        }
+        return false;
     }
 
     /**
