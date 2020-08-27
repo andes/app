@@ -44,6 +44,8 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     mainView;
     subscription: Subscription;
 
+    public sortBy: string;
+    public sortOrder = 'desc';
 
     public permisoIngreso = false;
     public permisoCenso = false;
@@ -126,7 +128,7 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
             fecha = this.fecha;
         }
 
-        this.camas = this.mapaCamasService.snapshotFiltrado$.pipe(
+        this.camas = this.mapaCamasService.snapshotOrdenado$.pipe(
             map(snapshots => snapshots.filter(snap => snap.estado !== 'inactiva'))
         );
     }
@@ -198,4 +200,16 @@ export class MapaCamasCapaComponent implements OnInit, OnDestroy {
     trackByFn(item: ISnapshot) {
         return item.idCama;
     }
+
+    sortTable(event: string) {
+        if (this.sortBy === event) {
+            this.sortOrder = (this.sortOrder === 'asc') ? 'desc' : 'asc';
+            this.mapaCamasService.sortOrder.next(this.sortOrder);
+        } else {
+            this.sortBy = event;
+            this.mapaCamasService.sortBy.next(event);
+            this.mapaCamasService.sortOrder.next('desc');
+        }
+    }
+
 }

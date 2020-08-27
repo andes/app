@@ -20,6 +20,9 @@ export class MapaCamasService {
     public timer$;
     public fechaMax$;
 
+    public sortBy = new BehaviorSubject<string>(null);
+    public sortOrder = new BehaviorSubject<string>(null);
+
     public ambito2 = new BehaviorSubject<string>(null);
     public capa2 = new BehaviorSubject<string>(null);
     public fecha2 = new BehaviorSubject<Date>(null);
@@ -50,6 +53,7 @@ export class MapaCamasService {
 
     public snapshot$: Observable<ISnapshot[]>;
     public snapshotFiltrado$: Observable<ISnapshot[]>;
+    public snapshotOrdenado$: Observable<ISnapshot[]>;
 
     public fechaActual$: Observable<Date>;
 
@@ -121,6 +125,17 @@ export class MapaCamasService {
                 this.filtrarSnapshot(camas, paciente, unidadOrganizativa, sector, tipoCama, esCensable, estado, equipamiento)
             )
         );
+
+        this.snapshotOrdenado$ = combineLatest(
+            this.snapshotFiltrado$,
+            this.sortBy,
+            this.sortOrder
+        ).pipe(
+            map(([camas, sortBy, sortOrder]) =>
+                this.sortSnapshots(camas, sortBy, sortOrder)
+            )
+        );
+
 
         this.prestacion$ = combineLatest(
             this.selectedPrestacion,
@@ -329,6 +344,24 @@ export class MapaCamasService {
         }
 
         return camasFiltradas;
+    }
+
+    sortSnapshots(snapshots: ISnapshot[], sortBy: string, sortOrder: string) {
+        if (sortOrder === 'asc') {
+            snapshots = snapshots.reverse();
+        } else {
+            if (sortBy === 'cama') {
+                snapshots = snapshots.sort((a, b) => a.nombre.localeCompare((b.nombre as string)));
+            } else if (sortBy === 'unidadOrganizativa') {
+                snapshots = snapshots.sort((a, b) => a.unidadOrganizativa.term.localeCompare(b.unidadOrganizativa.term));
+            } else if (sortBy === 'estado') {
+                snapshots = snapshots.sort((a, b) => a.estado.localeCompare((b.estado as string)));
+            } else if (sortBy === 'paciente') {
+                snapshots = snapshots.sort((a, b) => (!a.paciente) ? 1 : (!b.paciente) ? -1 : a.paciente.apellido.localeCompare((b.paciente.apellido as string)));
+            }
+        }
+
+        return snapshots;
     }
 
     filtrarListaInternacion(listaInternacion: IPrestacion[], documento: string, apellido: string, estado: string) {

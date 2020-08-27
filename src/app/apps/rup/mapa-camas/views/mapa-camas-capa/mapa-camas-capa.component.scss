@@ -2,3 +2,8 @@
     color: white;
     background-color: #002738 !important;
 }
+
+table tr th.sortable:hover {
+    text-decoration: underline !important;
+    cursor: pointer;
+}
