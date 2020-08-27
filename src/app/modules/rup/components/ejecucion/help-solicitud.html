@@ -1,19 +1,31 @@
 <plex-help size='md' type="help" titulo="Información de la Solicitud" class='text-left'>
     <div class="container mb-4 float-left">
         <div class="row">
-            <div class="col-12">
+            <div class="col-12" *ngIf="!solicitud.organizacionOrigen">
                 <label>Organización:</label> {{solicitud.organizacion.nombre}}
+            </div>
+        </div>
+        <div class="row" *ngIf="solicitud.organizacionOrigen">
+            <div class="col-12">
+                <label>Organización Origen:</label>
+                {{solicitud.organizacionOrigen.nombre}}
+            </div>
+
+            <div class="col-12" *ngIf="solicitud.profesionalOrigen">
+                <label>Profesional Origen:</label>
+                {{solicitud.profesionalOrigen | nombre }}
+            </div>
+
+            <div class="col-12">
+                <label>Prestacion Origen:</label>
+                {{solicitud.tipoPrestacionOrigen.term}}
             </div>
         </div>
         <div class="row">
             <div class="col-12">
-                <label>Fecha:</label> {{solicitud.fecha | date}}
-            </div>
-        </div>
-        <div class="row" *ngIf="solicitud.prestacionOrigen">
-            <div class="col">
-                <label>Prestación de origen:</label> {{solicitud.prestacionOrigen}}
+                <label>Fecha:</label> {{solicitud.fecha | fecha}}
             </div>
         </div>
     </div>
+
 </plex-help>
