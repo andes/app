@@ -128,7 +128,7 @@ export class AppComponent {
                     if (this.auth.getPermissions(permiso).length > 0) {
                         if (modulos.indexOf(modulo._id) === -1) {
                             modulos.push(modulo._id);
-                            const menuOption = { label: `${modulo.nombre}: ${modulo.subtitulo}`, icon: `mdi ${modulo.icono}`, route: modulo.linkAcceso };
+                            const menuOption = { label: `${modulo.nombre}: ${modulo.subtitulo}`, icon: `${modulo.icono}`, route: modulo.linkAcceso };
                             this.menuList.push(menuOption);
                         }
                     }
