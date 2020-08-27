@@ -29,7 +29,6 @@ import { SeguimientoPacienteService } from '../../services/seguimientoPaciente.s
     encapsulation: ViewEncapsulation.None
 })
 export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
-    idAgenda: any;
     @HostBinding('class.plex-layout') layout = true;
     @ViewChildren(RUPComponent) rupElements: QueryList<any>;
 
@@ -120,7 +119,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         public servicioTipoPrestacion: TipoPrestacionService,
         private servicioPaciente: PacienteService,
-        private servicioAgenda: AgendaService,
         private conceptObserverService: ConceptObserverService,
         private buscadorService: SnomedBuscarService,
         public huds: HUDSService,
@@ -165,8 +163,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         this.conceptObserverService.destroy();
         this.route.params.subscribe(params => {
             let id = params['id'];
-            this.idAgenda = localStorage.getItem('idAgenda');
-
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.elementosRUPService.ready.subscribe((resultado) => {
                 if (resultado) {
@@ -249,10 +245,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.huds.clear();
     }
-
-    /**
-     *
-     */
 
     public onCloseTab(index) {
         this.huds.remove(index - 2);
@@ -699,30 +691,6 @@ export class PrestacionEjecucionComponent implements OnInit, OnDestroy {
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
             this.plex.toast('success', 'Prestación guardada correctamente', 'Prestacion guardada', 100);
             if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
-                // Si existe un turno y una agenda asociada, y existe un concepto que indica que el paciente no concurrió a la consulta...
-                if (this.idAgenda) {
-                    localStorage.removeItem('idAgenda');
-
-                    // Se hace un patch en el turno para indicar que el paciente no asistió (turno.asistencia = "noAsistio")
-                    let cambios;
-                    this.servicioPrestacion.prestacionPacienteAusente().subscribe(
-                        result => {
-                            let filtroRegistros = this.prestacion.ejecucion.registros.filter(x => result.find(y => y.conceptId === x.concepto.conceptId));
-                            if (filtroRegistros && filtroRegistros.length > 0) {
-
-                                cambios = {
-                                    op: 'noAsistio',
-                                    turnos: [this.prestacion.solicitud.turno]
-                                };
-                            } else {
-                                cambios = {
-                                    op: 'darAsistencia',
-                                    turnos: [this.prestacion.solicitud.turno]
-                                };
-                            }
-                            this.servicioAgenda.patch(this.idAgenda, cambios).subscribe();
-                        });
-                }
                 // Actualizamos las prestaciones de la HUDS
                 this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
                     this.servicioPrestacion.clearRefSetData();

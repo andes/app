@@ -13,7 +13,6 @@ import { ObraSocialCacheService } from '../../../../services/obraSocialCache.ser
 import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 import { HUDSService } from '../../services/huds.service';
 import { concat } from 'rxjs';
-import { tap } from 'rxjs/operators';
 
 @Component({
     templateUrl: 'prestacionCrear.html'
@@ -199,7 +198,6 @@ export class PrestacionCrearComponent implements OnInit {
                         // se obtuvo token y loguea el acceso a la huds del paciente
                         window.sessionStorage.setItem('huds-token', input.token);
                     } else {
-                        localStorage.removeItem('idAgenda');
                         this.router.navigate(['/rup/ejecucion', input.id]); // prestacion
                     }
                 }, (err) => {
@@ -207,7 +205,6 @@ export class PrestacionCrearComponent implements OnInit {
                 });
             } else {
                 this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
-                    localStorage.removeItem('idAgenda');
                     this.router.navigate(['/rup/ejecucion', prestacion.id]);
                 }, (err) => {
                     this.disableGuardar = false;
@@ -246,7 +243,6 @@ export class PrestacionCrearComponent implements OnInit {
      */
     elegirPrestacion(unPacientePresente) {
         if (unPacientePresente.idPrestacion) {
-
             if (unPacientePresente.estado === 'Programado') {
                 let cambioEstado: any = {
                     op: 'estadoPush',
