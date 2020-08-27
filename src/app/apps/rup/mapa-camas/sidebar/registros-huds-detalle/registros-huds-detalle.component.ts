@@ -112,6 +112,7 @@ export class RegistrosHudsDetalleComponent implements OnInit {
             })
         );
 
+
         this.max$ = this.mapaCamasService.historialInternacion$.pipe(
             map(movimientos => {
                 const egreso = movimientos.find(m => m.extras && m.extras.egreso);
