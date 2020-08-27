@@ -77,6 +77,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
     public rutaVolver;
     verMasRelaciones: any = [];
     conceptosTurneables: ITipoPrestacion[] = [];
+    public title;
 
     constructor(public servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -147,6 +148,7 @@ export class PrestacionValidacionComponent implements OnInit, OnDestroy {
         ).subscribe(([conceptosTurneables, prestacion]) => {
             this.conceptosTurneables = conceptosTurneables;
             this.prestacion = prestacion;
+            this.title = 'Resumen | ' + prestacion.solicitud.tipoPrestacion.term + ' - ' + moment(prestacion.solicitud.fecha).format('dd DD/MM/YYYY');
             this.registrosOriginales = prestacion.ejecucion.registros;
             this.plex.updateTitle([{
                 route: '/',
