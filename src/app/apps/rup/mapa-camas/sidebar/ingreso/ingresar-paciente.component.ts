@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, Optional } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ProfesionalService } from '../../../../../services/profesional.service';
 import { OcupacionService } from '../../../../../services/ocupacion/ocupacion.service';
@@ -11,11 +11,11 @@ import { snomedIngreso, pacienteAsociado, origenHospitalizacion, nivelesInstrucc
 import { ISnapshot } from '../../interfaces/ISnapshot';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { combineLatest, Subscription, Observable } from 'rxjs';
-import { ObraSocialService } from '../../../../../services/obraSocial.service';
-import { map } from 'rxjs/operators';
+import { map, switchMap, filter, tap } from 'rxjs/operators';
 import { ObjectID } from 'bson';
 import { ListadoInternacionService } from '../../views/listado-internacion/listado-internacion.service';
 import { Auth } from '@andes/auth';
+import { IngresoPacienteService } from './ingreso-paciente-workflow/ingreso-paciente-workflow.service';
 
 @Component({
     selector: 'app-ingresar-paciente',
@@ -27,7 +27,6 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     // EVENTOS
     @Output() onSave = new EventEmitter<any>();
-    @Output() volver = new EventEmitter<any>();
 
     // CONSTANTES
     public pacienteAsociado = pacienteAsociado;
@@ -82,9 +81,9 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
         private organizacionService: OrganizacionService,
         private servicioPrestacion: PrestacionesService,
         public mapaCamasService: MapaCamasService,
-        private obraSocialService: ObraSocialService,
         private listadoInternacionService: ListadoInternacionService,
-        private auth: Auth
+        private auth: Auth,
+        @Optional() private ingresoPacienteService: IngresoPacienteService
     ) {
     }
 
@@ -104,16 +103,37 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
     }
 
+    private handlerPacienteID(): Observable<string> {
+        if (this.ingresoPacienteService) {
+            return this.ingresoPacienteService.selectedPaciente;
+        }
+        return combineLatest(
+            this.mapaCamasService.selectedCama,
+            this.mapaCamasService.prestacion$
+        ).pipe(
+            map(([snap, prestacion]) => snap.idCama ? snap : prestacion),
+            filter(snap => !!snap.paciente),
+            map(snap => (snap.paciente.id))
+        ) as any;
+    }
+
     ngOnInit() {
         this.informeIngreso.fechaIngreso = this.mapaCamasService.fecha;
         this.fechaHasta = this.listadoInternacionService.fechaIngresoHasta;
+
+        const pacienteID$ = this.handlerPacienteID();
 
         this.subscription = combineLatest(
             this.mapaCamasService.view,
             this.mapaCamasService.capa2,
             this.mapaCamasService.selectedCama,
             this.mapaCamasService.prestacion$,
-            this.mapaCamasService.selectedPaciente
+            pacienteID$.pipe(
+                filter(pacID => !!pacID),
+                switchMap((pacID) => {
+                    return this.mapaCamasService.getPaciente({ id: pacID }, false);
+                })
+            )
         ).subscribe(([view, capa, cama, prestacion, paciente]) => {
             this.view = view;
             this.capa = capa;
@@ -128,18 +148,19 @@ export class IngresarPacienteComponent implements OnInit, OnDestroy {
 
             // Guarda la obra social en el paciente
             if (paciente.id) {
-                if (paciente.documento) {
-                    this.obraSocialService.get({ dni: this.paciente.documento }).subscribe((os: any) => {
-                        if (os && os.length > 0) {
-                            this.paciente.obraSocial = { nombre: os[0].financiador, financiador: os[0].financiador, codigoPuco: os[0].codigoFinanciador };
-                        }
-                    });
+                if (paciente.financiador && paciente.financiador.length > 0) {
+                    const os = paciente.financiador[0];
+                    this.paciente.obraSocial = {
+                        nombre: os.financiador,
+                        financiador: os.financiador,
+                        codigoPuco: os.codigoPuco
+                    };
                 }
                 let indiceCarpeta = -1;
                 if (paciente.carpetaEfectores && paciente.carpetaEfectores.length > 0) {
                     indiceCarpeta = paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
                     if (indiceCarpeta > -1) {
-                        this.informeIngreso.nroCarpeta = this.paciente.carpetaEfectores[indiceCarpeta].nroCarpeta;
+                        this.informeIngreso.nroCarpeta = paciente.carpetaEfectores[indiceCarpeta].nroCarpeta;
                     }
                 }
             }

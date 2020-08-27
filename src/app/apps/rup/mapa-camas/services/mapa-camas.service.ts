@@ -5,13 +5,14 @@ import { ISnapshot } from '../interfaces/ISnapshot';
 import { ICama } from '../interfaces/ICama';
 import { IMaquinaEstados, IMAQRelacion, IMAQEstado } from '../interfaces/IMaquinaEstados';
 import { MapaCamasHTTP } from './mapa-camas.http';
-import { switchMap, map, pluck, catchError, startWith, tap, publishReplay, refCount } from 'rxjs/operators';
+import { switchMap, map, pluck, catchError, startWith, tap, publishReplay, refCount, publish, filter } from 'rxjs/operators';
 import { ISectores } from '../../../../interfaces/IOrganizacion';
 import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concept.interface';
 import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 import { MaquinaEstadosHTTP } from './maquina-estados.http';
 import { PacienteService } from '../../../../core/mpi/services/paciente.service';
+import { IPaciente } from '../../../../core/mpi/interfaces/IPaciente';
 
 
 @Injectable()
@@ -32,7 +33,6 @@ export class MapaCamasService {
     public estadoSelected = new BehaviorSubject<string>(null);
     public equipamientoSelected = new BehaviorSubject<ISnomedConcept[]>(null);
 
-    public selectedPaciente = new BehaviorSubject<any>({} as any);
     public pacienteAux = new BehaviorSubject<any>({} as any);
 
     public selectedCama = new BehaviorSubject<ISnapshot>({} as any);
@@ -51,8 +51,6 @@ export class MapaCamasService {
     public snapshot$: Observable<ISnapshot[]>;
     public snapshotFiltrado$: Observable<ISnapshot[]>;
 
-    // public listaInternacion$: Observable<IPrestacion[]>;
-    // public listaInternacionFiltrada$: Observable<IPrestacion[]>;
     public fechaActual$: Observable<Date>;
 
     public mainView = new BehaviorSubject<any>('mapa-camas');
@@ -169,8 +167,9 @@ export class MapaCamasService {
             map((historial: ISnapshot[]) => {
                 return historial.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
             }),
-            cache()
+            publish()
         );
+        (this.historialInternacion$ as any).connect();
 
         const proximoMinuto = moment().add(1, 'minute').startOf('minute');
         const segundosAPoxMin = proximoMinuto.diff(moment());
@@ -262,10 +261,6 @@ export class MapaCamasService {
         this.fecha = fecha;
     }
 
-    // setFechaHasta(fecha: Date) {
-    //     this.fechaIngresoHasta.next(fecha);
-    // }
-
     setView(view: 'mapa-camas' | 'listado-internacion') {
         this.view.next(view);
     }
@@ -275,13 +270,6 @@ export class MapaCamasService {
             return this.selectedCama.next({ idCama: null } as any);
         }
         this.selectedCama.next(cama);
-    }
-
-    selectPaciente(paciente: any) {
-        if (!paciente) {
-            return this.selectedPaciente.next({ id: null } as any);
-        }
-        this.selectedPaciente.next(paciente);
     }
 
     selectPrestacion(prestacion: IPrestacion) {
@@ -374,7 +362,7 @@ export class MapaCamasService {
         return combineLatest(
             this.ambito2,
             this.capa2,
-            this.selectedCama,
+            this.selectedCama.pipe(filter(snap => !!snap.idCama)),
             this.selectedPrestacion,
             this.view
         ).pipe(
@@ -471,12 +459,12 @@ export class MapaCamasService {
         return (String(edad.valor) + ' ' + edad.unidad);
     }
 
-    private paciente$: any = {};
-    getPaciente(paciente) {
+    private paciente$: { [key: string]: Observable<IPaciente> } = {};
+    getPaciente(paciente, _startWith = true) {
         if (!this.paciente$[paciente.id]) {
             this.paciente$[paciente.id] = this.pacienteService.getById(paciente.id).pipe(
-                cache(),
-                startWith(paciente)
+                _startWith ? startWith(paciente) : map(res => res),
+                cache()
             );
         }
         return this.paciente$[paciente.id];
