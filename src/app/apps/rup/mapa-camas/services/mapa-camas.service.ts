@@ -5,7 +5,7 @@ import { ISnapshot } from '../interfaces/ISnapshot';
 import { ICama } from '../interfaces/ICama';
 import { IMaquinaEstados, IMAQRelacion, IMAQEstado } from '../interfaces/IMaquinaEstados';
 import { MapaCamasHTTP } from './mapa-camas.http';
-import { switchMap, map, pluck, catchError, startWith, tap, publishReplay, refCount, publish, filter } from 'rxjs/operators';
+import { switchMap, map, pluck, catchError, startWith, multicast, filter } from 'rxjs/operators';
 import { ISectores } from '../../../../interfaces/IOrganizacion';
 import { ISnomedConcept } from '../../../../modules/rup/interfaces/snomed-concept.interface';
 import { IPrestacion } from '../../../../modules/rup/interfaces/prestacion.interface';
@@ -182,7 +182,9 @@ export class MapaCamasService {
             map((historial: ISnapshot[]) => {
                 return historial.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
             }),
-            publish()
+            multicast(
+                () => new BehaviorSubject([])
+            )
         );
         (this.historialInternacion$ as any).connect();
 
