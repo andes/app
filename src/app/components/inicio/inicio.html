@@ -50,7 +50,8 @@
                     <div class="seccion hover" (click)="redirect(seccion)">
                         <div class="principal {{ seccion.class }}">
                             <div class="band"></div>
-                            <plex-icon [name]="seccion.icono" size="lg"></plex-icon>
+                            <plex-icon class="main" [name]="seccion.icono" size="lg"></plex-icon>
+                            <plex-icon class="animated" name="chevron-right" size="lg"></plex-icon>
                         </div>
                         <div class="secundario">
                             <div class="titulo ml-2">{{seccion.nombre}}</div>

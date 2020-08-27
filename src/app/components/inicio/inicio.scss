@@ -143,8 +143,6 @@ main {
         align-items: flex-start;
         flex-direction: column;
 
-        // margin-right: 20px;
-
         box-sizing: border-box;
         width: 210px;
 
@@ -329,31 +327,41 @@ main {
     .principal .band {
         width: 4px;
         height: 50px;
-        margin-left: -8px;
         background-color: white;
         transition: all 0.5s ease-in-out;
     }
 
     .principal plex-icon {
         margin-left: 0px;
+        margin-right: 0px;
+        &.animated {
+            position: relative;
+            right: 0px;
+            width: 0px;
+            opacity: 0;
+        }
     }
 
     &:hover {
-        // .principal {
         .band {
-            position: relative;
-            left: 61px;
+            margin-left: -10px !important;
         }
-        plex-icon {
-            position: relative;
-            transition: all 0.5s ease-in-out;
-            // margin-left: -80px;
+
+        .principal {
+            plex-icon {
+                &.animated {
+                    width: 10px;
+                    opacity: 1;
+                    right: 7px;
+                    transition: all 0.25s ease-in-out;
+                    animation-direction: reverse;
+                }
+            }
         }
-        // }
     }
 
     .principal {
-        transition: width ease-in-out 0.25s, margin ease-in 0.5s;
+        transition: width ease-in-out 0.5s, margin ease-in 0.5s;
 
         width: 61px;
         height: 49px;
