@@ -87,6 +87,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
     private subscription: Subscription;
     private subscription2: Subscription;
     private subscription3: Subscription;
+    private subscription4: Subscription;
 
     constructor(
         public auth: Auth,
@@ -108,6 +109,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
         if (this.subscription3) {
             this.subscription3.unsubscribe();
         }
+        this.subscription4.unsubscribe();
     }
 
     ngOnInit() {
@@ -125,7 +127,6 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                 fecha = moment().toDate();
                 this.prestacionValidada = prestacion.estados[prestacion.estados.length - 1].tipo === 'validada';
             }
-            this.fechaMax = moment().add(1, 's').toDate();
             this.registro.valor.InformeEgreso.fechaEgreso = fecha;
             this.view = view;
             this.capa = capa;
@@ -144,9 +145,9 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                     if (this.subscription2) {
                         this.subscription2.unsubscribe();
                     }
-                    let fechaABuscar = moment(this.registro.valor.InformeEgreso.fechaEgreso).add(1, 's');
+                    let fechaABuscar = moment(this.informeIngreso.fechaIngreso).add(1, 's');
                     if (this.hayEgreso) {
-                        fechaABuscar = fechaABuscar.add(-10, 's');
+                        fechaABuscar = moment(this.registro.valor.InformeEgreso.fechaEgreso).add(-10, 's');
                     }
                     this.subscription2 = this.mapaCamasService.snapshot(
                         fechaABuscar.toDate(),
@@ -155,8 +156,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
                         this.cama = snapshot[0];
                         if (this.cama) {
                             this.fechaMin = moment(this.cama.fecha, 'DD-MM-YYYY HH:mm').toDate();
-                            this.fecha = fecha;
-                            this.setFecha();
+                            this.checkHistorial(fecha);
                         }
                         if (this.subscription3) {
                             this.subscription3.unsubscribe();
@@ -170,8 +170,7 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
             if (cama.id) {
                 this.cama = cama;
                 this.fechaMin = moment(this.cama.fecha).add(1, 'm').toDate();
-                this.fecha = fecha;
-                this.setFecha();
+                this.checkHistorial(fecha);
                 if (this.subscription3) {
                     this.subscription3.unsubscribe();
                 }
@@ -514,6 +513,32 @@ export class EgresarPacienteComponent implements OnInit, OnDestroy {
 
             }
         });
+    }
+
+    /*
+        Controla que no se haya internado y egresado otro paciente hasta la fecha seleccionada.
+        Define la fecha maxima para el egreso actual según corresponda.
+    */
+    checkHistorial(fecha: Date) {
+        if (this.subscription4) {
+            this.subscription4.unsubscribe();
+        }
+        this.subscription4 = this.mapaCamasService.historial('cama', this.cama.fecha, moment().toDate()).subscribe(
+            (historialCama) => {
+                this.fechaMax = null;
+                for (const historial of historialCama) {
+                    if (!this.fechaMax && historial.estado === 'ocupada' && historial.idInternacion !== this.cama.idInternacion) {
+                        this.fechaMax = historial.fecha;
+                    }
+                }
+                if (moment(fecha).isSameOrAfter(moment(this.fechaMax))) {
+                    this.fecha = moment(this.fechaMax).add(-1, 'h').toDate();
+                } else {
+                    this.fecha = fecha;
+                }
+                this.setFecha();
+            }
+        );
     }
 
 }
