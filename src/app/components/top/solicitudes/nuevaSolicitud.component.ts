@@ -56,6 +56,7 @@ export class NuevaSolicitudComponent implements OnInit {
     ];
 
     modelo: any = {
+        inicio: 'top',
         paciente: {
             id: '',
             nombre: '',
