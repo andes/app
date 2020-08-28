@@ -154,7 +154,7 @@
                                             <td *ngIf="!prestacion.solicitud.turno" class="estado"
                                                 (click)="seleccionar(prestacion)">
                                                 <plex-badge type="info"
-                                                            *ngIf="prestacion.estados[prestacion.estados.length-1].tipo !== 'rechazada' && prestacion.estados[prestacion.estados.length-1].tipo !== 'auditoria'">
+                                                            *ngIf="prestacion.estados[prestacion.estados.length-1].tipo !== 'rechazada' && prestacion.estados[prestacion.estados.length-1].tipo !== 'auditoria' && prestacion.estados[prestacion.estados.length-1].tipo !== 'validada'">
                                                     {{prestacion.estados[prestacion.estados.length-1].tipo}}
                                                 </plex-badge>
                                                 <plex-badge type="success"
