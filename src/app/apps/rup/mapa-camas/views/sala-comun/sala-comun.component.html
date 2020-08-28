@@ -1,0 +1,49 @@
+<plex-layout main="8">
+    <plex-layout-main>
+        <form #formSala="ngForm">
+            <plex-title titulo="DATOS DE SALA COMUN">
+                <plex-button label="GUARDAR" title="{{ (puedeEditar) ? null : 'No tiene permisos para guardar' }}"
+                            type="success" [validateForm]="formSala" (click)="save($event)"
+                             [disabled]="disabled || !puedeEditar">
+                </plex-button>
+                <plex-button label="CANCELAR" type="danger" (click)="volver()"></plex-button>
+            </plex-title>
+            <fieldset>
+                <div class="row">
+                    <div class="col-8">
+                        <plex-text type="text" [(ngModel)]="salaComun.nombre" label="Nombre" name="nombre"
+                                   placeholder="Nombre" [required]="true">
+                        </plex-text>
+                    </div>
+                    <div class="col-4">
+                        <plex-float name="capacidad" [(ngModel)]="salaComun.capacidad" label="Capacidad">
+                        </plex-float>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <plex-select [(ngModel)]="salaComun.unidadOrganizativas" name="unidadOrganizativa"
+                                     [required]="true" [data]="unidadesOrganizativas$ | async" idField="term"
+                                     labelField="term" label="Unidades Organizativas" [multiple]="true">
+                        </plex-select>
+                    </div>
+                    <div class="col-6">
+                        <ng-container *ngIf="organizacion$ | async as organizacion">
+                            <plex-select name="sectores" [data]="sectores$ | async" label="Sectores" idField="_id"
+                                         labelField="nombre" [required]="true" [(ngModel)]="salaComun.sectores" 
+                                         [multiple]="true" >
+                            </plex-select>
+                        </ng-container>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <plex-title titulo="MAPA DE ORGANIZACION"></plex-title>
+        <div>
+            <sectores-item *ngFor="let unidad of mapaSectores$ | async" [root]="unidad" [actions]="false">
+            </sectores-item>
+        </div>
+    </plex-layout-sidebar>
+</plex-layout>

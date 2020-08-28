@@ -7,6 +7,7 @@ import { CensosDiariosComponent } from './views/censos/censo-diario/censo-diario
 import { CensosMensualesComponent } from './views/censos/censo-mensual/censo-mensual.component';
 import { InternacionListadoComponent } from './views/listado-internacion/listado-internacion.component';
 import { InternacionListaEsperaComponent } from './views/lista-espera/lista-espera.component';
+import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
 
 export const INTERNACION_ROUTES = [
     { path: 'mapa-camas', component: MapaCamasMainComponent },
@@ -24,6 +25,10 @@ export const INTERNACION_ROUTES = [
     { path: 'listado-internacion', component: InternacionListadoComponent },
 
     { path: ':ambito/:capa/lista-espera', component: InternacionListaEsperaComponent },
+
+    { path: 'sala-comun', component: SalaComunComponent },
+
+    { path: 'sala-comun/:id', component: SalaComunComponent },
 
     { path: '', redirectTo: 'mapa-camas', pathMatch: 'full' }
 

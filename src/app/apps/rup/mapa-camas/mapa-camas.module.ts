@@ -44,6 +44,8 @@ import { RegistrosHudsDetalleComponent } from './sidebar/registros-huds-detalle/
 import { ElementosRUPModule } from '../../../modules/rup/elementos-rup.module';
 import { RegistroHUDSItemComponent } from './sidebar/registros-huds-detalle/registros-huds-item/registros-huds-item.component';
 import { IngresoPacienteWorkflowComponent } from './sidebar/ingreso/ingreso-paciente-workflow/ingreso-paciente-workflow.component';
+import { SalaComunComponent } from './views/sala-comun/sala-comun.component';
+import { SalaComunService } from './views/sala-comun/sala-comun.service';
 
 export const INTERNACION_COMPONENTS = [
     MapaCamasMainComponent,
@@ -73,13 +75,15 @@ export const INTERNACION_COMPONENTS = [
     NuevoRegistroSaludComponent,
     RegistrosHudsDetalleComponent,
     RegistroHUDSItemComponent,
-    IngresoPacienteWorkflowComponent
+    IngresoPacienteWorkflowComponent,
+    SalaComunComponent,
 ];
 
 export const INTERNACION_PROVIDERS = [
     MapaCamasService,
     MaquinaEstadosHTTP,
-    ListadoInternacionService
+    ListadoInternacionService,
+    SalaComunService,
 ];
 
 @NgModule({
