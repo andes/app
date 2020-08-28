@@ -258,14 +258,12 @@
                                     <plex-badge type="danger" *ngIf="turno && turno.estado === 'suspendido'">
                                         Suspendido</plex-badge>
                                     <span *ngIf="turno && turno.nota">
-                                        <i title="{{turno.nota}}"
-                                           class="text-warning warning mdi mdi-message"></i>
+                                        <i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i>
                                     </span>
 
                                     <div *ngIf="turno && turno.confirmatedAt">
                                         <br />
-                                        <plex-badge type="default"
-                                                    title="{{turno.confirmatedAt | date: 'medium'}}">                                            
+                                        <plex-badge type="default" title="{{turno.confirmatedAt | date: 'medium'}}">
                                             Confirmado
                                         </plex-badge>
                                     </div>
@@ -305,6 +303,12 @@
                                                      *ngIf="!turno.asistencia && !esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && turno.paciente && (!turno.prestacion || turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion')"
                                                      type="warning btn-sm" label="REGISTRAR INASISTENCIA"
                                                      (click)="registrarInasistencia(turno.paciente,agendaSeleccionada, turno.id, 'noAsistio')">
+                                        </plex-button>
+
+                                        <plex-button size="block"
+                                                     *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(turno) && verificarAsistencia(turno)"
+                                                     label="ANULAR INICIO DE PRESTACIÓN" type="danger btn-sm"
+                                                     (click)="invalidarPrestacion(turno.prestacion, agendaSeleccionada.dinamica ? turno.id : false)">
                                         </plex-button>
 
                                     </ng-container>
@@ -358,8 +362,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <ng-container
-                                          *ngFor="let sobreturno of agendaSeleccionada.sobreturnos; let j=index">
+                            <ng-container *ngFor="let sobreturno of agendaSeleccionada.sobreturnos; let j=index">
                                 <tr *ngIf="sobreturno" class="hover">
                                     <td>
                                         <strong>{{ sobreturno.horaInicio | date: 'HH:mm' }}</strong>
@@ -443,8 +446,7 @@
                                     </td>
                                     <td>
                                     <td>
-                                        <ng-container 
-                                                      *ngIf="sobreturno.tipoPrestacion && sobreturno.paciente?.id">
+                                        <ng-container *ngIf="sobreturno.tipoPrestacion && sobreturno.paciente?.id">
                                             <plex-button size="block" *ngIf='tieneAccesoHUDS'
                                                          (click)="setRouteToParams(['paciente', sobreturno.paciente.id]); setAccesoHudsParams(sobreturno.paciente, sobreturno.id, sobreturno.tipoPrestacion.id)"
                                                          label="VER HUDS" type="primary btn-sm">
@@ -477,6 +479,11 @@
                                                          type="warning btn-sm" label="REGISTRAR INASISTENCIA"
                                                          (click)=" registrarInasistencia(sobreturno.paciente,agendaSeleccionada, sobreturno.id, 'noAsistio')">
                                             </plex-button>
+                                            <plex-button size="block"
+                                                         *ngIf="sobreturno.paciente && sobreturno.estado !== 'suspendido' && sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(sobreturno)"
+                                                         label="ANULAR INICIO DE PRESTACIÓN" type="danger btn-sm"
+                                                         (click)="invalidarPrestacion(sobreturno.prestacion)">
+                                            </plex-button>
 
                                         </ng-container>
                                     </td>
@@ -495,8 +502,7 @@
                     <tbody>
                         <tr *ngFor="let prestacion of fueraDeAgenda" class="hover">
                             <td>
-                                <strong 
-                                        *ngIf="prestacion">{{ prestacion.solicitud.fecha | date: 'HH:mm' }}</strong>
+                                <strong *ngIf="prestacion">{{ prestacion.solicitud.fecha | date: 'HH:mm' }}</strong>
                                 <br>
                                 <plex-badge
                                             type="{{ prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' ? 'success' : (
@@ -545,9 +551,16 @@
 
                                 <plex-button size="block"
                                              *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'"
-                                             (click)="onVerResumenClick('validacion', prestacion)" 
-                                             label="VER RESUMEN" type="success btn-sm">
+                                             (click)="onVerResumenClick('validacion', prestacion)" label="VER RESUMEN"
+                                             type="success btn-sm">
                                 </plex-button>
+
+                                <plex-button size="block"
+                                             *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'"
+                                             label="ANULAR INICIO DE PRESTACIÓN" type="danger btn-sm"
+                                             (click)="invalidarPrestacion(prestacion)">
+                                </plex-button>
+
                             </td>
                         </tr>
                     </tbody>
