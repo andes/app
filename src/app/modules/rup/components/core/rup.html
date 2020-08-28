@@ -1,7 +1,14 @@
-<!-- Este es un elemento RUP -->
+<div *ngIf="(ultimaConsulta?.updatedAt || ultimaConsulta?.createdAt) && validacion === false" class="row bg-faded"
+     class="d-flex justify-content-start">
+    <div class="col m-0 p-0 bg-registro-anterior">
+        <span>Registros tomados el {{ (ultimaConsulta.updatedAt || ultimaConsulta.createdAt) | fecha }}, por {{ ultimaConsulta.createdBy
+            | nombre }}</span>
+    </div>
+</div>
+
 
 <!-- Moléculas -->
-<ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
+<ng-container *ngIf="flag && elementoRUP.requeridos && elementoRUP.requeridos.length">
     <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
         <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
             <div *ngIf="item.elementoRUP"
