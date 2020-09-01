@@ -25,7 +25,6 @@ import { ProfesionalComponent } from './components/profesional/profesional.compo
 import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { InicioComponent } from './components/inicio/inicio.component';
-import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 import { OrganizacionSectoresComponent } from './components/organizacion/organizacion-sectores.component';
 import { OrganizacionOfertaPrestacionalComponent } from './components/organizacion/organizacion-prestaciones.component';
@@ -144,15 +143,13 @@ const appRoutes: Routes = [
   // { path: 'citas/sobreturnos', component: AgregarSobreturnoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'citas/sobreturnos/:idAgenda', component: AgregarSobreturnoComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'citas/paciente/:idAgenda', component: AgregarPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  // RUP
-  { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/crear/:opcion', component: PrestacionCrearComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/validacion/:id', component: PrestacionValidacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/vista/:id', component: VistaHudsComponent, canActivate: [RoutingNavBar, RoutingGuard, RoutingHudsGuard] },
-  { path: 'rup/huds/paciente/:id', component: VistaHudsComponent, canActivate: [RoutingNavBar, RoutingGuard, RoutingHudsGuard] },
-  { path: 'rup/huds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-  { path: 'rup/plantillas', component: PlantillasRUPComponent, canActivate: [RoutingNavBar, RoutingGuard] },
+
+  {
+    path: 'rup',
+    loadChildren: () => import('./modules/rup/rup.module').then(m => m.RUPModule),
+    canActivate: [RoutingNavBar, RoutingGuard],
+    runGuardsAndResolvers: 'always'
+  },
 
   // Configuraciones / ABM
   { path: 'configuracionPrestacion', component: ConfiguracionPrestacionVisualizarComponent, canActivate: [RoutingNavBar, RoutingGuard] },
@@ -186,9 +183,6 @@ const appRoutes: Routes = [
   // TOP
   { path: 'top/reglas', component: ReglasComponent, canActivate: [RoutingNavBar, RoutingGuard] },
   { path: 'top/reglasVisualizacion', component: VisualizacionReglasTopComponent, canActivate: [RoutingNavBar, RoutingGuard] },
-
-  // TODO: Verificar si estas rutas todavía son válidas, y ubicarlas en los módulos correspondientes
-  /* VERIFICAR ==> */ { path: 'tipoprestaciones', component: TipoPrestacionComponent, canActivate: [RoutingNavBar, RoutingGuard] },
 
   // Principal
   { path: 'auth', loadChildren: './apps/auth/auth.module#AuthAppModule' },

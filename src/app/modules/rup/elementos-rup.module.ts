@@ -12,53 +12,34 @@ import { NgDragDropModule } from 'ng-drag-drop';
 import { SelectPorRefsetComponent } from './components/elementos/SelectPorRefset.component';
 import { AutocitadoComponent } from './components/elementos/autocitado.component';
 import { EvolucionProblemaDefaultComponent } from './components/elementos/evolucionProblemaDefault.component';
-import { FiltradoGlomerularComponent } from './components/elementos/filtradoGlomerular.component';
 import { FrecuenciaCardiacaComponent } from './components/elementos/frecuenciaCardiaca.component';
 import { FrecuenciaRespiratoriaComponent } from './components/elementos/frecuenciaRespiratoria.component';
-import { HipertensionArterialComponent } from './components/elementos/hipertensionArterial.component';
 import { IndiceDeMasaCorporalComponent } from './components/elementos/indiceDeMasaCorporal.component';
 import { InformesComponent } from './components/elementos/deprecated/informe.component';
 import { NuevaEvolucionProblemaComponent } from './components/elementos/nuevaEvolucionProblema.component';
-import { ObesidadComponent } from './components/elementos/obesidad.component';
 import { ObservacionesComponent } from './components/elementos/rupers/texto-enriquecido/observaciones.component';
 import { PesoComponent } from './components/elementos/peso.component';
-import { PercentiloPerimetroCefalicoComponent } from './components/elementos/percentiloPerimetroCefalico.component';
-import { PerimetroCefalicoComponent } from './components/elementos/perimetroCefalico.component';
 import { RegistrarMedicamentoDefaultComponent } from './components/elementos/registrarMedicamentoDefault.component';
 import { SaturacionOxigenoComponent } from './components/elementos/saturacionOxigeno.component';
 import { GraficoLinealComponent } from './components/elementos/graficoLineal.component';
-import { SignosVitalesComponent } from './components/elementos/signosVitales.component';
 import { SolicitudPrestacionDefaultComponent } from './components/elementos/solicitudPrestacionDefault.component';
 import { TallaComponent } from './components/elementos/talla.component';
 import { TemperaturaComponent } from './components/elementos/temperatura.component';
-import { TensionArterialComponent } from './components/elementos/tensionArterial.component';
 import { TensionDiastolicaComponent } from './components/elementos/tensionDiastolica.component';
 import { TensionSistolicaComponent } from './components/elementos/tensionSistolica.component';
 import { AdjuntarDocumentoComponent } from './components/elementos/adjuntarDocumento.component';
-import { OtoemisionAcusticaDeOidoDerechoComponent } from './components/elementos/otoemisionAcusticaDeOidoDerecho.component';
-import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
 import { OdontogramaRefsetComponent } from './components/elementos/OdontogramaRefset.component';
 import { LactanciaComponent } from './components/elementos/lactancia.component';
 import { InformeEpicrisisComponent } from './components/elementos/deprecated/informeEpicrisis.component';
 import { ElementoDeRegistroComponent } from './components/elementos/deprecated/elementoDeRegistro.component';
-import { OdontologiaDefaultComponent } from './components/elementos/odontologiaDefault.component';
-import { CircunferenciaCinturaComponent } from './components/elementos/circunferenciaCintura.component';
 import { InternacionEgresoComponent } from './components/elementos/internacionEgreso.component';
 import { InternacionIngresoComponent } from './components/elementos/internacionIngreso.component';
 
 import { InformeActividadNoNominalizadaComponent } from './components/elementos/informeActividadNoNominalizada.component';
-import { PercentiloPesoComponent } from './components/elementos/percentiloPeso.component';
-import { PercentiloTallaComponent } from './components/elementos/percentiloTalla.component';
-import { PercentiloDeMasaCorporalComponent } from './components/elementos/percentiloDeMasaCorporal.component';
-import { TensionArterialPediatricaComponent } from './components/elementos/tensionArterialPediatrica.component';
-import { PercentiloDeTensionArterialComponent } from './components/elementos/percentiloDeTensionArterial.component';
 import { ConsultaDeNinoSanoM2AComponent } from './components/elementos/consultaDeNinoSanoM2A.component';
 import { ConsultaDeNinoSanoE2Y3AComponent } from './components/elementos/consultaDeNinoSanoE2Y3A.component';
 import { ConsultaDeNinoSanoE3Y6AComponent } from './components/elementos/consultaDeNinoSanoE3Y6A.component';
 import { DesarrolloPsicomotorComponent } from './components/elementos/desarrolloPsicomotor.component';
-import { RegistrarMedidasAntropometricasNinoM2AComponent } from './components/elementos/RegistrarMedidasAntropometricasNinoM2A.component';
-import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './components/elementos/RegistrarMedidasAntropometricasNinoE2Y3A.component';
-import { RegistrarMedidasAntropometricasNinoE3Y6AComponent } from './components/elementos/RegistrarMedidasAntropometricasNinoE3Y6A.component';
 import { ResumenHistoriaClinicaComponent } from './components/elementos/resumenHistoriaClinica.component';
 import { FormulaBaseComponent } from './components/elementos/FormulaBase.component';
 import { CalculoDeBostonComponent } from './components/elementos/calculoDeBoston.component';
@@ -70,8 +51,6 @@ import { UltimaFechaComponent } from './components/elementos/ultimaFecha.compone
 
 import { MoleculaBaseComponent } from './components/elementos/moleculaBase.component';
 import { ProcedimientoDeEnfermeriaComponent } from './components/elementos/procedimientoDeEnfermeria.component';
-
-import { LugarDeNacimientoComponent } from './components/elementos/lugarDeNacimiento.component';
 import { SelectOrganizacionComponent } from './components/elementos/rupers/select-organizacion.component';
 import { SelectProfesionalComponent } from './components/elementos/rupers/select-profesional.component';
 import { SelectPrestacionComponent } from './components/elementos/rupers/select-prestacion.component';
@@ -94,50 +73,31 @@ const RUPComponentsArray = [
     SelectPorRefsetComponent,
     AutocitadoComponent,
     EvolucionProblemaDefaultComponent,
-    FiltradoGlomerularComponent,
     FrecuenciaCardiacaComponent,
     FrecuenciaRespiratoriaComponent,
-    HipertensionArterialComponent,
     IndiceDeMasaCorporalComponent,
     InformesComponent,
     NuevaEvolucionProblemaComponent,
-    ObesidadComponent,
     ObservacionesComponent,
     PesoComponent,
-    PercentiloPerimetroCefalicoComponent,
-    PerimetroCefalicoComponent,
     RegistrarMedicamentoDefaultComponent,
     SaturacionOxigenoComponent,
     GraficoLinealComponent,
-    SignosVitalesComponent,
     SolicitudPrestacionDefaultComponent,
     TallaComponent,
     TemperaturaComponent,
-    TensionArterialComponent,
     TensionDiastolicaComponent,
     TensionSistolicaComponent,
     AdjuntarDocumentoComponent,
-    OtoemisionAcusticaDeOidoDerechoComponent,
-    OtoemisionAcusticaDeOidoIzquierdoComponent,
     OdontogramaRefsetComponent,
     LactanciaComponent,
     InformeEpicrisisComponent,
     ElementoDeRegistroComponent,
-    OdontologiaDefaultComponent,
-    CircunferenciaCinturaComponent,
     InformeActividadNoNominalizadaComponent,
-    PercentiloPesoComponent,
-    PercentiloTallaComponent,
-    PercentiloDeMasaCorporalComponent,
-    TensionArterialPediatricaComponent,
-    PercentiloDeTensionArterialComponent,
     ConsultaDeNinoSanoM2AComponent,
     ConsultaDeNinoSanoE2Y3AComponent,
     ConsultaDeNinoSanoE3Y6AComponent,
     DesarrolloPsicomotorComponent,
-    RegistrarMedidasAntropometricasNinoM2AComponent,
-    RegistrarMedidasAntropometricasNinoE2Y3AComponent,
-    RegistrarMedidasAntropometricasNinoE3Y6AComponent,
     ResumenHistoriaClinicaComponent,
     FormulaBaseComponent,
     CalculoDeBostonComponent,
@@ -147,7 +107,6 @@ const RUPComponentsArray = [
     UltimaFechaComponent,
     MoleculaBaseComponent,
     ProcedimientoDeEnfermeriaComponent,
-    LugarDeNacimientoComponent,
     SelectOrganizacionComponent,
     SelectProfesionalComponent,
     SelectPrestacionComponent,

@@ -1,12 +1,13 @@
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { Plex } from '@andes/plex';
+
 import { Component, AfterViewInit, HostBinding, Input } from '@angular/core';
 import { Auth } from '@andes/auth';
-import { AppComponent } from './../../../../app.component';
-import { IPaciente } from './../../../../core/mpi/interfaces/IPaciente';
-import { PrestacionesService } from './../../../../modules/rup/services/prestaciones.service';
+import { IPaciente } from '../../../../../core/mpi/interfaces/IPaciente';
+import { PrestacionesService } from '../../../services/prestaciones.service';
 
-@Component({ selector: 'radio-chart', templateUrl: 'chart.html' })
+@Component({
+    selector: 'radio-chart',
+    templateUrl: 'chart.html'
+})
 export class ChartComponent implements AfterViewInit {
     private _paciente: IPaciente;
     public chart;
@@ -41,7 +42,7 @@ export class ChartComponent implements AfterViewInit {
         // { id: 4, label: 'Índice de masa corporal' },
     ];
 
-    constructor(public auth: Auth, public appComponent: AppComponent, public prestacionesService: PrestacionesService) { }
+    constructor(public auth: Auth, public prestacionesService: PrestacionesService) { }
 
     ngAfterViewInit() {
     }
