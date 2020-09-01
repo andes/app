@@ -88,7 +88,15 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
 
 
             forkJoin(
-                this.perfilesHttp.find().pipe(tap(perfiles => this.perfiles = perfiles)),
+                this.perfilesHttp.find().pipe(tap(perfiles => {
+                    this.permisos$.pipe(delay(1), takeUntil(this.destroy$)).subscribe((permisos) => {
+                        perfiles.forEach(perfil => {
+                            const enabled = this.perfilesHttp.validatePerfil(permisos, perfil);
+                            this.tooglePerfil(perfil, enabled);
+                        });
+                        this.perfiles = perfiles;
+                    });
+                })),
                 this.user$.pipe(
                     tap(user => {
                         const orgPermisos = user.organizaciones.find(org => org.id === this.organizacionId);
@@ -100,13 +108,6 @@ export class UsuariosEditComponent implements OnInit, OnDestroy {
                 ),
                 this.permisosService.get().pipe(tap(permisos => this.arbolPermisos = permisos))
             ).pipe(takeUntil(this.destroy$)).subscribe(() => { });
-
-            this.permisos$.pipe(delay(1), takeUntil(this.destroy$)).subscribe((permisos) => {
-                this.perfiles.forEach(perfil => {
-                    const enabled = this.perfilesHttp.validatePerfil(permisos, perfil);
-                    this.tooglePerfil(perfil, enabled);
-                });
-            });
         });
     }
 
