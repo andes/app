@@ -188,6 +188,9 @@ export class ElementosRUPService {
      */
 
     populateElemento(elemento: IElementoRUP, esSolicitud: boolean) {
+        if (!elemento) {
+            return;
+        }
         elemento.requeridos.forEach((elem) => {
             if (!elem.elementoRUP) {
                 elem.elementoRUP = this.buscarElemento(elem.concepto, esSolicitud);
